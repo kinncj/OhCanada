@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1004,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -72,9 +72,9 @@
         "id": "government-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -173,9 +173,9 @@
         "id": "government-city-hall",
         "type": "city-hall",
         "position": [
-          -45,
+          -260,
           0,
-          -10
+          -60
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -187,9 +187,9 @@
         "id": "government-rideau-hall",
         "type": "rideau-hall",
         "position": [
-          50,
+          290,
           0,
-          14
+          -120
         ],
         "rotationY": -1.5707963267948966,
         "label": {
@@ -201,24 +201,69 @@
         "id": "government-gate",
         "type": "gate",
         "position": [
-          34,
+          262,
           0,
-          14
+          -120
         ],
         "rotationY": 1.5707963267948966,
         "label": {
           "en": "Rideau Hall gate",
           "fr": "Grille de Rideau Hall"
         }
+      },
+      {
+        "id": "government-lamp-5",
+        "type": "lamp",
+        "position": [
+          -244,
+          0,
+          -44
+        ]
+      },
+      {
+        "id": "government-avenue-lamp-1",
+        "type": "lamp",
+        "position": [
+          110,
+          0,
+          130
+        ]
+      },
+      {
+        "id": "government-avenue-lamp-2",
+        "type": "lamp",
+        "position": [
+          130,
+          0,
+          150
+        ]
+      },
+      {
+        "id": "government-works-box",
+        "type": "utility-box",
+        "position": [
+          -190,
+          0,
+          -312
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.4,
       "weather": "clear",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "city-hum",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.5
   },
   "npcs": [
     {
@@ -292,9 +337,9 @@
         "fr": "Le conseiller Ahmed Karim"
       },
       "position": [
-        14,
+        -238,
         0,
-        20
+        -40
       ],
       "behavior": "wander",
       "wanderRadius": 4,
@@ -335,9 +380,9 @@
     {
       "id": "government-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -350,9 +395,9 @@
     {
       "id": "government-city-hall",
       "position": [
-        -34,
+        -246,
         0,
-        -10
+        -60
       ],
       "radius": 4,
       "kind": "zone",
@@ -366,5 +411,209 @@
     "government-intro",
     "government-order-in-the-house",
     "government-who-holds-office"
+  ],
+  "pois": [
+    {
+      "id": "government-plaza",
+      "name": {
+        "en": "Legislature square",
+        "fr": "Place de l'Assemblée législative"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "government-city-hall",
+      "name": {
+        "en": "City hall",
+        "fr": "Hôtel de ville"
+      },
+      "position": [
+        -244,
+        0,
+        -44
+      ],
+      "radius": 50,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "government-rideau-hall",
+      "name": {
+        "en": "Rideau Hall grounds",
+        "fr": "Domaine de Rideau Hall"
+      },
+      "position": [
+        250,
+        0,
+        -104
+      ],
+      "radius": 55,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-gravel",
+          "church-bell"
+        ],
+        "volume": 0.4
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 4,
+          "behavior": "graze"
+        }
+      ]
+    },
+    {
+      "id": "government-lakeside",
+      "name": {
+        "en": "Lakeside path",
+        "fr": "Sentier du lac"
+      },
+      "position": [
+        110,
+        0,
+        -40
+      ],
+      "radius": 45,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "loon-call"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "loon",
+          "count": 2,
+          "behavior": "swim"
+        }
+      ]
+    },
+    {
+      "id": "government-provincial-park",
+      "name": {
+        "en": "Provincial park",
+        "fr": "Parc provincial"
+      },
+      "position": [
+        -300,
+        0,
+        280
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "moose-call"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "moose",
+          "count": 1,
+          "behavior": "graze"
+        }
+      ]
+    },
+    {
+      "id": "government-works-yard",
+      "name": {
+        "en": "Municipal works yard",
+        "fr": "Cour des travaux publics"
+      },
+      "position": [
+        -200,
+        0,
+        -320
+      ],
+      "radius": 45,
+      "landmark": "factory",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "government-ceremonial-avenue",
+      "name": {
+        "en": "Ceremonial avenue",
+        "fr": "Avenue de cérémonie"
+      },
+      "position": [
+        120,
+        0,
+        140
+      ],
+      "radius": 45,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-gravel",
+          "church-bell"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "government-station",
+      "name": {
+        "en": "Station",
+        "fr": "Gare"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "train-whistle",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

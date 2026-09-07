@@ -156,12 +156,12 @@ export async function processHero(io, { key, category, budget, texSize, glb, tex
 /**
  * Compress every assets/src/hero/*.glb into <distDir>/models/hero/<key>.glb and return renderer manifest entries.
  * @param {object} opts
- * @param {string} opts.srcDir      assets/src/hero (generated GLBs; assets/prompts is resolved as ../prompts)
+ * @param {string} opts.srcDir      assets/src/hero (generated GLBs; assets/prompts is resolved as ../../prompts)
  * @param {string} opts.distDir     assets/dist (outputs go under models/hero/)
  * @param {(entry: object) => void} opts.upsertCredit  credits.json upsert from scripts/assets.mjs
  * @param {string|boolean|null} opts.toktx  ktx bin dir (prepended to PATH) or true when `ktx` is already on PATH → KTX2;
  *                                          falsy → WebP textures
- * @param {string} [opts.promptsDir]  defaults to <srcDir>/../prompts
+ * @param {string} [opts.promptsDir]  defaults to <srcDir>/../../prompts (assets/prompts)
  * @param {(m: string) => void} [opts.log]
  * @param {(m: string) => void} [opts.warn]
  * @returns {Promise<Record<string, { path: string, lods: string[], triangles: Record<string, number>, height: number, radius: number, category: 'hero'|'fauna'|'prop' }>>}
@@ -173,7 +173,7 @@ export async function processHeroAssets({ srcDir, distDir, upsertCredit, toktx, 
   if (!files.length) return entries;
   if (typeof toktx === 'string') prependPath(toktx);
   const textureFormat = toktx ? 'ktx2' : 'webp';
-  const prompts = promptsDir ?? join(srcDir, '..', 'prompts');
+  const prompts = promptsDir ?? join(srcDir, '..', '..', 'prompts'); // assets/src/hero → assets/prompts
   const io = await createIO();
   for (const file of files) {
     const key = basename(file, '.glb');

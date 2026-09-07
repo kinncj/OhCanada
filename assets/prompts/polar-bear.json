@@ -1,0 +1,11 @@
+{
+  "key": "polar-bear",
+  "category": "fauna",
+  "prompt": "a polar bear, full body standing on all fours side view, creamy white fur, black nose, neutral pose, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "text, watermark, multiple animals, cropped, cut off, blurry, low quality, background scenery, grass, water, cartoon, deformed, extra limbs",
+  "seed": 206,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 1.3,
+  "polyBudget": 12000,
+  "notes": "Fauna."
+}

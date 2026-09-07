@@ -1,0 +1,11 @@
+{
+  "key": "inukshuk",
+  "category": "hero",
+  "prompt": "an Inuit inukshuk stone figure, a human-like marker built from stacked flat grey granite stones, two stone legs, a long flat stone laid across as arms and a small stone head on top, standing on a plain white surface, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds, snow, ice",
+  "seed": 109,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 3,
+  "polyBudget": 10000,
+  "notes": "Cultural: Inuit stone marker. Keep a simple, respectful stacked-stone form."
+}

@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1006,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -73,9 +73,9 @@
         "id": "justice-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -134,9 +134,9 @@
         "id": "justice-small-claims",
         "type": "courthouse",
         "position": [
-          -45,
+          -250,
           0,
-          -10
+          -80
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -148,9 +148,9 @@
         "id": "justice-police-station",
         "type": "police-station",
         "position": [
-          45,
+          250,
           0,
-          12
+          -90
         ],
         "rotationY": -1.5707963267948966,
         "label": {
@@ -206,15 +206,51 @@
           0,
           14
         ]
+      },
+      {
+        "id": "justice-lamp-5",
+        "type": "lamp",
+        "position": [
+          -236,
+          0,
+          -62
+        ]
+      },
+      {
+        "id": "justice-lamp-6",
+        "type": "lamp",
+        "position": [
+          236,
+          0,
+          -74
+        ]
+      },
+      {
+        "id": "justice-hydrant-2",
+        "type": "hydrant",
+        "position": [
+          242,
+          0,
+          -104
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.35,
       "weather": "clear",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "church-bell"
+        ],
+        "volume": 0.45
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.45
   },
   "npcs": [
     {
@@ -287,9 +323,9 @@
         "fr": "Aisha Bello, avocate de l'aide juridique"
       },
       "position": [
-        14,
+        -224,
         0,
-        20
+        -52
       ],
       "behavior": "idle",
       "questRefs": [],
@@ -328,9 +364,9 @@
     {
       "id": "justice-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -343,9 +379,9 @@
     {
       "id": "justice-small-claims",
       "position": [
-        -31,
+        -236,
         0,
-        -10
+        -80
       ],
       "radius": 4,
       "kind": "zone",
@@ -358,5 +394,179 @@
   "quests": [
     "justice-intro",
     "justice-the-courts"
+  ],
+  "pois": [
+    {
+      "id": "justice-plaza",
+      "name": {
+        "en": "Supreme Court plaza",
+        "fr": "Esplanade de la Cour suprême"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "church-bell"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "justice-small-claims",
+      "name": {
+        "en": "Small claims court",
+        "fr": "Cour des petites créances"
+      },
+      "position": [
+        -232,
+        0,
+        -60
+      ],
+      "radius": 50,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "justice-police-station",
+      "name": {
+        "en": "Police station",
+        "fr": "Poste de police"
+      },
+      "position": [
+        236,
+        0,
+        -72
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "justice-provincial-court",
+      "name": {
+        "en": "Provincial court",
+        "fr": "Cour provinciale"
+      },
+      "position": [
+        0,
+        0,
+        -90
+      ],
+      "radius": 45,
+      "landmark": "courthouse",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "justice-lake",
+      "name": {
+        "en": "Lakeside path",
+        "fr": "Sentier du lac"
+      },
+      "position": [
+        110,
+        0,
+        -40
+      ],
+      "radius": 45,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "loon-call"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "loon",
+          "count": 2,
+          "behavior": "swim"
+        }
+      ]
+    },
+    {
+      "id": "justice-pine-ridge",
+      "name": {
+        "en": "Pine ridge",
+        "fr": "Crête des pins"
+      },
+      "position": [
+        -300,
+        0,
+        -300
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "bear-grunt",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "black-bear",
+          "count": 1,
+          "behavior": "patrol"
+        }
+      ]
+    },
+    {
+      "id": "justice-station",
+      "name": {
+        "en": "Station",
+        "fr": "Gare"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "train-whistle",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

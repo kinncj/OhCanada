@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1005,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -72,9 +72,9 @@
         "id": "elections-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -133,9 +133,9 @@
         "id": "elections-returning-office",
         "type": "returning-office",
         "position": [
-          -45,
+          -240,
           0,
-          -10
+          -80
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -147,9 +147,9 @@
         "id": "elections-lamp-3",
         "type": "lamp",
         "position": [
-          -40,
+          -240,
           0,
-          8
+          -60
         ]
       },
       {
@@ -196,24 +196,60 @@
         "id": "elections-campaign-office",
         "type": "campaign-office",
         "position": [
-          45,
+          240,
           0,
-          12
+          -100
         ],
         "rotationY": -1.5707963267948966,
         "label": {
           "en": "Campaign office",
           "fr": "Local de campagne"
         }
+      },
+      {
+        "id": "elections-lamp-4",
+        "type": "lamp",
+        "position": [
+          226,
+          0,
+          -84
+        ]
+      },
+      {
+        "id": "elections-poll-lamp",
+        "type": "lamp",
+        "position": [
+          -146,
+          0,
+          284
+        ]
+      },
+      {
+        "id": "elections-hall-flag",
+        "type": "flagpole",
+        "position": [
+          286,
+          0,
+          246
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.5,
       "weather": "clear",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "church-bell"
+        ],
+        "volume": 0.45
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.5
   },
   "npcs": [
     {
@@ -256,9 +292,9 @@
         "fr": "Marco, scrutateur"
       },
       "position": [
-        -10,
+        -232,
         0,
-        20
+        -46
       ],
       "behavior": "idle",
       "questRefs": [],
@@ -308,6 +344,36 @@
         "bottomColor": "#2a2f3a",
         "hat": "none"
       }
+    },
+    {
+      "id": "elections-officer",
+      "name": {
+        "en": "Ayesha Khan, Elections officer",
+        "fr": "Ayesha Khan, agente électorale"
+      },
+      "position": [
+        -152,
+        0,
+        292
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "You can vote on election day, at an advance poll, or by mail with a special ballot. Bring your voter information card and proof of identity, and remember: your ballot is secret, nobody may ask how you voted.",
+        "fr": "Vous pouvez voter le jour de l'élection, à un bureau de vote par anticipation ou par la poste avec un bulletin spécial. Apportez votre carte d'information de l'électeur et une preuve d'identité, et rappelez-vous : votre vote est secret, personne ne peut vous demander pour qui vous avez voté."
+      },
+      "appearance": {
+        "skinTone": "tone-4",
+        "outfit": "fleece",
+        "hair": "long",
+        "hairColor": "black",
+        "accessory": "glasses",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "bottomColor": "#23262e",
+        "hat": "none"
+      }
     }
   ],
   "triggers": [
@@ -328,9 +394,9 @@
     {
       "id": "elections-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -343,9 +409,9 @@
     {
       "id": "voter-card",
       "position": [
-        -22,
+        -228,
         0,
-        -30
+        -62
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -357,9 +423,9 @@
     {
       "id": "photo-id",
       "position": [
-        22,
+        24,
         0,
-        -28
+        -56
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -371,9 +437,9 @@
     {
       "id": "riding-map",
       "position": [
+        228,
         0,
-        0,
-        -40
+        -84
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -386,5 +452,202 @@
   "quests": [
     "elections-intro",
     "elections-your-voter-information-card"
+  ],
+  "pois": [
+    {
+      "id": "elections-plaza",
+      "name": {
+        "en": "Polling station square",
+        "fr": "Place du bureau de scrutin"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "church-bell"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "elections-returning-office",
+      "name": {
+        "en": "Returning office",
+        "fr": "Bureau du directeur du scrutin"
+      },
+      "position": [
+        -224,
+        0,
+        -52
+      ],
+      "radius": 50,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "elections-campaign-square",
+      "name": {
+        "en": "Campaign square",
+        "fr": "Place de la campagne"
+      },
+      "position": [
+        226,
+        0,
+        -70
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "fiddle-riff"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "elections-riding-lake",
+      "name": {
+        "en": "Riding lake",
+        "fr": "Lac de la circonscription"
+      },
+      "position": [
+        110,
+        0,
+        -40
+      ],
+      "radius": 45,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "goose-honk",
+          "loon-call"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 6,
+          "behavior": "swim"
+        }
+      ]
+    },
+    {
+      "id": "elections-advance-poll",
+      "name": {
+        "en": "Advance polling station",
+        "fr": "Bureau de vote par anticipation"
+      },
+      "position": [
+        -160,
+        0,
+        300
+      ],
+      "radius": 50,
+      "landmark": "pollingstation",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "elections-community-hall",
+      "name": {
+        "en": "Community arena (polling place)",
+        "fr": "Aréna communautaire (lieu de scrutin)"
+      },
+      "position": [
+        300,
+        0,
+        260
+      ],
+      "radius": 50,
+      "landmark": "arena",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "whistle-referee",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "elections-maple-park",
+      "name": {
+        "en": "Maple park",
+        "fr": "Parc des érables"
+      },
+      "position": [
+        -320,
+        0,
+        -300
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "goose-flock"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 5,
+          "behavior": "graze"
+        }
+      ]
+    },
+    {
+      "id": "elections-station",
+      "name": {
+        "en": "Station",
+        "fr": "Gare"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "train-whistle",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

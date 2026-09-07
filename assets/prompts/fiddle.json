@@ -1,0 +1,11 @@
+{
+  "key": "fiddle",
+  "category": "prop",
+  "prompt": "a whole wooden violin with its bow laid diagonally across it, glossy amber varnish, black fingerboard and chin rest, front view, small in frame, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "hands, people, text, watermark, multiple objects, cropped, cut off, blurry, low quality, background scenery",
+  "seed": 116,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 0.6,
+  "polyBudget": 6000,
+  "notes": "Prop: fiddle. Height 0.6 m is the length of the violin standing on its lower bout."
+}

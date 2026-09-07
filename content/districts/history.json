@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1002,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -73,9 +73,9 @@
         "id": "history-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -165,9 +165,9 @@
         "id": "history-lookout",
         "type": "lookout",
         "position": [
-          -40,
+          -300,
           0,
-          -40
+          -260
         ],
         "label": {
           "en": "Palisade watchtower",
@@ -178,9 +178,9 @@
         "id": "history-circle",
         "type": "circle",
         "position": [
-          -40,
+          -200,
           0,
-          10
+          60
         ],
         "label": {
           "en": "Trading circle",
@@ -191,9 +191,9 @@
         "id": "history-fur-post",
         "type": "fur-post",
         "position": [
-          -30,
+          -210,
           0,
-          -8
+          30
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -205,14 +205,54 @@
         "id": "history-confederation-hall",
         "type": "confederation-hall",
         "position": [
-          40,
+          240,
           0,
-          -2
+          -80
         ],
         "rotationY": -1.5707963267948966,
         "label": {
           "en": "Confederation Hall",
           "fr": "Salle de la Confédération"
+        }
+      },
+      {
+        "id": "history-lamp-5",
+        "type": "lamp",
+        "position": [
+          226,
+          0,
+          -64
+        ]
+      },
+      {
+        "id": "history-vimy-flag-1",
+        "type": "flagpole",
+        "position": [
+          320,
+          0,
+          -290
+        ]
+      },
+      {
+        "id": "history-vimy-flag-2",
+        "type": "flagpole",
+        "position": [
+          340,
+          0,
+          -290
+        ]
+      },
+      {
+        "id": "history-farm-gate",
+        "type": "gate",
+        "position": [
+          -120,
+          0,
+          286
+        ],
+        "label": {
+          "en": "Loyalist farm gate",
+          "fr": "Barrière de la ferme loyaliste"
         }
       }
     ],
@@ -220,9 +260,19 @@
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.3,
       "weather": "fog",
-      "audio": "wind",
-      "fogDensity": 0.012
-    }
+      "fogDensity": 0.012,
+      "soundscape": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-wood",
+          "church-bell",
+          "loon-call"
+        ],
+        "volume": 0.5
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.5
   },
   "npcs": [
     {
@@ -318,6 +368,95 @@
         "bottomColor": "#3b2f2a",
         "hat": "none"
       }
+    },
+    {
+      "id": "history-voyageur",
+      "name": {
+        "en": "Étienne, voyageur",
+        "fr": "Étienne, voyageur"
+      },
+      "position": [
+        66,
+        0,
+        -78
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "We paddled the fur brigades for the Hudson's Bay Company, which got exclusive trading rights over the whole Hudson Bay watershed in 1670, and for its rival, the North West Company. A canoe like this carried tonnes of beaver pelts.",
+        "fr": "Nous pagayions pour les brigades de fourrures de la Compagnie de la Baie d'Hudson, qui a obtenu en 1670 le monopole du commerce sur tout le bassin de la baie d'Hudson, et pour sa rivale, la Compagnie du Nord-Ouest. Un canot comme celui-ci transportait des tonnes de peaux de castor."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "plaid",
+        "hair": "long",
+        "hairColor": "auburn",
+        "accessory": "scarf",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "workwear",
+        "bottomColor": "#4a3421",
+        "hat": "toque",
+        "beard": true
+      }
+    },
+    {
+      "id": "history-wwi-soldier",
+      "name": {
+        "en": "Private Callaghan, Canadian Corps",
+        "fr": "Le soldat Callaghan, Corps canadien"
+      },
+      "position": [
+        326,
+        0,
+        -270
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "In April 1917 the four divisions of the Canadian Corps fought together for the first time and took Vimy Ridge. More than 600,000 Canadians served in the First World War; April 9 is Vimy Day.",
+        "fr": "En avril 1917, les quatre divisions du Corps canadien ont combattu ensemble pour la première fois et ont pris la crête de Vimy. Plus de 600 000 Canadiens ont servi pendant la Première Guerre mondiale; le 9 avril est le jour de Vimy."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "parka",
+        "hair": "buzz",
+        "hairColor": "brown",
+        "body": "male",
+        "age": "young",
+        "outfitStyle": "uniform",
+        "bottomColor": "#4b4a33",
+        "hat": "hardhat"
+      }
+    },
+    {
+      "id": "history-loyalist",
+      "name": {
+        "en": "Abigail Perley, Loyalist settler",
+        "fr": "Abigail Perley, colonne loyaliste"
+      },
+      "position": [
+        -114,
+        0,
+        292
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "After the American Revolution more than 40,000 of us who stayed loyal to the Crown came north to Nova Scotia and Quebec. We cleared these farms and started new towns; it was a hard first winter.",
+        "fr": "Après la Révolution américaine, plus de 40 000 d'entre nous, restés fidèles à la Couronne, sont venus vers le nord, en Nouvelle-Écosse et au Québec. Nous avons défriché ces fermes et fondé de nouveaux villages; le premier hiver a été dur."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "fleece",
+        "hair": "bun",
+        "hairColor": "blond",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "casual",
+        "bottomColor": "#5a4632",
+        "hat": "none"
+      }
     }
   ],
   "triggers": [
@@ -338,9 +477,9 @@
     {
       "id": "history-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -353,9 +492,9 @@
     {
       "id": "ledger-page-1",
       "position": [
-        -16,
+        -214,
         0,
-        -32
+        8
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -367,9 +506,9 @@
     {
       "id": "ledger-page-2",
       "position": [
-        26,
+        232,
         0,
-        16
+        -60
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -381,9 +520,9 @@
     {
       "id": "ledger-page-3",
       "position": [
-        28,
+        186,
         0,
-        50
+        214
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -397,5 +536,217 @@
     "history-intro",
     "history-in-order-of-events",
     "history-the-fur-trade-ledger"
+  ],
+  "pois": [
+    {
+      "id": "history-plaza",
+      "name": {
+        "en": "Fort square",
+        "fr": "Place du fort"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-wood",
+          "church-bell"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "history-canoe-landing",
+      "name": {
+        "en": "Voyageur canoe landing",
+        "fr": "Débarcadère des voyageurs"
+      },
+      "position": [
+        60,
+        0,
+        -88
+      ],
+      "radius": 50,
+      "landmark": "canoe-voyageur",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "beaver-splash",
+          "loon-call",
+          "footstep-wood"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "beaver",
+          "count": 2,
+          "behavior": "swim"
+        },
+        {
+          "species": "loon",
+          "count": 1,
+          "behavior": "swim"
+        }
+      ]
+    },
+    {
+      "id": "history-fur-post",
+      "name": {
+        "en": "Fur-trade post",
+        "fr": "Poste de traite des fourrures"
+      },
+      "position": [
+        -196,
+        0,
+        20
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "campfire",
+        "oneshots": [
+          "footstep-wood",
+          "beaver-splash"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "history-confederation-hall",
+      "name": {
+        "en": "Confederation Hall",
+        "fr": "Salle de la Confédération"
+      },
+      "position": [
+        228,
+        0,
+        -60
+      ],
+      "radius": 50,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "history-palisade",
+      "name": {
+        "en": "Palisade watchtower",
+        "fr": "Tour de guet de la palissade"
+      },
+      "position": [
+        -286,
+        0,
+        -246
+      ],
+      "radius": 45,
+      "landmark": "gate",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "footstep-wood",
+          "bear-grunt"
+        ],
+        "volume": 0.4
+      },
+      "fauna": [
+        {
+          "species": "black-bear",
+          "count": 1,
+          "behavior": "patrol"
+        }
+      ]
+    },
+    {
+      "id": "history-vimy-memorial",
+      "name": {
+        "en": "Vimy memorial",
+        "fr": "Monument de Vimy"
+      },
+      "position": [
+        330,
+        0,
+        -280
+      ],
+      "radius": 45,
+      "landmark": "flame",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "church-bell"
+        ],
+        "volume": 0.35
+      }
+    },
+    {
+      "id": "history-loyalist-farm",
+      "name": {
+        "en": "Loyalist homestead",
+        "fr": "Ferme loyaliste"
+      },
+      "position": [
+        -120,
+        0,
+        300
+      ],
+      "radius": 50,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-gravel",
+          "goose-flock"
+        ],
+        "volume": 0.4
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 5,
+          "behavior": "graze"
+        }
+      ]
+    },
+    {
+      "id": "history-station",
+      "name": {
+        "en": "Railway siding",
+        "fr": "Voie de garage du chemin de fer"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "train-whistle",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

@@ -5,438 +5,972 @@
     {
       "id": "q-gv-001",
       "subject": "government",
-      "text": { "en": "Which three features together describe Canada's system of government?", "fr": "Quelles trois caractéristiques décrivent ensemble le système de gouvernement du Canada?" },
-      "answer": { "en": "A federal state, a parliamentary democracy and a constitutional monarchy", "fr": "Un État fédéral, une démocratie parlementaire et une monarchie constitutionnelle" },
+      "text": {
+        "en": "Which three features together describe Canada's system of government?",
+        "fr": "Quelles trois caractéristiques décrivent ensemble le système de gouvernement du Canada?"
+      },
+      "answer": {
+        "en": "A federal state, a parliamentary democracy and a constitutional monarchy",
+        "fr": "Un État fédéral, une démocratie parlementaire et une monarchie constitutionnelle"
+      },
       "distractors": [
-        { "en": "A unitary state, a presidential republic and a direct democracy", "fr": "Un État unitaire, une république présidentielle et une démocratie directe" },
-        { "en": "A confederation of city-states, an absolute monarchy and a theocracy", "fr": "Une confédération de cités-États, une monarchie absolue et une théocratie" },
-        { "en": "A federal republic, a one-party system and a military council", "fr": "Une république fédérale, un régime à parti unique et un conseil militaire" }
+        {
+          "en": "A unitary state, a presidential republic and a direct democracy",
+          "fr": "Un État unitaire, une république présidentielle et une démocratie directe"
+        },
+        {
+          "en": "A confederation of city-states, an absolute monarchy and a theocracy",
+          "fr": "Une confédération de cités-États, une monarchie absolue et une théocratie"
+        },
+        {
+          "en": "A federal republic, a one-party system and a military council",
+          "fr": "Une république fédérale, un régime à parti unique et un conseil militaire"
+        }
       ],
-      "explanation": { "en": "Power is shared between Ottawa and the provinces, Parliament is elected by the people, and the Sovereign is head of state under the Constitution.", "fr": "Le pouvoir est partagé entre Ottawa et les provinces, le Parlement est élu par la population et le souverain est chef d'État en vertu de la Constitution." },
+      "explanation": {
+        "en": "Power is shared between Ottawa and the provinces, Parliament is elected by the people, and the Sovereign is head of state under the Constitution.",
+        "fr": "Le pouvoir est partagé entre Ottawa et les provinces, le Parlement est élu par la population et le souverain est chef d'État en vertu de la Constitution."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-002",
       "subject": "government",
-      "text": { "en": "What are the three branches of government in Canada?", "fr": "Quels sont les trois pouvoirs (ou branches) du gouvernement au Canada?" },
-      "answer": { "en": "Executive, legislative and judicial", "fr": "Exécutif, législatif et judiciaire" },
+      "text": {
+        "en": "What are the three branches of government in Canada?",
+        "fr": "Quels sont les trois pouvoirs (ou branches) du gouvernement au Canada?"
+      },
+      "answer": {
+        "en": "Executive, legislative and judicial",
+        "fr": "Exécutif, législatif et judiciaire"
+      },
       "distractors": [
-        { "en": "Federal, provincial and municipal", "fr": "Fédéral, provincial et municipal" },
-        { "en": "Royal, military and civil", "fr": "Royal, militaire et civil" },
-        { "en": "Senate, Commons and Cabinet", "fr": "Sénat, Communes et Cabinet" }
+        {
+          "en": "Federal, provincial and municipal",
+          "fr": "Fédéral, provincial et municipal"
+        },
+        {
+          "en": "Royal, military and civil",
+          "fr": "Royal, militaire et civil"
+        },
+        {
+          "en": "Senate, Commons and Cabinet",
+          "fr": "Sénat, Communes et Cabinet"
+        }
       ],
-      "explanation": { "en": "The executive carries out the laws, the legislature makes them and the courts interpret them. Federal, provincial and municipal are levels of government, not branches.", "fr": "L'exécutif applique les lois, le législatif les adopte et les tribunaux les interprètent. Fédéral, provincial et municipal sont des ordres de gouvernement, pas des pouvoirs." },
+      "explanation": {
+        "en": "The executive carries out the laws, the legislature makes them and the courts interpret them. Federal, provincial and municipal are levels of government, not branches.",
+        "fr": "L'exécutif applique les lois, le législatif les adopte et les tribunaux les interprètent. Fédéral, provincial et municipal sont des ordres de gouvernement, pas des pouvoirs."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-003",
       "subject": "government",
-      "text": { "en": "Which three parts make up the Parliament of Canada?", "fr": "Quelles sont les trois composantes du Parlement du Canada?" },
-      "answer": { "en": "The Sovereign, the Senate and the House of Commons", "fr": "Le souverain, le Sénat et la Chambre des communes" },
+      "text": {
+        "en": "Which three parts make up the Parliament of Canada?",
+        "fr": "Quelles sont les trois composantes du Parlement du Canada?"
+      },
+      "answer": {
+        "en": "The Sovereign, the Senate and the House of Commons",
+        "fr": "Le souverain, le Sénat et la Chambre des communes"
+      },
       "distractors": [
-        { "en": "The Prime Minister, the Cabinet and the Supreme Court", "fr": "Le premier ministre, le Cabinet et la Cour suprême" },
-        { "en": "The House of Commons, the provincial legislatures and the Governor General", "fr": "La Chambre des communes, les assemblées provinciales et le gouverneur général" },
-        { "en": "The Senate, the House of Commons and the Privy Council Office", "fr": "Le Sénat, la Chambre des communes et le Bureau du Conseil privé" }
+        {
+          "en": "The Prime Minister, the Cabinet and the Supreme Court",
+          "fr": "Le premier ministre, le Cabinet et la Cour suprême"
+        },
+        {
+          "en": "The House of Commons, the provincial legislatures and the Governor General",
+          "fr": "La Chambre des communes, les assemblées provinciales et le gouverneur général"
+        },
+        {
+          "en": "The Senate, the House of Commons and the Privy Council Office",
+          "fr": "Le Sénat, la Chambre des communes et le Bureau du Conseil privé"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-004",
       "subject": "government",
-      "text": { "en": "In Canada's parliamentary democracy, how is the Prime Minister normally chosen?", "fr": "Dans la démocratie parlementaire canadienne, comment le premier ministre est-il normalement choisi?" },
-      "answer": { "en": "The leader of the party that holds the most seats in the House of Commons is invited to form a government", "fr": "Le chef du parti qui détient le plus de sièges à la Chambre des communes est invité à former le gouvernement" },
+      "text": {
+        "en": "In Canada's parliamentary democracy, how is the Prime Minister normally chosen?",
+        "fr": "Dans la démocratie parlementaire canadienne, comment le premier ministre est-il normalement choisi?"
+      },
+      "answer": {
+        "en": "The leader of the party that holds the most seats in the House of Commons is invited to form a government",
+        "fr": "Le chef du parti qui détient le plus de sièges à la Chambre des communes est invité à former le gouvernement"
+      },
       "distractors": [
-        { "en": "Voters elect the Prime Minister directly on a separate national ballot", "fr": "Les électeurs élisent directement le premier ministre sur un bulletin national distinct" },
-        { "en": "The Senate votes to select the Prime Minister from among its members", "fr": "Le Sénat vote pour choisir le premier ministre parmi ses membres" },
-        { "en": "The Sovereign personally picks a Prime Minister every ten years", "fr": "Le souverain choisit personnellement un premier ministre tous les dix ans" }
+        {
+          "en": "Voters elect the Prime Minister directly on a separate national ballot",
+          "fr": "Les électeurs élisent directement le premier ministre sur un bulletin national distinct"
+        },
+        {
+          "en": "The Senate votes to select the Prime Minister from among its members",
+          "fr": "Le Sénat vote pour choisir le premier ministre parmi ses membres"
+        },
+        {
+          "en": "The Sovereign personally picks a Prime Minister every ten years",
+          "fr": "Le souverain choisit personnellement un premier ministre tous les dix ans"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/federal-elections.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-005",
       "subject": "government",
-      "text": { "en": "Who is Canada's head of state?", "fr": "Qui est le chef d'État du Canada?" },
-      "answer": { "en": "The Sovereign, currently King Charles III", "fr": "Le souverain, actuellement le roi Charles III" },
+      "text": {
+        "en": "Who is Canada's head of state?",
+        "fr": "Qui est le chef d'État du Canada?"
+      },
+      "answer": {
+        "en": "The Sovereign, currently King Charles III",
+        "fr": "Le souverain, actuellement le roi Charles III"
+      },
       "distractors": [
-        { "en": "The Prime Minister", "fr": "Le premier ministre" },
-        { "en": "The Chief Justice of Canada", "fr": "Le juge en chef du Canada" },
-        { "en": "The Speaker of the House of Commons", "fr": "Le président de la Chambre des communes" }
+        {
+          "en": "The Prime Minister",
+          "fr": "Le premier ministre"
+        },
+        {
+          "en": "The Chief Justice of Canada",
+          "fr": "Le juge en chef du Canada"
+        },
+        {
+          "en": "The Speaker of the House of Commons",
+          "fr": "Le président de la Chambre des communes"
+        }
       ],
-      "explanation": { "en": "Canada is a constitutional monarchy: the Sovereign is head of state while the Prime Minister is head of government.", "fr": "Le Canada est une monarchie constitutionnelle : le souverain est chef d'État tandis que le premier ministre est chef du gouvernement." },
+      "explanation": {
+        "en": "Canada is a constitutional monarchy: the Sovereign is head of state while the Prime Minister is head of government.",
+        "fr": "Le Canada est une monarchie constitutionnelle : le souverain est chef d'État tandis que le premier ministre est chef du gouvernement."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": true
     },
     {
       "id": "q-gv-006",
       "subject": "government",
-      "text": { "en": "Who currently serves as Governor General of Canada?", "fr": "Qui occupe actuellement le poste de gouverneure générale du Canada?" },
-      "answer": { "en": "Mary Simon", "fr": "Mary Simon" },
+      "text": {
+        "en": "Who currently serves as Governor General of Canada?",
+        "fr": "Qui occupe actuellement le poste de gouverneure générale du Canada?"
+      },
+      "answer": {
+        "en": "Mary Simon",
+        "fr": "Mary Simon"
+      },
       "distractors": [
-        { "en": "Julie Payette", "fr": "Julie Payette" },
-        { "en": "David Johnston", "fr": "David Johnston" },
-        { "en": "Michaëlle Jean", "fr": "Michaëlle Jean" }
+        {
+          "en": "Julie Payette",
+          "fr": "Julie Payette"
+        },
+        {
+          "en": "David Johnston",
+          "fr": "David Johnston"
+        },
+        {
+          "en": "Michaëlle Jean",
+          "fr": "Michaëlle Jean"
+        }
       ],
-      "explanation": { "en": "Mary Simon, an Inuk leader from Nunavik, became the first Indigenous Governor General in 2021.", "fr": "Mary Simon, une dirigeante inuite du Nunavik, est devenue la première gouverneure générale autochtone en 2021." },
+      "explanation": {
+        "en": "Mary Simon, an Inuk leader from Nunavik, became the first Indigenous Governor General in 2021.",
+        "fr": "Mary Simon, une dirigeante inuite du Nunavik, est devenue la première gouverneure générale autochtone en 2021."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": true
     },
     {
       "id": "q-gv-007",
       "subject": "government",
-      "text": { "en": "Who is the Prime Minister of Canada?", "fr": "Qui est le premier ministre du Canada?" },
-      "answer": { "en": "Mark Carney", "fr": "Mark Carney" },
+      "text": {
+        "en": "Who is the Prime Minister of Canada?",
+        "fr": "Qui est le premier ministre du Canada?"
+      },
+      "answer": {
+        "en": "Mark Carney",
+        "fr": "Mark Carney"
+      },
       "distractors": [
-        { "en": "Justin Trudeau", "fr": "Justin Trudeau" },
-        { "en": "Stephen Harper", "fr": "Stephen Harper" },
-        { "en": "Jagmeet Singh", "fr": "Jagmeet Singh" }
+        {
+          "en": "Justin Trudeau",
+          "fr": "Justin Trudeau"
+        },
+        {
+          "en": "Stephen Harper",
+          "fr": "Stephen Harper"
+        },
+        {
+          "en": "Jagmeet Singh",
+          "fr": "Jagmeet Singh"
+        }
       ],
-      "explanation": { "en": "Mark Carney became Prime Minister in March 2025 and led the Liberal Party to victory in the general election of April 28, 2025.", "fr": "Mark Carney est devenu premier ministre en mars 2025 et a mené le Parti libéral à la victoire lors de l'élection générale du 28 avril 2025." },
+      "explanation": {
+        "en": "Mark Carney became Prime Minister in March 2025 and led the Liberal Party to victory in the general election of April 28, 2025.",
+        "fr": "Mark Carney est devenu premier ministre en mars 2025 et a mené le Parti libéral à la victoire lors de l'élection générale du 28 avril 2025."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": true
     },
     {
       "id": "q-gv-008",
       "subject": "government",
-      "text": { "en": "Who is the Leader of the Official Opposition in the House of Commons?", "fr": "Qui est le chef de l'opposition officielle à la Chambre des communes?" },
-      "answer": { "en": "Pierre Poilievre", "fr": "Pierre Poilievre" },
+      "text": {
+        "en": "Who is the Leader of the Official Opposition in the House of Commons?",
+        "fr": "Qui est le chef de l'opposition officielle à la Chambre des communes?"
+      },
+      "answer": {
+        "en": "Pierre Poilievre",
+        "fr": "Pierre Poilievre"
+      },
       "distractors": [
-        { "en": "Yves-François Blanchet", "fr": "Yves-François Blanchet" },
-        { "en": "Elizabeth May", "fr": "Elizabeth May" },
-        { "en": "Andrew Scheer", "fr": "Andrew Scheer" }
+        {
+          "en": "Yves-François Blanchet",
+          "fr": "Yves-François Blanchet"
+        },
+        {
+          "en": "Elizabeth May",
+          "fr": "Elizabeth May"
+        },
+        {
+          "en": "Andrew Scheer",
+          "fr": "Andrew Scheer"
+        }
       ],
-      "explanation": { "en": "The Official Opposition is the party with the second-largest number of seats; its leader is the Conservative leader, Pierre Poilievre.", "fr": "L'opposition officielle est le parti qui compte le deuxième plus grand nombre de sièges; son chef est le chef conservateur, Pierre Poilievre." },
+      "explanation": {
+        "en": "The Official Opposition is the party with the second-largest number of seats; its leader is the Conservative leader, Pierre Poilievre.",
+        "fr": "L'opposition officielle est le parti qui compte le deuxième plus grand nombre de sièges; son chef est le chef conservateur, Pierre Poilievre."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": true
     },
     {
       "id": "q-gv-009",
       "subject": "government",
-      "text": { "en": "How does a person become Governor General of Canada?", "fr": "Comment une personne devient-elle gouverneur général du Canada?" },
-      "answer": { "en": "The Sovereign appoints them on the advice of the Prime Minister, normally for about five years", "fr": "Le souverain la nomme sur l'avis du premier ministre, normalement pour environ cinq ans" },
+      "text": {
+        "en": "How does a person become Governor General of Canada?",
+        "fr": "Comment une personne devient-elle gouverneur général du Canada?"
+      },
+      "answer": {
+        "en": "The Sovereign appoints them on the advice of the Prime Minister, normally for about five years",
+        "fr": "Le souverain la nomme sur l'avis du premier ministre, normalement pour environ cinq ans"
+      },
       "distractors": [
-        { "en": "They are elected by Canadians in a national vote", "fr": "Elle est élue par les Canadiens lors d'un vote national" },
-        { "en": "The Senate selects them for a life term", "fr": "Le Sénat la choisit pour un mandat à vie" },
-        { "en": "The provincial premiers choose them by consensus", "fr": "Les premiers ministres provinciaux la choisissent par consensus" }
+        {
+          "en": "They are elected by Canadians in a national vote",
+          "fr": "Elle est élue par les Canadiens lors d'un vote national"
+        },
+        {
+          "en": "The Senate selects them for a life term",
+          "fr": "Le Sénat la choisit pour un mandat à vie"
+        },
+        {
+          "en": "The provincial premiers choose them by consensus",
+          "fr": "Les premiers ministres provinciaux la choisissent par consensus"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-010",
       "subject": "government",
-      "text": { "en": "What is the role of the Governor General?", "fr": "Quel est le rôle du gouverneur général?" },
-      "answer": { "en": "To represent the Sovereign in Canada and carry out the Crown's constitutional duties", "fr": "Représenter le souverain au Canada et exercer les fonctions constitutionnelles de la Couronne" },
+      "text": {
+        "en": "What is the role of the Governor General?",
+        "fr": "Quel est le rôle du gouverneur général?"
+      },
+      "answer": {
+        "en": "To represent the Sovereign in Canada and carry out the Crown's constitutional duties",
+        "fr": "Représenter le souverain au Canada et exercer les fonctions constitutionnelles de la Couronne"
+      },
       "distractors": [
-        { "en": "To lead the largest party in the House of Commons", "fr": "Diriger le plus grand parti à la Chambre des communes" },
-        { "en": "To preside over the Supreme Court of Canada", "fr": "Présider la Cour suprême du Canada" },
-        { "en": "To command the provincial police forces", "fr": "Commander les corps de police provinciaux" }
+        {
+          "en": "To lead the largest party in the House of Commons",
+          "fr": "Diriger le plus grand parti à la Chambre des communes"
+        },
+        {
+          "en": "To preside over the Supreme Court of Canada",
+          "fr": "Présider la Cour suprême du Canada"
+        },
+        {
+          "en": "To command the provincial police forces",
+          "fr": "Commander les corps de police provinciaux"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-011",
       "subject": "government",
-      "text": { "en": "Who represents the Sovereign in each of Canada's ten provinces?", "fr": "Qui représente le souverain dans chacune des dix provinces du Canada?" },
-      "answer": { "en": "A Lieutenant Governor", "fr": "Un lieutenant-gouverneur" },
+      "text": {
+        "en": "Who represents the Sovereign in each of Canada's ten provinces?",
+        "fr": "Qui représente le souverain dans chacune des dix provinces du Canada?"
+      },
+      "answer": {
+        "en": "A Lieutenant Governor",
+        "fr": "Un lieutenant-gouverneur"
+      },
       "distractors": [
-        { "en": "A Commissioner", "fr": "Un commissaire" },
-        { "en": "The Premier", "fr": "Le premier ministre provincial" },
-        { "en": "A Senator", "fr": "Un sénateur" }
+        {
+          "en": "A Commissioner",
+          "fr": "Un commissaire"
+        },
+        {
+          "en": "The Premier",
+          "fr": "Le premier ministre provincial"
+        },
+        {
+          "en": "A Senator",
+          "fr": "Un sénateur"
+        }
       ],
-      "explanation": { "en": "Lieutenant Governors are appointed by the Governor General on the advice of the Prime Minister. Territories have Commissioners instead, who represent the federal government.", "fr": "Les lieutenants-gouverneurs sont nommés par le gouverneur général sur l'avis du premier ministre. Les territoires ont plutôt des commissaires, qui représentent le gouvernement fédéral." },
+      "explanation": {
+        "en": "Lieutenant Governors are appointed by the Governor General on the advice of the Prime Minister. Territories have Commissioners instead, who represent the federal government.",
+        "fr": "Les lieutenants-gouverneurs sont nommés par le gouverneur général sur l'avis du premier ministre. Les territoires ont plutôt des commissaires, qui représentent le gouvernement fédéral."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-012",
       "subject": "government",
-      "text": { "en": "In the three territories, whom does the Commissioner represent?", "fr": "Dans les trois territoires, qui le commissaire représente-t-il?" },
-      "answer": { "en": "The federal government", "fr": "Le gouvernement fédéral" },
+      "text": {
+        "en": "In the three territories, whom does the Commissioner represent?",
+        "fr": "Dans les trois territoires, qui le commissaire représente-t-il?"
+      },
+      "answer": {
+        "en": "The federal government",
+        "fr": "Le gouvernement fédéral"
+      },
       "distractors": [
-        { "en": "The Sovereign directly", "fr": "Le souverain directement" },
-        { "en": "The territorial legislative assembly", "fr": "L'assemblée législative territoriale" },
-        { "en": "The neighbouring provinces", "fr": "Les provinces voisines" }
+        {
+          "en": "The Sovereign directly",
+          "fr": "Le souverain directement"
+        },
+        {
+          "en": "The territorial legislative assembly",
+          "fr": "L'assemblée législative territoriale"
+        },
+        {
+          "en": "The neighbouring provinces",
+          "fr": "Les provinces voisines"
+        }
       ],
-      "explanation": { "en": "Unlike a Lieutenant Governor, who represents the Crown, a territorial Commissioner represents the Government of Canada.", "fr": "Contrairement au lieutenant-gouverneur, qui représente la Couronne, le commissaire d'un territoire représente le gouvernement du Canada." },
+      "explanation": {
+        "en": "Unlike a Lieutenant Governor, who represents the Crown, a territorial Commissioner represents the Government of Canada.",
+        "fr": "Contrairement au lieutenant-gouverneur, qui représente la Couronne, le commissaire d'un territoire représente le gouvernement du Canada."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-013",
       "subject": "government",
-      "text": { "en": "How do Senators obtain their seats in the Senate of Canada?", "fr": "Comment les sénateurs obtiennent-ils leur siège au Sénat du Canada?" },
-      "answer": { "en": "They are appointed by the Governor General on the advice of the Prime Minister and may serve until age 75", "fr": "Ils sont nommés par le gouverneur général sur l'avis du premier ministre et peuvent siéger jusqu'à 75 ans" },
+      "text": {
+        "en": "How do Senators obtain their seats in the Senate of Canada?",
+        "fr": "Comment les sénateurs obtiennent-ils leur siège au Sénat du Canada?"
+      },
+      "answer": {
+        "en": "They are appointed by the Governor General on the advice of the Prime Minister and may serve until age 75",
+        "fr": "Ils sont nommés par le gouverneur général sur l'avis du premier ministre et peuvent siéger jusqu'à 75 ans"
+      },
       "distractors": [
-        { "en": "They are elected for four-year terms in each province", "fr": "Ils sont élus pour des mandats de quatre ans dans chaque province" },
-        { "en": "They are chosen by lottery from the National Register of Electors", "fr": "Ils sont tirés au sort à partir du Registre national des électeurs" },
-        { "en": "They inherit the position from a family member", "fr": "Ils héritent du poste d'un membre de leur famille" }
+        {
+          "en": "They are elected for four-year terms in each province",
+          "fr": "Ils sont élus pour des mandats de quatre ans dans chaque province"
+        },
+        {
+          "en": "They are chosen by lottery from the National Register of Electors",
+          "fr": "Ils sont tirés au sort à partir du Registre national des électeurs"
+        },
+        {
+          "en": "They inherit the position from a family member",
+          "fr": "Ils héritent du poste d'un membre de leur famille"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-014",
       "subject": "government",
-      "text": { "en": "What title is given to a person elected to the House of Commons?", "fr": "Quel titre porte une personne élue à la Chambre des communes?" },
-      "answer": { "en": "Member of Parliament (MP)", "fr": "Député ou députée" },
+      "text": {
+        "en": "What title is given to a person elected to the House of Commons?",
+        "fr": "Quel titre porte une personne élue à la Chambre des communes?"
+      },
+      "answer": {
+        "en": "Member of Parliament (MP)",
+        "fr": "Député ou députée"
+      },
       "distractors": [
-        { "en": "Senator", "fr": "Sénateur ou sénatrice" },
-        { "en": "Member of the Legislative Assembly (MLA)", "fr": "Député provincial (MAL)" },
-        { "en": "Privy Councillor", "fr": "Conseiller privé" }
+        {
+          "en": "Senator",
+          "fr": "Sénateur ou sénatrice"
+        },
+        {
+          "en": "Member of the Legislative Assembly (MLA)",
+          "fr": "Député provincial (MAL)"
+        },
+        {
+          "en": "Privy Councillor",
+          "fr": "Conseiller privé"
+        }
       ],
-      "explanation": { "en": "MPs are elected by voters in their electoral district; MLAs sit in provincial legislatures.", "fr": "Les députés fédéraux sont élus par les électeurs de leur circonscription; les députés provinciaux siègent aux assemblées législatives des provinces." },
+      "explanation": {
+        "en": "MPs are elected by voters in their electoral district; MLAs sit in provincial legislatures.",
+        "fr": "Les députés fédéraux sont élus par les électeurs de leur circonscription; les députés provinciaux siègent aux assemblées législatives des provinces."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-015",
       "subject": "government",
-      "text": { "en": "Who chooses the Cabinet ministers, and from where are they usually drawn?", "fr": "Qui choisit les ministres du Cabinet, et d'où proviennent-ils habituellement?" },
-      "answer": { "en": "The Prime Minister selects them, usually from among the Members of Parliament", "fr": "Le premier ministre les choisit, habituellement parmi les députés" },
+      "text": {
+        "en": "Who chooses the Cabinet ministers, and from where are they usually drawn?",
+        "fr": "Qui choisit les ministres du Cabinet, et d'où proviennent-ils habituellement?"
+      },
+      "answer": {
+        "en": "The Prime Minister selects them, usually from among the Members of Parliament",
+        "fr": "Le premier ministre les choisit, habituellement parmi les députés"
+      },
       "distractors": [
-        { "en": "The Governor General selects them from the judiciary", "fr": "Le gouverneur général les choisit parmi les juges" },
-        { "en": "The Senate elects them from among its own members", "fr": "Le Sénat les élit parmi ses propres membres" },
-        { "en": "Voters elect them directly in each province", "fr": "Les électeurs les élisent directement dans chaque province" }
+        {
+          "en": "The Governor General selects them from the judiciary",
+          "fr": "Le gouverneur général les choisit parmi les juges"
+        },
+        {
+          "en": "The Senate elects them from among its own members",
+          "fr": "Le Sénat les élit parmi ses propres membres"
+        },
+        {
+          "en": "Voters elect them directly in each province",
+          "fr": "Les électeurs les élisent directement dans chaque province"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/federal-elections.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-016",
       "subject": "government",
-      "text": { "en": "What is meant when the government is said to need the 'confidence' of the House of Commons?", "fr": "Que signifie l'expression selon laquelle le gouvernement doit avoir la « confiance » de la Chambre des communes?" },
-      "answer": { "en": "It must keep the support of a majority of MPs; if it loses a major vote it must resign or call an election", "fr": "Il doit conserver l'appui de la majorité des députés; s'il perd un vote important, il doit démissionner ou déclencher des élections" },
+      "text": {
+        "en": "What is meant when the government is said to need the 'confidence' of the House of Commons?",
+        "fr": "Que signifie l'expression selon laquelle le gouvernement doit avoir la « confiance » de la Chambre des communes?"
+      },
+      "answer": {
+        "en": "It must keep the support of a majority of MPs; if it loses a major vote it must resign or call an election",
+        "fr": "Il doit conserver l'appui de la majorité des députés; s'il perd un vote important, il doit démissionner ou déclencher des élections"
+      },
       "distractors": [
-        { "en": "Cabinet ministers must pass a security clearance", "fr": "Les ministres doivent obtenir une habilitation de sécurité" },
-        { "en": "The Governor General must approve every Cabinet appointment", "fr": "Le gouverneur général doit approuver chaque nomination au Cabinet" },
-        { "en": "Public opinion polls must show over 50 per cent approval", "fr": "Les sondages doivent montrer plus de 50 pour cent d'approbation" }
+        {
+          "en": "Cabinet ministers must pass a security clearance",
+          "fr": "Les ministres doivent obtenir une habilitation de sécurité"
+        },
+        {
+          "en": "The Governor General must approve every Cabinet appointment",
+          "fr": "Le gouverneur général doit approuver chaque nomination au Cabinet"
+        },
+        {
+          "en": "Public opinion polls must show over 50 per cent approval",
+          "fr": "Les sondages doivent montrer plus de 50 pour cent d'approbation"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-017",
       "subject": "government",
-      "text": { "en": "Which body must approve a bill after the House of Commons before it can receive Royal Assent?", "fr": "Quelle instance doit approuver un projet de loi après la Chambre des communes avant qu'il puisse recevoir la sanction royale?" },
-      "answer": { "en": "The Senate", "fr": "Le Sénat" },
+      "text": {
+        "en": "Which body must approve a bill after the House of Commons before it can receive Royal Assent?",
+        "fr": "Quelle instance doit approuver un projet de loi après la Chambre des communes avant qu'il puisse recevoir la sanction royale?"
+      },
+      "answer": {
+        "en": "The Senate",
+        "fr": "Le Sénat"
+      },
       "distractors": [
-        { "en": "The Supreme Court of Canada", "fr": "La Cour suprême du Canada" },
-        { "en": "The Cabinet", "fr": "Le Cabinet" },
-        { "en": "The Council of the Federation", "fr": "Le Conseil de la fédération" }
+        {
+          "en": "The Supreme Court of Canada",
+          "fr": "La Cour suprême du Canada"
+        },
+        {
+          "en": "The Cabinet",
+          "fr": "Le Cabinet"
+        },
+        {
+          "en": "The Council of the Federation",
+          "fr": "Le Conseil de la fédération"
+        }
       ],
-      "explanation": { "en": "A bill must pass both chambers of Parliament in the same form before the Governor General gives Royal Assent.", "fr": "Un projet de loi doit être adopté dans la même forme par les deux chambres du Parlement avant que le gouverneur général accorde la sanction royale." },
+      "explanation": {
+        "en": "A bill must pass both chambers of Parliament in the same form before the Governor General gives Royal Assent.",
+        "fr": "Un projet de loi doit être adopté dans la même forme par les deux chambres du Parlement avant que le gouverneur général accorde la sanction royale."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-018",
       "subject": "government",
-      "text": { "en": "What is the final step that turns a bill into law?", "fr": "Quelle est la dernière étape qui transforme un projet de loi en loi?" },
-      "answer": { "en": "Royal Assent, given by the Governor General on behalf of the Sovereign", "fr": "La sanction royale, accordée par le gouverneur général au nom du souverain" },
+      "text": {
+        "en": "What is the final step that turns a bill into law?",
+        "fr": "Quelle est la dernière étape qui transforme un projet de loi en loi?"
+      },
+      "answer": {
+        "en": "Royal Assent, given by the Governor General on behalf of the Sovereign",
+        "fr": "La sanction royale, accordée par le gouverneur général au nom du souverain"
+      },
       "distractors": [
-        { "en": "A national referendum", "fr": "Un référendum national" },
-        { "en": "Approval by a majority of provincial premiers", "fr": "L'approbation de la majorité des premiers ministres provinciaux" },
-        { "en": "Publication in a daily newspaper", "fr": "La publication dans un quotidien" }
+        {
+          "en": "A national referendum",
+          "fr": "Un référendum national"
+        },
+        {
+          "en": "Approval by a majority of provincial premiers",
+          "fr": "L'approbation de la majorité des premiers ministres provinciaux"
+        },
+        {
+          "en": "Publication in a daily newspaper",
+          "fr": "La publication dans un quotidien"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-019",
       "subject": "government",
-      "text": { "en": "Which stage of the legislative process comes first when a bill is introduced in the House of Commons?", "fr": "Quelle étape du processus législatif vient en premier lorsqu'un projet de loi est déposé à la Chambre des communes?" },
-      "answer": { "en": "First reading, where the bill is presented and printed", "fr": "La première lecture, où le projet de loi est présenté et imprimé" },
+      "text": {
+        "en": "Which stage of the legislative process comes first when a bill is introduced in the House of Commons?",
+        "fr": "Quelle étape du processus législatif vient en premier lorsqu'un projet de loi est déposé à la Chambre des communes?"
+      },
+      "answer": {
+        "en": "First reading, where the bill is presented and printed",
+        "fr": "La première lecture, où le projet de loi est présenté et imprimé"
+      },
       "distractors": [
-        { "en": "Committee stage, where clauses are studied", "fr": "L'étape de l'étude en comité, où les articles sont examinés" },
-        { "en": "Third reading, where the final vote takes place", "fr": "La troisième lecture, où a lieu le vote final" },
-        { "en": "Royal Assent, where the bill is signed", "fr": "La sanction royale, où le projet de loi est signé" }
+        {
+          "en": "Committee stage, where clauses are studied",
+          "fr": "L'étape de l'étude en comité, où les articles sont examinés"
+        },
+        {
+          "en": "Third reading, where the final vote takes place",
+          "fr": "La troisième lecture, où a lieu le vote final"
+        },
+        {
+          "en": "Royal Assent, where the bill is signed",
+          "fr": "La sanction royale, où le projet de loi est signé"
+        }
       ],
-      "explanation": { "en": "The order is first reading, second reading (debate on the principle), committee stage, report stage, third reading, then the same steps in the Senate, and finally Royal Assent.", "fr": "L'ordre est : première lecture, deuxième lecture (débat sur le principe), étude en comité, étape du rapport, troisième lecture, puis les mêmes étapes au Sénat, et enfin la sanction royale." },
+      "explanation": {
+        "en": "The order is first reading, second reading (debate on the principle), committee stage, report stage, third reading, then the same steps in the Senate, and finally Royal Assent.",
+        "fr": "L'ordre est : première lecture, deuxième lecture (débat sur le principe), étude en comité, étape du rapport, troisième lecture, puis les mêmes étapes au Sénat, et enfin la sanction royale."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-020",
       "subject": "government",
-      "text": { "en": "Which of the following is a responsibility of the federal government?", "fr": "Lequel des domaines suivants relève du gouvernement fédéral?" },
-      "answer": { "en": "National defence and foreign policy", "fr": "La défense nationale et la politique étrangère" },
+      "text": {
+        "en": "Which of the following is a responsibility of the federal government?",
+        "fr": "Lequel des domaines suivants relève du gouvernement fédéral?"
+      },
+      "answer": {
+        "en": "National defence and foreign policy",
+        "fr": "La défense nationale et la politique étrangère"
+      },
       "distractors": [
-        { "en": "Public schools", "fr": "Les écoles publiques" },
-        { "en": "Garbage collection", "fr": "La collecte des ordures" },
-        { "en": "Highways within a province", "fr": "Les routes à l'intérieur d'une province" }
+        {
+          "en": "Public schools",
+          "fr": "Les écoles publiques"
+        },
+        {
+          "en": "Garbage collection",
+          "fr": "La collecte des ordures"
+        },
+        {
+          "en": "Highways within a province",
+          "fr": "Les routes à l'intérieur d'une province"
+        }
       ],
-      "explanation": { "en": "Ottawa also handles citizenship, criminal law, currency, interprovincial trade and relations with Indigenous peoples.", "fr": "Ottawa s'occupe aussi de la citoyenneté, du droit criminel, de la monnaie, du commerce interprovincial et des relations avec les peuples autochtones." },
+      "explanation": {
+        "en": "Ottawa also handles citizenship, criminal law, currency, interprovincial trade and relations with Indigenous peoples.",
+        "fr": "Ottawa s'occupe aussi de la citoyenneté, du droit criminel, de la monnaie, du commerce interprovincial et des relations avec les peuples autochtones."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-021",
       "subject": "government",
-      "text": { "en": "Which of the following is NOT a federal responsibility under Canada's Constitution?", "fr": "Lequel des domaines suivants n'est PAS une responsabilité fédérale selon la Constitution du Canada?" },
-      "answer": { "en": "Education", "fr": "L'éducation" },
+      "text": {
+        "en": "Which of the following is NOT a federal responsibility under Canada's Constitution?",
+        "fr": "Lequel des domaines suivants n'est PAS une responsabilité fédérale selon la Constitution du Canada?"
+      },
+      "answer": {
+        "en": "Education",
+        "fr": "L'éducation"
+      },
       "distractors": [
-        { "en": "Criminal law", "fr": "Le droit criminel" },
-        { "en": "Citizenship", "fr": "La citoyenneté" },
-        { "en": "Currency and banking", "fr": "La monnaie et les banques" }
+        {
+          "en": "Criminal law",
+          "fr": "Le droit criminel"
+        },
+        {
+          "en": "Citizenship",
+          "fr": "La citoyenneté"
+        },
+        {
+          "en": "Currency and banking",
+          "fr": "La monnaie et les banques"
+        }
       ],
-      "explanation": { "en": "Education, health care, natural resources and property and civil rights belong to the provinces.", "fr": "L'éducation, les soins de santé, les ressources naturelles ainsi que la propriété et les droits civils relèvent des provinces." },
+      "explanation": {
+        "en": "Education, health care, natural resources and property and civil rights belong to the provinces.",
+        "fr": "L'éducation, les soins de santé, les ressources naturelles ainsi que la propriété et les droits civils relèvent des provinces."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-022",
       "subject": "government",
-      "text": { "en": "Which two areas are shared between the federal and provincial governments?", "fr": "Quels deux domaines sont partagés entre les gouvernements fédéral et provinciaux?" },
-      "answer": { "en": "Agriculture and immigration", "fr": "L'agriculture et l'immigration" },
+      "text": {
+        "en": "Which two areas are shared between the federal and provincial governments?",
+        "fr": "Quels deux domaines sont partagés entre les gouvernements fédéral et provinciaux?"
+      },
+      "answer": {
+        "en": "Agriculture and immigration",
+        "fr": "L'agriculture et l'immigration"
+      },
       "distractors": [
-        { "en": "National defence and postal service", "fr": "La défense nationale et le service postal" },
-        { "en": "Firefighting and snow removal", "fr": "Les services d'incendie et le déneigement" },
-        { "en": "Currency and foreign policy", "fr": "La monnaie et la politique étrangère" }
+        {
+          "en": "National defence and postal service",
+          "fr": "La défense nationale et le service postal"
+        },
+        {
+          "en": "Firefighting and snow removal",
+          "fr": "Les services d'incendie et le déneigement"
+        },
+        {
+          "en": "Currency and foreign policy",
+          "fr": "La monnaie et la politique étrangère"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-023",
       "subject": "government",
-      "text": { "en": "Which services are typically provided by municipal (local) governments?", "fr": "Quels services sont généralement offerts par les administrations municipales (locales)?" },
-      "answer": { "en": "Snow removal, recycling, public transit and local policing", "fr": "Le déneigement, le recyclage, le transport en commun et la police locale" },
+      "text": {
+        "en": "Which services are typically provided by municipal (local) governments?",
+        "fr": "Quels services sont généralement offerts par les administrations municipales (locales)?"
+      },
+      "answer": {
+        "en": "Snow removal, recycling, public transit and local policing",
+        "fr": "Le déneigement, le recyclage, le transport en commun et la police locale"
+      },
       "distractors": [
-        { "en": "Passports, the armed forces and the postal system", "fr": "Les passeports, les forces armées et le système postal" },
-        { "en": "Hospitals, universities and natural resources", "fr": "Les hôpitaux, les universités et les ressources naturelles" },
-        { "en": "Criminal law, banking and international treaties", "fr": "Le droit criminel, les banques et les traités internationaux" }
+        {
+          "en": "Passports, the armed forces and the postal system",
+          "fr": "Les passeports, les forces armées et le système postal"
+        },
+        {
+          "en": "Hospitals, universities and natural resources",
+          "fr": "Les hôpitaux, les universités et les ressources naturelles"
+        },
+        {
+          "en": "Criminal law, banking and international treaties",
+          "fr": "Le droit criminel, les banques et les traités internationaux"
+        }
       ],
-      "explanation": { "en": "Municipalities receive their powers from the province or territory they are in.", "fr": "Les municipalités tiennent leurs pouvoirs de la province ou du territoire où elles se trouvent." },
+      "explanation": {
+        "en": "Municipalities receive their powers from the province or territory they are in.",
+        "fr": "Les municipalités tiennent leurs pouvoirs de la province ou du territoire où elles se trouvent."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/federal-elections.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-024",
       "subject": "government",
-      "text": { "en": "Who presides over debates in the House of Commons and keeps order?", "fr": "Qui préside les débats à la Chambre des communes et y maintient l'ordre?" },
-      "answer": { "en": "The Speaker, an MP elected by the other Members in a secret ballot", "fr": "Le président de la Chambre, un député élu par les autres députés au scrutin secret" },
+      "text": {
+        "en": "Who presides over debates in the House of Commons and keeps order?",
+        "fr": "Qui préside les débats à la Chambre des communes et y maintient l'ordre?"
+      },
+      "answer": {
+        "en": "The Speaker, an MP elected by the other Members in a secret ballot",
+        "fr": "Le président de la Chambre, un député élu par les autres députés au scrutin secret"
+      },
       "distractors": [
-        { "en": "The Prime Minister", "fr": "Le premier ministre" },
-        { "en": "The Governor General", "fr": "Le gouverneur général" },
-        { "en": "The Clerk of the Privy Council", "fr": "Le greffier du Conseil privé" }
+        {
+          "en": "The Prime Minister",
+          "fr": "Le premier ministre"
+        },
+        {
+          "en": "The Governor General",
+          "fr": "Le gouverneur général"
+        },
+        {
+          "en": "The Clerk of the Privy Council",
+          "fr": "Le greffier du Conseil privé"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-025",
       "subject": "government",
-      "text": { "en": "What is the main role of the opposition parties in Parliament?", "fr": "Quel est le rôle principal des partis d'opposition au Parlement?" },
-      "answer": { "en": "To question and peacefully challenge government proposals and offer alternatives", "fr": "Questionner et contester pacifiquement les propositions du gouvernement et proposer des solutions de rechange" },
+      "text": {
+        "en": "What is the main role of the opposition parties in Parliament?",
+        "fr": "Quel est le rôle principal des partis d'opposition au Parlement?"
+      },
+      "answer": {
+        "en": "To question and peacefully challenge government proposals and offer alternatives",
+        "fr": "Questionner et contester pacifiquement les propositions du gouvernement et proposer des solutions de rechange"
+      },
       "distractors": [
-        { "en": "To appoint judges to the Supreme Court", "fr": "Nommer les juges de la Cour suprême" },
-        { "en": "To approve the federal budget on the Cabinet's behalf", "fr": "Approuver le budget fédéral au nom du Cabinet" },
-        { "en": "To select the Governor General", "fr": "Choisir le gouverneur général" }
+        {
+          "en": "To appoint judges to the Supreme Court",
+          "fr": "Nommer les juges de la Cour suprême"
+        },
+        {
+          "en": "To approve the federal budget on the Cabinet's behalf",
+          "fr": "Approuver le budget fédéral au nom du Cabinet"
+        },
+        {
+          "en": "To select the Governor General",
+          "fr": "Choisir le gouverneur général"
+        }
       ],
-      "explanation": { "en": "The party with the second-most seats becomes the Official Opposition, sometimes called Her or His Majesty's Loyal Opposition.", "fr": "Le parti qui compte le deuxième plus grand nombre de sièges devient l'opposition officielle, aussi appelée loyale opposition de Sa Majesté." },
+      "explanation": {
+        "en": "The party with the second-most seats becomes the Official Opposition, sometimes called Her or His Majesty's Loyal Opposition.",
+        "fr": "Le parti qui compte le deuxième plus grand nombre de sièges devient l'opposition officielle, aussi appelée loyale opposition de Sa Majesté."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/federal-elections.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-026",
       "subject": "government",
-      "text": { "en": "What is the title of the head of a provincial government?", "fr": "Quel est le titre du chef d'un gouvernement provincial?" },
-      "answer": { "en": "Premier", "fr": "Premier ministre (de la province)" },
+      "text": {
+        "en": "What is the title of the head of a provincial government?",
+        "fr": "Quel est le titre du chef d'un gouvernement provincial?"
+      },
+      "answer": {
+        "en": "Premier",
+        "fr": "Premier ministre (de la province)"
+      },
       "distractors": [
-        { "en": "Lieutenant Governor", "fr": "Lieutenant-gouverneur" },
-        { "en": "Mayor", "fr": "Maire" },
-        { "en": "Chief Commissioner", "fr": "Commissaire en chef" }
+        {
+          "en": "Lieutenant Governor",
+          "fr": "Lieutenant-gouverneur"
+        },
+        {
+          "en": "Mayor",
+          "fr": "Maire"
+        },
+        {
+          "en": "Chief Commissioner",
+          "fr": "Commissaire en chef"
+        }
       ],
-      "explanation": { "en": "The Premier plays a role in the province similar to that of the Prime Minister federally.", "fr": "Le premier ministre provincial joue dans la province un rôle semblable à celui du premier ministre fédéral." },
+      "explanation": {
+        "en": "The Premier plays a role in the province similar to that of the Prime Minister federally.",
+        "fr": "Le premier ministre provincial joue dans la province un rôle semblable à celui du premier ministre fédéral."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-027",
       "subject": "government",
-      "text": { "en": "What is the name of Quebec's provincial legislature?", "fr": "Quel est le nom de l'assemblée législative du Québec?" },
-      "answer": { "en": "The National Assembly", "fr": "L'Assemblée nationale" },
+      "text": {
+        "en": "What is the name of Quebec's provincial legislature?",
+        "fr": "Quel est le nom de l'assemblée législative du Québec?"
+      },
+      "answer": {
+        "en": "The National Assembly",
+        "fr": "L'Assemblée nationale"
+      },
       "distractors": [
-        { "en": "The House of Assembly", "fr": "La Chambre d'assemblée" },
-        { "en": "The Legislative Council", "fr": "Le Conseil législatif" },
-        { "en": "The Provincial Parliament", "fr": "Le Parlement provincial" }
+        {
+          "en": "The House of Assembly",
+          "fr": "La Chambre d'assemblée"
+        },
+        {
+          "en": "The Legislative Council",
+          "fr": "Le Conseil législatif"
+        },
+        {
+          "en": "The Provincial Parliament",
+          "fr": "Le Parlement provincial"
+        }
       ],
-      "explanation": { "en": "Most provinces call their legislature the Legislative Assembly; Newfoundland and Labrador and Nova Scotia use House of Assembly.", "fr": "La plupart des provinces appellent leur législature l'Assemblée législative; Terre-Neuve-et-Labrador et la Nouvelle-Écosse parlent de la Chambre d'assemblée." },
+      "explanation": {
+        "en": "Most provinces call their legislature the Legislative Assembly; Newfoundland and Labrador and Nova Scotia use House of Assembly.",
+        "fr": "La plupart des provinces appellent leur législature l'Assemblée législative; Terre-Neuve-et-Labrador et la Nouvelle-Écosse parlent de la Chambre d'assemblée."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-028",
       "subject": "government",
-      "text": { "en": "Which branch of government is responsible for interpreting laws and settling disputes?", "fr": "Quel pouvoir du gouvernement est chargé d'interpréter les lois et de régler les différends?" },
-      "answer": { "en": "The judicial branch, made up of the courts", "fr": "Le pouvoir judiciaire, composé des tribunaux" },
+      "text": {
+        "en": "Which branch of government is responsible for interpreting laws and settling disputes?",
+        "fr": "Quel pouvoir du gouvernement est chargé d'interpréter les lois et de régler les différends?"
+      },
+      "answer": {
+        "en": "The judicial branch, made up of the courts",
+        "fr": "Le pouvoir judiciaire, composé des tribunaux"
+      },
       "distractors": [
-        { "en": "The executive branch, led by the Cabinet", "fr": "Le pouvoir exécutif, dirigé par le Cabinet" },
-        { "en": "The legislative branch, made up of Parliament", "fr": "Le pouvoir législatif, composé du Parlement" },
-        { "en": "The public service", "fr": "La fonction publique" }
+        {
+          "en": "The executive branch, led by the Cabinet",
+          "fr": "Le pouvoir exécutif, dirigé par le Cabinet"
+        },
+        {
+          "en": "The legislative branch, made up of Parliament",
+          "fr": "Le pouvoir législatif, composé du Parlement"
+        },
+        {
+          "en": "The public service",
+          "fr": "La fonction publique"
+        }
       ],
-      "explanation": { "en": "Judges are independent of the other two branches so that they can decide cases impartially.", "fr": "Les juges sont indépendants des deux autres pouvoirs afin de pouvoir trancher les affaires de façon impartiale." },
+      "explanation": {
+        "en": "Judges are independent of the other two branches so that they can decide cases impartially.",
+        "fr": "Les juges sont indépendants des deux autres pouvoirs afin de pouvoir trancher les affaires de façon impartiale."
+      },
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-029",
       "subject": "government",
-      "text": { "en": "Why does Canada have both a head of state and a head of government?", "fr": "Pourquoi le Canada a-t-il à la fois un chef d'État et un chef du gouvernement?" },
-      "answer": { "en": "The Sovereign stands above party politics as a symbol of the country, while the Prime Minister leads the day-to-day government", "fr": "Le souverain se tient au-dessus de la politique partisane comme symbole du pays, tandis que le premier ministre dirige le gouvernement au quotidien" },
+      "text": {
+        "en": "Why does Canada have both a head of state and a head of government?",
+        "fr": "Pourquoi le Canada a-t-il à la fois un chef d'État et un chef du gouvernement?"
+      },
+      "answer": {
+        "en": "The Sovereign stands above party politics as a symbol of the country, while the Prime Minister leads the day-to-day government",
+        "fr": "Le souverain se tient au-dessus de la politique partisane comme symbole du pays, tandis que le premier ministre dirige le gouvernement au quotidien"
+      },
       "distractors": [
-        { "en": "The Constitution requires two leaders so that one can replace the other in an emergency", "fr": "La Constitution exige deux dirigeants pour que l'un puisse remplacer l'autre en cas d'urgence" },
-        { "en": "One governs English Canada and the other governs French Canada", "fr": "L'un gouverne le Canada anglais et l'autre le Canada français" },
-        { "en": "The head of state controls the military while the head of government controls the courts", "fr": "Le chef d'État contrôle l'armée tandis que le chef du gouvernement contrôle les tribunaux" }
+        {
+          "en": "The Constitution requires two leaders so that one can replace the other in an emergency",
+          "fr": "La Constitution exige deux dirigeants pour que l'un puisse remplacer l'autre en cas d'urgence"
+        },
+        {
+          "en": "One governs English Canada and the other governs French Canada",
+          "fr": "L'un gouverne le Canada anglais et l'autre le Canada français"
+        },
+        {
+          "en": "The head of state controls the military while the head of government controls the courts",
+          "fr": "Le chef d'État contrôle l'armée tandis que le chef du gouvernement contrôle les tribunaux"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-gv-030",
       "subject": "government",
-      "text": { "en": "Which document first divided powers between the federal Parliament and the provincial legislatures?", "fr": "Quel document a d'abord réparti les pouvoirs entre le Parlement fédéral et les législatures provinciales?" },
-      "answer": { "en": "The British North America Act of 1867, now called the Constitution Act, 1867", "fr": "L'Acte de l'Amérique du Nord britannique de 1867, aujourd'hui appelé Loi constitutionnelle de 1867" },
+      "text": {
+        "en": "Which document first divided powers between the federal Parliament and the provincial legislatures?",
+        "fr": "Quel document a d'abord réparti les pouvoirs entre le Parlement fédéral et les législatures provinciales?"
+      },
+      "answer": {
+        "en": "The British North America Act of 1867, now called the Constitution Act, 1867",
+        "fr": "L'Acte de l'Amérique du Nord britannique de 1867, aujourd'hui appelé Loi constitutionnelle de 1867"
+      },
       "distractors": [
-        { "en": "The Canadian Charter of Rights and Freedoms", "fr": "La Charte canadienne des droits et libertés" },
-        { "en": "The Statute of Westminster of 1931", "fr": "Le Statut de Westminster de 1931" },
-        { "en": "The Royal Proclamation of 1763", "fr": "La Proclamation royale de 1763" }
+        {
+          "en": "The Canadian Charter of Rights and Freedoms",
+          "fr": "La Charte canadienne des droits et libertés"
+        },
+        {
+          "en": "The Statute of Westminster of 1931",
+          "fr": "Le Statut de Westminster de 1931"
+        },
+        {
+          "en": "The Royal Proclamation of 1763",
+          "fr": "La Proclamation royale de 1763"
+        }
       ],
       "source": "Discover Canada: How Canadians Govern Themselves",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
       "asOf": "2026-09-07",
       "volatile": false
     }

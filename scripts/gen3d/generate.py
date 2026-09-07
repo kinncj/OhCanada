@@ -53,6 +53,16 @@ def free_gpu() -> None:
     torch.cuda.empty_cache()
 
 
+def stable_attention() -> None:
+    """ROCm 7.2 / gfx1151: the flash and memory-efficient SDPA kernels are racy here — the same seed gives different
+    images run to run and roughly a third come out as pure noise. The math kernel is deterministic (~40 % slower)."""
+    import torch
+
+    torch.backends.cuda.enable_flash_sdp(False)
+    torch.backends.cuda.enable_mem_efficient_sdp(False)
+    torch.backends.cuda.enable_math_sdp(True)
+
+
 # ---------------------------------------------------------------- stage 1 ----
 def stage_image(prompts: list[dict], work: Path, force: bool) -> None:
     todo = [p for p in prompts if force or not (work / p['key'] / 'concept.png').exists()]
@@ -61,6 +71,7 @@ def stage_image(prompts: list[dict], work: Path, force: bool) -> None:
     import torch
     from diffusers import AutoPipelineForText2Image
 
+    stable_attention()
     t = time.time()
     pipe = AutoPipelineForText2Image.from_pretrained(T2I_MODEL, torch_dtype=torch.float16, variant='fp16').to('cuda')
     pipe.set_progress_bar_config(disable=True)
@@ -86,11 +97,17 @@ def stage_matte(prompts: list[dict], work: Path, force: bool) -> None:
     from rembg import new_session, remove
 
     session = new_session('u2net')
+    import numpy as np
+
     for p in todo:
         img = Image.open(work / p['key'] / 'concept.png').convert('RGB')
         out = remove(img, session=session, alpha_matting=False, post_process_mask=True)
+        coverage = (np.asarray(out)[..., 3] > 127).mean()
+        if coverage < 0.02:
+            log(f'{p["key"]}: matte covers {coverage:.1%} of the frame — concept is empty or noise, re-seed it')
+            continue
         out.save(work / p['key'] / 'concept_rgba.png')
-        log(f'{p["key"]}: matted')
+        log(f'{p["key"]}: matted ({coverage:.0%} coverage)')
 
 
 # ---------------------------------------------------------------- stage 3 ----
@@ -102,18 +119,26 @@ def stage_shape(prompts: list[dict], work: Path, force: bool, octree: int) -> No
     from PIL import Image
     from hy3dgen.shapegen import Hunyuan3DDiTFlowMatchingPipeline
 
+    stable_attention()
     t = time.time()
     pipe = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained(SHAPE_MODEL, subfolder=SHAPE_SUBFOLDER, device='cuda', dtype=torch.float16)
     pipe.enable_flashvdm(mc_algo='mc')  # dmc needs the CUDA-only `diso`; mc is skimage marching cubes on the CPU
     log(f'Hunyuan3D-2mini-Turbo loaded in {time.time() - t:.1f}s')
     for p in todo:
         t = time.time()
-        img = Image.open(work / p['key'] / 'concept_rgba.png').convert('RGBA')
-        g = torch.Generator('cuda').manual_seed(int(p['seed']))
-        mesh = pipe(image=img, num_inference_steps=5, guidance_scale=5.0, generator=g, octree_resolution=octree, num_chunks=20000,
-                    mc_level=0.0, enable_pbar=False, output_type='trimesh')[0]
-        mesh.export(work / p['key'] / 'raw.ply')
-        log(f'{p["key"]}: shape {len(mesh.faces)} faces in {time.time() - t:.1f}s')
+        rgba = work / p['key'] / 'concept_rgba.png'
+        if not rgba.exists():
+            log(f'{p["key"]}: no matte, skipped')
+            continue
+        try:
+            img = Image.open(rgba).convert('RGBA')
+            g = torch.Generator('cuda').manual_seed(int(p['seed']))
+            mesh = pipe(image=img, num_inference_steps=5, guidance_scale=5.0, generator=g, octree_resolution=octree, num_chunks=20000,
+                        mc_level=0.0, enable_pbar=False, output_type='trimesh')[0]
+            mesh.export(work / p['key'] / 'raw.ply')
+            log(f'{p["key"]}: shape {len(mesh.faces)} faces in {time.time() - t:.1f}s')
+        except Exception as err:  # keep the batch going; the report lists what failed
+            log(f'{p["key"]}: shape FAILED: {err!r}')
     del pipe
     free_gpu()
 
@@ -129,7 +154,11 @@ def stage_post(prompts: list[dict], work: Path, out_dir: Path, force: bool) -> d
             continue
         if out.exists() and not force and out.stat().st_mtime >= raw.stat().st_mtime:
             continue
-        stats[p['key']] = postprocess(raw, work / p['key'] / 'concept_rgba.png', p, out)
+        try:
+            stats[p['key']] = postprocess(raw, work / p['key'] / 'concept_rgba.png', p, out)
+        except Exception as err:
+            log(f'{p["key"]}: postprocess FAILED: {err!r}')
+            stats[p['key']] = {'error': repr(err)}
     return stats
 
 

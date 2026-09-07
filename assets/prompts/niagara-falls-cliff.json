@@ -1,0 +1,11 @@
+{
+  "key": "niagara-falls-cliff",
+  "category": "hero",
+  "prompt": "a dry rocky cliff face made of layered grey dolomite and shale rock, a curved horseshoe shaped rock escarpment with a flat plateau on top and rubble at the base, geological model, no water, no plants, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds, water, waterfall, mist",
+  "seed": 111,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 20,
+  "polyBudget": 18000,
+  "notes": "Landmark: the waterfall itself is done in the renderer; this is the rock."
+}

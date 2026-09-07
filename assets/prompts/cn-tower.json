@@ -1,0 +1,11 @@
+{
+  "key": "cn-tower",
+  "category": "hero",
+  "prompt": "a miniature scale model of the CN Tower in Toronto seen from far away, a very tall thin white concrete tower with a round bulging main pod two thirds of the way up, a small sky pod above it and a thin antenna spire at the top, full height from base to tip, small in frame, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds, city skyline, other buildings",
+  "seed": 105,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 120,
+  "polyBudget": 20000,
+  "notes": "Landmark: Toronto. Real height 553 m; scaled to 120 m for the world."
+}

@@ -132,7 +132,7 @@ export class Game {
       try {
         const gltf = await lib.character(bodyKey);
         const entry = lib.characterEntry(bodyKey)!;
-        return new SkinnedCharacterView(gltf, entry, bodyKey, spec, lib);
+        return new SkinnedCharacterView(gltf, entry, bodyKey, spec, lib, this.preset.assetPolicy === 'lite');
       } catch (e) {
         console.warn('character asset failed, using procedural view', e);
       }
@@ -358,7 +358,7 @@ export class Game {
     this.onFrame?.(dt);
     if (Math.floor(this.elapsed * 2) !== Math.floor((this.elapsed - dt) * 2)) {
       const s = this.renderer.stats();
-      this.deps.bus.emit('debug:frame', { ...s, chunks: this.world ? 1 : 0 });
+      this.deps.bus.emit('debug:frame', { ...s, chunks: this.world ? this.world.pending.length + 1 : 0 });
     }
   }
 

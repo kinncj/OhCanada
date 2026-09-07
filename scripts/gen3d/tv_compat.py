@@ -1,5 +1,5 @@
-"""torch-only stand-in for the torchvision.transforms used by hy3dgen's DINO conditioner (ROCm venv has no torchvision).
-Copied by setup.sh to hy3dgen/shapegen/models/_tv_compat.py."""
+"""torch-only stand-in for the torchvision.transforms that hy3dgen's DINO conditioner uses (the ROCm venv has no
+torchvision: the PyPI wheel is built against a CUDA torch). setup.sh copies this to hy3dgen/shapegen/models/_tv_compat.py."""
 import torch
 import torch.nn.functional as F
 

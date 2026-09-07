@@ -202,7 +202,7 @@ def postprocess(raw_path: Path, concept_path: Path, prompt: dict, out_path: Path
     budget = int(prompt.get('polyBudget') or 25000)
     mesh = decimate(mesh, budget)
     mesh.merge_vertices()
-    mesh.remove_degenerate_faces()
+    mesh.update_faces(mesh.nondegenerate_faces())
     mesh.fix_normals()
 
     # Scale to metres, base on the ground, centred in XZ.

@@ -1,0 +1,11 @@
+{
+  "key": "stetson-hat",
+  "category": "prop",
+  "prompt": "a white felt Stetson cowboy hat with a wide curved brim and a pinched crown with a thin band, three quarter view slightly from above, resting on a plain white surface, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "hands, people, text, watermark, multiple objects, cropped, cut off, blurry, low quality, background scenery",
+  "seed": 115,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 0.15,
+  "polyBudget": 6000,
+  "notes": "Prop: Calgary white hat."
+}

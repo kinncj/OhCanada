@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1003,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -72,9 +72,9 @@
         "id": "modern-canada-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -133,9 +133,9 @@
         "id": "modern-canada-apartments-1",
         "type": "apartments",
         "position": [
-          -45,
+          -220,
           0,
-          -30
+          -40
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -147,9 +147,9 @@
         "id": "modern-canada-apartments-2",
         "type": "apartments",
         "position": [
-          -45,
+          -220,
           0,
-          -10
+          -20
         ],
         "rotationY": 1.5707963267948966
       },
@@ -157,9 +157,9 @@
         "id": "modern-canada-apartments-3",
         "type": "apartments",
         "position": [
-          -45,
+          -220,
           0,
-          10
+          0
         ],
         "rotationY": 1.5707963267948966
       },
@@ -167,9 +167,9 @@
         "id": "modern-canada-research-lab",
         "type": "factory",
         "position": [
-          -60,
+          -300,
           0,
-          -50
+          -260
         ],
         "label": {
           "en": "Research campus",
@@ -202,15 +202,52 @@
           0,
           -4
         ]
+      },
+      {
+        "id": "modern-canada-lamp-3",
+        "type": "lamp",
+        "position": [
+          -236,
+          0,
+          -40
+        ]
+      },
+      {
+        "id": "modern-canada-lamp-4",
+        "type": "lamp",
+        "position": [
+          -236,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "modern-canada-campus-lamp",
+        "type": "lamp",
+        "position": [
+          -286,
+          0,
+          -244
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.55,
       "weather": "rain",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "rain",
+        "oneshots": [
+          "footstep-gravel",
+          "camera-shutter",
+          "train-whistle"
+        ],
+        "volume": 0.5
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.5
   },
   "npcs": [
     {
@@ -253,9 +290,9 @@
         "fr": "Dre Amara Osei, chercheuse"
       },
       "position": [
-        -10,
+        -292,
         0,
-        20
+        -226
       ],
       "behavior": "idle",
       "questRefs": [],
@@ -283,9 +320,9 @@
         "fr": "Luc, technicien de glace"
       },
       "position": [
-        14,
+        6,
         0,
-        20
+        -64
       ],
       "behavior": "wander",
       "wanderRadius": 4,
@@ -325,9 +362,9 @@
     {
       "id": "modern-canada-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -340,9 +377,9 @@
     {
       "id": "modern-canada-campus",
       "position": [
-        -60,
+        -300,
         0,
-        -36
+        -244
       ],
       "radius": 4,
       "kind": "zone",
@@ -355,5 +392,203 @@
   "quests": [
     "modern-canada-intro",
     "modern-canada-rain-delay"
+  ],
+  "pois": [
+    {
+      "id": "modern-canada-plaza",
+      "name": {
+        "en": "Arena plaza",
+        "fr": "Esplanade de l'aréna"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "camera-shutter"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "modern-canada-arena-gate",
+      "name": {
+        "en": "Arena east gate",
+        "fr": "Porte est de l'aréna"
+      },
+      "position": [
+        0,
+        0,
+        -70
+      ],
+      "radius": 40,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "whistle-referee",
+          "skate-scrape"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "modern-canada-glass-towers",
+      "name": {
+        "en": "Glass towers",
+        "fr": "Tours de verre"
+      },
+      "position": [
+        -236,
+        0,
+        -20
+      ],
+      "radius": 50,
+      "landmark": "apartments",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "camera-shutter"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "modern-canada-research-campus",
+      "name": {
+        "en": "Research campus",
+        "fr": "Campus de recherche"
+      },
+      "position": [
+        -286,
+        0,
+        -232
+      ],
+      "radius": 50,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "rain",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "modern-canada-waterfront",
+      "name": {
+        "en": "Waterfront boardwalk",
+        "fr": "Promenade du bord de l'eau"
+      },
+      "position": [
+        110,
+        0,
+        -40
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "goose-flock",
+          "footstep-wood"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 6,
+          "behavior": "swim"
+        }
+      ]
+    },
+    {
+      "id": "modern-canada-skyline-lookout",
+      "name": {
+        "en": "Skyline lookout",
+        "fr": "Belvédère de la silhouette urbaine"
+      },
+      "position": [
+        280,
+        0,
+        -300
+      ],
+      "radius": 45,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "rain",
+        "oneshots": [
+          "camera-shutter"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "modern-canada-park",
+      "name": {
+        "en": "Multicultural park",
+        "fr": "Parc multiculturel"
+      },
+      "position": [
+        -120,
+        0,
+        320
+      ],
+      "radius": 55,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "goose-honk",
+          "fiddle-riff"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 5,
+          "behavior": "graze"
+        }
+      ]
+    },
+    {
+      "id": "modern-canada-station",
+      "name": {
+        "en": "Transit hub",
+        "fr": "Pôle de transport"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "train-whistle",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

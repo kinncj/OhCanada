@@ -238,3 +238,28 @@ None. All 30 questions are marked `volatile: false`.
 - q-ww-020, q-ww-021: the 18 million / 7 million anglophone-francophone figures and the "one million francophones in Ontario, New Brunswick and Manitoba" grouping come from the guide's older census data; verify against the current edition.
 - q-ww-026: "about one million Anglo-Quebecers with a 250-year heritage" is recalled from the guide; verify the exact figure.
 - q-ww-029: "Catholic is the largest religious affiliation" matches the guide; confirm the distractor "Anglican" is not treated as the guide's second-listed group in a way that confuses learners.
+
+## Indigenous cultural items in the world (art bible, 2026-09-07)
+
+Every POI with `culturalReview: true` and every roster archetype with `culturalReview: true` is listed here; `make validate-content` fails if one is missing. All items use current terminology (First Nations, Inuit, Métis; "Indigenous", never "Indian" or "Eskimo" in-world), are contemporary unless the district is explicitly historical, and are presented as living culture, not decoration. A reviewer from the relevant community should sign off before v1.0.
+
+### POIs (district / poi id / item)
+| District | POI id | Item | Guidance |
+|---|---|---|---|
+| who-we-are | `who-we-are-gathering-circle` | Gathering circle (rock ring with central fire) | Meeting place shared by all peoples; no ceremonial objects (drums, pipes, smudge) modelled. Fire is a campfire, not a sacred fire. |
+| who-we-are | `who-we-are-totem-pole` | Totem pole (hero asset `totem-pole`) | Totem poles belong to specific Northwest Coast nations (Haida, Tsimshian, Kwakwaka'wakw, Nuu-chah-nulth, Coast Salish). The asset must be an original design, not a copy of a specific pole; POI name must not attribute it to a nation unless the design is commissioned from an artist of that nation. Placed in a forest clearing, never as a "gateway" prop. |
+| who-we-are | `who-we-are-inukshuk` | Inukshuk (hero asset `inukshuk`) | Inuit stone marker; single-arm "inunnguaq" form is acceptable. Do not sit it on a plaza as street furniture; keep on an open hill. |
+| regions | `regions-west-coast-stanley-park` | Totem pole on the Stanley Park seawall (hero asset `totem-pole`) | Same guidance as above; the real Brockton Point poles are specific works by named artists, so this is a generic original pole. Orca fauna offshore is wildlife, not a crest figure. |
+| regions | `regions-north-inukshuk` | Tundra inukshuk (hero asset `inukshuk`), polar bear, aurora | Same guidance as above; the polar bear is fauna at a distance, never ridden or petted. |
+
+### NPC archetypes (content/characters/npcs.json) and district NPCs
+| Archetype id | District NPC id(s) | Notes |
+|---|---|---|
+| `metis-fiddler` | `who-we-are-metis-fiddler` (Rémi Dumont) | Contemporary Métis dress with ceinture fléchée and fiddle; dialogue paraphrases Discover Canada on the Métis as a distinct people, the Prairies and Michif. |
+| `inuit-hunter` | `regions-inuit-hunter` (Panigusiq) | Modern parka, qamutiik prop; dialogue paraphrases the guide's "Inuit means 'the people' in Inuktitut" and the knowledge-of-the-land passage. Confirm the name with an Inuit advisor. |
+| `indigenous-elder` | `npc-who-we-are-1` (Elder Sarah Cardinal) | Already flagged above; ribbon skirt, no regalia. |
+| `inuit-carver` | `npc-who-we-are-2` (Nuka) | Soapstone carving prop; contemporary. |
+| `metis-storyteller` | `npc-history-3` (Grandmother Adèle) | Arrow sash over the shoulder; Louis Riel dialogue. |
+| `arctic-ranger` | `npc-regions-1` (Ranger Aputik) | Red parka in the Canadian Rangers style without insignia; confirm the name. |
+
+Props that touch Indigenous culture but are not standalone POIs: `qamutiik` (hero prop, Inuit sled) beside `regions-inuit-hunter`; `canoe-voyageur` at `history-canoe-landing` is a fur-trade freight canoe (birchbark design of Indigenous origin, used by voyageurs) and is labelled as such, not as a nation-specific canoe. No regalia, headdresses, drums, masks or pipes are modelled anywhere in v1.

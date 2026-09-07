@@ -22,7 +22,7 @@
   "scene": {
     "generator": "regions",
     "seed": 1009,
-    "size": 240,
+    "size": 1200,
     "terrain": {
       "amplitude": 6,
       "frequency": 0.03,
@@ -74,9 +74,9 @@
         "id": "regions-station",
         "type": "station",
         "position": [
-          40,
+          220,
           0,
-          40
+          220
         ],
         "rotationY": -0.8,
         "label": {
@@ -137,7 +137,7 @@
         "position": [
           0,
           0,
-          -50
+          -120
         ],
         "label": {
           "en": "Compass circle",
@@ -148,9 +148,9 @@
         "id": "regions-atlantic-lookout",
         "type": "lookout",
         "position": [
-          78,
+          500,
           0,
-          -2
+          -60
         ],
         "label": {
           "en": "Atlantic shore lookout",
@@ -161,9 +161,9 @@
         "id": "regions-central-rink",
         "type": "rink",
         "position": [
-          45,
+          240,
           0,
-          -92
+          -420
         ],
         "label": {
           "en": "Central lakes rink",
@@ -174,9 +174,9 @@
         "id": "regions-north-lookout",
         "type": "lookout",
         "position": [
-          12,
+          -60,
           0,
-          -90
+          -500
         ],
         "label": {
           "en": "Midnight sun lookout",
@@ -187,9 +187,9 @@
         "id": "regions-prairie-elevator",
         "type": "factory",
         "position": [
-          -62,
+          -350,
           0,
-          -70
+          -320
         ],
         "label": {
           "en": "Prairie grain elevator",
@@ -200,32 +200,98 @@
         "id": "regions-prairie-power-pole",
         "type": "power-pole",
         "position": [
-          -40,
+          -220,
           0,
-          -60
+          -300
         ]
       },
       {
         "id": "regions-pacific-dock",
         "type": "port",
         "position": [
-          -85,
+          -470,
           0,
-          -8
+          60
         ],
         "label": {
           "en": "Pacific dock",
           "fr": "Quai du Pacifique"
         }
+      },
+      {
+        "id": "regions-prairie-power-pole-2",
+        "type": "power-pole",
+        "position": [
+          -280,
+          0,
+          -310
+        ]
+      },
+      {
+        "id": "regions-atlantic-bench",
+        "type": "bench",
+        "position": [
+          470,
+          0,
+          130
+        ],
+        "rotationY": 2.2
+      },
+      {
+        "id": "regions-central-lamp",
+        "type": "lamp",
+        "position": [
+          196,
+          0,
+          -366
+        ]
+      },
+      {
+        "id": "regions-frontenac-lamp",
+        "type": "lamp",
+        "position": [
+          316,
+          0,
+          -446
+        ]
+      },
+      {
+        "id": "regions-west-coast-bench",
+        "type": "bench",
+        "position": [
+          -426,
+          0,
+          134
+        ],
+        "rotationY": -0.9
+      },
+      {
+        "id": "regions-rockies-lookout-flag",
+        "type": "flagpole",
+        "position": [
+          -366,
+          0,
+          306
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.5,
       "weather": "clear",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-gravel",
+          "train-whistle",
+          "goose-flock"
+        ],
+        "volume": 0.5
+      }
+    },
+    "spawnRadius": 24,
+    "poiDensity": 0.6
   },
   "npcs": [
     {
@@ -268,9 +334,9 @@
         "fr": "Mary MacLeod, pêcheuse"
       },
       "position": [
-        -10,
+        470,
         0,
-        20
+        128
       ],
       "behavior": "idle",
       "questRefs": [],
@@ -321,6 +387,154 @@
         "hat": "cap",
         "beard": true
       }
+    },
+    {
+      "id": "regions-fundy-lighthouse-keeper",
+      "name": {
+        "en": "Mabel Crosby, lighthouse keeper",
+        "fr": "Mabel Crosby, gardienne de phare"
+      },
+      "position": [
+        410,
+        0,
+        -28
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Atlantic Canada is four provinces: Newfoundland and Labrador, Prince Edward Island, Nova Scotia and New Brunswick. Nova Scotia is the largest of them, and the Bay of Fundy has the highest tides in the world.",
+        "fr": "Le Canada atlantique compte quatre provinces : Terre-Neuve-et-Labrador, l'Île-du-Prince-Édouard, la Nouvelle-Écosse et le Nouveau-Brunswick. La Nouvelle-Écosse est la plus grande, et la baie de Fundy a les plus hautes marées du monde."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "raincoat",
+        "hair": "short",
+        "hairColor": "grey",
+        "body": "female",
+        "age": "elder",
+        "outfitStyle": "raincoat",
+        "bottomColor": "#2c3542",
+        "hat": "captain"
+      }
+    },
+    {
+      "id": "regions-prairie-grain-farmer",
+      "name": {
+        "en": "Olaf Bergstrom, grain farmer",
+        "fr": "Olaf Bergstrom, céréaliculteur"
+      },
+      "position": [
+        -318,
+        0,
+        -292
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Saskatchewan is called the breadbasket of the world and the wheat province. Alberta has the most cattle in Canada, and Manitoba's economy runs on farming, mining and hydro power.",
+        "fr": "La Saskatchewan est surnommée le grenier du monde et la province du blé. L'Alberta compte le plus grand nombre de bovins au Canada, et l'économie du Manitoba repose sur l'agriculture, les mines et l'hydroélectricité."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "plaid",
+        "hair": "short",
+        "hairColor": "blond",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "workwear",
+        "bottomColor": "#3b4a6b",
+        "hat": "cap",
+        "beard": true
+      }
+    },
+    {
+      "id": "regions-west-coast-fisher",
+      "name": {
+        "en": "Kenji Nakamura, fisher",
+        "fr": "Kenji Nakamura, pêcheur"
+      },
+      "position": [
+        -430,
+        0,
+        108
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Vancouver is Canada's largest and busiest port. British Columbia lives on forestry, mining, fishing, fruit orchards and wine, and about half of the goods it makes are forestry products.",
+        "fr": "Vancouver est le port le plus grand et le plus achalandé du Canada. La Colombie-Britannique vit de la forêt, des mines, de la pêche, des vergers et du vin, et environ la moitié de ses produits proviennent de la forêt."
+      },
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "raincoat",
+        "hair": "short",
+        "hairColor": "black",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "raincoat",
+        "bottomColor": "#24313f",
+        "hat": "hood"
+      }
+    },
+    {
+      "id": "regions-inuit-hunter",
+      "name": {
+        "en": "Panigusiq, hunter",
+        "fr": "Panigusiq, chasseur"
+      },
+      "position": [
+        14,
+        0,
+        -490
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Inuit means 'the people' in Inuktitut. We live in small, scattered communities across the Arctic, and our knowledge of the land, sea and wildlife has been passed down for generations. This qamutiik is how we travel over the snow.",
+        "fr": "Inuit signifie « le peuple » en inuktitut. Nous vivons dans de petites communautés dispersées à travers l'Arctique, et notre connaissance de la terre, de la mer et de la faune se transmet de génération en génération. Ce qamutiik nous sert à voyager sur la neige."
+      },
+      "appearance": {
+        "skinTone": "tone-4",
+        "outfit": "parka",
+        "hair": "short",
+        "hairColor": "black",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "parka",
+        "bottomColor": "#3a3128",
+        "hat": "hood"
+      }
+    },
+    {
+      "id": "regions-quebec-habitant",
+      "name": {
+        "en": "Jean-Baptiste Gagnon, habitant",
+        "fr": "Jean-Baptiste Gagnon, habitant"
+      },
+      "position": [
+        318,
+        0,
+        -448
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Quebec is the largest province by area and the heart of French-speaking Canada. Our ancestors farmed the long strips along the St. Lawrence in the 1600s; today the river is a seaway that carries ships from the Great Lakes to the Atlantic.",
+        "fr": "Le Québec est la plus grande province par sa superficie et le cœur du Canada francophone. Nos ancêtres cultivaient les longues terres le long du Saint-Laurent dès les années 1600; aujourd'hui, le fleuve est une voie maritime qui mène les navires des Grands Lacs à l'Atlantique."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "plaid",
+        "hair": "short",
+        "hairColor": "brown",
+        "accessory": "scarf",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "casual",
+        "bottomColor": "#4a3a2a",
+        "hat": "toque",
+        "beard": true
+      }
     }
   ],
   "triggers": [
@@ -341,9 +555,9 @@
     {
       "id": "regions-portal-hub",
       "position": [
-        40,
+        220,
         0,
-        40
+        220
       ],
       "radius": 4,
       "kind": "portal",
@@ -356,9 +570,9 @@
     {
       "id": "regions-atlantic",
       "position": [
-        85,
+        430,
         0,
-        10
+        -10
       ],
       "radius": 5,
       "kind": "zone",
@@ -370,9 +584,9 @@
     {
       "id": "regions-central",
       "position": [
-        45,
+        200,
         0,
-        -76
+        -370
       ],
       "radius": 5,
       "kind": "zone",
@@ -384,9 +598,9 @@
     {
       "id": "regions-prairie",
       "position": [
-        -52,
+        -310,
         0,
-        -52
+        -286
       ],
       "radius": 5,
       "kind": "zone",
@@ -398,9 +612,9 @@
     {
       "id": "regions-west-coast",
       "position": [
-        -82,
+        -426,
         0,
-        14
+        100
       ],
       "radius": 5,
       "kind": "zone",
@@ -412,9 +626,9 @@
     {
       "id": "regions-north",
       "position": [
-        -2,
+        10,
         0,
-        -84
+        -482
       ],
       "radius": 5,
       "kind": "zone",
@@ -427,5 +641,295 @@
   "quests": [
     "regions-intro",
     "regions-five-regions-tour"
+  ],
+  "pois": [
+    {
+      "id": "regions-plaza",
+      "name": {
+        "en": "Compass plaza",
+        "fr": "Esplanade de la boussole"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-gravel",
+          "train-whistle"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "regions-atlantic-peggys-cove",
+      "name": {
+        "en": "Peggy's Cove lighthouse",
+        "fr": "Phare de Peggy's Cove"
+      },
+      "position": [
+        420,
+        0,
+        -40
+      ],
+      "radius": 60,
+      "landmark": "peggys-cove-lighthouse",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "ocean",
+        "oneshots": [
+          "gull",
+          "footstep-gravel"
+        ],
+        "volume": 0.55
+      }
+    },
+    {
+      "id": "regions-atlantic-fundy-shore",
+      "name": {
+        "en": "Bay of Fundy shoreline",
+        "fr": "Rivage de la baie de Fundy"
+      },
+      "position": [
+        480,
+        0,
+        140
+      ],
+      "radius": 60,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "ocean",
+        "oneshots": [
+          "gull",
+          "footstep-wood"
+        ],
+        "volume": 0.55
+      }
+    },
+    {
+      "id": "regions-central-cn-tower",
+      "name": {
+        "en": "CN Tower",
+        "fr": "Tour CN"
+      },
+      "position": [
+        180,
+        0,
+        -380
+      ],
+      "radius": 60,
+      "landmark": "cn-tower",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "camera-shutter",
+          "train-whistle"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "regions-central-chateau-frontenac",
+      "name": {
+        "en": "Château Frontenac",
+        "fr": "Château Frontenac"
+      },
+      "position": [
+        330,
+        0,
+        -460
+      ],
+      "radius": 55,
+      "landmark": "chateau-frontenac",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "church-bell",
+          "fiddle-riff",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "regions-central-niagara",
+      "name": {
+        "en": "Niagara Falls",
+        "fr": "Chutes Niagara"
+      },
+      "position": [
+        420,
+        0,
+        -300
+      ],
+      "radius": 60,
+      "landmark": "niagara-falls-cliff",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "camera-shutter",
+          "gull"
+        ],
+        "volume": 0.8
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 6,
+          "behavior": "fly"
+        }
+      ]
+    },
+    {
+      "id": "regions-prairie-grain-elevator",
+      "name": {
+        "en": "Prairie grain elevator",
+        "fr": "Silo à grains des Prairies"
+      },
+      "position": [
+        -330,
+        0,
+        -300
+      ],
+      "radius": 60,
+      "landmark": "grain-elevator",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "prairie",
+        "oneshots": [
+          "footstep-gravel",
+          "train-whistle"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "regions-prairie-stampede",
+      "name": {
+        "en": "Stampede grandstand",
+        "fr": "Tribune du Stampede"
+      },
+      "position": [
+        -480,
+        0,
+        -180
+      ],
+      "radius": 60,
+      "landmark": "stampede-grandstand",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "prairie",
+        "oneshots": [
+          "fiddle-riff",
+          "whistle-referee"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "regions-west-coast-stanley-park",
+      "name": {
+        "en": "Stanley Park seawall",
+        "fr": "Digue du parc Stanley"
+      },
+      "position": [
+        -440,
+        0,
+        120
+      ],
+      "radius": 60,
+      "landmark": "totem-pole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "ocean",
+        "oneshots": [
+          "gull",
+          "footstep-wood"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "orca",
+          "count": 3,
+          "behavior": "swim"
+        }
+      ],
+      "culturalReview": true
+    },
+    {
+      "id": "regions-west-coast-rockies-lookout",
+      "name": {
+        "en": "Rockies lookout",
+        "fr": "Belvédère des Rocheuses"
+      },
+      "position": [
+        -380,
+        0,
+        320
+      ],
+      "radius": 55,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "moose-call",
+          "bear-grunt"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "moose",
+          "count": 2,
+          "behavior": "graze"
+        },
+        {
+          "species": "black-bear",
+          "count": 1,
+          "behavior": "patrol"
+        }
+      ]
+    },
+    {
+      "id": "regions-north-inukshuk",
+      "name": {
+        "en": "Tundra inukshuk",
+        "fr": "Inukshuk de la toundra"
+      },
+      "position": [
+        0,
+        0,
+        -500
+      ],
+      "radius": 60,
+      "landmark": "inukshuk",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "aurora-drone",
+        "oneshots": [
+          "footstep-snow"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "polar-bear",
+          "count": 1,
+          "behavior": "patrol"
+        }
+      ],
+      "culturalReview": true
+    }
   ]
 }

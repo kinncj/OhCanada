@@ -1,0 +1,11 @@
+{
+  "key": "hockey-stick",
+  "category": "prop",
+  "prompt": "a wooden ice hockey stick standing upright, long straight shaft with a black taped blade at the bottom and taped grip at the top, full view, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "hands, people, text, watermark, multiple objects, cropped, cut off, blurry, low quality, background scenery, puck",
+  "seed": 117,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 1.5,
+  "polyBudget": 4000,
+  "notes": "Prop: generated upright; in the world it is laid down (0.1 m tall, 1.5 m long). Height here is the stick length."
+}

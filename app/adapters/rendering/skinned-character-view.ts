@@ -82,7 +82,7 @@ export class SkinnedCharacterView {
   private boneCount = 1;
   private bodyKey: string;
 
-  constructor(gltf: GLTF, entry: CharacterEntry, bodyKey: string, spec: AppearanceSpec, private readonly library: AssetLibrary) {
+  constructor(gltf: GLTF, entry: CharacterEntry, bodyKey: string, spec: AppearanceSpec, private readonly library: AssetLibrary, private readonly simple = false) {
     this.bodyKey = bodyKey;
     const scene = SkeletonUtils.clone(gltf.scene);
     scene.traverse((o) => {
@@ -123,6 +123,10 @@ export class SkinnedCharacterView {
           return;
         }
         const base = o.material as THREE.MeshStandardMaterial;
+        if (this.simple) {
+          o.material = sharedMaterial(`hair-simple:${base.uuid}`, () => new THREE.MeshStandardMaterial({ map: base.map, color: 0x2a2320, roughness: 0.7, side: THREE.DoubleSide }));
+          return;
+        }
         o.material = sharedMaterial(`hair:${base.uuid}`, () => {
           const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.55, metalness: 0 });
           m.side = THREE.DoubleSide;
@@ -141,6 +145,7 @@ export class SkinnedCharacterView {
       if (/eye/i.test(name) || /Face/.test(name)) {
         // Face / eyes keep the imported material but get the skin tint.
         const base = o.material as THREE.MeshStandardMaterial;
+        if (this.simple) return;
         if (/Face/.test(name) && base.map) {
           o.material = sharedMaterial(`face:${base.uuid}`, () => {
             const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.6 });
@@ -156,7 +161,9 @@ export class SkinnedCharacterView {
       const base = o.material as THREE.MeshStandardMaterial;
       this.tintedMeshes.push(o);
       this.bodyMeshes.push(o);
-      o.material = sharedMaterial(`body:${base.uuid}:${lutKey}`, () => this.buildBodyMaterial(base, lut, bones.length));
+      o.material = this.simple
+        ? sharedMaterial(`body-simple:${base.uuid}`, () => new THREE.MeshStandardMaterial({ map: base.map, normalMap: base.normalMap, roughness: 0.8, metalness: 0 }))
+        : sharedMaterial(`body:${base.uuid}:${lutKey}`, () => this.buildBodyMaterial(base, lut, bones.length));
     });
     for (const o of toRemove) o.removeFromParent();
 
@@ -278,6 +285,7 @@ export class SkinnedCharacterView {
 
   private accessories: THREE.Object3D[] = [];
   private rebuildAccessories(spec: AppearanceSpec): void {
+    if (this.simple) return; // one shader per prop is too costly on the phone preset
     for (const a of this.accessories) a.removeFromParent();
     this.accessories = [];
     if (!this.head) return;

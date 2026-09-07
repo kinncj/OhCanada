@@ -1,0 +1,11 @@
+{
+  "key": "orca",
+  "category": "fauna",
+  "prompt": "an orca killer whale figurine, full body side view, glossy black and white, tall dorsal fin, white eye patch, straight horizontal swimming pose, floating in mid air, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "text, watermark, multiple animals, cropped, cut off, blurry, low quality, background scenery, grass, water, cartoon, deformed, extra limbs",
+  "seed": 207,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 2.0,
+  "polyBudget": 10000,
+  "notes": "Fauna. Height 2.0 m (dorsal fin tip to belly), length about 7 m."
+}

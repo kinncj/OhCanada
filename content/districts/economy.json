@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1008,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -72,9 +72,9 @@
         "id": "economy-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -113,9 +113,9 @@
         "id": "economy-grain-elevator",
         "type": "factory",
         "position": [
-          -45,
+          -260,
           0,
-          -10
+          -60
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -127,9 +127,9 @@
         "id": "economy-cannery",
         "type": "factory",
         "position": [
-          -45,
+          130,
           0,
-          -42
+          -120
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -141,9 +141,9 @@
         "id": "economy-incubator",
         "type": "tech-incubator",
         "position": [
-          45,
+          240,
           0,
-          12
+          -100
         ],
         "rotationY": -1.5707963267948966,
         "label": {
@@ -155,27 +155,27 @@
         "id": "economy-power-pole-1",
         "type": "power-pole",
         "position": [
-          -24,
+          -80,
           0,
-          14
+          -30
         ]
       },
       {
         "id": "economy-power-pole-2",
         "type": "power-pole",
         "position": [
-          -24,
+          -140,
           0,
-          -4
+          -40
         ]
       },
       {
         "id": "economy-power-pole-3",
         "type": "power-pole",
         "position": [
-          -24,
+          -200,
           0,
-          -22
+          -50
         ]
       },
       {
@@ -208,15 +208,61 @@
           0,
           -36
         ]
+      },
+      {
+        "id": "economy-power-pole-4",
+        "type": "power-pole",
+        "position": [
+          -300,
+          0,
+          180
+        ]
+      },
+      {
+        "id": "economy-power-pole-5",
+        "type": "power-pole",
+        "position": [
+          -340,
+          0,
+          220
+        ]
+      },
+      {
+        "id": "economy-incubator-lamp",
+        "type": "lamp",
+        "position": [
+          226,
+          0,
+          -116
+        ]
+      },
+      {
+        "id": "economy-dock-barrier",
+        "type": "barrier",
+        "position": [
+          48,
+          0,
+          -96
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.48,
       "weather": "clear",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "train-whistle",
+          "gull"
+        ],
+        "volume": 0.45
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.5
   },
   "npcs": [
     {
@@ -258,9 +304,9 @@
         "fr": "Anneke Visser, productrice de grains"
       },
       "position": [
-        -10,
+        -240,
         0,
-        20
+        -30
       ],
       "behavior": "idle",
       "questRefs": [],
@@ -332,9 +378,9 @@
     {
       "id": "economy-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -347,9 +393,9 @@
     {
       "id": "crate-1",
       "position": [
-        -16,
+        -246,
         0,
-        -30
+        -44
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -361,9 +407,9 @@
     {
       "id": "crate-2",
       "position": [
-        16,
+        20,
         0,
-        -30
+        -64
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -375,9 +421,9 @@
     {
       "id": "crate-3",
       "position": [
+        116,
         0,
-        0,
-        -42
+        -104
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -389,9 +435,9 @@
     {
       "id": "economy-incubator",
       "position": [
-        34,
+        226,
         0,
-        12
+        -100
       ],
       "radius": 4,
       "kind": "zone",
@@ -405,5 +451,201 @@
     "economy-intro",
     "economy-cargo-manifest",
     "economy-industries"
+  ],
+  "pois": [
+    {
+      "id": "economy-plaza",
+      "name": {
+        "en": "Harbour office square",
+        "fr": "Place de la capitainerie"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel",
+          "train-whistle"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "economy-grain-elevator",
+      "name": {
+        "en": "Grain elevator",
+        "fr": "Silo à grains"
+      },
+      "position": [
+        -248,
+        0,
+        -40
+      ],
+      "radius": 55,
+      "landmark": "grain-elevator",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "prairie",
+        "oneshots": [
+          "footstep-gravel",
+          "train-whistle"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "economy-canola-fields",
+      "name": {
+        "en": "Canola and wheat fields",
+        "fr": "Champs de canola et de blé"
+      },
+      "position": [
+        -320,
+        0,
+        200
+      ],
+      "radius": 60,
+      "landmark": "power-pole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "prairie",
+        "oneshots": [
+          "goose-flock"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 8,
+          "behavior": "fly"
+        }
+      ]
+    },
+    {
+      "id": "economy-processing-plant",
+      "name": {
+        "en": "Processing plant",
+        "fr": "Usine de transformation"
+      },
+      "position": [
+        116,
+        0,
+        -136
+      ],
+      "radius": 45,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "economy-tech-incubator",
+      "name": {
+        "en": "Tech incubator",
+        "fr": "Incubateur technologique"
+      },
+      "position": [
+        226,
+        0,
+        -116
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "camera-shutter"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "economy-dock",
+      "name": {
+        "en": "Container dock",
+        "fr": "Quai à conteneurs"
+      },
+      "position": [
+        60,
+        0,
+        -90
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "gull",
+          "footstep-wood"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 4,
+          "behavior": "swim"
+        }
+      ]
+    },
+    {
+      "id": "economy-lumber-mill",
+      "name": {
+        "en": "Lumber mill",
+        "fr": "Scierie"
+      },
+      "position": [
+        300,
+        0,
+        260
+      ],
+      "radius": 50,
+      "landmark": "factory",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "footstep-wood"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "economy-station",
+      "name": {
+        "en": "Rail yard",
+        "fr": "Gare de triage"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "train-whistle",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

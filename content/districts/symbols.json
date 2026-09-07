@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1007,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -83,9 +83,9 @@
         "id": "symbols-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -206,24 +206,88 @@
         "id": "symbols-pavilion",
         "type": "festival-pavilion",
         "position": [
-          45,
+          240,
           0,
-          12
+          -100
         ],
         "rotationY": -1.5707963267948966,
         "label": {
           "en": "Festival pavilion",
           "fr": "Pavillon du festival"
         }
+      },
+      {
+        "id": "symbols-pavilion-lamp",
+        "type": "lamp",
+        "position": [
+          226,
+          0,
+          -100
+        ]
+      },
+      {
+        "id": "symbols-parade-flag-1",
+        "type": "flagpole",
+        "position": [
+          -270,
+          0,
+          230
+        ]
+      },
+      {
+        "id": "symbols-parade-flag-2",
+        "type": "flagpole",
+        "position": [
+          -250,
+          0,
+          250
+        ]
+      },
+      {
+        "id": "symbols-parade-flag-3",
+        "type": "flagpole",
+        "position": [
+          -270,
+          0,
+          250
+        ]
+      },
+      {
+        "id": "symbols-rink-lamp-1",
+        "type": "lamp",
+        "position": [
+          -14,
+          0,
+          -50
+        ]
+      },
+      {
+        "id": "symbols-rink-lamp-2",
+        "type": "lamp",
+        "position": [
+          14,
+          0,
+          -50
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.6,
       "weather": "snow",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "snowfield",
+        "oneshots": [
+          "footstep-snow",
+          "skate-scrape",
+          "church-bell"
+        ],
+        "volume": 0.5
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.55
   },
   "npcs": [
     {
@@ -266,9 +330,9 @@
         "fr": "Émile, préposé aux drapeaux"
       },
       "position": [
-        -10,
+        -252,
         0,
-        20
+        232
       ],
       "behavior": "wander",
       "wanderRadius": 5,
@@ -318,6 +382,36 @@
         "bottomColor": "#1a1d24",
         "hat": "beret"
       }
+    },
+    {
+      "id": "symbols-hockey-player",
+      "name": {
+        "en": "Danielle Roy, forward",
+        "fr": "Danielle Roy, attaquante"
+      },
+      "position": [
+        10,
+        0,
+        -44
+      ],
+      "behavior": "wander",
+      "wanderRadius": 5,
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Hockey is Canada's most popular spectator sport and our national winter sport; lacrosse is the national summer sport. The Stanley Cup was donated by Lord Stanley in 1892, and we still chase it every spring.",
+        "fr": "Le hockey est le sport le plus populaire au Canada et notre sport national d'hiver; la crosse est le sport national d'été. La Coupe Stanley a été offerte par lord Stanley en 1892, et on court encore après chaque printemps."
+      },
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "hockey",
+        "hair": "long",
+        "hairColor": "brown",
+        "body": "female",
+        "age": "young",
+        "outfitStyle": "jersey",
+        "bottomColor": "#1d2430",
+        "hat": "none"
+      }
     }
   ],
   "triggers": [
@@ -338,9 +432,9 @@
     {
       "id": "symbols-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -353,9 +447,9 @@
     {
       "id": "token-flag",
       "position": [
-        -30,
+        228,
         0,
-        8
+        -86
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -367,9 +461,9 @@
     {
       "id": "token-beaver",
       "position": [
-        -38,
+        -66,
         0,
-        -14
+        -6
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -381,9 +475,9 @@
     {
       "id": "token-fleur-de-lys",
       "position": [
+        120,
         0,
-        0,
-        -38
+        -246
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -396,5 +490,244 @@
   "quests": [
     "symbols-intro",
     "symbols-colours-of-canada"
+  ],
+  "pois": [
+    {
+      "id": "symbols-plaza",
+      "name": {
+        "en": "Festival ground",
+        "fr": "Terrain du festival"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "snowfield",
+        "oneshots": [
+          "footstep-snow",
+          "church-bell"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "symbols-rink",
+      "name": {
+        "en": "Hockey rink",
+        "fr": "Patinoire de hockey"
+      },
+      "position": [
+        0,
+        0,
+        -56
+      ],
+      "radius": 40,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "rink",
+        "oneshots": [
+          "skate-scrape",
+          "whistle-referee",
+          "footstep-snow"
+        ],
+        "volume": 0.55
+      },
+      "fauna": [
+        {
+          "species": "skater",
+          "count": 8,
+          "behavior": "skate"
+        }
+      ]
+    },
+    {
+      "id": "symbols-beaver-pond",
+      "name": {
+        "en": "Beaver pond",
+        "fr": "Étang des castors"
+      },
+      "position": [
+        -64,
+        0,
+        -4
+      ],
+      "radius": 40,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "snowfield",
+        "oneshots": [
+          "beaver-splash",
+          "footstep-snow"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "beaver",
+          "count": 2,
+          "behavior": "idle"
+        }
+      ]
+    },
+    {
+      "id": "symbols-festival-pavilion",
+      "name": {
+        "en": "Festival pavilion",
+        "fr": "Pavillon du festival"
+      },
+      "position": [
+        226,
+        0,
+        -86
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "campfire",
+        "oneshots": [
+          "fiddle-riff",
+          "footstep-snow",
+          "church-bell"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "symbols-heritage-garden",
+      "name": {
+        "en": "Heritage garden",
+        "fr": "Jardin du patrimoine"
+      },
+      "position": [
+        120,
+        0,
+        -260
+      ],
+      "radius": 45,
+      "landmark": "circle",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "snowfield",
+        "oneshots": [
+          "footstep-snow",
+          "church-bell"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "symbols-frozen-lake",
+      "name": {
+        "en": "Frozen lake",
+        "fr": "Lac gelé"
+      },
+      "position": [
+        110,
+        0,
+        -40
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "snowfield",
+        "oneshots": [
+          "skate-scrape",
+          "footstep-snow"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "skater",
+          "count": 4,
+          "behavior": "skate"
+        }
+      ]
+    },
+    {
+      "id": "symbols-parade-ground",
+      "name": {
+        "en": "Parade ground of the provinces",
+        "fr": "Terrain de parade des provinces"
+      },
+      "position": [
+        -260,
+        0,
+        240
+      ],
+      "radius": 50,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "snowfield",
+        "oneshots": [
+          "fiddle-riff",
+          "footstep-snow"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "symbols-spruce-woods",
+      "name": {
+        "en": "Spruce woods",
+        "fr": "Bois d'épinettes"
+      },
+      "position": [
+        -320,
+        0,
+        -300
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "moose-call",
+          "footstep-snow"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "moose",
+          "count": 2,
+          "behavior": "graze"
+        }
+      ]
+    },
+    {
+      "id": "symbols-station",
+      "name": {
+        "en": "Station",
+        "fr": "Gare"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "snowfield",
+        "oneshots": [
+          "train-whistle",
+          "footstep-snow"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

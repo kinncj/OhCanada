@@ -22,7 +22,7 @@
   "scene": {
     "generator": "district",
     "seed": 1000,
-    "size": 240,
+    "size": 1000,
     "terrain": {
       "amplitude": 2.5,
       "frequency": 0.03,
@@ -73,9 +73,9 @@
         "id": "rights-responsibilities-station",
         "type": "station",
         "position": [
-          40,
+          200,
           0,
-          40
+          200
         ],
         "rotationY": -0.8,
         "label": {
@@ -161,9 +161,9 @@
         "id": "rights-responsibilities-town-hall",
         "type": "town-hall",
         "position": [
-          -45,
+          -260,
           0,
-          -10
+          -120
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -175,9 +175,9 @@
         "id": "rights-responsibilities-gate",
         "type": "gate",
         "position": [
-          -45,
+          -260,
           0,
-          10
+          -96
         ],
         "rotationY": 1.5707963267948966,
         "label": {
@@ -189,33 +189,61 @@
         "id": "rights-responsibilities-hydrant",
         "type": "hydrant",
         "position": [
-          -30,
+          -244,
           0,
-          -2
+          -108
         ]
       },
       {
         "id": "rights-responsibilities-volunteer-tent",
         "type": "volunteer-tent",
         "position": [
-          45,
+          220,
           0,
-          12
+          -160
         ],
         "rotationY": -1.5707963267948966,
         "label": {
           "en": "Volunteer fair",
           "fr": "Foire du bénévolat"
         }
+      },
+      {
+        "id": "rights-responsibilities-lamp-5",
+        "type": "lamp",
+        "position": [
+          -250,
+          0,
+          -84
+        ]
+      },
+      {
+        "id": "rights-responsibilities-lamp-6",
+        "type": "lamp",
+        "position": [
+          232,
+          0,
+          -170
+        ]
       }
     ],
     "ambience": {
       "hdri": "sky/partly_cloudy_1k.hdr",
       "timeOfDay": 0.45,
       "weather": "clear",
-      "audio": "wind",
-      "fogDensity": 0.004
-    }
+      "fogDensity": 0.004,
+      "soundscape": {
+        "loop": "wind",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel",
+          "goose-flock"
+        ],
+        "volume": 0.5
+      }
+    },
+    "spawnRadius": 22,
+    "poiDensity": 0.5
   },
   "npcs": [
     {
@@ -289,9 +317,9 @@
         "fr": "Le caporal Marcus Hill, réserviste"
       },
       "position": [
-        15,
+        336,
         0,
-        36
+        84
       ],
       "behavior": "idle",
       "questRefs": [],
@@ -331,9 +359,9 @@
     {
       "id": "rights-responsibilities-portal-hub",
       "position": [
-        40,
+        200,
         0,
-        40
+        200
       ],
       "radius": 4,
       "kind": "portal",
@@ -346,9 +374,9 @@
     {
       "id": "scroll-jury",
       "position": [
-        -24,
+        -248,
         0,
-        -24
+        -140
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -360,9 +388,9 @@
     {
       "id": "scroll-vote",
       "position": [
-        24,
+        232,
         0,
-        -24
+        -140
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -374,9 +402,9 @@
     {
       "id": "scroll-law",
       "position": [
+        -70,
         0,
-        0,
-        -38
+        -300
       ],
       "radius": 2.5,
       "kind": "pickup",
@@ -390,5 +418,209 @@
     "rights-responsibilities-intro",
     "rights-responsibilities-duties-of-a-citizen",
     "rights-responsibilities-charter-freedoms"
+  ],
+  "pois": [
+    {
+      "id": "rights-responsibilities-plaza",
+      "name": {
+        "en": "Courthouse square",
+        "fr": "Place du palais de justice"
+      },
+      "position": [
+        0,
+        0,
+        48
+      ],
+      "radius": 55,
+      "landmark": "flagpole",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "rights-responsibilities-town-hall",
+      "name": {
+        "en": "Town hall",
+        "fr": "Hôtel de ville"
+      },
+      "position": [
+        -262,
+        0,
+        -80
+      ],
+      "radius": 50,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "church-bell",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "rights-responsibilities-volunteer-fair",
+      "name": {
+        "en": "Volunteer fair",
+        "fr": "Foire du bénévolat"
+      },
+      "position": [
+        236,
+        0,
+        -146
+      ],
+      "radius": 50,
+      "landmark": "circle",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "city-hum",
+        "oneshots": [
+          "fiddle-riff",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    },
+    {
+      "id": "rights-responsibilities-charter-lookout",
+      "name": {
+        "en": "Charter lookout",
+        "fr": "Belvédère de la Charte"
+      },
+      "position": [
+        -60,
+        0,
+        -310
+      ],
+      "radius": 45,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "goose-flock",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      }
+    },
+    {
+      "id": "rights-responsibilities-lake",
+      "name": {
+        "en": "Lakeside bench",
+        "fr": "Banc du lac"
+      },
+      "position": [
+        110,
+        0,
+        -40
+      ],
+      "radius": 45,
+      "landmark": "bench",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "canal-water",
+        "oneshots": [
+          "loon-call",
+          "beaver-splash"
+        ],
+        "volume": 0.5
+      },
+      "fauna": [
+        {
+          "species": "loon",
+          "count": 2,
+          "behavior": "swim"
+        },
+        {
+          "species": "beaver",
+          "count": 1,
+          "behavior": "swim"
+        }
+      ]
+    },
+    {
+      "id": "rights-responsibilities-armoury",
+      "name": {
+        "en": "Reserve armoury",
+        "fr": "Manège militaire de la Réserve"
+      },
+      "position": [
+        330,
+        0,
+        70
+      ],
+      "radius": 45,
+      "landmark": "fort",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "footstep-gravel"
+        ],
+        "volume": 0.4
+      }
+    },
+    {
+      "id": "rights-responsibilities-maple-walk",
+      "name": {
+        "en": "Maple walk",
+        "fr": "Allée des érables"
+      },
+      "position": [
+        -300,
+        0,
+        250
+      ],
+      "radius": 50,
+      "landmark": "lookout",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "forest",
+        "oneshots": [
+          "goose-flock",
+          "footstep-gravel"
+        ],
+        "volume": 0.45
+      },
+      "fauna": [
+        {
+          "species": "canada-goose",
+          "count": 6,
+          "behavior": "graze"
+        }
+      ]
+    },
+    {
+      "id": "rights-responsibilities-station",
+      "name": {
+        "en": "Station",
+        "fr": "Gare"
+      },
+      "position": [
+        212,
+        0,
+        188
+      ],
+      "radius": 50,
+      "landmark": "lamp",
+      "fastTravel": true,
+      "ambience": {
+        "loop": "wind",
+        "oneshots": [
+          "train-whistle",
+          "footstep-gravel"
+        ],
+        "volume": 0.5
+      }
+    }
   ]
 }

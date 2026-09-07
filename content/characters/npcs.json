@@ -1,0 +1,407 @@
+{
+  "$schema": "../schemas/npc-roster.schema.json",
+  "archetypes": [
+    {
+      "id": "mountie",
+      "name": { "en": "Mountie", "fr": "Agent de la Police montée" },
+      "district": "hub",
+      "role": { "en": "Ceremonial sentry in red serge", "fr": "Sentinelle de cérémonie en tunique rouge" },
+      "outfit": {
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "serge",
+        "topColor": "#b3121b",
+        "bottomColor": "#1d2430",
+        "hat": "stetson",
+        "beard": false,
+        "props": [],
+        "notes": "Red serge tunic, navy breeches with a yellow side stripe, brown Sam Browne belt and riding boots, flat-brimmed tan stetson. NO RCMP crest, badge, shoulder flash or force name on the model or textures: this is a generic 'Mounted Police' silhouette, not a licensed likeness. District renderer maps serge to outfitStyle uniform with topColor #b3121b and hat cap until a stetson mesh exists. Instances: hub-mountie (hub)."
+      }
+    },
+    {
+      "id": "elections-officer",
+      "name": { "en": "Elections officer", "fr": "Agente électorale" },
+      "district": "elections",
+      "role": { "en": "Poll worker who checks ID and hands out ballots", "fr": "Employée du scrutin qui vérifie l'identité et remet les bulletins" },
+      "outfit": {
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "topColor": "#f4f1ea",
+        "bottomColor": "#23262e",
+        "hat": "none",
+        "beard": false,
+        "props": ["ballot-box", "lanyard"],
+        "notes": "White blouse, charcoal trousers, neutral lanyard with an unbranded 'Elections' card. Instances: elections-officer (advance poll), npc-elections-1 Fatima and npc-elections-2 Marco (returning office) share this archetype."
+      }
+    },
+    {
+      "id": "speaker-of-the-house",
+      "name": { "en": "Speaker of the House", "fr": "Président de la Chambre" },
+      "district": "hub",
+      "role": { "en": "Presiding officer of the House of Commons", "fr": "Officier président de la Chambre des communes" },
+      "outfit": {
+        "body": "male",
+        "age": "elder",
+        "outfitStyle": "robe",
+        "topColor": "#111318",
+        "bottomColor": "#111318",
+        "hat": "none",
+        "beard": false,
+        "props": [],
+        "notes": "Black silk robe over a white wing collar and tabs; tricorne hat is not modelled (no hat). Instances: hub-speaker (hub), npc-government-1 Speaker Nguyen (government) shares this archetype with outfitStyle formal."
+      }
+    },
+    {
+      "id": "voyageur",
+      "name": { "en": "Voyageur", "fr": "Voyageur" },
+      "district": "history",
+      "role": { "en": "Fur-brigade canoe paddler", "fr": "Pagayeur de brigade de fourrures" },
+      "outfit": {
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "voyageur",
+        "topColor": "#c9a86a",
+        "bottomColor": "#4a3421",
+        "hat": "toque",
+        "beard": true,
+        "props": ["canoe-voyageur", "paddle"],
+        "notes": "Linen capot, red woven sash, buckskin leggings, red tuque, clay pipe optional. The canoe-voyageur hero asset is placed as the POI landmark beside him (history-canoe-landing). District mapping: outfitStyle workwear. Instances: history-voyageur."
+      }
+    },
+    {
+      "id": "metis-fiddler",
+      "name": { "en": "Métis fiddler", "fr": "Violoneux métis" },
+      "district": "who-we-are",
+      "role": { "en": "Musician who plays the Red River Jig at the gathering circle", "fr": "Musicien qui joue la gigue de la rivière Rouge au cercle de rassemblement" },
+      "outfit": {
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "casual",
+        "topColor": "#3b5b8a",
+        "bottomColor": "#2f2a25",
+        "hat": "ceinture",
+        "beard": true,
+        "props": ["fiddle"],
+        "notes": "Contemporary Métis dress: blue shirt, dark trousers, arrow sash (ceinture fléchée, modelled as the 'ceinture' accessory) worn at the waist, beaded vest optional. No feathers, no face paint, no 'costume' cues. Fiddle prop carried. Cultural review required. Instances: who-we-are-metis-fiddler."
+      },
+      "culturalReview": true
+    },
+    {
+      "id": "inuit-hunter",
+      "name": { "en": "Inuit hunter", "fr": "Chasseur inuit" },
+      "district": "regions",
+      "role": { "en": "Traveller on the tundra with a qamutiik sled", "fr": "Voyageur de la toundra avec un traîneau qamutiik" },
+      "outfit": {
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "parka",
+        "topColor": "#e8e1d2",
+        "bottomColor": "#3a3128",
+        "hat": "hood",
+        "beard": false,
+        "props": ["qamutiik"],
+        "notes": "Modern parka with fur-trimmed hood (sealskin/caribou tones), wind pants, kamiit boots; sunglasses or snow goggles optional. Contemporary, not historical. Qamutiik sled prop placed beside him. Cultural review required. Instances: regions-inuit-hunter (North sub-zone)."
+      },
+      "culturalReview": true
+    },
+    {
+      "id": "loyalist-settler",
+      "name": { "en": "Loyalist settler", "fr": "Colonne loyaliste" },
+      "district": "history",
+      "role": { "en": "1780s farmer who came north after the American Revolution", "fr": "Fermière des années 1780 venue au nord après la Révolution américaine" },
+      "outfit": {
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "casual",
+        "topColor": "#8a9a7b",
+        "bottomColor": "#5a4632",
+        "hat": "none",
+        "beard": false,
+        "props": ["basket"],
+        "notes": "Homespun bodice and long skirt, apron, linen cap not modelled. Instances: history-loyalist."
+      }
+    },
+    {
+      "id": "wwi-soldier-vimy",
+      "name": { "en": "First World War soldier (Vimy)", "fr": "Soldat de la Première Guerre mondiale (Vimy)" },
+      "district": "history",
+      "role": { "en": "Canadian Corps private at the Vimy memorial", "fr": "Soldat du Corps canadien au monument de Vimy" },
+      "outfit": {
+        "body": "male",
+        "age": "young",
+        "outfitStyle": "military",
+        "topColor": "#4b4a33",
+        "bottomColor": "#4b4a33",
+        "hat": "helmet-brodie",
+        "beard": false,
+        "props": ["rifle-slung"],
+        "notes": "Khaki 1917 service dress, puttees, Brodie helmet, no unit badges. District mapping: outfitStyle uniform, hat hardhat until a Brodie mesh exists. Instances: history-wwi-soldier."
+      }
+    },
+    {
+      "id": "hockey-player",
+      "name": { "en": "Hockey player", "fr": "Joueuse de hockey" },
+      "district": "symbols",
+      "role": { "en": "Forward warming up beside the rink", "fr": "Attaquante qui s'échauffe près de la patinoire" },
+      "outfit": {
+        "body": "female",
+        "age": "young",
+        "outfitStyle": "jersey",
+        "topColor": "#c8102e",
+        "bottomColor": "#1d2430",
+        "hat": "none",
+        "beard": false,
+        "props": ["hockey-stick"],
+        "notes": "Red and white jersey with a maple-leaf chest motif (no league or team logos), hockey pants, skates. Hockey-stick prop. Instances: symbols-hockey-player; npc-symbols-1 Coach Bouchard and npc-modern-canada-3 Luc share the jersey look."
+      }
+    },
+    {
+      "id": "fundy-lighthouse-keeper",
+      "name": { "en": "Fundy lighthouse keeper", "fr": "Gardienne de phare de Fundy" },
+      "district": "regions",
+      "role": { "en": "Keeper of the Atlantic lighthouse", "fr": "Gardienne du phare atlantique" },
+      "outfit": {
+        "body": "female",
+        "age": "elder",
+        "outfitStyle": "raincoat",
+        "topColor": "#f2c230",
+        "bottomColor": "#2c3542",
+        "hat": "captain",
+        "beard": false,
+        "props": ["lantern"],
+        "notes": "Yellow oilskin over a fisherman's sweater, rubber boots, peaked captain's cap. Instances: regions-fundy-lighthouse-keeper (Atlantic sub-zone)."
+      }
+    },
+    {
+      "id": "prairie-grain-farmer",
+      "name": { "en": "Prairie grain farmer", "fr": "Céréaliculteur des Prairies" },
+      "district": "regions",
+      "role": { "en": "Wheat and canola farmer at the elevator", "fr": "Producteur de blé et de canola au silo" },
+      "outfit": {
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "workwear",
+        "topColor": "#a63a2a",
+        "bottomColor": "#3b4a6b",
+        "hat": "cap",
+        "beard": true,
+        "props": ["wheat-sheaf"],
+        "notes": "Plaid work shirt, denim, seed cap without a brand. Instances: regions-prairie-grain-farmer (Prairie sub-zone); npc-economy-2 Anneke Visser (economy) shares this archetype."
+      }
+    },
+    {
+      "id": "west-coast-fisher",
+      "name": { "en": "West Coast fisher", "fr": "Pêcheur de la côte Ouest" },
+      "district": "regions",
+      "role": { "en": "Salmon fisher on the Stanley Park seawall", "fr": "Pêcheur de saumon sur la digue du parc Stanley" },
+      "outfit": {
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "raincoat",
+        "topColor": "#2f6f4e",
+        "bottomColor": "#24313f",
+        "hat": "hood",
+        "beard": false,
+        "props": ["fishing-net"],
+        "notes": "Green rain jacket with hood, bib overalls, deck boots. Instances: regions-west-coast-fisher (West Coast sub-zone)."
+      }
+    },
+    {
+      "id": "quebec-habitant",
+      "name": { "en": "Quebec habitant", "fr": "Habitant du Québec" },
+      "district": "regions",
+      "role": { "en": "St. Lawrence farmer in traditional habitant dress", "fr": "Fermier du Saint-Laurent en habit traditionnel" },
+      "outfit": {
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "habitant",
+        "topColor": "#e9e3d3",
+        "bottomColor": "#4a3a2a",
+        "hat": "tuque-rouge",
+        "beard": true,
+        "props": [],
+        "notes": "Grey-white wool capot, dark wool trousers, red tuque, ceinture fléchée (arrow sash) tied at the waist. District mapping: outfitStyle casual, hat toque. Instances: regions-quebec-habitant (Central sub-zone, Château Frontenac)."
+      }
+    },
+    {
+      "id": "parliamentary-guide",
+      "name": { "en": "Parliamentary guide", "fr": "Guide parlementaire" },
+      "district": "hub",
+      "role": { "en": "Welcomes explorers on Parliament Hill", "fr": "Accueille les explorateurs sur la Colline du Parlement" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "formal", "topColor": "#2f5d8a", "bottomColor": "#2a2f3a", "hat": "none", "beard": false, "props": ["clipboard"], "notes": "Navy blazer, glasses. Instances: guide-amelie." }
+    },
+    {
+      "id": "canal-skater",
+      "name": { "en": "Canal skater", "fr": "Patineur du canal" },
+      "district": "hub",
+      "role": { "en": "Skater by the Rideau Canal locks", "fr": "Patineur près des écluses du canal Rideau" },
+      "outfit": { "body": "male", "age": "young", "outfitStyle": "jersey", "topColor": "#c8102e", "bottomColor": "#1d2430", "hat": "toque", "beard": false, "props": ["skates"], "notes": "Instances: skater-jo. Same look as the winter 'skater' fauna on the frozen canal." }
+    },
+    {
+      "id": "citizenship-judge",
+      "name": { "en": "Citizenship judge", "fr": "Juge de la citoyenneté" },
+      "district": "rights-responsibilities",
+      "role": { "en": "Presides over citizenship ceremonies", "fr": "Préside les cérémonies de citoyenneté" },
+      "outfit": { "body": "male", "age": "elder", "outfitStyle": "robe", "topColor": "#111318", "bottomColor": "#111318", "hat": "none", "beard": false, "props": [], "notes": "Black robe with a red sash. Instances: npc-rights-responsibilities-1 Justice Okafor; npc-justice-2 Justice Marchand shares the robe." }
+    },
+    {
+      "id": "volunteer-coordinator",
+      "name": { "en": "Volunteer coordinator", "fr": "Coordonnatrice du bénévolat" },
+      "district": "rights-responsibilities",
+      "role": { "en": "Runs the volunteer fair", "fr": "Anime la foire du bénévolat" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "casual", "topColor": "#e07a2f", "bottomColor": "#2e3a4a", "hat": "cap", "beard": false, "props": ["clipboard"], "notes": "Orange volunteer T-shirt, unbranded cap. Instances: npc-rights-responsibilities-2 Priya Raman." }
+    },
+    {
+      "id": "reservist",
+      "name": { "en": "Reservist", "fr": "Réserviste" },
+      "district": "rights-responsibilities",
+      "role": { "en": "Part-time soldier at the armoury", "fr": "Soldat à temps partiel au manège militaire" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "military", "topColor": "#4f5a3c", "bottomColor": "#4f5a3c", "hat": "beret", "beard": false, "props": [], "notes": "Modern green combat uniform, beret, no unit insignia. District mapping: uniform. Instances: npc-rights-responsibilities-3 Corporal Hill." }
+    },
+    {
+      "id": "indigenous-elder",
+      "name": { "en": "Indigenous Elder", "fr": "Aînée autochtone" },
+      "district": "who-we-are",
+      "role": { "en": "Elder who leads the gathering circle", "fr": "Aînée qui anime le cercle de rassemblement" },
+      "outfit": { "body": "female", "age": "elder", "outfitStyle": "casual", "topColor": "#7a4a8a", "bottomColor": "#3b2f2a", "hat": "none", "beard": false, "props": [], "notes": "Contemporary dress: ribbon skirt in purple and gold, plain fleece, no regalia or headdress in casual scenes. Name and dialogue to be reviewed with an Indigenous cultural advisor. Instances: npc-who-we-are-1 Elder Sarah Cardinal." },
+      "culturalReview": true
+    },
+    {
+      "id": "inuit-carver",
+      "name": { "en": "Inuit carver", "fr": "Sculpteur inuit" },
+      "district": "who-we-are",
+      "role": { "en": "Soapstone carver", "fr": "Sculpteur de stéatite" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "parka", "topColor": "#4a6f8a", "bottomColor": "#2b2f3a", "hat": "hood", "beard": false, "props": ["soapstone-carving"], "notes": "Modern parka with hood, carving prop. Instances: npc-who-we-are-2 Nuka." },
+      "culturalReview": true
+    },
+    {
+      "id": "metis-storyteller",
+      "name": { "en": "Métis storyteller", "fr": "Conteuse métisse" },
+      "district": "history",
+      "role": { "en": "Elder who tells the story of Louis Riel", "fr": "Aînée qui raconte l'histoire de Louis Riel" },
+      "outfit": { "body": "female", "age": "elder", "outfitStyle": "casual", "topColor": "#8a3b3b", "bottomColor": "#3b2f2a", "hat": "ceinture", "beard": false, "props": [], "notes": "Plaid shawl, arrow sash worn over the shoulder. Instances: npc-history-3 Grandmother Adèle." },
+      "culturalReview": true
+    },
+    {
+      "id": "acadian-fiddler",
+      "name": { "en": "Acadian fiddler", "fr": "Violoneux acadien" },
+      "district": "who-we-are",
+      "role": { "en": "Musician from the Acadian shore", "fr": "Musicien de la côte acadienne" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "casual", "topColor": "#2f5d8a", "bottomColor": "#3a2c1e", "hat": "beret", "beard": false, "props": ["fiddle"], "notes": "Blue plaid shirt, beret; Acadian star motif allowed on a pin. Instances: npc-who-we-are-3 Jean-Luc." }
+    },
+    {
+      "id": "fur-trade-historian",
+      "name": { "en": "Fur-trade historian", "fr": "Historienne de la traite des fourrures" },
+      "district": "history",
+      "role": { "en": "Interpreter at the fort", "fr": "Interprète au fort" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "workwear", "topColor": "#8a5a3b", "bottomColor": "#3a2c1e", "hat": "beret", "beard": false, "props": ["ledger"], "notes": "Instances: npc-history-1 Marie." }
+    },
+    {
+      "id": "fort-guard",
+      "name": { "en": "Fort guard", "fr": "Garde du fort" },
+      "district": "history",
+      "role": { "en": "Sergeant who patrols the palisade", "fr": "Sergent qui patrouille la palissade" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "military", "topColor": "#b3121b", "bottomColor": "#1d2430", "hat": "cap", "beard": true, "props": ["musket"], "notes": "Early-1800s red coat, white cross belts. District mapping: uniform. Instances: npc-history-2 Sergeant Baptiste." }
+    },
+    {
+      "id": "city-planner",
+      "name": { "en": "City planner", "fr": "Urbaniste" },
+      "district": "modern-canada",
+      "role": { "en": "Explains the modern downtown", "fr": "Explique le centre-ville moderne" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "raincoat", "topColor": "#2f4f6f", "bottomColor": "#2a2f3a", "hat": "none", "beard": false, "props": ["tablet"], "notes": "Instances: npc-modern-canada-1 Dev Patel." }
+    },
+    {
+      "id": "research-scientist",
+      "name": { "en": "Research scientist", "fr": "Chercheuse" },
+      "district": "modern-canada",
+      "role": { "en": "Works on the research campus", "fr": "Travaille au campus de recherche" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "formal", "topColor": "#f4f1ea", "bottomColor": "#2a2f3a", "hat": "hood", "beard": false, "props": [], "notes": "Lab coat under a hooded rain shell. Instances: npc-modern-canada-2 Dr. Amara Osei." }
+    },
+    {
+      "id": "house-clerk",
+      "name": { "en": "Clerk of the House", "fr": "Greffière de la Chambre" },
+      "district": "government",
+      "role": { "en": "Keeps the records of the legislature", "fr": "Tient les registres de l'Assemblée" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "formal", "topColor": "#111318", "bottomColor": "#111318", "hat": "none", "beard": false, "props": [], "notes": "Black gown, white tabs. Instances: npc-government-2 Rosalie Dubois." }
+    },
+    {
+      "id": "city-councillor",
+      "name": { "en": "City councillor", "fr": "Conseiller municipal" },
+      "district": "government",
+      "role": { "en": "Municipal representative at city hall", "fr": "Représentant municipal à l'hôtel de ville" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "casual", "topColor": "#4a6f8a", "bottomColor": "#2a2f3a", "hat": "none", "beard": false, "props": [], "notes": "Instances: npc-government-3 Councillor Karim." }
+    },
+    {
+      "id": "candidate",
+      "name": { "en": "Candidate", "fr": "Candidate" },
+      "district": "elections",
+      "role": { "en": "Campaigns in the square", "fr": "Fait campagne sur la place" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "formal", "topColor": "#6b2f7a", "bottomColor": "#2a2f3a", "hat": "none", "beard": false, "props": ["campaign-sign"], "notes": "Fictional party colours only (purple), no real party logos. Instances: npc-elections-3 Sophie Lavoie." }
+    },
+    {
+      "id": "police-constable",
+      "name": { "en": "Police constable", "fr": "Agent de police" },
+      "district": "justice",
+      "role": { "en": "Community officer at the police station", "fr": "Agent communautaire au poste de police" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "uniform", "topColor": "#1d2430", "bottomColor": "#1d2430", "hat": "police", "beard": false, "props": [], "notes": "Generic navy municipal uniform, no city or force crest. Instances: npc-justice-1 Constable Tremblay." }
+    },
+    {
+      "id": "legal-aid-lawyer",
+      "name": { "en": "Legal aid lawyer", "fr": "Avocate de l'aide juridique" },
+      "district": "justice",
+      "role": { "en": "Helps people at the small claims court", "fr": "Aide les gens à la cour des petites créances" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "formal", "topColor": "#2a2f3a", "bottomColor": "#2a2f3a", "hat": "none", "beard": false, "props": ["briefcase"], "notes": "Instances: npc-justice-3 Aisha Bello." }
+    },
+    {
+      "id": "flag-steward",
+      "name": { "en": "Flag steward", "fr": "Préposé aux drapeaux" },
+      "district": "symbols",
+      "role": { "en": "Raises the provincial flags on the parade ground", "fr": "Hisse les drapeaux provinciaux sur le terrain de parade" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "parka", "topColor": "#c8102e", "bottomColor": "#1d2430", "hat": "toque", "beard": false, "props": ["folded-flag"], "notes": "Instances: npc-symbols-2 Émile." }
+    },
+    {
+      "id": "veteran",
+      "name": { "en": "Veteran", "fr": "Ancien combattant" },
+      "district": "symbols",
+      "role": { "en": "Remembrance Day veteran with a poppy", "fr": "Ancien combattant du jour du Souvenir avec un coquelicot" },
+      "outfit": { "body": "male", "age": "elder", "outfitStyle": "formal", "topColor": "#1d2430", "bottomColor": "#1d2430", "hat": "beret", "beard": false, "props": ["poppy"], "notes": "Navy blazer, beret, red poppy; medals as generic discs. Instances: npc-symbols-3 Walter." }
+    },
+    {
+      "id": "harbourmaster",
+      "name": { "en": "Harbourmaster", "fr": "Capitaine de port" },
+      "district": "economy",
+      "role": { "en": "Runs the container dock", "fr": "Dirige le quai à conteneurs" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "uniform", "topColor": "#23303d", "bottomColor": "#23303d", "hat": "captain", "beard": false, "props": ["radio"], "notes": "Instances: npc-economy-1 Captain Singh." }
+    },
+    {
+      "id": "startup-founder",
+      "name": { "en": "Startup founder", "fr": "Fondateur de jeune entreprise" },
+      "district": "economy",
+      "role": { "en": "Works at the tech incubator", "fr": "Travaille à l'incubateur technologique" },
+      "outfit": { "body": "male", "age": "young", "outfitStyle": "casual", "topColor": "#3b4a6b", "bottomColor": "#2a2f3a", "hat": "none", "beard": false, "props": ["laptop"], "notes": "Instances: npc-economy-3 Kwame Mensah." }
+    },
+    {
+      "id": "arctic-ranger",
+      "name": { "en": "Arctic ranger", "fr": "Garde de l'Arctique" },
+      "district": "regions",
+      "role": { "en": "Park ranger who guides the five-regions tour", "fr": "Garde de parc qui guide la visite des cinq régions" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "parka", "topColor": "#8a2b2b", "bottomColor": "#2b2f3a", "hat": "hood", "beard": false, "props": ["map"], "notes": "Red hooded parka in the style of the Canadian Rangers but without insignia. Instances: npc-regions-1 Ranger Aputik (name to be reviewed with an Inuit cultural advisor)." },
+      "culturalReview": true
+    },
+    {
+      "id": "atlantic-fisher",
+      "name": { "en": "Atlantic fisher", "fr": "Pêcheuse de l'Atlantique" },
+      "district": "regions",
+      "role": { "en": "Fisher from the Bay of Fundy", "fr": "Pêcheuse de la baie de Fundy" },
+      "outfit": { "body": "female", "age": "adult", "outfitStyle": "raincoat", "topColor": "#f2c230", "bottomColor": "#23303d", "hat": "captain", "beard": false, "props": ["lobster-trap"], "notes": "Instances: npc-regions-2 Mary MacLeod (Fundy shore)." }
+    },
+    {
+      "id": "geographer",
+      "name": { "en": "Geographer", "fr": "Géographe" },
+      "district": "regions",
+      "role": { "en": "Explains provinces and capitals at the compass plaza", "fr": "Explique provinces et capitales à l'esplanade de la boussole" },
+      "outfit": { "body": "male", "age": "adult", "outfitStyle": "casual", "topColor": "#5a7f3a", "bottomColor": "#4a3b2e", "hat": "cap", "beard": true, "props": ["backpack"], "notes": "Instances: npc-regions-3 Simon Leblanc." }
+    }
+  ]
+}

@@ -5,430 +5,940 @@
     {
       "id": "q-ju-001",
       "subject": "justice",
-      "text": { "en": "What does the principle of the rule of law mean in Canada?", "fr": "Que signifie le principe de la primauté du droit au Canada?" },
-      "answer": { "en": "Everyone, including politicians and police, is subject to the same laws; no one is above the law", "fr": "Tout le monde, y compris les politiciens et les policiers, est soumis aux mêmes lois; personne n'est au-dessus de la loi" },
+      "text": {
+        "en": "What does the principle of the rule of law mean in Canada?",
+        "fr": "Que signifie le principe de la primauté du droit au Canada?"
+      },
+      "answer": {
+        "en": "Everyone, including politicians and police, is subject to the same laws; no one is above the law",
+        "fr": "Tout le monde, y compris les politiciens et les policiers, est soumis aux mêmes lois; personne n'est au-dessus de la loi"
+      },
       "distractors": [
-        { "en": "Only elected officials may interpret the law", "fr": "Seuls les élus peuvent interpréter la loi" },
-        { "en": "The Sovereign may override any court decision", "fr": "Le souverain peut annuler toute décision judiciaire" },
-        { "en": "Laws apply only to citizens, not to visitors", "fr": "Les lois s'appliquent seulement aux citoyens, pas aux visiteurs" }
+        {
+          "en": "Only elected officials may interpret the law",
+          "fr": "Seuls les élus peuvent interpréter la loi"
+        },
+        {
+          "en": "The Sovereign may override any court decision",
+          "fr": "Le souverain peut annuler toute décision judiciaire"
+        },
+        {
+          "en": "Laws apply only to citizens, not to visitors",
+          "fr": "Les lois s'appliquent seulement aux citoyens, pas aux visiteurs"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-002",
       "subject": "justice",
-      "text": { "en": "What does the presumption of innocence guarantee to a person accused of a crime?", "fr": "Que garantit la présomption d'innocence à une personne accusée d'un crime?" },
-      "answer": { "en": "They are considered innocent until the prosecution proves guilt in court", "fr": "Elle est considérée innocente jusqu'à ce que la poursuite prouve sa culpabilité devant le tribunal" },
+      "text": {
+        "en": "What does the presumption of innocence guarantee to a person accused of a crime?",
+        "fr": "Que garantit la présomption d'innocence à une personne accusée d'un crime?"
+      },
+      "answer": {
+        "en": "They are considered innocent until the prosecution proves guilt in court",
+        "fr": "Elle est considérée innocente jusqu'à ce que la poursuite prouve sa culpabilité devant le tribunal"
+      },
       "distractors": [
-        { "en": "They cannot be arrested before a trial takes place", "fr": "Elle ne peut pas être arrêtée avant la tenue d'un procès" },
-        { "en": "They must prove their own innocence to be released", "fr": "Elle doit prouver son innocence pour être libérée" },
-        { "en": "They are automatically pardoned for a first offence", "fr": "Elle est automatiquement graciée pour une première infraction" }
+        {
+          "en": "They cannot be arrested before a trial takes place",
+          "fr": "Elle ne peut pas être arrêtée avant la tenue d'un procès"
+        },
+        {
+          "en": "They must prove their own innocence to be released",
+          "fr": "Elle doit prouver son innocence pour être libérée"
+        },
+        {
+          "en": "They are automatically pardoned for a first offence",
+          "fr": "Elle est automatiquement graciée pour une première infraction"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-003",
       "subject": "justice",
-      "text": { "en": "What is meant by 'due process' in the Canadian justice system?", "fr": "Que signifie l'« application régulière de la loi » dans le système de justice canadien?" },
-      "answer": { "en": "The government must respect all of a person's legal rights when enforcing the law", "fr": "Le gouvernement doit respecter tous les droits juridiques d'une personne lorsqu'il applique la loi" },
+      "text": {
+        "en": "What is meant by 'due process' in the Canadian justice system?",
+        "fr": "Que signifie l'« application régulière de la loi » dans le système de justice canadien?"
+      },
+      "answer": {
+        "en": "The government must respect all of a person's legal rights when enforcing the law",
+        "fr": "Le gouvernement doit respecter tous les droits juridiques d'une personne lorsqu'il applique la loi"
+      },
       "distractors": [
-        { "en": "Court cases must be completed within thirty days", "fr": "Les procès doivent être terminés en trente jours" },
-        { "en": "Fines must be paid before a hearing is scheduled", "fr": "Les amendes doivent être payées avant qu'une audience soit fixée" },
-        { "en": "Every trial must be decided by a jury", "fr": "Chaque procès doit être tranché par un jury" }
+        {
+          "en": "Court cases must be completed within thirty days",
+          "fr": "Les procès doivent être terminés en trente jours"
+        },
+        {
+          "en": "Fines must be paid before a hearing is scheduled",
+          "fr": "Les amendes doivent être payées avant qu'une audience soit fixée"
+        },
+        {
+          "en": "Every trial must be decided by a jury",
+          "fr": "Chaque procès doit être tranché par un jury"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-004",
       "subject": "justice",
-      "text": { "en": "What right does habeas corpus protect?", "fr": "Quel droit l'habeas corpus protège-t-il?" },
-      "answer": { "en": "The right of a detained person to have a court decide whether the detention is lawful", "fr": "Le droit d'une personne détenue de faire décider par un tribunal si sa détention est légale" },
+      "text": {
+        "en": "What right does habeas corpus protect?",
+        "fr": "Quel droit l'habeas corpus protège-t-il?"
+      },
+      "answer": {
+        "en": "The right of a detained person to have a court decide whether the detention is lawful",
+        "fr": "Le droit d'une personne détenue de faire décider par un tribunal si sa détention est légale"
+      },
       "distractors": [
-        { "en": "The right to a free lawyer in every case", "fr": "Le droit à un avocat gratuit dans tous les cas" },
-        { "en": "The right to refuse to appear as a witness", "fr": "Le droit de refuser de témoigner" },
-        { "en": "The right to choose which judge hears your case", "fr": "Le droit de choisir le juge qui entend votre cause" }
+        {
+          "en": "The right to a free lawyer in every case",
+          "fr": "Le droit à un avocat gratuit dans tous les cas"
+        },
+        {
+          "en": "The right to refuse to appear as a witness",
+          "fr": "Le droit de refuser de témoigner"
+        },
+        {
+          "en": "The right to choose which judge hears your case",
+          "fr": "Le droit de choisir le juge qui entend votre cause"
+        }
       ],
-      "explanation": { "en": "Habeas corpus comes from English common law and is one of the oldest safeguards against arbitrary imprisonment.", "fr": "L'habeas corpus vient de la common law anglaise et constitue l'une des plus anciennes protections contre l'emprisonnement arbitraire." },
+      "explanation": {
+        "en": "Habeas corpus comes from English common law and is one of the oldest safeguards against arbitrary imprisonment.",
+        "fr": "L'habeas corpus vient de la common law anglaise et constitue l'une des plus anciennes protections contre l'emprisonnement arbitraire."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/rights-resonsibilities-citizenship.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-005",
       "subject": "justice",
-      "text": { "en": "Which court is the highest court in Canada?", "fr": "Quel tribunal est la plus haute instance judiciaire du Canada?" },
-      "answer": { "en": "The Supreme Court of Canada", "fr": "La Cour suprême du Canada" },
+      "text": {
+        "en": "Which court is the highest court in Canada?",
+        "fr": "Quel tribunal est la plus haute instance judiciaire du Canada?"
+      },
+      "answer": {
+        "en": "The Supreme Court of Canada",
+        "fr": "La Cour suprême du Canada"
+      },
       "distractors": [
-        { "en": "The Federal Court of Canada", "fr": "La Cour fédérale du Canada" },
-        { "en": "The Court of King's Bench", "fr": "La Cour du Banc du Roi" },
-        { "en": "The Judicial Committee of the Privy Council", "fr": "Le Comité judiciaire du Conseil privé" }
+        {
+          "en": "The Federal Court of Canada",
+          "fr": "La Cour fédérale du Canada"
+        },
+        {
+          "en": "The Court of King's Bench",
+          "fr": "La Cour du Banc du Roi"
+        },
+        {
+          "en": "The Judicial Committee of the Privy Council",
+          "fr": "Le Comité judiciaire du Conseil privé"
+        }
       ],
-      "explanation": { "en": "Appeals to the Privy Council in London ended in 1949; since then the Supreme Court has been the final court of appeal.", "fr": "Les appels au Conseil privé de Londres ont pris fin en 1949; depuis, la Cour suprême est le tribunal d'appel de dernier ressort." },
+      "explanation": {
+        "en": "Appeals to the Privy Council in London ended in 1949; since then the Supreme Court has been the final court of appeal.",
+        "fr": "Les appels au Conseil privé de Londres ont pris fin en 1949; depuis, la Cour suprême est le tribunal d'appel de dernier ressort."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-006",
       "subject": "justice",
-      "text": { "en": "What kinds of cases does the Federal Court of Canada handle?", "fr": "Quels types de causes la Cour fédérale du Canada entend-elle?" },
-      "answer": { "en": "Matters involving the federal government, such as immigration, intellectual property and federal taxes", "fr": "Les affaires concernant le gouvernement fédéral, comme l'immigration, la propriété intellectuelle et les impôts fédéraux" },
+      "text": {
+        "en": "What kinds of cases does the Federal Court of Canada handle?",
+        "fr": "Quels types de causes la Cour fédérale du Canada entend-elle?"
+      },
+      "answer": {
+        "en": "Matters involving the federal government, such as immigration and intellectual property cases",
+        "fr": "Les affaires concernant le gouvernement fédéral, comme les causes d'immigration et de propriété intellectuelle"
+      },
       "distractors": [
-        { "en": "All murder trials across the country", "fr": "Tous les procès pour meurtre au pays" },
-        { "en": "Traffic tickets and parking fines", "fr": "Les contraventions routières et les amendes de stationnement" },
-        { "en": "Divorce and child custody disputes", "fr": "Les divorces et les litiges sur la garde des enfants" }
+        {
+          "en": "All murder trials across the country",
+          "fr": "Tous les procès pour meurtre au pays"
+        },
+        {
+          "en": "Traffic tickets and parking fines",
+          "fr": "Les contraventions routières et les amendes de stationnement"
+        },
+        {
+          "en": "Divorce and child custody disputes",
+          "fr": "Les divorces et les litiges sur la garde des enfants"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-007",
       "subject": "justice",
-      "text": { "en": "Where are most criminal, family and civil cases in Canada first heard?", "fr": "Où la plupart des causes criminelles, familiales et civiles au Canada sont-elles entendues en premier lieu?" },
-      "answer": { "en": "In provincial and territorial courts", "fr": "Devant les tribunaux provinciaux et territoriaux" },
+      "text": {
+        "en": "Where are most criminal, family and civil cases in Canada first heard?",
+        "fr": "Où la plupart des causes criminelles, familiales et civiles au Canada sont-elles entendues en premier lieu?"
+      },
+      "answer": {
+        "en": "In provincial and territorial courts",
+        "fr": "Devant les tribunaux provinciaux et territoriaux"
+      },
       "distractors": [
-        { "en": "In the Supreme Court of Canada", "fr": "À la Cour suprême du Canada" },
-        { "en": "In the Senate", "fr": "Au Sénat" },
-        { "en": "In the Federal Court of Appeal", "fr": "À la Cour d'appel fédérale" }
+        {
+          "en": "In the Supreme Court of Canada",
+          "fr": "À la Cour suprême du Canada"
+        },
+        {
+          "en": "In the Senate",
+          "fr": "Au Sénat"
+        },
+        {
+          "en": "In the Federal Court of Appeal",
+          "fr": "À la Cour d'appel fédérale"
+        }
       ],
-      "explanation": { "en": "Each province and territory has trial courts and a court of appeal; the Supreme Court hears only selected appeals.", "fr": "Chaque province et territoire a des tribunaux de première instance et une cour d'appel; la Cour suprême n'entend que certains appels." },
+      "explanation": {
+        "en": "Each province and territory has trial courts and a court of appeal; the Supreme Court hears only selected appeals.",
+        "fr": "Chaque province et territoire a des tribunaux de première instance et une cour d'appel; la Cour suprême n'entend que certains appels."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-008",
       "subject": "justice",
-      "text": { "en": "Why are judges in Canada independent of the government?", "fr": "Pourquoi les juges au Canada sont-ils indépendants du gouvernement?" },
-      "answer": { "en": "So that they can decide cases impartially, based only on the law and the evidence", "fr": "Pour qu'ils puissent trancher les affaires de façon impartiale, en se fondant uniquement sur la loi et la preuve" },
+      "text": {
+        "en": "Why are judges in Canada independent of the government?",
+        "fr": "Pourquoi les juges au Canada sont-ils indépendants du gouvernement?"
+      },
+      "answer": {
+        "en": "So that they can decide cases impartially, based only on the law and the evidence",
+        "fr": "Pour qu'ils puissent trancher les affaires de façon impartiale, en se fondant uniquement sur la loi et la preuve"
+      },
       "distractors": [
-        { "en": "So that they can run for Parliament while serving", "fr": "Pour qu'ils puissent se présenter au Parlement pendant leur mandat" },
-        { "en": "So that they can set their own salaries", "fr": "Pour qu'ils puissent fixer leur propre salaire" },
-        { "en": "So that the Cabinet can dismiss them at will", "fr": "Pour que le Cabinet puisse les révoquer à volonté" }
+        {
+          "en": "So that they can run for Parliament while serving",
+          "fr": "Pour qu'ils puissent se présenter au Parlement pendant leur mandat"
+        },
+        {
+          "en": "So that they can set their own salaries",
+          "fr": "Pour qu'ils puissent fixer leur propre salaire"
+        },
+        {
+          "en": "So that the Cabinet can dismiss them at will",
+          "fr": "Pour que le Cabinet puisse les révoquer à volonté"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-009",
       "subject": "justice",
-      "text": { "en": "Which two provinces have their own provincial police forces?", "fr": "Quelles deux provinces ont leur propre corps de police provincial?" },
-      "answer": { "en": "Ontario and Quebec", "fr": "L'Ontario et le Québec" },
+      "text": {
+        "en": "Which two provinces have their own provincial police forces?",
+        "fr": "Quelles deux provinces ont leur propre corps de police provincial?"
+      },
+      "answer": {
+        "en": "Ontario and Quebec",
+        "fr": "L'Ontario et le Québec"
+      },
       "distractors": [
-        { "en": "Alberta and British Columbia", "fr": "L'Alberta et la Colombie-Britannique" },
-        { "en": "Manitoba and Saskatchewan", "fr": "Le Manitoba et la Saskatchewan" },
-        { "en": "Nova Scotia and New Brunswick", "fr": "La Nouvelle-Écosse et le Nouveau-Brunswick" }
+        {
+          "en": "Alberta and British Columbia",
+          "fr": "L'Alberta et la Colombie-Britannique"
+        },
+        {
+          "en": "Manitoba and Saskatchewan",
+          "fr": "Le Manitoba et la Saskatchewan"
+        },
+        {
+          "en": "Nova Scotia and New Brunswick",
+          "fr": "La Nouvelle-Écosse et le Nouveau-Brunswick"
+        }
       ],
-      "explanation": { "en": "The Ontario Provincial Police and the Sûreté du Québec serve those provinces; elsewhere the RCMP provides provincial policing under contract.", "fr": "La Police provinciale de l'Ontario et la Sûreté du Québec desservent ces provinces; ailleurs, la GRC assure les services de police provinciaux par contrat." },
+      "explanation": {
+        "en": "The Ontario Provincial Police and the Sûreté du Québec serve those provinces; elsewhere the RCMP provides provincial policing under contract.",
+        "fr": "La Police provinciale de l'Ontario et la Sûreté du Québec desservent ces provinces; ailleurs, la GRC assure les services de police provinciaux par contrat."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-010",
       "subject": "justice",
-      "text": { "en": "What is the Royal Canadian Mounted Police (RCMP)?", "fr": "Qu'est-ce que la Gendarmerie royale du Canada (GRC)?" },
-      "answer": { "en": "Canada's national police force, which enforces federal laws and also polices most provinces and territories", "fr": "Le service de police national du Canada, qui applique les lois fédérales et assure aussi la police dans la plupart des provinces et des territoires" },
+      "text": {
+        "en": "What is the Royal Canadian Mounted Police (RCMP)?",
+        "fr": "Qu'est-ce que la Gendarmerie royale du Canada (GRC)?"
+      },
+      "answer": {
+        "en": "Canada's national police force, which enforces federal laws and also polices most provinces and territories",
+        "fr": "Le service de police national du Canada, qui applique les lois fédérales et assure aussi la police dans la plupart des provinces et des territoires"
+      },
       "distractors": [
-        { "en": "A ceremonial cavalry unit with no law-enforcement powers", "fr": "Une unité de cavalerie d'apparat sans pouvoirs d'application de la loi" },
-        { "en": "The police force of the City of Ottawa", "fr": "Le service de police de la Ville d'Ottawa" },
-        { "en": "A private security company hired by Parliament", "fr": "Une entreprise de sécurité privée embauchée par le Parlement" }
+        {
+          "en": "A ceremonial cavalry unit with no law-enforcement powers",
+          "fr": "Une unité de cavalerie d'apparat sans pouvoirs d'application de la loi"
+        },
+        {
+          "en": "The police force of the City of Ottawa",
+          "fr": "Le service de police de la Ville d'Ottawa"
+        },
+        {
+          "en": "A private security company hired by Parliament",
+          "fr": "Une entreprise de sécurité privée embauchée par le Parlement"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-011",
       "subject": "justice",
-      "text": { "en": "Who provides policing in most Canadian cities and towns?", "fr": "Qui assure les services de police dans la plupart des villes canadiennes?" },
-      "answer": { "en": "Municipal police forces, or the RCMP or provincial police under contract", "fr": "Des services de police municipaux, ou la GRC ou la police provinciale en vertu d'un contrat" },
+      "text": {
+        "en": "Who provides policing in most Canadian cities and towns?",
+        "fr": "Qui assure les services de police dans la plupart des villes canadiennes?"
+      },
+      "answer": {
+        "en": "Municipal police forces, or the RCMP or provincial police under contract",
+        "fr": "Des services de police municipaux, ou la GRC ou la police provinciale en vertu d'un contrat"
+      },
       "distractors": [
-        { "en": "The Canadian Armed Forces", "fr": "Les Forces armées canadiennes" },
-        { "en": "Volunteer citizen patrols", "fr": "Des patrouilles citoyennes bénévoles" },
-        { "en": "Officers of the Supreme Court", "fr": "Des agents de la Cour suprême" }
+        {
+          "en": "The Canadian Armed Forces",
+          "fr": "Les Forces armées canadiennes"
+        },
+        {
+          "en": "Volunteer citizen patrols",
+          "fr": "Des patrouilles citoyennes bénévoles"
+        },
+        {
+          "en": "Officers of the Supreme Court",
+          "fr": "Des agents de la Cour suprême"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-012",
       "subject": "justice",
-      "text": { "en": "What is the main job of the police in Canada?", "fr": "Quelle est la principale fonction de la police au Canada?" },
-      "answer": { "en": "To keep people safe and enforce the law", "fr": "Assurer la sécurité de la population et faire respecter la loi" },
+      "text": {
+        "en": "What is the main job of the police in Canada?",
+        "fr": "Quelle est la principale fonction de la police au Canada?"
+      },
+      "answer": {
+        "en": "To keep people safe and enforce the law",
+        "fr": "Assurer la sécurité de la population et faire respecter la loi"
+      },
       "distractors": [
-        { "en": "To write new laws for Parliament", "fr": "Rédiger de nouvelles lois pour le Parlement" },
-        { "en": "To decide guilt or innocence at trial", "fr": "Décider de la culpabilité ou de l'innocence au procès" },
-        { "en": "To collect income taxes", "fr": "Percevoir l'impôt sur le revenu" }
+        {
+          "en": "To write new laws for Parliament",
+          "fr": "Rédiger de nouvelles lois pour le Parlement"
+        },
+        {
+          "en": "To decide guilt or innocence at trial",
+          "fr": "Décider de la culpabilité ou de l'innocence au procès"
+        },
+        {
+          "en": "To collect income taxes",
+          "fr": "Percevoir l'impôt sur le revenu"
+        }
       ],
-      "explanation": { "en": "You can ask the police for help after an accident, a theft, an assault, if you witness a crime or if someone goes missing.", "fr": "Vous pouvez demander l'aide de la police après un accident, un vol ou une agression, si vous êtes témoin d'un crime ou si une personne disparaît." },
+      "explanation": {
+        "en": "You can ask the police for help after an accident, a theft, an assault, if you witness a crime or if someone goes missing.",
+        "fr": "Vous pouvez demander l'aide de la police après un accident, un vol ou une agression, si vous êtes témoin d'un crime ou si une personne disparaît."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-013",
       "subject": "justice",
-      "text": { "en": "Which of the following is a legal right protected by the Canadian Charter of Rights and Freedoms?", "fr": "Lequel des énoncés suivants est un droit juridique protégé par la Charte canadienne des droits et libertés?" },
-      "answer": { "en": "The right not to be arbitrarily detained or imprisoned", "fr": "Le droit de ne pas être détenu ou emprisonné arbitrairement" },
+      "text": {
+        "en": "Which of the following is a legal right protected by the Canadian Charter of Rights and Freedoms?",
+        "fr": "Lequel des énoncés suivants est un droit juridique protégé par la Charte canadienne des droits et libertés?"
+      },
+      "answer": {
+        "en": "The right not to be arbitrarily detained or imprisoned",
+        "fr": "Le droit de ne pas être détenu ou emprisonné arbitrairement"
+      },
       "distractors": [
-        { "en": "The right to a government-paid car", "fr": "Le droit à une voiture payée par le gouvernement" },
-        { "en": "The right to ignore a court summons", "fr": "Le droit d'ignorer une assignation à comparaître" },
-        { "en": "The right to carry a firearm without a licence", "fr": "Le droit de porter une arme à feu sans permis" }
+        {
+          "en": "The right to a government-paid car",
+          "fr": "Le droit à une voiture payée par le gouvernement"
+        },
+        {
+          "en": "The right to ignore a court summons",
+          "fr": "Le droit d'ignorer une assignation à comparaître"
+        },
+        {
+          "en": "The right to carry a firearm without a licence",
+          "fr": "Le droit de porter une arme à feu sans permis"
+        }
       ],
-      "explanation": { "en": "The Charter's legal rights also include being told promptly why you are arrested, consulting a lawyer, and being tried within a reasonable time.", "fr": "Les droits juridiques garantis par la Charte comprennent aussi d'être informé rapidement des motifs de son arrestation, de consulter un avocat et d'être jugé dans un délai raisonnable." },
+      "explanation": {
+        "en": "The Charter's legal rights also include being told promptly why you are arrested, consulting a lawyer, and being tried within a reasonable time.",
+        "fr": "Les droits juridiques garantis par la Charte comprennent aussi d'être informé rapidement des motifs de son arrestation, de consulter un avocat et d'être jugé dans un délai raisonnable."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/rights-resonsibilities-citizenship.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-014",
       "subject": "justice",
-      "text": { "en": "If you are arrested in Canada, which of the following are you entitled to?", "fr": "Si vous êtes arrêté au Canada, à quoi avez-vous droit parmi les éléments suivants?" },
-      "answer": { "en": "To be told promptly why you were arrested and to speak with a lawyer without delay", "fr": "Être informé rapidement des motifs de votre arrestation et parler à un avocat sans délai" },
+      "text": {
+        "en": "If you are arrested in Canada, which of the following are you entitled to?",
+        "fr": "Si vous êtes arrêté au Canada, à quoi avez-vous droit parmi les éléments suivants?"
+      },
+      "answer": {
+        "en": "To be told promptly why you were arrested and to speak with a lawyer without delay",
+        "fr": "Être informé rapidement des motifs de votre arrestation et parler à un avocat sans délai"
+      },
       "distractors": [
-        { "en": "To be released within one hour regardless of the charge", "fr": "Être libéré dans l'heure, quelle que soit l'accusation" },
-        { "en": "To have the charges dropped if you are a citizen", "fr": "Voir les accusations abandonnées si vous êtes citoyen" },
-        { "en": "To choose the police officer who questions you", "fr": "Choisir le policier qui vous interroge" }
+        {
+          "en": "To be released within one hour regardless of the charge",
+          "fr": "Être libéré dans l'heure, quelle que soit l'accusation"
+        },
+        {
+          "en": "To have the charges dropped if you are a citizen",
+          "fr": "Voir les accusations abandonnées si vous êtes citoyen"
+        },
+        {
+          "en": "To choose the police officer who questions you",
+          "fr": "Choisir le policier qui vous interroge"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/rights-resonsibilities-citizenship.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-015",
       "subject": "justice",
-      "text": { "en": "What is the difference between criminal law and civil law?", "fr": "Quelle est la différence entre le droit criminel et le droit civil?" },
-      "answer": { "en": "Criminal law deals with offences against society prosecuted by the state; civil law settles disputes between people or organizations", "fr": "Le droit criminel traite des infractions contre la société poursuivies par l'État; le droit civil règle les différends entre personnes ou organisations" },
+      "text": {
+        "en": "What is the difference between criminal law and civil law?",
+        "fr": "Quelle est la différence entre le droit criminel et le droit civil?"
+      },
+      "answer": {
+        "en": "Criminal law deals with offences against society prosecuted by the state; civil law settles disputes between people or organizations",
+        "fr": "Le droit criminel traite des infractions contre la société poursuivies par l'État; le droit civil règle les différends entre personnes ou organisations"
+      },
       "distractors": [
-        { "en": "Criminal law applies in Quebec and civil law everywhere else", "fr": "Le droit criminel s'applique au Québec et le droit civil partout ailleurs" },
-        { "en": "Criminal law is written by judges and civil law by police", "fr": "Le droit criminel est écrit par les juges et le droit civil par la police" },
-        { "en": "Criminal law is federal and civil law is municipal", "fr": "Le droit criminel est fédéral et le droit civil est municipal" }
+        {
+          "en": "Criminal law applies in Quebec and civil law everywhere else",
+          "fr": "Le droit criminel s'applique au Québec et le droit civil partout ailleurs"
+        },
+        {
+          "en": "Criminal law is written by judges and civil law by police",
+          "fr": "Le droit criminel est écrit par les juges et le droit civil par la police"
+        },
+        {
+          "en": "Criminal law is federal and civil law is municipal",
+          "fr": "Le droit criminel est fédéral et le droit civil est municipal"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-016",
       "subject": "justice",
-      "text": { "en": "Which of the following would normally be a civil matter rather than a criminal one?", "fr": "Lequel des cas suivants relèverait normalement du droit civil plutôt que du droit criminel?" },
-      "answer": { "en": "A dispute between a landlord and a tenant over unpaid rent", "fr": "Un différend entre un propriétaire et un locataire au sujet d'un loyer impayé" },
+      "text": {
+        "en": "Which of the following would normally be a civil matter rather than a criminal one?",
+        "fr": "Lequel des cas suivants relèverait normalement du droit civil plutôt que du droit criminel?"
+      },
+      "answer": {
+        "en": "A dispute between a landlord and a tenant over unpaid rent",
+        "fr": "Un différend entre un propriétaire et un locataire au sujet d'un loyer impayé"
+      },
       "distractors": [
-        { "en": "Stealing a car", "fr": "Voler une voiture" },
-        { "en": "Assaulting a neighbour", "fr": "Agresser un voisin" },
-        { "en": "Selling illegal drugs", "fr": "Vendre des drogues illégales" }
+        {
+          "en": "Stealing a car",
+          "fr": "Voler une voiture"
+        },
+        {
+          "en": "Assaulting a neighbour",
+          "fr": "Agresser un voisin"
+        },
+        {
+          "en": "Selling illegal drugs",
+          "fr": "Vendre des drogues illégales"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-017",
       "subject": "justice",
-      "text": { "en": "What is small claims court used for?", "fr": "À quoi sert la Cour des petites créances?" },
-      "answer": { "en": "Resolving civil disputes involving relatively small amounts of money, often without a lawyer", "fr": "Régler des litiges civils portant sur des sommes relativement modestes, souvent sans avocat" },
+      "text": {
+        "en": "What is small claims court used for?",
+        "fr": "À quoi sert la Cour des petites créances?"
+      },
+      "answer": {
+        "en": "Resolving civil disputes involving relatively small amounts of money, often without a lawyer",
+        "fr": "Régler des litiges civils portant sur des sommes relativement modestes, souvent sans avocat"
+      },
       "distractors": [
-        { "en": "Trying minor criminal offences such as shoplifting", "fr": "Juger des infractions criminelles mineures comme le vol à l'étalage" },
-        { "en": "Hearing appeals from the Supreme Court", "fr": "Entendre des appels de la Cour suprême" },
-        { "en": "Approving small business licences", "fr": "Approuver les permis de petites entreprises" }
+        {
+          "en": "Trying minor criminal offences such as shoplifting",
+          "fr": "Juger des infractions criminelles mineures comme le vol à l'étalage"
+        },
+        {
+          "en": "Hearing appeals from the Supreme Court",
+          "fr": "Entendre des appels de la Cour suprême"
+        },
+        {
+          "en": "Approving small business licences",
+          "fr": "Approuver les permis de petites entreprises"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-018",
       "subject": "justice",
-      "text": { "en": "What is legal aid?", "fr": "Qu'est-ce que l'aide juridique?" },
-      "answer": { "en": "Help with the cost of a lawyer for people who cannot afford one, available in most communities", "fr": "Une aide pour payer les services d'un avocat, offerte dans la plupart des collectivités aux personnes qui n'en ont pas les moyens" },
+      "text": {
+        "en": "What is legal aid?",
+        "fr": "Qu'est-ce que l'aide juridique?"
+      },
+      "answer": {
+        "en": "Help with the cost of a lawyer for people who cannot afford one, available in most communities",
+        "fr": "Une aide pour payer les services d'un avocat, offerte dans la plupart des collectivités aux personnes qui n'en ont pas les moyens"
+      },
       "distractors": [
-        { "en": "A tax credit for law students", "fr": "Un crédit d'impôt pour les étudiants en droit" },
-        { "en": "Free legal advice provided by police officers", "fr": "Des conseils juridiques gratuits offerts par les policiers" },
-        { "en": "A government fund that pays fines for low-income people", "fr": "Un fonds gouvernemental qui paie les amendes des personnes à faible revenu" }
+        {
+          "en": "A tax credit for law students",
+          "fr": "Un crédit d'impôt pour les étudiants en droit"
+        },
+        {
+          "en": "Free legal advice provided by police officers",
+          "fr": "Des conseils juridiques gratuits offerts par les policiers"
+        },
+        {
+          "en": "A government fund that pays fines for low-income people",
+          "fr": "Un fonds gouvernemental qui paie les amendes des personnes à faible revenu"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-019",
       "subject": "justice",
-      "text": { "en": "How does a Canadian normally come to serve on a jury?", "fr": "Comment un Canadien est-il normalement appelé à faire partie d'un jury?" },
-      "answer": { "en": "They are summoned after being selected from a list of eligible citizens, and serving is a legal duty", "fr": "Il est convoqué après avoir été choisi sur une liste de citoyens admissibles, et le service de juré est une obligation légale" },
+      "text": {
+        "en": "How does a Canadian normally come to serve on a jury?",
+        "fr": "Comment un Canadien est-il normalement appelé à faire partie d'un jury?"
+      },
+      "answer": {
+        "en": "They are summoned after being selected from a list of eligible citizens, and serving is a legal duty",
+        "fr": "Il est convoqué après avoir été choisi sur une liste de citoyens admissibles, et le service de juré est une obligation légale"
+      },
       "distractors": [
-        { "en": "They volunteer at the courthouse and are paid a salary", "fr": "Il se porte volontaire au palais de justice et reçoit un salaire" },
-        { "en": "They are appointed by the accused person's lawyer", "fr": "Il est nommé par l'avocat de l'accusé" },
-        { "en": "They must first pass a law school entrance exam", "fr": "Il doit d'abord réussir un examen d'admission en droit" }
+        {
+          "en": "They volunteer at the courthouse and are paid a salary",
+          "fr": "Il se porte volontaire au palais de justice et reçoit un salaire"
+        },
+        {
+          "en": "They are appointed by the accused person's lawyer",
+          "fr": "Il est nommé par l'avocat de l'accusé"
+        },
+        {
+          "en": "They must first pass a law school entrance exam",
+          "fr": "Il doit d'abord réussir un examen d'admission en droit"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/rights-resonsibilities-citizenship.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-020",
       "subject": "justice",
-      "text": { "en": "What should you do if you are the victim of a crime or witness one?", "fr": "Que devez-vous faire si vous êtes victime ou témoin d'un crime?" },
-      "answer": { "en": "Report it to the police, calling 911 if it is an emergency", "fr": "Le signaler à la police, en composant le 911 s'il s'agit d'une urgence" },
+      "text": {
+        "en": "What should you do if you are the victim of a crime or witness one?",
+        "fr": "Que devez-vous faire si vous êtes victime ou témoin d'un crime?"
+      },
+      "answer": {
+        "en": "Report it to the police, calling 911 if it is an emergency",
+        "fr": "Le signaler à la police, en composant le 911 s'il s'agit d'une urgence"
+      },
       "distractors": [
-        { "en": "Write to your Member of Parliament", "fr": "Écrire à votre député" },
-        { "en": "File a claim directly with the Supreme Court", "fr": "Déposer une plainte directement à la Cour suprême" },
-        { "en": "Wait until the next census to declare it", "fr": "Attendre le prochain recensement pour le déclarer" }
+        {
+          "en": "Write to your Member of Parliament",
+          "fr": "Écrire à votre député"
+        },
+        {
+          "en": "File a claim directly with the Supreme Court",
+          "fr": "Déposer une plainte directement à la Cour suprême"
+        },
+        {
+          "en": "Wait until the next census to declare it",
+          "fr": "Attendre le prochain recensement pour le déclarer"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-021",
       "subject": "justice",
-      "text": { "en": "What support is available to victims of crime in Canada?", "fr": "Quel soutien est offert aux victimes d'actes criminels au Canada?" },
-      "answer": { "en": "Victim services offered through the police, the courts and community organizations, and the right to information about their case", "fr": "Des services aux victimes offerts par la police, les tribunaux et des organismes communautaires, ainsi que le droit d'être informées de leur dossier" },
+      "text": {
+        "en": "What support is available to victims of crime in Canada?",
+        "fr": "Quel soutien est offert aux victimes d'actes criminels au Canada?"
+      },
+      "answer": {
+        "en": "Victim services offered through the police, the courts and community organizations, and the right to information about their case",
+        "fr": "Des services aux victimes offerts par la police, les tribunaux et des organismes communautaires, ainsi que le droit d'être informées de leur dossier"
+      },
       "distractors": [
-        { "en": "The right to decide the accused person's sentence", "fr": "Le droit de décider de la peine de l'accusé" },
-        { "en": "Automatic citizenship for non-citizen victims", "fr": "La citoyenneté automatique pour les victimes non citoyennes" },
-        { "en": "A guaranteed cash payment equal to the value of the crime", "fr": "Un paiement en argent garanti égal à la valeur du crime" }
+        {
+          "en": "The right to decide the accused person's sentence",
+          "fr": "Le droit de décider de la peine de l'accusé"
+        },
+        {
+          "en": "Automatic citizenship for non-citizen victims",
+          "fr": "La citoyenneté automatique pour les victimes non citoyennes"
+        },
+        {
+          "en": "A guaranteed cash payment equal to the value of the crime",
+          "fr": "Un paiement en argent garanti égal à la valeur du crime"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-022",
       "subject": "justice",
-      "text": { "en": "Why might someone consult a lawyer in Canada?", "fr": "Pourquoi une personne pourrait-elle consulter un avocat au Canada?" },
-      "answer": { "en": "To understand their rights and get advice or representation in a legal matter", "fr": "Pour comprendre ses droits et obtenir des conseils ou une représentation dans une affaire juridique" },
+      "text": {
+        "en": "Why might someone consult a lawyer in Canada?",
+        "fr": "Pourquoi une personne pourrait-elle consulter un avocat au Canada?"
+      },
+      "answer": {
+        "en": "To understand their rights and get advice or representation in a legal matter",
+        "fr": "Pour comprendre ses droits et obtenir des conseils ou une représentation dans une affaire juridique"
+      },
       "distractors": [
-        { "en": "Because a lawyer must approve every purchase over a set amount", "fr": "Parce qu'un avocat doit approuver tout achat dépassant un certain montant" },
-        { "en": "Because only lawyers may speak to the police", "fr": "Parce que seuls les avocats peuvent parler à la police" },
-        { "en": "Because lawyers issue passports and citizenship certificates", "fr": "Parce que les avocats délivrent les passeports et les certificats de citoyenneté" }
+        {
+          "en": "Because a lawyer must approve every purchase over a set amount",
+          "fr": "Parce qu'un avocat doit approuver tout achat dépassant un certain montant"
+        },
+        {
+          "en": "Because only lawyers may speak to the police",
+          "fr": "Parce que seuls les avocats peuvent parler à la police"
+        },
+        {
+          "en": "Because lawyers issue passports and citizenship certificates",
+          "fr": "Parce que les avocats délivrent les passeports et les certificats de citoyenneté"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-023",
       "subject": "justice",
-      "text": { "en": "Which legal tradition governs private (civil) law in Quebec?", "fr": "Quelle tradition juridique régit le droit privé (civil) au Québec?" },
-      "answer": { "en": "A civil code derived from French law", "fr": "Un code civil issu du droit français" },
+      "text": {
+        "en": "Which legal tradition governs private (civil) law in Quebec?",
+        "fr": "Quelle tradition juridique régit le droit privé (civil) au Québec?"
+      },
+      "answer": {
+        "en": "A civil code derived from French law",
+        "fr": "Un code civil issu du droit français"
+      },
       "distractors": [
-        { "en": "English common law", "fr": "La common law anglaise" },
-        { "en": "Roman canon law", "fr": "Le droit canonique romain" },
-        { "en": "American federal law", "fr": "Le droit fédéral américain" }
+        {
+          "en": "English common law",
+          "fr": "La common law anglaise"
+        },
+        {
+          "en": "Roman canon law",
+          "fr": "Le droit canonique romain"
+        },
+        {
+          "en": "American federal law",
+          "fr": "Le droit fédéral américain"
+        }
       ],
-      "explanation": { "en": "The rest of Canada uses common law for civil matters; criminal law is federal and applies uniformly across the country.", "fr": "Le reste du Canada applique la common law en matière civile; le droit criminel est fédéral et s'applique uniformément dans tout le pays." },
+      "explanation": {
+        "en": "The rest of Canada uses common law for civil matters; criminal law is federal and applies uniformly across the country.",
+        "fr": "Le reste du Canada applique la common law en matière civile; le droit criminel est fédéral et s'applique uniformément dans tout le pays."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/rights-resonsibilities-citizenship.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-024",
       "subject": "justice",
-      "text": { "en": "Who represents the state when someone is prosecuted for a crime?", "fr": "Qui représente l'État lorsqu'une personne est poursuivie pour un crime?" },
-      "answer": { "en": "A Crown prosecutor", "fr": "Un procureur de la Couronne" },
+      "text": {
+        "en": "Who represents the state when someone is prosecuted for a crime?",
+        "fr": "Qui représente l'État lorsqu'une personne est poursuivie pour un crime?"
+      },
+      "answer": {
+        "en": "A Crown prosecutor",
+        "fr": "Un procureur de la Couronne"
+      },
       "distractors": [
-        { "en": "The victim's family", "fr": "La famille de la victime" },
-        { "en": "The arresting police officer", "fr": "Le policier qui a procédé à l'arrestation" },
-        { "en": "The Governor General", "fr": "Le gouverneur général" }
+        {
+          "en": "The victim's family",
+          "fr": "La famille de la victime"
+        },
+        {
+          "en": "The arresting police officer",
+          "fr": "Le policier qui a procédé à l'arrestation"
+        },
+        {
+          "en": "The Governor General",
+          "fr": "Le gouverneur général"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-025",
       "subject": "justice",
-      "text": { "en": "What can a person do if they believe a court decision against them was wrong?", "fr": "Que peut faire une personne qui croit qu'une décision judiciaire rendue contre elle est erronée?" },
-      "answer": { "en": "Appeal to a higher court", "fr": "Interjeter appel devant un tribunal supérieur" },
+      "text": {
+        "en": "What can a person do if they believe a court decision against them was wrong?",
+        "fr": "Que peut faire une personne qui croit qu'une décision judiciaire rendue contre elle est erronée?"
+      },
+      "answer": {
+        "en": "Appeal to a higher court",
+        "fr": "Interjeter appel devant un tribunal supérieur"
+      },
       "distractors": [
-        { "en": "Ask the police to overturn the decision", "fr": "Demander à la police d'annuler la décision" },
-        { "en": "Petition the Prime Minister for a new trial", "fr": "Demander au premier ministre un nouveau procès" },
-        { "en": "Refuse to follow the ruling until the next election", "fr": "Refuser de se conformer au jugement jusqu'à la prochaine élection" }
+        {
+          "en": "Ask the police to overturn the decision",
+          "fr": "Demander à la police d'annuler la décision"
+        },
+        {
+          "en": "Petition the Prime Minister for a new trial",
+          "fr": "Demander au premier ministre un nouveau procès"
+        },
+        {
+          "en": "Refuse to follow the ruling until the next election",
+          "fr": "Refuser de se conformer au jugement jusqu'à la prochaine élection"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-026",
       "subject": "justice",
-      "text": { "en": "What can the courts do if a law violates the Canadian Charter of Rights and Freedoms?", "fr": "Que peuvent faire les tribunaux si une loi viole la Charte canadienne des droits et libertés?" },
-      "answer": { "en": "Declare the law, or part of it, invalid", "fr": "Déclarer la loi, ou une partie de celle-ci, invalide" },
+      "text": {
+        "en": "What can the courts do if a law violates the Canadian Charter of Rights and Freedoms?",
+        "fr": "Que peuvent faire les tribunaux si une loi viole la Charte canadienne des droits et libertés?"
+      },
+      "answer": {
+        "en": "Declare the law, or part of it, invalid",
+        "fr": "Déclarer la loi, ou une partie de celle-ci, invalide"
+      },
       "distractors": [
-        { "en": "Nothing; only Parliament can review its own laws", "fr": "Rien; seul le Parlement peut réviser ses propres lois" },
-        { "en": "Dissolve Parliament and call an election", "fr": "Dissoudre le Parlement et déclencher des élections" },
-        { "en": "Fine the Members of Parliament who voted for it", "fr": "Imposer une amende aux députés qui ont voté en sa faveur" }
+        {
+          "en": "Nothing; only Parliament can review its own laws",
+          "fr": "Rien; seul le Parlement peut réviser ses propres lois"
+        },
+        {
+          "en": "Dissolve Parliament and call an election",
+          "fr": "Dissoudre le Parlement et déclencher des élections"
+        },
+        {
+          "en": "Fine the Members of Parliament who voted for it",
+          "fr": "Imposer une amende aux députés qui ont voté en sa faveur"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-027",
       "subject": "justice",
-      "text": { "en": "Who appoints the judges of the Supreme Court of Canada?", "fr": "Qui nomme les juges de la Cour suprême du Canada?" },
-      "answer": { "en": "The Governor General, on the advice of the Prime Minister", "fr": "Le gouverneur général, sur l'avis du premier ministre" },
+      "text": {
+        "en": "Who appoints the judges of the Supreme Court of Canada?",
+        "fr": "Qui nomme les juges de la Cour suprême du Canada?"
+      },
+      "answer": {
+        "en": "The Governor General, on the advice of the Prime Minister",
+        "fr": "Le gouverneur général, sur l'avis du premier ministre"
+      },
       "distractors": [
-        { "en": "Canadian voters, in a national election", "fr": "Les électeurs canadiens, lors d'une élection nationale" },
-        { "en": "The other Supreme Court judges", "fr": "Les autres juges de la Cour suprême" },
-        { "en": "The provincial premiers by majority vote", "fr": "Les premiers ministres provinciaux à la majorité" }
+        {
+          "en": "Canadian voters, in a national election",
+          "fr": "Les électeurs canadiens, lors d'une élection nationale"
+        },
+        {
+          "en": "The other Supreme Court judges",
+          "fr": "Les autres juges de la Cour suprême"
+        },
+        {
+          "en": "The provincial premiers by majority vote",
+          "fr": "Les premiers ministres provinciaux à la majorité"
+        }
       ],
-      "explanation": { "en": "The Court has nine judges, at least three of whom must come from Quebec.", "fr": "La Cour compte neuf juges, dont au moins trois doivent provenir du Québec." },
+      "explanation": {
+        "en": "The Court has nine judges, at least three of whom must come from Quebec.",
+        "fr": "La Cour compte neuf juges, dont au moins trois doivent provenir du Québec."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-028",
       "subject": "justice",
-      "text": { "en": "Which of the following is NOT a part of Canada's court system?", "fr": "Lequel des éléments suivants ne fait PAS partie du système judiciaire canadien?" },
-      "answer": { "en": "The House of Commons", "fr": "La Chambre des communes" },
+      "text": {
+        "en": "Which of the following is NOT a part of Canada's court system?",
+        "fr": "Lequel des éléments suivants ne fait PAS partie du système judiciaire canadien?"
+      },
+      "answer": {
+        "en": "The House of Commons",
+        "fr": "La Chambre des communes"
+      },
       "distractors": [
-        { "en": "The Supreme Court of Canada", "fr": "La Cour suprême du Canada" },
-        { "en": "Provincial courts of appeal", "fr": "Les cours d'appel provinciales" },
-        { "en": "The Federal Court", "fr": "La Cour fédérale" }
+        {
+          "en": "The Supreme Court of Canada",
+          "fr": "La Cour suprême du Canada"
+        },
+        {
+          "en": "Provincial courts of appeal",
+          "fr": "Les cours d'appel provinciales"
+        },
+        {
+          "en": "The Federal Court",
+          "fr": "La Cour fédérale"
+        }
       ],
-      "explanation": { "en": "The House of Commons is part of the legislative branch; it makes laws rather than judging cases.", "fr": "La Chambre des communes fait partie du pouvoir législatif; elle adopte les lois plutôt que de juger des causes." },
+      "explanation": {
+        "en": "The House of Commons is part of the legislative branch; it makes laws rather than judging cases.",
+        "fr": "La Chambre des communes fait partie du pouvoir législatif; elle adopte les lois plutôt que de juger des causes."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-029",
       "subject": "justice",
-      "text": { "en": "In Canada, how must the law treat people of different backgrounds, religions or origins?", "fr": "Au Canada, comment la loi doit-elle traiter les personnes d'origines, de religions ou de milieux différents?" },
-      "answer": { "en": "Equally; everyone is entitled to the same protection and benefit of the law without discrimination", "fr": "De façon égale; chacun a droit à la même protection et au même bénéfice de la loi, sans discrimination" },
+      "text": {
+        "en": "In Canada, how must the law treat people of different backgrounds, religions or origins?",
+        "fr": "Au Canada, comment la loi doit-elle traiter les personnes d'origines, de religions ou de milieux différents?"
+      },
+      "answer": {
+        "en": "Equally; everyone is entitled to the same protection and benefit of the law without discrimination",
+        "fr": "De façon égale; chacun a droit à la même protection et au même bénéfice de la loi, sans discrimination"
+      },
       "distractors": [
-        { "en": "According to how long they have lived in Canada", "fr": "Selon la durée de leur séjour au Canada" },
-        { "en": "According to the laws of their country of origin", "fr": "Selon les lois de leur pays d'origine" },
-        { "en": "Citizens receive more protection than non-citizens", "fr": "Les citoyens reçoivent plus de protection que les non-citoyens" }
+        {
+          "en": "According to how long they have lived in Canada",
+          "fr": "Selon la durée de leur séjour au Canada"
+        },
+        {
+          "en": "According to the laws of their country of origin",
+          "fr": "Selon les lois de leur pays d'origine"
+        },
+        {
+          "en": "Citizens receive more protection than non-citizens",
+          "fr": "Les citoyens reçoivent plus de protection que les non-citoyens"
+        }
       ],
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/rights-resonsibilities-citizenship.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ju-030",
       "subject": "justice",
-      "text": { "en": "What is the role of a jury in a criminal trial?", "fr": "Quel est le rôle d'un jury dans un procès criminel?" },
-      "answer": { "en": "To weigh the evidence and decide whether the accused is guilty or not guilty", "fr": "Évaluer la preuve et décider si l'accusé est coupable ou non coupable" },
+      "text": {
+        "en": "What is the role of a jury in a criminal trial?",
+        "fr": "Quel est le rôle d'un jury dans un procès criminel?"
+      },
+      "answer": {
+        "en": "To weigh the evidence and decide whether the accused is guilty or not guilty",
+        "fr": "Évaluer la preuve et décider si l'accusé est coupable ou non coupable"
+      },
       "distractors": [
-        { "en": "To investigate the crime alongside the police", "fr": "Enquêter sur le crime aux côtés de la police" },
-        { "en": "To write the laws that apply to the case", "fr": "Rédiger les lois qui s'appliquent à l'affaire" },
-        { "en": "To represent the accused in court", "fr": "Représenter l'accusé devant le tribunal" }
+        {
+          "en": "To investigate the crime alongside the police",
+          "fr": "Enquêter sur le crime aux côtés de la police"
+        },
+        {
+          "en": "To write the laws that apply to the case",
+          "fr": "Rédiger les lois qui s'appliquent à l'affaire"
+        },
+        {
+          "en": "To represent the accused in court",
+          "fr": "Représenter l'accusé devant le tribunal"
+        }
       ],
-      "explanation": { "en": "The judge rules on questions of law and, after a guilty verdict, decides the sentence.", "fr": "Le juge tranche les questions de droit et, après un verdict de culpabilité, détermine la peine." },
+      "explanation": {
+        "en": "The judge rules on questions of law and, after a guilty verdict, decides the sentence.",
+        "fr": "Le juge tranche les questions de droit et, après un verdict de culpabilité, détermine la peine."
+      },
       "source": "Discover Canada: The Justice System",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
       "asOf": "2026-09-07",
       "volatile": false
     }

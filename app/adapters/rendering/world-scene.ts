@@ -28,6 +28,9 @@ export class WorldScene {
   readonly lights: THREE.Light[] = [];
   private readonly disposables: { dispose(): void }[] = [];
   fauna: FaunaSystem | null = null;
+  /** Objects added a few per frame after the loading screen hides: turns one long shader-compile freeze into a fill-in. */
+  readonly pending: THREE.Object3D[] = [];
+  private hydrationBudget = 2;
 
   private constructor(
     readonly district: District,
@@ -142,7 +145,7 @@ export class WorldScene {
       scene.disposables.push({ dispose: () => mesh.geometry.dispose() });
     }
     for (const { l, b } of landmarkBuilds) {
-      scene.group.add(b.object);
+      scene.pending.push(b.object);
       scene.colliders.push(...b.colliders);
       scene.lights.push(...b.lights);
       if (b.footprint.w > 3) scene.occluders.push(b.object);
@@ -153,20 +156,20 @@ export class WorldScene {
       const beacon = scene.buildMarker('portal', 2.2);
       beacon.position.set(poi.position[0], heightAt(poi.position[0], poi.position[2]) + 0.05, poi.position[2]);
       beacon.name = `poi:${poi.id}`;
-      scene.group.add(beacon);
+      scene.pending.push(beacon);
       scene.markers.push({ id: `poi:${poi.id}`, object: beacon });
     }
     for (const t of district.triggers) {
       const marker = scene.buildMarker(t.kind, t.radius);
       marker.position.set(t.position[0], heightAt(t.position[0], t.position[2]) + 0.05, t.position[2]);
       marker.name = `trigger:${t.id}`;
-      scene.group.add(marker);
+      scene.pending.push(marker);
       scene.markers.push({ id: t.id, object: marker });
     }
     if (policy !== 'lite') {
       const fauna = new FaunaSystem(library, heightAt);
       await fauna.populate(district.pois, s.seed, (s.water?.[0]?.position[1] ?? -0.6));
-      scene.group.add(fauna.group);
+      scene.pending.push(fauna.group);
       scene.fauna = fauna;
     }
     onProgress?.(0.8);
@@ -193,7 +196,23 @@ export class WorldScene {
     return g;
   }
 
+  /** Add up to `budget` queued objects; called once per frame. */
+  hydrate(budget = this.hydrationBudget): number {
+    let n = 0;
+    while (n < budget && this.pending.length > 0) {
+      const obj = this.pending.shift();
+      if (obj) this.group.add(obj);
+      n++;
+    }
+    return this.pending.length;
+  }
+
+  get hydrated(): boolean {
+    return this.pending.length === 0;
+  }
+
   update(dt: number, cameraPos: THREE.Vector3, elapsed: number): void {
+    this.hydrate();
     this.vegetation.updateLod(cameraPos);
     this.fauna?.update(dt, elapsed);
     for (const m of this.markers) {

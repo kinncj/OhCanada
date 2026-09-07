@@ -1,0 +1,11 @@
+{
+  "key": "totem-pole",
+  "category": "hero",
+  "prompt": "a Pacific Northwest coast totem pole, a tall carved cedar log pole with stacked stylised animal figures, a thunderbird with spread wings on top, bear and raven faces, painted red, black and turquoise, full height, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds",
+  "seed": 110,
+  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "targetHeightMeters": 8,
+  "polyBudget": 16000,
+  "notes": "culturalReview: true. Indigenous (Haida / Kwakwaka'wakw style) art form; the generated pole is a generic stylisation and must be reviewed by the content review before shipping."
+}

@@ -77,7 +77,8 @@
     "exam": "Citizenship Ceremony",
     "examLocked": "Earn {{needed}} stamps to unlock the ceremony ({{have}} so far).",
     "examOpen": "You're ready. Take the mock exam!",
-    "practiceExam": "Practice exam (unlocked anytime)"
+    "practiceExam": "Practice exam (unlocked anytime)",
+    "fastTravel": "Fast travel"
   },
   "exam": {
     "title": "Citizenship Ceremony — Mock Exam",

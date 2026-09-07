@@ -5,431 +5,944 @@
     {
       "id": "q-ww-001",
       "subject": "who-we-are",
-      "text": { "en": "Which three peoples are described as the founding peoples of Canada?", "fr": "Quels sont les trois peuples décrits comme les peuples fondateurs du Canada?" },
-      "answer": { "en": "Indigenous peoples, the French and the British", "fr": "Les peuples autochtones, les Français et les Britanniques" },
+      "text": {
+        "en": "Which three peoples are described as the founding peoples of Canada?",
+        "fr": "Quels sont les trois peuples décrits comme les peuples fondateurs du Canada?"
+      },
+      "answer": {
+        "en": "Indigenous peoples, the French and the British",
+        "fr": "Les peuples autochtones, les Français et les Britanniques"
+      },
       "distractors": [
-        { "en": "The French, the British and the Americans", "fr": "Les Français, les Britanniques et les Américains" },
-        { "en": "The Inuit, the Métis and the Acadians", "fr": "Les Inuits, les Métis et les Acadiens" },
-        { "en": "The British, the Irish and the Scots", "fr": "Les Britanniques, les Irlandais et les Écossais" }
+        {
+          "en": "The French, the British and the Americans",
+          "fr": "Les Français, les Britanniques et les Américains"
+        },
+        {
+          "en": "The Inuit, the Métis and the Acadians",
+          "fr": "Les Inuits, les Métis et les Acadiens"
+        },
+        {
+          "en": "The British, the Irish and the Scots",
+          "fr": "Les Britanniques, les Irlandais et les Écossais"
+        }
       ],
-      "explanation": { "en": "Canadian society grew from the meeting of Indigenous peoples with French and British settlers, and Discover Canada calls these three the founding peoples.", "fr": "La société canadienne est née de la rencontre des peuples autochtones avec les colons français et britanniques; Découvrir le Canada les qualifie de peuples fondateurs." },
+      "explanation": {
+        "en": "Canadian society grew from the meeting of Indigenous peoples with French and British settlers, and Discover Canada calls these three the founding peoples.",
+        "fr": "La société canadienne est née de la rencontre des peuples autochtones avec les colons français et britanniques; Découvrir le Canada les qualifie de peuples fondateurs."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-002",
       "subject": "who-we-are",
-      "text": { "en": "Which of the following is NOT one of the three distinct groups of Indigenous peoples recognized in Canada?", "fr": "Lequel des groupes suivants n'est PAS l'un des trois groupes distincts de peuples autochtones reconnus au Canada?" },
-      "answer": { "en": "Acadians", "fr": "Les Acadiens" },
+      "text": {
+        "en": "Which of the following is NOT one of the three distinct groups of Indigenous peoples recognized in Canada?",
+        "fr": "Lequel des groupes suivants n'est PAS l'un des trois groupes distincts de peuples autochtones reconnus au Canada?"
+      },
+      "answer": {
+        "en": "Acadians",
+        "fr": "Les Acadiens"
+      },
       "distractors": [
-        { "en": "First Nations", "fr": "Les Premières Nations" },
-        { "en": "Inuit", "fr": "Les Inuits" },
-        { "en": "Métis", "fr": "Les Métis" }
+        {
+          "en": "First Nations",
+          "fr": "Les Premières Nations"
+        },
+        {
+          "en": "Inuit",
+          "fr": "Les Inuits"
+        },
+        {
+          "en": "Métis",
+          "fr": "Les Métis"
+        }
       ],
-      "explanation": { "en": "Acadians are descendants of French colonists in the Maritimes; the three Indigenous groups are First Nations, Inuit and Métis.", "fr": "Les Acadiens descendent de colons français établis dans les Maritimes; les trois groupes autochtones sont les Premières Nations, les Inuits et les Métis." },
+      "explanation": {
+        "en": "Acadians are descendants of French colonists in the Maritimes; the three Indigenous groups are First Nations, Inuit and Métis.",
+        "fr": "Les Acadiens descendent de colons français établis dans les Maritimes; les trois groupes autochtones sont les Premières Nations, les Inuits et les Métis."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-003",
       "subject": "who-we-are",
-      "text": { "en": "Which document first guaranteed the territorial rights of Indigenous peoples in what is now Canada?", "fr": "Quel document a garanti pour la première fois les droits territoriaux des peuples autochtones dans ce qui est aujourd'hui le Canada?" },
-      "answer": { "en": "The Royal Proclamation of 1763", "fr": "La Proclamation royale de 1763" },
+      "text": {
+        "en": "Which document first guaranteed the territorial rights of Indigenous peoples in what is now Canada?",
+        "fr": "Quel document a garanti pour la première fois les droits territoriaux des peuples autochtones dans ce qui est aujourd'hui le Canada?"
+      },
+      "answer": {
+        "en": "The Royal Proclamation of 1763",
+        "fr": "La Proclamation royale de 1763"
+      },
       "distractors": [
-        { "en": "The Quebec Act of 1774", "fr": "L'Acte de Québec de 1774" },
-        { "en": "The British North America Act of 1867", "fr": "L'Acte de l'Amérique du Nord britannique de 1867" },
-        { "en": "The Constitution Act of 1982", "fr": "La Loi constitutionnelle de 1982" }
+        {
+          "en": "The Quebec Act of 1774",
+          "fr": "L'Acte de Québec de 1774"
+        },
+        {
+          "en": "The British North America Act of 1867",
+          "fr": "L'Acte de l'Amérique du Nord britannique de 1867"
+        },
+        {
+          "en": "The Constitution Act of 1982",
+          "fr": "La Loi constitutionnelle de 1982"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-004",
       "subject": "who-we-are",
-      "text": { "en": "Which monarch issued the Royal Proclamation of 1763?", "fr": "Quel monarque a émis la Proclamation royale de 1763?" },
-      "answer": { "en": "King George III", "fr": "Le roi George III" },
+      "text": {
+        "en": "Which monarch issued the Royal Proclamation of 1763?",
+        "fr": "Quel monarque a émis la Proclamation royale de 1763?"
+      },
+      "answer": {
+        "en": "King George III",
+        "fr": "Le roi George III"
+      },
       "distractors": [
-        { "en": "Queen Victoria", "fr": "La reine Victoria" },
-        { "en": "King Louis XIV", "fr": "Le roi Louis XIV" },
-        { "en": "King Charles II", "fr": "Le roi Charles II" }
+        {
+          "en": "Queen Victoria",
+          "fr": "La reine Victoria"
+        },
+        {
+          "en": "King Louis XIV",
+          "fr": "Le roi Louis XIV"
+        },
+        {
+          "en": "King Charles II",
+          "fr": "Le roi Charles II"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-005",
       "subject": "who-we-are",
-      "text": { "en": "Since what year have Indigenous and treaty rights been recognized in Canada's Constitution?", "fr": "Depuis quelle année les droits ancestraux et issus de traités des peuples autochtones sont-ils reconnus dans la Constitution du Canada?" },
-      "answer": { "en": "1982", "fr": "1982" },
+      "text": {
+        "en": "Since what year have Indigenous and treaty rights been recognized in Canada's Constitution?",
+        "fr": "Depuis quelle année les droits ancestraux et issus de traités des peuples autochtones sont-ils reconnus dans la Constitution du Canada?"
+      },
+      "answer": {
+        "en": "1982",
+        "fr": "1982"
+      },
       "distractors": [
-        { "en": "1867", "fr": "1867" },
-        { "en": "1763", "fr": "1763" },
-        { "en": "2008", "fr": "2008" }
+        {
+          "en": "1867",
+          "fr": "1867"
+        },
+        {
+          "en": "1763",
+          "fr": "1763"
+        },
+        {
+          "en": "2008",
+          "fr": "2008"
+        }
       ],
-      "explanation": { "en": "The Constitution Act, 1982 recognizes and affirms the existing rights of the peoples it calls 'Aboriginal peoples', including treaty rights.", "fr": "La Loi constitutionnelle de 1982 reconnaît et confirme les droits existants des « peuples autochtones », y compris les droits issus de traités." },
+      "explanation": {
+        "en": "The Constitution Act, 1982 recognizes and affirms the existing rights of the peoples it calls 'Aboriginal peoples', including treaty rights.",
+        "fr": "La Loi constitutionnelle de 1982 reconnaît et confirme les droits existants des « peuples autochtones », y compris les droits issus de traités."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-006",
       "subject": "who-we-are",
-      "text": { "en": "What does the word 'Inuit' mean in Inuktitut?", "fr": "Que signifie le mot « Inuit » en inuktitut?" },
-      "answer": { "en": "The people", "fr": "Le peuple" },
+      "text": {
+        "en": "What does the word 'Inuit' mean in Inuktitut?",
+        "fr": "Que signifie le mot « Inuit » en inuktitut?"
+      },
+      "answer": {
+        "en": "The people",
+        "fr": "Le peuple"
+      },
       "distractors": [
-        { "en": "The land of ice", "fr": "La terre de glace" },
-        { "en": "The hunters", "fr": "Les chasseurs" },
-        { "en": "Our home", "fr": "Notre foyer" }
+        {
+          "en": "The land of ice",
+          "fr": "La terre de glace"
+        },
+        {
+          "en": "The hunters",
+          "fr": "Les chasseurs"
+        },
+        {
+          "en": "Our home",
+          "fr": "Notre foyer"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-007",
       "subject": "who-we-are",
-      "text": { "en": "In which part of Canada do the Inuit mainly live?", "fr": "Dans quelle partie du Canada les Inuits vivent-ils principalement?" },
-      "answer": { "en": "In small, scattered communities across the Arctic", "fr": "Dans de petites communautés dispersées dans l'Arctique" },
+      "text": {
+        "en": "In which part of Canada do the Inuit mainly live?",
+        "fr": "Dans quelle partie du Canada les Inuits vivent-ils principalement?"
+      },
+      "answer": {
+        "en": "In small, scattered communities across the Arctic",
+        "fr": "Dans de petites communautés dispersées dans l'Arctique"
+      },
       "distractors": [
-        { "en": "In large cities in southern Ontario", "fr": "Dans les grandes villes du sud de l'Ontario" },
-        { "en": "In farming communities on the Prairies", "fr": "Dans des communautés agricoles des Prairies" },
-        { "en": "Along the Pacific coast of British Columbia", "fr": "Le long de la côte du Pacifique en Colombie-Britannique" }
+        {
+          "en": "In large cities in southern Ontario",
+          "fr": "Dans les grandes villes du sud de l'Ontario"
+        },
+        {
+          "en": "In farming communities on the Prairies",
+          "fr": "Dans des communautés agricoles des Prairies"
+        },
+        {
+          "en": "Along the Pacific coast of British Columbia",
+          "fr": "Le long de la côte du Pacifique en Colombie-Britannique"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-008",
       "subject": "who-we-are",
-      "text": { "en": "Who are the Métis?", "fr": "Qui sont les Métis?" },
-      "answer": { "en": "A distinct people of mixed Indigenous and European ancestry", "fr": "Un peuple distinct d'ascendance mixte autochtone et européenne" },
+      "text": {
+        "en": "Who are the Métis?",
+        "fr": "Qui sont les Métis?"
+      },
+      "answer": {
+        "en": "A distinct people of mixed Indigenous and European ancestry",
+        "fr": "Un peuple distinct d'ascendance mixte autochtone et européenne"
+      },
       "distractors": [
-        { "en": "Indigenous people who live on reserve lands", "fr": "Des Autochtones qui vivent dans des réserves" },
-        { "en": "Descendants of French colonists in the Maritimes", "fr": "Des descendants de colons français des Maritimes" },
-        { "en": "The Indigenous people of the Arctic", "fr": "Le peuple autochtone de l'Arctique" }
+        {
+          "en": "Indigenous people who live on reserve lands",
+          "fr": "Des Autochtones qui vivent dans des réserves"
+        },
+        {
+          "en": "Descendants of French colonists in the Maritimes",
+          "fr": "Des descendants de colons français des Maritimes"
+        },
+        {
+          "en": "The Indigenous people of the Arctic",
+          "fr": "Le peuple autochtone de l'Arctique"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-009",
       "subject": "who-we-are",
-      "text": { "en": "In which region do the majority of Métis live?", "fr": "Dans quelle région vit la majorité des Métis?" },
-      "answer": { "en": "The Prairie provinces", "fr": "Les provinces des Prairies" },
+      "text": {
+        "en": "In which region do the majority of Métis live?",
+        "fr": "Dans quelle région vit la majorité des Métis?"
+      },
+      "answer": {
+        "en": "The Prairie provinces",
+        "fr": "Les provinces des Prairies"
+      },
       "distractors": [
-        { "en": "The Atlantic provinces", "fr": "Les provinces de l'Atlantique" },
-        { "en": "The northern territories", "fr": "Les territoires du Nord" },
-        { "en": "Quebec", "fr": "Le Québec" }
+        {
+          "en": "The Atlantic provinces",
+          "fr": "Les provinces de l'Atlantique"
+        },
+        {
+          "en": "The northern territories",
+          "fr": "Les territoires du Nord"
+        },
+        {
+          "en": "Quebec",
+          "fr": "Le Québec"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-010",
       "subject": "who-we-are",
-      "text": { "en": "What is the name of the dialect spoken by the Métis?", "fr": "Comment s'appelle le dialecte parlé par les Métis?" },
-      "answer": { "en": "Michif", "fr": "Le michif" },
+      "text": {
+        "en": "What is the name of the dialect spoken by the Métis?",
+        "fr": "Comment s'appelle le dialecte parlé par les Métis?"
+      },
+      "answer": {
+        "en": "Michif",
+        "fr": "Le michif"
+      },
       "distractors": [
-        { "en": "Inuktitut", "fr": "L'inuktitut" },
-        { "en": "Cree", "fr": "Le cri" },
-        { "en": "Joual", "fr": "Le joual" }
+        {
+          "en": "Inuktitut",
+          "fr": "L'inuktitut"
+        },
+        {
+          "en": "Cree",
+          "fr": "Le cri"
+        },
+        {
+          "en": "Joual",
+          "fr": "Le joual"
+        }
       ],
-      "explanation": { "en": "The Métis come from both French- and English-speaking backgrounds and developed their own dialect, Michif.", "fr": "Les Métis sont issus de milieux tant francophones qu'anglophones et ont développé leur propre dialecte, le michif." },
+      "explanation": {
+        "en": "The Métis come from both French- and English-speaking backgrounds and developed their own dialect, Michif.",
+        "fr": "Les Métis sont issus de milieux tant francophones qu'anglophones et ont développé leur propre dialecte, le michif."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-011",
       "subject": "who-we-are",
-      "text": { "en": "In which decade did the term 'First Nations' come into common use?", "fr": "Au cours de quelle décennie l'expression « Premières Nations » est-elle entrée dans l'usage courant?" },
-      "answer": { "en": "The 1970s", "fr": "Les années 1970" },
+      "text": {
+        "en": "In which decade did the term 'First Nations' come into common use?",
+        "fr": "Au cours de quelle décennie l'expression « Premières Nations » est-elle entrée dans l'usage courant?"
+      },
+      "answer": {
+        "en": "The 1970s",
+        "fr": "Les années 1970"
+      },
       "distractors": [
-        { "en": "The 1860s", "fr": "Les années 1860" },
-        { "en": "The 1920s", "fr": "Les années 1920" },
-        { "en": "The 1990s", "fr": "Les années 1990" }
+        {
+          "en": "The 1860s",
+          "fr": "Les années 1860"
+        },
+        {
+          "en": "The 1920s",
+          "fr": "Les années 1920"
+        },
+        {
+          "en": "The 1990s",
+          "fr": "Les années 1990"
+        }
       ],
-      "explanation": { "en": "The term 'Indian' in the Constitution refers to Indigenous people who are neither Inuit nor Métis; 'First Nations' has been used since the 1970s.", "fr": "Le terme « Indien » dans la Constitution désigne les Autochtones qui ne sont ni Inuits ni Métis; l'expression « Premières Nations » est utilisée depuis les années 1970." },
+      "explanation": {
+        "en": "The term 'Indian' in the Constitution refers to Indigenous people who are neither Inuit nor Métis; 'First Nations' has been used since the 1970s.",
+        "fr": "Le terme « Indien » dans la Constitution désigne les Autochtones qui ne sont ni Inuits ni Métis; l'expression « Premières Nations » est utilisée depuis les années 1970."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-012",
       "subject": "who-we-are",
-      "text": { "en": "Approximately what share of Indigenous people in Canada are First Nations?", "fr": "Environ quelle proportion des Autochtones du Canada sont membres des Premières Nations?" },
-      "answer": { "en": "About 65%", "fr": "Environ 65 %" },
+      "text": {
+        "en": "Approximately what share of Indigenous people in Canada are First Nations?",
+        "fr": "Environ quelle proportion des Autochtones du Canada sont membres des Premières Nations?"
+      },
+      "answer": {
+        "en": "About 65%",
+        "fr": "Environ 65 %"
+      },
       "distractors": [
-        { "en": "About 30%", "fr": "Environ 30 %" },
-        { "en": "About 4%", "fr": "Environ 4 %" },
-        { "en": "About 90%", "fr": "Environ 90 %" }
+        {
+          "en": "About 30%",
+          "fr": "Environ 30 %"
+        },
+        {
+          "en": "About 4%",
+          "fr": "Environ 4 %"
+        },
+        {
+          "en": "About 90%",
+          "fr": "Environ 90 %"
+        }
       ],
-      "explanation": { "en": "Discover Canada gives roughly 65% First Nations, 30% Métis and 4% Inuit.", "fr": "Découvrir le Canada indique environ 65 % de membres des Premières Nations, 30 % de Métis et 4 % d'Inuits." },
+      "explanation": {
+        "en": "Discover Canada gives roughly 65% First Nations, 30% Métis and 4% Inuit.",
+        "fr": "Découvrir le Canada indique environ 65 % de membres des Premières Nations, 30 % de Métis et 4 % d'Inuits."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-013",
       "subject": "who-we-are",
-      "text": { "en": "Which of the three Indigenous groups is the smallest in population?", "fr": "Lequel des trois groupes autochtones est le moins nombreux?" },
-      "answer": { "en": "Inuit", "fr": "Les Inuits" },
+      "text": {
+        "en": "Which of the three Indigenous groups is the smallest in population?",
+        "fr": "Lequel des trois groupes autochtones est le moins nombreux?"
+      },
+      "answer": {
+        "en": "Inuit",
+        "fr": "Les Inuits"
+      },
       "distractors": [
-        { "en": "First Nations", "fr": "Les Premières Nations" },
-        { "en": "Métis", "fr": "Les Métis" },
-        { "en": "They are roughly equal in size", "fr": "Ils sont à peu près de taille égale" }
+        {
+          "en": "First Nations",
+          "fr": "Les Premières Nations"
+        },
+        {
+          "en": "Métis",
+          "fr": "Les Métis"
+        },
+        {
+          "en": "They are roughly equal in size",
+          "fr": "Ils sont à peu près de taille égale"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-014",
       "subject": "who-we-are",
-      "text": { "en": "Where do about half of First Nations people live?", "fr": "Où vit environ la moitié des membres des Premières Nations?" },
-      "answer": { "en": "On reserve lands, with the other half mainly in urban centres", "fr": "Dans des réserves, l'autre moitié vivant surtout dans les centres urbains" },
+      "text": {
+        "en": "Where do about half of First Nations people live?",
+        "fr": "Où vit environ la moitié des membres des Premières Nations?"
+      },
+      "answer": {
+        "en": "On reserve lands, with the other half mainly in urban centres",
+        "fr": "Dans des réserves, l'autre moitié vivant surtout dans les centres urbains"
+      },
       "distractors": [
-        { "en": "In the Arctic territories", "fr": "Dans les territoires de l'Arctique" },
-        { "en": "Outside Canada", "fr": "À l'extérieur du Canada" },
-        { "en": "In Quebec's Eastern Townships", "fr": "Dans les Cantons-de-l'Est au Québec" }
+        {
+          "en": "In the Arctic territories",
+          "fr": "Dans les territoires de l'Arctique"
+        },
+        {
+          "en": "Outside Canada",
+          "fr": "À l'extérieur du Canada"
+        },
+        {
+          "en": "In Quebec's Eastern Townships",
+          "fr": "Dans les Cantons-de-l'Est au Québec"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-015",
       "subject": "who-we-are",
-      "text": { "en": "In what year did the federal government formally apologize to former students of residential schools?", "fr": "En quelle année le gouvernement fédéral a-t-il présenté des excuses officielles aux anciens élèves des pensionnats?" },
-      "answer": { "en": "2008", "fr": "2008" },
+      "text": {
+        "en": "In what year did the federal government formally apologize to former students of residential schools?",
+        "fr": "En quelle année le gouvernement fédéral a-t-il présenté des excuses officielles aux anciens élèves des pensionnats?"
+      },
+      "answer": {
+        "en": "2008",
+        "fr": "2008"
+      },
       "distractors": [
-        { "en": "1982", "fr": "1982" },
-        { "en": "1996", "fr": "1996" },
-        { "en": "2015", "fr": "2015" }
+        {
+          "en": "1982",
+          "fr": "1982"
+        },
+        {
+          "en": "1996",
+          "fr": "1996"
+        },
+        {
+          "en": "2015",
+          "fr": "2015"
+        }
       ],
-      "explanation": { "en": "From the 1800s until the 1980s, many Indigenous children were placed in residential schools; in 2008 Ottawa formally apologized to the former students.", "fr": "Des années 1800 jusqu'aux années 1980, de nombreux enfants autochtones ont été placés dans des pensionnats; en 2008, Ottawa a présenté des excuses officielles aux anciens élèves." },
+      "explanation": {
+        "en": "From the 1800s until the 1980s, many Indigenous children were placed in residential schools; in 2008 Ottawa formally apologized to the former students.",
+        "fr": "Des années 1800 jusqu'aux années 1980, de nombreux enfants autochtones ont été placés dans des pensionnats; en 2008, Ottawa a présenté des excuses officielles aux anciens élèves."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-016",
       "subject": "who-we-are",
-      "text": { "en": "What was the stated aim of the residential school system for Indigenous children?", "fr": "Quel était l'objectif déclaré du système des pensionnats pour les enfants autochtones?" },
-      "answer": { "en": "To educate and assimilate them into mainstream Canadian culture", "fr": "Les éduquer et les assimiler à la culture canadienne dominante" },
+      "text": {
+        "en": "What was the stated aim of the residential school system for Indigenous children?",
+        "fr": "Quel était l'objectif déclaré du système des pensionnats pour les enfants autochtones?"
+      },
+      "answer": {
+        "en": "To educate and assimilate them into mainstream Canadian culture",
+        "fr": "Les éduquer et les assimiler à la culture canadienne dominante"
+      },
       "distractors": [
-        { "en": "To teach Indigenous languages to all Canadians", "fr": "Enseigner les langues autochtones à tous les Canadiens" },
-        { "en": "To train them for military service", "fr": "Les préparer au service militaire" },
-        { "en": "To prepare them to govern their reserves", "fr": "Les préparer à gouverner leurs réserves" }
+        {
+          "en": "To teach Indigenous languages to all Canadians",
+          "fr": "Enseigner les langues autochtones à tous les Canadiens"
+        },
+        {
+          "en": "To train them for military service",
+          "fr": "Les préparer au service militaire"
+        },
+        {
+          "en": "To prepare them to govern their reserves",
+          "fr": "Les préparer à gouverner leurs réserves"
+        }
       ],
-      "explanation": { "en": "The schools were poorly funded and inflicted hardship; Indigenous languages and cultural practices were mostly forbidden and some students were physically abused.", "fr": "Les pensionnats étaient sous-financés et ont causé beaucoup de souffrance; les langues et pratiques culturelles autochtones y étaient généralement interdites et certains élèves ont subi des violences physiques." },
+      "explanation": {
+        "en": "The schools were poorly funded and inflicted hardship; Indigenous languages and cultural practices were mostly forbidden and some students were physically abused.",
+        "fr": "Les pensionnats étaient sous-financés et ont causé beaucoup de souffrance; les langues et pratiques culturelles autochtones y étaient généralement interdites et certains élèves ont subi des violences physiques."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-017",
       "subject": "who-we-are",
-      "text": { "en": "According to Discover Canada, from where are the ancestors of Indigenous peoples believed to have migrated thousands of years ago?", "fr": "Selon Découvrir le Canada, d'où les ancêtres des peuples autochtones auraient-ils migré il y a des milliers d'années?" },
-      "answer": { "en": "Asia", "fr": "L'Asie" },
+      "text": {
+        "en": "According to Discover Canada, from where are the ancestors of Indigenous peoples believed to have migrated thousands of years ago?",
+        "fr": "Selon Découvrir le Canada, d'où les ancêtres des peuples autochtones auraient-ils migré il y a des milliers d'années?"
+      },
+      "answer": {
+        "en": "Asia",
+        "fr": "L'Asie"
+      },
       "distractors": [
-        { "en": "Europe", "fr": "L'Europe" },
-        { "en": "Africa", "fr": "L'Afrique" },
-        { "en": "South America", "fr": "L'Amérique du Sud" }
+        {
+          "en": "Europe",
+          "fr": "L'Europe"
+        },
+        {
+          "en": "Africa",
+          "fr": "L'Afrique"
+        },
+        {
+          "en": "South America",
+          "fr": "L'Amérique du Sud"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-018",
       "subject": "who-we-are",
-      "text": { "en": "What are Canada's two official languages?", "fr": "Quelles sont les deux langues officielles du Canada?" },
-      "answer": { "en": "English and French", "fr": "L'anglais et le français" },
+      "text": {
+        "en": "What are Canada's two official languages?",
+        "fr": "Quelles sont les deux langues officielles du Canada?"
+      },
+      "answer": {
+        "en": "English and French",
+        "fr": "L'anglais et le français"
+      },
       "distractors": [
-        { "en": "English and Inuktitut", "fr": "L'anglais et l'inuktitut" },
-        { "en": "French and Michif", "fr": "Le français et le michif" },
-        { "en": "English only", "fr": "L'anglais seulement" }
+        {
+          "en": "English and Inuktitut",
+          "fr": "L'anglais et l'inuktitut"
+        },
+        {
+          "en": "French and Michif",
+          "fr": "Le français et le michif"
+        },
+        {
+          "en": "English only",
+          "fr": "L'anglais seulement"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-019",
       "subject": "who-we-are",
-      "text": { "en": "Which is the only officially bilingual province in Canada?", "fr": "Quelle est la seule province officiellement bilingue du Canada?" },
-      "answer": { "en": "New Brunswick", "fr": "Le Nouveau-Brunswick" },
+      "text": {
+        "en": "Which is the only officially bilingual province in Canada?",
+        "fr": "Quelle est la seule province officiellement bilingue du Canada?"
+      },
+      "answer": {
+        "en": "New Brunswick",
+        "fr": "Le Nouveau-Brunswick"
+      },
       "distractors": [
-        { "en": "Quebec", "fr": "Le Québec" },
-        { "en": "Ontario", "fr": "L'Ontario" },
-        { "en": "Manitoba", "fr": "Le Manitoba" }
+        {
+          "en": "Quebec",
+          "fr": "Le Québec"
+        },
+        {
+          "en": "Ontario",
+          "fr": "L'Ontario"
+        },
+        {
+          "en": "Manitoba",
+          "fr": "Le Manitoba"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-020",
       "subject": "who-we-are",
-      "text": { "en": "Roughly how many Canadians speak English as their first language, according to Discover Canada?", "fr": "Selon Découvrir le Canada, environ combien de Canadiens ont l'anglais comme langue maternelle?" },
-      "answer": { "en": "About 18 million", "fr": "Environ 18 millions" },
+      "text": {
+        "en": "Roughly how many Canadians speak English as their first language, according to Discover Canada?",
+        "fr": "Selon Découvrir le Canada, environ combien de Canadiens ont l'anglais comme langue maternelle?"
+      },
+      "answer": {
+        "en": "About 18 million",
+        "fr": "Environ 18 millions"
+      },
       "distractors": [
-        { "en": "About 7 million", "fr": "Environ 7 millions" },
-        { "en": "About 30 million", "fr": "Environ 30 millions" },
-        { "en": "About 1 million", "fr": "Environ 1 million" }
+        {
+          "en": "About 7 million",
+          "fr": "Environ 7 millions"
+        },
+        {
+          "en": "About 30 million",
+          "fr": "Environ 30 millions"
+        },
+        {
+          "en": "About 1 million",
+          "fr": "Environ 1 million"
+        }
       ],
-      "explanation": { "en": "The guide counts about 18 million anglophones and 7 million francophones.", "fr": "Le guide dénombre environ 18 millions d'anglophones et 7 millions de francophones." },
+      "explanation": {
+        "en": "The guide counts about 18 million anglophones and 7 million francophones.",
+        "fr": "Le guide dénombre environ 18 millions d'anglophones et 7 millions de francophones."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-021",
       "subject": "who-we-are",
-      "text": { "en": "Outside Quebec, in which provinces does Discover Canada say about one million francophones live?", "fr": "En dehors du Québec, dans quelles provinces Découvrir le Canada situe-t-il environ un million de francophones?" },
-      "answer": { "en": "Ontario, New Brunswick and Manitoba", "fr": "L'Ontario, le Nouveau-Brunswick et le Manitoba" },
+      "text": {
+        "en": "Outside Quebec, in which provinces does Discover Canada say about one million francophones live?",
+        "fr": "En dehors du Québec, dans quelles provinces Découvrir le Canada situe-t-il environ un million de francophones?"
+      },
+      "answer": {
+        "en": "Ontario, New Brunswick and Manitoba",
+        "fr": "L'Ontario, le Nouveau-Brunswick et le Manitoba"
+      },
       "distractors": [
-        { "en": "British Columbia, Alberta and Saskatchewan", "fr": "La Colombie-Britannique, l'Alberta et la Saskatchewan" },
-        { "en": "Nova Scotia, Newfoundland and Labrador, and Prince Edward Island", "fr": "La Nouvelle-Écosse, Terre-Neuve-et-Labrador et l'Île-du-Prince-Édouard" },
-        { "en": "Yukon, the Northwest Territories and Nunavut", "fr": "Le Yukon, les Territoires du Nord-Ouest et le Nunavut" }
+        {
+          "en": "British Columbia, Alberta and Saskatchewan",
+          "fr": "La Colombie-Britannique, l'Alberta et la Saskatchewan"
+        },
+        {
+          "en": "Nova Scotia, Newfoundland and Labrador, and Prince Edward Island",
+          "fr": "La Nouvelle-Écosse, Terre-Neuve-et-Labrador et l'Île-du-Prince-Édouard"
+        },
+        {
+          "en": "Yukon, the Northwest Territories and Nunavut",
+          "fr": "Le Yukon, les Territoires du Nord-Ouest et le Nunavut"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-022",
       "subject": "who-we-are",
-      "text": { "en": "The Acadians are descendants of French colonists who began settling in which region, and in what year?", "fr": "Les Acadiens descendent de colons français qui ont commencé à s'établir dans quelle région, et en quelle année?" },
-      "answer": { "en": "The Maritime provinces, starting in 1604", "fr": "Les provinces maritimes, à partir de 1604" },
+      "text": {
+        "en": "The Acadians are descendants of French colonists who began settling in which region, and in what year?",
+        "fr": "Les Acadiens descendent de colons français qui ont commencé à s'établir dans quelle région, et en quelle année?"
+      },
+      "answer": {
+        "en": "The Maritime provinces, starting in 1604",
+        "fr": "Les provinces maritimes, à partir de 1604"
+      },
       "distractors": [
-        { "en": "The St. Lawrence valley, starting in 1534", "fr": "La vallée du Saint-Laurent, à partir de 1534" },
-        { "en": "The Great Lakes region, starting in 1701", "fr": "La région des Grands Lacs, à partir de 1701" },
-        { "en": "The Red River valley, starting in 1812", "fr": "La vallée de la rivière Rouge, à partir de 1812" }
+        {
+          "en": "The St. Lawrence valley, starting in 1534",
+          "fr": "La vallée du Saint-Laurent, à partir de 1534"
+        },
+        {
+          "en": "The Great Lakes region, starting in 1701",
+          "fr": "La région des Grands Lacs, à partir de 1701"
+        },
+        {
+          "en": "The Red River valley, starting in 1812",
+          "fr": "La vallée de la rivière Rouge, à partir de 1812"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-023",
       "subject": "who-we-are",
-      "text": { "en": "What happened to the Acadians between 1755 and 1763, in what is known as the 'Great Upheaval'?", "fr": "Qu'est-il arrivé aux Acadiens entre 1755 et 1763, lors de ce qu'on appelle le « Grand Dérangement »?" },
-      "answer": { "en": "More than two-thirds of them were deported", "fr": "Plus des deux tiers d'entre eux ont été déportés" },
+      "text": {
+        "en": "What happened to the Acadians between 1755 and 1763, in what is known as the 'Great Upheaval'?",
+        "fr": "Qu'est-il arrivé aux Acadiens entre 1755 et 1763, lors de ce qu'on appelle le « Grand Dérangement »?"
+      },
+      "answer": {
+        "en": "More than two-thirds of them were deported",
+        "fr": "Plus des deux tiers d'entre eux ont été déportés"
+      },
       "distractors": [
-        { "en": "They were granted their own province", "fr": "On leur a accordé leur propre province" },
-        { "en": "They voluntarily moved to Quebec City", "fr": "Ils ont déménagé volontairement à Québec" },
-        { "en": "They joined the British army in large numbers", "fr": "Ils se sont enrôlés en grand nombre dans l'armée britannique" }
+        {
+          "en": "They were granted their own province",
+          "fr": "On leur a accordé leur propre province"
+        },
+        {
+          "en": "They voluntarily moved to Quebec City",
+          "fr": "Ils ont déménagé volontairement à Québec"
+        },
+        {
+          "en": "They joined the British army in large numbers",
+          "fr": "Ils se sont enrôlés en grand nombre dans l'armée britannique"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-024",
       "subject": "who-we-are",
-      "text": { "en": "Most French-speaking Quebecers descend from roughly how many French settlers of the 1600s and 1700s?", "fr": "La plupart des Québécois francophones descendent d'environ combien de colons français des années 1600 et 1700?" },
-      "answer": { "en": "About 8,500", "fr": "Environ 8 500" },
+      "text": {
+        "en": "Most French-speaking Quebecers descend from roughly how many French settlers of the 1600s and 1700s?",
+        "fr": "La plupart des Québécois francophones descendent d'environ combien de colons français des années 1600 et 1700?"
+      },
+      "answer": {
+        "en": "About 8,500",
+        "fr": "Environ 8 500"
+      },
       "distractors": [
-        { "en": "About 85,000", "fr": "Environ 85 000" },
-        { "en": "About 850", "fr": "Environ 850" },
-        { "en": "About 1 million", "fr": "Environ 1 million" }
+        {
+          "en": "About 85,000",
+          "fr": "Environ 85 000"
+        },
+        {
+          "en": "About 850",
+          "fr": "Environ 850"
+        },
+        {
+          "en": "About 1 million",
+          "fr": "Environ 1 million"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-025",
       "subject": "who-we-are",
-      "text": { "en": "What did the House of Commons recognize about the Québécois in 2006?", "fr": "Qu'a reconnu la Chambre des communes au sujet des Québécois en 2006?" },
-      "answer": { "en": "That they form a nation within a united Canada", "fr": "Qu'ils forment une nation au sein d'un Canada uni" },
+      "text": {
+        "en": "What did the House of Commons recognize about the Québécois in 2006?",
+        "fr": "Qu'a reconnu la Chambre des communes au sujet des Québécois en 2006?"
+      },
+      "answer": {
+        "en": "That they form a nation within a united Canada",
+        "fr": "Qu'ils forment une nation au sein d'un Canada uni"
+      },
       "distractors": [
-        { "en": "That Quebec would become an independent country", "fr": "Que le Québec deviendrait un pays indépendant" },
-        { "en": "That French would become Canada's only official language", "fr": "Que le français deviendrait la seule langue officielle du Canada" },
-        { "en": "That Quebec would be divided into two provinces", "fr": "Que le Québec serait divisé en deux provinces" }
+        {
+          "en": "That Quebec would become an independent country",
+          "fr": "Que le Québec deviendrait un pays indépendant"
+        },
+        {
+          "en": "That French would become Canada's only official language",
+          "fr": "Que le français deviendrait la seule langue officielle du Canada"
+        },
+        {
+          "en": "That Quebec would be divided into two provinces",
+          "fr": "Que le Québec serait divisé en deux provinces"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-026",
       "subject": "who-we-are",
-      "text": { "en": "About how many English-speaking Quebecers (Anglo-Quebecers) does Discover Canada mention, with a heritage going back some 250 years?", "fr": "Environ combien de Québécois anglophones (Anglo-Québécois), dont l'héritage remonte à quelque 250 ans, Découvrir le Canada mentionne-t-il?" },
-      "answer": { "en": "About one million", "fr": "Environ un million" },
+      "text": {
+        "en": "About how many English-speaking Quebecers (Anglo-Quebecers) does Discover Canada mention, with a heritage going back some 250 years?",
+        "fr": "Environ combien de Québécois anglophones (Anglo-Québécois), dont l'héritage remonte à quelque 250 ans, Découvrir le Canada mentionne-t-il?"
+      },
+      "answer": {
+        "en": "About one million",
+        "fr": "Environ un million"
+      },
       "distractors": [
-        { "en": "About 100,000", "fr": "Environ 100 000" },
-        { "en": "About 3 million", "fr": "Environ 3 millions" },
-        { "en": "About 10,000", "fr": "Environ 10 000" }
+        {
+          "en": "About 100,000",
+          "fr": "Environ 100 000"
+        },
+        {
+          "en": "About 3 million",
+          "fr": "Environ 3 millions"
+        },
+        {
+          "en": "About 10,000",
+          "fr": "Environ 10 000"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-027",
       "subject": "who-we-are",
-      "text": { "en": "The majority of English-speaking Canadians trace their ancestry to which groups of settlers?", "fr": "La majorité des Canadiens anglophones font remonter leurs origines à quels groupes de colons?" },
-      "answer": { "en": "English, Welsh, Scottish and Irish settlers", "fr": "Des colons anglais, gallois, écossais et irlandais" },
+      "text": {
+        "en": "The majority of English-speaking Canadians trace their ancestry to which groups of settlers?",
+        "fr": "La majorité des Canadiens anglophones font remonter leurs origines à quels groupes de colons?"
+      },
+      "answer": {
+        "en": "English, Welsh, Scottish and Irish settlers",
+        "fr": "Des colons anglais, gallois, écossais et irlandais"
+      },
       "distractors": [
-        { "en": "German, Dutch and Scandinavian settlers", "fr": "Des colons allemands, néerlandais et scandinaves" },
-        { "en": "American Loyalists only", "fr": "Uniquement des loyalistes américains" },
-        { "en": "Italian and Portuguese settlers", "fr": "Des colons italiens et portugais" }
+        {
+          "en": "German, Dutch and Scandinavian settlers",
+          "fr": "Des colons allemands, néerlandais et scandinaves"
+        },
+        {
+          "en": "American Loyalists only",
+          "fr": "Uniquement des loyalistes américains"
+        },
+        {
+          "en": "Italian and Portuguese settlers",
+          "fr": "Des colons italiens et portugais"
+        }
       ],
-      "explanation": { "en": "Hundreds of thousands of English, Welsh, Scottish and Irish settlers, soldiers and migrants arrived between the 1600s and the 20th century.", "fr": "Des centaines de milliers de colons, de soldats et de migrants anglais, gallois, écossais et irlandais sont arrivés entre les années 1600 et le XXe siècle." },
+      "explanation": {
+        "en": "Hundreds of thousands of English, Welsh, Scottish and Irish settlers, soldiers and migrants arrived between the 1600s and the 20th century.",
+        "fr": "Des centaines de milliers de colons, de soldats et de migrants anglais, gallois, écossais et irlandais sont arrivés entre les années 1600 et le XXe siècle."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-028",
       "subject": "who-we-are",
-      "text": { "en": "Since the 1970s, most immigrants to Canada have come from which part of the world?", "fr": "Depuis les années 1970, la plupart des immigrants au Canada viennent de quelle partie du monde?" },
-      "answer": { "en": "Asian countries", "fr": "Des pays d'Asie" },
+      "text": {
+        "en": "Since the 1970s, most immigrants to Canada have come from which part of the world?",
+        "fr": "Depuis les années 1970, la plupart des immigrants au Canada viennent de quelle partie du monde?"
+      },
+      "answer": {
+        "en": "Asian countries",
+        "fr": "Des pays d'Asie"
+      },
       "distractors": [
-        { "en": "Western Europe", "fr": "De l'Europe de l'Ouest" },
-        { "en": "The United States", "fr": "Des États-Unis" },
-        { "en": "South America", "fr": "De l'Amérique du Sud" }
+        {
+          "en": "Western Europe",
+          "fr": "De l'Europe de l'Ouest"
+        },
+        {
+          "en": "The United States",
+          "fr": "Des États-Unis"
+        },
+        {
+          "en": "South America",
+          "fr": "De l'Amérique du Sud"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-029",
       "subject": "who-we-are",
-      "text": { "en": "Which religious affiliation is the largest in Canada, according to Discover Canada?", "fr": "Quelle est l'affiliation religieuse la plus importante au Canada, selon Découvrir le Canada?" },
-      "answer": { "en": "Catholic", "fr": "Catholique" },
+      "text": {
+        "en": "Which religious affiliation is the largest in Canada, according to Discover Canada?",
+        "fr": "Quelle est l'affiliation religieuse la plus importante au Canada, selon Découvrir le Canada?"
+      },
+      "answer": {
+        "en": "Catholic",
+        "fr": "Catholique"
+      },
       "distractors": [
-        { "en": "Muslim", "fr": "Musulmane" },
-        { "en": "Anglican", "fr": "Anglicane" },
-        { "en": "Jewish", "fr": "Juive" }
+        {
+          "en": "Muslim",
+          "fr": "Musulmane"
+        },
+        {
+          "en": "Anglican",
+          "fr": "Anglicane"
+        },
+        {
+          "en": "Jewish",
+          "fr": "Juive"
+        }
       ],
-      "explanation": { "en": "The majority of Canadians identify as Christians; Catholics are the largest group, followed by Protestant churches, while many other faiths are also practised.", "fr": "La majorité des Canadiens se disent chrétiens; les catholiques forment le groupe le plus important, suivis des Églises protestantes, et de nombreuses autres religions sont aussi pratiquées." },
+      "explanation": {
+        "en": "The majority of Canadians identify as Christians; Catholics are the largest group, followed by Protestant churches, while many other faiths are also practised.",
+        "fr": "La majorité des Canadiens se disent chrétiens; les catholiques forment le groupe le plus important, suivis des Églises protestantes, et de nombreuses autres religions sont aussi pratiquées."
+      },
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     },
     {
       "id": "q-ww-030",
       "subject": "who-we-are",
-      "text": { "en": "Which statement about gay and lesbian Canadians reflects what Discover Canada says about Canada's diversity?", "fr": "Quel énoncé au sujet des Canadiens gais et lesbiennes reflète ce que dit Découvrir le Canada sur la diversité canadienne?" },
-      "answer": { "en": "They enjoy the full protection of equal treatment under the law, including access to civil marriage", "fr": "Ils bénéficient de la pleine protection de l'égalité de traitement devant la loi, y compris l'accès au mariage civil" },
+      "text": {
+        "en": "Which statement about gay and lesbian Canadians reflects what Discover Canada says about Canada's diversity?",
+        "fr": "Quel énoncé au sujet des Canadiens gais et lesbiennes reflète ce que dit Découvrir le Canada sur la diversité canadienne?"
+      },
+      "answer": {
+        "en": "They enjoy full protection and equal treatment under the law, including access to civil marriage",
+        "fr": "Ils bénéficient de l'entière protection de la loi et de l'égalité de traitement, y compris l'accès au mariage civil"
+      },
       "distractors": [
-        { "en": "They may marry only in religious ceremonies", "fr": "Ils ne peuvent se marier que lors de cérémonies religieuses" },
-        { "en": "Their rights vary by province", "fr": "Leurs droits varient selon la province" },
-        { "en": "They are not mentioned in the guide", "fr": "Le guide n'en fait pas mention" }
+        {
+          "en": "They may marry only in religious ceremonies",
+          "fr": "Ils ne peuvent se marier que lors de cérémonies religieuses"
+        },
+        {
+          "en": "Their rights vary by province",
+          "fr": "Leurs droits varient selon la province"
+        },
+        {
+          "en": "They are not mentioned in the guide",
+          "fr": "Le guide n'en fait pas mention"
+        }
       ],
       "source": "Discover Canada: Who We Are",
+      "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
       "asOf": "2026-09-07",
       "volatile": false
     }

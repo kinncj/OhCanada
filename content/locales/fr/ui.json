@@ -77,7 +77,8 @@
     "exam": "Cérémonie de citoyenneté",
     "examLocked": "Gagnez {{needed}} timbres pour débloquer la cérémonie ({{have}} jusqu'ici).",
     "examOpen": "Vous êtes prêt. Passez l'examen blanc!",
-    "practiceExam": "Examen d'entraînement (toujours accessible)"
+    "practiceExam": "Examen d'entraînement (toujours accessible)",
+    "fastTravel": "Voyage rapide"
   },
   "exam": {
     "title": "Cérémonie de citoyenneté — examen blanc",
