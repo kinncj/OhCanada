@@ -1,0 +1,445 @@
+{
+  "$schema": "../schemas/question.schema.json",
+  "subject": "regions",
+  "questions": [
+    {
+      "id": "q-re-001",
+      "subject": "regions",
+      "text": { "en": "How many provinces and territories does Canada have?", "fr": "Combien de provinces et de territoires le Canada compte-t-il?" },
+      "answer": { "en": "10 provinces and 3 territories", "fr": "10 provinces et 3 territoires" },
+      "distractors": [
+        { "en": "13 provinces", "fr": "13 provinces" },
+        { "en": "9 provinces and 4 territories", "fr": "9 provinces et 4 territoires" },
+        { "en": "12 provinces and 1 territory", "fr": "12 provinces et 1 territoire" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-002",
+      "subject": "regions",
+      "text": { "en": "Which of the following is NOT one of the five regions of Canada described in Discover Canada?", "fr": "Laquelle des régions suivantes ne fait PAS partie des cinq régions du Canada décrites dans Découvrir le Canada?" },
+      "answer": { "en": "The Great Lakes region", "fr": "La région des Grands Lacs" },
+      "distractors": [
+        { "en": "The Atlantic provinces", "fr": "Les provinces de l'Atlantique" },
+        { "en": "The Prairie provinces", "fr": "Les provinces des Prairies" },
+        { "en": "The North", "fr": "Le Nord" }
+      ],
+      "explanation": { "en": "The five regions are the Atlantic provinces, Central Canada, the Prairie provinces, the West Coast and the North.", "fr": "Les cinq régions sont les provinces de l'Atlantique, le Centre du Canada, les provinces des Prairies, la côte Ouest et le Nord." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-003",
+      "subject": "regions",
+      "text": { "en": "Who chose Ottawa as Canada's capital in 1857?", "fr": "Qui a choisi Ottawa comme capitale du Canada en 1857?" },
+      "answer": { "en": "Queen Victoria", "fr": "La reine Victoria" },
+      "distractors": [
+        { "en": "Sir John A. Macdonald", "fr": "Sir John A. Macdonald" },
+        { "en": "Lord Durham", "fr": "Lord Durham" },
+        { "en": "George-Étienne Cartier", "fr": "George-Étienne Cartier" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-004",
+      "subject": "regions",
+      "text": { "en": "Which two provinces make up Central Canada, where more than half of all Canadians live?", "fr": "Quelles deux provinces forment le Centre du Canada, où vit plus de la moitié des Canadiens?" },
+      "answer": { "en": "Ontario and Quebec", "fr": "L'Ontario et le Québec" },
+      "distractors": [
+        { "en": "Manitoba and Saskatchewan", "fr": "Le Manitoba et la Saskatchewan" },
+        { "en": "Ontario and Manitoba", "fr": "L'Ontario et le Manitoba" },
+        { "en": "Quebec and New Brunswick", "fr": "Le Québec et le Nouveau-Brunswick" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-005",
+      "subject": "regions",
+      "text": { "en": "Which of the following is NOT an Atlantic province?", "fr": "Laquelle des provinces suivantes n'est PAS une province de l'Atlantique?" },
+      "answer": { "en": "Quebec", "fr": "Le Québec" },
+      "distractors": [
+        { "en": "Newfoundland and Labrador", "fr": "Terre-Neuve-et-Labrador" },
+        { "en": "Prince Edward Island", "fr": "L'Île-du-Prince-Édouard" },
+        { "en": "New Brunswick", "fr": "Le Nouveau-Brunswick" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-006",
+      "subject": "regions",
+      "text": { "en": "Which of the following is NOT a Prairie province?", "fr": "Laquelle des provinces suivantes n'est PAS une province des Prairies?" },
+      "answer": { "en": "British Columbia", "fr": "La Colombie-Britannique" },
+      "distractors": [
+        { "en": "Manitoba", "fr": "Le Manitoba" },
+        { "en": "Saskatchewan", "fr": "La Saskatchewan" },
+        { "en": "Alberta", "fr": "L'Alberta" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-007",
+      "subject": "regions",
+      "text": { "en": "What is the capital city of British Columbia?", "fr": "Quelle est la capitale de la Colombie-Britannique?" },
+      "answer": { "en": "Victoria", "fr": "Victoria" },
+      "distractors": [
+        { "en": "Vancouver", "fr": "Vancouver" },
+        { "en": "Kelowna", "fr": "Kelowna" },
+        { "en": "Prince George", "fr": "Prince George" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-008",
+      "subject": "regions",
+      "text": { "en": "The three northern territories cover roughly what share of Canada's land mass?", "fr": "Les trois territoires du Nord couvrent environ quelle part de la superficie du Canada?" },
+      "answer": { "en": "About one-third", "fr": "Environ le tiers" },
+      "distractors": [
+        { "en": "About 5 percent", "fr": "Environ 5 pour cent" },
+        { "en": "About 10 percent", "fr": "Environ 10 pour cent" },
+        { "en": "More than two-thirds", "fr": "Plus des deux tiers" }
+      ],
+      "explanation": { "en": "Despite their vast size, the territories are home to only a small fraction of Canada's population.", "fr": "Malgré leur immense superficie, les territoires n'abritent qu'une petite fraction de la population canadienne." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-009",
+      "subject": "regions",
+      "text": { "en": "In what year was the territory of Nunavut created?", "fr": "En quelle année le territoire du Nunavut a-t-il été créé?" },
+      "answer": { "en": "1999", "fr": "1999" },
+      "distractors": [
+        { "en": "1949", "fr": "1949" },
+        { "en": "1982", "fr": "1982" },
+        { "en": "2005", "fr": "2005" }
+      ],
+      "explanation": { "en": "Nunavut, meaning \"our land\" in Inuktitut, was carved out of the eastern part of the Northwest Territories.", "fr": "Le Nunavut, qui signifie « notre terre » en inuktitut, a été créé à partir de la partie est des Territoires du Nord-Ouest." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-010",
+      "subject": "regions",
+      "text": { "en": "Which combination best describes the economy of Manitoba?", "fr": "Quelle combinaison décrit le mieux l'économie du Manitoba?" },
+      "answer": { "en": "Agriculture, mining and hydroelectric power", "fr": "L'agriculture, l'exploitation minière et l'hydroélectricité" },
+      "distractors": [
+        { "en": "Offshore oil and cod fishing", "fr": "Le pétrole en mer et la pêche à la morue" },
+        { "en": "Aerospace and shipbuilding only", "fr": "L'aérospatiale et la construction navale uniquement" },
+        { "en": "Tourism and diamond mining", "fr": "Le tourisme et l'extraction de diamants" }
+      ],
+      "explanation": { "en": "Winnipeg, the capital, is home to Saint-Boniface, the largest Francophone community in western Canada.", "fr": "Winnipeg, la capitale, abrite Saint-Boniface, la plus grande communauté francophone de l'Ouest canadien." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-011",
+      "subject": "regions",
+      "text": { "en": "What is the capital of Nunavut?", "fr": "Quelle est la capitale du Nunavut?" },
+      "answer": { "en": "Iqaluit", "fr": "Iqaluit" },
+      "distractors": [
+        { "en": "Yellowknife", "fr": "Yellowknife" },
+        { "en": "Whitehorse", "fr": "Whitehorse" },
+        { "en": "Rankin Inlet", "fr": "Rankin Inlet" }
+      ],
+      "explanation": { "en": "Iqaluit was formerly known as Frobisher Bay.", "fr": "Iqaluit portait autrefois le nom de Frobisher Bay." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-012",
+      "subject": "regions",
+      "text": { "en": "Which gold rush of the 1890s drew thousands of prospectors to Yukon?", "fr": "Quelle ruée vers l'or des années 1890 a attiré des milliers de prospecteurs au Yukon?" },
+      "answer": { "en": "The Klondike Gold Rush", "fr": "La ruée vers l'or du Klondike" },
+      "distractors": [
+        { "en": "The Cariboo Gold Rush", "fr": "La ruée vers l'or du Cariboo" },
+        { "en": "The Fraser Canyon Gold Rush", "fr": "La ruée vers l'or du canyon du Fraser" },
+        { "en": "The Porcupine Gold Rush", "fr": "La ruée vers l'or de Porcupine" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-013",
+      "subject": "regions",
+      "text": { "en": "What is the highest mountain in Canada, located in Yukon?", "fr": "Quelle est la plus haute montagne du Canada, située au Yukon?" },
+      "answer": { "en": "Mount Logan", "fr": "Le mont Logan" },
+      "distractors": [
+        { "en": "Mount Robson", "fr": "Le mont Robson" },
+        { "en": "Mount Waddington", "fr": "Le mont Waddington" },
+        { "en": "Mount Columbia", "fr": "Le mont Columbia" }
+      ],
+      "explanation": { "en": "Mount Logan is named after Sir William Logan, a founder of the Geological Survey of Canada.", "fr": "Le mont Logan porte le nom de Sir William Logan, l'un des fondateurs de la Commission géologique du Canada." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-014",
+      "subject": "regions",
+      "text": { "en": "Yellowknife, capital of the Northwest Territories, is nicknamed what?", "fr": "Yellowknife, la capitale des Territoires du Nord-Ouest, porte quel surnom?" },
+      "answer": { "en": "The diamond capital of North America", "fr": "La capitale nord-américaine du diamant" },
+      "distractors": [
+        { "en": "The gateway to the Pacific", "fr": "La porte du Pacifique" },
+        { "en": "The breadbasket of the world", "fr": "Le grenier du monde" },
+        { "en": "The city of bridges", "fr": "La ville des ponts" }
+      ],
+      "explanation": { "en": "The Mackenzie River, which flows through the territory, is the second-longest river system in North America.", "fr": "Le fleuve Mackenzie, qui traverse le territoire, est le deuxième plus long réseau fluvial d'Amérique du Nord." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-015",
+      "subject": "regions",
+      "text": { "en": "Why is Canada's North sometimes called the \"Land of the Midnight Sun\"?", "fr": "Pourquoi le Nord canadien est-il parfois appelé la « terre du soleil de minuit »?" },
+      "answer": { "en": "At the height of summer, daylight can last up to 24 hours a day", "fr": "Au plus fort de l'été, la clarté peut durer jusqu'à 24 heures par jour" },
+      "distractors": [
+        { "en": "The sun never rises there in any season", "fr": "Le soleil ne s'y lève en aucune saison" },
+        { "en": "The northern lights appear only at midnight", "fr": "Les aurores boréales n'apparaissent qu'à minuit" },
+        { "en": "Its clocks are set to a different time from the rest of Canada", "fr": "Ses horloges sont réglées sur une heure différente du reste du Canada" }
+      ],
+      "explanation": { "en": "In winter, by contrast, the sun disappears for long stretches and the northern lights (aurora borealis) are often visible.", "fr": "En hiver, à l'inverse, le soleil disparaît pendant de longues périodes et les aurores boréales sont souvent visibles." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-016",
+      "subject": "regions",
+      "text": { "en": "Which Indigenous people make up the majority of Nunavut's population?", "fr": "Quel peuple autochtone forme la majorité de la population du Nunavut?" },
+      "answer": { "en": "The Inuit", "fr": "Les Inuits" },
+      "distractors": [
+        { "en": "The Métis", "fr": "Les Métis" },
+        { "en": "The Cree", "fr": "Les Cris" },
+        { "en": "The Dene", "fr": "Les Dénés" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-017",
+      "subject": "regions",
+      "text": { "en": "Which province was the last to join Confederation, in 1949?", "fr": "Quelle province a été la dernière à se joindre à la Confédération, en 1949?" },
+      "answer": { "en": "Newfoundland and Labrador", "fr": "Terre-Neuve-et-Labrador" },
+      "distractors": [
+        { "en": "Prince Edward Island", "fr": "L'Île-du-Prince-Édouard" },
+        { "en": "British Columbia", "fr": "La Colombie-Britannique" },
+        { "en": "Alberta", "fr": "L'Alberta" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-018",
+      "subject": "regions",
+      "text": { "en": "Which province keeps its own time zone, half an hour ahead of Atlantic time?", "fr": "Quelle province conserve son propre fuseau horaire, une demi-heure en avance sur l'heure de l'Atlantique?" },
+      "answer": { "en": "Newfoundland and Labrador", "fr": "Terre-Neuve-et-Labrador" },
+      "distractors": [
+        { "en": "Nova Scotia", "fr": "La Nouvelle-Écosse" },
+        { "en": "Prince Edward Island", "fr": "L'Île-du-Prince-Édouard" },
+        { "en": "New Brunswick", "fr": "Le Nouveau-Brunswick" }
+      ],
+      "explanation": { "en": "Newfoundland was the oldest colony of the British Empire and is known for its fisheries, offshore oil and hydroelectric resources.", "fr": "Terre-Neuve était la plus ancienne colonie de l'Empire britannique et est connue pour ses pêcheries, son pétrole en mer et ses ressources hydroélectriques." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-019",
+      "subject": "regions",
+      "text": { "en": "Which province is known as the birthplace of Confederation?", "fr": "Quelle province est connue comme le berceau de la Confédération?" },
+      "answer": { "en": "Prince Edward Island", "fr": "L'Île-du-Prince-Édouard" },
+      "distractors": [
+        { "en": "Nova Scotia", "fr": "La Nouvelle-Écosse" },
+        { "en": "Ontario", "fr": "L'Ontario" },
+        { "en": "Quebec", "fr": "Le Québec" }
+      ],
+      "explanation": { "en": "The Charlottetown Conference of 1864 set the process of Confederation in motion; PEI is also the smallest province.", "fr": "La Conférence de Charlottetown de 1864 a lancé le processus de la Confédération; l'Île-du-Prince-Édouard est aussi la plus petite province." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-020",
+      "subject": "regions",
+      "text": { "en": "The Confederation Bridge links Prince Edward Island to which province?", "fr": "Le pont de la Confédération relie l'Île-du-Prince-Édouard à quelle province?" },
+      "answer": { "en": "New Brunswick", "fr": "Le Nouveau-Brunswick" },
+      "distractors": [
+        { "en": "Nova Scotia", "fr": "La Nouvelle-Écosse" },
+        { "en": "Quebec", "fr": "Le Québec" },
+        { "en": "Newfoundland and Labrador", "fr": "Terre-Neuve-et-Labrador" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-021",
+      "subject": "regions",
+      "text": { "en": "Which body of water on the Atlantic coast has the highest tides in the world?", "fr": "Quel plan d'eau de la côte atlantique connaît les plus hautes marées du monde?" },
+      "answer": { "en": "The Bay of Fundy", "fr": "La baie de Fundy" },
+      "distractors": [
+        { "en": "Hudson Bay", "fr": "La baie d'Hudson" },
+        { "en": "Georgian Bay", "fr": "La baie Georgienne" },
+        { "en": "James Bay", "fr": "La baie James" }
+      ],
+      "explanation": { "en": "The Bay of Fundy lies between Nova Scotia and New Brunswick.", "fr": "La baie de Fundy se trouve entre la Nouvelle-Écosse et le Nouveau-Brunswick." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-022",
+      "subject": "regions",
+      "text": { "en": "Which is the only officially bilingual province in Canada?", "fr": "Quelle est la seule province officiellement bilingue du Canada?" },
+      "answer": { "en": "New Brunswick", "fr": "Le Nouveau-Brunswick" },
+      "distractors": [
+        { "en": "Quebec", "fr": "Le Québec" },
+        { "en": "Manitoba", "fr": "Le Manitoba" },
+        { "en": "Ontario", "fr": "L'Ontario" }
+      ],
+      "explanation": { "en": "About one-third of New Brunswick's population lives and works in French.", "fr": "Environ le tiers de la population du Nouveau-Brunswick vit et travaille en français." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-023",
+      "subject": "regions",
+      "text": { "en": "Which statement about Quebec is correct?", "fr": "Lequel des énoncés suivants sur le Québec est exact?" },
+      "answer": { "en": "It is the largest province by area, its capital is Quebec City and most of its people speak French", "fr": "C'est la plus grande province par sa superficie, sa capitale est Québec et la majorité de sa population parle français" },
+      "distractors": [
+        { "en": "Its capital is Montreal and it borders the Pacific Ocean", "fr": "Sa capitale est Montréal et elle borde l'océan Pacifique" },
+        { "en": "It is the smallest province by area", "fr": "C'est la plus petite province par sa superficie" },
+        { "en": "It joined Confederation in 1949", "fr": "Elle s'est jointe à la Confédération en 1949" }
+      ],
+      "explanation": { "en": "Quebec is a major producer of hydroelectricity and a centre for forestry, aerospace and pharmaceuticals.", "fr": "Le Québec est un grand producteur d'hydroélectricité et un centre de la foresterie, de l'aérospatiale et des produits pharmaceutiques." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-024",
+      "subject": "regions",
+      "text": { "en": "Which is Canada's most populous province?", "fr": "Quelle est la province la plus peuplée du Canada?" },
+      "answer": { "en": "Ontario", "fr": "L'Ontario" },
+      "distractors": [
+        { "en": "Quebec", "fr": "Le Québec" },
+        { "en": "British Columbia", "fr": "La Colombie-Britannique" },
+        { "en": "Alberta", "fr": "L'Alberta" }
+      ],
+      "explanation": { "en": "Ontario is home to more than one-third of Canadians, to Toronto, the largest city, and to Ottawa, the national capital.", "fr": "L'Ontario abrite plus du tiers des Canadiens, Toronto, la plus grande ville, et Ottawa, la capitale nationale." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-025",
+      "subject": "regions",
+      "text": { "en": "Which of the following is NOT one of the Great Lakes?", "fr": "Lequel des lacs suivants ne fait PAS partie des Grands Lacs?" },
+      "answer": { "en": "Lake Winnipeg", "fr": "Le lac Winnipeg" },
+      "distractors": [
+        { "en": "Lake Superior", "fr": "Le lac Supérieur" },
+        { "en": "Lake Huron", "fr": "Le lac Huron" },
+        { "en": "Lake Erie", "fr": "Le lac Érié" }
+      ],
+      "explanation": { "en": "The five Great Lakes are Superior, Michigan, Huron, Erie and Ontario.", "fr": "Les cinq Grands Lacs sont les lacs Supérieur, Michigan, Huron, Érié et Ontario." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-026",
+      "subject": "regions",
+      "text": { "en": "Which province is the world's largest producer of potash and is often called the \"breadbasket of the world\"?", "fr": "Quelle province est le plus grand producteur de potasse au monde et est souvent appelée le « grenier du monde »?" },
+      "answer": { "en": "Saskatchewan", "fr": "La Saskatchewan" },
+      "distractors": [
+        { "en": "Manitoba", "fr": "Le Manitoba" },
+        { "en": "Alberta", "fr": "L'Alberta" },
+        { "en": "Ontario", "fr": "L'Ontario" }
+      ],
+      "explanation": { "en": "Saskatchewan also produces uranium; its capital, Regina, is home to the RCMP training academy.", "fr": "La Saskatchewan produit aussi de l'uranium; sa capitale, Regina, abrite l'école de formation de la GRC." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-027",
+      "subject": "regions",
+      "text": { "en": "What is the capital of Alberta, Canada's largest producer of oil and gas?", "fr": "Quelle est la capitale de l'Alberta, le plus grand producteur de pétrole et de gaz du Canada?" },
+      "answer": { "en": "Edmonton", "fr": "Edmonton" },
+      "distractors": [
+        { "en": "Calgary", "fr": "Calgary" },
+        { "en": "Red Deer", "fr": "Red Deer" },
+        { "en": "Banff", "fr": "Banff" }
+      ],
+      "explanation": { "en": "Alberta is also known for its cattle ranching and for Banff, Canada's first national park, created in 1885.", "fr": "L'Alberta est aussi connue pour l'élevage bovin et pour Banff, le premier parc national du Canada, créé en 1885." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-028",
+      "subject": "regions",
+      "text": { "en": "Which city is home to Canada's largest and busiest port?", "fr": "Quelle ville abrite le port le plus grand et le plus achalandé du Canada?" },
+      "answer": { "en": "Vancouver", "fr": "Vancouver" },
+      "distractors": [
+        { "en": "Halifax", "fr": "Halifax" },
+        { "en": "Montreal", "fr": "Montréal" },
+        { "en": "Thunder Bay", "fr": "Thunder Bay" }
+      ],
+      "explanation": { "en": "British Columbia is Canada's gateway to the Asia-Pacific, and about half of the goods it produces are forestry products.", "fr": "La Colombie-Britannique est la porte du Canada sur l'Asie-Pacifique, et environ la moitié des biens qu'elle produit sont des produits forestiers." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-029",
+      "subject": "regions",
+      "text": { "en": "Which part-time reserve force, drawn largely from Inuit, First Nations and Métis communities, patrols Canada's North?", "fr": "Quelle force de réserve à temps partiel, composée en grande partie d'Inuits, de membres des Premières Nations et de Métis, patrouille le Nord canadien?" },
+      "answer": { "en": "The Canadian Rangers", "fr": "Les Rangers canadiens" },
+      "distractors": [
+        { "en": "The RCMP Musical Ride", "fr": "Le Carrousel de la GRC" },
+        { "en": "The Coast Guard Auxiliary", "fr": "La Garde côtière auxiliaire" },
+        { "en": "The North West Mounted Police", "fr": "La Police à cheval du Nord-Ouest" }
+      ],
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-re-030",
+      "subject": "regions",
+      "text": { "en": "The St. Lawrence Seaway connects the Great Lakes with what?", "fr": "La Voie maritime du Saint-Laurent relie les Grands Lacs à quoi?" },
+      "answer": { "en": "The Atlantic Ocean", "fr": "L'océan Atlantique" },
+      "distractors": [
+        { "en": "Hudson Bay", "fr": "La baie d'Hudson" },
+        { "en": "The Pacific Ocean", "fr": "L'océan Pacifique" },
+        { "en": "Lake Winnipeg", "fr": "Le lac Winnipeg" }
+      ],
+      "explanation": { "en": "The Seaway lets ocean-going ships reach ports in Ontario and Quebec, the heart of Canada's manufacturing.", "fr": "La Voie maritime permet aux navires océaniques d'atteindre les ports de l'Ontario et du Québec, cœur de l'industrie manufacturière canadienne." },
+      "source": "Discover Canada: Canada's Regions",
+      "asOf": "2026-09-07",
+      "volatile": false
+    }
+  ]
+}

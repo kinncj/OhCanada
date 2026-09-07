@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/character-catalog.schema.json",
+  "title": "Character customization catalog",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "bodies": { "$ref": "#/$defs/options" },
+    "faces": { "$ref": "#/$defs/options" },
+    "skinTones": { "$ref": "#/$defs/options" },
+    "hair": { "$ref": "#/$defs/options" },
+    "hairColors": { "$ref": "#/$defs/options" },
+    "outfits": { "$ref": "#/$defs/options" },
+    "accessories": { "$ref": "#/$defs/options" }
+  },
+  "required": ["bodies", "faces", "skinTones", "hair", "hairColors", "outfits", "accessories"],
+  "additionalProperties": false,
+  "$defs": {
+    "options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "label": { "$ref": "common.schema.json#/$defs/localizedText" },
+          "value": { "type": "string" },
+          "mesh": { "type": "string" }
+        },
+        "required": ["id", "label"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

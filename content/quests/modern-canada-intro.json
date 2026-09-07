@@ -1,0 +1,70 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "modern-canada-intro",
+  "district": "modern-canada",
+  "type": "dialogue",
+  "title": {
+    "en": "Inventors' Walk",
+    "fr": "La promenade des inventeurs"
+  },
+  "summary": {
+    "en": "Discover Canadian innovations and modern society.",
+    "fr": "Découvrez les innovations canadiennes et la société moderne."
+  },
+  "giverNpc": "npc-modern-canada-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-modern-canada-1",
+      "objective": {
+        "en": "Talk to Dev Patel, City Planner",
+        "fr": "Parlez à Dev Patel, urbaniste"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-modern-canada-1",
+          "text": {
+            "en": "Glad you made it. Head to the arena plaza and I'll test what you know.",
+            "fr": "Content de vous voir. Rendez-vous à place de l'aréna et je testerai vos connaissances."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "kind": "reach",
+      "trigger": "modern-canada-landmark",
+      "objective": {
+        "en": "Reach the arena plaza",
+        "fr": "Rendez-vous à place de l'aréna"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-mc-001",
+        "q-mc-002",
+        "q-mc-003"
+      ],
+      "minCorrect": 2,
+      "objective": {
+        "en": "Answer three questions (2 of 3 to pass)",
+        "fr": "Répondez à trois questions (2 sur 3 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-modern-canada-intro"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-modern-canada-1",
+      "text": {
+        "en": "Well done. Another stamp for your passport!",
+        "fr": "Bravo. Un autre timbre pour votre passeport!"
+      }
+    }
+  ]
+}

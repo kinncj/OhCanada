@@ -1,0 +1,453 @@
+{
+  "$schema": "../schemas/question.schema.json",
+  "subject": "history",
+  "questions": [
+    {
+      "id": "q-hi-001",
+      "subject": "history",
+      "text": { "en": "Which Europeans reached Labrador and Newfoundland about 1,000 years ago, leaving remains at L'Anse aux Meadows?", "fr": "Quels Européens ont atteint le Labrador et Terre-Neuve il y a environ 1 000 ans, laissant des vestiges à L'Anse aux Meadows?" },
+      "answer": { "en": "Vikings from Iceland", "fr": "Des Vikings venus d'Islande" },
+      "distractors": [
+        { "en": "Portuguese fishermen", "fr": "Des pêcheurs portugais" },
+        { "en": "Basque whalers", "fr": "Des baleiniers basques" },
+        { "en": "Spanish explorers", "fr": "Des explorateurs espagnols" }
+      ],
+      "explanation": { "en": "The Vikings had colonized Greenland before reaching what is now Newfoundland and Labrador; the L'Anse aux Meadows site is a World Heritage Site.", "fr": "Les Vikings avaient colonisé le Groenland avant d'atteindre l'actuelle Terre-Neuve-et-Labrador; le site de L'Anse aux Meadows est inscrit au patrimoine mondial." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-002",
+      "subject": "history",
+      "text": { "en": "Who was the first European explorer to map Canada's Atlantic shore, in 1497?", "fr": "Qui a été le premier explorateur européen à cartographier la côte atlantique du Canada, en 1497?" },
+      "answer": { "en": "John Cabot", "fr": "Jean Cabot" },
+      "distractors": [
+        { "en": "Jacques Cartier", "fr": "Jacques Cartier" },
+        { "en": "Samuel de Champlain", "fr": "Samuel de Champlain" },
+        { "en": "Henry Hudson", "fr": "Henry Hudson" }
+      ],
+      "explanation": { "en": "Cabot, an Italian immigrant to England, drew a map of Canada's east coast during his 1497 voyage.", "fr": "Cabot, un immigrant italien établi en Angleterre, a dessiné une carte de la côte est du Canada lors de son voyage de 1497." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-003",
+      "subject": "history",
+      "text": { "en": "The name 'Canada' comes from the Iroquoian word 'kanata'. What does that word mean?", "fr": "Le nom « Canada » vient du mot iroquoien « kanata ». Que signifie ce mot?" },
+      "answer": { "en": "Village", "fr": "Village" },
+      "distractors": [
+        { "en": "Great river", "fr": "Grand fleuve" },
+        { "en": "Land of snow", "fr": "Pays de neige" },
+        { "en": "Meeting place", "fr": "Lieu de rencontre" }
+      ],
+      "explanation": { "en": "Jacques Cartier heard the word from Indigenous guides during his voyages of 1534 to 1542 and it began appearing on maps as 'Canada'.", "fr": "Jacques Cartier a entendu ce mot de guides autochtones lors de ses voyages de 1534 à 1542, et il a commencé à figurer sur les cartes sous la forme « Canada »." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-004",
+      "subject": "history",
+      "text": { "en": "Who founded the fortress at Quebec in 1608, establishing the first permanent European settlement in Canada?", "fr": "Qui a fondé le fort de Québec en 1608, établissant le premier peuplement européen permanent au Canada?" },
+      "answer": { "en": "Samuel de Champlain", "fr": "Samuel de Champlain" },
+      "distractors": [
+        { "en": "Jacques Cartier", "fr": "Jacques Cartier" },
+        { "en": "Pierre Le Moyne d'Iberville", "fr": "Pierre Le Moyne d'Iberville" },
+        { "en": "Jean Talon", "fr": "Jean Talon" }
+      ],
+      "explanation": { "en": "Champlain's settlement was the cradle of New France, and its French colonists built a fur-trading economy with Indigenous allies.", "fr": "Le peuplement de Champlain a été le berceau de la Nouvelle-France, dont les colons ont bâti une économie de la fourrure avec leurs alliés autochtones." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-005",
+      "subject": "history",
+      "text": { "en": "Which battle in 1759 marked the end of France's empire in North America?", "fr": "Quelle bataille de 1759 a marqué la fin de l'empire français en Amérique du Nord?" },
+      "answer": { "en": "The Battle of the Plains of Abraham at Quebec", "fr": "La bataille des plaines d'Abraham à Québec" },
+      "distractors": [
+        { "en": "The Battle of Queenston Heights", "fr": "La bataille de Queenston Heights" },
+        { "en": "The Battle of Châteauguay", "fr": "La bataille de Châteauguay" },
+        { "en": "The siege of Louisbourg in 1745", "fr": "Le siège de Louisbourg en 1745" }
+      ],
+      "explanation": { "en": "The British under Brigadier James Wolfe defeated the French under the Marquis de Montcalm; both commanders died of their wounds.", "fr": "Les Britanniques sous le brigadier James Wolfe ont vaincu les Français commandés par le marquis de Montcalm; les deux chefs sont morts de leurs blessures." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-006",
+      "subject": "history",
+      "text": { "en": "After Britain took control of New France, what did the Royal Proclamation of 1763 rename the colony?", "fr": "Après la prise de contrôle de la Nouvelle-France par la Grande-Bretagne, comment la Proclamation royale de 1763 a-t-elle renommé la colonie?" },
+      "answer": { "en": "The Province of Quebec", "fr": "La Province de Québec" },
+      "distractors": [
+        { "en": "Upper Canada", "fr": "Le Haut-Canada" },
+        { "en": "The Dominion of Canada", "fr": "Le Dominion du Canada" },
+        { "en": "Acadia", "fr": "L'Acadie" }
+      ],
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-007",
+      "subject": "history",
+      "text": { "en": "What did the Quebec Act of 1774 do for the French-speaking Catholic population?", "fr": "Qu'a fait l'Acte de Québec de 1774 pour la population catholique francophone?" },
+      "answer": { "en": "It allowed religious freedom for Catholics and restored French civil law while keeping British criminal law", "fr": "Il a accordé la liberté religieuse aux catholiques et rétabli le droit civil français tout en conservant le droit criminel britannique" },
+      "distractors": [
+        { "en": "It required all colonists to convert to the Anglican Church", "fr": "Il a obligé tous les colons à se convertir à l'Église anglicane" },
+        { "en": "It granted Quebec full independence from Britain", "fr": "Il a accordé au Québec l'indépendance complète de la Grande-Bretagne" },
+        { "en": "It abolished the seigneurial system and the French language", "fr": "Il a aboli le régime seigneurial et la langue française" }
+      ],
+      "explanation": { "en": "The Act also allowed Catholics to hold public office, an early example of the British accommodating the Canadiens.", "fr": "L'Acte permettait aussi aux catholiques d'occuper des charges publiques, un exemple précoce d'accommodement des Canadiens par les Britanniques." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-008",
+      "subject": "history",
+      "text": { "en": "Who were the Loyalists?", "fr": "Qui étaient les loyalistes?" },
+      "answer": { "en": "People who stayed loyal to the Crown and fled the American Revolution, settling mainly in Nova Scotia and Quebec", "fr": "Des gens restés fidèles à la Couronne qui ont fui la Révolution américaine pour s'établir surtout en Nouvelle-Écosse et au Québec" },
+      "distractors": [
+        { "en": "French settlers who swore loyalty to the British king after 1763", "fr": "Des colons français ayant juré fidélité au roi britannique après 1763" },
+        { "en": "Soldiers who defended Quebec in 1759", "fr": "Des soldats ayant défendu Québec en 1759" },
+        { "en": "Fur traders employed by the Hudson's Bay Company", "fr": "Des commerçants de fourrures employés par la Compagnie de la Baie d'Hudson" }
+      ],
+      "explanation": { "en": "More than 40,000 Loyalists came north; they included people of many backgrounds, among them Black Loyalists and Mohawk people led by Joseph Brant.", "fr": "Plus de 40 000 loyalistes sont venus au nord; ils étaient d'origines diverses, dont des loyalistes noirs et des Mohawks menés par Joseph Brant." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-009",
+      "subject": "history",
+      "text": { "en": "The Constitutional Act of 1791 divided the Province of Quebec into which two colonies?", "fr": "L'Acte constitutionnel de 1791 a divisé la Province de Québec en quelles deux colonies?" },
+      "answer": { "en": "Upper Canada and Lower Canada", "fr": "Le Haut-Canada et le Bas-Canada" },
+      "distractors": [
+        { "en": "Ontario and Quebec", "fr": "L'Ontario et le Québec" },
+        { "en": "Canada East and Canada West", "fr": "Le Canada-Est et le Canada-Ouest" },
+        { "en": "Nova Scotia and New Brunswick", "fr": "La Nouvelle-Écosse et le Nouveau-Brunswick" }
+      ],
+      "explanation": { "en": "Upper Canada was mainly Loyalist, Protestant and English-speaking; Lower Canada was mainly Catholic and French-speaking. The Act also marked the first official use of the name 'Canada'.", "fr": "Le Haut-Canada était surtout loyaliste, protestant et anglophone; le Bas-Canada, surtout catholique et francophone. L'Acte marque aussi la première utilisation officielle du nom « Canada »." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-010",
+      "subject": "history",
+      "text": { "en": "Where and when did the first representative assembly in what is now Canada meet?", "fr": "Où et quand la première assemblée représentative de ce qui est aujourd'hui le Canada s'est-elle réunie?" },
+      "answer": { "en": "Halifax, Nova Scotia, in 1758", "fr": "À Halifax, en Nouvelle-Écosse, en 1758" },
+      "distractors": [
+        { "en": "Quebec City in 1608", "fr": "À Québec en 1608" },
+        { "en": "York (Toronto) in 1791", "fr": "À York (Toronto) en 1791" },
+        { "en": "Charlottetown in 1864", "fr": "À Charlottetown en 1864" }
+      ],
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-011",
+      "subject": "history",
+      "text": { "en": "Which colony became the first in the British Empire to move toward abolishing slavery, in 1793?", "fr": "Quelle colonie a été la première de l'Empire britannique à s'engager vers l'abolition de l'esclavage, en 1793?" },
+      "answer": { "en": "Upper Canada, under Lieutenant Governor John Graves Simcoe", "fr": "Le Haut-Canada, sous le lieutenant-gouverneur John Graves Simcoe" },
+      "distractors": [
+        { "en": "Lower Canada, under Lord Durham", "fr": "Le Bas-Canada, sous lord Durham" },
+        { "en": "Nova Scotia, under Joseph Howe", "fr": "La Nouvelle-Écosse, sous Joseph Howe" },
+        { "en": "Newfoundland, under Sir Humphrey Gilbert", "fr": "Terre-Neuve, sous sir Humphrey Gilbert" }
+      ],
+      "explanation": { "en": "Slavery was abolished throughout the British Empire in 1833, and thousands of enslaved Americans later escaped to Canada by the Underground Railroad.", "fr": "L'esclavage a été aboli dans tout l'Empire britannique en 1833, et des milliers d'esclaves américains se sont ensuite réfugiés au Canada grâce au chemin de fer clandestin." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-012",
+      "subject": "history",
+      "text": { "en": "Which British commander captured Detroit in the War of 1812 and then died defending Queenston Heights?", "fr": "Quel commandant britannique a pris Détroit pendant la guerre de 1812, puis est mort en défendant Queenston Heights?" },
+      "answer": { "en": "Major-General Sir Isaac Brock", "fr": "Le major-général sir Isaac Brock" },
+      "distractors": [
+        { "en": "General James Wolfe", "fr": "Le général James Wolfe" },
+        { "en": "Lieutenant-Colonel Charles de Salaberry", "fr": "Le lieutenant-colonel Charles de Salaberry" },
+        { "en": "Sir Arthur Currie", "fr": "Sir Arthur Currie" }
+      ],
+      "explanation": { "en": "Brock was aided by the Shawnee leader Tecumseh, whose warriors were allies of the British.", "fr": "Brock a été appuyé par le chef shawnee Tecumseh, dont les guerriers étaient alliés des Britanniques." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-013",
+      "subject": "history",
+      "text": { "en": "At Châteauguay in 1813, who led a small force of mostly French-Canadian soldiers that turned back a much larger American army?", "fr": "À Châteauguay en 1813, qui a dirigé une petite troupe composée surtout de soldats canadiens-français qui a repoussé une armée américaine bien plus nombreuse?" },
+      "answer": { "en": "Lieutenant-Colonel Charles de Salaberry", "fr": "Le lieutenant-colonel Charles de Salaberry" },
+      "distractors": [
+        { "en": "Louis-Joseph Papineau", "fr": "Louis-Joseph Papineau" },
+        { "en": "Sir Isaac Brock", "fr": "Sir Isaac Brock" },
+        { "en": "The Marquis de Montcalm", "fr": "Le marquis de Montcalm" }
+      ],
+      "explanation": { "en": "About 460 soldiers, mostly Canadiens, defeated some 4,000 American invaders.", "fr": "Environ 460 soldats, pour la plupart des Canadiens, ont vaincu quelque 4 000 envahisseurs américains." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-014",
+      "subject": "history",
+      "text": { "en": "What was a lasting result of the War of 1812 for Canada?", "fr": "Quel a été un résultat durable de la guerre de 1812 pour le Canada?" },
+      "answer": { "en": "Canada remained independent of the United States and the present-day border was ensured", "fr": "Le Canada est resté indépendant des États-Unis et la frontière actuelle a été assurée" },
+      "distractors": [
+        { "en": "Canada annexed the state of Michigan", "fr": "Le Canada a annexé l'État du Michigan" },
+        { "en": "Upper and Lower Canada were reunited", "fr": "Le Haut-Canada et le Bas-Canada ont été réunis" },
+        { "en": "Britain granted Canada full independence", "fr": "La Grande-Bretagne a accordé au Canada la pleine indépendance" }
+      ],
+      "explanation": { "en": "British and Canadian forces repelled the American invasion; in 1814 the British even burned the White House in Washington.", "fr": "Les forces britanniques et canadiennes ont repoussé l'invasion américaine; en 1814, les Britanniques ont même incendié la Maison-Blanche à Washington." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-015",
+      "subject": "history",
+      "text": { "en": "After the rebellions of 1837-38, what did Lord Durham recommend?", "fr": "Après les rébellions de 1837-1838, qu'a recommandé lord Durham?" },
+      "answer": { "en": "Uniting Upper and Lower Canada and granting responsible government", "fr": "Unir le Haut-Canada et le Bas-Canada et accorder le gouvernement responsable" },
+      "distractors": [
+        { "en": "Returning the colonies to French rule", "fr": "Rendre les colonies au régime français" },
+        { "en": "Joining the colonies to the United States", "fr": "Rattacher les colonies aux États-Unis" },
+        { "en": "Abolishing the elected assemblies", "fr": "Abolir les assemblées élues" }
+      ],
+      "explanation": { "en": "The rebels believed progress toward democracy was too slow; the two colonies were merged as the Province of Canada in 1840.", "fr": "Les rebelles estimaient que les progrès vers la démocratie étaient trop lents; les deux colonies ont été fusionnées en 1840 pour former la Province du Canada." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-016",
+      "subject": "history",
+      "text": { "en": "Which was the first British colony to achieve responsible government, in 1847-48?", "fr": "Quelle a été la première colonie britannique à obtenir le gouvernement responsable, en 1847-1848?" },
+      "answer": { "en": "Nova Scotia", "fr": "La Nouvelle-Écosse" },
+      "distractors": [
+        { "en": "The Province of Canada", "fr": "La Province du Canada" },
+        { "en": "New Brunswick", "fr": "Le Nouveau-Brunswick" },
+        { "en": "British Columbia", "fr": "La Colombie-Britannique" }
+      ],
+      "explanation": { "en": "Responsible government means the government must keep the confidence of the elected assembly; the Province of Canada followed in 1848-49.", "fr": "Le gouvernement responsable doit conserver la confiance de l'assemblée élue; la Province du Canada a suivi en 1848-1849." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-017",
+      "subject": "history",
+      "text": { "en": "Who was Sir Louis-Hippolyte La Fontaine?", "fr": "Qui était sir Louis-Hippolyte La Fontaine?" },
+      "answer": { "en": "A champion of French language rights and the first head of a responsible government in Canada", "fr": "Un défenseur des droits linguistiques des francophones et le premier chef d'un gouvernement responsable au Canada" },
+      "distractors": [
+        { "en": "The first Governor General of the Dominion of Canada", "fr": "Le premier gouverneur général du Dominion du Canada" },
+        { "en": "The leader of the Métis at Red River", "fr": "Le chef des Métis à la rivière Rouge" },
+        { "en": "The founder of the Hudson's Bay Company", "fr": "Le fondateur de la Compagnie de la Baie d'Hudson" }
+      ],
+      "explanation": { "en": "La Fontaine and Robert Baldwin formed the government in 1848-49 under Governor Lord Elgin.", "fr": "La Fontaine et Robert Baldwin ont formé le gouvernement en 1848-1849 sous le gouverneur lord Elgin." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-018",
+      "subject": "history",
+      "text": { "en": "In which two cities did the Fathers of Confederation meet in 1864 to work out the details of a new country?", "fr": "Dans quelles deux villes les Pères de la Confédération se sont-ils réunis en 1864 pour élaborer les détails d'un nouveau pays?" },
+      "answer": { "en": "Charlottetown and Quebec City", "fr": "Charlottetown et Québec" },
+      "distractors": [
+        { "en": "Ottawa and Montreal", "fr": "Ottawa et Montréal" },
+        { "en": "Halifax and Toronto", "fr": "Halifax et Toronto" },
+        { "en": "London and Kingston", "fr": "Londres et Kingston" }
+      ],
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-019",
+      "subject": "history",
+      "text": { "en": "Which four provinces made up the Dominion of Canada when it was created on July 1, 1867?", "fr": "Quelles quatre provinces composaient le Dominion du Canada à sa création, le 1er juillet 1867?" },
+      "answer": { "en": "Ontario, Quebec, Nova Scotia and New Brunswick", "fr": "L'Ontario, le Québec, la Nouvelle-Écosse et le Nouveau-Brunswick" },
+      "distractors": [
+        { "en": "Ontario, Quebec, Manitoba and British Columbia", "fr": "L'Ontario, le Québec, le Manitoba et la Colombie-Britannique" },
+        { "en": "Nova Scotia, New Brunswick, Prince Edward Island and Newfoundland", "fr": "La Nouvelle-Écosse, le Nouveau-Brunswick, l'Île-du-Prince-Édouard et Terre-Neuve" },
+        { "en": "Upper Canada, Lower Canada, Acadia and Rupert's Land", "fr": "Le Haut-Canada, le Bas-Canada, l'Acadie et la Terre de Rupert" }
+      ],
+      "explanation": { "en": "The British Parliament passed the British North America Act in 1867; July 1 became Dominion Day, now Canada Day.", "fr": "Le Parlement britannique a adopté l'Acte de l'Amérique du Nord britannique en 1867; le 1er juillet est devenu la fête du Dominion, aujourd'hui la fête du Canada." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-020",
+      "subject": "history",
+      "text": { "en": "Who proposed the term 'Dominion of Canada', inspired by a verse of Psalm 72?", "fr": "Qui a proposé l'expression « Dominion du Canada », inspirée d'un verset du psaume 72?" },
+      "answer": { "en": "Sir Leonard Tilley", "fr": "Sir Leonard Tilley" },
+      "distractors": [
+        { "en": "Sir John A. Macdonald", "fr": "Sir John A. Macdonald" },
+        { "en": "Sir George-Étienne Cartier", "fr": "Sir George-Étienne Cartier" },
+        { "en": "Lord Durham", "fr": "Lord Durham" }
+      ],
+      "explanation": { "en": "Tilley, of New Brunswick, drew on the verse 'He shall have dominion also from sea to sea', which later inspired Canada's motto.", "fr": "Tilley, du Nouveau-Brunswick, s'est inspiré du verset « Il dominera d'une mer à l'autre », qui a plus tard inspiré la devise du Canada." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-021",
+      "subject": "history",
+      "text": { "en": "Who was Canada's first Prime Minister?", "fr": "Qui a été le premier premier ministre du Canada?" },
+      "answer": { "en": "Sir John A. Macdonald", "fr": "Sir John A. Macdonald" },
+      "distractors": [
+        { "en": "Sir Wilfrid Laurier", "fr": "Sir Wilfrid Laurier" },
+        { "en": "Sir George-Étienne Cartier", "fr": "Sir George-Étienne Cartier" },
+        { "en": "Alexander Mackenzie", "fr": "Alexander Mackenzie" }
+      ],
+      "explanation": { "en": "Born in Scotland in 1815, Macdonald came to Upper Canada as a child; his portrait appears on the $10 bill and January 11 is Sir John A. Macdonald Day.", "fr": "Né en Écosse en 1815, Macdonald est arrivé enfant dans le Haut-Canada; son portrait figure sur le billet de 10 $ et le 11 janvier est la Journée de sir John A. Macdonald." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-022",
+      "subject": "history",
+      "text": { "en": "Which province was the last to join Confederation, in 1949?", "fr": "Quelle province a été la dernière à se joindre à la Confédération, en 1949?" },
+      "answer": { "en": "Newfoundland (now Newfoundland and Labrador)", "fr": "Terre-Neuve (aujourd'hui Terre-Neuve-et-Labrador)" },
+      "distractors": [
+        { "en": "Prince Edward Island", "fr": "L'Île-du-Prince-Édouard" },
+        { "en": "British Columbia", "fr": "La Colombie-Britannique" },
+        { "en": "Saskatchewan", "fr": "La Saskatchewan" }
+      ],
+      "explanation": { "en": "Manitoba and the Northwest Territories joined in 1870, British Columbia in 1871, Prince Edward Island in 1873, Alberta and Saskatchewan in 1905, and Nunavut was created in 1999.", "fr": "Le Manitoba et les Territoires du Nord-Ouest se sont joints en 1870, la Colombie-Britannique en 1871, l'Île-du-Prince-Édouard en 1873, l'Alberta et la Saskatchewan en 1905, et le Nunavut a été créé en 1999." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-023",
+      "subject": "history",
+      "text": { "en": "Where was the last spike of the Canadian Pacific Railway driven in 1885?", "fr": "Où le dernier crampon du chemin de fer Canadien Pacifique a-t-il été enfoncé en 1885?" },
+      "answer": { "en": "Craigellachie, British Columbia", "fr": "À Craigellachie, en Colombie-Britannique" },
+      "distractors": [
+        { "en": "Winnipeg, Manitoba", "fr": "À Winnipeg, au Manitoba" },
+        { "en": "Calgary, Alberta", "fr": "À Calgary, en Alberta" },
+        { "en": "Montreal, Quebec", "fr": "À Montréal, au Québec" }
+      ],
+      "explanation": { "en": "The railway, financed by British and American investors and built by European and Chinese labourers, was a great feat of engineering that linked the country; Chinese workers later faced a head tax, for which the government apologized in 2006.", "fr": "Le chemin de fer, financé par des investisseurs britanniques et américains et construit par des ouvriers européens et chinois, a été un exploit d'ingénierie qui a relié le pays; les travailleurs chinois ont ensuite été soumis à une taxe d'entrée, pour laquelle le gouvernement s'est excusé en 2006." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-024",
+      "subject": "history",
+      "text": { "en": "Who was Louis Riel?", "fr": "Qui était Louis Riel?" },
+      "answer": { "en": "A Métis leader who led two uprisings and is seen by many as the father of Manitoba", "fr": "Un chef métis qui a mené deux soulèvements et que beaucoup considèrent comme le père du Manitoba" },
+      "distractors": [
+        { "en": "The engineer who designed the Canadian Pacific Railway", "fr": "L'ingénieur qui a conçu le chemin de fer Canadien Pacifique" },
+        { "en": "The first premier of Saskatchewan", "fr": "Le premier premier ministre de la Saskatchewan" },
+        { "en": "A fur trader who founded Fort Garry", "fr": "Un commerçant de fourrures qui a fondé Fort Garry" }
+      ],
+      "explanation": { "en": "Riel led the Red River uprising of 1869-70 and the 1885 rebellion in Saskatchewan; he was executed for treason in 1885 and is honoured by the Métis as a hero and defender of their rights.", "fr": "Riel a mené le soulèvement de la rivière Rouge en 1869-1870 et la rébellion de 1885 en Saskatchewan; exécuté pour trahison en 1885, il est honoré par les Métis comme un héros et un défenseur de leurs droits." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-025",
+      "subject": "history",
+      "text": { "en": "Who became the first French-Canadian Prime Minister since Confederation in 1896 and encouraged immigration to the West?", "fr": "Qui est devenu en 1896 le premier premier ministre canadien-français depuis la Confédération et a encouragé l'immigration dans l'Ouest?" },
+      "answer": { "en": "Sir Wilfrid Laurier", "fr": "Sir Wilfrid Laurier" },
+      "distractors": [
+        { "en": "Sir Robert Borden", "fr": "Sir Robert Borden" },
+        { "en": "Sir George-Étienne Cartier", "fr": "Sir George-Étienne Cartier" },
+        { "en": "Louis-Hippolyte La Fontaine", "fr": "Louis-Hippolyte La Fontaine" }
+      ],
+      "explanation": { "en": "Laurier's portrait appears on the $5 bill; during his time the Prairies filled with settlers, and Alberta and Saskatchewan became provinces in 1905.", "fr": "Le portrait de Laurier figure sur le billet de 5 $; sous son gouvernement, les Prairies se sont peuplées et l'Alberta et la Saskatchewan sont devenues des provinces en 1905." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-026",
+      "subject": "history",
+      "text": { "en": "Which province was the first to grant women the right to vote, in 1916?", "fr": "Quelle province a été la première à accorder le droit de vote aux femmes, en 1916?" },
+      "answer": { "en": "Manitoba", "fr": "Le Manitoba" },
+      "distractors": [
+        { "en": "Ontario", "fr": "L'Ontario" },
+        { "en": "Quebec", "fr": "Le Québec" },
+        { "en": "Nova Scotia", "fr": "La Nouvelle-Écosse" }
+      ],
+      "explanation": { "en": "Most Canadian women over 21 could vote federally by 1918; Agnes Macphail became the first woman elected to the House of Commons in 1921, and Quebec granted women the provincial vote in 1940.", "fr": "La plupart des Canadiennes de plus de 21 ans pouvaient voter aux élections fédérales dès 1918; Agnes Macphail a été la première femme élue à la Chambre des communes en 1921, et le Québec a accordé le vote provincial aux femmes en 1940." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-027",
+      "subject": "history",
+      "text": { "en": "Which First World War battle, fought in April 1917, is remembered as a defining moment for Canada and gives its name to a day of remembrance on April 9?", "fr": "Quelle bataille de la Première Guerre mondiale, livrée en avril 1917, est considérée comme un moment fondateur pour le Canada et donne son nom à une journée commémorative le 9 avril?" },
+      "answer": { "en": "The Battle of Vimy Ridge", "fr": "La bataille de la crête de Vimy" },
+      "distractors": [
+        { "en": "The Battle of the Somme", "fr": "La bataille de la Somme" },
+        { "en": "The Battle of Passchendaele", "fr": "La bataille de Passchendaele" },
+        { "en": "The Dieppe Raid", "fr": "Le raid de Dieppe" }
+      ],
+      "explanation": { "en": "The Canadian Corps captured the ridge at a cost of more than 10,000 killed and wounded; about 600,000 Canadians served in the war and some 60,000 died.", "fr": "Le Corps canadien a pris la crête au prix de plus de 10 000 morts et blessés; environ 600 000 Canadiens ont servi pendant la guerre et quelque 60 000 y ont perdu la vie." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-028",
+      "subject": "history",
+      "text": { "en": "Why do Canadians wear a red poppy around November 11?", "fr": "Pourquoi les Canadiens portent-ils un coquelicot rouge autour du 11 novembre?" },
+      "answer": { "en": "To remember the sacrifice of Canadians who served and died in wars, on Remembrance Day", "fr": "Pour se souvenir, le jour du Souvenir, du sacrifice des Canadiens qui ont servi et sont morts à la guerre" },
+      "distractors": [
+        { "en": "To celebrate the anniversary of Confederation", "fr": "Pour célébrer l'anniversaire de la Confédération" },
+        { "en": "To mark the end of the harvest season", "fr": "Pour marquer la fin de la saison des récoltes" },
+        { "en": "To honour the founding of the Royal Canadian Mounted Police", "fr": "Pour honorer la fondation de la Gendarmerie royale du Canada" }
+      ],
+      "explanation": { "en": "The poppy recalls the poem 'In Flanders Fields', written in 1915 by Lieutenant-Colonel John McCrae, a Canadian medical officer.", "fr": "Le coquelicot rappelle le poème « In Flanders Fields » (Au champ d'honneur), écrit en 1915 par le lieutenant-colonel John McCrae, un médecin militaire canadien." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-029",
+      "subject": "history",
+      "text": { "en": "Which institution was created in 1934, during the Great Depression, to manage Canada's money supply and bring stability to the financial system?", "fr": "Quelle institution a été créée en 1934, pendant la Grande Dépression, pour gérer la masse monétaire du Canada et stabiliser le système financier?" },
+      "answer": { "en": "The Bank of Canada", "fr": "La Banque du Canada" },
+      "distractors": [
+        { "en": "The Canada Pension Plan", "fr": "Le Régime de pensions du Canada" },
+        { "en": "The Toronto Stock Exchange", "fr": "La Bourse de Toronto" },
+        { "en": "The Hudson's Bay Company", "fr": "La Compagnie de la Baie d'Hudson" }
+      ],
+      "explanation": { "en": "After the stock market crash of 1929, unemployment reached 27% in 1933 and drought devastated the Prairies; governments began building social programs in response.", "fr": "Après le krach boursier de 1929, le chômage a atteint 27 % en 1933 et la sécheresse a dévasté les Prairies; les gouvernements ont alors commencé à mettre en place des programmes sociaux." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-hi-030",
+      "subject": "history",
+      "text": { "en": "On D-Day, June 6, 1944, which Normandy beach did Canadian forces capture?", "fr": "Le jour J, le 6 juin 1944, quelle plage de Normandie les forces canadiennes ont-elles prise?" },
+      "answer": { "en": "Juno Beach", "fr": "Juno Beach" },
+      "distractors": [
+        { "en": "Omaha Beach", "fr": "Omaha Beach" },
+        { "en": "Sword Beach", "fr": "Sword Beach" },
+        { "en": "Utah Beach", "fr": "Utah Beach" }
+      ],
+      "explanation": { "en": "More than a million Canadians served in the Second World War and about 44,000 died; Canadian troops also liberated the Netherlands in 1944-45 and the Royal Canadian Navy ended the war as one of the largest navies in the world.", "fr": "Plus d'un million de Canadiens ont servi pendant la Seconde Guerre mondiale et environ 44 000 sont morts; les troupes canadiennes ont aussi libéré les Pays-Bas en 1944-1945, et la Marine royale canadienne a terminé la guerre comme l'une des plus grandes marines du monde." },
+      "source": "Discover Canada: Canada's History",
+      "asOf": "2026-09-07",
+      "volatile": false
+    }
+  ]
+}

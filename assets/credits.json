@@ -1,0 +1,55 @@
+{
+  "$schema": "../content/schemas/credits.schema.json",
+  "assets": [
+    {
+      "path": "sky/partly_cloudy_1k.hdr",
+      "title": "Kloofendal 48d Partly Cloudy (Pure Sky) HDRI, 1k",
+      "author": "Greg Zaal (Poly Haven)",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
+      "notes": "1k resolution keeps the hub payload small; IBL only."
+    },
+    {
+      "path": "audio/wind.wav",
+      "title": "Procedural wind cue",
+      "author": "TrueNorth (scripts/assets.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/assets.mjs"
+    },
+    {
+      "path": "audio/click.wav",
+      "title": "Procedural click cue",
+      "author": "TrueNorth (scripts/assets.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/assets.mjs"
+    },
+    {
+      "path": "audio/correct.wav",
+      "title": "Procedural correct cue",
+      "author": "TrueNorth (scripts/assets.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/assets.mjs"
+    },
+    {
+      "path": "audio/wrong.wav",
+      "title": "Procedural wrong cue",
+      "author": "TrueNorth (scripts/assets.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/assets.mjs"
+    },
+    {
+      "path": "audio/stamp.wav",
+      "title": "Procedural stamp cue",
+      "author": "TrueNorth (scripts/assets.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/assets.mjs"
+    },
+    {
+      "path": "audio/step.wav",
+      "title": "Procedural step cue",
+      "author": "TrueNorth (scripts/assets.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/assets.mjs"
+    }
+  ]
+}

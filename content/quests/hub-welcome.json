@@ -1,0 +1,42 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "hub-welcome",
+  "district": "hub",
+  "type": "dialogue",
+  "title": { "en": "Welcome to the Hill", "fr": "Bienvenue sur la Colline" },
+  "summary": {
+    "en": "Meet Amélie, find the flagpole, and prove you know the basics of what citizenship asks of you.",
+    "fr": "Rencontrez Amélie, trouvez le mât du drapeau et prouvez que vous connaissez les bases de ce que la citoyenneté demande."
+  },
+  "giverNpc": "guide-amelie",
+  "steps": [
+    {
+      "id": "meet-guide",
+      "kind": "talk",
+      "npc": "guide-amelie",
+      "objective": { "en": "Talk to Amélie near the Centennial Flame", "fr": "Parlez à Amélie près de la Flamme du centenaire" },
+      "dialogue": [
+        { "speaker": "guide-amelie", "text": { "en": "You must be our newest explorer. I'm Amélie. Canada asks a few things of its citizens, and gives a lot in return.", "fr": "Vous devez être notre nouvel explorateur. Je suis Amélie. Le Canada demande quelques choses à ses citoyens, et donne beaucoup en retour." } },
+        { "speaker": "guide-amelie", "text": { "en": "See the flag over there? Walk to the flagpole. I'll meet you with a few questions to warm up.", "fr": "Vous voyez le drapeau là-bas? Marchez jusqu'au mât. Je vous y retrouverai avec quelques questions pour vous échauffer." } },
+        { "speaker": "player", "text": { "en": "On my way.", "fr": "J'y vais." } }
+      ]
+    },
+    {
+      "id": "reach-flagpole",
+      "kind": "reach",
+      "trigger": "flagpole",
+      "objective": { "en": "Walk to the flagpole east of the Flame", "fr": "Marchez jusqu'au mât du drapeau à l'est de la Flamme" }
+    },
+    {
+      "id": "warm-up-quiz",
+      "kind": "answer",
+      "questions": ["q-rr-001", "q-rr-002", "q-rr-003"],
+      "minCorrect": 2,
+      "objective": { "en": "Answer Amélie's three warm-up questions (2 of 3 to pass)", "fr": "Répondez aux trois questions d'échauffement d'Amélie (2 sur 3 pour réussir)" }
+    }
+  ],
+  "reward": { "stamp": "stamp-hub-welcome" },
+  "completionDialogue": [
+    { "speaker": "guide-amelie", "text": { "en": "That's your first Passport Stamp! The train at the station now runs to the Rights & Responsibilities district. Bon voyage!", "fr": "Voilà votre premier timbre de passeport! Le train à la gare va maintenant vers le district des Droits et responsabilités. Bon voyage!" } }
+  ]
+}

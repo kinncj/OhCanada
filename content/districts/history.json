@@ -1,0 +1,184 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "history",
+  "subject": "history",
+  "chapter": "Canada's History",
+  "name": {
+    "en": "Canada's History",
+    "fr": "L'histoire du Canada"
+  },
+  "description": {
+    "en": "A fortified old town: palisades, a fur-trade post and Confederation-era streets.",
+    "fr": "Une vieille ville fortifiée : palissades, poste de traite des fourrures et rues de l'époque de la Confédération."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1002,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#5a7a3a",
+        "#7a9a4c",
+        "#9db06c",
+        "#b8b58e"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "spruce",
+        "pine",
+        "rock"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "history-main",
+        "type": "fort",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "The old fort gate",
+          "fr": "La porte du vieux fort"
+        }
+      },
+      {
+        "id": "history-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "history-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "history-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "history-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.3,
+      "weather": "fog",
+      "audio": "wind",
+      "fogDensity": 0.012
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-history-1",
+      "name": {
+        "en": "Marie, Fur-Trade Historian",
+        "fr": "Marie, historienne de la traite des fourrures"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "history-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to Canada's History. There is much to learn here.",
+        "fr": "Bienvenue dans L'histoire du Canada. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "plaid",
+        "hair": "long",
+        "hairColor": "auburn"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "history-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "The old fort gate",
+        "fr": "La porte du vieux fort"
+      }
+    },
+    {
+      "id": "history-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "history-intro"
+  ]
+}

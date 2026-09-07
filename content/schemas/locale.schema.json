@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/locale.schema.json",
+  "title": "Locale bundle (nested string map)",
+  "type": "object",
+  "additionalProperties": { "$ref": "#/$defs/node" },
+  "$defs": {
+    "node": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "object", "additionalProperties": { "$ref": "#/$defs/node" } }
+      ]
+    }
+  }
+}

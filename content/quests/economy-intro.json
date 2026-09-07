@@ -1,0 +1,70 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "economy-intro",
+  "district": "economy",
+  "type": "dialogue",
+  "title": {
+    "en": "Trade Routes",
+    "fr": "Routes commerciales"
+  },
+  "summary": {
+    "en": "Follow Canadian goods from farm to port.",
+    "fr": "Suivez les produits canadiens de la ferme au port."
+  },
+  "giverNpc": "npc-economy-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-economy-1",
+      "objective": {
+        "en": "Talk to Captain Singh, Harbourmaster",
+        "fr": "Parlez à La capitaine Singh, capitaine de port"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-economy-1",
+          "text": {
+            "en": "Glad you made it. Head to the harbour office and I'll test what you know.",
+            "fr": "Content de vous voir. Rendez-vous à bureau du port et je testerai vos connaissances."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "kind": "reach",
+      "trigger": "economy-landmark",
+      "objective": {
+        "en": "Reach the harbour office",
+        "fr": "Rendez-vous à bureau du port"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-ec-001",
+        "q-ec-002",
+        "q-ec-003"
+      ],
+      "minCorrect": 2,
+      "objective": {
+        "en": "Answer three questions (2 of 3 to pass)",
+        "fr": "Répondez à trois questions (2 sur 3 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-economy-intro"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-economy-1",
+      "text": {
+        "en": "Well done. Another stamp for your passport!",
+        "fr": "Bravo. Un autre timbre pour votre passeport!"
+      }
+    }
+  ]
+}

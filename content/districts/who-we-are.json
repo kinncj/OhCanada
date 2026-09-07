@@ -1,0 +1,184 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "who-we-are",
+  "subject": "who-we-are",
+  "chapter": "Who We Are",
+  "name": {
+    "en": "Who We Are",
+    "fr": "Qui nous sommes"
+  },
+  "description": {
+    "en": "A lakeside gathering place honouring Indigenous peoples, the founding peoples, and the diversity of modern Canada.",
+    "fr": "Un lieu de rassemblement au bord d'un lac honorant les peuples autochtones, les peuples fondateurs et la diversité du Canada moderne."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1001,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#4f7f3a",
+        "#6d9a4d",
+        "#8db06a",
+        "#c2c9a0"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "pine",
+        "birch",
+        "rock"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "who-we-are-main",
+        "type": "circle",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Gathering circle",
+          "fr": "Cercle de rassemblement"
+        }
+      },
+      {
+        "id": "who-we-are-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "who-we-are-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "who-we-are-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "who-we-are-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.7,
+      "weather": "clear",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-who-we-are-1",
+      "name": {
+        "en": "Elder Sarah Cardinal",
+        "fr": "L'aînée Sarah Cardinal"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "who-we-are-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to Who We Are. There is much to learn here.",
+        "fr": "Bienvenue dans Qui nous sommes. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-4",
+        "outfit": "fleece",
+        "hair": "braids",
+        "hairColor": "grey"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "who-we-are-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Gathering circle",
+        "fr": "Cercle de rassemblement"
+      }
+    },
+    {
+      "id": "who-we-are-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "who-we-are-intro"
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "government",
+  "subject": "government",
+  "chapter": "How Canadians Govern Themselves",
+  "name": {
+    "en": "How Canadians Govern Themselves",
+    "fr": "Comment les Canadiens se gouvernent"
+  },
+  "description": {
+    "en": "A provincial legislature, a city hall and Rideau Hall in one civic district.",
+    "fr": "Une assemblée législative provinciale, un hôtel de ville et Rideau Hall dans un même district civique."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1004,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#5f8a3c",
+        "#7ca04c",
+        "#9cb66a",
+        "#c8caa5"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "maple",
+        "birch"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "government-main",
+        "type": "legislature",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Legislature steps",
+          "fr": "Marches de l'assemblée"
+        }
+      },
+      {
+        "id": "government-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "government-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "government-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "government-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.4,
+      "weather": "clear",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-government-1",
+      "name": {
+        "en": "Speaker Nguyen",
+        "fr": "Le président Nguyen"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "government-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to How Canadians Govern Themselves. There is much to learn here.",
+        "fr": "Bienvenue dans Comment les Canadiens se gouvernent. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "fleece",
+        "hair": "buzz",
+        "hairColor": "black"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "government-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Legislature steps",
+        "fr": "Marches de l'assemblée"
+      }
+    },
+    {
+      "id": "government-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "government-intro"
+  ]
+}

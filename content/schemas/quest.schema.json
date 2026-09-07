@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/quest.schema.json",
+  "title": "Quest",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "district": { "$ref": "common.schema.json#/$defs/id" },
+    "type": { "type": "string", "enum": ["fetch", "dialogue", "puzzle", "timed"] },
+    "title": { "$ref": "common.schema.json#/$defs/localizedText" },
+    "summary": { "$ref": "common.schema.json#/$defs/localizedText" },
+    "giverNpc": { "$ref": "common.schema.json#/$defs/id" },
+    "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/step" } },
+    "reward": {
+      "type": "object",
+      "properties": {
+        "stamp": { "$ref": "common.schema.json#/$defs/id" },
+        "unlocks": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } }
+      },
+      "required": ["stamp"],
+      "additionalProperties": false
+    },
+    "completionDialogue": { "type": "array", "items": { "$ref": "#/$defs/dialogueLine" } }
+  },
+  "required": ["id", "district", "type", "title", "summary", "giverNpc", "steps", "reward"],
+  "additionalProperties": false,
+  "$defs": {
+    "dialogueLine": {
+      "type": "object",
+      "properties": {
+        "speaker": { "type": "string", "minLength": 1 },
+        "text": { "$ref": "common.schema.json#/$defs/localizedText" }
+      },
+      "required": ["speaker", "text"],
+      "additionalProperties": false
+    },
+    "stepBase": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/id" },
+        "objective": { "$ref": "common.schema.json#/$defs/localizedText" },
+        "timeLimitSeconds": { "type": "integer", "minimum": 5 }
+      },
+      "required": ["id", "objective"]
+    },
+    "step": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {}, "objective": {}, "timeLimitSeconds": {},
+            "kind": { "const": "talk" },
+            "npc": { "$ref": "common.schema.json#/$defs/id" },
+            "dialogue": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/dialogueLine" } }
+          },
+          "required": ["id", "objective", "kind", "npc", "dialogue"],
+          "additionalProperties": false,
+          "allOf": [{ "$ref": "#/$defs/stepBase" }]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {}, "objective": {}, "timeLimitSeconds": {},
+            "kind": { "const": "reach" },
+            "trigger": { "$ref": "common.schema.json#/$defs/id" }
+          },
+          "required": ["id", "objective", "kind", "trigger"],
+          "additionalProperties": false,
+          "allOf": [{ "$ref": "#/$defs/stepBase" }]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {}, "objective": {}, "timeLimitSeconds": {},
+            "kind": { "const": "collect" },
+            "items": { "type": "array", "minItems": 1, "items": { "$ref": "common.schema.json#/$defs/id" } }
+          },
+          "required": ["id", "objective", "kind", "items"],
+          "additionalProperties": false,
+          "allOf": [{ "$ref": "#/$defs/stepBase" }]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {}, "objective": {}, "timeLimitSeconds": {},
+            "kind": { "const": "answer" },
+            "questions": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^q-[a-z]{2,3}-\\d{3}$" } },
+            "minCorrect": { "type": "integer", "minimum": 0 }
+          },
+          "required": ["id", "objective", "kind", "questions", "minCorrect"],
+          "additionalProperties": false,
+          "allOf": [{ "$ref": "#/$defs/stepBase" }]
+        }
+      ]
+    }
+  }
+}

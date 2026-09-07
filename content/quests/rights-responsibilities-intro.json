@@ -1,0 +1,70 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "rights-responsibilities-intro",
+  "district": "rights-responsibilities",
+  "type": "dialogue",
+  "title": {
+    "en": "The Oath",
+    "fr": "Le serment"
+  },
+  "summary": {
+    "en": "Learn what the oath of citizenship commits you to.",
+    "fr": "Apprenez ce à quoi le serment de citoyenneté vous engage."
+  },
+  "giverNpc": "npc-rights-responsibilities-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-rights-responsibilities-1",
+      "objective": {
+        "en": "Talk to Justice Okafor, Citizenship Judge",
+        "fr": "Parlez à Justice Okafor, juge de la citoyenneté"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-rights-responsibilities-1",
+          "text": {
+            "en": "Glad you made it. Head to the courthouse steps and I'll test what you know.",
+            "fr": "Content de vous voir. Rendez-vous à marches du palais de justice et je testerai vos connaissances."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "kind": "reach",
+      "trigger": "rights-responsibilities-landmark",
+      "objective": {
+        "en": "Reach the courthouse steps",
+        "fr": "Rendez-vous à marches du palais de justice"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-rr-001",
+        "q-rr-002",
+        "q-rr-003"
+      ],
+      "minCorrect": 2,
+      "objective": {
+        "en": "Answer three questions (2 of 3 to pass)",
+        "fr": "Répondez à trois questions (2 sur 3 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-rights-responsibilities-intro"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-rights-responsibilities-1",
+      "text": {
+        "en": "Well done. Another stamp for your passport!",
+        "fr": "Bravo. Un autre timbre pour votre passeport!"
+      }
+    }
+  ]
+}

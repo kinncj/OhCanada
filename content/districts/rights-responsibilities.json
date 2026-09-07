@@ -1,0 +1,184 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "rights-responsibilities",
+  "subject": "rights-responsibilities",
+  "chapter": "Rights and Responsibilities of Citizenship",
+  "name": {
+    "en": "Rights & Responsibilities",
+    "fr": "Droits et responsabilités"
+  },
+  "description": {
+    "en": "A courthouse square and a town hall where citizens learn what Canada asks of them.",
+    "fr": "Une place du palais de justice et un hôtel de ville où les citoyens apprennent ce que le Canada attend d'eux."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1000,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#5f8a3c",
+        "#78a24a",
+        "#98b866",
+        "#b9c7a1"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "maple",
+        "birch",
+        "shrub"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "rights-responsibilities-main",
+        "type": "courthouse",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Courthouse steps",
+          "fr": "Marches du palais de justice"
+        }
+      },
+      {
+        "id": "rights-responsibilities-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "rights-responsibilities-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "rights-responsibilities-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "rights-responsibilities-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.45,
+      "weather": "clear",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-rights-responsibilities-1",
+      "name": {
+        "en": "Justice Okafor, Citizenship Judge",
+        "fr": "Justice Okafor, juge de la citoyenneté"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "rights-responsibilities-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to Rights & Responsibilities. There is much to learn here.",
+        "fr": "Bienvenue dans Droits et responsabilités. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-5",
+        "outfit": "fleece",
+        "hair": "short",
+        "hairColor": "black"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "rights-responsibilities-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Courthouse steps",
+        "fr": "Marches du palais de justice"
+      }
+    },
+    {
+      "id": "rights-responsibilities-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "rights-responsibilities-intro"
+  ]
+}

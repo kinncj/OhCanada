@@ -1,0 +1,184 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "elections",
+  "subject": "elections",
+  "chapter": "Federal Elections",
+  "name": {
+    "en": "Federal Elections",
+    "fr": "Les élections fédérales"
+  },
+  "description": {
+    "en": "A polling station, a campaign square and a returning office.",
+    "fr": "Un bureau de vote, une place de campagne et un bureau du directeur du scrutin."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1005,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#5a8a3a",
+        "#7aa04c",
+        "#9bb86a",
+        "#c9cfa8"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "maple",
+        "shrub"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "elections-main",
+        "type": "pollingstation",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Polling station",
+          "fr": "Bureau de vote"
+        }
+      },
+      {
+        "id": "elections-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "elections-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "elections-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "elections-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.5,
+      "weather": "clear",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-elections-1",
+      "name": {
+        "en": "Fatima, Returning Officer",
+        "fr": "Fatima, directrice du scrutin"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "elections-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to Federal Elections. There is much to learn here.",
+        "fr": "Bienvenue dans Les élections fédérales. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-4",
+        "outfit": "parka",
+        "hair": "bun",
+        "hairColor": "black",
+        "accessory": "glasses"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "elections-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Polling station",
+        "fr": "Bureau de vote"
+      }
+    },
+    {
+      "id": "elections-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "elections-intro"
+  ]
+}

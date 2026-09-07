@@ -1,0 +1,436 @@
+{
+  "$schema": "../schemas/question.schema.json",
+  "subject": "symbols",
+  "questions": [
+    {
+      "id": "q-sy-001",
+      "subject": "symbols",
+      "text": { "en": "In what year was the current red-and-white maple leaf flag first raised?", "fr": "En quelle année le drapeau actuel, rouge et blanc à la feuille d'érable, a-t-il été hissé pour la première fois?" },
+      "answer": { "en": "1965", "fr": "1965" },
+      "distractors": [
+        { "en": "1867", "fr": "1867" },
+        { "en": "1931", "fr": "1931" },
+        { "en": "1982", "fr": "1982" }
+      ],
+      "explanation": { "en": "The new flag was raised for the first time on February 15, 1965; the red-white-red pattern comes from the flag of the Royal Military College.", "fr": "Le nouveau drapeau a été hissé pour la première fois le 15 février 1965; le motif rouge-blanc-rouge s'inspire du drapeau du Collège militaire royal." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-002",
+      "subject": "symbols",
+      "text": { "en": "Which monarch proclaimed red and white as Canada's national colours in 1921?", "fr": "Quel monarque a proclamé le rouge et le blanc couleurs nationales du Canada en 1921?" },
+      "answer": { "en": "King George V", "fr": "Le roi George V" },
+      "distractors": [
+        { "en": "Queen Victoria", "fr": "La reine Victoria" },
+        { "en": "King Edward VII", "fr": "Le roi Édouard VII" },
+        { "en": "Queen Elizabeth II", "fr": "La reine Elizabeth II" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-003",
+      "subject": "symbols",
+      "text": { "en": "Which symbol was adopted by French Canadians in the 1700s and has marked the graves of Canadian soldiers since the First World War?", "fr": "Quel symbole, adopté par les Canadiens français au XVIIIe siècle, orne les tombes des soldats canadiens depuis la Première Guerre mondiale?" },
+      "answer": { "en": "The maple leaf", "fr": "La feuille d'érable" },
+      "distractors": [
+        { "en": "The beaver", "fr": "Le castor" },
+        { "en": "The fleur-de-lys", "fr": "La fleur de lys" },
+        { "en": "The Tudor rose", "fr": "La rose Tudor" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-004",
+      "subject": "symbols",
+      "text": { "en": "Which animal, once the emblem of the Hudson's Bay Company, appears on the Canadian five-cent coin?", "fr": "Quel animal, jadis emblème de la Compagnie de la Baie d'Hudson, figure sur la pièce canadienne de cinq cents?" },
+      "answer": { "en": "The beaver", "fr": "Le castor" },
+      "distractors": [
+        { "en": "The moose", "fr": "L'orignal" },
+        { "en": "The common loon", "fr": "Le huard" },
+        { "en": "The polar bear", "fr": "L'ours polaire" }
+      ],
+      "explanation": { "en": "The beaver also appears on the coats of arms of Saskatchewan and Alberta and of cities such as Montreal and Toronto.", "fr": "Le castor figure aussi sur les armoiries de la Saskatchewan et de l'Alberta ainsi que de villes comme Montréal et Toronto." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-005",
+      "subject": "symbols",
+      "text": { "en": "Which emblem, linked to French royalty for some 1,500 years, appears on the Quebec flag adopted in 1948?", "fr": "Quel emblème, associé à la royauté française depuis quelque 1 500 ans, figure sur le drapeau du Québec adopté en 1948?" },
+      "answer": { "en": "The fleur-de-lys", "fr": "La fleur de lys" },
+      "distractors": [
+        { "en": "The white rose", "fr": "La rose blanche" },
+        { "en": "The thistle", "fr": "Le chardon" },
+        { "en": "The shamrock", "fr": "Le trèfle" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-006",
+      "subject": "symbols",
+      "text": { "en": "What does Canada's motto, \"A Mari usque ad Mare\", mean?", "fr": "Que signifie la devise du Canada, « A Mari usque ad Mare »?" },
+      "answer": { "en": "From sea to sea", "fr": "D'un océan à l'autre" },
+      "distractors": [
+        { "en": "Peace, order and good government", "fr": "Paix, ordre et bon gouvernement" },
+        { "en": "Strong and free", "fr": "Fort et libre" },
+        { "en": "The true north", "fr": "Le vrai Nord" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-007",
+      "subject": "symbols",
+      "text": { "en": "Which of the following does NOT appear on Canada's coat of arms?", "fr": "Lequel des éléments suivants ne figure PAS sur les armoiries du Canada?" },
+      "answer": { "en": "The beaver", "fr": "Le castor" },
+      "distractors": [
+        { "en": "The lions of England", "fr": "Les lions d'Angleterre" },
+        { "en": "The Irish harp", "fr": "La harpe irlandaise" },
+        { "en": "Red maple leaves", "fr": "Des feuilles d'érable rouges" }
+      ],
+      "explanation": { "en": "The arms combine symbols of England, Scotland, Ireland and France with a sprig of red maple leaves.", "fr": "Les armoiries réunissent des symboles de l'Angleterre, de l'Écosse, de l'Irlande et de la France avec un rameau de feuilles d'érable rouges." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-008",
+      "subject": "symbols",
+      "text": { "en": "The Peace Tower on Parliament Hill, completed in 1927, was built in memory of what?", "fr": "La tour de la Paix sur la Colline du Parlement, achevée en 1927, a été érigée en mémoire de quoi?" },
+      "answer": { "en": "The First World War", "fr": "La Première Guerre mondiale" },
+      "distractors": [
+        { "en": "Confederation in 1867", "fr": "La Confédération de 1867" },
+        { "en": "The War of 1812", "fr": "La guerre de 1812" },
+        { "en": "The end of the Second World War", "fr": "La fin de la Seconde Guerre mondiale" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-009",
+      "subject": "symbols",
+      "text": { "en": "Which part of the original Centre Block survived the fire of 1916?", "fr": "Quelle partie de l'édifice du Centre original a survécu à l'incendie de 1916?" },
+      "answer": { "en": "The Library of Parliament", "fr": "La Bibliothèque du Parlement" },
+      "distractors": [
+        { "en": "The Senate Chamber", "fr": "La salle du Sénat" },
+        { "en": "The Peace Tower", "fr": "La tour de la Paix" },
+        { "en": "The House of Commons chamber", "fr": "La salle de la Chambre des communes" }
+      ],
+      "explanation": { "en": "The Centre Block was rebuilt and reopened in 1922 in the Gothic Revival style of the original.", "fr": "L'édifice du Centre a été reconstruit et rouvert en 1922 dans le style néogothique de l'original." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-010",
+      "subject": "symbols",
+      "text": { "en": "What is Canada's official national summer sport?", "fr": "Quel est le sport national d'été officiel du Canada?" },
+      "answer": { "en": "Lacrosse", "fr": "La crosse" },
+      "distractors": [
+        { "en": "Baseball", "fr": "Le baseball" },
+        { "en": "Canadian football", "fr": "Le football canadien" },
+        { "en": "Soccer", "fr": "Le soccer" }
+      ],
+      "explanation": { "en": "Hockey is the official national winter sport and lacrosse the national summer sport.", "fr": "Le hockey est le sport national d'hiver officiel et la crosse, le sport national d'été." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-011",
+      "subject": "symbols",
+      "text": { "en": "Which Governor General donated the championship trophy for hockey in 1892?", "fr": "Quel gouverneur général a offert le trophée du championnat de hockey en 1892?" },
+      "answer": { "en": "Lord Stanley", "fr": "Lord Stanley" },
+      "distractors": [
+        { "en": "Lord Durham", "fr": "Lord Durham" },
+        { "en": "Lord Grey", "fr": "Lord Grey" },
+        { "en": "Lord Elgin", "fr": "Lord Elgin" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-012",
+      "subject": "symbols",
+      "text": { "en": "The Grey Cup, first donated by Governor General Lord Grey in 1909, is awarded in which sport?", "fr": "La Coupe Grey, offerte pour la première fois par le gouverneur général Lord Grey en 1909, récompense les champions de quel sport?" },
+      "answer": { "en": "Canadian football", "fr": "Le football canadien" },
+      "distractors": [
+        { "en": "Hockey", "fr": "Le hockey" },
+        { "en": "Curling", "fr": "Le curling" },
+        { "en": "Lacrosse", "fr": "La crosse" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-013",
+      "subject": "symbols",
+      "text": { "en": "In what year was \"O Canada\" proclaimed the national anthem?", "fr": "En quelle année « Ô Canada » a-t-il été proclamé hymne national?" },
+      "answer": { "en": "1980", "fr": "1980" },
+      "distractors": [
+        { "en": "1867", "fr": "1867" },
+        { "en": "1880", "fr": "1880" },
+        { "en": "1965", "fr": "1965" }
+      ],
+      "explanation": { "en": "The song was first performed in Quebec City in 1880, a full century before it became the official anthem.", "fr": "La chanson a été interprétée pour la première fois à Québec en 1880, un siècle avant de devenir l'hymne officiel." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-014",
+      "subject": "symbols",
+      "text": { "en": "What is the Royal Anthem of Canada?", "fr": "Quel est l'hymne royal du Canada?" },
+      "answer": { "en": "\"God Save the King\"", "fr": "« God Save the King » (Dieu protège le Roi)" },
+      "distractors": [
+        { "en": "\"O Canada\"", "fr": "« Ô Canada »" },
+        { "en": "\"The Maple Leaf Forever\"", "fr": "« The Maple Leaf Forever »" },
+        { "en": "\"Rule, Britannia!\"", "fr": "« Rule, Britannia! »" }
+      ],
+      "explanation": { "en": "The Royal Anthem may be played or sung at any time; its title follows the reigning Sovereign.", "fr": "L'hymne royal peut être joué ou chanté à tout moment; son titre suit le souverain régnant." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-015",
+      "subject": "symbols",
+      "text": { "en": "Which honour, created in 1967, recognizes outstanding citizens for achievement and service?", "fr": "Quelle distinction, créée en 1967, reconnaît des citoyens exceptionnels pour leurs réalisations et leur dévouement?" },
+      "answer": { "en": "The Order of Canada", "fr": "L'Ordre du Canada" },
+      "distractors": [
+        { "en": "The Order of Military Merit", "fr": "L'Ordre du mérite militaire" },
+        { "en": "The Victoria Cross", "fr": "La Croix de Victoria" },
+        { "en": "The Canadian Forces' Decoration", "fr": "La Décoration des Forces canadiennes" }
+      ],
+      "explanation": { "en": "Canada has had its own honours system since 1967, the year of its centennial.", "fr": "Le Canada possède son propre régime de distinctions honorifiques depuis 1967, l'année de son centenaire." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-016",
+      "subject": "symbols",
+      "text": { "en": "What is the highest honour available to Canadians, awarded for the most conspicuous bravery in the presence of the enemy?", "fr": "Quelle est la plus haute distinction offerte aux Canadiens, décernée pour une bravoure exceptionnelle face à l'ennemi?" },
+      "answer": { "en": "The Victoria Cross", "fr": "La Croix de Victoria" },
+      "distractors": [
+        { "en": "The Order of Canada", "fr": "L'Ordre du Canada" },
+        { "en": "The Star of Courage", "fr": "L'Étoile du courage" },
+        { "en": "The Medal of Bravery", "fr": "La Médaille de la bravoure" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-017",
+      "subject": "symbols",
+      "text": { "en": "Who was the first Canadian to receive the Victoria Cross, for his part in the Charge of the Light Brigade in 1854?", "fr": "Qui a été le premier Canadien à recevoir la Croix de Victoria, pour sa participation à la charge de la brigade légère en 1854?" },
+      "answer": { "en": "Lieutenant Alexander Roberts Dunn", "fr": "Le lieutenant Alexander Roberts Dunn" },
+      "distractors": [
+        { "en": "Billy Bishop", "fr": "Billy Bishop" },
+        { "en": "Filip Konowal", "fr": "Filip Konowal" },
+        { "en": "Paul Triquet", "fr": "Paul Triquet" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-018",
+      "subject": "symbols",
+      "text": { "en": "Which Nova Scotian sailor, the son of American slaves, became the first Black person awarded the Victoria Cross in 1857?", "fr": "Quel marin de la Nouvelle-Écosse, fils d'esclaves américains, est devenu en 1857 la première personne noire à recevoir la Croix de Victoria?" },
+      "answer": { "en": "Able Seaman William Hall", "fr": "Le matelot de 1re classe William Hall" },
+      "distractors": [
+        { "en": "John Ware", "fr": "John Ware" },
+        { "en": "Josiah Henson", "fr": "Josiah Henson" },
+        { "en": "Lincoln Alexander", "fr": "Lincoln Alexander" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-019",
+      "subject": "symbols",
+      "text": { "en": "In what year did Parliament pass the Official Languages Act, giving English and French equal status in the federal government?", "fr": "En quelle année le Parlement a-t-il adopté la Loi sur les langues officielles, accordant au français et à l'anglais un statut égal au gouvernement fédéral?" },
+      "answer": { "en": "1969", "fr": "1969" },
+      "distractors": [
+        { "en": "1867", "fr": "1867" },
+        { "en": "1982", "fr": "1982" },
+        { "en": "1995", "fr": "1995" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-020",
+      "subject": "symbols",
+      "text": { "en": "Canada Day, celebrated on July 1, marks the anniversary of what event?", "fr": "La fête du Canada, célébrée le 1er juillet, marque l'anniversaire de quel événement?" },
+      "answer": { "en": "Confederation and the creation of the Dominion of Canada in 1867", "fr": "La Confédération et la création du Dominion du Canada en 1867" },
+      "distractors": [
+        { "en": "The adoption of the maple leaf flag in 1965", "fr": "L'adoption du drapeau à la feuille d'érable en 1965" },
+        { "en": "The signing of the Charter in 1982", "fr": "La signature de la Charte en 1982" },
+        { "en": "The end of the First World War", "fr": "La fin de la Première Guerre mondiale" }
+      ],
+      "explanation": { "en": "Until 1982 the holiday was known as Dominion Day.", "fr": "Jusqu'en 1982, la fête portait le nom de fête du Dominion." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-021",
+      "subject": "symbols",
+      "text": { "en": "On November 11, Canadians wear a red poppy. What does Remembrance Day commemorate?", "fr": "Le 11 novembre, les Canadiens portent un coquelicot rouge. Que commémore le jour du Souvenir?" },
+      "answer": { "en": "The sacrifice of Canadians who served in wars, marking the end of the First World War in 1918", "fr": "Le sacrifice des Canadiens qui ont servi en temps de guerre, en rappel de la fin de la Première Guerre mondiale en 1918" },
+      "distractors": [
+        { "en": "Confederation", "fr": "La Confédération" },
+        { "en": "The Battle of the Plains of Abraham", "fr": "La bataille des plaines d'Abraham" },
+        { "en": "The adoption of the Constitution", "fr": "L'adoption de la Constitution" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-022",
+      "subject": "symbols",
+      "text": { "en": "Who wrote the poem \"In Flanders Fields\", from which the remembrance poppy tradition comes?", "fr": "Qui a écrit le poème « In Flanders Fields » (« Au champ d'honneur »), à l'origine de la tradition du coquelicot du Souvenir?" },
+      "answer": { "en": "Lieutenant-Colonel John McCrae", "fr": "Le lieutenant-colonel John McCrae" },
+      "distractors": [
+        { "en": "Robert Service", "fr": "Robert Service" },
+        { "en": "Stephen Leacock", "fr": "Stephen Leacock" },
+        { "en": "Émile Nelligan", "fr": "Émile Nelligan" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-023",
+      "subject": "symbols",
+      "text": { "en": "Victoria Day, observed on the Monday before May 25, honours what?", "fr": "La fête de Victoria, célébrée le lundi précédant le 25 mai, honore quoi?" },
+      "answer": { "en": "The birthday of Queen Victoria and the official birthday of the reigning Sovereign", "fr": "L'anniversaire de la reine Victoria et l'anniversaire officiel du souverain régnant" },
+      "distractors": [
+        { "en": "The founding of Victoria, British Columbia", "fr": "La fondation de Victoria, en Colombie-Britannique" },
+        { "en": "The arrival of the Loyalists", "fr": "L'arrivée des loyalistes" },
+        { "en": "The Battle of Vimy Ridge", "fr": "La bataille de la crête de Vimy" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-024",
+      "subject": "symbols",
+      "text": { "en": "Which national commemorative day falls on January 11?", "fr": "Quelle journée commémorative nationale tombe le 11 janvier?" },
+      "answer": { "en": "Sir John A. Macdonald Day", "fr": "La Journée Sir John A. Macdonald" },
+      "distractors": [
+        { "en": "Sir Wilfrid Laurier Day", "fr": "La Journée Sir Wilfrid Laurier" },
+        { "en": "Canada Day", "fr": "La fête du Canada" },
+        { "en": "National Indigenous Peoples Day", "fr": "La Journée nationale des peuples autochtones" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-025",
+      "subject": "symbols",
+      "text": { "en": "On which date is Sir Wilfrid Laurier Day observed?", "fr": "À quelle date la Journée Sir Wilfrid Laurier est-elle célébrée?" },
+      "answer": { "en": "November 20", "fr": "Le 20 novembre" },
+      "distractors": [
+        { "en": "January 11", "fr": "Le 11 janvier" },
+        { "en": "June 24", "fr": "Le 24 juin" },
+        { "en": "July 1", "fr": "Le 1er juillet" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-026",
+      "subject": "symbols",
+      "text": { "en": "On which date is National Indigenous Peoples Day celebrated?", "fr": "À quelle date la Journée nationale des peuples autochtones est-elle célébrée?" },
+      "answer": { "en": "June 21", "fr": "Le 21 juin" },
+      "distractors": [
+        { "en": "June 24", "fr": "Le 24 juin" },
+        { "en": "September 30", "fr": "Le 30 septembre" },
+        { "en": "October 1", "fr": "Le 1er octobre" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-027",
+      "subject": "symbols",
+      "text": { "en": "Which of the following is NOT a holiday or commemorative day observed in Canada?", "fr": "Laquelle des dates suivantes n'est PAS un jour férié ou une journée commémorative au Canada?" },
+      "answer": { "en": "Independence Day, July 4", "fr": "Le jour de l'Indépendance, le 4 juillet" },
+      "distractors": [
+        { "en": "Labour Day, the first Monday of September", "fr": "La fête du Travail, le premier lundi de septembre" },
+        { "en": "Boxing Day, December 26", "fr": "Le lendemain de Noël, le 26 décembre" },
+        { "en": "Thanksgiving, the second Monday of October", "fr": "L'Action de grâce, le deuxième lundi d'octobre" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-028",
+      "subject": "symbols",
+      "text": { "en": "The Royal Canadian Mounted Police, a national symbol, grew out of which force created in 1873?", "fr": "La Gendarmerie royale du Canada, symbole national, est issue de quel corps policier créé en 1873?" },
+      "answer": { "en": "The North West Mounted Police", "fr": "La Police à cheval du Nord-Ouest" },
+      "distractors": [
+        { "en": "The Dominion Police", "fr": "La Police fédérale du Dominion" },
+        { "en": "The Royal Irish Constabulary", "fr": "La Royal Irish Constabulary" },
+        { "en": "The Canadian Rangers", "fr": "Les Rangers canadiens" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-029",
+      "subject": "symbols",
+      "text": { "en": "In Canada, what does the Crown symbolize?", "fr": "Au Canada, que symbolise la Couronne?" },
+      "answer": { "en": "The state, including Parliament, the legislatures, the courts, police services and the armed forces", "fr": "L'État, y compris le Parlement, les assemblées législatives, les tribunaux, les services de police et les forces armées" },
+      "distractors": [
+        { "en": "Only the private property of the royal family", "fr": "Uniquement les biens privés de la famille royale" },
+        { "en": "The House of Commons alone", "fr": "La Chambre des communes uniquement" },
+        { "en": "The British government", "fr": "Le gouvernement britannique" }
+      ],
+      "explanation": { "en": "Canada has been a constitutional monarchy since Confederation; the Crown stands for the country as a whole.", "fr": "Le Canada est une monarchie constitutionnelle depuis la Confédération; la Couronne représente le pays dans son ensemble." },
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-sy-030",
+      "subject": "symbols",
+      "text": { "en": "Which of the following statements about Canada's official languages is correct?", "fr": "Lequel des énoncés suivants sur les langues officielles du Canada est exact?" },
+      "answer": { "en": "English and French are the two official languages, and federal services are available in both", "fr": "Le français et l'anglais sont les deux langues officielles et les services fédéraux sont offerts dans les deux" },
+      "distractors": [
+        { "en": "English is the only official language of the federal government", "fr": "L'anglais est la seule langue officielle du gouvernement fédéral" },
+        { "en": "Every citizen is required to speak both languages", "fr": "Chaque citoyen est tenu de parler les deux langues" },
+        { "en": "French is official only in Quebec", "fr": "Le français n'est officiel qu'au Québec" }
+      ],
+      "source": "Discover Canada: Canadian Symbols",
+      "asOf": "2026-09-07",
+      "volatile": false
+    }
+  ]
+}

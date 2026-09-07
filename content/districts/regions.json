@@ -1,0 +1,186 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "regions",
+  "subject": "regions",
+  "chapter": "Canada's Regions",
+  "name": {
+    "en": "Canada's Regions",
+    "fr": "Les régions du Canada"
+  },
+  "description": {
+    "en": "Five sub-zones: Atlantic shore, Central lakes, Prairie fields, West Coast rainforest and the Arctic North.",
+    "fr": "Cinq sous-zones : rive atlantique, lacs du Centre, champs des Prairies, forêt pluviale de la côte Ouest et Grand Nord arctique."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "regions",
+    "seed": 1009,
+    "size": 240,
+    "terrain": {
+      "amplitude": 6,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#4f7f3a",
+        "#8aa04a",
+        "#c2b168",
+        "#e8eef3"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "pine",
+        "wheat",
+        "iceberg",
+        "tundra-grass"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "regions-main",
+        "type": "lookout",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Lookout",
+          "fr": "Belvédère"
+        }
+      },
+      {
+        "id": "regions-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "regions-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "regions-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "regions-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.5,
+      "weather": "clear",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-regions-1",
+      "name": {
+        "en": "Ranger Aputik",
+        "fr": "La garde Aputik"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "regions-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to Canada's Regions. There is much to learn here.",
+        "fr": "Bienvenue dans Les régions du Canada. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "parka",
+        "hair": "long",
+        "hairColor": "black",
+        "accessory": "scarf"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "regions-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Lookout",
+        "fr": "Belvédère"
+      }
+    },
+    {
+      "id": "regions-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "regions-intro"
+  ]
+}

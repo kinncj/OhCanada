@@ -1,0 +1,445 @@
+{
+  "$schema": "../schemas/question.schema.json",
+  "subject": "modern-canada",
+  "questions": [
+    {
+      "id": "q-mc-001",
+      "subject": "modern-canada",
+      "text": { "en": "Which discovery in 1947 launched Canada's modern energy industry?", "fr": "Quelle découverte de 1947 a lancé l'industrie énergétique moderne du Canada?" },
+      "answer": { "en": "Oil in Alberta", "fr": "Le pétrole en Alberta" },
+      "distractors": [
+        { "en": "Natural gas off Nova Scotia", "fr": "Le gaz naturel au large de la Nouvelle-Écosse" },
+        { "en": "Uranium in Saskatchewan", "fr": "L'uranium en Saskatchewan" },
+        { "en": "Hydroelectric potential in Quebec", "fr": "Le potentiel hydroélectrique du Québec" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-002",
+      "subject": "modern-canada",
+      "text": { "en": "Which federal social program was introduced in 1940?", "fr": "Quel programme social fédéral a été instauré en 1940?" },
+      "answer": { "en": "Unemployment insurance, now called employment insurance", "fr": "L'assurance-chômage, aujourd'hui appelée assurance-emploi" },
+      "distractors": [
+        { "en": "The Canada Pension Plan", "fr": "Le Régime de pensions du Canada" },
+        { "en": "Old Age Security", "fr": "La Sécurité de la vieillesse" },
+        { "en": "The Canada Child Benefit", "fr": "L'Allocation canadienne pour enfants" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-003",
+      "subject": "modern-canada",
+      "text": { "en": "In what year were the Canada and Quebec Pension Plans created?", "fr": "En quelle année le Régime de pensions du Canada et le Régime de rentes du Québec ont-ils été créés?" },
+      "answer": { "en": "1965", "fr": "1965" },
+      "distractors": [
+        { "en": "1927", "fr": "1927" },
+        { "en": "1940", "fr": "1940" },
+        { "en": "1982", "fr": "1982" }
+      ],
+      "explanation": { "en": "Old Age Security was devised as early as 1927, and postwar prosperity made broader social programs affordable.", "fr": "La Sécurité de la vieillesse a été conçue dès 1927, et la prospérité de l'après-guerre a rendu possibles des programmes sociaux plus vastes." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-004",
+      "subject": "modern-canada",
+      "text": { "en": "What is the purpose of the Canada Health Act?", "fr": "Quel est l'objet de la Loi canadienne sur la santé?" },
+      "answer": { "en": "To ensure common elements and a basic standard of coverage in provincial health care systems", "fr": "Assurer des éléments communs et une norme de base de couverture dans les régimes provinciaux de soins de santé" },
+      "distractors": [
+        { "en": "To require every Canadian to buy private health insurance", "fr": "Obliger chaque Canadien à souscrire une assurance-maladie privée" },
+        { "en": "To transfer all hospitals to federal ownership", "fr": "Transférer tous les hôpitaux à la propriété fédérale" },
+        { "en": "To set the salaries of doctors across Canada", "fr": "Fixer le salaire des médecins partout au Canada" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-005",
+      "subject": "modern-canada",
+      "text": { "en": "Which military alliance did Canada help found in 1949?", "fr": "Quelle alliance militaire le Canada a-t-il contribué à fonder en 1949?" },
+      "answer": { "en": "The North Atlantic Treaty Organization (NATO)", "fr": "L'Organisation du Traité de l'Atlantique Nord (OTAN)" },
+      "distractors": [
+        { "en": "The Warsaw Pact", "fr": "Le Pacte de Varsovie" },
+        { "en": "The League of Nations", "fr": "La Société des Nations" },
+        { "en": "The Commonwealth of Nations", "fr": "Le Commonwealth des nations" }
+      ],
+      "explanation": { "en": "Canada was also a founding member of the United Nations in 1945.", "fr": "Le Canada a aussi été un membre fondateur des Nations Unies en 1945." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-006",
+      "subject": "modern-canada",
+      "text": { "en": "In which conflict from 1950 to 1953 did Canada take part as part of a United Nations operation?", "fr": "À quel conflit, de 1950 à 1953, le Canada a-t-il participé dans le cadre d'une opération des Nations Unies?" },
+      "answer": { "en": "The Korean War", "fr": "La guerre de Corée" },
+      "distractors": [
+        { "en": "The Vietnam War", "fr": "La guerre du Vietnam" },
+        { "en": "The Suez Crisis", "fr": "La crise de Suez" },
+        { "en": "The Gulf War", "fr": "La guerre du Golfe" }
+      ],
+      "explanation": { "en": "About 500 Canadians died and 1,000 were wounded defending South Korea.", "fr": "Environ 500 Canadiens sont morts et 1 000 ont été blessés en défendant la Corée du Sud." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-007",
+      "subject": "modern-canada",
+      "text": { "en": "Which of the following is NOT a place where Discover Canada says Canadians have served in UN peacekeeping missions?", "fr": "Lequel des endroits suivants n'est PAS mentionné dans Découvrir le Canada comme lieu d'une mission de maintien de la paix de l'ONU à laquelle des Canadiens ont participé?" },
+      "answer": { "en": "Australia", "fr": "L'Australie" },
+      "distractors": [
+        { "en": "Egypt", "fr": "L'Égypte" },
+        { "en": "Cyprus", "fr": "Chypre" },
+        { "en": "Haiti", "fr": "Haïti" }
+      ],
+      "explanation": { "en": "Canadians have served in many UN peacekeeping missions and in other international security operations, such as in the former Yugoslavia and Afghanistan.", "fr": "Des Canadiens ont participé à de nombreuses missions de maintien de la paix de l'ONU et à d'autres opérations de sécurité internationale, notamment dans l'ex-Yougoslavie et en Afghanistan." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-008",
+      "subject": "modern-canada",
+      "text": { "en": "In which country did Canadian Forces take part in an international security operation beginning in 2001?", "fr": "Dans quel pays les Forces canadiennes ont-elles participé à une opération de sécurité internationale à partir de 2001?" },
+      "answer": { "en": "Afghanistan", "fr": "L'Afghanistan" },
+      "distractors": [
+        { "en": "Iraq", "fr": "L'Irak" },
+        { "en": "Somalia", "fr": "La Somalie" },
+        { "en": "Rwanda", "fr": "Le Rwanda" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-009",
+      "subject": "modern-canada",
+      "text": { "en": "In 1956, about 37,000 refugees came to Canada after fleeing a Soviet crackdown in which country?", "fr": "En 1956, environ 37 000 réfugiés sont arrivés au Canada après avoir fui la répression soviétique dans quel pays?" },
+      "answer": { "en": "Hungary", "fr": "La Hongrie" },
+      "distractors": [
+        { "en": "Poland", "fr": "La Pologne" },
+        { "en": "Czechoslovakia", "fr": "La Tchécoslovaquie" },
+        { "en": "Ukraine", "fr": "L'Ukraine" }
+      ],
+      "explanation": { "en": "Postwar Canada welcomed many refugees from Communist rule, and later took in tens of thousands of people fleeing war in Vietnam and neighbouring countries.", "fr": "Le Canada de l'après-guerre a accueilli de nombreux réfugiés fuyant les régimes communistes, puis des dizaines de milliers de personnes fuyant la guerre au Vietnam et dans les pays voisins." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-010",
+      "subject": "modern-canada",
+      "text": { "en": "What was the 'Quiet Revolution'?", "fr": "Qu'était la « Révolution tranquille »?" },
+      "answer": { "en": "A period of rapid social and political change in Quebec during the 1960s", "fr": "Une période de changements sociaux et politiques rapides au Québec dans les années 1960" },
+      "distractors": [
+        { "en": "The peaceful transfer of power at Confederation in 1867", "fr": "Le transfert pacifique du pouvoir lors de la Confédération en 1867" },
+        { "en": "The women's suffrage movement of the 1910s", "fr": "Le mouvement pour le droit de vote des femmes des années 1910" },
+        { "en": "The Prairie farmers' protests of the 1930s", "fr": "Les protestations des agriculteurs des Prairies dans les années 1930" }
+      ],
+      "explanation": { "en": "Many Quebecers sought a stronger role for the province, and some began to seek separation from Canada.", "fr": "De nombreux Québécois souhaitaient un rôle accru pour leur province, et certains ont commencé à réclamer la séparation du Canada." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-011",
+      "subject": "modern-canada",
+      "text": { "en": "What was the outcome of the Quebec referendums on sovereignty held in 1980 and 1995?", "fr": "Quel a été le résultat des référendums québécois sur la souveraineté tenus en 1980 et 1995?" },
+      "answer": { "en": "In both cases a majority voted to remain part of Canada", "fr": "Dans les deux cas, une majorité a voté pour demeurer au sein du Canada" },
+      "distractors": [
+        { "en": "Quebec voted to separate in 1995 but the result was overturned", "fr": "Le Québec a voté pour la séparation en 1995, mais le résultat a été annulé" },
+        { "en": "Both referendums were cancelled before voting day", "fr": "Les deux référendums ont été annulés avant le jour du vote" },
+        { "en": "A majority voted to separate in 1980 but not in 1995", "fr": "Une majorité a voté pour la séparation en 1980, mais pas en 1995" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-012",
+      "subject": "modern-canada",
+      "text": { "en": "What did the Official Languages Act of 1969 establish?", "fr": "Qu'a établi la Loi sur les langues officielles de 1969?" },
+      "answer": { "en": "Equal status for English and French in the federal government", "fr": "L'égalité de statut du français et de l'anglais au sein du gouvernement fédéral" },
+      "distractors": [
+        { "en": "French as the sole official language of Quebec", "fr": "Le français comme seule langue officielle du Québec" },
+        { "en": "Mandatory bilingual education in every province", "fr": "L'enseignement bilingue obligatoire dans chaque province" },
+        { "en": "Official status for Indigenous languages", "fr": "Le statut officiel des langues autochtones" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-013",
+      "subject": "modern-canada",
+      "text": { "en": "What major constitutional change took place in 1982?", "fr": "Quel changement constitutionnel majeur a eu lieu en 1982?" },
+      "answer": { "en": "The Constitution was patriated and the Canadian Charter of Rights and Freedoms was added to it", "fr": "La Constitution a été rapatriée et la Charte canadienne des droits et libertés y a été ajoutée" },
+      "distractors": [
+        { "en": "Canada adopted its current national flag", "fr": "Le Canada a adopté son drapeau national actuel" },
+        { "en": "The Senate was abolished", "fr": "Le Sénat a été aboli" },
+        { "en": "Canada left the Commonwealth", "fr": "Le Canada a quitté le Commonwealth" }
+      ],
+      "explanation": { "en": "Since 1982 Canada can amend its own Constitution without an act of the British Parliament.", "fr": "Depuis 1982, le Canada peut modifier sa propre Constitution sans loi du Parlement britannique." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-014",
+      "subject": "modern-canada",
+      "text": { "en": "The Group of Seven was a group of Canadian artists known for what?", "fr": "Le Groupe des Sept était un groupe d'artistes canadiens connu pour quoi?" },
+      "answer": { "en": "Developing a style of painting that captured Canada's rugged wilderness landscapes", "fr": "Avoir développé un style de peinture qui rendait les paysages sauvages et rudes du Canada" },
+      "distractors": [
+        { "en": "Composing Canada's national anthem", "fr": "Avoir composé l'hymne national du Canada" },
+        { "en": "Designing the Parliament Buildings", "fr": "Avoir conçu les édifices du Parlement" },
+        { "en": "Pioneering Canadian documentary film", "fr": "Avoir été les pionniers du film documentaire canadien" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-015",
+      "subject": "modern-canada",
+      "text": { "en": "Which artist is known for painting the forests and Indigenous villages of the West Coast?", "fr": "Quelle artiste est connue pour avoir peint les forêts et les villages autochtones de la côte Ouest?" },
+      "answer": { "en": "Emily Carr", "fr": "Emily Carr" },
+      "distractors": [
+        { "en": "Jean-Paul Riopelle", "fr": "Jean-Paul Riopelle" },
+        { "en": "Tom Thomson", "fr": "Tom Thomson" },
+        { "en": "Margaret Atwood", "fr": "Margaret Atwood" }
+      ],
+      "explanation": { "en": "Riopelle was a leading figure of Les Automatistes, Quebec pioneers of abstract art in the 1950s; Atwood is a novelist.", "fr": "Riopelle était une figure de proue des Automatistes, pionniers québécois de l'art abstrait dans les années 1950; Atwood est romancière." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-016",
+      "subject": "modern-canada",
+      "text": { "en": "Who is Kenojuak Ashevak?", "fr": "Qui est Kenojuak Ashevak?" },
+      "answer": { "en": "An Inuit artist who pioneered modern Inuit art with etchings, prints and soapstone sculptures", "fr": "Une artiste inuite qui a été pionnière de l'art inuit moderne avec ses gravures, estampes et sculptures en pierre à savon" },
+      "distractors": [
+        { "en": "The first Inuit member of Parliament", "fr": "La première députée inuite au Parlement" },
+        { "en": "A Métis fiddler from Manitoba", "fr": "Une violoniste métisse du Manitoba" },
+        { "en": "A First Nations author from British Columbia", "fr": "Une auteure des Premières Nations de la Colombie-Britannique" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-017",
+      "subject": "modern-canada",
+      "text": { "en": "Which two Canadian researchers discovered insulin, a hormone that has saved millions of people with diabetes?", "fr": "Quels deux chercheurs canadiens ont découvert l'insuline, une hormone qui a sauvé des millions de personnes diabétiques?" },
+      "answer": { "en": "Sir Frederick Banting and Charles Best", "fr": "Sir Frederick Banting et Charles Best" },
+      "distractors": [
+        { "en": "Wilder Penfield and John A. Hopps", "fr": "Wilder Penfield et John A. Hopps" },
+        { "en": "Alexander Graham Bell and Reginald Fessenden", "fr": "Alexander Graham Bell et Reginald Fessenden" },
+        { "en": "Mike Lazaridis and Jim Balsillie", "fr": "Mike Lazaridis et Jim Balsillie" }
+      ],
+      "explanation": { "en": "Banting was awarded the Nobel Prize in Medicine in 1923 for the discovery made in Toronto.", "fr": "Banting a reçu le prix Nobel de médecine en 1923 pour cette découverte faite à Toronto." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-018",
+      "subject": "modern-canada",
+      "text": { "en": "Which inventor, who lived in Canada for much of his life, is credited with the telephone?", "fr": "Quel inventeur, qui a vécu au Canada une grande partie de sa vie, est reconnu pour l'invention du téléphone?" },
+      "answer": { "en": "Alexander Graham Bell", "fr": "Alexander Graham Bell" },
+      "distractors": [
+        { "en": "Reginald Fessenden", "fr": "Reginald Fessenden" },
+        { "en": "Sir Sandford Fleming", "fr": "Sir Sandford Fleming" },
+        { "en": "Joseph-Armand Bombardier", "fr": "Joseph-Armand Bombardier" }
+      ],
+      "explanation": { "en": "Bell worked out the idea of the telephone at his family home in Brantford, Ontario; Fessenden pioneered radio, sending the first wireless voice message.", "fr": "Bell a conçu l'idée du téléphone dans la maison familiale de Brantford, en Ontario; Fessenden a été un pionnier de la radio, transmettant le premier message vocal sans fil." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-019",
+      "subject": "modern-canada",
+      "text": { "en": "Who invented the snowmobile?", "fr": "Qui a inventé la motoneige?" },
+      "answer": { "en": "Joseph-Armand Bombardier", "fr": "Joseph-Armand Bombardier" },
+      "distractors": [
+        { "en": "Sir Sandford Fleming", "fr": "Sir Sandford Fleming" },
+        { "en": "Henry Woodward", "fr": "Henry Woodward" },
+        { "en": "James Naismith", "fr": "James Naismith" }
+      ],
+      "explanation": { "en": "Bombardier, from Quebec, built a light, fast snow vehicle that became a popular winter machine.", "fr": "Bombardier, un Québécois, a construit un véhicule léger et rapide pour la neige, devenu une machine hivernale populaire." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-020",
+      "subject": "modern-canada",
+      "text": { "en": "Which sport did the Canadian James Naismith invent in 1891?", "fr": "Quel sport le Canadien James Naismith a-t-il inventé en 1891?" },
+      "answer": { "en": "Basketball", "fr": "Le basketball" },
+      "distractors": [
+        { "en": "Lacrosse", "fr": "La crosse" },
+        { "en": "Ice hockey", "fr": "Le hockey sur glace" },
+        { "en": "Volleyball", "fr": "Le volleyball" }
+      ],
+      "explanation": { "en": "Naismith devised the game to keep students active indoors during the winter.", "fr": "Naismith a créé ce jeu pour garder les étudiants actifs à l'intérieur pendant l'hiver." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-021",
+      "subject": "modern-canada",
+      "text": { "en": "What is the Canadarm?", "fr": "Qu'est-ce que le Canadarm?" },
+      "answer": { "en": "A robotic arm developed in Canada and used in outer space", "fr": "Un bras robotisé mis au point au Canada et utilisé dans l'espace" },
+      "distractors": [
+        { "en": "A prosthetic limb for war veterans", "fr": "Une prothèse de membre pour les anciens combattants" },
+        { "en": "A crane used to build the CN Tower", "fr": "Une grue utilisée pour construire la Tour CN" },
+        { "en": "A deep-sea drilling rig off Newfoundland", "fr": "Une plateforme de forage en haute mer au large de Terre-Neuve" }
+      ],
+      "explanation": { "en": "It was built by SPAR Aerospace with the National Research Council and flew on the space shuttles.", "fr": "Il a été construit par SPAR Aerospace avec le Conseil national de recherches et a volé à bord des navettes spatiales." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-022",
+      "subject": "modern-canada",
+      "text": { "en": "Which Canadian invented the first cardiac pacemaker?", "fr": "Quel Canadien a inventé le premier stimulateur cardiaque?" },
+      "answer": { "en": "Dr. John A. Hopps", "fr": "Le Dr John A. Hopps" },
+      "distractors": [
+        { "en": "Dr. Wilder Penfield", "fr": "Le Dr Wilder Penfield" },
+        { "en": "Sir Frederick Banting", "fr": "Sir Frederick Banting" },
+        { "en": "Dr. Norman Bethune", "fr": "Le Dr Norman Bethune" }
+      ],
+      "explanation": { "en": "Penfield was a pioneering brain surgeon in Montreal, once called 'the greatest living Canadian'.", "fr": "Penfield était un neurochirurgien pionnier de Montréal, autrefois surnommé « le plus grand Canadien vivant »." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-023",
+      "subject": "modern-canada",
+      "text": { "en": "Sir Sandford Fleming is remembered for inventing what?", "fr": "Pourquoi se souvient-on de sir Sandford Fleming?" },
+      "answer": { "en": "The worldwide system of standard time zones", "fr": "Pour avoir inventé le système mondial des fuseaux horaires" },
+      "distractors": [
+        { "en": "The electric light bulb", "fr": "Pour avoir inventé l'ampoule électrique" },
+        { "en": "The zipper", "fr": "Pour avoir inventé la fermeture à glissière" },
+        { "en": "The steam locomotive", "fr": "Pour avoir inventé la locomotive à vapeur" }
+      ],
+      "explanation": { "en": "Two other Canadians, Matthew Evans and Henry Woodward, patented an early light bulb and sold the rights to Thomas Edison.", "fr": "Deux autres Canadiens, Matthew Evans et Henry Woodward, ont breveté une ampoule électrique précoce et vendu leurs droits à Thomas Edison." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-024",
+      "subject": "modern-canada",
+      "text": { "en": "What are Canada's official national sports?", "fr": "Quels sont les sports nationaux officiels du Canada?" },
+      "answer": { "en": "Ice hockey in winter and lacrosse in summer", "fr": "Le hockey sur glace en hiver et la crosse en été" },
+      "distractors": [
+        { "en": "Ice hockey and Canadian football", "fr": "Le hockey sur glace et le football canadien" },
+        { "en": "Curling and soccer", "fr": "Le curling et le soccer" },
+        { "en": "Lacrosse and basketball", "fr": "La crosse et le basketball" }
+      ],
+      "explanation": { "en": "Hockey is the most popular spectator sport, Canadian football is second, soccer has the most registered players, and curling was introduced by Scottish pioneers.", "fr": "Le hockey est le sport le plus regardé, le football canadien vient au deuxième rang, le soccer compte le plus grand nombre de joueurs inscrits, et le curling a été introduit par des pionniers écossais." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-025",
+      "subject": "modern-canada",
+      "text": { "en": "What is the Grey Cup?", "fr": "Qu'est-ce que la Coupe Grey?" },
+      "answer": { "en": "The championship trophy of the Canadian Football League", "fr": "Le trophée du championnat de la Ligue canadienne de football" },
+      "distractors": [
+        { "en": "The trophy for the national curling championship", "fr": "Le trophée du championnat national de curling" },
+        { "en": "The prize for the best Canadian novel", "fr": "Le prix du meilleur roman canadien" },
+        { "en": "The championship trophy of women's hockey", "fr": "Le trophée du championnat de hockey féminin" }
+      ],
+      "explanation": { "en": "It was donated by Governor General Lord Grey in 1909; the women's hockey championship trophy is the Clarkson Cup.", "fr": "Elle a été offerte par le gouverneur général lord Grey en 1909; le trophée du championnat de hockey féminin est la Coupe Clarkson." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-026",
+      "subject": "modern-canada",
+      "text": { "en": "Who donated the Stanley Cup, awarded to the champion of professional hockey, in 1892?", "fr": "Qui a offert la Coupe Stanley, remise au champion du hockey professionnel, en 1892?" },
+      "answer": { "en": "Lord Stanley, the Governor General", "fr": "Lord Stanley, le gouverneur général" },
+      "distractors": [
+        { "en": "Lord Grey, the Governor General", "fr": "Lord Grey, le gouverneur général" },
+        { "en": "Sir John A. Macdonald", "fr": "Sir John A. Macdonald" },
+        { "en": "Queen Victoria", "fr": "La reine Victoria" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-027",
+      "subject": "modern-canada",
+      "text": { "en": "Why is Terry Fox remembered as a Canadian hero?", "fr": "Pourquoi Terry Fox est-il considéré comme un héros canadien?" },
+      "answer": { "en": "After losing a leg to cancer, he ran across Canada in 1980 in the Marathon of Hope to raise money for cancer research", "fr": "Après avoir perdu une jambe à cause du cancer, il a traversé le Canada à la course en 1980 lors du Marathon de l'espoir pour financer la recherche sur le cancer" },
+      "distractors": [
+        { "en": "He was the first Canadian to walk in space", "fr": "Il a été le premier Canadien à marcher dans l'espace" },
+        { "en": "He scored the winning goal in the 1972 Summit Series", "fr": "Il a marqué le but gagnant de la Série du siècle en 1972" },
+        { "en": "He circled the globe in a wheelchair in 1985", "fr": "Il a fait le tour du monde en fauteuil roulant en 1985" }
+      ],
+      "explanation": { "en": "Fox, from British Columbia, ran for 143 days before his cancer returned; the annual Terry Fox Run continues his cause. Rick Hansen's 1985 Man in Motion tour and Paul Henderson's 1972 goal belong to other Canadians.", "fr": "Fox, de la Colombie-Britannique, a couru pendant 143 jours avant que son cancer ne réapparaisse; la course Terry Fox annuelle poursuit son oeuvre. La tournée Man in Motion de Rick Hansen en 1985 et le but de Paul Henderson en 1972 appartiennent à d'autres Canadiens." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-028",
+      "subject": "modern-canada",
+      "text": { "en": "Wayne Gretzky, considered one of the greatest hockey players of all time, played for which team from 1979 to 1988?", "fr": "Wayne Gretzky, considéré comme l'un des plus grands joueurs de hockey de tous les temps, a joué pour quelle équipe de 1979 à 1988?" },
+      "answer": { "en": "The Edmonton Oilers", "fr": "Les Oilers d'Edmonton" },
+      "distractors": [
+        { "en": "The Montreal Canadiens", "fr": "Les Canadiens de Montréal" },
+        { "en": "The Toronto Maple Leafs", "fr": "Les Maple Leafs de Toronto" },
+        { "en": "The Vancouver Canucks", "fr": "Les Canucks de Vancouver" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-029",
+      "subject": "modern-canada",
+      "text": { "en": "In which sport did Donovan Bailey set a world record and win two Olympic gold medals?", "fr": "Dans quel sport Donovan Bailey a-t-il établi un record du monde et remporté deux médailles d'or olympiques?" },
+      "answer": { "en": "Sprinting (track and field)", "fr": "Le sprint (athlétisme)" },
+      "distractors": [
+        { "en": "Swimming", "fr": "La natation" },
+        { "en": "Speed skating", "fr": "Le patinage de vitesse" },
+        { "en": "Rowing", "fr": "L'aviron" }
+      ],
+      "explanation": { "en": "Bailey won the 100 metres and the 4x100 relay at the 1996 Olympics.", "fr": "Bailey a remporté le 100 mètres et le relais 4 x 100 aux Jeux olympiques de 1996." },
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    },
+    {
+      "id": "q-mc-030",
+      "subject": "modern-canada",
+      "text": { "en": "Chantal Petitclerc is celebrated as a world champion in which discipline?", "fr": "Chantal Petitclerc est reconnue comme championne du monde dans quelle discipline?" },
+      "answer": { "en": "Wheelchair racing, with multiple Paralympic gold medals", "fr": "La course en fauteuil roulant, avec plusieurs médailles d'or paralympiques" },
+      "distractors": [
+        { "en": "Figure skating", "fr": "Le patinage artistique" },
+        { "en": "Alpine skiing", "fr": "Le ski alpin" },
+        { "en": "Gymnastics", "fr": "La gymnastique" }
+      ],
+      "source": "Discover Canada: Modern Canada",
+      "asOf": "2026-09-07",
+      "volatile": false
+    }
+  ]
+}

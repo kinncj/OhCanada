@@ -1,0 +1,184 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "justice",
+  "subject": "justice",
+  "chapter": "The Justice System",
+  "name": {
+    "en": "The Justice System",
+    "fr": "Le système judiciaire"
+  },
+  "description": {
+    "en": "A Supreme Court plaza, a police station and a small-claims court.",
+    "fr": "Une place de la Cour suprême, un poste de police et une cour des petites créances."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1006,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#587f3a",
+        "#749a4c",
+        "#96b26a",
+        "#c1c6a2"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "pine",
+        "shrub",
+        "rock"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "justice-main",
+        "type": "supremecourt",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Court plaza",
+          "fr": "Place de la Cour"
+        }
+      },
+      {
+        "id": "justice-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "justice-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "justice-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "justice-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.35,
+      "weather": "clear",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-justice-1",
+      "name": {
+        "en": "Constable Tremblay",
+        "fr": "L'agent Tremblay"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "justice-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to The Justice System. There is much to learn here.",
+        "fr": "Bienvenue dans Le système judiciaire. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "hockey",
+        "hair": "short",
+        "hairColor": "brown"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "justice-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Court plaza",
+        "fr": "Place de la Cour"
+      }
+    },
+    {
+      "id": "justice-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "justice-intro"
+  ]
+}

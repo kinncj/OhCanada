@@ -1,0 +1,70 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "elections-intro",
+  "district": "elections",
+  "type": "dialogue",
+  "title": {
+    "en": "Cast Your Ballot",
+    "fr": "Déposez votre bulletin"
+  },
+  "summary": {
+    "en": "Learn how to vote and how a government is formed.",
+    "fr": "Apprenez comment voter et comment un gouvernement est formé."
+  },
+  "giverNpc": "npc-elections-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-elections-1",
+      "objective": {
+        "en": "Talk to Fatima, Returning Officer",
+        "fr": "Parlez à Fatima, directrice du scrutin"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-elections-1",
+          "text": {
+            "en": "Glad you made it. Head to the polling station and I'll test what you know.",
+            "fr": "Content de vous voir. Rendez-vous à bureau de vote et je testerai vos connaissances."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "kind": "reach",
+      "trigger": "elections-landmark",
+      "objective": {
+        "en": "Reach the polling station",
+        "fr": "Rendez-vous à bureau de vote"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-el-001",
+        "q-el-002",
+        "q-el-003"
+      ],
+      "minCorrect": 2,
+      "objective": {
+        "en": "Answer three questions (2 of 3 to pass)",
+        "fr": "Répondez à trois questions (2 sur 3 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-elections-intro"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-elections-1",
+      "text": {
+        "en": "Well done. Another stamp for your passport!",
+        "fr": "Bravo. Un autre timbre pour votre passeport!"
+      }
+    }
+  ]
+}

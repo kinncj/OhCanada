@@ -1,0 +1,17 @@
+import { chromium } from '@playwright/test';
+import { spawn } from 'node:child_process';
+const port = 4173;
+const server = spawn('npx', ['vite', 'preview', '--port', String(port), '--strictPort'], { stdio: 'ignore' });
+await new Promise((r) => setTimeout(r, 2500));
+const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+const logs = [];
+page.on('console', (m) => logs.push(`${m.type()}: ${m.text()}`));
+page.on('pageerror', (e) => logs.push(`PAGEERROR: ${e.message}\n${e.stack}`));
+await page.goto(`http://localhost:${port}/OhCanada/?e2e=1`, { waitUntil: 'load' });
+await page.waitForTimeout(6000);
+await page.screenshot({ path: process.argv[2] ?? 'shot.png' });
+console.log(logs.slice(0, 60).join('\n'));
+await browser.close();
+server.kill();
+process.exit(0);

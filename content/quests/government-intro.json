@@ -1,0 +1,70 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "government-intro",
+  "district": "government",
+  "type": "dialogue",
+  "title": {
+    "en": "Three Branches",
+    "fr": "Trois pouvoirs"
+  },
+  "summary": {
+    "en": "Understand the three branches and three levels of government.",
+    "fr": "Comprenez les trois pouvoirs et les trois ordres de gouvernement."
+  },
+  "giverNpc": "npc-government-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-government-1",
+      "objective": {
+        "en": "Talk to Speaker Nguyen",
+        "fr": "Parlez à Le président Nguyen"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-government-1",
+          "text": {
+            "en": "Glad you made it. Head to the legislature steps and I'll test what you know.",
+            "fr": "Content de vous voir. Rendez-vous à marches de l'assemblée et je testerai vos connaissances."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "kind": "reach",
+      "trigger": "government-landmark",
+      "objective": {
+        "en": "Reach the legislature steps",
+        "fr": "Rendez-vous à marches de l'assemblée"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-gv-001",
+        "q-gv-002",
+        "q-gv-003"
+      ],
+      "minCorrect": 2,
+      "objective": {
+        "en": "Answer three questions (2 of 3 to pass)",
+        "fr": "Répondez à trois questions (2 sur 3 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-government-intro"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-government-1",
+      "text": {
+        "en": "Well done. Another stamp for your passport!",
+        "fr": "Bravo. Un autre timbre pour votre passeport!"
+      }
+    }
+  ]
+}

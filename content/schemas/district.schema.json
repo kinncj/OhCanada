@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/district.schema.json",
+  "title": "District scene manifest",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "$ref": "common.schema.json#/$defs/id" },
+    "subject": { "anyOf": [{ "$ref": "common.schema.json#/$defs/subject" }, { "const": "hub" }] },
+    "chapter": { "type": "string", "minLength": 1 },
+    "name": { "$ref": "common.schema.json#/$defs/localizedText" },
+    "description": { "$ref": "common.schema.json#/$defs/localizedText" },
+    "spawn": {
+      "type": "object",
+      "properties": { "position": { "$ref": "common.schema.json#/$defs/vec3" }, "yaw": { "type": "number" } },
+      "required": ["position", "yaw"],
+      "additionalProperties": false
+    },
+    "scene": {
+      "type": "object",
+      "properties": {
+        "generator": { "type": "string", "enum": ["hub", "district", "regions"] },
+        "seed": { "type": "integer" },
+        "size": { "type": "number", "minimum": 50, "maximum": 2000 },
+        "terrain": {
+          "type": "object",
+          "properties": {
+            "amplitude": { "type": "number", "minimum": 0 },
+            "frequency": { "type": "number", "minimum": 0 },
+            "snow": { "type": "boolean" },
+            "palette": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/hexColour" }, "minItems": 2, "maxItems": 6 }
+          },
+          "required": ["amplitude", "frequency", "palette"],
+          "additionalProperties": false
+        },
+        "water": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "position": { "$ref": "common.schema.json#/$defs/vec3" }, "size": { "$ref": "common.schema.json#/$defs/vec2" } },
+            "required": ["position", "size"],
+            "additionalProperties": false
+          }
+        },
+        "vegetation": {
+          "type": "object",
+          "properties": {
+            "density": { "type": "number", "minimum": 0, "maximum": 1 },
+            "kinds": { "type": "array", "items": { "type": "string", "enum": ["pine", "maple", "birch", "spruce", "shrub", "rock", "cactus-none", "iceberg", "tundra-grass", "wheat"] } }
+          },
+          "required": ["density", "kinds"],
+          "additionalProperties": false
+        },
+        "landmarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "$ref": "common.schema.json#/$defs/id" },
+              "type": { "type": "string", "minLength": 1 },
+              "position": { "$ref": "common.schema.json#/$defs/vec3" },
+              "rotationY": { "type": "number" },
+              "scale": { "type": "number", "minimum": 0.01 },
+              "label": { "$ref": "common.schema.json#/$defs/localizedText" }
+            },
+            "required": ["id", "type", "position"],
+            "additionalProperties": false
+          }
+        },
+        "ambience": {
+          "type": "object",
+          "properties": {
+            "hdri": { "type": "string", "minLength": 1 },
+            "timeOfDay": { "type": "number", "minimum": 0, "maximum": 1 },
+            "weather": { "type": "string", "enum": ["clear", "snow", "rain", "fog"] },
+            "audio": { "type": "string" },
+            "fogDensity": { "type": "number", "minimum": 0 }
+          },
+          "required": ["hdri", "timeOfDay", "weather"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["generator", "seed", "size", "terrain", "vegetation", "landmarks", "ambience"],
+      "additionalProperties": false
+    },
+    "npcs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "name": { "$ref": "common.schema.json#/$defs/localizedText" },
+          "position": { "$ref": "common.schema.json#/$defs/vec3" },
+          "behavior": { "type": "string", "enum": ["idle", "wander", "patrol"] },
+          "wanderRadius": { "type": "number", "minimum": 0 },
+          "questRefs": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } },
+          "idleDialogue": { "$ref": "common.schema.json#/$defs/localizedText" },
+          "appearance": {
+            "type": "object",
+            "properties": {
+              "skinTone": { "type": "string" },
+              "outfit": { "type": "string" },
+              "hair": { "type": "string" },
+              "hairColor": { "type": "string" },
+              "accessory": { "type": "string" }
+            },
+            "required": ["skinTone", "outfit", "hair", "hairColor"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["id", "name", "position", "behavior", "questRefs", "idleDialogue", "appearance"],
+        "additionalProperties": false
+      }
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "position": { "$ref": "common.schema.json#/$defs/vec3" },
+          "radius": { "type": "number", "minimum": 0.5 },
+          "label": { "$ref": "common.schema.json#/$defs/localizedText" },
+          "kind": { "type": "string", "enum": ["zone", "pickup", "portal"] },
+          "toDistrict": { "$ref": "common.schema.json#/$defs/id" }
+        },
+        "required": ["id", "position", "radius", "label", "kind"],
+        "additionalProperties": false
+      }
+    },
+    "quests": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" } }
+  },
+  "required": ["id", "subject", "chapter", "name", "description", "spawn", "scene", "npcs", "triggers", "quests"],
+  "additionalProperties": false
+}

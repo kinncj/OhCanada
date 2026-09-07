@@ -1,0 +1,183 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "modern-canada",
+  "subject": "modern-canada",
+  "chapter": "Modern Canada",
+  "name": {
+    "en": "Modern Canada",
+    "fr": "Le Canada moderne"
+  },
+  "description": {
+    "en": "A downtown of glass towers, a hockey arena and a research campus.",
+    "fr": "Un centre-ville de tours de verre, une aréna de hockey et un campus de recherche."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1003,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": false,
+      "palette": [
+        "#4a6a3a",
+        "#6a8a4a",
+        "#8ea470",
+        "#9aa39a"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "maple",
+        "shrub"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "modern-canada-main",
+        "type": "arena",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Arena plaza",
+          "fr": "Place de l'aréna"
+        }
+      },
+      {
+        "id": "modern-canada-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "modern-canada-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "modern-canada-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "modern-canada-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.55,
+      "weather": "rain",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-modern-canada-1",
+      "name": {
+        "en": "Dev Patel, City Planner",
+        "fr": "Dev Patel, urbaniste"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "modern-canada-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to Modern Canada. There is much to learn here.",
+        "fr": "Bienvenue dans Le Canada moderne. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-4",
+        "outfit": "raincoat",
+        "hair": "short",
+        "hairColor": "black"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "modern-canada-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Arena plaza",
+        "fr": "Place de l'aréna"
+      }
+    },
+    {
+      "id": "modern-canada-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "modern-canada-intro"
+  ]
+}

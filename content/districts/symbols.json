@@ -1,0 +1,184 @@
+{
+  "$schema": "../schemas/district.schema.json",
+  "id": "symbols",
+  "subject": "symbols",
+  "chapter": "Canadian Symbols",
+  "name": {
+    "en": "Canadian Symbols",
+    "fr": "Les symboles canadiens"
+  },
+  "description": {
+    "en": "A festival ground of flags, a beaver pond and a hockey rink.",
+    "fr": "Un terrain de festival avec drapeaux, un étang de castors et une patinoire."
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      30
+    ],
+    "yaw": 3.14159
+  },
+  "scene": {
+    "generator": "district",
+    "seed": 1007,
+    "size": 240,
+    "terrain": {
+      "amplitude": 2.5,
+      "frequency": 0.03,
+      "snow": true,
+      "palette": [
+        "#e8eef3",
+        "#d3dde6",
+        "#bcc9d4",
+        "#9fb0bf"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          60,
+          -0.6,
+          -40
+        ],
+        "size": [
+          60,
+          60
+        ]
+      }
+    ],
+    "vegetation": {
+      "density": 0.4,
+      "kinds": [
+        "spruce",
+        "pine"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "symbols-main",
+        "type": "rink",
+        "position": [
+          0,
+          0,
+          -20
+        ],
+        "label": {
+          "en": "Rink",
+          "fr": "Patinoire"
+        }
+      },
+      {
+        "id": "symbols-station",
+        "type": "station",
+        "position": [
+          40,
+          0,
+          40
+        ],
+        "rotationY": -0.8,
+        "label": {
+          "en": "Station",
+          "fr": "Gare"
+        }
+      },
+      {
+        "id": "symbols-lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "symbols-lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          10
+        ]
+      },
+      {
+        "id": "symbols-flag",
+        "type": "flagpole",
+        "position": [
+          12,
+          0,
+          4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.6,
+      "weather": "snow",
+      "audio": "wind",
+      "fogDensity": 0.004
+    }
+  },
+  "npcs": [
+    {
+      "id": "npc-symbols-1",
+      "name": {
+        "en": "Coach Bouchard",
+        "fr": "L'entraîneuse Bouchard"
+      },
+      "position": [
+        3,
+        0,
+        12
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "symbols-intro"
+      ],
+      "idleDialogue": {
+        "en": "Welcome to Canadian Symbols. There is much to learn here.",
+        "fr": "Bienvenue dans Les symboles canadiens. Il y a beaucoup à apprendre ici."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "hockey",
+        "hair": "long",
+        "hairColor": "blond",
+        "accessory": "toque"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "id": "symbols-landmark",
+      "position": [
+        0,
+        0,
+        -12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Rink",
+        "fr": "Patinoire"
+      }
+    },
+    {
+      "id": "symbols-portal-hub",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "hub",
+      "label": {
+        "en": "Train back to Parliament Hill",
+        "fr": "Train de retour vers la Colline du Parlement"
+      }
+    }
+  ],
+  "quests": [
+    "symbols-intro"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "../schemas/character-catalog.schema.json",
+  "bodies": [
+    { "id": "average", "label": { "en": "Average", "fr": "Moyenne" }, "mesh": "body_average" },
+    { "id": "slim", "label": { "en": "Slim", "fr": "Mince" }, "mesh": "body_slim" },
+    { "id": "broad", "label": { "en": "Broad", "fr": "Large" }, "mesh": "body_broad" },
+    { "id": "tall", "label": { "en": "Tall", "fr": "Grande" }, "mesh": "body_tall" }
+  ],
+  "faces": [
+    { "id": "round", "label": { "en": "Round", "fr": "Rond" }, "mesh": "face_round" },
+    { "id": "oval", "label": { "en": "Oval", "fr": "Ovale" }, "mesh": "face_oval" },
+    { "id": "square", "label": { "en": "Square", "fr": "Carré" }, "mesh": "face_square" }
+  ],
+  "skinTones": [
+    { "id": "tone-1", "label": { "en": "Porcelain", "fr": "Porcelaine" }, "value": "#f6dcc8" },
+    { "id": "tone-2", "label": { "en": "Fair", "fr": "Clair" }, "value": "#e8b894" },
+    { "id": "tone-3", "label": { "en": "Olive", "fr": "Olive" }, "value": "#c68f64" },
+    { "id": "tone-4", "label": { "en": "Tan", "fr": "Hâlé" }, "value": "#a86f45" },
+    { "id": "tone-5", "label": { "en": "Brown", "fr": "Brun" }, "value": "#7a4a2b" },
+    { "id": "tone-6", "label": { "en": "Deep", "fr": "Foncé" }, "value": "#4a2c1a" }
+  ],
+  "hair": [
+    { "id": "short", "label": { "en": "Short", "fr": "Courts" }, "mesh": "hair_short" },
+    { "id": "long", "label": { "en": "Long", "fr": "Longs" }, "mesh": "hair_long" },
+    { "id": "bun", "label": { "en": "Bun", "fr": "Chignon" }, "mesh": "hair_bun" },
+    { "id": "braids", "label": { "en": "Braids", "fr": "Tresses" }, "mesh": "hair_braids" },
+    { "id": "buzz", "label": { "en": "Buzz cut", "fr": "Rasés" }, "mesh": "hair_buzz" },
+    { "id": "none", "label": { "en": "None", "fr": "Aucun" } }
+  ],
+  "hairColors": [
+    { "id": "black", "label": { "en": "Black", "fr": "Noir" }, "value": "#1a1412" },
+    { "id": "brown", "label": { "en": "Brown", "fr": "Brun" }, "value": "#4b2e1e" },
+    { "id": "auburn", "label": { "en": "Auburn", "fr": "Auburn" }, "value": "#7d3418" },
+    { "id": "blond", "label": { "en": "Blond", "fr": "Blond" }, "value": "#d9b06a" },
+    { "id": "grey", "label": { "en": "Grey", "fr": "Gris" }, "value": "#9a9a9a" },
+    { "id": "red", "label": { "en": "Red", "fr": "Rouge" }, "value": "#c8422a" }
+  ],
+  "outfits": [
+    { "id": "parka", "label": { "en": "Winter parka", "fr": "Parka d'hiver" }, "value": "#c8102e" },
+    { "id": "plaid", "label": { "en": "Plaid jacket", "fr": "Veste à carreaux" }, "value": "#8a1c1c" },
+    { "id": "hockey", "label": { "en": "Hockey jersey", "fr": "Chandail de hockey" }, "value": "#1c4f8a" },
+    { "id": "raincoat", "label": { "en": "Yellow raincoat", "fr": "Imperméable jaune" }, "value": "#e3b505" },
+    { "id": "fleece", "label": { "en": "Fleece", "fr": "Polaire" }, "value": "#2f6b4f" }
+  ],
+  "accessories": [
+    { "id": "none", "label": { "en": "None", "fr": "Aucun" } },
+    { "id": "toque", "label": { "en": "Toque", "fr": "Tuque" }, "mesh": "acc_toque" },
+    { "id": "scarf", "label": { "en": "Scarf", "fr": "Foulard" }, "mesh": "acc_scarf" },
+    { "id": "backpack", "label": { "en": "Backpack", "fr": "Sac à dos" }, "mesh": "acc_backpack" },
+    { "id": "glasses", "label": { "en": "Glasses", "fr": "Lunettes" }, "mesh": "acc_glasses" }
+  ]
+}
