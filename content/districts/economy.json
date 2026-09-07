@@ -104,9 +104,109 @@
         "id": "economy-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
+        ]
+      },
+      {
+        "id": "economy-grain-elevator",
+        "type": "factory",
+        "position": [
+          -45,
+          0,
+          -10
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Grain elevator",
+          "fr": "Silo à grains"
+        }
+      },
+      {
+        "id": "economy-cannery",
+        "type": "factory",
+        "position": [
+          -45,
+          0,
+          -42
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Processing plant",
+          "fr": "Usine de transformation"
+        }
+      },
+      {
+        "id": "economy-incubator",
+        "type": "tech-incubator",
+        "position": [
+          45,
+          0,
+          12
+        ],
+        "rotationY": -1.5707963267948966,
+        "label": {
+          "en": "Tech incubator",
+          "fr": "Incubateur technologique"
+        }
+      },
+      {
+        "id": "economy-power-pole-1",
+        "type": "power-pole",
+        "position": [
+          -24,
+          0,
+          14
+        ]
+      },
+      {
+        "id": "economy-power-pole-2",
+        "type": "power-pole",
+        "position": [
+          -24,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "economy-power-pole-3",
+        "type": "power-pole",
+        "position": [
+          -24,
+          0,
+          -22
+        ]
+      },
+      {
+        "id": "economy-utility-box",
+        "type": "utility-box",
+        "position": [
+          26,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "economy-barrier-1",
+        "type": "barrier",
+        "position": [
+          -14,
+          0,
+          -36
+        ],
+        "label": {
+          "en": "Dock barrier",
+          "fr": "Barrière du quai"
+        }
+      },
+      {
+        "id": "economy-barrier-2",
+        "type": "barrier",
+        "position": [
+          14,
+          0,
+          -36
         ]
       }
     ],
@@ -132,11 +232,12 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "economy-intro"
+        "economy-intro",
+        "economy-cargo-manifest"
       ],
       "idleDialogue": {
-        "en": "Welcome to Canada's Economy. There is much to learn here.",
-        "fr": "Bienvenue dans L'économie du Canada. Il y a beaucoup à apprendre ici."
+        "en": "More than three-quarters of what leaves this port is bound for the United States, our largest trading partner by far.",
+        "fr": "Plus des trois quarts de ce qui quitte ce port est destiné aux États-Unis, notre principal partenaire commercial, et de loin."
       },
       "appearance": {
         "skinTone": "tone-4",
@@ -148,6 +249,68 @@
         "outfitStyle": "uniform",
         "bottomColor": "#101522",
         "hat": "captain"
+      }
+    },
+    {
+      "id": "npc-economy-2",
+      "name": {
+        "en": "Anneke Visser, Grain Farmer",
+        "fr": "Anneke Visser, productrice de grains"
+      },
+      "position": [
+        -10,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "This wheat came from the Prairies, the country's main grain-growing region. Natural resources still matter most out West, up North and in Atlantic Canada.",
+        "fr": "Ce blé vient des Prairies, la principale région céréalière du pays. Les ressources naturelles comptent encore le plus dans l'Ouest, dans le Nord et au Canada atlantique."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "plaid",
+        "hair": "long",
+        "hairColor": "blond",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "workwear",
+        "bottomColor": "#4a3b2e",
+        "hat": "cap"
+      }
+    },
+    {
+      "id": "npc-economy-3",
+      "name": {
+        "en": "Kwame Mensah, Startup Founder",
+        "fr": "Kwame Mensah, fondateur de jeune entreprise"
+      },
+      "position": [
+        14,
+        0,
+        20
+      ],
+      "behavior": "wander",
+      "wanderRadius": 4,
+      "questRefs": [
+        "economy-industries"
+      ],
+      "idleDialogue": {
+        "en": "Most working Canadians are in service industries: health care, education, banking, software. My whole company fits in one room of the incubator.",
+        "fr": "La plupart des Canadiens qui travaillent sont dans les services : santé, éducation, banques, logiciels. Toute mon entreprise tient dans une salle de l'incubateur."
+      },
+      "appearance": {
+        "skinTone": "tone-6",
+        "outfit": "fleece",
+        "hair": "buzz",
+        "hairColor": "black",
+        "accessory": "glasses",
+        "body": "male",
+        "age": "young",
+        "outfitStyle": "casual",
+        "bottomColor": "#2a2f3a",
+        "hat": "none"
       }
     }
   ],
@@ -180,9 +343,67 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "crate-1",
+      "position": [
+        -16,
+        0,
+        -30
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Crate: canola and wheat",
+        "fr": "Caisse : canola et blé"
+      }
+    },
+    {
+      "id": "crate-2",
+      "position": [
+        16,
+        0,
+        -30
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Crate: lumber",
+        "fr": "Caisse : bois d'œuvre"
+      }
+    },
+    {
+      "id": "crate-3",
+      "position": [
+        0,
+        0,
+        -42
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Crate: auto parts",
+        "fr": "Caisse : pièces automobiles"
+      }
+    },
+    {
+      "id": "economy-incubator",
+      "position": [
+        34,
+        0,
+        12
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Tech incubator entrance",
+        "fr": "Entrée de l'incubateur technologique"
+      }
     }
   ],
   "quests": [
-    "economy-intro"
+    "economy-intro",
+    "economy-cargo-manifest",
+    "economy-industries"
   ]
 }

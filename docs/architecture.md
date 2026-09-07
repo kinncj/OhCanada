@@ -92,6 +92,20 @@ flowchart LR
   Import[Imported file] -- same path, size-capped --> Progress2
 ```
 
+## Asset library and real assets (ADR-0007)
+
+```mermaid
+flowchart LR
+  Manifest[assets/dist/manifest.json] --> Lib[AssetLibrary\nGLTFLoader + Draco + Meshopt + KTX2]
+  Lib --> Veg[Vegetation: GLB LOD0/LOD1 → chunked InstancedMesh + wind sway]
+  Lib --> Terrain[Terrain: PBR splat (grass · forest floor · rock · snow · plaza)]
+  Lib --> Kit[MaterialKit: world-tiled PBR sets → facades, roofs, props]
+  Lib --> Chars[SkinnedCharacterView: Quaternius rig + UAL clips\nbone-weight clothing · hats · hair · skin tone]
+  Fallback[no manifest] -. procedural placeholders .-> Veg & Terrain & Kit & Chars
+```
+
+NPC looks are content: `appearance.{body, age, outfitStyle, bottomColor, hat, beard}` in `content/districts/*.json` map onto the character shader and head-bone props, so a judge wears a robe and a constable a police cap without code changes.
+
 ## Content pipeline
 
 ```mermaid

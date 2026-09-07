@@ -19,14 +19,14 @@
       "npc": "npc-government-1",
       "objective": {
         "en": "Talk to Speaker Nguyen",
-        "fr": "Parlez à Le président Nguyen"
+        "fr": "Parlez au président Nguyen"
       },
       "dialogue": [
         {
           "speaker": "npc-government-1",
           "text": {
             "en": "Glad you made it. Head to the legislature steps and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à marches de l'assemblée et je testerai vos connaissances."
+            "fr": "Content de vous voir. Rendez-vous aux marches de l'assemblée et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "government-landmark",
       "objective": {
         "en": "Reach the legislature steps",
-        "fr": "Rendez-vous à marches de l'assemblée"
+        "fr": "Rendez-vous aux marches de l'assemblée"
       }
     },
     {

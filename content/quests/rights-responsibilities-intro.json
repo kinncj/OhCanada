@@ -19,14 +19,14 @@
       "npc": "npc-rights-responsibilities-1",
       "objective": {
         "en": "Talk to Justice Okafor, Citizenship Judge",
-        "fr": "Parlez à Justice Okafor, juge de la citoyenneté"
+        "fr": "Parlez au juge Okafor, juge de la citoyenneté"
       },
       "dialogue": [
         {
           "speaker": "npc-rights-responsibilities-1",
           "text": {
             "en": "Glad you made it. Head to the courthouse steps and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à marches du palais de justice et je testerai vos connaissances."
+            "fr": "Content de vous voir. Rendez-vous aux marches du palais de justice et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "rights-responsibilities-landmark",
       "objective": {
         "en": "Reach the courthouse steps",
-        "fr": "Rendez-vous à marches du palais de justice"
+        "fr": "Rendez-vous aux marches du palais de justice"
       }
     },
     {

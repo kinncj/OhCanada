@@ -1,0 +1,91 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "history-the-fur-trade-ledger",
+  "district": "history",
+  "type": "fetch",
+  "title": {
+    "en": "The Fur-Trade Ledger",
+    "fr": "Le registre de la traite des fourrures"
+  },
+  "summary": {
+    "en": "Pages of the old trading ledger have blown across the fort. Find them, bring them back to the gate and answer for what they record.",
+    "fr": "Des pages du vieux registre de traite se sont envolées dans le fort. Retrouvez-les, rapportez-les à la porte et répondez sur ce qu'elles consignent."
+  },
+  "giverNpc": "npc-history-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-history-1",
+      "objective": {
+        "en": "Talk to Marie about the missing ledger pages",
+        "fr": "Parlez à Marie des pages manquantes du registre"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-history-1",
+          "text": {
+            "en": "Disaster! Three pages of the trading ledger blew away: one by the palisade, one near the flag, one down by the station.",
+            "fr": "Catastrophe! Trois pages du registre de traite se sont envolées : une près de la palissade, une près du drapeau, une en bas près de la gare."
+          }
+        },
+        {
+          "speaker": "npc-history-1",
+          "text": {
+            "en": "Bring them back to the fort gate. The last page even mentions the railway that stitched this country together.",
+            "fr": "Rapportez-les à la porte du fort. La dernière page parle même du chemin de fer qui a cousu ce pays ensemble."
+          }
+        }
+      ]
+    },
+    {
+      "id": "collect",
+      "kind": "collect",
+      "items": [
+        "ledger-page-1",
+        "ledger-page-2",
+        "ledger-page-3"
+      ],
+      "objective": {
+        "en": "Collect the three ledger pages",
+        "fr": "Ramassez les trois pages du registre"
+      }
+    },
+    {
+      "id": "return",
+      "kind": "reach",
+      "trigger": "history-landmark",
+      "objective": {
+        "en": "Return to the old fort gate",
+        "fr": "Retournez à la porte du vieux fort"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-hi-018",
+        "q-hi-020",
+        "q-hi-021",
+        "q-hi-023"
+      ],
+      "minCorrect": 3,
+      "objective": {
+        "en": "Answer Marie's four questions on Confederation and the railway (3 of 4 to pass)",
+        "fr": "Répondez aux quatre questions de Marie sur la Confédération et le chemin de fer (3 sur 4 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-history-the-fur-trade-ledger"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-history-1",
+      "text": {
+        "en": "The ledger is whole again, and so is your knowledge of how the Dominion was built. Well done!",
+        "fr": "Le registre est de nouveau complet, tout comme vos connaissances sur la construction du Dominion. Bravo!"
+      }
+    }
+  ]
+}

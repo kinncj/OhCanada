@@ -45,7 +45,9 @@ export class WorldScene {
     // Textures + models load in parallel while the terrain mesh is computed.
     const snow = s.terrain.snow ?? false;
     const texKeys = ['grass', 'forest-floor', 'rock', 'snow', 'cobble'];
-    const texPromise = library && library.hasTexture('grass') && library.hasTexture('forest-floor') && library.hasTexture('rock')
+    const policy = preset.assetPolicy ?? 'full';
+    // lite (CI / weak devices): characters only — untextured terrain and architecture keep shader compiles minimal.
+    const texPromise = policy !== 'lite' && library && library.hasTexture('grass') && library.hasTexture('forest-floor') && library.hasTexture('rock')
       ? (async (): Promise<TerrainTextures | null> => {
           try {
             const [grass, detail, rock, snowT, plaza] = await Promise.all(texKeys.map((k) => (library.hasTexture(k) ? library.texture(k) : Promise.resolve(null))));
@@ -56,8 +58,11 @@ export class WorldScene {
           }
         })()
       : Promise.resolve(null);
-    const kitPromise = buildMaterialKit(library, LANDMARK_MODEL_KEYS);
-    const vegKinds = s.vegetation.kinds.filter((k): k is VegetationKind => k in KIND_MODELS);
+    const kitPromise = buildMaterialKit(policy === 'lite' ? null : library, policy === 'lite' ? [] : LANDMARK_MODEL_KEYS);
+    const vegKinds = policy === 'lite' ? [] : s.vegetation.kinds.filter((k): k is VegetationKind => k in KIND_MODELS).slice(0, policy === 'standard' ? 2 : 99);
+    let loaded = 0;
+    const totalToLoad = vegKinds.reduce((n, k) => n + KIND_MODELS[k].length, 0) + 1;
+    const tick = () => onProgress?.(0.4 + 0.35 * Math.min(1, ++loaded / totalToLoad));
     const vegPromise = (async () => {
       const protos: Partial<Record<VegetationKind, ReturnType<typeof protoFromModel>[]>> = {};
       if (!library) return protos;
@@ -67,8 +72,11 @@ export class WorldScene {
           if (!library.hasModel(key)) continue;
           try {
             const model = await library.model(key);
+            tick();
             const tint = kind === 'maple' ? 0xc8683a : kind === 'birch' ? 0xb9d27a : undefined;
-            const scale: [number, number] = model.entry.category === 'tree' ? [0.85, 1.25] : model.entry.category === 'grass' ? [0.8, 1.4] : [0.7, 1.6];
+            // Scanned broadleaf trees are small specimens; scale trees into a believable 9–15 m canopy band.
+            const h = Math.max(0.5, model.entry.height);
+            const scale: [number, number] = model.entry.category === 'tree' ? (h < 8 ? [9 / h, 13 / h] : [0.85, 1.2]) : model.entry.category === 'grass' ? [0.8, 1.4] : [0.7, 1.6];
             list.push(protoFromModel(model, scale, tint));
           } catch {
             /* fall back */
@@ -81,15 +89,15 @@ export class WorldScene {
 
     onProgress?.(0.15);
     const textures = await texPromise;
-    const terrain = buildTerrain(s.size, heightAt, s.terrain.palette, snow, textures, 160, district.subject === 'hub' ? 34 : 22);
+    const terrain = buildTerrain(s.size, heightAt, s.terrain.palette, snow, textures, policy === 'lite' ? 64 : 160, district.subject === 'hub' ? 34 : 22);
     onProgress?.(0.4);
     const [kit, protos] = await Promise.all([kitPromise, vegPromise]);
-    onProgress?.(0.6);
+    onProgress?.(0.78);
 
     const rects: { x: number; z: number; w: number; d: number }[] = [];
     for (const w of s.water ?? []) rects.push({ x: w.position[0], z: w.position[2], w: w.size[0], d: w.size[1] });
     const exclusions = [{ x: 0, z: 0, r: 36 }, ...district.triggers.map((t) => ({ x: t.position[0], z: t.position[2], r: t.radius + 3 })), ...district.npcs.map((n) => ({ x: n.position[0], z: n.position[2], r: (n.wanderRadius ?? 2) + 2 }))];
-    const landmarkBuilds = s.landmarks.map((l) => ({ l, b: buildLandmark(l, kit) }));
+    const landmarkBuilds = s.landmarks.map((l) => ({ l, b: buildLandmark(l, kit, policy === 'lite') }));
     for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
 
     const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, protos });

@@ -105,10 +105,104 @@
         "id": "who-we-are-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
         ]
+      },
+      {
+        "id": "who-we-are-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "who-we-are-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "who-we-are-lamp-3",
+        "type": "lamp",
+        "position": [
+          10,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "who-we-are-lamp-4",
+        "type": "lamp",
+        "position": [
+          -10,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "who-we-are-bench-3",
+        "type": "bench",
+        "position": [
+          -18,
+          0,
+          -20
+        ],
+        "rotationY": -1.5707963267948966
+      },
+      {
+        "id": "who-we-are-bench-4",
+        "type": "bench",
+        "position": [
+          18,
+          0,
+          -20
+        ],
+        "rotationY": 1.5707963267948966
+      },
+      {
+        "id": "who-we-are-bench-5",
+        "type": "bench",
+        "position": [
+          0,
+          0,
+          -38
+        ]
+      },
+      {
+        "id": "who-we-are-lookout",
+        "type": "lookout",
+        "position": [
+          20,
+          0,
+          -48
+        ],
+        "label": {
+          "en": "Lakeshore lookout",
+          "fr": "Belvédère du lac"
+        }
+      },
+      {
+        "id": "who-we-are-friendship-centre",
+        "type": "friendship-centre",
+        "position": [
+          -45,
+          0,
+          -15
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Friendship Centre",
+          "fr": "Centre d'amitié"
+        }
       }
     ],
     "ambience": {
@@ -133,11 +227,12 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "who-we-are-intro"
+        "who-we-are-intro",
+        "who-we-are-voices-of-the-circle"
       ],
       "idleDialogue": {
-        "en": "Welcome to Who We Are. There is much to learn here.",
-        "fr": "Bienvenue dans Qui nous sommes. Il y a beaucoup à apprendre ici."
+        "en": "Canada recognizes three distinct groups of Indigenous peoples: First Nations, Inuit and Métis. Each has its own languages and traditions.",
+        "fr": "Le Canada reconnaît trois groupes distincts de peuples autochtones : les Premières Nations, les Inuits et les Métis. Chacun a ses propres langues et traditions."
       },
       "appearance": {
         "skinTone": "tone-4",
@@ -149,6 +244,66 @@
         "outfitStyle": "casual",
         "bottomColor": "#3b2f2a",
         "hat": "none"
+      }
+    },
+    {
+      "id": "npc-who-we-are-2",
+      "name": {
+        "en": "Nuka, Inuit Carver",
+        "fr": "Nuka, sculpteur inuit"
+      },
+      "position": [
+        -10,
+        0,
+        18
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "In Inuktitut, 'Inuit' means 'the people'. Most of us live in small communities spread across the Arctic.",
+        "fr": "En inuktitut, « Inuit » signifie « le peuple ». La plupart d'entre nous vivent dans de petites communautés dispersées dans l'Arctique."
+      },
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "parka",
+        "hair": "short",
+        "hairColor": "black",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "parka",
+        "bottomColor": "#2b2f3a",
+        "hat": "hood"
+      }
+    },
+    {
+      "id": "npc-who-we-are-3",
+      "name": {
+        "en": "Jean-Luc, Acadian Fiddler",
+        "fr": "Jean-Luc, violoneux acadien"
+      },
+      "position": [
+        12,
+        0,
+        20
+      ],
+      "behavior": "wander",
+      "wanderRadius": 4,
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "My ancestors settled the Maritimes starting in 1604. Between 1755 and 1763, most Acadians were deported, yet our culture is still alive.",
+        "fr": "Mes ancêtres se sont établis dans les Maritimes à partir de 1604. Entre 1755 et 1763, la plupart des Acadiens ont été déportés, mais notre culture est toujours vivante."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "plaid",
+        "hair": "short",
+        "hairColor": "brown",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "casual",
+        "bottomColor": "#4a3b2e",
+        "hat": "beret",
+        "beard": true
       }
     }
   ],
@@ -184,6 +339,7 @@
     }
   ],
   "quests": [
-    "who-we-are-intro"
+    "who-we-are-intro",
+    "who-we-are-voices-of-the-circle"
   ]
 }

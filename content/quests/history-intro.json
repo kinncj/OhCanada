@@ -25,8 +25,8 @@
         {
           "speaker": "npc-history-1",
           "text": {
-            "en": "Glad you made it. Head to the the old fort gate and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à la porte du vieux fort et je testerai vos connaissances."
+            "en": "Glad you made it. Head to the old fort gate and I'll test what you know.",
+            "fr": "Contente de vous voir. Rendez-vous à la porte du vieux fort et je testerai vos connaissances."
           }
         }
       ]
@@ -36,7 +36,7 @@
       "kind": "reach",
       "trigger": "history-landmark",
       "objective": {
-        "en": "Reach the the old fort gate",
+        "en": "Reach the old fort gate",
         "fr": "Rendez-vous à la porte du vieux fort"
       }
     },

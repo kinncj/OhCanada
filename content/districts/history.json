@@ -105,10 +105,115 @@
         "id": "history-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
         ]
+      },
+      {
+        "id": "history-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "history-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "history-lamp-3",
+        "type": "lamp",
+        "position": [
+          14,
+          0,
+          -6
+        ]
+      },
+      {
+        "id": "history-lamp-4",
+        "type": "lamp",
+        "position": [
+          -14,
+          0,
+          -6
+        ]
+      },
+      {
+        "id": "history-gate",
+        "type": "gate",
+        "position": [
+          0,
+          0,
+          -2
+        ],
+        "label": {
+          "en": "Palisade gate",
+          "fr": "Porte de la palissade"
+        }
+      },
+      {
+        "id": "history-lookout",
+        "type": "lookout",
+        "position": [
+          -40,
+          0,
+          -40
+        ],
+        "label": {
+          "en": "Palisade watchtower",
+          "fr": "Tour de guet de la palissade"
+        }
+      },
+      {
+        "id": "history-circle",
+        "type": "circle",
+        "position": [
+          -40,
+          0,
+          10
+        ],
+        "label": {
+          "en": "Trading circle",
+          "fr": "Cercle de traite"
+        }
+      },
+      {
+        "id": "history-fur-post",
+        "type": "fur-post",
+        "position": [
+          -30,
+          0,
+          -8
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Fur-trade post",
+          "fr": "Poste de traite des fourrures"
+        }
+      },
+      {
+        "id": "history-confederation-hall",
+        "type": "confederation-hall",
+        "position": [
+          40,
+          0,
+          -2
+        ],
+        "rotationY": -1.5707963267948966,
+        "label": {
+          "en": "Confederation Hall",
+          "fr": "Salle de la Confédération"
+        }
       }
     ],
     "ambience": {
@@ -133,11 +238,13 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "history-intro"
+        "history-intro",
+        "history-in-order-of-events",
+        "history-the-fur-trade-ledger"
       ],
       "idleDialogue": {
-        "en": "Welcome to Canada's History. There is much to learn here.",
-        "fr": "Bienvenue dans L'histoire du Canada. Il y a beaucoup à apprendre ici."
+        "en": "Samuel de Champlain built his fortress at Quebec in 1608. Fur, above all beaver pelts, was the trade that kept New France alive.",
+        "fr": "Samuel de Champlain a bâti sa forteresse à Québec en 1608. La fourrure, surtout les peaux de castor, était le commerce qui faisait vivre la Nouvelle-France."
       },
       "appearance": {
         "skinTone": "tone-2",
@@ -149,6 +256,67 @@
         "outfitStyle": "workwear",
         "bottomColor": "#3a2c1e",
         "hat": "beret"
+      }
+    },
+    {
+      "id": "npc-history-2",
+      "name": {
+        "en": "Sergeant Baptiste, Fort Guard",
+        "fr": "Le sergent Baptiste, garde du fort"
+      },
+      "position": [
+        -12,
+        0,
+        22
+      ],
+      "behavior": "patrol",
+      "wanderRadius": 6,
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "In 1813, at Châteauguay, de Salaberry and a few hundred mostly French-Canadian soldiers turned back an American army many times their size.",
+        "fr": "En 1813, à Châteauguay, de Salaberry et quelques centaines de soldats, surtout canadiens-français, ont repoussé une armée américaine bien plus nombreuse."
+      },
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "parka",
+        "hair": "short",
+        "hairColor": "black",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "uniform",
+        "bottomColor": "#1d2430",
+        "hat": "cap",
+        "beard": true
+      }
+    },
+    {
+      "id": "npc-history-3",
+      "name": {
+        "en": "Grandmother Adèle, Métis Storyteller",
+        "fr": "Grand-mère Adèle, conteuse métisse"
+      },
+      "position": [
+        14,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Louis Riel led our people twice and many call him the father of Manitoba. History is told differently depending on who is telling it.",
+        "fr": "Louis Riel a dirigé notre peuple à deux reprises et beaucoup le considèrent comme le père du Manitoba. L'histoire se raconte différemment selon qui la raconte."
+      },
+      "appearance": {
+        "skinTone": "tone-4",
+        "outfit": "plaid",
+        "hair": "long",
+        "hairColor": "grey",
+        "accessory": "scarf",
+        "body": "female",
+        "age": "elder",
+        "outfitStyle": "casual",
+        "bottomColor": "#3b2f2a",
+        "hat": "none"
       }
     }
   ],
@@ -181,9 +349,53 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "ledger-page-1",
+      "position": [
+        -16,
+        0,
+        -32
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Ledger page: beaver pelts",
+        "fr": "Page du registre : peaux de castor"
+      }
+    },
+    {
+      "id": "ledger-page-2",
+      "position": [
+        26,
+        0,
+        16
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Ledger page: trade goods",
+        "fr": "Page du registre : marchandises de traite"
+      }
+    },
+    {
+      "id": "ledger-page-3",
+      "position": [
+        28,
+        0,
+        50
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Ledger page: the railway contract",
+        "fr": "Page du registre : le contrat du chemin de fer"
+      }
     }
   ],
   "quests": [
-    "history-intro"
+    "history-intro",
+    "history-in-order-of-events",
+    "history-the-fur-trade-ledger"
   ]
 }

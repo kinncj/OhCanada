@@ -19,14 +19,14 @@
       "npc": "npc-symbols-1",
       "objective": {
         "en": "Talk to Coach Bouchard",
-        "fr": "Parlez à L'entraîneuse Bouchard"
+        "fr": "Parlez à l'entraîneuse Bouchard"
       },
       "dialogue": [
         {
           "speaker": "npc-symbols-1",
           "text": {
             "en": "Glad you made it. Head to the rink and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à patinoire et je testerai vos connaissances."
+            "fr": "Contente de vous voir. Rendez-vous à la patinoire et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "symbols-landmark",
       "objective": {
         "en": "Reach the rink",
-        "fr": "Rendez-vous à patinoire"
+        "fr": "Rendez-vous à la patinoire"
       }
     },
     {

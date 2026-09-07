@@ -60,7 +60,8 @@
       "antialias": "none",
       "maxInstances": 350,
       "anisotropy": 1,
-      "volumetricFog": false
+      "volumetricFog": false,
+      "assetPolicy": "lite"
     },
     "low": {
       "renderScale": 0.8,
@@ -74,7 +75,8 @@
       "antialias": "fxaa",
       "maxInstances": 700,
       "anisotropy": 2,
-      "volumetricFog": false
+      "volumetricFog": false,
+      "assetPolicy": "standard"
     },
     "medium": {
       "renderScale": 1,
@@ -88,7 +90,8 @@
       "antialias": "fxaa",
       "maxInstances": 1500,
       "anisotropy": 4,
-      "volumetricFog": true
+      "volumetricFog": true,
+      "assetPolicy": "full"
     },
     "high": {
       "renderScale": 1,
@@ -103,7 +106,8 @@
       "maxInstances": 3000,
       "anisotropy": 8,
       "volumetricFog": true,
-      "screenSpaceGI": false
+      "screenSpaceGI": false,
+      "assetPolicy": "full"
     },
     "ultra": {
       "renderScale": 1.25,
@@ -118,7 +122,8 @@
       "maxInstances": 6000,
       "anisotropy": 16,
       "volumetricFog": true,
-      "screenSpaceGI": true
+      "screenSpaceGI": true,
+      "assetPolicy": "full"
     }
   },
   "benchmark": {
@@ -129,7 +134,7 @@
       "high": 55,
       "ultra": 100
     },
-    "mobileDefault": "minimal"
+    "mobileDefault": "low"
   },
   "featureFlags": {
     "debugOverlay": false,

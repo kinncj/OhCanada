@@ -56,7 +56,10 @@ export class Hud {
     setTimeout(() => t.remove(), 4200);
   }
 
+  private clickToPlayShown: boolean | null = null;
   showClickToPlay(show: boolean, onClick?: () => void): void {
+    if (this.clickToPlayShown === show) return; // called every frame: only touch the DOM on change
+    this.clickToPlayShown = show;
     this.overlay.hidden = !show;
     clear(this.overlay);
     if (show) {

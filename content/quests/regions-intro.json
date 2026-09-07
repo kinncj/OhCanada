@@ -19,14 +19,14 @@
       "npc": "npc-regions-1",
       "objective": {
         "en": "Talk to Ranger Aputik",
-        "fr": "Parlez à La garde Aputik"
+        "fr": "Parlez à la garde Aputik"
       },
       "dialogue": [
         {
           "speaker": "npc-regions-1",
           "text": {
             "en": "Glad you made it. Head to the lookout and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à belvédère et je testerai vos connaissances."
+            "fr": "Contente de vous voir. Rendez-vous au belvédère et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "regions-landmark",
       "objective": {
         "en": "Reach the lookout",
-        "fr": "Rendez-vous à belvédère"
+        "fr": "Rendez-vous au belvédère"
       }
     },
     {

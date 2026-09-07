@@ -1,0 +1,85 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "government-who-holds-office",
+  "district": "government",
+  "type": "dialogue",
+  "title": {
+    "en": "Who Holds Office",
+    "fr": "Qui occupe la fonction"
+  },
+  "summary": {
+    "en": "Rosalie sends you to city hall to learn how the three levels of government share the work, then asks who currently holds the top offices.",
+    "fr": "Rosalie vous envoie à l'hôtel de ville pour voir comment les trois ordres de gouvernement se partagent le travail, puis vous demande qui occupe actuellement les plus hautes fonctions."
+  },
+  "giverNpc": "npc-government-2",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-government-2",
+      "objective": {
+        "en": "Talk to Rosalie Dubois, Clerk of the House",
+        "fr": "Parlez à Rosalie Dubois, greffière de la Chambre"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-government-2",
+          "text": {
+            "en": "Names change with every election, but the offices stay: Sovereign, Governor General, Prime Minister, Leader of the Opposition.",
+            "fr": "Les noms changent à chaque élection, mais les fonctions demeurent : souverain, gouverneur général, premier ministre, chef de l'opposition."
+          }
+        },
+        {
+          "speaker": "npc-government-2",
+          "text": {
+            "en": "Walk over to city hall first. Councillor Karim can remind you what the municipal level does. Then I'll ask who holds office today.",
+            "fr": "Allez d'abord à l'hôtel de ville. Le conseiller Karim vous rappellera ce que fait le palier municipal. Ensuite, je vous demanderai qui est en fonction aujourd'hui."
+          }
+        },
+        {
+          "speaker": "player",
+          "text": {
+            "en": "On my way to city hall.",
+            "fr": "Je pars pour l'hôtel de ville."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "kind": "reach",
+      "trigger": "government-city-hall",
+      "objective": {
+        "en": "Reach the city hall steps",
+        "fr": "Rendez-vous aux marches de l'hôtel de ville"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-gv-005",
+        "q-gv-006",
+        "q-gv-007",
+        "q-gv-008"
+      ],
+      "minCorrect": 3,
+      "objective": {
+        "en": "Answer Rosalie's four questions on who holds office (3 of 4 to pass)",
+        "fr": "Répondez aux quatre questions de Rosalie sur les titulaires des fonctions (3 sur 4 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-government-who-holds-office"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-government-2",
+      "text": {
+        "en": "Well kept up! Check the news now and then; these names will change again. Your stamp is recorded.",
+        "fr": "Vous êtes bien au courant! Suivez les nouvelles de temps en temps; ces noms changeront encore. Votre timbre est consigné."
+      }
+    }
+  ]
+}

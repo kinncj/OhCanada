@@ -105,9 +105,106 @@
         "id": "justice-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
+        ]
+      },
+      {
+        "id": "justice-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "justice-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "justice-small-claims",
+        "type": "courthouse",
+        "position": [
+          -45,
+          0,
+          -10
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Small claims court",
+          "fr": "Cour des petites créances"
+        }
+      },
+      {
+        "id": "justice-police-station",
+        "type": "police-station",
+        "position": [
+          45,
+          0,
+          12
+        ],
+        "rotationY": -1.5707963267948966,
+        "label": {
+          "en": "Police station",
+          "fr": "Poste de police"
+        }
+      },
+      {
+        "id": "justice-barrier-1",
+        "type": "barrier",
+        "position": [
+          -20,
+          0,
+          -8
+        ],
+        "label": {
+          "en": "Security barrier",
+          "fr": "Barrière de sécurité"
+        }
+      },
+      {
+        "id": "justice-barrier-2",
+        "type": "barrier",
+        "position": [
+          20,
+          0,
+          -8
+        ]
+      },
+      {
+        "id": "justice-lamp-3",
+        "type": "lamp",
+        "position": [
+          -24,
+          0,
+          -36
+        ]
+      },
+      {
+        "id": "justice-lamp-4",
+        "type": "lamp",
+        "position": [
+          24,
+          0,
+          -36
+        ]
+      },
+      {
+        "id": "justice-hydrant",
+        "type": "hydrant",
+        "position": [
+          -24,
+          0,
+          14
         ]
       }
     ],
@@ -136,8 +233,8 @@
         "justice-intro"
       ],
       "idleDialogue": {
-        "en": "Welcome to The Justice System. There is much to learn here.",
-        "fr": "Bienvenue dans Le système judiciaire. Il y a beaucoup à apprendre ici."
+        "en": "The RCMP is Canada's national police force. In most cities, though, a municipal force like mine keeps the peace; Ontario and Quebec also have provincial police.",
+        "fr": "La GRC est la police nationale du Canada. Dans la plupart des villes, cependant, un service municipal comme le mien assure la paix; l'Ontario et le Québec ont aussi une police provinciale."
       },
       "appearance": {
         "skinTone": "tone-2",
@@ -149,6 +246,67 @@
         "outfitStyle": "uniform",
         "bottomColor": "#141a2b",
         "hat": "police"
+      }
+    },
+    {
+      "id": "npc-justice-2",
+      "name": {
+        "en": "Justice Hélène Marchand",
+        "fr": "La juge Hélène Marchand"
+      },
+      "position": [
+        -10,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "justice-the-courts"
+      ],
+      "idleDialogue": {
+        "en": "Judges are independent of the government so that we can decide each case on the law and the evidence alone.",
+        "fr": "Les juges sont indépendants du gouvernement afin de pouvoir trancher chaque affaire uniquement selon le droit et la preuve."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "fleece",
+        "hair": "bun",
+        "hairColor": "grey",
+        "accessory": "glasses",
+        "body": "female",
+        "age": "elder",
+        "outfitStyle": "robe",
+        "bottomColor": "#111318",
+        "hat": "none"
+      }
+    },
+    {
+      "id": "npc-justice-3",
+      "name": {
+        "en": "Aisha Bello, Legal Aid Lawyer",
+        "fr": "Aisha Bello, avocate de l'aide juridique"
+      },
+      "position": [
+        14,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "If you cannot afford a lawyer, legal aid can help in most communities. And if you're ever arrested, you have the right to speak to one without delay.",
+        "fr": "Si vous ne pouvez pas payer un avocat, l'aide juridique existe dans la plupart des communautés. Et si jamais vous êtes arrêté, vous avez le droit de parler à un avocat sans délai."
+      },
+      "appearance": {
+        "skinTone": "tone-5",
+        "outfit": "fleece",
+        "hair": "long",
+        "hairColor": "black",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "bottomColor": "#2a2f3a",
+        "hat": "none"
       }
     }
   ],
@@ -181,9 +339,24 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "justice-small-claims",
+      "position": [
+        -31,
+        0,
+        -10
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Small claims court entrance",
+        "fr": "Entrée de la cour des petites créances"
+      }
     }
   ],
   "quests": [
-    "justice-intro"
+    "justice-intro",
+    "justice-the-courts"
   ]
 }

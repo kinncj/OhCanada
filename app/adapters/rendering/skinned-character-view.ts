@@ -1,6 +1,11 @@
 import * as THREE from 'three/webgpu';
-import { attribute, float, mix, texture as texNode, uniform, vec3, vec4, Fn, select } from 'three/tsl';
-import type { TextureNode } from 'three/webgpu';
+import { attribute, float, mix, texture as texNode, vec3, vec4, Fn, select, userData as userDataNode } from 'three/tsl';
+
+function userData(name: string, type: 'vec3'): THREE.Node<'vec3'>;
+function userData(name: string, type: 'float'): THREE.Node<'float'>;
+function userData(name: string, type: 'vec3' | 'float'): THREE.Node<'vec3'> | THREE.Node<'float'> {
+  return userDataNode(name, type) as unknown as THREE.Node<'vec3'>;
+}
 
 type N = THREE.Node<'float'>;
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
@@ -19,6 +24,18 @@ const CLIP: Record<AnimName, string> = {
   jump: 'Jump_Loop',
   interact: 'Interact',
 };
+
+/** Materials are shared across every character so the GPU compiles each shader once. */
+const SHARED = new Map<string, THREE.Material>();
+function sharedMaterial<T extends THREE.Material>(key: string, make: () => T): T {
+  let m = SHARED.get(key) as T | undefined;
+  if (!m) {
+    m = make();
+    m.name = key;
+    SHARED.set(key, m);
+  }
+  return m;
+}
 
 /** Clothing class per joint name: 0 skin, 1 top, 2 bottom, 3 shoes. Hands/head/neck stay skin. */
 function clothClass(joint: string): number {
@@ -49,16 +66,20 @@ export class SkinnedCharacterView {
   private current: AnimName | null = null;
   private readonly head: THREE.Object3D | null;
   private readonly spine: THREE.Object3D | null;
+  /** Per-character tints live in mesh.userData and are read by SHARED materials via TSL userData nodes. */
   private readonly uniforms = {
-    skinTint: uniform(new THREE.Color('#ffffff')),
-    top: uniform(new THREE.Color('#c8102e')),
-    bottom: uniform(new THREE.Color('#2b2f3a')),
-    shoes: uniform(new THREE.Color('#3a2a1e')),
-    hair: uniform(new THREE.Color('#1a1412')),
-    clothRough: uniform(0.92),
+    skinTint: new THREE.Color('#ffffff'),
+    top: new THREE.Color('#c8102e'),
+    bottom: new THREE.Color('#2b2f3a'),
+    shoes: new THREE.Color('#3a2a1e'),
+    hair: new THREE.Color('#1a1412'),
+    clothRough: 0.92,
   };
+  private readonly tintedMeshes: THREE.Mesh[] = [];
   private readonly disposables: { dispose(): void }[] = [];
-  private readonly bodyTextureNodes: TextureNode[] = [];
+  private readonly bodyMeshes: THREE.SkinnedMesh[] = [];
+  private lut!: THREE.DataTexture;
+  private boneCount = 1;
   private bodyKey: string;
 
   constructor(gltf: GLTF, entry: CharacterEntry, bodyKey: string, spec: AppearanceSpec, private readonly library: AssetLibrary) {
@@ -85,7 +106,10 @@ export class SkinnedCharacterView {
     const lut = new THREE.DataTexture(classes, Math.max(1, bones.length), 1, THREE.RGBAFormat, THREE.FloatType);
     lut.needsUpdate = true;
     lut.minFilter = lut.magFilter = THREE.NearestFilter;
-    this.disposables.push(lut);
+    const lutKey = bones.map((b) => clothClass(b.name)).join('');
+    this.lut = lut;
+    this.boneCount = bones.length;
+    const toRemove: THREE.Object3D[] = [];
 
     scene.traverse((o) => {
       if (!(o instanceof THREE.SkinnedMesh)) return;
@@ -93,43 +117,67 @@ export class SkinnedCharacterView {
       const isHair = entry.hair.includes(name) || name.startsWith('Hair') || name === 'Eyebrows';
       if (isHair) {
         const style = HAIR_STYLE[spec.hair] ?? '';
-        o.visible = name === 'Eyebrows' || name === style || (name === 'Hair_Beard' && (spec.accessory === 'beard' || spec.beard === true));
-        const base = o.material as THREE.MeshStandardMaterial;
-        const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.55, metalness: 0 });
-        m.side = THREE.DoubleSide;
-        if (base.map) m.colorNode = texNode(base.map).mul(vec4(this.uniforms.hair, 1));
-        else m.colorNode = vec4(this.uniforms.hair, 1);
-        if (base.normalMap) m.normalMap = base.normalMap;
-        if (base.alphaMap || base.transparent) {
-          m.transparent = true;
-          m.alphaTest = 0.4;
+        const keep = name === 'Eyebrows' || name === style || (name === 'Hair_Beard' && (spec.accessory === 'beard' || spec.beard === true));
+        if (!keep) {
+          toRemove.push(o); // removed (not hidden) so no shader is compiled for unused hairstyles
+          return;
         }
-        o.material = m;
-        this.disposables.push(m);
+        const base = o.material as THREE.MeshStandardMaterial;
+        o.material = sharedMaterial(`hair:${base.uuid}`, () => {
+          const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.55, metalness: 0 });
+          m.side = THREE.DoubleSide;
+          const tint = userData('hairTint', 'vec3');
+          m.colorNode = base.map ? texNode(base.map).mul(vec4(tint, 1)) : vec4(tint, 1);
+          if (base.normalMap) m.normalMap = base.normalMap;
+          if (base.alphaMap || base.transparent) {
+            m.transparent = true;
+            m.alphaTest = 0.4;
+          }
+          return m;
+        });
+        this.tintedMeshes.push(o);
         return;
       }
       if (/eye/i.test(name) || /Face/.test(name)) {
         // Face / eyes keep the imported material but get the skin tint.
         const base = o.material as THREE.MeshStandardMaterial;
         if (/Face/.test(name) && base.map) {
-          const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.6 });
-          m.colorNode = texNode(base.map).mul(vec4(this.uniforms.skinTint, 1));
-          if (base.normalMap) m.normalMap = base.normalMap;
-          o.material = m;
-          this.disposables.push(m);
+          o.material = sharedMaterial(`face:${base.uuid}`, () => {
+            const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.6 });
+            m.colorNode = texNode(base.map!).mul(vec4(userData('skinTint', 'vec3'), 1));
+            if (base.normalMap) m.normalMap = base.normalMap;
+            return m;
+          });
+          this.tintedMeshes.push(o);
         }
         return;
       }
       // Body: skin texture tinted + procedural clothing by bone weight.
       const base = o.material as THREE.MeshStandardMaterial;
+      this.tintedMeshes.push(o);
+      this.bodyMeshes.push(o);
+      o.material = sharedMaterial(`body:${base.uuid}:${lutKey}`, () => this.buildBodyMaterial(base, lut, bones.length));
+    });
+    for (const o of toRemove) o.removeFromParent();
+
+    this.mixer = new THREE.AnimationMixer(scene);
+    for (const [key, clipName] of Object.entries(CLIP) as [AnimName, string][]) {
+      const clip = gltf.animations.find((c) => c.name === clipName);
+      if (clip) this.actions.set(key, this.mixer.clipAction(clip));
+    }
+    this.applyAppearance(spec);
+    this.play('idle');
+  }
+
+
+  private buildBodyMaterial(base: THREE.MeshStandardMaterial, lut: THREE.DataTexture, boneCount: number): THREE.MeshStandardNodeMaterial {
       const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.75, metalness: 0 });
       const skinTexNode = base.map ? texNode(base.map) : null;
-      if (skinTexNode) this.bodyTextureNodes.push(skinTexNode);
       const skinTex = skinTexNode ?? vec4(0.8, 0.6, 0.5, 1);
       const idx = attribute<'uvec4'>('skinIndex', 'uvec4');
       const w = attribute<'vec4'>('skinWeight', 'vec4');
       const lutNode = texNode(lut);
-      const n = float(Math.max(1, bones.length));
+      const n = float(Math.max(1, boneCount));
       // skinIndex is an integer attribute: convert before arithmetic (WebGL2 rejects uint + float).
       const classOf = (j: N) => lutNode.sample(vec3(float(j).add(0.5).div(n), 0.5, 0).xy).x.mul(3);
       const cls = Fn(() => {
@@ -150,34 +198,24 @@ export class SkinnedCharacterView {
         }
         return vec3(top, bottom, shoes);
       })();
-      const skin = skinTex.rgb.mul(this.uniforms.skinTint);
+      const skin = skinTex.rgb.mul(userData('skinTint', 'vec3'));
       const topMask = cls.x.smoothstep(0.35, 0.65);
       const bottomMask = cls.y.smoothstep(0.35, 0.65);
       const shoeMask = cls.z.smoothstep(0.3, 0.6);
       // Fabric shading: reuse the skin texture's luminance so cloth keeps folds/AO instead of being flat.
       const shade = skinTex.rgb.dot(vec3(0.299, 0.587, 0.114)).mul(0.5).add(0.6);
-      let rgb = mix(skin, this.uniforms.top.mul(shade), topMask);
-      rgb = mix(rgb, this.uniforms.bottom.mul(shade), bottomMask);
-      rgb = mix(rgb, this.uniforms.shoes.mul(shade), shoeMask);
+      let rgb = mix(skin, userData('topTint', 'vec3').mul(shade), topMask);
+      rgb = mix(rgb, userData('bottomTint', 'vec3').mul(shade), bottomMask);
+      rgb = mix(rgb, userData('shoesTint', 'vec3').mul(shade), shoeMask);
       m.colorNode = vec4(rgb, 1);
-      m.roughnessNode = mix(float(0.6), this.uniforms.clothRough, topMask.max(bottomMask)).max(shoeMask.mul(0.7));
+      m.roughnessNode = mix(float(0.6), userData('clothRough', 'float'), topMask.max(bottomMask)).max(shoeMask.mul(0.7));
       if (base.normalMap) m.normalMap = base.normalMap;
-      o.material = m;
-      this.disposables.push(m);
-    });
-
-    this.mixer = new THREE.AnimationMixer(scene);
-    for (const [key, clipName] of Object.entries(CLIP) as [AnimName, string][]) {
-      const clip = gltf.animations.find((c) => c.name === clipName);
-      if (clip) this.actions.set(key, this.mixer.clipAction(clip));
-    }
-    this.applyAppearance(spec);
-    this.play('idle');
+      return m;
   }
 
   applyAppearance(spec: AppearanceSpec): void {
-    this.uniforms.skinTint.value.set(skinTintFor(spec.skinColor));
-    this.uniforms.hair.value.set(spec.hairColor);
+    this.uniforms.skinTint.copy(skinTintFor(spec.skinColor));
+    this.uniforms.hair.set(spec.hairColor);
     const style = spec.outfitStyle ?? 'casual';
     const top = new THREE.Color(spec.outfitColor);
     const bottom = new THREE.Color(spec.bottomColor ?? bottomFor(spec.outfitColor));
@@ -213,17 +251,24 @@ export class SkinnedCharacterView {
       default:
         break;
     }
-    this.uniforms.top.value.copy(top);
-    this.uniforms.bottom.value.copy(bottom);
-    this.uniforms.clothRough.value = rough;
-    // Deep tones use the pack's dark base texture so shading detail stays natural.
+    this.uniforms.top.copy(top);
+    this.uniforms.bottom.copy(bottom);
+    this.uniforms.clothRough = rough;
+    this.pushTints();
+    // Deep tones use the pack's dark base texture: a second SHARED body material variant keyed on the texture.
     const entry = this.library.characterEntry(this.bodyKey);
     const tone = new THREE.Color(spec.skinColor);
     const path = entry?.skin[tone.r + tone.g + tone.b < 1.1 ? 'dark' : 'light'];
-    if (path) {
+    if (path && tone.r + tone.g + tone.b < 1.1) {
       void this.library.loadTexture(path, true).then((t) => {
         t.flipY = false;
-        for (const node of this.bodyTextureNodes) node.value = t;
+        for (const o of this.bodyMeshes) {
+          const current = o.material as THREE.MeshStandardNodeMaterial;
+          o.material = sharedMaterial(`${current.name || current.uuid}:dark:${path}`, () => {
+            const base = new THREE.MeshStandardMaterial({ map: t, normalMap: (current.normalMap as THREE.Texture | null) ?? null });
+            return this.buildBodyMaterial(base, this.lut, this.boneCount);
+          });
+        }
       });
     }
     this.rebuildAccessories(spec);
@@ -360,6 +405,17 @@ export class SkinnedCharacterView {
     }
   }
 
+  private pushTints(): void {
+    for (const o of this.tintedMeshes) {
+      o.userData.skinTint = this.uniforms.skinTint;
+      o.userData.hairTint = this.uniforms.hair;
+      o.userData.topTint = this.uniforms.top;
+      o.userData.bottomTint = this.uniforms.bottom;
+      o.userData.shoesTint = this.uniforms.shoes;
+      o.userData.clothRough = this.uniforms.clothRough;
+    }
+  }
+
   play(name: AnimName, fade = 0.25): void {
     if (this.current === name) return;
     const next = this.actions.get(name) ?? this.actions.get('idle');
@@ -384,7 +440,7 @@ export class SkinnedCharacterView {
 
   dispose(): void {
     this.mixer.stopAllAction();
-    for (const d of this.disposables) d.dispose();
+    for (const d of this.disposables) d.dispose(); // shared materials are intentionally kept
     this.root.removeFromParent();
   }
 }

@@ -26,7 +26,7 @@
           "speaker": "npc-elections-1",
           "text": {
             "en": "Glad you made it. Head to the polling station and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à bureau de vote et je testerai vos connaissances."
+            "fr": "Contente de vous voir. Rendez-vous au bureau de vote et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "elections-landmark",
       "objective": {
         "en": "Reach the polling station",
-        "fr": "Rendez-vous à bureau de vote"
+        "fr": "Rendez-vous au bureau de vote"
       }
     },
     {

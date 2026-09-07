@@ -288,6 +288,14 @@
         },
         "screenSpaceGI": {
           "type": "boolean"
+        },
+        "assetPolicy": {
+          "type": "string",
+          "enum": [
+            "lite",
+            "standard",
+            "full"
+          ]
         }
       },
       "required": [

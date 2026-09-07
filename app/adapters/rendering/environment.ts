@@ -84,7 +84,8 @@ export class Environment {
     this.scene.backgroundIntensity = 0.06 + day * 0.95;
     this.fogColor.setHSL(0.58, 0.35 + dusk * 0.3, 0.2 + day * 0.62);
     (this.scene.fog as THREE.FogExp2).color.copy(this.fogColor);
-    if (!(this.scene.background instanceof THREE.Texture)) this.scene.background = this.fogColor.clone();
+    if (this.scene.background instanceof THREE.Color) this.scene.background.copy(this.fogColor);
+    else if (!(this.scene.background instanceof THREE.Texture)) this.scene.background = this.fogColor.clone();
   }
 
   get isNight(): boolean {

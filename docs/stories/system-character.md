@@ -64,3 +64,21 @@ Feature: Character persistence
     Then the preview and selections update to match
     And an unknown option id (e.g. hair "mohawk") is rejected with "That save file is not valid:"
 ```
+
+
+## NPC role appearance (TN-CHAR-09) — Implemented
+
+```gherkin
+Feature: NPCs look like the role they play
+  Scenario: A district author describes an NPC by role
+    Given a district JSON NPC with appearance.body "male", outfitStyle "uniform", hat "police"
+    When the district loads
+    Then the NPC is rendered with the male rig, a navy tunic, dark trousers and a peaked police cap
+    And an NPC with outfitStyle "robe" wears a single dark garment head to toe
+    And an NPC with age "elder" has grey hair regardless of hairColor
+
+  Scenario: Player customization drives the same rig
+    Given the player picked body "Feminine", hair "Buns", outfit "Yellow raincoat" and accessory "Glasses"
+    When the character is shown
+    Then the female rig plays the idle clip, wears the "Hair_Buns" mesh, a glossy yellow top, and glasses on the Head bone
+```

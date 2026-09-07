@@ -8,8 +8,8 @@
     "fr": "Droits et responsabilités"
   },
   "description": {
-    "en": "A courthouse square and a town hall where citizens learn what Canada asks of them.",
-    "fr": "Une place du palais de justice et un hôtel de ville où les citoyens apprennent ce que le Canada attend d'eux."
+    "en": "A courthouse square, a town hall and a volunteer fair where citizens learn what Canada asks of them and what it promises in return.",
+    "fr": "Une place du palais de justice, un hôtel de ville et une foire du bénévolat où les citoyens apprennent ce que le Canada attend d'eux et ce qu'il promet en retour."
   },
   "spawn": {
     "position": [
@@ -105,10 +105,108 @@
         "id": "rights-responsibilities-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
         ]
+      },
+      {
+        "id": "rights-responsibilities-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "rights-responsibilities-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "rights-responsibilities-lamp-3",
+        "type": "lamp",
+        "position": [
+          10,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "rights-responsibilities-lamp-4",
+        "type": "lamp",
+        "position": [
+          -10,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "rights-responsibilities-flag-2",
+        "type": "flagpole",
+        "position": [
+          -18,
+          0,
+          8
+        ]
+      },
+      {
+        "id": "rights-responsibilities-town-hall",
+        "type": "town-hall",
+        "position": [
+          -45,
+          0,
+          -10
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Town hall",
+          "fr": "Hôtel de ville"
+        }
+      },
+      {
+        "id": "rights-responsibilities-gate",
+        "type": "gate",
+        "position": [
+          -45,
+          0,
+          10
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Town hall gate",
+          "fr": "Grille de l'hôtel de ville"
+        }
+      },
+      {
+        "id": "rights-responsibilities-hydrant",
+        "type": "hydrant",
+        "position": [
+          -30,
+          0,
+          -2
+        ]
+      },
+      {
+        "id": "rights-responsibilities-volunteer-tent",
+        "type": "volunteer-tent",
+        "position": [
+          45,
+          0,
+          12
+        ],
+        "rotationY": -1.5707963267948966,
+        "label": {
+          "en": "Volunteer fair",
+          "fr": "Foire du bénévolat"
+        }
       }
     ],
     "ambience": {
@@ -124,7 +222,7 @@
       "id": "npc-rights-responsibilities-1",
       "name": {
         "en": "Justice Okafor, Citizenship Judge",
-        "fr": "Justice Okafor, juge de la citoyenneté"
+        "fr": "Le juge Okafor, juge de la citoyenneté"
       },
       "position": [
         3,
@@ -133,11 +231,12 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "rights-responsibilities-intro"
+        "rights-responsibilities-intro",
+        "rights-responsibilities-charter-freedoms"
       ],
       "idleDialogue": {
-        "en": "Welcome to Rights & Responsibilities. There is much to learn here.",
-        "fr": "Bienvenue dans Droits et responsabilités. Il y a beaucoup à apprendre ici."
+        "en": "Every new citizen takes an oath in this courthouse. Remember: the Charter protects everyone in Canada, not only citizens.",
+        "fr": "Chaque nouveau citoyen prête serment dans ce palais de justice. Rappelez-vous : la Charte protège toute personne au Canada, pas seulement les citoyens."
       },
       "appearance": {
         "skinTone": "tone-5",
@@ -149,6 +248,68 @@
         "outfitStyle": "robe",
         "bottomColor": "#111318",
         "hat": "none"
+      }
+    },
+    {
+      "id": "npc-rights-responsibilities-2",
+      "name": {
+        "en": "Priya Raman, Volunteer Coordinator",
+        "fr": "Priya Raman, coordonnatrice des bénévoles"
+      },
+      "position": [
+        -9,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [
+        "rights-responsibilities-duties-of-a-citizen"
+      ],
+      "idleDialogue": {
+        "en": "Helping at a food bank or coaching a kids' team counts too. Taking part in your community is one of the responsibilities of citizenship.",
+        "fr": "Aider dans une banque alimentaire ou entraîner une équipe de jeunes, ça compte aussi. S'impliquer dans sa communauté fait partie des responsabilités de la citoyenneté."
+      },
+      "appearance": {
+        "skinTone": "tone-4",
+        "outfit": "fleece",
+        "hair": "long",
+        "hairColor": "black",
+        "accessory": "backpack",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "casual",
+        "bottomColor": "#3b4a6b",
+        "hat": "cap"
+      }
+    },
+    {
+      "id": "npc-rights-responsibilities-3",
+      "name": {
+        "en": "Corporal Marcus Hill, Reservist",
+        "fr": "Le caporal Marcus Hill, réserviste"
+      },
+      "position": [
+        15,
+        0,
+        36
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Military service is voluntary in Canada. I serve part-time in the army reserve and keep my day job as an electrician.",
+        "fr": "Le service militaire est volontaire au Canada. Je sers à temps partiel dans la réserve de l'armée tout en gardant mon emploi d'électricien."
+      },
+      "appearance": {
+        "skinTone": "tone-6",
+        "outfit": "fleece",
+        "hair": "buzz",
+        "hairColor": "black",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "uniform",
+        "bottomColor": "#2e3a2a",
+        "hat": "beret",
+        "beard": true
       }
     }
   ],
@@ -181,9 +342,53 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "scroll-jury",
+      "position": [
+        -24,
+        0,
+        -24
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Scroll: serve on a jury",
+        "fr": "Parchemin : siéger à un jury"
+      }
+    },
+    {
+      "id": "scroll-vote",
+      "position": [
+        24,
+        0,
+        -24
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Scroll: vote in elections",
+        "fr": "Parchemin : voter aux élections"
+      }
+    },
+    {
+      "id": "scroll-law",
+      "position": [
+        0,
+        0,
+        -38
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Scroll: obey the law",
+        "fr": "Parchemin : respecter la loi"
+      }
     }
   ],
   "quests": [
-    "rights-responsibilities-intro"
+    "rights-responsibilities-intro",
+    "rights-responsibilities-duties-of-a-citizen",
+    "rights-responsibilities-charter-freedoms"
   ]
 }

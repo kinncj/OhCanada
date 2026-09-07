@@ -106,10 +106,117 @@
         "id": "regions-flag",
         "type": "flagpole",
         "position": [
+          18,
+          0,
+          8
+        ]
+      },
+      {
+        "id": "regions-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "regions-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "regions-compass-circle",
+        "type": "circle",
+        "position": [
+          0,
+          0,
+          -50
+        ],
+        "label": {
+          "en": "Compass circle",
+          "fr": "Cercle de la boussole"
+        }
+      },
+      {
+        "id": "regions-atlantic-lookout",
+        "type": "lookout",
+        "position": [
+          78,
+          0,
+          -2
+        ],
+        "label": {
+          "en": "Atlantic shore lookout",
+          "fr": "Belvédère de la rive atlantique"
+        }
+      },
+      {
+        "id": "regions-central-rink",
+        "type": "rink",
+        "position": [
+          45,
+          0,
+          -92
+        ],
+        "label": {
+          "en": "Central lakes rink",
+          "fr": "Patinoire des lacs du Centre"
+        }
+      },
+      {
+        "id": "regions-north-lookout",
+        "type": "lookout",
+        "position": [
           12,
           0,
-          4
+          -90
+        ],
+        "label": {
+          "en": "Midnight sun lookout",
+          "fr": "Belvédère du soleil de minuit"
+        }
+      },
+      {
+        "id": "regions-prairie-elevator",
+        "type": "factory",
+        "position": [
+          -62,
+          0,
+          -70
+        ],
+        "label": {
+          "en": "Prairie grain elevator",
+          "fr": "Silo à grains des Prairies"
+        }
+      },
+      {
+        "id": "regions-prairie-power-pole",
+        "type": "power-pole",
+        "position": [
+          -40,
+          0,
+          -60
         ]
+      },
+      {
+        "id": "regions-pacific-dock",
+        "type": "port",
+        "position": [
+          -85,
+          0,
+          -8
+        ],
+        "label": {
+          "en": "Pacific dock",
+          "fr": "Quai du Pacifique"
+        }
       }
     ],
     "ambience": {
@@ -134,11 +241,12 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "regions-intro"
+        "regions-intro",
+        "regions-five-regions-tour"
       ],
       "idleDialogue": {
-        "en": "Welcome to Canada's Regions. There is much to learn here.",
-        "fr": "Bienvenue dans Les régions du Canada. Il y a beaucoup à apprendre ici."
+        "en": "The three territories cover about a third of Canada's land, yet very few people live there. In summer the sun barely sets.",
+        "fr": "Les trois territoires couvrent environ le tiers du territoire canadien, mais très peu de gens y vivent. L'été, le soleil se couche à peine."
       },
       "appearance": {
         "skinTone": "tone-3",
@@ -151,6 +259,67 @@
         "outfitStyle": "parka",
         "bottomColor": "#2b2f3a",
         "hat": "hood"
+      }
+    },
+    {
+      "id": "npc-regions-2",
+      "name": {
+        "en": "Mary MacLeod, Fisher",
+        "fr": "Mary MacLeod, pêcheuse"
+      },
+      "position": [
+        -10,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Back home the Bay of Fundy has the highest tides in the world. Atlantic Canada is four provinces, and Quebec is not one of them, whatever the map looks like.",
+        "fr": "Chez nous, la baie de Fundy a les plus hautes marées du monde. Le Canada atlantique compte quatre provinces, et le Québec n'en fait pas partie, quoi qu'en dise la carte."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "raincoat",
+        "hair": "short",
+        "hairColor": "red",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "raincoat",
+        "bottomColor": "#23303d",
+        "hat": "captain"
+      }
+    },
+    {
+      "id": "npc-regions-3",
+      "name": {
+        "en": "Simon Leblanc, Geographer",
+        "fr": "Simon Leblanc, géographe"
+      },
+      "position": [
+        14,
+        0,
+        20
+      ],
+      "behavior": "wander",
+      "wanderRadius": 4,
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Ontario and Quebec make up Central Canada, and more than half of all Canadians live there. Victoria, not Vancouver, is the capital of British Columbia.",
+        "fr": "L'Ontario et le Québec forment le Canada central, où vivent plus de la moitié des Canadiens. Victoria, et non Vancouver, est la capitale de la Colombie-Britannique."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "fleece",
+        "hair": "short",
+        "hairColor": "brown",
+        "accessory": "backpack",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "casual",
+        "bottomColor": "#4a3b2e",
+        "hat": "cap",
+        "beard": true
       }
     }
   ],
@@ -183,9 +352,80 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "regions-atlantic",
+      "position": [
+        85,
+        0,
+        10
+      ],
+      "radius": 5,
+      "kind": "zone",
+      "label": {
+        "en": "Atlantic shore",
+        "fr": "Rive atlantique"
+      }
+    },
+    {
+      "id": "regions-central",
+      "position": [
+        45,
+        0,
+        -76
+      ],
+      "radius": 5,
+      "kind": "zone",
+      "label": {
+        "en": "Central lakes",
+        "fr": "Lacs du Centre"
+      }
+    },
+    {
+      "id": "regions-prairie",
+      "position": [
+        -52,
+        0,
+        -52
+      ],
+      "radius": 5,
+      "kind": "zone",
+      "label": {
+        "en": "Prairie fields",
+        "fr": "Champs des Prairies"
+      }
+    },
+    {
+      "id": "regions-west-coast",
+      "position": [
+        -82,
+        0,
+        14
+      ],
+      "radius": 5,
+      "kind": "zone",
+      "label": {
+        "en": "West Coast rainforest",
+        "fr": "Forêt pluviale de la côte Ouest"
+      }
+    },
+    {
+      "id": "regions-north",
+      "position": [
+        -2,
+        0,
+        -84
+      ],
+      "radius": 5,
+      "kind": "zone",
+      "label": {
+        "en": "Arctic North",
+        "fr": "Grand Nord arctique"
+      }
     }
   ],
   "quests": [
-    "regions-intro"
+    "regions-intro",
+    "regions-five-regions-tour"
   ]
 }

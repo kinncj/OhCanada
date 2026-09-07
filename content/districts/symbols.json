@@ -45,6 +45,17 @@
           60,
           60
         ]
+      },
+      {
+        "position": [
+          -50,
+          -0.6,
+          -30
+        ],
+        "size": [
+          24,
+          24
+        ]
       }
     ],
     "vegetation": {
@@ -104,10 +115,106 @@
         "id": "symbols-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
         ]
+      },
+      {
+        "id": "symbols-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "symbols-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "symbols-flag-2",
+        "type": "flagpole",
+        "position": [
+          -18,
+          0,
+          8
+        ]
+      },
+      {
+        "id": "symbols-flag-3",
+        "type": "flagpole",
+        "position": [
+          30,
+          0,
+          20
+        ],
+        "label": {
+          "en": "Festival flags",
+          "fr": "Drapeaux du festival"
+        }
+      },
+      {
+        "id": "symbols-flag-4",
+        "type": "flagpole",
+        "position": [
+          -30,
+          0,
+          20
+        ]
+      },
+      {
+        "id": "symbols-lamp-3",
+        "type": "lamp",
+        "position": [
+          20,
+          0,
+          -34
+        ]
+      },
+      {
+        "id": "symbols-lamp-4",
+        "type": "lamp",
+        "position": [
+          -20,
+          0,
+          -34
+        ]
+      },
+      {
+        "id": "symbols-lookout",
+        "type": "lookout",
+        "position": [
+          -50,
+          0,
+          -10
+        ],
+        "label": {
+          "en": "Beaver pond lookout",
+          "fr": "Belvédère de l'étang aux castors"
+        }
+      },
+      {
+        "id": "symbols-pavilion",
+        "type": "festival-pavilion",
+        "position": [
+          45,
+          0,
+          12
+        ],
+        "rotationY": -1.5707963267948966,
+        "label": {
+          "en": "Festival pavilion",
+          "fr": "Pavillon du festival"
+        }
       }
     ],
     "ambience": {
@@ -132,11 +239,12 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "symbols-intro"
+        "symbols-intro",
+        "symbols-colours-of-canada"
       ],
       "idleDialogue": {
-        "en": "Welcome to Canadian Symbols. There is much to learn here.",
-        "fr": "Bienvenue dans Les symboles canadiens. Il y a beaucoup à apprendre ici."
+        "en": "Hockey is Canada's official winter sport and lacrosse the summer one. My kids play both, and they'd tell you hockey is the hard one.",
+        "fr": "Le hockey est le sport national d'hiver du Canada et la crosse, celui d'été. Mes jeunes jouent aux deux, et ils vous diront que le hockey est le plus dur."
       },
       "appearance": {
         "skinTone": "tone-1",
@@ -149,6 +257,66 @@
         "outfitStyle": "jersey",
         "bottomColor": "#1d2430",
         "hat": "toque"
+      }
+    },
+    {
+      "id": "npc-symbols-2",
+      "name": {
+        "en": "Émile, Flag Steward",
+        "fr": "Émile, préposé aux drapeaux"
+      },
+      "position": [
+        -10,
+        0,
+        20
+      ],
+      "behavior": "wander",
+      "wanderRadius": 5,
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Red and white have been Canada's national colours since 1921, but the maple leaf flag itself was first raised only in 1965.",
+        "fr": "Le rouge et le blanc sont les couleurs nationales du Canada depuis 1921, mais le drapeau à la feuille d'érable n'a été hissé pour la première fois qu'en 1965."
+      },
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "parka",
+        "hair": "short",
+        "hairColor": "black",
+        "accessory": "scarf",
+        "body": "male",
+        "age": "young",
+        "outfitStyle": "parka",
+        "bottomColor": "#2b2f3a",
+        "hat": "toque"
+      }
+    },
+    {
+      "id": "npc-symbols-3",
+      "name": {
+        "en": "Walter, Veteran",
+        "fr": "Walter, vétéran"
+      },
+      "position": [
+        14,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Every November 11 I pin on a red poppy for the friends who never came home. Remembrance Day marks the end of the First World War in 1918.",
+        "fr": "Chaque 11 novembre, j'épingle un coquelicot rouge pour les amis qui ne sont jamais revenus. Le jour du Souvenir marque la fin de la Première Guerre mondiale en 1918."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "parka",
+        "hair": "none",
+        "hairColor": "grey",
+        "body": "male",
+        "age": "elder",
+        "outfitStyle": "formal",
+        "bottomColor": "#1a1d24",
+        "hat": "beret"
       }
     }
   ],
@@ -181,9 +349,52 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "token-flag",
+      "position": [
+        -30,
+        0,
+        8
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Token: the maple leaf flag",
+        "fr": "Jeton : le drapeau à la feuille d'érable"
+      }
+    },
+    {
+      "id": "token-beaver",
+      "position": [
+        -38,
+        0,
+        -14
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Token: the beaver",
+        "fr": "Jeton : le castor"
+      }
+    },
+    {
+      "id": "token-fleur-de-lys",
+      "position": [
+        0,
+        0,
+        -38
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Token: the fleur-de-lys",
+        "fr": "Jeton : la fleur de lys"
+      }
     }
   ],
   "quests": [
-    "symbols-intro"
+    "symbols-intro",
+    "symbols-colours-of-canada"
   ]
 }

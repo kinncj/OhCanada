@@ -19,14 +19,14 @@
       "npc": "npc-economy-1",
       "objective": {
         "en": "Talk to Captain Singh, Harbourmaster",
-        "fr": "Parlez à La capitaine Singh, capitaine de port"
+        "fr": "Parlez à la capitaine Singh, capitaine de port"
       },
       "dialogue": [
         {
           "speaker": "npc-economy-1",
           "text": {
             "en": "Glad you made it. Head to the harbour office and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à bureau du port et je testerai vos connaissances."
+            "fr": "Contente de vous voir. Rendez-vous au bureau du port et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "economy-landmark",
       "objective": {
         "en": "Reach the harbour office",
-        "fr": "Rendez-vous à bureau du port"
+        "fr": "Rendez-vous au bureau du port"
       }
     },
     {

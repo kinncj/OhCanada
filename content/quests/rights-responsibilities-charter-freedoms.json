@@ -1,0 +1,76 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "rights-responsibilities-charter-freedoms",
+  "district": "rights-responsibilities",
+  "type": "puzzle",
+  "title": {
+    "en": "Charter Freedoms",
+    "fr": "Les libertés de la Charte"
+  },
+  "summary": {
+    "en": "Justice Okafor tests you on the fundamental freedoms and rights in the Charter. No mistakes allowed.",
+    "fr": "Le juge Okafor vous interroge sur les libertés et les droits fondamentaux de la Charte. Aucune erreur permise."
+  },
+  "giverNpc": "npc-rights-responsibilities-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-rights-responsibilities-1",
+      "objective": {
+        "en": "Talk to Justice Okafor",
+        "fr": "Parlez au juge Okafor"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-rights-responsibilities-1",
+          "text": {
+            "en": "In my courtroom, a new citizen must know the freedoms they are swearing to uphold, every one of them.",
+            "fr": "Dans ma salle d'audience, un nouveau citoyen doit connaître les libertés qu'il jure de défendre, chacune d'elles."
+          }
+        },
+        {
+          "speaker": "npc-rights-responsibilities-1",
+          "text": {
+            "en": "Four questions on the Charter. Answer all four correctly and the stamp is yours.",
+            "fr": "Quatre questions sur la Charte. Répondez correctement aux quatre et le timbre est à vous."
+          }
+        },
+        {
+          "speaker": "player",
+          "text": {
+            "en": "I'm ready, Your Honour.",
+            "fr": "Je suis prêt, Monsieur le juge."
+          }
+        }
+      ]
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-rr-004",
+        "q-rr-005",
+        "q-rr-007",
+        "q-rr-014"
+      ],
+      "minCorrect": 4,
+      "objective": {
+        "en": "Answer all four of Justice Okafor's Charter questions correctly",
+        "fr": "Répondez correctement aux quatre questions du juge Okafor sur la Charte"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-rights-responsibilities-charter-freedoms"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-rights-responsibilities-1",
+      "text": {
+        "en": "Flawless. You understand what ordered liberty means. This stamp is well earned.",
+        "fr": "Sans faute. Vous comprenez ce que signifie la liberté ordonnée. Ce timbre est bien mérité."
+      }
+    }
+  ]
+}

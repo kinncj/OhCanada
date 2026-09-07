@@ -104,9 +104,103 @@
         "id": "modern-canada-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
+        ]
+      },
+      {
+        "id": "modern-canada-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "modern-canada-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "modern-canada-apartments-1",
+        "type": "apartments",
+        "position": [
+          -45,
+          0,
+          -30
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Glass towers",
+          "fr": "Tours de verre"
+        }
+      },
+      {
+        "id": "modern-canada-apartments-2",
+        "type": "apartments",
+        "position": [
+          -45,
+          0,
+          -10
+        ],
+        "rotationY": 1.5707963267948966
+      },
+      {
+        "id": "modern-canada-apartments-3",
+        "type": "apartments",
+        "position": [
+          -45,
+          0,
+          10
+        ],
+        "rotationY": 1.5707963267948966
+      },
+      {
+        "id": "modern-canada-research-lab",
+        "type": "factory",
+        "position": [
+          -60,
+          0,
+          -50
+        ],
+        "label": {
+          "en": "Research campus",
+          "fr": "Campus de recherche"
+        }
+      },
+      {
+        "id": "modern-canada-hydrant",
+        "type": "hydrant",
+        "position": [
+          -24,
+          0,
+          14
+        ]
+      },
+      {
+        "id": "modern-canada-utility-box",
+        "type": "utility-box",
+        "position": [
+          26,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "modern-canada-power-pole",
+        "type": "power-pole",
+        "position": [
+          -26,
+          0,
+          -4
         ]
       }
     ],
@@ -132,11 +226,12 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "modern-canada-intro"
+        "modern-canada-intro",
+        "modern-canada-rain-delay"
       ],
       "idleDialogue": {
-        "en": "Welcome to Modern Canada. There is much to learn here.",
-        "fr": "Bienvenue dans Le Canada moderne. Il y a beaucoup à apprendre ici."
+        "en": "The Canada Health Act sets a basic standard of coverage that every provincial health system has to meet. Rain or shine, the clinic is open.",
+        "fr": "La Loi canadienne sur la santé fixe une norme de base de couverture que chaque régime provincial doit respecter. Qu'il pleuve ou non, la clinique est ouverte."
       },
       "appearance": {
         "skinTone": "tone-4",
@@ -149,6 +244,66 @@
         "bottomColor": "#23303d",
         "hat": "none",
         "accessory": "glasses"
+      }
+    },
+    {
+      "id": "npc-modern-canada-2",
+      "name": {
+        "en": "Dr. Amara Osei, Research Scientist",
+        "fr": "Dre Amara Osei, chercheuse"
+      },
+      "position": [
+        -10,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Banting and Best discovered insulin here in Canada. Millions of people with diabetes are alive because of that lab work.",
+        "fr": "Banting et Best ont découvert l'insuline ici, au Canada. Des millions de personnes diabétiques sont en vie grâce à ce travail de laboratoire."
+      },
+      "appearance": {
+        "skinTone": "tone-6",
+        "outfit": "raincoat",
+        "hair": "bun",
+        "hairColor": "black",
+        "accessory": "glasses",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "bottomColor": "#2a2f3a",
+        "hat": "hood"
+      }
+    },
+    {
+      "id": "npc-modern-canada-3",
+      "name": {
+        "en": "Luc, Arena Ice Technician",
+        "fr": "Luc, technicien de glace"
+      },
+      "position": [
+        14,
+        0,
+        20
+      ],
+      "behavior": "wander",
+      "wanderRadius": 4,
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Hockey is our official winter sport and lacrosse the summer one. Lord Stanley donated the Cup back in 1892, and we're still fighting over it.",
+        "fr": "Le hockey est notre sport national d'hiver et la crosse, celui d'été. Lord Stanley a offert la Coupe en 1892, et on se la dispute encore."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "hockey",
+        "hair": "short",
+        "hairColor": "red",
+        "body": "male",
+        "age": "young",
+        "outfitStyle": "jersey",
+        "bottomColor": "#1d2430",
+        "hat": "cap"
       }
     }
   ],
@@ -181,9 +336,24 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "modern-canada-campus",
+      "position": [
+        -60,
+        0,
+        -36
+      ],
+      "radius": 4,
+      "kind": "zone",
+      "label": {
+        "en": "Research campus entrance",
+        "fr": "Entrée du campus de recherche"
+      }
     }
   ],
   "quests": [
-    "modern-canada-intro"
+    "modern-canada-intro",
+    "modern-canada-rain-delay"
   ]
 }

@@ -1,0 +1,86 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "modern-canada-rain-delay",
+  "district": "modern-canada",
+  "type": "timed",
+  "title": {
+    "en": "Rain Delay",
+    "fr": "Course sous la pluie"
+  },
+  "summary": {
+    "en": "Dev needs a signed permit at the research campus before the storm closes the gates. Run it there in time, then answer a few questions on Canadian inventors.",
+    "fr": "Dev a besoin d'un permis signé au campus de recherche avant que l'orage ferme les grilles. Courez-y à temps, puis répondez à quelques questions sur les inventeurs canadiens."
+  },
+  "giverNpc": "npc-modern-canada-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-modern-canada-1",
+      "objective": {
+        "en": "Talk to Dev Patel by the arena",
+        "fr": "Parlez à Dev Patel près de l'aréna"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-modern-canada-1",
+          "text": {
+            "en": "Perfect timing, and terrible weather. The research campus needs this permit signed before they lock up for the storm.",
+            "fr": "Un moment parfait, et un temps affreux. Le campus de recherche a besoin de ce permis signé avant de tout verrouiller pour l'orage."
+          }
+        },
+        {
+          "speaker": "npc-modern-canada-1",
+          "text": {
+            "en": "It's the big building past the towers, south-west. You have one minute. Go!",
+            "fr": "C'est le grand bâtiment au-delà des tours, au sud-ouest. Vous avez une minute. Allez!"
+          }
+        },
+        {
+          "speaker": "player",
+          "text": {
+            "en": "Running!",
+            "fr": "Je cours!"
+          }
+        }
+      ]
+    },
+    {
+      "id": "run",
+      "kind": "reach",
+      "trigger": "modern-canada-campus",
+      "objective": {
+        "en": "Reach the research campus entrance before the timer runs out",
+        "fr": "Atteignez l'entrée du campus de recherche avant la fin du compte à rebours"
+      },
+      "timeLimitSeconds": 60
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-mc-017",
+        "q-mc-018",
+        "q-mc-019",
+        "q-mc-021"
+      ],
+      "minCorrect": 3,
+      "objective": {
+        "en": "Catch your breath and answer four questions on Canadian inventors (3 of 4 to pass)",
+        "fr": "Reprenez votre souffle et répondez à quatre questions sur les inventeurs canadiens (3 sur 4 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-modern-canada-rain-delay"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-modern-canada-1",
+      "text": {
+        "en": "Made it, and soaked to the bone. The permit is in, and so is your stamp.",
+        "fr": "Vous y êtes arrivé, trempé jusqu'aux os. Le permis est déposé, et votre timbre aussi."
+      }
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "who-we-are-voices-of-the-circle",
+  "district": "who-we-are",
+  "type": "dialogue",
+  "title": {
+    "en": "Voices of the Circle",
+    "fr": "Les voix du cercle"
+  },
+  "summary": {
+    "en": "Listen to three voices of Canada, Inuit, Métis and Acadian, then show what you remember at the gathering circle.",
+    "fr": "Écoutez trois voix du Canada, inuite, métisse et acadienne, puis montrez ce que vous avez retenu au cercle de rassemblement."
+  },
+  "giverNpc": "npc-who-we-are-1",
+  "steps": [
+    {
+      "id": "talk-sarah",
+      "kind": "talk",
+      "npc": "npc-who-we-are-1",
+      "objective": {
+        "en": "Talk to Elder Sarah Cardinal",
+        "fr": "Parlez à l'aînée Sarah Cardinal"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-who-we-are-1",
+          "text": {
+            "en": "A country is made of many voices. Before you sit in the circle, go and listen to two of them: Nuka and Jean-Luc.",
+            "fr": "Un pays est fait de nombreuses voix. Avant de vous asseoir dans le cercle, allez en écouter deux : Nuka et Jean-Luc."
+          }
+        },
+        {
+          "speaker": "npc-who-we-are-1",
+          "text": {
+            "en": "The Métis, my own people, are a distinct nation of mixed Indigenous and European ancestry. Most of us live on the Prairies.",
+            "fr": "Les Métis, mon propre peuple, forment une nation distincte d'ascendance autochtone et européenne. La plupart d'entre nous vivent dans les Prairies."
+          }
+        },
+        {
+          "speaker": "player",
+          "text": {
+            "en": "I'll listen carefully.",
+            "fr": "J'écouterai attentivement."
+          }
+        }
+      ]
+    },
+    {
+      "id": "talk-nuka",
+      "kind": "talk",
+      "npc": "npc-who-we-are-2",
+      "objective": {
+        "en": "Talk to Nuka, the Inuit carver",
+        "fr": "Parlez à Nuka, le sculpteur inuit"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-who-we-are-2",
+          "text": {
+            "en": "Sarah sent you? Good. This stone will become a bear. In Inuktitut, 'Inuit' simply means 'the people'.",
+            "fr": "Sarah vous envoie? Bien. Cette pierre deviendra un ours. En inuktitut, « Inuit » veut simplement dire « le peuple »."
+          }
+        },
+        {
+          "speaker": "npc-who-we-are-2",
+          "text": {
+            "en": "Our communities are small and far apart, across the Arctic, from Nunavut to Nunavik and beyond.",
+            "fr": "Nos communautés sont petites et éloignées les unes des autres, partout dans l'Arctique, du Nunavut au Nunavik et au-delà."
+          }
+        }
+      ]
+    },
+    {
+      "id": "talk-jean-luc",
+      "kind": "talk",
+      "npc": "npc-who-we-are-3",
+      "objective": {
+        "en": "Talk to Jean-Luc, the Acadian fiddler",
+        "fr": "Parlez à Jean-Luc, le violoneux acadien"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-who-we-are-3",
+          "text": {
+            "en": "Ah, a visitor! The Acadians are descendants of French colonists who began settling the Maritimes in 1604.",
+            "fr": "Ah, un visiteur! Les Acadiens descendent de colons français qui ont commencé à s'établir dans les Maritimes en 1604."
+          }
+        },
+        {
+          "speaker": "npc-who-we-are-3",
+          "text": {
+            "en": "The Great Upheaval scattered us, but the fiddle, the language and the Tintamarre survived. Now go, Sarah is waiting at the circle.",
+            "fr": "Le Grand Dérangement nous a dispersés, mais le violon, la langue et le Tintamarre ont survécu. Allez, Sarah vous attend au cercle."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach-circle",
+      "kind": "reach",
+      "trigger": "who-we-are-landmark",
+      "objective": {
+        "en": "Return to the gathering circle",
+        "fr": "Retournez au cercle de rassemblement"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-ww-006",
+        "q-ww-008",
+        "q-ww-009",
+        "q-ww-022"
+      ],
+      "minCorrect": 3,
+      "objective": {
+        "en": "Answer Sarah's four questions about the voices you heard (3 of 4 to pass)",
+        "fr": "Répondez aux quatre questions de Sarah sur les voix que vous avez entendues (3 sur 4 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-who-we-are-voices-of-the-circle"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-who-we-are-1",
+      "text": {
+        "en": "You listened well. Carry those voices with you; they are part of who we all are.",
+        "fr": "Vous avez bien écouté. Portez ces voix avec vous; elles font partie de qui nous sommes tous."
+      }
+    }
+  ]
+}

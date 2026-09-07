@@ -1,0 +1,89 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "economy-cargo-manifest",
+  "district": "economy",
+  "type": "fetch",
+  "title": {
+    "en": "Cargo Manifest",
+    "fr": "Manifeste de cargaison"
+  },
+  "summary": {
+    "en": "Three crates are missing from the manifest. Track them down on the docks, then tell Captain Singh where Canadian goods go.",
+    "fr": "Trois caisses manquent au manifeste. Retrouvez-les sur les quais, puis dites à la capitaine Singh où vont les produits canadiens."
+  },
+  "giverNpc": "npc-economy-1",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-economy-1",
+      "objective": {
+        "en": "Talk to Captain Singh, Harbourmaster",
+        "fr": "Parlez à la capitaine Singh, capitaine de port"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-economy-1",
+          "text": {
+            "en": "The ship sails at the tide and three crates are unaccounted for: grain, lumber and auto parts. They're somewhere on the docks behind the office.",
+            "fr": "Le navire part avec la marée et trois caisses manquent : grain, bois et pièces automobiles. Elles sont quelque part sur les quais derrière le bureau."
+          }
+        },
+        {
+          "speaker": "npc-economy-1",
+          "text": {
+            "en": "Find them and check them off. Then I want to hear you explain where all this cargo is headed.",
+            "fr": "Trouvez-les et cochez-les. Ensuite, je veux vous entendre expliquer où va toute cette cargaison."
+          }
+        },
+        {
+          "speaker": "player",
+          "text": {
+            "en": "Aye, Captain.",
+            "fr": "À vos ordres, capitaine."
+          }
+        }
+      ]
+    },
+    {
+      "id": "collect",
+      "kind": "collect",
+      "items": [
+        "crate-1",
+        "crate-2",
+        "crate-3"
+      ],
+      "objective": {
+        "en": "Find the three missing crates on the docks",
+        "fr": "Retrouvez les trois caisses manquantes sur les quais"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-ec-004",
+        "q-ec-005",
+        "q-ec-012",
+        "q-ec-014"
+      ],
+      "minCorrect": 3,
+      "objective": {
+        "en": "Answer Captain Singh's four questions on Canadian trade (3 of 4 to pass)",
+        "fr": "Répondez aux quatre questions de la capitaine Singh sur le commerce canadien (3 sur 4 pour réussir)"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-economy-cargo-manifest"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-economy-1",
+      "text": {
+        "en": "Manifest complete, ship cleared. You understand trade better than half my crew. Stamp granted.",
+        "fr": "Manifeste complet, navire autorisé. Vous comprenez le commerce mieux que la moitié de mon équipage. Timbre accordé."
+      }
+    }
+  ]
+}

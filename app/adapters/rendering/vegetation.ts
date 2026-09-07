@@ -1,6 +1,7 @@
 import * as THREE from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { SeededRandom } from '@common/rng';
+import { positionLocal, positionWorld, sin, time, vec3, float } from 'three/tsl';
 import type { HeightFn } from './procedural/noise';
 import type { LoadedModel } from './asset-library';
 
@@ -57,6 +58,8 @@ function broadleaf(canopy: number, trunk: number, detail: number): THREE.BufferG
 }
 
 let proceduralProtos: Record<VegetationKind, Proto> | null = null;
+/** Shared per source material: keeps shader permutations (and compile time) low across LODs and variants. */
+const materialCache = new Map<string, THREE.Material>();
 function procedural(): Record<VegetationKind, Proto> {
   const mat = tinted();
   const two = (hi: THREE.BufferGeometry, lo: THREE.BufferGeometry, scale: [number, number]): Proto => ({ lods: [[{ geometry: hi, material: mat }], [{ geometry: lo, material: mat }]], scale, yOffset: -0.05, castShadow: true });
@@ -99,8 +102,15 @@ export function protoFromModel(model: LoadedModel, scale: [number, number], tint
       // bake the node transform relative to the LOD root
       const rel = new THREE.Matrix4().copy(lod.matrixWorld).invert().multiply(o.matrixWorld);
       g.applyMatrix4(rel);
-      const m = (o.material as THREE.Material).clone();
-      if (tint && m instanceof THREE.MeshStandardMaterial) m.color.multiply(new THREE.Color(tint));
+      const src = o.material as THREE.MeshStandardMaterial;
+      const cacheKey = `${src.uuid}:${tint ?? ''}`;
+      let m = materialCache.get(cacheKey);
+      if (!m) {
+        m = src.clone();
+        if (tint && m instanceof THREE.MeshStandardMaterial) m.color.multiply(new THREE.Color(tint));
+        if (model.entry.category === 'tree' && m instanceof THREE.MeshStandardMaterial) m = windSway(m, model.entry.height);
+        materialCache.set(cacheKey, m);
+      }
       out.push({ geometry: g, material: m });
     });
     return out;
@@ -232,4 +242,19 @@ export class Vegetation {
     for (const im of this.owned) im.dispose();
     this.group.removeFromParent();
   }
+}
+
+/** Convert an imported standard material into a node material whose vertices sway with height (wind). */
+function windSway(base: THREE.MeshStandardMaterial, height: number): THREE.MeshStandardNodeMaterial {
+  const m = new THREE.MeshStandardNodeMaterial();
+  m.copy(base as unknown as THREE.MeshStandardNodeMaterial);
+  m.alphaTest = base.alphaTest;
+  m.transparent = base.transparent;
+  m.side = base.side;
+  const h = Math.max(1, height);
+  const phase = positionWorld.x.mul(0.15).add(positionWorld.z.mul(0.12)).add(time.mul(0.9));
+  const amount = positionLocal.y.div(h).clamp(0, 1).pow(1.6).mul(0.12 * h);
+  const sway = vec3(sin(phase).mul(amount), float(0), sin(phase.mul(1.3).add(1.7)).mul(amount).mul(0.6));
+  m.positionNode = positionLocal.add(sway);
+  return m;
 }

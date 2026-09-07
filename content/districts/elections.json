@@ -104,10 +104,107 @@
         "id": "elections-flag",
         "type": "flagpole",
         "position": [
-          12,
+          18,
           0,
-          4
+          8
         ]
+      },
+      {
+        "id": "elections-bench-1",
+        "type": "bench",
+        "position": [
+          16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "elections-bench-2",
+        "type": "bench",
+        "position": [
+          -16,
+          0,
+          24
+        ],
+        "rotationY": 3.141592653589793
+      },
+      {
+        "id": "elections-returning-office",
+        "type": "returning-office",
+        "position": [
+          -45,
+          0,
+          -10
+        ],
+        "rotationY": 1.5707963267948966,
+        "label": {
+          "en": "Returning office",
+          "fr": "Bureau du directeur du scrutin"
+        }
+      },
+      {
+        "id": "elections-lamp-3",
+        "type": "lamp",
+        "position": [
+          -40,
+          0,
+          8
+        ]
+      },
+      {
+        "id": "elections-barrier-1",
+        "type": "barrier",
+        "position": [
+          -14,
+          0,
+          -6
+        ],
+        "label": {
+          "en": "Queue barrier",
+          "fr": "Barrière de file d'attente"
+        }
+      },
+      {
+        "id": "elections-barrier-2",
+        "type": "barrier",
+        "position": [
+          14,
+          0,
+          -6
+        ]
+      },
+      {
+        "id": "elections-utility-box",
+        "type": "utility-box",
+        "position": [
+          26,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "elections-hydrant",
+        "type": "hydrant",
+        "position": [
+          -24,
+          0,
+          14
+        ]
+      },
+      {
+        "id": "elections-campaign-office",
+        "type": "campaign-office",
+        "position": [
+          45,
+          0,
+          12
+        ],
+        "rotationY": -1.5707963267948966,
+        "label": {
+          "en": "Campaign office",
+          "fr": "Local de campagne"
+        }
       }
     ],
     "ambience": {
@@ -132,11 +229,12 @@
       ],
       "behavior": "idle",
       "questRefs": [
-        "elections-intro"
+        "elections-intro",
+        "elections-your-voter-information-card"
       ],
       "idleDialogue": {
-        "en": "Welcome to Federal Elections. There is much to learn here.",
-        "fr": "Bienvenue dans Les élections fédérales. Il y a beaucoup à apprendre ici."
+        "en": "To vote federally you must be a Canadian citizen, at least 18 on election day, and on the voters' list. Everything else, we can sort out here.",
+        "fr": "Pour voter au fédéral, il faut être citoyen canadien, avoir au moins 18 ans le jour du vote et figurer sur la liste électorale. Le reste, on peut le régler ici."
       },
       "appearance": {
         "skinTone": "tone-4",
@@ -148,6 +246,66 @@
         "age": "adult",
         "outfitStyle": "formal",
         "bottomColor": "#1f2430",
+        "hat": "none"
+      }
+    },
+    {
+      "id": "npc-elections-2",
+      "name": {
+        "en": "Marco, Deputy Returning Officer",
+        "fr": "Marco, scrutateur"
+      },
+      "position": [
+        -10,
+        0,
+        20
+      ],
+      "behavior": "idle",
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "When the polls close, we count every paper ballot by hand, with witnesses from the candidates watching. No machines, no secrets.",
+        "fr": "À la fermeture des bureaux, nous comptons chaque bulletin papier à la main, sous le regard de témoins des candidats. Ni machines, ni secrets."
+      },
+      "appearance": {
+        "skinTone": "tone-2",
+        "outfit": "fleece",
+        "hair": "short",
+        "hairColor": "grey",
+        "body": "male",
+        "age": "elder",
+        "outfitStyle": "casual",
+        "bottomColor": "#3a3f4a",
+        "hat": "none",
+        "beard": true
+      }
+    },
+    {
+      "id": "npc-elections-3",
+      "name": {
+        "en": "Sophie Lavoie, Candidate",
+        "fr": "Sophie Lavoie, candidate"
+      },
+      "position": [
+        14,
+        0,
+        20
+      ],
+      "behavior": "wander",
+      "wanderRadius": 5,
+      "questRefs": [],
+      "idleDialogue": {
+        "en": "Any citizen aged 18 or over can run for Parliament, with a party or as an independent. Whoever gets the most votes in the riding wins the seat.",
+        "fr": "Tout citoyen de 18 ans ou plus peut se présenter au Parlement, avec un parti ou comme indépendant. Celui qui obtient le plus de votes dans la circonscription remporte le siège."
+      },
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "plaid",
+        "hair": "long",
+        "hairColor": "blond",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "bottomColor": "#2a2f3a",
         "hat": "none"
       }
     }
@@ -181,9 +339,52 @@
         "en": "Train back to Parliament Hill",
         "fr": "Train de retour vers la Colline du Parlement"
       }
+    },
+    {
+      "id": "voter-card",
+      "position": [
+        -22,
+        0,
+        -30
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Voter information card",
+        "fr": "Carte d'information de l'électeur"
+      }
+    },
+    {
+      "id": "photo-id",
+      "position": [
+        22,
+        0,
+        -28
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Photo ID",
+        "fr": "Pièce d'identité avec photo"
+      }
+    },
+    {
+      "id": "riding-map",
+      "position": [
+        0,
+        0,
+        -40
+      ],
+      "radius": 2.5,
+      "kind": "pickup",
+      "label": {
+        "en": "Riding map",
+        "fr": "Carte de la circonscription"
+      }
     }
   ],
   "quests": [
-    "elections-intro"
+    "elections-intro",
+    "elections-your-voter-information-card"
   ]
 }

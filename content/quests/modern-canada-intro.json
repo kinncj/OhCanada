@@ -26,7 +26,7 @@
           "speaker": "npc-modern-canada-1",
           "text": {
             "en": "Glad you made it. Head to the arena plaza and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à place de l'aréna et je testerai vos connaissances."
+            "fr": "Content de vous voir. Rendez-vous à la place de l'aréna et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "modern-canada-landmark",
       "objective": {
         "en": "Reach the arena plaza",
-        "fr": "Rendez-vous à place de l'aréna"
+        "fr": "Rendez-vous à la place de l'aréna"
       }
     },
     {

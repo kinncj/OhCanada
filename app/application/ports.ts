@@ -15,6 +15,8 @@ export interface GraphicsPreset {
   readonly shadows: boolean;
   readonly postProcessing: boolean;
   readonly screenSpaceGI?: boolean;
+  /** lite: characters + terrain textures only (phones); standard: + props, fewer tree kinds; full: everything. */
+  readonly assetPolicy?: 'lite' | 'standard' | 'full';
   readonly shadowMapSize: number;
   readonly shadowCascades: number;
   readonly ssao: boolean;

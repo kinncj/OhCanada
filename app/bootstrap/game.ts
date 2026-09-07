@@ -67,6 +67,8 @@ export class Game {
   private readonly tmpR = new THREE.Vector3();
   private readonly playerPos = new THREE.Vector3();
   paused = false;
+  /** In-flight district load (single-flight: a second request for the same district reuses it). */
+  private loadingDistrict: { id: string; promise: Promise<void> } | null = null;
   /** Set by Flow; when false, movement input is ignored (menus open). */
   gameplayEnabled = false;
   onFrame: ((dt: number) => void) | null = null;
@@ -159,13 +161,39 @@ export class Game {
   }
 
   async loadDistrict(district: District, onProgress?: (f: number) => void): Promise<void> {
+    if (this.loadingDistrict) {
+      // Wait for whatever is loading; if it is the same district we are done.
+      const pending = this.loadingDistrict;
+      await pending.promise.catch(() => undefined);
+      if (pending.id === district.id && this.district?.id === district.id) {
+        onProgress?.(1);
+        return;
+      }
+    }
+    if (this.district?.id === district.id && this.world) {
+      onProgress?.(1);
+      return; // already resident (e.g. hub loaded as the menu backdrop)
+    }
+    const promise = this.loadDistrictInner(district, onProgress);
+    this.loadingDistrict = { id: district.id, promise };
+    try {
+      await promise;
+    } finally {
+      if (this.loadingDistrict?.promise === promise) this.loadingDistrict = null;
+    }
+  }
+
+  private async loadDistrictInner(district: District, onProgress?: (f: number) => void): Promise<void> {
     this.deps.bus.emit('district:load-requested', { district: district.id });
+    const t0 = performance.now();
+    const stage = (name: string) => console.info(`[truenorth] ${JSON.stringify({ type: 'load:stage', payload: { name, ms: Math.round(performance.now() - t0) } })}`);
     onProgress?.(0.05);
     this.unloadDistrict();
     this.district = district;
     const world = await WorldScene.create(district, this.preset, this.library, (f) => onProgress?.(0.05 + f * 0.45));
     this.world = world;
     this.scene.add(world.group);
+    stage('world');
     onProgress?.(0.5);
     // Physics
     const t = world.terrain;
@@ -174,6 +202,7 @@ export class Game {
       if (c.kind === 'box') this.deps.physics.addBox(c.center, c.halfExtents, c.rotationY);
       else this.deps.physics.addCylinder(c.center, c.halfExtents[1], c.halfExtents[0]);
     }
+    stage('physics');
     onProgress?.(0.55);
     // NPCs
     this.npcBrain.setHeightFunction(world.heightAt);
@@ -185,11 +214,21 @@ export class Game {
       const y = world.heightAt(npc.position[0], npc.position[2]);
       this.npcBrain.add(npc.id, [npc.position[0], y, npc.position[2]], npc.behavior, npc.wanderRadius ?? 6);
     }
+    stage('npcs');
     onProgress?.(0.7);
     await this.environment.load(district.scene.ambience, this.preset, this.deps.config.featureFlags.dayNightCycle ?? true);
     this.weather.set(this.deps.config.featureFlags.weather === false ? 'clear' : district.scene.ambience.weather, Math.round(this.preset.maxInstances * 0.5));
     if (district.scene.ambience.audio) this.deps.audio.playAmbience(district.scene.ambience.audio);
+    stage('environment');
     onProgress?.(0.9);
+    // Compile every material/pipeline while the loading screen is still up instead of stalling the first frames.
+    try {
+      await this.renderer.renderer.compileAsync(this.scene, this.rig.camera);
+    } catch (e) {
+      console.warn('[truenorth] precompile failed', e);
+    }
+    stage('compile');
+    onProgress?.(0.97);
     // Player
     const sp = district.spawn.position;
     this.teleport(sp[0], sp[2], district.spawn.yaw);

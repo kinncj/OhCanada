@@ -1,0 +1,78 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "economy-industries",
+  "district": "economy",
+  "type": "puzzle",
+  "title": {
+    "en": "Three Kinds of Work",
+    "fr": "Trois types de travail"
+  },
+  "summary": {
+    "en": "Kwame invites you to the incubator to map the shape of Canada's economy: services, manufacturing and natural resources. Every answer must be right.",
+    "fr": "Kwame vous invite à l'incubateur pour cartographier l'économie du Canada : services, fabrication et ressources naturelles. Chaque réponse doit être juste."
+  },
+  "giverNpc": "npc-economy-3",
+  "steps": [
+    {
+      "id": "talk",
+      "kind": "talk",
+      "npc": "npc-economy-3",
+      "objective": {
+        "en": "Talk to Kwame Mensah",
+        "fr": "Parlez à Kwame Mensah"
+      },
+      "dialogue": [
+        {
+          "speaker": "npc-economy-3",
+          "text": {
+            "en": "Investors ask me one thing: do you understand the market? Canada's economy has three big pieces, and I bet you can name them.",
+            "fr": "Les investisseurs me demandent une seule chose : comprenez-vous le marché? L'économie du Canada a trois grandes composantes, et je parie que vous pouvez les nommer."
+          }
+        },
+        {
+          "speaker": "npc-economy-3",
+          "text": {
+            "en": "Meet me at the incubator door. Four questions, no slips. Pitch-perfect or nothing.",
+            "fr": "Rejoignez-moi à la porte de l'incubateur. Quatre questions, aucun faux pas. Parfait ou rien."
+          }
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "kind": "reach",
+      "trigger": "economy-incubator",
+      "objective": {
+        "en": "Reach the tech incubator entrance",
+        "fr": "Rendez-vous à l'entrée de l'incubateur technologique"
+      }
+    },
+    {
+      "id": "quiz",
+      "kind": "answer",
+      "questions": [
+        "q-ec-006",
+        "q-ec-007",
+        "q-ec-008",
+        "q-ec-011"
+      ],
+      "minCorrect": 4,
+      "objective": {
+        "en": "Answer all four of Kwame's questions on Canada's industries correctly",
+        "fr": "Répondez correctement aux quatre questions de Kwame sur les industries du Canada"
+      }
+    }
+  ],
+  "reward": {
+    "stamp": "stamp-economy-industries"
+  },
+  "completionDialogue": [
+    {
+      "speaker": "npc-economy-3",
+      "text": {
+        "en": "Funded! You just pitched the Canadian economy without a single slide. Take the stamp.",
+        "fr": "Financé! Vous venez de présenter l'économie canadienne sans une seule diapositive. Prenez le timbre."
+      }
+    }
+  ]
+}

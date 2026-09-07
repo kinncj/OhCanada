@@ -19,14 +19,14 @@
       "npc": "npc-justice-1",
       "objective": {
         "en": "Talk to Constable Tremblay",
-        "fr": "Parlez à L'agent Tremblay"
+        "fr": "Parlez à l'agent Tremblay"
       },
       "dialogue": [
         {
           "speaker": "npc-justice-1",
           "text": {
             "en": "Glad you made it. Head to the court plaza and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à place de la cour et je testerai vos connaissances."
+            "fr": "Content de vous voir. Rendez-vous à la place de la Cour et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "justice-landmark",
       "objective": {
         "en": "Reach the court plaza",
-        "fr": "Rendez-vous à place de la cour"
+        "fr": "Rendez-vous à la place de la Cour"
       }
     },
     {

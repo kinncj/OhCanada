@@ -188,7 +188,7 @@ function facade(kit: MaterialKit, w: number, h: number, d: number, opts: { roof:
   g.add(box(w + 0.5, 0.45, d + 0.5, kit.darkStone, 0, h - 0.45, 0)); // cornice
   const floors = Math.max(1, Math.floor((h - 2.5) / 3.6));
   for (let f = 1; f < floors; f++) g.add(box(w + 0.3, 0.22, d + 0.3, kit.darkStone, 0, 2.2 + f * 3.6 - 1.6, 0)); // string courses
-  if (opts.windows !== false) {
+  if (opts.windows !== false && !liteMode) {
     const bays = Math.max(1, Math.floor(w / 3.4));
     const count = floors * bays * 2;
     const reveal = new THREE.InstancedMesh(new THREE.BoxGeometry(1.5, 2.5, 0.5), kit.darkStone, count);
@@ -253,7 +253,7 @@ function facade(kit: MaterialKit, w: number, h: number, d: number, opts: { roof:
       g.add(roof);
       const ridge = box(w + 1.2, 0.25, 0.3, kit.metal, 0, h + rh - 0.1, 0);
       g.add(ridge);
-      const n = Math.max(1, Math.floor(w / 6));
+      const n = liteMode ? 0 : Math.max(1, Math.floor(w / 6));
       for (let k = 0; k < n; k++) {
         const x = -w / 2 + (k + 0.5) * (w / n);
         for (const sz of [1, -1]) {
@@ -348,7 +348,7 @@ function flame(kit: MaterialKit): LandmarkBuild {
   const g = new THREE.Group();
   g.add(cyl(3.4, 3.8, 0.5, kit.darkStone, 0, 0, 0, 32));
   g.add(cyl(1.5, 1.9, 0.9, kit.sandstone, 0, 0.5, 0, 24));
-  const water = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.1, 32), new THREE.MeshPhysicalNodeMaterial({ color: 0x2b5f7a, roughness: 0.05, metalness: 0.1, transmission: 0.2 }));
+  const water = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.1, 32), new THREE.MeshStandardNodeMaterial({ color: 0x2b5f7a, roughness: 0.05, metalness: 0.3 }));
   water.position.y = 0.45;
   g.add(water);
   const f = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.5, 12), flameMat);
@@ -527,7 +527,11 @@ function generic(kit: MaterialKit, type: string): LandmarkBuild {
 
 export const LANDMARK_MODEL_KEYS = ['bench-wood', 'bench-street', 'pier', 'fort', 'facade-apartments', 'facade-factory', 'rock-boulder', 'rock-2', 'rock-3', 'hydrant', 'power-pole', 'utility-box', 'barrier', 'iron-gate'] as const;
 
-export function buildLandmark(l: Landmark, kit: MaterialKit): LandmarkBuild {
+/** `lite` skips window instancing and dormers so software renderers (CI) and weak GPUs draw far fewer triangles. */
+let liteMode = false;
+
+export function buildLandmark(l: Landmark, kit: MaterialKit, lite = false): LandmarkBuild {
+  liteMode = lite;
   const builders: Record<string, (k: MaterialKit) => LandmarkBuild> = {
     parliament, flame, flagpole, lamp, bench, station, locks,
     hydrant: prop(kit, 'hydrant', 0.9, () => cyl(0.15, 0.18, 0.9, redPaint, 0, 0, 0, 10), 1, { kind: 'cylinder', center: [0, 0.45, 0], halfExtents: [0.2, 0.45, 0.2], rotationY: 0 }),

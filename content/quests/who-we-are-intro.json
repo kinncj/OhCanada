@@ -19,14 +19,14 @@
       "npc": "npc-who-we-are-1",
       "objective": {
         "en": "Talk to Elder Sarah Cardinal",
-        "fr": "Parlez à L'aînée Sarah Cardinal"
+        "fr": "Parlez à l'aînée Sarah Cardinal"
       },
       "dialogue": [
         {
           "speaker": "npc-who-we-are-1",
           "text": {
             "en": "Glad you made it. Head to the gathering circle and I'll test what you know.",
-            "fr": "Content de vous voir. Rendez-vous à cercle de rassemblement et je testerai vos connaissances."
+            "fr": "Contente de vous voir. Rendez-vous au cercle de rassemblement et je testerai vos connaissances."
           }
         }
       ]
@@ -37,7 +37,7 @@
       "trigger": "who-we-are-landmark",
       "objective": {
         "en": "Reach the gathering circle",
-        "fr": "Rendez-vous à cercle de rassemblement"
+        "fr": "Rendez-vous au cercle de rassemblement"
       }
     },
     {

@@ -134,7 +134,8 @@ async function boot(): Promise<void> {
   };
   useCases.answer = new AnswerQuestion(store, content, clock, rng, bus, useCases.advance);
 
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator as Navigator & { userAgentData?: { mobile?: boolean } }).userAgentData?.mobile === true || ('ontouchstart' in window && Math.min(screen.width, screen.height) < 900);
+  // iPadOS reports a Macintosh user agent: treat any multi-touch device as mobile.
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator as Navigator & { userAgentData?: { mobile?: boolean } }).userAgentData?.mobile === true || navigator.maxTouchPoints > 1 || ('ontouchstart' in window && Math.min(screen.width, screen.height) < 900);
   const PRESETS: readonly PresetName[] = ['minimal', 'low', 'medium', 'high', 'ultra'];
   const isPreset = (v: string | null): v is PresetName => !!v && (PRESETS as readonly string[]).includes(v);
   const resolvePreset = (): PresetName => {
@@ -201,12 +202,11 @@ async function boot(): Promise<void> {
     void backdrop();
   };
 
-  let backdropLoaded = false;
   const backdrop = async (): Promise<void> => {
     const hub = await content.getDistrict(config.startDistrict);
     if (!hub.ok || game.district) return;
     await game.loadDistrict(hub.value);
-    backdropLoaded = true;
+
     game.gameplayEnabled = false;
     game.start();
     const forcedPreset = params.get('preset');
@@ -279,17 +279,12 @@ async function boot(): Promise<void> {
     if (!ch) return showCreator();
     await game.setPlayerAppearance(ch.appearance);
     const f = ensureFlow();
-    if (!backdropLoaded || game.district?.id !== store.progress.currentDistrict) {
-      await f.enterWorld();
-    } else {
-      // Hub already loaded as the menu backdrop: just hand over control.
-      game.gameplayEnabled = true;
-      input.setEnabled(true);
+    await f.enterWorld(); // loadDistrict is single-flight and reuses the hub already loaded as the menu backdrop
+    if (game.district) {
       const sp = game.district.spawn;
       game.teleport(sp.position[0], sp.position[2], sp.yaw);
-      await f.enterWorld();
     }
-    backdropLoaded = false;
+
   };
 
   window.clearTimeout(watchdog);
