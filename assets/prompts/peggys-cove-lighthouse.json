@@ -3,7 +3,7 @@
   "category": "hero",
   "prompt": "one small white octagonal concrete lighthouse tower standing alone, tapering eight sided white tower with a red lantern room and red cap on top, one small window, the whole lighthouse visible, no rocks, no sea, no ground, nothing around it, isolated on a plain white background, the complete object small in the centre of the frame with wide empty margins on all sides, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds, rocks",
-  "seed": 107,
+  "seed": 404,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
   "targetHeightMeters": 15,
   "polyBudget": 12000,

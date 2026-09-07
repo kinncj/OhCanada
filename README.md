@@ -15,6 +15,12 @@ npm run dev      # http://localhost:5173/OhCanada/
 make lint typecheck test test-e2e test-perf validate-content build deploy-check
 ```
 
+## Where the world comes from
+- **Places**: `content/districts/*.json` — 1.5 km² hub (Ottawa) and ten 1 km² districts, each with `pois[]` (named places, fast travel, zone soundscape, fauna).
+- **People**: `content/characters/npcs.json` — Canadian archetypes (Mountie, Speaker, voyageur, Métis fiddler, Inuit hunter, Vimy soldier, habitant…) rendered on a rigged, animated body.
+- **Facts**: `content/questions/*.json` — 300 questions (30 per subject, EN + FR), every one carrying the canada.ca *Discover Canada* chapter URL that supports it.
+- **Assets**: photoscans and PBR textures (Poly Haven, CC0), rigged humans and animation (Quaternius, CC0), generated Canadian landmarks and fauna (`assets/prompts` → `assets/src/hero`), all listed in `assets/manifest.json` with licence and poly budget.
+
 ## Repository map
 - `app/domain`, `app/application` — pure game logic and use cases (≥ 90 % coverage gate)
 - `app/adapters` — rendering, physics, AI, input, persistence, content, i18n, audio
