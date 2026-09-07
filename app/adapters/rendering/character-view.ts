@@ -176,7 +176,7 @@ export class CharacterView {
   }
 
   /** speed in m/s drives the walk cycle; dt in seconds. */
-  animate(dt: number, speed: number, grounded: boolean): void {
+  animate(dt: number, speed: number, grounded: boolean, _talking = false): void {
     const walking = speed > 0.2;
     this.phase += dt * (walking ? Math.min(14, 6 + speed * 1.4) : 2.2);
     const swing = walking ? Math.min(0.9, speed * 0.18) : 0;

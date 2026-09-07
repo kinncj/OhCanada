@@ -4,55 +4,153 @@
   "title": "Save file (Progress)",
   "type": "object",
   "properties": {
-    "version": { "type": "integer", "minimum": 1 },
-    "createdAt": { "type": "string", "format": "date-time" },
-    "updatedAt": { "type": "string", "format": "date-time" },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
     "character": {
       "anyOf": [
-        { "type": "null" },
+        {
+          "type": "null"
+        },
         {
           "type": "object",
           "properties": {
-            "name": { "type": "string", "minLength": 1, "maxLength": 24 },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 24
+            },
             "appearance": {
               "type": "object",
               "properties": {
-                "body": { "type": "string" }, "face": { "type": "string" }, "skinTone": { "type": "string" }, "hair": { "type": "string" },
-                "hairColor": { "type": "string" }, "outfit": { "type": "string" }, "accessory": { "type": "string" }
+                "body": {
+                  "type": "string"
+                },
+                "face": {
+                  "type": "string"
+                },
+                "skinTone": {
+                  "type": "string"
+                },
+                "hair": {
+                  "type": "string"
+                },
+                "hairColor": {
+                  "type": "string"
+                },
+                "outfit": {
+                  "type": "string"
+                },
+                "accessory": {
+                  "type": "string"
+                }
               },
-              "required": ["body", "face", "skinTone", "hair", "hairColor", "outfit", "accessory"],
+              "required": [
+                "body",
+                "face",
+                "skinTone",
+                "hair",
+                "hairColor",
+                "outfit",
+                "accessory"
+              ],
               "additionalProperties": false
             }
           },
-          "required": ["name", "appearance"],
+          "required": [
+            "name",
+            "appearance"
+          ],
           "additionalProperties": false
         }
       ]
     },
-    "currentDistrict": { "type": "string" },
+    "currentDistrict": {
+      "type": "string"
+    },
     "stamps": {
       "type": "array",
       "items": {
         "type": "object",
-        "properties": { "id": { "type": "string" }, "district": { "type": "string" }, "earnedAt": { "type": "string", "format": "date-time" } },
-        "required": ["id", "district", "earnedAt"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "earnedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "district",
+          "earnedAt"
+        ],
         "additionalProperties": false
       }
     },
-    "completedQuests": { "type": "array", "items": { "type": "string" } },
+    "completedQuests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "activeQuests": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "questId": { "type": "string" },
-          "status": { "type": "string", "enum": ["active", "completed", "failed"] },
-          "stepIndex": { "type": "integer", "minimum": 0 },
-          "collected": { "type": "array", "items": { "type": "string" } },
-          "answers": { "type": "object", "additionalProperties": { "type": "integer" } },
-          "stepStartedAt": { "type": "number" }
+          "questId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "completed",
+              "failed"
+            ]
+          },
+          "stepIndex": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "collected": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "answers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "stepStartedAt": {
+            "type": "number"
+          }
         },
-        "required": ["questId", "status", "stepIndex", "collected", "answers", "stepStartedAt"],
+        "required": [
+          "questId",
+          "status",
+          "stepIndex",
+          "collected",
+          "answers",
+          "stepStartedAt"
+        ],
         "additionalProperties": false
       }
     },
@@ -60,39 +158,132 @@
       "type": "array",
       "items": {
         "type": "object",
-        "properties": { "questionId": { "type": "string" }, "correct": { "type": "boolean" }, "at": { "type": "string", "format": "date-time" } },
-        "required": ["questionId", "correct", "at"],
+        "properties": {
+          "questionId": {
+            "type": "string"
+          },
+          "correct": {
+            "type": "boolean"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "questionId",
+          "correct",
+          "at"
+        ],
         "additionalProperties": false
       }
     },
-    "unlockedDistricts": { "type": "array", "items": { "type": "string" } },
+    "unlockedDistricts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "examResults": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "at": { "type": "string", "format": "date-time" }, "correct": { "type": "integer" }, "total": { "type": "integer" },
-          "passed": { "type": "boolean" }, "durationSeconds": { "type": "integer" }
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "correct": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "durationSeconds": {
+            "type": "integer"
+          }
         },
-        "required": ["at", "correct", "total", "passed", "durationSeconds"],
+        "required": [
+          "at",
+          "correct",
+          "total",
+          "passed",
+          "durationSeconds"
+        ],
         "additionalProperties": false
       }
     },
     "settings": {
       "type": "object",
       "properties": {
-        "locale": { "type": "string", "enum": ["en", "fr"] },
-        "graphicsPreset": { "type": "string", "enum": ["auto", "low", "medium", "high", "ultra"] },
-        "reducedMotion": { "type": "boolean" },
-        "subtitles": { "type": "boolean" },
-        "colourBlindSafe": { "type": "boolean" },
-        "masterVolume": { "type": "number", "minimum": 0, "maximum": 1 },
-        "keyBindings": { "type": "object", "additionalProperties": { "type": "string", "pattern": "^[A-Za-z0-9]+$" } }
+        "locale": {
+          "type": "string",
+          "enum": [
+            "en",
+            "fr"
+          ]
+        },
+        "graphicsPreset": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "minimal",
+            "low",
+            "medium",
+            "high",
+            "ultra"
+          ]
+        },
+        "reducedMotion": {
+          "type": "boolean"
+        },
+        "subtitles": {
+          "type": "boolean"
+        },
+        "colourBlindSafe": {
+          "type": "boolean"
+        },
+        "masterVolume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "keyBindings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]+$"
+          }
+        }
       },
-      "required": ["locale", "graphicsPreset", "reducedMotion", "subtitles", "colourBlindSafe", "masterVolume", "keyBindings"],
+      "required": [
+        "locale",
+        "graphicsPreset",
+        "reducedMotion",
+        "subtitles",
+        "colourBlindSafe",
+        "masterVolume",
+        "keyBindings"
+      ],
       "additionalProperties": false
     }
   },
-  "required": ["version", "createdAt", "updatedAt", "character", "currentDistrict", "stamps", "completedQuests", "activeQuests", "answered", "unlockedDistricts", "examResults", "settings"],
+  "required": [
+    "version",
+    "createdAt",
+    "updatedAt",
+    "character",
+    "currentDistrict",
+    "stamps",
+    "completedQuests",
+    "activeQuests",
+    "answered",
+    "unlockedDistricts",
+    "examResults",
+    "settings"
+  ],
   "additionalProperties": false
 }

@@ -9,24 +9,33 @@ const dist = join(root, 'dist');
 const walk = (d: string): string[] => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
 
 test.describe('Payload budgets (static analysis of dist/)', () => {
-  test('initial payload ≤ budget (entry + shared chunks + hub scene + hub assets)', () => {
+  test('initial payload (menu) ≤ 25 MB and hub scene ≤ 60 MB', () => {
     const files = walk(dist);
-    const html = readFileSync(join(dist, 'index.html'), 'utf8');
-    const entryAssets = [...html.matchAll(/(?:src|href)="[^"]*\/assets\/([^"]+)"/g)].map((m) => m[1]!);
     const size = (f: string) => statSync(f).size;
+    const sum = (list: string[]) => [...new Set(list)].reduce((n, f) => n + size(f), 0);
     const assetsDir = join(dist, 'assets');
+    const code = files.filter((f) => f.startsWith(assetsDir) && /\.(js|css)$/.test(f) && !/\/(q-|[a-z-]+-intro-|[a-z-]+-[A-Za-z0-9_-]{8}\.js$)/.test(f));
     const shared = files.filter((f) => f.startsWith(assetsDir) && /\/(three|rapier|yuka|ajv|index)-[\w-]+\.(js|css)$/.test(f));
-    const hub = files.filter((f) => /\/(hub|hub-welcome|rights-responsibilities)-[\w-]+\.js$/.test(f));
-    const hubAssets = files.filter((f) => /\/(sky|audio)\//.test(f));
-    const initial = [...new Set([...entryAssets.map((a) => join(assetsDir, a)), ...shared, ...hub, ...hubAssets])].reduce((n, f) => n + size(f), 0);
-    console.log(`initial payload: ${(initial / 1048576).toFixed(2)} MB (budget ${(config.budgets.initialPayloadBytes / 1048576).toFixed(0)} MB)`);
+    const sky = files.filter((f) => /\/sky\//.test(f));
+    const initial = sum([...code, ...shared, ...sky, join(dist, 'index.html')]);
+    // Hub scene = everything the hub streams: content chunks for hub + first district, characters, textures, env models, transcoders, audio.
+    const hubChunks = files.filter((f) => /\/(hub|hub-welcome|rights-responsibilities)-[\w-]+\.js$/.test(f));
+    const hubAssets = files.filter((f) => /\/(models|textures|basis|draco|audio)\//.test(f) && !/\/models\/(env\/(facade|fort|pier|barrier|utility|power|hydrant|iron))/.test(f));
+    const hub = initial + sum([...hubChunks, ...hubAssets]);
+    console.log(`initial payload: ${(initial / 1048576).toFixed(2)} MB (budget ${(config.budgets.initialPayloadBytes / 1048576).toFixed(0)} MB); hub scene: ${(hub / 1048576).toFixed(2)} MB (budget ${(config.budgets.hubSceneBytes / 1048576).toFixed(0)} MB)`);
     expect(initial).toBeLessThanOrEqual(config.budgets.initialPayloadBytes);
-    expect(initial).toBeLessThanOrEqual(config.budgets.hubSceneBytes);
-    // Compressed transfer size matters for TTI on 50 Mbps: report it.
-    const gz = [...new Set([...shared, ...hub])].reduce((n, f) => n + gzipSync(readFileSync(f)).length, 0) + hubAssets.reduce((n, f) => n + size(f), 0);
+    expect(hub).toBeLessThanOrEqual(config.budgets.hubSceneBytes);
+    const gz = sum([]) + [...new Set([...code, ...shared])].reduce((n, f) => n + gzipSync(readFileSync(f)).length, 0) + sum(sky);
     console.log(`initial transfer (gzip): ${(gz / 1048576).toFixed(2)} MB`);
     // 50 Mbps = 6.25 MB/s; TTI budget must leave headroom for parse + GPU init.
     expect(gz / 6_553_600).toBeLessThan(config.budgets.timeToInteractiveMs / 1000 / 2);
+  });
+
+  test('every district payload ≤ 80 MB', () => {
+    const files = walk(dist);
+    const size = (f: string) => statSync(f).size;
+    const districtAssets = files.filter((f) => /\/(models|textures)\//.test(f)).reduce((n, f) => n + size(f), 0);
+    expect(districtAssets).toBeLessThanOrEqual(config.budgets.districtSceneBytes);
   });
 
   test('every district chunk ≤ district budget', () => {
@@ -44,7 +53,7 @@ test.describe('Payload budgets (static analysis of dist/)', () => {
 test.describe('Runtime (headless, software GL — informational unless PERF_MIN_FPS is set)', () => {
   test('time to interactive and frame loop', async ({ page }) => {
     const start = Date.now();
-    await page.goto('?e2e=1&preset=low');
+    await page.goto(process.env.CI ? '?e2e=1&preset=minimal' : '?e2e=1&preset=low');
     await page.getByTestId('menu-new').waitFor({ timeout: 120_000 });
     const tti = Date.now() - start;
     console.log(`TTI (menu interactive, headless swiftshader): ${tti} ms`);

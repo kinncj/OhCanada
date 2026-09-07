@@ -3,10 +3,11 @@ import type { District } from '@domain/district';
 import type { GraphicsPreset } from '@application/ports';
 import { hashString } from '@common/rng';
 import { makeHeightFunction, type HeightFn } from './procedural/noise';
-import { buildTerrain, type TerrainBuild } from './terrain';
+import { buildTerrain, type TerrainBuild, type TerrainTextures } from './terrain';
 import { buildWater } from './water';
-import { Vegetation } from './vegetation';
-import { buildLandmark, type ColliderSpec } from './landmarks';
+import { KIND_MODELS, Vegetation, protoFromModel, type VegetationKind } from './vegetation';
+import { buildLandmark, buildMaterialKit, LANDMARK_MODEL_KEYS, type ColliderSpec, type MaterialKit } from './landmarks';
+import type { AssetLibrary } from './asset-library';
 
 export interface Marker {
   readonly id: string;
@@ -14,75 +15,124 @@ export interface Marker {
 }
 
 /**
- * Builds one streamed district scene from its manifest: terrain (+ physics heights), water,
- * chunked vegetation, landmarks (+ colliders), trigger markers. Disposable as a unit.
+ * One streamed district: terrain (+ physics heights), water, chunked vegetation, landmarks (+ colliders),
+ * trigger markers. Real assets come from the AssetLibrary; every builder degrades to procedural geometry when
+ * a model/texture is missing so the game always runs.
  */
 export class WorldScene {
   readonly group = new THREE.Group();
-  readonly heightAt: HeightFn;
-  readonly terrain: TerrainBuild;
   readonly colliders: ColliderSpec[] = [];
   readonly occluders: THREE.Object3D[] = [];
   readonly markers: Marker[] = [];
   readonly lights: THREE.Light[] = [];
-  private readonly vegetation: Vegetation;
   private readonly disposables: { dispose(): void }[] = [];
 
-  constructor(readonly district: District, preset: GraphicsPreset) {
+  private constructor(
+    readonly district: District,
+    readonly heightAt: HeightFn,
+    readonly terrain: TerrainBuild,
+    private readonly vegetation: Vegetation,
+  ) {}
+
+  static async create(district: District, preset: GraphicsPreset, library: AssetLibrary | null, onProgress?: (f: number) => void): Promise<WorldScene> {
     const s = district.scene;
-    this.group.name = `district:${district.id}`;
-    const flatSpots = s.landmarks.map((l) => ({ x: l.position[0], z: l.position[2], r: 16 }));
+    const flatSpots = s.landmarks.map((l) => ({ x: l.position[0], z: l.position[2], r: 18 }));
     for (const t of district.triggers) flatSpots.push({ x: t.position[0], z: t.position[2], r: t.radius + 4 });
     for (const n of district.npcs) flatSpots.push({ x: n.position[0], z: n.position[2], r: (n.wanderRadius ?? 2) + 3 });
     for (const w of s.water ?? []) flatSpots.push({ x: w.position[0], z: w.position[2], r: Math.max(w.size[0], w.size[1]) * 0.6 });
-    this.heightAt = makeHeightFunction({ seed: s.seed ^ hashString(district.id), amplitude: s.terrain.amplitude, frequency: s.terrain.frequency, size: s.size, flatRadius: 40, flatSpots });
+    const heightAt = makeHeightFunction({ seed: s.seed ^ hashString(district.id), amplitude: s.terrain.amplitude, frequency: s.terrain.frequency, size: s.size, flatRadius: 40, flatSpots });
 
-    this.terrain = buildTerrain(s.size, this.heightAt, s.terrain.palette, s.terrain.snow ?? false);
-    this.group.add(this.terrain.mesh);
-    this.occluders.push(this.terrain.mesh);
+    // Textures + models load in parallel while the terrain mesh is computed.
+    const snow = s.terrain.snow ?? false;
+    const texKeys = ['grass', 'forest-floor', 'rock', 'snow', 'cobble'];
+    const texPromise = library && library.hasTexture('grass') && library.hasTexture('forest-floor') && library.hasTexture('rock')
+      ? (async (): Promise<TerrainTextures | null> => {
+          try {
+            const [grass, detail, rock, snowT, plaza] = await Promise.all(texKeys.map((k) => (library.hasTexture(k) ? library.texture(k) : Promise.resolve(null))));
+            if (!grass || !detail || !rock) return null;
+            return { grass, detail, rock, ...(snowT ? { snow: snowT } : {}), ...(plaza ? { plaza } : {}) };
+          } catch {
+            return null;
+          }
+        })()
+      : Promise.resolve(null);
+    const kitPromise = buildMaterialKit(library, LANDMARK_MODEL_KEYS);
+    const vegKinds = s.vegetation.kinds.filter((k): k is VegetationKind => k in KIND_MODELS);
+    const vegPromise = (async () => {
+      const protos: Partial<Record<VegetationKind, ReturnType<typeof protoFromModel>[]>> = {};
+      if (!library) return protos;
+      for (const kind of vegKinds) {
+        const list: ReturnType<typeof protoFromModel>[] = [];
+        for (const key of KIND_MODELS[kind]) {
+          if (!library.hasModel(key)) continue;
+          try {
+            const model = await library.model(key);
+            const tint = kind === 'maple' ? 0xc8683a : kind === 'birch' ? 0xb9d27a : undefined;
+            const scale: [number, number] = model.entry.category === 'tree' ? [0.85, 1.25] : model.entry.category === 'grass' ? [0.8, 1.4] : [0.7, 1.6];
+            list.push(protoFromModel(model, scale, tint));
+          } catch {
+            /* fall back */
+          }
+        }
+        if (list.length) protos[kind] = list;
+      }
+      return protos;
+    })();
+
+    onProgress?.(0.15);
+    const textures = await texPromise;
+    const terrain = buildTerrain(s.size, heightAt, s.terrain.palette, snow, textures, 160, district.subject === 'hub' ? 34 : 22);
+    onProgress?.(0.4);
+    const [kit, protos] = await Promise.all([kitPromise, vegPromise]);
+    onProgress?.(0.6);
+
+    const rects: { x: number; z: number; w: number; d: number }[] = [];
+    for (const w of s.water ?? []) rects.push({ x: w.position[0], z: w.position[2], w: w.size[0], d: w.size[1] });
+    const exclusions = [{ x: 0, z: 0, r: 36 }, ...district.triggers.map((t) => ({ x: t.position[0], z: t.position[2], r: t.radius + 3 })), ...district.npcs.map((n) => ({ x: n.position[0], z: n.position[2], r: (n.wanderRadius ?? 2) + 2 }))];
+    const landmarkBuilds = s.landmarks.map((l) => ({ l, b: buildLandmark(l, kit) }));
+    for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
+
+    const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, protos });
+    const scene = new WorldScene(district, heightAt, terrain, vegetation);
+    scene.group.name = `district:${district.id}`;
+    scene.group.add(terrain.mesh);
+    scene.occluders.push(terrain.mesh);
+    scene.group.add(vegetation.group);
+    scene.kit = kit;
 
     const frozen = s.ambience.weather === 'snow';
     for (const w of s.water ?? []) {
       const mesh = buildWater(w.position, w.size, frozen);
-      this.group.add(mesh);
-      this.disposables.push({ dispose: () => mesh.geometry.dispose() });
+      scene.group.add(mesh);
+      scene.disposables.push({ dispose: () => mesh.geometry.dispose() });
     }
-
-    const rects: { x: number; z: number; w: number; d: number }[] = [];
-    for (const l of s.landmarks) {
-      const b = buildLandmark(l);
-      this.group.add(b.object);
-      this.colliders.push(...b.colliders);
-      this.lights.push(...b.lights);
-      if (b.footprint.w > 3) {
-        this.occluders.push(b.object);
-        rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
-      }
-      // sit on terrain
-      b.object.position.y += this.heightAt(l.position[0], l.position[2]);
+    for (const { l, b } of landmarkBuilds) {
+      scene.group.add(b.object);
+      scene.colliders.push(...b.colliders);
+      scene.lights.push(...b.lights);
+      if (b.footprint.w > 3) scene.occluders.push(b.object);
+      b.object.position.y += heightAt(l.position[0], l.position[2]);
     }
-    for (const w of s.water ?? []) rects.push({ x: w.position[0], z: w.position[2], w: w.size[0], d: w.size[1] });
-
-    const exclusions = [{ x: 0, z: 0, r: 34 }, ...district.triggers.map((t) => ({ x: t.position[0], z: t.position[2], r: t.radius + 3 })), ...district.npcs.map((n) => ({ x: n.position[0], z: n.position[2], r: (n.wanderRadius ?? 2) + 2 }))];
-    this.vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt: this.heightAt, exclusions, rects });
-    this.group.add(this.vegetation.group);
-
     for (const t of district.triggers) {
-      const marker = this.buildMarker(t.kind, t.radius);
-      marker.position.set(t.position[0], this.heightAt(t.position[0], t.position[2]) + 0.05, t.position[2]);
+      const marker = scene.buildMarker(t.kind, t.radius);
+      marker.position.set(t.position[0], heightAt(t.position[0], t.position[2]) + 0.05, t.position[2]);
       marker.name = `trigger:${t.id}`;
-      this.group.add(marker);
-      this.markers.push({ id: t.id, object: marker });
+      scene.group.add(marker);
+      scene.markers.push({ id: t.id, object: marker });
     }
+    onProgress?.(0.8);
+    return scene;
   }
+
+  private kit: MaterialKit | null = null;
 
   private buildMarker(kind: 'zone' | 'pickup' | 'portal', radius: number): THREE.Object3D {
     const g = new THREE.Group();
     const color = kind === 'portal' ? 0x46b3ff : kind === 'pickup' ? 0xffc542 : 0xff5a5a;
-    const ring = new THREE.Mesh(new THREE.RingGeometry(radius * 0.8, radius, 40), new THREE.MeshBasicNodeMaterial({ color, transparent: true, opacity: 0.55, side: THREE.DoubleSide }));
+    const ring = new THREE.Mesh(new THREE.RingGeometry(radius * 0.8, radius, 48), new THREE.MeshBasicNodeMaterial({ color, transparent: true, opacity: 0.5, side: THREE.DoubleSide }));
     ring.rotation.x = -Math.PI / 2;
     g.add(ring);
-    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 6, 8, 1, true), new THREE.MeshBasicNodeMaterial({ color, transparent: true, opacity: 0.35, side: THREE.DoubleSide }));
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 6, 8, 1, true), new THREE.MeshBasicNodeMaterial({ color, transparent: true, opacity: 0.3, side: THREE.DoubleSide }));
     beam.position.y = 3;
     g.add(beam);
     if (kind === 'pickup') {
@@ -108,7 +158,6 @@ export class WorldScene {
     if (m) m.object.visible = visible;
   }
 
-  /** Night lighting: only lamps within range are lit to stay within light budgets. */
   setNight(night: boolean): void {
     for (const l of this.lights) if (l.name === 'lamp-light') l.intensity = night ? 14 : 0;
   }
@@ -119,13 +168,14 @@ export class WorldScene {
 
   dispose(): void {
     this.group.traverse((o) => {
-      if (o instanceof THREE.Mesh) {
+      if (o instanceof THREE.Mesh && !(o instanceof THREE.InstancedMesh)) {
         o.geometry.disposeBoundsTree?.();
-        o.geometry.dispose();
+        if (o.name === 'terrain' || o.name === 'water') o.geometry.dispose();
       }
     });
     this.vegetation.dispose();
     for (const d of this.disposables) d.dispose();
+    void this.kit;
     this.group.removeFromParent();
   }
 }

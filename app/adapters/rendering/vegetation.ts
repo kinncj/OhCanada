@@ -2,21 +2,24 @@ import * as THREE from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { SeededRandom } from '@common/rng';
 import type { HeightFn } from './procedural/noise';
+import type { LoadedModel } from './asset-library';
 
 export type VegetationKind = 'pine' | 'maple' | 'birch' | 'spruce' | 'shrub' | 'rock' | 'iceberg' | 'tundra-grass' | 'wheat' | 'cactus-none';
 
 interface Proto {
-  high: THREE.BufferGeometry;
-  low: THREE.BufferGeometry;
-  material: THREE.Material;
+  /** Per LOD: list of (geometry, material) pairs to instance. */
+  lods: { geometry: THREE.BufferGeometry; material: THREE.Material }[][];
   scale: [number, number];
+  /** Y offset so the model base sits on the ground. */
+  yOffset: number;
+  castShadow: boolean;
 }
 
 const CHUNKS = 6;
-const LOD_DISTANCE = 90;
+const LOD_DISTANCE = 70;
 
-function tinted(color: number, roughness = 0.9): THREE.MeshStandardNodeMaterial {
-  return new THREE.MeshStandardNodeMaterial({ vertexColors: true, roughness, metalness: 0, color });
+function tinted(): THREE.MeshStandardNodeMaterial {
+  return new THREE.MeshStandardNodeMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 });
 }
 
 function paint(geo: THREE.BufferGeometry, color: THREE.ColorRepresentation): THREE.BufferGeometry {
@@ -39,41 +42,76 @@ function merge(parts: THREE.BufferGeometry[]): THREE.BufferGeometry {
 }
 
 function conifer(tiers: number, trunk: number, leaf: number, detail: number): THREE.BufferGeometry {
-  const parts: THREE.BufferGeometry[] = [];
-  parts.push(paint(new THREE.CylinderGeometry(0.12, 0.2, 1.4, detail).translate(0, 0.7, 0), trunk));
-  for (let i = 0; i < tiers; i++) {
-    const r = 1.4 - i * (1.0 / tiers);
-    parts.push(paint(new THREE.ConeGeometry(r, 1.6, detail).translate(0, 1.6 + i * 1.05, 0), leaf));
-  }
+  const parts: THREE.BufferGeometry[] = [paint(new THREE.CylinderGeometry(0.12, 0.2, 1.4, detail).translate(0, 0.7, 0), trunk)];
+  for (let i = 0; i < tiers; i++) parts.push(paint(new THREE.ConeGeometry(1.4 - i * (1.0 / tiers), 1.6, detail).translate(0, 1.6 + i * 1.05, 0), leaf));
   return merge(parts);
 }
 
 function broadleaf(canopy: number, trunk: number, detail: number): THREE.BufferGeometry {
-  const parts: THREE.BufferGeometry[] = [];
-  parts.push(paint(new THREE.CylinderGeometry(0.16, 0.26, 2.2, detail).translate(0, 1.1, 0), trunk));
-  parts.push(paint(new THREE.IcosahedronGeometry(1.5, detail > 6 ? 1 : 0).translate(0, 3.1, 0), canopy));
-  parts.push(paint(new THREE.IcosahedronGeometry(1.0, 0).translate(0.8, 2.7, 0.4), canopy));
-  parts.push(paint(new THREE.IcosahedronGeometry(0.9, 0).translate(-0.7, 2.9, -0.5), canopy));
-  return merge(parts);
+  return merge([
+    paint(new THREE.CylinderGeometry(0.16, 0.26, 2.2, detail).translate(0, 1.1, 0), trunk),
+    paint(new THREE.IcosahedronGeometry(1.5, detail > 6 ? 1 : 0).translate(0, 3.1, 0), canopy),
+    paint(new THREE.IcosahedronGeometry(1.0, 0).translate(0.8, 2.7, 0.4), canopy),
+    paint(new THREE.IcosahedronGeometry(0.9, 0).translate(-0.7, 2.9, -0.5), canopy),
+  ]);
 }
 
-function makeProtos(): Record<VegetationKind, Proto> {
-  const mat = tinted(0xffffff);
+let proceduralProtos: Record<VegetationKind, Proto> | null = null;
+function procedural(): Record<VegetationKind, Proto> {
+  const mat = tinted();
+  const two = (hi: THREE.BufferGeometry, lo: THREE.BufferGeometry, scale: [number, number]): Proto => ({ lods: [[{ geometry: hi, material: mat }], [{ geometry: lo, material: mat }]], scale, yOffset: -0.05, castShadow: true });
   return {
-    pine: { high: conifer(3, 0x4a3320, 0x2f5e34, 8), low: conifer(2, 0x4a3320, 0x2f5e34, 4), material: mat, scale: [0.9, 1.6] },
-    spruce: { high: conifer(4, 0x3f2d1c, 0x1f4a2e, 8), low: conifer(2, 0x3f2d1c, 0x1f4a2e, 4), material: mat, scale: [1.0, 1.8] },
-    maple: { high: broadleaf(0xb8432a, 0x5a3b26, 8), low: broadleaf(0xb8432a, 0x5a3b26, 4), material: mat, scale: [0.9, 1.4] },
-    birch: { high: broadleaf(0x8fbf4a, 0xe8e6dc, 8), low: broadleaf(0x8fbf4a, 0xe8e6dc, 4), material: mat, scale: [0.7, 1.2] },
-    shrub: { high: paint(new THREE.IcosahedronGeometry(0.7, 1).translate(0, 0.5, 0), 0x4f7a34), low: paint(new THREE.IcosahedronGeometry(0.7, 0).translate(0, 0.5, 0), 0x4f7a34), material: mat, scale: [0.6, 1.3] },
-    rock: { high: paint(new THREE.DodecahedronGeometry(0.8, 1).translate(0, 0.3, 0), 0x777b80), low: paint(new THREE.DodecahedronGeometry(0.8, 0).translate(0, 0.3, 0), 0x777b80), material: mat, scale: [0.5, 1.8] },
-    iceberg: { high: paint(new THREE.DodecahedronGeometry(2.4, 1).translate(0, 0.6, 0), 0xdfeaf5), low: paint(new THREE.DodecahedronGeometry(2.4, 0).translate(0, 0.6, 0), 0xdfeaf5), material: mat, scale: [0.8, 2.2] },
-    'tundra-grass': { high: paint(new THREE.ConeGeometry(0.35, 0.6, 5).translate(0, 0.3, 0), 0x9aa16a), low: paint(new THREE.ConeGeometry(0.35, 0.6, 3).translate(0, 0.3, 0), 0x9aa16a), material: mat, scale: [0.8, 1.4] },
-    wheat: { high: paint(new THREE.CylinderGeometry(0.02, 0.05, 1.1, 4).translate(0, 0.55, 0), 0xd9b25a), low: paint(new THREE.CylinderGeometry(0.02, 0.05, 1.1, 3).translate(0, 0.55, 0), 0xd9b25a), material: mat, scale: [0.9, 1.2] },
-    'cactus-none': { high: new THREE.BufferGeometry(), low: new THREE.BufferGeometry(), material: mat, scale: [1, 1] },
+    pine: two(conifer(3, 0x4a3320, 0x2f5e34, 8), conifer(2, 0x4a3320, 0x2f5e34, 4), [0.9, 1.6]),
+    spruce: two(conifer(4, 0x3f2d1c, 0x1f4a2e, 8), conifer(2, 0x3f2d1c, 0x1f4a2e, 4), [1.0, 1.8]),
+    maple: two(broadleaf(0xb8432a, 0x5a3b26, 8), broadleaf(0xb8432a, 0x5a3b26, 4), [0.9, 1.4]),
+    birch: two(broadleaf(0x8fbf4a, 0xe8e6dc, 8), broadleaf(0x8fbf4a, 0xe8e6dc, 4), [0.7, 1.2]),
+    shrub: two(paint(new THREE.IcosahedronGeometry(0.7, 1).translate(0, 0.5, 0), 0x4f7a34), paint(new THREE.IcosahedronGeometry(0.7, 0).translate(0, 0.5, 0), 0x4f7a34), [0.6, 1.3]),
+    rock: two(paint(new THREE.DodecahedronGeometry(0.8, 1).translate(0, 0.3, 0), 0x777b80), paint(new THREE.DodecahedronGeometry(0.8, 0).translate(0, 0.3, 0), 0x777b80), [0.5, 1.8]),
+    iceberg: two(paint(new THREE.DodecahedronGeometry(2.4, 1).translate(0, 0.6, 0), 0xdfeaf5), paint(new THREE.DodecahedronGeometry(2.4, 0).translate(0, 0.6, 0), 0xdfeaf5), [0.8, 2.2]),
+    'tundra-grass': two(paint(new THREE.ConeGeometry(0.35, 0.6, 5).translate(0, 0.3, 0), 0x9aa16a), paint(new THREE.ConeGeometry(0.35, 0.6, 3).translate(0, 0.3, 0), 0x9aa16a), [0.8, 1.4]),
+    wheat: two(paint(new THREE.CylinderGeometry(0.02, 0.05, 1.1, 4).translate(0, 0.55, 0), 0xd9b25a), paint(new THREE.CylinderGeometry(0.02, 0.05, 1.1, 3).translate(0, 0.55, 0), 0xd9b25a), [0.9, 1.2]),
+    'cactus-none': { lods: [[], []], scale: [1, 1], yOffset: 0, castShadow: false },
   };
 }
 
-let protos: Record<VegetationKind, Proto> | null = null;
+/** Which real models stand in for each manifest-less kind. Several models per kind give variety. */
+export const KIND_MODELS: Record<VegetationKind, readonly string[]> = {
+  pine: ['tree-pine', 'sapling-pine'],
+  spruce: ['tree-fir', 'sapling-fir'],
+  maple: ['tree-broadleaf-1', 'tree-broadleaf-2'],
+  birch: ['tree-broadleaf-2', 'tree-broadleaf-1'],
+  shrub: ['fern', 'grass-clump'],
+  rock: ['rock-boulder', 'rock-2', 'rock-3'],
+  iceberg: ['rock-coast', 'rock-boulder'],
+  'tundra-grass': ['grass-clump', 'fern'],
+  wheat: ['grass-clump'],
+  'cactus-none': [],
+};
+
+/** Convert a loaded glTF model (LOD0/LOD1 nodes) into an instancing prototype with world-space baked transforms. */
+export function protoFromModel(model: LoadedModel, scale: [number, number], tint?: THREE.ColorRepresentation): Proto {
+  const lods = model.lods.map((lod) => {
+    lod.updateMatrixWorld(true);
+    const out: { geometry: THREE.BufferGeometry; material: THREE.Material }[] = [];
+    lod.traverse((o) => {
+      if (!(o instanceof THREE.Mesh)) return;
+      const g = o.geometry.clone();
+      // bake the node transform relative to the LOD root
+      const rel = new THREE.Matrix4().copy(lod.matrixWorld).invert().multiply(o.matrixWorld);
+      g.applyMatrix4(rel);
+      const m = (o.material as THREE.Material).clone();
+      if (tint && m instanceof THREE.MeshStandardMaterial) m.color.multiply(new THREE.Color(tint));
+      out.push({ geometry: g, material: m });
+    });
+    return out;
+  });
+  const box = new THREE.Box3();
+  for (const p of lods[0] ?? []) {
+    p.geometry.computeBoundingBox();
+    if (p.geometry.boundingBox) box.union(p.geometry.boundingBox);
+  }
+  return { lods, scale, yOffset: Number.isFinite(box.min.y) ? -box.min.y : 0, castShadow: model.entry.category !== 'grass' };
+}
 
 export interface VegetationOptions {
   readonly size: number;
@@ -82,9 +120,10 @@ export interface VegetationOptions {
   readonly seed: number;
   readonly maxInstances: number;
   readonly heightAt: HeightFn;
-  /** Discs where nothing grows (plazas, buildings, water). */
   readonly exclusions: readonly { x: number; z: number; r: number }[];
   readonly rects: readonly { x: number; z: number; w: number; d: number }[];
+  /** Real-asset prototypes per kind (several for variety); falls back to procedural when absent. */
+  readonly protos?: Partial<Record<VegetationKind, Proto[]>>;
 }
 
 interface Chunk {
@@ -94,24 +133,27 @@ interface Chunk {
 }
 
 /**
- * Chunked GPU instancing with two LOD levels: each chunk owns a high and a low detail
- * InstancedMesh per kind; distance to the camera toggles which one is visible, and Three's frustum
- * culling works per chunk. Placement is seeded so every client sees the same forest.
+ * Chunked GPU instancing with two LOD levels per prototype; frustum culling works per chunk and distance to the
+ * camera toggles LOD0/LOD1. Placement is seeded so every client sees the same forest.
  */
 export class Vegetation {
   readonly group = new THREE.Group();
   private readonly chunks: Chunk[] = [];
+  private readonly owned: THREE.InstancedMesh[] = [];
 
   constructor(opts: VegetationOptions) {
-    protos ??= makeProtos();
+    proceduralProtos ??= procedural();
     this.group.name = 'vegetation';
     const rng = new SeededRandom(opts.seed);
-    const kinds = opts.kinds.filter((k): k is VegetationKind => k in protos! && k !== 'cactus-none');
+    const kinds = opts.kinds.filter((k): k is VegetationKind => k in proceduralProtos! && k !== 'cactus-none');
     if (kinds.length === 0) return;
+    const protoSets = new Map<VegetationKind, Proto[]>();
+    for (const k of kinds) protoSets.set(k, opts.protos?.[k]?.length ? opts.protos[k]! : [proceduralProtos[k]]);
+    // Trees are heavier than grass: scale the count by the average LOD0 triangle load of the chosen kinds.
     const total = Math.min(opts.maxInstances, Math.floor(opts.density * opts.size * opts.size * 0.02));
     const half = opts.size / 2;
     const chunkSize = opts.size / CHUNKS;
-    const placements = new Map<string, THREE.Matrix4[]>(); // key `${cx}:${cz}:${kind}`
+    const placements = new Map<string, THREE.Matrix4[]>(); // `${cx}:${cz}:${kind}:${variant}`
     const m = new THREE.Matrix4();
     const q = new THREE.Quaternion();
     const s = new THREE.Vector3();
@@ -125,22 +167,21 @@ export class Vegetation {
       if (opts.exclusions.some((e) => Math.hypot(x - e.x, z - e.z) < e.r)) continue;
       if (opts.rects.some((r) => Math.abs(x - r.x) < r.w / 2 + 2 && Math.abs(z - r.z) < r.d / 2 + 2)) continue;
       const kind = kinds[rng.int(kinds.length)] as VegetationKind;
-      const proto = protos[kind];
+      const variants = protoSets.get(kind)!;
+      const vi = rng.int(variants.length);
+      const proto = variants[vi]!;
       const y = opts.heightAt(x, z);
       if (y < -0.3) continue;
       const sc = proto.scale[0] + rng.next() * (proto.scale[1] - proto.scale[0]);
-      p.set(x, y - 0.05, z);
+      p.set(x, y + proto.yOffset * sc, z);
       q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), rng.next() * Math.PI * 2);
-      s.set(sc, sc * (0.9 + rng.next() * 0.2), sc);
+      s.set(sc, sc * (0.92 + rng.next() * 0.16), sc);
       m.compose(p, q, s);
       const cx = Math.min(CHUNKS - 1, Math.floor((x + half) / chunkSize));
       const cz = Math.min(CHUNKS - 1, Math.floor((z + half) / chunkSize));
-      const key = `${cx}:${cz}:${kind}`;
+      const key = `${cx}:${cz}:${kind}:${vi}`;
       let list = placements.get(key);
-      if (!list) {
-        list = [];
-        placements.set(key, list);
-      }
+      if (!list) placements.set(key, (list = []));
       list.push(m.clone());
       placed++;
     }
@@ -148,25 +189,27 @@ export class Vegetation {
       for (let cz = 0; cz < CHUNKS; cz++) {
         const chunk: Chunk = { center: new THREE.Vector3(-half + (cx + 0.5) * chunkSize, 0, -half + (cz + 0.5) * chunkSize), high: [], low: [] };
         for (const kind of kinds) {
-          const list = placements.get(`${cx}:${cz}:${kind}`);
-          if (!list || list.length === 0) continue;
-          const proto = protos[kind];
-          const hi = new THREE.InstancedMesh(proto.high, proto.material, list.length);
-          const lo = new THREE.InstancedMesh(proto.low, proto.material, list.length);
-          list.forEach((mat, i) => {
-            hi.setMatrixAt(i, mat);
-            lo.setMatrixAt(i, mat);
+          const variants = protoSets.get(kind)!;
+          variants.forEach((proto, vi) => {
+            const list = placements.get(`${cx}:${cz}:${kind}:${vi}`);
+            if (!list || list.length === 0) return;
+            const lod0 = proto.lods[0] ?? [];
+            const lod1 = proto.lods[1] ?? lod0;
+            const make = (parts: { geometry: THREE.BufferGeometry; material: THREE.Material }[], high: boolean) =>
+              parts.map((part) => {
+                const im = new THREE.InstancedMesh(part.geometry, part.material, list.length);
+                list.forEach((mat, i) => im.setMatrixAt(i, mat));
+                im.castShadow = high && proto.castShadow;
+                im.receiveShadow = true;
+                im.computeBoundingSphere();
+                im.visible = high;
+                this.group.add(im);
+                this.owned.push(im);
+                return im;
+              });
+            chunk.high.push(...make(lod0, true));
+            chunk.low.push(...make(lod1, false));
           });
-          hi.castShadow = true;
-          hi.receiveShadow = true;
-          lo.castShadow = false;
-          lo.receiveShadow = true;
-          hi.computeBoundingSphere();
-          lo.computeBoundingSphere();
-          lo.visible = false;
-          this.group.add(hi, lo);
-          chunk.high.push(hi);
-          chunk.low.push(lo);
         }
         this.chunks.push(chunk);
       }
@@ -186,7 +229,7 @@ export class Vegetation {
   }
 
   dispose(): void {
-    for (const c of this.chunks) for (const mesh of [...c.high, ...c.low]) mesh.dispose();
+    for (const im of this.owned) im.dispose();
     this.group.removeFromParent();
   }
 }

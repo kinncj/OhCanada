@@ -2,7 +2,7 @@ import '../ui/styles.css';
 import { EventBus } from '@common/event-bus';
 import { SeededRandom } from '@common/rng';
 import type { GameEvents } from '@application/events';
-import type { Clock } from '@application/ports';
+import type { Clock, PresetName } from '@application/ports';
 import {
   SessionStore, InitializeSession, CreateCharacter, StartQuest, AdvanceQuest, AnswerQuestion, UnlockDistrict, SaveProgress, ExportSave, ImportSave, ResetProgress, CitizenshipExam, UpdateSettings,
 } from '@application/index';
@@ -12,6 +12,7 @@ import { StaticContentRepository } from '@adapters/content/static-content-reposi
 import { JsonSaveCodec, LocalStorageProgressRepository } from '@adapters/persistence';
 import { I18nextLocalizer } from '@adapters/i18n/i18next-localizer';
 import { KeyboardMouseInput } from '@adapters/input/keyboard-mouse-input';
+import { GamepadUiNavigator } from '@adapters/input/gamepad-ui-navigator';
 import { RapierPhysicsWorld } from '@adapters/physics/rapier-physics-world';
 import { HowlerAudio } from '@adapters/audio/howler-audio';
 import { MainMenu, CharacterCreator, LoadingScreen, el } from '@ui/index';
@@ -77,6 +78,14 @@ async function boot(): Promise<void> {
   input.setBindings(settings().keyBindings);
   const audio = new HowlerAudio(base);
   audio.setMasterVolume(settings().masterVolume);
+  if (config.featureFlags.gamepad !== false) {
+    const padNav = new GamepadUiNavigator(ui);
+    const pollPads = (): void => {
+      padNav.poll();
+      requestAnimationFrame(pollPads);
+    };
+    requestAnimationFrame(pollPads);
+  }
   loading.set(t.t('app.loading'), 0.4);
 
   let game: Game;
@@ -104,11 +113,15 @@ async function boot(): Promise<void> {
   };
   useCases.answer = new AnswerQuestion(store, content, clock, rng, bus, useCases.advance);
 
-  const resolvePreset = (): 'low' | 'medium' | 'high' | 'ultra' => {
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator as Navigator & { userAgentData?: { mobile?: boolean } }).userAgentData?.mobile === true || ('ontouchstart' in window && Math.min(screen.width, screen.height) < 900);
+  const PRESETS: readonly PresetName[] = ['minimal', 'low', 'medium', 'high', 'ultra'];
+  const isPreset = (v: string | null): v is PresetName => !!v && (PRESETS as readonly string[]).includes(v);
+  const resolvePreset = (): PresetName => {
     const s = settings().graphicsPreset;
     if (s !== 'auto') return s;
     const stored = safeGet(BENCH_KEY);
-    return stored === 'low' || stored === 'medium' || stored === 'high' || stored === 'ultra' ? stored : 'medium';
+    if (isPreset(stored)) return stored;
+    return isMobile ? config.benchmark.mobileDefault : 'medium';
   };
   const applySettings = (s: Settings): void => {
     document.documentElement.dataset.cb = s.colourBlindSafe ? '1' : '0';
@@ -176,13 +189,17 @@ async function boot(): Promise<void> {
     game.gameplayEnabled = false;
     game.start();
     const forcedPreset = params.get('preset');
-    if (forcedPreset === 'low' || forcedPreset === 'medium' || forcedPreset === 'high' || forcedPreset === 'ultra') {
+    if (isPreset(forcedPreset)) {
       safeSet(BENCH_KEY, forcedPreset);
       game.applyGraphics(forcedPreset, settings().reducedMotion);
     } else if (settings().graphicsPreset === 'auto' && !safeGet(BENCH_KEY)) {
+      // Benchmark on the current (mobile: minimal) preset; only ever step up as far as the measured frame-rate allows.
       const fps = await game.benchmark(config.benchmark.durationMs);
       const th = config.benchmark.thresholdsFps;
-      const chosen = fps >= th.ultra ? 'ultra' : fps >= th.high ? 'high' : fps >= th.medium ? 'medium' : 'low';
+      const current = resolvePreset();
+      let chosen: PresetName = fps >= th.ultra ? 'ultra' : fps >= th.high ? 'high' : fps >= th.medium ? 'medium' : fps >= th.low ? 'low' : 'minimal';
+      // Measured on 'minimal' (mobile) the headroom is unknown above 'low': cap at low for phones, at medium elsewhere.
+      if (current === 'minimal' && PRESETS.indexOf(chosen) > PRESETS.indexOf(isMobile ? 'low' : 'medium')) chosen = isMobile ? 'low' : 'medium';
       safeSet(BENCH_KEY, chosen);
       console.info(`[truenorth] ${JSON.stringify({ type: 'benchmark', payload: { fps: Math.round(fps), chosen } })}`);
       game.applyGraphics(chosen, settings().reducedMotion);
@@ -207,7 +224,7 @@ async function boot(): Promise<void> {
     creator?.destroy();
     creator = new CharacterCreator(t, catalog, {
       onPreview: (c: Character) => {
-        game.setPlayerAppearance(c.appearance);
+        void game.setPlayerAppearance(c.appearance);
         if (!game.district) void backdrop();
         game.gameplayEnabled = false;
         game.rig.distance = 3.2;
@@ -239,7 +256,7 @@ async function boot(): Promise<void> {
     menu = null;
     const ch = store.progress.character;
     if (!ch) return showCreator();
-    game.setPlayerAppearance(ch.appearance);
+    await game.setPlayerAppearance(ch.appearance);
     const f = ensureFlow();
     if (!backdropLoaded || game.district?.id !== store.progress.currentDistrict) {
       await f.enterWorld();

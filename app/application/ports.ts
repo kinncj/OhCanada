@@ -7,8 +7,13 @@ import type { Progress } from '@domain/progress';
 import type { Quest } from '@domain/quest';
 import type { Question } from '@domain/question';
 
+export type PresetName = 'minimal' | 'low' | 'medium' | 'high' | 'ultra';
+
 export interface GraphicsPreset {
   readonly renderScale: number;
+  readonly maxPixelRatio: number;
+  readonly shadows: boolean;
+  readonly postProcessing: boolean;
   readonly shadowMapSize: number;
   readonly shadowCascades: number;
   readonly ssao: boolean;
@@ -28,11 +33,11 @@ export interface GameConfig {
   readonly startDistrict: DistrictId;
   readonly unlockRules: UnlockRules;
   readonly exam: ExamParameters;
-  readonly graphicsPresets: Readonly<Record<'low' | 'medium' | 'high' | 'ultra', GraphicsPreset>>;
+  readonly graphicsPresets: Readonly<Record<PresetName, GraphicsPreset>>;
   readonly featureFlags: Readonly<Record<string, boolean>>;
   readonly volatileMaxAgeDays: number;
   readonly districts: readonly DistrictId[];
-  readonly benchmark: { readonly durationMs: number; readonly thresholdsFps: { readonly medium: number; readonly high: number; readonly ultra: number } };
+  readonly benchmark: { readonly durationMs: number; readonly thresholdsFps: { readonly low: number; readonly medium: number; readonly high: number; readonly ultra: number }; readonly mobileDefault: 'minimal' | 'low' | 'medium' };
   readonly budgets: { readonly initialPayloadBytes: number; readonly hubSceneBytes: number; readonly districtSceneBytes: number; readonly timeToInteractiveMs: number };
 }
 

@@ -4,7 +4,10 @@
   "version": "0.1.0",
   "basePath": "/OhCanada/",
   "defaultLocale": "en",
-  "locales": ["en", "fr"],
+  "locales": [
+    "en",
+    "fr"
+  ],
   "startDistrict": "hub",
   "districts": [
     "hub",
@@ -20,7 +23,9 @@
     "regions"
   ],
   "unlockRules": {
-    "initialDistricts": ["hub"],
+    "initialDistricts": [
+      "hub"
+    ],
     "order": [
       "hub",
       "rights-responsibilities",
@@ -37,14 +42,93 @@
     "stampsToUnlockNext": 1,
     "stampsForExam": 10
   },
-  "exam": { "questionCount": 20, "passMark": 15, "timeLimitSeconds": 1800 },
-  "graphicsPresets": {
-    "low": { "renderScale": 0.75, "shadowMapSize": 1024, "shadowCascades": 1, "ssao": false, "bloom": false, "antialias": "fxaa", "maxInstances": 600, "anisotropy": 2, "volumetricFog": false },
-    "medium": { "renderScale": 1, "shadowMapSize": 2048, "shadowCascades": 2, "ssao": false, "bloom": true, "antialias": "fxaa", "maxInstances": 1500, "anisotropy": 4, "volumetricFog": true },
-    "high": { "renderScale": 1, "shadowMapSize": 2048, "shadowCascades": 3, "ssao": true, "bloom": true, "antialias": "taa", "maxInstances": 3000, "anisotropy": 8, "volumetricFog": true },
-    "ultra": { "renderScale": 1.25, "shadowMapSize": 4096, "shadowCascades": 4, "ssao": true, "bloom": true, "antialias": "taa", "maxInstances": 6000, "anisotropy": 16, "volumetricFog": true }
+  "exam": {
+    "questionCount": 20,
+    "passMark": 15,
+    "timeLimitSeconds": 1800
   },
-  "benchmark": { "durationMs": 2000, "thresholdsFps": { "medium": 30, "high": 50, "ultra": 100 } },
+  "graphicsPresets": {
+    "minimal": {
+      "renderScale": 0.6,
+      "maxPixelRatio": 1.25,
+      "shadows": false,
+      "postProcessing": false,
+      "shadowMapSize": 512,
+      "shadowCascades": 1,
+      "ssao": false,
+      "bloom": false,
+      "antialias": "none",
+      "maxInstances": 350,
+      "anisotropy": 1,
+      "volumetricFog": false
+    },
+    "low": {
+      "renderScale": 0.8,
+      "maxPixelRatio": 1.5,
+      "shadows": true,
+      "postProcessing": true,
+      "shadowMapSize": 1024,
+      "shadowCascades": 1,
+      "ssao": false,
+      "bloom": false,
+      "antialias": "fxaa",
+      "maxInstances": 700,
+      "anisotropy": 2,
+      "volumetricFog": false
+    },
+    "medium": {
+      "renderScale": 1,
+      "maxPixelRatio": 1.5,
+      "shadows": true,
+      "postProcessing": true,
+      "shadowMapSize": 2048,
+      "shadowCascades": 2,
+      "ssao": false,
+      "bloom": true,
+      "antialias": "fxaa",
+      "maxInstances": 1500,
+      "anisotropy": 4,
+      "volumetricFog": true
+    },
+    "high": {
+      "renderScale": 1,
+      "maxPixelRatio": 2,
+      "shadows": true,
+      "postProcessing": true,
+      "shadowMapSize": 2048,
+      "shadowCascades": 3,
+      "ssao": true,
+      "bloom": true,
+      "antialias": "taa",
+      "maxInstances": 3000,
+      "anisotropy": 8,
+      "volumetricFog": true
+    },
+    "ultra": {
+      "renderScale": 1.25,
+      "maxPixelRatio": 2,
+      "shadows": true,
+      "postProcessing": true,
+      "shadowMapSize": 4096,
+      "shadowCascades": 4,
+      "ssao": true,
+      "bloom": true,
+      "antialias": "taa",
+      "maxInstances": 6000,
+      "anisotropy": 16,
+      "volumetricFog": true
+    }
+  },
+  "benchmark": {
+    "durationMs": 2000,
+    "thresholdsFps": {
+      "low": 24,
+      "medium": 34,
+      "high": 55,
+      "ultra": 100
+    },
+    "mobileDefault": "minimal"
+  },
   "featureFlags": {
     "debugOverlay": false,
     "weather": true,

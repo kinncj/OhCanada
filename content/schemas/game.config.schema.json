@@ -4,91 +4,303 @@
   "title": "Game configuration",
   "type": "object",
   "properties": {
-    "$schema": { "type": "string" },
-    "title": { "type": "string", "minLength": 1 },
-    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
-    "basePath": { "type": "string", "pattern": "^/([a-zA-Z0-9._-]+/)?$" },
-    "defaultLocale": { "$ref": "common.schema.json#/$defs/locale" },
-    "locales": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/locale" }, "minItems": 1, "uniqueItems": true },
-    "startDistrict": { "$ref": "common.schema.json#/$defs/id" },
-    "districts": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" }, "minItems": 1, "uniqueItems": true },
+    "$schema": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "basePath": {
+      "type": "string",
+      "pattern": "^/([a-zA-Z0-9._-]+/)?$"
+    },
+    "defaultLocale": {
+      "$ref": "common.schema.json#/$defs/locale"
+    },
+    "locales": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/locale"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "startDistrict": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "districts": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "unlockRules": {
       "type": "object",
       "properties": {
-        "initialDistricts": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" }, "minItems": 1 },
-        "order": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/id" }, "minItems": 1 },
-        "stampsToUnlockNext": { "type": "integer", "minimum": 1 },
-        "stampsForExam": { "type": "integer", "minimum": 0 }
+        "initialDistricts": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "minItems": 1
+        },
+        "order": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "minItems": 1
+        },
+        "stampsToUnlockNext": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stampsForExam": {
+          "type": "integer",
+          "minimum": 0
+        }
       },
-      "required": ["initialDistricts", "order", "stampsToUnlockNext", "stampsForExam"],
+      "required": [
+        "initialDistricts",
+        "order",
+        "stampsToUnlockNext",
+        "stampsForExam"
+      ],
       "additionalProperties": false
     },
     "exam": {
       "type": "object",
       "properties": {
-        "questionCount": { "type": "integer", "minimum": 1 },
-        "passMark": { "type": "integer", "minimum": 1 },
-        "timeLimitSeconds": { "type": "integer", "minimum": 60 }
+        "questionCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "passMark": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "timeLimitSeconds": {
+          "type": "integer",
+          "minimum": 60
+        }
       },
-      "required": ["questionCount", "passMark", "timeLimitSeconds"],
+      "required": [
+        "questionCount",
+        "passMark",
+        "timeLimitSeconds"
+      ],
       "additionalProperties": false
     },
     "graphicsPresets": {
       "type": "object",
       "properties": {
-        "low": { "$ref": "#/$defs/preset" },
-        "medium": { "$ref": "#/$defs/preset" },
-        "high": { "$ref": "#/$defs/preset" },
-        "ultra": { "$ref": "#/$defs/preset" }
+        "minimal": {
+          "$ref": "#/$defs/preset"
+        },
+        "low": {
+          "$ref": "#/$defs/preset"
+        },
+        "medium": {
+          "$ref": "#/$defs/preset"
+        },
+        "high": {
+          "$ref": "#/$defs/preset"
+        },
+        "ultra": {
+          "$ref": "#/$defs/preset"
+        }
       },
-      "required": ["low", "medium", "high", "ultra"],
+      "required": [
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "ultra"
+      ],
       "additionalProperties": false
     },
     "benchmark": {
       "type": "object",
       "properties": {
-        "durationMs": { "type": "integer", "minimum": 500 },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 500
+        },
         "thresholdsFps": {
           "type": "object",
-          "properties": { "medium": { "type": "number" }, "high": { "type": "number" }, "ultra": { "type": "number" } },
-          "required": ["medium", "high", "ultra"],
+          "properties": {
+            "medium": {
+              "type": "number"
+            },
+            "high": {
+              "type": "number"
+            },
+            "ultra": {
+              "type": "number"
+            },
+            "low": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "low",
+            "medium",
+            "high",
+            "ultra"
+          ],
           "additionalProperties": false
+        },
+        "mobileDefault": {
+          "type": "string",
+          "enum": [
+            "minimal",
+            "low",
+            "medium"
+          ]
         }
       },
-      "required": ["durationMs", "thresholdsFps"],
+      "required": [
+        "durationMs",
+        "thresholdsFps",
+        "mobileDefault"
+      ],
       "additionalProperties": false
     },
-    "featureFlags": { "type": "object", "additionalProperties": { "type": "boolean" } },
-    "volatileMaxAgeDays": { "type": "integer", "minimum": 1 },
+    "featureFlags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "volatileMaxAgeDays": {
+      "type": "integer",
+      "minimum": 1
+    },
     "budgets": {
       "type": "object",
       "properties": {
-        "initialPayloadBytes": { "type": "integer" },
-        "hubSceneBytes": { "type": "integer" },
-        "districtSceneBytes": { "type": "integer" },
-        "timeToInteractiveMs": { "type": "integer" }
+        "initialPayloadBytes": {
+          "type": "integer"
+        },
+        "hubSceneBytes": {
+          "type": "integer"
+        },
+        "districtSceneBytes": {
+          "type": "integer"
+        },
+        "timeToInteractiveMs": {
+          "type": "integer"
+        }
       },
-      "required": ["initialPayloadBytes", "hubSceneBytes", "districtSceneBytes", "timeToInteractiveMs"],
+      "required": [
+        "initialPayloadBytes",
+        "hubSceneBytes",
+        "districtSceneBytes",
+        "timeToInteractiveMs"
+      ],
       "additionalProperties": false
     }
   },
-  "required": ["title", "version", "basePath", "defaultLocale", "locales", "startDistrict", "districts", "unlockRules", "exam", "graphicsPresets", "benchmark", "featureFlags", "volatileMaxAgeDays", "budgets"],
+  "required": [
+    "title",
+    "version",
+    "basePath",
+    "defaultLocale",
+    "locales",
+    "startDistrict",
+    "districts",
+    "unlockRules",
+    "exam",
+    "graphicsPresets",
+    "benchmark",
+    "featureFlags",
+    "volatileMaxAgeDays",
+    "budgets"
+  ],
   "additionalProperties": false,
   "$defs": {
     "preset": {
       "type": "object",
       "properties": {
-        "renderScale": { "type": "number", "minimum": 0.25, "maximum": 2 },
-        "shadowMapSize": { "type": "integer", "enum": [512, 1024, 2048, 4096] },
-        "shadowCascades": { "type": "integer", "minimum": 1, "maximum": 4 },
-        "ssao": { "type": "boolean" },
-        "bloom": { "type": "boolean" },
-        "antialias": { "type": "string", "enum": ["none", "fxaa", "taa", "msaa"] },
-        "maxInstances": { "type": "integer", "minimum": 0 },
-        "anisotropy": { "type": "integer", "minimum": 1, "maximum": 16 },
-        "volumetricFog": { "type": "boolean" }
+        "renderScale": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 2
+        },
+        "shadowMapSize": {
+          "type": "integer",
+          "enum": [
+            512,
+            1024,
+            2048,
+            4096
+          ]
+        },
+        "shadowCascades": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "ssao": {
+          "type": "boolean"
+        },
+        "bloom": {
+          "type": "boolean"
+        },
+        "antialias": {
+          "type": "string",
+          "enum": [
+            "none",
+            "fxaa",
+            "taa",
+            "msaa"
+          ]
+        },
+        "maxInstances": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "anisotropy": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "volumetricFog": {
+          "type": "boolean"
+        },
+        "maxPixelRatio": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 3
+        },
+        "shadows": {
+          "type": "boolean"
+        },
+        "postProcessing": {
+          "type": "boolean"
+        }
       },
-      "required": ["renderScale", "shadowMapSize", "shadowCascades", "ssao", "bloom", "antialias", "maxInstances", "anisotropy", "volumetricFog"],
+      "required": [
+        "renderScale",
+        "shadowMapSize",
+        "shadowCascades",
+        "ssao",
+        "bloom",
+        "antialias",
+        "maxInstances",
+        "anisotropy",
+        "volumetricFog",
+        "maxPixelRatio",
+        "shadows",
+        "postProcessing"
+      ],
       "additionalProperties": false
     }
   }

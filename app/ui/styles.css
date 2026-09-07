@@ -116,3 +116,32 @@ label.field input, label.field select { font: inherit; padding: 0.55rem 0.7rem; 
 .touch .lookpad { position: absolute; right: 0; top: 0; width: 50vw; height: 100%; pointer-events: auto; touch-action: none; }
 @media (prefers-reduced-motion: reduce) { .hud .toast { animation-duration: 6s; } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+/* Phones and small tablets */
+@media (max-width: 720px), (max-height: 480px) {
+  .panel { padding: 1rem 1.1rem; border-radius: 14px; width: min(96vw, 640px); max-height: 94vh; }
+  .panel h1 { font-size: 1.5rem; }
+  .title { font-size: clamp(2rem, 9vw, 3rem); }
+  .btn { padding: 0.65rem 1rem; }
+  .hud .controls { display: none; }
+  .hud .top-left { max-width: 60vw; }
+  .hud .objective { font-size: 0.85rem; }
+  .hud .stamps { font-size: 0.85rem; padding: 0.35rem 0.6rem; }
+  .hud .prompt { bottom: 26%; font-size: 0.9rem; }
+  .dialogue { width: 96vw; bottom: 22vh; padding: 0.8rem 0.9rem; }
+  .dialogue .line { font-size: 1rem; }
+  .choice { padding: 0.65rem 0.8rem; }
+  .creator-grid { grid-template-columns: 1fr; }
+  .exam .nav button { width: 30px; height: 30px; }
+  .debug { font-size: 10px; bottom: 0.6rem; }
+}
+@media (pointer: coarse) {
+  .click-to-play { display: none; }
+  .crosshair { display: none; }
+  .btn, .chip, .choice { min-height: 44px; }
+  .swatch { width: 40px; height: 40px; }
+}
+/* Safe areas (notches) */
+.hud .top-left { top: max(1rem, env(safe-area-inset-top)); left: max(1rem, env(safe-area-inset-left)); }
+.hud .top-right { top: max(1rem, env(safe-area-inset-top)); right: max(1rem, env(safe-area-inset-right)); }
+.touch .stick { left: max(6vw, env(safe-area-inset-left)); bottom: max(8vh, env(safe-area-inset-bottom)); }
+.touch .act { right: max(6vw, env(safe-area-inset-right)); bottom: max(10vh, env(safe-area-inset-bottom)); }

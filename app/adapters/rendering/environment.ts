@@ -39,6 +39,7 @@ export class Environment {
     this.timeOfDay = ambience.timeOfDay;
     this.cycleSpeed = cycleEnabled ? 1 / 600 : 0; // full day in 10 minutes
     (this.scene.fog as THREE.FogExp2).density = ambience.fogDensity ?? 0.004;
+    this.sun.castShadow = preset.shadows;
     this.sun.shadow.mapSize.set(preset.shadowMapSize, preset.shadowMapSize);
     this.sun.shadow.map?.dispose();
     this.sun.shadow.map = null;

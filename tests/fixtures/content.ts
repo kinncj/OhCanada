@@ -22,16 +22,16 @@ export const CONFIG: GameConfig = {
   },
   exam: { questionCount: 4, passMark: 3, timeLimitSeconds: 600 },
   graphicsPresets: {
-    low: preset(), medium: preset(), high: preset(), ultra: preset(),
+    minimal: preset(), low: preset(), medium: preset(), high: preset(), ultra: preset(),
   },
   featureFlags: {},
   volatileMaxAgeDays: 180,
-  benchmark: { durationMs: 1000, thresholdsFps: { medium: 30, high: 50, ultra: 100 } },
+  benchmark: { durationMs: 1000, thresholdsFps: { low: 20, medium: 30, high: 50, ultra: 100 }, mobileDefault: 'minimal' },
   budgets: { initialPayloadBytes: 1, hubSceneBytes: 1, districtSceneBytes: 1, timeToInteractiveMs: 1 },
 };
 
 function preset() {
-  return { renderScale: 1, shadowMapSize: 1024, shadowCascades: 1, ssao: false, bloom: false, antialias: 'none' as const, maxInstances: 10, anisotropy: 1, volumetricFog: false };
+  return { renderScale: 1, maxPixelRatio: 1, shadows: false, postProcessing: false, shadowMapSize: 1024, shadowCascades: 1, ssao: false, bloom: false, antialias: 'none' as const, maxInstances: 10, anisotropy: 1, volumetricFog: false };
 }
 
 export function q(id: string, subject: Subject, volatile = false, asOf = '2026-09-01'): Question {

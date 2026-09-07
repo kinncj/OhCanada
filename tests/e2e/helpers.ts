@@ -34,7 +34,7 @@ export function collectTelemetry(page: Page): TelemetryEvent[] {
   return events;
 }
 
-export async function bootToMenu(page: Page, query = '?e2e=1&preset=low'): Promise<void> {
+export async function bootToMenu(page: Page, query = '?e2e=1&preset=minimal'): Promise<void> {
   await page.goto(query);
   await page.getByTestId('menu-new').or(page.getByTestId('menu-continue')).first().waitFor({ timeout: 60_000 });
 }

@@ -1,5 +1,10 @@
 {
-  "app": { "title": "TrueNorth", "tagline": "Explorez le Canada. Gagnez vos timbres. Réussissez l'examen.", "loading": "Chargement…", "version": "Version {{version}}" },
+  "app": {
+    "title": "TrueNorth",
+    "tagline": "Explorez le Canada. Gagnez vos timbres. Réussissez l'examen.",
+    "loading": "Chargement…",
+    "version": "Version {{version}}"
+  },
   "menu": {
     "newGame": "Nouveau parcours",
     "continue": "Continuer",
@@ -25,7 +30,9 @@
     "accessory": "Accessoire",
     "randomize": "Aléatoire",
     "confirm": "Commencer le parcours",
-    "errors": { "name": "Entrez un nom de 1 à 24 caractères." }
+    "errors": {
+      "name": "Entrez un nom de 1 à 24 caractères."
+    }
   },
   "hud": {
     "stamps": "Timbres de passeport",
@@ -37,7 +44,13 @@
     "controls": "WASD pour bouger · Maj pour courir · Espace pour sauter · Souris pour regarder · E interagir · J journal · Échap pause",
     "clickToPlay": "Cliquez pour regarder autour"
   },
-  "dialogue": { "next": "Suivant", "close": "Fermer", "startQuest": "Accepter la quête", "you": "Vous", "narrator": "Narrateur" },
+  "dialogue": {
+    "next": "Suivant",
+    "close": "Fermer",
+    "startQuest": "Accepter la quête",
+    "you": "Vous",
+    "narrator": "Narrateur"
+  },
   "question": {
     "title": "Question {{index}} sur {{total}}",
     "submit": "Répondre",
@@ -84,7 +97,10 @@
     "title": "Paramètres",
     "graphics": "Préréglage graphique",
     "auto": "Auto (test de performance)",
-    "low": "Bas", "medium": "Moyen", "high": "Élevé", "ultra": "Ultra",
+    "low": "Bas",
+    "medium": "Moyen",
+    "high": "Élevé",
+    "ultra": "Ultra",
     "reducedMotion": "Mouvement réduit (désactive le balancement de caméra et le bloom)",
     "subtitles": "Sous-titres",
     "colourBlindSafe": "ATH adapté au daltonisme",
@@ -92,10 +108,33 @@
     "controls": "Commandes",
     "rebind": "Appuyez sur une touche…",
     "close": "Fermer",
-    "actions": { "forward": "Avancer", "back": "Reculer", "left": "Gauche", "right": "Droite", "sprint": "Courir", "jump": "Sauter", "interact": "Interagir", "journal": "Journal", "pause": "Pause" }
+    "actions": {
+      "forward": "Avancer",
+      "back": "Reculer",
+      "left": "Gauche",
+      "right": "Droite",
+      "sprint": "Courir",
+      "jump": "Sauter",
+      "interact": "Interagir",
+      "journal": "Journal",
+      "pause": "Pause"
+    },
+    "minimal": "Minimal (téléphones)"
   },
-  "pause": { "title": "Pause", "resume": "Reprendre", "save": "Sauvegarder", "saved": "Progression sauvegardée", "mainMenu": "Menu principal" },
+  "pause": {
+    "title": "Pause",
+    "resume": "Reprendre",
+    "save": "Sauvegarder",
+    "saved": "Progression sauvegardée",
+    "mainMenu": "Menu principal"
+  },
   "loadingDistrict": "En route vers {{district}}…",
-  "errors": { "importInvalid": "Ce fichier de sauvegarde n'est pas valide : {{message}}", "webgl": "Votre navigateur ne prend pas en charge WebGPU ni WebGL2. Essayez une version récente de Chrome, Edge, Firefox ou Safari." },
-  "credits": { "title": "Crédits", "content": "Contenu paraphrasé de Découvrir le Canada (gouvernement du Canada). Les faits marqués comme volatils sont revérifiés tous les 180 jours." }
+  "errors": {
+    "importInvalid": "Ce fichier de sauvegarde n'est pas valide : {{message}}",
+    "webgl": "Votre navigateur ne prend pas en charge WebGPU ni WebGL2. Essayez une version récente de Chrome, Edge, Firefox ou Safari."
+  },
+  "credits": {
+    "title": "Crédits",
+    "content": "Contenu paraphrasé de Découvrir le Canada (gouvernement du Canada). Les faits marqués comme volatils sont revérifiés tous les 180 jours."
+  }
 }

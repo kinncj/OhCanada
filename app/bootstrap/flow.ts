@@ -66,7 +66,8 @@ export class Flow {
     this.debug = debugEnabled ? new DebugOverlay() : null;
     d.ui.append(this.hud.root);
     if (this.debug) d.ui.append(this.debug.root);
-    if ('ontouchstart' in window && d.config.featureFlags.touchControls !== false) {
+    const touchDevice = 'ontouchstart' in window || window.matchMedia('(pointer: coarse)').matches;
+    if (touchDevice && d.config.featureFlags.touchControls !== false) {
       const input = d.input as InputPort & { setTouchMove?(x: number, y: number): void; addTouchLook?(dx: number, dy: number): void; pressAction?(a: 'interact'): void };
       const touch = new TouchControls({
         onMove: (x, y) => input.setTouchMove?.(x, y),
@@ -165,7 +166,7 @@ export class Flow {
       this.hud.setPrompt(prompt && near?.kind === 'npc' ? key : null, prompt ? (near?.kind === 'npc' ? t.t('hud.interact', { key }).replace(`${key}`, key) + ` · ${prompt}` : prompt) : null);
     }
     if (input.consume('interact') && near) void this.interact(near);
-    this.hud.showClickToPlay(!input.pointerLocked && !('ontouchstart' in window), () => input.requestPointerLock());
+    this.hud.showClickToPlay(!input.pointerLocked && !('ontouchstart' in window) && !window.matchMedia('(pointer: coarse)').matches, () => input.requestPointerLock());
   }
 
   private districtName(id: DistrictId | string): string {

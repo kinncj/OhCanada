@@ -20,7 +20,7 @@ export interface ExamResult {
 
 export interface Settings {
   readonly locale: 'en' | 'fr';
-  readonly graphicsPreset: 'auto' | 'low' | 'medium' | 'high' | 'ultra';
+  readonly graphicsPreset: 'auto' | 'minimal' | 'low' | 'medium' | 'high' | 'ultra';
   readonly reducedMotion: boolean;
   readonly subtitles: boolean;
   readonly colourBlindSafe: boolean;

@@ -1,5 +1,10 @@
 {
-  "app": { "title": "TrueNorth", "tagline": "Explore Canada. Earn your stamps. Pass the test.", "loading": "Loading…", "version": "Version {{version}}" },
+  "app": {
+    "title": "TrueNorth",
+    "tagline": "Explore Canada. Earn your stamps. Pass the test.",
+    "loading": "Loading…",
+    "version": "Version {{version}}"
+  },
   "menu": {
     "newGame": "New journey",
     "continue": "Continue",
@@ -25,7 +30,9 @@
     "accessory": "Accessory",
     "randomize": "Randomize",
     "confirm": "Begin the journey",
-    "errors": { "name": "Enter a name between 1 and 24 characters." }
+    "errors": {
+      "name": "Enter a name between 1 and 24 characters."
+    }
   },
   "hud": {
     "stamps": "Passport Stamps",
@@ -37,7 +44,13 @@
     "controls": "WASD to move · Shift to sprint · Space to jump · Mouse to look · E to interact · J journal · Esc pause",
     "clickToPlay": "Click to look around"
   },
-  "dialogue": { "next": "Next", "close": "Close", "startQuest": "Accept quest", "you": "You", "narrator": "Narrator" },
+  "dialogue": {
+    "next": "Next",
+    "close": "Close",
+    "startQuest": "Accept quest",
+    "you": "You",
+    "narrator": "Narrator"
+  },
   "question": {
     "title": "Question {{index}} of {{total}}",
     "submit": "Answer",
@@ -84,7 +97,10 @@
     "title": "Settings",
     "graphics": "Graphics preset",
     "auto": "Auto (benchmark)",
-    "low": "Low", "medium": "Medium", "high": "High", "ultra": "Ultra",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "ultra": "Ultra",
     "reducedMotion": "Reduced motion (disables camera bob and bloom)",
     "subtitles": "Subtitles",
     "colourBlindSafe": "Colour-blind safe HUD",
@@ -92,10 +108,33 @@
     "controls": "Controls",
     "rebind": "Press a key…",
     "close": "Close",
-    "actions": { "forward": "Forward", "back": "Back", "left": "Left", "right": "Right", "sprint": "Sprint", "jump": "Jump", "interact": "Interact", "journal": "Journal", "pause": "Pause" }
+    "actions": {
+      "forward": "Forward",
+      "back": "Back",
+      "left": "Left",
+      "right": "Right",
+      "sprint": "Sprint",
+      "jump": "Jump",
+      "interact": "Interact",
+      "journal": "Journal",
+      "pause": "Pause"
+    },
+    "minimal": "Minimal (phones)"
   },
-  "pause": { "title": "Paused", "resume": "Resume", "save": "Save", "saved": "Progress saved", "mainMenu": "Main menu" },
+  "pause": {
+    "title": "Paused",
+    "resume": "Resume",
+    "save": "Save",
+    "saved": "Progress saved",
+    "mainMenu": "Main menu"
+  },
   "loadingDistrict": "Travelling to {{district}}…",
-  "errors": { "importInvalid": "That save file is not valid: {{message}}", "webgl": "Your browser does not support WebGPU or WebGL2. Try a current version of Chrome, Edge, Firefox or Safari." },
-  "credits": { "title": "Credits", "content": "Content paraphrased from Discover Canada (Government of Canada). Facts marked volatile are re-verified every 180 days." }
+  "errors": {
+    "importInvalid": "That save file is not valid: {{message}}",
+    "webgl": "Your browser does not support WebGPU or WebGL2. Try a current version of Chrome, Edge, Firefox or Safari."
+  },
+  "credits": {
+    "title": "Credits",
+    "content": "Content paraphrased from Discover Canada (Government of Canada). Facts marked volatile are re-verified every 180 days."
+  }
 }

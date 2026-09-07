@@ -29,7 +29,7 @@ export class SettingsScreen {
     grid.append(el('label', { class: 'field' }, t.t('menu.language'), locale));
 
     const preset = el('select', {});
-    for (const p of ['auto', 'low', 'medium', 'high', 'ultra'] as const) preset.append(el('option', { value: p, selected: settings.graphicsPreset === p }, t.t(`settings.${p}`)));
+    for (const p of ['auto', 'minimal', 'low', 'medium', 'high', 'ultra'] as const) preset.append(el('option', { value: p, selected: settings.graphicsPreset === p }, t.t(`settings.${p}`)));
     preset.addEventListener('change', () => h.onChange({ graphicsPreset: preset.value as Settings['graphicsPreset'] }));
     preset.dataset.testid = 'settings-preset';
     grid.append(el('label', { class: 'field' }, t.t('settings.graphics'), preset));

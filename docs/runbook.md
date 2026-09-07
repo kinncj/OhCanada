@@ -34,5 +34,11 @@ Headless CI uses SwiftShader, so frame-rate numbers there are informational. Bef
 - Apple M1 / Intel Iris Xe: `?debug=1&preset=medium` → ≥ 30 fps.
 Record results in the release notes. Set `PERF_MIN_FPS=<n>` to make `make test-perf` enforce a floor on a GPU-enabled runner.
 
+## Mobile and input verification
+- Phones/tablets boot on the `minimal` preset (no post-processing/shadows, pixel ratio ≤ 1.25). Verify on an iPhone/Android: `https://kinncj.github.io/OhCanada/?debug=1` should show `minimal` (or `low` after the benchmark) and ≥ 30 fps in the hub. Touch controls: left joystick, drag right half to look, red E button to interact.
+- Gamepad: left stick/d-pad moves focus in menus, A activates, B closes; in-game left stick moves, right stick looks, X interacts, Y journal, Start pauses.
+- Keyboard/mouse: WASD, Shift, Space, E, J, Esc; click the canvas for pointer lock. All keys are remappable in Settings.
+- Force a preset for testing with `?preset=minimal|low|medium|high|ultra`; force WebGL2 with `?webgl=1`.
+
 ## Volatile facts
 `make validate-content` fails when a `volatile: true` question is older than 180 days. Re-verify the fact, update `text`/`answer` if needed and bump `asOf`. The list of volatile ids is in `docs/content-review.md`.

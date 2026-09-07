@@ -14,7 +14,7 @@ copyFileSync(join(dist, 'index.html'), join(dist, '404.html'));
 const { count, size, warnings } = await generateSW({
   swDest: join(dist, 'sw.js'),
   globDirectory: dist,
-  globPatterns: ['index.html', 'assets/*.{js,css}', 'audio/*.wav', 'sky/*.hdr'],
+  globPatterns: ['index.html', 'assets/*.{js,css}', 'audio/*.wav', 'sky/*.hdr', 'manifest.json', 'basis/*', 'draco/*', 'textures/**/*', 'models/characters/*.glb'],
   globIgnores: ['404.html'],
   maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
   modifyURLPrefix: { '': config.basePath },
@@ -25,7 +25,7 @@ const { count, size, warnings } = await generateSW({
   cleanupOutdatedCaches: true,
   sourcemap: false,
   runtimeCaching: [
-    { urlPattern: /\/models\/.*\.(glb|ktx2)$/, handler: 'CacheFirst', options: { cacheName: 'truenorth-models', expiration: { maxEntries: 60 } } },
+    { urlPattern: /\/models\/.*\.(glb|ktx2)$/, handler: 'CacheFirst', options: { cacheName: 'truenorth-models', expiration: { maxEntries: 120 } } },
   ],
 });
 for (const w of warnings) console.warn(w);

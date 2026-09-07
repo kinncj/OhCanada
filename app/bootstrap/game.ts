@@ -1,14 +1,14 @@
 import * as THREE from 'three/webgpu';
 import type { EventBus } from '@common/event-bus';
 import type { GameEvents } from '@application/events';
-import type { GameConfig, GraphicsPreset } from '@application/ports';
+import type { GameConfig, GraphicsPreset, PresetName } from '@application/ports';
 import type { AudioPort, InputPort, PhysicsWorldPort } from '@application/engine-ports';
 import type { District, Npc, Trigger } from '@domain/district';
 import type { CharacterAppearance, CharacterCatalog } from '@domain/character';
 import type { NpcAppearance } from '@domain/district';
 import { districtId, triggerId, type DistrictId, type TriggerId } from '@domain/ids';
 import { createPlayer, withinRadius, type PlayerComponent } from '@domain/player';
-import { GameRenderer, Environment, WorldScene, CharacterView, Weather, CameraRig, type AppearanceSpec } from '@adapters/rendering';
+import { GameRenderer, Environment, WorldScene, CharacterView, Weather, CameraRig, AssetLibrary, SkinnedCharacterView, type AppearanceSpec } from '@adapters/rendering';
 import { YukaNpcBrain } from '@adapters/ai/yuka-npc-brain';
 
 export interface GameDeps {
@@ -51,9 +51,11 @@ export class Game {
   world: WorldScene | null = null;
   district: District | null = null;
   player: PlayerComponent;
-  playerView: CharacterView | null = null;
+  playerView: CharacterView | SkinnedCharacterView | null = null;
+  library: AssetLibrary | null = null;
   private playerHandle = -1;
-  private readonly npcViews = new Map<string, CharacterView>();
+  private readonly npcViews = new Map<string, CharacterView | SkinnedCharacterView>();
+  private readonly talking = new Set<string>();
   private preset: GraphicsPreset;
   private presetName = 'medium';
   private running = false;
@@ -88,6 +90,7 @@ export class Game {
     const renderer = await GameRenderer.create({ canvas: deps.canvas, forceWebGL: deps.forceWebGL ?? false });
     await deps.physics.init();
     const game = new Game(deps, renderer);
+    game.library = await AssetLibrary.create(deps.assetBase, renderer.renderer);
     game.playerHandle = deps.physics.createCharacter([0, 5, 0], PLAYER_RADIUS, PLAYER_HALF_HEIGHT);
     return game;
   }
@@ -100,24 +103,41 @@ export class Game {
     return this.presetName;
   }
 
-  applyGraphics(name: 'low' | 'medium' | 'high' | 'ultra', reducedMotion: boolean): void {
+  applyGraphics(name: PresetName, reducedMotion: boolean): void {
     this.preset = this.deps.config.graphicsPresets[name];
     this.presetName = name;
 
     this.rig.reducedMotion = reducedMotion;
     this.renderer.applyPreset(this.preset, reducedMotion);
-    this.weather.set(this.district?.scene.ambience.weather ?? 'clear', Math.round(this.preset.maxInstances * 0.5));
+    this.weather.set(this.district?.scene.ambience.weather ?? 'clear', name === 'minimal' ? 0 : Math.round(this.preset.maxInstances * 0.5));
   }
 
-  setPlayerAppearance(appearance: CharacterAppearance): void {
+  async setPlayerAppearance(appearance: CharacterAppearance): Promise<void> {
+    const view = await this.makeCharacter(this.resolve(appearance));
     this.playerView?.dispose();
-    this.playerView = new CharacterView(this.resolve(appearance));
-    this.playerView.root.name = 'player';
-    this.scene.add(this.playerView.root);
+    this.playerView = view;
+    view.root.name = 'player';
+    this.scene.add(view.root);
     this.syncPlayerView();
   }
 
-  private resolve(a: CharacterAppearance | (NpcAppearance & { body?: string; face?: string })): AppearanceSpec {
+  /** Real rigged human when the asset library has one, procedural humanoid otherwise. */
+  private async makeCharacter(spec: AppearanceSpec): Promise<CharacterView | SkinnedCharacterView> {
+    const lib = this.library;
+    const bodyKey = spec.body === 'slim' || spec.body === 'tall' ? 'female' : 'male';
+    if (lib?.hasCharacter(bodyKey)) {
+      try {
+        const gltf = await lib.character(bodyKey);
+        const entry = lib.characterEntry(bodyKey)!;
+        return new SkinnedCharacterView(gltf, entry, bodyKey, spec, lib);
+      } catch (e) {
+        console.warn('character asset failed, using procedural view', e);
+      }
+    }
+    return new CharacterView(spec);
+  }
+
+  private resolve(a: CharacterAppearance | (NpcAppearance & { body?: string | undefined; face?: string })): AppearanceSpec {
     const c = this.deps.catalog;
     const val = (opts: readonly { id: string; value?: string }[], id: string, fallback: string) => opts.find((o) => o.id === id)?.value ?? fallback;
     return {
@@ -136,10 +156,10 @@ export class Game {
     onProgress?.(0.05);
     this.unloadDistrict();
     this.district = district;
-    const world = new WorldScene(district, this.preset);
+    const world = await WorldScene.create(district, this.preset, this.library, (f) => onProgress?.(0.05 + f * 0.45));
     this.world = world;
     this.scene.add(world.group);
-    onProgress?.(0.4);
+    onProgress?.(0.5);
     // Physics
     const t = world.terrain;
     this.deps.physics.addHeightfield([0, 0, 0], district.scene.size, t.heights, t.rows, t.cols, t.maxHeight);
@@ -151,7 +171,7 @@ export class Game {
     // NPCs
     this.npcBrain.setHeightFunction(world.heightAt);
     for (const npc of district.npcs) {
-      const view = new CharacterView(this.resolve(npc.appearance));
+      const view = await this.makeCharacter(this.resolve({ ...npc.appearance, body: hashNpc(npc.id) ? 'slim' : 'average' }));
       view.root.name = `npc:${npc.id}`;
       this.scene.add(view.root);
       this.npcViews.set(npc.id, view);
@@ -231,6 +251,8 @@ export class Game {
 
   attendNpc(id: string, attend: boolean): void {
     this.npcBrain.attend(id, attend ? this.player.transform.position : null);
+    if (attend) this.talking.add(id);
+    else this.talking.delete(id);
   }
 
   hideTrigger(id: TriggerId): void {
@@ -275,7 +297,7 @@ export class Game {
       if (!pose) continue;
       view.root.position.set(pose.x, pose.y, pose.z);
       view.root.rotation.y = pose.yaw;
-      view.animate(dt, pose.speed, true);
+      view.animate(dt, pose.speed, true, this.talking.has(id));
     }
     this.rig.update(dt, this.playerPos, speed, this.world?.occluders ?? []);
     this.environment.update(this.paused ? 0 : dt, this.playerPos);
@@ -367,4 +389,10 @@ export class Game {
     this.playerView?.dispose();
     this.renderer.dispose();
   }
+}
+
+function hashNpc(id: string): boolean {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+  return (h & 1) === 1;
 }

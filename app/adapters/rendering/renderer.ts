@@ -1,5 +1,5 @@
 import * as THREE from 'three/webgpu';
-import { pass, mrt, output, normalView, velocity, nodeObject } from 'three/tsl';
+import { pass, mrt, output, normalView, velocity, nodeObject, uv, vec3, vec4, float, mix } from 'three/tsl';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
 import { ao } from 'three/addons/tsl/display/GTAONode.js';
@@ -55,8 +55,9 @@ export class GameRenderer {
   applyPreset(preset: GraphicsPreset, reducedMotion: boolean): void {
     this.preset = preset;
     this.reducedMotion = reducedMotion;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2) * preset.renderScale;
+    const dpr = Math.min(window.devicePixelRatio || 1, preset.maxPixelRatio) * preset.renderScale;
     this.renderer.setPixelRatio(dpr);
+    this.renderer.shadowMap.enabled = preset.shadows;
     this.resize();
     if (this.scene && this.camera) this.buildPost();
   }
@@ -77,7 +78,7 @@ export class GameRenderer {
     const useBloom = p.bloom && !this.reducedMotion;
     const useAO = p.ssao;
     const useTAA = p.antialias === 'taa';
-    if (!useBloom && !useAO && p.antialias === 'none') {
+    if (!p.postProcessing) {
       this.post = null;
       return;
     }
@@ -96,9 +97,11 @@ export class GameRenderer {
       const b = bloom(colorNode, 0.35, 0.4, 0.85);
       colorNode = colorNode.add(b) as THREE.Node<'vec4'>;
     }
-    let finalNode: THREE.Node = colorNode;
-    if (useTAA) finalNode = traa(colorNode, depth, scenePass.getTextureNode('velocity'), this.camera);
-    else if (p.antialias === 'fxaa' || p.antialias === 'msaa') finalNode = fxaa(colorNode);
+    // Colour grading: gentle filmic contrast, a touch of warmth in highlights and cool shadows, plus vignette.
+    const graded = grade(colorNode);
+    let finalNode: THREE.Node = graded;
+    if (useTAA) finalNode = traa(graded, depth, scenePass.getTextureNode('velocity'), this.camera);
+    else if (p.antialias === 'fxaa' || p.antialias === 'msaa') finalNode = fxaa(graded);
     const post = new THREE.RenderPipeline(this.renderer);
     post.outputNode = finalNode;
     this.post = post;
@@ -125,4 +128,18 @@ export class GameRenderer {
   dispose(): void {
     this.renderer.dispose();
   }
+}
+
+/** Filmic-ish grade in TSL: lift shadows slightly cool, warm highlights, mild S-curve, vignette. */
+function grade(input: THREE.Node<'vec4'>): THREE.Node<'vec4'> {
+  const c = input.rgb;
+  const lum = c.dot(vec3(0.2126, 0.7152, 0.0722));
+  const shadowTint = vec3(0.97, 0.99, 1.04);
+  const highlightTint = vec3(1.04, 1.01, 0.96);
+  const tinted = c.mul(mix(shadowTint, highlightTint, lum.smoothstep(0.1, 0.9)));
+  const contrast = tinted.sub(0.5).mul(1.06).add(0.5);
+  const saturated = mix(vec3(lum), contrast, 1.08);
+  const d = uv().sub(0.5).length();
+  const vignette = float(1).sub(d.smoothstep(0.45, 0.95).mul(0.35));
+  return vec4(saturated.mul(vignette), input.a);
 }

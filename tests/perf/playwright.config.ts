@@ -10,7 +10,7 @@ export default defineConfig({
   use: {
     ...devices['Desktop Chrome'],
     baseURL: 'http://localhost:4173/OhCanada/',
-    viewport: { width: 1920, height: 1080 },
+    viewport: process.env.CI ? { width: 1280, height: 720 } : { width: 1920, height: 1080 },
     launchOptions: { args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] },
   },
   webServer: {
