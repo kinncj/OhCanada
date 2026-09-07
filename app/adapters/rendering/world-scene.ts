@@ -6,7 +6,7 @@ import { makeHeightFunction, type HeightFn } from './procedural/noise';
 import { buildTerrain, type TerrainBuild, type TerrainTextures } from './terrain';
 import { buildWater } from './water';
 import { KIND_MODELS, Vegetation, protoFromModel, type VegetationKind } from './vegetation';
-import { buildLandmark, buildMaterialKit, LANDMARK_MODEL_KEYS, type ColliderSpec, type MaterialKit } from './landmarks';
+import { buildLandmark, buildMaterialKit, LANDMARK_MODEL_KEYS, PROCEDURAL_TYPES, type ColliderSpec, type MaterialKit } from './landmarks';
 import type { AssetLibrary } from './asset-library';
 import { FaunaSystem } from './fauna';
 
@@ -128,6 +128,8 @@ export class WorldScene {
           /* fall through to procedural */
         }
       }
+      // A hero key with no generated asset yet places nothing: better an empty plot than a generic box.
+      if (!PROCEDURAL_TYPES.has(poi.landmark)) continue;
       landmarkBuilds.push({ l: { id: poi.id, type: poi.landmark, position: poi.position }, b: buildLandmark({ id: poi.id, type: poi.landmark, position: poi.position }, kit, policy === 'lite') });
     }
     for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });

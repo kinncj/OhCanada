@@ -606,6 +606,15 @@ function generic(kit: MaterialKit, type: string): LandmarkBuild {
   return { object: r.g, colliders: r.colliders, footprint: { w: r.w, d: r.d }, lights: [] };
 }
 
+/** Landmark types with a real builder. Anything else must come from a hero asset (ADR-0009). */
+export const PROCEDURAL_TYPES: ReadonlySet<string> = new Set([
+  'parliament', 'flame', 'flagpole', 'lamp', 'bench', 'station', 'locks',
+  'courthouse', 'legislature', 'supremecourt', 'pollingstation', 'arena', 'fort', 'port', 'rink',
+  'apartments', 'factory', 'circle', 'lookout', 'hydrant', 'power-pole', 'utility-box', 'barrier', 'gate',
+  'town-hall', 'city-hall', 'rideau-hall', 'confederation-hall', 'police-station', 'returning-office',
+  'campaign-office', 'tech-incubator', 'friendship-centre', 'fur-post', 'festival-pavilion', 'volunteer-tent', 'street',
+]);
+
 export const LANDMARK_MODEL_KEYS = ['bench-wood', 'bench-street', 'pier', 'fort', 'facade-apartments', 'facade-factory', 'rock-boulder', 'rock-2', 'rock-3', 'hydrant', 'power-pole', 'utility-box', 'barrier', 'iron-gate'] as const;
 
 /** `lite` skips window instancing and dormers so software renderers (CI) and weak GPUs draw far fewer triangles. */
