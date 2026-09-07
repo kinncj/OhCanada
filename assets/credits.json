@@ -796,6 +796,14 @@
       "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "models/hero/moose.glb",
+      "title": "moose (generated fauna, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/moose.json (seed 201). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
     }
   ]
 }

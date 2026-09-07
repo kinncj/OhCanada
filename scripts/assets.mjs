@@ -257,6 +257,48 @@ for (const body of manifest.characters?.bodies ?? []) {
 // 8. Renderer manifest + credits (credits for files that no longer exist are dropped)
 const distManifest = { version: 1, textureFormat, basisTranscoderPath: 'basis/', dracoDecoderPath: 'draco/', models, textures, characters };
 writeIfChanged('manifest.json', JSON.stringify(distManifest, null, 2) + '\n');
+
+// 8b. Hero-asset ledger (assets/manifest.json): every hero asset with its source, licence and poly budget.
+// `make validate-content` fails when a hero model is missing here or busts its budget.
+{
+  const promptsDir = join(root, 'assets', 'prompts');
+  const ledger = { generatedBy: 'scripts/assets.mjs', generatedAt: new Date().toISOString().slice(0, 10), assets: [] };
+  const prompts = existsSync(promptsDir) ? readdirSync(promptsDir).filter((f) => f.endsWith('.json')) : [];
+  for (const f of prompts.sort()) {
+    const spec = JSON.parse(readFileSync(join(promptsDir, f), 'utf8'));
+    const entry = models[spec.key];
+    ledger.assets.push({
+      key: spec.key,
+      category: spec.category,
+      path: entry?.path ?? null,
+      source: 'generated',
+      generator: spec.model,
+      prompt: `assets/prompts/${f}`,
+      license: 'CC0-1.0',
+      polyBudget: spec.polyBudget,
+      triangles: entry?.triangles?.LOD0 ?? null,
+      targetHeightMeters: spec.targetHeightMeters,
+      ...(spec.notes ? { notes: spec.notes } : {}),
+    });
+  }
+  for (const [key, spec] of Object.entries(manifest.polyhaven?.models ?? {})) {
+    const entry = models[key];
+    ledger.assets.push({ key, category: entry?.category ?? 'prop', path: entry?.path ?? null, source: 'CC0', generator: `Poly Haven: ${spec.id ?? key}`, license: 'CC0-1.0', polyBudget: spec.polyBudget ?? 15000, triangles: entry?.triangles?.LOD0 ?? null });
+  }
+  for (const body of manifest.characters?.bodies ?? []) {
+    const entry = characters[body];
+    ledger.assets.push({ key: body, category: 'character', path: entry?.path ?? null, source: 'CC0', generator: 'Quaternius: Universal Base Characters + Universal Animation Library', license: 'CC0-1.0', polyBudget: 30000, triangles: null });
+  }
+  const ledgerPath = join(root, 'assets', 'manifest.json');
+  const ledgerJson = JSON.stringify(ledger, null, 2) + '\n';
+  const prev = existsSync(ledgerPath) ? readFileSync(ledgerPath, 'utf8') : '';
+  // Ignore the date when comparing so a no-op run stays a no-op.
+  if (prev.replace(/"generatedAt": "[^"]*"/, '') !== ledgerJson.replace(/"generatedAt": "[^"]*"/, '')) {
+    writeFileSync(ledgerPath, ledgerJson);
+    console.log(`wrote assets/manifest.json (${ledger.assets.length} hero/source assets)`);
+  }
+}
+
 const walk = (d) => (existsSync(d) ? readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)])) : []);
 const distFiles = new Set(walk(dist).map((f) => relative(dist, f)));
 for (const a of [...credits.assets]) if (!distFiles.has(a.path)) { console.log(`credits: dropping ${a.path} (file removed)`); credits.assets.splice(credits.assets.indexOf(a), 1); }

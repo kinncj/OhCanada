@@ -166,6 +166,24 @@ const credited = new Set(credits.assets.map((a) => a.path));
 for (const f of distFiles) if (!credited.has(f)) fail(`assets/dist/${f} is not listed in assets/credits.json`);
 for (const a of credits.assets) if (!distFiles.includes(a.path)) fail(`credits.json lists ${a.path} which is not in assets/dist`);
 
+// Hero-asset ledger: every model in the renderer manifest must be listed with a poly budget it respects.
+const ledgerPath = join(root, 'assets', 'manifest.json');
+if (existsSync(ledgerPath) && existsSync(join(root, 'assets', 'dist', 'manifest.json'))) {
+  const ledger = readJson(ledgerPath);
+  const rendered = readJson(join(root, 'assets', 'dist', 'manifest.json'));
+  const byKey = new Map(ledger.assets.map((a) => [a.key, a]));
+  for (const [key, m] of Object.entries(rendered.models ?? {})) {
+    const a = byKey.get(key);
+    if (!a) fail(`assets/manifest.json: model ${key} is not listed (every asset needs source, licence and poly budget)`);
+    else {
+      if (!a.license || !a.source) fail(`assets/manifest.json: ${key} needs source and license`);
+      const tris = m.triangles?.LOD0 ?? 0;
+      if (a.polyBudget && tris > a.polyBudget) fail(`assets/manifest.json: ${key} LOD0 ${tris} tris exceeds budget ${a.polyBudget}`);
+    }
+  }
+  for (const [key] of Object.entries(rendered.characters ?? {})) if (!byKey.has(key)) fail(`assets/manifest.json: character ${key} is not listed`);
+}
+
 const totalQuestions = questionIds.size;
 console.log(`validate-content: ${districts.length} districts, ${quests.length} quests, ${totalQuestions} questions, ${Object.keys(bundles).length} locales, ${distFiles.length} assets`);
 if (errors.length) {

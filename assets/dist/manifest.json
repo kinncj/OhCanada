@@ -339,6 +339,20 @@
       "height": 1.05,
       "radius": 2.02,
       "category": "prop"
+    },
+    "moose": {
+      "path": "models/hero/moose.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 12000,
+        "LOD1": 2400
+      },
+      "height": 2.1,
+      "radius": 1.14,
+      "category": "fauna"
     }
   },
   "textures": {
