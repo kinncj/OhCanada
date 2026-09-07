@@ -9,6 +9,12 @@ export interface AppearanceSpec {
   readonly hairColor: string;
   readonly outfitColor: string;
   readonly accessory: string;
+  /** Optional role styling (NPCs): see NpcAppearance in the domain. */
+  readonly outfitStyle?: string;
+  readonly bottomColor?: string;
+  readonly hat?: string;
+  readonly age?: string;
+  readonly beard?: boolean;
 }
 
 const BODY_SCALE: Record<string, [number, number, number]> = {

@@ -142,7 +142,12 @@
         "skinTone": "tone-3",
         "outfit": "fleece",
         "hair": "buzz",
-        "hairColor": "black"
+        "hairColor": "black",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "bottomColor": "#15181f",
+        "hat": "none"
       }
     }
   ],

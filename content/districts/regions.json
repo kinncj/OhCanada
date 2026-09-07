@@ -145,7 +145,12 @@
         "outfit": "parka",
         "hair": "long",
         "hairColor": "black",
-        "accessory": "scarf"
+        "accessory": "scarf",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "parka",
+        "bottomColor": "#2b2f3a",
+        "hat": "hood"
       }
     }
   ],

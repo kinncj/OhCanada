@@ -13,12 +13,22 @@ export interface Npc {
   readonly appearance: NpcAppearance;
 }
 
+export type OutfitStyle = 'casual' | 'formal' | 'uniform' | 'robe' | 'parka' | 'jersey' | 'raincoat' | 'workwear';
+export type Hat = 'none' | 'toque' | 'cap' | 'police' | 'hardhat' | 'beret' | 'hood' | 'captain';
+
 export interface NpcAppearance {
   readonly skinTone: string;
   readonly outfit: string;
   readonly hair: string;
   readonly hairColor: string;
   readonly accessory?: string;
+  /** Role-matching looks (ADR-0007): body, age and outfit style drive the character shader and props. */
+  readonly body?: 'male' | 'female';
+  readonly age?: 'young' | 'adult' | 'elder';
+  readonly outfitStyle?: OutfitStyle;
+  readonly bottomColor?: string;
+  readonly hat?: Hat;
+  readonly beard?: boolean;
 }
 
 export interface Trigger {

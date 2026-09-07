@@ -143,7 +143,12 @@
         "skinTone": "tone-4",
         "outfit": "fleece",
         "hair": "long",
-        "hairColor": "grey"
+        "hairColor": "grey",
+        "body": "female",
+        "age": "elder",
+        "outfitStyle": "casual",
+        "bottomColor": "#3b2f2a",
+        "hat": "none"
       }
     }
   ],

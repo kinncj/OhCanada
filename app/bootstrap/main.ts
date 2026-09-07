@@ -41,6 +41,22 @@ async function boot(): Promise<void> {
   const loading = new LoadingScreen();
   ui.append(loading.root);
   loading.set('Loading…', 0.05);
+  const watchdog = window.setTimeout(() => {
+    if (!loading.root.isConnected) return;
+    const btn = el('button', { class: 'btn', type: 'button', style: 'margin-top:1rem' }, 'Reload without cache');
+    btn.addEventListener('click', async () => {
+      try {
+        const regs = await navigator.serviceWorker?.getRegistrations?.();
+        for (const r of regs ?? []) await r.unregister();
+        const keys = await caches?.keys?.();
+        for (const k of keys ?? []) await caches.delete(k);
+      } catch {
+        /* ignore */
+      }
+      location.href = `${location.pathname}?nocache=${Date.now()}`;
+    });
+    loading.root.append(el('p', { class: 'source', style: 'margin-top:1rem;color:#fff' }, 'Taking longer than usual…'), btn);
+  }, 20_000);
 
   const bus = new EventBus<GameEvents>();
   attachTelemetry(bus);
@@ -90,7 +106,12 @@ async function boot(): Promise<void> {
 
   let game: Game;
   try {
-    game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL: params.get('webgl') === '1' });
+    try {
+      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL: params.get('webgl') === '1' });
+    } catch (first) {
+      console.warn('[truenorth] renderer init failed, retrying with WebGL2', first);
+      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL: true });
+    }
   } catch (e) {
     loading.hide();
     ui.append(el('div', { class: 'screen' }, el('div', { class: 'panel' }, el('h2', {}, 'TrueNorth'), el('p', {}, t.t('errors.webgl')), el('p', { class: 'source' }, String((e as Error).message)))));
@@ -271,11 +292,18 @@ async function boot(): Promise<void> {
     backdropLoaded = false;
   };
 
+  window.clearTimeout(watchdog);
   loading.hide();
   showMenu();
 
   if (config.featureFlags.serviceWorker && import.meta.env.PROD && 'serviceWorker' in navigator && !e2e) {
-    navigator.serviceWorker.register(`${base}sw.js`, { scope: base }).catch(() => undefined);
+    // Reload once when an updated worker takes control so the page never runs a stale shell against new assets.
+    let hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (hadController) location.reload();
+      hadController = true;
+    });
+    navigator.serviceWorker.register(`${base}sw.js`, { scope: base, updateViaCache: 'none' }).then((reg) => reg.update().catch(() => undefined)).catch(() => undefined);
   }
 }
 

@@ -142,7 +142,12 @@
         "skinTone": "tone-4",
         "outfit": "raincoat",
         "hair": "bun",
-        "hairColor": "black"
+        "hairColor": "black",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "uniform",
+        "bottomColor": "#101522",
+        "hat": "captain"
       }
     }
   ],

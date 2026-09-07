@@ -142,7 +142,13 @@
         "skinTone": "tone-4",
         "outfit": "raincoat",
         "hair": "short",
-        "hairColor": "black"
+        "hairColor": "black",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "raincoat",
+        "bottomColor": "#23303d",
+        "hat": "none",
+        "accessory": "glasses"
       }
     }
   ],

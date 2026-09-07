@@ -142,8 +142,13 @@
       "appearance": {
         "skinTone": "tone-5",
         "outfit": "fleece",
-        "hair": "short",
-        "hairColor": "black"
+        "hair": "buzz",
+        "hairColor": "grey",
+        "body": "male",
+        "age": "elder",
+        "outfitStyle": "robe",
+        "bottomColor": "#111318",
+        "hat": "none"
       }
     }
   ],

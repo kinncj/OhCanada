@@ -143,7 +143,12 @@
         "skinTone": "tone-2",
         "outfit": "hockey",
         "hair": "short",
-        "hairColor": "brown"
+        "hairColor": "brown",
+        "body": "male",
+        "age": "adult",
+        "outfitStyle": "uniform",
+        "bottomColor": "#141a2b",
+        "hat": "police"
       }
     }
   ],

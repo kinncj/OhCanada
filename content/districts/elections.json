@@ -143,7 +143,12 @@
         "outfit": "parka",
         "hair": "bun",
         "hairColor": "black",
-        "accessory": "glasses"
+        "accessory": "glasses",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "bottomColor": "#1f2430",
+        "hat": "none"
       }
     }
   ],

@@ -143,7 +143,12 @@
         "outfit": "hockey",
         "hair": "long",
         "hairColor": "blond",
-        "accessory": "toque"
+        "accessory": "toque",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "jersey",
+        "bottomColor": "#1d2430",
+        "hat": "toque"
       }
     }
   ],

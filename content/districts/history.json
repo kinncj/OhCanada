@@ -143,7 +143,12 @@
         "skinTone": "tone-2",
         "outfit": "plaid",
         "hair": "long",
-        "hairColor": "auburn"
+        "hairColor": "auburn",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "workwear",
+        "bottomColor": "#3a2c1e",
+        "hat": "beret"
       }
     }
   ],

@@ -55,6 +55,7 @@ export class SkinnedCharacterView {
     bottom: uniform(new THREE.Color('#2b2f3a')),
     shoes: uniform(new THREE.Color('#3a2a1e')),
     hair: uniform(new THREE.Color('#1a1412')),
+    clothRough: uniform(0.92),
   };
   private readonly disposables: { dispose(): void }[] = [];
   private readonly bodyTextureNodes: TextureNode[] = [];
@@ -92,7 +93,7 @@ export class SkinnedCharacterView {
       const isHair = entry.hair.includes(name) || name.startsWith('Hair') || name === 'Eyebrows';
       if (isHair) {
         const style = HAIR_STYLE[spec.hair] ?? '';
-        o.visible = name === 'Eyebrows' || name === style || (name === 'Hair_Beard' && spec.accessory === 'beard');
+        o.visible = name === 'Eyebrows' || name === style || (name === 'Hair_Beard' && (spec.accessory === 'beard' || spec.beard === true));
         const base = o.material as THREE.MeshStandardMaterial;
         const m = new THREE.MeshStandardNodeMaterial({ roughness: 0.55, metalness: 0 });
         m.side = THREE.DoubleSide;
@@ -159,7 +160,7 @@ export class SkinnedCharacterView {
       rgb = mix(rgb, this.uniforms.bottom.mul(shade), bottomMask);
       rgb = mix(rgb, this.uniforms.shoes.mul(shade), shoeMask);
       m.colorNode = vec4(rgb, 1);
-      m.roughnessNode = mix(float(0.6), float(0.92), topMask.max(bottomMask)).max(shoeMask.mul(0.7));
+      m.roughnessNode = mix(float(0.6), this.uniforms.clothRough, topMask.max(bottomMask)).max(shoeMask.mul(0.7));
       if (base.normalMap) m.normalMap = base.normalMap;
       o.material = m;
       this.disposables.push(m);
@@ -176,9 +177,45 @@ export class SkinnedCharacterView {
 
   applyAppearance(spec: AppearanceSpec): void {
     this.uniforms.skinTint.value.set(skinTintFor(spec.skinColor));
-    this.uniforms.top.value.set(spec.outfitColor);
-    this.uniforms.bottom.value.set(bottomFor(spec.outfitColor));
     this.uniforms.hair.value.set(spec.hairColor);
+    const style = spec.outfitStyle ?? 'casual';
+    const top = new THREE.Color(spec.outfitColor);
+    const bottom = new THREE.Color(spec.bottomColor ?? bottomFor(spec.outfitColor));
+    let rough = 0.92;
+    switch (style) {
+      case 'robe': // judge / ceremonial: one dark garment head to toe
+        top.set('#141620');
+        bottom.copy(top);
+        rough = 0.85;
+        break;
+      case 'uniform': // police / harbour: navy tunic, darker trousers
+        top.set('#1f2d4d');
+        bottom.set(spec.bottomColor ?? '#141a2b');
+        rough = 0.8;
+        break;
+      case 'formal': // suit jacket + trousers
+        rough = 0.75;
+        break;
+      case 'raincoat': // glossy, long: covers hips too
+        rough = 0.35;
+        bottom.copy(top).multiplyScalar(0.9);
+        break;
+      case 'parka':
+        rough = 0.98;
+        break;
+      case 'jersey':
+        rough = 0.9;
+        break;
+      case 'workwear':
+        top.set('#6b4a2b');
+        rough = 0.95;
+        break;
+      default:
+        break;
+    }
+    this.uniforms.top.value.copy(top);
+    this.uniforms.bottom.value.copy(bottom);
+    this.uniforms.clothRough.value = rough;
     // Deep tones use the pack's dark base texture so shading detail stays natural.
     const entry = this.library.characterEntry(this.bodyKey);
     const tone = new THREE.Color(spec.skinColor);
@@ -204,7 +241,74 @@ export class SkinnedCharacterView {
       to.add(obj);
       this.accessories.push(obj);
     };
-    switch (spec.accessory) {
+    const hatColor = spec.outfitStyle === 'uniform' ? '#141a2b' : spec.outfitColor;
+    switch (spec.hat ?? (spec.accessory === 'toque' ? 'toque' : 'none')) {
+      case 'cap': {
+        const g = new THREE.Group();
+        g.name = 'part:hat:cap';
+        const m = new THREE.MeshStandardNodeMaterial({ color: hatColor, roughness: 0.9 });
+        const crown = new THREE.Mesh(new THREE.SphereGeometry(0.113, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), m);
+        crown.position.y = 0.06;
+        const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.012, 20, 1, false, -Math.PI / 2, Math.PI), m);
+        brim.position.set(0, 0.06, 0.09);
+        brim.scale.set(1.2, 1, 1.3);
+        g.add(crown, brim);
+        attach(g, this.head);
+        break;
+      }
+      case 'police':
+      case 'captain': {
+        const g = new THREE.Group();
+        g.name = `part:hat:${spec.hat}`;
+        const dark = new THREE.MeshStandardNodeMaterial({ color: spec.hat === 'captain' ? '#f2f2ee' : '#141a2b', roughness: 0.8 });
+        const band = new THREE.MeshStandardNodeMaterial({ color: '#0c0f18', roughness: 0.6 });
+        const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.105, 0.075, 24), dark);
+        crown.position.y = 0.105;
+        const topDisc = new THREE.Mesh(new THREE.CylinderGeometry(0.135, 0.12, 0.02, 24), dark);
+        topDisc.position.set(0, 0.15, -0.01);
+        const bandM = new THREE.Mesh(new THREE.CylinderGeometry(0.108, 0.108, 0.03, 24), band);
+        bandM.position.y = 0.075;
+        const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.01, 20, 1, false, -Math.PI / 2, Math.PI), band);
+        brim.position.set(0, 0.062, 0.085);
+        brim.scale.set(1.15, 1, 1.2);
+        const badge = new THREE.Mesh(new THREE.SphereGeometry(0.014, 8, 6), new THREE.MeshStandardNodeMaterial({ color: '#d4af37', metalness: 0.9, roughness: 0.3 }));
+        badge.position.set(0, 0.11, 0.115);
+        g.add(crown, topDisc, bandM, brim, badge);
+        attach(g, this.head);
+        break;
+      }
+      case 'hardhat': {
+        const g = new THREE.Group();
+        g.name = 'part:hat:hardhat';
+        const m = new THREE.MeshStandardNodeMaterial({ color: '#f5c518', roughness: 0.35 });
+        const shell = new THREE.Mesh(new THREE.SphereGeometry(0.125, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.55), m);
+        shell.position.y = 0.05;
+        const brim = new THREE.Mesh(new THREE.TorusGeometry(0.125, 0.012, 6, 24), m);
+        brim.rotation.x = Math.PI / 2;
+        brim.position.y = 0.055;
+        g.add(shell, brim);
+        attach(g, this.head);
+        break;
+      }
+      case 'beret': {
+        const m = new THREE.MeshStandardNodeMaterial({ color: hatColor, roughness: 0.95 });
+        const b = new THREE.Mesh(new THREE.SphereGeometry(0.13, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.45), m);
+        b.scale.set(1, 0.6, 1);
+        b.position.set(0.02, 0.075, -0.01);
+        b.rotation.z = -0.25;
+        b.name = 'part:hat:beret';
+        attach(b, this.head);
+        break;
+      }
+      case 'hood': {
+        const m = new THREE.MeshStandardNodeMaterial({ color: spec.outfitColor, roughness: 0.98 });
+        const hood = new THREE.Mesh(new THREE.SphereGeometry(0.16, 22, 14, Math.PI * 0.15, Math.PI * 1.7, 0, Math.PI * 0.62), m);
+        hood.position.set(0, 0.02, -0.02);
+        hood.rotation.y = Math.PI;
+        hood.name = 'part:hat:hood';
+        attach(hood, this.head);
+        break;
+      }
       case 'toque': {
         const g = new THREE.Group();
         const cap = new THREE.Mesh(new THREE.SphereGeometry(0.115, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.55), new THREE.MeshStandardNodeMaterial({ color: '#c8102e', roughness: 0.95 }));
@@ -216,35 +320,43 @@ export class SkinnedCharacterView {
         attach(g, this.head);
         break;
       }
-      case 'glasses': {
-        const g = new THREE.Group();
-        const m = new THREE.MeshStandardNodeMaterial({ color: '#222', roughness: 0.4, metalness: 0.6 });
-        for (const sx of [-1, 1]) {
-          const ring = new THREE.Mesh(new THREE.TorusGeometry(0.026, 0.004, 6, 14), m);
-          ring.position.set(sx * 0.033, 0.05, 0.095);
-          g.add(ring);
-        }
-        const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.004, 0.004), m);
-        bridge.position.set(0, 0.05, 0.095);
-        g.add(bridge);
-        attach(g, this.head);
-        break;
-      }
-      case 'scarf': {
-        const t = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 8, 18), new THREE.MeshStandardNodeMaterial({ color: '#e3b505', roughness: 0.95 }));
-        t.rotation.x = Math.PI / 2;
-        t.position.y = -0.02;
-        attach(t, this.head);
-        break;
-      }
-      case 'backpack': {
-        const b = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.36, 0.14), new THREE.MeshStandardNodeMaterial({ color: '#2f6b4f', roughness: 0.9 }));
-        b.position.set(0, 0.02, -0.17);
-        attach(b, this.spine);
-        break;
-      }
       default:
         break;
+    }
+    // Remaining accessories (glasses, scarf, backpack) are independent of the hat.
+    switch (spec.accessory) {
+      case 'glasses':
+      case 'scarf':
+      case 'backpack':
+        this.buildSmallAccessory(spec.accessory, attach);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private buildSmallAccessory(kind: 'glasses' | 'scarf' | 'backpack', attach: (obj: THREE.Object3D, to: THREE.Object3D | null) => void): void {
+    if (kind === 'glasses') {
+      const g = new THREE.Group();
+      const m = new THREE.MeshStandardNodeMaterial({ color: '#222', roughness: 0.4, metalness: 0.6 });
+      for (const sx of [-1, 1]) {
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.026, 0.004, 6, 14), m);
+        ring.position.set(sx * 0.033, 0.05, 0.095);
+        g.add(ring);
+      }
+      const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.004, 0.004), m);
+      bridge.position.set(0, 0.05, 0.095);
+      g.add(bridge);
+      attach(g, this.head);
+    } else if (kind === 'scarf') {
+      const t = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 8, 18), new THREE.MeshStandardNodeMaterial({ color: '#e3b505', roughness: 0.95 }));
+      t.rotation.x = Math.PI / 2;
+      t.position.y = -0.02;
+      attach(t, this.head);
+    } else {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.36, 0.14), new THREE.MeshStandardNodeMaterial({ color: '#2f6b4f', roughness: 0.9 }));
+      b.position.set(0, 0.02, -0.17);
+      attach(b, this.spine);
     }
   }
 

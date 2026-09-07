@@ -140,14 +140,21 @@ export class Game {
   private resolve(a: CharacterAppearance | (NpcAppearance & { body?: string | undefined; face?: string })): AppearanceSpec {
     const c = this.deps.catalog;
     const val = (opts: readonly { id: string; value?: string }[], id: string, fallback: string) => opts.find((o) => o.id === id)?.value ?? fallback;
+    const npc = a as Partial<NpcAppearance>;
+    const body = a.body === 'male' ? 'average' : a.body === 'female' ? 'slim' : (a.body ?? 'average');
     return {
-      body: a.body ?? 'average',
+      body,
       face: a.face ?? 'round',
       skinColor: val(c.skinTones, a.skinTone, '#c68f64'),
       hair: a.hair,
-      hairColor: val(c.hairColors, a.hairColor, '#1a1412'),
+      hairColor: npc.age === 'elder' ? '#a9a9a9' : val(c.hairColors, a.hairColor, '#1a1412'),
       outfitColor: val(c.outfits, a.outfit, '#c8102e'),
       accessory: a.accessory ?? 'none',
+      ...(npc.outfitStyle ? { outfitStyle: npc.outfitStyle } : {}),
+      ...(npc.bottomColor ? { bottomColor: npc.bottomColor } : {}),
+      ...(npc.hat ? { hat: npc.hat } : {}),
+      ...(npc.age ? { age: npc.age } : {}),
+      ...(npc.beard !== undefined ? { beard: npc.beard } : {}),
     };
   }
 
@@ -171,7 +178,7 @@ export class Game {
     // NPCs
     this.npcBrain.setHeightFunction(world.heightAt);
     for (const npc of district.npcs) {
-      const view = await this.makeCharacter(this.resolve({ ...npc.appearance, body: hashNpc(npc.id) ? 'slim' : 'average' }));
+      const view = await this.makeCharacter(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? (hashNpc(npc.id) ? 'female' : 'male') }));
       view.root.name = `npc:${npc.id}`;
       this.scene.add(view.root);
       this.npcViews.set(npc.id, view);

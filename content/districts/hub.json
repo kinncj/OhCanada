@@ -3,52 +3,239 @@
   "id": "hub",
   "subject": "hub",
   "chapter": "Introduction",
-  "name": { "en": "Parliament Hill", "fr": "Colline du Parlement" },
+  "name": {
+    "en": "Parliament Hill",
+    "fr": "Colline du Parlement"
+  },
   "description": {
     "en": "Ottawa's heart: the Peace Tower, the Centennial Flame and the Rideau Canal. Every journey to citizenship starts here.",
     "fr": "Le cœur d'Ottawa : la tour de la Paix, la Flamme du centenaire et le canal Rideau. Chaque parcours vers la citoyenneté commence ici."
   },
-  "spawn": { "position": [0, 0, 28], "yaw": 3.14159 },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      28
+    ],
+    "yaw": 3.14159
+  },
   "scene": {
     "generator": "hub",
     "seed": 1867,
     "size": 260,
-    "terrain": { "amplitude": 1.4, "frequency": 0.02, "palette": ["#5a7f3a", "#6f9a44", "#8fae5c", "#a9b98a"] },
-    "water": [{ "position": [-70, -0.6, 10], "size": [22, 220] }],
-    "vegetation": { "density": 0.45, "kinds": ["maple", "pine", "birch", "shrub"] },
-    "landmarks": [
-      { "id": "centre-block", "type": "parliament", "position": [0, 0, -30], "label": { "en": "Centre Block & Peace Tower", "fr": "Édifice du Centre et tour de la Paix" } },
-      { "id": "centennial-flame", "type": "flame", "position": [0, 0, 6], "label": { "en": "Centennial Flame", "fr": "Flamme du centenaire" } },
-      { "id": "flagpole-main", "type": "flagpole", "position": [16, 0, 12] },
-      { "id": "flagpole-west", "type": "flagpole", "position": [-16, 0, 12] },
-      { "id": "canal-locks", "type": "locks", "position": [-58, 0, 30], "label": { "en": "Rideau Canal locks", "fr": "Écluses du canal Rideau" } },
-      { "id": "station", "type": "station", "position": [52, 0, 40], "rotationY": -0.6, "label": { "en": "VIA Rail station", "fr": "Gare VIA Rail" } },
-      { "id": "bench-1", "type": "bench", "position": [10, 0, 22], "rotationY": 3.14159 },
-      { "id": "bench-2", "type": "bench", "position": [-10, 0, 22], "rotationY": 3.14159 },
-      { "id": "lamp-1", "type": "lamp", "position": [6, 0, 18] },
-      { "id": "lamp-2", "type": "lamp", "position": [-6, 0, 18] },
-      { "id": "lamp-3", "type": "lamp", "position": [6, 0, -4] },
-      { "id": "lamp-4", "type": "lamp", "position": [-6, 0, -4] }
+    "terrain": {
+      "amplitude": 1.4,
+      "frequency": 0.02,
+      "palette": [
+        "#5a7f3a",
+        "#6f9a44",
+        "#8fae5c",
+        "#a9b98a"
+      ]
+    },
+    "water": [
+      {
+        "position": [
+          -70,
+          -0.6,
+          10
+        ],
+        "size": [
+          22,
+          220
+        ]
+      }
     ],
-    "ambience": { "hdri": "sky/partly_cloudy_1k.hdr", "timeOfDay": 0.42, "weather": "clear", "audio": "wind", "fogDensity": 0.0035 }
+    "vegetation": {
+      "density": 0.45,
+      "kinds": [
+        "maple",
+        "pine",
+        "birch",
+        "shrub"
+      ]
+    },
+    "landmarks": [
+      {
+        "id": "centre-block",
+        "type": "parliament",
+        "position": [
+          0,
+          0,
+          -30
+        ],
+        "label": {
+          "en": "Centre Block & Peace Tower",
+          "fr": "Édifice du Centre et tour de la Paix"
+        }
+      },
+      {
+        "id": "centennial-flame",
+        "type": "flame",
+        "position": [
+          0,
+          0,
+          6
+        ],
+        "label": {
+          "en": "Centennial Flame",
+          "fr": "Flamme du centenaire"
+        }
+      },
+      {
+        "id": "flagpole-main",
+        "type": "flagpole",
+        "position": [
+          16,
+          0,
+          12
+        ]
+      },
+      {
+        "id": "flagpole-west",
+        "type": "flagpole",
+        "position": [
+          -16,
+          0,
+          12
+        ]
+      },
+      {
+        "id": "canal-locks",
+        "type": "locks",
+        "position": [
+          -58,
+          0,
+          30
+        ],
+        "label": {
+          "en": "Rideau Canal locks",
+          "fr": "Écluses du canal Rideau"
+        }
+      },
+      {
+        "id": "station",
+        "type": "station",
+        "position": [
+          52,
+          0,
+          40
+        ],
+        "rotationY": -0.6,
+        "label": {
+          "en": "VIA Rail station",
+          "fr": "Gare VIA Rail"
+        }
+      },
+      {
+        "id": "bench-1",
+        "type": "bench",
+        "position": [
+          10,
+          0,
+          22
+        ],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "bench-2",
+        "type": "bench",
+        "position": [
+          -10,
+          0,
+          22
+        ],
+        "rotationY": 3.14159
+      },
+      {
+        "id": "lamp-1",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          18
+        ]
+      },
+      {
+        "id": "lamp-2",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          18
+        ]
+      },
+      {
+        "id": "lamp-3",
+        "type": "lamp",
+        "position": [
+          6,
+          0,
+          -4
+        ]
+      },
+      {
+        "id": "lamp-4",
+        "type": "lamp",
+        "position": [
+          -6,
+          0,
+          -4
+        ]
+      }
+    ],
+    "ambience": {
+      "hdri": "sky/partly_cloudy_1k.hdr",
+      "timeOfDay": 0.42,
+      "weather": "clear",
+      "audio": "wind",
+      "fogDensity": 0.0035
+    }
   },
   "npcs": [
     {
       "id": "guide-amelie",
-      "name": { "en": "Amélie, Parliamentary Guide", "fr": "Amélie, guide parlementaire" },
-      "position": [4, 0, 14],
+      "name": {
+        "en": "Amélie, Parliamentary Guide",
+        "fr": "Amélie, guide parlementaire"
+      },
+      "position": [
+        4,
+        0,
+        14
+      ],
       "behavior": "idle",
-      "questRefs": ["hub-welcome"],
+      "questRefs": [
+        "hub-welcome"
+      ],
       "idleDialogue": {
         "en": "Welcome to Parliament Hill! When you're ready, I can show you around.",
         "fr": "Bienvenue sur la Colline du Parlement! Quand vous serez prêt, je vous ferai visiter."
       },
-      "appearance": { "skinTone": "tone-3", "outfit": "plaid", "hair": "bun", "hairColor": "brown", "accessory": "glasses" }
+      "appearance": {
+        "skinTone": "tone-3",
+        "outfit": "plaid",
+        "hair": "bun",
+        "hairColor": "brown",
+        "accessory": "glasses",
+        "body": "female",
+        "age": "adult",
+        "outfitStyle": "formal",
+        "bottomColor": "#2a2f3a",
+        "hat": "none"
+      }
     },
     {
       "id": "skater-jo",
-      "name": { "en": "Jo, Canal Skater", "fr": "Jo, patineur du canal" },
-      "position": [-52, 0, 20],
+      "name": {
+        "en": "Jo, Canal Skater",
+        "fr": "Jo, patineur du canal"
+      },
+      "position": [
+        -52,
+        0,
+        20
+      ],
       "behavior": "wander",
       "wanderRadius": 8,
       "questRefs": [],
@@ -56,22 +243,201 @@
         "en": "In winter the Rideau Canal becomes the world's largest skating rink. Bring a BeaverTail!",
         "fr": "En hiver, le canal Rideau devient la plus grande patinoire du monde. Apportez une queue de castor!"
       },
-      "appearance": { "skinTone": "tone-1", "outfit": "hockey", "hair": "short", "hairColor": "red", "accessory": "toque" }
+      "appearance": {
+        "skinTone": "tone-1",
+        "outfit": "hockey",
+        "hair": "short",
+        "hairColor": "red",
+        "accessory": "toque",
+        "body": "male",
+        "age": "young",
+        "outfitStyle": "jersey",
+        "bottomColor": "#1d2430",
+        "hat": "toque"
+      }
     }
   ],
   "triggers": [
-    { "id": "flagpole", "position": [16, 0, 12], "radius": 3.5, "kind": "zone", "label": { "en": "The flagpole", "fr": "Le mât du drapeau" } },
-    { "id": "flame", "position": [0, 0, 6], "radius": 3.5, "kind": "zone", "label": { "en": "Centennial Flame", "fr": "Flamme du centenaire" } },
-    { "id": "portal-rights", "position": [52, 0, 40], "radius": 4, "kind": "portal", "toDistrict": "rights-responsibilities", "label": { "en": "Train to Rights & Responsibilities", "fr": "Train vers Droits et responsabilités" } },
-    { "id": "portal-who-we-are", "position": [58, 0, 34], "radius": 3, "kind": "portal", "toDistrict": "who-we-are", "label": { "en": "Train to Who We Are", "fr": "Train vers Qui nous sommes" } },
-    { "id": "portal-history", "position": [64, 0, 28], "radius": 3, "kind": "portal", "toDistrict": "history", "label": { "en": "Train to Canada's History", "fr": "Train vers L'histoire du Canada" } },
-    { "id": "portal-modern", "position": [70, 0, 22], "radius": 3, "kind": "portal", "toDistrict": "modern-canada", "label": { "en": "Train to Modern Canada", "fr": "Train vers Le Canada moderne" } },
-    { "id": "portal-government", "position": [76, 0, 16], "radius": 3, "kind": "portal", "toDistrict": "government", "label": { "en": "Train to Government", "fr": "Train vers Le gouvernement" } },
-    { "id": "portal-elections", "position": [82, 0, 10], "radius": 3, "kind": "portal", "toDistrict": "elections", "label": { "en": "Train to Federal Elections", "fr": "Train vers Les élections fédérales" } },
-    { "id": "portal-justice", "position": [88, 0, 4], "radius": 3, "kind": "portal", "toDistrict": "justice", "label": { "en": "Train to the Justice System", "fr": "Train vers Le système judiciaire" } },
-    { "id": "portal-symbols", "position": [94, 0, -2], "radius": 3, "kind": "portal", "toDistrict": "symbols", "label": { "en": "Train to Canadian Symbols", "fr": "Train vers Les symboles canadiens" } },
-    { "id": "portal-economy", "position": [100, 0, -8], "radius": 3, "kind": "portal", "toDistrict": "economy", "label": { "en": "Train to Canada's Economy", "fr": "Train vers L'économie du Canada" } },
-    { "id": "portal-regions", "position": [106, 0, -14], "radius": 3, "kind": "portal", "toDistrict": "regions", "label": { "en": "Train to Canada's Regions", "fr": "Train vers Les régions du Canada" } }
+    {
+      "id": "flagpole",
+      "position": [
+        16,
+        0,
+        12
+      ],
+      "radius": 3.5,
+      "kind": "zone",
+      "label": {
+        "en": "The flagpole",
+        "fr": "Le mât du drapeau"
+      }
+    },
+    {
+      "id": "flame",
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "radius": 3.5,
+      "kind": "zone",
+      "label": {
+        "en": "Centennial Flame",
+        "fr": "Flamme du centenaire"
+      }
+    },
+    {
+      "id": "portal-rights",
+      "position": [
+        52,
+        0,
+        40
+      ],
+      "radius": 4,
+      "kind": "portal",
+      "toDistrict": "rights-responsibilities",
+      "label": {
+        "en": "Train to Rights & Responsibilities",
+        "fr": "Train vers Droits et responsabilités"
+      }
+    },
+    {
+      "id": "portal-who-we-are",
+      "position": [
+        58,
+        0,
+        34
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "who-we-are",
+      "label": {
+        "en": "Train to Who We Are",
+        "fr": "Train vers Qui nous sommes"
+      }
+    },
+    {
+      "id": "portal-history",
+      "position": [
+        64,
+        0,
+        28
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "history",
+      "label": {
+        "en": "Train to Canada's History",
+        "fr": "Train vers L'histoire du Canada"
+      }
+    },
+    {
+      "id": "portal-modern",
+      "position": [
+        70,
+        0,
+        22
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "modern-canada",
+      "label": {
+        "en": "Train to Modern Canada",
+        "fr": "Train vers Le Canada moderne"
+      }
+    },
+    {
+      "id": "portal-government",
+      "position": [
+        76,
+        0,
+        16
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "government",
+      "label": {
+        "en": "Train to Government",
+        "fr": "Train vers Le gouvernement"
+      }
+    },
+    {
+      "id": "portal-elections",
+      "position": [
+        82,
+        0,
+        10
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "elections",
+      "label": {
+        "en": "Train to Federal Elections",
+        "fr": "Train vers Les élections fédérales"
+      }
+    },
+    {
+      "id": "portal-justice",
+      "position": [
+        88,
+        0,
+        4
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "justice",
+      "label": {
+        "en": "Train to the Justice System",
+        "fr": "Train vers Le système judiciaire"
+      }
+    },
+    {
+      "id": "portal-symbols",
+      "position": [
+        94,
+        0,
+        -2
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "symbols",
+      "label": {
+        "en": "Train to Canadian Symbols",
+        "fr": "Train vers Les symboles canadiens"
+      }
+    },
+    {
+      "id": "portal-economy",
+      "position": [
+        100,
+        0,
+        -8
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "economy",
+      "label": {
+        "en": "Train to Canada's Economy",
+        "fr": "Train vers L'économie du Canada"
+      }
+    },
+    {
+      "id": "portal-regions",
+      "position": [
+        106,
+        0,
+        -14
+      ],
+      "radius": 3,
+      "kind": "portal",
+      "toDistrict": "regions",
+      "label": {
+        "en": "Train to Canada's Regions",
+        "fr": "Train vers Les régions du Canada"
+      }
+    }
   ],
-  "quests": ["hub-welcome"]
+  "quests": [
+    "hub-welcome"
+  ]
 }
