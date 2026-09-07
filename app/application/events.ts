@@ -31,6 +31,8 @@ export interface GameEvents {
   'player:interact': { target: NpcId | TriggerId; kind: 'npc' | 'trigger' };
   'player:entered-trigger': { trigger: TriggerId; kind: 'zone' | 'pickup' | 'portal' };
   'player:exited-trigger': { trigger: TriggerId };
+  'poi:entered': { poi: string; district: DistrictId };
+  'poi:fast-travel': { poi: string };
   'player:moved': { position: Vec3 };
   'settings:changed': { key: string; value: unknown };
   'ui:notify': { key: string; params?: Record<string, string | number> };

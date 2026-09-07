@@ -32,8 +32,9 @@ export class JsonSaveCodec implements SaveCodec {
 }
 
 function migrate(p: Progress): Result<Progress, PersistenceError> {
-  if (p.version === SAVE_VERSION) return ok(p);
+  const filled: Progress = { ...p, seenQuestionIds: p.seenQuestionIds ?? [], wrongQuestionIds: p.wrongQuestionIds ?? [] };
+  if (p.version === SAVE_VERSION) return ok(filled);
   if (p.version > SAVE_VERSION) return err({ code: 'version', message: `Save version ${p.version} is newer than this game (${SAVE_VERSION})` });
   // Future: stepwise migrations v1 -> v2 -> ...
-  return ok({ ...p, version: SAVE_VERSION });
+  return ok({ ...filled, version: SAVE_VERSION });
 }

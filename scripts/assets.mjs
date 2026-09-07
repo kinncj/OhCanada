@@ -19,6 +19,16 @@ import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { getHeapStatistics } from 'node:v8';
 
+// ---- Optional modules produced by the art/audio pipelines (loaded only when present) ----
+async function optional(modulePath) {
+  try {
+    return await import(modulePath);
+  } catch (e) {
+    if (e?.code === 'ERR_MODULE_NOT_FOUND') return null;
+    throw e;
+  }
+}
+
 // Photoscans run to millions of triangles: make sure V8 has room, re-executing with a bigger heap when it does not.
 const HEAP_MB = 8192;
 if (getHeapStatistics().heap_size_limit < HEAP_MB * 1024 * 1024 * 0.9 && !process.env.TRUENORTH_ASSETS_CHILD) {
@@ -231,6 +241,17 @@ for (const body of manifest.characters?.bodies ?? []) {
   quaterniusCredit(rel, `Universal Base Character (${body}) with hairstyles and UAL animation clips`);
   quaterniusCredit(skinRel.light, `Universal Base Character ${body} skin, light tone`);
   quaterniusCredit(skinRel.dark, `Universal Base Character ${body} skin, dark tone`);
+}
+
+// 7b. Hero assets (scripts/lib/hero.mjs) and soundscapes (scripts/lib/soundscapes.mjs), when those modules exist
+{
+  const hero = await optional('./lib/hero.mjs');
+  if (hero?.processHeroAssets) {
+    const entries = await hero.processHeroAssets({ srcDir: join(src, 'hero'), distDir: dist, upsertCredit, toktx: await optional('./lib/toktx.mjs') });
+    if (entries) Object.assign(models, entries);
+  }
+  const sound = await optional('./lib/soundscapes.mjs');
+  if (sound?.generateSoundscapes) await sound.generateSoundscapes({ outDir: dist, upsertCredit });
 }
 
 // 8. Renderer manifest + credits (credits for files that no longer exist are dropped)

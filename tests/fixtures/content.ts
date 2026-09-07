@@ -70,7 +70,8 @@ export const QUEST_COLLECT: Quest = {
 export const HUB: District = {
   id: districtId('hub'), subject: 'hub', chapter: 'Intro', name: { en: 'Hub', fr: 'Hub' }, description: { en: 'd', fr: 'd' },
   spawn: { position: [0, 0, 0], yaw: 0 },
-  scene: { generator: 'hub', seed: 1, size: 100, terrain: { amplitude: 1, frequency: 0.1, palette: ['#000000', '#ffffff'] }, vegetation: { density: 0, kinds: [] }, landmarks: [], ambience: { hdri: 'x', timeOfDay: 0.5, weather: 'clear' } },
+  scene: { generator: 'hub', seed: 1, size: 100, terrain: { amplitude: 1, frequency: 0.1, palette: ['#000000', '#ffffff'] }, vegetation: { density: 0, kinds: [] }, landmarks: [], ambience: { hdri: 'x', timeOfDay: 0.5, weather: 'clear', soundscape: { loop: 'wind', oneshots: [], volume: 0.5 } } },
+  pois: [],
   npcs: [{ id: npcId('guide'), name: { en: 'G', fr: 'G' }, position: [1, 0, 1], behavior: 'idle', questRefs: [questId('hub-welcome')], idleDialogue: { en: 'hi', fr: 'salut' }, appearance: { skinTone: 't', outfit: 'o', hair: 'h', hairColor: 'c' } }],
   triggers: [{ id: triggerId('flagpole'), position: [5, 0, 5], radius: 2, label: { en: 'f', fr: 'f' }, kind: 'zone' }],
   quests: [questId('hub-welcome')],

@@ -600,6 +600,202 @@
       "license": "CC0-1.0",
       "source": "https://quaternius.itch.io/universal-base-characters",
       "notes": "Universal Base Characters / Universal Animation Library"
+    },
+    {
+      "path": "audio/canal-water.wav",
+      "title": "Canal: lapping water with distant traffic (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/city-hum.wav",
+      "title": "City: distant traffic hum with a far horn (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/forest.wav",
+      "title": "Boreal forest: wind in conifers with birdsong (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/ocean.wav",
+      "title": "Ocean: rolling waves with foam hiss, 10 s period (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/rain.wav",
+      "title": "Rain on ground with occasional drips (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/snowfield.wav",
+      "title": "Snowfield: muffled wind with soft creaks (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/harbour.wav",
+      "title": "Harbour: waves, gull cries and rope creak (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/tundra-wind.wav",
+      "title": "Tundra: thin high wind, sparse (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/campfire.wav",
+      "title": "Campfire: crackle and low roar (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/prairie.wav",
+      "title": "Prairie: wind through grain with insects (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/rink.wav",
+      "title": "Arena rink: hum with distant skate scrapes (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/aurora-drone.wav",
+      "title": "Aurora: soft evolving synth pad for the North at night (ambience loop)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/goose-honk.wav",
+      "title": "Canada goose honk (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/goose-flock.wav",
+      "title": "Canada goose flock, several honks (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/loon-call.wav",
+      "title": "Common loon two-note tremolo call (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/beaver-splash.wav",
+      "title": "Beaver tail slap and splash (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/moose-call.wav",
+      "title": "Bull moose bellow (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/bear-grunt.wav",
+      "title": "Black bear grunt (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/gull.wav",
+      "title": "Herring gull cry (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/skate-scrape.wav",
+      "title": "Skate blade scrape on ice (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/footstep-snow.wav",
+      "title": "Footstep in snow (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/footstep-gravel.wav",
+      "title": "Footstep on gravel (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/footstep-wood.wav",
+      "title": "Footstep on wooden boardwalk (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/train-whistle.wav",
+      "title": "Train horn chord in the distance (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/church-bell.wav",
+      "title": "Church bell strike (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/fiddle-riff.wav",
+      "title": "Fiddle riff, short D-pentatonic phrase (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/whistle-referee.wav",
+      "title": "Referee pea whistle (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
+    },
+    {
+      "path": "audio/camera-shutter.wav",
+      "title": "Camera shutter click (one-shot)",
+      "author": "TrueNorth (scripts/lib/soundscapes.mjs)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/lib/soundscapes.mjs"
     }
   ]
 }

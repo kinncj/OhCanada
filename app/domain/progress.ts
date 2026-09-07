@@ -41,6 +41,9 @@ export interface Progress {
   readonly unlockedDistricts: readonly DistrictId[];
   readonly examResults: readonly ExamResult[];
   readonly settings: Settings;
+  /** Question selection history (exclusion window + wrong-answer weighting). */
+  readonly seenQuestionIds: readonly QuestionId[];
+  readonly wrongQuestionIds: readonly QuestionId[];
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -77,6 +80,8 @@ export function newProgress(nowIso: string, startDistrict: DistrictId, unlocked:
     unlockedDistricts: [...unlocked],
     examResults: [],
     settings: DEFAULT_SETTINGS,
+    seenQuestionIds: [],
+    wrongQuestionIds: [],
   };
 }
 
@@ -110,7 +115,11 @@ export function completeQuest(p: Progress, questId: QuestId, stamp: StampId, dis
 }
 
 export function recordAnswer(p: Progress, record: AnsweredRecord): Progress {
-  return { ...p, answered: [...p.answered, record], updatedAt: record.at };
+  const wrong = new Set(p.wrongQuestionIds ?? []);
+  if (record.correct) wrong.delete(record.questionId);
+  else wrong.add(record.questionId);
+  const seen = [...(p.seenQuestionIds ?? []), record.questionId].slice(-200);
+  return { ...p, answered: [...p.answered, record], seenQuestionIds: seen, wrongQuestionIds: [...wrong], updatedAt: record.at };
 }
 
 export function withUnlocked(p: Progress, unlocked: readonly DistrictId[], nowIso: string): Progress {

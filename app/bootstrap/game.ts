@@ -3,7 +3,7 @@ import type { EventBus } from '@common/event-bus';
 import type { GameEvents } from '@application/events';
 import type { GameConfig, GraphicsPreset, PresetName } from '@application/ports';
 import type { AudioPort, InputPort, PhysicsWorldPort } from '@application/engine-ports';
-import type { District, Npc, Trigger } from '@domain/district';
+import type { District, Npc, Soundscape, Trigger } from '@domain/district';
 import type { CharacterAppearance, CharacterCatalog } from '@domain/character';
 import type { NpcAppearance } from '@domain/district';
 import { districtId, triggerId, type DistrictId, type TriggerId } from '@domain/ids';
@@ -63,6 +63,7 @@ export class Game {
   private accumulator = 0;
   private lastTime = 0;
   private readonly insideTriggers = new Set<string>();
+  private currentPoi: string | null = null;
   private readonly tmpF = new THREE.Vector3();
   private readonly tmpR = new THREE.Vector3();
   private readonly playerPos = new THREE.Vector3();
@@ -218,7 +219,7 @@ export class Game {
     onProgress?.(0.7);
     await this.environment.load(district.scene.ambience, this.preset, this.deps.config.featureFlags.dayNightCycle ?? true);
     this.weather.set(this.deps.config.featureFlags.weather === false ? 'clear' : district.scene.ambience.weather, Math.round(this.preset.maxInstances * 0.5));
-    if (district.scene.ambience.audio) this.deps.audio.playAmbience(district.scene.ambience.audio);
+    this.setZoneAudio(district.scene.ambience.soundscape);
     stage('environment');
     onProgress?.(0.9);
     // Compile every material/pipeline while the loading screen is still up instead of stalling the first frames.
@@ -234,6 +235,7 @@ export class Game {
     this.teleport(sp[0], sp[2], district.spawn.yaw);
     this.player.district = district.id;
     this.insideTriggers.clear();
+    this.currentPoi = null;
     this.deps.bus.emit('district:loaded', { district: district.id });
     onProgress?.(1);
   }
@@ -345,7 +347,10 @@ export class Game {
       view.root.rotation.y = pose.yaw;
       view.animate(dt, pose.speed, true, this.talking.has(id));
     }
-    this.rig.update(dt, this.playerPos, speed, this.world?.occluders ?? []);
+    if (this.freeCam) {
+      this.rig.camera.position.copy(this.freeCam.eye);
+      this.rig.camera.lookAt(this.freeCam.target);
+    } else this.rig.update(dt, this.playerPos, speed, this.world?.occluders ?? []);
     this.environment.update(this.paused ? 0 : dt, this.playerPos);
     this.world?.update(dt, this.rig.camera.position, this.elapsed);
     this.world?.setNight(this.environment.isNight);
@@ -388,7 +393,44 @@ export class Game {
     }
     this.syncPlayerView();
     this.checkTriggers();
+    this.checkPois();
     return speed;
+  }
+
+  /** POI the player stands in (zone ambience, fast-travel discovery). */
+  private checkPois(): void {
+    if (!this.district) return;
+    const p = this.player.transform.position;
+    let inside: string | null = null;
+    for (const poi of this.district.pois) if (withinRadius(p, poi.position, poi.radius)) inside = poi.id;
+    if (inside === this.currentPoi) return;
+    this.currentPoi = inside;
+    const poi = this.district.pois.find((x) => x.id === inside);
+    this.setZoneAudio(poi?.ambience ?? this.district.scene.ambience.soundscape);
+    if (poi) this.deps.bus.emit('poi:entered', { poi: poi.id, district: this.district.id });
+  }
+
+  private freeCam: { eye: THREE.Vector3; target: THREE.Vector3 } | null = null;
+  /** Detach the camera for screenshots/cinematics; movement input still runs. */
+  freeCamera(eye: readonly [number, number, number] | null, target: readonly [number, number, number] = [0, 0, 0]): void {
+    this.freeCam = eye ? { eye: new THREE.Vector3(...eye), target: new THREE.Vector3(...target) } : null;
+  }
+
+  /** Crossfade to a zone soundscape (loop + one-shots); falls back to a plain loop on older adapters. */
+  private setZoneAudio(zone: Soundscape): void {
+    const audio = this.deps.audio as AudioPort & { setSoundscape?(z: Soundscape): void };
+    if (audio.setSoundscape) audio.setSoundscape(zone);
+    else this.deps.audio.playAmbience(zone.loop);
+  }
+
+  /** Fast travel to a POI of the current district. */
+  fastTravel(poiId: string): boolean {
+    const poi = this.district?.pois.find((x) => x.id === poiId && x.fastTravel);
+    if (!poi) return false;
+    const [x, , z] = poi.position;
+    this.teleport(x + 3, z + 3, Math.atan2(-3, -3));
+    this.deps.bus.emit('poi:fast-travel', { poi: poi.id });
+    return true;
   }
 
   private checkTriggers(): void {

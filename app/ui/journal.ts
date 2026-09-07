@@ -9,11 +9,13 @@ export interface JournalData {
   readonly districts: readonly { id: string; name: LocalizedText; unlocked: boolean; stamps: number }[];
   readonly examUnlocked: boolean;
   readonly stampsForExam: number;
+  readonly pois: readonly { id: string; name: LocalizedText }[];
 }
 
 export interface JournalHandlers {
   onClose(): void;
   onExam(practice: boolean): void;
+  onFastTravel(poiId: string): void;
 }
 
 export class Journal {
@@ -41,6 +43,12 @@ export class Journal {
     const right = el('div', {});
     right.append(el('h3', {}, t.t('journal.districts')));
     right.append(el('ul', {}, ...data.districts.map((d) => el('li', { class: d.unlocked ? '' : 'locked' }, t.pick(d.name), el('span', { class: 'badge' }, d.unlocked ? `${d.stamps} 🍁` : t.t('journal.locked'))))));
+    if (data.pois.length) {
+      right.append(el('h3', {}, t.t('journal.fastTravel')));
+      const list = el('div', { class: 'chips' });
+      for (const p of data.pois) list.append(button(t.pick(p.name), () => h.onFastTravel(p.id), 'chip', `travel-${p.id}`));
+      right.append(list);
+    }
     right.append(el('h3', {}, t.t('journal.exam')));
     right.append(el('p', { class: 'source' }, data.examUnlocked ? t.t('journal.examOpen') : t.t('journal.examLocked', { needed: data.stampsForExam, have: data.progress.stamps.length })));
     const examRow = el('div', { class: 'stack' });

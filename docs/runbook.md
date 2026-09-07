@@ -42,3 +42,9 @@ Record results in the release notes. Set `PERF_MIN_FPS=<n>` to make `make test-p
 
 ## Volatile facts
 `make validate-content` fails when a `volatile: true` question is older than 180 days. Re-verify the fact, update `text`/`answer` if needed and bump `asOf`. The list of volatile ids is in `docs/content-review.md`.
+
+## World scale, POIs and fast travel
+- District size is `scene.size` (metres, square). The hub is ≥ 1300 m (≥ 1.5 km²), districts ≥ 1000 m; `make validate-content` enforces it once a district declares `pois[]`.
+- `pois[]` are the named places: fast-travel nodes (Journal → Fast travel, or `window.__truenorth.fastTravel(id)` in e2e), zone soundscapes (crossfaded on entry) and fauna spawners. Hero landmarks are referenced by manifest key (`peace-tower`, `cn-tower`, …) and placed by `WorldScene`.
+- Terrain resolution follows size (≈ 5 m quads, 96–320 segments); `lite` uses ≈ 16 m quads.
+- Report screenshots: `node scripts/dev/peace-tower-shot.mjs out.png low` (camera on the Peace Tower looking over the plaza).

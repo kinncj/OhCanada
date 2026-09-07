@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/npc-roster.schema.json",
+  "title": "NPC archetype roster (art bible)",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "archetypes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "$ref": "common.schema.json#/$defs/localizedText"
+          },
+          "district": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "role": {
+            "$ref": "common.schema.json#/$defs/localizedText"
+          },
+          "outfit": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "string",
+                "enum": [
+                  "male",
+                  "female"
+                ]
+              },
+              "age": {
+                "type": "string",
+                "enum": [
+                  "young",
+                  "adult",
+                  "elder"
+                ]
+              },
+              "outfitStyle": {
+                "type": "string",
+                "enum": [
+                  "casual",
+                  "formal",
+                  "uniform",
+                  "robe",
+                  "parka",
+                  "jersey",
+                  "raincoat",
+                  "workwear",
+                  "serge",
+                  "habitant",
+                  "voyageur",
+                  "military"
+                ]
+              },
+              "topColor": {
+                "$ref": "common.schema.json#/$defs/hexColour"
+              },
+              "bottomColor": {
+                "$ref": "common.schema.json#/$defs/hexColour"
+              },
+              "hat": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "toque",
+                  "cap",
+                  "police",
+                  "hardhat",
+                  "beret",
+                  "hood",
+                  "captain",
+                  "stetson",
+                  "tuque-rouge",
+                  "helmet-brodie",
+                  "ceinture"
+                ]
+              },
+              "beard": {
+                "type": "boolean"
+              },
+              "props": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Hero prop asset keys carried or placed beside the NPC (canoe, fiddle, qamutiik, hockey-stick...)."
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "body",
+              "age",
+              "outfitStyle",
+              "topColor",
+              "bottomColor",
+              "hat"
+            ],
+            "additionalProperties": false
+          },
+          "culturalReview": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "district",
+          "role",
+          "outfit"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "archetypes"
+  ],
+  "additionalProperties": false
+}

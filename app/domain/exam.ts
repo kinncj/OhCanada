@@ -3,6 +3,7 @@ import { presentQuestion, type PresentedQuestion } from './question';
 import type { RandomSource } from '@common/rng';
 import { shuffle } from '@common/rng';
 import { SUBJECTS, type QuestionId, type Subject } from './ids';
+import { selectQuestions, type SelectionHistory } from './question-selector';
 
 export interface ExamParameters {
   readonly questionCount: number;
@@ -18,12 +19,20 @@ export interface ExamState {
   readonly submittedAt: number | null;
 }
 
-/** Pick questions spread across subjects (round-robin) so the exam mirrors the real test's breadth. */
-export function selectExamQuestions(pool: readonly Question[], count: number, rng: RandomSource): Question[] {
+const NO_HISTORY: SelectionHistory = { seenQuestionIds: [], wrongQuestionIds: [] };
+
+/**
+ * Pick questions spread across subjects (round-robin) so the exam mirrors the real test's breadth.
+ * Within a subject the QuestionSelector avoids recently seen questions and favours previously-wrong ones.
+ */
+export function selectExamQuestions(pool: readonly Question[], count: number, rng: RandomSource, history: SelectionHistory = NO_HISTORY): Question[] {
   const bySubject = new Map<Subject, Question[]>();
   for (const s of SUBJECTS) bySubject.set(s, []);
   for (const q of pool) bySubject.get(q.subject)?.push(q);
-  for (const s of SUBJECTS) bySubject.set(s, shuffle(bySubject.get(s) ?? [], rng));
+  for (const s of SUBJECTS) {
+    const subjectPool = bySubject.get(s) ?? [];
+    bySubject.set(s, selectQuestions(subjectPool, s, history, subjectPool.length, rng));
+  }
 
   const picked: Question[] = [];
   const subjects = shuffle(SUBJECTS, rng);
@@ -42,8 +51,8 @@ export function selectExamQuestions(pool: readonly Question[], count: number, rn
   return shuffle(picked, rng);
 }
 
-export function startExam(pool: readonly Question[], params: ExamParameters, rng: RandomSource, startedAt: number): ExamState {
-  const chosen = selectExamQuestions(pool, params.questionCount, rng);
+export function startExam(pool: readonly Question[], params: ExamParameters, rng: RandomSource, startedAt: number, history: SelectionHistory = NO_HISTORY): ExamState {
+  const chosen = selectExamQuestions(pool, params.questionCount, rng, history);
   if (chosen.length < params.questionCount) throw new Error(`Not enough questions for exam: ${chosen.length} < ${params.questionCount}`);
   return { startedAt, params, questions: chosen.map((q) => presentQuestion(q, rng)), answers: {}, submittedAt: null };
 }

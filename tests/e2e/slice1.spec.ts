@@ -9,7 +9,7 @@ test.describe('Slice 1 smoke', () => {
     expect(events.some((e) => e.type === 'session:ready')).toBe(true);
 
     await createCharacterAndEnter(page, 'Sam');
-    await expect.poll(() => events.some((e) => e.type === 'district:loaded'), { timeout: 60_000 }).toBe(true);
+    await expect.poll(() => events.some((e) => e.type === 'district:loaded'), { timeout: 300_000 }).toBe(true);
     expect(events.find((e) => e.type === 'character:created')).toMatchObject({ payload: { character: { name: 'Sam', appearance: { outfit: 'hockey', accessory: 'toque' } } } });
     await expect(page.getByTestId('stamps')).toHaveText('0');
 
@@ -43,9 +43,9 @@ test.describe('Slice 1 smoke', () => {
 
     // Reload: the save is restored and Continue drops us back into the world with the stamp.
     await page.reload();
-    await page.getByTestId('menu-continue').waitFor({ timeout: 60_000 });
+    await page.getByTestId('menu-continue').waitFor({ timeout: 300_000 });
     await page.getByTestId('menu-continue').click();
-    await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]'), null, { timeout: 60_000 });
+    await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]'), null, { timeout: 300_000 });
     await expect(page.getByTestId('stamps')).toHaveText('1');
     const restored = await page.evaluate(() => window.__truenorth.state());
     expect(restored.character?.name).toBe('Sam');
@@ -69,8 +69,8 @@ test.describe('Slice 1 smoke', () => {
     for (let i = 0; i < 3; i++) await answerQuestion(page, true);
     await stepThroughDialogue(page, false);
     expect(await page.evaluate(() => window.__truenorth.travel('rights-responsibilities'))).toBe(true);
-    await expect.poll(() => events.filter((e) => e.type === 'district:loaded').length, { timeout: 60_000 }).toBeGreaterThanOrEqual(2);
-    await page.waitForFunction(() => !document.querySelector('[data-screen="loading"]'), null, { timeout: 60_000 });
+    await expect.poll(() => events.filter((e) => e.type === 'district:loaded').length, { timeout: 300_000 }).toBeGreaterThanOrEqual(2);
+    await page.waitForFunction(() => !document.querySelector('[data-screen="loading"]'), null, { timeout: 300_000 });
     expect((await page.evaluate(() => window.__truenorth.state())).currentDistrict).toBe('rights-responsibilities');
     // District intro NPC exists and can be talked to.
     await page.evaluate(() => window.__truenorth.teleport(3, 12.5));

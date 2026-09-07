@@ -49,12 +49,39 @@ export interface Landmark {
   readonly label?: LocalizedText;
 }
 
+export interface Soundscape {
+  readonly loop: string;
+  readonly oneshots: readonly string[];
+  readonly volume: number;
+}
+
 export interface Ambience {
   readonly hdri: string;
   readonly timeOfDay: number; // 0..1
   readonly weather: 'clear' | 'snow' | 'rain' | 'fog';
-  readonly audio?: string;
+  readonly soundscape: Soundscape;
   readonly fogDensity?: number;
+}
+
+export type FaunaSpecies = 'moose' | 'beaver' | 'loon' | 'black-bear' | 'canada-goose' | 'polar-bear' | 'orca' | 'skater';
+
+export interface Fauna {
+  readonly species: FaunaSpecies;
+  readonly count: number;
+  readonly behavior: 'graze' | 'swim' | 'fly' | 'idle' | 'skate' | 'patrol';
+}
+
+/** Point of interest: fast-travel node, zone ambience and fauna spawner. */
+export interface Poi {
+  readonly id: string;
+  readonly name: LocalizedText;
+  readonly position: Vec3;
+  readonly radius: number;
+  readonly landmark?: string;
+  readonly fastTravel: boolean;
+  readonly ambience?: Soundscape;
+  readonly fauna?: readonly Fauna[];
+  readonly culturalReview?: boolean;
 }
 
 export interface SceneManifest {
@@ -64,6 +91,8 @@ export interface SceneManifest {
   readonly terrain: { readonly amplitude: number; readonly frequency: number; readonly snow?: boolean; readonly palette: readonly string[] };
   readonly water?: readonly { readonly position: Vec3; readonly size: readonly [number, number] }[];
   readonly vegetation: { readonly density: number; readonly kinds: readonly string[] };
+  readonly spawnRadius?: number;
+  readonly poiDensity?: number;
   readonly landmarks: readonly Landmark[];
   readonly ambience: Ambience;
 }
@@ -79,6 +108,7 @@ export interface District {
   readonly npcs: readonly Npc[];
   readonly triggers: readonly Trigger[];
   readonly quests: readonly QuestId[];
+  readonly pois: readonly Poi[];
 }
 
 export interface UnlockRules {

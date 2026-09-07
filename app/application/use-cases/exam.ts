@@ -33,7 +33,8 @@ export class CitizenshipExam {
     const params = this.content.getConfig().exam;
     let state: ExamState;
     try {
-      state = startExam(pool.value, params, this.rng, this.clock.now());
+      const p = this.store.progress;
+      state = startExam(pool.value, params, this.rng, this.clock.now(), { seenQuestionIds: p.seenQuestionIds ?? [], wrongQuestionIds: p.wrongQuestionIds ?? [] });
     } catch (e) {
       return err({ code: 'invalid', message: (e as Error).message });
     }

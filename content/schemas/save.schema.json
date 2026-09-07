@@ -269,6 +269,18 @@
         "keyBindings"
       ],
       "additionalProperties": false
+    },
+    "seenQuestionIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "wrongQuestionIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": [

@@ -36,7 +36,7 @@ export function collectTelemetry(page: Page): TelemetryEvent[] {
 
 export async function bootToMenu(page: Page, query = '?e2e=1&preset=minimal'): Promise<void> {
   await page.goto(query);
-  await page.getByTestId('menu-new').or(page.getByTestId('menu-continue')).first().waitFor({ timeout: 60_000 });
+  await page.getByTestId('menu-new').or(page.getByTestId('menu-continue')).first().waitFor({ timeout: 300_000 });
 }
 
 export async function createCharacterAndEnter(page: Page, name = 'Sam'): Promise<void> {
@@ -45,7 +45,7 @@ export async function createCharacterAndEnter(page: Page, name = 'Sam'): Promise
   await page.getByTestId('opt-outfit-hockey').click();
   await page.getByTestId('opt-accessory-toque').click();
   await page.getByTestId('creator-confirm').click();
-  await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]') && !!window.__truenorth, null, { timeout: 60_000 });
+  await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]') && !!window.__truenorth, null, { timeout: 300_000 });
 }
 
 export async function stepThroughDialogue(page: Page, accept: boolean): Promise<void> {

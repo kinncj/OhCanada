@@ -10,6 +10,7 @@ export interface Question {
   readonly distractors: readonly LocalizedText[];
   readonly explanation?: LocalizedText;
   readonly source: string;
+  readonly sourceUrl?: string;
   readonly asOf: string; // ISO date
   readonly volatile: boolean;
 }

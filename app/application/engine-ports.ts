@@ -3,7 +3,7 @@
  * Implemented under app/adapters/*, wired in app/bootstrap.
  */
 import type { LocalizedText, Locale } from '@domain/ids';
-import type { Vec3 } from '@domain/district';
+import type { Soundscape, Vec3 } from '@domain/district';
 
 export interface LocalizerPort {
   readonly locale: Locale;
@@ -55,6 +55,9 @@ export interface PhysicsWorldPort {
 }
 
 export interface AudioPort {
+  /** Crossfade to a zone's loop and start its scheduled one-shots (see docs/audio.md). */
+  setSoundscape(zone: Soundscape): void;
+  /** Loop only, no one-shots — equivalent to setSoundscape({ loop: id, oneshots: [], volume: 0.45 }). */
   playAmbience(id: string): void;
   stopAmbience(): void;
   playSfx(id: 'click' | 'correct' | 'wrong' | 'stamp' | 'step'): void;

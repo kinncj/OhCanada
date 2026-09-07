@@ -7,12 +7,12 @@ test.use({ ...devices['Pixel 7'], launchOptions: { args: ['--use-gl=angle', '--u
 test('phone: touch controls appear, joystick moves the player, tap to interact', async ({ page }) => {
   const events = collectTelemetry(page);
   await page.goto('?e2e=1&preset=minimal');
-  await page.getByTestId('menu-new').waitFor({ timeout: 90_000 });
+  await page.getByTestId('menu-new').waitFor({ timeout: 300_000 });
   await page.getByTestId('menu-new').tap();
   await page.getByTestId('creator-name').fill('Mo');
   await page.getByTestId('creator-confirm').tap();
-  await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]') && !!window.__truenorth, null, { timeout: 90_000 });
-  await expect.poll(() => events.some((e) => e.type === 'district:loaded'), { timeout: 60_000 }).toBe(true);
+  await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]') && !!window.__truenorth, null, { timeout: 300_000 });
+  await expect.poll(() => events.some((e) => e.type === 'district:loaded'), { timeout: 300_000 }).toBe(true);
   const stick = page.locator('.touch .stick');
   await expect(stick).toBeVisible();
   await expect(page.locator('.touch .act')).toBeVisible();

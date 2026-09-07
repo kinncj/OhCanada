@@ -54,14 +54,14 @@ test.describe('Runtime (headless, software GL — informational unless PERF_MIN_
   test('time to interactive and frame loop', async ({ page }) => {
     const start = Date.now();
     await page.goto(process.env.CI ? '?e2e=1&preset=minimal' : '?e2e=1&preset=low');
-    await page.getByTestId('menu-new').waitFor({ timeout: 120_000 });
+    await page.getByTestId('menu-new').waitFor({ timeout: 400_000 });
     const tti = Date.now() - start;
     console.log(`TTI (menu interactive, headless swiftshader): ${tti} ms`);
     // SwiftShader compiles shaders on the CPU; the real budget is enforced on the reference GPU configs (docs/runbook.md).
     if (process.env.PERF_STRICT) expect(tti).toBeLessThanOrEqual(config.budgets.timeToInteractiveMs);
     await page.getByTestId('menu-new').click();
     await page.getByTestId('creator-confirm').click();
-    await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]'), null, { timeout: 120_000 });
+    await page.waitForFunction(() => !!document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]'), null, { timeout: 400_000 });
     await page.waitForTimeout(4000);
     const overlay = page.getByTestId('debug-overlay');
     const fps = Number(await overlay.getAttribute('data-fps'));

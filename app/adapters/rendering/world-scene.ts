@@ -8,6 +8,7 @@ import { buildWater } from './water';
 import { KIND_MODELS, Vegetation, protoFromModel, type VegetationKind } from './vegetation';
 import { buildLandmark, buildMaterialKit, LANDMARK_MODEL_KEYS, type ColliderSpec, type MaterialKit } from './landmarks';
 import type { AssetLibrary } from './asset-library';
+import { FaunaSystem } from './fauna';
 
 export interface Marker {
   readonly id: string;
@@ -26,6 +27,7 @@ export class WorldScene {
   readonly markers: Marker[] = [];
   readonly lights: THREE.Light[] = [];
   private readonly disposables: { dispose(): void }[] = [];
+  fauna: FaunaSystem | null = null;
 
   private constructor(
     readonly district: District,
@@ -89,7 +91,9 @@ export class WorldScene {
 
     onProgress?.(0.15);
     const textures = await texPromise;
-    const terrain = buildTerrain(s.size, heightAt, s.terrain.palette, snow, textures, policy === 'lite' ? 64 : 160, district.subject === 'hub' ? 34 : 22);
+    // Terrain resolution follows world size (≈5 m quads, capped) so 1 km+ districts stay smooth and cheap.
+    const segments = policy === 'lite' ? Math.min(96, Math.max(48, Math.round(s.size / 16))) : Math.min(320, Math.max(96, Math.round(s.size / 5)));
+    const terrain = buildTerrain(s.size, heightAt, s.terrain.palette, snow, textures, segments, district.subject === 'hub' ? 34 : 22);
     onProgress?.(0.4);
     const [kit, protos] = await Promise.all([kitPromise, vegPromise]);
     onProgress?.(0.78);
@@ -98,6 +102,29 @@ export class WorldScene {
     for (const w of s.water ?? []) rects.push({ x: w.position[0], z: w.position[2], w: w.size[0], d: w.size[1] });
     const exclusions = [{ x: 0, z: 0, r: 36 }, ...district.triggers.map((t) => ({ x: t.position[0], z: t.position[2], r: t.radius + 3 })), ...district.npcs.map((n) => ({ x: n.position[0], z: n.position[2], r: (n.wanderRadius ?? 2) + 2 }))];
     const landmarkBuilds = s.landmarks.map((l) => ({ l, b: buildLandmark(l, kit, policy === 'lite') }));
+    // POIs may carry a hero asset key (assets/dist/manifest models) or a procedural landmark type.
+    for (const poi of district.pois) {
+      if (!poi.landmark) continue;
+      if (library?.hasModel(poi.landmark)) {
+        try {
+          const model = await library.model(poi.landmark);
+          const obj = model.lods[0]!.clone(true);
+          obj.name = `hero:${poi.id}`;
+          obj.traverse((o) => {
+            if (o instanceof THREE.Mesh) {
+              o.castShadow = true;
+              o.receiveShadow = true;
+            }
+          });
+          const r = Math.max(2, model.entry.radius * 0.7);
+          landmarkBuilds.push({ l: { id: poi.id, type: poi.landmark, position: poi.position }, b: { object: obj, colliders: [{ kind: 'cylinder', center: [poi.position[0], model.entry.height / 2, poi.position[2]], halfExtents: [r, model.entry.height / 2, r], rotationY: 0 }], footprint: { w: r * 2, d: r * 2 }, lights: [] } });
+          continue;
+        } catch {
+          /* fall through to procedural */
+        }
+      }
+      landmarkBuilds.push({ l: { id: poi.id, type: poi.landmark, position: poi.position }, b: buildLandmark({ id: poi.id, type: poi.landmark, position: poi.position }, kit, policy === 'lite') });
+    }
     for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
 
     const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, protos });
@@ -121,12 +148,26 @@ export class WorldScene {
       if (b.footprint.w > 3) scene.occluders.push(b.object);
       b.object.position.y += heightAt(l.position[0], l.position[2]);
     }
+    for (const poi of district.pois) {
+      if (!poi.fastTravel) continue;
+      const beacon = scene.buildMarker('portal', 2.2);
+      beacon.position.set(poi.position[0], heightAt(poi.position[0], poi.position[2]) + 0.05, poi.position[2]);
+      beacon.name = `poi:${poi.id}`;
+      scene.group.add(beacon);
+      scene.markers.push({ id: `poi:${poi.id}`, object: beacon });
+    }
     for (const t of district.triggers) {
       const marker = scene.buildMarker(t.kind, t.radius);
       marker.position.set(t.position[0], heightAt(t.position[0], t.position[2]) + 0.05, t.position[2]);
       marker.name = `trigger:${t.id}`;
       scene.group.add(marker);
       scene.markers.push({ id: t.id, object: marker });
+    }
+    if (policy !== 'lite') {
+      const fauna = new FaunaSystem(library, heightAt);
+      await fauna.populate(district.pois, s.seed, (s.water?.[0]?.position[1] ?? -0.6));
+      scene.group.add(fauna.group);
+      scene.fauna = fauna;
     }
     onProgress?.(0.8);
     return scene;
@@ -154,6 +195,7 @@ export class WorldScene {
 
   update(dt: number, cameraPos: THREE.Vector3, elapsed: number): void {
     this.vegetation.updateLod(cameraPos);
+    this.fauna?.update(dt, elapsed);
     for (const m of this.markers) {
       m.object.rotation.y += dt * 0.6;
       const gem = m.object.getObjectByName('gem');
@@ -182,6 +224,7 @@ export class WorldScene {
       }
     });
     this.vegetation.dispose();
+    this.fauna?.dispose();
     for (const d of this.disposables) d.dispose();
     void this.kit;
     this.group.removeFromParent();

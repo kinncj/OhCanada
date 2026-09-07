@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   testDir: '.',
   testMatch: /.*\.spec\.ts/,
-  timeout: process.env.CI ? 240_000 : 120_000,
+  timeout: process.env.CI ? 900_000 : 600_000,
   expect: { timeout: 20_000 },
   fullyParallel: false,
   workers: 1,

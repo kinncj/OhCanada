@@ -117,6 +117,41 @@ for (const d of districts) {
 }
 for (const q of quests) if (!districtIds.has(q.district)) fail(`quest ${q.id}: unknown district ${q.district}`);
 
+// POIs: bounds, unique ids, hero/procedural landmark keys, fauna zoning, cultural review listing
+const PROCEDURAL = new Set(['parliament','flame','flagpole','lamp','bench','station','locks','courthouse','legislature','supremecourt','pollingstation','arena','fort','port','rink','apartments','factory','circle','lookout','hydrant','power-pole','utility-box','barrier','gate','street']);
+const HERO = new Set(['peace-tower','centre-block','chateau-laurier','war-memorial','cn-tower','chateau-frontenac','peggys-cove-lighthouse','grain-elevator','inukshuk','totem-pole','niagara-falls-cliff','stampede-grandstand','canoe-voyageur','qamutiik']);
+const manifestPath = join(root, 'assets', 'dist', 'manifest.json');
+const manifestModels = existsSync(manifestPath) ? Object.keys(readJson(manifestPath).models ?? {}) : [];
+const reviewDoc = existsSync(join(root, 'docs', 'content-review.md')) ? readFileSync(join(root, 'docs', 'content-review.md'), 'utf8') : '';
+for (const d of districts) {
+  const half = d.scene.size / 2;
+  const ids = new Set();
+  for (const poi of d.pois ?? []) {
+    if (ids.has(poi.id)) fail(`district ${d.id}: duplicate poi ${poi.id}`);
+    ids.add(poi.id);
+    if (Math.abs(poi.position[0]) > half || Math.abs(poi.position[2]) > half) fail(`district ${d.id} poi ${poi.id}: outside the terrain`);
+    if (poi.landmark && !PROCEDURAL.has(poi.landmark) && !HERO.has(poi.landmark) && !manifestModels.includes(poi.landmark)) fail(`district ${d.id} poi ${poi.id}: unknown landmark ${poi.landmark}`);
+    for (const f of poi.fauna ?? []) {
+      if (f.species === 'polar-bear' && !(d.id === 'regions' && /north/.test(poi.id))) fail(`poi ${poi.id}: polar bears only in the North sub-zone`);
+      if (f.species === 'orca' && !(d.id === 'regions' && /west|coast|pacific/.test(poi.id))) fail(`poi ${poi.id}: orcas only on the West Coast`);
+    }
+    if ((poi.ambience?.loop === 'ocean' || poi.ambience?.loop === 'harbour') && !(d.id === 'regions' && /atlantic|west|coast|pacific|fundy|peggy/.test(poi.id))) fail(`poi ${poi.id}: ocean/harbour ambience only in Atlantic or West Coast zones`);
+    if (poi.culturalReview && !reviewDoc.includes(poi.id)) fail(`poi ${poi.id} needs a cultural review entry in docs/content-review.md`);
+  }
+  if ((d.scene.ambience.soundscape.loop === 'ocean' || d.scene.ambience.soundscape.loop === 'harbour') && d.id !== 'regions') fail(`district ${d.id}: ocean ambience outside Atlantic/West Coast`);
+  if (d.id === 'hub' && d.scene.size < 1300) fail(`hub size ${d.scene.size} < 1300 (≥ 1.5 km² required)`);
+  if (d.id !== 'hub' && d.scene.size < 1000 && (d.pois?.length ?? 0) > 0) fail(`district ${d.id} size ${d.scene.size} < 1000 (≥ 1 km² required once POIs exist)`);
+}
+// NPC roster
+const rosterPath = join(content, 'characters', 'npcs.json');
+if (existsSync(rosterPath)) {
+  const roster = validate('npc-roster.schema.json', rosterPath);
+  for (const a of roster.archetypes) {
+    if (!districtIds.has(a.district)) fail(`npcs.json archetype ${a.id}: unknown district ${a.district}`);
+    if (a.culturalReview && !reviewDoc.includes(a.id)) fail(`npcs.json archetype ${a.id} needs a cultural review entry in docs/content-review.md`);
+  }
+}
+
 // Volatile freshness
 const now = Date.now();
 const maxMs = config.volatileMaxAgeDays * 86_400_000;

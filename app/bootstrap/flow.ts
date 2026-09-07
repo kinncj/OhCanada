@@ -446,8 +446,13 @@ export class Flow {
     const list = await this.d.content.listDistricts();
     const districts = (list.ok ? list.value : []).filter((d) => d.id !== 'hub').map((d) => ({ id: d.id, name: d.name, unlocked: p.unlockedDistricts.includes(d.id), stamps: p.stamps.filter((s) => s.district === d.id).length }));
     this.setModal('journal');
-    this.d.ui.append(this.journal.show({ progress: p, quests, districts, examUnlocked: this.d.useCases.exam.isUnlocked(), stampsForExam: this.d.config.unlockRules.stampsForExam }, {
+    const pois = (this.d.game.district?.pois ?? []).filter((x) => x.fastTravel).map((x) => ({ id: x.id, name: x.name }));
+    this.d.ui.append(this.journal.show({ progress: p, quests, districts, examUnlocked: this.d.useCases.exam.isUnlocked(), stampsForExam: this.d.config.unlockRules.stampsForExam, pois }, {
       onClose: () => this.closeModal(),
+      onFastTravel: (id) => {
+        this.closeModal();
+        this.d.game.fastTravel(id);
+      },
       onExam: (practice) => {
         this.journal.close();
         this.openExam(practice);
@@ -509,6 +514,9 @@ export class Flow {
         return r.ok;
       },
       openJournal: () => void this.openJournal(),
+      fastTravel: (id: string) => this.d.game.fastTravel(id),
+      /** Free camera for report screenshots: eye xyz, look-at xyz. */
+      camera: (ex: number, ey: number, ez: number, tx: number, ty: number, tz: number) => this.d.game.freeCamera([ex, ey, ez], [tx, ty, tz]),
       openExam: (practice: boolean) => this.openExam(practice),
     };
   }
