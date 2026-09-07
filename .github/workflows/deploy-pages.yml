@@ -31,8 +31,8 @@ jobs:
           curl -fsSL -o /tmp/ktx.deb "$URL" && sudo dpkg -i /tmp/ktx.deb || echo "toktx unavailable; assets fall back to WebP"
           toktx --version || true
       - run: npm ci
-      - run: make validate-content
       - run: make assets
+      - run: make validate-content
       - run: make build
       - run: make deploy-check
       - uses: actions/configure-pages@v5
