@@ -1,7 +1,7 @@
 {
   "key": "stampede-grandstand",
   "category": "hero",
-  "prompt": "the exterior of a rodeo grandstand building seen from the arena side, a long low spectator stand with tiered bleacher seats under a wide cantilevered roof on posts, painted red and white, architectural model, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "prompt": "the outside of a small rodeo grandstand building seen from the front and slightly above, one long low block of tiered bleacher seating under a wide sloping roof held up by posts, painted red and white, the whole building visible, nothing around it, isolated on a plain white background, the complete object small in the centre of the frame with wide empty margins on all sides, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds, crowd",
   "seed": 112,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",

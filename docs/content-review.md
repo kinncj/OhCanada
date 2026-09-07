@@ -263,3 +263,145 @@ Every POI with `culturalReview: true` and every roster archetype with `culturalR
 | `arctic-ranger` | `npc-regions-1` (Ranger Aputik) | Red parka in the Canadian Rangers style without insignia; confirm the name. |
 
 Props that touch Indigenous culture but are not standalone POIs: `qamutiik` (hero prop, Inuit sled) beside `regions-inuit-hunter`; `canoe-voyageur` at `history-canoe-landing` is a fur-trade freight canoe (birchbark design of Indigenous origin, used by voyageurs) and is labelled as such, not as a nation-specific canoe. No regalia, headdresses, drums, masks or pipes are modelled anywhere in v1.
+
+## Verification against canada.ca (2026-09-07)
+
+All 300 questions in `content/questions/*.json` were checked against the full text of the official IRCC
+*Discover Canada* chapters as published on canada.ca (read-online edition, English; the French edition
+`.../fr/.../decouvrir-canada/lisez-ligne/...` was consulted for French wording of names and terms).
+Every question now carries a `sourceUrl` pointing at the chapter that supports its answer. Where a
+question is answered by a different chapter than its `source` label suggests (for example the sports
+trophies, which sit in *Canadian Symbols* rather than *Modern Canada*), the `sourceUrl` points at the
+chapter that actually contains the fact.
+
+Two chapter slugs in the task brief 404; the correct ones were found on the read-online index:
+
+- Rights and Responsibilities → `read-online/rights-resonsibilities-citizenship.html` (note the
+  misspelling "resonsibilities" in the official URL)
+- Who We Are → `read-online/who-are-canadians.html`
+
+### Questions verified per subject
+
+| Subject | Verified | Corrected |
+|---|---|---|
+| rights-responsibilities | 30 | 2 |
+| who-we-are | 30 | 1 |
+| history | 30 | 3 |
+| modern-canada | 30 | 2 |
+| government | 30 | 1 |
+| elections | 30 | 1 |
+| justice | 30 | 1 |
+| symbols | 30 | 2 |
+| economy | 30 | 2 |
+| regions | 30 | 1 |
+| **Total** | **300** | **16** |
+
+For every question the answer was confirmed against the chapter text and each distractor was checked
+to make sure it is not also defensible. Corrections were kept minimal, preserve ids and EN+FR parity,
+and remain paraphrases — no guide sentence is reproduced verbatim.
+
+### Corrections made
+
+- **q-gv-006** (volatile) — answer changed from Mary Simon to **Louise Arbour**. gg.ca states she was
+  sworn in on June 8, 2026 as the 31st governor general; the site's "Former Governors General" page
+  now lists Mary Simon for July 26, 2021 – June 8, 2026. Mary Simon became a distractor and the
+  explanation was rewritten.
+- **q-rr-007** — the question claimed Indigenous and official-language-minority rights are affirmed
+  "in the Constitution alongside the Charter". The chapter presents both as rights set out *within* the
+  Charter, so the stem was reworded to match.
+- **q-rr-030** — "To whom do the fundamental freedoms apply? Everyone in Canada, not only citizens"
+  is not stated in the guide, whose chapter frames the freedoms as those of Canadians; the distractor
+  "Only Canadian citizens" was therefore arguably defensible from the text. Replaced with a question on
+  the chapter's "Equality of Women and Men" passage (gender-based violence is severely punished under
+  Canada's criminal laws), which is unambiguous in both editions.
+- **q-ww-030** — answer wording "full protection of equal treatment under the law" corrected to
+  "full protection and equal treatment under the law" (two distinct guarantees in the guide).
+- **q-hi-004** — stem said Quebec 1608 was "the first permanent European settlement in Canada". The
+  guide gives that distinction to the 1604 settlement at St. Croix Island / Port-Royal; reworded to
+  Champlain building a fortress at present-day Québec City, the cradle of New France.
+- **q-hi-027** — explanation said "more than 10,000 killed and wounded" and "about 600,000" served;
+  the guide gives 10,000 killed or wounded at Vimy and more than 600,000 served, 60,000 killed.
+- **q-hi-030** — explanation said the Royal Canadian Navy ended the war "as one of the largest navies";
+  the guide says Canada had the third-largest navy in the world.
+- **q-mc-015** — Emily Carr painted "the forests and Aboriginal artifacts of the West Coast" per the
+  guide (French: "les vestiges autochtones"); the stem's "Indigenous villages" was changed to
+  "Indigenous artifacts".
+- **q-mc-018** — explanation placed the telephone idea at Bell's "family home in Brantford"; the guide
+  says his summer house in Canada. Reworded to name Brantford as his summer home.
+- **q-el-013** — a majority government was defined as "at least half of the seats plus one", which is
+  self-contradictory. The guide says a majority government holds at least half the seats and a minority
+  government less than half; corrected to "more than half of the seats", with a matching explanation.
+- **q-ju-006** — the answer listed "federal taxes" among Federal Court matters; tax appeals go to the
+  Tax Court of Canada. Trimmed to immigration and intellectual property, which the Federal Court does hear.
+- **q-sy-003** — the stem said the maple leaf has marked soldiers' graves "since the First World War".
+  The guide dates uniforms and insignia to the 1850s and says maple leaves are carved into the headstones
+  of the fallen buried overseas and in Canada, without giving a start date; the date claim was removed.
+- **q-sy-005** — "linked to French royalty for some 1,500 years" corrected to the guide's "symbol of
+  French royalty for more than a thousand years", and an explanation added (adopted by the French king
+  in 496; revived at Confederation).
+- **q-ec-002** — answer "The G7" kept (the seven countries named in the stem), but an explanation was
+  added noting that the guide's text still says G8 including Russia, which was suspended in 2014.
+- **q-ec-019** — "a highly skilled and well-educated workforce" as a "key strength" appears nowhere in
+  the Economy chapter. Replaced with the Peace Arch at Blaine, Washington ("children of a common
+  mother"), which the chapter describes.
+- **q-re-026** — the stem called Saskatchewan "the world's largest producer of potash"; the guide says
+  it holds the world's richest deposits of uranium and potash and is Canada's largest producer of grains
+  and oilseeds. Reworded to deposits, and the explanation now cites the 40% of Canada's arable land.
+
+### Volatile items — status
+
+All seven volatile questions were re-verified today against primary sources and their `asOf` is set to
+2026-09-07.
+
+| id | Fact | Source checked | Status |
+|---|---|---|---|
+| q-gv-005 | Head of state is King Charles III | canada.ca Royal Family page | Confirmed |
+| q-gv-006 | Governor General | gg.ca (Governor General; Former Governors General) | **Corrected** to Louise Arbour, sworn in June 8, 2026 |
+| q-gv-007 | Prime Minister Mark Carney | pm.gc.ca (site title and news dated Sept 7, 2026) | Confirmed |
+| q-gv-008 | Opposition Leader Pierre Poilievre | ourcommons.ca member page: "Leader of the Opposition" | Confirmed |
+| q-el-004 | 343 seats in the House of Commons | elections.ca ("all 343 ridings") | Confirmed |
+| q-el-018 | Liberal government after the April 28, 2025 election | elections.ca 45th General Election; pm.gc.ca | Confirmed |
+| q-el-019 | Conservatives form the Official Opposition | ourcommons.ca member page and party standings | Confirmed |
+
+Note that the guide itself is generic on all of these: *How Canadians Govern Themselves* still shows
+Queen Elizabeth II and David Johnston, and *Federal Elections* still says 308 electoral districts. The
+`sourceUrl` for these items points at the relevant chapter for the *institution*, while the current
+office-holder or seat count comes from the primary sources listed above.
+
+### Items not supported by the guide text (verified elsewhere or well-known stable facts)
+
+These are answerable and correct, but the specific fact is not in the *Discover Canada* chapters. They
+keep the chapter `sourceUrl` for topical context and are listed here for transparency.
+
+- Government: q-gv-024 (Speaker elected by secret ballot of MPs).
+- Elections: q-el-020 (by-elections), q-el-021/q-el-022 (Elections Canada's independence and the Chief
+  Electoral Officer's appointment by resolution of the House — verified on elections.ca),
+  q-el-027 (hand count in front of candidates' representatives — elections.ca), q-el-028 (party leaders
+  chosen under each party's own rules).
+- Justice: q-ju-005 explanation (Privy Council appeals ended 1949), q-ju-013/q-ju-014 (Charter legal
+  rights on arrest and detention — Charter ss. 9-11, not in the guide), q-ju-015/016/017 (criminal vs
+  civil law beyond the guide's one-paragraph court list), q-ju-021 (victim services), q-ju-024 (Crown
+  prosecutor), q-ju-026 (courts may declare a law invalid), q-ju-027 (nine judges, three from Quebec —
+  Supreme Court Act), q-ju-030 (jury's role). The Justice chapter is only about 600 words, so this
+  subject relies on stable outside facts more than any other.
+- History: q-hi-023 (Craigellachie as the site of the last spike — the guide gives the date and Donald
+  Smith but not the place), q-hi-025 (1896 as the year Laurier took office), q-hi-018 (Charlottetown
+  and Quebec City as the 1864 conference cities).
+- Modern Canada: q-mc-005 (1949 as NATO's founding year and the UN in 1945), q-mc-008 (2001 for
+  Afghanistan), q-mc-017 explanation (Banting's 1923 Nobel), q-mc-027 explanation (143 days).
+- Symbols: q-sy-001 explanation (February 15, 1965), q-sy-026 (National Indigenous Peoples Day, June 21
+  — the 2012 guide's holiday table does not list it).
+- Economy: q-ec-005 (CUSMA, in force 2020), q-ec-017 (the loonie), q-ec-026 (CETA, applied 2017) — all
+  post-date the guide's text.
+- Regions: q-re-012 (the name "Klondike"), q-re-018 (the half-hour offset of Newfoundland time),
+  q-re-023 (Quebec as the largest province by area), q-re-030 (the St. Lawrence Seaway).
+
+Nothing in the bank could be checked and found unverifiable: every question is either supported by the
+chapter text or by a stable public fact listed above.
+
+### Terminology note
+
+The guide uses "Aboriginal peoples" and, in the constitutional sense, "Indian" throughout. The question
+bank uses "Indigenous" except where a legal or constitutional term is being explained (q-ww-005,
+q-ww-011). Both editions were checked so that the French questions follow the French guide's terms
+("les peuples autochtones", "les Inuits", "les Métis").

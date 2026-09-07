@@ -1,9 +1,9 @@
 {
   "key": "fiddle",
   "category": "prop",
-  "prompt": "a whole wooden violin with its bow laid diagonally across it, glossy amber varnish, black fingerboard and chin rest, front view, small in frame, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "prompt": "one whole wooden violin seen from the front, the complete instrument from scroll to tailpiece visible, glossy amber varnish, black fingerboard, four strings, f-holes, lying flat, nothing else around it, isolated on a plain white background, the complete object small in the centre of the frame with wide empty margins on all sides, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "hands, people, text, watermark, multiple objects, cropped, cut off, blurry, low quality, background scenery",
-  "seed": 116,
+  "seed": 404,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
   "targetHeightMeters": 0.6,
   "polyBudget": 6000,

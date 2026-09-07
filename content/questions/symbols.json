@@ -134,8 +134,8 @@
       "id": "q-sy-005",
       "subject": "symbols",
       "text": {
-        "en": "Which emblem, linked to French royalty for some 1,500 years, appears on the Quebec flag adopted in 1948?",
-        "fr": "Quel emblème, associé à la royauté française depuis quelque 1 500 ans, figure sur le drapeau du Québec adopté en 1948?"
+        "en": "Which emblem, the symbol of French royalty for more than a thousand years, appears on the Quebec flag adopted in 1948?",
+        "fr": "Quel emblème, symbole de la royauté française pendant plus de mille ans, figure sur le drapeau du Québec adopté en 1948?"
       },
       "answer": {
         "en": "The fleur-de-lys",
@@ -155,6 +155,10 @@
           "fr": "Le trèfle"
         }
       ],
+      "explanation": {
+        "en": "The lily flower is said to have been adopted by the French king in 496; revived at Confederation, it also appeared on the Canadian Red Ensign.",
+        "fr": "On prétend que la fleur de lys a été adoptée par le roi français en 496; reprise au moment de la Confédération, elle figurait aussi sur le Red Ensign canadien."
+      },
       "source": "Discover Canada: Canadian Symbols",
       "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/canadian-symbols.html",
       "asOf": "2026-09-07",

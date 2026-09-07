@@ -512,6 +512,87 @@ function generic(kit: MaterialKit, type: string): LandmarkBuild {
       g.add(fire);
       return { g, colliders, w: 14, d: 14 };
     },
+    // Civic and vernacular buildings referenced by district content — each gets its own massing so nothing
+    // falls through to a generic box.
+    'town-hall': () => ({ ...facade(kit, 20, 9, 13, { roof: 'gable', wall: kit.brick, arches: true }), w: 20, d: 13 }),
+    'city-hall': () => ({ ...facade(kit, 26, 14, 15, { roof: 'flat', wall: kit.concrete }), w: 26, d: 15 }),
+    'rideau-hall': () => ({ ...facade(kit, 30, 11, 16, { roof: 'mansard', wall: kit.sandstone, arches: true }), w: 30, d: 16 }),
+    'confederation-hall': () => ({ ...facade(kit, 24, 12, 16, { roof: 'dome', wall: kit.sandstone, arches: true }), w: 24, d: 16 }),
+    'police-station': () => ({ ...facade(kit, 18, 8, 12, { roof: 'flat', wall: kit.concrete }), w: 18, d: 12 }),
+    'returning-office': () => ({ ...facade(kit, 14, 5, 10, { roof: 'flat', wall: kit.plaster }), w: 14, d: 10 }),
+    'campaign-office': () => ({ ...facade(kit, 12, 4.5, 9, { roof: 'flat', wall: kit.brick }), w: 12, d: 9 }),
+    'tech-incubator': () => ({ ...facade(kit, 22, 13, 14, { roof: 'flat', wall: kit.metal }), w: 22, d: 14 }),
+    'friendship-centre': () => ({ ...facade(kit, 16, 6, 12, { roof: 'gable', wall: kit.wood }), w: 16, d: 12 }),
+    'fur-post': () => {
+      const g = new THREE.Group();
+      const colliders: ColliderSpec[] = [];
+      const cabin = facade(kit, 10, 4, 8, { roof: 'gable', wall: kit.wood, windows: false });
+      g.add(cabin.g);
+      colliders.push(...cabin.colliders);
+      // palisade
+      for (let i = 0; i < 26; i++) {
+        const a = (i / 26) * Math.PI * 2;
+        const post = cyl(0.22, 0.26, 3.2, kit.wood, Math.cos(a) * 12, 0, Math.sin(a) * 12, 6);
+        post.rotation.y = a;
+        g.add(post);
+      }
+      for (const [x, z] of [[3.5, 6], [-3.5, 6]] as const) g.add(box(1.2, 1.2, 1.2, kit.wood, x, 0, z));
+      return { g, colliders, w: 26, d: 26 };
+    },
+    'festival-pavilion': () => {
+      const g = new THREE.Group();
+      const colliders: ColliderSpec[] = [];
+      for (const [x, z] of [[-7, -5], [7, -5], [-7, 5], [7, 5]] as const) {
+        g.add(cyl(0.2, 0.24, 5, kit.metal, x, 0, z, 8));
+        colliders.push({ kind: 'cylinder', center: [x, 2.5, z], halfExtents: [0.3, 2.5, 0.3], rotationY: 0 });
+      }
+      const canopy = prismRoof(17, 12, 2.6, kit.white);
+      canopy.position.y = 5;
+      g.add(canopy);
+      g.add(box(16, 0.4, 11, kit.wood, 0, 0.05, 0));
+      return { g, colliders, w: 18, d: 13 };
+    },
+    'volunteer-tent': () => {
+      const g = new THREE.Group();
+      const cloth = new THREE.MeshStandardNodeMaterial({ color: 0xd7e2ea, roughness: 0.95, side: THREE.DoubleSide });
+      const canopy = prismRoof(6, 5, 1.2, cloth);
+      canopy.position.y = 2.4;
+      g.add(canopy);
+      for (const [x, z] of [[-2.8, -2.2], [2.8, -2.2], [-2.8, 2.2], [2.8, 2.2]] as const) g.add(cyl(0.05, 0.06, 2.4, kit.metal, x, 0, z, 6));
+      g.add(box(4, 0.75, 0.7, kit.wood, 0, 0, -1.6));
+      return { g, colliders: [{ kind: 'box', center: [0, 0.4, -1.6], halfExtents: [2, 0.4, 0.35], rotationY: 0 }], w: 7, d: 6 };
+    },
+    street: () => {
+      // Market street: paving strip, stalls and bilingual street signs (art bible).
+      const g = new THREE.Group();
+      const colliders: ColliderSpec[] = [];
+      g.add(box(46, 0.12, 12, kit.concrete, 0, 0, 0));
+      const stallCloth = [0xc8102e, 0x2f6b4f, 0xe3b505, 0x1c4f8a];
+      for (let i = 0; i < 6; i++) {
+        const x = -18 + i * 7.2;
+        const z = i % 2 === 0 ? -3.6 : 3.6;
+        const mat = new THREE.MeshStandardNodeMaterial({ color: stallCloth[i % stallCloth.length] ?? 0xc8102e, roughness: 0.95, side: THREE.DoubleSide });
+        const canopy = prismRoof(4.4, 3, 0.8, mat);
+        canopy.position.set(x, 2.3, z);
+        g.add(canopy);
+        for (const [dx, dz] of [[-1.9, -1.3], [1.9, -1.3], [-1.9, 1.3], [1.9, 1.3]] as const) g.add(cyl(0.05, 0.06, 2.3, kit.metal, x + dx, 0, z + dz, 6));
+        g.add(box(4, 0.85, 1.2, kit.wood, x, 0, z));
+        colliders.push({ kind: 'box', center: [x, 0.45, z], halfExtents: [2, 0.45, 0.6], rotationY: 0 });
+      }
+      for (const sx of [-1, 1]) {
+        const post = cyl(0.06, 0.08, 3.2, kit.metal, sx * 21, 0, 5.4, 8);
+        g.add(post);
+        // bilingual blades: EN over FR
+        const blade = (y: number, color: number) => {
+          const b = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.42, 0.06), new THREE.MeshStandardNodeMaterial({ color, roughness: 0.6, metalness: 0.1 }));
+          b.position.set(sx * 21 + sx * 1.1, y, 5.4);
+          b.castShadow = true;
+          return b;
+        };
+        g.add(blade(3.1, 0x14532d), blade(2.62, 0x14532d));
+      }
+      return { g, colliders, w: 48, d: 14 };
+    },
     lookout: () => {
       const g = new THREE.Group();
       g.add(box(6, 0.4, 6, kit.wood, 0, 4));

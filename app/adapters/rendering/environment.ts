@@ -1,5 +1,6 @@
 import * as THREE from 'three/webgpu';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 import { CSMShadowNode } from 'three/addons/csm/CSMShadowNode.js';
 import type { Ambience } from '@domain/district';
 import type { GraphicsPreset } from '@application/ports';
@@ -13,6 +14,9 @@ export class Environment {
   private cycleSpeed = 0; // day fraction per second
   private readonly fogColor = new THREE.Color();
   private csm: CSMShadowNode | null = null;
+  private readonly sky: SkyMesh;
+  private readonly stars: THREE.Points;
+  private readonly sunDir = new THREE.Vector3();
 
   constructor(
     private readonly scene: THREE.Scene,
@@ -33,10 +37,45 @@ export class Environment {
     this.hemi = new THREE.HemisphereLight(0xbfd8ff, 0x5a4a30, 0.6);
     scene.add(this.hemi);
     scene.fog = new THREE.FogExp2(0xcfd9e6, 0.004);
+
+    // Physical sky (Preetham, TSL) — renders on both WebGPU and WebGL2 and reacts to the sun position.
+    this.sky = new SkyMesh();
+    this.sky.scale.setScalar(45000);
+    this.sky.name = 'sky';
+    this.sky.frustumCulled = false;
+    this.sky.renderOrder = -1000;
+    scene.add(this.sky);
+
+    // Star field: a sphere of points that fades in after dusk.
+    const starCount = 900;
+    const pos = new Float32Array(starCount * 3);
+    const sizes = new Float32Array(starCount);
+    for (let i = 0; i < starCount; i++) {
+      const u = Math.random() * 2 - 1;
+      const a = Math.random() * Math.PI * 2;
+      const r = Math.sqrt(1 - u * u);
+      pos[i * 3] = Math.cos(a) * r * 9000;
+      pos[i * 3 + 1] = Math.abs(u) * 9000 + 200;
+      pos[i * 3 + 2] = Math.sin(a) * r * 9000;
+      sizes[i] = 12 + Math.random() * 26;
+    }
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    starGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    this.stars = new THREE.Points(starGeo, new THREE.PointsNodeMaterial({ color: 0xdfe8ff, sizeAttenuation: false, size: 2, transparent: true, opacity: 0, depthWrite: false }));
+    this.stars.name = 'stars';
+    this.stars.frustumCulled = false;
+    this.stars.renderOrder = -999;
+    scene.add(this.stars);
   }
 
   async load(ambience: Ambience, preset: GraphicsPreset, cycleEnabled: boolean): Promise<void> {
     this.timeOfDay = ambience.timeOfDay;
+    const w = ambience.weather;
+    this.sky.turbidity.value = w === 'fog' ? 14 : w === 'rain' ? 10 : w === 'snow' ? 6 : 2.6;
+    this.sky.rayleigh.value = w === 'rain' || w === 'fog' ? 0.6 : w === 'snow' ? 1.6 : 2.2;
+    this.sky.mieCoefficient.value = w === 'fog' ? 0.03 : 0.006;
+    this.sky.mieDirectionalG.value = w === 'snow' ? 0.85 : 0.8;
     this.cycleSpeed = cycleEnabled ? 1 / 600 : 0; // full day in 10 minutes
     (this.scene.fog as THREE.FogExp2).density = ambience.fogDensity ?? 0.004;
     this.sun.castShadow = preset.shadows;
@@ -56,13 +95,12 @@ export class Environment {
       tex.mapping = THREE.EquirectangularReflectionMapping;
       this.hdri?.dispose();
       this.hdri = tex;
-      this.scene.environment = tex;
-      this.scene.background = tex;
-      this.scene.backgroundBlurriness = 0.02;
+      this.scene.environment = tex; // image-based lighting only: the sky itself is the SkyMesh
+      this.scene.background = null;
     } catch {
-      // No HDRI (offline dev): fall back to a gradient-ish solid sky.
+      // No HDRI (offline dev): the SkyMesh still provides the visible sky.
       this.scene.environment = null;
-      this.scene.background = new THREE.Color(0x9fc2e6);
+      this.scene.background = null;
     }
     this.update(0, new THREE.Vector3());
   }
@@ -71,7 +109,7 @@ export class Environment {
     this.timeOfDay = (this.timeOfDay + dt * this.cycleSpeed) % 1;
     const angle = (this.timeOfDay - 0.25) * Math.PI * 2; // sunrise at 0.25
     const elev = Math.sin(angle);
-    const dir = new THREE.Vector3(Math.cos(angle) * 0.6, elev, Math.sin(angle) * 0.4 + 0.3).normalize();
+    const dir = this.sunDir.set(Math.cos(angle) * 0.6, elev, Math.sin(angle) * 0.4 + 0.3).normalize();
     this.sun.position.copy(focus).addScaledVector(dir, 180);
     this.sun.target.position.copy(focus);
     this.sun.target.updateMatrixWorld();
@@ -84,8 +122,12 @@ export class Environment {
     this.scene.backgroundIntensity = 0.06 + day * 0.95;
     this.fogColor.setHSL(0.58, 0.35 + dusk * 0.3, 0.2 + day * 0.62);
     (this.scene.fog as THREE.FogExp2).color.copy(this.fogColor);
-    if (this.scene.background instanceof THREE.Color) this.scene.background.copy(this.fogColor);
-    else if (!(this.scene.background instanceof THREE.Texture)) this.scene.background = this.fogColor.clone();
+    this.sky.sunPosition.value.copy(dir).multiplyScalar(40000);
+    this.sky.position.copy(focus);
+    this.stars.position.copy(focus);
+    const night = THREE.MathUtils.clamp(-elev * 3, 0, 1);
+    (this.stars.material as THREE.PointsNodeMaterial).opacity = night * 0.9;
+    this.stars.visible = night > 0.01;
   }
 
   get isNight(): boolean {
@@ -99,6 +141,8 @@ export class Environment {
 
   dispose(): void {
     this.hdri?.dispose();
-    this.scene.remove(this.sun, this.sun.target, this.hemi);
+    this.scene.remove(this.sun, this.sun.target, this.hemi, this.sky, this.stars);
+    this.sky.geometry.dispose();
+    this.stars.geometry.dispose();
   }
 }

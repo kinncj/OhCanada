@@ -1,9 +1,9 @@
 {
   "key": "canoe-voyageur",
   "category": "hero",
-  "prompt": "a whole traditional birchbark voyageur canoe seen from the side and slightly above, a long slender canoe with upswept bow and stern, pale tan birch bark hull with dark seams and wooden ribs and thwarts inside, small in frame, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "prompt": "one whole traditional birchbark voyageur canoe seen from the side, the entire canoe from bow to stern visible end to end, upswept pointed ends, pale tan birch bark hull with dark stitched seams and wooden ribs inside, empty, nothing around it, isolated on a plain white background, the complete object small in the centre of the frame with wide empty margins on all sides, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "hands, people, text, watermark, multiple objects, cropped, cut off, blurry, low quality, background scenery, paddle, water",
-  "seed": 113,
+  "seed": 303,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
   "targetHeightMeters": 1.2,
   "polyBudget": 10000,

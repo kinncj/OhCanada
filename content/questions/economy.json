@@ -566,27 +566,31 @@
       "id": "q-ec-019",
       "subject": "economy",
       "text": {
-        "en": "Which of the following is described as a key strength of Canada's economy?",
-        "fr": "Lequel des éléments suivants est décrit comme une force clé de l'économie canadienne?"
+        "en": "Which monument at Blaine, Washington, inscribed \"children of a common mother\", symbolizes the close ties between Canada and the United States?",
+        "fr": "Quel monument situé à Blaine, dans l’État de Washington, portant l’inscription « children of a common mother », symbolise les liens étroits entre le Canada et les États-Unis?"
       },
       "answer": {
-        "en": "A highly skilled and well-educated workforce",
-        "fr": "Une main-d'œuvre hautement qualifiée et bien instruite"
+        "en": "The Peace Arch",
+        "fr": "L'Arche de la paix"
       },
       "distractors": [
         {
-          "en": "A single dominant national industry",
-          "fr": "Une seule industrie nationale dominante"
+          "en": "The Peace Tower",
+          "fr": "La Tour de la Paix"
         },
         {
-          "en": "An abundance of low-wage labour",
-          "fr": "Une abondance de main-d'œuvre à bas salaire"
+          "en": "The Confederation Bridge",
+          "fr": "Le pont de la Confédération"
         },
         {
-          "en": "Closed borders that keep out imports",
-          "fr": "Des frontières fermées aux importations"
+          "en": "The Vimy Memorial",
+          "fr": "Le Monument commémoratif de Vimy"
         }
       ],
+      "explanation": {
+        "en": "Millions of Canadians and Americans safely cross what is traditionally called the world’s longest undefended border each year.",
+        "fr": "Des millions de Canadiens et d'Américains traversent chaque année en toute sécurité ce qu'on appelle traditionnellement la plus longue frontière non défendue du monde."
+      },
       "source": "Discover Canada: Canada's Economy",
       "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/canadas-economy.html",
       "asOf": "2026-09-07",

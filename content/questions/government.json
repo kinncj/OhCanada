@@ -172,10 +172,14 @@
         "fr": "Qui occupe actuellement le poste de gouverneure générale du Canada?"
       },
       "answer": {
-        "en": "Mary Simon",
-        "fr": "Mary Simon"
+        "en": "Louise Arbour",
+        "fr": "Louise Arbour"
       },
       "distractors": [
+        {
+          "en": "Mary Simon",
+          "fr": "Mary Simon"
+        },
         {
           "en": "Julie Payette",
           "fr": "Julie Payette"
@@ -183,15 +187,11 @@
         {
           "en": "David Johnston",
           "fr": "David Johnston"
-        },
-        {
-          "en": "Michaëlle Jean",
-          "fr": "Michaëlle Jean"
         }
       ],
       "explanation": {
-        "en": "Mary Simon, an Inuk leader from Nunavik, became the first Indigenous Governor General in 2021.",
-        "fr": "Mary Simon, une dirigeante inuite du Nunavik, est devenue la première gouverneure générale autochtone en 2021."
+        "en": "Louise Arbour, a former Supreme Court of Canada judge and UN High Commissioner for Human Rights, was sworn in on June 8, 2026 as the 31st Governor General, succeeding Mary Simon.",
+        "fr": "Louise Arbour, ancienne juge de la Cour suprême du Canada et haut-commissaire des Nations Unies aux droits de l'homme, a prêté serment le 8 juin 2026 comme 31e gouverneure générale, succédant à Mary Simon."
       },
       "source": "Discover Canada: How Canadians Govern Themselves",
       "sourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",

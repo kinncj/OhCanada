@@ -1,7 +1,7 @@
 {
   "key": "peggys-cove-lighthouse",
   "category": "hero",
-  "prompt": "the Peggy's Cove lighthouse in Nova Scotia, a small white octagonal concrete lighthouse tower with a red lantern room and red cap on top, one small window, full view, standing on a plain white surface, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "prompt": "one small white octagonal concrete lighthouse tower standing alone, tapering eight sided white tower with a red lantern room and red cap on top, one small window, the whole lighthouse visible, no rocks, no sea, no ground, nothing around it, isolated on a plain white background, the complete object small in the centre of the frame with wide empty margins on all sides, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds, rocks",
   "seed": 107,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
