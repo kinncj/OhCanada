@@ -1,7 +1,7 @@
 {
   "key": "peace-tower",
   "category": "hero",
-  "prompt": "a miniature model of one single tall narrow gothic revival stone clock tower standing completely alone, four times taller than it is wide, beige sandstone walls, a steep pointed green copper roof, one round clock face high up on each side, narrow pointed arch windows, small stone pinnacles at the four corners of the roof, only the one tower and nothing else, a small souvenir desk model standing on a plain white surface, the whole miniature visible from base to top with empty space above it, studio product photo, plain white background, soft even lighting, sharp focus",
+  "prompt": "a freestanding gothic campanile bell tower, a single square stone tower alone with no church and no building attached to it, very tall and narrow, beige sandstone, one round clock face near the top of each face, narrow pointed arch openings, four small pinnacles around a steep pointed green copper spire, a small souvenir desk model of the tower alone standing on a plain white surface, the whole tower visible from base to spire with empty space around it, studio product photo, plain white background, soft even lighting, sharp focus",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds",
   "seed": 909,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",

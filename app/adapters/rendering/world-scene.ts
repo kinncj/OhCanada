@@ -30,6 +30,8 @@ export class WorldScene {
   fauna: FaunaSystem | null = null;
   /** Objects added a few per frame after the loading screen hides: turns one long shader-compile freeze into a fill-in. */
   readonly pending: THREE.Object3D[] = [];
+  /** Distance-culled landmarks: big silhouettes stay visible far away, street furniture drops out early. */
+  private readonly culled: { obj: THREE.Object3D; pos: THREE.Vector3; range: number }[] = [];
   private hydrationBudget = 2;
 
   private constructor(
@@ -146,6 +148,9 @@ export class WorldScene {
     }
     for (const { l, b } of landmarkBuilds) {
       scene.pending.push(b.object);
+      // Cull range scales with footprint: a tower is visible across the map, a bench only nearby.
+      const extent = Math.max(b.footprint.w, b.footprint.d) * (l.scale ?? 1);
+      scene.culled.push({ obj: b.object, pos: new THREE.Vector3(l.position[0], l.position[1], l.position[2]), range: Math.max(90, Math.min(1400, extent * 26)) });
       scene.colliders.push(...b.colliders);
       scene.lights.push(...b.lights);
       if (b.footprint.w > 3) scene.occluders.push(b.object);
@@ -213,6 +218,11 @@ export class WorldScene {
 
   update(dt: number, cameraPos: THREE.Vector3, elapsed: number): void {
     this.hydrate();
+    for (const c of this.culled) {
+      const d = c.pos.distanceTo(cameraPos);
+      const want = d < c.range * (c.obj.visible ? 1.12 : 1); // hysteresis so objects do not flicker at the boundary
+      if (c.obj.visible !== want) c.obj.visible = want;
+    }
     this.vegetation.updateLod(cameraPos);
     this.fauna?.update(dt, elapsed);
     for (const m of this.markers) {
