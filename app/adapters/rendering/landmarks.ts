@@ -79,8 +79,10 @@ export async function buildMaterialKit(lib: AssetLibrary | null, modelKeys: read
       }),
     );
   }
+  const scaled = (key: string, tile: number, fallback: THREE.Material, extra?: Partial<THREE.MeshStandardNodeMaterialParameters>): Promise<THREE.Material> =>
+    lib?.hasTexture(key) ? lib.texture(key).then((t) => tiled({ ...t, tileMeters: tile }, extra)).catch(() => fallback) : Promise.resolve(fallback);
   const [sandstone, brick, plaster, concrete, roof, wood, metal, copper] = await Promise.all([
-    tex('sandstone', solid(0xb9a98c, 0.85)),
+    scaled('sandstone', 7, solid(0xb9a98c, 0.85)),
     tex('brick', solid(0x8a4a3a, 0.9)),
     tex('plaster', solid(0xd9d2c3, 0.85)),
     tex('concrete', solid(0x9a9a96, 0.9)),
@@ -92,7 +94,7 @@ export async function buildMaterialKit(lib: AssetLibrary | null, modelKeys: read
   return {
     sandstone, brick, plaster, concrete, roof, wood, metal, copper,
     darkStone: solid(0x6f6a62, 0.9),
-    glass: new THREE.MeshPhysicalNodeMaterial({ color: 0x8fb8d8, roughness: 0.08, metalness: 0.2, transmission: 0.35, thickness: 0.2, envMapIntensity: 1.2 }),
+    glass: new THREE.MeshStandardNodeMaterial({ color: 0x223447, roughness: 0.06, metalness: 0.92, envMapIntensity: 1.4 }),
     white: solid(0xf1f1ee, 0.6),
     models,
   };
@@ -143,96 +145,152 @@ function placeModel(kit: MaterialKit, key: string, targetHeight?: number): THREE
  * Gothic-revival facade: recessed windows with stone surrounds, string courses, a pitched copper roof with
  * dormers and finials. Windows are instanced boxes; recesses come from an inset dark panel behind the glass.
  */
+/** Triangular prism roof (ridge along x) with proper UVs so roof textures tile correctly. */
+function prismRoof(w: number, d: number, h: number, mat: THREE.Material): THREE.Mesh {
+  const hw = w / 2;
+  const hd = d / 2;
+  const v = [
+    // left gable end (x = -hw)
+    -hw, 0, -hd, -hw, 0, hd, -hw, h, 0,
+    // right gable end
+    hw, 0, hd, hw, 0, -hd, hw, h, 0,
+    // front slope (+z)
+    -hw, 0, hd, hw, 0, hd, hw, h, 0, -hw, 0, hd, hw, h, 0, -hw, h, 0,
+    // back slope (-z)
+    hw, 0, -hd, -hw, 0, -hd, -hw, h, 0, hw, 0, -hd, -hw, h, 0, hw, h, 0,
+  ];
+  const slopeLen = Math.hypot(hd, h);
+  const uv = [
+    0, 0, 1, 0, 0.5, 1,
+    0, 0, 1, 0, 0.5, 1,
+    0, 0, w / 2, 0, w / 2, slopeLen / 2, 0, 0, w / 2, slopeLen / 2, 0, slopeLen / 2,
+    0, 0, w / 2, 0, w / 2, slopeLen / 2, 0, 0, w / 2, slopeLen / 2, 0, slopeLen / 2,
+  ];
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+  geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, mat);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
+}
+
+/**
+ * Gothic-revival facade: recessed windows (dark reveal + reflective glass + stone frame + sill + keystone),
+ * pilasters between bays, plinth, string courses, cornice; roof as a textured prism with dormers, or a dome.
+ */
 function facade(kit: MaterialKit, w: number, h: number, d: number, opts: { roof: 'copper' | 'flat' | 'gable' | 'dome' | 'mansard'; windows?: boolean; wall?: THREE.Material; arches?: boolean }): { g: THREE.Group; colliders: ColliderSpec[] } {
   const g = new THREE.Group();
   const wall = opts.wall ?? kit.sandstone;
   g.add(box(w, h, d, wall));
-  // plinth + cornice
-  g.add(box(w + 0.6, 0.9, d + 0.6, kit.darkStone, 0, 0, 0));
-  g.add(box(w + 0.5, 0.35, d + 0.5, kit.darkStone, 0, h - 0.35, 0));
+  g.add(box(w + 0.7, 1.1, d + 0.7, kit.darkStone, 0, 0, 0)); // plinth
+  g.add(box(w + 0.5, 0.45, d + 0.5, kit.darkStone, 0, h - 0.45, 0)); // cornice
+  const floors = Math.max(1, Math.floor((h - 2.5) / 3.6));
+  for (let f = 1; f < floors; f++) g.add(box(w + 0.3, 0.22, d + 0.3, kit.darkStone, 0, 2.2 + f * 3.6 - 1.6, 0)); // string courses
   if (opts.windows !== false) {
-    const rows = Math.max(1, Math.floor((h - 2.5) / 3.4));
-    const colsN = Math.max(1, Math.floor(w / 3.2));
-    const glassGeo = new THREE.BoxGeometry(1.25, 2.2, 0.08);
-    const frameGeo = new THREE.BoxGeometry(1.65, 2.7, 0.35);
-    const sillGeo = new THREE.BoxGeometry(1.8, 0.16, 0.5);
-    const count = rows * colsN * 2;
-    const glass = new THREE.InstancedMesh(glassGeo, kit.glass, count);
-    const frame = new THREE.InstancedMesh(frameGeo, kit.darkStone, count);
-    const sill = new THREE.InstancedMesh(sillGeo, kit.darkStone, count);
+    const bays = Math.max(1, Math.floor(w / 3.4));
+    const count = floors * bays * 2;
+    const reveal = new THREE.InstancedMesh(new THREE.BoxGeometry(1.5, 2.5, 0.5), kit.darkStone, count);
+    const glass = new THREE.InstancedMesh(new THREE.BoxGeometry(1.3, 2.3, 0.06), kit.glass, count);
+    const mullionV = new THREE.InstancedMesh(new THREE.BoxGeometry(0.08, 2.3, 0.1), kit.white, count);
+    const mullionH = new THREE.InstancedMesh(new THREE.BoxGeometry(1.3, 0.08, 0.1), kit.white, count);
+    const frame = new THREE.InstancedMesh(new THREE.BoxGeometry(1.9, 0.28, 0.42), kit.darkStone, count * 2); // head + sill
+    const pilaster = new THREE.InstancedMesh(new THREE.BoxGeometry(0.5, h - 1.2, 0.45), wall, (bays + 1) * 2);
     const m = new THREE.Matrix4();
     let i = 0;
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < colsN; c++) {
-        const x = -w / 2 + (c + 0.5) * (w / colsN);
-        const y = 2.4 + r * 3.4;
-        for (const sz of [1, -1]) {
-          m.makeTranslation(x, y, sz * (d / 2 - 0.1));
-          frame.setMatrixAt(i, m);
-          m.makeTranslation(x, y, sz * (d / 2 + 0.12));
+    let fi = 0;
+    let pi = 0;
+    for (let sz of [1, -1]) {
+      const zFace = sz * (d / 2);
+      for (let b = 0; b <= bays; b++) {
+        m.makeTranslation(-w / 2 + b * (w / bays), h / 2 + 0.5, zFace + sz * 0.15);
+        pilaster.setMatrixAt(pi++, m);
+      }
+      for (let f = 0; f < floors; f++) {
+        const y = 2.4 + f * 3.6;
+        for (let b = 0; b < bays; b++) {
+          const x = -w / 2 + (b + 0.5) * (w / bays);
+          m.makeTranslation(x, y, zFace - sz * 0.2);
+          reveal.setMatrixAt(i, m);
+          m.makeTranslation(x, y, zFace - sz * 0.32);
           glass.setMatrixAt(i, m);
-          m.makeTranslation(x, y - 1.4, sz * (d / 2 + 0.2));
-          sill.setMatrixAt(i, m);
+          mullionV.setMatrixAt(i, m);
+          mullionH.setMatrixAt(i, m);
+          m.makeTranslation(x, y + 1.4, zFace + sz * 0.1);
+          frame.setMatrixAt(fi++, m);
+          m.makeTranslation(x, y - 1.4, zFace + sz * 0.16);
+          frame.setMatrixAt(fi++, m);
           i++;
         }
       }
+      sz = -sz;
     }
-    frame.castShadow = glass.castShadow = false;
-    g.add(frame, glass, sill);
+    for (const im of [reveal, glass, mullionV, mullionH, frame, pilaster]) {
+      im.castShadow = im === pilaster || im === frame;
+      im.receiveShadow = true;
+      g.add(im);
+    }
     if (opts.arches) {
-      // arched entrance
-      const arch = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 1.2, 24, 1, false, 0, Math.PI), kit.darkStone);
+      const arch = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 1.4, 28, 1, false, 0, Math.PI), kit.darkStone);
       arch.rotation.z = Math.PI / 2;
       arch.rotation.y = Math.PI / 2;
-      arch.position.set(0, 4.2, d / 2 + 0.2);
+      arch.position.set(0, 4.3, d / 2 + 0.3);
       g.add(arch);
-      const door = box(3.4, 4.2, 0.3, kit.wood, 0, 0, d / 2 + 0.25);
-      g.add(door);
+      g.add(box(4.2, 4.3, 0.6, kit.darkStone, 0, 0, d / 2 + 0.25));
+      g.add(box(3.4, 4.0, 0.3, kit.wood, 0, 0, d / 2 + 0.5));
+      for (let k = 0; k < 4; k++) g.add(box(9 - k * 1.6, 0.3, 1.4, kit.darkStone, 0, k * 0.3, d / 2 + 2.4 - k * 0.6));
     }
   }
-  const colliders: ColliderSpec[] = [{ kind: 'box', center: [0, h / 2, 0], halfExtents: [w / 2 + 0.3, h / 2, d / 2 + 0.3], rotationY: 0 }];
+  const colliders: ColliderSpec[] = [{ kind: 'box', center: [0, h / 2, 0], halfExtents: [w / 2 + 0.4, h / 2, d / 2 + 0.4], rotationY: 0 }];
   switch (opts.roof) {
     case 'copper':
     case 'gable': {
       const mat = opts.roof === 'copper' ? kit.copper : kit.roof;
-      const roof = new THREE.Mesh(new THREE.CylinderGeometry(0.01, d * 0.72, w + 0.8, 4, 1), mat);
-      roof.rotation.z = Math.PI / 2;
-      roof.rotation.y = Math.PI / 4;
-      roof.scale.set(1, 1, 0.55);
-      roof.position.y = h + d * 0.36 * 0.55 + 0.1;
-      roof.castShadow = true;
+      const rh = Math.min(d * 0.55, 6.5);
+      const roof = prismRoof(w + 1.0, d + 1.0, rh, mat);
+      roof.position.y = h;
       g.add(roof);
-      // dormers
+      const ridge = box(w + 1.2, 0.25, 0.3, kit.metal, 0, h + rh - 0.1, 0);
+      g.add(ridge);
       const n = Math.max(1, Math.floor(w / 6));
       for (let k = 0; k < n; k++) {
         const x = -w / 2 + (k + 0.5) * (w / n);
         for (const sz of [1, -1]) {
-          const dm = box(1.4, 1.6, 1.2, kit.sandstone, x, h + 0.6, sz * (d * 0.28));
-          g.add(dm);
-          const dr = new THREE.Mesh(new THREE.ConeGeometry(1.1, 1.0, 4), mat);
-          dr.rotation.y = Math.PI / 4;
-          dr.position.set(x, h + 2.7, sz * (d * 0.28));
+          const z = sz * (d * 0.3);
+          g.add(box(1.6, 1.8, 1.4, kit.sandstone, x, h + 0.5, z));
+          const win = box(0.8, 1.0, 0.1, kit.glass, x, h + 0.9, z + sz * 0.72);
+          g.add(win);
+          const dr = prismRoof(1.9, 1.7, 1.1, mat);
+          dr.position.set(x, h + 2.3, z);
           g.add(dr);
         }
       }
       break;
     }
     case 'mansard': {
-      g.add(box(w * 0.9, 2.2, d * 0.9, kit.roof, 0, h));
-      g.add(box(w * 0.7, 0.6, d * 0.7, kit.roof, 0, h + 2.2));
+      g.add(box(w * 0.92, 2.4, d * 0.92, kit.roof, 0, h));
+      g.add(box(w * 0.7, 0.7, d * 0.7, kit.roof, 0, h + 2.4));
       break;
     }
     case 'dome': {
-      const drum = cyl(Math.min(w, d) * 0.32, Math.min(w, d) * 0.32, 2.2, kit.sandstone, 0, h, 0, 24);
-      g.add(drum);
-      const dm = new THREE.Mesh(new THREE.SphereGeometry(Math.min(w, d) * 0.36, 28, 16, 0, Math.PI * 2, 0, Math.PI / 2), kit.copper);
-      dm.position.y = h + 2.2;
+      const r = Math.min(w, d) * 0.34;
+      g.add(cyl(r, r, 2.4, kit.sandstone, 0, h, 0, 32));
+      for (let k = 0; k < 12; k++) {
+        const a = (k / 12) * Math.PI * 2;
+        g.add(cyl(0.22, 0.22, 2.4, kit.white, Math.cos(a) * (r + 0.1), h, Math.sin(a) * (r + 0.1), 10));
+      }
+      const dm = new THREE.Mesh(new THREE.SphereGeometry(r + 0.4, 36, 18, 0, Math.PI * 2, 0, Math.PI / 2), kit.copper);
+      dm.position.y = h + 2.4;
       dm.castShadow = true;
       g.add(dm);
+      g.add(cyl(0.6, 0.8, 1.6, kit.sandstone, 0, h + 2.4 + r + 0.2, 0, 12));
       break;
     }
     default:
-      g.add(box(w * 1.02, 0.5, d * 1.02, kit.roof, 0, h));
+      g.add(box(w * 1.02, 0.6, d * 1.02, kit.roof, 0, h));
+      g.add(box(w * 0.98, 0.9, 0.35, kit.sandstone, 0, h + 0.6, d / 2 - 0.2)); // parapet
+      g.add(box(w * 0.98, 0.9, 0.35, kit.sandstone, 0, h + 0.6, -d / 2 + 0.2));
   }
   return { g, colliders };
 }

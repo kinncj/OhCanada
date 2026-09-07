@@ -1,0 +1,483 @@
+{
+  "version": 1,
+  "textureFormat": "ktx2",
+  "basisTranscoderPath": "basis/",
+  "dracoDecoderPath": "draco/",
+  "models": {
+    "tree-fir": {
+      "path": "models/env/fir_tree_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 14272,
+        "LOD1": 2901
+      },
+      "height": 14.49,
+      "radius": 3.13,
+      "category": "tree"
+    },
+    "tree-pine": {
+      "path": "models/env/pine_tree_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 14926,
+        "LOD1": 3020
+      },
+      "height": 14.8,
+      "radius": 3.72,
+      "category": "tree"
+    },
+    "tree-broadleaf-1": {
+      "path": "models/env/island_tree_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 14825,
+        "LOD1": 2941
+      },
+      "height": 4.98,
+      "radius": 2.39,
+      "category": "tree"
+    },
+    "tree-broadleaf-2": {
+      "path": "models/env/island_tree_02.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 14951,
+        "LOD1": 2937
+      },
+      "height": 3.4,
+      "radius": 2.03,
+      "category": "tree"
+    },
+    "sapling-pine": {
+      "path": "models/env/pine_sapling_medium.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 14888,
+        "LOD1": 3014
+      },
+      "height": 6.78,
+      "radius": 1.88,
+      "category": "sapling"
+    },
+    "sapling-fir": {
+      "path": "models/env/fir_sapling_medium.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 14168,
+        "LOD1": 2940
+      },
+      "height": 7.65,
+      "radius": 2.02,
+      "category": "sapling"
+    },
+    "rock-boulder": {
+      "path": "models/env/boulder_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 5996,
+        "LOD1": 1200
+      },
+      "height": 1,
+      "radius": 0.91,
+      "category": "rock"
+    },
+    "rock-2": {
+      "path": "models/env/namaqualand_boulder_02.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6000,
+        "LOD1": 1198
+      },
+      "height": 0.88,
+      "radius": 1.26,
+      "category": "rock"
+    },
+    "rock-3": {
+      "path": "models/env/namaqualand_boulder_04.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6000,
+        "LOD1": 1200
+      },
+      "height": 1.9,
+      "radius": 1.26,
+      "category": "rock"
+    },
+    "rock-coast": {
+      "path": "models/env/coast_rocks_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 5997,
+        "LOD1": 1198
+      },
+      "height": 3.28,
+      "radius": 29.75,
+      "category": "rock"
+    },
+    "grass-clump": {
+      "path": "models/env/grass_medium_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 2287,
+        "LOD1": 457
+      },
+      "height": 0.22,
+      "radius": 0.11,
+      "category": "foliage"
+    },
+    "fern": {
+      "path": "models/env/fern_02.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 2384,
+        "LOD1": 477
+      },
+      "height": 0.43,
+      "radius": 0.49,
+      "category": "foliage"
+    },
+    "bench-wood": {
+      "path": "models/env/painted_wooden_bench.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 630,
+        "LOD1": 126
+      },
+      "height": 0.89,
+      "radius": 0.58,
+      "category": "prop"
+    },
+    "bench-street": {
+      "path": "models/env/modular_street_seating.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 5994,
+        "LOD1": 1214
+      },
+      "height": 0.95,
+      "radius": 2.17,
+      "category": "prop"
+    },
+    "hydrant": {
+      "path": "models/env/fire_hydrant.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 5732,
+        "LOD1": 1204
+      },
+      "height": 0.8,
+      "radius": 0.44,
+      "category": "prop"
+    },
+    "power-pole": {
+      "path": "models/env/modular_electricity_poles.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6662,
+        "LOD1": 2099
+      },
+      "height": 6.99,
+      "radius": 6.56,
+      "category": "structure"
+    },
+    "pier": {
+      "path": "models/env/modular_wooden_pier.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 5980,
+        "LOD1": 1167
+      },
+      "height": 7.51,
+      "radius": 9.51,
+      "category": "structure"
+    },
+    "fort": {
+      "path": "models/env/modular_fort_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6067,
+        "LOD1": 1456
+      },
+      "height": 13.66,
+      "radius": 35.69,
+      "category": "structure"
+    },
+    "iron-gate": {
+      "path": "models/env/large_iron_gate.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 5999,
+        "LOD1": 1063
+      },
+      "height": 2.93,
+      "radius": 1.48,
+      "category": "prop"
+    },
+    "facade-apartments": {
+      "path": "models/env/modular_urban_apartments_facade.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6142,
+        "LOD1": 2355
+      },
+      "height": 17,
+      "radius": 25.75,
+      "category": "structure"
+    },
+    "facade-factory": {
+      "path": "models/env/modular_factory_facade.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6264,
+        "LOD1": 3252
+      },
+      "height": 29,
+      "radius": 26.66,
+      "category": "structure"
+    },
+    "barrier": {
+      "path": "models/env/concrete_road_barrier.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6000,
+        "LOD1": 1196
+      },
+      "height": 0.83,
+      "radius": 0.77,
+      "category": "prop"
+    },
+    "utility-box": {
+      "path": "models/env/utility_box_01.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 4404,
+        "LOD1": 880
+      },
+      "height": 1.12,
+      "radius": 0.26,
+      "category": "prop"
+    },
+    "dead-trunk": {
+      "path": "models/env/dead_tree_trunk_02.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 5980,
+        "LOD1": 1198
+      },
+      "height": 1.05,
+      "radius": 2.02,
+      "category": "prop"
+    }
+  },
+  "textures": {
+    "grass": {
+      "diff": "textures/aerial_grass_rock/diff.ktx2",
+      "nor": "textures/aerial_grass_rock/nor.ktx2",
+      "arm": "textures/aerial_grass_rock/arm.ktx2",
+      "tileMeters": 4
+    },
+    "forest-floor": {
+      "diff": "textures/forest_floor/diff.ktx2",
+      "nor": "textures/forest_floor/nor.ktx2",
+      "arm": "textures/forest_floor/arm.ktx2",
+      "tileMeters": 4
+    },
+    "rock": {
+      "diff": "textures/rock_face/diff.ktx2",
+      "nor": "textures/rock_face/nor.ktx2",
+      "arm": "textures/rock_face/arm.ktx2",
+      "tileMeters": 4
+    },
+    "snow": {
+      "diff": "textures/snow_02/diff.ktx2",
+      "nor": "textures/snow_02/nor.ktx2",
+      "arm": "textures/snow_02/arm.ktx2",
+      "tileMeters": 4
+    },
+    "cobble": {
+      "diff": "textures/cobblestone_floor_08/diff.ktx2",
+      "nor": "textures/cobblestone_floor_08/nor.ktx2",
+      "arm": "textures/cobblestone_floor_08/arm.ktx2",
+      "tileMeters": 3
+    },
+    "asphalt": {
+      "diff": "textures/asphalt_02/diff.ktx2",
+      "nor": "textures/asphalt_02/nor.ktx2",
+      "arm": "textures/asphalt_02/arm.ktx2",
+      "tileMeters": 3
+    },
+    "sandstone": {
+      "diff": "textures/large_sandstone_blocks/diff.ktx2",
+      "nor": "textures/large_sandstone_blocks/nor.ktx2",
+      "arm": "textures/large_sandstone_blocks/arm.ktx2",
+      "tileMeters": 3
+    },
+    "brick": {
+      "diff": "textures/castle_brick_02_red/diff.ktx2",
+      "nor": "textures/castle_brick_02_red/nor.ktx2",
+      "arm": "textures/castle_brick_02_red/arm.ktx2",
+      "tileMeters": 3
+    },
+    "plaster": {
+      "diff": "textures/grey_plaster/diff.ktx2",
+      "nor": "textures/grey_plaster/nor.ktx2",
+      "arm": "textures/grey_plaster/arm.ktx2",
+      "tileMeters": 3
+    },
+    "concrete": {
+      "diff": "textures/concrete_wall_008/diff.ktx2",
+      "nor": "textures/concrete_wall_008/nor.ktx2",
+      "arm": "textures/concrete_wall_008/arm.ktx2",
+      "tileMeters": 3
+    },
+    "roof-copper": {
+      "diff": "textures/green_metal_rust/diff.ktx2",
+      "nor": "textures/green_metal_rust/nor.ktx2",
+      "arm": "textures/green_metal_rust/arm.ktx2",
+      "tileMeters": 2
+    },
+    "roof-grey": {
+      "diff": "textures/grey_roof_tiles/diff.ktx2",
+      "nor": "textures/grey_roof_tiles/nor.ktx2",
+      "arm": "textures/grey_roof_tiles/arm.ktx2",
+      "tileMeters": 2
+    },
+    "wood": {
+      "diff": "textures/wood_planks_grey/diff.ktx2",
+      "nor": "textures/wood_planks_grey/nor.ktx2",
+      "arm": "textures/wood_planks_grey/arm.ktx2",
+      "tileMeters": 1
+    },
+    "metal": {
+      "diff": "textures/metal_plate/diff.ktx2",
+      "nor": "textures/metal_plate/nor.ktx2",
+      "arm": "textures/metal_plate/arm.ktx2",
+      "tileMeters": 1
+    }
+  },
+  "characters": {
+    "male": {
+      "path": "models/characters/male.glb",
+      "hair": [
+        "Hair_Buzzed",
+        "Hair_SimpleParted",
+        "Hair_Long",
+        "Hair_Buns",
+        "Hair_Beard"
+      ],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Walk_Loop",
+        "Jog_Fwd_Loop",
+        "Sprint_Loop",
+        "Jump_Start",
+        "Jump_Loop",
+        "Jump_Land",
+        "Interact",
+        "Sitting_Idle_Loop"
+      ],
+      "skin": {
+        "light": "textures/characters/male_skin_light.ktx2",
+        "dark": "textures/characters/male_skin_dark.ktx2"
+      }
+    },
+    "female": {
+      "path": "models/characters/female.glb",
+      "hair": [
+        "Hair_BuzzedFemale",
+        "Hair_SimpleParted",
+        "Hair_Long",
+        "Hair_Buns"
+      ],
+      "animations": [
+        "Idle_Loop",
+        "Idle_Talking_Loop",
+        "Walk_Loop",
+        "Jog_Fwd_Loop",
+        "Sprint_Loop",
+        "Jump_Start",
+        "Jump_Loop",
+        "Jump_Land",
+        "Interact",
+        "Sitting_Idle_Loop"
+      ],
+      "skin": {
+        "light": "textures/characters/female_skin_light.ktx2",
+        "dark": "textures/characters/female_skin_dark.ktx2"
+      }
+    }
+  }
+}

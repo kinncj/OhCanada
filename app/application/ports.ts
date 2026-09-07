@@ -14,6 +14,7 @@ export interface GraphicsPreset {
   readonly maxPixelRatio: number;
   readonly shadows: boolean;
   readonly postProcessing: boolean;
+  readonly screenSpaceGI?: boolean;
   readonly shadowMapSize: number;
   readonly shadowCascades: number;
   readonly ssao: boolean;

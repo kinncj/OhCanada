@@ -102,7 +102,8 @@
       "antialias": "taa",
       "maxInstances": 3000,
       "anisotropy": 8,
-      "volumetricFog": true
+      "volumetricFog": true,
+      "screenSpaceGI": false
     },
     "ultra": {
       "renderScale": 1.25,
@@ -116,7 +117,8 @@
       "antialias": "taa",
       "maxInstances": 6000,
       "anisotropy": 16,
-      "volumetricFog": true
+      "volumetricFog": true,
+      "screenSpaceGI": true
     }
   },
   "benchmark": {

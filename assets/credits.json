@@ -50,6 +50,556 @@
       "author": "TrueNorth (scripts/assets.mjs)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/blob/main/scripts/assets.mjs"
+    },
+    {
+      "path": "basis/basis_transcoder.js",
+      "title": "Basis Universal / KTX2 transcoder (basis_transcoder.js)",
+      "author": "three.js authors",
+      "license": "MIT",
+      "source": "https://github.com/mrdoob/three.js",
+      "notes": "Copied from three/examples/jsm/libs; also bundles Google Draco / Binomial Basis Universal (Apache-2.0)."
+    },
+    {
+      "path": "basis/basis_transcoder.wasm",
+      "title": "Basis Universal / KTX2 transcoder (basis_transcoder.wasm)",
+      "author": "three.js authors",
+      "license": "MIT",
+      "source": "https://github.com/mrdoob/three.js",
+      "notes": "Copied from three/examples/jsm/libs; also bundles Google Draco / Binomial Basis Universal (Apache-2.0)."
+    },
+    {
+      "path": "draco/draco_decoder.js",
+      "title": "Draco mesh decoder (draco_decoder.js)",
+      "author": "three.js authors",
+      "license": "MIT",
+      "source": "https://github.com/mrdoob/three.js",
+      "notes": "Copied from three/examples/jsm/libs; also bundles Google Draco / Binomial Basis Universal (Apache-2.0)."
+    },
+    {
+      "path": "draco/draco_decoder.wasm",
+      "title": "Draco mesh decoder (draco_decoder.wasm)",
+      "author": "three.js authors",
+      "license": "MIT",
+      "source": "https://github.com/mrdoob/three.js",
+      "notes": "Copied from three/examples/jsm/libs; also bundles Google Draco / Binomial Basis Universal (Apache-2.0)."
+    },
+    {
+      "path": "draco/draco_wasm_wrapper.js",
+      "title": "Draco mesh decoder (draco_wasm_wrapper.js)",
+      "author": "three.js authors",
+      "license": "MIT",
+      "source": "https://github.com/mrdoob/three.js",
+      "notes": "Copied from three/examples/jsm/libs; also bundles Google Draco / Binomial Basis Universal (Apache-2.0)."
+    },
+    {
+      "path": "models/env/fir_tree_01.glb",
+      "title": "Fir Tree 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/fir_tree_01"
+    },
+    {
+      "path": "models/env/pine_tree_01.glb",
+      "title": "Pine Tree 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/pine_tree_01"
+    },
+    {
+      "path": "models/env/island_tree_01.glb",
+      "title": "Island Tree 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/island_tree_01"
+    },
+    {
+      "path": "models/env/island_tree_02.glb",
+      "title": "Island Tree 02 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/island_tree_02"
+    },
+    {
+      "path": "models/env/pine_sapling_medium.glb",
+      "title": "Pine Sapling Medium (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/pine_sapling_medium"
+    },
+    {
+      "path": "models/env/fir_sapling_medium.glb",
+      "title": "Fir Sapling Medium (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/fir_sapling_medium"
+    },
+    {
+      "path": "models/env/boulder_01.glb",
+      "title": "Boulder 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/boulder_01"
+    },
+    {
+      "path": "models/env/namaqualand_boulder_02.glb",
+      "title": "Namaqualand Boulder 02 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Greg Zaal, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/namaqualand_boulder_02"
+    },
+    {
+      "path": "models/env/namaqualand_boulder_04.glb",
+      "title": "Namaqualand Boulder 04 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Jenelle van Heerden",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/namaqualand_boulder_04"
+    },
+    {
+      "path": "models/env/coast_rocks_01.glb",
+      "title": "Coast Rocks 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/coast_rocks_01"
+    },
+    {
+      "path": "models/env/grass_medium_01.glb",
+      "title": "Grass Medium 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/grass_medium_01"
+    },
+    {
+      "path": "models/env/fern_02.glb",
+      "title": "Fern 02 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/fern_02"
+    },
+    {
+      "path": "models/env/painted_wooden_bench.glb",
+      "title": "Painted Wooden Bench (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Kirill Sannikov",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/painted_wooden_bench"
+    },
+    {
+      "path": "models/env/modular_street_seating.glb",
+      "title": "Modular Street Seating (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Stuart Attenborrow",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/modular_street_seating"
+    },
+    {
+      "path": "models/env/fire_hydrant.glb",
+      "title": "Fire Hydrant (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Gonçalo Felício",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/fire_hydrant"
+    },
+    {
+      "path": "models/env/modular_electricity_poles.glb",
+      "title": "Modular Electricity Poles (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "James Ray Cock",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/modular_electricity_poles"
+    },
+    {
+      "path": "models/env/modular_wooden_pier.glb",
+      "title": "Modular Wooden Pier (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/modular_wooden_pier"
+    },
+    {
+      "path": "models/env/modular_fort_01.glb",
+      "title": "Modular Fort 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/modular_fort_01"
+    },
+    {
+      "path": "models/env/large_iron_gate.glb",
+      "title": "Large Iron Gate (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Josh Dean",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/large_iron_gate"
+    },
+    {
+      "path": "models/env/modular_urban_apartments_facade.glb",
+      "title": "Modular Urban Apartments Facade (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "James Ray Cock",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/modular_urban_apartments_facade"
+    },
+    {
+      "path": "models/env/modular_factory_facade.glb",
+      "title": "Modular Factory Facade (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "James Ray Cock",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/modular_factory_facade"
+    },
+    {
+      "path": "models/env/concrete_road_barrier.glb",
+      "title": "Concrete Road Barrier (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Amal Kumar",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/concrete_road_barrier"
+    },
+    {
+      "path": "models/env/utility_box_01.glb",
+      "title": "Utility Box 01 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "James Ray Cock",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/utility_box_01"
+    },
+    {
+      "path": "models/env/dead_tree_trunk_02.glb",
+      "title": "Dead Tree Trunk 02 (Poly Haven photoscan, LOD0/LOD1)",
+      "author": "Jenelle van Heerden, Rico Cilliers",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/dead_tree_trunk_02"
+    },
+    {
+      "path": "textures/aerial_grass_rock/diff.ktx2",
+      "title": "Aerial Grass Rock — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/aerial_grass_rock"
+    },
+    {
+      "path": "textures/aerial_grass_rock/nor.ktx2",
+      "title": "Aerial Grass Rock — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/aerial_grass_rock"
+    },
+    {
+      "path": "textures/aerial_grass_rock/arm.ktx2",
+      "title": "Aerial Grass Rock — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/aerial_grass_rock"
+    },
+    {
+      "path": "textures/forest_floor/diff.ktx2",
+      "title": "Forest Floor — diffuse",
+      "author": "eye-candy.xyz",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/forest_floor"
+    },
+    {
+      "path": "textures/forest_floor/nor.ktx2",
+      "title": "Forest Floor — normal (GL)",
+      "author": "eye-candy.xyz",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/forest_floor"
+    },
+    {
+      "path": "textures/forest_floor/arm.ktx2",
+      "title": "Forest Floor — AO/roughness/metal",
+      "author": "eye-candy.xyz",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/forest_floor"
+    },
+    {
+      "path": "textures/rock_face/diff.ktx2",
+      "title": "Rock Face — diffuse",
+      "author": "Greg Zaal, Dario Barresi",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/rock_face"
+    },
+    {
+      "path": "textures/rock_face/nor.ktx2",
+      "title": "Rock Face — normal (GL)",
+      "author": "Greg Zaal, Dario Barresi",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/rock_face"
+    },
+    {
+      "path": "textures/rock_face/arm.ktx2",
+      "title": "Rock Face — AO/roughness/metal",
+      "author": "Greg Zaal, Dario Barresi",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/rock_face"
+    },
+    {
+      "path": "textures/snow_02/diff.ktx2",
+      "title": "Snow 02 — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/snow_02"
+    },
+    {
+      "path": "textures/snow_02/nor.ktx2",
+      "title": "Snow 02 — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/snow_02"
+    },
+    {
+      "path": "textures/snow_02/arm.ktx2",
+      "title": "Snow 02 — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/snow_02"
+    },
+    {
+      "path": "textures/cobblestone_floor_08/diff.ktx2",
+      "title": "Cobblestone Floor 08 — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/cobblestone_floor_08"
+    },
+    {
+      "path": "textures/cobblestone_floor_08/nor.ktx2",
+      "title": "Cobblestone Floor 08 — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/cobblestone_floor_08"
+    },
+    {
+      "path": "textures/cobblestone_floor_08/arm.ktx2",
+      "title": "Cobblestone Floor 08 — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/cobblestone_floor_08"
+    },
+    {
+      "path": "textures/asphalt_02/diff.ktx2",
+      "title": "Asphalt 02 — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/asphalt_02"
+    },
+    {
+      "path": "textures/asphalt_02/nor.ktx2",
+      "title": "Asphalt 02 — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/asphalt_02"
+    },
+    {
+      "path": "textures/asphalt_02/arm.ktx2",
+      "title": "Asphalt 02 — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/asphalt_02"
+    },
+    {
+      "path": "textures/large_sandstone_blocks/diff.ktx2",
+      "title": "Large Sandstone Blocks — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/large_sandstone_blocks"
+    },
+    {
+      "path": "textures/large_sandstone_blocks/nor.ktx2",
+      "title": "Large Sandstone Blocks — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/large_sandstone_blocks"
+    },
+    {
+      "path": "textures/large_sandstone_blocks/arm.ktx2",
+      "title": "Large Sandstone Blocks — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/large_sandstone_blocks"
+    },
+    {
+      "path": "textures/castle_brick_02_red/diff.ktx2",
+      "title": "Castle Brick 02 Red — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/castle_brick_02_red"
+    },
+    {
+      "path": "textures/castle_brick_02_red/nor.ktx2",
+      "title": "Castle Brick 02 Red — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/castle_brick_02_red"
+    },
+    {
+      "path": "textures/castle_brick_02_red/arm.ktx2",
+      "title": "Castle Brick 02 Red — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/castle_brick_02_red"
+    },
+    {
+      "path": "textures/grey_plaster/diff.ktx2",
+      "title": "Grey Plaster — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/grey_plaster"
+    },
+    {
+      "path": "textures/grey_plaster/nor.ktx2",
+      "title": "Grey Plaster — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/grey_plaster"
+    },
+    {
+      "path": "textures/grey_plaster/arm.ktx2",
+      "title": "Grey Plaster — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/grey_plaster"
+    },
+    {
+      "path": "textures/concrete_wall_008/diff.ktx2",
+      "title": "Concrete Wall 008 — diffuse",
+      "author": "Dario Barresi, Charlotte Baglioni",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/concrete_wall_008"
+    },
+    {
+      "path": "textures/concrete_wall_008/nor.ktx2",
+      "title": "Concrete Wall 008 — normal (GL)",
+      "author": "Dario Barresi, Charlotte Baglioni",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/concrete_wall_008"
+    },
+    {
+      "path": "textures/concrete_wall_008/arm.ktx2",
+      "title": "Concrete Wall 008 — AO/roughness/metal",
+      "author": "Dario Barresi, Charlotte Baglioni",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/concrete_wall_008"
+    },
+    {
+      "path": "textures/green_metal_rust/diff.ktx2",
+      "title": "Green Metal Rust — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/green_metal_rust"
+    },
+    {
+      "path": "textures/green_metal_rust/nor.ktx2",
+      "title": "Green Metal Rust — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/green_metal_rust"
+    },
+    {
+      "path": "textures/green_metal_rust/arm.ktx2",
+      "title": "Green Metal Rust — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/green_metal_rust"
+    },
+    {
+      "path": "textures/grey_roof_tiles/diff.ktx2",
+      "title": "Grey Roof Tiles — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/grey_roof_tiles"
+    },
+    {
+      "path": "textures/grey_roof_tiles/nor.ktx2",
+      "title": "Grey Roof Tiles — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/grey_roof_tiles"
+    },
+    {
+      "path": "textures/grey_roof_tiles/arm.ktx2",
+      "title": "Grey Roof Tiles — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/grey_roof_tiles"
+    },
+    {
+      "path": "textures/wood_planks_grey/diff.ktx2",
+      "title": "Wood Planks Grey — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/wood_planks_grey"
+    },
+    {
+      "path": "textures/wood_planks_grey/nor.ktx2",
+      "title": "Wood Planks Grey — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/wood_planks_grey"
+    },
+    {
+      "path": "textures/wood_planks_grey/arm.ktx2",
+      "title": "Wood Planks Grey — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/wood_planks_grey"
+    },
+    {
+      "path": "textures/metal_plate/diff.ktx2",
+      "title": "Metal Plate — diffuse",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/metal_plate"
+    },
+    {
+      "path": "textures/metal_plate/nor.ktx2",
+      "title": "Metal Plate — normal (GL)",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/metal_plate"
+    },
+    {
+      "path": "textures/metal_plate/arm.ktx2",
+      "title": "Metal Plate — AO/roughness/metal",
+      "author": "Rob Tuytel",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/metal_plate"
+    },
+    {
+      "path": "models/characters/male.glb",
+      "title": "Universal Base Character (male) with hairstyles and UAL animation clips",
+      "author": "Quaternius",
+      "license": "CC0-1.0",
+      "source": "https://quaternius.itch.io/universal-base-characters",
+      "notes": "Universal Base Characters / Universal Animation Library"
+    },
+    {
+      "path": "textures/characters/male_skin_light.ktx2",
+      "title": "Universal Base Character male skin, light tone",
+      "author": "Quaternius",
+      "license": "CC0-1.0",
+      "source": "https://quaternius.itch.io/universal-base-characters",
+      "notes": "Universal Base Characters / Universal Animation Library"
+    },
+    {
+      "path": "textures/characters/male_skin_dark.ktx2",
+      "title": "Universal Base Character male skin, dark tone",
+      "author": "Quaternius",
+      "license": "CC0-1.0",
+      "source": "https://quaternius.itch.io/universal-base-characters",
+      "notes": "Universal Base Characters / Universal Animation Library"
+    },
+    {
+      "path": "models/characters/female.glb",
+      "title": "Universal Base Character (female) with hairstyles and UAL animation clips",
+      "author": "Quaternius",
+      "license": "CC0-1.0",
+      "source": "https://quaternius.itch.io/universal-base-characters",
+      "notes": "Universal Base Characters / Universal Animation Library"
+    },
+    {
+      "path": "textures/characters/female_skin_light.ktx2",
+      "title": "Universal Base Character female skin, light tone",
+      "author": "Quaternius",
+      "license": "CC0-1.0",
+      "source": "https://quaternius.itch.io/universal-base-characters",
+      "notes": "Universal Base Characters / Universal Animation Library"
+    },
+    {
+      "path": "textures/characters/female_skin_dark.ktx2",
+      "title": "Universal Base Character female skin, dark tone",
+      "author": "Quaternius",
+      "license": "CC0-1.0",
+      "source": "https://quaternius.itch.io/universal-base-characters",
+      "notes": "Universal Base Characters / Universal Animation Library"
     }
   ]
 }

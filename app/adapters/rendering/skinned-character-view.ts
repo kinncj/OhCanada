@@ -125,17 +125,18 @@ export class SkinnedCharacterView {
       const skinTexNode = base.map ? texNode(base.map) : null;
       if (skinTexNode) this.bodyTextureNodes.push(skinTexNode);
       const skinTex = skinTexNode ?? vec4(0.8, 0.6, 0.5, 1);
-      const idx = attribute<'vec4'>('skinIndex', 'vec4');
+      const idx = attribute<'uvec4'>('skinIndex', 'uvec4');
       const w = attribute<'vec4'>('skinWeight', 'vec4');
       const lutNode = texNode(lut);
       const n = float(Math.max(1, bones.length));
-      const classOf = (j: N) => lutNode.sample(vec3(j.add(0.5).div(n), 0.5, 0).xy).x.mul(3);
+      // skinIndex is an integer attribute: convert before arithmetic (WebGL2 rejects uint + float).
+      const classOf = (j: N) => lutNode.sample(vec3(float(j).add(0.5).div(n), 0.5, 0).xy).x.mul(3);
       const cls = Fn(() => {
         const comps = [
-          [idx.x, w.x],
-          [idx.y, w.y],
-          [idx.z, w.z],
-          [idx.w, w.w],
+          [idx.x as unknown as N, w.x as N],
+          [idx.y as unknown as N, w.y as N],
+          [idx.z as unknown as N, w.z as N],
+          [idx.w as unknown as N, w.w as N],
         ] as const;
         let top: N = float(0);
         let bottom: N = float(0);

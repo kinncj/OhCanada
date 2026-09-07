@@ -1,9 +1,12 @@
 import * as THREE from 'three/webgpu';
-import { pass, mrt, output, normalView, velocity, nodeObject, uv, vec3, vec4, float, mix } from 'three/tsl';
+import { pass, mrt, output, normalView, velocity, nodeObject, uv, vec3, vec4, float, mix, metalness, roughness } from 'three/tsl';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
 import { ao } from 'three/addons/tsl/display/GTAONode.js';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
+import { ssr } from 'three/addons/tsl/display/SSRNode.js';
+import { ssgi } from 'three/addons/tsl/display/SSGINode.js';
+import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
 import type { GraphicsPreset } from '@application/ports';
 import type { RenderStats } from '@application/engine-ports';
 
@@ -76,19 +79,35 @@ export class GameRenderer {
     if (!this.scene || !this.camera || !this.preset) return;
     const p = this.preset;
     const useBloom = p.bloom && !this.reducedMotion;
-    const useAO = p.ssao;
-    const useTAA = p.antialias === 'taa';
+    // GTAO / TRAA / SSGI / SSR nodes only compile on the WebGPU backend today; WebGL2 falls back to FXAA.
+    const advanced = this.backend === 'webgpu';
+    const useAO = p.ssao && advanced;
+    const useTAA = p.antialias === 'taa' && advanced;
+    const useGI = p.screenSpaceGI === true && advanced;
     if (!p.postProcessing) {
       this.post = null;
       return;
     }
     const scenePass = pass(this.scene, this.camera);
     const mrtSpec: Record<string, THREE.Node> = { output };
-    if (useAO) mrtSpec.normal = normalView;
+    if (useAO || useGI) mrtSpec.normal = normalView;
     if (useTAA) mrtSpec.velocity = velocity;
+    if (useGI) {
+      mrtSpec.metalrough = vec4(metalness, roughness, 0, 0);
+    }
     scenePass.setMRT(mrt(mrtSpec));
     let colorNode = nodeObject(scenePass.getTextureNode('output')) as THREE.Node<'vec4'>;
     const depth = scenePass.getTextureNode('depth');
+    if (useGI) {
+      // Ultra: screen-space GI (denoised) for bounce light, then SSR for wet/metallic/glass surfaces.
+      const normal = scenePass.getTextureNode('normal') as unknown as THREE.Node<'vec3'>;
+      const gi = nodeObject(ssgi(colorNode, depth, normal, this.camera)) as unknown as THREE.Node<'vec4'>;
+      const giDenoised = nodeObject(denoise(gi, depth, normal, this.camera)) as unknown as THREE.Node<'vec4'>;
+      colorNode = colorNode.add(giDenoised.mul(0.6)) as THREE.Node<'vec4'>;
+      const mr = scenePass.getTextureNode('metalrough');
+      const reflections = ssr(colorNode, depth, normal, { camera: this.camera, metalnessNode: mr.r, roughnessNode: mr.g, reflectNonMetals: true }) as unknown as THREE.Node<'vec4'>;
+      colorNode = colorNode.add(reflections.mul(0.7)) as THREE.Node<'vec4'>;
+    }
     if (useAO) {
       const aoPass = ao(depth, scenePass.getTextureNode('normal'), this.camera);
       colorNode = colorNode.mul(aoPass.getTextureNode()) as THREE.Node<'vec4'>;
@@ -101,7 +120,7 @@ export class GameRenderer {
     const graded = grade(colorNode);
     let finalNode: THREE.Node = graded;
     if (useTAA) finalNode = traa(graded, depth, scenePass.getTextureNode('velocity'), this.camera);
-    else if (p.antialias === 'fxaa' || p.antialias === 'msaa') finalNode = fxaa(graded);
+    else if (p.antialias !== 'none') finalNode = fxaa(graded);
     const post = new THREE.RenderPipeline(this.renderer);
     post.outputNode = finalNode;
     this.post = post;

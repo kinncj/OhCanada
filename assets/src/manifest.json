@@ -9,5 +9,52 @@
       "source": "https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky",
       "notes": "1k resolution keeps the hub payload small; IBL only."
     }
-  ]
+  ],
+  "polyhaven": {
+    "models": {
+      "tree-fir": { "id": "fir_tree_01", "category": "tree" },
+      "tree-pine": { "id": "pine_tree_01", "category": "tree" },
+      "tree-broadleaf-1": { "id": "island_tree_01", "category": "tree" },
+      "tree-broadleaf-2": { "id": "island_tree_02", "category": "tree" },
+      "sapling-pine": { "id": "pine_sapling_medium", "category": "sapling" },
+      "sapling-fir": { "id": "fir_sapling_medium", "category": "sapling" },
+      "rock-boulder": { "id": "boulder_01", "category": "rock" },
+      "rock-2": { "id": "namaqualand_boulder_02", "category": "rock" },
+      "rock-3": { "id": "namaqualand_boulder_04", "category": "rock" },
+      "rock-coast": { "id": "coast_rocks_01", "category": "rock" },
+      "grass-clump": { "id": "grass_medium_01", "category": "foliage" },
+      "fern": { "id": "fern_02", "category": "foliage" },
+      "bench-wood": { "id": "painted_wooden_bench", "category": "prop" },
+      "bench-street": { "id": "modular_street_seating", "category": "prop" },
+      "hydrant": { "id": "fire_hydrant", "category": "prop" },
+      "power-pole": { "id": "modular_electricity_poles", "category": "structure" },
+      "pier": { "id": "modular_wooden_pier", "category": "structure" },
+      "fort": { "id": "modular_fort_01", "category": "structure" },
+      "iron-gate": { "id": "large_iron_gate", "category": "prop" },
+      "facade-apartments": { "id": "modular_urban_apartments_facade", "category": "structure" },
+      "facade-factory": { "id": "modular_factory_facade", "category": "structure" },
+      "barrier": { "id": "concrete_road_barrier", "category": "prop" },
+      "utility-box": { "id": "utility_box_01", "category": "prop" },
+      "dead-trunk": { "id": "dead_tree_trunk_02", "category": "prop" }
+    },
+    "textures": {
+      "grass": { "id": "aerial_grass_rock", "tileMeters": 4 },
+      "forest-floor": { "id": "forest_floor", "tileMeters": 4 },
+      "rock": { "id": "rock_face", "tileMeters": 4 },
+      "snow": { "id": "snow_02", "tileMeters": 4 },
+      "cobble": { "id": "cobblestone_floor_08", "tileMeters": 3 },
+      "asphalt": { "id": "asphalt_02", "tileMeters": 3 },
+      "sandstone": { "id": "large_sandstone_blocks", "tileMeters": 3 },
+      "brick": { "id": "castle_brick_02_red", "tileMeters": 3 },
+      "plaster": { "id": "grey_plaster", "tileMeters": 3 },
+      "concrete": { "id": "concrete_wall_008", "tileMeters": 3 },
+      "roof-copper": { "id": "green_metal_rust", "tileMeters": 2 },
+      "roof-grey": { "id": "grey_roof_tiles", "tileMeters": 2 },
+      "wood": { "id": "wood_planks_grey", "tileMeters": 1 },
+      "metal": { "id": "metal_plate", "tileMeters": 1 }
+    }
+  },
+  "characters": {
+    "bodies": ["male", "female"]
+  }
 }

@@ -11,20 +11,20 @@ const logs = [];
 page.on('console', (m) => { if (!m.text().includes('GL Driver')) logs.push(`${m.type()}: ${m.text()}`); });
 page.on('pageerror', (e) => logs.push(`PAGEERROR: ${e.message}\n${e.stack}`));
 try {
-  await page.goto(`http://localhost:${port}/OhCanada/?e2e=1&preset=low`, { waitUntil: 'load' });
+  await page.goto(`http://localhost:${port}/OhCanada/?e2e=1&preset=minimal`, { waitUntil: 'load' });
   await page.getByTestId('menu-new').waitFor({ timeout: 30000 });
   await page.waitForTimeout(4000);
-  await page.screenshot({ path: `${out}/w1-menu.png` });
+  await page.screenshot({ path: `${out}/w1-menu.png`, timeout: 120000 });
   await page.getByTestId('menu-new').click();
   await page.getByTestId('creator-name').fill('Sam');
   await page.getByTestId('opt-outfit-hockey').click();
   await page.getByTestId('opt-accessory-toque').click();
   await page.waitForTimeout(1500);
-  await page.screenshot({ path: `${out}/w2-creator.png` });
+  await page.screenshot({ path: `${out}/w2-creator.png`, timeout: 120000 });
   await page.getByTestId('creator-confirm').click();
   await page.waitForFunction(() => document.querySelector('[data-screen="hud"]') && !document.querySelector('[data-screen="loading"]'), null, { timeout: 30000 });
   await page.waitForTimeout(2500);
-  await page.screenshot({ path: `${out}/w3-world.png` });
+  await page.screenshot({ path: `${out}/w3-world.png`, timeout: 120000 });
   // Walk to Amélie via hook and interact
   await page.evaluate(() => window.__truenorth.teleport(4, 12.5));
   await page.waitForTimeout(800);
@@ -32,7 +32,7 @@ try {
   logs.push(`nearby=${near}`);
   await page.evaluate(() => window.__truenorth.interact());
   await page.getByTestId('dialogue-line').waitFor({ timeout: 10000 });
-  await page.screenshot({ path: `${out}/w4-dialogue.png` });
+  await page.screenshot({ path: `${out}/w4-dialogue.png`, timeout: 120000 });
   for (let i = 0; i < 6; i++) {
     if (await page.getByTestId('dialogue-accept').isVisible().catch(() => false)) { await page.getByTestId('dialogue-accept').click(); break; }
     await page.getByTestId('dialogue-next').click();
@@ -46,17 +46,17 @@ try {
   logs.push(`objective=${await page.getByTestId('objective').textContent()}`);
   await page.evaluate(() => window.__truenorth.teleport(16, 12));
   await page.getByTestId('question-text').waitFor({ timeout: 10000 });
-  await page.screenshot({ path: `${out}/w5-question.png` });
+  await page.screenshot({ path: `${out}/w5-question.png`, timeout: 120000 });
   for (let i = 0; i < 3; i++) {
     await page.getByTestId('question-text').waitFor({ timeout: 10000 });
     await page.locator('[data-testid^="choice-"][data-correct="true"]').click();
     await page.getByTestId('question-submit').click();
     await page.getByTestId('feedback').waitFor();
-    if (i === 0) await page.screenshot({ path: `${out}/w6-feedback.png` });
+    if (i === 0) await page.screenshot({ path: `${out}/w6-feedback.png`, timeout: 120000 });
     await page.getByTestId('question-continue').click();
   }
   await page.waitForTimeout(1500);
-  await page.screenshot({ path: `${out}/w7-complete.png` });
+  await page.screenshot({ path: `${out}/w7-complete.png`, timeout: 120000 });
   logs.push(`stamps=${await page.getByTestId('stamps').textContent()}`);
   const state = await page.evaluate(() => JSON.stringify(window.__truenorth.state().unlockedDistricts));
   logs.push(`unlocked=${state}`);
