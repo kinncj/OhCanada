@@ -43,7 +43,30 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
+
+/**
+ * EVERY CASE IN THIS FILE SPAWNS A PROCESS THAT RASTERISES REAL ART, so the 5 s
+ * default does not describe the work.
+ *
+ * The comparison canvas alone composites two whole figures out of twenty rig
+ * parts each, and several cases build more than one hand-off. That is 3.2 s on
+ * this laptop and it timed out on a GitHub runner, which is a good deal slower.
+ *
+ * Set for the FILE rather than on the cases that are slow today, deliberately:
+ * the next render-building case somebody adds would otherwise have to remember,
+ * and would fail on the runner and pass locally -- which is the failure this
+ * file is about. The budget is generous on purpose. A suite that passes at 30 s
+ * against a 5 s limit is one busy runner away from flaking, and A FLAKY GATE
+ * GETS DISABLED, AND A DISABLED GATE LEAKS SILENTLY. That sentence is the
+ * argument for this whole harness; it applies to the harness's own tests.
+ *
+ * This is a ceiling, not a target. The cases below build the SMALLEST hand-off
+ * that answers them (`cheap`, below) and use fixed seeds instead of repeated
+ * sampling, so the suite runs in a few seconds and the ceiling is never
+ * approached.
+ */
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
 
 const SCRIPT = fileURLToPath(new URL('../../../scripts/verify-art.mjs', import.meta.url));
 const REPO = fileURLToPath(new URL('../../../', import.meta.url));
@@ -185,6 +208,14 @@ const fixture = (name: string, options: FixtureOptions = {}): string => {
 const readKeymap = (path: string) => JSON.parse(readFileSync(path, 'utf8'));
 
 /** Build a hand-off from a fixture and return every path a case needs. */
+/**
+ * The smallest hand-off that still answers a structural question: one character
+ * figure, no size ladder. It KEEPS `full`, both masked-feature probes and the
+ * comparison figure -- six renders instead of fourteen -- so every case that only
+ * reads the keymap can use it. Cases that are about the ladder itself must not.
+ */
+const CHEAP = ['--variants', '1', '--no-ladder'] as const;
+
 const handoff = (root: string, extra: readonly string[] = [], seed: string | null = 'test-seed') => {
   const out = scratch('out');
   const result = run([
@@ -246,7 +277,7 @@ describe('the gate over the repository as it stands', () => {
     // UNSEEDED, which is how a real run goes. `--seed` exists so the rest of
     // this file is deterministic and is the one thing a real run must not use.
     const slotsOf = (): string => {
-      const built = handoff(REPO, [], null);
+      const built = handoff(REPO, [...CHEAP], null);
       const keymap = readKeymap(built.keymapPath);
       return keymap.entries
         .filter((e: { subjectId: string; gating: boolean }) => e.subjectId === 'officer' && e.gating)
@@ -256,8 +287,11 @@ describe('the gate over the repository as it stands', () => {
         .sort()
         .join(' ');
     };
-    const runs = new Set([slotsOf(), slotsOf(), slotsOf(), slotsOf(), slotsOf()]);
-    expect(runs.size, `five runs produced ${runs.size} distinct skin/hair sets`).toBeGreaterThan(1);
+    // Four rather than five: 120 skin/hair combinations, so four runs all landing
+    // on the same one is about one in a million. Cheap builds, because this reads
+    // the keymap and not the pixels.
+    const runs = new Set([slotsOf(), slotsOf(), slotsOf(), slotsOf()]);
+    expect(runs.size, `four runs produced ${runs.size} distinct skin/hair sets`).toBeGreaterThan(1);
   });
 });
 
@@ -350,8 +384,8 @@ describe('the anonymisation', () => {
     // same picture encodes to the same number of bytes every time, so a run whose
     // mapping was once revealed hands it to every later run. Both halves are
     // asserted here, because fixing only the name fixes only half.
-    const a = readKeymap(handoff(REPO, [], 'run-a').keymapPath);
-    const b = readKeymap(handoff(REPO, [], 'run-b').keymapPath);
+    const a = readKeymap(handoff(REPO, ['--variants', '1'], 'run-a').keymapPath);
+    const b = readKeymap(handoff(REPO, ['--variants', '1'], 'run-b').keymapPath);
 
     type Entry = { render: string; bytes: number; subjectId: string; probe: string };
     const key = (e: Entry): string => `${e.subjectId}::${e.probe}`;
@@ -473,7 +507,7 @@ describe('a leak must fail', () => {
   });
 
   it('fails on a render whose name is not opaque, and on one carrying PNG metadata', () => {
-    const source = handoff(REPO);
+    const source = handoff(REPO, [...CHEAP]);
     const dir = scratch('planted-png');
     const real = readdirSync(source.handoffDir).find((n) => n.endsWith('.png'))!;
 
@@ -558,14 +592,7 @@ describe('what the harness PRINTS, and what its own entry points say', () => {
     // were clean the whole time; the terminal was not.
     const out = scratch('out');
     const result = run([
-      'handoff',
-      '--quiet',
-      '--root',
-      REPO,
-      '--out',
-      out,
-      '--seed',
-      'quiet-seed',
+      'handoff', '--quiet', '--root', REPO, ...CHEAP, '--out', out, '--seed', 'quiet-seed',
     ]);
     expect(result.status, result.output).toBe(0);
     assertClean('--quiet output', result.output);
@@ -581,7 +608,7 @@ describe('what the harness PRINTS, and what its own entry points say', () => {
     // identifier. If this ever stops being true the two modes have collapsed
     // into one and `--quiet` has quietly become the only behaviour.
     const out = scratch('out');
-    const result = run(['handoff', '--root', REPO, '--out', out, '--seed', 'loud-seed']);
+    const result = run(['handoff', '--root', REPO, ...CHEAP, '--out', out, '--seed', 'loud-seed']);
     expect(result.status, result.output).toBe(0);
     const hits = answerTokens().filter((t) => result.output.toLowerCase().includes(t));
     expect(hits.length).toBeGreaterThan(0);
@@ -1175,7 +1202,7 @@ describe('probes', () => {
     // Derived probes must NEVER gate: the first pass found that a tower crop with
     // the flag masked failed identification outright, and that is information
     // about which cue carries the recognition, not an art defect.
-    const built = handoff(REPO);
+    const built = handoff(REPO, ['--variants', '1']);
     const keymap = readKeymap(built.keymapPath);
     const derived = keymap.entries.filter((e: { probe: string }) => e.probe !== 'full');
     expect(derived.length).toBeGreaterThan(0);
@@ -1185,7 +1212,7 @@ describe('probes', () => {
     }
     expect(derived.some((e: { probe: string }) => e.probe.startsWith('w'))).toBe(true);
 
-    const without = handoff(REPO, ['--no-ladder']);
+    const without = handoff(REPO, [...CHEAP]);
     const bare = readKeymap(without.keymapPath);
     // `--no-ladder` drops the SIZE probes. It must not drop the masked-feature
     // probes or the comparison figure: those answer contract entries, they are
@@ -1201,7 +1228,7 @@ describe('probes', () => {
     // verifier's clothes". A right answer arrived at by accident. The contract
     // now marks the entry `requiresComparisonFigure` and the recipe asks for two
     // figures on one canvas, built the same way and differing in everything else.
-    const built = handoff(REPO);
+    const built = handoff(REPO, [...CHEAP]);
     const keymap = readKeymap(built.keymapPath);
     const pairs = keymap.entries.filter((e: { probe: string }) => e.probe === 'comparison');
     expect(pairs.length, 'no comparison figure in the hand-off').toBeGreaterThan(0);
@@ -1226,15 +1253,18 @@ describe('probes', () => {
 
     // And which side the subject stands on moves, or an identifier learns "the
     // left one is the answer" across runs.
-    const sides = new Set(
-      [0, 1, 2, 3, 4, 5].map(
-        () =>
-          readKeymap(handoff(REPO, [], null).keymapPath).entries.find(
-            (e: { probe: string }) => e.probe === 'comparison',
-          ).slots.subjectSide,
-      ),
-    );
-    expect(sides.size, 'the subject is always on the same side').toBe(2);
+    //
+    // TWO FIXED SEEDS, not a handful of unseeded runs. The first version sampled
+    // six random runs and asserted both sides appeared, which is a one-in-thirty-two
+    // chance of failing for no reason -- a flaky assertion inside the suite that
+    // exists to stop a flaky gate. These two seeds are known to fall on opposite
+    // sides, so the check is exact: if the side ever stops varying, both land the
+    // same way and this fails every time rather than sometimes.
+    const sideFor = (seed: string): string =>
+      readKeymap(handoff(REPO, [...CHEAP], seed).keymapPath).entries.find(
+        (e: { probe: string }) => e.probe === 'comparison',
+      ).slots.subjectSide;
+    expect([sideFor('side-a'), sideFor('side-b')].sort()).toEqual(['left', 'right']);
   });
 
   it('fails a subject that needs a comparison figure and has no builder for one', () => {
@@ -1292,7 +1322,9 @@ describe('probes', () => {
 
 describe('--require-identification', () => {
   it('turns a missing verdict record into a failure', () => {
-    const result = run(['--root', REPO, '--require-identification', '--record', join(WORK, 'nope.json')]);
+    const result = run([
+      '--root', REPO, ...CHEAP, '--require-identification', '--record', join(WORK, 'nope.json'),
+    ]);
     expect(result.status, result.output).toBe(1);
     expect(result.stderr).toContain('NOT ESTABLISHED');
   });
@@ -1303,7 +1335,7 @@ describe('--require-identification', () => {
     // The default gate reports that and exits 0 -- the record is stale, not
     // wrong. Under this flag it is a failure, which is what makes the flag the
     // one-line change that turns identification into a hard gate.
-    const result = run(['--root', REPO, '--require-identification']);
+    const result = run(['--root', REPO, ...CHEAP, '--require-identification']);
     expect(result.status, result.output).toBe(1);
     expect(result.stdout).toContain('STALE');
     expect(result.stderr).toContain('NOT ESTABLISHED');
@@ -1315,7 +1347,7 @@ describe('--require-identification', () => {
       path,
       JSON.stringify({ runIntegrity: { blindnessHeld: false }, results: [] }, null, 2),
     );
-    const result = run(['--root', REPO, '--require-identification', '--record', path]);
+    const result = run(['--root', REPO, ...CHEAP, '--require-identification', '--record', path]);
     expect(result.status, result.output).toBe(1);
     expect(result.stderr).toContain('predates this harness');
     expect(result.stderr).toContain('blindnessHeld: false');

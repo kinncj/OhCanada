@@ -3,6 +3,16 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test } from '@playwright/test';
 
+/*
+  Imported, not restated: the same selection the game runs at boot. This suite is
+  where the *real* `assets/dist/manifest.json` may be read at all — `assets/dist`
+  is gitignored build output, and CI's unit job runs before `make assets`, so a
+  unit test that opened this file could only ever be green on a machine that had
+  already built. `make assets build test-e2e` is one command in one job, so by
+  the time this runs the manifest is the one the browser two lines below fetches.
+*/
+import { parseAssetManifest, selectLevelAssets } from '@adapters/phaser/level-assets';
+
 /**
  * **The assertion that was missing.**
  *
@@ -27,7 +37,10 @@ import { expect, test } from '@playwright/test';
  *  2. **The manifest.** Every texture key `content/levels/ottawa.json` names is
  *     one `assets/dist/manifest.json` provides — read from disk, both sides, so
  *     a rename on either side fails here rather than becoming a coloured band.
- *  3. **The scene's own count.** `data-layers-textured` equals `data-layers`.
+ *  3. **The selection.** `selectLevelAssets` — the real function, against the
+ *     real manifest — resolves every layer key at both scales. This is the half
+ *     that used to live in the unit suite and could not: it needs build output.
+ *  4. **The scene's own count.** `data-layers-textured` equals `data-layers`.
  *     This is the durable one: it is a fact the game publishes about itself, so
  *     it keeps working when the assets change, and it distinguishes "drew its
  *     art" from "drew a band" without anybody counting requests.
@@ -56,9 +69,10 @@ const level = JSON.parse(
   readFileSync(`${REPO_ROOT}content/levels/${LEVEL_ID}.json`, 'utf8'),
 ) as LevelFile;
 
-const manifest = JSON.parse(
+const manifestSource: unknown = JSON.parse(
   readFileSync(`${REPO_ROOT}assets/dist/manifest.json`, 'utf8'),
-) as Manifest;
+);
+const manifest = manifestSource as Manifest;
 
 test.describe('the level draws its art', () => {
   test('the manifest provides every texture key the level names', () => {
@@ -80,6 +94,28 @@ test.describe('the level draws its art', () => {
       'the level names a texture key the asset pipeline does not build. It will not 404 — ' +
         'nothing will request it — it will silently draw a placeholder band.',
     ).toEqual([]);
+  });
+
+  /* Playwright's `test` has no `.each`; both scales in one body, and the scale
+     that failed is named in the message. */
+  test('resolves every layer key at both scales, through the real selector', () => {
+    const parsed = parseAssetManifest(manifestSource);
+    expect(parsed.ok, parsed.ok ? '' : parsed.error.message).toBe(true);
+    if (!parsed.ok) return;
+
+    for (const scale of [1, 2]) {
+      const keys = new Set(
+        selectLevelAssets(parsed.value, LEVEL_ID, { scale, baseUrl: '/' }).map(
+          (request) => request.key,
+        ),
+      );
+      expect(
+        level.layers.map((layer) => layer.key).filter((key) => !keys.has(key)),
+        `at scale ${String(scale)}, a layer the level draws resolves to no load request, so ` +
+          'it will silently draw a flat theme-coloured band. At scale 2 this is also the ' +
+          'pinned-asset case: a key with no 2x file must fall back to its 1x, not disappear.',
+      ).toEqual([]);
+    }
   });
 
   test('fetches its images, which the deployed build did not do at all', async ({ page }) => {

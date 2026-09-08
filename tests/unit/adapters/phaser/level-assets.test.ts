@@ -9,13 +9,29 @@
  * mode is always the same and always silent, so the tests are about *refusing*
  * rather than about producing.
  *
- * The real `assets/dist/manifest.json` is read at the bottom, because a
- * hand-written fixture proves the parser and not the pipeline, and it was the
- * gap between the two that shipped.
+ * ## Why the real manifest is not read here
+ *
+ * It was, and it could only ever be green on a machine that had run
+ * `make assets`. `assets/dist/` is **gitignored** — it is build output, hashed
+ * and rebuilt — and CI's unit job runs `make lint typecheck test` *before* the
+ * job that runs `make assets`, so a clean checkout has no `manifest.json` and
+ * the read threw `ENOENT`. It passed locally because this tree carries build
+ * state CI does not, which is the same class of mistake as the defect this
+ * module fixes: the deployed level looked right locally too.
+ *
+ * So the split is: **the parser is proven here, against a verbatim excerpt of
+ * real pipeline output**, and **the actual Ottawa manifest is asserted in
+ * `tests/e2e/level-art.spec.ts`**, which runs in the job that has just built it.
+ * The fixture is not a skip and not a mock — every field below is copied
+ * unaltered from a real `make assets` run, including the `scalePin` on the
+ * landmark and the `atlas` back-reference on the frame data, so a change to the
+ * pipeline's shape breaks the e2e assertion and a change to the parser breaks
+ * this one.
+ *
+ * There is deliberately **no conditional skip**. A test that reports success
+ * when it checked nothing is the failure mode this project keeps removing, and
+ * "the file is not there" would be true on every CI run.
  */
-
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
@@ -27,8 +43,6 @@ import {
   selectLevelAssets,
   type AssetManifest,
 } from '@adapters/phaser/level-assets';
-
-const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 
 const manifest = (files: unknown[]): unknown => ({
   version: SUPPORTED_MANIFEST_VERSION,
@@ -174,34 +188,141 @@ describe('selectLevelAssets', () => {
   });
 });
 
-describe('against the manifest the pipeline actually built', () => {
-  /*
-   * The gap this closes is not in the parser, it is between the parser and the
-   * pipeline: `make assets` built six layer images with exactly the keys
-   * `content/levels/ottawa.json` names, the texture gate weighed them, and the
-   * game requested none of them. A fixture cannot see that.
-   */
-  const real = parseAssetManifest(
-    JSON.parse(readFileSync(`${REPO_ROOT}assets/dist/manifest.json`, 'utf8')),
-  );
-  const level = JSON.parse(
-    readFileSync(`${REPO_ROOT}content/levels/ottawa.json`, 'utf8'),
-  ) as { readonly layers: readonly { readonly key: string }[] };
+/**
+ * A verbatim excerpt of `assets/dist/manifest.json` from a real `make assets`.
+ *
+ * Six entries, chosen to carry every shape the parser has to survive: an image
+ * at one scale only (the landmark, `scalePin: 1` — the pin that recovered 12.85
+ * MiB), a layer image, an atlas at two scales, and the `atlas-data` files whose
+ * `atlas` back-reference is what pairs a sheet with its frames. Fields the
+ * parser ignores (`role`, `group`, `bytes`, `decodedBytes`) are kept exactly as
+ * the pipeline writes them, so this reads as the thing it stands in for rather
+ * than as a minimal shape someone hand-tuned until the test passed.
+ */
+const PIPELINE_EXCERPT = {
+  version: 2,
+  files: [
+    {
+      path: 'atlas/ottawa@1x.16829e2f.webp',
+      bytes: 5734,
+      kind: 'atlas',
+      role: 'sprite',
+      scalePin: null,
+      group: 'atlas:ottawa:0',
+      scale: 1,
+      decodedBytes: 178416,
+      levels: ['ottawa'],
+      keys: ['ottawa-particle-snow', 'ottawa-poi-marker-active', 'ottawa-poi-marker-idle'],
+    },
+    {
+      path: 'atlas/ottawa@1x.79bdd8a5.json',
+      bytes: 1659,
+      kind: 'atlas-data',
+      role: 'sprite',
+      scalePin: null,
+      group: 'atlas-data:ottawa:0',
+      scale: 1,
+      decodedBytes: 0,
+      levels: ['ottawa'],
+      keys: [],
+      atlas: 'atlas/ottawa@1x.16829e2f.webp',
+    },
+    {
+      path: 'atlas/ottawa@2x.fa99afcd.webp',
+      bytes: 11450,
+      kind: 'atlas',
+      role: 'sprite',
+      scalePin: null,
+      group: 'atlas:ottawa:0',
+      scale: 2,
+      decodedBytes: 678960,
+      levels: ['ottawa'],
+      keys: ['ottawa-particle-snow', 'ottawa-poi-marker-active', 'ottawa-poi-marker-idle'],
+    },
+    {
+      path: 'atlas/ottawa@2x.c4df6086.json',
+      bytes: 1664,
+      kind: 'atlas-data',
+      role: 'sprite',
+      scalePin: null,
+      group: 'atlas-data:ottawa:0',
+      scale: 2,
+      decodedBytes: 0,
+      levels: ['ottawa'],
+      keys: [],
+      atlas: 'atlas/ottawa@2x.fa99afcd.webp',
+    },
+    {
+      path: 'img/ottawa-landmark-parliament-hill@1x.6749121e.webp',
+      bytes: 34354,
+      kind: 'image',
+      role: 'sprite',
+      scalePin: 1,
+      group: 'img:ottawa-landmark-parliament-hill',
+      scale: 1,
+      decodedBytes: 4492800,
+      levels: ['ottawa'],
+      keys: ['ottawa-landmark-parliament-hill'],
+    },
+    {
+      path: 'img/ottawa-layer-10-sky@1x.1513d0ff.webp',
+      bytes: 17380,
+      kind: 'image',
+      role: 'layer',
+      scalePin: null,
+      group: 'img:ottawa-layer-10-sky',
+      scale: 1,
+      decodedBytes: 5011200,
+      levels: ['ottawa'],
+      keys: ['ottawa-layer-10-sky'],
+    },
+  ],
+};
 
-  it('reads it', () => {
+describe('against real pipeline output', () => {
+  const real = parseAssetManifest(PIPELINE_EXCERPT);
+
+  it('reads what make assets writes, extra fields and all', () => {
     expect(real.ok, real.ok ? '' : real.error.message).toBe(true);
+    if (!real.ok) return;
+    expect(real.value.files).toHaveLength(PIPELINE_EXCERPT.files.length);
   });
 
-  it.each([1, 2])('resolves every layer key the level names, at scale %i', (scale) => {
+  it.each([1, 2])('resolves every key the excerpt provides, at scale %i', (scale) => {
     if (!real.ok) return;
     const requests = selectLevelAssets(real.value, 'ottawa', { scale, baseUrl: BASE });
-    const keys = new Set(requests.map((request) => request.key));
-    const missing = level.layers.map((layer) => layer.key).filter((key) => !keys.has(key));
+    expect(requests.map((request) => request.key).sort()).toEqual([
+      'ottawa',
+      'ottawa-landmark-parliament-hill',
+      'ottawa-layer-10-sky',
+    ]);
+  });
 
-    expect(
-      missing,
-      'a layer the level draws resolves to no load request, so it will silently draw a ' +
-        'flat theme-coloured band — which is exactly what the deployed build did for all six.',
-    ).toEqual([]);
+  it('honours the landmark pin at 2x rather than dropping the key', () => {
+    if (!real.ok) return;
+    const requests = selectLevelAssets(real.value, 'ottawa', { scale: 2, baseUrl: BASE });
+    const landmark = requests.find(
+      (request) => request.key === 'ottawa-landmark-parliament-hill',
+    );
+    /* `scalePin: 1` means there is no 2x file. Dropping the key would draw
+       nothing where Parliament Hill is, silently — the failure this whole
+       module exists to stop, one asset at a time. */
+    expect(landmark).toEqual({
+      kind: 'image',
+      key: 'ottawa-landmark-parliament-hill',
+      url: `${BASE}img/ottawa-landmark-parliament-hill@1x.6749121e.webp`,
+    });
+  });
+
+  it('takes the 2x atlas on a dense display and the 1x on a plain one', () => {
+    if (!real.ok) return;
+    const at = (scale: number): string | undefined => {
+      const request = selectLevelAssets(real.value, 'ottawa', { scale, baseUrl: BASE }).find(
+        (candidate) => candidate.key === 'ottawa',
+      );
+      return request?.kind === 'atlas' ? request.textureUrl : undefined;
+    };
+    expect(at(2)).toBe(`${BASE}atlas/ottawa@2x.fa99afcd.webp`);
+    expect(at(1)).toBe(`${BASE}atlas/ottawa@1x.16829e2f.webp`);
   });
 });
