@@ -25,6 +25,20 @@
 #     most need to work.
 # The cost is wall-clock, not duplicated work: ci.yml no longer triggers on
 # `push: main`, because this job is now the same gate.
+#
+# ACTION MAJORS
+# Every `actions/*` pin here runs on the Node 24 runtime. The Node 20 runtime is
+# deprecated and the runner was already forcing these actions onto Node 24 with
+# a warning, so the bump removes the annotation rather than changing behaviour.
+# `setup-node` v5 added automatic caching and v6 narrowed it to npm; both are
+# moot here because `cache: npm` is set explicitly and package.json declares no
+# `packageManager` field. `upload-artifact` v7 added an `archive` input that
+# defaults to `true`, i.e. the v4 behaviour, and still honours
+# `if-no-files-found` and `retention-days`. Artifact names are unique within a
+# run, so the v4+ "no overwriting an existing artifact" rule does not bite.
+# `checkout` v7 blocks fork-PR checkout under `pull_request_target` and
+# `workflow_run`; neither workflow uses those triggers. `configure-pages` v6 and
+# `deploy-pages` v5 are Node 24 rebuilds with no input changes.
 name: Deploy to GitHub Pages
 
 on:
@@ -55,9 +69,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
@@ -76,7 +90,7 @@ jobs:
 
       - name: Upload Playwright report
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: playwright-report
@@ -84,13 +98,25 @@ jobs:
           retention-days: 7
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
+      # `include-hidden-files` restores the v3 behaviour this workflow was
+      # written against. v4 of this action started excluding dotfiles from the
+      # tar by default (`--exclude=.[^/]*`), which would silently deploy a
+      # different set of bytes from the one `deploy-check` just weighed: that
+      # script walks all of dist/ for the 100 MB per-file cap and the payload
+      # budgets, hidden files included. A gate that measures a superset of what
+      # ships is a gate that can be wrong in the direction nobody notices.
+      # Today the only dotfile in dist/ is `.gitkeep`, copied out of
+      # `assets/dist/` by Vite's publicDir - zero bytes. Tomorrow it could be
+      # `.well-known/assetlinks.json` (see infra/capacitor/) or `.nojekyll`,
+      # and those vanishing without a word is exactly the failure to avoid.
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist
+          include-hidden-files: true
 
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
