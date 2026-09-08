@@ -16,7 +16,7 @@
  * {@link resolveMotion}.
  */
 
-import { isUiLocale, type UiLocale } from './copy';
+import { isUiLocale, type CopyKey, type UiLocale } from './copy';
 
 export interface Settings {
   readonly locale: UiLocale;
@@ -32,9 +32,9 @@ export interface Settings {
   readonly subtitles: boolean;
   /**
    * How long a switch contact must be held to *choose* rather than advance.
-   * `OQ-SET-4` recommends 600 ms and a control for it; there is no story copy
-   * for that control, so the value is settable through this model and is not
-   * yet drawn. See the task report.
+   * `TN-SET-09` draws it as {@link HOLD_TIME_CHOICES}, four named values rather
+   * than a slider: a switch user reaches four named items in four short presses
+   * and would need fourteen to walk a 100 ms step from 0.6 s to 2.0 s.
    */
   readonly holdToChooseMs: number;
 }
@@ -45,6 +45,41 @@ export const TEXT_SCALE_STEP = 25;
 
 export const HOLD_TO_CHOOSE_MIN_MS = 200;
 export const HOLD_TO_CHOOSE_MAX_MS = 3_000;
+
+/** `TN-SET-09`'s default, and the ceiling the hold-time control can never exceed. */
+export const HOLD_TO_CHOOSE_DEFAULT_MS = 600;
+
+export interface HoldTimeChoice {
+  readonly ms: number;
+  /** The name the player sees: Short, Medium, Long, Very long. */
+  readonly label: CopyKey;
+  readonly testId: string;
+}
+
+/**
+ * The four values, in order. `TN-SET-09`: Short 0.3 s, Medium 0.6 s (the
+ * default), Long 1.2 s, Very long 2.0 s. Every one sits inside the
+ * {@link HOLD_TO_CHOOSE_MIN_MS}–{@link HOLD_TO_CHOOSE_MAX_MS} clamp, which still
+ * guards a hand-edited or imported save.
+ */
+export const HOLD_TIME_CHOICES: readonly HoldTimeChoice[] = [
+  { ms: 300, label: 'settings.holdTime.short', testId: 'setting-hold-time-short' },
+  { ms: HOLD_TO_CHOOSE_DEFAULT_MS, label: 'settings.holdTime.medium', testId: 'setting-hold-time-medium' },
+  { ms: 1_200, label: 'settings.holdTime.long', testId: 'setting-hold-time-long' },
+  { ms: 2_000, label: 'settings.holdTime.veryLong', testId: 'setting-hold-time-very-long' },
+];
+
+/**
+ * The nearest named choice to a stored value, so a save written by an older
+ * build — or by hand — still lights one of the four radios rather than none.
+ */
+export function nearestHoldTimeChoice(ms: number): HoldTimeChoice {
+  const first = HOLD_TIME_CHOICES[0] as HoldTimeChoice;
+  return HOLD_TIME_CHOICES.reduce(
+    (best, choice) => (Math.abs(choice.ms - ms) < Math.abs(best.ms - ms) ? choice : best),
+    first,
+  );
+}
 
 /**
  * Subtitles are on and nothing else is (CLAUDE.md: "Subtitles on by default").
@@ -60,7 +95,7 @@ export const DEFAULT_SETTINGS: Settings = {
   dyslexiaFont: false,
   textScale: TEXT_SCALE_MIN,
   subtitles: true,
-  holdToChooseMs: 600,
+  holdToChooseMs: HOLD_TO_CHOOSE_DEFAULT_MS,
 };
 
 /**

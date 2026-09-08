@@ -1,6 +1,13 @@
 # ADR-0012: The scheduling maths is written out in the domain and pinned to `ts-fsrs` by oracle
 
 - Status: Accepted (2026-09-08)
+- Amended 2026-09-08: two clauses below are superseded, both narrowly, and the decision they supported is
+  unchanged. (1) "`Clock` already offers both ends (`now`, `nowIso`)" — `nowIso()` was removed by ADR-0015;
+  the conversion lives in `app/application/persistence/iso-instant.ts`, which is where "so the conversion
+  has a home and it is not the domain's" is actually satisfied. The domain still holds `EpochMillis`, the
+  document still holds `IsoInstant`, `SaveCodec` still converts. (2) The oracle method described here has
+  since been reached for independently in three more places, and is generalised by **ADR-0014**; this ADR
+  remains the record of the FSRS decision specifically.
 
 ## Context
 

@@ -7,6 +7,11 @@
   off in the same change that adds the first consumer" assumed the implementer can edit the port, which is
   usually false: `app/application/ports/**` is the architect's. See "The form of the marker" and "Who removes
   it".
+- Amended 2026-09-08 (second): the gate reads import edges, so the finest thing it can see is a file.
+  `Clock.nowIso()` was a *member* with no caller inside a file that is correctly consumed and correctly
+  unmarked, and the gate was silent about it — correctly, by its own definition. **ADR-0015 extends this
+  rule below the file** (prune what has no caller; tripwire what cannot be pruned) and records why no
+  member-level checker is being built. This ADR's gate is unchanged.
 
 ## Context
 `app/application/ports/` is 1,297 lines across eleven files. Three exported types are consumed by anything:

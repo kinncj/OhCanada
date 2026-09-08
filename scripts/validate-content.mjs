@@ -3,14 +3,19 @@
  * validate-content — the content gate (slice 0, task 0.9).
  *
  * 1. Loads every JSON Schema under content/schemas/.
- * 2. Validates every .json under content/ (plus assets/credits.json) against
- *    the schema its own `$schema` names. A file without `$schema` is a failure.
- *    Schemas use `additionalProperties: false`, so unknown properties fail.
+ * 2. Validates every .json under content/, plus the documents in
+ *    EXTERNAL_DATA_FILES, against the schema its own `$schema` names. A file
+ *    without `$schema` is a failure. Schemas use `additionalProperties: false`,
+ *    so unknown properties fail.
  * 3. Checks EN/FR key parity for content/locales/<locale>/*.json.
  * 4. Checks that every asset file under assets/ is credited in
  *    assets/credits.json, and that every credit entry points at a file that
  *    exists (ADR-0004). Both directions; see the section for what counts as an
  *    asset and why the exclusions are the shape they are.
+ * 5. Cross-checks assets/style/palette.json's own referential integrity: every
+ *    ramp tone and ink names a colour that exists. A JSON Schema can say "these
+ *    are ids"; it cannot say "this id is in that table", and 97 colours in 31
+ *    ramps is exactly the file where that distinction bites.
  *
  * Exits non-zero and lists every failure. Prints a one-line summary.
  *
@@ -40,6 +45,35 @@ const ROOT =
 const CONTENT_DIR = join(ROOT, 'content');
 const SCHEMA_DIR = join(CONTENT_DIR, 'schemas');
 const CREDITS_FILE = join(ROOT, 'assets', 'credits.json');
+const PALETTE_FILE = join(ROOT, 'assets', 'style', 'palette.json');
+
+/**
+ * Documents that are schema-checked but do not live under content/.
+ *
+ * Listed one by one, deliberately, and each one is REQUIRED to exist. The
+ * alternative -- widening the walk to all of assets/ -- would drag every atlas,
+ * every Rive export and every reference photograph through schema resolution to
+ * find two files, and would make "is this validated?" depend on a file
+ * extension rather than on a decision somebody made.
+ *
+ * `assets/style/palette.json` was added on 2026-09-08, when the architect found
+ * that content/schemas/palette.schema.json validated NOTHING: the palette is not
+ * under content/, so the schema walk never reached it, and it is (correctly) in
+ * NON_ASSET_PATHS below, so the credit walk skipped it too. A schema and a
+ * document, named after each other, with nothing checking one against the other
+ * -- ADR-0007's problem inverted, and it reads as enforced precisely because
+ * both halves exist. The file is 97 colours in 31 ramps generated from a
+ * published formula; the art agent's own checker caught six contradicting ramps
+ * on its first pass. That is a file a schema should be holding.
+ *
+ * The palette stays at assets/style/palette.json. CLAUDE.md never named a
+ * canonical palette path, so the earlier "it belongs under content/style/"
+ * premise was wrong and content/style/ has been deleted.
+ */
+const EXTERNAL_DATA_FILES = [
+  { file: CREDITS_FILE, why: 'the ADR-0004 credit register' },
+  { file: PALETTE_FILE, why: 'the colour allow-list every SVG is linted against' },
+];
 
 const META_SCHEMA_PREFIXES = ['https://json-schema.org/', 'http://json-schema.org/'];
 
@@ -113,9 +147,25 @@ function validatorFor(schemaPath) {
 
 // ------------------------------------------------------------- data files ---
 
+/**
+ * ANTI-VACUUM FLOOR for the external list. A document that is simply absent
+ * would otherwise be validated by nobody and reported by nobody -- which is the
+ * exact state the palette was in before it joined this list. "It was not there"
+ * is a failure, not a skip.
+ */
+for (const { file, why } of EXTERNAL_DATA_FILES) {
+  if (!existsSync(file)) {
+    fail(
+      rel(file),
+      `is missing. It is ${why} and this gate validates it against content/schemas/; ` +
+        'a document that is not there is not a document that passed.',
+    );
+  }
+}
+
 const dataFiles = [
   ...walk(CONTENT_DIR, (f) => extname(f) === '.json' && !f.startsWith(SCHEMA_DIR + sep)),
-  ...(existsSync(CREDITS_FILE) ? [CREDITS_FILE] : []),
+  ...EXTERNAL_DATA_FILES.map((e) => e.file).filter((f) => existsSync(f)),
 ];
 
 let validated = 0;
@@ -283,7 +333,11 @@ const NON_ASSET_BASENAMES = new Set([
 const NON_ASSET_PATHS = new Set([
   'credits.json', // the register itself
   'refs/references.json', // the reference index verify-art reads
-  'style/palette.json', // the palette, authored in this repo
+  // The palette, authored in this repo. Not an asset -- and NOT unchecked
+  // either: it is in EXTERNAL_DATA_FILES above, so it is schema-validated and
+  // referentially cross-checked below. Excluding a file from the credit walk
+  // used to mean excluding it from every walk there is.
+  'style/palette.json',
 ]);
 
 /** `p` is `assets`-relative, posix-separated. */
@@ -441,6 +495,99 @@ if (!existsSync(CREDITS_FILE)) {
   creditedAssets = assetFiles.filter((a) => credited.has(a)).length;
 }
 
+// ----------------------------------------------------------------- palette ---
+
+/**
+ * The palette's referential integrity, which its schema cannot express.
+ *
+ * palette.schema.json pins every ramp tone and every ink key to the `id` type.
+ * It cannot say that the id is a key of `colours` in the same document -- JSON
+ * Schema has no way to reach across a document like that -- and its own
+ * description says so: "Every tone names a key in `colours`; validate-content
+ * cross-checks that once this file is in its input set." This is that
+ * cross-check. Without it a ramp can name `snow-basee` and pass every gate in
+ * the repository until an SVG renders with a missing fill.
+ *
+ * `levelTheme` is only checked at the three keys the schema's description names
+ * (`sky`, `ground`, `horizon`) and only when they are strings, because the rest
+ * of that block is deliberately unconstrained prose and guessing at its shape
+ * would be inventing a rule nobody wrote.
+ */
+let paletteColours = 0;
+let paletteRamps = 0;
+
+if (existsSync(PALETTE_FILE)) {
+  const parsed = readJson(PALETTE_FILE);
+  const where = rel(PALETTE_FILE);
+  if (!parsed.ok) {
+    // Already reported by the schema pass; not repeated here.
+  } else {
+    const palette = parsed.value;
+    const colours = palette?.colours;
+    const known = colours && typeof colours === 'object' && !Array.isArray(colours) ? Object.keys(colours) : [];
+    const has = (id) => known.includes(id);
+
+    /**
+     * ANTI-VACUUM FLOOR. A palette with no colours satisfies every "names a
+     * colour that exists" check below by having nothing to check, and an empty
+     * one is what a broken generator writes. minProperties in the schema says
+     * the same thing; it is repeated here because this section must not be
+     * satisfiable by an empty document even if the schema pass was skipped.
+     */
+    if (known.length === 0) {
+      fail(where, 'declares no colours; the allow-list every SVG is linted against cannot be empty');
+    }
+
+    const ramps = palette?.ramps;
+    const rampEntries =
+      ramps && typeof ramps === 'object' && !Array.isArray(ramps) ? Object.entries(ramps) : [];
+    if (rampEntries.length === 0) {
+      fail(where, 'declares no ramps; three-tone shading has nothing to derive from');
+    }
+
+    for (const [name, ramp] of rampEntries) {
+      if (ramp === null || typeof ramp !== 'object') continue; // the schema names this one.
+      for (const tone of ['light', 'base', 'shade']) {
+        const id = ramp[tone];
+        if (typeof id !== 'string') continue; // the schema names this one too.
+        if (!has(id)) {
+          fail(
+            where,
+            `ramps.${name}.${tone} is "${id}", which is not a key of "colours". Every tone must name ` +
+              'a colour in the allow-list; a ramp pointing at a colour that does not exist renders as ' +
+              'a missing fill and no other gate would see it.',
+          );
+        }
+      }
+    }
+
+    const inks = palette?.inks;
+    if (inks && typeof inks === 'object' && !Array.isArray(inks)) {
+      for (const id of Object.keys(inks)) {
+        if (!has(id)) {
+          fail(where, `inks."${id}" is not a key of "colours"; an outline colour must be in the allow-list`);
+        }
+      }
+    }
+
+    const levelTheme = palette?.levelTheme;
+    if (levelTheme && typeof levelTheme === 'object' && !Array.isArray(levelTheme)) {
+      for (const [level, theme] of Object.entries(levelTheme)) {
+        if (theme === null || typeof theme !== 'object' || Array.isArray(theme)) continue;
+        for (const slot of ['sky', 'ground', 'horizon']) {
+          const id = theme[slot];
+          if (typeof id === 'string' && !has(id)) {
+            fail(where, `levelTheme.${level}.${slot} is "${id}", which is not a key of "colours"`);
+          }
+        }
+      }
+    }
+
+    paletteColours = known.length;
+    paletteRamps = rampEntries.length;
+  }
+}
+
 // ------------------------------------------------------------------ report ---
 
 if (failures.length > 0) {
@@ -456,5 +603,6 @@ console.log(
   `validate-content: OK - ${validated}/${dataFiles.length} content file(s) valid against ` +
     `${schemasByPath.size} schema(s), ${localeBundlesChecked} locale bundle(s) in EN/FR parity, ` +
     `${creditedAssets} asset file(s) under assets/ credited ` +
-    `(${shippedEntries} shipped, ${referenceEntries} reference).`,
+    `(${shippedEntries} shipped, ${referenceEntries} reference), ` +
+    `palette ${paletteColours} colour(s) in ${paletteRamps} ramp(s), every tone and ink resolved.`,
 );

@@ -88,6 +88,9 @@ export function createDialogue(host: HTMLElement, options: DialogueOptions): Dia
    */
   const speaker = element(doc, 'h1', {
     id: 'tn-dialogue-speaker',
+    /* The marker `docs/stories/README.md` fixes for this element, and what
+       `TN-LEVEL-05` reads to check the officer is named rather than "Speaker". */
+    testId: 'dialogue-speaker',
     text: options.speakerName,
   });
   screen.labelledBy(speaker);

@@ -136,6 +136,43 @@ describe('createBuildStatus', () => {
     expect(page.doc.head.children[0]?.textContent).toContain('pointer-events: none');
   });
 
+  it('refuses to be on a page that has a level', () => {
+    /*
+     * The defect, as a rule the component cannot break.
+     *
+     * This sentence was found in a panel over the running Ottawa level — the
+     * most legible text on the screen, telling the player there was nothing to
+     * play. The composition root now decides not to mount it there, and that is
+     * the fix that matters; this is the other half. `data-tn-level` is the
+     * attribute `app/bootstrap` writes on `<html>` to say what the page is, and
+     * its *absence* is the only state this caption describes.
+     */
+    for (const state of ['loading', 'ready', 'failed']) {
+      const page = buildPage();
+      page.doc.documentElement.setAttribute('data-tn-level', state);
+
+      const status = createBuildStatus(page.uiHost);
+
+      expect(page.ui.children, `the caption survived into a "${state}" level`).not.toContain(
+        fake(status.element),
+      );
+    }
+  });
+
+  it('leaves when a level opens after it was mounted', () => {
+    /* A level can be asked for after the page has drawn. Removal, not `hidden`:
+       a hidden caption is one CSS rule away from being visible again, which is
+       how an empty unnamed button reached the question card. */
+    const page = buildPage();
+    const status = createBuildStatus(page.uiHost);
+    expect(page.ui.children).toContain(fake(status.element));
+
+    page.doc.documentElement.setAttribute('data-tn-level', 'loading');
+    page.doc.runMutationObservers();
+
+    expect(page.ui.children).not.toContain(fake(status.element));
+  });
+
   it('is removed by destroy', () => {
     const page = buildPage();
     const status = createBuildStatus(page.uiHost);
@@ -202,10 +239,40 @@ class FakeElement {
 class FakeDocument {
   readonly head: FakeElement;
   readonly body: FakeElement;
+  readonly documentElement: FakeElement;
+  /** What `MutationObserver` would call. Run by hand: no scheduler in a double. */
+  private readonly observers: (() => void)[] = [];
 
   constructor() {
     this.head = new FakeElement(this, 'head');
     this.body = new FakeElement(this, 'body');
+    this.documentElement = new FakeElement(this, 'html');
+    this.documentElement.append(this.head, this.body);
+  }
+
+  /**
+   * Enough of a window for the module to find `MutationObserver`. The double
+   * observes nothing on its own; `runMutationObservers` is the test's way of
+   * saying "the attribute changed", which keeps the suite free of real timers.
+   */
+  get defaultView(): { MutationObserver: new (callback: () => void) => FakeObserver } {
+    const observers = this.observers;
+    return {
+      MutationObserver: class implements FakeObserver {
+        constructor(private readonly callback: () => void) {}
+        observe(): void {
+          observers.push(this.callback);
+        }
+        disconnect(): void {
+          const index = observers.indexOf(this.callback);
+          if (index >= 0) observers.splice(index, 1);
+        }
+      },
+    };
+  }
+
+  runMutationObservers(): void {
+    for (const callback of [...this.observers]) callback();
   }
 
   createElement(tag: string): FakeElement {
@@ -213,8 +280,13 @@ class FakeDocument {
   }
 
   getElementById(id: string): FakeElement | null {
-    return this.head.find(id) ?? this.body.find(id);
+    return this.documentElement.find(id);
   }
+}
+
+interface FakeObserver {
+  observe(): void;
+  disconnect(): void;
 }
 
 interface Page {

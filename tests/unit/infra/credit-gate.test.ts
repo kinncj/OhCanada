@@ -87,6 +87,8 @@ function run(files: Record<string, string>, entries: CreditEntry[] | null): Run 
   cpSync(SCHEMAS, join(root, 'content', 'schemas'), { recursive: true });
   mkdirSync(join(root, 'assets'), { recursive: true });
 
+  mkdirSync(join(root, 'assets', 'style'), { recursive: true });
+
   for (const [rel, contents] of Object.entries(files)) {
     const full = join(root, 'assets', rel);
     mkdirSync(dirname(full), { recursive: true });
@@ -101,8 +103,32 @@ function run(files: Record<string, string>, entries: CreditEntry[] | null): Run 
     );
   }
 
+  // The gate also requires assets/style/palette.json (EXTERNAL_DATA_FILES), and
+  // a missing one is a failure rather than a skip - deliberately, since the
+  // palette spent slice 1 with a schema that validated nothing. Every case here
+  // is about credits, so each scratch tree gets a valid palette and none of them
+  // has to think about it.
+  writeFileSync(join(root, 'assets', 'style', 'palette.json'), `${JSON.stringify(PALETTE, null, 2)}\n`, 'utf8');
+
   return gate(['--root', root]);
 }
+
+/** The smallest document content/schemas/palette.schema.json accepts. */
+const PALETTE = {
+  $schema: '../../content/schemas/palette.schema.json',
+  id: 'scratch-palette',
+  version: '1.0.0',
+  owner: 'art',
+  licence: 'CC-BY-4.0',
+  designResolution: { width: 1080, height: 1920 },
+  shading: { tones: 3 },
+  outline: { weight: 6 },
+  ambientOcclusion: { mode: 'baked' },
+  colours: { 'snow-light': '#ffffff', 'snow-base': '#e6eff7', 'snow-shade': '#c8d8e8', 'ink-warm': '#1a2036' },
+  ramps: { snow: { light: 'snow-light', base: 'snow-base', shade: 'snow-shade' } },
+  inks: { 'ink-warm': 'Warm characters.' },
+  restrictedMarks: { note: 'None in a scratch tree.' },
+};
 
 /**
  * `spawnSync`, not `execFileSync`: failures go to stderr and the summary goes to
@@ -289,15 +315,31 @@ describe('the credit gate passes', () => {
 });
 
 describe('the credit gate, on this repository as it stands', () => {
-  it('sees the assets that are actually committed', () => {
+  it('sees the assets that are actually committed, whether or not they are all credited yet', () => {
     // The regression this whole change exists for: the same command reported
     // "0 shipped asset(s) credited" against a tree holding fourteen licensed
-    // reference photographs. The exact count is deliberately not pinned - art
-    // adds references - but zero is never right again while assets exist.
+    // reference photographs. The property asserted is that the gate is NOT in
+    // that state - it walked assets/ and found files. The exact count is
+    // deliberately not pinned, because art adds references.
+    //
+    // What is deliberately NOT asserted is that the tree is fully credited.
+    // `make validate-content` owns that, fails on it by name, and runs in CI; a
+    // second copy here only means an uncredited SVG that art landed five minutes
+    // ago turns `make test` red for a reason that has nothing to do with the
+    // gate's own behaviour. Both outcomes are checked instead, and neither can
+    // be satisfied by a walk that found nothing.
     const result = gate([]);
-    expect(result.status).toBe(0);
-    const match = /(\d+) asset file\(s\) under assets\/ credited/.exec(result.stdout);
-    expect(match).not.toBeNull();
-    expect(Number(match?.[1])).toBeGreaterThan(0);
+    if (result.status === 0) {
+      const match = /(\d+) asset file\(s\) under assets\/ credited/.exec(result.stdout);
+      expect(match).not.toBeNull();
+      expect(Number(match?.[1])).toBeGreaterThan(0);
+      return;
+    }
+    // Red: every failure must name a specific file under assets/, which is only
+    // possible if the walk saw the tree. The vacuum has its own message and it
+    // must not be the reason.
+    expect(result.output).not.toContain('found 0 asset file(s) under assets/');
+    const named = result.output.split('\n').filter((line) => /assets\/\S+\.\w+/.test(line));
+    expect(named.length).toBeGreaterThan(0);
   });
 });

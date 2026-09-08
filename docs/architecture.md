@@ -133,6 +133,17 @@ the fact — it is a step the next load waits for.
 The loader admits a level only if the manifest's declared `decodedBytes` fit the ceiling. That check is
 static and runs in CI too, so a level that cannot fit is a failing build, not a crash on a phone.
 
+**ADR-0013 is the decision behind this section** and should be read with it. Three things it settles that the
+diagram cannot show: full-screen parallax layers ship at **1× only** (the same art at 2× puts Ottawa 46 % over
+the global ceiling on payload of 0.19 MiB, so no download gate would ever have flinched); "full-screen" means
+"the key appears in some level document's `layers[]`", not a pixel-area threshold; and the 64 MiB figure is a
+**floor** on VRAM rather than a ceiling, because mipmaps, render targets and Rive's canvas surfaces are sized
+by the display and not by a file, so no file-measuring gate can count them. The gap between 64 MiB and the
+hardware limit is where those live.
+
+The `+ shared baseline` term in the BUDGET node below is design intent that no gate implements yet — see
+ADR-0013's open obligation.
+
 ```mermaid
 flowchart TB
   REQ["level requested<br/>(world map or quest chain)"]
@@ -257,17 +268,24 @@ All under `app/application/ports/`, re-exported from `index.ts`. Interfaces and 
 `PROVISIONAL` in the last column means nothing imports the port and nothing implements it: it is a design
 sketch that happens to be type-checked, and the first implementer may change it without an ADR (ADR-0008).
 The column is enforced, not maintained by hand — `tests/unit/contracts/ports-are-provisional.test.ts` fails
-if a port is unconsumed and unmarked, and fails again if the marker outlives the first caller.
+if a port is unconsumed and unmarked, and fails again if the marker outlives the first caller. **It also
+reads this table**: a row whose State disagrees with its file's marker fails the same test, so the table
+cannot drift out of step with the directory it describes. That drift had already happened once — four rows
+here still read `PROVISIONAL` after their first callers landed in slice 1.
+
+The gate reads import edges, so the finest thing it can see is a file. A *member* with no caller is
+ADR-0015's subject and is found by review, not by CI; the reasoning for not building a member-level checker
+is recorded there.
 
 | Port | Hides | Notes | State |
 |---|---|---|---|
-| `ContentRepository` | fetch, ajv, caching | Async, `Result`-returning; `unload` serves the texture budget | Consumed by the Phaser boot adapter |
-| `ProgressRepository` | `localStorage`, quota, private mode | `ok(null)` means "no save", not "storage failed" | `PROVISIONAL` → slice 1 task 1.6 |
-| `SaveCodec` | the export/import format | `decode` validates and migrates; never trusts its input | `PROVISIONAL` → slice 1 task 1.6 |
-| `Clock` | `Date.now`, `performance.now` | `now`/`nowIso` for scheduling, `elapsed` monotonic for timers | `PROVISIONAL` → slice 1 tasks 1.4, 1.5 |
-| `RandomSource` | `Math.random` | Seeded variant makes an exam draw replayable | `PROVISIONAL` → slice 1 task 1.4 |
+| `ContentRepository` | fetch, ajv, caching | Async, `Result`-returning; `unload` serves the texture budget (ADR-0013) | Consumed |
+| `ProgressRepository` | `localStorage`, quota, private mode | `ok(null)` means "no save", not "storage failed" | Consumed |
+| `SaveCodec` | the export/import format | `decode` validates and migrates; never trusts its input. Migration is a mechanism with no steps — ADR-0015 | Consumed |
+| `Clock` | `Date.now`, `performance.now` | `now()` for scheduling, `elapsed()` monotonic for timers. **No `nowIso()`** — ADR-0015 removed it; `toIsoInstant(clock.now())` is the one conversion | Consumed |
+| `RandomSource` | `Math.random` | Seeded variant makes an exam draw replayable | Consumed |
+| `Locomotion` | how a mode moves | Pure `step`; implementations live in the domain | Consumed |
 | `ICharacterRenderer` | Rive vs. sprite atlas | Identical artboard, input, slot and expression names in both | `PROVISIONAL` → slice 1 tasks 1.11, 1.12 |
-| `Locomotion` | how a mode moves | Pure `step`; implementations live in the domain | `PROVISIONAL` → slice 1 task 1.14 |
 | `AudioPort` | howler, autoplay unlock | Every cue carries a `captionKey` — sound always has a visual twin | `PROVISIONAL`, **no task** — delete it if slice 2 closes without an audio adapter |
 | `LocalizerPort` | i18next | No literal player-facing string exists anywhere else | `PROVISIONAL` → slice 1 task 1.15 |
 | `InputPort` | touch, keyboard, gamepad, switch | Keyboard bindings keyed by `KeyboardEvent.code` | `PROVISIONAL` → slice 1 task 1.15 |

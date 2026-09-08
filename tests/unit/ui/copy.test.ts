@@ -3,7 +3,17 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { COPY_GAPS, percent, preferredLocale, text, UI_LOCALES, isUiLocale } from '@ui/copy';
+import {
+  count,
+  COPY_GAPS,
+  formatNumber,
+  percent,
+  pluralCategory,
+  preferredLocale,
+  text,
+  UI_LOCALES,
+  isUiLocale,
+} from '@ui/copy';
 
 /**
  * The copy table is the one place in `app/ui` that holds player-facing words, so
@@ -88,15 +98,157 @@ describe('the copy table', () => {
     }
   });
 
-  it('declares every string it had to invent, and invents no other', () => {
-    /* The NEEDS_COPY comments in the source are the marker; COPY_GAPS is the
-       list. If they disagree, a sixth invented string has slipped in unlisted. */
+  it('invents nothing: the gap list is empty and its marker is gone', () => {
+    /*
+     * `TN-COPY-06`, "the gap list is empty when the tables are complete".
+     * `settings.state.on` / `.off` used to be the two entries and are now
+     * written down in `TN-COPY-strings-and-counts.md`, so nothing here is
+     * authored by this directory. The marker is built rather than written so
+     * this file is not itself a hit for the search.
+     */
+    const marker = ['NEEDS', 'COPY'].join('_');
     const source = readFileSync(new URL('../../../app/ui/copy.ts', import.meta.url), 'utf8');
-    const marked = source.split('NEEDS_COPY').length - 1;
-    /* One mention in the module docstring, one in COPY_GAPS' own doc comment,
-       and one comment above the invented block. */
-    expect(marked).toBeGreaterThan(0);
-    expect([...COPY_GAPS]).toEqual(['settings.state.on', 'settings.state.off']);
+
+    expect([...COPY_GAPS]).toEqual([]);
+    expect(source.includes(marker), `${marker} survives in copy.ts`).toBe(false);
+  });
+
+  it('takes the two strings no table carries from the caller, as required options', () => {
+    /*
+     * The other half of `TN-COPY-06`: "the string is taken from the caller as
+     * data, or the key is listed as a gap". Two screens need a string no story
+     * table writes — the `hud` region's accessible name and the level-loading
+     * sentence — and both are *required* options, so neither can quietly become
+     * a default this directory authored. Read from the source, so deleting the
+     * word `readonly label: string` fails here rather than at review.
+     */
+    const hud = readFileSync(new URL('../../../app/ui/hud.ts', import.meta.url), 'utf8');
+    const level = readFileSync(new URL('../../../app/ui/level-screens.ts', import.meta.url), 'utf8');
+
+    expect(hud).toMatch(/readonly label: string;/);
+    expect(hud).not.toMatch(/options\.label \?\?/);
+    expect(level).toMatch(/readonly message: string;/);
+    expect(level).not.toMatch(/options\.message \?\?/);
+  });
+
+  it('counts through Intl.PluralRules, in English', () => {
+    /* `TN-COPY-01`. */
+    expect(count('en', 'study.count', 1)).toBe('1 question');
+    expect(count('en', 'study.count', 5)).toBe('5 questions');
+    expect(count('en', 'study.short', 1)).toBe('You have 1 question ready. We will ask it.');
+    expect(count('en', 'study.short', 3)).toBe('You have 3 questions ready. We will ask those.');
+  });
+
+  it('counts through Intl.PluralRules, in French, where French differs', () => {
+    /*
+     * `TN-COPY-02`. This is the pair that makes the rule worth having: at zero
+     * the two languages choose different categories, and an `n === 1`
+     * comparison gets French wrong every time.
+     */
+    expect(count('fr', 'study.count', 0)).toBe('0 question');
+    expect(count('en', 'study.count', 0)).toBe('0 questions');
+    expect(count('fr', 'study.count', 1)).toBe('1 question');
+    expect(count('fr', 'study.count', 5)).toBe('5 questions');
+    expect(pluralCategory('fr', 0)).toBe('one');
+    expect(pluralCategory('en', 0)).toBe('other');
+  });
+
+  it('treats a fraction below two as singular in French and plural in English', () => {
+    /* `TN-SET-09` draws 0.3 s as « 0,3 seconde » and as "0.3 seconds". */
+    expect(pluralCategory('fr', 0.3)).toBe('one');
+    expect(pluralCategory('en', 0.3)).toBe('other');
+    expect(count('fr', 'settings.holdTime.seconds', 0.3, { seconds: formatNumber('fr', 0.3) })).toBe(
+      '0,3 seconde',
+    );
+    expect(count('en', 'settings.holdTime.seconds', 0.3, { seconds: formatNumber('en', 0.3) })).toBe(
+      '0.3 seconds',
+    );
+    expect(count('en', 'settings.holdTime.seconds', 2, { seconds: formatNumber('en', 2) })).toBe(
+      '2 seconds',
+    );
+    expect(count('fr', 'settings.holdTime.seconds', 2, { seconds: formatNumber('fr', 2) })).toBe(
+      '2 secondes',
+    );
+  });
+
+  it('formats a number the way each language writes one', () => {
+    expect(formatNumber('en', 0.6)).toBe('0.6');
+    expect(formatNumber('fr', 0.6)).toBe('0,6');
+  });
+
+  it('carries both plural forms for every counted key, in both languages', () => {
+    /*
+     * `TN-COPY-03`: "a count key without both forms fails the check", and "a form
+     * missing in one language only fails the check". The type already refuses a
+     * French table with a missing row; this catches the other half — an English
+     * `.one` with no `.other` beside it.
+     */
+    const missing: string[] = [];
+    for (const key of KEYS) {
+      if (!key.endsWith('.one')) continue;
+      const other = `${key.slice(0, -'.one'.length)}.other`;
+      if (!KEYS.includes(other as (typeof KEYS)[number])) missing.push(other);
+    }
+    expect(missing, missing.join(', ')).toEqual([]);
+  });
+
+  it('never places a counted noun straight after a placeholder in a single row', () => {
+    /*
+     * `TN-COPY-03`, third scenario: a single row whose value puts a noun
+     * immediately after a placeholder is how "1 questions" happens.
+     *
+     * A *preposition* after the number is fine and is what rule 1 recommends —
+     * "Question 1 of 3" / « Question 1 sur 3 » has no plural problem because the
+     * noun does not follow the number that changes — so the function words are
+     * skipped rather than the keys being exempted.
+     *
+     * What is left is a real finding and it is reported rather than silenced:
+     * `study.summary.score` in French reads « Vous avez 1 bonnes réponses sur 5 »
+     * when the player got one right. The wording belongs to
+     * `docs/stories/TN-STUDY-study-mode.md`, which this directory may not edit,
+     * so the key is listed here with its language and reported with the task.
+     * The assertion is an equality, not an allowance: fixing the string fails
+     * this test, and so does adding a second offender.
+     */
+    const FUNCTION_WORDS = new Set([
+      'of', 'out', 'on', 'in', 'for', 'and', 'or', 'to',
+      'sur', 'de', 'des', 'du', 'et', 'ou', 'en', 'au',
+    ]);
+    const REPORTED_TO_THE_PO = ['study.summary.score (fr)'];
+
+    const offenders: string[] = [];
+    for (const locale of UI_LOCALES) {
+      for (const key of KEYS) {
+        if (key.endsWith('.one') || key.endsWith('.other')) continue;
+        const value = text(locale, key as Parameters<typeof text>[1]);
+        const after = /\{\{\w+\}\} ([a-zà-ÿ]+)/u.exec(value);
+        if (after === null) continue;
+        if (FUNCTION_WORDS.has(after[1] ?? '')) continue;
+        offenders.push(`${key} (${locale})`);
+      }
+    }
+    expect(offenders.sort(), offenders.join('\n')).toEqual(REPORTED_TO_THE_PO);
+  });
+
+  it('refuses hand-written pluralisation anywhere in app/ui', () => {
+    /*
+     * `TN-COPY-03`, last scenario: "a string chosen by comparing a count to 1
+     * rather than by its plural category" fails the unit suite, naming the
+     * string. The type already makes it uncompilable — `text` cannot name a
+     * plural row — and this is the belt: a screen could still build the ending
+     * itself out of two literals.
+     */
+    const offenders: string[] = [];
+    for (const name of readdirSync(UI_DIR)) {
+      if (!name.endsWith('.ts')) continue;
+      const code = readFileSync(`${UI_DIR}${name}`, 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/^\s*\/\/.*$/gm, '');
+      for (const [hit] of code.matchAll(/[!=]==\s*1\s*\?|\?\s*'[^']*'\s*:\s*'[^']*s'/g)) {
+        offenders.push(`${name}: ${hit}`);
+      }
+    }
+    expect(offenders, offenders.join('\n')).toEqual([]);
   });
 
   it('leaves a placeholder visible when a parameter is missing, rather than a hole', () => {
@@ -166,6 +318,7 @@ describe('the copy table parser used by this suite', () => {
     expect(KEYS.length).toBeGreaterThan(50);
     expect(KEYS).toContain('settings.title');
     expect(KEYS).toContain('study.summary.score');
+    expect(KEYS).toContain('study.count.one');
     expect(everyString('en').length).toBeGreaterThan(10);
   });
 });

@@ -112,6 +112,25 @@ export interface BuildStatus {
   destroy(): void;
 }
 
+/**
+ * The attribute `app/bootstrap` writes on `<html>` to say what the page is:
+ * absent for the foundation shell, `loading` / `ready` / `failed` once a level
+ * has been asked for.
+ */
+const LEVEL_STATE_ATTRIBUTE = 'data-tn-level';
+
+/**
+ * Is there a level on this page — being opened, running, or failed?
+ *
+ * Any value at all counts, including `failed`: "there is no level to play yet"
+ * is not true of a level that failed to arrive either. The *absence* of the
+ * attribute is the only state this caption describes.
+ */
+function pageHasALevel(doc: Document): boolean {
+  const root: Element | null = doc.documentElement ?? null;
+  return root !== null && root.getAttribute(LEVEL_STATE_ATTRIBUTE) !== null;
+}
+
 export function createBuildStatus(
   host: HTMLElement,
   options: BuildStatusOptions = {},
@@ -126,12 +145,53 @@ export function createBuildStatus(
   element.setAttribute('lang', copy.lang);
   element.textContent = copy.text;
 
-  host.append(element);
+  /*
+   * Where this sentence is allowed to exist, enforced here and not only at the
+   * call site.
+   *
+   * It was found in a panel over the running Ottawa level — the most legible
+   * text on the screen, telling the player there was nothing to play. The
+   * composition root now decides not to mount it there (ADR-0005: mounting is a
+   * composition decision), and that fix is the one that matters. This is the
+   * second half: the caption refuses to be on a page that has a level, whoever
+   * asks and whenever the level appears. A sentence that can only be wrong in
+   * one state should not be able to reach that state at all.
+   *
+   * Removal, not `hidden`: a hidden caption is still in the accessibility tree's
+   * blast radius, still one CSS rule away from being visible, and the project
+   * has already lost a day to a style rule overriding `[hidden]`.
+   */
+  const removeIfALevelIsOpen = (): boolean => {
+    if (!pageHasALevel(doc)) return false;
+    element.remove();
+    return true;
+  };
+
+  let observer: MutationObserver | undefined;
+  if (!removeIfALevelIsOpen()) {
+    host.append(element);
+    /*
+     * A level can be asked for after the caption is on screen. `MutationObserver`
+     * is optional because the unit doubles do not have one; where it is missing
+     * the check above still runs at mount, which is the case that was shipped.
+     */
+    const Observer = doc.defaultView?.MutationObserver;
+    if (Observer !== undefined) {
+      observer = new Observer(() => {
+        if (removeIfALevelIsOpen()) observer?.disconnect();
+      });
+      const root = doc.documentElement;
+      if (root !== null) {
+        observer.observe(root, { attributes: true, attributeFilter: [LEVEL_STATE_ATTRIBUTE] });
+      }
+    }
+  }
 
   return {
     element,
     message: copy.text,
     destroy(): void {
+      observer?.disconnect();
       element.remove();
     },
   };

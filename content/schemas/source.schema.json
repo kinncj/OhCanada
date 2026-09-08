@@ -73,6 +73,12 @@
       "description": "What is already known to be out of date in this document, recorded before a question is written against it rather than discovered after one ships. A cached source is a snapshot of a page that keeps moving; this is the list of places the snapshot is known to lie.",
       "type": "array",
       "items": { "$ref": "#/$defs/knownStaleness" }
+    },
+    "liveChecks": {
+      "description": "The record of going to the LIVE page and comparing it with this cache. A different question from `knownStaleness`, and the two are easy to confuse. `knownStaleness` says *this cached text is wrong*; a live check says *we looked, and here is whether the wrongness is ours or theirs*. That distinction decides what a periodic re-check can possibly achieve. If the live page has moved on and the cache has not, re-fetching resolves the claim - which is the model this register was built on. If the live page states the same out-of-date thing the cache does, the source itself is unrevised: `sourceHash` keeps matching indefinitely, no drift-based quarantine can ever trigger, and re-fetching returns the same wrong text forever. Nothing else here can tell those two situations apart, and until this array existed nothing recorded which one we were in (ADR-0016).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/liveCheck" },
+      "minItems": 1
     }
   },
   "required": [
@@ -120,7 +126,7 @@
 
     "knownStaleness": {
       "title": "Known staleness",
-      "description": "One thing this snapshot is known to get wrong, the chapters it touches, and what an author must do instead. `action` is instructions to the author and the verifier, not a machine directive: a question in an affected chapter is expected to be marked volatile and verified against the live page, and no gate can tell whether it was.",
+      "description": "One thing this snapshot is known to get wrong, the chapters it touches, and what an author must do instead. `action` is instructions to the author and the verifier, not a machine directive: a question in an affected chapter is expected to be marked volatile and verified against the live page, and no gate can tell whether it was. `upstream` and `bannedFromAnswers` were added by ADR-0016, after a live check established that the official source is itself unrevised. When the publisher will never correct a flag, re-verifying against an unchanged page is a recurring cost with no possible finding, and routing the answers around the stale fact is the only mitigation that can work - so it is recorded and checked instead of left to an author's unstated judgement.",
       "type": "object",
       "properties": {
         "topic": { "type": "string", "minLength": 1 },
@@ -143,7 +149,19 @@
           "minItems": 1,
           "uniqueItems": true
         },
-        "action": { "type": "string", "minLength": 1 }
+        "action": { "type": "string", "minLength": 1 },
+        "upstream": {
+          "description": "Will a future edition of the source fix this, on the evidence of `liveChecks`? `revises` means the publisher maintains this document, so the flag eventually clears by re-fetching and the existing rule is right. `does-not-revise` means the live page has been checked and states the same out-of-date thing: the flag will not clear by waiting, the periodic re-check has nothing to find, and the mitigation has to move into the questions - which is why `bannedFromAnswers` becomes required. `unknown` is the honest answer before anyone has looked, and the re-check rule treats it exactly as `revises`, because continuing to fetch is the safe direction. Absent means `unknown`; the field is optional so that a register written before it existed stays valid, not so the question can be dodged.",
+          "type": "string",
+          "enum": ["revises", "does-not-revise", "unknown"]
+        },
+        "bannedFromAnswers": {
+          "description": "Terms that must not appear in any option or explanation of a question citing an affected region. This is the mitigation that actually works when the source will never be corrected, and until this field existed it was an author's unrecorded judgement - correct, invisible, and enforced by nothing. Listed as terms rather than described in prose so a gate can search for them (ADR-0016), matched case-insensitively as whole words against the EN and FR text a player reads. List the specific stale tokens - \"Her Majesty\", \"Elizabeth\", \"53 other nations\", \"308\" - not the topic. A list that over-fires costs one build failure and a refined entry; a list that under-fires ships the wrong fact to somebody studying for a citizenship test.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        }
       },
       "required": ["topic", "problem", "affects", "grain", "action"],
       "additionalProperties": false,
@@ -164,8 +182,91 @@
               "required": ["pages"]
             }
           }
+        },
+        {
+          "$comment": "Declaring that the source will never correct a flag is declaring that the only remaining mitigation lives in the answers - so say what the answers may not depend on. A `does-not-revise` with no term list switches the periodic re-check off and puts nothing in its place, which is strictly worse than the busywork it replaces. Only property names this object already declares appear here (ADR-0007).",
+          "if": {
+            "properties": { "upstream": { "const": "does-not-revise" } },
+            "required": ["upstream"]
+          },
+          "then": {
+            "properties": { "bannedFromAnswers": { "type": "array", "minItems": 1 } },
+            "required": ["bannedFromAnswers"]
+          }
         }
       ]
+    },
+
+    "liveCheck": {
+      "title": "Live source check",
+      "description": "One occasion on which the live page was fetched and compared with this cache. Kept as a list rather than one latest reading, because the pattern across checks is the evidence: `source-unrevised` after a single look is a guess, and after three looks spanning a year it is a finding. Overwriting would destroy exactly the signal that justifies moving a question off per-run re-verification.",
+      "type": "object",
+      "properties": {
+        "checkedAt": {
+          "description": "The date the live page was fetched, YYYY-MM-DD. This is OUR clock, and it is deliberately a separate field from `pages[].sourceDateModified`, which is the page's claim about itself. The gap between the two is the whole finding.",
+          "type": "string",
+          "format": "date"
+        },
+        "checkedBy": {
+          "description": "Which agent or model performed the fetch and the comparison. ADR-0003 separates author from verifier; a check nobody is named for is a check nobody can be asked about.",
+          "type": "string",
+          "minLength": 1
+        },
+        "pages": {
+          "description": "One entry per live URL compared. A source with several chapters lives at several URLs and they are revised independently, so a single verdict for the whole source would average unrelated facts.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/liveCheckPage" },
+          "minItems": 1
+        },
+        "finding": {
+          "description": "What the comparison established, as a value a gate branches on rather than prose a person interprets. `source-revised`: the live page has moved on and this cache is behind it, so re-fetch, re-hash and re-verify. `source-unrevised`: the live page states the same out-of-date thing, so the staleness is upstream and permanent until the publisher acts. `source-withdrawn`: the page is gone. `source-unreachable`: the fetch failed. The last two are separate on purpose and folding them would be the defect - a 500 or a DNS failure is not a retraction, and treating one as the other would let a transient network fault read as the Government of Canada removing a document. Same reasoning as ADR-0009's split of DISCHARGED from VOIDED.",
+          "type": "string",
+          "enum": ["source-revised", "source-unrevised", "source-withdrawn", "source-unreachable"]
+        },
+        "consequence": {
+          "description": "What was done about the finding, in the checker's own words: which questions were re-verified, quarantined, or deliberately left alone, and why. The counterpart to a staleness flag's `action` - that one is instructions before the fact, this one is what actually happened.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["checkedAt", "checkedBy", "pages", "finding", "consequence"],
+      "additionalProperties": false
+    },
+
+    "liveCheckPage": {
+      "title": "Live check page",
+      "description": "One live URL, compared against this cache on one occasion.",
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "The live URL fetched. Chapter-level, not the source's landing page: the landing page is what the register's root `url` records, and it can be perfectly current while the chapter under it is nine years old.",
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "chapter": {
+          "description": "Which chapter this URL carries. Must match one of this register's `chapters[].title`, so a live check binds to the same vocabulary a question's `source.chapter` uses and the two can be joined. Checked by tests/unit/contracts/questions-cite-a-cached-source.test.ts, because JSON Schema cannot compare a value against a sibling array.",
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceDateModified": {
+          "description": "The date the page states about ITSELF - canada.ca's \"Date modified\" - or null when it publishes none. Null is a real answer and the field is required rather than optional, so \"the page carries no date\" stays distinguishable from \"nobody recorded one\". It is the page's claim and not a fact: a page can be edited without the stamp moving, and a stamp can move on a navigation change. It is the cheapest available evidence that a document is unmaintained, not proof that it is.",
+          "anyOf": [{ "type": "string", "format": "date" }, { "type": "null" }]
+        },
+        "agreesWithCache": {
+          "description": "Did the live text agree with our extraction on every claim in `claimsCompared`? True is the reading that inverts this register's model: it means a re-fetch would change nothing, and `sourceHash` will go on matching a document that is wrong.",
+          "type": "boolean"
+        },
+        "claimsCompared": {
+          "description": "The specific claims compared, one per string. Required and non-empty because \"textually identical\" is unfalsifiable without saying identical ON WHAT - two documents differ somewhere - and a verdict with no stated scope is the vacuum this project keeps closing. These are the sentences a later checker repeats to reproduce the finding.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": ["url", "chapter", "sourceDateModified", "agreesWithCache", "claimsCompared"],
+      "additionalProperties": false
     }
   }
 }

@@ -54,6 +54,34 @@ export const HIGHLIGHT_ATTRIBUTE = 'data-switch-highlight';
 /** Overrides the announced label when an item's text is not what should be read. */
 export const SWITCH_LABEL_ATTRIBUTE = 'data-switch-label';
 
+/**
+ * The longest hold an item is willing to demand, in milliseconds.
+ *
+ * This exists for exactly one control and it is the reason the control is
+ * usable: "Hold time" changes what a long press *means*, so a player who has
+ * chosen "Very long" and can no longer hold for two seconds would be locked out
+ * of the only control that could rescue them. `TN-SET-09` states the escape —
+ * "the hold-time options accept a hold of the default length or the current
+ * threshold, whichever is shorter" — and {@link holdThresholdFor} is that
+ * sentence as arithmetic, so the property holds for every threshold rather than
+ * for the ones somebody thought to test.
+ */
+export const SWITCH_MAX_HOLD_ATTRIBUTE = 'data-switch-max-hold-ms';
+
+/**
+ * The threshold that actually applies to one item: the ring's, capped by
+ * whatever the item declared.
+ *
+ * Total, and never above the cap. A missing, malformed or non-positive cap is
+ * "no cap", which is the safe direction: an item that says nothing keeps the
+ * ring's threshold.
+ */
+export function holdThresholdFor(ringHoldMs: number, itemMaxHoldMs?: number | null): number {
+  if (itemMaxHoldMs === undefined || itemMaxHoldMs === null) return ringHoldMs;
+  if (!Number.isFinite(itemMaxHoldMs) || itemMaxHoldMs <= 0) return ringHoldMs;
+  return Math.min(ringHoldMs, itemMaxHoldMs);
+}
+
 export interface SwitchRingOptions {
   /**
    * Hold-to-choose threshold in milliseconds. `TN-SET`/`OQ-SET-4` makes it
@@ -162,11 +190,22 @@ export function createSwitchRing(
     pressStartedAt = now();
   };
 
+  /**
+   * What this press has to beat, for the item currently highlighted. Read at
+   * release, so a ring built before the threshold changed still honours it, and
+   * so an item's own cap is consulted rather than assumed.
+   */
+  const thresholdNow = (): number => {
+    const current = index === -1 ? undefined : items[index];
+    const declared = current?.getAttribute(SWITCH_MAX_HOLD_ATTRIBUTE) ?? null;
+    return holdThresholdFor(holdMs(), declared === null ? null : Number(declared));
+  };
+
   const end = (): void => {
     if (pressStartedAt === null) return;
     const duration = now() - pressStartedAt;
     pressStartedAt = null;
-    if (classifyPress(duration, holdMs()) === 'choose') choose();
+    if (classifyPress(duration, thresholdNow()) === 'choose') choose();
     else advance();
   };
 

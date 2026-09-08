@@ -1,7 +1,9 @@
 # This file is the only copy. It used to be a generated duplicate of
-# infra/github/workflows/deploy-pages.yml, kept in step by `make sync-workflows`
-# and policed by scripts/deploy-check.mjs; that mirror is gone and
-# infra/README.md says why. Edit this file directly. Ownership is enforced by
+# infra/github/workflows/deploy-pages.yml, kept in step by a `sync-workflows`
+# Makefile target and policed by scripts/deploy-check.mjs. The mirror, the target
+# and the drift check are all gone -- do not go looking for
+# `make sync-workflows`, it does not exist; infra/README.md says why it was
+# removed. Edit this file directly. Ownership is enforced by
 # .github/CODEOWNERS, which is where it belongs, not by which directory the file
 # sits in.
 #

@@ -9,7 +9,7 @@ player as a JSON file.
 The realistic attack surface is therefore small:
 
 - **Save-file import** — an imported save is parsed with `JSON.parse` only (never `eval` or `Function`),
-  size-capped, and validated against `content/schemas/save.schema.json` with `additionalProperties: false`
+  size-capped, and validated against `content/schemas/progress.schema.json` with `additionalProperties: false`
   before it touches any state. Invalid input is rejected without partial application.
 - **Third-party code** — no CDN scripts. Everything is bundled from the lockfile.
 - **Content** — question and level JSON is schema-validated at build and again at runtime load.

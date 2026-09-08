@@ -256,10 +256,142 @@ const CSS = `
   gap: 0.75rem;
 }
 
+/* ------------------------------------------------------------------ *
+ * The page under the screens: one <main>, one lower-third HUD.
+ *
+ * Two things here are acceptance criteria (TN-HUD-01, TN-HUD-08):
+ *
+ *  1. The HUD lives in the lower third and never covers the skater, so it is
+ *     anchored to the bottom and capped at a third of the viewport. Growing
+ *     text scrolls INSIDE the strip rather than pushing it up over the
+ *     playfield.
+ *  2. It is chrome, not a play control. pointer-events: none on the region and
+ *     its rows, auto on the controls, so a hold on the play area behind the
+ *     strip reaches the level and activates nothing here.
+ * ------------------------------------------------------------------ */
+
+.tn-main {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tn-hud {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  box-sizing: border-box;
+  max-block-size: 33vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding:
+    0.75rem
+    max(0.75rem, env(safe-area-inset-right, 0px))
+    max(0.75rem, env(safe-area-inset-bottom, 0px))
+    max(0.75rem, env(safe-area-inset-left, 0px));
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--tn-screen-fg);
+  /* Opaque, not a wash over the canvas: text on a translucent panel over a
+     gradient has no computable contrast, and axe reports "incomplete" rather
+     than a pass. */
+  background: var(--tn-screen-bg);
+  border-block-start: 2px solid var(--tn-screen-line);
+  pointer-events: none;
+}
+
+[data-tn-font="dyslexia"] .tn-hud {
+  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  letter-spacing: 0.02em;
+  word-spacing: 0.08em;
+}
+
+.tn-hud p {
+  margin: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.tn-hud__status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tn-hud__mode { font-weight: 700; }
+
+.tn-hud__slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tn-hud__slot:empty { display: none; }
+
+.tn-hud button {
+  box-sizing: border-box;
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
+  inline-size: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border: 2px solid var(--tn-screen-line);
+  border-radius: 0.5rem;
+  background: var(--tn-screen-control-bg);
+  color: var(--tn-screen-control-fg);
+  font: inherit;
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  /* The controls, and only the controls, take input. */
+  pointer-events: auto;
+}
+
+.tn-hud :focus-visible,
+.tn-hud [data-switch-highlight="true"] {
+  outline: 4px solid var(--tn-screen-focus);
+  outline-offset: 3px;
+  border-style: double;
+  border-width: 4px;
+}
+
+/*
+  The storage warning. A border and a mark of weight rather than a colour, so it
+  reads as a warning in greyscale, in forced colours, and to a player who cannot
+  tell the hue from the rest of the strip.
+*/
+.tn-hud__warning {
+  border: 4px solid var(--tn-screen-line);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--tn-screen-control-bg);
+  color: var(--tn-screen-control-fg);
+}
+
+.tn-hud__warning-title { font-weight: 700; }
+
+@media (forced-colors: active) {
+  .tn-hud button { border: 2px solid ButtonText; }
+  .tn-hud__warning { border: 4px solid CanvasText; }
+}
+
 /* Motion is a separate axis from the visual tier: the attribute is written from
    the setting OR the media query, and the media query is also honoured alone. */
 [data-tn-motion="reduced"] .tn-screen,
-[data-tn-motion="reduced"] .tn-screen * {
+[data-tn-motion="reduced"] .tn-screen *,
+[data-tn-motion="reduced"] .tn-hud,
+[data-tn-motion="reduced"] .tn-hud * {
   animation: none !important;
   transition: none !important;
   scroll-behavior: auto !important;
@@ -267,7 +399,9 @@ const CSS = `
 
 @media (prefers-reduced-motion: reduce) {
   .tn-screen,
-  .tn-screen * {
+  .tn-screen *,
+  .tn-hud,
+  .tn-hud * {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;

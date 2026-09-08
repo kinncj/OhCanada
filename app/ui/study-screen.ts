@@ -24,7 +24,7 @@
  * DOM only (ADR-0005).
  */
 
-import { text, type UiLocale } from './copy';
+import { count, text, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
 import { createScreen, type Screen } from './screen';
 
@@ -175,18 +175,27 @@ export function createStudyScreen(
      * "A drill can be shorter than the drill size": the player is told, in
      * words, rather than the drill being padded with repeats (`TN-STUDY-02`).
      */
-    const count =
+    /*
+     * `count(...)` and not `text(...)`: `study.count` and `study.short` are two
+     * rows each, and the form is chosen by `Intl.PluralRules` for the active
+     * locale. English and French disagree at zero and again below two, so the
+     * `n === 1` this screen used to be one refactor away from would draw
+     * "1 questions" in English and « 0 questions » in French. The type makes the
+     * mistake unavailable: `text` cannot name a plural row.
+     */
+    const size = Math.min(available, drillSize);
+    const summary =
       available < drillSize
         ? element(doc, 'p', {
             testId: 'study-count',
-            text: text(locale, 'study.short', { n: available }),
+            text: count(locale, 'study.short', available),
           })
         : element(doc, 'p', {
             testId: 'study-count',
-            text: text(locale, 'study.count', { n: Math.min(available, drillSize) }),
+            text: count(locale, 'study.count', size),
           });
 
-    replaceChildren(panel, [intro, count]);
+    replaceChildren(panel, [intro, summary]);
     replaceChildren(actions, [
       button(doc, {
         testId: 'study-start',
@@ -230,7 +239,9 @@ export function createStudyScreen(
     replaceChildren(actions, [
       button(doc, {
         testId: 'study-retry',
-        text: text(locale, 'level.error.retry'),
+        /* `study.error.retry` is the same two words as `level.error.retry` and a
+           separate key on purpose, so the two screens can be reworded apart. */
+        text: text(locale, 'study.error.retry'),
         ...(options.onRetry === undefined ? {} : { onClick: options.onRetry }),
       }),
       exitButton(),

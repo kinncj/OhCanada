@@ -100,11 +100,11 @@
           "pattern": "^[0-9a-f]{64}$"
         },
         "asOf": {
-          "description": "When the source was fetched. A volatile item whose asOf exceeds 180 days is quarantined.",
+          "description": "When the source was fetched. Against a maintained source, a volatile item whose asOf exceeds 180 days is quarantined. Against a source whose register records it as unrevised, the 180-day clock moves to that register's `liveChecks[].checkedAt` and quarantines the SOURCE rather than each question under it - one fetch instead of N re-verifications of a page that cannot have changed, and it still fails closed. ADR-0016.",
           "$ref": "#/$defs/isoInstant"
         },
         "volatile": {
-          "description": "True when the fact can change without notice (office-holders, dates, numbers). Volatile items are re-verified every run.",
+          "description": "True when the fact can change WITHOUT NOTICE - office holders, dates, counts. It is a property of the FACT, written by the author, and it deliberately says nothing about the source. What a volatile item's periodic re-check consists of is a property of the SOURCE, and lives in that register's `liveChecks` and `knownStaleness[].upstream` (ADR-0016). Conflating the two is what produced the defect: `volatile` was read as 're-verify every run and quarantine at 180 days', which is right against a maintained source and is busywork against one that will never be revised, where the re-fetch can only ever return the same wrong text.",
           "type": "boolean"
         }
       },

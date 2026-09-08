@@ -107,8 +107,10 @@ is live:
 ## 3. Deploy pipeline: what runs, and where it is defined
 
 - **`.github/workflows/` is the only copy.** Edit it directly. It used to be generated from
-  `infra/github/workflows/` by `make sync-workflows`, with a drift check in `scripts/deploy-check.mjs`;
-  that mirror was removed on 2026-09-08 and `infra/README.md` explains why. Ownership of these files —
+  `infra/github/workflows/` by a `sync-workflows` Makefile target, with a drift check in
+  `scripts/deploy-check.mjs`; the mirror, the target and the check were all removed on 2026-09-08 and
+  `infra/README.md` explains why. `make sync-workflows` no longer exists — if you find it named anywhere
+  as a live step, that text is out of date. Ownership of these files —
   they hold `pages: write` and `id-token: write` — is enforced by `.github/CODEOWNERS`.
 - **`ci.yml`** runs on pull requests only, in two parallel jobs, calling Makefile targets and nothing else.
 - **`deploy-pages.yml`** runs on push to `main` and on manual dispatch. It runs the *same* gate set before

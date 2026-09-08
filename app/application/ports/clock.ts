@@ -16,20 +16,20 @@
  * is domain code and `domain-is-pure` forbids it importing a port, so it takes
  * `now` as an argument and the use case above it supplies one.
  *
- * `now` and `nowIso` are the two ends of the conversion ADR-0012 records: the
- * domain does arithmetic on `EpochMillis`, the save document persists
- * `IsoInstant`, and `SaveCodec` is where one becomes the other:
- * `app/application/persistence/iso-instant.ts` writes both directions out, so an
- * adapter implementing `nowIso()` has one conversion to call rather than a
- * second one to write.
+ * There is no `nowIso()`. ADR-0012 put `EpochMillis` in the domain and
+ * `IsoInstant` in the save document and said `SaveCodec` converts; ADR-0015
+ * removed the port method, because the conversion's home turned out to be
+ * `app/application/persistence/iso-instant.ts` — a pure function pinned against
+ * `Date` and `ajv-formats` — and a member whose only correct implementation is
+ * `toIsoInstant(now())` is a helper on the wrong object, not a seam. Nothing in
+ * `app/**` called it, and its one implementation wrote a second, unpinned
+ * conversion. Code that needs an `IsoInstant` calls `toIsoInstant(clock.now())`.
  */
 
-import type { EpochMillis, IsoInstant } from '@domain/ids';
+import type { EpochMillis } from '@domain/ids';
 
 export interface Clock {
   now(): EpochMillis;
-  /** The same instant, formatted for persistence and content `asOf` comparison. */
-  nowIso(): IsoInstant;
   /** Monotonic milliseconds since an arbitrary origin. Differences only. */
   elapsed(): number;
 }

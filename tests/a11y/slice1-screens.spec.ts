@@ -29,12 +29,19 @@ const RULESET = [...WCAG, 'best-practice'];
  * Two page-level best-practice rules are disabled, and only these two.
  *
  * `region` and `landmark-one-main` are about the structure of a *document* — a
- * banner, a main, a contentinfo. What this harness renders is a single modal
- * dialog over a game canvas, which is the whole page in the real app too: the
- * canvas is `aria-hidden` and the dialog is `aria-modal`, so there is no
- * document structure to landmark and adding a `<main>` would be a landmark
- * invented to satisfy a scanner. Every other best-practice rule, including
+ * banner, a main, a contentinfo. What this file renders is one screen at a time,
+ * mounted alone in a harness: a single modal dialog over a game canvas, with no
+ * document structure to landmark. Every other best-practice rule, including
  * `aria-dialog-name`, is on.
+ *
+ * **The suppression has an expiry, and it has been reached.** `TN-HUD` builds
+ * the page those rules describe — one `<main>`, a named `hud` region, real
+ * content outside the modals — and `TN-HUD-07` requires both rules back on for a
+ * whole-page scan. That scan is `tests/a11y/level-screens.spec.ts`, which
+ * disables nothing, runs against the HUD with a modal open over it, and asserts
+ * that both rules actually ran rather than merely failing to complain. This file
+ * keeps them off because it still scans components in isolation, which is a
+ * different question — not because the page has no landmarks any more.
  */
 const DISABLED = ['region', 'landmark-one-main'];
 

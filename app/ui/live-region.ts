@@ -21,6 +21,22 @@ const REGION_ID = 'tn-live-region';
  */
 const ANNOUNCE_DELAY_MS = 100;
 
+/**
+ * How long a message is left in the region before the next one replaces it.
+ *
+ * `TN-LEVEL-08`, "the announcements do not flood": when the skater passes three
+ * things in reach in quick succession, "no announcement is cut off before it is
+ * read" and "announcements are delivered in order". The old behaviour — a
+ * second call replacing the first — fails both, and it fails them silently,
+ * because the message that was dropped is the one nobody hears.
+ *
+ * This is not a player timer: nothing expires, nothing is chosen, and no
+ * scenario passes or fails on how fast the player acts (CLAUDE.md: no timers
+ * outside Exam mode). It paces the *game's* speech, and the queue drains whether
+ * or not the player does anything.
+ */
+const MESSAGE_DWELL_MS = 900;
+
 /** The standard visually-hidden recipe: present to AT, zero visual footprint. */
 const HIDDEN_STYLE = [
   'position:absolute',
@@ -37,8 +53,16 @@ const HIDDEN_STYLE = [
   'color:#ffffff',
 ].join(';');
 
+interface QueuedMessage {
+  readonly message: string;
+  /** BCP-47, for the announcing element — `TN-LEVEL-11` requires `lang="fr"`. */
+  readonly lang?: string;
+}
+
 let region: HTMLElement | null = null;
 let pending: ReturnType<typeof setTimeout> | undefined;
+let queue: QueuedMessage[] = [];
+let draining = false;
 
 /**
  * Create the region and attach it to `host`. Called once by `app/bootstrap`.
@@ -71,20 +95,68 @@ export function mountLiveRegion(host: HTMLElement): HTMLElement {
  * TODO(slice-1): messages arrive already localised from the i18n adapter; this
  * helper must never build copy itself.
  *
- * A second call before the first has been written replaces it. That is right for
- * slice 0 — one boot message — and wrong for gameplay; the a11y agent replaces
- * this with a queue when there is more than one speaker.
+ * Messages queue and are delivered in order. Slice 0 had one speaker and a
+ * second call replaced the first; a level has several — arriving, coming into
+ * reach of the officer, coming into reach of the landmark — and replacing is how
+ * the middle one of three is never heard.
+ *
+ * Repeating the message currently queued or on screen is dropped rather than
+ * queued twice: `TN-HUD-07` requires the storage warning not to be read again
+ * every time the player answers a question, and a component that re-renders is
+ * not a new event.
+ *
+ * @param lang BCP-47 tag for the message. `TN-LEVEL-11` requires the announcing
+ *   element to carry `lang="fr"` when it is speaking French, so a screen reader
+ *   does not read « Vous êtes sur le canal Rideau » with English phonemes.
  */
-export function announce(message: string): void {
+export function announce(message: string, lang?: string): void {
   const target = region ?? autoMount();
   if (target === null) return;
+  if (message === '') return;
 
+  const last = queue.at(-1);
+  if (last !== undefined && last.message === message) return;
+  if (queue.length === 0 && draining && target.textContent === message) return;
+
+  queue.push(lang === undefined ? { message } : { message, lang });
+  if (!draining) drain(target);
+}
+
+/**
+ * Empty the queue, one message at a time.
+ *
+ * Clear, wait, write, wait, next. The first wait is what makes a repeat of an
+ * identical message audible at all; the second is what stops the next message
+ * cutting this one off.
+ */
+function drain(target: HTMLElement): void {
+  const next = queue.shift();
+  if (next === undefined) {
+    draining = false;
+    return;
+  }
+
+  draining = true;
   target.textContent = '';
-  if (pending !== undefined) clearTimeout(pending);
   pending = setTimeout(() => {
-    target.textContent = message;
-    pending = undefined;
+    target.textContent = next.message;
+    if (next.lang !== undefined) target.setAttribute('lang', next.lang);
+    pending = setTimeout(() => {
+      pending = undefined;
+      drain(target);
+    }, MESSAGE_DWELL_MS);
   }, ANNOUNCE_DELAY_MS);
+}
+
+/**
+ * Drop anything not yet spoken. For a screen leaving the page: the announcements
+ * it queued describe something the player can no longer reach.
+ */
+export function clearAnnouncements(): void {
+  queue = [];
+  if (pending !== undefined) clearTimeout(pending);
+  pending = undefined;
+  draining = false;
 }
 
 /** Escape hatch for a caller that announces before bootstrap mounted the layer. */

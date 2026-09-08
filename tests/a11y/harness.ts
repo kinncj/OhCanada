@@ -20,7 +20,11 @@
 
 import { createCharacterCreator, type CreatorSlot } from '../../app/ui/character-creator';
 import { createDialogue } from '../../app/ui/dialogue';
+import { createHud } from '../../app/ui/hud';
+import { createLevelAnnouncer, type LevelEvent } from '../../app/ui/level-events';
+import { createLevelError, createLevelLoading } from '../../app/ui/level-screens';
 import { mountLiveRegion, announce } from '../../app/ui/live-region';
+import { createPoiCard } from '../../app/ui/poi-card';
 import { createQuestionCard, type QuestionView } from '../../app/ui/question-card';
 import { createSettingsScreen } from '../../app/ui/settings-screen';
 import { createStudyScreen, type StudyState } from '../../app/ui/study-screen';
@@ -123,6 +127,53 @@ const QUESTION: QuestionView = {
       ? 'Le Canada est une monarchie constitutionnelle.'
       : 'Canada is a constitutional monarchy.',
 };
+
+/**
+ * The level's own fixtures. Every string here is transcribed from
+ * `docs/stories/TN-LEVEL-ottawa.md`'s copy table, because the level's copy
+ * belongs to the level document (ADR-0010) and reaches `app/ui` as data — the
+ * components take it as a required option rather than owning it.
+ *
+ * `hud.label` and the loading sentence are the two exceptions: no story table
+ * carries them, so these are placeholders standing in for a row the PO owns, and
+ * they are reported as gaps rather than being added to `app/ui/copy.ts`.
+ */
+const LEVEL = {
+  en: {
+    title: 'Ottawa',
+    hud: 'Game controls',
+    loading: 'Getting the canal ready.',
+    mode: 'Skating',
+    task: 'Answer 3 questions (0 of 3)',
+    officer: 'Talk to the officer',
+    landmark: 'Look at Parliament Hill',
+    arrival: 'You are on the Rideau Canal in Ottawa. Skating.',
+    poi: {
+      title: 'Parliament Hill',
+      body: [
+        'The Parliament buildings are in Ottawa. The tall clock tower is called the Peace Tower.',
+      ],
+    },
+  },
+  fr: {
+    title: 'Ottawa',
+    hud: 'Commandes du jeu',
+    loading: 'Préparation du canal.',
+    mode: 'Patinage',
+    task: 'Répondez à 3 questions (0 sur 3)',
+    officer: "Parler à l'agent",
+    landmark: 'Regarder la Colline du Parlement',
+    arrival: 'Vous êtes sur le canal Rideau à Ottawa. Patinage.',
+    poi: {
+      title: 'La Colline du Parlement',
+      body: [
+        "Les édifices du Parlement sont à Ottawa. La haute tour de l'horloge s'appelle la tour de la Paix.",
+      ],
+    },
+  },
+} as const;
+
+const level = LEVEL[locale];
 
 const screen = params.get('screen') ?? 'settings';
 
@@ -231,6 +282,138 @@ switch (screen) {
       onPractiseNew: () => undefined,
       onRetry: () => undefined,
     }).show(state);
+    break;
+  }
+
+  case 'level-loading': {
+    const loading = createLevelLoading(ui, {
+      locale,
+      title: level.title,
+      message: level.loading,
+      onBack: () => undefined,
+      singleSwitch: store.current.singleSwitch,
+    });
+    loading.show();
+    /* The stalled case is a state, not a wait: the escape is revealed on demand
+       so a scan of it needs no timer. */
+    if (params.get('stalled') === '1') loading.offerEscape();
+    break;
+  }
+
+  case 'level-error': {
+    createLevelError(ui, {
+      locale,
+      onRetry: () => undefined,
+      onBack: () => undefined,
+      singleSwitch: store.current.singleSwitch,
+    }).show();
+    break;
+  }
+
+  case 'poi': {
+    createPoiCard(ui, {
+      locale,
+      announce,
+      onClose: () => undefined,
+      singleSwitch: store.current.singleSwitch,
+    }).show(level.poi);
+    break;
+  }
+
+  /*
+   * The whole page, not a component: one `<main>` holding the `aria-hidden`
+   * canvas and the HUD, with a modal over it when asked for. This is the page
+   * `TN-HUD-07` describes, and it is the one the scan runs with axe's `region`
+   * and `landmark-one-main` rules turned back on.
+   */
+  case 'level': {
+    const game = document.getElementById('game');
+    const hud = createHud(ui, {
+      locale,
+      label: level.hud,
+      announce,
+      onPause: () => undefined,
+      onResume: () => undefined,
+      onOpenSettings: () => undefined,
+      onOpenStudy: () => undefined,
+      onOpenPassport: () => undefined,
+      onInteract: () => undefined,
+      onExportSave: () => undefined,
+      singleSwitch: store.current.singleSwitch,
+      ...(game === null ? {} : { canvasHost: game }),
+    });
+
+    hud.setMode(level.mode);
+    if (params.get('task') === '1') hud.setTask(level.task);
+    if (params.get('warning') === '1') hud.setStorageWarning(true);
+
+    /*
+     * The events arrive as an injected subscription, exactly as they will from
+     * the composition root. The harness plays a short trace rather than
+     * calling the HUD directly, so what is scanned is the wiring and not a
+     * hand-placed prompt.
+     */
+    const listeners: ((event: LevelEvent) => void)[] = [];
+    createLevelAnnouncer(
+      (listener) => {
+        listeners.push(listener);
+        return () => undefined;
+      },
+      {
+        locale,
+        announce,
+        arrival: level.arrival,
+        targets: {
+          'npc.officer': { prompt: level.officer },
+          'poi.parliament-hill': { prompt: level.landmark },
+        },
+        onPrompt: (target) => {
+          hud.setPrompt(target?.prompt ?? null);
+        },
+      },
+    );
+
+    const emit = (event: LevelEvent): void => {
+      for (const listener of [...listeners]) listener(event);
+    };
+    emit({ name: 'level/ready' });
+    if (params.get('prompt') === '1') {
+      emit({ name: 'poi/entered', detail: 'npc.officer' });
+    }
+
+    /*
+     * A modal over the running level. Mounted inside `<main>`: a dialog is not a
+     * landmark, so a modal that sits beside `<main>` leaves its own content
+     * outside every landmark and axe's `region` rule is right to say so.
+     */
+    switch (params.get('over')) {
+      case 'menu':
+        hud.openMenu();
+        break;
+      case 'settings':
+        createSettingsScreen(hud.main, { store, announce, onClose: () => undefined }).show();
+        break;
+      case 'poi':
+        createPoiCard(hud.main, {
+          locale,
+          announce,
+          onClose: () => undefined,
+          restoreFocusTo: () => hud.prompt,
+        }).show(level.poi);
+        break;
+      case 'card': {
+        createQuestionCard(hud.main, {
+          locale,
+          announce,
+          onAnswer: () => undefined,
+          onNext: () => undefined,
+          onDismiss: () => undefined,
+        }).present(QUESTION);
+        break;
+      }
+      default:
+        break;
+    }
     break;
   }
 

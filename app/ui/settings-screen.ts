@@ -15,13 +15,26 @@
  * DOM only (ADR-0005), no adapters, no scenes.
  */
 
-import { labelled, percent, text, type CopyKey, type UiLocale } from './copy';
+import {
+  count,
+  formatNumber,
+  labelled,
+  percent,
+  text,
+  type CopyKey,
+  type UiLocale,
+} from './copy';
 import { button, element } from './dom';
 import { createScreen, type Screen } from './screen';
+import { SWITCH_MAX_HOLD_ATTRIBUTE } from './single-switch';
 import {
+  HOLD_TIME_CHOICES,
+  HOLD_TO_CHOOSE_DEFAULT_MS,
+  nearestHoldTimeChoice,
   TEXT_SCALE_MAX,
   TEXT_SCALE_MIN,
   TEXT_SCALE_STEP,
+  type HoldTimeChoice,
   type Settings,
   type SettingsStore,
 } from './settings';
@@ -127,7 +140,13 @@ export function createSettingsScreen(
     },
   });
 
-  screen.card.append(title, languageGroup(), ...SWITCHES.map(switchRow), textSizeRow());
+  screen.card.append(
+    title,
+    languageGroup(),
+    ...SWITCHES.map(switchRow),
+    holdTimeGroup(),
+    textSizeRow(),
+  );
   if (options.showSound === true) screen.card.append(soundSection());
 
   const closeButton = button(doc, {
@@ -320,6 +339,134 @@ export function createSettingsScreen(
       className: 'tn-screen__row',
       children: help === null ? [control] : [control, help],
     });
+  }
+
+  /**
+   * Hold time: four named values, and the one control that cannot be locked by
+   * its own setting.
+   *
+   * `TN-SET-09`. A slider was rejected for a reason worth keeping written down:
+   * the player who needs this control is the player who reaches four named items
+   * in four short presses and would need fourteen to walk a 100 ms step from
+   * 0.6 s to 2.0 s.
+   *
+   * The escape clause is the important half. A player who chose "Very long" and
+   * then found they cannot hold for two seconds would be locked out of the only
+   * control that could rescue them — so each option declares
+   * {@link SWITCH_MAX_HOLD_ATTRIBUTE} at the *default* length, and the ring takes
+   * the shorter of that and the current threshold
+   * (`holdThresholdFor`). It is a construction rather than a promise: the
+   * threshold that applies to these buttons is a `Math.min`, so it cannot exceed
+   * 0.6 s at any setting, including one no test thought of.
+   */
+  function holdTimeGroup(): HTMLElement {
+    const legend = element(doc, 'span', {
+      id: 'tn-settings-hold-time-legend',
+      className: 'tn-screen__legend',
+      text: text(locale(), 'settings.holdTime'),
+    });
+
+    const help = element(doc, 'p', {
+      id: 'tn-settings-hold-time-help',
+      className: 'tn-screen__help',
+      text: text(locale(), 'settings.holdTime.help'),
+    });
+
+    const group = element(doc, 'div', {
+      className: 'tn-screen__group',
+      testId: 'setting-hold-time',
+      attrs: {
+        role: 'radiogroup',
+        'aria-labelledby': 'tn-settings-hold-time-legend',
+        'aria-describedby': 'tn-settings-hold-time-help',
+      },
+      children: [legend, help],
+    });
+
+    /* "Medium" and "0.6 seconds" both, in one accessible name: the name says how
+       long it is, so the number is not decoration a screen reader skips
+       (`TN-SET-09`, "each option says how long it is, in words and numbers"). */
+    const secondsOf = (choice: HoldTimeChoice, which: UiLocale): string => {
+      const seconds = choice.ms / 1_000;
+      /* The category comes from `Intl.PluralRules`, never from `seconds === 1`:
+         French returns `one` for 0.3 (« 0,3 seconde ») and English returns
+         `other` (0.3 seconds), and no hand-written rule gets both right. */
+      return count(which, 'settings.holdTime.seconds', seconds, {
+        seconds: formatNumber(which, seconds),
+      });
+    };
+
+    const buttons = HOLD_TIME_CHOICES.map((choice) => {
+      const name = element(doc, 'span', { text: text(locale(), choice.label) });
+      const seconds = element(doc, 'span', {
+        className: 'tn-screen__state',
+        text: secondsOf(choice, locale()),
+      });
+      const option = button(doc, {
+        testId: choice.testId,
+        attrs: {
+          role: 'radio',
+          'aria-checked': 'false',
+          [SWITCH_MAX_HOLD_ATTRIBUTE]: String(HOLD_TO_CHOOSE_DEFAULT_MS),
+        },
+        children: [name, seconds],
+        onClick: () => choose(choice),
+      });
+      return { choice, option, name, seconds };
+    });
+
+    const paint = (): void => {
+      const current = nearestHoldTimeChoice(store.current.holdToChooseMs);
+      for (const entry of buttons) {
+        const chosen = entry.choice.ms === current.ms;
+        entry.option.setAttribute('aria-checked', String(chosen));
+        entry.option.tabIndex = chosen ? 0 : -1;
+      }
+    };
+
+    const choose = (choice: HoldTimeChoice): void => {
+      const next = store.set('holdToChooseMs', choice.ms);
+      paint();
+      say(
+        labelled(
+          next.locale,
+          text(next.locale, 'settings.holdTime'),
+          `${text(next.locale, choice.label)} ${secondsOf(choice, next.locale)}`,
+        ),
+      );
+      buttons.find((entry) => entry.choice.ms === choice.ms)?.option.focus();
+    };
+
+    group.addEventListener('keydown', (event: KeyboardEvent) => {
+      const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
+      if (!keys.includes(event.key)) return;
+      event.preventDefault();
+      const forward = event.key === 'ArrowRight' || event.key === 'ArrowDown';
+      const current = nearestHoldTimeChoice(store.current.holdToChooseMs);
+      const at = HOLD_TIME_CHOICES.findIndex((choice) => choice.ms === current.ms);
+      const target =
+        HOLD_TIME_CHOICES[
+          (at + (forward ? 1 : -1) + HOLD_TIME_CHOICES.length) % HOLD_TIME_CHOICES.length
+        ];
+      if (target !== undefined) choose(target);
+    });
+
+    group.append(...buttons.map((entry) => entry.option));
+    paint();
+
+    rows.push({
+      refresh: (next) => {
+        legend.textContent = text(next, 'settings.holdTime');
+        help.textContent = text(next, 'settings.holdTime.help');
+        for (const entry of buttons) {
+          entry.name.textContent = text(next, entry.choice.label);
+          entry.seconds.textContent = secondsOf(entry.choice, next);
+        }
+        paint();
+      },
+    });
+
+    return group;
   }
 
   /**

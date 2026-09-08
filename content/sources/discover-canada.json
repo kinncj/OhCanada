@@ -84,7 +84,8 @@
         "Rights and Responsibilities of Citizenship"
       ],
       "action": "volatile: verify against the live canada.ca page, never against this file",
-      "grain": "chapter"
+      "grain": "chapter",
+      "upstream": "unknown"
     },
     {
       "topic": "The monarch and the Governor General",
@@ -97,7 +98,23 @@
       "pages": [
         57
       ],
-      "grain": "pages"
+      "grain": "pages",
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "Her Majesty",
+        "Sa Majest\u00e9",
+        "Queen Elizabeth",
+        "Elizabeth II",
+        "His Majesty",
+        "King Charles",
+        "53 other nations",
+        "53 autres",
+        "308",
+        "Governor General David Johnston",
+        "Justin Trudeau",
+        "Her Majesty's Loyal Opposition",
+        "loyale opposition de Sa Majest\u00e9"
+      ]
     },
     {
       "topic": "Named office holders and election dates",
@@ -113,7 +130,23 @@
         60,
         63
       ],
-      "grain": "pages"
+      "grain": "pages",
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "Her Majesty",
+        "Sa Majest\u00e9",
+        "Queen Elizabeth",
+        "Elizabeth II",
+        "His Majesty",
+        "King Charles",
+        "53 other nations",
+        "53 autres",
+        "308",
+        "Governor General David Johnston",
+        "Justin Trudeau",
+        "Her Majesty's Loyal Opposition",
+        "loyale opposition de Sa Majest\u00e9"
+      ]
     },
     {
       "topic": "The Oath of Citizenship is genuinely mixed",
@@ -125,8 +158,53 @@
       "pages": [
         2
       ],
-      "grain": "pages"
+      "grain": "pages",
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "Her Majesty",
+        "Sa Majest\u00e9",
+        "Queen Elizabeth",
+        "Elizabeth II"
+      ]
     }
   ],
-  "grainNote": "knownStaleness entries carry `pages` where the affected claims are localised, and fall back to `affects` chapters where they are not. Chapter grain alone made 57 of 57 authored questions volatile because two facts in the chapter were, which stopped the flag discriminating: everything is re-verified every run and quarantined at 180 days, so nothing is prioritised. A flag that fires on everything carries the same information as a flag that fires on nothing."
+  "grainNote": "knownStaleness entries carry `pages` where the affected claims are localised, and fall back to `affects` chapters where they are not. Chapter grain alone made 57 of 57 authored questions volatile because two facts in the chapter were, which stopped the flag discriminating: everything is re-verified every run and quarantined at 180 days, so nothing is prioritised. A flag that fires on everything carries the same information as a flag that fires on nothing.",
+  "liveChecks": [
+    {
+      "checkedAt": "2026-09-08",
+      "checkedBy": "content-verifier",
+      "finding": "source-unrevised",
+      "pages": [
+        {
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/how-canadians-govern-themselves.html",
+          "chapter": "How Canadians Govern Themselves",
+          "sourceDateModified": "2017-12-21",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the Sovereign's role and title",
+            "the Governor General's appointment",
+            "the three parts of Parliament",
+            "Senate composition and retirement age",
+            "federal and provincial responsibilities",
+            "how a bill becomes law"
+          ]
+        },
+        {
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/federal-elections.html",
+          "chapter": "Federal Elections",
+          "sourceDateModified": "2025-08-08",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the number of electoral districts",
+            "who may run for office",
+            "the fixed election date",
+            "the Cabinet's role",
+            "the Official Opposition's title",
+            "the shared-responsibilities summary table"
+          ]
+        }
+      ],
+      "consequence": "IRCC has not revised Discover Canada for the accession. The live pages still read \"Her Majesty is a symbol of Canadian sovereignty\", \"53 other nations\", \"Her Majesty's Loyal Opposition\" and \"308 electoral districts\", and caption a photo \"Queen Elizabeth II\". So our cache is not drifting behind a maintained source: the source itself is unrevised, cache and live agree, and both are out of date. A drift-based quarantine has no trigger and re-fetching cannot resolve a stale fact. What makes the bank shippable is bannedFromAnswers, not a future fetch."
+    }
+  ]
 }

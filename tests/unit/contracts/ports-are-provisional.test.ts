@@ -22,6 +22,25 @@
  *
  * A test is not a consumer (ADR-0008): `tests/**` is excluded on purpose. An
  * interface exercised only by a test written against it is tested against itself.
+ *
+ * Since slice 1 it also judges `docs/architecture.md` §5's port table, whose last
+ * column states the same fact in prose. ADR-0008's Consequences require the table
+ * and the files to agree, and by review alone they did not: four rows still read
+ * `PROVISIONAL` after their first callers landed. A document describing the ports
+ * directory is a claim about it, and this is the one place in the repository that
+ * can check it — so the table's State column is derived from the same marker the
+ * gate above reads, and a disagreement fails here rather than misleading a reader.
+ *
+ * The row-to-file mapping is not by name-guessing: it reuses `declaringFileOf`,
+ * the barrel's own export map, so `ICharacterRenderer` finds `character-renderer.ts`
+ * and `AudioPort` finds `audio.ts` because `index.ts` says so. A row naming a type
+ * the barrel does not export fails, which is what stops the table describing ports
+ * that do not exist.
+ *
+ * What it deliberately does not check: the "→ slice 1 task N" part of a
+ * `PROVISIONAL` cell, or anything in the Hides and Notes columns. Those are prose
+ * and there is nothing to compare them against. Only the binary — marked or not —
+ * is a fact both sides state.
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
@@ -34,6 +53,7 @@ const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const APP_DIR = `${REPO_ROOT}app`;
 const PORTS_DIR = `${REPO_ROOT}app/application/ports`;
 const PORTS_INDEX = `${PORTS_DIR}/index.ts`;
+const ARCHITECTURE_DOC = `${REPO_ROOT}docs/architecture.md`;
 /**
  * The marker, matched as a *marker* rather than as a word.
  *
@@ -158,6 +178,42 @@ const headerCarriesMarker = (portFile: string): boolean => {
   return header !== undefined && MARKER.test(header);
 };
 
+
+/* -------------------------------------------------------------------------- */
+/* docs/architecture.md 5 — the same fact, in prose                           */
+/* -------------------------------------------------------------------------- */
+
+interface TableRow {
+  /** The type named in the first column, e.g. `ICharacterRenderer`. */
+  readonly port: string;
+  /** The State column, verbatim. */
+  readonly state: string;
+  readonly line: number;
+}
+
+/**
+ * Rows of the port table in §5. Found by shape rather than by heading offset —
+ * a four-column row whose first cell is a single backticked identifier — so
+ * re-ordering the document or adding a section above it does not silently empty
+ * this set. The anti-vacuum assertion below is what catches it if it does.
+ */
+const portTableRows = (): readonly TableRow[] => {
+  const rows: TableRow[] = [];
+  readFileSync(ARCHITECTURE_DOC, 'utf8')
+    .split('\n')
+    .forEach((text, index) => {
+      if (!text.startsWith('|')) return;
+      const cells = text.split('|').slice(1, -1);
+      if (cells.length !== 4) return;
+      const port = /^\s*`([A-Za-z][A-Za-z0-9_]*)`\s*$/u.exec(cells[0] ?? '')?.[1];
+      if (port === undefined) return;
+      rows.push({ port, state: (cells[3] ?? '').trim(), line: index + 1 });
+    });
+  return rows;
+};
+
+const architectureRows = portTableRows();
+
 /* -------------------------------------------------------------------------- */
 /* the gate                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -219,4 +275,65 @@ describe('a port exists when something calls it (ADR-0008)', () => {
       }
     });
   });
+});
+
+describe('docs/architecture.md 5 states the same marker state as the files (ADR-0008)', () => {
+  it('found a port table to read', () => {
+    // Anti-vacuum: if the table moves, is reformatted, or loses its backticks,
+    // every assertion below becomes vacuous and this is what says so.
+    expect(
+      architectureRows.length,
+      `${ARCHITECTURE_DOC} has no four-column table row whose first cell is a single ` +
+        'backticked identifier, so the port table could not be found and nothing below ' +
+        'is being checked',
+    ).toBeGreaterThanOrEqual(portFiles.length);
+  });
+
+  it('names only ports the barrel actually exports', () => {
+    const unknown = architectureRows
+      .filter((row) => declaringFileOf.get(row.port) === undefined)
+      .map((row) => `docs/architecture.md:${String(row.line)} lists \`${row.port}\``);
+    expect(
+      unknown,
+      'The port table describes a type that app/application/ports/index.ts does not ' +
+        'export. Either the port was renamed or removed and the table was not, or the ' +
+        'table is describing a seam that does not exist yet — which belongs in 6, ' +
+        '"Seams deliberately left open", not in the table of what is there.\n  ' +
+        unknown.join('\n  '),
+    ).toEqual([]);
+  });
+
+  it('describes every port file exactly once', () => {
+    const described = architectureRows
+      .map((row) => declaringFileOf.get(row.port))
+      .filter((file): file is string => file !== undefined);
+    const missing = portFiles.filter((file) => !described.includes(file));
+    expect(
+      missing,
+      `app/application/ports holds ${missing.join(', ')}, which docs/architecture.md 5 ` +
+        'does not describe. A port absent from the table is a seam a reader of the ' +
+        'architecture cannot know about.',
+    ).toEqual([]);
+    expect(new Set(described).size, 'a port file is described by two rows').toBe(described.length);
+  });
+
+  it.each(architectureRows.map((row) => [row.port, row] as const))(
+    '%s: the State column agrees with the file',
+    (_port, row) => {
+      const file = declaringFileOf.get(row.port);
+      if (file === undefined) return; // reported by the case above
+      const marked = headerCarriesMarker(file);
+      const claimsProvisional = /\bPROVISIONAL\b/u.test(row.state);
+      expect(
+        claimsProvisional,
+        `docs/architecture.md:${String(row.line)} says \`${row.port}\` is ` +
+          `"${row.state}", and app/application/ports/${file} ${marked ? 'carries' : 'does not carry'} ` +
+          `the ${MARKER_FORM} marker. The file is the fact; the table is a claim about it. ` +
+          (marked
+            ? 'Update the table row to PROVISIONAL, or land a consumer and remove the marker.'
+            : 'The first caller has landed, so this row is out of date — say what it is ' +
+              'consumed by instead.'),
+      ).toBe(marked);
+    },
+  );
 });

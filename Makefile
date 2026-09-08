@@ -35,6 +35,25 @@ typecheck: ## TypeScript strict typecheck, no emit
 test: ## Vitest unit and integration tests with coverage thresholds
 	npm run test
 
+# ONE BROWSER SUITE AT A TIME, per checkout. The guard is in the npm scripts
+# these targets call (scripts/browser-suite-lock.sh), NOT here, so that
+# `npm run test:e2e` is covered too and so that nothing takes the lock twice and
+# waits for itself.
+#
+# scripts/browser-suite-lock.sh has the full diagnosis. The short version: two
+# Playwright runs in one working tree delete each other's artefacts -- the second
+# wipes test-results/ at startup and both reuse the same
+# `.playwright-artifacts-<n>` paths -- so the first starts failing with
+# "browserContext.close: ENOENT ... traces/<id>-recording<n>.trace" and no
+# assertion anywhere. Measured with `--trace off` as well: the runs still fail,
+# as timeouts, because eight SwiftShader browsers on one CPU cannot satisfy
+# assertions stated in seconds.
+#
+# `npx playwright test --config ...` typed directly BYPASSES this and will still
+# corrupt a run that is already going. It cannot be guarded from inside the
+# config: Playwright deletes outputDir in `createRemoveOutputDirsTask`, which
+# runs BEFORE `globalSetup`, so by the time any hook of ours could refuse, the
+# other run's artefacts are already gone. Use these targets.
 test-e2e: ## Playwright end-to-end suite against the production build
 	npm run test:e2e
 

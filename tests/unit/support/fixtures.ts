@@ -228,7 +228,6 @@ export const testClock = (start: EpochMillis = ORIGIN): TestClock => {
   let monotonic = 0;
   return {
     now: () => current,
-    nowIso: () => new Date(current).toISOString() as IsoInstant,
     elapsed: () => monotonic,
     set(millis) {
       current = millis;

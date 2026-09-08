@@ -1,4 +1,5 @@
 {
+  "$schema": "../../content/schemas/palette.schema.json",
   "id": "truenorth-core",
   "version": "1.0.0",
   "owner": "art",
@@ -10,9 +11,11 @@
   "note": [
     "The allow-list for every fill and stroke in assets/src/svg. The palette lint fails on any colour",
     "not present in `colours`. Add a colour here, with a ramp, before any SVG uses it.",
-    "CANONICAL LOCATION IS content/style/palette.json. It sits under assets/ today only because",
-    "scripts/validate-content.mjs requires every .json under content/ to declare a $schema naming a",
-    "schema in content/schemas/, and no palette schema exists yet. See content/style/README.md (OQ-ART-01).",
+    "This file lives here. CLAUDE.md never named a canonical palette path, and a build-time input read",
+    "by the asset pipeline and by make verify-art - never by anything under app/ - belongs beside the",
+    "art it governs (same reasoning as assets/credits.json, ADR-0004). It is validated in place against",
+    "content/schemas/palette.schema.json by make validate-content, which also cross-checks that every",
+    "ramp tone and ink names a colour in `colours`.",
     "UI, text and focus-ring colours are deliberately absent: ui-a11y owns those and they must pass WCAG AA."
   ],
   "shading": {

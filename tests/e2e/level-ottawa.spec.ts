@@ -174,8 +174,45 @@ async function waitForSimulated(page: Page, seconds: number): Promise<void> {
 /** Hold a key until `seconds` of simulated time have passed, then release it. */
 async function holdForSimulated(page: Page, key: string, seconds: number): Promise<void> {
   await page.keyboard.down(key);
+  await waitForIntent(page, key === 'ArrowLeft' ? -1 : 1);
   await waitForSimulated(page, seconds);
   await page.keyboard.up(key);
+  /* And wait for the release to land too, or the next phase starts while the
+     game still thinks a direction is held and the two intents cancel. */
+  await waitForIntent(page, 0);
+}
+
+/**
+ * Wait until a frame has actually been given `move` as its intent.
+ *
+ * Pressing a key and the game *seeing* it pressed are two different events, and
+ * under load they can be seconds apart: the keystroke crosses the CDP
+ * connection, Chromium queues it, Phaser drains its key queue on its next
+ * update, and only then does a frame carry the intent. A scenario that measures
+ * from the `keyboard.down` call instead of from that frame is measuring the
+ * round trip, and it fails with "no player/braked" — a sentence about the
+ * physics — when the truth is that the physics was never asked.
+ *
+ * So the tests wait for the input to land, and if it never does they say that
+ * instead.
+ */
+async function waitForIntent(page: Page, move: number): Promise<void> {
+  await page.waitForFunction(
+    (want: number) => {
+      const scene = (window as unknown as { __tnScene: { frames: () => { intentMove: number }[] } })
+        .__tnScene;
+      /* The *last* frames, not any frame. "Some frame was given 0" is true of
+         every trace ever recorded — the level starts at rest — so a release
+         checked that way is not checked at all, and the next phase starts while
+         the game still thinks the previous direction is held. Holding left and
+         right at once sums to zero, which is why that mistake presents as
+         "the skater never went left". */
+      const recent = scene.frames().slice(-3);
+      return recent.length === 3 && recent.every((frame) => frame.intentMove === want);
+    },
+    move,
+    { timeout: 20_000 },
+  );
 }
 
 /** Wait until the skater's world x passes `x`, or fail saying it never did. */
@@ -387,6 +424,7 @@ test.describe('TN-LEVEL-03 — skating feels like ice', () => {
     await holdForSimulated(page, 'ArrowRight', 1.5);
     await clearTrace(page);
     await page.keyboard.down('ArrowLeft');
+    await waitForIntent(page, -1);
     await waitForSimulated(page, 2.5);
     await page.keyboard.up('ArrowLeft');
 
@@ -410,13 +448,19 @@ test.describe('TN-LEVEL-03 — skating feels like ice', () => {
     await holdForSimulated(page, 'ArrowRight', 1.5);
     await clearTrace(page);
     await page.keyboard.down('ArrowLeft');
+    await waitForIntent(page, -1);
     await waitForSimulated(page, 1.5);
     await page.keyboard.up('ArrowLeft');
+
+    const trace = await frames(page);
+    expect(
+      trace.some((frame) => frame.intentMove === -1 && frame.velocityX > 0),
+      'the premise: the other way was held while the skater was still going right',
+    ).toBe(true);
 
     const braked = (await events(page)).filter((event) => event.name === 'player/braked');
     expect(braked.length, 'no player/braked when the other way was held').toBeGreaterThan(0);
 
-    const trace = await frames(page);
     expect(trace.length).toBeGreaterThan(10);
     for (let index = 1; index < trace.length; index += 1) {
       const previous = trace[index - 1];
@@ -438,6 +482,7 @@ test.describe('TN-LEVEL-03 — skating feels like ice', () => {
        position rather than by a clock, so a slow machine takes longer and still
        measures the same stretch of canal. */
     await page.keyboard.down('ArrowRight');
+    await waitForIntent(page, 1);
     await waitForPlayerPast(page, DESCENT_END_X);
     await page.keyboard.up('ArrowRight');
 
@@ -458,6 +503,7 @@ test.describe('TN-LEVEL-03 — skating feels like ice', () => {
     await openLevel(page);
     await holdForSimulated(page, 'ArrowRight', 1.5);
     await page.keyboard.down('ArrowRight');
+    await waitForIntent(page, 1);
     await clearTrace(page);
     await page.mouse.click(200, 300);
     /* The second tap, while still in the air: "there is no second jump". The hop
@@ -554,6 +600,7 @@ test.describe('TN-LEVEL-05 — coming into reach', () => {
     await clearTrace(page);
 
     await page.keyboard.down('ArrowRight');
+    await waitForIntent(page, 1);
     await waitForPlayerPast(page, (OTTAWA.characters[0]?.position.x ?? 0) + REACH + 200);
     await page.keyboard.up('ArrowRight');
 
@@ -578,6 +625,7 @@ test.describe('TN-LEVEL-05 — coming into reach', () => {
     await clearTrace(page);
 
     await page.keyboard.down('ArrowRight');
+    await waitForIntent(page, 1);
     await waitForPlayerPast(page, LANDMARK_X - REACH + 40);
     await page.keyboard.up('ArrowRight');
 

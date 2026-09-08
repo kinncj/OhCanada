@@ -130,6 +130,10 @@ const SKIPPED_DEFS: Readonly<Record<string, string>> = {
     'part of the verification-time source register (ADR-0003) — never read by the application at runtime',
   'source.schema.json#/$defs/knownStaleness':
     'part of the verification-time source register (ADR-0003) — never read by the application at runtime',
+  'source.schema.json#/$defs/liveCheck':
+    'the live-source check record (ADR-0016) — read by verify-content, never by the application at runtime',
+  'source.schema.json#/$defs/liveCheckPage':
+    'one page of a live-source check (ADR-0016) — read by verify-content, never by the application at runtime',
 };
 
 /**

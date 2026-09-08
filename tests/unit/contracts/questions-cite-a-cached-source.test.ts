@@ -65,6 +65,22 @@ interface KnownStaleness {
   readonly affects?: readonly unknown[];
   readonly grain?: unknown;
   readonly pages?: readonly unknown[];
+  readonly upstream?: unknown;
+  readonly bannedFromAnswers?: readonly unknown[];
+}
+interface LiveCheckPage {
+  readonly url?: unknown;
+  readonly chapter?: unknown;
+  readonly sourceDateModified?: unknown;
+  readonly agreesWithCache?: unknown;
+  readonly claimsCompared?: readonly unknown[];
+}
+interface LiveCheck {
+  readonly checkedAt?: unknown;
+  readonly checkedBy?: unknown;
+  readonly finding?: unknown;
+  readonly consequence?: unknown;
+  readonly pages?: readonly LiveCheckPage[];
 }
 interface SourceManifest {
   readonly id?: unknown;
@@ -75,9 +91,16 @@ interface SourceManifest {
   readonly extractedTextSha256?: unknown;
   readonly chapters?: readonly SourceChapter[];
   readonly knownStaleness?: readonly KnownStaleness[];
+  readonly liveChecks?: readonly LiveCheck[];
+}
+interface LocalizedTextLike {
+  readonly en?: unknown;
+  readonly fr?: unknown;
 }
 interface QuestionLike {
   readonly id?: unknown;
+  readonly options?: readonly LocalizedTextLike[];
+  readonly explanation?: LocalizedTextLike;
   readonly source?: {
     readonly sourceId?: unknown;
     readonly chapter?: unknown;
@@ -91,6 +114,57 @@ interface QuestionLike {
 const str = (value: unknown): string | null => (typeof value === 'string' ? value : null);
 const int = (value: unknown): number | null =>
   typeof value === 'number' && Number.isInteger(value) ? value : null;
+
+/**
+ * A banned term appears in text when it appears as a WHOLE word, case-insensitively.
+ *
+ * Whole-word rather than substring, because the terms are ordinary English and
+ * French words: a substring match on "53" hits "1953" and "253", and one on
+ * "Elizabeth" is fine but one on "Queen" would hit "Queensland". The register
+ * chooses the terms and a term that still over-fires is refined there, which is
+ * the safe direction - a build failure and one edit, against shipping a wrong
+ * fact to somebody studying for a citizenship test.
+ *
+ * "Whole word" is bounded by anything that is not a letter or a digit. The
+ * apostrophe is deliberately a BOUNDARY and not word-like, which the fixtures
+ * below caught: treating it as word-like made French elision ("l'Elizabeth")
+ * miss, and - far worse - made the English possessive ("Elizabeth's reign") miss
+ * too. Both failures are in the dangerous direction, letting a banned term ship
+ * by being adjacent to punctuation. Letters are matched by Unicode property, so
+ * accented French is a word and "Elisabeth" is one word, not two.
+ *
+ * The term itself may contain spaces ("Her Majesty", "53 other nations"), which
+ * is why this is a boundary check around a literal rather than a token set.
+ */
+const WORDLIKE = /[\p{L}\p{N}]/u;
+
+export const mentionsTerm = (text: string, term: string): boolean => {
+  const haystack = text.toLocaleLowerCase();
+  const needle = term.trim().toLocaleLowerCase();
+  if (needle === '') return false;
+  let from = 0;
+  for (;;) {
+    const at = haystack.indexOf(needle, from);
+    if (at === -1) return false;
+    const before = at === 0 ? '' : haystack.charAt(at - 1);
+    const after = haystack.charAt(at + needle.length);
+    if (!WORDLIKE.test(before) && !WORDLIKE.test(after)) return true;
+    from = at + 1;
+  }
+};
+
+/** Every player-readable string of a question that an answer could hide a stale fact in. */
+const answerText = (question: QuestionLike): readonly string[] => {
+  const from = (value: LocalizedTextLike | undefined): readonly string[] =>
+    value === undefined
+      ? []
+      : [str(value.en), str(value.fr)].flatMap((text) => (text === null ? [] : [text]));
+  // The PROMPT is deliberately not included. A question may legitimately ask
+  // about a stale topic - the wrongness is in asserting a stale value as an
+  // answer, not in naming the subject. Options and explanation are what a player
+  // is told is TRUE.
+  return [...(question.options ?? []).flatMap(from), ...from(question.explanation)];
+};
 
 /**
  * The whole check as one pure function over already-parsed documents, so the
@@ -210,6 +284,38 @@ export const citationFaults = (
     // judgement the staleness gate says it cannot make.
   }
 
+  // --- answers may not depend on a fact the source will never correct --------
+  //
+  // ADR-0016. When a flag declares `upstream: "does-not-revise"`, marking the
+  // question volatile buys nothing: the live page states the same wrong thing,
+  // so the re-verification it routes to can only ever return "unchanged". The
+  // mitigation that works is the one the author used unprompted - write the
+  // answers so that none of them depends on the stale fact - and this is what
+  // makes that a checked property instead of an unrecorded judgement.
+  //
+  // The check is deliberately on the ANSWERS, not the question. A prompt may name
+  // a stale topic; what may not happen is a player being told a stale value is
+  // true.
+  const texts = answerText(question);
+  for (const flag of flags) {
+    const banned = (flag.bannedFromAnswers ?? []).flatMap((value) => {
+      const term = str(value);
+      return term === null ? [] : [term];
+    });
+    if (banned.length === 0) continue;
+    const hits = banned.filter((term) => texts.some((text) => mentionsTerm(text, term)));
+    if (hits.length === 0) continue;
+    found.push(
+      `${where}: an option or explanation contains ${hits.map((term) => `"${term}"`).join(', ')}, ` +
+        `which ${sourceId} bans from answers under the staleness flag "${str(flag.topic) ?? '?'}". ` +
+        `That flag declares upstream: "does-not-revise" - the official source states the same ` +
+        `out-of-date thing the cache does, so re-verifying can never correct this and marking the ` +
+        `question volatile buys nothing. Route the answer around the stale fact: change the option ` +
+        `or the explanation so it does not depend on it. If the term is over-broad, refine the ` +
+        `entry in the register rather than removing it.`,
+    );
+  }
+
   return found;
 };
 
@@ -229,6 +335,198 @@ const manifests = new Map<string, SourceManifest>(
     return id === null ? [] : [[id, manifest] as const];
   }),
 );
+
+/* -------------------------------------------------------------------------- */
+/* ADR-0016 — an unrevised source, and the answers that route around it        */
+/* -------------------------------------------------------------------------- */
+
+describe('answers do not depend on a fact the source will never correct (ADR-0016)', () => {
+  const unrevised = new Map<string, SourceManifest>([
+    [
+      'discover-canada',
+      {
+        id: 'discover-canada',
+        sha256: 'a'.repeat(64),
+        extractedText: 'discover-canada.txt',
+        extractedTextSha256: 'b'.repeat(64),
+        pages: 129,
+        chapters: [{ title: 'How Canadians Govern Themselves', page: 54, endPage: 59 }],
+        knownStaleness: [
+          {
+            topic: 'The monarch and the Commonwealth',
+            affects: ['How Canadians Govern Themselves'],
+            grain: 'chapter',
+            upstream: 'does-not-revise',
+            bannedFromAnswers: ['Her Majesty', 'Elizabeth', '53 other nations', '308'],
+          },
+        ],
+      },
+    ],
+  ]);
+
+  const ask = (options: readonly string[], explanation = 'A neutral explanation.'): QuestionLike => ({
+    id: 'q',
+    options: options.map((en) => ({ en, fr: en })),
+    explanation: { en: explanation, fr: explanation },
+    source: {
+      sourceId: 'discover-canada',
+      chapter: 'How Canadians Govern Themselves',
+      page: 56,
+      sourceHash: 'b'.repeat(64),
+      volatile: true,
+    },
+  });
+
+  it('accepts answers written around the stale facts', () => {
+    // This is what the author actually did, unprompted, and what made 54 of 57
+    // questions verifiable off an unrevised source. The rule exists to keep it
+    // true rather than to discover it was.
+    expect(
+      citationFaults(
+        ask(
+          ['The Sovereign', 'The Prime Minister', 'The Speaker', 'The Chief Justice'],
+          'Canada is a constitutional monarchy; the Sovereign is the head of state.',
+        ),
+        'f',
+        unrevised,
+      ),
+    ).toEqual([]);
+  });
+
+  it('rejects an option that names the stale monarch', () => {
+    const faults = citationFaults(ask(['Queen Elizabeth II', 'B', 'C', 'D']), 'f', unrevised);
+    expect(faults).toHaveLength(1);
+    expect(faults[0]).toContain('"Elizabeth"');
+    expect(faults[0]).toContain('does-not-revise');
+  });
+
+  it('rejects a stale count hidden in the explanation rather than an option', () => {
+    // The explanation is player-facing prose asserting a fact, so it is an
+    // answer for this purpose. Checking only the options would leave the easiest
+    // place to put a wrong number unchecked.
+    const faults = citationFaults(
+      ask(['A', 'B', 'C', 'D'], 'The Commonwealth has 53 other nations besides Canada.'),
+      'f',
+      unrevised,
+    );
+    expect(faults).toHaveLength(1);
+    expect(faults[0]).toContain('"53 other nations"');
+  });
+
+  it('reads the French text too', () => {
+    const question = ask(['A', 'B', 'C', 'D']);
+    const french: QuestionLike = {
+      ...question,
+      options: [{ en: 'A', fr: 'Sa Majeste la reine Elizabeth II' }, ...(question.options ?? []).slice(1)],
+    };
+    // Both official languages ship, so a stale fact in only one of them is a
+    // stale fact shipped to half the players.
+    expect(citationFaults(french, 'f', unrevised)).toHaveLength(1);
+  });
+
+  it('does not fire on the prompt, which may name the stale topic', () => {
+    const question = ask(['A', 'B', 'C', 'D']);
+    expect(citationFaults({ ...question, id: 'q' }, 'f', unrevised)).toEqual([]);
+  });
+
+  it('does not fire when the flag names no banned terms', () => {
+    // `bannedFromAnswers` is required only when a flag declares
+    // `upstream: "does-not-revise"` (the schema enforces that). A flag against a
+    // maintained source keeps the old behaviour: volatile, re-verify, quarantine.
+    const maintained = new Map<string, SourceManifest>([
+      [
+        'discover-canada',
+        {
+          ...(unrevised.get('discover-canada') as SourceManifest),
+          knownStaleness: [
+            {
+              topic: 'Named office holders',
+              affects: ['How Canadians Govern Themselves'],
+              grain: 'chapter',
+              upstream: 'revises',
+            },
+          ],
+        },
+      ],
+    ]);
+    expect(citationFaults(ask(['Queen Elizabeth II', 'B', 'C', 'D']), 'f', maintained)).toEqual([]);
+  });
+
+  describe('whole-word matching', () => {
+    it.each([
+      ['53 other nations', 'There are 53 other nations.', true],
+      ['53 other nations', 'There are 153 other nations.', false],
+      ['308', 'There are 308 seats.', true],
+      ['308', 'Route 3081 is long.', false],
+      ['308', 'The number is 1308.', false],
+      ['Elizabeth', "l'Elizabeth", true],
+      ['Elizabeth', "Elizabeth's reign", true],
+      ['Elizabeth', 'Elizabethan', false],
+      ['Elizabeth', 'Queen Elizabeth II, 1952-2022.', true],
+      ['Her Majesty', 'a symbol of Her Majesty, the Queen', true],
+      ['Her Majesty', 'her majesty is lowercase here', true],
+    ])('%s in "%s" -> %s', (term, text, expected) => {
+      // Two directions, both proved rather than asserted in a comment. A
+      // substring match would report "153 other nations" and "1308" as hits,
+      // which is how a term list stops being usable and starts being argued
+      // with. A token match that treats the apostrophe as part of a word would
+      // miss "Elizabeth's", which is how a banned term ships.
+      expect(mentionsTerm(text, term)).toBe(expected);
+    });
+  });
+});
+
+describe('a live check binds to the chapters it claims to have checked (ADR-0016)', () => {
+  const registers = [...manifests.entries()];
+
+  it('read the registers it judges', () => {
+    expect(registers.length, 'no content/sources/*.json parsed').toBeGreaterThan(0);
+  });
+
+  it.each(registers.map(([id, manifest]) => [id, manifest] as const))(
+    '%s',
+    (id, manifest) => {
+      const titles = (manifest.chapters ?? []).flatMap((entry) => {
+        const title = str(entry.title);
+        return title === null ? [] : [title];
+      });
+      const faults = (manifest.liveChecks ?? []).flatMap((check, index) =>
+        (check.pages ?? []).flatMap((page) => {
+          const chapter = str(page.chapter);
+          return chapter !== null && !titles.includes(chapter)
+            ? [
+                `liveChecks[${String(index)}] checked "${chapter}", which is not a chapter of ` +
+                  `${id}. A live check has to join to the same chapter vocabulary a question's ` +
+                  `source.chapter uses, or it records a finding about a region nothing can cite. ` +
+                  `Chapters: ${titles.join(' | ')}`,
+              ]
+            : [];
+        }),
+      );
+      expect(faults, faults.join('\n')).toEqual([]);
+    },
+  );
+
+  it('declares bannedFromAnswers on every flag it says the source will not correct', () => {
+    // The schema enforces this per file; this is the corpus-wide restatement, and
+    // it is what fails if a register is ever validated by something looser.
+    const faults = registers.flatMap(([id, manifest]) =>
+      (manifest.knownStaleness ?? [])
+        .filter(
+          (flag) =>
+            str(flag.upstream) === 'does-not-revise' &&
+            (flag.bannedFromAnswers ?? []).length === 0,
+        )
+        .map(
+          (flag) =>
+            `${id}: the flag "${str(flag.topic) ?? '?'}" says the source will never correct it and ` +
+              `names no banned terms. That switches the periodic re-check off and puts nothing in ` +
+              `its place, which is worse than the busywork it replaces (ADR-0016).`,
+        ),
+    );
+    expect(faults, faults.join('\n')).toEqual([]);
+  });
+});
 
 describe('a question cites a cached source that exists, and says so (ADR-0003)', () => {
   describe('the predicate rejects each fault', () => {
