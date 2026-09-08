@@ -66,8 +66,7 @@ marching cubes on the CPU. It costs a few seconds per mesh and is otherwise equi
   first in every prompt and the studio-framing boilerplate goes last.
 - **SDXL-Turbo will not zoom out** when a subject has a canonical photographic framing. Asking for a "miniature
   souvenir desk model … standing on a plain white surface" reliably produces the whole object with margins, and it
-  is what makes `cn-tower` and `totem-pole` work (a direct prompt gives a cityscape and a close-up of one carved
-  face respectively).
+  is what makes `totem-pole` work (a direct prompt gives a close-up of one carved face).
 - Animals need "dry, no water, no reflection" or the matte keeps a puddle, which the shape model then extrudes into
   a slab under the animal.
 - **A straight-on view produces a flat relief.** This is the failure that costs the most rework: given a head-on
@@ -75,9 +74,8 @@ marching cubes on the CPU. It costs a few seconds per mesh and is otherwise equi
   and the first `chateau-laurier` was a 0.97 m facade card. Asking for "a three quarter angle showing two sides at
   once" fixes both. Check the printed `size` of every new asset — a depth far below the other two dimensions means a
   relief, not a model.
-- Souvenir framing has a cost: it often adds a base plate, and a wide one becomes part of the mesh (the first
-  `cn-tower` was 95 m across at 120 m tall because of its display disc). "no base plate, no stand, no platform"
-  removes it.
+- Souvenir framing has a cost: it often adds a base plate, and a wide one becomes part of the mesh. "no base plate,
+  no stand, no platform" helps but does not always win — it is what finally sent `cn-tower` to the parametric path.
 
 ## Parametric fallback
 
@@ -86,10 +84,18 @@ marching cubes on the CPU. It costs a few seconds per mesh and is otherwise equi
 unwrap-and-bake half of post-processing, using the mesh's own vertex colours — so one `generate.py` run still covers
 every key.
 
-Currently the map holds just `peace-tower`: every phrasing of a freestanding gothic clock tower attaches a church
-nave or a city skyline, because that is what the training data holds. Since the Peace Tower is the hub landmark, it is built from primitives with
-correct proportions (92 m tall, ~15 m plan, clock stage at 0.65 h, spire 0.24 h) and vertex colours baked to a
-texture through the same unwrap-and-bake path. Add a builder to `BUILDERS` to cover another key.
+Two keys are built this way, both because the image path could not be steered to a usable result:
+
+- **`peace-tower`** — every phrasing of a freestanding gothic clock tower attaches a church nave or a city skyline,
+  because that is what the training data holds. Built to the real proportions instead: 92 m tall on a ~15 m plan,
+  clock stage at 0.65 h, spire 0.24 h.
+- **`cn-tower`** — the souvenir framing that gets SDXL to show the whole tower always sits it on a wide display
+  disc, and that disc becomes part of the mesh (95 m across at 120 m tall in the first pass, 84 m after
+  re-prompting for "no base plate"). Built instead as a tapering hexagonal shaft with the SkyPod at 0.62 h and the
+  antenna to the tip: 15 m across at 120 m tall.
+
+Both bake their vertex colours to a texture through the same unwrap-and-bake path as generated meshes. Add a builder
+to `BUILDERS` to cover another key.
 
 ## Running it
 
