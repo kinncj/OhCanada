@@ -265,19 +265,56 @@ gh api repos/kinncj/OhCanada/environments/github-pages
   -> protection_rules: [branch_policy]; deployment branch policy allows "main" only
 gh api repos/kinncj/OhCanada/pages
   -> {"build_type":"workflow", ...}
+gh api repos/kinncj/OhCanada/branches/main/protection
+  -> required_status_checks.strict: true
+     required_status_checks.contexts: ["Lint, types, unit tests, content",
+                                       "Build, e2e, perf, a11y"]
+     required_pull_request_reviews: 1 approval, require_code_owner_reviews: true,
+                                    dismiss_stale_reviews: true
+     required_conversation_resolution: true
+     allow_force_pushes: false, allow_deletions: false
+     enforce_admins: false
 ```
 
 The `github-pages` environment's branch policy is a genuine second line: even if a deploy job were somehow
 triggered on another ref, the environment refuses the deployment. The `first_time_contributors` approval
 policy means a new contributor's first pull request does not run until a maintainer presses Approve.
 
-**Known weakness, deliberately accepted:** `main` has no branch protection and no rulesets
-(`gh api repos/kinncj/OhCanada/branches/main/protection` returns 404, `.../rulesets` returns `[]`). CI is
-therefore a check that is *run*, not a check that is *required*, and `.github/CODEOWNERS` currently only
-**requests** a review — "require review from code owners" is a branch-protection setting, and there is no
-branch protection. Nothing here lets an outsider merge: a fork PR still needs a maintainer to press Merge.
-It does mean the owner can push straight to `main` and deploy without review, which was fine for a
-single-maintainer private repository and is worth revisiting now. Recorded in §6.
+**`main` is protected, as of 2026-09-08.** Both `ci.yml` jobs are *required* status checks, `strict: true`
+so a stale branch must be brought up to date before it merges, one approving review is required and
+`require_code_owner_reviews: true` means `.github/CODEOWNERS` now genuinely **requires** the owner's review
+rather than merely requesting it. `dismiss_stale_reviews: true`, so pushing a new commit after an approval
+re-opens the review. `required_conversation_resolution: true`. Force pushes and deletions are refused for
+everyone, admins included. This is classic branch protection, not a ruleset — `gh api .../rulesets` still
+returns `[]`, which matters only if someone later migrates and expects to find the rules there.
+
+**The chosen residue: `enforce_admins: false`.** This was decided deliberately, not left at a default. The
+protection binds contributors; it does not bind the maintainer, who can still push straight to `main` and
+deploy without a review or a green check. Stated plainly because it is the honest shape of the control: a
+stranger's pull request cannot reach a `pages: write` workflow file without the owner approving it, and the
+*owner's own* commits still rest on the owner's discipline. That is a smaller gap than before — it no longer
+covers anyone else — but it is a gap, and it is the one that would let an unreviewed privileged change land.
+
+**A required context that nothing reports leaves every pull request pending forever.** This is the failure
+mode of this setting, and it is silent: GitHub waits for a check with that exact name and no timeout ever
+fires. The two required contexts are the `name:` values of the two jobs in `ci.yml`, character for
+character:
+
+| Required context | Comes from |
+|---|---|
+| `Lint, types, unit tests, content` | `ci.yml` job `static`, `name:` |
+| `Build, e2e, perf, a11y` | `ci.yml` job `browser`, `name:` |
+
+Verified two ways. Statically, by comparing the two strings byte for byte (`gh api
+.../branches/main/protection --jq '.required_status_checks.contexts[]'` against `grep '^    name:'
+.github/workflows/ci.yml`) — identical. And observed on a live pull request (#6, the open Dependabot
+bump), which reports check runs named exactly `Lint, types, unit tests, content` and `Build, e2e, perf,
+a11y`, sits at `reviewDecision: REVIEW_REQUIRED`, and shows `mergeStateStatus: BEHIND` — that last one
+being `strict: true` doing its job. So the matching is confirmed by behaviour, not only by string
+equality. **Those job names are load-bearing.** Renaming a job, splitting one in two, or adding a third gate job without updating
+the required contexts wedges every open pull request with no error message anywhere. If pull requests start
+hanging on "Expected — Waiting for status to be reported", this is why: compare the two lists above before
+looking at anything else.
 
 ### Dependabot
 
@@ -432,14 +469,16 @@ Recorded here rather than left implicit. None of these are "fine"; they are simp
   job": six numbered rules, the reasoning behind the `pull_request_target` and `workflow_run` prohibitions,
   the backing repository settings with the `gh api` calls that read them, and the one accepted weakness.
   Written as rules rather than as a description of the present arrangement, which was the point.
-- **`main` has no branch protection and no ruleset.** CI is run on every pull request but is not *required*
-  to pass before merge, and `.github/CODEOWNERS` therefore only requests a review rather than requiring one
-  — "require review from code owners" needs branch protection to exist. That was tolerable for a private
-  single-maintainer repository. Now that anyone can open a pull request it means the only thing standing
-  between an unreviewed change to a `pages: write` workflow and `main` is the maintainer's own discipline.
-  Not an infra decision — it is a repository setting the owner has to make — but it is the largest remaining
-  gap in §3's invariant and it should be closed with a ruleset requiring the `CI` checks and code-owner
-  review on `main`.
+- ~~**`main` has no branch protection and no ruleset.**~~ Closed 2026-09-08 by the owner. Both `ci.yml`
+  jobs are required status checks with `strict: true`, one approving review is required, and
+  `require_code_owner_reviews: true` makes `.github/CODEOWNERS` binding on pull requests instead of
+  advisory. Force pushes and branch deletion are refused for everyone. **Closed with classic branch
+  protection, not a ruleset** — the bullet asked for a ruleset, `gh api .../rulesets` still returns `[]`,
+  and that difference is a choice of API rather than unfinished work. Settings and the exact required
+  contexts are in §3.
+  What is left of this gap is one deliberate residue, `enforce_admins: false`: the protection binds
+  contributors, not the maintainer, so a direct push to `main` still bypasses both the checks and the
+  review. That was the owner's explicit choice among three options and is recorded rather than reopened.
 - ~~**A stray directory named `git@github.com:kinncj/`**, created by a `git clone <url> <url>` typo.~~
   Closed. Inspected before removal: 18 files, all stock hook samples, no remotes, an unborn `master` with no
   commits and empty `objects/` — nothing recoverable. Deleted, along with the `.gitignore` rule that existed

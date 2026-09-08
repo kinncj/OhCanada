@@ -30,6 +30,23 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# JOB NAMES ARE LOAD-BEARING - DO NOT RENAME WITHOUT READING THIS
+# The `name:` of each job below is a *required status check* on `main` (classic
+# branch protection, set 2026-09-08; docs/runbook.md 3). The required contexts
+# are those two strings, character for character:
+#
+#     "Lint, types, unit tests, content"
+#     "Build, e2e, perf, a11y"
+#
+# GitHub matches a required check by name and waits forever for one that never
+# reports. So renaming a job here, splitting one in two, or adding a third gate
+# job without updating the branch protection wedges EVERY open pull request on
+# "Expected - Waiting for status to be reported", with no error anywhere. It
+# fails silent, not loud.
+#
+# If you change a `name:`, update the contexts in the same change:
+#   gh api repos/kinncj/OhCanada/branches/main/protection \
+#     --jq '.required_status_checks.contexts[]'
 jobs:
   static:
     name: Lint, types, unit tests, content

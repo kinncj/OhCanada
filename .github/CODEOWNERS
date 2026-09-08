@@ -15,15 +15,18 @@
 # workflow's `on:` or `permissions:` block. This file is the review control; the
 # invariant is the execution control. They are not substitutes.
 #
-# WHAT THIS FILE DOES AND DOES NOT DO - read this before relying on it.
-# CODEOWNERS *requests* a review. It does not *require* one. Requiring it is a
-# branch-protection setting ("Require review from Code Owners") on `main`, and
-# `main` currently has no branch protection and no ruleset. So today this file
-# guarantees the owner is asked, not that the owner answered. That was an
-# acceptable gap for a private repository with one maintainer; it is the largest
-# remaining hole now that anyone can open a pull request, and it is logged in
-# docs/runbook.md 6. Do not read the rules below as an enforced gate until a
-# ruleset exists.
+# WHAT THIS FILE DOES, AND THE ONE CASE WHERE IT DOES NOT.
+# On a pull request these rules are ENFORCED, not advisory: `main` has classic
+# branch protection with `require_code_owner_reviews: true` and one required
+# approval, set 2026-09-08. A pull request touching a path below does not merge
+# until its owner approves it, and pushing a new commit after an approval
+# dismisses that approval.
+#
+# The exception, deliberately chosen: `enforce_admins: false`. Branch protection
+# binds contributors, not the maintainer, so a direct push to `main` by the owner
+# bypasses this file entirely - no review, no required checks. That is recorded
+# in docs/runbook.md 3 and 6 rather than hidden. It means this file protects the
+# workflows from everyone except the one person who can also change this file.
 #
 # This rule, not a directory layout, is what makes those files owned. The
 # workflows briefly lived in infra/ as well so that "the pipeline is infra's";
