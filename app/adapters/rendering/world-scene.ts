@@ -1,5 +1,5 @@
 import * as THREE from 'three/webgpu';
-import type { District } from '@domain/district';
+import type { District, Landmark } from '@domain/district';
 import type { GraphicsPreset } from '@application/ports';
 import { hashString } from '@common/rng';
 import { makeHeightFunction, type HeightFn } from './procedural/noise';
@@ -107,12 +107,21 @@ export class WorldScene {
     const terrain = buildTerrain(s.size, heightAt, s.terrain.palette, snow, textures, segments, district.subject === 'hub' ? 34 : 22);
     onProgress?.(0.4, 'textures and models');
     const [kit, protos] = await Promise.all([kitPromise, vegPromise]);
-    onProgress?.(0.78, 'placing landmarks');
+    onProgress?.(0.78, 'landmarks');
 
     const rects: { x: number; z: number; w: number; d: number }[] = [];
     for (const w of s.water ?? []) rects.push({ x: w.position[0], z: w.position[2], w: w.size[0], d: w.size[1] });
     const exclusions = [{ x: 0, z: 0, r: 36 }, ...district.triggers.map((t) => ({ x: t.position[0], z: t.position[2], r: t.radius + 3 })), ...district.npcs.map((n) => ({ x: n.position[0], z: n.position[2], r: (n.wanderRadius ?? 2) + 2 }))];
-    const landmarkBuilds = s.landmarks.map((l) => ({ l, b: buildLandmark(l, kit, policy === 'lite') }));
+    const yieldToBrowser = (): Promise<void> => new Promise((r) => setTimeout(r, 0));
+    const landmarkBuilds: { l: Landmark; b: ReturnType<typeof buildLandmark> }[] = [];
+    const totalLandmarks = s.landmarks.length + district.pois.filter((p) => p.landmark).length;
+    for (const l of s.landmarks) {
+      landmarkBuilds.push({ l, b: buildLandmark(l, kit, policy === 'lite') });
+      if (landmarkBuilds.length % 3 === 0) {
+        onProgress?.(0.78 + 0.14 * (landmarkBuilds.length / Math.max(1, totalLandmarks)), `landmarks ${landmarkBuilds.length}/${totalLandmarks}`);
+        await yieldToBrowser();
+      }
+    }
     // POIs may carry a hero asset key (assets/dist/manifest models) or a procedural landmark type.
     for (const poi of district.pois) {
       if (!poi.landmark) continue;
@@ -138,6 +147,8 @@ export class WorldScene {
       // A hero key with no generated asset yet places nothing: better an empty plot than a generic box.
       if (!PROCEDURAL_TYPES.has(poi.landmark)) continue;
       landmarkBuilds.push({ l: { id: poi.id, type: poi.landmark, position: poi.position }, b: buildLandmark({ id: poi.id, type: poi.landmark, position: poi.position }, kit, policy === 'lite') });
+      onProgress?.(0.78 + 0.14 * (landmarkBuilds.length / Math.max(1, totalLandmarks)), `landmarks ${landmarkBuilds.length}/${totalLandmarks}`);
+      await yieldToBrowser();
     }
     for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
 
@@ -174,8 +185,10 @@ export class WorldScene {
       scene.pending.push(beacon);
       scene.markers.push({ id: `poi:${poi.id}`, object: beacon });
     }
+    let markerCount = 0;
     for (const t of district.triggers) {
       const marker = scene.buildMarker(t.kind, t.radius);
+      if (++markerCount % 6 === 0) await yieldToBrowser();
       marker.position.set(t.position[0], heightAt(t.position[0], t.position[2]) + 0.05, t.position[2]);
       marker.name = `trigger:${t.id}`;
       scene.pending.push(marker);

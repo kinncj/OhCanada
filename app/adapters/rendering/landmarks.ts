@@ -104,6 +104,8 @@ const flameMat = new THREE.MeshStandardNodeMaterial({ color: 0xff9a2a, emissive:
 const bulbMat = new THREE.MeshStandardNodeMaterial({ color: 0xfff3c4, emissive: 0xffe2a0, emissiveIntensity: 2.2 });
 const redPaint = new THREE.MeshStandardNodeMaterial({ color: 0xc8102e, roughness: 0.5, metalness: 0.2 });
 let flagTexture: THREE.CanvasTexture | null = null;
+/** Phone tier: simplified facades (no window instancing, no dormers). Set per build, single-threaded. */
+let liteMode = false;
 
 function box(w: number, h: number, d: number, mat: THREE.Material, x = 0, y = 0, z = 0): THREE.Mesh {
   const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
@@ -187,7 +189,7 @@ function facade(kit: MaterialKit, w: number, h: number, d: number, opts: { roof:
   g.add(box(w + 0.7, 1.1, d + 0.7, kit.darkStone, 0, 0, 0)); // plinth
   g.add(box(w + 0.5, 0.45, d + 0.5, kit.darkStone, 0, h - 0.45, 0)); // cornice
   const floors = Math.max(1, Math.floor((h - 2.5) / 3.6));
-  for (let f = 1; f < floors; f++) g.add(box(w + 0.3, 0.22, d + 0.3, kit.darkStone, 0, 2.2 + f * 3.6 - 1.6, 0)); // string courses
+  for (let f = 1; f < (liteMode ? 1 : floors); f++) g.add(box(w + 0.3, 0.22, d + 0.3, kit.darkStone, 0, 2.2 + f * 3.6 - 1.6, 0)); // string courses
   if (opts.windows !== false && !liteMode) {
     const bays = Math.max(1, Math.floor(w / 3.4));
     const count = floors * bays * 2;
@@ -618,9 +620,9 @@ export const PROCEDURAL_TYPES: ReadonlySet<string> = new Set([
 export const LANDMARK_MODEL_KEYS = ['bench-wood', 'bench-street', 'pier', 'fort', 'facade-apartments', 'facade-factory', 'rock-boulder', 'rock-2', 'rock-3', 'hydrant', 'power-pole', 'utility-box', 'barrier', 'iron-gate'] as const;
 
 /** `lite` skips window instancing and dormers so software renderers (CI) and weak GPUs draw far fewer triangles. */
-let liteMode = false;
 
 export function buildLandmark(l: Landmark, kit: MaterialKit, lite = false): LandmarkBuild {
+  liteMode = lite;
   liteMode = lite;
   const builders: Record<string, (k: MaterialKit) => LandmarkBuild> = {
     parliament, flame, flagpole, lamp, bench, station, locks,
