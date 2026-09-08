@@ -5,8 +5,7 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup lint typecheck test test-e2e test-perf test-a11y \
-        assets validate-content verify-content verify-art build preview clean \
-        sync-workflows
+        assets validate-content verify-content verify-art build preview clean
 
 help: ## List every target
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -51,10 +50,9 @@ build: validate-content ## Validate content, build the site, then check the arte
 	npm run build
 	node scripts/deploy-check.mjs
 
-sync-workflows: ## Copy infra/github/workflows to .github/workflows (infra is the source of truth)
-	@rsync -a --delete infra/github/workflows/ .github/workflows/ 2>/dev/null \
-		|| { rm -f .github/workflows/*.yml && cp infra/github/workflows/*.yml .github/workflows/; }
-	@echo "sync-workflows: .github/workflows now matches infra/github/workflows"
+# `sync-workflows` used to live here, copying infra/github/workflows into
+# .github/workflows. Both the target and the mirror are gone: .github/workflows
+# is the only copy and is edited directly. infra/README.md explains why.
 
 preview: ## Serve the production build locally
 	npm run preview

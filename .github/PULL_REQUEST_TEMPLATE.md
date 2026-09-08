@@ -40,7 +40,7 @@ Tick only what applies; delete the rest.
 - [ ] Within the payload budgets — `make build` runs `scripts/deploy-check.mjs`, which enforces them
 
 **Infrastructure** (`infra/**`, `.github/**`, `Makefile`, `scripts/**`)
-- [ ] `.github/workflows/` is a byte-identical copy of `infra/github/workflows/` (`make sync-workflows`)
+- [ ] Workflow changes are made in `.github/workflows/` — the only copy; there is no mirror to sync
 - [ ] Any new gate has been seen to FAIL on a real violation, not just pass — say how in the description
 
 ## Rollback

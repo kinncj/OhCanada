@@ -9,9 +9,13 @@
  *      deployable artefact exceeds `budgets.totalPayloadBytes` (CLAUDE.md,
  *      "Budgets (CI fails on breach)") — see INITIAL PAYLOAD below;
  *   4. `basePath` in content/game.config.json does not match the repository
- *      the site is published from (a wrong base ships a blank page);
- *   5. .github/workflows/*.yml has drifted from infra/github/workflows/*.yml
- *      — infra/ is the source of truth and .github/ is its checked-in copy.
+ *      the site is published from (a wrong base ships a blank page).
+ *
+ * It used to also check that .github/workflows/ matched a mirror of it under
+ * infra/github/workflows/. That mirror is gone — see infra/README.md. GitHub
+ * only ever executes .github/workflows/, so the second copy was inert, and this
+ * check existed solely to police a duplicate that did nothing. Deleting the
+ * duplicate deletes the reason for the check.
  *
  * The payload budget lives here rather than in a Playwright test because it is a
  * property of the artefact, not of a page load: it must hold before anything is
@@ -29,8 +33,6 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST_DIR = join(ROOT, 'dist');
 const CONFIG_FILE = join(ROOT, 'content', 'game.config.json');
-const INFRA_WORKFLOWS = join(ROOT, 'infra', 'github', 'workflows');
-const REPO_WORKFLOWS = join(ROOT, '.github', 'workflows');
 
 const MAX_FILE_BYTES = 100 * 1024 * 1024;
 const REQUIRED_DIST_FILES = ['index.html'];
@@ -317,41 +319,6 @@ if (config !== null) {
   }
 }
 
-// ------------------------------------------------------------- workflows ---
-
-const infraWorkflows = existsSync(INFRA_WORKFLOWS)
-  ? readdirSync(INFRA_WORKFLOWS).filter((f) => f.endsWith('.yml')).sort()
-  : [];
-const repoWorkflows = existsSync(REPO_WORKFLOWS)
-  ? readdirSync(REPO_WORKFLOWS).filter((f) => f.endsWith('.yml')).sort()
-  : [];
-
-if (infraWorkflows.length === 0) {
-  fail('infra/github/workflows/ has no .yml files; the pipeline source of truth is missing.');
-}
-
-for (const name of infraWorkflows) {
-  if (!repoWorkflows.includes(name)) {
-    fail(`.github/workflows/${name} is missing. Copy it from infra/github/workflows/.`);
-    continue;
-  }
-  const source = readFileSync(join(INFRA_WORKFLOWS, name), 'utf8');
-  const copy = readFileSync(join(REPO_WORKFLOWS, name), 'utf8');
-  if (source !== copy) {
-    fail(
-      `.github/workflows/${name} differs from infra/github/workflows/${name}. ` +
-        'Edit the infra copy, then run `make sync-workflows`. (A Dependabot action ' +
-        'bump edits only the .github copy, so it will land here first.)',
-    );
-  }
-}
-
-for (const name of repoWorkflows) {
-  if (!infraWorkflows.includes(name)) {
-    fail(`.github/workflows/${name} has no source in infra/github/workflows/.`);
-  }
-}
-
 // ---------------------------------------------------------------- report ---
 
 if (failures.length > 0) {
@@ -364,5 +331,5 @@ if (failures.length > 0) {
 const distBytes = distFiles.reduce((sum, file) => sum + statSync(file).size, 0);
 console.log(
   `deploy-check: OK - ${distFiles.length} file(s), ${mib(distBytes)} on disk in dist/, ` +
-    `${payloadSummary}, base path and ${infraWorkflows.length} workflow(s) in sync.`,
+    `${payloadSummary}, base path correct.`,
 );

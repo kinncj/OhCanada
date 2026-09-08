@@ -1,12 +1,16 @@
 # Code owners. GitHub requests a review from these owners on every pull request
 # that touches a matching path.
 #
-# The two paths below are the ones where a bad change is not just a bug:
-# .github/workflows contains a job with `pages: write` and `id-token: write`, and
-# infra/github/workflows is its source of truth. A pull request that edits either
-# is a pull request that can publish to the live site or mint an OIDC token, so
-# it does not merge without the repository owner looking at it. This repository
-# is open source; assume pull requests from strangers.
+# .github/workflows contains a job with `pages: write` and `id-token: write`. A
+# pull request that edits it is a pull request that can publish to the live site
+# or mint an OIDC token, so it does not merge without the repository owner
+# looking at it. This repository is open source; assume pull requests from
+# strangers.
+#
+# This rule, not a directory layout, is what makes those files owned. The
+# workflows briefly lived in infra/ as well so that "the pipeline is infra's";
+# that mirror bought nothing and cost a red pull request per action bump
+# (infra/README.md). The review requirement below is the real control.
 
 *                       @kinncj
 

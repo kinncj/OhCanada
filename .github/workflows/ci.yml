@@ -1,6 +1,8 @@
-# Source of truth: infra/github/workflows/ci.yml
-# .github/workflows/ci.yml is a byte-identical copy; scripts/deploy-check.mjs
-# fails the build if the two drift.
+# This file is the only copy. It used to be a generated duplicate of
+# infra/github/workflows/ci.yml, kept in step by `make sync-workflows` and
+# policed by scripts/deploy-check.mjs; that mirror is gone and infra/README.md
+# says why. Edit this file directly. Ownership is enforced by .github/CODEOWNERS,
+# which is where it belongs, not by which directory the file sits in.
 #
 # Pull requests only. `push: main` used to be here too, but deploy-pages.yml now
 # runs this same gate set before it publishes, so a second copy on the same

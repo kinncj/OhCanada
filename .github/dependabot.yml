@@ -12,6 +12,23 @@ updates:
     versioning-strategy: increase
     labels:
       - dependencies
+    ignore:
+      # TypeScript 7.0 is published as `latest`, and Dependabot tried to take it
+      # on 2026-09-08. It cannot: every typescript-eslint release, 8.70.0 latest
+      # and 8.70.1-alpha.0 canary alike, declares `peer typescript ">=4.8.4
+      # <6.1.0"`. Dependabot retried with `npm install --force`, which forces a
+      # full re-resolve, and that collided with its own `--min-release-age=3`
+      # cooldown - the pinned @typescript-eslint/eslint-plugin@8.70.0 was less
+      # than three days old, so it was invisible to the resolver and npm exited
+      # ETARGET. The whole npm job failed with `dependency_file_not_resolvable`,
+      # taking every other npm update in the run down with it.
+      #
+      # So this is not a preference. Until typescript-eslint widens its peer
+      # range, TypeScript 7 is uninstallable here, and asking Dependabot to try
+      # every week just breaks the ecosystem weekly. Delete this entry the day
+      # `npm view typescript-eslint peerDependencies.typescript` admits 7.
+      - dependency-name: typescript
+        versions: [">=7"]
     groups:
       # One pull request per family keeps CI runs down and makes a bad update
       # easy to revert as a unit.
@@ -30,6 +47,15 @@ updates:
           - "@playwright/*"
           - "@axe-core/*"
 
+  # This ecosystem scans .github/workflows/ and nothing else. That used to be a
+  # problem: the workflows were generated copies of infra/github/workflows/, so
+  # a bump landed in the copy, drifted from the source, and deploy-check failed
+  # the pull request. Five of them, on day one. The mirror is gone - see
+  # infra/README.md - so bumps now land in the file that actually runs.
+  #
+  # `labels` below need the labels to exist in the repository first; Dependabot
+  # comments on the pull request and gives up otherwise, which is what it did on
+  # 2026-09-08. `ci` and `dependencies` now exist.
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -39,3 +65,10 @@ updates:
     labels:
       - dependencies
       - ci
+    groups:
+      # One pull request for all of them, for the same reason the npm groups
+      # exist: five separate action bumps meant five full runs of a gate set
+      # that takes about three minutes each, to review one decision.
+      actions:
+        patterns:
+          - "*"

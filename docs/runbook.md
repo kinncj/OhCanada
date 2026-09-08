@@ -90,8 +90,10 @@ is live:
 
 ## 3. Deploy pipeline: what runs, and where it is defined
 
-- **Source of truth is `infra/github/workflows/`.** `.github/workflows/` is a byte-identical copy;
-  `scripts/deploy-check.mjs` fails the build if the two drift. Repair with `make sync-workflows`.
+- **`.github/workflows/` is the only copy.** Edit it directly. It used to be generated from
+  `infra/github/workflows/` by `make sync-workflows`, with a drift check in `scripts/deploy-check.mjs`;
+  that mirror was removed on 2026-09-08 and `infra/README.md` explains why. Ownership of these files —
+  they hold `pages: write` and `id-token: write` — is enforced by `.github/CODEOWNERS`.
 - **`ci.yml`** runs on pull requests only, in two parallel jobs, calling Makefile targets and nothing else.
 - **`deploy-pages.yml`** runs on push to `main` and on manual dispatch. It runs the *same* gate set before
   it builds and uploads, so the bytes that ship are the bytes that were verified. This is deliberate; the
@@ -99,11 +101,19 @@ is live:
 - Everything a workflow does is a `make` target. If you cannot reproduce a CI failure locally by running
   the same target, that is a bug in the pipeline, not a flake to be re-run.
 
-### Known wrinkle: Dependabot and the workflow copies
+### Dependabot
 
-Dependabot's `github-actions` ecosystem only sees `.github/workflows/`. An action bump therefore edits the
-copy and not the source, and `deploy-check` will fail that PR with a drift error. This is intended — the
-fix is to apply the same bump to `infra/github/workflows/` and run `make sync-workflows`.
+- **Action bumps** arrive as one grouped pull request. They edit `.github/workflows/` directly, which is
+  the file that runs, so a green pull request can just be merged. Before 2026-09-08 they could not: the
+  workflows were generated copies and every action bump failed the drift check. That is fixed at the
+  root, not worked around.
+- **`typescript` is pinned below 7** in `.github/dependabot.yml`. Not a preference — every
+  typescript-eslint release still declares `peer typescript ">=4.8.4 <6.1.0"`, so TypeScript 7 cannot be
+  installed here, and Dependabot's retry-with-`--force` path failed the entire npm ecosystem run when it
+  tried. Remove the `ignore` entry when typescript-eslint's peer range admits 7.
+- **Labels referenced in `dependabot.yml` must exist in the repository.** Dependabot does not create
+  them; it comments on the pull request and skips labelling. `dependencies` and `ci` were created on
+  2026-09-08 after it did exactly that.
 
 ---
 
@@ -117,7 +127,6 @@ fix is to apply the same bump to `infra/github/workflows/` and run `make sync-wo
 | Initial payload over `budgets.initialPayloadBytes` | CLAUDE.md budgets |
 | Fetchable `dist/` over `budgets.totalPayloadBytes` | CLAUDE.md budgets |
 | `basePath` not matching the publishing repository | ADR-0006 |
-| `.github/workflows` drifted from `infra/github/workflows` | this runbook, §3 |
 
 "Initial payload" is defined precisely in the header of that script: `index.html` plus everything it
 statically references plus everything those chunks reach by static ES import, excluding `.map` files and
