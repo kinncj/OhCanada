@@ -6,21 +6,61 @@
   "$defs": {
     "id": {
       "title": "Identifier",
-      "description": "Stable kebab-case identifier, unique within its collection.",
+      "description": "Stable kebab-case identifier, unique within its collection. Unbranded: a property that $refs this def is a plain string in the port type. When the value names an entity the id vocabulary covers, $ref the branded def below instead.",
       "type": "string",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
       "minLength": 1,
       "maxLength": 64
     },
-    "locale": {
-      "title": "Locale",
-      "description": "A supported UI locale. EN and FR ship from the first commit.",
+
+    "levelId": {
+      "title": "Level id",
+      "description": "Names a level document, `content/levels/<id>.json`. Mirrored by the branded `LevelId` in app/domain/ids.ts.",
+      "$ref": "#/$defs/id"
+    },
+    "questId": {
+      "title": "Quest id",
+      "description": "Names a quest document. Mirrored by the branded `QuestId`.",
+      "$ref": "#/$defs/id"
+    },
+    "questionId": {
+      "title": "Question id",
+      "description": "Names a question in a subject's bank. Mirrored by the branded `QuestionId`.",
+      "$ref": "#/$defs/id"
+    },
+    "subjectId": {
+      "title": "Subject id",
+      "description": "One of the ten Discover Canada subjects; also the question-bank key. Mirrored by the branded `SubjectId`.",
+      "$ref": "#/$defs/id"
+    },
+    "characterId": {
+      "title": "Character id",
+      "description": "Names a character document. Mirrored by the branded `CharacterId`.",
+      "$ref": "#/$defs/id"
+    },
+    "poiId": {
+      "title": "Point-of-interest id",
+      "description": "Names a landmark a player can engage on a level. Mirrored by the branded `PoiId`.",
+      "$ref": "#/$defs/id"
+    },
+
+    "localeCode": {
+      "title": "Locale code",
+      "description": "A supported UI locale. EN and FR ship from the first commit. Mirrored by the branded `LocaleCode`.",
       "type": "string",
       "enum": ["en", "fr"]
     },
+    "isoInstant": {
+      "title": "ISO instant",
+      "description": "ISO-8601 instant, as persisted in save data and in content `asOf` fields. Mirrored by the branded `IsoInstant`.",
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1
+    },
+
     "localizedText": {
       "title": "Localized text",
-      "description": "A string in every supported locale. Both EN and FR are mandatory.",
+      "description": "A string in every supported locale. Both EN and FR are mandatory, which is how ADR-0003's \"missing EN or FR text\" clause is enforced per document rather than per string table.",
       "type": "object",
       "properties": {
         "en": { "type": "string", "minLength": 1 },
@@ -29,6 +69,213 @@
       "required": ["en", "fr"],
       "additionalProperties": false
     },
+    "factSource": {
+      "title": "Fact source",
+      "description": "Where a claim about Canada comes from. Written by the content-author agent, never by the verifier (ADR-0003). The same block backs a question, a landmark blurb and a line of NPC dialogue, because a wrong fact is equally wrong wherever a player reads it.",
+      "type": "object",
+      "properties": {
+        "sourceId": {
+          "description": "Which cached source this came from: the `id` of a content/sources/<id>.json manifest. Without it a chapter title and a hash are strings pointing at nothing, and ADR-0003's whole mechanism - a status granted for a hash, invalidated when the hash moves - has no second end. It is also what lets a gate read the source's knownStaleness list and insist that a question drawn from a region known to be out of date is marked volatile.",
+          "$ref": "#/$defs/id"
+        },
+        "chapter": {
+          "description": "Chapter or section heading, exactly as it appears in the cited source. Must match one of that source manifest's chapters[].title.",
+          "type": "string",
+          "minLength": 1
+        },
+        "url": { "type": "string", "format": "uri", "minLength": 1 },
+        "sourceHash": {
+          "description": "SHA-256 of what the verifier actually read: the manifest's extractedTextSha256 when the source has an extraction, and its sha256 otherwise. Hashing what was read rather than what was downloaded is the difference that matters - a re-extraction with a different tool changes the text a claim was checked against without touching the document.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "asOf": {
+          "description": "When the source was fetched. A volatile item whose asOf exceeds 180 days is quarantined.",
+          "$ref": "#/$defs/isoInstant"
+        },
+        "volatile": {
+          "description": "True when the fact can change without notice (office-holders, dates, numbers). Volatile items are re-verified every run.",
+          "type": "boolean"
+        }
+      },
+      "required": ["sourceId", "chapter", "url", "sourceHash", "asOf", "volatile"],
+      "additionalProperties": false
+    },
+
+    "factVerification": {
+      "title": "Fact verification",
+      "description": "The block the content-verifier agent writes, and the only block it may write (ADR-0003). Four statuses: `unverified` before a check has run, `verified` when every check passed for this sourceHash, `rejected` when the verifier's judgement failed and the text goes back to the author, `quarantined` when a granted status was later invalidated by source drift or age and it goes back to the verifier. `rejected` and `quarantined` are both excluded from the build and differ only in who owns the next move.",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["unverified", "verified", "quarantined", "rejected"]
+        },
+        "model": {
+          "description": "The model that granted the status, so a bad verifier run can be identified later.",
+          "type": "string"
+        },
+        "checkedAt": {
+          "description": "When the check ran. null while the status is unverified.",
+          "anyOf": [{ "$ref": "#/$defs/isoInstant" }, { "type": "null" }]
+        },
+        "sourceHash": {
+          "description": "The sourceHash the status was granted for; a mismatch with the source block invalidates it. Empty string while unverified.",
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{64})?$"
+        },
+        "evidence": {
+          "description": "The passage from the cited section that entails the claim, quoted exactly. Empty is only tolerable when nothing has been granted.",
+          "type": "string"
+        }
+      },
+      "required": ["status", "model", "checkedAt", "sourceHash", "evidence"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "ADR-0003's CI clause, stated in the schema so make validate-content fails on it and not only verify-content: a verified status with no quoted passage is an assertion, and this project does not accept assertions. The conditional only names properties this object already declares, so it adds no unmirrored shape (ADR-0007).",
+          "if": {
+            "properties": { "status": { "const": "verified" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "evidence": { "minLength": 1 },
+              "model": { "minLength": 1 },
+              "checkedAt": { "not": { "type": "null" } },
+              "sourceHash": { "pattern": "^[0-9a-f]{64}$" }
+            },
+            "required": ["evidence", "model", "checkedAt", "sourceHash"]
+          }
+        }
+      ]
+    },
+
+    "factClaim": {
+      "title": "Fact claim",
+      "description": "Attached to player-facing prose outside the question bank - a landmark blurb, a line of NPC dialogue - so that ADR-0003 governs every sentence stating something about Canada, not only the ones on a question card. `factual` is the author's declaration that this text asserts a fact; it is required rather than optional so the judgement is recorded for every line instead of defaulting to unchecked. When it is true, source and verification must both be present and the verifier treats the text exactly as it treats a question.",
+      "type": "object",
+      "properties": {
+        "factual": {
+          "description": "Does this text state a fact about Canada? Greetings, instructions and flavour are false; anything a player could repeat in the citizenship test is true.",
+          "type": "boolean"
+        },
+        "source": {
+          "anyOf": [{ "$ref": "#/$defs/factSource" }, { "type": "null" }]
+        },
+        "verification": {
+          "anyOf": [{ "$ref": "#/$defs/factVerification" }, { "type": "null" }]
+        }
+      },
+      "required": ["factual", "source", "verification"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "A claimed fact must be sourced and checked. Only property names this object already declares appear here (ADR-0007).",
+          "if": {
+            "properties": { "factual": { "const": true } },
+            "required": ["factual"]
+          },
+          "then": {
+            "properties": {
+              "source": { "not": { "type": "null" } },
+              "verification": { "not": { "type": "null" } }
+            },
+            "required": ["source", "verification"]
+          }
+        }
+      ]
+    },
+
+    "nationName": {
+      "title": "Nation name",
+      "description": "One nation, in the form that nation uses for itself: Mi'kmaq, Algonquin Anishinaabe, Haudenosaunee (Kanien'keha:ka), Nunatsiavummiut, Metis Nation of Alberta. The pattern is a deny-list, applied case-insensitively and ignoring surrounding whitespace, of the category words that are not nations - Indigenous, Aboriginal, First Nations, Inuit, Metis, tribal, traditional, unspecified, generic, n/a, TBD and the rest. docs/content-review.md 3.1 makes those a build failure rather than a warning, because \"a generic Indigenous person\" is the failure this rule exists to prevent and a vague value here is that failure wearing the field's name. Two nations may be named only when the depiction is explicitly of two; two names used as hedging is the vague value spelled longer, and no gate can tell the difference - only a reader can.",
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80,
+      "not": { "pattern": "^\\s*(?:[Nn][Aa][Tt][Ii][Vv][Ee]\\s+[Aa][Mm][Ee][Rr][Ii][Cc][Aa][Nn]|[Aa][Mm][Ee][Rr][Ii][Cc][Aa][Nn]\\s+[Ii][Nn][Dd][Ii][Aa][Nn]|[Nn][Oo][Rr][Tt][Hh][Ee][Rr][Nn]\\s+[Cc][Aa][Nn][Aa][Dd][Aa]|[Ff][Ii][Rr][Ss][Tt]\\s+[Nn][Aa][Tt][Ii][Oo][Nn][Ss]|[Ff][Ii][Rr][Ss][Tt]\\s+[Nn][Aa][Tt][Ii][Oo][Nn]|[Tt][Rr][Aa][Dd][Ii][Tt][Ii][Oo][Nn][Aa][Ll]|[Uu][Nn][Ss][Pp][Ee][Cc][Ii][Ff][Ii][Ee][Dd]|[Ii][Nn][Dd][Ii][Gg][Ee][Nn][Oo][Uu][Ss]|[Aa][Bb][Oo][Rr][Ii][Gg][Ii][Nn][Aa][Ll]|[Nn][Oo][Rr][Tt][Hh][Ee][Rr][Nn]|[Uu][Nn][Kk][Nn][Oo][Ww][Nn]|[Vv][Aa][Rr][Ii][Oo][Uu][Ss]|[Gg][Ee][Nn][Ee][Rr][Ii][Cc]|[Nn][Aa][Tt][Ii][Vv][Ee]|[Ii][Nn][Dd][Ii][Aa][Nn]|[Tt][Rr][Ii][Bb][Aa][Ll]|[Ii][Nn][Uu][Ii][Tt]|[Mm][Ee][Tt][Ii][Ss]|[Mm][\u00c9\u00e9][Tt][Ii][Ss]|[Tt][Rr][Ii][Bb][Ee]|[Mm][Ii][Xx][Ee][Dd]|[Ii][Nn][Uu][Kk]|[Nn][Oo][Nn][Ee]|[Tt][Oo][Dd][Oo]|[Tt][Bb][Dd]|[Nn]\\/[Aa]|[Nn][Aa])\\s*$" }
+    },
+
+    "nationSource": {
+      "title": "Nation source",
+      "description": "Evidence that a named nation was copied from somewhere real. Per docs/content-review.md 3.2 the source must be the nation's own published material - its government, its cultural centre, its language authority - or a registry that nation is listed in. Same author/verifier split as a question: the author writes publisher, url, sourceHash and asOf; the verifier writes the verification block and nothing else. What this proves is narrow and is stated so nobody reads it as more: that the name appears on a page that was fetched and hashed. It does not prove the name is right, that the nation would recognise the spelling, or that this is the nation actually depicted. Only a Tier 3 reviewer checks those, and this project has none.",
+      "type": "object",
+      "properties": {
+        "publisher": {
+          "description": "Whose material this is, named: the nation's government, cultural centre, language authority, or the registry.",
+          "type": "string",
+          "minLength": 1
+        },
+        "url": { "type": "string", "format": "uri", "minLength": 1 },
+        "sourceHash": {
+          "description": "SHA-256 of the cached page under content/sources/, empty until the verifier has fetched it.",
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{64})?$"
+        },
+        "asOf": {
+          "anyOf": [{ "$ref": "#/$defs/isoInstant" }, { "type": "null" }]
+        },
+        "verification": { "$ref": "#/$defs/factVerification" }
+      },
+      "required": ["publisher", "url", "sourceHash", "asOf", "verification"],
+      "additionalProperties": false
+    },
+
+    "communityReview": {
+      "title": "Community review",
+      "description": "Whether the nation depicted has been asked, and what they said. docs/content-review.md 1 extends ADR-0003's separation of duties one step: no agent may grant cultural sign-off, ever, for any reason - an agent may write status \"not-sought\" and nothing else. THE SCHEMA CANNOT ENFORCE THAT AND MUST NOT BE READ AS DOING SO: a schema constrains a value, not its author, and any schema that permits \"granted\" at all permits an agent to write it. What the schema does is raise the cost and change the shape of the lie - a fabricated sign-off must now name a person, an organisation, a date and a scope, which is a specific and checkable falsehood rather than a flag flip, and \"not-sought\" is forced to carry no names at all so a review cannot be half-claimed. The author rule itself needs a gate that reads git history: verify-content must fail when a commit authored by an agent moves status away from not-sought. That is slice 1 task 1.17's, and until it exists this block is enforced by review.",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["not-sought", "sought", "granted", "refused"]
+        },
+        "reviewer": {
+          "description": "The person who reviewed it, named. Null when nothing has been sought.",
+          "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "organisation": {
+          "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "date": {
+          "anyOf": [{ "$ref": "#/$defs/isoInstant" }, { "type": "null" }]
+        },
+        "scope": {
+          "description": "What exactly was reviewed. A sign-off on a hat is not a sign-off on a character.",
+          "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
+        "note": { "type": "string" }
+      },
+      "required": ["status", "reviewer", "organisation", "date", "scope", "note"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "not-sought carries no names: a review cannot be half-claimed, and an agent writing the only status it may write cannot smuggle a person into the record. Every other status must name a person, an organisation, a date and a scope. Only property names this object already declares appear here (ADR-0007).",
+          "if": {
+            "properties": { "status": { "const": "not-sought" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "reviewer": { "type": "null" },
+              "organisation": { "type": "null" },
+              "date": { "type": "null" },
+              "scope": { "type": "null" }
+            }
+          },
+          "else": {
+            "properties": {
+              "reviewer": { "not": { "type": "null" } },
+              "organisation": { "not": { "type": "null" } },
+              "date": { "not": { "type": "null" } },
+              "scope": { "not": { "type": "null" } }
+            },
+            "required": ["reviewer", "organisation", "date", "scope"]
+          }
+        }
+      ]
+    },
+
     "hexColour": {
       "title": "Hex colour",
       "description": "An sRGB colour as #RRGGBB.",
@@ -36,8 +283,8 @@
       "pattern": "^#[0-9a-fA-F]{6}$"
     },
     "vec2": {
-      "title": "2D vector",
-      "description": "A point or size in design-resolution pixels (1080x1920).",
+      "title": "Vec2",
+      "description": "A 2D vector: a point, size or scroll factor in design-resolution pixels (1080x1920).",
       "type": "object",
       "properties": {
         "x": { "type": "number" },

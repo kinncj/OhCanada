@@ -1,4 +1,131 @@
 {
   "$schema": "../content/schemas/credits.schema.json",
-  "assets": []
+  "assets": [
+    {
+      "path": "refs/ottawa/peace-tower-elevation.jpg",
+      "kind": "reference",
+      "title": "Peace Tower, Parliament Hill, Ottawa - full elevation",
+      "author": "V. L.",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Peace_Tower_(8129704131).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/parliament-hill-skyline.jpg",
+      "kind": "reference",
+      "title": "Parliament Hill, Ottawa - skyline from the north",
+      "author": "Unknown (pxhere.com contributor)",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canada_ottawa_parliament_monument_landscape-1051590.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/peace-tower-clock-face.jpg",
+      "kind": "reference",
+      "title": "Peace Tower clock face at night",
+      "author": "Salwa Farwaneh",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Parliament_Hill_Ottawa_Canada.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/parliament-hill-north-library.jpg",
+      "kind": "reference",
+      "title": "Parliament Hill from the north, with the Library of Parliament",
+      "author": "Monocletophat123",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canadian_Parliament_Buildings_Ottawa.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/centre-block-front-elevation.jpg",
+      "kind": "reference",
+      "title": "Centre Block front elevation from Parliament Hill Square",
+      "author": "Cyrobyte",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Centre_Block_-_April_2022.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/parliament-hill-winter-stone-and-copper.jpg",
+      "kind": "reference",
+      "title": "East Block, Parliament Hill, in winter - stone and copper reference",
+      "author": "DJLeamen",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Parliament_Hill_(Ottawa,_ON,_12-17-24).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/parliament-hill-skyline-sunset.jpg",
+      "kind": "reference",
+      "title": "Parliament Hill at sunset from Kìwekì Point",
+      "author": "Hayden Soloviev",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Parliament_Hill_at_sunset,_from_K%C3%ACwek%C3%AC_Point.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/rideau-canal-skateway-ice.jpg",
+      "kind": "reference",
+      "title": "Rideau Canal Skateway - ice surface and bridge crossing",
+      "author": "Ahunt",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Rideau_Canal_6918.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/rideau-canal-skateway-portrait.jpg",
+      "kind": "reference",
+      "title": "Rideau Canal Skateway - portrait composition reference",
+      "author": "Williamson.est",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Rideau_Canal_Skateway.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/rideau-canal-ottawa-locks.jpg",
+      "kind": "reference",
+      "title": "Ottawa Locks on the Rideau Canal",
+      "author": "Alexrocheleau",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canalrideau-chateaulaurier.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/officer/red-serge-full-figure.jpg",
+      "kind": "reference",
+      "title": "Scarlet review-order uniform, full figure",
+      "author": "Jason Woodhead",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Calgary_Stampede_July_2025_(54653317503).jpg",
+      "modifications": "Cropped to the uniformed figure, which also removes a private individual from the frame; downscaled to 1600 px on the long edge; metadata stripped."
+    },
+    {
+      "path": "refs/officer/red-serge-musical-ride.jpg",
+      "kind": "reference",
+      "title": "Scarlet review-order uniform at distance - silhouette and leg stripe",
+      "author": "Jason Woodhead",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Calgary_Stampede_July_2025_(54652241157).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/officer/stetson-felt-hat.jpg",
+      "kind": "reference",
+      "title": "Wide-brimmed felt hat",
+      "author": "Jean-Pol GRANDMONT",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:0_Chapeau_en_feutre_de_la_gendarmerie_royale_du_canada.JPG",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/officer/sam-browne-belt-hardware.jpg",
+      "kind": "reference",
+      "title": "Sam Browne belt - buckle and strap hardware (British WW2 pattern, not RCMP issue)",
+      "author": "Auckland War Memorial Museum Tāmaki Paenga Hira",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Belt,_Sam_Browne_(AM_2007.87.1-1).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    }
+  ]
 }

@@ -1,0 +1,305 @@
+{
+  "id": "truenorth-references",
+  "version": "1.0.0",
+  "owner": "art",
+  "note": [
+    "The reference set and the required-features lists that `make verify-art` judges renders against.",
+    "This file is NOT schema-validated: scripts/validate-content.mjs walks content/ plus",
+    "assets/credits.json only. If verify-art comes to depend on this shape, it needs a schema and",
+    "a home under content/. See OQ-ART-01.",
+    "Every file listed here is also credited in assets/credits.json (ADR-0004) with kind=\"reference\"",
+    "and a path relative to assets/. The credit gate walks all of assets/ and asserts set equality in",
+    "both directions, so an uncredited reference and a credit for a deleted file both fail the build.",
+    "It is a denylist: an unrecognised file type defaults to needing a credit. OQ-ART-02 is closed.",
+    "Licences were established from the Wikimedia Commons API before anything was downloaded, on",
+    "2026-09-08. Only CC0-1.0 and CC-BY-4.0 are present; assets/refs/README.md explains why that set",
+    "is narrower than ADR-0004 alone would allow, and lists what was left out because of it.",
+    "Reference photographs are drawing references and verification inputs. They are not shipped in",
+    "the built game and must never be traced, filtered, posterised or otherwise turned into art."
+  ],
+  "verifyArtProtocol": {
+    "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
+    "then": "Only then is the render compared against `referenceFiles` and `mustBeRight` for that subject.",
+    "pass": "The unprompted identification matches `subject` AND every entry in `mustBeRight` is present.",
+    "fail": "Recognisable only once you know what it is, any missing `mustBeRight` entry, or any entry from `neverAdd` present."
+  },
+  "subjects": [
+    {
+      "id": "peace-tower",
+      "subject": "The Peace Tower, Centre Block, Parliament Hill, Ottawa",
+      "expectedBlindAnswer": [
+        "Peace Tower",
+        "Parliament Hill",
+        "Canadian Parliament",
+        "Centre Block"
+      ],
+      "referenceFiles": [
+        "ottawa/peace-tower-elevation.jpg",
+        "ottawa/centre-block-front-elevation.jpg",
+        "ottawa/peace-tower-clock-face.jpg",
+        "ottawa/parliament-hill-skyline.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "green copper spire",
+          "why": "The single strongest colour cue. A tall pale-green pyramidal spire on a pale stone tower is the Peace Tower and almost nothing else.",
+          "detail": "Steep square-based pyramid, apex angle roughly 26 degrees, oxidised copper green. Height of the spire alone is about 30 percent of the total tower height."
+        },
+        {
+          "feature": "clock face",
+          "why": "Named in the brief and in every photograph a learner has seen. Without it the tower is a generic Gothic spire.",
+          "detail": "One large circular white clock face centred on the tower shaft, set just below the spire, roughly 0.62 of the way up the total height. Dark hands, Roman numerals, dark surround. Diameter is about 0.55 of the tower shaft's width."
+        },
+        {
+          "feature": "national flag on the mast above the spire",
+          "detail": "A single flagpole rising from the spire apex, flying the National Flag of Canada. The flag reads at small size only if it is drawn at least 40 px wide at design resolution."
+        },
+        {
+          "feature": "pale warm sandstone shaft",
+          "detail": "Nepean sandstone, warm buff. Use the `stone` ramp. Not grey, not white."
+        },
+        {
+          "feature": "tall pointed arch at the base",
+          "detail": "One large Gothic arched entrance at the foot of the tower, on the tower's centre line. This is the Memorial Arch entrance."
+        },
+        {
+          "feature": "tower rises from the centre of a symmetrical wing block",
+          "detail": "Centre Block's two wings run left and right from the tower base at roughly one third of the tower height. The composition is symmetrical about the tower."
+        },
+        {
+          "feature": "vertical proportion",
+          "detail": "The tower reads as slender: shaft width to total height is about 1:8. Anything squatter than 1:6 stops being the Peace Tower."
+        }
+      ],
+      "simplifyAway": [
+        "stone coursing and masonry joints",
+        "window tracery and mullions",
+        "gargoyles and grotesques",
+        "carved figures and heraldry over the arch",
+        "dormers and chimneys under 8 px at design resolution",
+        "the corner turrets' finials"
+      ],
+      "neverAdd": [
+        "a second tower or spire on the Centre Block",
+        "a dome",
+        "round or rose windows",
+        "battlements or crenellation on the tower shaft",
+        "a clock face on more than the visible faces",
+        "a bell visible in the belfry openings"
+      ],
+      "openQuestions": [
+        "OQ-ART-05"
+      ],
+      "notes": [
+        "Centre Block has been under rehabilitation since 2019. `centre-block-front-elevation.jpg` and",
+        "`parliament-hill-skyline-sunset.jpg` show cranes, hoarding and scaffolding, and the wing roofs",
+        "stripped to dark metal. Draw the building in its settled state: green copper wing roofs, no",
+        "cranes, no hoarding. `parliament-hill-skyline.jpg` shows that state. See OQ-ART-05.",
+        "`peace-tower-clock-face.jpg` is a night exposure with a purple cast; use it for the dial layout",
+        "and the numeral style, not for colour."
+      ]
+    },
+    {
+      "id": "parliament-hill-skyline",
+      "subject": "Parliament Hill seen from a distance: Centre Block, Peace Tower, Library of Parliament",
+      "expectedBlindAnswer": [
+        "Parliament Hill",
+        "Canadian Parliament",
+        "Ottawa"
+      ],
+      "referenceFiles": [
+        "ottawa/parliament-hill-skyline.jpg",
+        "ottawa/parliament-hill-north-library.jpg",
+        "ottawa/parliament-hill-winter-stone-and-copper.jpg",
+        "ottawa/parliament-hill-skyline-sunset.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the Peace Tower off-centre in the massing, not at the end of the block",
+          "detail": "Read left to right: West Block, Centre Block with the Peace Tower, the Library's polygonal roof behind, East Block."
+        },
+        {
+          "feature": "the Library of Parliament's polygonal chapter-house roof",
+          "why": "The second most identifying silhouette on the Hill: a many-sided steep cone with a finial, quite unlike the square spire.",
+          "detail": "Sixteen-sided steep roof, dark, with a slender finial. It sits behind and to the right of the Peace Tower from the south."
+        },
+        {
+          "feature": "green copper roofs on the wings",
+          "detail": "Long low roof planes in the `copper` ramp, punctuated by dormers reduced to rhythm."
+        },
+        {
+          "feature": "the escarpment",
+          "detail": "The buildings sit on a wooded cliff above the river. On a distant parallax layer this reads as a dark green mass under the pale stone."
+        }
+      ],
+      "simplifyAway": [
+        "individual windows below 6 px",
+        "chimney stacks",
+        "modern buildings behind the Hill"
+      ],
+      "neverAdd": [
+        "a river in front of the Hill on the south (Wellington Street) side",
+        "mountains"
+      ],
+      "notes": [
+        "parliament-hill-skyline-sunset.jpg (2026) is the closest thing here to the level's dusk palette and shows the escarpment and the river together. It is also heavily scaffolded: cranes, sheeting and hoarding from the Centre Block rehabilitation. Use it for massing, silhouette and light. Do not draw the scaffolding. See OQ-ART-05.",
+        "parliament-hill-north-library.jpg is low resolution and overcast. It is here for one thing: the Library of Parliament's polygonal roof read from behind the Centre Block."
+      ]
+    },
+    {
+      "id": "rideau-canal-skateway",
+      "subject": "The Rideau Canal Skateway, Ottawa, in winter",
+      "expectedBlindAnswer": [
+        "Rideau Canal",
+        "Rideau Canal Skateway",
+        "skating on a frozen canal in Ottawa"
+      ],
+      "referenceFiles": [
+        "ottawa/rideau-canal-skateway-ice.jpg",
+        "ottawa/rideau-canal-skateway-portrait.jpg",
+        "ottawa/rideau-canal-ottawa-locks.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a long straight ice lane between two walls",
+          "why": "This is a canal, not a pond or a lake. The parallel containment is the whole read.",
+          "detail": "Two low masonry retaining walls run to the vanishing point, one on each side, with snow banked against them. The ice fills the full width between them."
+        },
+        {
+          "feature": "scored skate marks in the ice",
+          "detail": "Fine curved white scratches across the ice surface. Draw them as a sparse repeating overlay in `snow-light` at low opacity, never as noise."
+        },
+        {
+          "feature": "people skating, not walking",
+          "detail": "Skate blades under the boots, glide stance with the trailing leg extended, arms low. Winter coats, toques, mitts."
+        },
+        {
+          "feature": "a road bridge crossing overhead",
+          "detail": "The skateway passes under low bridges. At least one crossing bridge should be visible in the level's horizontal run; it is the strongest depth cue the canal gives."
+        },
+        {
+          "feature": "cold overcast or low winter light",
+          "detail": "Ice is not white. Use the `ice` ramp against `snow` banks so the lane reads as a distinct surface."
+        }
+      ],
+      "simplifyAway": [
+        "individual bricks in the retaining wall",
+        "street furniture above the wall line",
+        "distant office towers"
+      ],
+      "neverAdd": [
+        "a hockey rink, boards, nets or line markings",
+        "a natural shoreline with reeds or rocks: this is a built canal",
+        "mountains or hills on the horizon"
+      ],
+      "notes": [
+        "`rideau-canal-ottawa-locks.jpg` shows the flight of locks at the Ottawa River end with the",
+        "Chateau Laurier above. Use it for lock-gate geometry and canal masonry only. The Chateau",
+        "Laurier is not a slice-1 subject and should not be drawn as a recognisable landmark here.",
+        "`rideau-canal-skateway-portrait.jpg` is the closest reference to the shipped aspect ratio and",
+        "is the primary composition reference for the level."
+      ]
+    },
+    {
+      "id": "officer",
+      "subject": "A Canadian police constable in ceremonial scarlet review order (the 'Mountie' silhouette)",
+      "expectedBlindAnswer": [
+        "Mountie",
+        "RCMP officer",
+        "Canadian Mountie",
+        "Canadian police officer in red dress uniform",
+        "Royal Canadian Mounted Police"
+      ],
+      "designSheet": "assets/style/officer.md",
+      "referenceFiles": [
+        "officer/red-serge-full-figure.jpg",
+        "officer/red-serge-musical-ride.jpg",
+        "officer/stetson-felt-hat.jpg",
+        "officer/sam-browne-belt-hardware.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "scarlet tunic",
+          "detail": "Single-breasted, high standing collar, fitted to the waist then flaring into a short skirt below the belt. Two breast pockets with pointed, scalloped flaps.",
+          "palette": "serge"
+        },
+        {
+          "feature": "dark collar and shoulder straps",
+          "why": "The colour break at the collar and shoulders is what stops the tunic reading as a plain red coat.",
+          "detail": "Midnight blue, distinctly darker than the tunic.",
+          "palette": "navy"
+        },
+        {
+          "feature": "wide-brimmed felt hat",
+          "why": "The strongest silhouette read at small size.",
+          "detail": "Tan felt, flat level brim about 1.4 head-widths across, crown pinched to a point with a fore-and-aft crease, brown leather band with a small buckle.",
+          "palette": "felt, leather"
+        },
+        {
+          "feature": "brown leather belt with a diagonal cross-strap",
+          "why": "The diagonal is half the identity of a Sam Browne. A plain waist belt loses it.",
+          "detail": "Wide waist belt with a brass buckle, and one strap from the wearer's right shoulder down to the left hip.",
+          "palette": "leather, brass"
+        },
+        {
+          "feature": "dark breeches with a yellow-gold stripe down the outer seam",
+          "why": "Does more identification work than its area suggests. If it disappears first at small size, thicken it.",
+          "detail": "Midnight blue, full at the thigh and close below the knee, one broad stripe running the full leg.",
+          "palette": "navy, brass"
+        },
+        {
+          "feature": "high brown riding boots",
+          "detail": "To just below the knee, with a strap and buckle at the ankle. Breeches tuck in.",
+          "palette": "leather"
+        },
+        {
+          "feature": "brass buttons in a single centre row",
+          "detail": "Read as a rhythm of round brass dots, not as modelled buttons.",
+          "palette": "brass"
+        },
+        {
+          "feature": "cartoon proportions identical to every other character",
+          "why": "CLAUDE.md requires it, and this is the character most likely to tempt an artist into breaking it.",
+          "detail": "6 heads tall, 420 px at design resolution, same shoulder width, hands, feet, eye line and detail budget as the player."
+        }
+      ],
+      "simplifyAway": [
+        "wool drape and fabric folds",
+        "the holster and its contents",
+        "pocket stitching and seam lines",
+        "belt tooling and D-rings",
+        "boot lacing above the ankle strap",
+        "hat-band tooling"
+      ],
+      "neverAdd": [
+        "any crest or badge, including the bison-head device",
+        "any wordmark or lettering: RCMP, GRC, Royal Canadian Mounted Police, Gendarmerie royale du Canada, anywhere in the level",
+        "collar dogs, shoulder flashes, rank chevrons or service numbers",
+        "an approximation of any insignia - worse than none, because it reads as an attempt at the real thing",
+        "any resemblance to the identifiable serving member in red-serge-full-figure.jpg"
+      ],
+      "whyTheOmissions": "The red-serge silhouette is not a protected mark and is what carries the recognition. The insignia are protected and the repository is public under open licences. Decided by the repository owner on 2026-09-08 after the licensing risk was raised. This is a legal constraint with a reason, not a stylistic preference: an artist who does not know that will helpfully add a badge.",
+      "naming": "Never 'RCMP Officer' and never a member of a named force. Generic: 'Constable', or a personal name. Copy is the PO's.",
+      "openQuestions": [
+        "OQ-ART-07",
+        "OQ-ART-08",
+        "OQ-ART-09",
+        "OQ-ART-10"
+      ],
+      "notes": [
+        "red-serge-full-figure.jpg is cropped from a photograph that also showed a private individual; the crop removes him and focuses the uniform.",
+        "sam-browne-belt-hardware.jpg is a British WW2 Sam Browne from the Auckland War Memorial Museum, NOT an RCMP belt. Use it for buckle, strap-width and brass-hardware geometry only.",
+        "red-serge-musical-ride.jpg shows the uniform at distance in daylight: use it to check that the silhouette and the leg stripe still read when the figure is small."
+      ]
+    }
+  ],
+  "licenceAudit": {
+    "checkedOn": "2026-09-08",
+    "method": "Wikimedia Commons API, prop=imageinfo&iiprop=extmetadata, before download",
+    "acceptedLicences": [
+      "CC0-1.0",
+      "CC-BY-4.0"
+    ],
+    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for it. Part of OQ-ART-06."
+  }
+}

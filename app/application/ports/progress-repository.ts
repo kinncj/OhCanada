@@ -14,25 +14,27 @@
  * removes this marker in the same change.
  */
 
-import type { IsoInstant, LevelId, LocaleCode, QuestId, QuestionId, SubjectId } from '@domain/ids';
+import type {
+  CharacterId,
+  IsoInstant,
+  LevelId,
+  LocaleCode,
+  QuestId,
+  QuestionId,
+  SubjectId,
+} from '@domain/ids';
 import type { Result } from '@common/result';
 
 /*
  * The five types below are *documents*: they are what gets written to
  * localStorage and what a player pastes back in from a save code, so they are
  * authored data in every sense that matters — just authored by the previous
- * session instead of by a content agent. ADR-0007 applies to them: the schema is
- * the authority, and `SaveCodec.decode` cannot honour "validate, migrate and
- * return" against a schema that does not exist. Slice 1 task 1.6 writes
- * `content/schemas/progress.schema.json`; until then every one of them is
- * SPECULATIVE and `decode` has nothing to validate against.
+ * session instead of by a content agent. ADR-0007 applies to them, and
+ * `content/schemas/progress.schema.json` is now the authority on their shape, so
+ * `SaveCodec.decode` has something real to validate against.
  */
 
-/**
- * FSRS card state for one question. The scheduler itself is pure domain (ADR-0001).
- *
- * SPECULATIVE — no `progress.schema.json` yet (ADR-0007).
- */
+/** FSRS card state for one question. The scheduler itself is pure domain (ADR-0001). */
 export interface ReviewStateDocument {
   readonly questionId: QuestionId;
   readonly due: IsoInstant;
@@ -44,15 +46,53 @@ export interface ReviewStateDocument {
   readonly state: 'new' | 'learning' | 'review' | 'relearning';
 }
 
-/** SPECULATIVE — no `progress.schema.json` yet (ADR-0007). */
+/**
+ * Where the player is in one quest.
+ *
+ * `offered` and `declined` are distinct from absent: a quest never met is not in
+ * the list at all, and TN-SAVE asserts that a declined quest comes back declined
+ * rather than as never offered.
+ */
+export interface QuestProgressDocument {
+  readonly questId: QuestId;
+  readonly status: 'offered' | 'declined' | 'active' | 'completed';
+  /** Index into the quest document's steps; a completed quest keeps its last. */
+  readonly stepIndex: number;
+  /**
+   * How many of the current step's required items are done — questions answered
+   * on an `answer` step, 0 on every other kind. This is what lets "accepted, on
+   * step 2, two of three answered" survive a closed tab.
+   */
+  readonly stepProgress: number;
+  readonly updatedAt: IsoInstant;
+}
+
+/** What the character creator produced. There is no player-entered name — slot choices only. */
+export interface PlayerCharacterDocument {
+  readonly characterId: CharacterId;
+  /** Slot name to chosen option id, one entry per selectable slot. */
+  readonly skins: Readonly<Record<string, string>>;
+}
+
 export interface LevelProgressDocument {
   readonly levelId: LevelId;
   readonly unlocked: boolean;
-  readonly completedQuests: readonly QuestId[];
+  /**
+   * One entry per quest the player has met, in any state. Not a completed-only
+   * list: a quest recorded only once it is finished cannot be resumed, which is
+   * the whole point of TN-SAVE item 5. Completion is `status: 'completed'`, so no
+   * second list says the same thing.
+   */
+  readonly quests: readonly QuestProgressDocument[];
   readonly bestScore: number;
+  /**
+   * When this level's stamp was earned; `null` while it has not been.
+   * `unlockRules.stampsToUnlockNext` counts these, so a stamp is *recorded* rather
+   * than derived from a rule that could change under an existing save.
+   */
+  readonly stampEarnedAt: IsoInstant | null;
 }
 
-/** SPECULATIVE — no `progress.schema.json` yet (ADR-0007). */
 export interface ExamAttemptDocument {
   readonly startedAt: IsoInstant;
   readonly finishedAt: IsoInstant | null;
@@ -64,11 +104,15 @@ export interface ExamAttemptDocument {
   readonly timed: boolean;
 }
 
-/**
- * Accessibility and comfort settings. Persisted, because a player should set them once.
- *
- * SPECULATIVE — no `progress.schema.json` yet (ADR-0007).
- */
+/** One 0–1 level per audio bus. Fixed keys: the buses are code, not content. */
+export interface VolumeSettings {
+  readonly master: number;
+  readonly music: number;
+  readonly sfx: number;
+  readonly voice: number;
+}
+
+/** Accessibility and comfort settings. Persisted, because a player should set them once. */
 export interface SettingsDocument {
   readonly locale: LocaleCode;
   readonly autoMove: boolean;
@@ -79,19 +123,24 @@ export interface SettingsDocument {
   /** 100–200 %, expressed as a multiplier. */
   readonly textScale: number;
   readonly subtitles: boolean;
-  readonly volumes: Readonly<Record<'master' | 'music' | 'sfx' | 'voice', number>>;
+  readonly volumes: VolumeSettings;
 }
 
 /**
- * The whole persisted state, versioned so `SaveCodec` can migrate it.
+ * The whole persisted state, versioned so `SaveCodec` can migrate it, and exactly
+ * what `content/schemas/progress.schema.json` validates.
  *
- * SPECULATIVE — no `progress.schema.json` yet (ADR-0007). This is the root of the
- * save document, so it is the shape `SaveCodec.decode` must refuse to trust.
+ * `$schema` is carried in the persisted document too, not only in authored
+ * content: an exported save that names its schema can be validated by the same
+ * tooling, and read by a person, without guessing which build wrote it.
  */
 export interface ProgressSnapshot {
+  readonly $schema: string;
   readonly version: number;
   readonly updatedAt: IsoInstant;
   readonly settings: SettingsDocument;
+  /** `null` before the creator has run; settings persist from the first screen. */
+  readonly character: PlayerCharacterDocument | null;
   readonly levels: readonly LevelProgressDocument[];
   readonly reviews: readonly ReviewStateDocument[];
   readonly subjectsStarted: readonly SubjectId[];

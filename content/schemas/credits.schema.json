@@ -5,35 +5,79 @@
   "description": "Attribution for every shipped asset. ADR-0004: third-party assets are CC0 or CC-BY only, and every file under assets/dist must appear here.",
   "type": "object",
   "properties": {
-    "$schema": { "type": "string", "minLength": 1 },
+    "$schema": {
+      "type": "string",
+      "minLength": 1
+    },
     "assets": {
       "type": "array",
-      "items": { "$ref": "#/$defs/creditedAsset" }
+      "items": {
+        "$ref": "#/$defs/creditedAsset"
+      }
     }
   },
-  "required": ["$schema", "assets"],
+  "required": [
+    "$schema",
+    "assets"
+  ],
   "additionalProperties": false,
-
   "$defs": {
     "creditedAsset": {
       "title": "Credited asset",
       "type": "object",
       "properties": {
         "path": {
-          "description": "Path relative to assets/dist, exactly as shipped.",
+          "description": "Path relative to `assets/`, so `dist/level4/atlas.webp` for a shipped asset and `refs/ottawa/peace-tower-elevation.jpg` for a reference. The gate walks `assets/` and asserts set equality in both directions - a file with no entry is an uncredited asset, an entry with no file is a stale claim about a file that is gone. A `../` prefix is the pre-2026-09-08 convention, still resolved by scripts/validate-content.mjs with a warning; no pattern forbids it here because retiring that transitional branch belongs to the gate that owns it, not to a schema forcing it closed from outside.",
           "type": "string",
           "minLength": 1
         },
-        "title": { "type": "string", "minLength": 1 },
-        "author": { "type": "string", "minLength": 1 },
-        "licence": {
+        "kind": {
+          "description": "What this entry is. `shipped` is redistributed in the built game and is what the credit gate walks; `reference` is a drawing and verify-art input that ADR-0004 says is never redistributed, credited here only because there is no separate register. Optional until the credit gate learns the difference (ADR-0006, credit-scope obligation); required after that.",
           "type": "string",
-          "enum": ["CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0", "MIT", "Apache-2.0"]
+          "enum": [
+            "shipped",
+            "reference"
+          ]
         },
-        "source": { "type": "string", "format": "uri" },
-        "modifications": { "type": "string" }
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "licence": {
+          "description": "ADR-0004, as amended: any licence permitting redistribution and modification with no copyleft, non-commercial or no-derivatives condition. ShareAlike of every version is deliberately absent - the ADR rejects viral terms for the same reason it makes original art CC BY rather than CC BY-SA. `public-domain` is not an SPDX identifier because SPDX has none for a work whose term has expired or that was never eligible; the `source` URL must evidence the status.",
+          "type": "string",
+          "enum": [
+            "public-domain",
+            "CC0-1.0",
+            "CC-BY-1.0",
+            "CC-BY-2.0",
+            "CC-BY-2.5",
+            "CC-BY-3.0",
+            "CC-BY-4.0",
+            "MIT",
+            "Apache-2.0"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "format": "uri"
+        },
+        "modifications": {
+          "type": "string"
+        }
       },
-      "required": ["path", "title", "author", "licence", "source"],
+      "required": [
+        "path",
+        "kind",
+        "title",
+        "author",
+        "licence",
+        "source"
+      ],
       "additionalProperties": false
     }
   }

@@ -1,0 +1,436 @@
+{
+  "id": "truenorth-core",
+  "version": "1.0.0",
+  "owner": "art",
+  "licence": "CC-BY-4.0",
+  "designResolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "note": [
+    "The allow-list for every fill and stroke in assets/src/svg. The palette lint fails on any colour",
+    "not present in `colours`. Add a colour here, with a ramp, before any SVG uses it.",
+    "CANONICAL LOCATION IS content/style/palette.json. It sits under assets/ today only because",
+    "scripts/validate-content.mjs requires every .json under content/ to declare a $schema naming a",
+    "schema in content/schemas/, and no palette schema exists yet. See content/style/README.md (OQ-ART-01).",
+    "UI, text and focus-ring colours are deliberately absent: ui-a11y owns those and they must pass WCAG AA."
+  ],
+  "shading": {
+    "tones": 3,
+    "toneNames": [
+      "light",
+      "base",
+      "shade"
+    ],
+    "rule": "Exactly three flat fills per material. No gradients, no dithering, no fourth tone. Author the BASE from the reference photograph, then derive light and shade with the formula below. Do not eyeball the other two tones.",
+    "keyLight": "Warm sun, upper left, 35 degrees above horizontal. One key for the whole game.",
+    "ambient": "Cool sky and snow bounce.",
+    "formula": {
+      "light": {
+        "lightnessDelta": "+15 (clamped at 96)",
+        "hueRotation": "8 degrees toward 45 (warm)",
+        "saturation": "x1.00 if base S < 12 (neutral); x0.92 if S <= 45; x0.97 otherwise"
+      },
+      "shade": {
+        "lightnessDelta": "-16 (clamped at 8)",
+        "hueRotation": "12 degrees toward 225 (cool); toward 350 for the skin and hair families",
+        "saturation": "unchanged if base S < 12 (neutrals stay neutral); otherwise S + (92 - S) * 0.10"
+      },
+      "familyOverrides": {
+        "skin": {
+          "shadeHueTarget": 350,
+          "lightSaturation": "x0.80",
+          "shadeSaturation": "x0.78",
+          "why": "Flesh shadow turns red-violet, not blue, and loses saturation. Without this, pale skin shadows go orange and deep skin highlights go ochre."
+        },
+        "hair": {
+          "shadeHueTarget": 350,
+          "lightSaturation": "x0.90",
+          "shadeSaturation": "x0.95"
+        }
+      },
+      "colourSpace": "HSL over sRGB, hue in degrees, S and L in percent."
+    },
+    "acceptanceBand": {
+      "minAdjacentLightnessDelta": 8,
+      "targetAdjacentLightnessDelta": 15,
+      "note": "15 is what the formula produces. The floor is 8 rather than 15 because ramps whose base sits near L=8 or L=96 clamp: skin-6 and hair-black cannot span 15 twice without going to black. A ramp that clamps is correct; a ramp that was eyeballed flat is not."
+    },
+    "exemptions": [
+      "sky",
+      "cloud",
+      "dusk",
+      "snow"
+    ],
+    "exemptionReason": "Atmosphere ramps are vertical band sets, not a lit material, and snow clamps at white. They are authored by hand and are the only ramps the formula does not govern."
+  },
+  "outline": {
+    "appliesTo": "characters only",
+    "neverAppliesTo": [
+      "landmarks",
+      "buildings",
+      "props",
+      "background layers",
+      "particles",
+      "UI"
+    ],
+    "silhouettePx": 6,
+    "majorInternalPx": 4,
+    "minorInternalPx": 3,
+    "minimumPx": 3,
+    "cap": "round",
+    "join": "round",
+    "constantWidth": true,
+    "whyConstantWidth": "Tapered strokes alias badly at atlas mip levels and cannot be expressed as a Rive shape stroke.",
+    "colourRule": "Use the ink whose hue family matches the character's largest colour area. Never #000000.",
+    "backgroundSeparationRule": "A background shape that does not read without a line has the wrong tone. Change the tone. Do not add a line."
+  },
+  "ambientOcclusion": {
+    "colour": "ao-shadow",
+    "mode": "multiply",
+    "overlapAlpha": 0.18,
+    "groundContactAlpha": 0.28,
+    "maxBlurRadiusPx": 24,
+    "rule": "Baked as soft shapes in the SVG, never as a runtime filter: the Canvas visual tier has no Filters (slice-1 task 1.19). AO goes where forms meet the ground and where parts overlap, nowhere else."
+  },
+  "colours": {
+    "sky-light": "#a5d6ee",
+    "sky-base": "#3d8ccb",
+    "sky-shade": "#1f5fa8",
+    "cloud-light": "#fbfdfe",
+    "cloud-base": "#dce9f3",
+    "cloud-shade": "#b9cfe2",
+    "dusk-light": "#f0a15e",
+    "dusk-base": "#8a5e9e",
+    "dusk-shade": "#3a3d77",
+    "snow-light": "#ffffff",
+    "snow-base": "#e6eff7",
+    "snow-shade": "#c2d6e8",
+    "stone-light": "#d2c5a3",
+    "stone-base": "#bc9c6d",
+    "stone-shade": "#9a623e",
+    "copper-light": "#80caaa",
+    "copper-base": "#46b896",
+    "copper-shade": "#2b8179",
+    "slate-light": "#7d8fa0",
+    "slate-base": "#57647a",
+    "slate-shade": "#30384f",
+    "ice-light": "#e4f2f6",
+    "ice-base": "#a9d0e5",
+    "ice-shade": "#6799d6",
+    "water-light": "#5cbfd6",
+    "water-base": "#2c8cba",
+    "water-shade": "#1a487a",
+    "pine-light": "#41b76b",
+    "pine-base": "#2c8055",
+    "pine-shade": "#154536",
+    "grass-light": "#89c05f",
+    "grass-base": "#56993a",
+    "grass-shade": "#276121",
+    "wood-light": "#c5994d",
+    "wood-base": "#96632f",
+    "wood-shade": "#5a2d19",
+    "path-light": "#afaca5",
+    "path-base": "#8b857c",
+    "path-shade": "#605a55",
+    "flag-red-light": "#e27468",
+    "flag-red-base": "#d8262c",
+    "flag-red-shade": "#941835",
+    "navy-light": "#464c92",
+    "navy-base": "#2b3660",
+    "navy-shade": "#101629",
+    "brass-light": "#e1c368",
+    "brass-base": "#d6a727",
+    "brass-shade": "#935a18",
+    "leather-light": "#b4733b",
+    "leather-base": "#7c4327",
+    "leather-shade": "#401812",
+    "felt-light": "#d5c18e",
+    "felt-base": "#c29455",
+    "felt-shade": "#965630",
+    "skin-1-light": "#f6ecde",
+    "skin-1-base": "#efbe99",
+    "skin-1-shade": "#d47d62",
+    "skin-2-light": "#e8d4bb",
+    "skin-2-base": "#dfa477",
+    "skin-2-shade": "#be6246",
+    "skin-3-light": "#d1b692",
+    "skin-3-base": "#c68550",
+    "skin-3-shade": "#894f3b",
+    "skin-4-light": "#bc9662",
+    "skin-4-base": "#9e6334",
+    "skin-4-shade": "#593327",
+    "skin-5-light": "#a97c41",
+    "skin-5-base": "#7a4923",
+    "skin-5-shade": "#361d15",
+    "skin-6-light": "#865f33",
+    "skin-6-base": "#553018",
+    "skin-6-shade": "#1d0f0b",
+    "hair-black-light": "#5a5365",
+    "hair-black-base": "#33303c",
+    "hair-black-shade": "#141217",
+    "hair-brown-light": "#936a38",
+    "hair-brown-base": "#5f3a20",
+    "hair-brown-shade": "#21110c",
+    "hair-blond-light": "#decc96",
+    "hair-blond-base": "#d2ae55",
+    "hair-blond-shade": "#a66c30",
+    "hair-red-light": "#d18547",
+    "hair-red-base": "#a94d22",
+    "hair-red-shade": "#631f16",
+    "hair-grey-light": "#e1e1e4",
+    "hair-grey-base": "#b8b8c0",
+    "hair-grey-shade": "#908d99",
+    "serge-light": "#db7961",
+    "serge-base": "#c5342a",
+    "serge-shade": "#841a28",
+    "white-light": "#ffffff",
+    "white-base": "#f0f2f5",
+    "white-shade": "#cbd2da",
+    "ink-warm": "#3a2018",
+    "ink-cool": "#1a2036",
+    "ink-neutral": "#251f23",
+    "ao-shadow": "#16203a"
+  },
+  "ramps": {
+    "sky": {
+      "light": "sky-light",
+      "base": "sky-base",
+      "shade": "sky-shade",
+      "derived": false,
+      "note": "Band order top to bottom is shade (zenith), base, light (horizon). Three flat bands."
+    },
+    "cloud": {
+      "light": "cloud-light",
+      "base": "cloud-base",
+      "shade": "cloud-shade",
+      "derived": false
+    },
+    "dusk": {
+      "light": "dusk-light",
+      "base": "dusk-base",
+      "shade": "dusk-shade",
+      "derived": false,
+      "note": "Alternative sky set for a dusk section. Never mix dusk and sky in one layer."
+    },
+    "snow": {
+      "light": "snow-light",
+      "base": "snow-base",
+      "shade": "snow-shade",
+      "derived": false
+    },
+    "stone": {
+      "light": "stone-light",
+      "base": "stone-base",
+      "shade": "stone-shade",
+      "derived": true,
+      "material": "Nepean sandstone. Parliament Hill walls and the Peace Tower shaft."
+    },
+    "copper": {
+      "light": "copper-light",
+      "base": "copper-base",
+      "shade": "copper-shade",
+      "derived": true,
+      "material": "Oxidised copper roofing and the Peace Tower spire."
+    },
+    "slate": {
+      "light": "slate-light",
+      "base": "slate-base",
+      "shade": "slate-shade",
+      "derived": true,
+      "material": "Dark metal roofing, bridge steel, lamp posts, skate blades."
+    },
+    "ice": {
+      "light": "ice-light",
+      "base": "ice-base",
+      "shade": "ice-shade",
+      "derived": true,
+      "material": "Rideau Canal skateway ice."
+    },
+    "water": {
+      "light": "water-light",
+      "base": "water-base",
+      "shade": "water-shade",
+      "derived": true,
+      "material": "Open canal and river water."
+    },
+    "pine": {
+      "light": "pine-light",
+      "base": "pine-base",
+      "shade": "pine-shade",
+      "derived": true,
+      "material": "Conifers, the Christmas-tree lane markers on the skateway."
+    },
+    "grass": {
+      "light": "grass-light",
+      "base": "grass-base",
+      "shade": "grass-shade",
+      "derived": true,
+      "material": "Summer lawn on the Hill."
+    },
+    "wood": {
+      "light": "wood-light",
+      "base": "wood-base",
+      "shade": "wood-shade",
+      "derived": true,
+      "material": "Warming huts, benches, lock gates, park signage."
+    },
+    "path": {
+      "light": "path-light",
+      "base": "path-base",
+      "shade": "path-shade",
+      "derived": true,
+      "material": "Stone paving, asphalt, concrete. The only near-neutral ramp."
+    },
+    "flag-red": {
+      "light": "flag-red-light",
+      "base": "flag-red-base",
+      "shade": "flag-red-shade",
+      "derived": true,
+      "material": "The National Flag of Canada. See OQ-ART-04."
+    },
+    "navy": {
+      "light": "navy-light",
+      "base": "navy-base",
+      "shade": "navy-shade",
+      "derived": true,
+      "material": "Midnight-blue duty outerwear, dark trousers, night sky accents."
+    },
+    "brass": {
+      "light": "brass-light",
+      "base": "brass-base",
+      "shade": "brass-shade",
+      "derived": true,
+      "material": "Buckles, buttons, brass hardware, the skateway's amber hazard marks."
+    },
+    "leather": {
+      "light": "leather-light",
+      "base": "leather-base",
+      "shade": "leather-shade",
+      "derived": true,
+      "material": "Belts, boots, straps, mitts."
+    },
+    "felt": {
+      "light": "felt-light",
+      "base": "felt-base",
+      "shade": "felt-shade",
+      "derived": true,
+      "material": "Generic tan felt and canvas."
+    },
+    "skin-1": {
+      "light": "skin-1-light",
+      "base": "skin-1-base",
+      "shade": "skin-1-shade",
+      "derived": true,
+      "material": "Six skin ramps, all derived by the same rule so no tone is 'the default'. The character creator exposes all six. Ordering is lightest to deepest and carries no meaning."
+    },
+    "skin-2": {
+      "light": "skin-2-light",
+      "base": "skin-2-base",
+      "shade": "skin-2-shade",
+      "derived": true,
+      "material": "Six skin ramps, all derived by the same rule so no tone is 'the default'. The character creator exposes all six. Ordering is lightest to deepest and carries no meaning."
+    },
+    "skin-3": {
+      "light": "skin-3-light",
+      "base": "skin-3-base",
+      "shade": "skin-3-shade",
+      "derived": true,
+      "material": "Six skin ramps, all derived by the same rule so no tone is 'the default'. The character creator exposes all six. Ordering is lightest to deepest and carries no meaning."
+    },
+    "skin-4": {
+      "light": "skin-4-light",
+      "base": "skin-4-base",
+      "shade": "skin-4-shade",
+      "derived": true,
+      "material": "Six skin ramps, all derived by the same rule so no tone is 'the default'. The character creator exposes all six. Ordering is lightest to deepest and carries no meaning."
+    },
+    "skin-5": {
+      "light": "skin-5-light",
+      "base": "skin-5-base",
+      "shade": "skin-5-shade",
+      "derived": true,
+      "material": "Six skin ramps, all derived by the same rule so no tone is 'the default'. The character creator exposes all six. Ordering is lightest to deepest and carries no meaning."
+    },
+    "skin-6": {
+      "light": "skin-6-light",
+      "base": "skin-6-base",
+      "shade": "skin-6-shade",
+      "derived": true,
+      "material": "Six skin ramps, all derived by the same rule so no tone is 'the default'. The character creator exposes all six. Ordering is lightest to deepest and carries no meaning."
+    },
+    "hair-black": {
+      "light": "hair-black-light",
+      "base": "hair-black-base",
+      "shade": "hair-black-shade",
+      "derived": true,
+      "material": "Hair. Same three-tone rule as skin."
+    },
+    "hair-brown": {
+      "light": "hair-brown-light",
+      "base": "hair-brown-base",
+      "shade": "hair-brown-shade",
+      "derived": true,
+      "material": "Hair. Same three-tone rule as skin."
+    },
+    "hair-blond": {
+      "light": "hair-blond-light",
+      "base": "hair-blond-base",
+      "shade": "hair-blond-shade",
+      "derived": true,
+      "material": "Hair. Same three-tone rule as skin."
+    },
+    "hair-red": {
+      "light": "hair-red-light",
+      "base": "hair-red-base",
+      "shade": "hair-red-shade",
+      "derived": true,
+      "material": "Hair. Same three-tone rule as skin."
+    },
+    "hair-grey": {
+      "light": "hair-grey-light",
+      "base": "hair-grey-base",
+      "shade": "hair-grey-shade",
+      "derived": true,
+      "material": "Hair. Same three-tone rule as skin."
+    },
+    "serge": {
+      "light": "serge-light",
+      "base": "serge-base",
+      "shade": "serge-shade",
+      "derived": true,
+      "material": "Scarlet review-order tunic wool. Base authored from assets/refs/officer/, sampled #be3828 under warm indoor light and set cooler and more saturated. Deliberately NOT the same red as `flag-red`: the two must not be interchangeable."
+    },
+    "white": {
+      "light": "white-light",
+      "base": "white-base",
+      "shade": "white-shade",
+      "derived": false,
+      "material": "Lanyards, flag field, paper, snow highlight. Clamps at white, so authored."
+    }
+  },
+  "inks": {
+    "ink-warm": "Characters whose largest area is a warm hue (skin, wood, leather, tan).",
+    "ink-cool": "Characters whose largest area is a cool hue (navy parka, ice, slate).",
+    "ink-neutral": "Mixed or neutral characters only. Prefer warm or cool; neutral is the last resort."
+  },
+  "levelTheme": {
+    "note": "Palette ids proposed for content/levels/ottawa.json. The level author (task 1.7) owns that file. ADR-0002 extends the level's sky and ground into the desktop side panels, so whatever is named here must also be the flat colour at the extreme left and right columns of the sky and ground layers, or the panel seam will show.",
+    "ottawa-winter": {
+      "sky": "sky-base",
+      "ground": "snow-base",
+      "horizon": "sky-light"
+    }
+  },
+  "restrictedMarks": {
+    "why": "The officer NPC wears the recognisable red-serge silhouette. That silhouette is not a protected mark and is what carries the recognition. The insignia are protected, and their absence is a deliberate constraint with a legal reason, not a stylistic choice. Decided by the user on 2026-09-08 after the licensing risk was raised.",
+    "neverDraw": [
+      "any crest or badge, including the bison-head device",
+      "any wordmark or lettering: RCMP, GRC, Royal Canadian Mounted Police, Gendarmerie royale du Canada",
+      "collar dogs, shoulder flashes, rank chevrons, service numbers",
+      "an approximation of any of the above - an approximated insignia is worse than none, because it reads as an attempt at the real thing"
+    ],
+    "naming": "Never 'RCMP Officer' and never a member of a named force. Generic: 'Constable', or a personal name. Copy belongs to the PO; this is the constraint the copy must satisfy.",
+    "seeAlso": "assets/style/officer.md"
+  }
+}

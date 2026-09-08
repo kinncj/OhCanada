@@ -10,6 +10,11 @@
 - Amended 2026-09-08 (second): the GitHub Issues alternative was rejected partly because "issues are not
   visible in a private repository's diff". ADR-0006 has since made the repository public, so that clause is
   no longer true and is removed. The rejection stands on its remaining two grounds.
+- Amended 2026-09-08 (third): the gate exists a month early and its own obligation is discharged below, so
+  this ADR now describes something real. Three things the first draft left implicit are stated outright:
+  what a gate wired into `make lint` actually blocks, and the two parsing questions the specification did
+  not answer — a marker outside every list item, and a marker inside a nested one. Both were resolved by the
+  implementer; both resolutions are ratified here, under "Two questions the first specification left open".
 
 ## Context
 
@@ -133,6 +138,30 @@ Wiring: run it in `make lint`, alongside dependency-cruiser, so it is in the pul
 deploy gate set that `deploy-pages.yml` runs before publishing. Exact target names and script layout are
 infra's.
 
+Say plainly what that second clause costs, because the sentence above understates it. `deploy-pages.yml`
+runs `make lint` before `make assets build`, so an overdue obligation **stops the site publishing**, not
+merely a pull request merging — and, combined with the deliberate oddity below, a date passing overnight can
+take the deploy job red on a tree nobody touched. That is the intended reading of "the deploy gate set" and
+it is not being softened: an obligation this project would rather publish past is an obligation it should
+have re-dated or voided. But an author choosing a `due` date should know the blast radius is the live site,
+not the merge queue, and should choose the date accordingly.
+
+### Two questions the first specification left open
+
+Both were found by the implementer while building the gate, both were resolved before it ran, and both
+resolutions are the ones this ADR would have chosen. They are recorded because "the script decided it" is
+not a decision record, and because either could reasonably have gone the other way.
+
+- **A marker that is inside no list item is judged as its own one-line block**, not ignored. The format says
+  an obligation *is* a list item, so a bare `OBLIGATION` line is malformed — and it must be *reported* as
+  malformed rather than skipped. Skipping it would mean the shape most likely to come from a hurried author
+  is the one shape the gate stays silent about, which is precisely what the malformed-marker rule exists to
+  prevent: a marker that looks like coverage and is not is worse than no marker.
+- **A marker's block is the *innermost* enclosing list item.** A nested obligation belongs to the bullet
+  that states it and not also to its parent, so a parent cannot inherit a child's `DISCHARGED` and read as
+  closed. Attributing a marker to every enclosing item would let one nested discharge quietly close an outer
+  obligation — remote discharge by accident, which is the thing the "same block" rule was written to forbid.
+
 ### The one deliberate oddity
 
 This gate can turn a green tree red **with no commit**, because the clock moved. That is intended and is the
@@ -213,3 +242,11 @@ the first place the discipline breaks.
   closure, impossible due date, future-dated closure, discharged, voided, code-block exclusion, sort order,
   and the clock-tick property itself: identical bytes green on 2026-09-08 and red on 2026-09-09. Every
   failure condition was also reproduced by hand on scratch corpora before the gate was trusted.
+
+  It earned its keep on its first real run, which is the part worth recording: it found a true positive
+  nobody had noticed. ADR-0006's first precondition — the credential-history audit — was struck through and
+  closed with a `DISCHARGED` line, but it predated this ADR and so carried no `OBLIGATION` marker, leaving a
+  discharge with nothing to discharge. The gate reported it as a dangling closure, correctly. That
+  precondition has been retro-fitted with the marker rather than reworded around it, which is what the
+  consequence below means by converting a pre-existing obligation "when it is next touched": the claim stays
+  machine-checked instead of becoming prose the gate cannot see.

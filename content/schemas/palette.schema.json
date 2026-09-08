@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/palette.schema.json",
+  "title": "TrueNorth palette",
+  "description": "The colour allow-list and the three-tone derivation rule, `assets/style/palette.json`. A build-time input like assets/credits.json (ADR-0004): read by the asset pipeline and by make verify-art, never by anything under app/, which is why it lives under assets/ rather than content/ and has no port type. What this schema pins is the machine-readable half - the colour table, the ramps, the ink assignment, the level theme - so the generator that derives 26 of the 31 ramps from the published formula cannot silently change the file's shape. What it deliberately does not pin is the prose half: `shading`, `outline`, `ambientOcclusion` and `restrictedMarks` are rules written for a person and for the art checker, and a JSON Schema that enumerated their fields would be a second, weaker copy of a document the art agent owns. Those four are required to be objects and are otherwise unconstrained here, which is stated rather than left to be discovered.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "owner": { "type": "string", "minLength": 1 },
+    "licence": {
+      "description": "The palette is original work and ships under the project's asset licence (ADR-0004).",
+      "type": "string",
+      "enum": ["CC-BY-4.0"]
+    },
+    "designResolution": { "$ref": "#/$defs/designResolution" },
+    "note": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "shading": {
+      "description": "The three-tone derivation rule, the key light, the formula and its family overrides. Prose and numbers for the art checker; not enumerated here (see this file's description).",
+      "type": "object"
+    },
+    "outline": {
+      "description": "Stroke weights and where outlines apply. Not enumerated here.",
+      "type": "object"
+    },
+    "ambientOcclusion": {
+      "description": "Baked AO rules. Not enumerated here.",
+      "type": "object"
+    },
+    "colours": {
+      "description": "The allow-list: every fill and stroke any SVG may use, keyed by id. The palette lint fails on a colour that is not here.",
+      "type": "object",
+      "propertyNames": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+      "additionalProperties": {
+        "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/hexColour"
+      },
+      "minProperties": 1
+    },
+    "ramps": {
+      "description": "Three-tone ramps, keyed by material. Every tone names a key in `colours`; validate-content cross-checks that once this file is in its input set.",
+      "type": "object",
+      "propertyNames": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+      "additionalProperties": { "$ref": "#/$defs/paletteRamp" },
+      "minProperties": 1
+    },
+    "inks": {
+      "description": "Outline colour ids to the rule for choosing between them.",
+      "type": "object",
+      "propertyNames": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "levelTheme": {
+      "description": "Palette ids proposed per level for the sky/ground/horizon gradient. A proposal: the level document owns its own theme block (ADR-0002, level.schema.json).",
+      "type": "object"
+    },
+    "restrictedMarks": {
+      "description": "Marks that must never be drawn, and why. A legal constraint recorded as data so verify-art can quote it. Not enumerated here.",
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "owner",
+    "licence",
+    "designResolution",
+    "shading",
+    "outline",
+    "ambientOcclusion",
+    "colours",
+    "ramps",
+    "inks",
+    "restrictedMarks"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "designResolution": {
+      "title": "Design resolution",
+      "description": "Portrait, 1080x1920 (ADR-0002). Named width and height rather than the shared vec2: this is a canvas size, not a point, and it reads better in the file it lives in.",
+      "type": "object",
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["width", "height"],
+      "additionalProperties": false
+    },
+
+    "paletteRamp": {
+      "title": "Palette ramp",
+      "description": "One material's three flat fills. `derived` records whether the light and shade tones came from the published formula or were authored by hand; the four atmosphere ramps the formula does not govern are the only false values, and the art checker re-derives every true one.",
+      "type": "object",
+      "properties": {
+        "light": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+        "base": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+        "shade": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+        "derived": { "type": "boolean" },
+        "family": {
+          "description": "Which family override the formula applied, when one did (skin, hair).",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "material": {
+          "description": "What this ramp is the colour of, in words. Nepean sandstone, oxidised copper, canal ice.",
+          "type": "string",
+          "minLength": 1
+        },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["light", "base", "shade"],
+      "additionalProperties": false
+    }
+  }
+}

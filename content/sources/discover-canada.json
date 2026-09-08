@@ -1,0 +1,98 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "discover-canada",
+  "title": "Discover Canada: The Rights and Responsibilities of Citizenship",
+  "publisher": "Immigration, Refugees and Citizenship Canada",
+  "edition": "2012 large-print, PDF metadata modified 2024-11-08",
+  "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+  "file": "discover-canada-2012-large-print.pdf",
+  "extractedText": "discover-canada-2012-large-print.txt",
+  "sha256": "3426e3f4465b8b518262fb7b91a493b1ceae6ae239e5d9aeb2dd40f348dbd4fb",
+  "extractedTextSha256": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+  "bytes": 910364,
+  "pages": 129,
+  "retrievedAt": "2026-09-08",
+  "licence": "Crown copyright. Paraphrase and cite; do not redistribute. Not committed to this repository.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Rights and Responsibilities of Citizenship",
+      "page": 11,
+      "level": 1
+    },
+    {
+      "title": "Who We Are",
+      "page": 16,
+      "level": 2
+    },
+    {
+      "title": "Canada's History",
+      "page": 23,
+      "level": 3
+    },
+    {
+      "title": "Modern Canada",
+      "page": 45,
+      "level": 7
+    },
+    {
+      "title": "How Canadians Govern Themselves",
+      "page": 54,
+      "level": 4
+    },
+    {
+      "title": "Federal Elections",
+      "page": 60,
+      "level": 5
+    },
+    {
+      "title": "The Justice System",
+      "page": 75,
+      "level": 6
+    },
+    {
+      "title": "Canadian Symbols",
+      "page": 78,
+      "level": 9
+    },
+    {
+      "title": "Canada's Economy",
+      "page": 90,
+      "level": 8
+    },
+    {
+      "title": "Canada's Regions",
+      "page": 93,
+      "level": 10
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "Oath of Citizenship",
+      "problem": "Names Her Majesty Queen Elizabeth II. The reigning monarch is King Charles III, and the Oath was amended in June 2021 to add recognition of Aboriginal and treaty rights of First Nations, Inuit and Metis peoples.",
+      "affects": [
+        "Rights and Responsibilities of Citizenship"
+      ],
+      "action": "volatile: verify against the live canada.ca page, never against this file"
+    },
+    {
+      "topic": "The monarch and the Governor General",
+      "problem": "References to the Sovereign are pre-accession. The document contains six references to Elizabeth II or Her Majesty and one to His Majesty, so it is partially and inconsistently updated.",
+      "affects": [
+        "How Canadians Govern Themselves",
+        "Canadian Symbols"
+      ],
+      "action": "volatile: verify against the live canada.ca page"
+    },
+    {
+      "topic": "Named office holders and election dates",
+      "problem": "Any named Prime Minister, Governor General, premier or seat count is a point-in-time fact.",
+      "affects": [
+        "How Canadians Govern Themselves",
+        "Federal Elections",
+        "Modern Canada"
+      ],
+      "action": "volatile: re-verify every run, quarantine when asOf exceeds 180 days"
+    }
+  ]
+}

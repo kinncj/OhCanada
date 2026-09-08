@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/quest.schema.json",
+  "title": "TrueNorth quest",
+  "description": "One quest, `content/quests/<id>.json`. A quest is an ordered list of steps a character gives the player; finishing the last step completes it. Question scheduling belongs to the domain - a step names the pool, it does not pick from it.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId" },
+    "levelId": {
+      "description": "The level this quest is played on. The level document lists the quest id too; validate-content is where the two are cross-checked.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId"
+    },
+    "giver": {
+      "description": "The character who offers the quest.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
+    },
+    "title": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" },
+    "summary": {
+      "description": "One or two plain-language sentences shown in the quest log and announced in the live region when the quest is accepted.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+    },
+    "steps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/questStep" },
+      "minItems": 1
+    }
+  },
+  "required": ["$schema", "id", "levelId", "giver", "title", "summary", "steps"],
+  "additionalProperties": false,
+
+  "$defs": {
+    "questStep": {
+      "title": "Quest step document",
+      "description": "One objective. `targetId` is deliberately an unbranded id: what it names depends on `kind` (a character for talk, a POI for visit or collect, a question pool for answer), and a union of brands is not a shape a schema can state.",
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+        "kind": {
+          "type": "string",
+          "enum": ["talk", "visit", "collect", "answer"]
+        },
+        "targetId": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+        "prompt": {
+          "description": "What the player is being asked to do, in plain language, roughly CLB 4.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+        },
+        "subject": {
+          "description": "Which bank an `answer` step draws from. Required on `answer` steps and forbidden elsewhere.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/subjectId"
+        },
+        "count": {
+          "description": "How many questions an `answer` step asks. The quest says how many; the FSRS scheduler says which, from the player's own review state. A quest that named the ids would make the scheduler decorative, and a scheduler that ignored the quest would make the step unbounded - so the quest owns the count and the pool, and the domain owns the choice.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "questionPool": {
+          "description": "Optional narrowing of the draw to these ids, still ordered and filtered by the scheduler. Absent means the whole subject bank is eligible, which is the normal case; present is for a step that must stay on one topic.",
+          "type": "array",
+          "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questionId" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "dialogue": {
+          "description": "Lines spoken when the step starts. Present on `talk` steps; absent elsewhere. Subtitles are on by default, so this is the subtitle text as well as the dialogue text.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/dialogueLine" },
+          "minItems": 1
+        }
+      },
+      "required": ["id", "kind", "targetId", "prompt"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "The draw specification belongs to `answer` steps and to nothing else, so a `talk` step cannot carry a stray subject or count that nothing reads. Only property names this object already declares appear here (ADR-0007).",
+          "if": {
+            "properties": { "kind": { "const": "answer" } },
+            "required": ["kind"]
+          },
+          "then": { "required": ["subject", "count"] },
+          "else": {
+            "not": {
+              "anyOf": [
+                { "required": ["subject"] },
+                { "required": ["count"] },
+                { "required": ["questionPool"] }
+              ]
+            }
+          }
+        }
+      ]
+    },
+
+    "dialogueLine": {
+      "title": "Dialogue line",
+      "type": "object",
+      "properties": {
+        "speaker": {
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
+        },
+        "text": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" },
+        "fact": {
+          "description": "Whether this line states a fact about Canada and, if so, its source and verification. \"Welcome to Parliament Hill\" is flavour; \"Ottawa is Canada's capital\" is a claim, and a wrong claim in an NPC's mouth is exactly as wrong as one on a question card (ADR-0003).",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factClaim"
+        },
+        "expression": {
+          "description": "Named face pose on the speaker's rig, resolved by the same name in Rive and in the sprite atlas. Absent leaves the rig's default.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["speaker", "text", "fact"],
+      "additionalProperties": false
+    }
+  }
+}

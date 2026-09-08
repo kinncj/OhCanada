@@ -9,26 +9,26 @@
  *
  * Traversal stays one-thumb throughout (CLAUDE.md): hold to move, tap to
  * jump/interact, tap an NPC or POI to engage, and no trick system — so a mode is
- * described entirely by *tuning*, not by new verbs. `LocomotionTuning` is the
- * shape a level's JSON will have to satisfy — no `level.schema.json` exists yet,
- * so nothing validates it and nothing mirrors it. ADR-0007 puts the schema first:
- * slice 1 task 1.2 writes it, and this type is reconciled against it there.
+ * described entirely by *tuning*, not by new verbs. `LocomotionTuning` and its
+ * satellites are declared in `content/schemas/level.schema.json` (`$defs`
+ * `locomotionTuning`, `jumpAffordance`, `interactionAffordance`,
+ * `locomotionAnimationBinding`, `locomotionMode`, `movementDrive`), because they
+ * are part of a level document; the contract test mirrors each of them here.
  *
  * Implementations are pure functions of (state, intent, dt) and therefore live in
  * the domain, not in an adapter — they are covered by the ≥ 90 % gate. The seam is
  * declared here because the application composes it and hands it to the scene.
  *
  * PROVISIONAL (ADR-0008) — nothing imports this port and nothing implements it
- * yet. First call site: slice 1 task 1.14 (skate locomotion), against the
- * `level.schema.json` written in task 1.2. Eight modes are declared here and zero
- * have been built, so the tuning record in particular is a guess at what a mode
- * needs; the implementer may change it without an ADR, and removes this marker in
- * the same change.
+ * yet. First call site: slice 1 task 1.14 (skate locomotion). Eight modes are
+ * declared here and zero have been built, so the tuning record is validated but
+ * still untried; the implementer may change it — schema first, then this file —
+ * and removes this marker in the same change.
  */
 
 import type { Result } from '@common/result';
 
-/** SPECULATIVE — no `level.schema.json` yet (ADR-0007). */
+/** `level.schema.json#/$defs/locomotionMode`. */
 export type LocomotionMode =
   | 'walk'
   | 'canoe'
@@ -45,13 +45,13 @@ export type LocomotionMode =
  *  - `auto`: movement is continuous and the player only steers or brakes
  *    (train; also every mode when the auto-move accessibility option is on).
  */
-/** SPECULATIVE — no `level.schema.json` yet (ADR-0007). */
+/** `level.schema.json#/$defs/movementDrive`. */
 export type MovementDrive = 'held' | 'auto';
 
 /**
  * What a tap does in this mode when the player is not touching an NPC or POI.
  *
- * SPECULATIVE — no `level.schema.json` yet (ADR-0007).
+ * `level.schema.json#/$defs/jumpAffordance`.
  */
 export interface JumpAffordance {
   /** Upward impulse in design-resolution px/s. */
@@ -70,7 +70,7 @@ export interface JumpAffordance {
 /**
  * How close, and how still, the player must be to engage an NPC or POI.
  *
- * SPECULATIVE — no `level.schema.json` yet (ADR-0007).
+ * `level.schema.json#/$defs/interactionAffordance`.
  */
 export interface InteractionAffordance {
   /** Reach in design-resolution px. */
@@ -84,14 +84,11 @@ export interface InteractionAffordance {
 }
 
 /**
- * Everything a level's JSON must provide to offer a mode. No field is optional
- * except the two affordances, whose absence *is* the statement that the mode
- * cannot jump or cannot interact.
- *
- * SPECULATIVE — no `level.schema.json` yet (ADR-0007). This is the largest
- * unvalidated shape in the directory: eleven fields, none of them checked by
- * anything, all of them read from authored JSON. Task 1.2 writes the schema and
- * this type is reconciled against it property by property.
+ * Everything a level's JSON must provide to offer a mode, exactly as
+ * `level.schema.json#/$defs/locomotionTuning` validates it. No field is optional:
+ * the two affordances are nullable instead, because `null` *is* the statement
+ * that the mode cannot jump or cannot interact, and an absent key would leave
+ * that unsaid.
  */
 export interface LocomotionTuning {
   readonly mode: LocomotionMode;
@@ -101,7 +98,19 @@ export interface LocomotionTuning {
   readonly acceleration: number;
   /** px/s² while input is released — friction, edging, paddling drag. */
   readonly deceleration: number;
-  /** px/s² when input reverses. High for skate/canoe: turning around costs time. */
+  /**
+   * px/s² while input is held *against* the current direction — the brake, and
+   * then the turn.
+   *
+   * Strictly between `deceleration` and `acceleration`, and both halves of that
+   * band come from TN-LEVEL-03: above `deceleration` so holding the other way
+   * stops you in a shorter distance than a free glide, below `acceleration` so
+   * reaching cruise speed the other way takes longer than starting from rest.
+   * An earlier comment here said "high for skate/canoe", which is backwards — a
+   * high acceleration makes reversing *faster*. The band is asserted by
+   * `tests/unit/contracts/locomotion-tuning-is-coherent.test.ts`, because JSON
+   * Schema cannot compare two sibling values.
+   */
   readonly turnAcceleration: number;
   /** 0–1. How much momentum survives an input release; ice and water sit near 1. */
   readonly glide: number;
@@ -118,7 +127,7 @@ export interface LocomotionTuning {
   readonly labelKey: string;
 }
 
-/** SPECULATIVE — no `level.schema.json` yet (ADR-0007). */
+/** `level.schema.json#/$defs/locomotionAnimationBinding`. */
 export interface LocomotionAnimationBinding {
   /** Number input fed normalised speed (0–1). */
   readonly speedInput: string;

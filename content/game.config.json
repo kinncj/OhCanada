@@ -24,6 +24,12 @@
     "wrongWeight": 3,
     "dailyNewLimit": 10
   },
+  "study": {
+    "drillSize": 5
+  },
+  "save": {
+    "maxImportBytes": 1048576
+  },
   "graphicsPresets": {
     "low": {
       "renderScale": 0.75,

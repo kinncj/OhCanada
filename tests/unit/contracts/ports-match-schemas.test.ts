@@ -28,6 +28,29 @@
  * entry in `TYPE_NAME_OVERRIDES` records the pairing explicitly. A schema or a
  * `$defs` object that maps to no exported type fails the run: the only way to
  * opt out is a named entry in one of the skip tables below, with a reason.
+ *
+ * Since slice 1 task 1.2 it also compares **value types**, not only property
+ * names. ADR-0007 recorded that gap honestly and deferred it: with one schema and
+ * zero branded properties the mapping would have been guessed rather than tested.
+ * The half that made it worth waiting for is the branded ids: a `$ref` to
+ * `common.schema.json#/$defs/levelId` must be satisfied by `LevelId`, not by
+ * `string`, or the check either rejects every id in the game or accepts every
+ * string — and branded ids are the one thing ADR-0007 gave up code generation to
+ * keep. The rule is bidirectional and derived from the `$ref` itself: a `$def`
+ * whose name pascal-cases to a branded alias in `app/domain/ids.ts` demands that
+ * brand, and every other scalar `$ref` demands the *absence* of one, so
+ * `titleKey: LevelId` fails just as loudly as `id: string`.
+ *
+ * What the value check covers, per property, recursively: branded vs plain
+ * scalars; `string` / `integer` / `number` / `boolean` / `null`; `enum` against a
+ * union of literals, in both directions; arrays against `readonly T[]`;
+ * `prefixItems` against a fixed-length tuple; `anyOf` against a TypeScript union
+ * (which is how `IsoInstant | null` and `JumpAffordance | null` are stated); a
+ * string-keyed map (`additionalProperties: { … }`) against an index signature;
+ * and a `$ref` to an object `$def` against *that `$def`'s* bound interface, so
+ * `camera: CameraTuning` cannot quietly become `camera: ParallaxLayer`.
+ *
+ * What it still does not cover is listed at the bottom of ADR-0007.
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
@@ -67,6 +90,21 @@ const SKIPPED_SCHEMAS: Readonly<Record<string, string>> = {
   // applies to it, and this entry must be deleted.
   'credits.schema.json':
     'build-time artefact (ADR-0004) — never read by the application at runtime, so no port type exists',
+  // Same class as credits, and settled the same way: the palette is an input to
+  // `make assets` and `make verify-art`, authored by the art agent and read by
+  // nothing under `app/`. ADR-0004 (amended) draws the line — `content/` is what
+  // the game loads at runtime, `assets/` is what the pipeline reads at build
+  // time — so the file stays at `assets/style/palette.json` and only its schema
+  // lives here.
+  'palette.schema.json':
+    'build-time artefact (ADR-0004) — an asset-pipeline and verify-art input, never read by the application at runtime',
+  // The register of documents the question bank was written against. It is what
+  // `verify-content` re-fetches and re-hashes; the game reads questions, never
+  // the sources behind them, and `ContentRepository` exposes no way to ask for
+  // one. If a screen ever cites a source to a player, that screen reads a
+  // document, ADR-0007 applies to it, and this entry is deleted.
+  'source.schema.json':
+    'verification-time register (ADR-0003) — read by verify-content, never by the application at runtime',
 };
 
 /**
@@ -75,20 +113,23 @@ const SKIPPED_SCHEMAS: Readonly<Record<string, string>> = {
  * pointer must exist, and the type it would bind to must not.
  */
 const SKIPPED_DEFS: Readonly<Record<string, string>> = {
-  // Slice 1's schemas will `$ref` this for every player-facing string, but no
-  // port re-declares the `{ en, fr }` pair today and ADR-0008 forbids adding a
-  // port type before something reads it. The moment a port declares
-  // `LocalizedText`, this entry fails and the binding is checked.
-  'common.schema.json#/$defs/localizedText':
-    'no port re-declares the EN/FR pair yet — the type must not be written before a consumer exists (ADR-0008)',
-  // Same reasoning: design-resolution points and sizes are numbers in the port
-  // types that use them, and no `Vec2` interface exists to mirror.
-  'common.schema.json#/$defs/vec2':
-    'no port re-declares a 2D vector yet — the type must not be written before a consumer exists (ADR-0008)',
-  // The item shape of the credits artefact above; it inherits that entry's
-  // reason and disappears with it.
+  // The item shape of the build-time credits artefact above; it inherits that
+  // entry's reason and disappears with it.
+  //
+  // The `localizedText` and `vec2` entries that stood here through slice 0 are
+  // gone, deleted by the rule that put them there: slice 1's documents read both
+  // shapes, so `LocalizedText` and `Vec2` are now port types with consumers, and
+  // this table's staleness check fails on an entry whose type has been written.
   'credits.schema.json#/$defs/creditedAsset':
     'item of the build-time credits artefact (ADR-0004) — never read by the application at runtime',
+  'palette.schema.json#/$defs/paletteRamp':
+    'part of the build-time palette artefact (ADR-0004) — never read by the application at runtime',
+  'palette.schema.json#/$defs/designResolution':
+    'part of the build-time palette artefact (ADR-0004) — never read by the application at runtime',
+  'source.schema.json#/$defs/sourceChapter':
+    'part of the verification-time source register (ADR-0003) — never read by the application at runtime',
+  'source.schema.json#/$defs/knownStaleness':
+    'part of the verification-time source register (ADR-0003) — never read by the application at runtime',
 };
 
 /**
@@ -100,18 +141,138 @@ const TYPE_NAME_OVERRIDES: Readonly<Record<string, string>> = {
   // The `$def` is titled "Colour theme"; the exported interface is `ThemeColours`
   // because it is the palette block of a document, not a document itself.
   'game.config.schema.json#/$defs/theme': 'ThemeColours',
+  // Two roots whose port types were named before this convention existed, and
+  // whose names are better than the ones the convention would derive. Both use a
+  // reserved document suffix (ADR-0007), so both are still walked as document
+  // roots; only the derivation `<file> -> <Name>Document` needed the pairing.
+  'locale.schema.json#': 'LocaleBundle',
+  'progress.schema.json#': 'ProgressSnapshot',
 };
+
+/* -------------------------------------------------------------------------- */
+/* type side — TypeScript compiler API                                        */
+/* -------------------------------------------------------------------------- */
+
+interface TypeShape {
+  readonly required: readonly string[];
+  readonly optional: readonly string[];
+}
+
+const buildPortsProgram = (): ts.Program => {
+  const configPath = `${REPO_ROOT}tsconfig.json`;
+  const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
+  if (configFile.error !== undefined) {
+    throw new Error(
+      `cannot read tsconfig.json: ${ts.flattenDiagnosticMessageText(configFile.error.messageText, ' ')}`,
+    );
+  }
+  const parsed = ts.parseJsonConfigFileContent(configFile.config, ts.sys, REPO_ROOT);
+
+  // Same module resolution and `paths` as the build, but only the ports graph is
+  // loaded and nothing is emitted. `types: []` keeps the ambient @types packages
+  // out: this program is used to enumerate members, never to typecheck (that is
+  // `make typecheck`'s job).
+  return ts.createProgram([PORTS_INDEX], {
+    ...parsed.options,
+    noEmit: true,
+    skipLibCheck: true,
+    types: [],
+  });
+};
+
+const program = buildPortsProgram();
+const checker = program.getTypeChecker();
+const portsIndexSource = program.getSourceFile(PORTS_INDEX);
+
+if (portsIndexSource === undefined) {
+  throw new Error(`the TypeScript program did not load ${PORTS_INDEX_LABEL}`);
+}
+
+const syntaxErrors = program.getSyntacticDiagnostics(portsIndexSource);
+if (syntaxErrors.length > 0) {
+  throw new Error(
+    `${PORTS_INDEX_LABEL} does not parse: ${syntaxErrors
+      .map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, ' '))
+      .join('; ')}`,
+  );
+}
+
+const portsModuleSymbol = checker.getSymbolAtLocation(portsIndexSource);
+if (portsModuleSymbol === undefined) {
+  throw new Error(`${PORTS_INDEX_LABEL} is not a module`);
+}
+
+const exportedSymbols = new Map<string, ts.Symbol>(
+  checker.getExportsOfModule(portsModuleSymbol).map((symbol) => [symbol.getName(), symbol]),
+);
+
+const exportedTypeNames = [...exportedSymbols.keys()].sort();
+
+/* -------------------------------------------------------------------------- */
+/* branded ids — the half of the value check that had to wait for slice 1     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * `Brand<string, 'LevelId'>` is `string & { readonly [brand]: 'LevelId' }`. The
+ * brand is read *structurally* — an intersection member that is an object with
+ * exactly one property whose type is a string literal — rather than by matching
+ * the mangled `__@brand@n` symbol name, so renaming the `unique symbol` in
+ * `app/domain/ids.ts` cannot silently turn this check off.
+ */
+const brandOf = (type: ts.Type): string | null => {
+  if (!type.isIntersection()) return null;
+  for (const part of type.types) {
+    if ((part.flags & ts.TypeFlags.Object) === 0) continue;
+    const properties = part.getProperties();
+    if (properties.length !== 1) continue;
+    const only = checker.getTypeOfSymbol(properties[0]!);
+    if (only.isStringLiteral()) return only.value;
+  }
+  return null;
+};
+
+const IDS_FILE = `${REPO_ROOT}app/domain/ids.ts`;
+
+/**
+ * Every branded alias the id vocabulary exports, keyed by its own name.
+ *
+ * This is what makes the `$ref`-to-brand rule derived rather than listed: a
+ * `$def` named `levelId` demands `LevelId` because `LevelId` is here, and a new
+ * branded id is covered the day `ids.ts` declares it. Reading the *set* from the
+ * source is safe — the brand identity itself is still checked through the type
+ * system, so a `LevelId` that had lost its brand would not be in here at all.
+ */
+const brandedIdNames = ((): ReadonlySet<string> => {
+  const source = program.getSourceFile(IDS_FILE);
+  if (source === undefined) throw new Error(`the TypeScript program did not load ${IDS_FILE}`);
+  const moduleSymbol = checker.getSymbolAtLocation(source);
+  if (moduleSymbol === undefined) throw new Error('app/domain/ids.ts is not a module');
+  const names = new Set<string>();
+  for (const symbol of checker.getExportsOfModule(moduleSymbol)) {
+    const declared = checker.getDeclaredTypeOfSymbol(symbol);
+    if (brandOf(declared) === symbol.getName()) names.add(symbol.getName());
+  }
+  return names;
+})();
 
 /* -------------------------------------------------------------------------- */
 /* schema side                                                                */
 /* -------------------------------------------------------------------------- */
 
 interface JsonSchemaObject {
+  readonly $id?: string;
   readonly title?: string;
-  readonly type?: string;
+  readonly type?: string | readonly string[];
   readonly properties?: Readonly<Record<string, unknown>>;
   readonly required?: readonly string[];
   readonly additionalProperties?: unknown;
+  readonly propertyNames?: unknown;
+  readonly items?: unknown;
+  readonly prefixItems?: readonly unknown[];
+  readonly enum?: readonly unknown[];
+  readonly const?: unknown;
+  readonly anyOf?: readonly JsonSchemaObject[];
+  readonly oneOf?: readonly JsonSchemaObject[];
   readonly $defs?: Readonly<Record<string, JsonSchemaObject>>;
   readonly $ref?: string;
 }
@@ -180,14 +341,23 @@ const walkSubschemas = (
   step('#', root);
 };
 
-/** One schema object that must have a mirror type: the root, or one `$def`. */
+/**
+ * One schema node that must have a mirror type: the root, or one `$def`.
+ *
+ * `kind` is `object` for a named property set and `enum` for a closed list of
+ * literals. Enum `$defs` are bound too, because otherwise a union like
+ * `LocomotionMode` could never be schema-backed and would have to carry a
+ * `SPECULATIVE` marker for ever — a marker claiming "nothing validates this"
+ * about a value `make validate-content` does in fact check.
+ */
 interface Binding {
   /** File name, e.g. `game.config.schema.json`. */
   readonly file: string;
   /** JSON pointer inside that file: `#` for the root, `#/$defs/<key>` otherwise. */
   readonly pointer: string;
-  /** Exported interface name in `app/application/ports/index.ts`. */
+  /** Exported type name in `app/application/ports/index.ts`. */
   readonly typeName: string;
+  readonly kind: 'object' | 'enum';
   readonly schema: JsonSchemaObject;
 }
 
@@ -210,6 +380,15 @@ const rootTypeNameFor = (file: string): string =>
  */
 const isObjectSchema = (schema: JsonSchemaObject): boolean => schema.properties !== undefined;
 
+/**
+ * A closed list of literals. A `$def` that is a *branded scalar* — `levelId`,
+ * `isoInstant` — is deliberately not one of these even when it carries an `enum`
+ * (`localeCode` does): its port-side counterpart is a branded alias in
+ * `app/domain/ids.ts`, not an exported union, and the brand rule checks it.
+ */
+const isEnumSchema = (schema: JsonSchemaObject): boolean =>
+  Array.isArray(schema.enum) && schema.properties === undefined;
+
 /** The two pointers a bindable object may live at: the root, or one `$def`. */
 const isBindablePointer = (pointer: string): boolean =>
   pointer === '#' || /^#\/\$defs\/[^/]+$/u.test(pointer);
@@ -231,19 +410,21 @@ const candidatesFor = (file: string): readonly Binding[] => {
   const candidates: Binding[] = [];
 
   walkSubschemas(schema, (pointer, node) => {
-    if (!isObjectSchema(node)) return;
     if (!isBindablePointer(pointer)) return;
-    if (pointer === '#' && SKIPPED_SCHEMAS[file] !== undefined) return;
     const derived =
       pointer === '#'
         ? rootTypeNameFor(file)
         : pascalCase(node.title ?? pointer.slice('#/$defs/'.length));
-    candidates.push({
-      file,
-      pointer,
-      typeName: TYPE_NAME_OVERRIDES[`${file}${pointer}`] ?? derived,
-      schema: node,
-    });
+    const typeName = TYPE_NAME_OVERRIDES[`${file}${pointer}`] ?? derived;
+
+    if (isObjectSchema(node)) {
+      if (pointer === '#' && SKIPPED_SCHEMAS[file] !== undefined) return;
+      candidates.push({ file, pointer, typeName, kind: 'object', schema: node });
+      return;
+    }
+    if (isEnumSchema(node) && pointer !== '#' && !brandedIdNames.has(typeName)) {
+      candidates.push({ file, pointer, typeName, kind: 'enum', schema: node });
+    }
   });
 
   return candidates;
@@ -258,13 +439,55 @@ const candidatesFor = (file: string): readonly Binding[] => {
  * `camera: { minZoom, maxZoom }` and a port saying `camera: { zoom }` can both
  * be green. Every object shape has to sit at a pointer a type can be bound to.
  */
+/**
+ * The one exemption, and the reason it is narrow.
+ *
+ * A conditional — `if` / `then` / `else` / `not`, reached through `allOf`,
+ * `anyOf` or `oneOf` — is a *constraint*, not a shape. `question`'s "a verified
+ * status must quote its evidence" and `quest`'s "only an `answer` step carries a
+ * subject and a count" are both stated that way, and both have to list
+ * `properties` to name the property they constrain. Banning that would either
+ * lose the constraints or force each one into a `$def` demanding a port
+ * interface of its own, which is worse than the defect the rule prevents.
+ *
+ * So the exemption holds only when the conditional cannot introduce a shape:
+ * every property name it lists must already be declared by the nearest enclosing
+ * bindable object. A conditional that names a property the parent does not have
+ * is exactly the "compared with nothing" case and still fails.
+ */
+const CONDITIONAL_KEYWORDS = new Set(['allOf', 'anyOf', 'oneOf', 'not', 'if', 'then', 'else']);
+
+/** The root, or the `$def`, that a pointer sits under, plus the path down to it. */
+const bindableAncestorOf = (pointer: string): { pointer: string; tail: readonly string[] } => {
+  if (pointer.startsWith('#/$defs/')) {
+    const segments = pointer.slice('#/$defs/'.length).split('/');
+    return { pointer: `#/$defs/${segments[0] ?? ''}`, tail: segments.slice(1) };
+  }
+  return { pointer: '#', tail: pointer === '#' ? [] : pointer.slice(2).split('/') };
+};
+
 const inlineObjectsIn = (file: string): readonly string[] => {
+  const nodes = new Map<string, JsonSchemaObject>();
+  walkSubschemas(readSchema(file), (pointer, node) => nodes.set(pointer, node));
+
   const found: string[] = [];
-  walkSubschemas(readSchema(file), (pointer, node) => {
-    if (!isObjectSchema(node)) return;
-    if (isBindablePointer(pointer)) return;
+  for (const [pointer, node] of nodes) {
+    if (!isObjectSchema(node)) continue;
+    if (isBindablePointer(pointer)) continue;
+
+    const ancestor = bindableAncestorOf(pointer);
+    const onlyConditionals = ancestor.tail.every(
+      (segment) => CONDITIONAL_KEYWORDS.has(segment) || /^\d+$/u.test(segment),
+    );
+    const parent = nodes.get(ancestor.pointer);
+    const declared = new Set(Object.keys(parent?.properties ?? {}));
+    const namesOnlyDeclared = Object.keys(node.properties ?? {}).every((name) =>
+      declared.has(name),
+    );
+    if (onlyConditionals && parent !== undefined && namesOnlyDeclared) continue;
+
     found.push(pointer);
-  });
+  }
   return found;
 };
 
@@ -275,64 +498,6 @@ const allBindings = allCandidates.filter(
 );
 const checkedFiles = [...new Set(allBindings.map((binding) => binding.file))].sort();
 
-/* -------------------------------------------------------------------------- */
-/* type side — TypeScript compiler API                                        */
-/* -------------------------------------------------------------------------- */
-
-interface TypeShape {
-  readonly required: readonly string[];
-  readonly optional: readonly string[];
-}
-
-const buildPortsProgram = (): ts.Program => {
-  const configPath = `${REPO_ROOT}tsconfig.json`;
-  const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
-  if (configFile.error !== undefined) {
-    throw new Error(
-      `cannot read tsconfig.json: ${ts.flattenDiagnosticMessageText(configFile.error.messageText, ' ')}`,
-    );
-  }
-  const parsed = ts.parseJsonConfigFileContent(configFile.config, ts.sys, REPO_ROOT);
-
-  // Same module resolution and `paths` as the build, but only the ports graph is
-  // loaded and nothing is emitted. `types: []` keeps the ambient @types packages
-  // out: this program is used to enumerate members, never to typecheck (that is
-  // `make typecheck`'s job).
-  return ts.createProgram([PORTS_INDEX], {
-    ...parsed.options,
-    noEmit: true,
-    skipLibCheck: true,
-    types: [],
-  });
-};
-
-const program = buildPortsProgram();
-const checker = program.getTypeChecker();
-const portsIndexSource = program.getSourceFile(PORTS_INDEX);
-
-if (portsIndexSource === undefined) {
-  throw new Error(`the TypeScript program did not load ${PORTS_INDEX_LABEL}`);
-}
-
-const syntaxErrors = program.getSyntacticDiagnostics(portsIndexSource);
-if (syntaxErrors.length > 0) {
-  throw new Error(
-    `${PORTS_INDEX_LABEL} does not parse: ${syntaxErrors
-      .map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, ' '))
-      .join('; ')}`,
-  );
-}
-
-const portsModuleSymbol = checker.getSymbolAtLocation(portsIndexSource);
-if (portsModuleSymbol === undefined) {
-  throw new Error(`${PORTS_INDEX_LABEL} is not a module`);
-}
-
-const exportedSymbols = new Map<string, ts.Symbol>(
-  checker.getExportsOfModule(portsModuleSymbol).map((symbol) => [symbol.getName(), symbol]),
-);
-
-const exportedTypeNames = [...exportedSymbols.keys()].sort();
 
 /* -------------------------------------------------------------------------- */
 /* the reverse walk: document types with no schema must say so                */
@@ -521,6 +686,369 @@ const explain = (binding: Binding, schemaShape: TypeShape, typeShape: TypeShape)
   return lines.join('\n');
 };
 
+
+/* -------------------------------------------------------------------------- */
+/* value types — the gap ADR-0007 recorded in slice 0 and deferred to 1.2      */
+/* -------------------------------------------------------------------------- */
+
+/** `$id` -> file, so a cross-file `$ref` resolves without a network fetch. */
+const fileBySchemaId = new Map<string, string>(
+  schemaFiles.flatMap((file) => {
+    const id = readSchema(file).$id;
+    return id === undefined ? [] : [[id, file] as const];
+  }),
+);
+
+const rootByFile = new Map<string, JsonSchemaObject>(
+  schemaFiles.map((file) => [file, readSchema(file)] as const),
+);
+
+interface ResolvedRef {
+  readonly file: string;
+  readonly pointer: string;
+  readonly node: JsonSchemaObject;
+}
+
+/** Follows `#/$defs/x` and `https://…/common.schema.json#/$defs/x` alike. */
+const resolveRef = (ref: string, fromFile: string): ResolvedRef | null => {
+  const hash = ref.indexOf('#');
+  const base = hash === -1 ? ref : ref.slice(0, hash);
+  const fragment = hash === -1 ? '' : ref.slice(hash + 1);
+  const file = base === '' ? fromFile : fileBySchemaId.get(base);
+  if (file === undefined) return null;
+
+  let node = rootByFile.get(file);
+  if (node === undefined) return null;
+  for (const raw of fragment.split('/').filter((part) => part.length > 0)) {
+    const key = raw.replace(/~1/gu, '/').replace(/~0/gu, '~');
+    const next = (node as unknown as Record<string, unknown>)[key];
+    if (!isRecord(next)) return null;
+    node = next as JsonSchemaObject;
+  }
+  return { file, pointer: fragment === '' ? '#' : `#${fragment}`, node };
+};
+
+const bindingAt = new Map<string, Binding>(
+  allBindings.map((binding) => [`${binding.file}${binding.pointer}`, binding] as const),
+);
+
+/** The last segment of a pointer, pascal-cased: `#/$defs/levelId` -> `LevelId`. */
+const refNameOf = (pointer: string): string =>
+  pascalCase(pointer.slice(pointer.lastIndexOf('/') + 1));
+
+const typeNameOf = (type: ts.Type): string | undefined =>
+  type.aliasSymbol?.getName() ?? type.getSymbol()?.getName();
+
+const show = (type: ts.Type): string => checker.typeToString(type);
+
+const describeNode = (node: JsonSchemaObject): string => {
+  if (node.$ref !== undefined) return `$ref ${node.$ref}`;
+  const json = JSON.stringify(node);
+  return json.length > 90 ? `${json.slice(0, 87)}...` : json;
+};
+
+/**
+ * `boolean` is a union of `true | false` inside the compiler, so it must not be
+ * split the way a real union is; everything else splits normally.
+ */
+const constituentsOf = (type: ts.Type): readonly ts.Type[] => {
+  if ((type.flags & ts.TypeFlags.BooleanLike) !== 0) return [type];
+  return type.isUnion() ? type.types : [type];
+};
+
+const withoutUndefined = (type: ts.Type): ts.Type => {
+  if (!type.isUnion()) return type;
+  const kept = type.types.filter((part) => (part.flags & ts.TypeFlags.Undefined) === 0);
+  return kept.length === 1 ? kept[0]! : type;
+};
+
+/** The primitive under a brand: `LevelId` is `string`, `EpochMillis` is `number`. */
+const scalarFlagsOf = (type: ts.Type): ts.TypeFlags => {
+  if (!type.isIntersection()) return type.flags;
+  let flags = ts.TypeFlags.Never;
+  for (const part of type.types) {
+    if ((part.flags & ts.TypeFlags.Object) === 0) flags |= part.flags;
+  }
+  return flags;
+};
+
+const literalValueOf = (type: ts.Type): string | number | boolean | null | undefined => {
+  if (type.isStringLiteral()) return type.value;
+  if (type.isNumberLiteral()) return type.value;
+  if ((type.flags & ts.TypeFlags.BooleanLiteral) !== 0) return show(type) === 'true';
+  if ((type.flags & ts.TypeFlags.Null) !== 0) return null;
+  return undefined;
+};
+
+/** `readonly T[]` and `T[]` both; a tuple is handled separately. */
+const arrayElementOf = (type: ts.Type): ts.Type | null => {
+  if (checker.isTupleType(type)) return null;
+  const name = type.getSymbol()?.getName();
+  if (name !== 'Array' && name !== 'ReadonlyArray') return null;
+  return typeArgumentsOf(type)[0] ?? null;
+};
+
+/**
+ * Compares one schema node with one TypeScript type, recursively.
+ *
+ * `brand` carries a demand down through a `$ref` chain: a property that `$ref`s
+ * `common.schema.json#/$defs/levelId` must be `LevelId`, and the string check at
+ * the bottom of that chain is the place that can say so. `brand === null` is the
+ * opposite demand and is just as load-bearing: a plain `"type": "string"` must
+ * *not* be satisfied by a branded id, or `titleKey: LevelId` would pass.
+ */
+const valueMismatches = (
+  node: JsonSchemaObject,
+  file: string,
+  type: ts.Type,
+  path: string,
+  brand: string | null,
+): readonly string[] => {
+  if (node.$ref !== undefined) {
+    const target = resolveRef(node.$ref, file);
+    if (target === null) return [`${path}: cannot resolve "$ref": "${node.$ref}"`];
+
+    const refName = refNameOf(target.pointer);
+    if (brandedIdNames.has(refName)) {
+      return valueMismatches(target.node, target.file, type, path, refName);
+    }
+
+    const bound = bindingAt.get(`${target.file}${target.pointer}`);
+    if (bound !== undefined) {
+      if (typeNameOf(type) !== bound.typeName) {
+        return [
+          `${path}: the schema $refs ${target.file}${target.pointer}, which binds to ` +
+            `\`${bound.typeName}\`; the type is \`${show(type)}\``,
+        ];
+      }
+      return bound.kind === 'enum'
+        ? enumMismatches(target.node, type, path, brand)
+        : [];
+    }
+    return valueMismatches(target.node, target.file, type, path, brand);
+  }
+
+  const branches = node.anyOf ?? node.oneOf;
+  if (branches !== undefined) return unionMismatches(branches, file, type, path, brand);
+
+  if (Array.isArray(node.type) && node.type.length > 1) {
+    return unionMismatches(
+      node.type.map((one) => ({ ...node, type: one }) as JsonSchemaObject),
+      file,
+      type,
+      path,
+      brand,
+    );
+  }
+
+  if (node.enum !== undefined) return enumMismatches(node, type, path, brand);
+  if (node.const !== undefined) return [];
+
+  const kind = Array.isArray(node.type) ? node.type[0] : node.type;
+  if (kind === undefined) return [];
+
+  if (kind === 'array') {
+    if (node.prefixItems !== undefined) {
+      if (!checker.isTupleType(type)) {
+        return [
+          `${path}: the schema is a fixed-length tuple of ${String(node.prefixItems.length)}; ` +
+            `the type is \`${show(type)}\`, which is not a tuple`,
+        ];
+      }
+      const elements = checker.getTypeArguments(type as ts.TypeReference);
+      if (elements.length !== node.prefixItems.length) {
+        return [
+          `${path}: the schema has ${String(node.prefixItems.length)} prefixItems; ` +
+            `\`${show(type)}\` has ${String(elements.length)} elements`,
+        ];
+      }
+      return node.prefixItems.flatMap((item, index) =>
+        isRecord(item)
+          ? valueMismatches(
+              item as JsonSchemaObject,
+              file,
+              elements[index]!,
+              `${path}[${String(index)}]`,
+              null,
+            )
+          : [],
+      );
+    }
+    const element = arrayElementOf(type);
+    if (element === null) {
+      return [`${path}: the schema is an array; the type is \`${show(type)}\``];
+    }
+    return isRecord(node.items)
+      ? valueMismatches(node.items as JsonSchemaObject, file, element, `${path}[]`, null)
+      : [];
+  }
+
+  if (kind === 'object') {
+    // A named property set is bound and compared by the property-set test; the
+    // only thing left here is the free-form map, which must be an index signature.
+    if (node.properties !== undefined) return [];
+    if (!isRecord(node.additionalProperties)) return [];
+    const index = checker.getIndexInfoOfType(type, ts.IndexKind.String);
+    if (index === undefined) {
+      return [
+        `${path}: the schema is a string-keyed map; \`${show(type)}\` has no string index signature`,
+      ];
+    }
+    return valueMismatches(
+      node.additionalProperties as JsonSchemaObject,
+      file,
+      index.type,
+      `${path}[key]`,
+      null,
+    );
+  }
+
+  return scalarMismatches(kind, type, path, brand);
+};
+
+const SCALAR_FLAGS: Readonly<Record<string, ts.TypeFlags>> = {
+  string: ts.TypeFlags.StringLike,
+  integer: ts.TypeFlags.NumberLike,
+  number: ts.TypeFlags.NumberLike,
+  boolean: ts.TypeFlags.BooleanLike,
+  null: ts.TypeFlags.Null,
+};
+
+const scalarMismatches = (
+  kind: string,
+  type: ts.Type,
+  path: string,
+  brand: string | null,
+): readonly string[] => {
+  const expected = SCALAR_FLAGS[kind];
+  if (expected === undefined) return [];
+
+  const found: string[] = [];
+  if ((scalarFlagsOf(type) & expected) === 0) {
+    found.push(`${path}: the schema says "${kind}"; the type is \`${show(type)}\``);
+  }
+
+  const actualBrand = brandOf(type);
+  if (brand !== null && actualBrand !== brand) {
+    found.push(
+      `${path}: the schema $refs the branded id \`${brand}\`; the type is \`${show(type)}\`` +
+        (actualBrand === null
+          ? ' — a plain string here would accept any string, which is what the id vocabulary exists to prevent'
+          : ` (branded \`${actualBrand}\`)`),
+    );
+  }
+  if (brand === null && actualBrand !== null) {
+    found.push(
+      `${path}: the schema says "${kind}" with no branded $ref; the type is branded ` +
+        `\`${actualBrand}\` — $ref the branded def, or drop the brand`,
+    );
+  }
+  return found;
+};
+
+const enumMismatches = (
+  node: JsonSchemaObject,
+  type: ts.Type,
+  path: string,
+  brand: string | null,
+): readonly string[] => {
+  // A branded scalar keeps its brand rather than becoming a literal union, so the
+  // brand rule answers for it and the literal comparison would always fail.
+  if (brand !== null) {
+    const kind = Array.isArray(node.type) ? node.type[0] : node.type;
+    return scalarMismatches(kind ?? 'string', type, path, brand);
+  }
+
+  const expected = new Set((node.enum ?? []).map((value) => JSON.stringify(value)));
+  const actual = new Set<string>();
+  for (const part of constituentsOf(type)) {
+    if ((part.flags & ts.TypeFlags.BooleanLike) !== 0 && !part.isLiteral()) {
+      actual.add(JSON.stringify(true));
+      actual.add(JSON.stringify(false));
+      continue;
+    }
+    const value = literalValueOf(part);
+    if (value === undefined) {
+      return [
+        `${path}: the schema is an enum of ${[...expected].join(', ')}; the type is ` +
+          `\`${show(type)}\`, which is not a union of literals`,
+      ];
+    }
+    actual.add(JSON.stringify(value));
+  }
+
+  const missing = [...expected].filter((value) => !actual.has(value));
+  const extra = [...actual].filter((value) => !expected.has(value));
+  if (missing.length === 0 && extra.length === 0) return [];
+  return [
+    `${path}: enum mismatch against \`${show(type)}\`` +
+      (missing.length > 0 ? ` — missing from the type: ${missing.join(', ')}` : '') +
+      (extra.length > 0 ? ` — not in the schema: ${extra.join(', ')}` : ''),
+  ];
+};
+
+const unionMismatches = (
+  branches: readonly JsonSchemaObject[],
+  file: string,
+  type: ts.Type,
+  path: string,
+  brand: string | null,
+): readonly string[] => {
+  const parts = constituentsOf(type);
+  const found: string[] = [];
+  const matched = new Set<ts.Type>();
+
+  for (const branch of branches) {
+    const hit = parts.find(
+      (part) => valueMismatches(branch, file, part, path, brand).length === 0,
+    );
+    if (hit === undefined) {
+      found.push(
+        `${path}: no member of \`${show(type)}\` satisfies the schema branch ${describeNode(branch)}`,
+      );
+    } else {
+      matched.add(hit);
+    }
+  }
+  for (const part of parts) {
+    if (matched.has(part)) continue;
+    const satisfied = branches.some(
+      (branch) => valueMismatches(branch, file, part, path, brand).length === 0,
+    );
+    if (!satisfied) {
+      found.push(`${path}: \`${show(part)}\` satisfies no branch the schema offers`);
+    }
+  }
+  return found;
+};
+
+/** Every property of one bound object schema, compared value-type by value-type. */
+const valueMismatchesFor = (binding: Binding): readonly string[] => {
+  const exported = exportedSymbols.get(binding.typeName);
+  if (exported === undefined) return [];
+  const declared = checker.getDeclaredTypeOfSymbol(aliasedSymbolOf(exported));
+  const properties = new Map(
+    declared.getProperties().map((property) => [property.getName(), property] as const),
+  );
+
+  const found: string[] = [];
+  for (const [name, raw] of Object.entries(binding.schema.properties ?? {})) {
+    if (!isRecord(raw)) continue;
+    const property = properties.get(name);
+    if (property === undefined) continue; // the property-set test reports this
+    found.push(
+      ...valueMismatches(
+        raw as JsonSchemaObject,
+        binding.file,
+        withoutUndefined(checker.getTypeOfSymbol(property)),
+        `${binding.typeName}.${name}`,
+        null,
+      ),
+    );
+  }
+  return found;
+};
+
 /* -------------------------------------------------------------------------- */
 /* the gate                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -633,25 +1161,62 @@ describe('content schemas are the port contract (ADR-0007)', () => {
     });
   });
 
-  describe.each(allBindings.map((binding) => [`${binding.file}${binding.pointer}`, binding] as const))(
-    '%s',
-    (_label, binding) => {
-      it(`has exactly the properties of ${binding.typeName}, with the same required/optional split`, () => {
-        const schemaShape = shapeOfSchema(binding.schema);
-        const typeShape = shapeOfExportedType(binding.typeName);
+  describe.each(
+    allBindings
+      .filter((binding) => binding.kind === 'object')
+      .map((binding) => [`${binding.file}${binding.pointer}`, binding] as const),
+  )('%s', (_label, binding) => {
+    it(`has exactly the properties of ${binding.typeName}, with the same required/optional split`, () => {
+      const schemaShape = shapeOfSchema(binding.schema);
+      const typeShape = shapeOfExportedType(binding.typeName);
 
-        expect(flatten(typeShape), explain(binding, schemaShape, typeShape)).toEqual(
-          flatten(schemaShape),
-        );
-      });
+      expect(flatten(typeShape), explain(binding, schemaShape, typeShape)).toEqual(
+        flatten(schemaShape),
+      );
+    });
 
-      it('is a closed statement (additionalProperties: false), so the type can mirror it exactly', () => {
-        expect(
-          binding.schema.additionalProperties,
-          `content/schemas/${binding.file}${binding.pointer} must set "additionalProperties": false ` +
-            `(ADR-0007): an open schema is a lower bound and ${binding.typeName} cannot mirror it.`,
-        ).toBe(false);
-      });
-    },
-  );
+    it('is a closed statement (additionalProperties: false), so the type can mirror it exactly', () => {
+      expect(
+        binding.schema.additionalProperties,
+        `content/schemas/${binding.file}${binding.pointer} must set "additionalProperties": false ` +
+          `(ADR-0007): an open schema is a lower bound and ${binding.typeName} cannot mirror it.`,
+      ).toBe(false);
+    });
+
+    it(`holds the same value types as ${binding.typeName}, branded ids included`, () => {
+      expect(
+        valueMismatchesFor(binding),
+        `ADR-0007: \`${binding.typeName}\` and content/schemas/${binding.file}${binding.pointer} ` +
+          `agree on every property name and disagree about what the properties hold. Until slice 1 ` +
+          `task 1.2 this was invisible: the two sides could agree on every key while one said ` +
+          `\`readonly LevelId[]\` and the other said \`number\`. The schema wins.`,
+      ).toEqual([]);
+    });
+  });
+
+  describe.each(
+    allBindings
+      .filter((binding) => binding.kind === 'enum')
+      .map((binding) => [`${binding.file}${binding.pointer}`, binding] as const),
+  )('%s', (_label, binding) => {
+    it(`is exactly the union \`${binding.typeName}\` declares`, () => {
+      const exported = exportedSymbols.get(binding.typeName);
+      expect(
+        exported,
+        `content/schemas/${binding.file}${binding.pointer} is a closed list of literals and ` +
+          `${PORTS_INDEX_LABEL} exports no type named \`${binding.typeName}\`. An enum $def is ` +
+          `bound like an object one, so a union such as \`LocomotionMode\` is schema-backed rather ` +
+          `than permanently SPECULATIVE — write the union, or rename the $def.`,
+      ).toBeDefined();
+      if (exported === undefined) return;
+
+      const declared = checker.getDeclaredTypeOfSymbol(aliasedSymbolOf(exported));
+      expect(
+        enumMismatches(binding.schema, declared, binding.typeName, null),
+        `ADR-0007: \`${binding.typeName}\` and content/schemas/${binding.file}${binding.pointer} ` +
+          `do not offer the same values. Adding a locomotion mode to one and not the other is how ` +
+          `a level ships naming a mode nothing can create.`,
+      ).toEqual([]);
+    });
+  });
 });

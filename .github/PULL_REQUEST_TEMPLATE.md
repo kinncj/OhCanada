@@ -11,7 +11,13 @@ make lint typecheck test validate-content verify-content verify-art
 make assets build test-e2e test-perf test-a11y
 ```
 
-- [ ] `make lint typecheck test validate-content` is green locally
+`verify-content` and `verify-art` are **stubs**. They print "not yet implemented (slice 1)" and exit 0,
+so they are green on every pull request and green means nothing: no question has been checked against
+*Discover Canada*, no image against a reference. They stay in the command line above because tasks 1.16
+and 1.17 make them real. Until then, do not cite a passing `verify-content` as verification of anything —
+verification status is set by a separate verifier agent, never by the author (see `CONTRIBUTING.md`).
+
+- [ ] `make lint typecheck test validate-content` is green locally — these four actually check something
 - [ ] New behaviour has a test that fails without the change
 - [ ] Coverage still measures something real (`scripts/coverage-floor.mjs` passes)
 

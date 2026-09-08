@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/character.schema.json",
+  "title": "TrueNorth character",
+  "description": "One playable or non-playable character, `content/characters/<id>.json`. It describes the rig contract - artboard, state machine, inputs, skin slots - in vocabulary both backends of ICharacterRenderer honour, so a character never knows whether it was drawn by Rive or by a sprite atlas.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId" },
+    "name": {
+      "description": "Display name, carried inline (ADR-0010). A Mountie is named by role, never by a real person or a force.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+    },
+    "artboard": {
+      "description": "Rive artboard name, or the atlas namespace the sprite fallback uses. Identical in both.",
+      "type": "string",
+      "minLength": 1
+    },
+    "stateMachine": {
+      "description": "Rive state machine name; the sprite fallback derives its animation selection from the same inputs.",
+      "type": "string",
+      "minLength": 1
+    },
+    "inputs": {
+      "description": "State-machine inputs the rig must expose. Slice 1 task 1.11's contract test loads the .riv and asserts each of these exists, which is only possible because they are declared as data here.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/characterInput" },
+      "minItems": 1
+    },
+    "slots": {
+      "description": "Every skin slot this character offers, with its options and its default. Slot and option names are identical in Rive and in the sprite atlas (CLAUDE.md, Characters); that identity is what makes the fallback a swap rather than a port. Declared as data so the character creator renders itself from the document instead of from a hardcoded list - adding a slot is content, not an engine change.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/characterSlot" },
+      "minItems": 1
+    },
+    "indigenous": {
+      "description": "Is this character depicted as Indigenous? Required and never inferred, so the judgement is recorded rather than defaulted - the same shape as factClaim.factual and for the same reason. False is a real answer: docs/content-review.md 3.3 gives exactly two outcomes for a depiction with no nameable nation, and the second is a character who carries no cultural marker at all and about whom the game asserts nothing.",
+      "type": "boolean"
+    },
+    "nation": {
+      "description": "The nation depicted. Required whenever `indigenous` is true, and forbidden otherwise - naming a nation for a character not depicted as Indigenous is a claim nobody meant to make.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/nationName"
+    },
+    "nationSource": {
+      "description": "Where the name in `nation` was copied from, and the verifier's check of it.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/nationSource"
+    },
+    "communityReview": {
+      "description": "Whether the nation depicted has been asked. An agent may write status \"not-sought\" and nothing else (docs/content-review.md 1).",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/communityReview"
+    }
+  },
+  "required": [
+    "$schema",
+    "id",
+    "name",
+    "artboard",
+    "stateMachine",
+    "inputs",
+    "slots",
+    "indigenous"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$comment": "docs/content-review.md 3: a character depicted as Indigenous names one nation, cites it, and records whether the nation has been asked. A character not so depicted carries none of the three, so an unused nation field cannot sit in a file looking like a claim. Only property names this object already declares appear here (ADR-0007).",
+      "if": {
+        "properties": { "indigenous": { "const": true } },
+        "required": ["indigenous"]
+      },
+      "then": { "required": ["nation", "nationSource", "communityReview"] },
+      "else": {
+        "not": {
+          "anyOf": [
+            { "required": ["nation"] },
+            { "required": ["nationSource"] },
+            { "required": ["communityReview"] }
+          ]
+        }
+      }
+    }
+  ],
+
+  "$defs": {
+    "characterSlot": {
+      "title": "Character slot",
+      "description": "One runtime-swappable slot: skin tone, hair, coat. `playerSelectable` is what the character creator shows; an NPC's costume slots are not selectable and are never offered to a player.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Slot name, identical in the Rive artboard and in the atlas frame prefixes.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "labelKey": {
+          "description": "Localiser key naming the slot in the creator, e.g. creator.slot.hair. A key, not inline text: it is UI vocabulary reused by every character (ADR-0010).",
+          "type": "string",
+          "minLength": 1
+        },
+        "playerSelectable": { "type": "boolean" },
+        "options": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/characterSkinOption" },
+          "minItems": 1
+        },
+        "fallback": {
+          "description": "Option id used when nothing has been chosen: an NPC document, and save recovery when a saved option id no longer exists. NOT a pre-selection. It was called `default` for one day and that name was the whole of a real conflict with assets/style/art-bible.md 8, which says no skin tone is the default - a field named `default` reads as \"show this one chosen\", and a pre-chosen tone is a statement about who the standard player is, made in a data file where nobody reads it. The creator randomises uniformly over every option on open (docs/content-review.md 8.3); that is UI behaviour, checked by task 1.15's seeded-draw test, not by this schema. Must be one of options[].id; validate-content cross-checks it.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        }
+      },
+      "required": ["name", "labelKey", "playerSelectable", "options", "fallback"],
+      "additionalProperties": false
+    },
+
+    "characterSkinOption": {
+      "title": "Character skin option",
+      "description": "One choice inside a slot. Every option has a name shown as text: colour is never the only signal (CLAUDE.md, Accessibility).",
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+        "labelKey": {
+          "description": "Localiser key naming the option, e.g. creator.hair.curly.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["id", "labelKey"],
+      "additionalProperties": false
+    },
+
+    "characterInput": {
+      "title": "Character input",
+      "description": "One state-machine input. `kind` is what ICharacterRenderer's setBool, setNumber and fire address.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "enum": ["bool", "number", "trigger"] }
+      },
+      "required": ["name", "kind"],
+      "additionalProperties": false
+    }
+  }
+}

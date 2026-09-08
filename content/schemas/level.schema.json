@@ -1,0 +1,388 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/level.schema.json",
+  "title": "TrueNorth level",
+  "description": "One playable level, `content/levels/<id>.json`. This file is the whole level: parallax layers, ground polyline, camera, spawn, points of interest, character placements, locomotion tuning and the asset manifest. Adding a level is this file plus assets — if a level needs an engine change, this schema is wrong (docs/plan/slices.md, Rules).",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId" },
+    "subject": {
+      "description": "The Discover Canada subject this level teaches; also the question-bank key the scheduler draws from.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/subjectId"
+    },
+    "order": {
+      "description": "Position in the world map, 1-10. Unlocking is game.config's job, not this file's.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": {
+      "description": "The level's name, carried in the document rather than in a locale bundle (ADR-0010).",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+    },
+    "size": {
+      "description": "World size in design-resolution pixels. The camera clamps to it and the ground polyline must fit inside it.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
+    },
+    "spawn": {
+      "description": "Where the player starts, in design-resolution pixels.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
+    },
+    "theme": {
+      "description": "Palette override for this level. Absent means the renderer keeps game.config's theme.",
+      "$ref": "https://truenorth.app/schemas/game.config.schema.json#/$defs/theme"
+    },
+    "territory": {
+      "description": "Whose land this level is set on, stated as a citable fact. Required on every level: every place in Canada is on someone's territory, and a level that omits this has not decided, it has just not said (docs/content-review.md 10).",
+      "$ref": "#/$defs/territoryStatement"
+    },
+    "camera": { "$ref": "#/$defs/cameraTuning" },
+    "ground": {
+      "description": "The walkable/skateable surface as a polyline in design-resolution pixels, ordered left to right. Slope between consecutive points is what LocomotionIntent.slope samples.",
+      "type": "array",
+      "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2" },
+      "minItems": 2
+    },
+    "layers": {
+      "description": "Parallax layers, any order; the renderer sorts by depth and keeps as many as the graphics preset allows.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/parallaxLayer" },
+      "minItems": 1
+    },
+    "locomotion": {
+      "description": "Locomotion modes this level offers, in the order the player unlocks them. The first is the mode the player spawns in. Walking and skating differ by these numbers alone (slice 1 task 1.14).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/locomotionTuning" },
+      "minItems": 1
+    },
+    "quests": {
+      "type": "array",
+      "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId" },
+      "uniqueItems": true
+    },
+    "pois": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/pointOfInterest" }
+    },
+    "characters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/levelCharacter" }
+    },
+    "assets": {
+      "description": "Preload manifest. The sum of decodedBytes is checked against textureBudgetBytes in CI and again by the loader before it commits (docs/architecture.md 3).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/levelAssetRef" }
+    },
+    "textureBudgetBytes": {
+      "description": "Author-declared decoded-texture ceiling for this level, at most 64 MB (CLAUDE.md, Budgets).",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 67108864
+    }
+  },
+  "required": [
+    "$schema",
+    "id",
+    "subject",
+    "order",
+    "title",
+    "size",
+    "spawn",
+    "territory",
+    "camera",
+    "ground",
+    "layers",
+    "locomotion",
+    "quests",
+    "pois",
+    "characters",
+    "assets",
+    "textureBudgetBytes"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "territoryStatement": {
+      "title": "Territory statement",
+      "description": "The first line of the level's \"About this place\" panel (docs/content-review.md 10.2): a territorial FACT, sourced and verifiable, not an acknowledgement. The distinction is the whole of 10.1 and it is load-bearing. \"Ottawa is on the unceded traditional territory of the Algonquin Anishinaabe Nation\" is a citable statement an agent may write and a verifier may check. \"We acknowledge that we live and work on...\" is a statement of relationship in the project's own voice, and no agent may write it: a model has no relationship to acknowledge, and a generated acknowledgement is words asserting something that was never true. There is deliberately no field for one here. If the project owner writes one, it is signed and it lives in README.md, where the project speaks for itself.",
+      "type": "object",
+      "properties": {
+        "nations": {
+          "description": "The nations whose territory this is, each named as that nation names itself. The same deny-list as a character's nation: a category word is a build failure.",
+          "type": "array",
+          "items": {
+            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/nationName"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "statement": {
+          "description": "The fact, in plain language, in both languages. Shown in the panel, never as a modal on level entry and never as anything a player taps past to reach gameplay - which is what teaches that it is a thing you tap past.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+        },
+        "fact": {
+          "description": "Source and verification for the statement, checked under ADR-0003 like any other claim. `factual` is true here by construction; a territory statement that claimed nothing would not be one.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factClaim"
+        },
+        "nationSource": {
+          "description": "Where the nation names came from. The nation's own material where one exists (docs/content-review.md 10.2).",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/nationSource"
+        }
+      },
+      "required": ["nations", "statement", "fact", "nationSource"],
+      "additionalProperties": false
+    },
+
+    "cameraTuning": {
+      "title": "Camera tuning",
+      "description": "How the camera follows the player. Portrait only (ADR-0002), so the vertical numbers matter as much as the horizontal ones.",
+      "type": "object",
+      "properties": {
+        "followLerp": {
+          "description": "0-1 per frame at 60 fps. 1 is rigid; reduced motion clamps this down, it does not read it from here.",
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "deadZone": {
+          "description": "Half-size of the box the player may move inside before the camera follows, in design-resolution pixels.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
+        },
+        "offset": {
+          "description": "Where the player sits in frame. A negative y lifts the player above centre so the lower third stays free for the question card (ADR-0002).",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
+        },
+        "zoom": {
+          "description": "Fixed zoom for the level. Design resolution is 1080x1920, so 1 shows the level at authored scale.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": ["followLerp", "deadZone", "offset", "zoom"],
+      "additionalProperties": false
+    },
+
+    "parallaxLayer": {
+      "title": "Parallax layer",
+      "description": "One scrolling band of the backdrop. Sky and ground panels on desktop extend the outermost layers (ADR-0002).",
+      "type": "object",
+      "properties": {
+        "key": {
+          "description": "Texture key, matching a LevelAssetRef key or a frame inside one of its atlases.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "depth": {
+          "description": "Render order, low to high. The graphics preset's parallaxLayers count keeps the highest-depth layers and drops the rest, so decoration must sit at a lower depth than anything load-bearing.",
+          "type": "integer"
+        },
+        "scrollFactor": {
+          "description": "Camera-relative scroll rate per axis. 0 is pinned to the viewport, 1 moves with the world.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
+        },
+        "offset": {
+          "description": "Placement in design-resolution pixels before scrolling is applied.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
+        },
+        "repeatX": {
+          "description": "Tile horizontally to fill the level width. False draws the texture once at offset.",
+          "type": "boolean"
+        }
+      },
+      "required": ["key", "depth", "scrollFactor", "offset", "repeatX"],
+      "additionalProperties": false
+    },
+
+    "pointOfInterest": {
+      "title": "Point of interest",
+      "description": "A landmark the player taps to engage. The blurb is the fact it teaches, so a POI is content, not decoration; decoration is a parallax layer.",
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/poiId" },
+        "name": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" },
+        "blurb": {
+          "description": "Plain-language description shown when the player engages, roughly CLB 4 (CLAUDE.md, Accessibility).",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+        },
+        "fact": {
+          "description": "Whether the blurb states a fact about Canada and, if so, its source and verification. A landmark blurb that says \"the Peace Tower was completed in 1927\" is a claim, and ADR-0003 governs it exactly as it governs a question.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factClaim"
+        },
+        "position": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2" },
+        "artKey": {
+          "description": "Texture key for the landmark art.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "radiusPx": {
+          "description": "Engagement radius in design-resolution pixels. At least 44 pt of screen at design scale (CLAUDE.md, Accessibility).",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "questId": {
+          "description": "Quest this POI advances, when it is a quest target.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId"
+        }
+      },
+      "required": ["id", "name", "blurb", "fact", "position", "artKey", "radiusPx"],
+      "additionalProperties": false
+    },
+
+    "levelCharacter": {
+      "title": "Level character",
+      "description": "Where a character document is placed in this level. The character's own art, rig and skins live in `content/characters/<id>.json`; only placement belongs here.",
+      "type": "object",
+      "properties": {
+        "characterId": {
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
+        },
+        "position": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2" },
+        "facing": { "type": "string", "enum": ["left", "right"] },
+        "questId": {
+          "description": "Quest this character gives or advances, when they are a quest target.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId"
+        }
+      },
+      "required": ["characterId", "position", "facing"],
+      "additionalProperties": false
+    },
+
+    "levelAssetKind": {
+      "title": "Level asset kind",
+      "type": "string",
+      "enum": ["atlas", "rive", "audio", "font", "tilemap", "json"]
+    },
+
+    "levelAssetRef": {
+      "title": "Level asset ref",
+      "type": "object",
+      "properties": {
+        "key": {
+          "description": "The key scenes and layers refer to this asset by.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "kind": { "$ref": "#/$defs/levelAssetKind" },
+        "url": {
+          "description": "Path relative to the site base, as shipped under assets/dist.",
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "bytes": {
+          "description": "Transfer size. Summed against the 8 MB per-level payload budget.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "decodedBytes": {
+          "description": "Decoded (not transfer) size for textures; 0 for non-texture assets.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["key", "kind", "url", "bytes", "decodedBytes"],
+      "additionalProperties": false
+    },
+
+    "locomotionMode": {
+      "title": "Locomotion mode",
+      "description": "Every way TrueNorth crosses Canada. A mode is one pure strategy plus the tuning below; adding one never touches a scene, a camera or an input handler.",
+      "type": "string",
+      "enum": ["walk", "canoe", "skate", "bike", "train", "horse", "skateboard", "dogsled"]
+    },
+
+    "movementDrive": {
+      "title": "Movement drive",
+      "description": "held: the player holds to move and stops on release (walk, bike, skate). auto: movement is continuous and the player only steers or brakes (train; also every mode when the auto-move accessibility option is on).",
+      "type": "string",
+      "enum": ["held", "auto"]
+    },
+
+    "jumpAffordance": {
+      "title": "Jump affordance",
+      "description": "What a tap does when the player is not touching an NPC or POI. One-thumb traversal, never a trick system (CLAUDE.md, Traversal).",
+      "type": "object",
+      "properties": {
+        "impulse": { "description": "Upward impulse in design-resolution px/s.", "type": "number", "exclusiveMinimum": 0 },
+        "maxHoldMs": { "description": "Hold-to-jump-higher window; 0 makes the jump fixed-height.", "type": "number", "minimum": 0 },
+        "airControl": { "description": "Fraction of ground acceleration available in the air.", "type": "number", "minimum": 0, "maximum": 1 },
+        "coyoteMs": { "description": "Forgiveness after leaving the ground.", "type": "number", "minimum": 0 },
+        "bufferMs": { "description": "Forgiveness before landing.", "type": "number", "minimum": 0 },
+        "maxJumps": { "description": "1 for a single jump; 2 for a bunny-hop mode.", "type": "integer", "minimum": 1 }
+      },
+      "required": ["impulse", "maxHoldMs", "airControl", "coyoteMs", "bufferMs", "maxJumps"],
+      "additionalProperties": false
+    },
+
+    "interactionAffordance": {
+      "title": "Interaction affordance",
+      "description": "How close, and how still, the player must be to engage an NPC or POI in this mode.",
+      "type": "object",
+      "properties": {
+        "reachPx": { "description": "Reach in design-resolution pixels.", "type": "number", "exclusiveMinimum": 0 },
+        "requiresStop": { "description": "Some modes (canoe, train) require coming to rest before engaging.", "type": "boolean" },
+        "whileMoving": { "description": "Whether a tap engages while moving, or only when idle.", "type": "boolean" },
+        "approachSpeed": { "description": "Speed the mode decelerates to when an interaction starts, in px/s.", "type": "number", "minimum": 0 }
+      },
+      "required": ["reachPx", "requiresStop", "whileMoving", "approachSpeed"],
+      "additionalProperties": false
+    },
+
+    "locomotionAnimationBinding": {
+      "title": "Locomotion animation binding",
+      "description": "Character state-machine inputs this mode drives. The names must exist on the character's rig; slice 1 task 1.11's contract test asserts that against the .riv.",
+      "type": "object",
+      "properties": {
+        "speedInput": { "description": "Number input fed normalised speed (0-1).", "type": "string", "minLength": 1 },
+        "airborneInput": { "description": "Bool input set while airborne. Absent when the mode cannot jump.", "type": "string", "minLength": 1 },
+        "jumpTrigger": { "type": "string", "minLength": 1 },
+        "landTrigger": { "type": "string", "minLength": 1 },
+        "brakeTrigger": { "type": "string", "minLength": 1 }
+      },
+      "required": ["speedInput"],
+      "additionalProperties": false
+    },
+
+    "locomotionTuning": {
+      "title": "Locomotion tuning",
+      "description": "Everything a level must provide to offer a mode. Every difference between walking and dogsledding is a number or a null in this record.",
+      "type": "object",
+      "properties": {
+        "mode": { "$ref": "#/$defs/locomotionMode" },
+        "maxSpeed": { "description": "Cruise speed, design-resolution px/s.", "type": "number", "exclusiveMinimum": 0 },
+        "acceleration": { "description": "px/s^2 while input is held.", "type": "number", "exclusiveMinimum": 0 },
+        "deceleration": { "description": "px/s^2 while input is released - friction, edging, paddling drag.", "type": "number", "minimum": 0 },
+        "turnAcceleration": { "description": "px/s^2 while input is held against the current direction - the brake, and then the turn. Must sit strictly between deceleration and acceleration: above deceleration so holding the other way stops you in a shorter distance than a free glide, and below acceleration so reaching cruise speed the other way takes longer than starting from rest (TN-LEVEL-03). The band is asserted by tests/unit/contracts/locomotion-tuning-is-coherent.test.ts; JSON Schema cannot compare two sibling values.", "type": "number", "exclusiveMinimum": 0 },
+        "glide": { "description": "How much momentum survives an input release; ice and water sit near 1.", "type": "number", "minimum": 0, "maximum": 1 },
+        "maxSpeedMultiplierDownhill": { "description": "Speed cap on a downhill or tailwind segment, as a multiple of maxSpeed.", "type": "number", "minimum": 1 },
+        "drive": { "$ref": "#/$defs/movementDrive" },
+        "jump": {
+          "description": "null means this mode cannot jump (canoe, train).",
+          "anyOf": [{ "$ref": "#/$defs/jumpAffordance" }, { "type": "null" }]
+        },
+        "interaction": {
+          "description": "null means this mode cannot engage; the player must dismount first.",
+          "anyOf": [{ "$ref": "#/$defs/interactionAffordance" }, { "type": "null" }]
+        },
+        "animation": { "$ref": "#/$defs/locomotionAnimationBinding" },
+        "labelKey": {
+          "description": "Localiser key naming the mode for the a11y live region and the HUD. A key, not inline text: a mode label is engine vocabulary reused by every level (ADR-0010).",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "mode",
+        "maxSpeed",
+        "acceleration",
+        "deceleration",
+        "turnAcceleration",
+        "glide",
+        "maxSpeedMultiplierDownhill",
+        "drive",
+        "jump",
+        "interaction",
+        "animation",
+        "labelKey"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -19,3 +19,10 @@ node_modules/
 # is anchored this rule is reachable; before, `dist/` swallowed the whole
 # directory and this line was dead.
 assets/dist/**/*.tmp
+
+# The cached Discover Canada study guide and its extracted text. Crown copyright:
+# we may paraphrase it and must not redistribute it. `content/sources/*.json`
+# records the URL, the SHA-256 and the edition so a verifier can re-fetch and
+# hash-check the same bytes; the bytes themselves stay out of the repository.
+content/sources/*.pdf
+content/sources/*.txt

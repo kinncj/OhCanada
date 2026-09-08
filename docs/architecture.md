@@ -6,9 +6,11 @@ they fit together. If a diagram and an ADR disagree, the ADR wins and this file 
 One sentence: **the engine changes more often than the rules, so the rules do not know the engine exists.**
 
 Every boundary in this file is defended by something that fails a build, never by a convention: layering by
-`.dependency-cruiser.cjs`, content shapes by `make validate-content`, unimplemented ports by the
-`PROVISIONAL` contract test, and dated commitments in documents by the obligation gate specified in
-**ADR-0009**. If a rule here has no gate behind it, that is stated where the rule is.
+`.dependency-cruiser.cjs`, content shapes and value constraints by `make validate-content`, the agreement
+between a schema and its port type — names, optionality *and* value types, branded ids included — by the
+ADR-0007 contract test, unimplemented ports by the `PROVISIONAL` contract test, and dated commitments in
+documents by the ADR-0009 obligation gate. If a rule here has no gate behind it, that is stated where the
+rule is.
 
 ## 1. Layers
 
@@ -185,11 +187,19 @@ A single agent doing both would be marking its own homework, and the status woul
 Status is granted against a `sourceHash`. If canada.ca changes, the hash changes, the status no longer
 matches, and the question falls out of the build — automatically, without anyone noticing the edit.
 
-The verifier writes five fields and only five (ADR-0003, mirrored by `QuestionVerification` in
+The verifier writes five fields and only five (ADR-0003, mirrored by `FactVerification` in
 `app/application/ports/content-repository.ts`): `status`, `model`, `checkedAt`, `sourceHash` and
 `evidence`. `evidence` is the passage from the cited section quoted exactly, and it is the field that makes
 ADR-0003's "the bank is auditable" consequence true — a `verified` status with no quoted passage is an
-assertion, not an audit trail. An earlier draft of the port dropped it; nothing may drop it again.
+assertion, not an audit trail. An earlier draft of the port dropped it; nothing may drop it again, and since
+slice 1 nothing can: `common.schema.json#/$defs/factVerification` carries a conditional requiring a non-empty
+`evidence`, a non-empty `model`, a non-null `checkedAt` and a full `sourceHash` whenever `status` is
+`verified`, so the claim fails `make validate-content` before `verify-content` is reached.
+
+The pipeline below is drawn around a question because a question is the commonest case, but ADR-0003's
+second amendment made the subject the **claim**, not the screen. A landmark blurb and a line of NPC dialogue
+carry a `FactClaim` — `factual`, plus the same `source` and `verification` blocks — and travel the same
+path. A wrong fact in a Mountie's mouth is exactly as wrong as one on a question card.
 
 ```mermaid
 flowchart TB
@@ -273,7 +283,8 @@ gameplay cannot tell which one it got.
 
 ### The locomotion seam
 
-A level's JSON supplies a `LocomotionTuning` per mode: `maxSpeed`, `acceleration`, `deceleration`,
+A level's JSON supplies a `LocomotionTuning` per mode, validated by
+`level.schema.json#/$defs/locomotionTuning`: `maxSpeed`, `acceleration`, `deceleration`,
 `turnAcceleration`, `glide` (how much momentum survives a release — near 1 on ice and water),
 `maxSpeedMultiplierDownhill`, `drive` (`held` or `auto`), a `jump` affordance or `null` when the mode
 cannot jump, an `interaction` affordance or `null` when the player must dismount first, the character
@@ -295,35 +306,30 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   types (`LevelDocument`, `QuestionDocument`, …) are the *validated content shapes*, deliberately distinct
   from the entities built out of them — the content schemas remain the authority on the full shape
   (ADR-0007), which means a port type mirrors its schema exactly rather than declaring a subset.
-- **Content schemas not written yet.** `content/schemas/` holds `common`, `game.config` and `credits`.
-  `GameConfigDocument` is reconciled against its schema property for property; every other document shape is
-  marked `SPECULATIVE` because no validator backs it, and that marker is now enforced — the contract test
-  walks out from every exported `*Document`, `*Snapshot` and `*Bundle` type through its property types and
-  requires each shape it reaches to be either schema-bound or marked. Slice 1 writes `level`, `quest`,
-  `question`, `character` and `locale` schemas *first*, then reconciles the types — plus
-  `progress.schema.json`, which the save file needs and which `SaveCodec.decode` already promises to
-  validate against.
-- **How a question carries its EN and FR text.** Undecided, and it must be settled by task 1.2 before a
-  question is authored. `QuestionDocument` declares `promptKey`, `optionKeys` and `explanationKey`, which
-  puts the wording in a locale bundle; `common.schema.json` already defines a `localizedText` `$def`
-  (`{ en, fr }`, both required) that nothing references, which points the other way, and ADR-0003's CI gate
-  is phrased per question ("missing EN or FR text"). Keys keep one string table; inline `localizedText` keeps
-  a question, its source, its evidence and its two languages in one reviewable file, which is what the
-  verifier actually reads. The agent prompts name the port's fields today and say the schema wins.
-- **`evidence` has no mechanical gate yet.** The port requires the field to *exist* on every
-  `QuestionVerification`, and the contract test checks that the port matches its schema — but
-  `question.schema.json` does not exist, so nothing yet fails a build for a question marked `verified`
-  with an empty `evidence` string. That is the one part of ADR-0003 I cannot express mechanically today.
-  It closes in slice 1: task 1.2 makes the schema require a non-empty `evidence` whenever `status` is
-  `verified`, and task 1.17 makes `verify-content` fail on it.
-- **Four verification statuses in the port, three in ADR-0003.** ADR-0003 names `unverified`, `verified`
-  and `quarantined`; the port and the diagram above also carry `rejected`, drawing a line between a
-  verifier judgement that failed (`rejected`, back to the author) and a status invalidated later by drift
-  (`quarantined`, back to the verifier). The distinction is useful and the ADR does not forbid it, but it
-  was never decided. Task 1.2 settles it in `question.schema.json`; if the schema keeps four, ADR-0003
-  gets an amendment naming the fourth rather than the schema quietly widening the ADR.
+- ~~**Content schemas not written yet.**~~ Closed by slice 1 task 1.2. `content/schemas/` holds nine files:
+  `common`, `game.config`, `credits`, and the six the slice needed — `level`, `quest`, `question`,
+  `character`, `locale`, `progress`. Every document type is reconciled against its schema, so no
+  `SPECULATIVE` marker remains in `app/application/ports`, and the contract test now compares **value
+  types** as well as property names, branded ids included (ADR-0007, third amendment).
+- ~~**How a question carries its EN and FR text.**~~ Decided by **ADR-0010**: a content document carries its
+  own text inline as `localizedText`, and a locale bundle carries engine and UI vocabulary reused across
+  content. The dividing line is reuse, not screen. The one rule no gate expresses — a locale bundle may not
+  state a fact about Canada, because that is the only place a `FactClaim` cannot reach it — is named in that
+  ADR's consequences.
+- ~~**`evidence` has no mechanical gate yet.**~~ It has two now: the conditional in
+  `common.schema.json#/$defs/factVerification` described in §4, and task 1.17's `verify-content`.
+- ~~**Four verification statuses in the port, three in ADR-0003.**~~ The schema keeps four and ADR-0003's
+  second amendment names the fourth, so the ADR was widened deliberately rather than by a file it did not
+  mention. `rejected` goes back to the author; `quarantined` goes back to the verifier.
 - **Id constructors.** Ids are branded types with no parse functions yet; the content adapter casts once,
-  immediately after schema validation. `parseLevelId`-style validators land with the entities.
+  immediately after schema validation. `parseLevelId`-style validators land with the entities. The brands
+  themselves are now load-bearing at the schema boundary: `common.schema.json` declares a `$def` per id and
+  the contract test demands the matching brand on every property that `$ref`s one, in both directions.
+- **What decides which questions a quest asks.** Settled in `quest.schema.json` and worth stating here
+  because it is a split of authority, not a field: an `answer` step declares `subject` and `count`, and may
+  narrow the draw with an optional `questionPool`. The quest says *how many* and *from where*; the FSRS
+  scheduler in the domain says *which*, from the player's own review state. A quest naming the ids outright
+  would make the scheduler decorative; a scheduler ignoring the quest would make the step unbounded.
 - **Device tiers.** Which tier gets Rive and which gets the sprite atlas is a bootstrap policy; the
   detection rule is not written yet, and no port needs to know it.
 - **Save migration.** `SaveCodec` declares `version` and `minSupportedVersion`. The first migration is

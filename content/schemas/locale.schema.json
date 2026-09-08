@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/locale.schema.json",
+  "title": "TrueNorth locale bundle",
+  "description": "One locale's UI string table, `content/locales/<locale>/<bundle>.json`. This is the on-disk shape and the shape the i18n adapter hands to the application - the adapter no longer attaches the locale, the file declares it. Bundles hold engine and UI vocabulary reused across content (menus, settings, overlays, live-region templates, locomotion mode labels). Text that belongs to one content document - a level title, a POI blurb, a question prompt, a dialogue line - lives in that document instead (ADR-0010).",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "locale": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localeCode" },
+    "strings": {
+      "description": "Flat dotted keys to translated strings. Flat, not nested: the key is the contract between a screen and a translator, and a nested tree lets the same key be spelled two ways. EN/FR parity across the pair of files is checked by make validate-content.",
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$" },
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    }
+  },
+  "required": ["$schema", "locale", "strings"],
+  "additionalProperties": false
+}

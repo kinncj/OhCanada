@@ -24,12 +24,12 @@
       "pattern": "^/(?:[A-Za-z0-9._~-]+/)*$"
     },
     "defaultLocale": {
-      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/locale"
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localeCode"
     },
     "locales": {
       "type": "array",
       "items": {
-        "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/locale"
+        "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localeCode"
       },
       "minItems": 1,
       "uniqueItems": true
@@ -46,13 +46,15 @@
       "description": "Level ids in authoring order. Empty until slice 1.",
       "type": "array",
       "items": {
-        "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId"
       },
       "uniqueItems": true
     },
     "unlockRules": { "$ref": "#/$defs/unlockRules" },
     "exam": { "$ref": "#/$defs/exam" },
     "scheduler": { "$ref": "#/$defs/scheduler" },
+    "study": { "$ref": "#/$defs/study" },
+    "save": { "$ref": "#/$defs/save" },
     "graphicsPresets": { "$ref": "#/$defs/graphicsPresets" },
     "budgets": { "$ref": "#/$defs/budgets" },
     "featureFlags": { "$ref": "#/$defs/featureFlags" },
@@ -71,6 +73,8 @@
     "unlockRules",
     "exam",
     "scheduler",
+    "study",
+    "save",
     "graphicsPresets",
     "budgets",
     "featureFlags"
@@ -86,7 +90,7 @@
           "description": "Levels playable before any stamp is earned.",
           "type": "array",
           "items": {
-            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId"
           },
           "uniqueItems": true
         },
@@ -94,7 +98,7 @@
           "description": "Progression order used when a level is unlocked by the previous one.",
           "type": "array",
           "items": {
-            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId"
           },
           "uniqueItems": true
         },
@@ -143,6 +147,36 @@
         }
       },
       "required": ["exclusionWindow", "wrongWeight", "dailyNewLimit"],
+      "additionalProperties": false
+    },
+
+    "study": {
+      "title": "Study rules",
+      "description": "Study mode, the drill a player runs outside a quest.",
+      "type": "object",
+      "properties": {
+        "drillSize": {
+          "description": "How many questions one Study drill asks. The number lives here rather than in a scene so the copy that says \"3 of 5\" and the loop that stops at five read the same value.",
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": ["drillSize"],
+      "additionalProperties": false
+    },
+
+    "save": {
+      "title": "Save rules",
+      "description": "Limits on the save file, held in config rather than in code because SECURITY.md's cap and the message that reports it must not drift apart.",
+      "type": "object",
+      "properties": {
+        "maxImportBytes": {
+          "description": "Largest file JSON import will read, in bytes. SECURITY.md requires a cap; a save that exceeds it is refused before it is parsed, with save.import.tooBig. 1 MB is roughly two orders of magnitude above a full ten-level save.",
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": ["maxImportBytes"],
       "additionalProperties": false
     },
 

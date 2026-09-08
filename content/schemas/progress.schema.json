@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/progress.schema.json",
+  "title": "TrueNorth progress snapshot",
+  "description": "The whole persisted state: what SaveCodec.encode writes, what a player pastes back in from an exported save, and what ProgressRepository stores in localStorage. It is a document in every sense ADR-0007 means - authored by the previous session rather than by a content agent - and it is what SaveCodec.decode validates against before it trusts a byte of it. Storage is local only: no accounts, no server, no analytics (CLAUDE.md, Storage).",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "description": "Present in the persisted document too, not only in authored content. An exported save that names its schema can be validated by the same tooling, and by a person, without guessing which build wrote it.",
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "description": "Save format version. SaveCodec migrates anything from minSupportedVersion up to its own version and refuses the rest cleanly.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "updatedAt": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+    "settings": { "$ref": "#/$defs/settings" },
+    "character": {
+      "description": "The character the player made, or null before the creator has run. Nullable rather than absent because settings are persisted from the first screen, which is reachable before a character exists (TN-SAVE item 1).",
+      "anyOf": [{ "$ref": "#/$defs/playerCharacter" }, { "type": "null" }]
+    },
+    "levels": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/levelProgress" }
+    },
+    "reviews": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/reviewState" }
+    },
+    "subjectsStarted": {
+      "type": "array",
+      "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/subjectId" },
+      "uniqueItems": true
+    },
+    "exams": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/examAttempt" }
+    }
+  },
+  "required": [
+    "$schema",
+    "version",
+    "updatedAt",
+    "settings",
+    "character",
+    "levels",
+    "reviews",
+    "subjectsStarted",
+    "exams"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "playerCharacter": {
+      "title": "Player character document",
+      "description": "What the character creator produced: which character document the avatar uses, and the chosen option in every slot (TN-SAVE item 1, TN-CREATOR). There is no player-entered name - the creator asks for slot choices only, so nothing here is free text a player could be identified by.",
+      "type": "object",
+      "properties": {
+        "characterId": {
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
+        },
+        "skins": {
+          "description": "Slot name to chosen option id, one entry per selectable slot of that character document.",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+          },
+          "additionalProperties": {
+            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+          }
+        }
+      },
+      "required": ["characterId", "skins"],
+      "additionalProperties": false
+    },
+
+    "settings": {
+      "title": "Settings document",
+      "description": "Accessibility and comfort settings. Persisted, because a player should set them once (CLAUDE.md, Accessibility).",
+      "type": "object",
+      "properties": {
+        "locale": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localeCode" },
+        "autoMove": { "type": "boolean" },
+        "singleSwitch": { "type": "boolean" },
+        "reducedMotion": { "type": "boolean" },
+        "highContrast": { "type": "boolean" },
+        "dyslexiaFont": { "type": "boolean" },
+        "textScale": {
+          "description": "100-200 %, expressed as a multiplier.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "subtitles": { "type": "boolean" },
+        "volumes": { "$ref": "#/$defs/volumeSettings" }
+      },
+      "required": [
+        "locale",
+        "autoMove",
+        "singleSwitch",
+        "reducedMotion",
+        "highContrast",
+        "dyslexiaFont",
+        "textScale",
+        "subtitles",
+        "volumes"
+      ],
+      "additionalProperties": false
+    },
+
+    "volumeSettings": {
+      "title": "Volume settings",
+      "description": "One 0-1 level per audio bus. A fixed property set rather than a free map, because the buses are code, not content.",
+      "type": "object",
+      "properties": {
+        "master": { "type": "number", "minimum": 0, "maximum": 1 },
+        "music": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sfx": { "type": "number", "minimum": 0, "maximum": 1 },
+        "voice": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "required": ["master", "music", "sfx", "voice"],
+      "additionalProperties": false
+    },
+
+    "levelProgress": {
+      "title": "Level progress document",
+      "type": "object",
+      "properties": {
+        "levelId": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId" },
+        "unlocked": { "type": "boolean" },
+        "quests": {
+          "description": "One entry per quest the player has met, in any state. This replaces a completed-only list: TN-SAVE item 5 promises that \"not offered / declined / accepted with the current step / completed\" all come back, and a quest recorded only once it is finished cannot be resumed, which is the point of the story. Completion is `status: \"completed\"`; there is no second list saying the same thing.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/questProgress" }
+        },
+        "bestScore": { "type": "number", "minimum": 0 },
+        "stampEarnedAt": {
+          "description": "When this level's stamp was earned; null while it has not been. game.config's unlockRules.stampsToUnlockNext counts these, so a stamp is recorded, not derived from a rule that could change under a saved game.",
+          "anyOf": [
+            { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": ["levelId", "unlocked", "quests", "bestScore", "stampEarnedAt"],
+      "additionalProperties": false
+    },
+
+    "questProgress": {
+      "title": "Quest progress document",
+      "description": "Where the player is in one quest. `offered` and `declined` are distinct from absent: a quest never met is not in this list at all, and TN-SAVE asserts that a declined quest comes back as declined rather than as never offered.",
+      "type": "object",
+      "properties": {
+        "questId": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId" },
+        "status": {
+          "type": "string",
+          "enum": ["offered", "declined", "active", "completed"]
+        },
+        "stepIndex": {
+          "description": "Index into the quest document's steps. 0 while offered or declined; the completed quest keeps the index of its last step.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "stepProgress": {
+          "description": "How many of the current step's required items are done - questions answered on an `answer` step, 0 on every other kind. This is what lets \"accepted, on step 2, two of three answered\" survive a closed tab.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "updatedAt": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" }
+      },
+      "required": ["questId", "status", "stepIndex", "stepProgress", "updatedAt"],
+      "additionalProperties": false
+    },
+
+    "reviewState": {
+      "title": "Review state document",
+      "description": "FSRS card state for one question. The scheduler itself is pure domain (ADR-0001); this is only what it needs persisted.",
+      "type": "object",
+      "properties": {
+        "questionId": {
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questionId"
+        },
+        "due": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+        "stability": { "type": "number", "minimum": 0 },
+        "difficulty": { "type": "number", "minimum": 0 },
+        "reps": { "type": "integer", "minimum": 0 },
+        "lapses": { "type": "integer", "minimum": 0 },
+        "lastReview": {
+          "anyOf": [
+            { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+            { "type": "null" }
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": ["new", "learning", "review", "relearning"]
+        }
+      },
+      "required": [
+        "questionId",
+        "due",
+        "stability",
+        "difficulty",
+        "reps",
+        "lapses",
+        "lastReview",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+
+    "examAttempt": {
+      "title": "Exam attempt document",
+      "description": "One run at the exam. IRCC mirror: 20 questions, 15 to pass, 30 minutes, timer optional (CLAUDE.md, Purpose).",
+      "type": "object",
+      "properties": {
+        "startedAt": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+        "finishedAt": {
+          "anyOf": [
+            { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+            { "type": "null" }
+          ]
+        },
+        "askedQuestionIds": {
+          "type": "array",
+          "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questionId" }
+        },
+        "correctCount": { "type": "integer", "minimum": 0 },
+        "passed": { "type": "boolean" },
+        "timed": {
+          "description": "The timer is optional even in Exam mode; record whether it was on, so a result is never read as something it was not.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "startedAt",
+        "finishedAt",
+        "askedQuestionIds",
+        "correctCount",
+        "passed",
+        "timed"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

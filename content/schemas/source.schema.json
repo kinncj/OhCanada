@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/source.schema.json",
+  "title": "TrueNorth cached source",
+  "description": "One document the question bank is written against, `content/sources/<id>.json`. ADR-0003 turns on a `sourceHash`: a verification status is granted for a hash, and when the hash changes the status stops matching and the claim falls out of the build without anyone noticing the edit. That only works if the hash, and what it is a hash of, are recorded somewhere a gate can read - which is this file. It is a register, not a copy: `licence` and `committed` exist because Discover Canada is Crown copyright and is paraphrased and cited rather than redistributed (ADR-0004).",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": {
+      "description": "The id a question's source block cites. Kebab-case, unique among sources.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "publisher": { "type": "string", "minLength": 1 },
+    "edition": {
+      "description": "Which edition or revision this hash is of, in words. Two files can share a title and differ in every fact that matters.",
+      "type": "string",
+      "minLength": 1
+    },
+    "url": { "type": "string", "format": "uri", "minLength": 1 },
+    "file": {
+      "description": "The fetched document, relative to content/sources/. Present in the working tree only when `committed` is true.",
+      "type": "string",
+      "minLength": 1
+    },
+    "extractedText": {
+      "description": "The plain-text extraction the verifier actually reads and quotes evidence from, relative to content/sources/. Kept beside the original because a hash of a PDF says nothing about whether the text came out of it intact.",
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256": {
+      "description": "SHA-256 of `file`. This is the hash a question's verification is granted against.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "extractedTextSha256": {
+      "description": "SHA-256 of `extractedText`. Separate from `sha256` on purpose: a re-extraction with a different tool changes what the verifier read without changing the source document, and that is a difference the bank must be able to see.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "bytes": { "type": "integer", "minimum": 1 },
+    "pages": {
+      "description": "Page count, when the source is paginated. A chapter's `page` is an offset into this.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "retrievedAt": {
+      "description": "The date the file was fetched, YYYY-MM-DD. A date, not an instant: the fetch time of day carries no meaning and inviting one invites a fabricated one.",
+      "type": "string",
+      "format": "date"
+    },
+    "licence": {
+      "description": "Free text, not the credits enum: this is a document the project reads, never an asset it ships, so ADR-0004's redistribution test does not apply and a licence id would misrepresent Crown copyright.",
+      "type": "string",
+      "minLength": 1
+    },
+    "committed": {
+      "description": "Is the file itself in this repository? False for anything the project may cite but not redistribute. When false, the hashes are the whole of the record and a verifier must re-fetch to check them.",
+      "type": "boolean"
+    },
+    "chapters": {
+      "description": "The table of contents, so a question's `source.chapter` can be checked against something rather than trusted.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/sourceChapter" },
+      "minItems": 1
+    },
+    "knownStaleness": {
+      "description": "What is already known to be out of date in this document, recorded before a question is written against it rather than discovered after one ships. A cached source is a snapshot of a page that keeps moving; this is the list of places the snapshot is known to lie.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/knownStaleness" }
+    }
+  },
+  "required": [
+    "$schema",
+    "id",
+    "title",
+    "publisher",
+    "edition",
+    "url",
+    "sha256",
+    "bytes",
+    "retrievedAt",
+    "licence",
+    "committed",
+    "chapters"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "sourceChapter": {
+      "title": "Source chapter",
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "The heading exactly as it appears in the source. A question's source.chapter must match one of these.",
+          "type": "string",
+          "minLength": 1
+        },
+        "page": { "type": "integer", "minimum": 1 },
+        "level": {
+          "description": "Which of the ten levels teaches this chapter, when one does.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "required": ["title"],
+      "additionalProperties": false
+    },
+
+    "knownStaleness": {
+      "title": "Known staleness",
+      "description": "One thing this snapshot is known to get wrong, the chapters it touches, and what an author must do instead. `action` is instructions to the author and the verifier, not a machine directive: a question in an affected chapter is expected to be marked volatile and verified against the live page, and no gate can tell whether it was.",
+      "type": "object",
+      "properties": {
+        "topic": { "type": "string", "minLength": 1 },
+        "problem": { "type": "string", "minLength": 1 },
+        "affects": {
+          "description": "Chapter titles from `chapters`.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "action": { "type": "string", "minLength": 1 }
+      },
+      "required": ["topic", "problem", "affects", "action"],
+      "additionalProperties": false
+    }
+  }
+}

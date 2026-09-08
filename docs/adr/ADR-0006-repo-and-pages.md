@@ -127,9 +127,9 @@ Three were named while the decision was open. One was blocking and is closed; tw
 obligations in the ADR-0009 marker format, because they are now consequences of an accepted decision rather
 than advice to someone who has not agreed to it.
 
-1. ~~**History audit for credential-shaped commits — blocking; must complete before the switch is flipped.**
-   A later deletion does not unpublish anything already pushed, so the order is *rotate first, publish
-   second*, never *publish, notice, delete*.~~
+1. ~~**OBLIGATION due=2026-09-08 owner=repo-owner** — history audit for credential-shaped commits;
+   blocking, must complete before the switch is flipped. A later deletion does not unpublish anything
+   already pushed, so the order is *rotate first, publish second*, never *publish, notice, delete*.~~
 
    **DISCHARGED 2026-09-08** — run by the repository owner **before the switch was flipped**, which is the
    only order that counts. What it covered, recorded here because a claim of this kind must show its
@@ -156,22 +156,58 @@ than advice to someone who has not agreed to it.
    this precondition arrives with the first shipped asset, and the gate — not this line — is what will keep
    it true.
 
-   - **OBLIGATION due=2026-09-15 owner=art** — before the first asset lands in `assets/dist/`, confirm every
+   - ~~**OBLIGATION due=2026-09-15 owner=art** — before the first asset lands in `assets/dist/`, confirm every
      asset carries the provenance ADR-0004 requires, and confirm the credit gate's scope matches where
      assets actually live: it checks `assets/dist/`, so an asset committed elsewhere under `assets/` is
      credited by nobody. Raise the scope with infra if the gate is looking in the wrong place. A vacuously
-     passing gate is exactly the shape of check this project has been bitten by before.
+     passing gate is exactly the shape of check this project has been bitten by before.~~
+
+     **DISCHARGED 2026-09-08** — both halves, and the second one found what it was written to find.
+     *Provenance:* fourteen reference photographs were fetched for slice 1, each licence established from
+     the Wikimedia Commons API (`prop=imageinfo&iiprop=extmetadata`) **before** the file was downloaded
+     rather than read off a page afterwards, and all fourteen are credited in `assets/credits.json` with
+     author, licence and source URL. Six further references were identified, licensed and deliberately not
+     downloaded because `credits.schema.json` could not express their licences; that enum defect is fixed
+     and ADR-0004 is amended, so three of the six are now fetchable and three stay excluded as ShareAlike.
+     *Scope:* the gate was indeed looking in the wrong place. It walked `assets/dist/`, which is build
+     output and was empty, and reported "0 shipped asset(s) credited" while fourteen licensed files sat
+     uncredited-by-anything in `assets/refs/`. It now walks `assets/` and asserts set equality in both
+     directions — an asset with no entry is uncredited, an entry with no asset is a stale claim — and
+     reports 14. The vacuum this precondition warned about was real and is closed.
+
+   - ~~**OBLIGATION due=2026-09-22 owner=art** — rewrite the fourteen `../refs/...` entries in
+     `assets/credits.json` to the `assets/`-relative convention the gate now uses, add `kind` to every entry,
+     and tell infra to drop the transitional branch and the warning in `scripts/validate-content.mjs` in the
+     same change. Until then one file is doing two jobs — a register of what ships and a register of what
+     was looked at — and `credits.schema.json` carries an optional discriminator that describes a state it
+     cannot yet enforce. That optional is the drift risk, not the paths.~~
+
+     **DISCHARGED 2026-09-08** — all fourteen entries are `assets/`-relative and carry
+     `"kind": "reference"`; the transitional branch and its warning are gone. `make validate-content`
+     reports `14 asset file(s) under assets/ credited (0 shipped, 14 reference)` with set equality in both
+     directions. `kind` is now **required** in `credits.schema.json`; the optional lasted one commit, which
+     is what the obligation was for, because an optional discriminator is one that gets omitted exactly
+     where the two kinds are hardest to tell apart. The schema does *not* also pattern-ban a `../` path:
+     `scripts/validate-content.mjs` still resolves and warns on that form, and retiring a transitional
+     branch belongs to the gate that owns it rather than to a schema forcing it closed from outside.
 
 3. **`CONTRIBUTING.md` must read as instructions to a stranger.** It was written when no stranger could
    reach it. The audience it addresses now exists, and prose that assumes the reader already knows the
    project is the difference between a fork right that is real and one that is granted only on paper.
 
-   - **OBLIGATION due=2026-09-22 owner=infra** — rewrite `CONTRIBUTING.md` for a reader who has never seen
+   - ~~**OBLIGATION due=2026-09-22 owner=infra** — rewrite `CONTRIBUTING.md` for a reader who has never seen
      this repository: how to run the gate set, what `make lint typecheck test validate-content` must show
      before a pull request, the commit-message rule, and what a `.github/CODEOWNERS` review means for them.
      Cover the issue templates in the same pass. Routing note: assigned to the owner of the gate set the
      document describes; the orchestrator should reassign if contributor-facing prose belongs elsewhere, but
-     it needs one owner, not a committee.
+     it needs one owner, not a committee.~~
+     **DISCHARGED 2026-09-08** — `CONTRIBUTING.md` rewritten for a reader with no prior context: Node 22+
+     and the `make` targets, the two required check names verbatim, code-owner review, the first-time
+     contributor approval that otherwise reads as silence, the author/verifier separation and *why* it
+     exists, the issue templates as the easy path, licensing as an acceptance condition, and accessibility
+     and plain language as requirements. `docs/content-review.md` landed from the PO while this was being
+     written and is linked rather than summarised; the issue chooser gained a link to the document it
+     describes. Closed by the owner it was assigned to.
 
 ## Alternatives considered
 - **Separate content repository** — rejected: content and the schema that validates it must version together.

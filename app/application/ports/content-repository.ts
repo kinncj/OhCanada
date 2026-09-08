@@ -3,10 +3,11 @@
  *
  * Everything a level needs is data (ADR-0005): levels, quests, questions,
  * characters and locale bundles are JSON validated against `content/schemas`
- * before they cross this seam. Only `game.config.json` has a schema today; see
- * the SPECULATIVE marker on every other document type below. The implementation
- * (fetch + ajv + cache) is an adapter; nothing here knows about HTTP, bundlers
- * or the file system.
+ * before they cross this seam. Every document type below now has a schema, and
+ * `tests/unit/contracts/ports-match-schemas.test.ts` compares the two property
+ * by property *and type by type*, so the contract below is checked rather than
+ * asserted. The implementation (fetch + ajv + cache) is an adapter; nothing here
+ * knows about HTTP, bundlers or the file system.
  *
  * Contract:
  *  - every read is async and returns `Result` — a missing or invalid document is
@@ -32,21 +33,147 @@ import type { LocomotionTuning } from './locomotion';
 
 /**
  * The document types below mirror `content/schemas/*.schema.json` exactly: same
- * properties, same optionality, same names. The schema is the authority — it is
- * what `make validate-content` runs in CI and it sets `additionalProperties:
- * false`, so a port that declares a property the schema does not have is a
- * defect, not a convenience.
- *
- * Where the schema does not exist yet the type is marked SPECULATIVE. Nothing
- * validates those shapes today, so they are a sketch, not a contract; each one
- * must be reconciled against its schema when that schema is written (slice 1).
+ * properties, same optionality, same names, same value types. The schema is the
+ * authority — it is what `make validate-content` runs in CI and it sets
+ * `additionalProperties: false`, so a port that declares a property the schema
+ * does not have is a defect, not a convenience.
  *
  * Keep every type structural and dumb — behaviour belongs to the domain entities
  * built from them.
  */
 
 /* --------------------------------------------------------------------------
- * game.config.json — schema: content/schemas/game.config.schema.json (exists)
+ * shared value types — schema: content/schemas/common.schema.json
+ * ----------------------------------------------------------------------- */
+
+/**
+ * A string in every supported locale, `common.schema.json#/$defs/localizedText`.
+ *
+ * Both languages are required by the schema, which is how ADR-0003's "missing EN
+ * or FR text" clause is enforced per document rather than per string table
+ * (ADR-0010). Content documents carry their player-facing text as one of these;
+ * engine and UI vocabulary reused across content stays a key in a locale bundle.
+ */
+export interface LocalizedText {
+  readonly en: string;
+  readonly fr: string;
+}
+
+/** A point, size or scroll factor in design-resolution pixels (1080x1920). */
+export interface Vec2 {
+  readonly x: number;
+  readonly y: number;
+}
+
+/**
+ * Where a claim about Canada comes from. Written by the author agent, never by
+ * the verifier (ADR-0003).
+ */
+export interface FactSource {
+  /**
+   * The `id` of a `content/sources/<id>.json` manifest. Without it a chapter and
+   * a hash point at nothing, and ADR-0003's mechanism — a status granted for a
+   * hash, invalidated when the hash moves — has no second end.
+   */
+  readonly sourceId: string;
+  /** Chapter or section heading, exactly as it appears in the cited source. */
+  readonly chapter: string;
+  readonly url: string;
+  /** SHA-256 of what the verifier read: the manifest's extracted text, or the file. */
+  readonly sourceHash: string;
+  readonly asOf: IsoInstant;
+  /** Volatile facts are re-verified every run and quarantined after 180 days. */
+  readonly volatile: boolean;
+}
+
+/**
+ * The block ADR-0003's verifier agent writes, and the only block it may write.
+ *
+ * Four statuses, and the fourth is deliberate (ADR-0003, amended): `rejected` is
+ * a verifier judgement that failed and goes back to the author; `quarantined` is
+ * a granted status invalidated later by source drift or age and goes back to the
+ * verifier. Both are excluded from the build.
+ *
+ * `evidence` is not optional detail. The schema requires it to be non-empty
+ * whenever `status` is `verified`, together with a non-null `checkedAt`, a
+ * non-empty `model` and a full `sourceHash`, so a status with no quoted passage
+ * fails `make validate-content` and not only `verify-content`.
+ */
+export interface FactVerification {
+  /** Only `verified` may ship. Set by the verifier agent, never by the author. */
+  readonly status: 'unverified' | 'verified' | 'quarantined' | 'rejected';
+  /** The model that granted the status, so a bad verifier run can be identified later. */
+  readonly model: string;
+  /** When the check ran. `null` while `status` is `unverified`. */
+  readonly checkedAt: IsoInstant | null;
+  /** The `sourceHash` the status was granted for; a mismatch invalidates it. */
+  readonly sourceHash: string;
+  /** The passage from the cited section that entails the claim, quoted exactly. */
+  readonly evidence: string;
+}
+
+/**
+ * Evidence that a named nation was copied from somewhere real
+ * (`docs/content-review.md` §3.2). The source must be the nation's own published
+ * material, or a registry that nation is listed in.
+ *
+ * What it proves is narrow: that the name appears on a page that was fetched and
+ * hashed. Not that the name is right, that the nation would recognise the
+ * spelling, or that this is the nation actually depicted.
+ */
+export interface NationSource {
+  /** Whose material this is, named. */
+  readonly publisher: string;
+  readonly url: string;
+  /** Empty until the verifier has fetched it. */
+  readonly sourceHash: string;
+  readonly asOf: IsoInstant | null;
+  readonly verification: FactVerification;
+}
+
+/**
+ * Whether the nation depicted has been asked, and what they said.
+ *
+ * `docs/content-review.md` §1 extends ADR-0003's separation of duties: **no agent
+ * may grant cultural sign-off, ever.** An agent may write `not-sought` and
+ * nothing else.
+ *
+ * Neither this type nor its schema can enforce that, and neither should be read
+ * as doing so — a type constrains a value, not its author. What they do is force
+ * a fabricated sign-off to name a person, an organisation, a date and a scope,
+ * which is a specific and checkable lie rather than a flag flip, and force
+ * `not-sought` to carry no names so a review cannot be half-claimed. The author
+ * rule needs a gate that reads git history; that is slice 1 task 1.17's.
+ */
+export interface CommunityReview {
+  readonly status: 'not-sought' | 'sought' | 'granted' | 'refused';
+  /** Named person. `null` if and only if `status` is `not-sought`. */
+  readonly reviewer: string | null;
+  readonly organisation: string | null;
+  readonly date: IsoInstant | null;
+  /** What exactly was reviewed. A sign-off on a hat is not a sign-off on a character. */
+  readonly scope: string | null;
+  readonly note: string;
+}
+
+/**
+ * Attached to player-facing prose outside the question bank — a landmark blurb, a
+ * line of NPC dialogue — so ADR-0003 governs every sentence stating something
+ * about Canada, not only the ones on a question card.
+ *
+ * `factual` is required rather than optional so the judgement is *recorded* for
+ * every line instead of defaulting to unchecked; when it is true the schema
+ * requires both other fields to be present.
+ */
+export interface FactClaim {
+  /** Greetings and instructions are false; anything a player could be tested on is true. */
+  readonly factual: boolean;
+  readonly source: FactSource | null;
+  readonly verification: FactVerification | null;
+}
+
+/* --------------------------------------------------------------------------
+ * game.config.json — schema: content/schemas/game.config.schema.json
  * ----------------------------------------------------------------------- */
 
 /** Which levels are playable at the start, and how the next one is earned. */
@@ -102,6 +229,21 @@ export interface PerformanceBudgets {
   readonly frameTimeMs: number;
 }
 
+/** Study mode: the drill a player runs outside a quest. */
+export interface StudyRules {
+  /**
+   * How many questions one drill asks. In config rather than in a scene so the
+   * copy that says "3 of 5" and the loop that stops at five read one value.
+   */
+  readonly drillSize: number;
+}
+
+/** Limits on the save file. In config because SECURITY.md's cap and the message reporting it must not drift. */
+export interface SaveRules {
+  /** Largest file JSON import will read. A larger file is refused before it is parsed. */
+  readonly maxImportBytes: number;
+}
+
 export interface FeatureFlags {
   readonly debugOverlay: boolean;
   readonly autoMove: boolean;
@@ -113,9 +255,10 @@ export interface FeatureFlags {
  * The palette a scene paints itself from, `game.config.schema.json#/$defs/theme`.
  *
  * Optional at the root of the config: the schema does not require `theme`, and a
- * renderer that gets none keeps its built-in default. The same shape is intended
- * to be reusable per level so a level document can override the whole block, so
- * do not fold these five colours into `GameConfigDocument` directly.
+ * renderer that gets none keeps its built-in default. The same block is `$ref`d
+ * by `level.schema.json`, so a level overrides the whole palette without an
+ * engine change — which is why these five colours are not folded into
+ * `GameConfigDocument`.
  *
  * Colours are sRGB `#rrggbb` (`common.schema.json#/$defs/hexColour`). All five
  * are required when the block is present.
@@ -153,11 +296,13 @@ export interface GameConfigDocument {
   /** Design resolution — 1080x1920, portrait only (ADR-0002). */
   readonly designWidth: number;
   readonly designHeight: number;
-  /** Level ids in authoring order. Empty until slice 1. */
+  /** Level ids in authoring order. */
   readonly levels: readonly LevelId[];
   readonly unlockRules: UnlockRules;
   readonly exam: ExamRules;
   readonly scheduler: SchedulerTuning;
+  readonly study: StudyRules;
+  readonly save: SaveRules;
   readonly graphicsPresets: GraphicsPresets;
   readonly budgets: PerformanceBudgets;
   readonly featureFlags: FeatureFlags;
@@ -166,156 +311,319 @@ export interface GameConfigDocument {
 }
 
 /* --------------------------------------------------------------------------
- * SPECULATIVE from here down.
- *
- * `content/schemas/` holds three files today: `common.schema.json`,
- * `game.config.schema.json` and `credits.schema.json`. There is no level, quest,
- * question, character or locale schema, and no such content file exists. Every
- * type below was written from the design notes, not from a validator, so the
- * `ContentRepository` guarantee "the document has already passed schema
- * validation" does not hold for any of them yet.
- *
- * Rule for slice 1: write the schema first, then reconcile the type against it
- * property by property and delete the marker. Do not add a property here to make
- * a caller compile — add it to the schema, or the caller is relying on data that
- * will never be validated.
+ * content/levels/<id>.json — schema: content/schemas/level.schema.json
  * ----------------------------------------------------------------------- */
 
-/** SPECULATIVE — no `level.schema.json` yet. */
-export interface LevelSummary {
-  readonly id: LevelId;
-  readonly subject: SubjectId;
-  /** Localiser key, never literal copy — content is EN/FR from the first commit. */
-  readonly titleKey: string;
-  readonly order: number;
+/**
+ * The first line of a level's "About this place" panel
+ * (`docs/content-review.md` §10.2): a territorial **fact**, sourced and
+ * verifiable — not an acknowledgement.
+ *
+ * That distinction is load-bearing. "Ottawa is on the unceded traditional
+ * territory of the Algonquin Anishinaabe Nation" is a citable statement an agent
+ * may write and a verifier may check. "We acknowledge that we live and work
+ * on…" is a statement of relationship in the project's own voice, and no agent
+ * may write it. There is deliberately no field for one here.
+ */
+export interface TerritoryStatement {
+  /** Each named as that nation names itself; the same deny-list as `CharacterDocument.nation`. */
+  readonly nations: readonly string[];
+  readonly statement: LocalizedText;
+  /** Source and verification, checked under ADR-0003 like any other claim. */
+  readonly fact: FactClaim;
+  readonly nationSource: NationSource;
 }
 
-/** SPECULATIVE — no `level.schema.json` yet. */
-export interface LevelDocument extends LevelSummary {
-  readonly $schema: string;
-  /** Locomotion modes this level offers, in the order the player unlocks them. */
-  readonly locomotion: readonly LocomotionTuning[];
-  readonly quests: readonly QuestId[];
-  readonly pois: readonly PoiId[];
-  readonly characters: readonly CharacterId[];
-  /** Asset manifest for preload and for the per-level payload budget (≤ 8 MB). */
-  readonly assets: readonly LevelAssetRef[];
+/** How the camera follows the player. Portrait only, so the vertical numbers matter. */
+export interface CameraTuning {
+  /** 0–1 per frame at 60 fps. 1 is rigid. */
+  readonly followLerp: number;
+  /** Half-size of the box the player may move inside before the camera follows. */
+  readonly deadZone: Vec2;
+  /** Where the player sits in frame; a negative `y` keeps the lower third free. */
+  readonly offset: Vec2;
+  readonly zoom: number;
+}
+
+/** One scrolling band of the backdrop. */
+export interface ParallaxLayer {
+  /** Texture key, matching a `LevelAssetRef.key` or a frame inside one of its atlases. */
+  readonly key: string;
   /**
-   * Author-declared decoded-texture cost in bytes. `make lint`/CI check it against
-   * the 64 MB per-level ceiling; the loader checks the sum before it commits.
+   * Render order, low to high. The graphics preset's `parallaxLayers` count keeps
+   * the highest-depth layers and drops the rest, so decoration sits low.
    */
-  readonly textureBudgetBytes: number;
+  readonly depth: number;
+  /** Camera-relative scroll rate per axis; 0 is pinned, 1 moves with the world. */
+  readonly scrollFactor: Vec2;
+  readonly offset: Vec2;
+  readonly repeatX: boolean;
 }
 
-/** SPECULATIVE — no `level.schema.json` yet. */
+/**
+ * A landmark the player taps to engage. The blurb is the fact it teaches, which
+ * is why a POI is content and a backdrop is a `ParallaxLayer`.
+ */
+export interface PointOfInterest {
+  readonly id: PoiId;
+  readonly name: LocalizedText;
+  readonly blurb: LocalizedText;
+  /** Whether the blurb claims a fact about Canada and, if so, who checked it. */
+  readonly fact: FactClaim;
+  readonly position: Vec2;
+  readonly artKey: string;
+  /** Engagement radius; at least 44 pt of screen at design scale. */
+  readonly radiusPx: number;
+  readonly questId?: QuestId;
+}
+
+/** Where a character document is placed in a level. Placement only — the rig lives in the character file. */
+export interface LevelCharacter {
+  readonly characterId: CharacterId;
+  readonly position: Vec2;
+  readonly facing: 'left' | 'right';
+  readonly questId?: QuestId;
+}
+
 export type LevelAssetKind = 'atlas' | 'rive' | 'audio' | 'font' | 'tilemap' | 'json';
 
-/** SPECULATIVE — no `level.schema.json` yet. */
 export interface LevelAssetRef {
   readonly key: string;
   readonly kind: LevelAssetKind;
   readonly url: string;
+  /** Transfer size, summed against the 8 MB per-level payload budget. */
   readonly bytes: number;
   /** Decoded (not transfer) size for textures; 0 for non-texture assets. */
   readonly decodedBytes: number;
 }
 
-/** SPECULATIVE — no `quest.schema.json` yet. */
-export interface QuestDocument {
+/**
+ * `content/levels/<id>.json` — the whole level.
+ *
+ * Adding a level is this document plus assets. If a level ever needs an engine
+ * change, this shape is wrong and the schema is fixed first
+ * (`docs/plan/slices.md`, Rules); slice 2 is the proof.
+ */
+export interface LevelDocument {
   readonly $schema: string;
-  readonly id: QuestId;
-  readonly levelId: LevelId;
-  readonly titleKey: string;
-  readonly steps: readonly QuestStepDocument[];
+  readonly id: LevelId;
+  /** The subject this level teaches; also the question-bank key. */
+  readonly subject: SubjectId;
+  /** Position in the world map, 1–10. Unlocking is `game.config`'s job. */
+  readonly order: number;
+  readonly title: LocalizedText;
+  /** World size in design-resolution pixels. */
+  readonly size: Vec2;
+  readonly spawn: Vec2;
+  /** Palette override; absent keeps `game.config`'s theme. */
+  readonly theme?: ThemeColours;
+  /** Whose land this level is set on, stated as a citable fact. */
+  readonly territory: TerritoryStatement;
+  readonly camera: CameraTuning;
+  /** The surface as a polyline, ordered left to right; slope is sampled from it. */
+  readonly ground: readonly Vec2[];
+  readonly layers: readonly ParallaxLayer[];
+  /**
+   * Locomotion modes this level offers, in the order the player unlocks them. The
+   * first is the mode the player spawns in. Walking and skating differ by these
+   * numbers alone.
+   */
+  readonly locomotion: readonly LocomotionTuning[];
+  readonly quests: readonly QuestId[];
+  readonly pois: readonly PointOfInterest[];
+  readonly characters: readonly LevelCharacter[];
+  /** Preload manifest, and the input to the per-level payload budget (≤ 8 MB). */
+  readonly assets: readonly LevelAssetRef[];
+  /**
+   * Author-declared decoded-texture ceiling in bytes, at most 64 MB. CI checks the
+   * manifest sum against it; the loader checks it again before it commits.
+   */
+  readonly textureBudgetBytes: number;
 }
 
-/** SPECULATIVE — no `quest.schema.json` yet. */
+/**
+ * The cheap list the world map renders, derived from the level documents rather
+ * than declared beside them (ADR-0007: an adapter that needs a subset derives it
+ * from the port type). There is no `levelSummary` schema because there is no
+ * summary file — nothing authors this shape.
+ */
+export type LevelSummary = Pick<LevelDocument, 'id' | 'subject' | 'order' | 'title'>;
+
+/* --------------------------------------------------------------------------
+ * content/quests/<id>.json — schema: content/schemas/quest.schema.json
+ * ----------------------------------------------------------------------- */
+
+/** One spoken line. Subtitles are on by default, so this is the subtitle text too. */
+export interface DialogueLine {
+  readonly speaker: CharacterId;
+  readonly text: LocalizedText;
+  /**
+   * Whether this line claims a fact about Canada. "Welcome to Parliament Hill"
+   * is flavour; "Ottawa is Canada's capital" is a claim, and a wrong claim in an
+   * NPC's mouth is exactly as wrong as one on a question card.
+   */
+  readonly fact: FactClaim;
+  /** Named face pose on the speaker's rig; absent leaves the rig's default. */
+  readonly expression?: string;
+}
+
+/**
+ * One objective.
+ *
+ * `targetId` is deliberately an unbranded string: what it names depends on
+ * `kind`, and a union of brands is not a shape a schema can state.
+ */
 export interface QuestStepDocument {
   readonly id: string;
   readonly kind: 'talk' | 'visit' | 'collect' | 'answer';
   readonly targetId: string;
-  /** Questions asked by an `answer` step; empty for other kinds. */
-  readonly questionIds: readonly QuestionId[];
+  readonly prompt: LocalizedText;
+  /**
+   * The draw specification for an `answer` step, and absent on every other kind.
+   *
+   * The quest says *how many* and, optionally, *from which pool*; the FSRS
+   * scheduler in the domain says *which*, from the player's own review state. A
+   * quest that named the ids outright would make the scheduler decorative, and a
+   * scheduler ignoring the quest would make the step unbounded.
+   */
+  readonly subject?: SubjectId;
+  readonly count?: number;
+  /** Narrows the draw without choosing it. Absent means the whole subject bank. */
+  readonly questionPool?: readonly QuestionId[];
+  /** Lines spoken when the step starts. Present on `talk` steps, absent elsewhere. */
+  readonly dialogue?: readonly DialogueLine[];
 }
 
-/** SPECULATIVE — no `question.schema.json` yet. */
+export interface QuestDocument {
+  readonly $schema: string;
+  readonly id: QuestId;
+  readonly levelId: LevelId;
+  /** The character who offers the quest. */
+  readonly giver: CharacterId;
+  readonly title: LocalizedText;
+  readonly summary: LocalizedText;
+  readonly steps: readonly QuestStepDocument[];
+}
+
+/* --------------------------------------------------------------------------
+ * content/questions/<subject>/<id>.json — schema: content/schemas/question.schema.json
+ * ----------------------------------------------------------------------- */
+
+/**
+ * One exam-style question.
+ *
+ * Prompt, options and explanation carry their EN and FR text inline rather than
+ * as locale keys (ADR-0010): the verifier reads the claim, its source, its
+ * evidence and both languages in one file, and a quarantined question takes its
+ * text out of the build with it.
+ */
 export interface QuestionDocument {
   readonly $schema: string;
   readonly id: QuestionId;
   readonly subject: SubjectId;
-  /** Localised prompt keys; the text itself lives in the locale bundle. */
-  readonly promptKey: string;
-  /** Exactly four options — one correct, three distractors (CLAUDE.md, Content rules). */
-  readonly optionKeys: readonly [string, string, string, string];
+  readonly prompt: LocalizedText;
+  /** Exactly four — one correct, three distractors (CLAUDE.md, Content rules). */
+  readonly options: readonly [LocalizedText, LocalizedText, LocalizedText, LocalizedText];
   readonly correctIndex: 0 | 1 | 2 | 3;
-  readonly explanationKey: string;
-  readonly source: QuestionSourceRef;
-  readonly verification: QuestionVerification;
+  readonly explanation: LocalizedText;
+  /** A question always claims a fact, so both blocks are required and non-null. */
+  readonly source: FactSource;
+  readonly verification: FactVerification;
 }
 
-/** SPECULATIVE — no `question.schema.json` yet. ADR-0003 fixes the intent, not the shape. */
-export interface QuestionSourceRef {
-  /** Discover Canada chapter reference; every fact is chapter-referenced. */
-  readonly chapter: string;
-  readonly url: string;
-  /** Hash of the source text the question was written against. */
-  readonly sourceHash: string;
-  readonly asOf: IsoInstant;
-  /** Volatile facts are re-verified every run and quarantined after 180 days. */
-  readonly volatile: boolean;
+/* --------------------------------------------------------------------------
+ * content/characters/<id>.json — schema: content/schemas/character.schema.json
+ * ----------------------------------------------------------------------- */
+
+/** One state-machine input, in the vocabulary `ICharacterRenderer` addresses. */
+export interface CharacterInput {
+  readonly name: string;
+  readonly kind: 'bool' | 'number' | 'trigger';
+}
+
+/** One choice inside a slot. Every option has a name shown as text: colour is never the only signal. */
+export interface CharacterSkinOption {
+  readonly id: string;
+  /** Localiser key naming the option, e.g. `creator.hair.curly`. */
+  readonly labelKey: string;
 }
 
 /**
- * The block ADR-0003's verifier agent writes, and the only block it may write.
- *
- * SPECULATIVE — no `question.schema.json` yet. The field names come from ADR-0003,
- * which is accepted and names all five: an earlier version of this interface
- * declared `status`, `sourceHash` and `verifiedAt` only, dropping `evidence` and
- * `model` and renaming `checkedAt`. `evidence` is not optional detail — ADR-0003's
- * consequence is "the bank is auditable: every shipped question carries the
- * passage that supports it", and a verification without it cannot be audited.
+ * One runtime-swappable slot: skin tone, hair, coat. Slot and option names are
+ * identical in Rive and in the atlas, which is what makes the fallback a swap.
  */
-export interface QuestionVerification {
-  /** Only `verified` may ship. Set by the verifier agent, never by the author (ADR-0003). */
-  readonly status: 'unverified' | 'verified' | 'quarantined' | 'rejected';
-  /** The model that granted the status, so a bad verifier run can be identified later. */
-  readonly model: string;
-  /** When the check ran. `null` while `status` is `unverified`. */
-  readonly checkedAt: IsoInstant | null;
-  /** The `sourceHash` the status was granted for; a mismatch invalidates it. */
-  readonly sourceHash: string;
+export interface CharacterSlot {
+  readonly name: string;
+  /** Localiser key naming the slot in the creator, e.g. `creator.slot.hair`. */
+  readonly labelKey: string;
+  /** What the character creator offers; an NPC's costume slots are not selectable. */
+  readonly playerSelectable: boolean;
+  readonly options: readonly CharacterSkinOption[];
   /**
-   * The passage from the cited section that entails the answer, quoted exactly.
-   * Empty only when the status is `unverified`.
+   * Option id used when nothing has been chosen: an NPC document, and save
+   * recovery when a saved option id no longer exists. **Not a pre-selection.**
+   *
+   * It was called `default` for one day, and that name was the whole of a real
+   * conflict with `assets/style/art-bible.md` §8 — no skin tone is the default,
+   * and a field named `default` reads as "show this one chosen". The creator
+   * randomises uniformly on open; that is UI behaviour, checked by task 1.15's
+   * seeded-draw test, not by a schema.
    */
-  readonly evidence: string;
+  readonly fallback: string;
 }
 
-/** SPECULATIVE — no `character.schema.json` yet. */
 export interface CharacterDocument {
   readonly $schema: string;
   readonly id: CharacterId;
-  readonly nameKey: string;
-  /** How this character is drawn — see `ICharacterRenderer`. */
+  readonly name: LocalizedText;
+  /** Rive artboard name, or the atlas namespace the sprite fallback uses. */
   readonly artboard: string;
   readonly stateMachine: string;
-  /** Default skin option per slot; identical slot names in Rive and in the sprite atlas. */
-  readonly skins: Readonly<Record<string, string>>;
   /**
-   * Nation depicted, when the character is Indigenous. Required by
-   * `docs/content-review.md`; the art verifier rejects a missing value.
+   * Inputs the rig must expose. Declared as data so slice 1 task 1.11's contract
+   * test can load the `.riv` and assert each one exists.
+   */
+  readonly inputs: readonly CharacterInput[];
+  /**
+   * Every skin slot this character offers, with its options and its default.
+   * Declared as data so the creator renders itself from the document rather than
+   * from a hardcoded list — adding a slot is content, not an engine change.
+   */
+  readonly slots: readonly CharacterSlot[];
+  /**
+   * Is this character depicted as Indigenous? Required and never inferred, so
+   * the judgement is recorded rather than defaulted — the same shape as
+   * `FactClaim.factual`. `false` is a real answer: a character carrying no
+   * cultural marker at all, about whom the game asserts nothing
+   * (`docs/content-review.md` §3.3, outcome 2).
+   */
+  readonly indigenous: boolean;
+  /**
+   * One nation, as that nation names itself. Present if and only if
+   * `indigenous` is true. The schema holds a case-insensitive deny-list of the
+   * category words that are not nations — `Indigenous`, `First Nations`,
+   * `Inuit`, `TBD` and the rest — and a value matching one is a build failure.
    */
   readonly nation?: string;
+  readonly nationSource?: NationSource;
+  readonly communityReview?: CommunityReview;
 }
 
+/* --------------------------------------------------------------------------
+ * content/locales/<locale>/<bundle>.json — schema: content/schemas/locale.schema.json
+ * ----------------------------------------------------------------------- */
+
 /**
- * Flat key -> localised string map for one locale, as loaded by the i18n adapter.
+ * One locale's UI string table, exactly as it sits on disk — the adapter no
+ * longer attaches the locale, the file declares it.
  *
- * SPECULATIVE — no `locale.schema.json` yet. Note this is not the on-disk shape:
- * the bundle file is expected to be the bare key/value object, and the adapter
- * attaches `locale`. That indirection is exactly what a schema would settle.
+ * Bundles hold engine and UI vocabulary reused across content: menus, settings,
+ * the rotate overlay, the build-status line, live-region templates, locomotion
+ * mode labels. Text belonging to one content document lives in that document
+ * (ADR-0010). Keys are flat and dotted, so a key is spelled exactly one way.
  */
 export interface LocaleBundle {
+  readonly $schema: string;
   readonly locale: LocaleCode;
   readonly strings: Readonly<Record<string, string>>;
 }

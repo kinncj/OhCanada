@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/question.schema.json",
+  "title": "TrueNorth question",
+  "description": "One exam-style question, `content/questions/<subject>/<id>.json`. Prompt, options and explanation carry their EN and FR text inline rather than as locale keys (ADR-0010): the verifier reads the claim, its source, its evidence and both languages in one file, and a quarantined question takes its text out of the build with it.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questionId" },
+    "subject": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/subjectId" },
+    "prompt": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" },
+    "options": {
+      "description": "Exactly four options - one correct, three distractors (CLAUDE.md, Content rules). A fixed-length tuple, not a bounded list, so the port can mirror it as one.",
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" },
+        { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" },
+        { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" },
+        { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText" }
+      ],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "correctIndex": {
+      "description": "Index into options. Answer order is fixed by the author; shuffling is a presentation decision the domain makes from a seed.",
+      "type": "integer",
+      "enum": [0, 1, 2, 3]
+    },
+    "explanation": {
+      "description": "Why the answer is right, in plain language. Shown after answering, in Study mode as well as in a quest.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+    },
+    "source": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factSource" },
+    "verification": {
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factVerification"
+    }
+  },
+  "required": [
+    "$schema",
+    "id",
+    "subject",
+    "prompt",
+    "options",
+    "correctIndex",
+    "explanation",
+    "source",
+    "verification"
+  ],
+  "additionalProperties": false
+}

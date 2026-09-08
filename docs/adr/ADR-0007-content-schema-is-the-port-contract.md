@@ -7,6 +7,13 @@
   are now mechanical — sub-objects declared inline, and document types with no schema. The
   `SPECULATIVE` rule is also scoped properly here: it is about *content and persisted documents*,
   and ADR-0008 covers the different question of a port nothing has ever implemented.
+- Amended 2026-09-08 (third), by slice 1 task 1.2: **the type-blindness gap is closed.** The check compared
+  property *names* and optionality and nothing else, so `levels: readonly LevelId[]` and `levels: number`
+  were both green against an array of ids. It now compares value types, branded ids included. Three smaller
+  decisions fell out of writing six schemas against it and are recorded below: enum `$defs` are bound like
+  object ones, a conditional applicator is exempt from the inline-object rule under a stated condition, and
+  the six SPECULATIVE document types this ADR named are all schema-backed, so the marker count in
+  `content-repository.ts`, `progress-repository.ts` and `locomotion.ts` is zero.
 
 ## Context
 `app/application/ports/content-repository.ts` declares TypeScript shapes for every authored document, and
@@ -41,8 +48,29 @@ validates.
 - **`*Document`, `*Snapshot` and `*Bundle` are reserved suffixes** for document shapes. The enforcement below
   starts its walk from them, so a per-frame value object must not borrow one (`InputSnapshot` was renamed to
   `InputFrame` for precisely this reason).
+- **A `$def` that is a closed list of literals is bound too**, to the union that mirrors it
+  (`level.schema.json#/$defs/locomotionMode` -> `LocomotionMode`). Without this an enum could never be
+  schema-backed: the enforcement below starts from object shapes, so `LocomotionMode`, `MovementDrive` and
+  `LevelAssetKind` would have had to carry `SPECULATIVE` for ever — a marker saying "nothing validates this"
+  about values `make validate-content` does in fact check. The exception is a **branded scalar** `$def`
+  whose name pascal-cases to an alias in `app/domain/ids.ts`: `localeCode` carries an `enum` and is mirrored
+  by the branded `LocaleCode`, not by an exported union, so the brand rule answers for it instead.
+- **A `$ref` to a branded scalar `$def` demands that brand, and every other scalar `$ref` demands its
+  absence.** `common.schema.json` declares `levelId`, `questId`, `questionId`, `subjectId`, `characterId`,
+  `poiId`, `localeCode` and `isoInstant` beside the unbranded `id`; a property that `$ref`s `levelId` must be
+  `LevelId`, and a property that `$ref`s `id` must be a plain `string`. Both directions matter: without the
+  first, every id in the game is interchangeable with every string; without the second, `titleKey: LevelId`
+  passes. This is the reason generation was rejected in Alternatives, so it is the one thing the check may
+  not fudge.
 - **Every object shape lives at the root of a schema or in `$defs`, never inline under `properties` or
-  `items`.** An inline object contributes one property *name* to its parent and its own shape is then
+  `items`** — with one exemption, narrowly stated. A **conditional applicator** (`if` / `then` / `else` /
+  `not`, reached through `allOf`, `anyOf` or `oneOf`) may list `properties`, provided every property name it
+  lists is already declared by the nearest enclosing bindable object. A conditional is a *constraint*, not a
+  shape: "a `verified` status must quote its evidence" and "only an `answer` step carries a subject and a
+  count" both have to name the property they constrain, and banning that would either lose the constraints
+  or force each one into a `$def` demanding a port interface of its own. The condition is what keeps the
+  exemption from reopening the hole — a conditional that names a property its parent does not declare is
+  exactly the "compared with nothing" case and still fails. An inline object contributes one property *name* to its parent and its own shape is then
   compared with nothing at all: a schema saying `camera: { minZoom, maxZoom }` and a port saying
   `camera: { zoom }` are both green, `validate-content` passes, and the level ships reading `undefined`. That
   is the `levelOrder`/`levels` defect one level deeper. Put it in `$defs` and `$ref` it; the `$def` then gets
@@ -78,16 +106,18 @@ validates.
   the application had no typed access to before. Sub-objects are exported (`ExamRules`, `SchedulerTuning`,
   `GraphicsPresets`, `PerformanceBudgets`, `FeatureFlags`, `UnlockRules`, `ThemeColours`) so a consumer can
   depend on one block instead of the whole document.
-- The `SPECULATIVE` document types are visibly provisional, and the set is larger than this ADR first
-  recorded. Slice 1 must write `level.schema.json`, `quest.schema.json`, `question.schema.json`,
-  `character.schema.json` and `locale.schema.json` and reconcile each type against its schema before those
-  documents are loaded — plus `progress.schema.json`, which the first version of this ADR missed entirely.
-  `progress-repository.ts` declares five persisted shapes (`ProgressSnapshot`, `SettingsDocument`,
-  `LevelProgressDocument`, `ReviewStateDocument`, `ExamAttemptDocument`) and `SaveCodec.decode` promises to
-  "validate against the save schema" — a schema that does not exist, which makes that promise unkeepable by
-  anyone. Slice 1 task 1.6 writes it. `locomotion.ts` is the other miss: `LocomotionTuning` is read straight
-  out of a level's JSON, its header claimed "the content schema mirrors it", and no such schema exists. That
-  sentence is deleted; the eleven-field record and its four satellites are marked.
+- ~~The `SPECULATIVE` document types are visibly provisional, and the set is larger than this ADR first
+  recorded.~~ **Closed by slice 1 task 1.2.** All six schemas exist — `level`, `quest`, `question`,
+  `character`, `locale`, `progress` — and every type they name is reconciled against them, so there is no
+  `SPECULATIVE` marker anywhere in `app/application/ports` and the gate's staleness check would fail if one
+  were left behind. Two of them mattered more than the rest. `progress.schema.json` was the miss the first
+  version of this ADR made entirely: `SaveCodec.decode` promised to "validate against the save schema" and
+  no such schema existed, which made the promise unkeepable by anyone; it is now writable against a real
+  file, and the persisted document carries `$schema` like an authored one so an exported save can be
+  validated by the same tooling. `locomotion.ts` was the other: `LocomotionTuning` is read straight out of a
+  level's JSON and its header claimed "the content schema mirrors it" when none existed. It does now —
+  `level.schema.json#/$defs/locomotionTuning` — and the eleven-field record, its two nullable affordances,
+  its animation binding and its two enums are each bound and compared.
 - This rule **is** mechanically enforced, by `tests/unit/contracts/ports-match-schemas.test.ts`. It runs in
   `make test`, so it is a required check on every PR. It reads every file in `content/schemas/`, binds each
   object schema to a port interface by naming convention (`level.schema.json` -> `LevelDocument`; a `$defs`
@@ -117,27 +147,44 @@ validates.
   `MovementDrive` with nobody remembering to list them. Every member of that closure is either bound to a
   schema or carries `SPECULATIVE` in its own doc comment. Both directions fail: an unmarked unbound type, and
   a marker left on a type whose schema has since landed. It found fourteen unmarked types on its first run.
-- What that test still does **not** cover, recorded here so nobody reads it as more than it is:
-  - **Types, formats and value constraints.** It compares property *names* and optionality, nothing else. A
-    port declaring `questionCount: string` against a schema saying `"type": "integer"` passes, as does a
-    `string` against a `pattern`, an `enum`, a `minimum` or `uniqueItems`, and `levels: readonly LevelId[]`
-    passes against `levels: number`. The schema remains the only authority on values, and
-    `make validate-content` remains the only thing that checks them — against content files, not against
-    types. A type and a schema can agree on every key and still disagree about what the keys hold.
-    **Assessment: this is slice 1 task 1.2's job, not a slice-0 fix.** Closing it means teaching the test the
-    schema -> TypeScript type mapping, and the hard half of that mapping is ours by choice: a `$ref` to
-    `common.schema.json#/$defs/id` must accept a *branded* `LevelId`, not merely a `string`, or the check
-    either rejects every id we have or accepts every string, and branded ids are the one thing this ADR gave
-    up code generation to keep. Written today it would be exercised by one schema, one document and zero
-    branded properties. Written in 1.2 it is exercised by six schemas, every id in the game, arrays,
-    nullables and enums on the day they are authored — which is the difference between a mapping that is
-    tested and one that is guessed. The risk of deferring is bounded and named: between now and 1.2 the only
-    checked document is `game.config.json`, whose types are already reconciled by hand.
+- **Value types are compared too, since slice 1 task 1.2.** The gap recorded above through slice 0 — "it
+  compares property names and optionality, nothing else" — is closed. Per property, recursively: branded
+  versus plain scalars in both directions; `string` / `integer` / `number` / `boolean` / `null`; `enum`
+  against a union of literals, failing on a value in either that is missing from the other; arrays against
+  `readonly T[]`; `prefixItems` against a fixed-length tuple; `anyOf` against a TypeScript union, which is
+  how `IsoInstant | null` and `JumpAffordance | null` are stated; a string-keyed map against an index
+  signature; and a `$ref` to an object `$def` against *that `$def`'s* bound interface, so `camera` cannot
+  quietly become a `ParallaxLayer`. The brand is read structurally — an intersection member with exactly one
+  property whose type is a string literal — rather than by matching the mangled `__@brand@n` symbol, so
+  renaming the `unique symbol` in `ids.ts` cannot switch the check off.
+
+  Deferring it to 1.2 was right for the reason given at the time, and the evidence is in what it was
+  exercised against on its first day: six schemas, every branded id in the game, arrays, tuples, nullables,
+  enums and two string-keyed maps. It was also *proved to fail* before it was trusted, on fifteen deliberate
+  defects — a branded id replaced by `string`, `QuestId[]` swapped for `LevelId[]`, a `number` turned into a
+  `string`, `camera` bound to the wrong interface, a four-tuple widened to an array, a nullable dropped, a
+  brand added where the schema says a plain id, an array collapsed to a scalar, an index signature replaced
+  by a fixed shape, a mode removed from `LocomotionMode`, a value added to a schema enum, a required property
+  made optional, an inline object under `properties`, and a conditional naming a property its parent does not
+  declare. All fifteen were reported; the unmutated tree is green. This project has removed gates that
+  measured nothing, so a new one arrives with its failures demonstrated.
+- What the test still does **not** cover, recorded here so nobody reads it as more than it is. These are
+  narrower than the gaps they replace, and all of them are about *values*, not shapes:
+  - **`integer` versus `number`.** TypeScript has one numeric type, so a schema saying `"integer"` and a port
+    saying `number` are indistinguishable and always will be. The schema is the authority; `validate-content`
+    catches a fractional value in a file.
+  - **Every other value constraint.** `pattern`, `format`, `minimum`, `maxLength`, `minItems`/`maxItems` on a
+    non-tuple array, `uniqueItems`, `propertyNames`, `const`, and the conditional applicators themselves. A
+    TypeScript type cannot express any of them, so there is nothing to compare against. They are checked
+    against *data* by `make validate-content`, which is the right place — but that means a schema constraint
+    with no content file to exercise it is checked by nothing until content exists.
+  - **`anyOf` matching is greedy, not exhaustive.** Each branch must be satisfied by some union member and
+    each member by some branch; it does not look for a perfect pairing. Exact for `X | null`, which is every
+    `anyOf` in the tree today, and loose for a hypothetical many-branch union.
+  - **A branded `$def` whose name does not pascal-case to an alias in `ids.ts` is silently unbranded.** Name
+    a def `level_id` and the demand disappears. Nothing detects that; it is caught by the def being useless.
   - **Ports with no schema and no document nature.** `Clock`, `AudioPort` and `InputPort` will never have a
     schema, so this ADR has nothing to say about them. ADR-0008 does.
-  These are narrower gaps than the ones they replace. The original defect — a renamed property, five missing
-  ones and an optional made required — is now reported in a single run, and so is a `camera` sub-object that
-  disagrees with its port.
 - The exemptions in the test's `SKIPPED_SCHEMAS` are correct and stay, but they are now **root-only**. The
   previous file-level skip also hid every object under that file's `$defs` — the narrowing this ADR said a
   future port "must" do, done now instead, because slice 1's schemas will `$ref`
@@ -153,6 +200,14 @@ validates.
   exists fails, so a rename cannot leave an exemption protecting nothing; and an entry whose port type has
   since been written fails too, so an exemption cannot outlive the reason for it. An override keyed on a
   pointer no schema declares renames nothing and fails on the same principle. The three `SKIPPED_DEFS`
-  entries added with the root-only narrowing (`localizedText`, `vec2`, `creditedAsset`) all say the same
+  entries added with the root-only narrowing (`localizedText`, `vec2`, `creditedAsset`) all said the same
   thing — no port re-declares this shape, and per ADR-0008 none should be written before something reads it —
-  and each fails the moment a port does.
+  and each fails the moment a port does. Two of the three did, within one slice: ADR-0010 puts every
+  player-facing string in a content document as `localizedText`, and a level's ground polyline, camera dead
+  zone and parallax offsets are all `vec2`, so `LocalizedText` and `Vec2` are now port types with consumers
+  and both exemptions were deleted — by the check failing, not by anyone remembering. `creditedAsset`
+  remains, for the reason it always had.
+- `TYPE_NAME_OVERRIDES` gained two entries, both for roots whose port names predate the convention and are
+  better than what it would derive: `locale.schema.json` -> `LocaleBundle` and `progress.schema.json` ->
+  `ProgressSnapshot`. Both use a reserved document suffix, so both are still walked as document roots; only
+  the `<file> -> <Name>Document` derivation needed the pairing.
