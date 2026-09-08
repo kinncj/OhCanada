@@ -164,6 +164,114 @@ describe('parseBootConfig', () => {
   });
 });
 
+/**
+ * The renderer probe (task 1.19) chooses between the three `graphicsPresets` and
+ * derives its tier thresholds from `budgets.frameTimeMs`. Both therefore reach
+ * the player, not just CI, so both are parsed on the boot path with the same
+ * "fail loudly rather than draw wrong" rule as the palette: a preset with a
+ * missing member would arrive at the first frame as `particles: undefined` and a
+ * level would emit `NaN` particles instead of failing.
+ */
+describe('parseBootConfig reads the visual tiers', () => {
+  it('carries the shipped presets through unchanged', () => {
+    const result = parseBootConfig(gameConfigJson);
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+
+    const shipped = valid()['graphicsPresets'];
+    expect(result.value.graphicsPresets).toEqual(shipped);
+    expect(result.value.frameTimeMs).toBe(16.7);
+  });
+
+  it.each([
+    ['graphicsPresets', 'config.boot.graphicsPresets'],
+    ['budgets', 'config.boot.budgets'],
+  ])('rejects a config missing %s: there is no tier to degrade to', (field, code) => {
+    const raw = valid();
+    delete raw[field];
+
+    const result = parseBootConfig(raw);
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.code).toBe(code);
+  });
+
+  it.each(['low', 'medium', 'high'])('rejects a missing "%s" preset', (tier) => {
+    const raw = valid();
+    const presets = { ...(raw['graphicsPresets'] as Record<string, unknown>) };
+    delete presets[tier];
+    raw['graphicsPresets'] = presets;
+
+    const result = parseBootConfig(raw);
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.code).toBe(`config.boot.graphicsPresets.${tier}`);
+  });
+
+  const withMediumPreset = (patch: Record<string, unknown>): Record<string, unknown> => {
+    const raw = valid();
+    const presets = raw['graphicsPresets'] as Record<string, Record<string, unknown>>;
+    raw['graphicsPresets'] = {
+      ...presets,
+      medium: { ...presets['medium'], ...patch },
+    };
+    return raw;
+  };
+
+  it.each([
+    ['renderScale', { renderScale: 0 }],
+    ['renderScale above 1', { renderScale: 1.5 }],
+    ['maxPixelRatio', { maxPixelRatio: '2' }],
+    ['particles', { particles: 12.5 }],
+    ['negative particles', { particles: -1 }],
+    ['parallaxLayers', { parallaxLayers: null }],
+    ['postProcessing', { postProcessing: 'yes' }],
+  ])('rejects an invalid %s', (_label, patch) => {
+    const result = parseBootConfig(withMediumPreset(patch));
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.code).toMatch(/^config\.boot\.graphicsPresets\.medium\./u);
+  });
+
+  it('accepts zero particles, because that is what reduced motion asks for', () => {
+    const result = parseBootConfig(withMediumPreset({ particles: 0 }));
+
+    expect(result.ok).toBe(true);
+  });
+
+  it('rejects a preset block that is not an object', () => {
+    const raw = valid();
+    raw['graphicsPresets'] = 'medium';
+
+    expect(parseBootConfig(raw).ok).toBe(false);
+
+    const nested = valid();
+    (nested['graphicsPresets'] as Record<string, unknown>)['low'] = 42;
+    const result = parseBootConfig(nested);
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.code).toBe('config.boot.graphicsPresets.low');
+  });
+
+  it.each([0, -1, 'fast', null])(
+    'rejects budgets.frameTimeMs of %p, which every tier threshold is derived from',
+    (frameTimeMs) => {
+      const raw = valid();
+      raw['budgets'] = { ...(raw['budgets'] as Record<string, unknown>), frameTimeMs };
+
+      const result = parseBootConfig(raw);
+
+      expect(result.ok).toBe(false);
+      if (result.ok) return;
+      expect(result.error.code).toBe('config.boot.budgets.frameTimeMs');
+    },
+  );
+});
+
 describe('toPhaserColor', () => {
   it('converts a #rrggbb literal to the integer Phaser wants', () => {
     expect(toPhaserColor('#000000')).toBe(0x000000);

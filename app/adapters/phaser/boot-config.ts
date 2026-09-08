@@ -25,7 +25,14 @@
  * implement them — but not `app/ui`, `app/bootstrap` or another adapter (ADR-0005).
  */
 
-import type { FeatureFlags, GameConfigDocument, ThemeColours } from '@application/ports';
+import type {
+  FeatureFlags,
+  GameConfigDocument,
+  GraphicsPreset,
+  GraphicsPresets,
+  PerformanceBudgets,
+  ThemeColours,
+} from '@application/ports';
 
 import { appErr, ok, type Result } from '@common/result';
 
@@ -44,10 +51,23 @@ import { appErr, ok, type Result } from '@common/result';
 export interface BootConfig
   extends Pick<
       GameConfigDocument,
-      'title' | 'version' | 'defaultLocale' | 'designWidth' | 'designHeight'
+      | 'title'
+      | 'version'
+      | 'defaultLocale'
+      | 'designWidth'
+      | 'designHeight'
+      /* The three visual tiers the renderer probe chooses between (task 1.19).
+         Read from the config rather than declared in the adapter so re-tuning a
+         tier is a content edit, and so the tiers cannot drift from the budgets
+         they were written against. */
+      | 'graphicsPresets'
     >,
     /* Flattened out of `featureFlags`: the scene needs the flag, not the block. */
-    Pick<FeatureFlags, 'debugOverlay'> {
+    Pick<FeatureFlags, 'debugOverlay'>,
+    /* Flattened out of `budgets` for the same reason: the tier thresholds are
+       ratios of this one number (see `visual-tier.ts`), and nothing on the boot
+       path needs the payload or texture budgets. */
+    Pick<PerformanceBudgets, 'frameTimeMs'> {
   /** Phaser's clear colour, `#rrggbb`. Equal to `palette.sky`; not a config property. */
   readonly backgroundColor: string;
   /**
@@ -134,6 +154,107 @@ function readPositiveInt(
   return ok(value);
 }
 
+/**
+ * The three graphics presets, validated shape by shape.
+ *
+ * These are what the renderer probe (task 1.19) chooses between, so a preset
+ * with a missing or non-numeric member would reach the first frame as
+ * `particles: undefined` and a level would emit `NaN` particles rather than
+ * fail. Every member is checked, and the whole block is required: a config that
+ * omits `graphicsPresets` has no tiers to degrade to, which is a build defect
+ * and not something to paper over with defaults invented in the adapter.
+ */
+function readGraphicsPreset(
+  raw: Record<string, unknown>,
+  tier: string,
+): Result<GraphicsPreset> {
+  const path = `graphicsPresets.${tier}`;
+  const source = raw[tier];
+  if (!isRecord(source)) return invalid(path, `"${path}" must be an object.`);
+
+  const number = (field: string, max?: number): Result<number> => {
+    const value = source[field];
+    if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
+      return invalid(`${path}.${field}`, `"${path}.${field}" must be a positive number.`);
+    }
+    if (max !== undefined && value > max) {
+      return invalid(`${path}.${field}`, `"${path}.${field}" must be at most ${max}.`);
+    }
+    return ok(value);
+  };
+
+  const renderScale = number('renderScale', 1);
+  if (!renderScale.ok) return renderScale;
+  const maxPixelRatio = number('maxPixelRatio');
+  if (!maxPixelRatio.ok) return maxPixelRatio;
+
+  const countable = (field: string): Result<number> => {
+    const value = source[field];
+    if (typeof value !== 'number' || !Number.isInteger(value) || value < 0) {
+      return invalid(
+        `${path}.${field}`,
+        `"${path}.${field}" must be an integer of zero or more.`,
+      );
+    }
+    return ok(value);
+  };
+
+  const particles = countable('particles');
+  if (!particles.ok) return particles;
+  const parallaxLayers = countable('parallaxLayers');
+  if (!parallaxLayers.ok) return parallaxLayers;
+
+  const postProcessing = source['postProcessing'];
+  if (typeof postProcessing !== 'boolean') {
+    return invalid(`${path}.postProcessing`, `"${path}.postProcessing" must be a boolean.`);
+  }
+
+  return ok({
+    renderScale: renderScale.value,
+    maxPixelRatio: maxPixelRatio.value,
+    particles: particles.value,
+    parallaxLayers: parallaxLayers.value,
+    postProcessing,
+  });
+}
+
+function readGraphicsPresets(raw: Record<string, unknown>): Result<GraphicsPresets> {
+  const presets = raw['graphicsPresets'];
+  if (!isRecord(presets)) {
+    return invalid('graphicsPresets', '"graphicsPresets" must be an object.');
+  }
+
+  const low = readGraphicsPreset(presets, 'low');
+  if (!low.ok) return low;
+  const medium = readGraphicsPreset(presets, 'medium');
+  if (!medium.ok) return medium;
+  const high = readGraphicsPreset(presets, 'high');
+  if (!high.ok) return high;
+
+  return ok({ low: low.value, medium: medium.value, high: high.value });
+}
+
+/**
+ * `budgets.frameTimeMs` — the one budget the boot path needs.
+ *
+ * It is not a CI-only number: `visual-tier.ts` derives all five tier thresholds
+ * from it, so it reaches the player as "how much scenery does this device get".
+ * Read here rather than duplicated in the adapter, so the tier boundaries and
+ * the CI gate can never be written against two different budgets.
+ */
+function readFrameTimeMs(raw: Record<string, unknown>): Result<number> {
+  const budgets = raw['budgets'];
+  if (!isRecord(budgets)) return invalid('budgets', '"budgets" must be an object.');
+  const frameTimeMs = budgets['frameTimeMs'];
+  if (typeof frameTimeMs !== 'number' || !Number.isFinite(frameTimeMs) || frameTimeMs <= 0) {
+    return invalid(
+      'budgets.frameTimeMs',
+      '"budgets.frameTimeMs" must be a positive number of milliseconds.',
+    );
+  }
+  return ok(frameTimeMs);
+}
+
 function readPalette(raw: Record<string, unknown>): Result<ThemeColours> {
   const theme = raw['theme'];
   if (theme === undefined) return ok(DEFAULT_PALETTE);
@@ -206,6 +327,12 @@ export function parseBootConfig(raw: unknown): Result<BootConfig> {
   const palette = readPalette(raw);
   if (!palette.ok) return palette;
 
+  const graphicsPresets = readGraphicsPresets(raw);
+  if (!graphicsPresets.ok) return graphicsPresets;
+
+  const frameTimeMs = readFrameTimeMs(raw);
+  if (!frameTimeMs.ok) return frameTimeMs;
+
   return ok({
     title: title.value,
     version: version.value,
@@ -215,6 +342,8 @@ export function parseBootConfig(raw: unknown): Result<BootConfig> {
     backgroundColor: palette.value.sky,
     palette: palette.value,
     debugOverlay,
+    graphicsPresets: graphicsPresets.value,
+    frameTimeMs: frameTimeMs.value,
   });
 }
 
