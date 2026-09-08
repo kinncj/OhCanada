@@ -29,9 +29,16 @@ was passing on `0/0` over a directory of type-only files. Two skipped tests carr
 so removing the skip would have produced a green tick meaning nothing. The lesson is written into every later
 slice: **a gate is not trusted until it has been seen to fail on a real violation.**
 
-**Open obligation.** Rollback is documented in `docs/runbook.md` §1 and its determinism premise is proven,
-but the procedure itself has never been exercised — there has been no deploy to roll back. Owner infra,
-opened 2026-09-08, due once two successful deploys exist (ADR-0006, amended).
+**Closed after the audit.** Rollback was exercised in both directions once the tombstone deploy made
+`dist/` genuinely differ between builds — until then, re-running an older run would have proven nothing
+observable. The repository went public, branch protection landed with `enforce_admins: false`, and the
+boot screen stopped reading as a stalled loading bar: every gate passed while it did, because they checked
+that it rendered and never that it communicated.
+
+**Carried into slice 1.** The ADR-0009 obligation gate does not exist yet (`due=2026-10-08`, owner infra);
+until it does, a reader stands in for it, which happened twice in one session. The credit check reads
+`assets/dist/` only, so an asset committed elsewhere under `assets/` is credited by nobody — it passes today
+by vacuum and bites the day art lands.
 
 **Explicitly not in this slice.** Gameplay, art, questions, Rive, audio, scheduler — all slice 1 or later.
 
