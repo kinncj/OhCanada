@@ -14,20 +14,42 @@ test.describe('Payload budgets (static analysis of dist/)', () => {
     const size = (f: string) => statSync(f).size;
     const sum = (list: string[]) => [...new Set(list)].reduce((n, f) => n + size(f), 0);
     const assetsDir = join(dist, 'assets');
-    const code = files.filter((f) => f.startsWith(assetsDir) && /\.(js|css)$/.test(f) && !/\/(q-|[a-z-]+-intro-|[a-z-]+-[A-Za-z0-9_-]{8}\.js$)/.test(f));
-    const shared = files.filter((f) => f.startsWith(assetsDir) && /\/(three|rapier|yuka|ajv|index)-[\w-]+\.(js|css)$/.test(f));
+    const shared = files.filter((f) => f.startsWith(assetsDir) && /\.(js|css)$/.test(f));
     const sky = files.filter((f) => /\/sky\//.test(f));
-    const initial = sum([...code, ...shared, ...sky, join(dist, 'index.html')]);
-    // Hub scene = everything the hub streams: content chunks for hub + first district, characters, textures, env models, transcoders, audio.
-    const hubChunks = files.filter((f) => /\/(hub|hub-welcome|rights-responsibilities)-[\w-]+\.js$/.test(f));
-    const hubAssets = files.filter((f) => /\/(models|textures|basis|draco|audio)\//.test(f) && !/\/models\/(env\/(facade|fort|pier|barrier|utility|power|hydrant|iron))/.test(f));
-    const hub = initial + sum([...hubChunks, ...hubAssets]);
-    console.log(`initial payload: ${(initial / 1048576).toFixed(2)} MB (budget ${(config.budgets.initialPayloadBytes / 1048576).toFixed(0)} MB); hub scene: ${(hub / 1048576).toFixed(2)} MB (budget ${(config.budgets.hubSceneBytes / 1048576).toFixed(0)} MB)`);
+    const initial = sum([...shared, ...sky, join(dist, 'index.html')]);
+
+    // The hub streams only what it references: the app shell, transcoders, audio, characters, terrain
+    // textures and the models its POIs and vegetation actually use — not every district's hero assets.
+    const manifest = JSON.parse(readFileSync(join(dist, 'manifest.json'), 'utf8')) as {
+      models: Record<string, { path: string }>;
+      textures: Record<string, { diff: string; nor?: string; arm?: string }>;
+      characters: Record<string, { path: string; skin: Record<string, string> }>;
+    };
+    const hub = JSON.parse(readFileSync(join(root, 'content', 'districts', 'hub.json'), 'utf8')) as {
+      pois: { landmark?: string }[];
+      scene: { vegetation: { kinds: string[] } };
+    };
+    const KIND_MODELS: Record<string, string[]> = {
+      pine: ['tree-pine', 'sapling-pine'], spruce: ['tree-fir', 'sapling-fir'],
+      maple: ['tree-broadleaf-1', 'tree-broadleaf-2'], birch: ['tree-broadleaf-2', 'tree-broadleaf-1'],
+      shrub: ['fern', 'grass-clump'], rock: ['rock-boulder', 'rock-2', 'rock-3'],
+      iceberg: ['rock-coast', 'rock-boulder'], 'tundra-grass': ['grass-clump', 'fern'], wheat: ['grass-clump'],
+    };
+    const hubKeys = new Set<string>();
+    for (const p of hub.pois) if (p.landmark) hubKeys.add(p.landmark);
+    for (const k of hub.scene.vegetation.kinds) for (const m of KIND_MODELS[k] ?? []) hubKeys.add(m);
+    const rel = (p: string) => join(dist, p);
+    const hubModels = [...hubKeys].map((k) => manifest.models[k]?.path).filter((p): p is string => !!p).map(rel).filter((f) => files.includes(f));
+    const charFiles = Object.values(manifest.characters).flatMap((c) => [c.path, ...Object.values(c.skin)]).map(rel).filter((f) => files.includes(f));
+    const textureFiles = Object.values(manifest.textures).flatMap((t) => [t.diff, t.nor, t.arm].filter((x): x is string => !!x)).map(rel).filter((f) => files.includes(f));
+    const support = files.filter((f) => /\/(basis|draco|audio)\//.test(f));
+    const hubTotal = initial + sum([...hubModels, ...charFiles, ...textureFiles, ...support, join(dist, 'manifest.json')]);
+    console.log(`initial payload: ${(initial / 1048576).toFixed(2)} MB (budget ${(config.budgets.initialPayloadBytes / 1048576).toFixed(0)} MB); hub scene: ${(hubTotal / 1048576).toFixed(2)} MB (budget ${(config.budgets.hubSceneBytes / 1048576).toFixed(0)} MB)`);
     expect(initial).toBeLessThanOrEqual(config.budgets.initialPayloadBytes);
-    expect(hub).toBeLessThanOrEqual(config.budgets.hubSceneBytes);
-    const gz = sum([]) + [...new Set([...code, ...shared])].reduce((n, f) => n + gzipSync(readFileSync(f)).length, 0) + sum(sky);
+    expect(hubTotal).toBeLessThanOrEqual(config.budgets.hubSceneBytes);
+
+    const gz = [...new Set(shared)].reduce((n, f) => n + gzipSync(readFileSync(f)).length, 0) + sum(sky);
     console.log(`initial transfer (gzip): ${(gz / 1048576).toFixed(2)} MB`);
-    // 50 Mbps = 6.25 MB/s; TTI budget must leave headroom for parse + GPU init.
     expect(gz / 6_553_600).toBeLessThan(config.budgets.timeToInteractiveMs / 1000 / 2);
   });
 
