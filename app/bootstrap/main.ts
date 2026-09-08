@@ -86,6 +86,23 @@ async function boot(): Promise<void> {
 
   const bus = new EventBus<GameEvents>();
   attachTelemetry(bus);
+  bus.onAny((type) => {
+    if (type !== 'debug:frame' && type !== 'player:moved') loading.note(type);
+  });
+  for (const level of ['warn', 'error'] as const) {
+    const original = console[level].bind(console);
+    console[level] = (...args: unknown[]) => {
+      loading.note(`${level}: ${args.map((a) => (a instanceof Error ? a.message : String(a))).join(' ')}`);
+      original(...args);
+    };
+  }
+  const stallTimer = window.setInterval(() => {
+    if (!loading.root.isConnected) return;
+    loading.tick(() => {
+      safeSet(SAFE_KEY, '1');
+      location.reload();
+    });
+  }, 2000);
   const content = new StaticContentRepository();
   const config = content.getConfig();
   const base = config.basePath;
@@ -336,6 +353,7 @@ async function boot(): Promise<void> {
 
   window.clearTimeout(watchdog);
   window.clearTimeout(escalate);
+  void stallTimer;
   booted = true;
   loading.hide();
   showMenu();
