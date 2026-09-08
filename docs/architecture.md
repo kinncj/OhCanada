@@ -5,6 +5,11 @@ they fit together. If a diagram and an ADR disagree, the ADR wins and this file 
 
 One sentence: **the engine changes more often than the rules, so the rules do not know the engine exists.**
 
+Every boundary in this file is defended by something that fails a build, never by a convention: layering by
+`.dependency-cruiser.cjs`, content shapes by `make validate-content`, unimplemented ports by the
+`PROVISIONAL` contract test, and dated commitments in documents by the obligation gate specified in
+**ADR-0009**. If a rule here has no gate behind it, that is stated where the rule is.
+
 ## 1. Layers
 
 `app/domain` is entities and pure rules. `app/application` is use cases and ports — interfaces only.
