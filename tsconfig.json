@@ -26,14 +26,21 @@
 
     "types": ["vite/client", "node"],
 
-    "baseUrl": ".",
+    /**
+     * No `baseUrl`. TypeScript 6.0 deprecates it (TS5101) and 7.0 removes it.
+     * Since 4.4, `paths` resolve relative to this file when `baseUrl` is absent,
+     * which is what we want anyway: the aliases are repo-relative, not
+     * dependent on where tsc is invoked from. Mirrored in `vite.config.ts` and
+     * `vitest.config.ts` -- all three must agree or an alias resolves in the
+     * editor and fails at build.
+     */
     "paths": {
-      "@domain/*": ["app/domain/*"],
-      "@application/*": ["app/application/*"],
-      "@adapters/*": ["app/adapters/*"],
-      "@ui/*": ["app/ui/*"],
-      "@common/*": ["common/*"],
-      "@content/*": ["content/*"]
+      "@domain/*": ["./app/domain/*"],
+      "@application/*": ["./app/application/*"],
+      "@adapters/*": ["./app/adapters/*"],
+      "@ui/*": ["./app/ui/*"],
+      "@common/*": ["./common/*"],
+      "@content/*": ["./content/*"]
     }
   },
   "include": [
