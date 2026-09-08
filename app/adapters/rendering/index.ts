@@ -1,6 +1,7 @@
 export * from './renderer';
 export * from './environment';
 export * from './world-scene';
+export { clearVegetationCaches } from './vegetation';
 export * from './character-view';
 export * from './weather';
 export * from './camera-rig';

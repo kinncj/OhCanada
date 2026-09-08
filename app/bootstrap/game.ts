@@ -8,7 +8,7 @@ import type { CharacterAppearance, CharacterCatalog } from '@domain/character';
 import type { NpcAppearance } from '@domain/district';
 import { districtId, triggerId, type DistrictId, type TriggerId } from '@domain/ids';
 import { createPlayer, withinRadius, type PlayerComponent } from '@domain/player';
-import { GameRenderer, Environment, WorldScene, CharacterView, Weather, CameraRig, AssetLibrary, SkinnedCharacterView, type AppearanceSpec } from '@adapters/rendering';
+import { GameRenderer, Environment, WorldScene, CharacterView, Weather, CameraRig, AssetLibrary, SkinnedCharacterView, clearVegetationCaches, type AppearanceSpec } from '@adapters/rendering';
 import { YukaNpcBrain } from '@adapters/ai/yuka-npc-brain';
 
 export interface GameDeps {
@@ -84,7 +84,7 @@ export class Game {
   ) {
     this.renderer = renderer;
     this.rig = new CameraRig(window.innerWidth / window.innerHeight);
-    this.environment = new Environment(this.scene, deps.assetBase);
+    this.environment = new Environment(this.scene, deps.assetBase, renderer.backend === 'webgpu');
     this.weather = new Weather();
     this.scene.add(this.weather.group);
     this.preset = deps.config.graphicsPresets.medium;
@@ -244,10 +244,10 @@ export class Game {
     stage('world');
     onProgress?.(0.5);
     // Physics
-    const t = world.terrain;
     onProgress?.(0.51, 'physics: ground');
     await new Promise((r) => setTimeout(r, 0));
-    this.deps.physics.addHeightfield([0, 0, 0], district.scene.size, t.heights, t.rows, t.cols, t.maxHeight);
+    const ph = world.physics;
+    this.deps.physics.addHeightfield([0, 0, 0], district.scene.size, ph.heights, ph.rows, ph.rows, ph.maxHeight);
     onProgress?.(0.52, `physics: ${world.colliders.length} colliders`);
     await new Promise((r) => setTimeout(r, 0));
     let colliderCount = 0;
@@ -261,9 +261,12 @@ export class Game {
     // NPCs
     this.npcBrain.setHeightFunction(world.heightAt);
     let npcCount = 0;
+    // Rigged characters are expensive to instantiate; past a handful the rest use the procedural humanoid.
+    const riggedLimit = this.preset.assetPolicy === 'full' ? district.npcs.length : 2;
     for (const npc of district.npcs) {
       onProgress?.(0.6 + 0.1 * (npcCount / Math.max(1, district.npcs.length)), `people ${++npcCount}/${district.npcs.length}`);
-      const view = (await this.phase(`npc:${npc.id}`, 12_000, this.makeCharacter(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? (hashNpc(npc.id) ? 'female' : 'male') }))))
+      const spec = this.resolve({ ...npc.appearance, body: npc.appearance.body ?? (hashNpc(npc.id) ? 'female' : 'male') });
+      const view = (await this.phase(`npc:${npc.id}`, 8_000, npcCount <= riggedLimit ? this.makeCharacter(spec) : Promise.resolve(new CharacterView(spec))))
         ?? new CharacterView(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? 'male' }));
       view.root.name = `npc:${npc.id}`;
       this.scene.add(view.root);
@@ -302,6 +305,8 @@ export class Game {
   unloadDistrict(): void {
     // Textures and meshes from the district we are leaving must go, or travelling accumulates GPU memory
     // until the context is lost.
+    // Caches that hold geometry/materials from released models must go with them.
+    clearVegetationCaches();
     this.library?.releaseUnused([], [this.playerBodyKey]);
     if (this.world) {
       this.world.dispose();

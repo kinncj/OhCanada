@@ -26,6 +26,24 @@ export interface TerrainTextures {
   readonly plaza?: PbrTextureSet; // cobblestone around the origin
 }
 
+export const PHYSICS_MAX_ROWS = 97;
+
+/** Coarse height grid for the physics collider, sampled straight from the height function. */
+export function buildPhysicsHeights(size: number, heightAt: HeightFn, rows = PHYSICS_MAX_ROWS): { heights: Float32Array; rows: number; maxHeight: number } {
+  const heights = new Float32Array(rows * rows);
+  const step = size / (rows - 1);
+  const half = size / 2;
+  let maxHeight = 0;
+  for (let ix = 0; ix < rows; ix++) {
+    for (let iz = 0; iz < rows; iz++) {
+      const h = heightAt(-half + ix * step, -half + iz * step);
+      heights[ix * rows + iz] = h;
+      maxHeight = Math.max(maxHeight, Math.abs(h));
+    }
+  }
+  return { heights, rows, maxHeight };
+}
+
 export function buildTerrain(size: number, heightAt: HeightFn, palette: readonly string[], snow: boolean, textures: TerrainTextures | null, segments = 160, plazaRadius = 0): TerrainBuild {
   const geo = new THREE.PlaneGeometry(size, size, segments, segments);
   geo.rotateX(-Math.PI / 2);

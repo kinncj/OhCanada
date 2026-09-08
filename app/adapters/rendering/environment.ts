@@ -22,6 +22,7 @@ export class Environment {
   constructor(
     private readonly scene: THREE.Scene,
     private readonly assetBase: string,
+    private readonly allowCascades = true,
   ) {
     this.sun = new THREE.DirectionalLight(0xfff2dc, 3.2);
     this.sun.castShadow = true;
@@ -89,7 +90,7 @@ export class Environment {
     this.sun.shadow.mapSize.set(preset.shadowMapSize, preset.shadowMapSize);
     this.sun.shadow.map?.dispose();
     this.sun.shadow.map = null;
-    if (preset.shadowCascades > 1) {
+    if (preset.shadowCascades > 1 && this.allowCascades) {
       this.csm = new CSMShadowNode(this.sun, { cascades: preset.shadowCascades, maxFar: 260, mode: 'practical', lightMargin: 120 });
       this.csm.fade = true;
       this.sun.shadow.shadowNode = this.csm;

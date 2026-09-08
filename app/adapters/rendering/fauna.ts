@@ -46,6 +46,7 @@ export class FaunaSystem {
         }
         for (let i = 0; i < f.count; i++) {
           const obj = model.lods[0]!.clone(true);
+          obj.traverse((o) => (o.userData.shared = true));
           obj.traverse((o) => {
             if (o instanceof THREE.Mesh) {
               o.castShadow = true;

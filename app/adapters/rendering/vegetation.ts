@@ -147,6 +147,12 @@ interface Chunk {
  * Chunked GPU instancing with two LOD levels per prototype; frustum culling works per chunk and distance to the
  * camera toggles LOD0/LOD1. Placement is seeded so every client sees the same forest.
  */
+/** Drop the shared proto/material caches; call when the asset library releases the models behind them. */
+export function clearVegetationCaches(): void {
+  materialCache.clear();
+
+}
+
 export class Vegetation {
   readonly group = new THREE.Group();
   private readonly chunks: Chunk[] = [];
@@ -212,7 +218,8 @@ export class Vegetation {
               parts.map((part) => {
                 const im = new THREE.InstancedMesh(part.geometry, part.material, list.length);
                 list.forEach((mat, i) => im.setMatrixAt(i, mat));
-                im.castShadow = high && proto.castShadow && (opts.castShadows ?? true);
+                im.userData.shared = true; // geometry and materials come from the shared proto cache
+            im.castShadow = high && proto.castShadow && (opts.castShadows ?? true);
                 im.receiveShadow = true;
                 im.computeBoundingSphere();
                 im.visible = high;

@@ -3,7 +3,7 @@ import type { District, Landmark } from '@domain/district';
 import type { GraphicsPreset } from '@application/ports';
 import { hashString } from '@common/rng';
 import { makeHeightFunction, type HeightFn } from './procedural/noise';
-import { buildTerrain, type TerrainBuild, type TerrainTextures } from './terrain';
+import { buildPhysicsHeights, buildTerrain, type TerrainBuild, type TerrainTextures } from './terrain';
 import { buildWater } from './water';
 import { KIND_MODELS, Vegetation, protoFromModel, type VegetationKind } from './vegetation';
 import { buildLandmark, buildMaterialKit, LANDMARK_MODEL_KEYS, PROCEDURAL_TYPES, type ColliderSpec, type MaterialKit } from './landmarks';
@@ -33,6 +33,8 @@ export class WorldScene {
   /** Distance-culled landmarks: big silhouettes stay visible far away, street furniture drops out early. */
   private readonly culled: { obj: THREE.Object3D; pos: THREE.Vector3; range: number }[] = [];
   drawDistance = 400;
+  /** Coarse height grid handed to the physics engine; the visual mesh is far denser. */
+  physics: { heights: Float32Array; rows: number; maxHeight: number } = { heights: new Float32Array(0), rows: 0, maxHeight: 0 };
   private hydrationBudget = 2;
 
   private constructor(
@@ -131,6 +133,7 @@ export class WorldScene {
           const model = await library.model(poi.landmark);
           const obj = model.lods[0]!.clone(true);
           obj.name = `hero:${poi.id}`;
+          obj.traverse((o) => (o.userData.shared = true));
           obj.traverse((o) => {
             if (o instanceof THREE.Mesh) {
               o.castShadow = true;
@@ -156,6 +159,7 @@ export class WorldScene {
     await yieldToBrowser();
     const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, castShadows: policy === 'full', ...(protos ? { protos } : {}) });
     const scene = new WorldScene(district, heightAt, terrain, vegetation);
+    scene.physics = buildPhysicsHeights(s.size, heightAt);
     scene.drawDistance = preset.drawDistance;
     scene.group.name = `district:${district.id}`;
     scene.group.add(terrain.mesh);
