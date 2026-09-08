@@ -6,6 +6,9 @@ Stages, each cached under $GEN3D_WORK/<key>/ so an interrupted run resumes:
   3. raw.ply          Hunyuan3D-2mini-Turbo image-to-shape (FlashVDM, 5 steps, marching cubes) → dense raw mesh
   4. <key>.glb        scripts/gen3d/postprocess.py → assets/src/hero/<key>.glb (oriented, scaled, decimated, textured)
 
+Keys listed in parametric.BUILDERS skip stages 1-3: their geometry is hand-built (see parametric.py) and only the
+unwrap-and-bake half of stage 4 applies, using the mesh's own vertex colours.
+
 Usage:
   source $SCRATCH/gen3d/env.sh
   python scripts/gen3d/generate.py [--keys moose beaver ...] [--stage image|matte|shape|post|all] [--force]
@@ -23,6 +26,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from parametric import BUILDERS, build as build_parametric  # noqa: E402
 from postprocess import postprocess  # noqa: E402
 
 T2I_MODEL = 'stabilityai/sdxl-turbo'
@@ -46,6 +50,11 @@ def load_prompts(prompts_dir: Path, keys: list[str] | None) -> list[dict]:
     return prompts
 
 
+def generative(prompts: list[dict]) -> list[dict]:
+    """Prompts whose mesh comes from the image-to-3D path (the rest are built by parametric.py)."""
+    return [p for p in prompts if p['key'] not in BUILDERS]
+
+
 def free_gpu() -> None:
     import torch
 
@@ -65,7 +74,7 @@ def stable_attention() -> None:
 
 # ---------------------------------------------------------------- stage 1 ----
 def stage_image(prompts: list[dict], work: Path, force: bool) -> None:
-    todo = [p for p in prompts if force or not (work / p['key'] / 'concept.png').exists()]
+    todo = [p for p in generative(prompts) if force or not (work / p['key'] / 'concept.png').exists()]
     if not todo:
         return
     import torch
@@ -90,7 +99,7 @@ def stage_image(prompts: list[dict], work: Path, force: bool) -> None:
 
 # ---------------------------------------------------------------- stage 2 ----
 def stage_matte(prompts: list[dict], work: Path, force: bool) -> None:
-    todo = [p for p in prompts if force or not (work / p['key'] / 'concept_rgba.png').exists()]
+    todo = [p for p in generative(prompts) if force or not (work / p['key'] / 'concept_rgba.png').exists()]
     if not todo:
         return
     from PIL import Image
@@ -112,7 +121,7 @@ def stage_matte(prompts: list[dict], work: Path, force: bool) -> None:
 
 # ---------------------------------------------------------------- stage 3 ----
 def stage_shape(prompts: list[dict], work: Path, force: bool, octree: int) -> None:
-    todo = [p for p in prompts if force or not (work / p['key'] / 'raw.ply').exists()]
+    todo = [p for p in generative(prompts) if force or not (work / p['key'] / 'raw.ply').exists()]
     if not todo:
         return
     import torch
@@ -147,18 +156,23 @@ def stage_shape(prompts: list[dict], work: Path, force: bool, octree: int) -> No
 def stage_post(prompts: list[dict], work: Path, out_dir: Path, force: bool) -> dict:
     stats = {}
     for p in prompts:
-        out = out_dir / f'{p["key"]}.glb'
-        raw = work / p['key'] / 'raw.ply'
-        if not raw.exists():
-            log(f'{p["key"]}: no raw mesh, skipped')
-            continue
-        if out.exists() and not force and out.stat().st_mtime >= raw.stat().st_mtime:
-            continue
+        key = p['key']
+        out = out_dir / f'{key}.glb'
+        parametric = key in BUILDERS
+        raw = work / key / ('parametric.glb' if parametric else 'raw.ply')
         try:
-            stats[p['key']] = postprocess(raw, work / p['key'] / 'concept_rgba.png', p, out)
+            if parametric:
+                raw.parent.mkdir(parents=True, exist_ok=True)
+                build_parametric(key, p, raw)
+            elif not raw.exists():
+                log(f'{key}: no raw mesh, skipped')
+                continue
+            elif out.exists() and not force and out.stat().st_mtime >= raw.stat().st_mtime:
+                continue
+            stats[key] = postprocess(raw, None if parametric else work / key / 'concept_rgba.png', p, out)
         except Exception as err:
-            log(f'{p["key"]}: postprocess FAILED: {err!r}')
-            stats[p['key']] = {'error': repr(err)}
+            log(f'{key}: postprocess FAILED: {err!r}')
+            stats[key] = {'error': repr(err)}
     return stats
 
 

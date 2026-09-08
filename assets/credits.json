@@ -804,6 +804,14 @@
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
       "notes": "Prompt assets/prompts/moose.json (seed 201). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/peace-tower.glb",
+      "title": "peace-tower (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/peace-tower.json (seed 909). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
     }
   ]
 }

@@ -217,7 +217,7 @@ export class Game {
     }
     stage('npcs');
     onProgress?.(0.7);
-    await this.environment.load(district.scene.ambience, this.preset, this.deps.config.featureFlags.dayNightCycle ?? true);
+    await this.environment.load(district.scene.ambience, this.preset, this.deps.config.featureFlags.dayNightCycle ?? true, district.scene.size);
     this.weather.set(this.deps.config.featureFlags.weather === false ? 'clear' : district.scene.ambience.weather, Math.round(this.preset.maxInstances * 0.5));
     this.setZoneAudio(district.scene.ambience.soundscape);
     stage('environment');

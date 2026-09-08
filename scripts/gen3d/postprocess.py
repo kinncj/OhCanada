@@ -179,31 +179,74 @@ def bake_projected_texture(mesh: trimesh.Trimesh, uv: np.ndarray, rgba: np.ndarr
     return Image.fromarray(np.clip(tex, 0, 255).astype(np.uint8))
 
 
-def unwrap(mesh: trimesh.Trimesh) -> tuple[trimesh.Trimesh, np.ndarray]:
-    """xatlas UV unwrap; returns the re-indexed mesh and per-vertex UVs."""
+def bake_vertex_colours(mesh: trimesh.Trimesh, uv: np.ndarray, colours: np.ndarray, size: int) -> Image.Image:
+    """Bake per-vertex colours into a texture (parametric meshes carry colours, not a concept image to project)."""
+    tex = np.zeros((size, size, 3), np.float32)
+    written = np.zeros((size, size), bool)
+    uvp = np.stack([uv[:, 0] * (size - 1), (1 - uv[:, 1]) * (size - 1)], axis=1)
+    for tri in np.asarray(mesh.faces):
+        p = uvp[tri]
+        x0, y0 = np.floor(p.min(axis=0)).astype(int)
+        x1, y1 = np.ceil(p.max(axis=0)).astype(int)
+        x0, y0, x1, y1 = max(x0, 0), max(y0, 0), min(x1, size - 1), min(y1, size - 1)
+        if x1 < x0 or y1 < y0:
+            continue
+        gx, gy = np.meshgrid(np.arange(x0, x1 + 1), np.arange(y0, y1 + 1))
+        gx, gy = gx.ravel().astype(np.float64) + 0.5, gy.ravel().astype(np.float64) + 0.5
+        (ax, ay), (bx, by), (cx, cy) = p + 0.5
+        det = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy)
+        if abs(det) < 1e-12:
+            continue
+        w0 = ((by - cy) * (gx - cx) + (cx - bx) * (gy - cy)) / det
+        w1 = ((cy - ay) * (gx - cx) + (ax - cx) * (gy - cy)) / det
+        w2 = 1 - w0 - w1
+        inside = (w0 >= -0.02) & (w1 >= -0.02) & (w2 >= -0.02)
+        if not inside.any():
+            continue
+        w = np.stack([w0, w1, w2], axis=1)[inside]
+        ix, iy = gx[inside].astype(int), gy[inside].astype(int)
+        tex[iy, ix] = w @ colours[tri]
+        written[iy, ix] = True
+    if not written.all():
+        _, (iy, ix) = ndimage.distance_transform_edt(~written, return_indices=True)
+        tex = tex[iy, ix]
+    return Image.fromarray(np.clip(tex, 0, 255).astype(np.uint8))
+
+
+def unwrap(mesh: trimesh.Trimesh) -> tuple[trimesh.Trimesh, np.ndarray, np.ndarray | None]:
+    """xatlas UV unwrap; returns the re-indexed mesh, per-vertex UVs and the remapped vertex colours (if any)."""
+    colours = None
+    vis = mesh.visual
+    if hasattr(vis, 'vertex_colors') and vis.vertex_colors is not None and len(vis.vertex_colors) == len(mesh.vertices):
+        colours = np.asarray(vis.vertex_colors, dtype=np.float64)[:, :3]
     vmap, indices, uvs = xatlas.parametrize(np.asarray(mesh.vertices, np.float32), np.asarray(mesh.faces, np.uint32))
     out = trimesh.Trimesh(mesh.vertices[vmap], indices.astype(np.int64), process=False)
-    return out, uvs.astype(np.float64)
+    return out, uvs.astype(np.float64), None if colours is None else colours[vmap]
 
 
 # ------------------------------------------------------------------ driver ----
-def postprocess(raw_path: Path, concept_path: Path, prompt: dict, out_path: Path) -> dict:
+def postprocess(raw_path: Path, concept_path: Path | None, prompt: dict, out_path: Path) -> dict:
+    """`concept_path` None (or a mesh that carries vertex colours) bakes the mesh's own colours instead of projecting."""
     t0 = time.time()
     mesh = trimesh.load(raw_path, force='mesh', process=False)
     log(f'{prompt["key"]}: raw {len(mesh.faces)} faces')
-    mesh = keep_main_components(mesh)
-    rgba = np.asarray(Image.open(concept_path).convert('RGBA'))
-    mask = rgba[..., 3] > 127
+    parametric = concept_path is None
+    if not parametric:
+        mesh = keep_main_components(mesh)
+    rgba = None if parametric else np.asarray(Image.open(concept_path).convert('RGBA'))
 
-    rot, iou = best_orientation(mesh, mask)
-    mesh.vertices = mesh.vertices @ rot.T
-    log(f'orientation IoU {iou:.3f}')
+    iou = float('nan')
+    if not parametric:
+        rot, iou = best_orientation(mesh, rgba[..., 3] > 127)
+        mesh.vertices = mesh.vertices @ rot.T
+        log(f'orientation IoU {iou:.3f}')
 
     budget = int(prompt.get('polyBudget') or 25000)
-    mesh = decimate(mesh, budget)
-    mesh.merge_vertices()
-    mesh.update_faces(mesh.nondegenerate_faces())
-    mesh.fix_normals()
+    if not parametric:  # parametric meshes are already at their minimal face count and decimation would ruin them
+        mesh = decimate(mesh, budget)
+        mesh.merge_vertices()
+        mesh.update_faces(mesh.nondegenerate_faces())
+        mesh.fix_normals()
 
     # Scale to metres, base on the ground, centred in XZ.
     lo, hi = mesh.bounds
@@ -211,9 +254,14 @@ def postprocess(raw_path: Path, concept_path: Path, prompt: dict, out_path: Path
     s = height / max(hi[1] - lo[1], 1e-9)
     mesh.vertices = (mesh.vertices - [(lo[0] + hi[0]) / 2, lo[1], (lo[2] + hi[2]) / 2]) * s
 
-    mesh, uv = unwrap(mesh)
+    mesh, uv, vertex_colours = unwrap(mesh)
     size = TEX_SIZE.get(prompt.get('category', 'hero'), 1024)
-    tex = bake_projected_texture(mesh, uv, rgba, size)
+    if parametric:
+        if vertex_colours is None:
+            raise ValueError(f'{prompt["key"]}: parametric mesh carries no vertex colours to bake')
+        tex = bake_vertex_colours(mesh, uv, vertex_colours, size)
+    else:
+        tex = bake_projected_texture(mesh, uv, rgba, size)
     material = trimesh.visual.material.PBRMaterial(baseColorTexture=tex, metallicFactor=0.0, roughnessFactor=0.85, name=f'{prompt["key"]}_mat')
     mesh.visual = trimesh.visual.TextureVisuals(uv=uv, material=material)
     mesh.metadata['name'] = prompt['key']
@@ -222,7 +270,7 @@ def postprocess(raw_path: Path, concept_path: Path, prompt: dict, out_path: Path
     scene.add_geometry(mesh, node_name=prompt['key'], geom_name=prompt['key'])
     scene.export(out_path, file_type='glb')
     b = mesh.bounds
-    stats = {'faces': int(len(mesh.faces)), 'vertices': int(len(mesh.vertices)), 'iou': round(iou, 3), 'bytes': out_path.stat().st_size,
+    stats = {'faces': int(len(mesh.faces)), 'vertices': int(len(mesh.vertices)), 'iou': None if np.isnan(iou) else round(iou, 3), 'bytes': out_path.stat().st_size,
              'size': [round(float(x), 3) for x in (b[1] - b[0])], 'seconds': round(time.time() - t0, 1)}
     log(f'{prompt["key"]}: {stats}')
     return stats
@@ -230,4 +278,4 @@ def postprocess(raw_path: Path, concept_path: Path, prompt: dict, out_path: Path
 
 if __name__ == '__main__':
     raw, concept, prompt_file, out = sys.argv[1:5]
-    postprocess(Path(raw), Path(concept), json.loads(Path(prompt_file).read_text()), Path(out))
+    postprocess(Path(raw), None if concept in ('-', 'none') else Path(concept), json.loads(Path(prompt_file).read_text()), Path(out))

@@ -159,8 +159,9 @@ export async function processHero(io, { key, category, budget, texSize, glb, tex
  * @param {string} opts.srcDir      assets/src/hero (generated GLBs; assets/prompts is resolved as ../../prompts)
  * @param {string} opts.distDir     assets/dist (outputs go under models/hero/)
  * @param {(entry: object) => void} opts.upsertCredit  credits.json upsert from scripts/assets.mjs
- * @param {string|boolean|null} opts.toktx  ktx bin dir (prepended to PATH) or true when `ktx` is already on PATH → KTX2;
- *                                          falsy → WebP textures
+ * @param {string|boolean|object|null} opts.toktx  how to reach KTX-Software: a bin dir (prepended to PATH), `true`
+ *   when `ktx` is already on PATH, the `./toktx.mjs` module itself (its `ensureKtx` is called to resolve the dir),
+ *   or falsy for WebP textures. When the module resolves to nothing, KTX2 is impossible and WebP is used.
  * @param {string} [opts.promptsDir]  defaults to <srcDir>/../../prompts (assets/prompts)
  * @param {(m: string) => void} [opts.log]
  * @param {(m: string) => void} [opts.warn]
@@ -171,8 +172,12 @@ export async function processHeroAssets({ srcDir, distDir, upsertCredit, toktx, 
   if (!existsSync(srcDir)) return entries;
   const files = readdirSync(srcDir).filter((f) => f.endsWith('.glb')).sort();
   if (!files.length) return entries;
-  if (typeof toktx === 'string') prependPath(toktx);
-  const textureFormat = toktx ? 'ktx2' : 'webp';
+  // `toktx` may arrive as a bin dir, as `true`, or as the toktx.mjs module (what scripts/assets.mjs passes).
+  let ktxDir = toktx;
+  if (ktxDir && typeof ktxDir === 'object') ktxDir = await ktxDir.ensureKtx?.({ root: join(srcDir, '..', '..', '..'), log });
+  if (typeof ktxDir === 'string') prependPath(ktxDir);
+  const textureFormat = ktxDir ? 'ktx2' : 'webp';
+  if (!ktxDir) warn('hero: KTX-Software not available, hero textures are WebP');
   const prompts = promptsDir ?? join(srcDir, '..', '..', 'prompts'); // assets/src/hero → assets/prompts
   const io = await createIO();
   for (const file of files) {

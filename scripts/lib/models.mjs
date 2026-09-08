@@ -123,11 +123,22 @@ async function restoreAlpha(doc, { id, files, cacheDir, log }) {
     }
     const entry = files[key]['1k'].jpg;
     const alphaPath = await download(entry.url, join(cacheDir, 'polyhaven', 'models', id, 'textures', `${id}_${key}_1k.jpg`), entry.size, log);
-    const base = sharp(tex.getImage()).removeAlpha();
-    const { width, height } = await base.metadata();
-    const alpha = await sharp(alphaPath).resize(width, height).greyscale().toColourspace('b-w').raw().toBuffer();
-    const rgba = await base.joinChannel(alpha, { raw: { width, height, channels: 1 } }).png().toBuffer();
+    // Interleave RGB + mask by hand: sharp's joinChannel on a JPEG source silently returns a 3-channel
+    // image, which strips the cutout and renders foliage as bare branches.
+    const { width, height } = await sharp(tex.getImage()).metadata();
+    const rgb = await sharp(tex.getImage()).removeAlpha().raw().toBuffer();
+    const mask = await sharp(alphaPath).resize(width, height).greyscale().raw().toBuffer();
+    const rgbaRaw = Buffer.allocUnsafe(width * height * 4);
+    for (let i = 0, j = 0, k = 0; i < width * height; i++, j += 3, k += 4) {
+      rgbaRaw[k] = rgb[j];
+      rgbaRaw[k + 1] = rgb[j + 1];
+      rgbaRaw[k + 2] = rgb[j + 2];
+      rgbaRaw[k + 3] = mask[i];
+    }
+    const rgba = await sharp(rgbaRaw, { raw: { width, height, channels: 4 } }).png().toBuffer();
     tex.setImage(rgba).setMimeType('image/png').setURI((tex.getURI() || `${suffix}_diff`).replace(/\.jpe?g$/i, '.png'));
+    const meta = await sharp(rgba).metadata();
+    if (!meta.hasAlpha) log(`  ${id}: WARNING alpha join produced ${meta.channels} channels for ${mat.getName()}`);
     mat.setAlphaMode('MASK').setAlphaCutoff(0.5).setDoubleSided(true);
   }
 }
@@ -182,10 +193,20 @@ export async function processModel(io, { id, category, gltf, files, cacheDir, te
   scene.addChild(lod1);
   decimateNode(doc, lod1, Math.round(Math.min(budget, before) * 0.2));
 
-  // 4. Textures.
+  // 4. Textures. Base-colour maps of MASK/BLEND materials (leaf and twig cutouts) must keep their alpha
+  // channel — the ETC1S encoder drops it (alphaSliceByteLength 0), which renders foliage as bare branches —
+  // so those are encoded with UASTC and everything else stays ETC1S.
+  const cutoutNames = new Set();
+  for (const mat of doc.getRoot().listMaterials()) {
+    if (!['MASK', 'BLEND'].includes(mat.getAlphaMode())) continue;
+    const t = mat.getBaseColorTexture();
+    if (t?.getName()) cutoutNames.add(t.getName());
+  }
+  const cutoutPattern = cutoutNames.size ? new RegExp(`^(${[...cutoutNames].map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})$`) : null;
   if (textureFormat === 'ktx2') {
     await doc.transform(
       toktx({ mode: Mode.UASTC, encoder: sharp, slots: NORMAL_SLOTS, resize: [tex.normal, tex.normal], level: 2, rdo: true, rdoLambda: 2, zstd: 18 }),
+      ...(cutoutPattern ? [toktx({ mode: Mode.UASTC, encoder: sharp, slots: COLOR_SLOTS, pattern: cutoutPattern, resize: [tex.color, tex.color], level: 2, rdo: true, rdoLambda: 3, zstd: 18 })] : []),
       toktx({ mode: Mode.ETC1S, encoder: sharp, slots: COLOR_SLOTS, resize: [tex.color, tex.color], quality: 128 }),
     );
   } else {

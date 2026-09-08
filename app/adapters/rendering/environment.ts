@@ -69,7 +69,7 @@ export class Environment {
     scene.add(this.stars);
   }
 
-  async load(ambience: Ambience, preset: GraphicsPreset, cycleEnabled: boolean): Promise<void> {
+  async load(ambience: Ambience, preset: GraphicsPreset, cycleEnabled: boolean, worldSize = 260): Promise<void> {
     this.timeOfDay = ambience.timeOfDay;
     const w = ambience.weather;
     this.sky.turbidity.value = w === 'fog' ? 14 : w === 'rain' ? 10 : w === 'snow' ? 6 : 2.6;
@@ -77,7 +77,10 @@ export class Environment {
     this.sky.mieCoefficient.value = w === 'fog' ? 0.03 : 0.006;
     this.sky.mieDirectionalG.value = w === 'snow' ? 0.85 : 0.8;
     this.cycleSpeed = cycleEnabled ? 1 / 600 : 0; // full day in 10 minutes
-    (this.scene.fog as THREE.FogExp2).density = ambience.fogDensity ?? 0.004;
+    // Fog is authored per district but must scale with the map: exp2 fog at a fixed density that suited a
+    // 260 m block turns a 1.3 km district into haze. Keep roughly one map-width of visibility.
+    const reach = (ambience.weather === 'fog' ? 2.2 : ambience.weather === 'rain' || ambience.weather === 'snow' ? 1.4 : 0.85) / Math.max(120, worldSize);
+    (this.scene.fog as THREE.FogExp2).density = Math.min(ambience.fogDensity ?? 0.004, reach);
     this.sun.castShadow = preset.shadows;
     this.sun.shadow.mapSize.set(preset.shadowMapSize, preset.shadowMapSize);
     this.sun.shadow.map?.dispose();

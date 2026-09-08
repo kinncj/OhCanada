@@ -353,6 +353,20 @@
       "height": 2.1,
       "radius": 1.14,
       "category": "fauna"
+    },
+    "peace-tower": {
+      "path": "models/hero/peace-tower.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 1232,
+        "LOD1": 246
+      },
+      "height": 92,
+      "radius": 8.86,
+      "category": "hero"
     }
   },
   "textures": {
