@@ -9,7 +9,10 @@
  *      deployable artefact exceeds `budgets.totalPayloadBytes` (CLAUDE.md,
  *      "Budgets (CI fails on breach)") — see INITIAL PAYLOAD below;
  *   4. `basePath` in content/game.config.json does not match the repository
- *      the site is published from (a wrong base ships a blank page).
+ *      the site is published from (a wrong base ships a blank page);
+ *   5. dist/sw.js is missing, gains a `fetch` handler, or stops unregistering
+ *      itself — see infra/pages/sw.js. It is a tombstone, not a feature, and it
+ *      is the one file here that looks unused and is not.
  *
  * It used to also check that .github/workflows/ matched a mirror of it under
  * infra/github/workflows/. That mirror is gone — see infra/README.md. GitHub
@@ -33,9 +36,10 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST_DIR = join(ROOT, 'dist');
 const CONFIG_FILE = join(ROOT, 'content', 'game.config.json');
+const SW_FILE = join(DIST_DIR, 'sw.js');
 
 const MAX_FILE_BYTES = 100 * 1024 * 1024;
-const REQUIRED_DIST_FILES = ['index.html'];
+const REQUIRED_DIST_FILES = ['index.html', 'sw.js'];
 
 const failures = [];
 const fail = (message) => failures.push(message);
@@ -227,6 +231,17 @@ if (distFiles.length > 0 && existsSync(INDEX_HTML) && config !== null) {
     }
   }
 
+  // The tombstone worker is reached by a browser's update check, never by the
+  // page, so it must not be charged to the budget for bytes the page needs
+  // before it can start. If it ever turns up here, something imported it.
+  if (reachable.has(SW_FILE)) {
+    fail(
+      'dist/sw.js is in the initial payload: something in dist/index.html or a chunk ' +
+        'statically references it. Nothing may import the tombstone worker - see ' +
+        'infra/pages/sw.js.',
+    );
+  }
+
   const initialFiles = [...reachable].sort();
   const initialBytes = initialFiles.reduce((sum, file) => sum + statSync(file).size, 0);
   const initialGzipBytes = initialFiles.reduce(
@@ -283,6 +298,41 @@ if (distFiles.length > 0 && existsSync(INDEX_HTML) && config !== null) {
   fail('dist/index.html is missing or the config is unreadable; the payload budget was not checked.');
 }
 
+// ------------------------------------------------- tombstone service worker ---
+
+/**
+ * dist/sw.js must exist and must never serve anything.
+ *
+ * It is the one file in the artefact that looks safe to delete: nothing imports
+ * it, nothing links to it, and the app never registers it. It is load-bearing
+ * anyway — it is the only thing that can reach a browser still holding the
+ * archived 3D build's service worker registration, because a 404 leaves that
+ * registration in place rather than removing it. infra/pages/sw.js has the full
+ * story. Its absence is checked through REQUIRED_DIST_FILES above.
+ *
+ * A `fetch` handler is the failure mode that would turn a tombstone back into a
+ * cache: the moment it can answer a request, it can pin a device to a stale
+ * shell, which is the whole problem it was written to end.
+ */
+if (existsSync(SW_FILE)) {
+  const worker = readFileSync(SW_FILE, 'utf8');
+
+  if (/addEventListener\s*\(\s*['"`]fetch['"`]/.test(worker) || /\bonfetch\s*=/.test(worker)) {
+    fail(
+      'dist/sw.js registers a fetch handler. The tombstone worker must never serve a ' +
+        'response - it exists only to unregister itself and clear its caches. If this is ' +
+        'deliberate PWA work (slice F3), replace this check rather than loosening it.',
+    );
+  }
+
+  if (!/registration\.unregister\s*\(/.test(worker)) {
+    fail(
+      'dist/sw.js never calls registration.unregister(); a tombstone worker that does ' +
+        'not remove itself just replaces one permanent worker with another.',
+    );
+  }
+}
+
 // -------------------------------------------------------------- base path ---
 
 function repositoryName() {
@@ -331,5 +381,5 @@ if (failures.length > 0) {
 const distBytes = distFiles.reduce((sum, file) => sum + statSync(file).size, 0);
 console.log(
   `deploy-check: OK - ${distFiles.length} file(s), ${mib(distBytes)} on disk in dist/, ` +
-    `${payloadSummary}, base path correct.`,
+    `${payloadSummary}, base path correct, tombstone sw.js present and inert.`,
 );

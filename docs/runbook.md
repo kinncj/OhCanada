@@ -117,6 +117,65 @@ is live:
 
 ---
 
+## 3b. The tombstone service worker — do not delete `dist/sw.js`
+
+**Status: live since 2026-09-08. Earliest removal date: 2027-09-08.** Not before, and check the evidence
+below before removing it even then.
+
+`dist/sw.js` is built from `infra/pages/sw.js` by a small plugin in `vite.config.ts`. It is not a PWA and
+not a feature. Nothing registers it, nothing imports it, and slice 0 has no service worker. It exists
+solely to be found by update checks from browsers that are still carrying the archived 3D build's worker.
+
+### Why it cannot simply be deleted
+
+The archived build (`archive/v0.1`) ran `vite build && node scripts/build-sw.mjs`, generating a real
+Workbox worker. It shipped: deploy run
+[34222875457](https://github.com/kinncj/OhCanada/actions/runs/34222875457) logged
+`sw.js: precaching 97 files, 14.71 MB`, and `./sw.js` appears in that run's uploaded artifact listing. It
+registered at `/OhCanada/sw.js` with the whole site as its scope.
+
+Slice 0 emits no worker, so that URL began returning 404. **A 404 does not remove a service worker.** Per
+the Service Worker specification, when an update check fails to fetch the script the existing registration
+is *retained*. Slice 0 also ships no eviction code, so an affected browser has nothing that can clear it.
+
+It is not fatal, and it is worth being precise about why, because the symptom is confusing:
+
+- The old worker is **NetworkFirst for navigations** with a 4 second timeout, and `index.html` was
+  deliberately never precached. On a healthy connection the live site loads normally. This is why the site
+  tests clean in a fresh browser while a real user reports a stuck loader.
+- Past 4 seconds it falls back to its cached shell, which references hashed bundles that no longer exist.
+  The user gets the old 3D loading screen stuck at 0%. Slow connection, broken page; fast connection, fine.
+- It also holds roughly 15 MB of dead cache indefinitely and adds a worker hop to every navigation.
+
+Serving a real script at that URL is the only thing that can reach those devices. The tombstone replaces
+the old worker, deletes its caches, unregisters itself and reloads the open pages — one visit, no user
+action. It has **no `fetch` handler** and must never gain one.
+
+### What protects it
+
+`scripts/deploy-check.mjs` runs on every `make build`, before any upload, and fails if `dist/sw.js` is
+missing, if it contains a `fetch` handler, if it stops calling `registration.unregister()`, or if anything
+in the build starts statically referencing it (which would charge it to the initial-payload budget it is
+not part of). All four were confirmed to fail on a real violation, not merely to pass.
+
+### Caveats
+
+- **Cache headers.** GitHub Pages serves `sw.js` with `cache-control: max-age=600`. That does not delay
+  the fix: the archived registration used `updateViaCache: 'none'`, so the update check bypasses the HTTP
+  cache. It does mean a *change* to the tombstone can take up to 10 minutes to propagate to new visitors.
+- **It only deletes its own caches.** `kinncj.github.io` is one origin shared by every project on the
+  account, so `caches.keys()` returns other repositories' caches too. The worker filters to
+  `truenorth-*` and names containing its own registration scope.
+
+### Before removing it
+
+Removal is safe only once no browser can still hold the old registration. There is no way to measure that
+directly — there are no analytics, by design (ADR-0006). Hence the 12 month floor. When the date passes,
+delete `infra/pages/sw.js`, the plugin in `vite.config.ts`, and the `sw.js` clauses in
+`scripts/deploy-check.mjs` together, and say in the commit message that the tombstone expired.
+
+---
+
 ## 4. Budgets and what fails on breach
 
 `scripts/deploy-check.mjs` runs as part of `make build`, before anything is uploaded. It fails on:
@@ -127,6 +186,7 @@ is live:
 | Initial payload over `budgets.initialPayloadBytes` | CLAUDE.md budgets |
 | Fetchable `dist/` over `budgets.totalPayloadBytes` | CLAUDE.md budgets |
 | `basePath` not matching the publishing repository | ADR-0006 |
+| `dist/sw.js` missing, serving fetches, or in the initial payload | this runbook, §3b |
 
 "Initial payload" is defined precisely in the header of that script: `index.html` plus everything it
 statically references plus everything those chunks reach by static ES import, excluding `.map` files and

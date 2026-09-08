@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url));
 
@@ -20,10 +20,39 @@ const gameConfig = JSON.parse(
 const resolvePath = (segment: string): string =>
   fileURLToPath(new URL(segment, import.meta.url));
 
+/**
+ * Copy infra/pages/sw.js to dist/sw.js, verbatim and un-hashed.
+ *
+ * It has to land on exactly `<base>sw.js` because that is the URL the archived
+ * 3D build registered, and a browser's update check for a live registration
+ * fetches that one URL. A content hash would defeat the entire point. Read
+ * infra/pages/sw.js before touching this — it is a tombstone, not a feature.
+ *
+ * `publicDir` would have been the shorter route, but publicDir here is
+ * `assets/dist`, which `make assets` generates and which slice 1's art pipeline
+ * will own and clean. A hand-written file parked in a generated directory is a
+ * file that disappears in a rebuild. Emitting it from the bundle keeps the
+ * source in infra/, where it belongs, and independent of that pipeline.
+ */
+function tombstoneServiceWorker(): Plugin {
+  return {
+    name: 'truenorth:tombstone-service-worker',
+    apply: 'build',
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sw.js',
+        source: readFileSync(resolvePath('./infra/pages/sw.js'), 'utf8'),
+      });
+    },
+  };
+}
+
 export default defineConfig({
   root: rootDir,
   base: gameConfig.basePath,
   publicDir: 'assets/dist',
+  plugins: [tombstoneServiceWorker()],
   resolve: {
     alias: {
       '@domain': resolvePath('./app/domain'),
