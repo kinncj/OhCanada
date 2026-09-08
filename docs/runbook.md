@@ -11,12 +11,24 @@ is being served*, which is why rollback is the first section.
 
 ## 1. Rollback: put the previous build back
 
-**Status of this procedure: WRITTEN, NOT YET EXERCISED — PENDING FIRST DEPLOY.**
-Slice 0 has not landed on `main`, so `Deploy to GitHub Pages` has never run and no successful run exists to
-re-run. Nobody has performed the steps below on this repository. Do not treat it as proven until the
-"After the first real deploy" checklist at the end of this section has been ticked off, with the run URL
-recorded. ADR-0006 was amended to match: it now claims this procedure is documented, not tested, and
-carries the dated obligation to exercise it once two successful deploys exist.
+**Status of this procedure: EXERCISED END TO END ON 2026-09-08. It works.**
+
+Drilled on the live site, not simulated. The tombstone service worker (§3b) made the drill observable for
+the first time: it is the first change where two consecutive deploys produce a genuinely different
+`dist/`, so "which build is live" can be read straight off an HTTP status code.
+
+| Step | Run | Result |
+|---|---|---|
+| Re-ran the *older* run (`bf18599`, pre-tombstone) | [34245903706](https://github.com/kinncj/OhCanada/actions/runs/34245903706) | success — `/OhCanada/sw.js` returned **404**, i.e. the older build was being served, and `index.html` stayed **200** throughout |
+| Re-ran the *newest* run (`5daeeef`, tombstone) to return to current | [34247227799](https://github.com/kinncj/OhCanada/actions/runs/34247227799) | success — `/OhCanada/sw.js` back to **200** `application/javascript` |
+
+The site stayed up for the whole drill; a rollback swaps which build is served, it never takes the site
+down. Total time per direction was under four minutes, almost all of it the gate set.
+
+Note on why this could not honestly be drilled earlier: the three deploys before the tombstone produced a
+byte-identical `dist/` (none of them touched `app/` or `content/`), so re-running an older one would have
+demonstrated nothing observable. Ticking this checklist off that would have been a false claim of a tested
+procedure — the precise defect ADR-0006 was amended to stop making.
 
 ### When to use it
 
@@ -65,13 +77,17 @@ old run is a rollback.
 3. Do not disable a gate to get a deploy out. A gate that can be switched off during an incident is a gate
    that is off.
 
-### After the first real deploy — tick these off and update this file
+### Drill checklist — completed 2026-09-08
 
-- [ ] `Deploy to GitHub Pages` has completed successfully at least twice (so there is a previous run).
-- [ ] Re-ran the *older* of the two runs from the Actions tab.
-- [ ] Confirmed the site served the older build afterwards (check the hashed script filename in view-source).
-- [ ] Re-deployed the newest run to get back to current.
-- [ ] Recorded the run URLs and the date here, and changed the status line at the top of this section.
+- [x] `Deploy to GitHub Pages` has completed successfully at least twice (so there is a previous run).
+- [x] Re-ran the *older* of the two runs from the Actions tab.
+- [x] Confirmed the site served the older build afterwards — `/OhCanada/sw.js` returned 404, which only
+      the pre-tombstone build does.
+- [x] Re-deployed the newest run to get back to current — `sw.js` back to 200.
+- [x] Recorded the run URLs and the date here, and changed the status line at the top of this section.
+
+Re-drill when the deploy pipeline changes shape (a new upload action major, a change to the artefact, a
+move off Pages), not on a calendar. The thing being tested is the pipeline, not the procedure text.
 
 ---
 
@@ -100,6 +116,51 @@ is live:
   alternative (`workflow_run` gating on CI) is discussed in the header comment of that file.
 - Everything a workflow does is a `make` target. If you cannot reproduce a CI failure locally by running
   the same target, that is a bug in the pipeline, not a flake to be re-run.
+
+### Deploy fails at "Upload artifact" with a 403
+
+Seen for real on 2026-09-08, run
+[34247227799](https://github.com/kinncj/OhCanada/actions/runs/34247227799). Every gate passed, the artefact
+uploaded to blob storage, then:
+
+```
+Uploaded bytes 2189627
+Finished uploading artifact content to blob storage!
+Finalizing artifact upload
+##[error]Failed to FinalizeArtifact: Received non-retryable error:
+         Failed request: (403) Forbidden: Error from intermediary with HTTP status code 403 "Forbidden"
+```
+
+**This is the Actions storage quota, not a permissions problem.** The message says "Forbidden" and points
+nowhere useful. The repository is currently **private**, so it has a 500 MB Actions artifact allowance; it
+was holding 1,088 MB, of which two failed-CI `playwright-report` artifacts from the archived 3D branch were
+524 MB and 537 MB. The content upload succeeds and only the finalize call is rejected, which is why it
+looks like an auth failure.
+
+Diagnose and fix:
+
+```
+gh api --paginate repos/kinncj/OhCanada/actions/artifacts \
+  --jq '.artifacts[] | [(.id|tostring), (.size_in_bytes/1048576|floor|tostring)+"MB", .name, .created_at] | @tsv' \
+  | sort -k2 -n -r | head
+gh api -X DELETE repos/kinncj/OhCanada/actions/artifacts/<id>
+```
+
+Then **re-run the failed job**; nothing needs rebuilding by hand. Deleting the two large artifacts brought
+storage to 26 MB and the re-run deployed cleanly.
+
+**No rollback is needed for this failure.** The job dies before the `Deploy` step, so Pages carries on
+serving the last successful deployment. Check that before doing anything dramatic — the site is almost
+certainly fine.
+
+Two things that would stop it recurring, neither of them mine to do alone:
+
+- **Make the repository public.** Public repositories have no Actions storage charge, and the project is
+  meant to be public anyway — the licence is MIT/CC-BY/CC0, and `.github/CODEOWNERS` already assumes pull
+  requests from strangers. The private setting is the anomaly here, not the quota.
+- **Stop Playwright writing 500 MB reports on failure.** A half-gigabyte report is video and traces. The
+  knobs are `video`, `trace` and `screenshot` in `tests/*/playwright.config.ts`, which the test owner
+  controls. The workflows keep these artifacts for 3 days, which caps the damage but does not prevent it.
 
 ### Dependabot
 
@@ -218,14 +279,26 @@ rollback stops being predictable. Find it before you need it.
 
 Recorded here rather than left implicit. None of these are "fine"; they are simply not yet done.
 
-- **The rollback procedure in §1 is untested.** See the status line there.
+- ~~**The rollback procedure in §1 is untested.**~~ Closed 2026-09-08. Drilled end to end on the live
+  site: re-ran the older run and confirmed by HTTP status that the older build was served, then re-deployed
+  the newest. Run URLs and the reasoning are in §1. This closes the dated obligation ADR-0006 opened with
+  infra as owner; that ADR's line claiming rollback is "documented, not tested" is now out of date and
+  should be amended by the architect.
 - ~~**`app/ui/rotate-overlay.ts` is excluded from coverage.**~~ Closed. `tests/unit/ui/rotate-overlay.test.ts`
   covers all 53 executable lines (100% lines, functions and branches) against a document double under
   `environment: 'node'`, and the exclusion line has been deleted from `vitest.config.ts`. The coverage
   `exclude` list now holds only the three browser entry points, which cannot be imported outside a browser
   and are proven by the Playwright suites instead.
-- **No Pages deploy has ever run.** Slice 0 lists task 0.10 as done with the note "deploy unverified until
-  slice-0 lands on main". That is still true.
+- ~~**No Pages deploy has ever run.**~~ Closed 2026-09-08. The site is live at
+  <https://kinncj.github.io/OhCanada/> and the pipeline has deployed repeatedly, including two re-runs of
+  older commits during the §1 drill.
+- **The repository is private while the project is open source.** MIT/CC-BY/CC0 licences, a CODEOWNERS
+  file that assumes pull requests from strangers, and a public Pages site — but the repository itself is
+  private, which is what put a 500 MB Actions storage cap in the way of a deploy on 2026-09-08 (§3). Not
+  an infra decision to make unilaterally; flagged for the owner.
+- **A 500 MB Playwright report is one failing CI run away.** Retention on the failure-only artifacts is
+  now 3 days, which caps how long the damage lasts but not the size. The `video`/`trace`/`screenshot`
+  settings in `tests/*/playwright.config.ts` are the actual fix and belong to whoever owns `tests/`.
 - ~~**A stray directory named `git@github.com:kinncj/`**, created by a `git clone <url> <url>` typo.~~
   Closed. Inspected before removal: 18 files, all stock hook samples, no remotes, an unborn `master` with no
   commits and empty `objects/` — nothing recoverable. Deleted, along with the `.gitignore` rule that existed

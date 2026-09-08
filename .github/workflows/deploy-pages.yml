@@ -98,7 +98,7 @@ jobs:
           name: playwright-report
           path: playwright-report
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
 
       - name: Configure Pages
         uses: actions/configure-pages@v6
