@@ -8,6 +8,11 @@ review scheduler (task 1.4). **The player never learns that.** The words *spaced
 *algorithm*, *interval*, *card state* and *due* appear nowhere on screen, in either language. What the
 player sees is a small tag — "New" or "Seen before" — and a promise that questions they get wrong come back.
 
+That promise is printed on the card, so it is the one that wins when something else disagrees with it.
+`TN-SAVE-01` used to say a question already answered is never asked again after a reload; it was amended on
+2026-09-08 and `TN-RESUME-questions-after-a-reload.md` carries the whole decision. Nothing in this file
+changed as a result — it is named here so a reader arriving from that side finds one story, not two.
+
 Read `README.md` in this directory first.
 
 ## Accessibility and bilingual coverage map
@@ -85,9 +90,9 @@ Feature: The question card appearing
     And no timer, clock or progress bar that empties is shown
 
   Scenario: The three questions are the ones the scheduler chose
-    When I answer all three questions
+    When I answer all three questions in one sitting
     Then the three questions are all from this level's subject
-    And no question is asked twice
+    And no question is asked twice in that sitting
     And every question shown carries verification status "verified"
 ```
 
@@ -100,15 +105,26 @@ Feature: Which questions come back, and when
     When the next questions are chosen for me
     Then question A is offered before question B
 
-  Scenario: A question answered rightly is not asked again in the same session
+  Scenario: A question answered rightly is not asked again in the same sitting
     Given I answered question B rightly
-    When I am asked more questions in this session
+    When I am asked more questions in this sitting
     Then question B is not asked again
+
+  Scenario: A question is never asked twice in the same sitting
+    When I am asked any number of questions between opening the game and closing the tab
+    Then no question is put on screen twice
 
   Scenario: The promise made to the player is kept
     Given I answered a question wrongly and was told "You will see this question again soon."
     When I run a Study drill afterwards
     Then that question is in the drill
+
+  Scenario: The promise is kept after a reload too, not broken by it
+    Given I answered a question wrongly and was told "You will see this question again soon."
+    And I closed the tab and opened the game again once it was ready to come back
+    When I am asked the next question
+    Then that question may be the one I got wrong, as TN-RESUME-01 requires
+    And nothing is hidden from me because a reload happened in between
 
   Scenario: The scheduling words never appear
     When I read every string on the card in English and in French
@@ -420,11 +436,14 @@ Feature: The question card in French
 - **`OQ-CARD-3` — how does the player know how many questions are left in the level?**
   `card.progress` says "Question 1 of 3" because the quest step asks for three. In Study, the total is the
   drill size. *Recommendation:* one string, one meaning: "of" always counts the current activity, never the
-  whole bank.
+  whole bank. A step resumed after a reload continues that count rather than restarting it —
+  `TN-RESUME-01` asserts the card and the tracker never show two different numbers for the same step.
 - **`OQ-CARD-4` — does a question ever arrive outside a quest step?** Not in these scenarios. A question
   that appears while the player is skating would be an ambush, and no scenario allows it. If the design
   wants questions at other points of interest, they arrive the same way: only on engagement.
-- **`OQ-CARD-5` — what counts as "soon"?** The player is told a wrong question comes back soon; the
-  scheduler decides when. *Recommendation:* the wording must stay true for the shortest interval the
-  scheduler can produce. If FSRS can push a lapsed question days out, either the copy changes or the drill
-  is allowed to pull it forward.
+- **`OQ-CARD-5` — what counts as "soon"?** **Answered in part, 2026-09-08.** The player is told a wrong
+  question comes back soon; the scheduler decides when, and as built the shortest interval is about a
+  minute, which makes the wording true. *Recommendation, unchanged:* the wording must stay true for the
+  shortest interval the scheduler can produce. If FSRS is ever tuned so that a lapsed question is pushed
+  days out, either this copy changes or the drill is allowed to pull it forward — and the scenarios in
+  `TN-RESUME` are the ones that fail first, by design.

@@ -20,6 +20,19 @@
   `FactSource.sourceId` names one. Two consequences follow, and the second is new policy rather than
   plumbing: a cited chapter and hash are now checkable, and a source's **known-stale regions bind the
   questions drawn from them**. See "The cached source register".
+- Corrected 2026-09-08: the paragraph justifying the staleness register asserted that the cached *Discover
+  Canada* was "inconsistently updated — six references to Elizabeth II against one to His Majesty". That is
+  false: the text contains no "His Majesty", and the grep behind the figure had matched *King Charles II* in
+  a 1670 sentence about the Hudson's Bay Company. The real hazard is sharper and replaces it — the cached
+  Oath carries the June 2021 amendment *and* still names Queen Elizabeth the Second, in both languages, so
+  the freshness signal a careful reader would use is present and misleading. The paragraph now also states
+  the rule the mistake implies: a claim the register makes about a source must be re-derivable from the
+  cached bytes.
+- Amended 2026-09-08 (fifth), by the first real authoring run of 57 questions: the author's supporting
+  passage and the verifier's are two different things and now have two fields, the null form of an unverified
+  block is pinned so task 1.17's gate needs no per-field carve-out, and staleness flags gained a *grain*
+  because chapter grain marked 57 of 57 questions volatile off two genuinely volatile facts. See "Two quotes,
+  one per side of the separation" and "Staleness has a grain".
 - Amended 2026-09-08 (fourth): `docs/content-review.md` extends this ADR's separation of duties one step —
   no agent may grant cultural sign-off — and asked the architect for the fields to carry it. They exist
   (`nationName`, `nationSource`, `communityReview`, and `TerritoryStatement` on a level). One of them cannot
@@ -124,19 +137,43 @@ lists what a snapshot is already known to get wrong, with the chapters each flag
 citing a flagged chapter **must** be marked `volatile`. That is a gate, not a note, and it is the difference
 between recording a hazard and acting on one.
 
-The hazard is not hypothetical. The cached edition is the 2012 large print, and its Oath of Citizenship
-still names Her Majesty Queen Elizabeth the Second; the monarch is King Charles III, and the Oath was
-amended in June 2021 to recognise the Aboriginal and treaty rights of First Nations, Inuit and Métis
-peoples. The document is also *inconsistently* updated — six references to Elizabeth II against one to His
-Majesty — which is worse than uniformly old, because it reads as current in places. A question authored
-straight off that page would be confidently, officially wrong about the Oath, in a game teaching people to
-take it. Marking it `volatile` routes it to the live page every run and quarantines it when the source moves
-or `asOf` passes 180 days, which is what each flag's `action` asks for in words and what a trusted-to-read
-note would not have delivered.
+The hazard is not hypothetical, and its real shape is worse than "old". The cached edition is the 2012 large
+print. Its Oath of Citizenship, on page 2, **already carries the June 2021 amendment** recognising the
+Aboriginal and treaty rights of First Nations, Inuit and Métis peoples — and in the same passage still swears
+allegiance to "Her Majesty / Queen Elizabeth the Second". One block of text is simultaneously current and
+out of date, in both official languages: the French Oath beside it carries the same amendment and the same
+« La reine Elizabeth Deux ».
+
+That is the trap. A verifier who checks whether the page has been revised will find the amendment, conclude
+that it has, and be wrong about everything else on it — including the monarch, who is King Charles III. The
+signal a careful reader would use to decide the snapshot is fresh is present *and misleading*. A question
+authored straight off that page would be confidently, officially wrong about the Oath, in a game teaching
+people to take it.
+
+Marking it `volatile` routes it to the live page every run and quarantines it when the source moves or
+`asOf` passes 180 days, which is what each flag's `action` asks for in words and what a trusted-to-read note
+would not have delivered.
 
 What the gate cannot do, said plainly: it cannot tell that a `knownStaleness` entry *should* exist. It binds
 a flag to the questions under it; noticing that a source has gone stale in a region nobody flagged is the
 verifier's judgement against the live page, and nothing here substitutes for that.
+
+**A claim the register makes about a source must be re-derivable from the cached bytes.** This paragraph is
+the reason the rule is written down. Its first version asserted that the document was *inconsistently*
+updated, "six references to Elizabeth II against one to His Majesty", and offered that inconsistency as the
+evidence that the source is wrong in a known way. The text contains **no** occurrence of "His Majesty". The
+figure came from a grep for `King Charles|His Majesty` whose single hit was *King Charles II*, in a sentence
+about the 1670 Hudson's Bay Company charter — a seventeenth-century reference read as a present-day one. On
+the Sovereign the document is uniformly pre-accession, which is a different and easier risk than a patchily
+revised one, and the ADR was stating a checkable fact about a file that the file did not support.
+
+Two things follow, and neither is "be more careful". First, a `knownStaleness` entry, and any prose here
+describing one, states what can be recovered by re-running a stated command over the hash the manifest
+records — so a wrong count is a reproducible disagreement rather than a claim nobody can check. Second, this
+defect arrived by a route the ADR-0009 obligation gate structurally cannot see: the sentence was false the
+moment it was written, not true-then-stale, and no date passing would ever have flagged it. The gate catches
+claims that expire; nothing mechanical catches a claim that was never true, which is why the register points
+at bytes and a hash instead of at a recollection.
 
 ### What a schema cannot enforce about an author
 
@@ -176,6 +213,56 @@ Two smaller decisions from the same document, recorded because they are schema-v
   any other. There is deliberately no field for an acknowledgement: a model has no relationship to
   acknowledge, and a generated one would be words asserting something that was never true — this project's
   oldest failure mode, dressed as respect.
+
+### Two quotes, one per side of the separation
+
+The first authoring run found a contradiction this ADR had not noticed. The brief told the author to write
+no `verification` block; the schema listed `verification` in `required`; and the only `evidence` field was
+*inside* that block. So the instruction both forbade the block and asked for a quote only that block could
+hold. The author resolved toward the schema and wrote the block in a null form, which was the right call, but
+the shape was wrong and is now fixed.
+
+There are two passages, they belong to different agents, and they are not redundant:
+
+- **`source.quote`** — the passage the *author* read the claim from, copied exactly. It says where the
+  wording came from. It is required and non-empty, and it must be a contiguous passage of the cached
+  extraction at the recorded hash, which is a check that catches a fabricated citation **before any verifier
+  runs**.
+- **`verification.evidence`** — the passage the *verifier* found that entails the answer. For a question with
+  three distractors that is frequently a different sentence from the one the wording came from, which is why
+  collapsing the two would lose information rather than remove duplication.
+
+**The null form is now the only legal shape of an unverified block**: `status: "unverified"` requires
+`model: ""`, `checkedAt: null`, `sourceHash: ""` **and** `evidence: ""`. That is what makes the separation
+mechanically cheap. `make validate-content` enforces the shape, so task 1.17's git-history gate is a single
+sentence with no per-field carve-out — *an author-authored commit may write a `verification` object only in
+the null form, and may never change one that exists.* It is the same rule `communityReview` already needs
+("an agent may write `not-sought` and nothing else"), so 1.17 writes it once.
+
+This matters more since the permission prompt on `content/questions/**` was removed: separation of duties now
+rests on agent roles plus that gate, and a rule with an exception is a rule with a way through it.
+
+### Staleness has a grain
+
+A `knownStaleness` entry declares `grain`, and where the affected claims are localised it lists `pages`. The
+gate prefers page grain and falls back to chapter grain, because the first authoring run showed what chapter
+grain costs: two genuinely volatile facts in the governance chapters — a Commonwealth member count and the
+Official Opposition's formal title — flagged **all 57** authored questions as volatile, when the other 55 are
+stable structure (how a bill becomes law, what a riding is, the three parts of Parliament).
+
+That is safe and it is useless. Every one of the 57 would be re-verified every run and quarantined at 180
+days, and — the part that matters — **a flag that fires on everything carries the same information as a flag
+that fires on nothing.** The verifier can no longer use it to prioritise, which is what it was for.
+
+Two supporting changes make page grain possible. `sourceChapter.endPage` closes a chapter's range: without
+it a chapter was only a *start* marker and every page after it belonged to the previous chapter by accident,
+which is how 27 questions from pp. 60-69 came to cite `Federal Elections` — mechanically correct and wrong
+at a glance. And `source.page` records where the claim was read, checked against that range, and required
+whenever the cited source is paginated. A page-grain flag on a question with no page still applies: it cannot
+be ruled out, and silently dropping it would be the unsafe direction.
+
+Over-marking is deliberately **not** a fault. A fact can be volatile for a reason the register has not
+noticed, and that is precisely the judgement the staleness gate says it cannot make.
 
 ## Alternatives considered
 - **One agent authoring and verifying** — rejected: a model that wrote an answer is the worst judge of it.

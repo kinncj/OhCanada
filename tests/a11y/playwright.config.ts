@@ -12,7 +12,25 @@ import { defineConfig, devices } from '@playwright/test';
  */
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url));
 const PORT = 4175;
+/**
+ * The screen harness (`tests/a11y/harness.html`) is served by a *dev* server,
+ * not by `vite preview`.
+ *
+ * `vite preview` serves `dist/`, and `dist/` contains exactly what
+ * `vite.config.ts` declares as a build input — one page, `index.html`. Slice 1's
+ * DOM screens are not wired into the boot sequence yet (`app/bootstrap` belongs
+ * to another agent and the level scene is in flight), so scanning them through
+ * the production artefact would mean either editing that agent's file or
+ * scanning nothing at all. The `fixme` scans this replaces did the latter.
+ *
+ * The dev server is the same Vite, the same aliases and the same TypeScript, so
+ * what axe sees is the real component. What it does *not* prove is that the
+ * screens survive a production build; that becomes true, and this server goes
+ * away, when task 1.16 wires them into `app/bootstrap`.
+ */
+const HARNESS_PORT = 4176;
 const BASE_PATH = '/OhCanada/';
+export const HARNESS_URL = `http://127.0.0.1:${HARNESS_PORT}${BASE_PATH}tests/a11y/harness.html`;
 
 export default defineConfig({
   testDir: '.',
@@ -91,13 +109,24 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: `npx vite preview --port ${PORT} --strictPort --host 127.0.0.1`,
-    cwd: REPO_ROOT,
-    url: `http://127.0.0.1:${PORT}${BASE_PATH}`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-    stdout: 'ignore',
-    stderr: 'pipe',
-  },
+  webServer: [
+    {
+      command: `npx vite preview --port ${PORT} --strictPort --host 127.0.0.1`,
+      cwd: REPO_ROOT,
+      url: `http://127.0.0.1:${PORT}${BASE_PATH}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      stdout: 'ignore',
+      stderr: 'pipe',
+    },
+    {
+      command: `npx vite --port ${HARNESS_PORT} --strictPort --host 127.0.0.1`,
+      cwd: REPO_ROOT,
+      url: HARNESS_URL,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      stdout: 'ignore',
+      stderr: 'pipe',
+    },
+  ],
 });

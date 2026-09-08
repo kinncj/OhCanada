@@ -137,3 +137,85 @@ export {
   type SceneProbeHandle,
   type SceneSnapshot,
 } from './scene-probe';
+
+/*
+  Tasks 1.13 and 1.14: the level scene and locomotion.
+
+  `app/bootstrap` reaches for `GameRenderer.loadLevel` and nothing below;
+  everything else here is exported because a unit suite imports it directly. The
+  pure modules — the document parser, the ground polyline, the camera arithmetic,
+  the tier-gated effects and the locomotion strategy — run under
+  `environment: 'node'` with no Phaser and no DOM, which is what lets
+  TN-LEVEL-03's feel and TN-LEVEL-04's framing be asserted as properties of a
+  function rather than sampled through a browser.
+
+  `level-scene.ts` is not exported: it is the only new file that imports Phaser,
+  it is constructed by `game-renderer.ts`, and nothing outside this directory has
+  any business holding a scene.
+*/
+export {
+  LOCOMOTION_MODES,
+  MAX_DECODED_TEXTURE_BYTES,
+  parseLevelDocument,
+  refuseOverBudget,
+  type SceneLevel,
+} from './level-document';
+
+export {
+  MAX_GRADIENT,
+  groundYAt,
+  levelBounds,
+  slopeAt,
+  type LevelBounds,
+} from './ground-profile';
+
+export {
+  bundledLevelCatalog,
+  firstLevelId,
+  hasLevel,
+  interpretLevelModule,
+  levelIds,
+  loadLevel,
+  type LevelCatalog,
+} from './level-catalog';
+
+export {
+  followCamera,
+  followLerpFor,
+  desiredScroll,
+  scaledViewport,
+  screenFraction,
+  scrollBounds,
+  type CameraFollowInput,
+  type CameraViewport,
+} from './level-camera';
+
+export {
+  PINNED_SCROLL_FACTOR,
+  createLevelEffects,
+  particleBudget,
+  selectLayers,
+  type EmitterTarget,
+  type LevelEffects,
+  type ScrollTarget,
+  type TintTarget,
+} from './level-effects';
+
+export {
+  GRAVITY_PX_S2,
+  MAX_STEP_SECONDS,
+  MOVE_DEADZONE,
+  applyBounds,
+  createLocomotion,
+  createLocomotionFactory,
+  type MovementBounds,
+} from './locomotion';
+
+export {
+  PLAYABLE_ATTRIBUTES,
+  PLAYABLE_TEST_ID,
+  createPlayableMarker,
+  type MarkerElement,
+  type MarkerHost,
+  type PlayableMarker,
+} from './playable-marker';

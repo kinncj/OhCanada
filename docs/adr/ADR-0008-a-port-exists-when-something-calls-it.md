@@ -1,6 +1,12 @@
 # ADR-0008: A port exists when something calls it
 
 - Status: Accepted (2026-09-08)
+- Amended 2026-09-08: two things this ADR left implicit and that both bit within one slice. The marker has an
+  **exact form** — `PROVISIONAL (ADR-0008)` — because the gate was matching the bare word and so failed on a
+  file whose author had correctly removed the marker and written a sentence saying so. And "the marker comes
+  off in the same change that adds the first consumer" assumed the implementer can edit the port, which is
+  usually false: `app/application/ports/**` is the architect's. See "The form of the marker" and "Who removes
+  it".
 
 ## Context
 `app/application/ports/` is 1,297 lines across eleven files. Three exported types are consumed by anything:
@@ -30,8 +36,35 @@ about a `level.schema.json` that does not exist.
   slice task that will give it one. `PROVISIONAL` means: no implementation exists, this shape has never been
   compiled against a real caller, and the first implementer may change it without an ADR. It is a design
   sketch that happens to be type-checked, not a contract.
-- **The marker comes off in the same change that adds the first consumer.** A port that is consumed and still
-  marked, or unconsumed and unmarked, fails `make test` — see the enforcement bullet below.
+- **The marker comes off when the first consumer lands.** A port that is consumed and still marked, or
+  unconsumed and unmarked, fails `make test` — see the enforcement bullet below.
+
+### The form of the marker
+
+The marker is the literal string **`PROVISIONAL (ADR-0008)`**, not the bare word. The gate matches that form.
+
+This is not pedantry, it is a defect that already happened. The check was a substring search for
+`PROVISIONAL`, and the first time an implementer retired a marker properly they wrote the sentence a careful
+person writes — "the ADR-0008 PROVISIONAL marker is gone because the first call site landed with that task" —
+which contains the word. The gate reported the file as still marked. A check that fires on prose *about* the
+marker punishes explaining yourself, and the lesson a contributor takes from it is to stop explaining
+themselves, which is the opposite of what this ADR wants. Requiring the form lets a port say what happened to
+its own marker.
+
+Writing the bare word and expecting it to count fails in the safe direction: the port then reports as
+unconsumed *and* unmarked, and that message names the form to use.
+
+### Who removes it
+
+The first implementer is usually not allowed to. `app/application/ports/**` belongs to the architect, so a
+port's marker outlives its first consumer by however long it takes to route the edit — and in the meantime
+`make test` is red for everyone on a defect nobody in the failing change can fix.
+
+That is a genuine boundary defect and it is named rather than smoothed over. **The resolution is that marker
+removal is not a design change and does not need the architect's judgement** — the gate has already decided
+it, by finding a consumer. An implementer landing a first call site deletes the marker line in the same
+change; the ownership rule protects the *shape* of a port, and a marker is not part of the shape. If a port's
+shape needs changing too, that is a different edit and it does route through the architect.
 - **A port is not written before a named task in the current or next slice will call it.** A seam with no task
   is a design note; it belongs in `docs/architecture.md`, which is where the target architecture is allowed to
   describe things that do not exist. This is the rule that stops the directory growing another nine files.
@@ -72,7 +105,10 @@ about a `level.schema.json` that does not exist.
   reportable number: it should fall to zero across slice 1 for eight of them, and `audio.ts` is the one that
   will still be marked at the end of it.
 - Enforced by `tests/unit/contracts/ports-are-provisional.test.ts`, which is in `make test` and therefore a
-  required check. It reads every `import` in `app/**` outside the ports directory, resolves the imported
+  required check. Its three failure directions were each demonstrated on a real mutation before it was
+  trusted: a consumed port that re-adds the marker, an unconsumed port whose marker is downgraded to the bare
+  word, and an unconsumed port whose marker is deleted — all three reported, with the corrected
+  `locomotion.ts` prose about its own retired marker staying green. It reads every `import` in `app/**` outside the ports directory, resolves the imported
   names back through `app/application/ports/index.ts` to the file that declares them, and asserts marker
   present if and only if consumer absent. Both directions fail: a new port added without a caller and without
   a marker fails, and a marker left behind after the first caller lands fails too. Nothing is listed, so a

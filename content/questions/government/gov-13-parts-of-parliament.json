@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-13-parts-of-parliament",
+  "subject": "government",
+  "prompt": {
+    "en": "What are the three parts of Parliament?",
+    "fr": "Quelles sont les trois parties du Parlement?"
+  },
+  "options": [
+    {
+      "en": "The Prime Minister, the Senate and the House of Commons.",
+      "fr": "Le premier ministre, le Sénat et la Chambre des communes."
+    },
+    {
+      "en": "The executive, the legislative and the judicial branches.",
+      "fr": "Le pouvoir exécutif, le pouvoir législatif et le pouvoir judiciaire."
+    },
+    {
+      "en": "The Sovereign, the Senate and the House of Commons.",
+      "fr": "Le souverain ou la souveraine, le Sénat et la Chambre des communes."
+    },
+    {
+      "en": "The Governor General, the Cabinet and the Supreme Court.",
+      "fr": "Le gouverneur général, le Cabinet et la Cour suprême."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Parliament is the Sovereign, the appointed Senate and the elected House of Commons. The Prime Minister leads the government but is not one of the three parts. The three branches of government are a different idea.",
+    "fr": "Le Parlement, c'est le souverain ou la souveraine, le Sénat dont les membres sont nommés, et la Chambre des communes élue. Le premier ministre dirige le gouvernement, mais il n'est pas l'une des trois parties. Les trois pouvoirs de l'État sont une autre notion."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Parliament has three parts: the Sovereign (Queen or King), the Senate and the House of Commons."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

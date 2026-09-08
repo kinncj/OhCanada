@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-14-provincial-legislature-parts",
+  "subject": "government",
+  "prompt": {
+    "en": "Who makes up a provincial legislature?",
+    "fr": "De qui se compose une législature provinciale?"
+  },
+  "options": [
+    {
+      "en": "The elected Assembly, together with the Lieutenant Governor.",
+      "fr": "L'Assemblée élue, avec le lieutenant-gouverneur."
+    },
+    {
+      "en": "An elected Assembly and a provincial Senate.",
+      "fr": "Une assemblée élue et un sénat provincial."
+    },
+    {
+      "en": "The premier and the Governor General.",
+      "fr": "Le premier ministre de la province et le gouverneur général."
+    },
+    {
+      "en": "Members of Parliament sent from Ottawa.",
+      "fr": "Des députés envoyés d'Ottawa."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A province mirrors Ottawa only in part. It has one elected chamber and the Lieutenant Governor, who stands for the Sovereign there. No province has a second chamber.",
+    "fr": "Une province ne reproduit qu'en partie le modèle fédéral. Elle a une seule chambre élue et le lieutenant-gouverneur, qui y représente le souverain ou la souveraine. Aucune province n'a de deuxième chambre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Provincial legislatures comprise the Lieutenant Governor and the elected Assembly."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

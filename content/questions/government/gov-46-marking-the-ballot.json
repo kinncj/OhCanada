@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-46-marking-the-ballot",
+  "subject": "government",
+  "prompt": {
+    "en": "How do you mark a ballot in a federal election?",
+    "fr": "Comment remplit-on un bulletin de vote à une élection fédérale?"
+  },
+  "options": [
+    {
+      "en": "Write the candidate's name at the bottom.",
+      "fr": "Écrire le nom du candidat au bas du bulletin."
+    },
+    {
+      "en": "Number the candidates in the order you prefer.",
+      "fr": "Numéroter les candidats selon votre ordre de préférence."
+    },
+    {
+      "en": "Put an X in the circle beside the name of the candidate you choose.",
+      "fr": "Faire un X dans le cercle à côté du nom du candidat de votre choix."
+    },
+    {
+      "en": "Sign your name next to your choice.",
+      "fr": "Signer votre nom à côté de votre choix."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "One mark, one candidate. You do not rank the candidates and you never sign a ballot: a signature would break the secrecy of your vote.",
+    "fr": "Une seule marque, un seul candidat. On ne classe pas les candidats et on ne signe jamais un bulletin : une signature briserait le secret de votre vote."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 65,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Mark an “X” in the circle next to the name of the candidate of your choice."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

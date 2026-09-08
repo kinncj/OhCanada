@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-44-what-to-bring",
+  "subject": "government",
+  "prompt": {
+    "en": "What should you take to the polling station on election day?",
+    "fr": "Qu'est-ce que vous devez apporter au bureau de scrutin le jour du vote?"
+  },
+  "options": [
+    {
+      "en": "Your voter information card and nothing else.",
+      "fr": "Votre carte d'information de l'électeur et rien d'autre."
+    },
+    {
+      "en": "Your voter information card, plus proof of who you are and where you live.",
+      "fr": "Votre carte d'information de l'électeur, ainsi qu'une preuve de votre identité et de votre adresse."
+    },
+    {
+      "en": "A Canadian passport; nothing else is accepted.",
+      "fr": "Un passeport canadien; rien d'autre n'est accepté."
+    },
+    {
+      "en": "Nothing; the poll officials already have your details.",
+      "fr": "Rien; les responsables du scrutin ont déjà vos renseignements."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The card alone is not enough, and a passport is not required. Go to the polling station named on your card and bring the card together with identification showing your name and your address.",
+    "fr": "La carte seule ne suffit pas, et le passeport n'est pas obligatoire. Rendez-vous au bureau de scrutin indiqué sur votre carte et apportez la carte ainsi qu'une pièce d'identité indiquant votre nom et votre adresse."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 64,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Go to your polling station. The location is on your voter information card. Bring this card and proof of your identity and address to the polling station."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

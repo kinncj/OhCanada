@@ -126,6 +126,123 @@
       "licence": "CC-BY-4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Belt,_Sam_Browne_(AM_2007.87.1-1).jpg",
       "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/officer/officer-and-peace-tower-portrait.jpg",
+      "kind": "reference",
+      "title": "A member of the RCMP poses in front of the Parliament Buildings for snapshooting tourists, Ottawa, Ontario",
+      "author": "Chris Lund / National Film Board of Canada. Photothèque / Library and Archives Canada",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:A_member_of_the_RCMP_poses_in_front_of_the_Parliament_Buildings_for_snapshooting_tourists._Ottawa,_Ontario,_Canada.jpg",
+      "modifications": "Downscaled to 1600 px long edge (source is 980x1249, so unchanged); metadata stripped."
+    },
+    {
+      "path": "refs/officer/red-serge-and-working-uniform.jpg",
+      "kind": "reference",
+      "title": "Mountie at Parliament Hill, Ottawa - ceremonial scarlet beside the working uniform",
+      "author": "Mykola Swarnyk",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Mountie@parliamentOttawa.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/peace-tower-clock-daylight.jpg",
+      "kind": "reference",
+      "title": "Peace Tower clock, daylight",
+      "author": "John Talbot",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Peace_Tower_Clock_(1).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "src/svg/ottawa/landmark-parliament-hill.svg",
+      "kind": "shipped",
+      "title": "Parliament Hill, Ottawa - Centre Block, the Peace Tower and the Library of Parliament",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/landmark-parliament-hill.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - parallax layer 10, winter sky",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/layer-20-skyline.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - parallax layer 20, distant winter skyline",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/layer-20-skyline.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/layer-30-escarpment.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - parallax layer 30, wooded escarpment",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/layer-30-escarpment.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/layer-40-treeline.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - parallax layer 40, canal-bank treeline",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/layer-40-treeline.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/layer-50-canalwall.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - parallax layer 50, canal retaining wall, bridge, hut and skaters",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/layer-50-canalwall.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/layer-60-ice.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - parallax layer 60, the Rideau Canal Skateway ice",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/layer-60-ice.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/poi-marker-idle.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - point-of-interest marker, idle",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/poi-marker-idle.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/poi-marker-active.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - point-of-interest marker, in reach",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/poi-marker-active.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/ottawa/particle-snow.svg",
+      "kind": "shipped",
+      "title": "Ottawa level - falling-snow particle texture",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/particle-snow.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
     }
   ]
 }

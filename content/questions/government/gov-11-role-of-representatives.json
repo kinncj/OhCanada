@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-11-role-of-representatives",
+  "subject": "government",
+  "prompt": {
+    "en": "What is the job of the representatives Canadians elect?",
+    "fr": "Quel est le rôle des représentants élus par les Canadiens?"
+  },
+  "options": [
+    {
+      "en": "To make laws, to approve and watch over spending, and to hold the government to account.",
+      "fr": "Faire les lois, approuver et surveiller les dépenses, et demander des comptes au gouvernement."
+    },
+    {
+      "en": "To debate only; spending is decided elsewhere, with no vote.",
+      "fr": "Seulement débattre; les dépenses se décident ailleurs, sans vote."
+    },
+    {
+      "en": "To choose the Head of State.",
+      "fr": "Choisir le chef d'État."
+    },
+    {
+      "en": "To run the government departments from day to day.",
+      "fr": "Diriger au quotidien les ministères du gouvernement."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Elected members do more than talk. They vote on the laws, they say yes or no to public spending and keep an eye on it, and they make the government answer for what it does.",
+    "fr": "Les élus ne font pas que parler. Ils votent les lois, acceptent ou refusent les dépenses publiques et les surveillent, et ils obligent le gouvernement à répondre de ses actes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "These representatives are responsible for passing laws, approving and monitoring expenditures, and keeping the government accountable."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

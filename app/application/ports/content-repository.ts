@@ -78,6 +78,24 @@ export interface FactSource {
   readonly sourceId: string;
   /** Chapter or section heading, exactly as it appears in the cited source. */
   readonly chapter: string;
+  /**
+   * Page the claim was read from, when the source is paginated. Checked against
+   * the cited chapter's range, and it is what lets a page-grain staleness flag be
+   * evaluated per question rather than forcing every question in a long chapter
+   * volatile.
+   */
+  readonly page?: number;
+  /**
+   * The passage the author read the claim from, copied exactly.
+   *
+   * Not the same field as `FactVerification.evidence`, and the difference is the
+   * point: this says where the *wording* came from and is written by the author;
+   * the verifier's says what entails the *answer*, and for a question with three
+   * distractors those are often different sentences. Copied exactly because it
+   * must be a contiguous passage of the cached extraction at the recorded hash —
+   * a check that catches a fabricated citation before any verifier runs.
+   */
+  readonly quote: string;
   readonly url: string;
   /** SHA-256 of what the verifier read: the manifest's extracted text, or the file. */
   readonly sourceHash: string;

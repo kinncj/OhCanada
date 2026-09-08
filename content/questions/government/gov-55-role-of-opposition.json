@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-55-role-of-opposition",
+  "subject": "government",
+  "prompt": {
+    "en": "What is the role of the opposition parties?",
+    "fr": "Quel est le rôle des partis de l'opposition?"
+  },
+  "options": [
+    {
+      "en": "To block every government proposal, whatever it is.",
+      "fr": "Bloquer toutes les propositions du gouvernement, quelles qu'elles soient."
+    },
+    {
+      "en": "To run the government departments.",
+      "fr": "Diriger les ministères du gouvernement."
+    },
+    {
+      "en": "To oppose government proposals peacefully, or to try to make them better.",
+      "fr": "S'opposer pacifiquement aux propositions du gouvernement ou tenter de les améliorer."
+    },
+    {
+      "en": "To choose the Prime Minister.",
+      "fr": "Choisir le premier ministre."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Opposition is a normal, peaceful part of the system, not obstruction for its own sake. Opposition parties may argue against a plan, and they may also improve it.",
+    "fr": "L'opposition est une partie normale et pacifique du système, et non de l'obstruction pour le plaisir. Les partis de l'opposition peuvent s'opposer à un projet, mais ils peuvent aussi l'améliorer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 63,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The role of opposition parties is to peacefully oppose or try to improve government proposals."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

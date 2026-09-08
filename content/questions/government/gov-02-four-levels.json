@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-02-four-levels",
+  "subject": "government",
+  "prompt": {
+    "en": "How many levels of government does Canada have?",
+    "fr": "Combien de paliers de gouvernement le Canada compte-t-il?"
+  },
+  "options": [
+    {
+      "en": "Two: federal and provincial.",
+      "fr": "Deux : fédéral et provincial."
+    },
+    {
+      "en": "Three: federal, provincial and municipal.",
+      "fr": "Trois : fédéral, provincial et municipal."
+    },
+    {
+      "en": "Four: municipal, provincial, territorial and federal.",
+      "fr": "Quatre : municipal, provincial, territorial et fédéral."
+    },
+    {
+      "en": "One: everything is decided in Ottawa.",
+      "fr": "Un seul : tout se décide à Ottawa."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "People often name only the federal and provincial levels. The territories and the municipalities are separate levels too, and each one looks after different things.",
+    "fr": "On ne nomme souvent que le fédéral et le provincial. Les territoires et les municipalités forment eux aussi des paliers distincts, et chacun s'occupe de choses différentes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 54,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "There are federal, provincial, territorial and municipal governments in Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -17,6 +17,7 @@ single-switch contract these scenarios use.
 | 200 % text | `TN-CREATOR-08` — *Nothing clips or overlaps at 200 %* |
 | Bilingual | `TN-CREATOR-09` (FR copy) and `TN-CREATOR-10` (switching language mid-flow) |
 | Failure path | `TN-CREATOR-03` — *The character cannot be saved* |
+| The way in to accessibility itself | `TN-CREATOR-11` — *Settings, before there is a game to pause* |
 
 ## Player-facing copy
 
@@ -32,6 +33,11 @@ single-switch contract these scenarios use.
 | `creator.saveFailed` | We could not save your character. You can keep playing, but your choices may be lost. | Nous n'avons pas pu enregistrer votre personnage. Vous pouvez continuer à jouer, mais vos choix pourraient être perdus. |
 | `creator.retry` | Try again | Réessayer |
 | `creator.continue` | Keep playing | Continuer quand même |
+
+The settings control on this screen uses `common.settings` — "Settings" / « Réglages » — defined in
+`TN-SET-settings.md`. It needs a key of its own and **not words of its own**: the button names the screen it
+opens, and a screen reader user who has heard "Settings" in the HUD menu should hear the same word here.
+`settings.title` stays the heading of that screen, so the two can be reworded apart if they ever need to be.
 
 Option names are content (`content/locales/*`), one key per slot option, e.g. `creator.hair.curly` →
 "Curly" / « Bouclés ». Every option has a name; no option is identified by colour alone.
@@ -128,7 +134,7 @@ Feature: Storage refuses the character
     When I tap "Keep playing"
     Then the Ottawa level loads
     And the character in the level uses the options I chose
-    And the warning "storage-warning" stays visible in the HUD
+    And the warning "storage-warning" stays visible in the HUD, as TN-HUD-03 describes
 
   Scenario: The preview art fails to load
     Given the character art fails to load
@@ -266,6 +272,7 @@ Feature: Large text in the creator
     And the full text of the heading and of every option name is visible, not cut off
     And every control is still at least 44 CSS px wide and tall
     And "start-playing" is reachable, by scrolling down if needed
+    And "creator-settings" is reachable, by scrolling if needed
 
   Scenario: The dyslexia-friendly font does not break the layout
     Given "setting-dyslexia-font" is on
@@ -285,6 +292,7 @@ Feature: Character creation in French
     Then the heading reads "Créez votre personnage"
     And the groups read "Teint de peau", "Cheveux" and "Manteau"
     And the buttons read "Au hasard" and "Commencer à jouer"
+    And the settings control reads "Réglages"
     And no English word appears in "character-creator"
     And the screen carries "lang" equal to "fr"
 
@@ -324,6 +332,76 @@ Feature: Language switching mid-flow
     And "#tn-live-region" announces in French
 ```
 
+## TN-CREATOR-11 — Settings, before there is a game to pause
+
+```gherkin
+Feature: Reaching Settings from the first screen
+  As a player who needs one-button mode or 200 % text
+  I want the settings before I am asked to choose anything
+  So that the first screen of the game is not the one I cannot use
+
+  Background:
+    Given I have no saved game
+    And the element "character-creator" is visible
+
+  Scenario: The control is there and is named
+    Then the element "creator-settings" is visible
+    And it reads "Settings"
+    And it is at least 44 CSS px wide and tall
+    And it has a visible text label, not an icon alone
+
+  Scenario: It opens the same screen the menu opens
+    When I tap "creator-settings"
+    Then the element "settings-screen" is visible
+    And it offers the same controls as TN-SET-01 describes, including "Hold time"
+
+  Scenario: Closing returns to the creator, with the choices intact
+    Given I had chosen the third option in "slot-hair"
+    When I open Settings and close it
+    Then the element "character-creator" is visible again
+    And the third option in "slot-hair" is still chosen
+    And focus returns to "creator-settings"
+
+  Scenario: A setting changed here applies here
+    When I open Settings, set "Text size" to 200 % and close it
+    Then "character-creator" is drawn at 200 %
+    And it did not need a reload
+
+  Scenario: Turning on one-button mode here makes this screen usable with the switch
+    When I open Settings, turn on "One-button mode" and close it
+    Then I can finish TN-CREATOR-05 with short and long presses alone
+    And I never had to use a second input to get there
+
+  Scenario: From the keyboard
+    Given I am using a keyboard only
+    When I press "Tab" until focus is on "creator-settings" and press "Enter"
+    Then focus moves into "settings-screen"
+    When I press "Escape"
+    Then focus returns to "creator-settings"
+
+  Scenario: With a screen reader
+    Then "creator-settings" is a button with the accessible name "Settings"
+    And opening it makes the creator inert
+    And exactly one element on the page has an "aria-live" attribute
+
+  Scenario: Without motion
+    Given reduced motion is on
+    When I open and close Settings from here
+    Then it appears and disappears with no slide, fade or scale
+
+  Scenario: In French
+    Given the language is French
+    Then "creator-settings" reads "Réglages"
+    And opening it shows the heading "Réglages"
+
+  Scenario: Settings cannot lose an unsaved character
+    Given writing to local storage fails
+    And I have chosen options in every group
+    When I open Settings and close it
+    Then the same options are still chosen
+    And no message claims the character was saved
+```
+
 ---
 
 ## Open questions
@@ -342,7 +420,8 @@ Feature: Language switching mid-flow
   to `progress.schema.json` and to `ProgressSnapshot`.
 - **`OQ-CREATOR-4` — can the character be changed later?** `creator.intro` promises "you can change this
   later in Settings". *Recommendation:* keep the promise in slice 1 by re-opening this same screen from
-  Settings, or delete that sentence. Do not ship the sentence without the button.
+  Settings, or delete that sentence. Do not ship the sentence without the button. `TN-CREATOR-11` is the
+  other half of the same route and makes this cheaper: the two screens already know how to open each other.
 - **`OQ-CREATOR-5` — skin tone option names.** Naming skin tones in two languages is a content-review
   matter, not a UI one. *Recommendation:* neutral, non-food names decided under `docs/content-review.md`
-  (`OQ-REVIEW-1`), never a colour word alone.
+  (`OQ-REVIEW-6`), never a colour word alone.

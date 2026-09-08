@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-23-sovereign-non-partisan",
+  "subject": "government",
+  "prompt": {
+    "en": "What kind of role does the Sovereign play in Canada?",
+    "fr": "Quel rôle le souverain ou la souveraine joue-t-il au Canada?"
+  },
+  "options": [
+    {
+      "en": "The role of judging cases in the highest court.",
+      "fr": "Le rôle de juger les causes devant le plus haut tribunal."
+    },
+    {
+      "en": "The role of leading the party in power.",
+      "fr": "Le rôle de diriger le parti au pouvoir."
+    },
+    {
+      "en": "The role of setting the government's policies.",
+      "fr": "Le rôle d'établir les politiques du gouvernement."
+    },
+    {
+      "en": "A role above party politics, as a focus for citizenship and allegiance.",
+      "fr": "Un rôle au-dessus des partis, comme point de ralliement de la citoyenneté et de l'allégeance."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The Sovereign is one part of Parliament and takes no side in politics. Canadians see the role most clearly during royal visits. Choosing policy is the job of the Prime Minister and the Cabinet.",
+    "fr": "Le souverain ou la souveraine est l'une des parties du Parlement et ne prend parti pour aucun camp politique. Les Canadiens voient ce rôle surtout lors des visites royales. Le choix des politiques revient au premier ministre et au Cabinet."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 57,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The Sovereign is a part of Parliament, playing an important, non- partisan role as the focus of citizenship and allegiance, most visibly during royal visits to Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

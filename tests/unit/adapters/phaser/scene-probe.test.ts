@@ -214,6 +214,7 @@ describe('createSceneProbe', () => {
     for (let frame = 0; frame < 6; frame += 1) {
       probe.recordFrame({
         t: frame * 16.7,
+        dtSeconds: 1 / 60,
         x: frame,
         y: 0,
         velocityX: frame,
@@ -237,6 +238,7 @@ describe('createSceneProbe', () => {
 
     for (let frame = 0; frame < 10; frame += 1) {
       probe.recordFrame({
+        dtSeconds: 1 / 60,
         x: frame,
         y: 0,
         velocityX: 0,
@@ -277,6 +279,7 @@ describe('createSceneProbe', () => {
     const probe = createSceneProbe({ element, now: clock.now });
 
     probe.recordFrame({
+      dtSeconds: 1 / 60,
       x: 0,
       y: 0,
       velocityX: 0,
@@ -297,6 +300,7 @@ describe('createSceneProbe', () => {
     const probe = createSceneProbe({ element, now: fakeClock().now });
     probe.recordEvent('player/moved');
     probe.recordFrame({
+      dtSeconds: 1 / 60,
       x: 0,
       y: 0,
       velocityX: 0,
@@ -322,6 +326,7 @@ describe('createSceneProbe', () => {
     const before = element.writes();
     probe.publish({ level: 'ottawa' });
     probe.recordFrame({
+      dtSeconds: 1 / 60,
       x: 1,
       y: 0,
       velocityX: 0,
@@ -361,6 +366,7 @@ describe('sceneProbeHandle', () => {
     probe.publish({ mode: 'skate' });
     probe.recordEvent('player/moved');
     probe.recordFrame({
+      dtSeconds: 1 / 60,
       x: 12,
       y: 0,
       velocityX: 4,
@@ -408,6 +414,7 @@ describe('the trace can express TN-LEVEL-03', () => {
         frames.push({
           frame: frames.length,
           t: frames.length * (1000 / 60),
+          dtSeconds: 1 / 60,
           x,
           y: 0,
           velocityX,

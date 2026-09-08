@@ -37,3 +37,13 @@ It is cached anyway because it is the edition the study guide has been distribut
 a source that is wrong in a *known, recorded* way is safer than one that is wrong in an unknown way.
 Every affected subject is listed in the manifest. A question drawn from those areas must be checked
 against the live canada.ca page, not this file.
+
+The sharpest hazard is not that the text is old. It is that **one passage is current and out of date at
+the same time**: the Oath on page 2 already carries the June 2021 amendment recognising Aboriginal and
+treaty rights, while still naming Queen Elizabeth the Second. A reader who checks that the amendment is
+present will conclude the page was revised, and be wrong.
+
+On the Sovereign the document is uniformly pre-accession — five "Her Majesty", zero "His Majesty".
+An earlier version of this file claimed the text was *inconsistently* updated on that point, citing one
+"His Majesty". That was a misread: the match was "King Charles II of England" in a 1670 sentence about
+the Hudson's Bay Company charter.

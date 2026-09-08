@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-47-ballot-box",
+  "subject": "government",
+  "prompt": {
+    "en": "After a poll official tears the number off your folded ballot, what happens next?",
+    "fr": "Après qu'un responsable du scrutin a détaché le numéro de votre bulletin plié, que se passe-t-il?"
+  },
+  "options": [
+    {
+      "en": "The official keeps the ballot on file.",
+      "fr": "Le responsable conserve le bulletin dans un dossier."
+    },
+    {
+      "en": "The ballot is handed back to you to put in the ballot box.",
+      "fr": "On vous remet le bulletin pour que vous le déposiez dans l'urne."
+    },
+    {
+      "en": "The ballot is counted right away, in front of you.",
+      "fr": "Le bulletin est compté sur-le-champ, devant vous."
+    },
+    {
+      "en": "The ballot is mailed to Ottawa.",
+      "fr": "Le bulletin est envoyé par la poste à Ottawa."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "You mark your ballot behind a screen and fold it, so nobody sees your choice. The official removes the number and gives the ballot back, and you are the one who puts it in the box.",
+    "fr": "Vous remplissez votre bulletin derrière un isoloir et vous le pliez, pour que personne ne voie votre choix. Le responsable retire le numéro et vous rend le bulletin : c'est vous qui le déposez dans l'urne."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 65,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The poll official will tear off the ballot number and give your ballot back to you to deposit in the ballot box."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

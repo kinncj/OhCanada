@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-57-by-laws",
+  "subject": "government",
+  "prompt": {
+    "en": "What are the laws passed by a municipal council called?",
+    "fr": "Comment appelle-t-on les lois adoptées par un conseil municipal?"
+  },
+  "options": [
+    {
+      "en": "Statutes.",
+      "fr": "Des lois provinciales."
+    },
+    {
+      "en": "By-laws.",
+      "fr": "Des règlements municipaux."
+    },
+    {
+      "en": "Orders of the province.",
+      "fr": "Des décrets de la province."
+    },
+    {
+      "en": "Acts of Parliament.",
+      "fr": "Des lois du Parlement."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Local government matters in daily life. A council passes rules for its own community, and those rules apply only there, not across the whole province.",
+    "fr": "L'administration locale compte dans la vie de tous les jours. Un conseil adopte des règles pour sa propre communauté, et ces règles ne s'appliquent que là, et non dans toute la province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 66,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Municipal governments usually have a council that passes laws called “by-laws” that affect only the local community."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

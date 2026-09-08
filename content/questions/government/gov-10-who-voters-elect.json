@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-10-who-voters-elect",
+  "subject": "government",
+  "prompt": {
+    "en": "In Canada's parliamentary democracy, whom do voters elect?",
+    "fr": "Dans la démocratie parlementaire canadienne, qui les électeurs élisent-ils?"
+  },
+  "options": [
+    {
+      "en": "The Prime Minister, whose name is on the ballot.",
+      "fr": "Le premier ministre, dont le nom figure sur le bulletin de vote."
+    },
+    {
+      "en": "Members of the House of Commons, and members of their provincial or territorial legislature.",
+      "fr": "Des députés à la Chambre des communes et des députés de leur assemblée provinciale ou territoriale."
+    },
+    {
+      "en": "Senators and the Governor General.",
+      "fr": "Les sénateurs et le gouverneur général."
+    },
+    {
+      "en": "The Head of State, every four years.",
+      "fr": "Le chef d'État, tous les quatre ans."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Canadians vote for the people who will represent them, at the federal level and at the provincial or territorial level. They do not vote directly for a Prime Minister, and they do not choose the Head of State.",
+    "fr": "Les Canadiens votent pour les personnes qui les représenteront, au palier fédéral comme au palier provincial ou territorial. Ils ne votent pas directement pour un premier ministre et ne choisissent pas le chef d'État."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In Canada’s parliamentary democracy, the people elect members to the House of Commons in Ottawa and to the provincial and territorial legislatures."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-41-elections-canada",
+  "subject": "government",
+  "prompt": {
+    "en": "Who keeps the voters' lists used in federal elections?",
+    "fr": "Qui tient les listes électorales utilisées lors des élections fédérales?"
+  },
+  "options": [
+    {
+      "en": "The political party in power.",
+      "fr": "Le parti politique au pouvoir."
+    },
+    {
+      "en": "Elections Canada, a neutral agency of Parliament.",
+      "fr": "Élections Canada, un organisme neutre du Parlement."
+    },
+    {
+      "en": "The Prime Minister's office.",
+      "fr": "Le bureau du premier ministre."
+    },
+    {
+      "en": "Each province's government.",
+      "fr": "Le gouvernement de chaque province."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The lists come from the National Register of Electors, a standing database of citizens 18 and over who may vote federally. The agency that keeps it takes no side, so the party in power does not control who is on the list.",
+    "fr": "Les listes proviennent du Registre national des électeurs, une base de données permanente des citoyens de 18 ans et plus qui ont le droit de voter au fédéral. L'organisme qui la tient est neutre : le parti au pouvoir ne décide donc pas qui figure sur la liste."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 61,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The voters’ lists used during federal elections and referendums are produced from the National Register of Electors by a neutral agency of Parliament called Elections Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

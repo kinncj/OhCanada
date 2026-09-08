@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-59-municipal-responsibilities",
+  "subject": "government",
+  "prompt": {
+    "en": "Which level of government usually takes care of snow removal and garbage collection?",
+    "fr": "Quel palier de gouvernement s'occupe habituellement du déneigement et de la collecte des ordures?"
+  },
+  "options": [
+    {
+      "en": "The federal government.",
+      "fr": "Le gouvernement fédéral."
+    },
+    {
+      "en": "The province or territory.",
+      "fr": "La province ou le territoire."
+    },
+    {
+      "en": "The municipal (local) government.",
+      "fr": "L'administration municipale (locale)."
+    },
+    {
+      "en": "No government; only private companies do this work.",
+      "fr": "Aucun gouvernement; seules des entreprises privées font ce travail."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Municipalities normally look after planning, streets and roads, waste, snow, firefighting, ambulance and other emergency services, recreation centres, public transit and some local health and social services. Most large cities also have their own police force.",
+    "fr": "Les municipalités s'occupent normalement de l'aménagement, des rues et des routes, des déchets, de la neige, de la lutte contre les incendies, des ambulances et d'autres services d'urgence, des centres de loisirs, du transport en commun et de certains services locaux de santé et de services sociaux. La plupart des grandes villes ont aussi leur propre service de police."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 66,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Municipalities are normally responsible for urban or regional planning, streets and roads, sanitation (such as garbage removal), snow removal, firefighting, ambulance and other emergency services, recreation facilities, public transit and some local health and social services."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

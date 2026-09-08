@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-25-governor-general-appointed",
+  "subject": "government",
+  "prompt": {
+    "en": "How does someone become Governor General of Canada?",
+    "fr": "Comment devient-on gouverneur général du Canada?"
+  },
+  "options": [
+    {
+      "en": "Canadians elect the Governor General for a four-year term.",
+      "fr": "Les Canadiens élisent le gouverneur général pour un mandat de quatre ans."
+    },
+    {
+      "en": "The Sovereign appoints them on the advice of the Prime Minister, usually for five years.",
+      "fr": "Le souverain ou la souveraine le nomme sur l'avis du premier ministre, habituellement pour cinq ans."
+    },
+    {
+      "en": "Parliament votes to choose them.",
+      "fr": "Le Parlement le choisit par un vote."
+    },
+    {
+      "en": "The position is inherited.",
+      "fr": "La charge est héréditaire."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The Governor General stands in for the Sovereign here in Canada. The post is neither elected nor held for life: it is an appointment, normally for about five years.",
+    "fr": "Le gouverneur général représente le souverain ou la souveraine ici, au Canada. La charge n'est ni élective ni à vie : c'est une nomination, normalement pour environ cinq ans."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 57,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The Sovereign is represented in Canada by the Governor General, who is appointed by the Sovereign on the advice of the Prime Minister, usually for five years."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

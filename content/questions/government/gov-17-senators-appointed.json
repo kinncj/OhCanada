@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-17-senators-appointed",
+  "subject": "government",
+  "prompt": {
+    "en": "How does a person become a senator, and how long may they serve?",
+    "fr": "Comment devient-on sénateur, et jusqu'à quand peut-on siéger?"
+  },
+  "options": [
+    {
+      "en": "They are elected by voters for a four-year term.",
+      "fr": "On est élu par les électeurs pour un mandat de quatre ans."
+    },
+    {
+      "en": "They are appointed on the Prime Minister's advice and may serve until age 75.",
+      "fr": "On est nommé sur l'avis du premier ministre et on peut siéger jusqu'à 75 ans."
+    },
+    {
+      "en": "They are appointed for life.",
+      "fr": "On est nommé à vie."
+    },
+    {
+      "en": "They are chosen by their provincial legislature for ten years.",
+      "fr": "On est choisi par l'assemblée de sa province pour dix ans."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Senators are not elected. The Governor General appoints them on the advice of the Prime Minister, and a senator's seat is not held for life: it ends at 75.",
+    "fr": "Les sénateurs ne sont pas élus. Le gouverneur général les nomme sur l'avis du premier ministre, et le siège n'est pas occupé à vie : il prend fin à 75 ans."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Senators are appointed by the Governor General on the advice of the Prime Minister and serve until age 75."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-42-voter-information-card",
+  "subject": "government",
+  "prompt": {
+    "en": "What does the voter information card tell you?",
+    "fr": "Que vous apprend la carte d'information de l'électeur?"
+  },
+  "options": [
+    {
+      "en": "Which candidate your neighbours support.",
+      "fr": "Quel candidat vos voisins appuient."
+    },
+    {
+      "en": "When and where to vote, and a number to call if you need help such as an interpreter.",
+      "fr": "Quand et où voter, ainsi qu'un numéro à composer si vous avez besoin d'aide, par exemple d'un interprète."
+    },
+    {
+      "en": "How you must mark your ballot.",
+      "fr": "Comment vous devez remplir votre bulletin de vote."
+    },
+    {
+      "en": "The result of the election in your district.",
+      "fr": "Le résultat de l'élection dans votre circonscription."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Once an election is called, the card is mailed to each elector whose name is in the National Register of Electors. It confirms that you are on the voters' list and says when and where you vote.",
+    "fr": "Une fois l'élection déclenchée, la carte est postée à chaque électeur dont le nom figure au Registre national des électeurs. Elle confirme que vous êtes sur la liste électorale et indique quand et où voter."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 61,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Once an election has been called, Elections Canada mails a voter information card to each elector whose name is in the National Register of Electors. The card lists when and where you vote and the number to call if you require an interpreter or other special services."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

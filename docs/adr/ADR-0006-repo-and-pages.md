@@ -187,9 +187,9 @@ than advice to someone who has not agreed to it.
      reports `14 asset file(s) under assets/ credited (0 shipped, 14 reference)` with set equality in both
      directions. `kind` is now **required** in `credits.schema.json`; the optional lasted one commit, which
      is what the obligation was for, because an optional discriminator is one that gets omitted exactly
-     where the two kinds are hardest to tell apart. The schema does *not* also pattern-ban a `../` path:
-     `scripts/validate-content.mjs` still resolves and warns on that form, and retiring a transitional
-     branch belongs to the gate that owns it rather than to a schema forcing it closed from outside.
+     where the two kinds are hardest to tell apart. Infra has since deleted the transitional branch, so a
+     `../` path is a hard failure rather than a warning and `path`'s description says `assets/`-relative is
+     the only accepted form.
 
 3. **`CONTRIBUTING.md` must read as instructions to a stranger.** It was written when no stranger could
    reach it. The audience it addresses now exists, and prose that assumes the reader already knows the

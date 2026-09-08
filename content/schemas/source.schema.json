@@ -64,6 +64,11 @@
       "items": { "$ref": "#/$defs/sourceChapter" },
       "minItems": 1
     },
+    "grainNote": {
+      "description": "Why this register's staleness flags are located the way they are, in the register's own words. Prose for the next person to add a flag, kept beside the flags rather than in an ADR because it is about this document rather than about the rule.",
+      "type": "string",
+      "minLength": 1
+    },
     "knownStaleness": {
       "description": "What is already known to be out of date in this document, recorded before a question is written against it rather than discovered after one ships. A cached source is a snapshot of a page that keeps moving; this is the list of places the snapshot is known to lie.",
       "type": "array",
@@ -97,6 +102,11 @@
           "minLength": 1
         },
         "page": { "type": "integer", "minimum": 1 },
+        "endPage": {
+          "description": "Last page of the chapter, inclusive. Without it a chapter is only a START marker and every page after it belongs to the previous chapter by accident - which is how 27 questions from pp. 60-69 came to cite `Federal Elections`, mechanically correct and wrong at a glance. An explicit range is what lets a question's `source.page` be checked against the chapter it claims.",
+          "type": "integer",
+          "minimum": 1
+        },
         "level": {
           "description": "Which of the ten levels teaches this chapter, when one does.",
           "type": "integer",
@@ -121,10 +131,41 @@
           "items": { "type": "string", "minLength": 1 },
           "minItems": 1
         },
+        "grain": {
+          "description": "How precisely the stale region is located. `pages` means the claims sit on the pages listed below and only a question citing one of them is affected; `chapter` means the whole of every chapter in `affects` is suspect. Prefer `pages`. A flag at chapter grain over a long chapter forces every question in it volatile, and a flag that fires on everything carries the same information as a flag that fires on nothing - the verifier can no longer use it to prioritise, which is what it was for.",
+          "type": "string",
+          "enum": ["pages", "chapter"]
+        },
+        "pages": {
+          "description": "The pages the stale claims are on. Required when `grain` is `pages`; a page here must fall inside one of the chapters named in `affects`, or the flag localises to somewhere no question can cite.",
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
         "action": { "type": "string", "minLength": 1 }
       },
-      "required": ["topic", "problem", "affects", "action"],
-      "additionalProperties": false
+      "required": ["topic", "problem", "affects", "grain", "action"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "Page grain without pages is chapter grain wearing a more precise name. Only property names this object already declares appear here (ADR-0007).",
+          "if": {
+            "properties": { "grain": { "const": "pages" } },
+            "required": ["grain"]
+          },
+          "then": {
+            "properties": { "pages": { "type": "array", "minItems": 1 } },
+            "required": ["pages"]
+          },
+          "else": {
+            "not": {
+              "properties": { "pages": { "type": "array" } },
+              "required": ["pages"]
+            }
+          }
+        }
+      ]
     }
   }
 }

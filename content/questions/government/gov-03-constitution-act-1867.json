@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-03-constitution-act-1867",
+  "subject": "government",
+  "prompt": {
+    "en": "Which law first set out what the federal government and the provinces are each responsible for?",
+    "fr": "Quelle loi a établi pour la première fois les responsabilités du gouvernement fédéral et celles des provinces?"
+  },
+  "options": [
+    {
+      "en": "The British North America Act of 1867, called the Constitution Act, 1867 today.",
+      "fr": "L'Acte de l'Amérique du Nord britannique de 1867, appelé aujourd'hui la Loi constitutionnelle de 1867."
+    },
+    {
+      "en": "The Constitution Act, 1982, which also brought in the Charter.",
+      "fr": "La Loi constitutionnelle de 1982, qui a aussi introduit la Charte."
+    },
+    {
+      "en": "The Statute of Westminster of 1931.",
+      "fr": "Le Statut de Westminster de 1931."
+    },
+    {
+      "en": "The Canadian Bill of Rights of 1960.",
+      "fr": "La Déclaration canadienne des droits de 1960."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The split of responsibilities dates from 1867, the year of Confederation. The 1982 law is a later step and is the one that added the Charter of Rights and Freedoms, so the two are easy to mix up.",
+    "fr": "Le partage des responsabilités remonte à 1867, l'année de la Confédération. La loi de 1982 est une étape plus tardive : c'est elle qui a ajouté la Charte des droits et libertés. Il est donc facile de confondre les deux."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 54,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The responsibilities of the federal and provincial governments were defined in 1867 in the British North America Act, now known as the Constitution Act, 1867."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

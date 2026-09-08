@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-38-who-may-run",
+  "subject": "government",
+  "prompt": {
+    "en": "Who may run as a candidate in a federal election?",
+    "fr": "Qui peut se porter candidat à une élection fédérale?"
+  },
+  "options": [
+    {
+      "en": "Only members of a registered political party.",
+      "fr": "Seulement les membres d'un parti politique enregistré."
+    },
+    {
+      "en": "Any Canadian citizen who is at least 18 years old.",
+      "fr": "Tout citoyen canadien âgé d'au moins 18 ans."
+    },
+    {
+      "en": "Any resident of Canada aged 18 or older.",
+      "fr": "Tout résident du Canada âgé de 18 ans ou plus."
+    },
+    {
+      "en": "Only Canadian citizens aged 21 or older.",
+      "fr": "Seulement les citoyens canadiens âgés de 21 ans ou plus."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The people who run are called candidates, and one electoral district can have several of them. You do not need to belong to a party, and the age is the same as the voting age.",
+    "fr": "Les personnes qui se présentent sont appelées candidats, et une même circonscription peut en compter plusieurs. Il n'est pas nécessaire d'appartenir à un parti, et l'âge requis est le même que pour voter."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "Canadian citizens who are 18 years old or older may run in a federal election. The people who run for office are called candidates. There can be many candidates in an electoral district."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

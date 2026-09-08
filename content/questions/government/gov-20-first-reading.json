@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-20-first-reading",
+  "subject": "government",
+  "prompt": {
+    "en": "What is the first step a bill takes on its way to becoming law?",
+    "fr": "Quelle est la première étape du parcours d'un projet de loi vers son adoption?"
+  },
+  "options": [
+    {
+      "en": "First reading, when the bill is printed.",
+      "fr": "La première lecture, au moment où le projet de loi est imprimé."
+    },
+    {
+      "en": "The committee stage.",
+      "fr": "L'étude en comité."
+    },
+    {
+      "en": "Royal assent.",
+      "fr": "La sanction royale."
+    },
+    {
+      "en": "A vote in the Senate.",
+      "fr": "Un vote au Sénat."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The steps come in order: first reading, second reading, committee stage, report stage, third reading, then the Senate, and royal assent last of all.",
+    "fr": "Les étapes se suivent dans l'ordre : première lecture, deuxième lecture, étude en comité, étape du rapport, troisième lecture, puis le Sénat, et enfin la sanction royale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 56,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "First Reading – The bill is considered read for the first STEP 1 time and is printed."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

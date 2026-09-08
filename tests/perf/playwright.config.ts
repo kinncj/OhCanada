@@ -34,7 +34,14 @@ export default defineConfig({
   // sets `exactOptionalPropertyTypes` and an explicit `undefined` is not the
   // same as an omitted key under that rule. Same shape as `workers` below.
   ...(process.env.CI ? { maxFailures: 5 } : {}),
-  ...(process.env.CI ? { workers: 1 } : {}),
+  // ONE WORKER, ALWAYS - unlike the e2e and a11y configs, and not for artefact
+  // weight. This suite measures frame time. A frame time sampled while three
+  // other Chromium instances are saturating the same CPU on a software
+  // rasteriser is not a measurement of the game; it is a measurement of the
+  // machine's load, and it would fail (or pass) for reasons that have nothing to
+  // do with the build. `fullyParallel` above still applies within the worker's
+  // single browser, which costs nothing here: the suite is four tests.
+  workers: 1,
   timeout: 60_000,
   expect: { timeout: 10_000 },
   outputDir: fileURLToPath(new URL('../../test-results/perf', import.meta.url)),

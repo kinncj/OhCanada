@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-29-territorial-commissioner",
+  "subject": "government",
+  "prompt": {
+    "en": "In each of the three territories, whom does the Commissioner represent?",
+    "fr": "Dans chacun des trois territoires, qui le commissaire représente-t-il?"
+  },
+  "options": [
+    {
+      "en": "The Sovereign.",
+      "fr": "Le souverain ou la souveraine."
+    },
+    {
+      "en": "The territorial premier.",
+      "fr": "Le premier ministre du territoire."
+    },
+    {
+      "en": "The federal government.",
+      "fr": "Le gouvernement fédéral."
+    },
+    {
+      "en": "The Senate.",
+      "fr": "Le Sénat."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "This is the difference people miss. A Lieutenant Governor represents the Sovereign in a province. A Commissioner represents the federal government in a territory, and the role is ceremonial.",
+    "fr": "C'est la nuance qu'on oublie souvent. Un lieutenant-gouverneur représente le souverain ou la souveraine dans une province. Un commissaire représente le gouvernement fédéral dans un territoire, et son rôle est protocolaire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 58,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In the three territories, the Commissioner represents the federal government and plays a ceremonial role."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -5,7 +5,7 @@ Parliament Hill and the Peace Tower, and can reach and engage the officer and th
 feeling like ice, not like pavement.
 
 Read `README.md` in this directory first: it fixes the shared markers, the scene probe, the event names and
-the single-switch contract these scenarios use.
+the single-switch contract these scenarios use. The HUD this level draws into is `TN-HUD-hud-and-menu.md`.
 
 ## Accessibility and bilingual coverage map
 
@@ -26,6 +26,7 @@ the single-switch contract these scenarios use.
 | `level.ottawa.title` | Ottawa | Ottawa |
 | `level.ottawa.subtitle` | How Canadians govern themselves | Comment les Canadiens se gouvernent |
 | `locomotion.skate.label` | Skating | Patinage |
+| `npc.officer.name` | The officer | L'agent |
 | `hud.interact.officer` | Talk to the officer | Parler à l'agent |
 | `hud.interact.poi.parliamentHill` | Look at Parliament Hill | Regarder la Colline du Parlement |
 | `hud.turnAround` | Turn around | Faire demi-tour |
@@ -40,6 +41,17 @@ the single-switch contract these scenarios use.
 
 `poi.parliamentHill.body` is a factual claim and goes through the same verification as a question — see
 `OQ-LEVEL-4`.
+
+**`npc.officer.name` is the speaker's label**, and it is the string `TN-QUEST-08` needs when it requires the
+dialogue to have "an accessible name naming the speaker". It is drawn as the dialogue's heading and is that
+dialog's accessible name — one string doing both jobs, so a sighted player and a screen-reader user are told
+the same thing. Under ADR-0010 a character's display name is inline content, carried by the NPC's own
+document as `localizedText`; the wording is fixed here so no agent has to invent it, and the level file
+transcribes it. **No dialogue in this game opens with a generic label**: "Speaker", "NPC", "Character" and
+an empty heading are all defects, and `TN-QUEST-08` fails on them.
+
+The officer is called "the officer" / « l'agent » in every string, never by an organisation's name — see
+*What is depicted*. `OQ-LEVEL-8` covers the one French question the label raises.
 
 ## What is depicted, for the art agent
 
@@ -276,6 +288,12 @@ Feature: Engaging an NPC and a point of interest
     And the element "dialogue" is visible
     And the skater comes to a stop rather than sliding away under the card
 
+  Scenario: The dialogue says who is speaking
+    Given the element "dialogue" is visible
+    Then the element "dialogue-speaker" reads "The officer"
+    And it is the accessible name of "dialogue"
+    And it is not "Speaker", "NPC", "Character" or empty
+
   Scenario: Tapping the prompt does the same thing as tapping the officer
     Given the officer is in reach
     When I tap "interact-prompt"
@@ -361,7 +379,7 @@ Feature: Single-switch traversal
 
   Scenario: Long press does the highlighted thing
     Given the highlighted action is "Talk to the officer"
-    When I hold the switch past the hold-to-choose threshold
+    When I hold the switch past the hold-to-choose threshold set by "Hold time"
     Then the event "npc/engaged" is emitted for "npc.officer"
 
   Scenario: The whole level can be finished with the switch alone
@@ -390,6 +408,11 @@ Feature: Playing Ottawa with a screen reader
     Then "#tn-live-region" reads a message naming the officer and what to do
     When Parliament Hill comes into reach
     Then "#tn-live-region" reads a message naming Parliament Hill and what to do
+
+  Scenario: The speaker is named before the words are read
+    When the dialogue opens
+    Then the accessible name of "dialogue" is "The officer"
+    And it is read before the first line of dialogue
 
   Scenario: Every sound has a visual twin
     When any sound is played in the level
@@ -464,6 +487,16 @@ Feature: The level in French
     When Parliament Hill comes into reach
     Then "interact-prompt" reads "Regarder la Colline du Parlement"
 
+  Scenario: The speaker's label is French
+    When I engage the officer
+    Then "dialogue-speaker" reads "L'agent"
+    And it is the accessible name of "dialogue"
+
+  Scenario: The officer is named the same way in every string
+    Then every French string that names the officer uses the same form of the word
+    And no French string about the officer contains "(e)", "·e" or a bracketed ending
+    And no string in either language names a police force
+
   Scenario: The landmark card is French
     When I engage Parliament Hill
     Then "poi-card" shows "La Colline du Parlement"
@@ -537,8 +570,9 @@ Feature: Pausing
   standing at a public event on the skateway — but say so in the level's art notes rather than leaving it as
   an accident.
 - **`OQ-LEVEL-3` — the officer's gender presentation is not specified**, and neither is the character's
-  skin tone. *Recommendation:* decide it in `docs/content-review.md` (`OQ-REVIEW-1`) rather than in an art
-  ticket, and keep the same cartoon proportions as every other character either way.
+  skin tone. *Recommendation:* decide it in `docs/content-review.md` (`OQ-REVIEW-6` and the depiction rules
+  in §6 and §8.6) rather than in an art ticket, and keep the same cartoon proportions as every other
+  character either way.
 - **`OQ-LEVEL-4` — does dialogue and landmark copy go through content verification?** ADR-0003 governs
   questions. `poi.parliamentHill.body` and the officer's greeting both state facts. *Recommendation:* any
   sentence that states a fact about Canada is verified exactly like a question, whatever screen it appears
@@ -553,3 +587,10 @@ Feature: Pausing
 - **`OQ-LEVEL-7` — can the skater jump at all?** These scenarios say yes: one hop, no double jump, no trick,
   so that a tap always means something. If the design says skate cannot jump, `jump` is `null` in the level
   file and `TN-LEVEL-03`'s two hop scenarios are deleted rather than quietly failing.
+- **`OQ-LEVEL-8` — « l'agent » or « l'agente »?** Three French strings name the officer —
+  `npc.officer.name`, `hud.interact.officer` and `quest.step.talk` in `TN-QUEST` — and all three use the
+  masculine generic today. If `OQ-LEVEL-3` answers that the officer is drawn as a woman, all three change
+  together to « l'agente ». *Recommendation:* one decision, three strings, and the scenario "the officer is
+  named the same way in every string" in `TN-LEVEL-11` is what stops two of them changing and the third not.
+  Do **not** reach for « l'agent(e) » or « l'agent·e »: `docs/content-review.md` §8.6 forbids the bracketed
+  form, and it is unreadable to a screen reader in either language.

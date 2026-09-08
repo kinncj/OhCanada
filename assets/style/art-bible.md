@@ -141,6 +141,10 @@ The five rules:
    `neverAdd` list per subject exists because these are the specific inventions a cartoon style tempts you
    into.
 
+`assets/style/ottawa-level.md` §6 is the worked example: the measured ratios for the Peace Tower, the two
+numbers in `references.json` that measurement found wrong, and the one feature that is exaggerated on purpose
+and labelled as such. Read it before simplifying the next landmark.
+
 **The two-size test.** Before a landmark ships:
 
 - at **25 %** of design size, every `mustBeRight` feature is still legible;
@@ -174,8 +178,21 @@ y=1920  └───────────────────────
   120 px. `viewport-fit=cover` and safe-area insets can eat the rest.
 - **Ground line at y ≈ 1280.** Characters stand on the ground polyline defined in the level JSON. Authoring
   to a different ground height makes the level unreadable when the card panel opens.
-- **Parallax layers extend horizontally only.** Each layer is authored 1920 tall × N wide and must tile at
-  the seam. Vertical extension is never needed and never authored.
+- **Parallax layers extend horizontally only.** Each layer must tile at the seam. Vertical extension is
+  never needed and never authored.
+- **Crop each layer to the world band it actually covers.** "Author it 1920 tall" was this section's
+  advice until task 1.9 measured what it costs: a full-screen layer is 8.3 MB of decoded texture at 1×
+  and 33 MB at 2×, and Ottawa's six layers authored full height would have been 17 MiB over budget
+  before a single landmark was placed. Transfer size is not the constraint — Ottawa's whole payload is
+  0.32 MiB against 8 — **decoded texture memory is**, and it is what killed this project's 3D
+  predecessor. Give each layer a `y` offset and only as many rows as its content needs.
+- **2048 px is the widest a source gets.** `scripts/assets.mjs` rasterises at 1× and 2×, packs pages up
+  to 2048 px and allows a standalone texture up to 4096 px. Anything wider than 2048 authored fails the
+  build at 2×. A wide layer tiles, so it never needs to be one texture.
+- **Full-screen parallax layers ship at 1×.** 2× is for characters, props and anything the player looks
+  at closely. Practically: draw nothing on a background layer that only survives at 2×. The 12 px
+  minimum-shape rule in §1 already enforces this — it is why Ottawa's layers survived being told, after
+  they were drawn, which scale they ship at.
 - **Side-panel seam.** The extreme left and right columns of the sky layer and of the ground layer must be
   the flat palette colour named in the level's theme, or the desktop side panel will show a visible join.
   `palette.json` `levelTheme` proposes those ids.
@@ -249,8 +266,17 @@ not resolve that conflict and does not need to: the schema decided, and this sec
 - Character parts are separate `<g>` elements named for their rig slot, so `content/characters/rig.json`
   (task 1.11) can bind them. Sprite-sheet fallbacks use the identical slot names so content JSON never
   changes.
-- `make assets` rasterises and packs. Per-level payload ≤ 8 MB, atlas ≤ 2048 px, decoded texture memory
-  ≤ 64 MB per level on iPhone.
+- `make assets` rasterises and packs, at 1× and 2×, and runs the per-level payload gate; a failure there
+  fails the build. Per-level payload ≤ 8 MB, atlas page ≤ 2048 px, standalone texture ≤ 4096 px, decoded
+  texture memory ≤ 64 MB per level and whatever the level document's own `textureBudgetBytes` declares,
+  which is usually tighter. The level a source belongs to is read from its path:
+  `assets/src/svg/<levelId>/<name>.svg` becomes the key `<levelId>-<name>`.
+- **Do not ship a source the level cannot place.** `level.schema.json` has parallax layers, POIs and
+  characters, and no concept of a loose prop. Six standalone prop files were authored for Ottawa and
+  then deleted: their geometry was already inside a parallax tile, nothing could reference them, and the
+  pipeline was packing and charging them to the level's texture budget anyway.
+- Per-level sheets sit beside this one — `assets/style/ottawa-level.md` for Level 4 — and carry the
+  layer table, world offsets, tier drop order, the plain/filtered table and the measured budgets.
 - Reference photographs stay in `assets/refs/` and are never shipped.
 
 ---
@@ -296,8 +322,8 @@ Recorded rather than resolved. Inventing a detail is worse than leaving a questi
 | ~~**OQ-ART-02**~~ | ~~The credit gate reads `assets/dist/` only, so an asset committed anywhere else under `assets/` is credited by nobody and the check stays green. All 14 references here are credited by hand.~~ **CLOSED 2026-09-08 by infra.** The gate walks `assets/`, asserts set equality in both directions, and reports 14. It is a denylist, so an unrecognised file type defaults to "must be credited" — the first `.riv`, `.woff2` or `.ogg` cannot land uncredited. `credits.json` `path` is now relative to `assets/`, and every entry carries `kind`. Kept struck through because the next artist should know the hand-checking described in `assets/refs/README.md` rule 3 stopped for a reason, not by being forgotten. | infra | ADR-0006 obligation `due=2026-09-15 owner=art` |
 | ~~**OQ-ART-03**~~ | ~~May this project depict the red-serge uniform, the wide-brimmed hat and the Sam Browne belt?~~ **ANSWERED 2026-09-08 by the repository owner: yes — the recognisable silhouette, without the protected marks.** Kept struck through rather than deleted, because the next artist needs to know the omissions in §9 were decided, not overlooked. See `assets/style/officer.md`. | user | — |
 | **OQ-ART-04** | Which red is the National Flag of Canada? The Federal Identity Program specifies Pantone 032; renderings in the wild vary from `#FF0000` to `#D52B1E`. `flag-red-base` is currently `#d8262c`, chosen to read well in a saturated cartoon palette, not from a specification. | content-verifier | flag colour accuracy |
-| **OQ-ART-05** | Centre Block has been under rehabilitation since 2019: cranes, hoarding, and wing roofs stripped to dark metal. Do we draw the settled building — green copper roofs, no scaffolding — or what a visitor sees today? Recommendation: the settled building, because that is what *Discover Canada* and every learner's mental image show, and the scaffolding will outlive neither the rehabilitation nor this game. Needs confirming, not assuming. | PO | the Peace Tower and skyline assets |
-| **OQ-ART-06** | `credits.schema.json`'s `licence` enum has no value for public domain, CC BY 2.0 or CC BY 3.0, and no field for a licence-check date; it *does* accept `CC-BY-SA-4.0`, which ADR-0004 forbids. Six good references were identified and deliberately not downloaded because of this. Listed in `assets/refs/README.md`. | architect | reference quality, not correctness |
+| **OQ-ART-05** | Centre Block has been under rehabilitation since 2019: cranes, hoarding, and wing roofs stripped to dark metal. Do we draw the settled building — green copper roofs, no scaffolding — or what a visitor sees today? Recommendation: the settled building, because that is what *Discover Canada* and every learner's mental image show, and the scaffolding will outlive neither the rehabilitation nor this game. Needs confirming, not assuming. **Task 1.9 has now drawn it settled**, on that recommendation — so this is no longer a question with no cost attached: answering it the other way is a redraw of `landmark-parliament-hill.svg`. | PO | the Peace Tower and skyline assets |
+| **OQ-ART-06** | ~~`credits.schema.json`'s `licence` enum has no value for public domain, CC BY 2.0 or CC BY 3.0, and it *does* accept `CC-BY-SA-4.0`, which ADR-0004 forbids.~~ **The licence-value half is CLOSED, 2026-09-08 by the architect**, who reconciled the enum with ADR-0004 in both directions: `public-domain` and `CC-BY-1.0/2.0/2.5/3.0` added, `CC-BY-SA-4.0` removed. Three of the six parked references were fetched, credited and are in use, including the public-domain photograph that frames an officer and the Peace Tower in one portrait frame. The other three are ShareAlike and are now **out by decision**, not by accident — the schema and the ADR agree. **Still open:** the enum has no field for a licence-check date, so `assets/refs/README.md` and `references.json` carry it in prose. | architect | nothing; a licence-check date has no home |
 | ~~**OQ-ART-07**~~ | ~~`docs/content-review.md` does not exist, though `CLAUDE.md`, `CONTRIBUTING.md`, `docs/architecture.md` and the art-verifier's own brief all cite it.~~ **CLOSED 2026-09-08: the document exists and is substantial.** It governs the skin-tone set (§8.1), slot independence (§8.2), the randomiser (§8.3) and every depiction of Indigenous people, art or land, and it forbids any agent from granting cultural sign-off. Two things it carries into tasks 1.9–1.11: the eleven ramps stay **unnamed** until `OQ-REVIEW-6` settles naming, and `OQ-REVIEW-7` (§8, "no tone is the default") was settled by the architect renaming `CharacterSlot.default` to `fallback` — art follows the schema and did not decide it. | routed by the coordinator | the character creator; slice 4 (Mi'kma'ki) |
 | **OQ-ART-08** | Is the officer's gender presentation fixed, or a player choice? Not an art decision. The art is built so it can be either: gender presentation is a **skin slot** on one artboard with one proportion canon, so either answer is a data change. | PO (`OQ-LEVEL-3`) | the officer rig contract, task 1.11 |
 | **OQ-ART-09** | Is scarlet review order plausible outdoors on canal ice in an Ottawa winter? It is a ceremonial uniform; the working winter answer is a parka. The level may be summer on the Hill and winter on the canal, or the officer may be posted ceremonially. A story and setting call, not an art one. | PO | the officer's placement in the level |

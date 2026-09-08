@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1160" viewBox="0 0 1080 1160" shape-rendering="geometricPrecision">
+  <title>Ottawa winter sky: three flat bands and eight cloud masses. Tiles at 1080, covers world y 0..1160 because everything below that is behind the canal wall.</title>
+  <rect x="0" y="0" width="1080" height="880" fill="#1f5fa8"/>
+  <rect x="0" y="880" width="1080" height="200" fill="#3d8ccb"/>
+  <rect x="0" y="1080" width="1080" height="80" fill="#a5d6ee"/>
+  <rect x="138.2" y="300" width="223.6" height="63.64" rx="31.82" fill="#dce9f3"/>
+  <circle cx="200.808" cy="306.364" r="49.6392" fill="#dce9f3"/>
+  <circle cx="281.304" cy="292.363" r="61.0944" fill="#dce9f3"/>
+  <circle cx="182.92" cy="294.909" r="38.184" fill="#fbfdfe"/>
+  <circle cx="254.472" cy="278.362" r="39.4568" fill="#fbfdfe"/>
+  <rect x="138.2" y="342.002" width="223.6" height="21.6376" rx="10.8188" fill="#b9cfe2"/>
+  <rect x="616.8" y="190" width="166.4" height="47.36" rx="23.68" fill="#dce9f3"/>
+  <circle cx="663.392" cy="194.736" r="36.9408" fill="#dce9f3"/>
+  <circle cx="723.296" cy="184.317" r="45.4656" fill="#dce9f3"/>
+  <circle cx="650.08" cy="186.211" r="28.416" fill="#fbfdfe"/>
+  <circle cx="703.328" cy="173.898" r="29.3632" fill="#fbfdfe"/>
+  <rect x="616.8" y="221.258" width="166.4" height="16.1024" rx="8.0512" fill="#b9cfe2"/>
+  <rect x="283.5" y="500" width="273" height="77.7" rx="38.85" fill="#dce9f3"/>
+  <circle cx="359.94" cy="507.77" r="60.606" fill="#dce9f3"/>
+  <circle cx="458.22" cy="490.676" r="74.592" fill="#dce9f3"/>
+  <circle cx="338.1" cy="493.784" r="46.62" fill="#fbfdfe"/>
+  <circle cx="425.46" cy="473.582" r="48.174" fill="#fbfdfe"/>
+  <rect x="283.5" y="551.282" width="273" height="26.418" rx="13.209" fill="#b9cfe2"/>
+  <rect x="776" y="420" width="208" height="59.2" rx="29.6" fill="#dce9f3"/>
+  <circle cx="834.24" cy="425.92" r="46.176" fill="#dce9f3"/>
+  <circle cx="909.12" cy="412.896" r="56.832" fill="#dce9f3"/>
+  <circle cx="817.6" cy="415.264" r="35.52" fill="#fbfdfe"/>
+  <circle cx="884.16" cy="399.872" r="36.704" fill="#fbfdfe"/>
+  <rect x="776" y="459.072" width="208" height="20.128" rx="10.064" fill="#b9cfe2"/>
+  <rect x="76.4" y="620" width="187.2" height="53.28" rx="26.64" fill="#dce9f3"/>
+  <circle cx="128.816" cy="625.328" r="41.5584" fill="#dce9f3"/>
+  <circle cx="196.208" cy="613.606" r="51.1488" fill="#dce9f3"/>
+  <circle cx="113.84" cy="615.738" r="31.968" fill="#fbfdfe"/>
+  <circle cx="173.744" cy="601.885" r="33.0336" fill="#fbfdfe"/>
+  <rect x="76.4" y="655.165" width="187.2" height="18.1152" rx="9.0576" fill="#b9cfe2"/>
+  <rect x="470.5" y="690" width="299" height="85.1" rx="42.55" fill="#dce9f3"/>
+  <circle cx="554.22" cy="698.51" r="66.378" fill="#dce9f3"/>
+  <circle cx="661.86" cy="679.788" r="81.696" fill="#dce9f3"/>
+  <circle cx="530.3" cy="683.192" r="51.06" fill="#fbfdfe"/>
+  <circle cx="625.98" cy="661.066" r="52.762" fill="#fbfdfe"/>
+  <rect x="470.5" y="746.166" width="299" height="28.934" rx="14.467" fill="#b9cfe2"/>
+  <rect x="810.4" y="730" width="239.2" height="68.08" rx="34.04" fill="#dce9f3"/>
+  <circle cx="877.376" cy="736.808" r="53.1024" fill="#dce9f3"/>
+  <circle cx="963.488" cy="721.83" r="65.3568" fill="#dce9f3"/>
+  <circle cx="858.24" cy="724.554" r="40.848" fill="#fbfdfe"/>
+  <circle cx="934.784" cy="706.853" r="42.2096" fill="#fbfdfe"/>
+  <rect x="810.4" y="774.933" width="239.2" height="23.1472" rx="11.5736" fill="#b9cfe2"/>
+  <rect x="244.2" y="790" width="171.6" height="48.84" rx="24.42" fill="#dce9f3"/>
+  <circle cx="292.248" cy="794.884" r="38.0952" fill="#dce9f3"/>
+  <circle cx="354.024" cy="784.139" r="46.8864" fill="#dce9f3"/>
+  <circle cx="278.52" cy="786.093" r="29.304" fill="#fbfdfe"/>
+  <circle cx="333.432" cy="773.394" r="30.2808" fill="#fbfdfe"/>
+  <rect x="244.2" y="822.234" width="171.6" height="16.6056" rx="8.3028" fill="#b9cfe2"/>
+</svg>

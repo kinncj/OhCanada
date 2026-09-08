@@ -18,9 +18,9 @@ Every item below is asserted by a scenario in `TN-SAVE-01`. Nothing else is prom
 | 2 | The language | The game opens in the language last used |
 | 3 | Every accessibility setting: auto-move, single switch, reduced motion, high contrast, dyslexia font, text scale, subtitles, volumes | The switches are where they were left |
 | 4 | Which levels are unlocked | Ottawa is playable |
-| 5 | The quest state: not offered / declined / accepted with the current step / completed | The tracker shows the same step |
+| 5 | The quest state: not offered / declined / accepted with the current step / completed | The tracker shows the same step, with the same count in it |
 | 6 | The Ottawa stamp, once earned | The stamp is in the passport |
-| 7 | For every question ever answered: that it was seen, whether the last answer was right, and when it should come back | Questions I got wrong come back first |
+| 7 | For every question ever answered: that it was seen, whether the last answer was right, and when it should come back | Questions I got wrong come back first — including on the way back in (`TN-RESUME-01`) |
 | 8 | Which subjects have been started | Study offers the same drill |
 
 ## What does not survive, on purpose
@@ -31,8 +31,20 @@ Every item below is asserted by a scenario in `TN-SAVE-01`. Nothing else is prom
 | The camera position | Follows from the spawn point |
 | An open dialogue, landmark card or question card | Closed; an unanswered question is asked again |
 | A drill in progress | No drill is running; the answers already given are kept |
+| Which questions this sitting has already put on screen | A question that is ready to come back may be asked again after a reload, even if it was asked before the tab closed. Row 7 above is why; `TN-RESUME-02` proves it |
 | The single-switch highlight position | Starts at the first item |
 | A load error | The game tries again |
+
+**Amended 2026-09-08.** The fifth row of that second table is new, and the fourth scenario of `TN-SAVE-01`
+was rewritten to match it. As written before, that scenario said the questions already answered are never
+asked again after a reload — which contradicted `TN-CARD-04`, the line "You will see this question again
+soon." that the game prints on every wrong answer, and `TN-CARD-02`, which puts missed questions ahead of
+everything else. It also contradicted row 7 of this file's own survives table and the first scenario of this
+file's own `TN-SAVE-01`. `TN-CARD` won and this story was amended, because the promise the player can read
+outranks the promise only a test can read. **The whole argument, including the two alternatives that were
+rejected and what this decision costs, is in `TN-RESUME-questions-after-a-reload.md` — read it before
+changing either side of this seam.** What this story protects at that moment is that *progress is not lost*:
+the count does not reset, no answer is forgotten, and one more answer finishes the step.
 
 ## Player-facing copy
 
@@ -80,7 +92,7 @@ Feature: Progress survives a closed tab
     And reduced motion is on and text scaling is 150 %
     And Ottawa is playable
     And "hud-quest-tracker" shows "Répondez à 3 questions (2 sur 3)"
-    And the question I answered wrongly is offered before the one I answered rightly
+    And engaging Parliament Hill offers the question I answered wrongly before the one I answered rightly
     And the creator is not shown
 
   Scenario: The stamp survives
@@ -99,8 +111,17 @@ Feature: Progress survives a closed tab
     Given I answered two of the three questions
     When I close the tab and open the game again
     And I engage Parliament Hill
-    Then the third question is asked
-    And neither of the first two is asked again
+    Then "hud-quest-tracker" shows "Répondez à 3 questions (2 sur 3)"
+    And one more answer completes the step and the quest
+    And both answers I already gave are still recorded, each with whether it was right
+    And neither of them is offered as "Nouvelle"
+
+  Scenario: A repeat is not lost progress
+    Given I answered question A wrongly, and A is ready to come back
+    When I close the tab, open the game again and engage Parliament Hill
+    Then A may be the question I am asked, as TN-RESUME-01 requires
+    And the count in "hud-quest-tracker" is not reduced by it
+    And no answer I already gave is asked for a second time to be counted again
 
   Scenario: The save is one document that validates
     Then local storage holds one key for this game
@@ -136,6 +157,12 @@ Feature: Transient state is not saved
     When I open the game again
     Then no dialogue is shown
     And the quest is in the state it was in before the dialogue opened
+
+  Scenario: The list of questions already put on screen does not come back
+    Given three questions were asked and answered in the last sitting
+    When I open the game again
+    Then the saved document holds no list of questions asked in a sitting
+    And which question is offered next follows only from row 7 of the survives table
 ```
 
 ## TN-SAVE-03 — When a save happens
@@ -171,6 +198,7 @@ Feature: Saving at the right moments
   Scenario: Nothing is written that was not promised
     When I inspect the saved document
     Then it contains no player position, no camera, no open screen and no drill in progress
+    And it contains no list of which questions a quest step has already asked
     And it contains no free text typed by the player
     And it contains nothing that identifies the device or the player
 ```
@@ -434,7 +462,9 @@ Feature: Saving and reloading in French
 - **`OQ-SAVE-2` — where is the quest *step* stored?** `LevelProgressDocument` records `completedQuests`
   only, so an accepted-but-unfinished quest cannot be represented, and neither can "declined". Item 5 of the
   survives table depends on this. *Recommendation:* an `activeQuests` entry carrying the quest id, the
-  current step index and the per-step counter.
+  current step index and the per-step counter. **The counter is a count of answers given, and nothing more:
+  no list of question ids belongs in it** — see `TN-RESUME` for why that list is deliberately absent, and
+  `TN-SAVE-03` for the scenario that fails if one appears.
 - **`OQ-SAVE-3` — how big may an imported file be?** SECURITY.md requires a cap; no number is written down.
   *Recommendation:* 1 MB, which is far above any real save and far below anything that can hurt the parser.
   The number belongs in `game.config.json` so the message and the check cannot drift apart.
@@ -444,3 +474,8 @@ Feature: Saving and reloading in French
 - **`OQ-SAVE-5` — what is the storage key?** `TN-SAVE-01` only requires exactly one key for this game.
   *Recommendation:* one key, versioned in its *value* and not in its name, so a migration does not orphan
   the previous key.
+- ~~**`OQ-SAVE-6` — after a reload, may a question I already answered be asked again?**~~ **Answered
+  2026-09-08 — yes, if it is ready to come back.** The old fourth scenario of `TN-SAVE-01` said no and
+  contradicted `TN-CARD-02`, `TN-CARD-04` and this file's own row 7. It was rewritten to assert what it was
+  actually protecting. The decision, the two rejected alternatives and the cost are in
+  `TN-RESUME-questions-after-a-reload.md`.

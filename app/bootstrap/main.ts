@@ -10,7 +10,7 @@
 
 import gameConfigDocument from '@content/game.config.json';
 
-import { GameRenderer, parseBootConfig, type BootConfig } from '@adapters/phaser';
+import { GameRenderer, parseBootConfig } from '@adapters/phaser';
 import { createBuildStatus } from '@ui/build-status';
 import { announce, mountLiveRegion } from '@ui/live-region';
 import { createRotateOverlay } from '@ui/rotate-overlay';
@@ -55,17 +55,68 @@ function main(): void {
   document.title = config.title;
   root.lang = config.defaultLocale;
 
-  const renderer = new GameRenderer({ parent: gameHost, config });
-  applyPageTheme(renderer.cssVariables(), config);
+  /*
+   * Which level to open, if any — decided here, before anything is mounted,
+   * because what the page is *for* changes what belongs on it.
+   *
+   * `?level=<id>` and nothing else. Slice 1's world map and character creator
+   * (task 1.15) are what will choose a level for a player; until they exist,
+   * opening one by URL is the honest interim — it is a real route a player could
+   * be deep-linked to, it keeps the boot screen as the default so nothing about
+   * the foundation build changes for a visitor who did not ask, and it means the
+   * level suites drive the same artefact everything else does rather than a
+   * test-only entry point.
+   *
+   * `window.location` is optional on purpose: the bootstrap suites stub a
+   * minimal window, and a composition root that cannot be constructed without a
+   * full browser is a composition root nothing can test.
+   */
+  const requested = new URLSearchParams(window.location?.search ?? '').get('level');
+  const opensALevel = requested !== null && requested.length > 0;
 
   /*
-   * What the screen says about itself. The canvas is `aria-hidden`, so the one
-   * sentence explaining that this is a foundation build with nothing to play
-   * yet has to be DOM or it does not exist for a screen-reader user. It goes up
-   * with the page rather than after `renderer.ready`, so it is there whether or
-   * not the canvas ever comes back.
+   * The level's lifecycle, as one attribute on `<html>`, for `app/ui` to route
+   * on. It is the composition root's job to say what state the page is in;
+   * every screen above the canvas reads it rather than each of them re-deciding.
+   *
+   *   absent      no level was asked for — this page is the foundation shell
+   *   "loading"   a level was asked for and is opening
+   *   "ready"     a level is playable
+   *   "failed"    a level was asked for and did not load
+   *
+   * There is deliberately no "none": the *absence* of the attribute is the shell
+   * state, so a screen that forgets to check cannot mistake a missing value for
+   * a level that is fine.
    */
-  const status = createBuildStatus(uiHost, { locale: toUiLocale(config.defaultLocale) });
+  if (opensALevel) root.dataset['tnLevel'] = 'loading';
+
+  const renderer = new GameRenderer({ parent: gameHost, config });
+  applyPageTheme(renderer);
+
+  /*
+   * What the screen says about itself — and only when it is true.
+   *
+   * The caption says "Foundation build. There is no level to play yet", which is
+   * the honest description of a page with no level and a lie over a running one.
+   * It was found sitting in a panel over the Ottawa ice, the most legible text
+   * on the screen, saying there was nothing to play. That is the second time
+   * this project has shown a screen that misdescribes its own state — the first
+   * was the boot screen reading as a stalled loading bar, reported twice from
+   * two devices — and the fix is the same shape both times: the statement is
+   * only made where it is true.
+   *
+   * Mounting is a decision, so it is made here, in the one file allowed to make
+   * composition decisions (ADR-0005). `app/ui/build-status.ts` is unchanged and
+   * still knows nothing about levels; it is asked for a caption or it is not.
+   *
+   * A level that *fails* to load does not bring the caption back. "There is no
+   * level to play yet" is no truer then — there is one, it did not arrive — and
+   * the page needs an error card with "Try again" and "Go back"
+   * (TN-LEVEL-02), which is `app/ui`'s and hangs off `data-tn-level="failed"`.
+   */
+  const status = opensALevel
+    ? null
+    : createBuildStatus(uiHost, { locale: toUiLocale(config.defaultLocale) });
 
   const overlay = createRotateOverlay(uiHost, {
     locale: toUiLocale(config.defaultLocale),
@@ -91,16 +142,48 @@ function main(): void {
   window.addEventListener('orientationchange', syncOrientation, { passive: true });
   window.visualViewport?.addEventListener('resize', syncOrientation, { passive: true });
 
+  /*
+   * Open the level, once the renderer has a first frame.
+   *
+   * A level id nobody authored, and a document that will not load, both land in
+   * the same place: `data-tn-level="failed"`, a developer-facing line in the
+   * console, and an announcement. The player-facing error card with "Try again"
+   * and "Go back" (TN-LEVEL-02) is DOM and belongs to the UI agent — this is the
+   * seam it hangs on.
+   */
+  if (opensALevel && requested !== null) {
+    void renderer.ready
+      .then(() => renderer.loadLevel(requested))
+      .then((result) => {
+        if (!result.ok) {
+          root.dataset['tnLevel'] = 'failed';
+          console.error(`[bootstrap] ${result.error.code}: ${result.error.message}`);
+          announce(`Could not open the level "${requested}".`);
+          return;
+        }
+        root.dataset['tnLevel'] = 'ready';
+        /* The side panels are the *level's* sky and ground now, not the boot
+           screen's, and the boot screen's hills are not this level's ground.
+           Re-applied here so a wide window does not frame a level in slice 0's
+           scenery (ADR-0002). */
+        applyPageTheme(renderer);
+      });
+  }
+
   void renderer.ready.then(() => {
     root.dataset['tnBoot'] = 'ready';
     /*
      * TODO(slice-1): localised through the LocalizerPort, like every other string.
      * "ready" alone was the whole of what assistive technology could perceive on
      * this page, and it left a screen-reader user with no way to tell a finished
-     * boot from a stalled one. The build-status sentence is appended so the
-     * announcement says the same thing the screen does.
+     * boot from a stalled one. The build-status sentence is appended when it is
+     * on screen, so the announcement says the same thing the screen does — and
+     * omitted when it is not, rather than telling a screen-reader user there is
+     * nothing to play while a level runs. Arriving in a level is announced from
+     * `announce.arrived.ottawa` by the UI once the localiser exists
+     * (TN-LEVEL-08); this file does not invent that copy.
      */
-    announce(`${config.title} ready. ${status.message}`);
+    announce(status === null ? `${config.title} ready.` : `${config.title} ready. ${status.message}`);
   });
 }
 
@@ -112,15 +195,14 @@ function main(): void {
  * under it runs the same sky -> ground gradient the scene draws. The two colours
  * come from the same config the renderer used, so they cannot drift.
  */
-function applyPageTheme(
-  variables: Readonly<Record<string, string>>,
-  config: BootConfig,
-): void {
-  for (const [name, value] of Object.entries(variables)) {
+function applyPageTheme(renderer: GameRenderer): void {
+  for (const [name, value] of Object.entries(renderer.cssVariables())) {
     document.documentElement.style.setProperty(name, value);
   }
+  /* `renderer.palette`, not the config's: a level may override the theme, and
+     the browser chrome should match the sky the player is actually looking at. */
   const themeColor = document.querySelector('meta[name="theme-color"]');
-  themeColor?.setAttribute('content', config.palette.sky);
+  themeColor?.setAttribute('content', renderer.palette.sky);
 }
 
 /** EN and FR ship from the first commit; anything else falls back to EN. */

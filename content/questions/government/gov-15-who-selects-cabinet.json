@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-15-who-selects-cabinet",
+  "subject": "government",
+  "prompt": {
+    "en": "Who chooses the Cabinet ministers in the federal government?",
+    "fr": "Qui choisit les ministres du gouvernement fédéral?"
+  },
+  "options": [
+    {
+      "en": "Voters, on election day.",
+      "fr": "Les électeurs, le jour du scrutin."
+    },
+    {
+      "en": "The Governor General, acting alone.",
+      "fr": "Le gouverneur général, seul."
+    },
+    {
+      "en": "The Prime Minister.",
+      "fr": "Le premier ministre."
+    },
+    {
+      "en": "The Senate, from among its own members.",
+      "fr": "Le Sénat, parmi ses propres membres."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Nobody is elected to be a minister. The Prime Minister picks the ministers, and is also answerable for how the government runs and for the policy it follows.",
+    "fr": "Personne n'est élu pour devenir ministre. C'est le premier ministre qui choisit les ministres, et il répond aussi du fonctionnement du gouvernement et de sa politique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In the federal government, the Prime Minister selects the Cabinet ministers and is responsible for the operations and policy of the government."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

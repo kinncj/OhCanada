@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-54-official-opposition",
+  "subject": "government",
+  "prompt": {
+    "en": "Which party is the Official Opposition?",
+    "fr": "Quel parti forme l'Opposition officielle?"
+  },
+  "options": [
+    {
+      "en": "All the parties that are not in power, taken together.",
+      "fr": "L'ensemble des partis qui ne sont pas au pouvoir."
+    },
+    {
+      "en": "The opposition party with the most members in the House of Commons.",
+      "fr": "Le parti d'opposition qui compte le plus de députés à la Chambre des communes."
+    },
+    {
+      "en": "The party that came second in the total vote across the country.",
+      "fr": "Le parti arrivé deuxième pour le nombre total de voix au pays."
+    },
+    {
+      "en": "The party the Governor General names after an election.",
+      "fr": "Le parti que le gouverneur général désigne après une élection."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Every party that is not in power is an opposition party. Only the largest of them is the Official Opposition, and the count that decides it is seats in the House of Commons, not votes across the country.",
+    "fr": "Chaque parti qui n'est pas au pouvoir est un parti d'opposition. Seul le plus grand d'entre eux forme l'Opposition officielle, et ce qui tranche, ce sont les sièges à la Chambre des communes, pas les voix à l'échelle du pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 63,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The opposition party with the most members of the House of Commons is the Official Opposition"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

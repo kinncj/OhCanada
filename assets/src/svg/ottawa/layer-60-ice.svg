@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" shape-rendering="geometricPrecision">
+  <title>The skateway lane: three ice tones, flat sheen lozenges and sparse skate scoring. Survives the low graphics preset. World y 1280..1840; local 0 is the ground line.</title>
+  <rect x="0" y="0" width="1440" height="14" fill="#6799d6"/>
+  <rect x="0" y="14" width="1440" height="266" fill="#a9d0e5"/>
+  <rect x="0" y="280" width="1440" height="280" fill="#e4f2f6"/>
+  <rect x="59" y="50" width="302" height="24" rx="12" fill="#e4f2f6"/>
+  <rect x="348" y="116" width="269" height="24" rx="12" fill="#e4f2f6"/>
+  <rect x="600" y="182" width="288" height="24" rx="12" fill="#e4f2f6"/>
+  <rect x="907" y="50" width="353" height="24" rx="12" fill="#e4f2f6"/>
+  <rect x="1157" y="116" width="315" height="24" rx="12" fill="#e4f2f6"/>
+  <path d="M -62 236 Q 39.5 210 141 234" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 194 253 Q 307.5 227 421 251" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 377 133 Q 472.5 107 568 131" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 599 197 Q 690 171 781 195" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 826 236 Q 937 210 1048 234" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 1024 112 Q 1133 86 1242 110" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 1264 186 Q 1425 160 1586 184" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 33 104 Q 175 126 317 108" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
+  <path d="M 246 234 Q 335 256 424 238" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
+  <path d="M 485 192 Q 592.5 214 700 196" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
+  <path d="M 743 220 Q 821 242 899 224" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
+  <path d="M 986 145 Q 1088.5 167 1191 149" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
+  <path d="M 1229 180 Q 1373 202 1517 184" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
+  <path d="M 0 516 Q 360 486 760 512 Q 1120 536 1440 506 L 1440 560 L 0 560 Z" fill="#e6eff7"/>
+  <path d="M 0 516 Q 360 486 760 512 Q 1120 536 1440 506 L 1440 530 L 0 534 Z" fill="#ffffff"/>
+</svg>

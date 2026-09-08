@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-64-indigenous-organizations",
+  "subject": "government",
+  "prompt": {
+    "en": "How do First Nations, Métis and Inuit people make their views heard with federal, provincial and territorial governments?",
+    "fr": "Comment les Premières Nations, les Métis et les Inuits font-ils entendre leur point de vue auprès des gouvernements fédéral, provinciaux et territoriaux?"
+  },
+  "options": [
+    {
+      "en": "Through one single national body that speaks for everyone.",
+      "fr": "Par un seul organisme national qui parle au nom de tous."
+    },
+    {
+      "en": "Through a number of provincial, regional and national organizations.",
+      "fr": "Par plusieurs organisations provinciales, régionales et nationales."
+    },
+    {
+      "en": "Only through their members of Parliament.",
+      "fr": "Uniquement par l'entremise de leurs députés fédéraux."
+    },
+    {
+      "en": "They have no organizations of their own.",
+      "fr": "Ils n'ont pas d'organisations qui leur soient propres."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "There is no single voice. Many organizations work at the provincial, regional and national level, and they deal with all three levels of government.",
+    "fr": "Il n'y a pas une voix unique. De nombreuses organisations travaillent aux échelles provinciale, régionale et nationale, et elles traitent avec les trois ordres de gouvernement."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 69,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "There are a number of provincial, regional and national Aboriginal organizations that are a voice for First Nations, Métis and Inuit people in their relationships with the federal, provincial and territorial governments."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

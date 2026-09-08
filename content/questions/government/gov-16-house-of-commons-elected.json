@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-16-house-of-commons-elected",
+  "subject": "government",
+  "prompt": {
+    "en": "Which chamber of Parliament is elected by the people?",
+    "fr": "Quelle chambre du Parlement est élue par la population?"
+  },
+  "options": [
+    {
+      "en": "The Senate.",
+      "fr": "Le Sénat."
+    },
+    {
+      "en": "The House of Commons.",
+      "fr": "La Chambre des communes."
+    },
+    {
+      "en": "Both chambers are elected.",
+      "fr": "Les deux chambres sont élues."
+    },
+    {
+      "en": "Neither; the members of both are appointed.",
+      "fr": "Ni l'une ni l'autre; les membres des deux sont nommés."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The House of Commons is the chamber that represents the people, and its members are elected, by tradition about every four years. Senators are appointed, not elected.",
+    "fr": "La Chambre des communes est la chambre qui représente la population, et ses membres sont élus, traditionnellement tous les quatre ans environ. Les sénateurs sont nommés et non élus."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The House of Commons is the representative chamber, made up of members of Parliament elected by the people, traditionally every four years."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

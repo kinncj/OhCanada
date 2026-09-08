@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-51-majority-government",
+  "subject": "government",
+  "prompt": {
+    "en": "When is a government called a majority government?",
+    "fr": "Quand parle-t-on d'un gouvernement majoritaire?"
+  },
+  "options": [
+    {
+      "en": "When it has the support of the Senate.",
+      "fr": "Quand il a l'appui du Sénat."
+    },
+    {
+      "en": "When it wins more than half of all the votes cast.",
+      "fr": "Quand il obtient plus de la moitié de tous les votes exprimés."
+    },
+    {
+      "en": "When it holds two thirds of the seats.",
+      "fr": "Quand il détient les deux tiers des sièges."
+    },
+    {
+      "en": "When the party in power holds at least half the seats in the House of Commons.",
+      "fr": "Quand le parti au pouvoir détient au moins la moitié des sièges à la Chambre des communes."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The test is seats, not votes. Half the seats or more is a majority government; fewer than half is a minority government, which has to win support from other parties to pass anything.",
+    "fr": "Ce qui compte, ce sont les sièges et non les votes. La moitié des sièges ou plus, c'est un gouvernement majoritaire; moins de la moitié, c'est un gouvernement minoritaire, qui doit obtenir l'appui d'autres partis pour faire adopter quoi que ce soit."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 62,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "If the party in power holds at least half of the seats in the House of Commons, this is called a majority government. If the party in power holds less than half of the seats in the House of Commons, this is called a minority government."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-58-municipal-council",
+  "subject": "government",
+  "prompt": {
+    "en": "Who usually sits on a municipal council?",
+    "fr": "Qui siège habituellement à un conseil municipal?"
+  },
+  "options": [
+    {
+      "en": "A mayor or a reeve, along with councillors or aldermen.",
+      "fr": "Un maire ou un préfet, avec des conseillers ou des échevins."
+    },
+    {
+      "en": "A Lieutenant Governor and elected members.",
+      "fr": "Un lieutenant-gouverneur et des membres élus."
+    },
+    {
+      "en": "The members of Parliament for the area.",
+      "fr": "Les députés fédéraux de la région."
+    },
+    {
+      "en": "Members chosen by the provincial government.",
+      "fr": "Des membres choisis par le gouvernement provincial."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The head of a council may be called a mayor or a reeve, depending on the place. The other members are councillors, sometimes called aldermen. They are local, and they are not members of a legislature.",
+    "fr": "Le chef d'un conseil peut être appelé maire ou préfet, selon l'endroit. Les autres membres sont des conseillers, parfois appelés échevins. Ce sont des élus locaux, et non des membres d'une assemblée législative."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 66,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The council usually includes a mayor (or a reeve) and councillors or aldermen."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-07-provincial-legislative-assembly",
+  "subject": "government",
+  "prompt": {
+    "en": "What does every province have to make its own laws?",
+    "fr": "De quoi chaque province dispose-t-elle pour adopter ses propres lois?"
+  },
+  "options": [
+    {
+      "en": "An elected Legislative Assembly.",
+      "fr": "Une Assemblée législative élue."
+    },
+    {
+      "en": "A Senate whose members are appointed.",
+      "fr": "Un Sénat dont les membres sont nommés."
+    },
+    {
+      "en": "A committee named by the federal government.",
+      "fr": "Un comité nommé par le gouvernement fédéral."
+    },
+    {
+      "en": "No lawmaking body of its own.",
+      "fr": "Aucun organe législatif qui lui soit propre."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Provinces are not run from Ottawa. Voters in each province elect their own Assembly, which works much like the House of Commons does at the federal level. No province has a Senate.",
+    "fr": "Les provinces ne sont pas dirigées depuis Ottawa. Les électeurs de chaque province élisent leur propre Assemblée, qui fonctionne un peu comme la Chambre des communes au fédéral. Aucune province n'a de Sénat."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 54,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Every province has its own elected Legislative Assembly, like the House of Commons in Ottawa."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

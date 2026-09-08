@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-12-non-confidence-vote",
+  "subject": "government",
+  "prompt": {
+    "en": "What must Cabinet ministers do if they are defeated in a non-confidence vote?",
+    "fr": "Que doivent faire les ministres s'ils sont défaits lors d'un vote de non-confiance?"
+  },
+  "options": [
+    {
+      "en": "Nothing; the government keeps its full four-year term.",
+      "fr": "Rien; le gouvernement termine son mandat de quatre ans."
+    },
+    {
+      "en": "Resign.",
+      "fr": "Démissionner."
+    },
+    {
+      "en": "Ask the Senate to hold the vote again.",
+      "fr": "Demander au Sénat de reprendre le vote."
+    },
+    {
+      "en": "Wait for a court to decide.",
+      "fr": "Attendre la décision d'un tribunal."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Ministers answer to the elected members. They govern only as long as they keep the confidence of the House, so a government here does not sit out a fixed term the way a president does.",
+    "fr": "Les ministres sont responsables devant les élus. Ils ne gouvernent que tant qu'ils conservent la confiance de la Chambre : un gouvernement ne termine donc pas automatiquement un mandat fixe, comme le ferait un président."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Cabinet ministers are responsible to the elected representatives, which means they must retain the “confidence of the House” and have to resign if they are defeated in a non- confidence vote."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

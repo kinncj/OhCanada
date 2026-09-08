@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-45-advance-poll",
+  "subject": "government",
+  "prompt": {
+    "en": "What can you do if you cannot vote on election day?",
+    "fr": "Que pouvez-vous faire si vous ne pouvez pas voter le jour du scrutin?"
+  },
+  "options": [
+    {
+      "en": "Vote by telephone the day after.",
+      "fr": "Voter par téléphone le lendemain."
+    },
+    {
+      "en": "Ask a family member to vote for you.",
+      "fr": "Demander à un membre de votre famille de voter à votre place."
+    },
+    {
+      "en": "Nothing; election day is the only chance to vote.",
+      "fr": "Rien; le jour du scrutin est la seule occasion de voter."
+    },
+    {
+      "en": "Vote at an advance poll or by special ballot.",
+      "fr": "Voter par anticipation ou par bulletin de vote spécial."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Election day is not your only chance. The dates and places for advance voting are printed on your voter information card, and nobody may vote in your place.",
+    "fr": "Le jour du scrutin n'est pas votre seule occasion. Les dates et les lieux du vote par anticipation figurent sur votre carte d'information de l'électeur, et personne ne peut voter à votre place."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 64,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "If you cannot or do not wish to vote on election day, you can vote at the advance polls or by special ballot. The dates and location are on your voter information card."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

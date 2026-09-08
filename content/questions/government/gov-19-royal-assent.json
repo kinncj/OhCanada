@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-19-royal-assent",
+  "subject": "government",
+  "prompt": {
+    "en": "What has to happen before a bill becomes law in Canada?",
+    "fr": "Que doit-il se passer avant qu'un projet de loi devienne une loi au Canada?"
+  },
+  "options": [
+    {
+      "en": "The House of Commons must pass it, and that is enough.",
+      "fr": "La Chambre des communes doit l'adopter, et cela suffit."
+    },
+    {
+      "en": "The Prime Minister must sign it.",
+      "fr": "Le premier ministre doit le signer."
+    },
+    {
+      "en": "Both chambers must pass it, and it must receive royal assent.",
+      "fr": "Les deux chambres doivent l'adopter, et il doit recevoir la sanction royale."
+    },
+    {
+      "en": "A majority of the provinces must agree to it.",
+      "fr": "La majorité des provinces doivent y consentir."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The House of Commons alone cannot make law. The Senate must pass the bill too, and then the Governor General gives royal assent on behalf of the Sovereign.",
+    "fr": "La Chambre des communes ne peut pas faire une loi à elle seule. Le Sénat doit aussi adopter le projet de loi, puis le gouverneur général accorde la sanction royale au nom du souverain ou de la souveraine."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 55,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "No bill can become law in Canada until it has been passed by both chambers and has received royal assent, granted by the Governor General on behalf of the Sovereign."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

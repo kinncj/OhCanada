@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-08-territories-not-provinces",
+  "subject": "government",
+  "prompt": {
+    "en": "What is true about Canada's three northern territories?",
+    "fr": "Qu'est-ce qui est vrai au sujet des trois territoires du Nord canadien?"
+  },
+  "options": [
+    {
+      "en": "They are provinces under another name.",
+      "fr": "Ce sont des provinces sous un autre nom."
+    },
+    {
+      "en": "They have no government of their own.",
+      "fr": "Ils n'ont pas de gouvernement qui leur soit propre."
+    },
+    {
+      "en": "They are not provinces, but they have assemblies and do many of the same jobs.",
+      "fr": "Ce ne sont pas des provinces, mais ils ont des assemblées et remplissent bon nombre des mêmes fonctions."
+    },
+    {
+      "en": "Each one has a Lieutenant Governor, just as a province does.",
+      "fr": "Chacun a un lieutenant-gouverneur, comme une province."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The territories have small populations and do not hold the status of a province. Even so, each has its own government and assembly, and they take care of many of the things a province takes care of.",
+    "fr": "Les territoires ont de petites populations et n'ont pas le statut de province. Ils ont pourtant chacun leur gouvernement et leur assemblée, et ils s'occupent de bon nombre des mêmes choses qu'une province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 54,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The three northern territories, which have small populations, do not have the 54 status of provinces, but their governments and assemblies carry out many of the same functions."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

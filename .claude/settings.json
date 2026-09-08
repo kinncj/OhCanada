@@ -22,8 +22,6 @@
     ],
     "ask": [
       "Bash(git push:*)",
-      "Write(content/questions/**)",
-      "Edit(content/questions/**)",
       "Edit(CLAUDE.md)",
       "Write(CLAUDE.md)",
       "Edit(.claude/**)",

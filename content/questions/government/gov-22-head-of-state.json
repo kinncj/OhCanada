@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-22-head-of-state",
+  "subject": "government",
+  "prompt": {
+    "en": "Who is Canada's Head of State?",
+    "fr": "Qui est le chef d'État du Canada?"
+  },
+  "options": [
+    {
+      "en": "The Prime Minister.",
+      "fr": "Le premier ministre."
+    },
+    {
+      "en": "The Governor General.",
+      "fr": "Le gouverneur général."
+    },
+    {
+      "en": "A hereditary Sovereign, who reigns under the Constitution.",
+      "fr": "Un souverain ou une souveraine héréditaire, qui règne selon la Constitution."
+    },
+    {
+      "en": "The Speaker of the House of Commons.",
+      "fr": "Le président de la Chambre des communes."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Canada is a constitutional monarchy, so the Head of State inherits the role and reigns under the rule of law. The Governor General is not the Head of State; that office represents the Sovereign here in Canada.",
+    "fr": "Le Canada est une monarchie constitutionnelle : le chef d'État hérite de sa charge et règne dans le respect de la primauté du droit. Le gouverneur général n'est pas le chef d'État; cette charge représente le souverain ou la souveraine ici, au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 57,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "As a constitutional monarchy, Canada’s Head of State is a hereditary Sovereign (Queen or King), who reigns in accordance with the Constitution: the rule of law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-62-shared-responsibilities",
+  "subject": "government",
+  "prompt": {
+    "en": "In the guide's summary table of responsibilities, which ones are shared by the federal government and the provinces?",
+    "fr": "Dans le tableau récapitulatif des responsabilités du guide, lesquelles sont partagées entre le gouvernement fédéral et les provinces?"
+  },
+  "options": [
+    {
+      "en": "Immigration, agriculture and the environment.",
+      "fr": "L'immigration, l'agriculture et l'environnement."
+    },
+    {
+      "en": "Immigration only; everything else is federal.",
+      "fr": "L'immigration seulement; tout le reste est fédéral."
+    },
+    {
+      "en": "National defence and foreign policy.",
+      "fr": "La défense nationale et la politique étrangère."
+    },
+    {
+      "en": "Education and health care.",
+      "fr": "L'éducation et les soins de santé."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Newcomers deal with a federal department to immigrate, so immigration feels federal only. The table marks three areas as shared. Defence and foreign policy are federal alone, and education and health care belong to the provinces.",
+    "fr": "Les nouveaux arrivants s'adressent à un ministère fédéral pour immigrer : l'immigration semble donc purement fédérale. Le tableau indique trois domaines partagés. La défense et la politique étrangère relèvent du fédéral seul, tandis que l'éducation et les soins de santé relèvent des provinces."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 67,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "• Immigration (shared) • Agriculture (shared) • Environment (shared)"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

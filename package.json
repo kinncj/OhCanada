@@ -21,7 +21,9 @@
     "validate-content": "node scripts/validate-content.mjs",
     "verify-content": "node scripts/verify-content.mjs",
     "verify-art": "node scripts/verify-art.mjs",
-    "assets": "node scripts/assets.mjs"
+    "assets": "node scripts/assets.mjs",
+    "check-level-payload": "node scripts/check-level-payload.mjs",
+    "check-texture-memory": "node scripts/check-texture-memory.mjs"
   },
   "dependencies": {
     "@rive-app/canvas": "2.42.0",
@@ -29,8 +31,7 @@
     "ajv-formats": "3.0.1",
     "howler": "2.2.4",
     "i18next": "26.4.2",
-    "phaser": "4.2.1",
-    "ts-fsrs": "5.4.2"
+    "phaser": "4.2.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
@@ -45,6 +46,7 @@
     "globals": "17.12.0",
     "msdf-bmfont-xml": "2.8.0",
     "sharp": "0.35.4",
+    "ts-fsrs": "5.4.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.70.0",
     "vite": "8.2.2",

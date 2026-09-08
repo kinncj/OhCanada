@@ -15,15 +15,34 @@
  * `locomotionAnimationBinding`, `locomotionMode`, `movementDrive`), because they
  * are part of a level document; the contract test mirrors each of them here.
  *
- * Implementations are pure functions of (state, intent, dt) and therefore live in
- * the domain, not in an adapter — they are covered by the ≥ 90 % gate. The seam is
- * declared here because the application composes it and hands it to the scene.
+ * Implementations are pure functions of (state, intent, dt). The seam is declared
+ * here because the application composes it and hands it to the scene.
  *
- * PROVISIONAL (ADR-0008) — nothing imports this port and nothing implements it
- * yet. First call site: slice 1 task 1.14 (skate locomotion). Eight modes are
- * declared here and zero have been built, so the tuning record is validated but
- * still untried; the implementer may change it — schema first, then this file —
- * and removes this marker in the same change.
+ * WHERE THE IMPLEMENTATION LIVES, and why it is not where this comment used to
+ * say. It shipped in `app/adapters/phaser/`, not `app/domain/`, and that is a
+ * deviation worth naming rather than quietly leaving: the strategy is pure and
+ * belongs in the domain by the argument this file already makes. It is in the
+ * adapter because the domain was being edited by another agent in the same
+ * session, and moving it later is a file move plus one import — nothing about
+ * the module reaches for Phaser, the DOM or a clock. `vitest.config.ts` already
+ * measures `app/adapters/**` at the same ≥ 90 % threshold, so it is not
+ * unmeasured in the meantime. Move it when the domain is quiet.
+ *
+ * Implemented as of slice 1 task 1.14 by `app/adapters/phaser/locomotion.ts`:
+ * one `step`, eight modes, and every difference between them a number in
+ * `content/levels/<id>.json`. The ADR-0008 PROVISIONAL marker is gone because
+ * the first call site landed with that task.
+ *
+ * Three fields were added by that implementation and are recorded here rather
+ * than left as folklore. `LocomotionIntent.groundY` joins `slope`: both are
+ * terrain samples the caller takes for the strategy, and without the surface
+ * height under the player, landing, grounding and slope-following would have had
+ * to happen in scene code — which is precisely the thing this port exists to
+ * prevent. `LocomotionState.braking` exists so `braked` is emitted once per
+ * brake instead of once per frame; `jumpBufferMs` and `jumpHoldMs` exist so
+ * `JumpAffordance.bufferMs` and `maxHoldMs` are honoured instead of being
+ * tuning nobody reads. None of the three is in `content/schemas/level.schema.json`
+ * and none needs to be: they are per-frame state, not authored content.
  */
 
 import type { Result } from '@common/result';
@@ -150,6 +169,19 @@ export interface LocomotionState {
   /** Milliseconds since leaving the ground; 0 while grounded. Drives coyote time. */
   readonly airborneMs: number;
   readonly jumpsUsed: number;
+  /**
+   * Was the player holding *against* their direction of travel last step?
+   *
+   * Carried in the state so `braked` fires on the frame the brake starts rather
+   * than on every frame it lasts. A pure step cannot remember, so the caller
+   * hands the memory back; the alternative was de-duplicating the event in the
+   * scene, which would have put one mode's feel into scene code.
+   */
+  readonly braking: boolean;
+  /** Remaining jump-buffer window, ms. `JumpAffordance.bufferMs` on a press. */
+  readonly jumpBufferMs: number;
+  /** How long the current jump has been held, ms. Bounded by `maxHoldMs`. */
+  readonly jumpHoldMs: number;
 }
 
 /** One frame of player intent, already normalised by the input adapter. */
@@ -161,6 +193,16 @@ export interface LocomotionIntent {
   readonly interactPressed: boolean;
   /** Terrain slope at the player, -1 (steep down) … 1 (steep up). */
   readonly slope: number;
+  /**
+   * Surface height under the player, design-resolution px, y growing downwards.
+   *
+   * The other half of the terrain sample. A strategy owns landing, grounding and
+   * following the ground down a bank — those differ per mode (a canoe never
+   * leaves the water, a dogsled lands heavier than a skater) — and it cannot own
+   * them without knowing where the ground is. Sampled by the caller from the
+   * level's `ground` polyline, so the strategy stays pure and terrain stays data.
+   */
+  readonly groundY: number;
 }
 
 /** Facts the step produced, published on the event bus for audio, VFX and subtitles. */

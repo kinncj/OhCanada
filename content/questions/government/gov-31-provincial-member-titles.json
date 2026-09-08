@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-31-provincial-member-titles",
+  "subject": "government",
+  "prompt": {
+    "en": "What are members of a provincial or territorial legislature called?",
+    "fr": "Comment appelle-t-on les membres d'une assemblée provinciale ou territoriale?"
+  },
+  "options": [
+    {
+      "en": "Members of Parliament (MPs), the same as in Ottawa.",
+      "fr": "Des députés fédéraux (MP), comme à Ottawa."
+    },
+    {
+      "en": "Senators.",
+      "fr": "Des sénateurs."
+    },
+    {
+      "en": "MLA, MNA, MPP or MHA; the title depends on where they sit.",
+      "fr": "MLA, MNA, MPP ou MHA; le titre dépend de l'endroit où ils siègent."
+    },
+    {
+      "en": "Councillors or aldermen.",
+      "fr": "Des conseillers ou des échevins."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The four titles stand for member of the Legislative Assembly, member of the National Assembly, member of the Provincial Parliament and member of the House of Assembly. MP is a federal title only, and councillors sit on a municipal council.",
+    "fr": "Les quatre titres désignent un député à l'Assemblée législative, un député à l'Assemblée nationale, un député provincial et un député à la Chambre d'assemblée. Le titre de député fédéral (MP) est réservé au fédéral, et les conseillers siègent à un conseil municipal."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 58,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The members of the legislature are called members of the Legislative Assembly (MLAs), members of the National Assembly (MNAs), members of the Provincial Parliament (MPPs) or members of the House of Assembly (MHAs), depending on the province or territory."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

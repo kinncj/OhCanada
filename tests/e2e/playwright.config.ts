@@ -34,7 +34,18 @@ export default defineConfig({
   // sets `exactOptionalPropertyTypes` and an explicit `undefined` is not the
   // same as an omitted key under that rule. Same shape as `workers` below.
   ...(process.env.CI ? { maxFailures: 5 } : {}),
-  ...(process.env.CI ? { workers: 1 } : {}),
+  // Four workers locally, one on CI. Playwright's default is half the cores,
+  // which on a 32-core machine is sixteen Chromium instances rendering on
+  // SwiftShader at 1170x2532 at the same time - and this suite is not only
+  // clicking buttons, it drives real-time physics and asserts relationships
+  // stated in seconds. Under that much contention the game runs at a quarter
+  // speed and the level scenarios fail on the machine's load rather than on the
+  // build, which is the flakiness `docs/stories/README.md` forbids in a
+  // scenario ("a test that fails one run in six teaches people to press
+  // re-run"). Four keeps the wall clock reasonable and leaves each browser
+  // enough CPU to hit its frame rate. `tests/perf` goes further and uses one,
+  // because it measures frame time rather than merely needing it.
+  workers: process.env.CI ? 1 : 4,
   timeout: 60_000,
   expect: { timeout: 10_000 },
   outputDir: fileURLToPath(new URL('../../test-results/e2e', import.meta.url)),

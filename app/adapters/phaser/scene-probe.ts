@@ -133,6 +133,21 @@ export interface FrameTraceEntry {
   readonly frame: number;
   /** `performance.now()` at the start of the frame. */
   readonly t: number;
+  /**
+   * The simulated time this frame advanced, in seconds — the `dt` the locomotion
+   * strategy was actually given, after the clamp.
+   *
+   * Wall time and game time are the same thing until the machine cannot keep up,
+   * and then they are not: `locomotion.ts` bounds a step at `MAX_STEP_SECONDS`
+   * so that one slow frame cannot brake a skater from cruise to zero, which
+   * means a device below 30 fps runs the world slightly slow. TN-LEVEL-03's
+   * "at least 70 percent of maxSpeed after 1 second" is a statement about the
+   * physics, so the scenario integrates this rather than reading `t` — otherwise
+   * a busy CI box makes a claim about the tuning fail for a reason that has
+   * nothing to do with the tuning. Whether the machine keeps up at all is the
+   * perf suite's question and it has its own budget.
+   */
+  readonly dtSeconds: number;
   readonly x: number;
   readonly y: number;
   readonly velocityX: number;
@@ -149,6 +164,16 @@ export interface EventTraceEntry {
   readonly t: number;
   /** The frame index this event belongs to, so an event can be tied to a sample. */
   readonly frame: number;
+  /**
+   * What the event was about, when the name alone does not say.
+   *
+   * `TN-LEVEL-05` is written as 'the event "poi/entered" is emitted for
+   * "npc.officer"', and a bare name cannot answer the second half — with two
+   * things in reach on the same canal, "a poi/entered happened" is not the
+   * assertion the story makes. Present only when there is a subject, so an event
+   * that has none carries no empty string pretending to be one.
+   */
+  readonly detail?: string;
 }
 
 /** The slice of an element the probe writes. Structural, so tests need no DOM. */
@@ -256,8 +281,8 @@ export interface SceneProbe {
   publish(patch: SceneSnapshot): void;
   /** Record one frame. Called every frame; never throttled. */
   recordFrame(entry: Omit<FrameTraceEntry, 'frame' | 't'> & { readonly t?: number }): void;
-  /** Record one bus event, tied to the current frame. */
-  recordEvent(name: string): void;
+  /** Record one bus event, tied to the current frame. `detail` names its subject. */
+  recordEvent(name: string, detail?: string): void;
   /** Every frame still in the buffer, oldest first. */
   frames(): readonly FrameTraceEntry[];
   events(): readonly EventTraceEntry[];
@@ -319,9 +344,13 @@ export function createSceneProbe(options: SceneProbeOptions): SceneProbe {
       if (frameTrace.length > frameCapacity) frameTrace.shift();
     },
 
-    recordEvent(name: string): void {
+    recordEvent(name: string, detail?: string): void {
       if (destroyed) return;
-      eventTrace.push({ name, t: options.now(), frame: frameIndex });
+      const entry: EventTraceEntry =
+        detail === undefined
+          ? { name, t: options.now(), frame: frameIndex }
+          : { name, t: options.now(), frame: frameIndex, detail };
+      eventTrace.push(entry);
       if (eventTrace.length > eventCapacity) eventTrace.shift();
     },
 

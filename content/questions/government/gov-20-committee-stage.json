@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-20-committee-stage",
+  "subject": "government",
+  "prompt": {
+    "en": "What happens at the committee stage of a bill?",
+    "fr": "Que se passe-t-il à l'étape de l'étude en comité d'un projet de loi?"
+  },
+  "options": [
+    {
+      "en": "The Governor General gives royal assent.",
+      "fr": "Le gouverneur général accorde la sanction royale."
+    },
+    {
+      "en": "Members of a committee examine the bill one clause at a time.",
+      "fr": "Les membres d'un comité examinent le projet de loi article par article."
+    },
+    {
+      "en": "The public votes on the bill.",
+      "fr": "La population vote sur le projet de loi."
+    },
+    {
+      "en": "The bill is printed for the first time.",
+      "fr": "Le projet de loi est imprimé pour la première fois."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Committee is the close-reading stage. A small group of members goes through the bill part by part, before it comes back to the whole House at report stage for more changes.",
+    "fr": "L'étude en comité est l'étape de l'examen détaillé. Un petit groupe de membres passe le projet de loi en revue partie par partie, avant qu'il revienne devant l'ensemble de la Chambre à l'étape du rapport pour d'autres modifications."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 56,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Committee Stage – Committee members study the bill STEP 3 clause by clause."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

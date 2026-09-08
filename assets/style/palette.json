@@ -415,11 +415,26 @@
     "ink-neutral": "Mixed or neutral characters only. Prefer warm or cool; neutral is the last resort."
   },
   "levelTheme": {
-    "note": "Palette ids proposed for content/levels/ottawa.json. The level author (task 1.7) owns that file. ADR-0002 extends the level's sky and ground into the desktop side panels, so whatever is named here must also be the flat colour at the extreme left and right columns of the sky and ground layers, or the panel seam will show.",
+    "note": [
+      "Palette ids proposed for content/levels/ottawa.json. The level author owns that file.",
+      "game.config.schema.json's theme is a vertical gradient: `sky` is the TOP stop and the",
+      "renderer clear colour, `ground` is the bottom stop, `horizon` is a rule at two-thirds",
+      "height - which is y=1280, the level's ground line. ADR-0002 extends that gradient into the",
+      "desktop side panels, so the three ids below are exactly the three flat bands of",
+      "assets/src/svg/ottawa/layer-10-sky.svg, in the same order. Authoring them to agree is what",
+      "keeps the panel seam invisible, and it is also what lets the sky layer be dropped at the",
+      "medium and low visual tiers without the scene losing its sky (ADR-0011).",
+      "`sky` is sky-shade rather than sky-base because it is the zenith, not the mid band."
+    ],
     "ottawa-winter": {
-      "sky": "sky-base",
+      "sky": "sky-shade",
       "ground": "snow-base",
-      "horizon": "sky-light"
+      "horizon": "sky-light",
+      "skyBandStops": {
+        "note": "Design-resolution y at which layer-10-sky.svg changes band. Both edges sit behind a nearer layer at the high tier so the hard step never shows against open sky.",
+        "shadeToBase": 880,
+        "baseToLight": 1100
+      }
     }
   },
   "restrictedMarks": {

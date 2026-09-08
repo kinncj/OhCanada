@@ -14,7 +14,12 @@ The quest is `quest.ottawa.parliament-hill`, with three steps:
 Answering wrongly still finishes the step. This is a learning tool, not a test: see `TN-CARD` for what a
 wrong answer does instead.
 
-Read `README.md` in this directory first. The question card itself is `TN-CARD-question-card.md`.
+Step 3 can be interrupted by a closed tab and picked up later. What happens then — which question is asked,
+and why it may be one the player has already answered — is `TN-RESUME-questions-after-a-reload.md`, which
+owns that moment for every story that touches it.
+
+Read `README.md` in this directory first. The question card itself is `TN-CARD-question-card.md`. The strip
+the tracker is drawn into is `TN-HUD-hud-and-menu.md`.
 
 ## Accessibility and bilingual coverage map
 
@@ -52,6 +57,21 @@ Read `README.md` in this directory first. The question card itself is `TN-CARD-q
 
 `officer.greet` states a fact about Canada and is verified like a question (`OQ-LEVEL-4`).
 
+**The dialogue's speaker label is `npc.officer.name`** — "The officer" / « L'agent » — defined in
+`TN-LEVEL-ottawa.md` with the rest of that character. It is not repeated here, because a name written down
+twice is a name that can differ in two places. `TN-QUEST-08` asserts it is what the dialog is called.
+
+`quest.step.answer` counts to a number the quest document fixes at three, so the author writes "3 questions"
+once and no plural rule applies (`TN-COPY-strings-and-counts.md`, rule 5). The `{{done}}` placeholder is not
+followed by a noun, so it cannot produce "1 questions". If a later quest ever makes the total variable, the
+string becomes two rows.
+
+**`{{done}}` counts answers given, not different questions,** and the string is worded so that it can say so
+honestly. Within one sitting the two are the same thing, because the game never asks the same question twice
+in a sitting (`TN-CARD-02`). Across a reload they can differ by one, when the question the player got wrong
+is ready to come back and is offered again — `TN-RESUME` says why that is the right trade and what it costs.
+The counter never goes down and never counts one answer twice (`TN-RESUME-02`).
+
 ---
 
 ## TN-QUEST-01 — The officer offers the task
@@ -70,6 +90,7 @@ Feature: Being offered the quest
     When I engage the officer
     Then the event "dialogue/opened" is emitted
     And the event "quest/offered" is emitted for "quest.ottawa.parliament-hill"
+    And the element "dialogue-speaker" reads "The officer"
     And the element "dialogue" shows "Hello! Welcome to Ottawa. Ottawa is Canada's capital city."
     And then it shows "Skate up the canal to Parliament Hill and find the Peace Tower. Then answer three questions."
     And the buttons "dialogue-accept" and "dialogue-decline" read "Yes, let's go" and "Not now"
@@ -193,6 +214,13 @@ Feature: Completing the quest
     And the stamp is still earned
     And no message tells me I failed
 
+  Scenario: The third answer finishes it after a reload as well
+    Given the tab was closed after my second answer
+    When I open the game again, engage Parliament Hill and answer once more
+    Then the event "quest/completed" is emitted
+    And the stamp is earned exactly once
+    And it does not matter whether that last question was one I had answered before
+
   Scenario: The stamp appears in the passport
     When I tap "See my passport"
     Then the element "passport" is visible
@@ -236,7 +264,7 @@ Feature: The answer step cannot start
     Given only two verified questions exist for this level's subject
     When I reach the answer step
     Then two questions are asked
-    And no question is asked twice to make up the number
+    And no question is asked twice in that sitting to make up the number
     And the quest does not complete
     And the message explains that more questions are coming
 
@@ -292,7 +320,7 @@ Feature: Single-switch quest
 
   Scenario: A long press accepts
     Given the highlight is on "Yes, let's go"
-    When I hold the switch past the hold-to-choose threshold
+    When I hold the switch past the hold-to-choose threshold set by "Hold time"
     Then the event "quest/accepted" is emitted
 
   Scenario: Nothing is chosen for the player
@@ -312,7 +340,9 @@ Feature: The quest with a screen reader
   Scenario: The dialogue is a named dialog
     When the officer's offer opens
     Then "dialogue" has role "dialog" with "aria-modal" true
-    And it has an accessible name naming the speaker
+    And its accessible name is "The officer", the value of "npc.officer.name"
+    And that same name is drawn as "dialogue-speaker", so it is seen as well as heard
+    And the name is not "Speaker", "NPC", "Dialogue" or empty
     And the rest of the page is inert while it is open
 
   Scenario: Each step change is announced once
@@ -364,6 +394,7 @@ Feature: Large text for the quest
     And the viewport is 390 x 844
     When the officer's offer opens
     Then the whole of both dialogue lines is visible, by scrolling inside the dialogue if needed
+    And "dialogue-speaker" is fully visible above them
     And "dialogue-accept" and "dialogue-decline" are both fully visible and at least 44 CSS px tall
     And the page does not scroll sideways
 
@@ -385,9 +416,14 @@ Feature: The quest in French
 
   Scenario: The offer is French
     When I engage the officer
-    Then the dialogue shows "Bonjour! Bienvenue à Ottawa. Ottawa est la capitale du Canada."
+    Then "dialogue-speaker" reads "L'agent"
+    And the dialogue shows "Bonjour! Bienvenue à Ottawa. Ottawa est la capitale du Canada."
     And it shows "Patinez sur le canal jusqu'à la Colline du Parlement et trouvez la tour de la Paix. Ensuite, répondez à trois questions."
     And the buttons read "Oui, allons-y" and "Pas maintenant"
+
+  Scenario: The speaker's label and the task agree with each other
+    Then "dialogue-speaker" and "quest.step.talk" use the same word for the officer
+    And neither contains "(e)", "·e" or a bracketed ending
 
   Scenario: The tracker is French
     When I accept the quest
@@ -410,6 +446,7 @@ Feature: The quest in French
     Given I have accepted the quest in English and engaged Parliament Hill
     When I change the language to French
     Then "hud-quest-tracker" shows "Répondez à 3 questions (0 sur 3)"
+    And "dialogue-speaker" reads "L'agent" the next time the officer speaks
     And the quest is still accepted and still on step 3
 ```
 
@@ -429,7 +466,17 @@ Feature: The quest in French
   *Recommendation:* keep it that way in slice 1; there is one quest and nothing to abandon it for.
 - **`OQ-QUEST-4` — is the passport a screen or a panel?** `TN-QUEST-04` only requires that
   `stamp-ottawa` becomes visible inside `passport`. *Recommendation:* a full screen reached from the menu and
-  from the completion card, so slice 2 can add nine more stamps without redesigning a panel.
+  from the completion card, so slice 2 can add nine more stamps without redesigning a panel. `TN-HUD-02`
+  assumes the menu route exists, and `OQ-HUD-2` says why it has to.
 - **`OQ-QUEST-5` — does the player have to skate back to the officer?** These scenarios say no; the quest
   ends at the Hill. It costs the slice a return trip and gains it nothing. If the design wants the return
   trip for the feel of turning around on ice, it is a fourth step and this file changes.
+- **`OQ-QUEST-6` — does a dialogue ever have a speaker who is not a character?** Every line in slice 1 comes
+  from the officer, so `npc.officer.name` is the only speaker label there is. *Recommendation:* keep the
+  speaker name a required input to the dialogue rather than a default — a dialogue that can open without one
+  is a dialogue that will one day open with an empty accessible name, which is the defect `TN-QUEST-08`
+  exists to catch.
+- **`OQ-QUEST-7` — does the answer step keep a per-step record of what it asked?** No, and that is a
+  decision rather than an omission: `TN-RESUME` rejected it, and `TN-SAVE-03` has a scenario that fails if
+  such a list appears in the saved document. If a later quest genuinely needs one — an exam does — it is a
+  new field with its own story, not a quiet addition to this one.

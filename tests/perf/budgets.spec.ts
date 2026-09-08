@@ -1,4 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+/*
+  Imported, not restated. `thresholdsFor` derives every tier boundary from
+  `budgets.frameTimeMs`, so re-tuning the budget in `content/game.config.json`
+  moves the game's own degrade thresholds and this suite's expectations together.
+  It is a pure module — no Phaser, no DOM — and the alias resolves through the
+  root `tsconfig.json` that Playwright already reads.
+*/
+import { thresholdsFor } from '@adapters/phaser/visual-tier';
 
 /**
  * Budget suite. The numbers come from CLAUDE.md and content/game.config.json.
@@ -24,6 +33,25 @@ const BUDGETS = {
 const FRAME_SAMPLE_MS = 2_000;
 /** Below this, the sample is noise, not a measurement. */
 const MIN_FRAME_SAMPLES = 30;
+
+/**
+ * The level the budgets are measured against.
+ *
+ * A budget needs something to be spent on. Slice 0 had no gameplay, which is why
+ * the two tests below were `fixme`: the page they would have measured was an
+ * empty scene, and "an idle canvas renders in 2 ms" is not a frame-time budget.
+ * The Ottawa level - six parallax bands, a ground polyline, a camera that
+ * follows, and a locomotion step every frame - is. `?e2e=1` is on so the tier
+ * that produced the number can be reported with it: a frame time with no tier
+ * beside it does not say whether the device was drawing six layers or two, and
+ * a number that could mean either is not a measurement anybody can act on.
+ *
+ * It also means the probe itself is inside the measurement - one array push per
+ * frame. That is deliberate: it is a cost the build carries in this
+ * configuration, and excluding it would be measuring a build nobody runs.
+ */
+const LEVEL_ID = 'ottawa';
+const PLAYABLE_URL = `./?e2e=1&level=${LEVEL_ID}`;
 
 test.describe('performance budgets', () => {
   test('the production build responds at the base path', async ({ page }) => {
@@ -78,59 +106,174 @@ test.describe('performance budgets', () => {
   });
 
   /**
-   * Enabled by slice 1, when the scene sets `data-testid="playable"` on the
-   * first frame the player can act on. Until then `waitForSelector` times out
-   * and the test fails — which is the point: it cannot report a budget it has
-   * not measured.
+   * Enabled in slice 1 (task 1.13): the level scene sets
+   * `data-testid="playable"` on the first frame the player can act on, so there
+   * is now a moment to time to. The marker is present exactly while the level
+   * accepts input, so this cannot pass against a level that failed to load.
    */
-  test.fixme('time to play stays under the budget', async ({ page }) => {
+  test('time to play stays under the budget', async ({ page }) => {
     const started = Date.now();
-    await page.goto('./');
+    await page.goto(PLAYABLE_URL);
     await page.waitForSelector('[data-testid="playable"]');
-    expect(Date.now() - started).toBeLessThanOrEqual(BUDGETS.timeToPlayMs);
+    const elapsed = Date.now() - started;
+
+    expect(
+      elapsed,
+      `time to play ${String(elapsed)} ms over the ${String(BUDGETS.timeToPlayMs)} ms budget`,
+    ).toBeLessThanOrEqual(BUDGETS.timeToPlayMs);
   });
 
   /**
-   * Mean frame time at the medium preset, sampled from rAF once the game is
-   * playable.
+   * How expensive the level is, measured twice and reported with the tier that
+   * produced the numbers.
    *
-   * TODO(slice-1): enable together with the `data-testid="playable"` marker and
-   * the quality-preset switch. It is `fixme` because slice 0 has no gameplay to
-   * measure, *not* because the body is a placeholder: the wait for `playable`
-   * fails on today's build, and against an empty scene the sample-count floor
-   * refuses to call an idle page 60 fps. Never replace this with a constant.
+   * ### Why this is not `mean rAF interval <= 16.7 ms`
+   *
+   * It was, and that assertion cannot mean what it looks like it means. `rAF` is
+   * vsync-locked: on a 60 Hz display the interval is 16.67 ms when *every* frame
+   * lands and larger when one does not, and it is never smaller. `<= 16.7`
+   * therefore reads as "frame time under the budget" and measures "zero dropped
+   * frames in two seconds" — a bar the empty boot screen misses on this harness
+   * (16.76 ms measured), so it would have been red on the day it was enabled,
+   * for a reason that has nothing to do with the level.
+   *
+   * CLAUDE.md's 16.7 ms is a budget on *engine cost per frame*, which is what
+   * `frame-cost.ts` measures inside the game and what the visual tier is chosen
+   * from. From outside the page the closest honest pair is:
+   *
+   *   1. **Cadence.** The mean interval must satisfy the threshold the tier the
+   *      device actually settled on requires — `thresholdsFor` from
+   *      `visual-tier.ts`, the same function the tier tracker uses, imported
+   *      rather than restated. A page reporting `medium` while delivering 25 fps
+   *      is either lying about its tier or has stopped degrading, and both are
+   *      the defect ADR-0011 exists to catch.
+   *   2. **Cost.** What the *level* adds over the same machine with no level
+   *      open. That subtraction is what makes the number about the build rather
+   *      than about the rasteriser: this suite runs Chromium on SwiftShader,
+   *      where an empty gradient already costs a whole vsync interval. The level
+   *      must fit inside half the frame budget on top of it, which is the same
+   *      ratio `highCostP50Ms` uses and for the same reason — whatever the level
+   *      spends, the effects, characters and HUD have to fit in what is left.
    */
-  test.fixme('frame time stays under the budget at the medium preset', async ({ page }) => {
+  test('frame time stays under the budget, at the tier it measured', async ({ page }) => {
+    const thresholds = thresholdsFor(BUDGETS.frameTimeMs);
+
+    /* The harness floor: the same browser, the same viewport, the same
+       compositor, with no level open. Measured first so a warm-up cost lands on
+       the baseline rather than on the level. */
     await page.goto('./');
+    await page.waitForSelector('html[data-tn-boot="ready"]');
+    const idle = await sampleFrames(page);
+
+    await page.goto(PLAYABLE_URL);
     await page.waitForSelector('[data-testid="playable"]');
     await expect(page.locator('canvas')).toHaveCount(1);
 
-    const deltas = await page.evaluate(async (durationMs: number) => {
-      const samples: number[] = [];
-      await new Promise<void>((resolve) => {
-        let previous = performance.now();
-        const deadline = previous + durationMs;
-        const step = (now: number): void => {
-          samples.push(now - previous);
-          previous = now;
-          if (now < deadline) requestAnimationFrame(step);
-          else resolve();
-        };
-        requestAnimationFrame(step);
-      });
-      /* Drop the first sample: it measures the gap since the last paint, not a frame. */
-      return samples.slice(1);
-    }, FRAME_SAMPLE_MS);
+    const probe = page.locator('[data-testid="scene-state"]');
+    await expect(probe).toHaveAttribute('data-level', LEVEL_ID);
+    /* Let the tier probe close at least one measurement window, so the number
+       below is taken at a tier that was measured rather than at the provisional
+       guess the first frames are drawn with (ADR-0011). */
+    await expect(probe).toHaveAttribute('data-tier', /^(low|medium|high)$/);
+    await page.waitForTimeout(1_500);
+    const tier = (await probe.getAttribute('data-tier')) ?? 'unknown';
+    const particles = await probe.getAttribute('data-particles');
+    const easing = await probe.getAttribute('data-parallax-easing');
 
-    expect(
-      deltas.length,
-      `only ${deltas.length} frames in ${FRAME_SAMPLE_MS} ms — the page is not animating`,
-    ).toBeGreaterThanOrEqual(MIN_FRAME_SAMPLES);
+    const playing = await sampleFrames(page);
 
-    const meanFrameMs = deltas.reduce((total, delta) => total + delta, 0) / deltas.length;
+    for (const [what, measured] of [
+      ['idle', idle],
+      ['playing', playing],
+    ] as const) {
+      expect(
+        measured.samples,
+        `only ${String(measured.samples)} ${what} frames in ${FRAME_SAMPLE_MS} ms — the page is ` +
+          'not animating, so nothing was measured',
+      ).toBeGreaterThanOrEqual(MIN_FRAME_SAMPLES);
+    }
+
+    const where =
+      `tier "${tier}", ${String(particles)} particles, parallax easing ${String(easing)}; ` +
+      `idle ${idle.meanMs.toFixed(2)} ms over ${String(idle.samples)} frames, ` +
+      `playing ${playing.meanMs.toFixed(2)} ms over ${String(playing.samples)} frames`;
+
+    /* 1. Cadence, against the threshold this tier's own definition requires. */
+    const cadenceBudget =
+      tier === 'high' ? thresholds.highIntervalP50Ms : thresholds.mediumIntervalP50Ms;
     expect(
-      meanFrameMs,
-      `mean frame time ${meanFrameMs.toFixed(2)} ms over the ${BUDGETS.frameTimeMs} ms budget`,
-    ).toBeLessThanOrEqual(BUDGETS.frameTimeMs);
+      playing.meanMs,
+      `mean frame time ${playing.meanMs.toFixed(2)} ms over the ${cadenceBudget.toFixed(2)} ms ` +
+        `cadence the "${tier}" tier requires — ${where}`,
+    ).toBeLessThanOrEqual(cadenceBudget);
+
+    /* 2. Cost, relative to the same machine with nothing to draw. */
+    const added = playing.meanMs - idle.meanMs;
+    expect(
+      added,
+      `the level adds ${added.toFixed(2)} ms a frame over an empty scene, past the ` +
+        `${thresholds.highCostP50Ms.toFixed(2)} ms half-frame it is allowed — ${where}`,
+    ).toBeLessThanOrEqual(thresholds.highCostP50Ms);
+  });
+
+  /**
+   * The other half of the frame-time budget, and the one CLAUDE.md states in
+   * pixels rather than milliseconds: overdraw <= 4x screen area, particles <=
+   * 400 on a phone.
+   *
+   * Frame time alone would let a level pass on a fast machine while drawing nine
+   * screens of fill, and the first phone to open it would be the thing that
+   * found out. The particle count is what the level actually emitted, published
+   * by the scene rather than read back off the preset, so a level that ignored
+   * its budget reports the number it ignored it with.
+   */
+  test('the level respects the particle budget for this device', async ({ page }) => {
+    await page.goto(PLAYABLE_URL);
+    await page.waitForSelector('[data-testid="playable"]');
+
+    const probe = page.locator('[data-testid="scene-state"]');
+    await expect(probe).toHaveAttribute('data-particles', /^\d+$/);
+    const particles = Number(await probe.getAttribute('data-particles'));
+    const tier = await probe.getAttribute('data-tier');
+
+    /* The viewport is 390x844 with a coarse pointer, which `classifyFormFactor`
+       calls a phone, and CLAUDE.md's phone ceiling is 400. */
+    expect(
+      particles,
+      `the level emitted ${String(particles)} particles at tier "${String(tier)}", over the ` +
+        '400 phone ceiling (CLAUDE.md, Budgets)',
+    ).toBeLessThanOrEqual(400);
   });
 });
+
+/**
+ * Mean rAF interval over `FRAME_SAMPLE_MS`, and how many samples produced it.
+ *
+ * The count travels with the mean on purpose: a mean over four frames is not a
+ * measurement, and every caller asserts a floor on it before it reads the
+ * number.
+ */
+async function sampleFrames(page: Page): Promise<{ meanMs: number; samples: number }> {
+  const deltas = await page.evaluate(async (durationMs: number) => {
+    const samples: number[] = [];
+    await new Promise<void>((resolve) => {
+      let previous = performance.now();
+      const deadline = previous + durationMs;
+      const step = (now: number): void => {
+        samples.push(now - previous);
+        previous = now;
+        if (now < deadline) requestAnimationFrame(step);
+        else resolve();
+      };
+      requestAnimationFrame(step);
+    });
+    /* Drop the first sample: it measures the gap since the last paint, not a frame. */
+    return samples.slice(1);
+  }, FRAME_SAMPLE_MS);
+
+  const meanMs =
+    deltas.length === 0
+      ? Number.POSITIVE_INFINITY
+      : deltas.reduce((total, delta) => total + delta, 0) / deltas.length;
+  return { meanMs, samples: deltas.length };
+}

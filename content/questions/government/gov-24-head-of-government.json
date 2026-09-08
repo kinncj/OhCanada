@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-24-head-of-government",
+  "subject": "government",
+  "prompt": {
+    "en": "In Canada, who is the head of government?",
+    "fr": "Au Canada, qui est le chef du gouvernement?"
+  },
+  "options": [
+    {
+      "en": "The Sovereign.",
+      "fr": "Le souverain ou la souveraine."
+    },
+    {
+      "en": "The Governor General.",
+      "fr": "Le gouverneur général."
+    },
+    {
+      "en": "The Prime Minister.",
+      "fr": "Le premier ministre."
+    },
+    {
+      "en": "The Chief Justice.",
+      "fr": "Le juge en chef."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Canada keeps the two top roles apart. The Sovereign is the Head of State. The Prime Minister is the head of government and actually directs how the country is governed. In many other countries one person does both.",
+    "fr": "Le Canada sépare les deux plus hautes fonctions. Le souverain ou la souveraine est le chef d'État. Le premier ministre est le chef du gouvernement et dirige concrètement la conduite du pays. Dans bien d'autres pays, une seule personne occupe les deux rôles."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 57,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "There is a clear distinction in Canada between the head of state—the Sovereign—and the head of government—the Prime Minister, who actually directs the governing of the country."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-53-what-cabinet-does",
+  "subject": "government",
+  "prompt": {
+    "en": "What does the Cabinet do?",
+    "fr": "Que fait le Cabinet?"
+  },
+  "options": [
+    {
+      "en": "It hears court cases about new laws.",
+      "fr": "Il entend les causes portant sur les nouvelles lois."
+    },
+    {
+      "en": "It counts the ballots after an election.",
+      "fr": "Il compte les bulletins de vote après une élection."
+    },
+    {
+      "en": "It prepares the budget and puts forward most new laws.",
+      "fr": "Il prépare le budget et propose la plupart des nouvelles lois."
+    },
+    {
+      "en": "It appoints the Governor General.",
+      "fr": "Il nomme le gouverneur général."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The Cabinet is the Prime Minister together with the ministers, who run the federal departments. They take the important decisions about governing, and every member of the House of Commons may question those decisions.",
+    "fr": "Le Cabinet, c'est le premier ministre et les ministres, qui dirigent les ministères fédéraux. Ils prennent les décisions importantes sur la conduite du pays, et tous les députés peuvent remettre ces décisions en question."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 63,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The Prime Minister and the Cabinet ministers are called the Cabinet and they make important decisions about how the country is governed. They prepare the budget and propose most new laws."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -34,7 +34,24 @@ const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const APP_DIR = `${REPO_ROOT}app`;
 const PORTS_DIR = `${REPO_ROOT}app/application/ports`;
 const PORTS_INDEX = `${PORTS_DIR}/index.ts`;
-const MARKER = 'PROVISIONAL';
+/**
+ * The marker, matched as a *marker* rather than as a word.
+ *
+ * It was `'PROVISIONAL'` and a plain `includes`, which is wrong in a way that
+ * only shows up once a marker is removed: the sentence a careful implementer
+ * writes when they retire one — "the ADR-0008 PROVISIONAL marker is gone because
+ * the first call site landed" — contains the word, so the file was read as still
+ * marked and the gate failed on a port that had been corrected properly. A check
+ * that punishes explaining yourself teaches people to explain themselves less.
+ *
+ * So the form is what counts, and it is the form ADR-0008 specifies and every
+ * port already uses: `PROVISIONAL (ADR-0008)`. Prose about the marker does not
+ * match it. Writing the bare word and expecting it to count fails in the safe
+ * direction — the port reports as unconsumed and unmarked, which points at the
+ * right fix.
+ */
+const MARKER = /\bPROVISIONAL\s*\(ADR-0008\)/u;
+const MARKER_FORM = 'PROVISIONAL (ADR-0008)';
 
 /** Every `.ts` file under `dir`, recursively. */
 const typeScriptFilesIn = (dir: string): readonly string[] =>
@@ -134,11 +151,11 @@ const consumersOf = (portFile: string): readonly string[] => {
   return [...found].sort();
 };
 
-/** Is `MARKER` in the file's own header comment — the first block comment? */
+/** Is the marker in the file's own header comment — the first block comment? */
 const headerCarriesMarker = (portFile: string): boolean => {
   const text = readFileSync(`${PORTS_DIR}/${portFile}`, 'utf8');
   const header = /^\/\*[\s\S]*?\*\//u.exec(text)?.[0];
-  return header !== undefined && header.includes(MARKER);
+  return header !== undefined && MARKER.test(header);
 };
 
 /* -------------------------------------------------------------------------- */
@@ -186,16 +203,18 @@ describe('a port exists when something calls it (ADR-0008)', () => {
           marked,
           `app/application/ports/${portFile} has no consumer under app/: nothing imports a ` +
             `type it declares, so nothing has ever been compiled against it. ADR-0008 requires ` +
-            `PROVISIONAL in its header comment, naming the slice task that will give it a ` +
-            `caller — or the file should not exist yet. An unmarked port reads as a contract ` +
-            `that something satisfies.`,
+            `\`${MARKER_FORM}\` in its header comment, naming the slice task that will give it a ` +
+            `caller — or the file should not exist yet. The exact form matters: the bare word is ` +
+            `not enough, so that prose *about* the marker cannot be mistaken for one. An unmarked ` +
+            `port reads as a contract that something satisfies.`,
         ).toBe(true);
       } else {
         expect(
           marked,
-          `app/application/ports/${portFile} is imported by ${consumers.join(', ')} and still ` +
-            `says PROVISIONAL. The marker means "nothing has ever implemented or called this"; ` +
-            `something has. Delete the marker (ADR-0008).`,
+          `app/application/ports/${portFile} is imported by ${consumers.join(', ')} and ` +
+            `still carries \`${MARKER_FORM}\` in its header. The marker means "nothing has ever ` +
+            `implemented or called this"; something has. Delete it (ADR-0008). Writing a sentence ` +
+            `saying the marker is gone is fine and does not trip this check.`,
         ).toBe(false);
       }
     });

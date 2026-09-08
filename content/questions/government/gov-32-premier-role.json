@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-32-premier-role",
+  "subject": "government",
+  "prompt": {
+    "en": "In a province, whose job is most like the Prime Minister's?",
+    "fr": "Dans une province, quelle fonction ressemble le plus à celle du premier ministre du Canada?"
+  },
+  "options": [
+    {
+      "en": "The Lieutenant Governor's.",
+      "fr": "Celle du lieutenant-gouverneur."
+    },
+    {
+      "en": "The premier's.",
+      "fr": "Celle du premier ministre de la province."
+    },
+    {
+      "en": "The mayor's.",
+      "fr": "Celle du maire."
+    },
+    {
+      "en": "The Commissioner's.",
+      "fr": "Celle du commissaire."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The premier leads the government of a province, the way the Prime Minister leads the federal government. The Lieutenant Governor matches the Governor General instead, so it is easy to pair the wrong two.",
+    "fr": "Le premier ministre de la province dirige le gouvernement provincial, comme le premier ministre dirige le gouvernement fédéral. C'est plutôt le lieutenant-gouverneur qui correspond au gouverneur général; on associe donc facilement les mauvaises fonctions."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 58,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In each province, the Premier has a role similar to that of the Prime Minister in the federal government, just as the Lieutenant Governor has a role similar to that of the Governor General."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

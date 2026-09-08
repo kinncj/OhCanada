@@ -5,6 +5,11 @@ import type { ThemeColours } from '@application/ports';
 import { BootScene, HORIZON_FRACTION } from './boot-scene';
 import { blendColors, toCssColor, toPhaserColor } from './boot-config';
 import type { BootConfig } from './boot-config';
+import { bundledLevelCatalog, type LevelCatalog } from './level-catalog';
+import type { SceneLevel } from './level-document';
+import { LevelScene } from './level-scene';
+import { createPlayableMarker, type MarkerHost, type PlayableMarker } from './playable-marker';
+import { appErr, ok, type Result } from '@common/result';
 import { LAND_SHADE, landBand } from './horizon-profile';
 import {
   identifyRenderer,
@@ -89,14 +94,23 @@ export interface GameRendererOptions {
    * `window.location.search`; present as an option so a test can drive it.
    */
   readonly search?: string;
+  /**
+   * Where level documents come from. Defaults to the bundler glob over
+   * `content/levels/`; injectable so the failure path can be driven.
+   */
+  readonly levels?: LevelCatalog;
 }
 
 export class GameRenderer {
   readonly #game: Phaser.Game;
   readonly #config: BootConfig;
   readonly #ready: Promise<void>;
+  readonly #catalog: LevelCatalog;
   #probe: RenderTierProbe | null = null;
   #scene: SceneProbe | null = null;
+  #level: LevelScene | null = null;
+  #levelDocument: SceneLevel | null = null;
+  #marker: PlayableMarker | null = null;
   /**
    * Mirrors the rotate overlay, because `postBoot` is async: on a landscape
    * first load the overlay calls `pause()` before the probe exists, and
@@ -107,6 +121,7 @@ export class GameRenderer {
 
   constructor(options: GameRendererOptions) {
     this.#config = options.config;
+    this.#catalog = options.levels ?? bundledLevelCatalog;
 
     let resolveReady: () => void = () => undefined;
     this.#ready = new Promise<void>((resolve) => {
@@ -151,7 +166,10 @@ export class GameRenderer {
             options.parent,
             options.search ?? readLocationSearch(),
           );
-          this.#probe = startRendererProbe(game, options.config, this.#scene);
+          this.#marker = installPlayableMarker(options.parent);
+          this.#probe = startRendererProbe(game, options.config, this.#scene, (profile) => {
+            this.#level?.applyProfile(profile);
+          });
           this.#scene?.publish({ paused: this.#paused });
         },
       },
@@ -163,8 +181,13 @@ export class GameRenderer {
     return this.#ready;
   }
 
+  /**
+   * The palette the canvas is actually painted with: the open level's theme when
+   * one is open, `game.config.json`'s otherwise. The page reads this through
+   * `cssVariables()`, so the letterboxed panels and the canvas cannot drift.
+   */
   get palette(): ThemeColours {
-    return this.#config.palette;
+    return this.#levelDocument?.palette ?? this.#config.palette;
   }
 
   get canvas(): HTMLCanvasElement | null {
@@ -206,41 +229,109 @@ export class GameRenderer {
   }
 
   /**
+   * Open a level.
+   *
+   * The whole of task 1.13 from the outside: the document is fetched from
+   * `content/levels/<id>.json`, parsed, refused if it will not fit the texture
+   * budget, and handed to one scene that builds itself out of it. Nothing about
+   * this method, or the scene behind it, names a level — adding Quebec City is
+   * the JSON file and nothing else.
+   *
+   * `Result` rather than a throw, and the previous scene is stopped only once
+   * the new document has parsed: a level that fails to load leaves the player
+   * where they were with an error to act on, not on a black canvas
+   * (TN-LEVEL-02).
+   */
+  async loadLevel(id: string): Promise<Result<void>> {
+    const document = await this.#catalog.load(id);
+    if (!document.ok) return document;
+
+    const marker = this.#marker;
+    marker?.hide();
+
+    if (this.#game.scene.getScene(LevelScene.KEY) !== null) {
+      this.#game.scene.remove(LevelScene.KEY);
+    }
+    if (this.#game.scene.isActive(BootScene.KEY)) this.#game.scene.stop(BootScene.KEY);
+
+    const scene = new LevelScene({
+      level: document.value,
+      designWidth: this.#config.designWidth,
+      designHeight: this.#config.designHeight,
+      probe: this.#scene,
+      marker,
+      profile: this.renderProfile,
+    });
+    this.#level = scene;
+    this.#levelDocument = document.value;
+
+    try {
+      this.#game.scene.add(LevelScene.KEY, scene, true);
+    } catch (cause) {
+      this.#level = null;
+      this.#levelDocument = null;
+      return appErr('io', 'renderer.level.startFailed', `level "${id}" failed to start.`, { level: id }, cause);
+    }
+    if (this.#paused) this.#game.scene.pause(LevelScene.KEY);
+    return ok();
+  }
+
+  /** The ids of every authored level, derived from `content/levels/`. */
+  levelIds(): readonly string[] {
+    return this.#catalog.ids();
+  }
+
+  /**
    * Custom properties the page uses to extend sky and ground into the side
    * panels. Returned as data so `app/bootstrap` applies them and the adapter
    * stays out of the page's styling.
    */
   cssVariables(): Readonly<Record<string, string>> {
-    const band = landBand(this.#config.designHeight, HORIZON_FRACTION);
     const percent = (fraction: number): string => `${(fraction * 100).toFixed(3)}%`;
+    const level = this.#levelDocument;
+    const palette = level?.palette ?? this.#config.palette;
+
+    /*
+     * The land band is the *boot screen's* hills, and only the boot screen's.
+     *
+     * `--tn-land-*` exists so the rolling horizon `boot-scene.ts` paints
+     * continues into the desktop side panels instead of ending on a hard
+     * vertical edge. A level's ground is a polyline that rises and falls along
+     * its own length, so there is no one height those three stops could take
+     * that would match it — and leaving slice 0's numbers in place frames a
+     * running level in scenery from a screen that is no longer on the canvas.
+     *
+     * So with a level open the band collapses to nothing and the panels are what
+     * ADR-0002 actually asks for and nothing more: the level's own sky-to-ground
+     * gradient, continuing past the letterbox edge. Still zero draw calls.
+     */
+    const band = level === null ? landBand(this.#config.designHeight, HORIZON_FRACTION) : null;
 
     return {
-      '--tn-sky': this.#config.palette.sky,
-      '--tn-ground': this.#config.palette.ground,
-      '--tn-horizon': this.#config.palette.horizon,
+      '--tn-sky': palette.sky,
+      '--tn-ground': palette.ground,
+      '--tn-horizon': palette.horizon,
       /* A shade of the ground, computed once here so the page and the scene
          cannot disagree about the colour of the same hill. */
-      '--tn-land': toCssColor(
-        blendColors(toPhaserColor(this.#config.palette.ground), 0x000000, LAND_SHADE),
-      ),
-      '--tn-land-crest': percent(band.crest),
-      '--tn-land-skirt': percent(band.skirt),
-      '--tn-land-end': percent(band.end),
+      '--tn-land': toCssColor(blendColors(toPhaserColor(palette.ground), 0x000000, LAND_SHADE)),
+      '--tn-land-crest': band === null ? '100%' : percent(band.crest),
+      '--tn-land-skirt': band === null ? '100%' : percent(band.skirt),
+      '--tn-land-end': band === null ? '100%' : percent(band.end),
     };
   }
 
   /** Landscape on a phone pauses the game behind the rotate overlay (ADR-0002). */
   pause(): void {
-    if (this.#game.scene.isActive(BootScene.KEY)) {
-      this.#game.scene.pause(BootScene.KEY);
+    for (const key of [BootScene.KEY, LevelScene.KEY]) {
+      if (this.#game.scene.isActive(key)) this.#game.scene.pause(key);
     }
     this.#paused = true;
     this.#scene?.publish({ paused: true });
   }
 
   resume(): void {
-    if (this.#game.scene.isPaused(BootScene.KEY)) {
-      this.#game.scene.resume(BootScene.KEY);
+    for (const key of [BootScene.KEY, LevelScene.KEY]) {
+      if (this.#game.scene.isPaused(key)) this.#game.scene.resume(key);
     }
     /* The frames either side of a pause are a gap, not slow frames. Re-arm the
        warm-up so rotating a phone cannot cost a player a visual tier. */
@@ -254,6 +345,10 @@ export class GameRenderer {
        listener on a destroyed game is how a level unload leaks into the next. */
     this.#probe?.stop();
     this.#probe = null;
+    this.#marker?.hide();
+    this.#marker = null;
+    this.#level = null;
+    this.#levelDocument = null;
     this.#scene?.destroy();
     this.#scene = null;
     removeSceneProbeGlobal();
@@ -284,6 +379,7 @@ function startRendererProbe(
   game: Phaser.Game,
   config: BootConfig,
   scene: SceneProbe | null,
+  onProfileChanged: (profile: RenderProfile) => void,
 ): RenderTierProbe {
   const identity = identifyRenderer(rendererKindOf(game), webglContextOf(game));
 
@@ -303,6 +399,10 @@ function startRendererProbe(
        through the same element a locomotion scenario reads. */
     onProfile: (profile) => {
       scene?.publish({ ...profileToSnapshot(profile), renderer: identity.kind });
+      /* The level re-derives everything the tier controls from the new profile:
+         how many parallax layers are drawn and how much snow falls. This is the
+         line that makes ADR-0011 something a player can see. */
+      onProfileChanged(profile);
     },
   });
 }
@@ -329,6 +429,22 @@ function installSceneProbe(host: HTMLElement, search: string): SceneProbe | null
   (window as unknown as Record<string, SceneProbeHandle>)[SCENE_PROBE_GLOBAL] =
     sceneProbeHandle(probe);
   return probe;
+}
+
+/**
+ * Create the `data-testid="playable"` element, hidden from assistive technology
+ * and not yet attached: `LevelScene` shows it on the first playable frame and
+ * hides it on shutdown, so its presence is the statement the stories rely on
+ * rather than a flag somebody remembered to set.
+ */
+function installPlayableMarker(host: HTMLElement): PlayableMarker | null {
+  if (typeof document === 'undefined') return null;
+  /* `MarkerHost.append` is narrower than `Element.append`'s variadic
+     `(string | Node)[]`, which TypeScript reads as an incompatible parameter.
+     The element passed is the `HTMLDivElement` created on the next line, so the
+     narrowing is sound; the cast records that rather than widening the seam and
+     letting anything with an `append` be a host. */
+  return createPlayableMarker(host as unknown as MarkerHost, document.createElement('div'));
 }
 
 function removeSceneProbeGlobal(): void {

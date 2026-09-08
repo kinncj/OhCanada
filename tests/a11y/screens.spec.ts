@@ -251,10 +251,19 @@ test.describe('accessibility', () => {
   });
 
   /*
-   * The screens below do not exist yet (slice 1). Each body starts by waiting
-   * for the screen's own marker, so removing `test.fixme` before the screen is
-   * built fails on that wait instead of passing against an empty shell. The
-   * short timeout is so that mistake costs seconds, not a minute per test.
+   * The screens below are *built* (task 1.15, `app/ui/`) but not yet *routed*:
+   * `app/bootstrap` does not open them from a URL, so `./#/settings` still
+   * resolves to the boot page. They stay `fixme` until task 1.16 wires them,
+   * and each body starts by waiting for the screen's own marker, so removing
+   * `test.fixme` too early fails on that wait instead of passing against an
+   * empty shell. The short timeout is so that mistake costs seconds.
+   *
+   * The components themselves are scanned for real in
+   * `tests/a11y/slice1-screens.spec.ts`, which mounts each of the five screens
+   * in a browser and runs axe over it under `[...WCAG, 'best-practice']`. What
+   * these two add when they are un-fixmed is the *routed* path — that the game
+   * can actually get the player to the screen — which is the half a harness
+   * cannot prove.
    */
   const NOT_BUILT_YET_MS = 5_000;
 

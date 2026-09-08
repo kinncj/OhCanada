@@ -6,19 +6,20 @@ chosen for them, see how they did, and go again — with no timer, no score kept
 Study reuses the question card exactly as specified in `TN-CARD-question-card.md`. This file covers getting
 into a drill, what the drill contains, and the summary at the end.
 
-Read `README.md` in this directory first.
+Read `README.md` in this directory first. Every count on this screen follows the plural rule in
+`TN-COPY-strings-and-counts.md`.
 
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-STUDY-06` — *A drill from the keyboard* |
-| Single switch | `TN-STUDY-07` — *A drill with one switch* |
+| Keyboard only | `TN-STUDY-06` — *A drill from the keyboard*; `TN-STUDY-03` for the load-failure message |
+| Single switch | `TN-STUDY-07` — *A drill with one switch*; `TN-STUDY-03` for the load-failure message |
 | Screen reader | `TN-STUDY-08` — *The drill and the summary are spoken* |
 | Reduced motion | `TN-STUDY-09` — *The summary appears without motion* |
 | 200 % text | `TN-STUDY-10` — *The summary at 200 %* |
 | Bilingual | `TN-STUDY-11` — *Study in French* |
-| Failure path | `TN-STUDY-03` (nothing to review), `TN-STUDY-05` (leaving part-way) |
+| Failure path | `TN-STUDY-03` (nothing to review, and the questions will not load), `TN-STUDY-05` (leaving part-way) |
 
 ## Player-facing copy
 
@@ -27,12 +28,16 @@ Read `README.md` in this directory first.
 | `study.open` | Study | Réviser |
 | `study.title` | Study | Révision |
 | `study.intro` | Practise the questions you have seen. There is no time limit. | Exercez-vous avec les questions que vous avez déjà vues. Il n'y a aucune limite de temps. |
-| `study.count` | {{n}} questions | {{n}} questions |
+| `study.count.one` | {{n}} question | {{n}} question |
+| `study.count.other` | {{n}} questions | {{n}} questions |
 | `study.start` | Start | Commencer |
 | `study.empty.title` | Nothing to review yet | Rien à réviser pour l'instant |
 | `study.empty.body` | Play a level and answer a few questions first. | Jouez d'abord à un niveau et répondez à quelques questions. |
 | `study.empty.practise` | Practise new questions | S'exercer avec de nouvelles questions |
-| `study.short` | You have {{n}} questions ready. We will ask those. | Vous avez {{n}} questions prêtes. Nous poserons celles-là. |
+| `study.short.one` | You have {{n}} question ready. We will ask it. | Vous avez {{n}} question prête. Nous poserons celle-là. |
+| `study.short.other` | You have {{n}} questions ready. We will ask those. | Vous avez {{n}} questions prêtes. Nous poserons celles-là. |
+| `study.error` | We could not load the questions. Check your connection and try again. | Nous n'avons pas pu charger les questions. Vérifiez votre connexion et réessayez. |
+| `study.error.retry` | Try again | Réessayer |
 | `study.summary.title` | Finished | Terminé |
 | `study.summary.score` | You got {{correct}} out of {{total}} right. | Vous avez {{correct}} bonnes réponses sur {{total}}. |
 | `study.summary.comeBack` | We will ask these again: | Nous reposerons ces questions : |
@@ -41,6 +46,13 @@ Read `README.md` in this directory first.
 | `study.exit` | Back to the game | Retour au jeu |
 | `study.leave` | Leave | Quitter |
 | `study.leaveKept` | Your answers so far are saved. | Vos réponses sont enregistrées. |
+
+`study.count` and `study.short` are two rows each because one row draws "1 questions" — see
+`TN-COPY-strings-and-counts.md` for the rule and for why English and French need the same mechanism and not
+the same condition. `study.error` deliberately mirrors `level.error.title` and `level.error.body` in
+`TN-LEVEL-ottawa.md`: the same failure said the same way, so the player learns one sentence, not two.
+`study.error.retry` is the same two words as `level.error.retry` and a separate key, so the two screens can
+be reworded independently.
 
 ---
 
@@ -66,8 +78,14 @@ Feature: A study drill
     Then the element "study-screen" is visible
     And it shows the heading "Study"
     And it shows "Practise the questions you have seen. There is no time limit."
-    And it shows the number of questions in the drill
+    And the element "study-count" shows the number of questions in the drill
     And a button "Start" is offered
+
+  Scenario: The count reads correctly at one and at many
+    Given exactly one question is ready for me
+    Then "study-count" reads "1 question"
+    Given five questions are ready for me
+    Then "study-count" reads "5 questions"
 
   Scenario: Starting the drill
     When I tap "study-start"
@@ -122,6 +140,12 @@ Feature: Choosing the questions in a drill
     And the drill asks three questions
     And no question is repeated to pad the drill
 
+  Scenario: A drill of exactly one reads as one
+    Given only one question is ready for me
+    When I open Study
+    Then it shows "You have 1 question ready. We will ask it."
+    And the drill asks one question
+
   Scenario: Two drills in a row do not repeat the same questions
     Given I have just finished a drill
     When I tap "Study again"
@@ -131,10 +155,10 @@ Feature: Choosing the questions in a drill
     Then no string on "study-screen" or "study-summary" contains "spaced repetition", "FSRS", "algorithm", "interval" or "due"
 ```
 
-## TN-STUDY-03 — Nothing to review yet (failure path)
+## TN-STUDY-03 — Nothing to review yet, and questions that will not load (failure path)
 
 ```gherkin
-Feature: An empty Study screen
+Feature: An empty or broken Study screen
   Scenario: A brand-new player opens Study
     Given I have never answered a question
     When I open Study
@@ -143,6 +167,7 @@ Feature: An empty Study screen
     And it shows "Play a level and answer a few questions first."
     And a button "Practise new questions" is offered
     And no empty question card is shown
+    And no count is drawn, so "0 questions" is never on screen
 
   Scenario: Practising anyway
     When I tap "Practise new questions"
@@ -152,10 +177,51 @@ Feature: An empty Study screen
   Scenario: The question bank cannot be loaded
     Given the question bank fails to load
     When I open Study
-    Then a message explains that the questions could not be loaded
-    And a "Try again" button is offered
+    Then the element "study-error" is visible
+    And it says "We could not load the questions. Check your connection and try again."
+    And a button "Try again" is offered as "study-retry"
     And the message is announced in "#tn-live-region"
     And no blank drill is started
+    And "study-start" is not offered
+
+  Scenario: Trying again after the questions come back
+    Given the element "study-error" is visible
+    And the question bank now loads
+    When I tap "Try again"
+    Then the element "study-error" is gone
+    And the element "study-screen" shows the drill and "Start"
+
+  Scenario: Trying again while it is still broken says the same thing once
+    Given the element "study-error" is visible
+    When I tap "Try again" and the question bank fails again
+    Then the same message is shown
+    And it is announced again in "#tn-live-region"
+    And no second error is stacked on the first
+
+  Scenario: The player can always leave the failure
+    Given the element "study-error" is visible
+    Then a control returns me to the game
+    And "data-paused" becomes "false" when I take it
+    And nothing on the screen counts down
+
+  Scenario: The failure is operable from the keyboard
+    Given I am using a keyboard only
+    And the element "study-error" is visible
+    Then focus is inside "study-screen" when the message appears
+    And "Try again" is reachable with "Tab" and activates with "Enter"
+    And "Escape" returns me to the game
+
+  Scenario: The failure is operable with one switch
+    Given single-switch mode is on
+    And the element "study-error" is visible
+    When I use only short and long presses
+    Then I can reach and choose "Try again"
+    And I can leave Study
+
+  Scenario: The failure does not animate
+    Given reduced motion is on
+    When the message appears
+    Then it appears with no slide, fade or shake
 
   Scenario: An answer cannot be saved during a drill
     Given writing to local storage fails
@@ -296,6 +362,7 @@ Feature: Study with a screen reader
   Scenario: Starting is announced
     When the drill starts
     Then "#tn-live-region" reads a message naming the drill and the number of questions
+    And the number is read in the same singular or plural form that is drawn
 
   Scenario: Progress is announced between questions
     When I move to the next question
@@ -337,6 +404,12 @@ Feature: Large text in Study
     And the list of returning questions can be read by scrolling down inside the summary
     And "Study again" and "Back to the game" are both reachable and at least 44 CSS px tall
     And the page does not scroll sideways
+
+  Scenario: The failure message fits too
+    Given text scaling is 200 %
+    And the element "study-error" is visible
+    Then the whole message is readable, by scrolling inside "study-screen" if needed
+    And "Try again" is fully visible and at least 44 CSS px tall
 ```
 
 ## TN-STUDY-11 — Study in French
@@ -353,12 +426,25 @@ Feature: Study in French
     And the body reads "Exercez-vous avec les questions que vous avez déjà vues. Il n'y a aucune limite de temps."
     And the button reads "Commencer"
 
+  Scenario: The count is French and reads correctly at one
+    Given exactly one question is ready for me
+    Then "study-count" reads "1 question"
+    Given five questions are ready for me
+    Then "study-count" reads "5 questions"
+
   Scenario: The empty state is French
     Given I have never answered a question
     When I open Study
     Then it shows "Rien à réviser pour l'instant"
     And it shows "Jouez d'abord à un niveau et répondez à quelques questions."
     And the button reads "S'exercer avec de nouvelles questions"
+
+  Scenario: The load failure is French
+    Given the question bank fails to load
+    When I open Study
+    Then "study-error" says "Nous n'avons pas pu charger les questions. Vérifiez votre connexion et réessayez."
+    And the button reads "Réessayer"
+    And the message is announced in "#tn-live-region" with "lang" equal to "fr"
 
   Scenario: The summary is French
     When I finish a drill with four right out of five
@@ -389,11 +475,15 @@ Feature: Study in French
 - **`OQ-STUDY-2` — can the player choose a subject to study?** Not in these scenarios; the drill is chosen
   for them. *Recommendation:* leave subject choice to a later slice, when there is more than one subject.
 - **`OQ-STUDY-3` — where is Study reached from?** These scenarios use the in-level menu, because that is the
-  only shell slice 1 has. *Recommendation:* the same control moves to the world map when the map exists;
-  the story is unchanged.
+  only shell slice 1 has, and that menu is now owned by `TN-HUD-hud-and-menu.md`. *Recommendation:* the same
+  control moves to the world map when the map exists; the story is unchanged.
 - **`OQ-STUDY-4` — does the summary list every missed question, or only some?** Listing all of them is fine
   at five, and wrong at twenty (Exam mode, later). *Recommendation:* list all missed questions in a drill,
   and revisit for Exam mode in slice F1.
 - **`OQ-STUDY-5` — should a drill in progress survive a closed tab?** `TN-STUDY-05` and `TN-SAVE` both say
   no: the answers survive, the drill does not. *Recommendation:* keep it. Resuming a drill means persisting
   transient state for no learning benefit.
+- **`OQ-STUDY-6` — does a failed load distinguish "offline" from "the file is broken"?** `study.error` says
+  one thing for both, because the player's action is the same either way and a player cannot fix a corrupt
+  bundle. *Recommendation:* keep one message; if telemetry ever existed it would tell us the difference, and
+  this game has none by decision (CLAUDE.md, Storage).

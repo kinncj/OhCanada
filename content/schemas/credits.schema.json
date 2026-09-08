@@ -27,7 +27,7 @@
       "type": "object",
       "properties": {
         "path": {
-          "description": "Path relative to `assets/`, so `dist/level4/atlas.webp` for a shipped asset and `refs/ottawa/peace-tower-elevation.jpg` for a reference. The gate walks `assets/` and asserts set equality in both directions - a file with no entry is an uncredited asset, an entry with no file is a stale claim about a file that is gone. A `../` prefix is the pre-2026-09-08 convention, still resolved by scripts/validate-content.mjs with a warning; no pattern forbids it here because retiring that transitional branch belongs to the gate that owns it, not to a schema forcing it closed from outside.",
+          "description": "Path relative to `assets/`, so `dist/level4/atlas.webp` for a shipped asset and `refs/ottawa/peace-tower-elevation.jpg` for a reference. That is the only accepted form: a `../` prefix was the pre-2026-09-08 convention and is now a hard failure, not a warning. The gate walks `assets/` and asserts set equality in both directions - a file with no entry is an uncredited asset, an entry with no file is a stale claim about a file that is gone.",
           "type": "string",
           "minLength": 1
         },

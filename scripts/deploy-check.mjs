@@ -12,7 +12,15 @@
  *      the site is published from (a wrong base ships a blank page);
  *   5. dist/sw.js is missing, gains a `fetch` handler, or stops unregistering
  *      itself — see infra/pages/sw.js. It is a tombstone, not a feature, and it
- *      is the one file here that looks unused and is not.
+ *      is the one file here that looks unused and is not;
+ *   6. a level in dist/manifest.json exceeds `budgets.levelPayloadBytes`, or the
+ *      manifest and the files in dist/ have stopped agreeing. `make assets` is
+ *      where that gate is authoritative; this is the same rules applied to the
+ *      artefact that actually ships;
+ *   7. a level in dist/manifest.json exceeds its decoded-texture budget, or a
+ *      full-screen parallax layer ships above 1x (scripts/lib/texture-memory.mjs).
+ *      Same reasoning as 6, different quantity: 6 is what a player downloads,
+ *      7 is what the GPU holds, and 7 is the one that ends in a lost context.
  *
  * It used to also check that .github/workflows/ matched a mirror of it under
  * infra/github/workflows/. That mirror is gone — see infra/README.md. GitHub
@@ -32,6 +40,9 @@ import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { MANIFEST_NAME, checkLevelPayload } from './lib/level-payload.mjs';
+import { checkTextureMemory } from './lib/texture-memory.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST_DIR = join(ROOT, 'dist');
@@ -120,7 +131,11 @@ if (!existsSync(DIST_DIR)) {
  *   - `import()` calls. Dynamic imports are the mechanism by which a level is
  *     loaded on demand; charging them to the initial payload would make the
  *     budget punish the very split it exists to encourage. Per-level weight is
- *     `budgets.levelPayloadBytes` and is a different gate.
+ *     `budgets.levelPayloadBytes`, enforced by scripts/lib/level-payload.mjs
+ *     over `assets/dist/manifest.json` and re-checked against `dist/` at the
+ *     bottom of this file. Until 2026-09-08 this comment said "a different
+ *     gate" and that gate did not exist, which made a budget nothing read look
+ *     enforced; it exists now (slice 1, task 1.10).
  *   - Anything reached only at runtime (fetched JSON, atlases, audio). Those
  *     are level payload too.
  *   - Images or fonts referenced by `<link rel="icon">` and friends: not on the
@@ -331,6 +346,42 @@ if (existsSync(SW_FILE)) {
         'not remove itself just replaces one permanent worker with another.',
     );
   }
+}
+
+// ------------------------------------------------- per-level payload budget ---
+
+/**
+ * `make assets` already ran this gate over `assets/dist`. This is the same
+ * rules applied to what actually shipped: Vite copies `publicDir` into `dist/`
+ * verbatim, so a manifest that agreed with `assets/dist` and disagrees with
+ * `dist/` means the copy went wrong, and a per-file budget check that never
+ * looks at the artefact is checking the wrong tree.
+ *
+ * It is conditional on the manifest being present, and that is NOT a vacuum:
+ * `make assets` runs the same check unconditionally and fails the build without
+ * it, and `deploy-pages.yml` runs `make assets` before `make build`. What this
+ * conditional buys is that `make build` on its own - which the e2e, perf and
+ * a11y suites all do - does not demand an asset build that has nothing to do
+ * with the page under test. If assets ever stop being copied into `dist/`, the
+ * gate that notices is the one in `make assets`, not this one.
+ *
+ * `scanRoot: false` because the root of `dist/` is Vite's output, not the
+ * pipeline's; the manifest's own output directories are still walked in full,
+ * so no shipped asset goes unclaimed either way.
+ */
+if (distFiles.length > 0 && existsSync(join(DIST_DIR, MANIFEST_NAME))) {
+  const level = checkLevelPayload({ root: ROOT, dir: DIST_DIR, scanRoot: false, source: 'dist' });
+  for (const failure of level.failures) fail(failure);
+  if (level.summary !== null) payloadSummary += `, ${level.summary}`;
+
+  // And the decoded-texture budget over the same artefact. Transfer bytes and
+  // VRAM bytes are different quantities measured over the same files: this one
+  // is the one whose breach is invisible until a device loses its WebGL context,
+  // so the artefact that actually ships is checked for it too, not just the
+  // tree `make assets` produced.
+  const textures = checkTextureMemory({ root: ROOT, dir: DIST_DIR, source: 'dist' });
+  for (const failure of textures.failures) fail(failure);
+  if (textures.summary !== null) payloadSummary += `, ${textures.summary}`;
 }
 
 // -------------------------------------------------------------- base path ---

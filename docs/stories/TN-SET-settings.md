@@ -8,25 +8,27 @@ is on" or "Given text scaling is 200 %". A precondition nobody can set is not te
 set them are specified here. It is deliberately the smallest file in the directory.
 
 Read `README.md` in this directory first. Export, import and delete live in `TN-SAVE-save-and-reload.md`,
-reached from this same screen.
+reached from this same screen. The plural rule and the state-word rule this file uses are fixed by
+`TN-COPY-strings-and-counts.md`.
 
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-SET-04` |
-| Single switch | `TN-SET-05` |
+| Keyboard only | `TN-SET-04`, and `TN-SET-09` for the hold-time control |
+| Single switch | `TN-SET-05`, and `TN-SET-09` for the hold-time control |
 | Screen reader | `TN-SET-06` |
 | Reduced motion | `TN-SET-07` |
 | 200 % text | `TN-SET-07` |
-| Bilingual | `TN-SET-08` |
-| Failure path | `TN-SET-03` |
+| Bilingual | `TN-SET-08`, and `TN-SET-09` for the hold-time control |
+| Failure path | `TN-SET-03`, and `TN-SET-09` for a hold time that cannot be undone |
 
 ## Player-facing copy
 
 | Key | EN | FR |
 |---|---|---|
 | `settings.title` | Settings | Réglages |
+| `common.settings` | Settings | Réglages |
 | `settings.language` | Language | Langue |
 | `settings.language.en` | English | English |
 | `settings.language.fr` | Français | Français |
@@ -34,6 +36,14 @@ reached from this same screen.
 | `settings.autoMove.help` | You do not need to hold the screen. | Vous n'avez pas besoin de garder le doigt sur l'écran. |
 | `settings.singleSwitch` | One-button mode | Mode à un bouton |
 | `settings.singleSwitch.help` | Tap to move the highlight. Hold to choose. | Touchez pour déplacer la sélection. Maintenez pour choisir. |
+| `settings.holdTime` | Hold time | Durée du maintien |
+| `settings.holdTime.help` | How long you hold the button to choose something. | Le temps que vous devez maintenir le bouton pour choisir. |
+| `settings.holdTime.short` | Short | Courte |
+| `settings.holdTime.medium` | Medium | Moyenne |
+| `settings.holdTime.long` | Long | Longue |
+| `settings.holdTime.veryLong` | Very long | Très longue |
+| `settings.holdTime.seconds.one` | {{seconds}} second | {{seconds}} seconde |
+| `settings.holdTime.seconds.other` | {{seconds}} seconds | {{seconds}} secondes |
 | `settings.reducedMotion` | Less movement | Moins de mouvement |
 | `settings.highContrast` | High contrast | Contraste élevé |
 | `settings.dyslexiaFont` | Easier-to-read font | Police plus lisible |
@@ -46,7 +56,22 @@ reached from this same screen.
 | `settings.sound.voice` | Voices | Voix |
 | `common.close` | Close | Fermer |
 
+`settings.state.on` and `settings.state.off` — "On" / « Activé » and "Off" / « Désactivé » — are confirmed
+in `TN-COPY-strings-and-counts.md`, which also says why the French does not agree with its label. They are
+not repeated here.
+
+`common.settings` and `settings.title` are the same two words and two different keys on purpose.
+`settings.title` names this screen; `common.settings` names the *control that opens it*, from the HUD menu
+(`TN-HUD-02`) and from the character creator (`TN-CREATOR-11`). One key for a heading and a button label
+would make a change to either a change to both.
+
 The language names are written in their own language and are never translated.
+
+Hold-time values: **Short 0.3 s, Medium 0.6 s, Long 1.2 s, Very long 2.0 s.** Medium is the default. Named
+choices rather than a slider or a plus-and-minus pair, because a switch user reaches four named items in at
+most four short presses and would need fourteen to walk a 100 ms step from 0.6 s to 2.0 s — and this is the
+one control whose whole purpose is to be usable by that player. The model's 200–3000 ms clamp still applies
+to a hand-edited or imported save; every named value sits inside it.
 
 ---
 
@@ -65,9 +90,24 @@ Feature: The settings screen
 
   Scenario: Every setting is present and labelled
     Then controls are shown for language, "Move by itself", "One-button mode", "Less movement",
-      "High contrast", "Easier-to-read font", "Text size", "Subtitles" and "Sound"
+      "High contrast", "Easier-to-read font", "Text size" and "Subtitles"
     And each has a visible label, not an icon alone
     And each is at least 44 CSS px wide and tall
+
+  Scenario: The hold-time control is present whenever one-button mode can be turned on
+    Then a control "Hold time" is shown, as described in TN-SET-09
+    And it is present whether one-button mode is on or off
+
+  Scenario: Sound controls are shown only when there is a sound to control
+    Given the game ships at least one sound
+    Then a control "Sound" is shown, with "Overall", "Music", "Sound effects" and "Voices"
+    And each is at least 44 CSS px wide and tall
+
+  Scenario: Sound controls are absent, not disabled, when nothing makes a sound
+    Given the game ships no sound
+    Then no control named "Sound" is present in the accessibility tree
+    And no volume control is drawn greyed out, or drawn and ignored
+    And nothing on the screen mentions sound
 
   Scenario: A change takes effect at once and is kept
     When I turn on "Less movement"
@@ -139,6 +179,13 @@ Feature: Settings when storage fails
     When the game loads it
     Then the text scale is clamped to 200 %
     And the game does not fail to start
+
+  Scenario: An out-of-range hold time is refused, not applied
+    Given a saved document declares a hold time of 30 seconds
+    When the game loads it
+    Then the hold time is clamped to the longest value the screen offers
+    And a long press still chooses
+    And the game does not fail to start
 ```
 
 ## TN-SET-04 — Settings from the keyboard
@@ -154,6 +201,7 @@ Feature: Keyboard-only settings
     Then every control receives focus in the order it is read
     And switches toggle with "Space"
     And the language control changes with the arrow keys
+    And "Hold time" changes with the arrow keys
     And "Text size" changes with the arrow keys and reports its value as text
 
   Scenario: The screen is a modal that gives focus back
@@ -171,10 +219,12 @@ Feature: Single-switch settings
     When I use only short and long presses
     Then I can reach every control in "settings-screen"
     And I can change the language
+    And I can change "Hold time"
     And I can turn single-switch mode off again
 
   Scenario: The mode cannot trap the player
     Then no setting can put the game into a state that the switch alone cannot leave
+    And that includes every value "Hold time" offers
 ```
 
 ## TN-SET-06 — Settings with a screen reader
@@ -185,6 +235,7 @@ Feature: Announcing settings
     Then "settings-screen" has role "dialog" with an accessible name
     And each switch is a checkbox or a switch with an accessible name and state
     And "Text size" is a slider or a group with an accessible name and a value in percent
+    And "Hold time" is a group with an accessible name, whose options are radios with names that are words
 
   Scenario: A change is announced once
     When I turn on "Less movement"
@@ -193,6 +244,7 @@ Feature: Announcing settings
 
   Scenario: Help text is attached, not floating
     Then each switch with help text has it as its accessible description
+    And "Hold time" is described by "How long you hold the button to choose something."
 ```
 
 ## TN-SET-07 — Settings under reduced motion and at 200 %
@@ -229,9 +281,14 @@ Feature: Settings in French
   Scenario: Every label is French
     When "settings-screen" is visible
     Then the heading reads "Réglages"
-    And the labels read "Langue", "Déplacement automatique", "Mode à un bouton", "Moins de mouvement",
-      "Contraste élevé", "Police plus lisible", "Taille du texte", "Sous-titres" and "Son"
+    And the labels read "Langue", "Déplacement automatique", "Mode à un bouton", "Durée du maintien",
+      "Moins de mouvement", "Contraste élevé", "Police plus lisible", "Taille du texte" and "Sous-titres"
     And the close button reads "Fermer"
+
+  Scenario: The sound labels are French when the sound section is shown
+    Given the game ships at least one sound
+    Then the section reads "Son"
+    And its controls read "Général", "Musique", "Effets sonores" and "Voix"
 
   Scenario: The language names are not translated
     Then the language choices read "English" and "Français" in both languages
@@ -246,6 +303,86 @@ Feature: Settings in French
 
   Scenario: The help text is French
     Then "Mode à un bouton" is described by "Touchez pour déplacer la sélection. Maintenez pour choisir."
+    And "Durée du maintien" is described by "Le temps que vous devez maintenir le bouton pour choisir."
+```
+
+## TN-SET-09 — Hold time: the setting a switch user cannot change any other way
+
+```gherkin
+Feature: Choosing how long a long press is
+  As a player who uses one switch
+  I want to set how long I have to hold it
+  So that the game matches my hands and not the other way round
+
+  Background:
+    Given the element "settings-screen" is visible
+
+  Scenario: The control is there and says what it is
+    Then the element "setting-hold-time" is visible
+    And it is labelled "Hold time"
+    And it offers "Short", "Medium", "Long" and "Very long"
+    And each option is at least 44 CSS px wide and tall
+
+  Scenario: Each option says how long it is, in words and numbers
+    Then "Short" also shows "0.3 seconds"
+    And "Medium" also shows "0.6 seconds"
+    And "Long" also shows "1.2 seconds"
+    And "Very long" also shows "2 seconds"
+    And the singular and plural forms follow TN-COPY-01
+
+  Scenario: Medium is the default
+    Given I have never opened Settings
+    Then "Medium" is the chosen option
+    And a hold of 0.6 seconds chooses the highlighted item
+
+  Scenario: Changing it changes what a long press means, at once
+    Given single-switch mode is on
+    When I choose "Long"
+    Then the event "settings/changed" is emitted
+    And the event "progress/saved" is emitted
+    And a hold of 0.6 seconds no longer chooses the highlighted item
+    And a hold of 1.2 seconds does
+
+  Scenario: A short press is still a short press
+    Given I have chosen "Very long"
+    When I press the switch briefly
+    Then the highlight moves to the next item
+    And nothing has been chosen
+
+  Scenario: The control that sets the threshold can never be locked by it
+    Given single-switch mode is on
+    And I have chosen "Very long"
+    When the highlight is on "Short" inside "setting-hold-time"
+    And I hold the switch for 0.6 seconds
+    Then "Short" is chosen
+    And the hold-time options accept a hold of the default length or of the current threshold,
+      whichever is shorter
+
+  Scenario: Nothing counts down while the player decides
+    When the hold-time control is highlighted and I do nothing for two minutes
+    Then the chosen option has not changed
+    And nothing on screen counts down
+    And no timer, clock or filling bar is drawn while I hold
+
+  Scenario: It survives a reload
+    Given I chose "Long"
+    When I close the tab and open the game again
+    Then "Long" is still chosen
+    And a hold of 1.2 seconds chooses from the first screen, without opening Settings
+
+  Scenario: From the keyboard
+    Given I am using a keyboard only
+    When I press "Tab" until focus is inside "setting-hold-time"
+    And I press "ArrowRight"
+    Then the next option is chosen
+    And the change is announced in "#tn-live-region"
+
+  Scenario: In French
+    Given the language is French
+    Then the label reads "Durée du maintien"
+    And the options read "Courte", "Moyenne", "Longue" and "Très longue"
+    And "Courte" also shows "0,3 seconde"
+    And "Très longue" also shows "2 secondes"
 ```
 
 ---
@@ -255,16 +392,27 @@ Feature: Settings in French
 - **`OQ-STYLE-1` — « tu » or « vous »?** Every French string in these stories uses « vous », to match IRCC's
   own French and because the audience is adults as well as children. *Recommendation:* keep « vous »
   everywhere, and say so in the content guide so two agents do not write two registers.
-- **`OQ-SET-1` — is there a settings entry before the first level?** The creator is the first screen, and a
-  player who needs single-switch mode or 200 % text needs it *there*. *Recommendation:* a small settings
-  control on the character creator itself, opening the same screen. Without it, `TN-CREATOR-05` and
-  `TN-CREATOR-08` describe a state the player cannot reach on a first run.
+- ~~**`OQ-SET-1` — is there a settings entry before the first level?**~~ **Answered 2026-09-08 — yes.** A
+  settings control on the character creator, opening this same screen, labelled `common.settings`. Without
+  it, `TN-CREATOR-05` and `TN-CREATOR-08` describe a state a first-run player cannot reach. It is specified
+  as `TN-CREATOR-11` and was built in task 1.15.
 - **`OQ-SET-2` — does the game follow the browser's language on a first run?** *Recommendation:* yes —
   start in French when the browser asks for French, otherwise English, and let the player override. The
   override wins from then on.
-- **`OQ-SET-3` — is there any audio in slice 1?** `AudioPort` is provisional with no task, so the four
-  volume controls may have nothing to control. *Recommendation:* ship the sound section only if a sound
-  ships; a control that does nothing is worse than a missing one.
-- **`OQ-SET-4` — the hold-to-choose threshold.** This screen exposes single-switch mode but not the length
-  of a long press, which switch users vary widely on. *Recommendation:* a "Hold time" control in this
-  screen, default 600 ms, in the same release as single-switch mode.
+- ~~**`OQ-SET-3` — is there any audio in slice 1?**~~ **Answered 2026-09-08 — build it, ship it behind the
+  presence of a sound.** `TN-SET-01` used to require a Sound control unconditionally and this question used
+  to say ship it "only if a sound ships", which is two answers in one file; `TN-SET-01` now carries both
+  halves as two scenarios, and one of them asserts the section is *absent from the accessibility tree*
+  rather than present-and-disabled. The section exists in code behind a flag, transcribed and translated,
+  so enabling it when `AudioPort` lands is one line and not a copy round. A volume control that moves
+  nothing is worse than no volume control: it teaches the player the setting does not work.
+- ~~**`OQ-SET-4` — the hold-to-choose threshold.**~~ **Answered 2026-09-08 — `TN-SET-09`.** Four named
+  values rather than a slider, because the player who needs this setting is the player who reaches four
+  named items in four presses and a hundred-millisecond step in fourteen. The escape clause — the hold-time
+  options accept the shorter of the default and the current threshold — is what makes `TN-SET-05`'s
+  "no setting can trap the player" true by construction rather than by argument.
+- **`OQ-SET-5` — should "Hold time" be hidden when one-button mode is off?** `TN-SET-01` says no: it is
+  always shown. A control that appears and disappears is harder to find than one that is always there, and
+  the switch user turning the mode on for the first time will want the threshold in the same screen, not
+  after a reload. *Recommendation:* keep it visible always. If the screen gets crowded, group it under
+  "One-button mode" visually without making it conditional.

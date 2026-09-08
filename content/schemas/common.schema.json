@@ -83,6 +83,16 @@
           "type": "string",
           "minLength": 1
         },
+        "page": {
+          "description": "Page the claim was read from, when the source is paginated. Must fall inside the cited chapter's page range, which is what `sourceChapter.endPage` makes checkable - and it is what lets a page-grain staleness flag be evaluated per question instead of forcing every question in a long chapter volatile.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "quote": {
+          "description": "The passage the author read the claim from, copied exactly. Author-owned, and not the same field as `factVerification.evidence`: this one says where the wording came from, and the verifier's says what entails the ANSWER - for a question with distractors those are often different sentences. Copied exactly because it must be a contiguous substring of the cached extraction at the recorded hash, which is a check that catches a fabricated citation before any verifier runs.",
+          "type": "string",
+          "minLength": 1
+        },
         "url": { "type": "string", "format": "uri", "minLength": 1 },
         "sourceHash": {
           "description": "SHA-256 of what the verifier actually read: the manifest's extractedTextSha256 when the source has an extraction, and its sha256 otherwise. Hashing what was read rather than what was downloaded is the difference that matters - a re-extraction with a different tool changes the text a claim was checked against without touching the document.",
@@ -98,7 +108,7 @@
           "type": "boolean"
         }
       },
-      "required": ["sourceId", "chapter", "url", "sourceHash", "asOf", "volatile"],
+      "required": ["sourceId", "chapter", "quote", "url", "sourceHash", "asOf", "volatile"],
       "additionalProperties": false
     },
 
@@ -133,6 +143,22 @@
       "additionalProperties": false,
       "allOf": [
         {
+          "$comment": "The null form is the ONLY legal shape of an unverified block, so \"an author wrote nothing but the zero value\" is checkable by validate-content instead of only by reading a diff. That is what makes task 1.17's git-history gate a single sentence - an author-authored commit may write a verification object only in this form and may never change one that exists - with no per-field carve-out. Only property names this object already declares appear here (ADR-0007).",
+          "if": {
+            "properties": { "status": { "const": "unverified" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "model": { "type": "string", "const": "" },
+              "checkedAt": { "type": "null" },
+              "sourceHash": { "type": "string", "const": "" },
+              "evidence": { "type": "string", "const": "" }
+            },
+            "required": ["model", "checkedAt", "sourceHash", "evidence"]
+          }
+        },
+        {
           "$comment": "ADR-0003's CI clause, stated in the schema so make validate-content fails on it and not only verify-content: a verified status with no quoted passage is an assertion, and this project does not accept assertions. The conditional only names properties this object already declares, so it adds no unmirrored shape (ADR-0007).",
           "if": {
             "properties": { "status": { "const": "verified" } },
@@ -140,10 +166,10 @@
           },
           "then": {
             "properties": {
-              "evidence": { "minLength": 1 },
-              "model": { "minLength": 1 },
+              "evidence": { "type": "string", "minLength": 1 },
+              "model": { "type": "string", "minLength": 1 },
               "checkedAt": { "not": { "type": "null" } },
-              "sourceHash": { "pattern": "^[0-9a-f]{64}$" }
+              "sourceHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
             },
             "required": ["evidence", "model", "checkedAt", "sourceHash"]
           }

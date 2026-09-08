@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-34-what-mp-means",
+  "subject": "government",
+  "prompt": {
+    "en": "What does MP mean in Canadian politics?",
+    "fr": "Que signifie « MP » (député) en politique canadienne?"
+  },
+  "options": [
+    {
+      "en": "Member of Parliament: someone who sits in the House of Commons.",
+      "fr": "Membre du Parlement : une personne qui siège à la Chambre des communes."
+    },
+    {
+      "en": "Municipal politician: someone on a city council.",
+      "fr": "Politicien municipal : une personne qui siège à un conseil municipal."
+    },
+    {
+      "en": "A member of a provincial legislature.",
+      "fr": "Un membre d'une assemblée provinciale."
+    },
+    {
+      "en": "Minister of Parliament: a member of the Cabinet.",
+      "fr": "Ministre du Parlement : un membre du Cabinet."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Members of the House of Commons are also called members of Parliament. The title is federal only. Provincial and territorial members use other titles, and senators are never called MPs.",
+    "fr": "Les membres de la Chambre des communes sont aussi appelés députés fédéraux. Ce titre n'existe qu'au fédéral. Les élus provinciaux et territoriaux portent d'autres titres, et les sénateurs ne sont jamais appelés députés."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "Members of the House of Commons are also known as members of Parliament or MPs."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,326 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "ottawa",
+  "subject": "government",
+  "order": 4,
+  "title": {
+    "en": "Ottawa",
+    "fr": "Ottawa"
+  },
+  "size": {
+    "x": 9000,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 640,
+    "y": 1237
+  },
+  "theme": {
+    "sky": "#3d8ccb",
+    "ground": "#e6eff7",
+    "horizon": "#a5d6ee",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Anishinabe Algonquin"
+    ],
+    "statement": {
+      "en": "Ottawa stands on the unceded, unsurrendered territory of the Anishinabe Algonquin Nation. No treaty ever gave this land up.",
+      "fr": "Ottawa se trouve sur le territoire non c\u00e9d\u00e9 de la nation algonquine anishinabe. Aucun trait\u00e9 n'a jamais c\u00e9d\u00e9 ces terres."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "cirnac-algonquin-parliamentary-precinct",
+        "chapter": "Traditional signing ceremony marks the commitment to establish a dedicated Algonquin space in the Parliamentary Precinct",
+        "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2024/06/traditional-signing-ceremony-marks-the-commitment-to-establish-a-dedicated-algonquin-space-in-the-parliamentary-precinct.html",
+        "sourceHash": "8276d6ce5e2ec94e9cf29a39be32a1a7dadcf09cd067b863b3478388349a5727",
+        "asOf": "2026-09-08T00:00:00Z",
+        "volatile": false,
+        "quote": "Ottawa, unceded, unsurrendered territory of the Anishinabe Algonquin Nation, Ontario"
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Algonquin Anishinabeg Nation Tribal Council",
+      "url": "https://anishinabemowin.ca/en_CA/",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.14,
+    "deadZone": {
+      "x": 60,
+      "y": 120
+    },
+    "offset": {
+      "x": 140,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1240
+    },
+    {
+      "x": 900,
+      "y": 1236
+    },
+    {
+      "x": 1800,
+      "y": 1244
+    },
+    {
+      "x": 2700,
+      "y": 1238
+    },
+    {
+      "x": 3600,
+      "y": 1246
+    },
+    {
+      "x": 4500,
+      "y": 1240
+    },
+    {
+      "x": 5400,
+      "y": 1242
+    },
+    {
+      "x": 6000,
+      "y": 1240
+    },
+    {
+      "x": 6400,
+      "y": 1440
+    },
+    {
+      "x": 7000,
+      "y": 1470
+    },
+    {
+      "x": 8000,
+      "y": 1466
+    },
+    {
+      "x": 9000,
+      "y": 1470
+    }
+  ],
+  "layers": [
+    {
+      "key": "ottawa-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.05,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "ottawa-layer-20-skyline",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.28,
+        "y": 0.1
+      },
+      "offset": {
+        "x": 0,
+        "y": 780
+      },
+      "repeatX": true
+    },
+    {
+      "key": "ottawa-layer-30-escarpment",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.46,
+        "y": 0.16
+      },
+      "offset": {
+        "x": 0,
+        "y": 900
+      },
+      "repeatX": true
+    },
+    {
+      "key": "ottawa-layer-40-treeline",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 0.68,
+        "y": 0.28
+      },
+      "offset": {
+        "x": 0,
+        "y": 1020
+      },
+      "repeatX": true
+    },
+    {
+      "key": "ottawa-layer-50-canalwall",
+      "depth": 50,
+      "scrollFactor": {
+        "x": 0.88,
+        "y": 0.62
+      },
+      "offset": {
+        "x": 0,
+        "y": 1120
+      },
+      "repeatX": true
+    },
+    {
+      "key": "ottawa-layer-60-ice",
+      "depth": 60,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 1210
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "skate",
+      "maxSpeed": 620,
+      "acceleration": 1200,
+      "deceleration": 900,
+      "turnAcceleration": 1050,
+      "glide": 0.9,
+      "maxSpeedMultiplierDownhill": 1.35,
+      "drive": "held",
+      "jump": {
+        "impulse": 980,
+        "maxHoldMs": 0,
+        "airControl": 0.35,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 220,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 90
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.skate.label"
+    },
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "parliament-hill",
+      "name": {
+        "en": "Parliament Hill",
+        "fr": "La Colline du Parlement"
+      },
+      "blurb": {
+        "en": "The Parliament buildings are in Ottawa. The tall clock tower is called the Peace Tower.",
+        "fr": "Les \u00e9difices du Parlement sont \u00e0 Ottawa. La haute tour de l'horloge s'appelle la tour de la Paix."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The towers, arches, sculptures and stained glass of the Parliament Buildings embody the French, English and Aboriginal traditions and the Gothic Revival architecture popular in the time of Queen Victoria. The buildings were completed in the 1860s. The Centre Block was destroyed by an accidental fire in 1916 and rebuilt in 1922. The Library is the only part of the original building remaining. The Peace Tower was completed in 1927 in memory of the First World War."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 5400,
+        "y": 1242
+      },
+      "artKey": "ottawa-landmark-parliament-hill",
+      "radiusPx": 220
+    }
+  ],
+  "characters": [
+    {
+      "characterId": "officer",
+      "position": {
+        "x": 2400,
+        "y": 1240
+      },
+      "facing": "left"
+    }
+  ],
+  "assets": [],
+  "textureBudgetBytes": 50331648
+}

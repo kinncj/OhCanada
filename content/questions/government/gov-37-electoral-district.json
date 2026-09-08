@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-37-electoral-district",
+  "subject": "government",
+  "prompt": {
+    "en": "What is an electoral district?",
+    "fr": "Qu'est-ce qu'une circonscription électorale?"
+  },
+  "options": [
+    {
+      "en": "A list of candidates put forward by a party.",
+      "fr": "Une liste de candidats présentée par un parti."
+    },
+    {
+      "en": "A province or a territory.",
+      "fr": "Une province ou un territoire."
+    },
+    {
+      "en": "An area that elects several members of Parliament.",
+      "fr": "Une région qui élit plusieurs députés."
+    },
+    {
+      "en": "An area of the country that elects one member of Parliament.",
+      "fr": "Une région du pays qui élit un seul député."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "An electoral district is also called a riding or a constituency. Each one elects a single member, who sits in the House of Commons and speaks both for that district and for all Canadians.",
+    "fr": "Une circonscription électorale est aussi appelée un comté. Chacune élit un seul député, qui siège à la Chambre des communes et parle au nom de sa circonscription comme au nom de tous les Canadiens."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "An electoral district is a geographical area represented by a member of Parliament (MP). The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

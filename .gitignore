@@ -15,10 +15,22 @@ node_modules/
 .env.*
 
 
-# Scratch files written by scripts/assets.mjs while it packs. Now that `/dist/`
-# is anchored this rule is reachable; before, `dist/` swallowed the whole
-# directory and this line was dead.
-assets/dist/**/*.tmp
+# Everything scripts/assets.mjs writes into assets/dist is build output: WebP
+# atlases and their JSON, standalone WebP, copied .riv artboards and
+# manifest.json, all content-hashed and rebuilt from assets/src by every
+# `make assets`. Committing them would put a second, staler, content-hashed copy
+# of every asset in the repository on every art change - the fastest route there
+# is to the 1 GB repository ceiling in CLAUDE.md.
+#
+# `.gitkeep` stays tracked: vite.config.ts sets `publicDir: 'assets/dist'`, and
+# the credit gate in scripts/validate-content.mjs treats `assets/dist` as
+# generated (provenance belongs to the source in assets/src, not to a hashed
+# derivative), so the directory must exist in a fresh checkout.
+#
+# This replaces `assets/dist/**/*.tmp`, which named scratch files the packer
+# never actually wrote: it packs in memory and writes each output once.
+/assets/dist/*
+!/assets/dist/.gitkeep
 
 # The cached Discover Canada study guide and its extracted text. Crown copyright:
 # we may paraphrase it and must not redistribute it. `content/sources/*.json`
@@ -26,3 +38,4 @@ assets/dist/**/*.tmp
 # hash-check the same bytes; the bytes themselves stay out of the repository.
 content/sources/*.pdf
 content/sources/*.txt
+content/sources/*.html

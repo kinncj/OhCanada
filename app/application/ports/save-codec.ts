@@ -12,10 +12,10 @@
  * versions forward, and returns `Result` — a bad code shows a message, it does not
  * crash the game or silently reset progress.
  *
- * PROVISIONAL (ADR-0008) — nothing imports this port and nothing implements it
- * yet. First call site: slice 1 task 1.6 (JSON export/import). Whoever writes the
- * first implementation may change this interface without an ADR, and removes this
- * marker in the same change.
+ * Consumed since slice 1 task 1.6, so the ADR-0008 marker is gone: this shape has
+ * been compiled against a real caller. `decode`'s promise is now keepable, which
+ * it was not when this file was written — `content/schemas/progress.schema.json`
+ * exists, so "validate against the save schema" names something real.
  */
 
 import type { Result } from '@common/result';

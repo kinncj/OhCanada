@@ -10,10 +10,18 @@
  * source for frame and timer arithmetic — it does not jump when the device clock is
  * corrected and it never goes backwards.
  *
- * PROVISIONAL (ADR-0008) — nothing imports this port and nothing implements it
- * yet. First call sites: slice 1 task 1.4 (`QuestionScheduler`) and 1.5 (the use
- * cases). Whoever writes the first implementation may change this interface
- * without an ADR, and removes this marker in the same change.
+ * The ADR-0008 marker is gone: slice 1 task 1.5 landed the first call sites.
+ * `StartQuest`, `AnswerQuestion`, `ScheduleReview` and `SaveProgress` all hold
+ * this port and pass `now()` into rules that may not reach one — the scheduler
+ * is domain code and `domain-is-pure` forbids it importing a port, so it takes
+ * `now` as an argument and the use case above it supplies one.
+ *
+ * `now` and `nowIso` are the two ends of the conversion ADR-0012 records: the
+ * domain does arithmetic on `EpochMillis`, the save document persists
+ * `IsoInstant`, and `SaveCodec` is where one becomes the other:
+ * `app/application/persistence/iso-instant.ts` writes both directions out, so an
+ * adapter implementing `nowIso()` has one conversion to call rather than a
+ * second one to write.
  */
 
 import type { EpochMillis, IsoInstant } from '@domain/ids';

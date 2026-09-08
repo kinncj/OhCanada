@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-43-added-on-election-day",
+  "subject": "government",
+  "prompt": {
+    "en": "You are a citizen but you are not on the voters' list and no card arrived. What can you do?",
+    "fr": "Vous êtes citoyen, mais vous n'êtes pas sur la liste électorale et vous n'avez pas reçu de carte. Que pouvez-vous faire?"
+  },
+  "options": [
+    {
+      "en": "Nothing; the deadline has passed.",
+      "fr": "Rien; le délai est écoulé."
+    },
+    {
+      "en": "You can be added to the list at any time, including on election day.",
+      "fr": "Vous pouvez être ajouté à la liste en tout temps, même le jour du scrutin."
+    },
+    {
+      "en": "You must wait for the next election.",
+      "fr": "Vous devez attendre la prochaine élection."
+    },
+    {
+      "en": "You must ask a judge for permission.",
+      "fr": "Vous devez demander la permission à un juge."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "There is no registration deadline that shuts a citizen out. If no card arrived, you can call your local elections office to check the list, and you can still be added right up to voting day.",
+    "fr": "Aucun délai d'inscription n'empêche un citoyen de voter. Si vous n'avez pas reçu de carte, vous pouvez appeler votre bureau d'élection local pour vérifier la liste, et vous pouvez encore être ajouté jusqu'au jour du scrutin."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 61,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Even if you choose not to be listed in the National Register of Electors or do not receive a voter information card, you can still be added to the voters’ list at any time, including on election day."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

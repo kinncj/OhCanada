@@ -131,6 +131,24 @@ module.exports = {
       },
     },
     {
+      name: 'no-scheduler-library-in-app',
+      comment:
+        'ts-fsrs is a TEST ORACLE, not a runtime dependency (ADR-0012). The scheduling maths ' +
+        'is written out in app/domain/scheduling and pinned against the library by exact ' +
+        'equality in tests/unit/domain, which is legal precisely where the import is not. ' +
+        'domain-is-pure and application-no-frameworks already stop it reaching the two layers ' +
+        'that would want it; this rule closes the remaining door, an adapter importing it and ' +
+        'pushing the arithmetic outside the >= 90% coverage gate, which is the outcome ADR-0012 ' +
+        'rejected. If you are here because you want the library at runtime, that is an ADR, not ' +
+        'an import.',
+      severity: 'error',
+      from: { path: '^app' },
+      to: {
+        dependencyTypes: ['npm', 'npm-dev', 'npm-optional', 'npm-peer', 'npm-no-pkg'],
+        path: '^node_modules/ts-fsrs(/|$)',
+      },
+    },
+    {
       name: 'no-circular',
       comment:
         'No cycles, including cycles that only exist in the type graph. A cycle means two ' +

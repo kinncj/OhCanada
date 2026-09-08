@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-30-three-branches",
+  "subject": "government",
+  "prompt": {
+    "en": "What are the three branches of government in Canada?",
+    "fr": "Quels sont les trois pouvoirs de l'État au Canada?"
+  },
+  "options": [
+    {
+      "en": "The Sovereign, the Senate and the House of Commons.",
+      "fr": "Le souverain ou la souveraine, le Sénat et la Chambre des communes."
+    },
+    {
+      "en": "The executive, the legislative and the judicial.",
+      "fr": "L'exécutif, le législatif et le judiciaire."
+    },
+    {
+      "en": "Federal, provincial and municipal.",
+      "fr": "Le fédéral, le provincial et le municipal."
+    },
+    {
+      "en": "The Cabinet, the Senate and the Supreme Court.",
+      "fr": "Le Cabinet, le Sénat et la Cour suprême."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The three branches work together, and sometimes pull against each other, and that tension helps protect people's rights and freedoms. Do not mix them up with the three parts of Parliament.",
+    "fr": "Les trois pouvoirs travaillent ensemble et se font parfois contrepoids, et cette tension aide à protéger les droits et libertés. Il ne faut pas les confondre avec les trois parties du Parlement."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 58,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The interplay between the three branches of government—the Executive, Legislative and Judicial—which work together but also sometimes in creative tension, helps to secure the rights and freedoms of Canadians."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

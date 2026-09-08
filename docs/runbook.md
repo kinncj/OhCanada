@@ -402,6 +402,9 @@ delete `infra/pages/sw.js`, the plugin in `vite.config.ts`, and the `sw.js` clau
 | Fetchable `dist/` over `budgets.totalPayloadBytes` | CLAUDE.md budgets |
 | `basePath` not matching the publishing repository | ADR-0006 |
 | `dist/sw.js` missing, serving fetches, or in the initial payload | this runbook, §3b |
+| A level over `budgets.levelPayloadBytes` | CLAUDE.md budgets, via `scripts/lib/level-payload.mjs` |
+| A level over its `textureBudgetBytes`, or over the 64 MiB decoded-texture ceiling | CLAUDE.md budgets, via `scripts/lib/texture-memory.mjs` |
+| A full-screen parallax layer shipping a 2x variant | owner's decision, slice 1; same gate |
 
 "Initial payload" is defined precisely in the header of that script: `index.html` plus everything it
 statically references plus everything those chunks reach by static ES import, excluding `.map` files and
@@ -414,6 +417,37 @@ twice is consistent rather than incongruous, and `sourcemap: true` stays. The 10
 against the 1 GB repository cap and the 100 MB per-file cap, both of which are checked above and neither of
 which is close. The rule that follows from it is unchanged and absolute: **never place a secret in this
 tree** — it is published as the repository and again as the sourcemaps, and neither can be taken back.
+
+The last three also run inside `make assets`, over `assets/dist/` rather than `dist/`, in the same process
+and under the same exit code — so there is no way to build assets and skip them. `make check-assets` and
+`make check-textures` run them alone.
+
+### When the deploy fails on decoded texture memory
+
+This is the one that reads as a surprise, because the download budget will be nowhere near troubled when it
+fires. They are different quantities over the same files: a WebP is small on the wire and is
+`width x height x 4` once the GPU holds it. A 2160x3840 sky is 31.6 MiB decoded and about 33 kB
+transferred — a factor of a thousand. **This is the constraint that killed this project's predecessor:**
+roughly 190 textures, WebGL context lost around 538 MB, on an iPhone that had reported every capability as
+available, and found by a user rather than by us.
+
+So do not respond to it by turning compression up; compression does not exist on the GPU. The three real
+answers, in order of preference:
+
+1. **Author the source smaller.** The failure names the heaviest textures with their pixel dimensions. A
+   parallax layer that repeats (`repeatX` in the level document) does not need to be as wide as the level.
+2. **Split it into tiles that repeat.** Art-bible 6: a layer tiles at the seam anyway.
+3. **Drop the layer.** Cheaper than a lost context.
+
+Lowering the number is not on that list. `textureBudgetBytes` may be made *stricter* than the 64 MiB
+ceiling in a level document at any time; it may not be made looser, and the gate refuses a level document
+that tries. Raising the ceiling itself means an ADR plus the same number in CLAUDE.md,
+`content/schemas/level.schema.json`, `scripts/lib/texture-memory.mjs` and
+`app/adapters/phaser/level-document.ts`, which is deliberately tedious.
+
+The number the gate prints on a green run is the real one, per device scale — read it rather than trusting
+the pass. As of 2026-09-08, Ottawa holds 38.23 MiB of 48.00 MiB declared (64 MiB global), 23.41 MiB on a 1x
+device and 38.23 MiB on a 2x device.
 
 If a budget is genuinely too small for what the game needs, the fix is an ADR that changes the number in
 `content/game.config.json`, not a change to the check.

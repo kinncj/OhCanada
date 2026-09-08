@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-21-vote-right-and-responsibility",
+  "subject": "government",
+  "prompt": {
+    "en": "How is voting described for Canadians aged 18 and over?",
+    "fr": "Comment le vote est-il présenté pour les Canadiens de 18 ans et plus?"
+  },
+  "options": [
+    {
+      "en": "As a right only, which nobody expects you to use.",
+      "fr": "Comme un droit seulement, que personne ne s'attend à vous voir exercer."
+    },
+    {
+      "en": "As both a right and a responsibility.",
+      "fr": "Comme un droit et une responsabilité à la fois."
+    },
+    {
+      "en": "As a duty enforced by a fine.",
+      "fr": "Comme une obligation punie d'une amende."
+    },
+    {
+      "en": "As a choice open only to people born in Canada.",
+      "fr": "Comme un choix réservé aux personnes nées au Canada."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Living in a democracy means helping to make the decisions that affect you. Canadians of voting age are asked to take part in federal, provincial or territorial, and municipal elections. Nobody is fined for staying home, but voting is treated as a responsibility, not just a right.",
+    "fr": "Vivre en démocratie, c'est participer aux décisions qui vous touchent. On invite les Canadiens en âge de voter à participer aux élections fédérales, provinciales ou territoriales et municipales. Personne n'est mis à l'amende s'il reste chez lui, mais le vote est présenté comme une responsabilité, et pas seulement comme un droit."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 56,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Living in a democracy, Canadian citizens have the right and the responsibility to participate in making decisions that affect them."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -5,7 +5,7 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup lint typecheck test test-e2e test-perf test-a11y \
-        assets validate-content verify-content verify-art build preview clean \
+        assets check-assets check-textures validate-content verify-content verify-art build preview clean \
         check-obligations
 
 help: ## List every target
@@ -44,8 +44,27 @@ test-perf: ## Playwright performance-budget suite
 test-a11y: ## Playwright axe-core accessibility suite
 	npm run test:a11y
 
-assets: ## Build assets/dist from assets/src
+assets: ## Build assets/dist from assets/src, then hold both per-level budgets
 	npm run assets
+
+# `assets` already runs both gates over what it just built, in the same process
+# and under the same exit code, so there is no way to build assets and skip them.
+# These targets run them alone, for when that is all you want to look at, or to
+# re-check a dist/ that `make build` produced:
+#     npm run check-level-payload  -- --dir dist --source dist --no-scan-root
+#     npm run check-texture-memory -- --dir dist --source dist
+#
+# Two targets because they are two quantities, not two views of one. `check-assets`
+# weighs what a player DOWNLOADS; `check-textures` weighs what the GPU HOLDS, which
+# is width x height x 4 and has nothing to do with how well WebP compressed it. A
+# level can pass the first at 3 MB and fail the second at 130 MB -- that is how this
+# project's predecessor lost a WebGL context, on a device that had reported every
+# capability as available.
+check-assets: ## budgets.levelPayloadBytes, over assets/dist/manifest.json
+	npm run check-level-payload
+
+check-textures: ## Decoded texture memory per level vs textureBudgetBytes and the 64 MiB cap
+	npm run check-texture-memory
 
 validate-content: ## Validate every content file against its JSON Schema
 	npm run validate-content

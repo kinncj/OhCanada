@@ -10,14 +10,14 @@ import { expect, test } from '@playwright/test';
  * build nobody deploys. So the gate itself is what has to be tested, and it is
  * tested here on the same bytes that go to Pages.
  *
- * What this suite can prove today, and what it cannot: slice 0 has no level, no
- * player and no camera, so `data-player-x`, `data-speed` and the rest report
- * `unknown`. That is the honest answer and it is asserted as such — the
- * attributes exist and are named correctly, and they say they do not know rather
- * than reporting a plausible zero. The momentum scenarios in `TN-LEVEL-03` turn
- * on when task 1.14 starts filling them in, and `tests/unit/adapters/phaser/
- * scene-probe.test.ts` already rehearses that every one of them is expressible
- * over the frame trace.
+ * What this suite covers is the probe *at boot*, with no level open. That is
+ * still a real state — `./?e2e=1` opens the boot screen and nothing else — and
+ * the assertion that matters there is that the probe says `unknown` rather than
+ * reporting a plausible zero for a player who does not exist.
+ *
+ * The probe with a level behind it is `level-ottawa.spec.ts`, which is where
+ * `data-player-x`, `data-speed` and the frame trace are asserted against real
+ * movement (tasks 1.13 and 1.14).
  */
 
 /** Fixed by `docs/stories/README.md`. Restated so a rename fails a test. */
@@ -99,9 +99,11 @@ test.describe('the scene probe', () => {
     ).toHaveAttribute('data-tn-tier', /^(low|medium)$/);
   });
 
-  test('says "unknown" for what slice 0 has no answer to, rather than a plausible zero', async ({
-    page,
-  }) => {
+  test('says "unknown" with no level open, rather than a plausible zero', async ({ page }) => {
+    /* `./?e2e=1` with no `level` opens the boot screen. There is no player and
+       no camera, and a probe that answered "0" would be reporting a measurement
+       it never took — the defect this element exists to avoid. The same
+       attributes carry real numbers in `level-ottawa.spec.ts`. */
     await page.goto('./?e2e=1');
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
 
@@ -109,10 +111,11 @@ test.describe('the scene probe', () => {
     for (const attribute of ['data-level', 'data-mode', 'data-player-x', 'data-speed']) {
       await expect(
         probe,
-        `${attribute} reports a value, but slice 0 has no level and no player — ` +
+        `${attribute} reports a value, but no level is open and there is no player — ` +
           'a probe that invents an answer is worse than one that admits it has none',
       ).toHaveAttribute(attribute, 'unknown');
     }
+    await expect(page.locator('[data-testid="playable"]')).toHaveCount(0);
   });
 
   test('exposes a read-only frame trace, which is what a poll cannot give', async ({ page }) => {

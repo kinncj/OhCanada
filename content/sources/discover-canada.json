@@ -18,52 +18,62 @@
     {
       "title": "Rights and Responsibilities of Citizenship",
       "page": 11,
-      "level": 1
+      "level": 1,
+      "endPage": 15
     },
     {
       "title": "Who We Are",
       "page": 16,
-      "level": 2
+      "level": 2,
+      "endPage": 22
     },
     {
       "title": "Canada's History",
       "page": 23,
-      "level": 3
+      "level": 3,
+      "endPage": 44
     },
     {
       "title": "Modern Canada",
       "page": 45,
-      "level": 7
+      "level": 7,
+      "endPage": 53
     },
     {
       "title": "How Canadians Govern Themselves",
       "page": 54,
-      "level": 4
+      "level": 4,
+      "endPage": 59
     },
     {
       "title": "Federal Elections",
       "page": 60,
-      "level": 5
+      "level": 5,
+      "endPage": 74
     },
     {
       "title": "The Justice System",
       "page": 75,
-      "level": 6
+      "level": 6,
+      "endPage": 77
     },
     {
       "title": "Canadian Symbols",
       "page": 78,
-      "level": 9
+      "level": 9,
+      "endPage": 89
     },
     {
       "title": "Canada's Economy",
       "page": 90,
-      "level": 8
+      "level": 8,
+      "endPage": 92
     },
     {
       "title": "Canada's Regions",
       "page": 93,
-      "level": 10
+      "level": 10,
+      "endPage": 129
     }
   ],
   "knownStaleness": [
@@ -73,16 +83,21 @@
       "affects": [
         "Rights and Responsibilities of Citizenship"
       ],
-      "action": "volatile: verify against the live canada.ca page, never against this file"
+      "action": "volatile: verify against the live canada.ca page, never against this file",
+      "grain": "chapter"
     },
     {
       "topic": "The monarch and the Governor General",
-      "problem": "References to the Sovereign are pre-accession. The document contains six references to Elizabeth II or Her Majesty and one to His Majesty, so it is partially and inconsistently updated.",
+      "problem": "References to the Sovereign are pre-accession throughout: five occurrences of \"Her Majesty\" and eight of \"Elizabeth\", and zero of \"His Majesty\". The document is uniformly old on this point rather than partly updated. An earlier note in this file claimed one \"His Majesty\"; that was a misread of \"King Charles II of England\" in a 1670 sentence about the Hudson's Bay Company charter.",
       "affects": [
         "How Canadians Govern Themselves",
         "Canadian Symbols"
       ],
-      "action": "volatile: verify against the live canada.ca page"
+      "action": "volatile: verify against the live canada.ca page",
+      "pages": [
+        57
+      ],
+      "grain": "pages"
     },
     {
       "topic": "Named office holders and election dates",
@@ -92,7 +107,26 @@
         "Federal Elections",
         "Modern Canada"
       ],
-      "action": "volatile: re-verify every run, quarantine when asOf exceeds 180 days"
+      "action": "volatile: re-verify every run, quarantine when asOf exceeds 180 days",
+      "pages": [
+        57,
+        60,
+        63
+      ],
+      "grain": "pages"
+    },
+    {
+      "topic": "The Oath of Citizenship is genuinely mixed",
+      "problem": "The cached Oath on page 2 already carries the June 2021 amendment recognising the Aboriginal and treaty rights of First Nations, Inuit and Metis peoples, while still naming Queen Elizabeth the Second. So one passage is simultaneously current and out of date. That is the real 'reads as current in places' hazard in this document, and it is sharper than a uniformly old text would be.",
+      "affects": [
+        "Rights and Responsibilities of Citizenship"
+      ],
+      "action": "volatile: verify against the live canada.ca page, never against this file",
+      "pages": [
+        2
+      ],
+      "grain": "pages"
     }
-  ]
+  ],
+  "grainNote": "knownStaleness entries carry `pages` where the affected claims are localised, and fall back to `affects` chapters where they are not. Chapter grain alone made 57 of 57 authored questions volatile because two facts in the chapter were, which stopped the flag discriminating: everything is re-verified every run and quarantined at 180 days, so nothing is prioritised. A flag that fires on everything carries the same information as a flag that fires on nothing."
 }

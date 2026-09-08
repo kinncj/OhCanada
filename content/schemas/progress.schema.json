@@ -193,7 +193,20 @@
             { "type": "null" }
           ]
         },
-        "state": {
+        "firstReviewedAt": {
+          "description": "When this question was first answered; null while it has never been. `scheduler.dailyNewLimit` means \"introduced today\", and without this field the only marker of a new question is reps === 1, which stops being true the moment a question is answered twice - measured, that let 26 of 30 questions through a limit of 10 in one day. With it, exactly 10.",
+          "anyOf": [
+            { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+            { "type": "null" }
+          ]
+        },
+        "learningSteps": {
+          "description": "Which short-term step the question is on while its phase is learning or relearning; 0 otherwise. The next gap is read from this index, so a snapshot without it silently restarts the sequence after a reload - a question two steps into relearning comes back as if it had just lapsed.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "phase": {
+          "description": "Where the question sits in the review cycle. Named `phase`, not `state`: \"card state\" is on TN-CARD-02's banned-vocabulary list, and a field the UI can read is a field the UI can leak. The four values are the model's, not the player's, and none of them is ever shown.",
           "type": "string",
           "enum": ["new", "learning", "review", "relearning"]
         }
@@ -206,7 +219,9 @@
         "reps",
         "lapses",
         "lastReview",
-        "state"
+        "firstReviewedAt",
+        "learningSteps",
+        "phase"
       ],
       "additionalProperties": false
     },

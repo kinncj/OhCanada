@@ -8,10 +8,12 @@
  *
  * Serialisation is *not* this port's job — see `SaveCodec`.
  *
- * PROVISIONAL (ADR-0008) — nothing imports this port and nothing implements it
- * yet. First call site: slice 1 task 1.6 (the localStorage adapter). Whoever
- * writes the first implementation may change this interface without an ADR, and
- * removes this marker in the same change.
+ * Consumed since slice 1 task 1.6 by `app/application/persistence/`, so the
+ * ADR-0008 marker is gone: this shape has been compiled against a real caller.
+ * It is still young, and changing it is a two-file edit in a fixed order —
+ * `content/schemas/progress.schema.json` first, this file second (ADR-0007) —
+ * because the schema is what `SaveCodec.decode` validates against and what a
+ * save written by an older build is held to.
  */
 
 import type {
@@ -34,7 +36,17 @@ import type { Result } from '@common/result';
  * `SaveCodec.decode` has something real to validate against.
  */
 
-/** FSRS card state for one question. The scheduler itself is pure domain (ADR-0001). */
+/**
+ * The persisted half of one question's review record. The model itself is pure
+ * domain (ADR-0001, ADR-0012).
+ *
+ * Timestamps here are `IsoInstant`; the domain's `ReviewRecord` holds the same
+ * moments as `EpochMillis`. That is deliberate and the conversion belongs to
+ * `SaveCodec` (ADR-0012): the domain does arithmetic — "is this due", "how many
+ * whole days since" — and epoch milliseconds are the type for arithmetic, while
+ * a save file is exported, pasted between devices and read by a person, and
+ * needs a value that is sortable, unambiguous about its timezone and legible.
+ */
 export interface ReviewStateDocument {
   readonly questionId: QuestionId;
   readonly due: IsoInstant;
@@ -43,7 +55,24 @@ export interface ReviewStateDocument {
   readonly reps: number;
   readonly lapses: number;
   readonly lastReview: IsoInstant | null;
-  readonly state: 'new' | 'learning' | 'review' | 'relearning';
+  /**
+   * When the question was first answered; `null` while it never has been.
+   * `dailyNewLimit` means "introduced today", and `reps === 1` stops marking that
+   * the moment a question is answered twice — which measured as 26 of 30
+   * questions introduced against a limit of 10.
+   */
+  readonly firstReviewedAt: IsoInstant | null;
+  /**
+   * Which short-term step the question is on while learning or relearning; 0
+   * otherwise. The next gap is read from this index, so a snapshot without it
+   * silently restarts the sequence after a reload.
+   */
+  readonly learningSteps: number;
+  /**
+   * Named `phase`, not `state`: "card state" is on TN-CARD-02's banned-vocabulary
+   * list, and a field the UI can read is a field the UI can leak.
+   */
+  readonly phase: 'new' | 'learning' | 'review' | 'relearning';
 }
 
 /**

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-50-who-forms-government",
+  "subject": "government",
+  "prompt": {
+    "en": "After an election, who is normally invited to form the government?",
+    "fr": "Après une élection, qui est normalement invité à former le gouvernement?"
+  },
+  "options": [
+    {
+      "en": "The candidate who received the most votes anywhere in Canada.",
+      "fr": "Le candidat qui a obtenu le plus de voix dans tout le Canada."
+    },
+    {
+      "en": "The leader of the party holding the most seats in the House of Commons.",
+      "fr": "Le chef du parti qui détient le plus de sièges à la Chambre des communes."
+    },
+    {
+      "en": "The person Canadians voted for as Prime Minister on the ballot.",
+      "fr": "La personne que les Canadiens ont choisie comme premier ministre sur le bulletin de vote."
+    },
+    {
+      "en": "The senator who has served the longest.",
+      "fr": "Le sénateur qui siège depuis le plus longtemps."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The Governor General issues the invitation, and once appointed that leader becomes Prime Minister. Canadians never mark a ballot for a Prime Minister; they elect the members, and the seat count decides.",
+    "fr": "C'est le gouverneur général qui lance l'invitation, et une fois nommé, ce chef devient premier ministre. Les Canadiens ne votent jamais pour un premier ministre sur leur bulletin : ils élisent des députés, et c'est le nombre de sièges qui tranche."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 62,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Ordinarily, after an election, the leader of the political party with the most seats in the House of Commons is invited by the Governor General to form the government. After being appointed by the Governor General, the leader of this party becomes the Prime Minister."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

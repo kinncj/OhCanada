@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-05-provincial-responsibilities",
+  "subject": "government",
+  "prompt": {
+    "en": "Which level of government looks after education and health?",
+    "fr": "Quel palier de gouvernement s'occupe de l'éducation et de la santé?"
+  },
+  "options": [
+    {
+      "en": "The federal government in Ottawa.",
+      "fr": "Le gouvernement fédéral, à Ottawa."
+    },
+    {
+      "en": "The city or town council.",
+      "fr": "Le conseil de la ville ou du village."
+    },
+    {
+      "en": "The provinces.",
+      "fr": "Les provinces."
+    },
+    {
+      "en": "All four levels equally.",
+      "fr": "Les quatre paliers, à parts égales."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Because health care is public everywhere in Canada, newcomers often think Ottawa runs it. The provinces do. They also look after municipal government, natural resources, property and civil rights, and highways.",
+    "fr": "Comme les soins de santé sont publics partout au Canada, les nouveaux arrivants croient souvent qu'Ottawa les gère. Ce sont les provinces qui le font. Elles s'occupent aussi des administrations municipales, des ressources naturelles, de la propriété et des droits civils, ainsi que des routes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 54,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The provinces are responsible for municipal government, education, health, natural resources, property and civil rights, and highways."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

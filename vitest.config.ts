@@ -65,6 +65,14 @@ export default defineConfig({
         'app/bootstrap/main.ts',
         'app/adapters/phaser/boot-scene.ts',
         'app/adapters/phaser/game-renderer.ts',
+        // Same reason, and the same discipline: `level-scene.ts` imports Phaser
+        // at module scope, so `environment: 'node'` cannot load it. Everything
+        // it would otherwise decide has been pushed into the pure modules beside
+        // it - `level-document`, `ground-profile`, `level-camera`,
+        // `level-effects`, `locomotion`, `playable-marker`, `level-catalog` -
+        // which ARE measured here. If this file starts growing rules rather than
+        // wiring, that is the signal to move them out, not to widen this list.
+        'app/adapters/phaser/level-scene.ts',
         // Re-export barrels. They hold no logic, and the modules behind them are
         // imported directly by their own suites, so counting the barrel would
         // only measure whether a test happened to go through the front door.

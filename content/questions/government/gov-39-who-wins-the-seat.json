@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-39-who-wins-the-seat",
+  "subject": "government",
+  "prompt": {
+    "en": "Which candidate becomes the MP for an electoral district?",
+    "fr": "Quel candidat devient le député d'une circonscription électorale?"
+  },
+  "options": [
+    {
+      "en": "The one who gets more than half of the votes.",
+      "fr": "Celui qui obtient plus de la moitié des voix."
+    },
+    {
+      "en": "The one whose party wins the most seats across Canada.",
+      "fr": "Celui dont le parti remporte le plus de sièges dans l'ensemble du Canada."
+    },
+    {
+      "en": "The one with the most votes in that district.",
+      "fr": "Celui qui obtient le plus de voix dans cette circonscription."
+    },
+    {
+      "en": "The one the Prime Minister chooses.",
+      "fr": "Celui que le premier ministre choisit."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Voters mark one ballot, for a candidate and a party in their own district. The candidate ahead of the others wins the seat, even without half the votes. No ballot anywhere names a Prime Minister.",
+    "fr": "Les électeurs remplissent un seul bulletin, pour un candidat et un parti dans leur propre circonscription. Le candidat qui devance les autres remporte le siège, même sans obtenir la moitié des voix. Aucun bulletin ne porte le nom d'un premier ministre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The people in each electoral district vote for the candidate and political party of their choice. The candidate who receives the most votes becomes the MP for that electoral district."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

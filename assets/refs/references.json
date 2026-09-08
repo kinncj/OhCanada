@@ -12,10 +12,15 @@
     "both directions, so an uncredited reference and a credit for a deleted file both fail the build.",
     "It is a denylist: an unrecognised file type defaults to needing a credit. OQ-ART-02 is closed.",
     "Licences were established from the Wikimedia Commons API before anything was downloaded, on",
-    "2026-09-08. Only CC0-1.0 and CC-BY-4.0 are present; assets/refs/README.md explains why that set",
-    "is narrower than ADR-0004 alone would allow, and lists what was left out because of it.",
+    "2026-09-08, and again on 2026-09-08 for the three files added after the credits enum was widened.",
     "Reference photographs are drawing references and verification inputs. They are not shipped in",
-    "the built game and must never be traced, filtered, posterised or otherwise turned into art."
+    "the built game and must never be traced, filtered, posterised or otherwise turned into art.",
+    "AMENDED 2026-09-08 while drawing task 1.9. Three numbers in `mustBeRight` were written from",
+    "memory of the photographs rather than from measurement, and measuring them found two of the",
+    "three wrong. They are corrected in place, with the measurement and the file it came from, and",
+    "the places where the shipped drawing deliberately departs from the measurement are now labelled",
+    "as exaggerations rather than left to look like accuracy. A contract that a render cannot be",
+    "checked against is worse than no contract."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -37,18 +42,20 @@
         "ottawa/peace-tower-elevation.jpg",
         "ottawa/centre-block-front-elevation.jpg",
         "ottawa/peace-tower-clock-face.jpg",
-        "ottawa/parliament-hill-skyline.jpg"
+        "ottawa/peace-tower-clock-daylight.jpg",
+        "ottawa/parliament-hill-skyline.jpg",
+        "officer/officer-and-peace-tower-portrait.jpg"
       ],
       "mustBeRight": [
         {
           "feature": "green copper spire",
           "why": "The single strongest colour cue. A tall pale-green pyramidal spire on a pale stone tower is the Peace Tower and almost nothing else.",
-          "detail": "Steep square-based pyramid, apex angle roughly 26 degrees, oxidised copper green. Height of the spire alone is about 30 percent of the total tower height."
+          "detail": "Steep square-based pyramid, apex angle about 26 degrees, oxidised copper green. MEASURED 2026-09-08: the spire is 0.21 of the tower height in peace-tower-elevation.jpg and 0.18 in officer-and-peace-tower-portrait.jpg. The 'about 30 percent' this entry carried until then was never measured and was wrong; it is corrected rather than kept, because a render built to it would put the spire base through the clock. Spire base width is 0.75 of the shaft width. Anything under 0.15 of the tower height stops reading as the Peace Tower."
         },
         {
           "feature": "clock face",
           "why": "Named in the brief and in every photograph a learner has seen. Without it the tower is a generic Gothic spire.",
-          "detail": "One large circular white clock face centred on the tower shaft, set just below the spire, roughly 0.62 of the way up the total height. Dark hands, Roman numerals, dark surround. Diameter is about 0.55 of the tower shaft's width."
+          "detail": "One large circular white clock face centred on the tower shaft, just below the belfry stage. MEASURED: centre at 0.74 of the tower height above the terrace (0.62 was recorded here before measurement and was wrong), dial diameter 0.40 of the shaft width. Dark surround, dark hands. DELIBERATE EXAGGERATION: the shipped art draws the dial at 0.55 of the shaft width and centres it at 0.72, because 0.40 is 24 px at design resolution and stops being a clock on a phone. Exaggerating an identifying feature is simplification (art-bible section 5, rule 2); this is the only feature on this subject that is exaggerated, and the spire is NOT, so the two do not collide."
         },
         {
           "feature": "national flag on the mast above the spire",
@@ -68,7 +75,7 @@
         },
         {
           "feature": "vertical proportion",
-          "detail": "The tower reads as slender: shaft width to total height is about 1:8. Anything squatter than 1:6 stops being the Peace Tower."
+          "detail": "The tower reads as slender: shaft width to total height. MEASURED 1:6.8 in peace-tower-elevation.jpg (a telephoto from below, foreshortened at the base) and 1:8.5 in officer-and-peace-tower-portrait.jpg; the building itself is about 1:7.6 (92.2 m tall on a 12.2 m square shaft). The shipped art is 880 x 113 = 1:7.8. Anything squatter than 1:6 stops being the Peace Tower."
         }
       ],
       "simplifyAway": [
@@ -77,7 +84,9 @@
         "gargoyles and grotesques",
         "carved figures and heraldry over the arch",
         "dormers and chimneys under 8 px at design resolution",
-        "the corner turrets' finials"
+        "the corner turrets' finials",
+        "Roman numerals on the dial: below 6 px at design resolution, so they become four cardinal tick marks. Rhythm replacing count, not an invented ornament (art-bible section 5, rule 3)",
+        "the eleven-point outline of the maple leaf on the flag: at a 59 px flag the notches are 3 px, so the leaf is drawn as a bold five-lobe silhouette"
       ],
       "neverAdd": [
         "a second tower or spire on the Centre Block",
@@ -96,7 +105,9 @@
         "stripped to dark metal. Draw the building in its settled state: green copper wing roofs, no",
         "cranes, no hoarding. `parliament-hill-skyline.jpg` shows that state. See OQ-ART-05.",
         "`peace-tower-clock-face.jpg` is a night exposure with a purple cast; use it for the dial layout",
-        "and the numeral style, not for colour."
+        "and the numeral style, not for colour.",
+        "peace-tower-clock-daylight.jpg (CC BY 2.0, added 2026-09-08 once the credits enum could express the licence) is the daylight dial: use it for the dial layout, the surround and the belfry, not peace-tower-clock-face.jpg, which is a night exposure with a purple cast.",
+        "officer-and-peace-tower-portrait.jpg is public domain and frames the whole composition this level wants - Centre Block symmetrical about the tower, green copper wing roofs intact, seen from the lawn. It predates 1965, so the mast flies the Canadian Red Ensign; the level draws the National Flag of Canada."
       ]
     },
     {
@@ -161,9 +172,9 @@
       ],
       "mustBeRight": [
         {
-          "feature": "a long straight ice lane between two walls",
-          "why": "This is a canal, not a pond or a lake. The parallel containment is the whole read.",
-          "detail": "Two low masonry retaining walls run to the vanishing point, one on each side, with snow banked against them. The ice fills the full width between them."
+          "feature": "the ice lane is contained by built edges, not by a natural shore",
+          "why": "This is a canal, not a pond or a lake. The containment is the whole read. It was written as 'two low retaining walls running to the vanishing point', which is a view down the canal; TrueNorth is a side-scroller and looks ACROSS it, where that view does not exist. Amended 2026-09-08 so the contract describes what the shipped camera can show.",
+          "detail": "In the side view the containment reads as: one low masonry retaining wall running the full width behind the ice with snow banked against its foot, an iron railing along its head, and a near snow bank framing the bottom of the frame. Ice fills everything between them. Straight, level, parallel edges - a built channel, never a curved shoreline."
         },
         {
           "feature": "scored skate marks in the ice",
@@ -197,7 +208,8 @@
         "Chateau Laurier above. Use it for lock-gate geometry and canal masonry only. The Chateau",
         "Laurier is not a slice-1 subject and should not be drawn as a recognisable landmark here.",
         "`rideau-canal-skateway-portrait.jpg` is the closest reference to the shipped aspect ratio and",
-        "is the primary composition reference for the level."
+        "is the primary composition reference for the level.",
+        "The road bridge is drawn end-on, because a bridge crossing the canal is seen as a portal the skater passes through when the camera looks across the canal rather than along it."
       ]
     },
     {
@@ -215,7 +227,9 @@
         "officer/red-serge-full-figure.jpg",
         "officer/red-serge-musical-ride.jpg",
         "officer/stetson-felt-hat.jpg",
-        "officer/sam-browne-belt-hardware.jpg"
+        "officer/sam-browne-belt-hardware.jpg",
+        "officer/officer-and-peace-tower-portrait.jpg",
+        "officer/red-serge-and-working-uniform.jpg"
       ],
       "mustBeRight": [
         {
@@ -289,7 +303,9 @@
       "notes": [
         "red-serge-full-figure.jpg is cropped from a photograph that also showed a private individual; the crop removes him and focuses the uniform.",
         "sam-browne-belt-hardware.jpg is a British WW2 Sam Browne from the Auckland War Memorial Museum, NOT an RCMP belt. Use it for buckle, strap-width and brass-hardware geometry only.",
-        "red-serge-musical-ride.jpg shows the uniform at distance in daylight: use it to check that the silhouette and the leg stripe still read when the figure is small."
+        "red-serge-musical-ride.jpg shows the uniform at distance in daylight: use it to check that the silhouette and the leg stripe still read when the figure is small.",
+        "officer-and-peace-tower-portrait.jpg is public domain (Crown copyright expired) and is the composition reference: scarlet review order, full length, standing on Parliament Hill with the Peace Tower behind, in portrait. It shows an identifiable person - rule 4 in assets/refs/README.md applies, it is a reference for uniform, posture and framing and never a portrait to reproduce.",
+        "red-serge-and-working-uniform.jpg shows ceremonial scarlet beside the modern working uniform, which is the visual answer to OQ-LEVEL-2 if the PO chooses the winter option."
       ]
     }
   ],
@@ -297,9 +313,12 @@
     "checkedOn": "2026-09-08",
     "method": "Wikimedia Commons API, prop=imageinfo&iiprop=extmetadata, before download",
     "acceptedLicences": [
+      "public-domain",
       "CC0-1.0",
+      "CC-BY-2.0",
+      "CC-BY-3.0",
       "CC-BY-4.0"
     ],
-    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for it. Part of OQ-ART-06."
+    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md."
   }
 }

@@ -1,0 +1,33 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "cirnac-algonquin-parliamentary-precinct",
+  "title": "Traditional signing ceremony marks the commitment to establish a dedicated Algonquin space in the Parliamentary Precinct",
+  "publisher": "Crown-Indigenous Relations and Northern Affairs Canada",
+  "edition": "News release, 5 June 2024",
+  "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2024/06/traditional-signing-ceremony-marks-the-commitment-to-establish-a-dedicated-algonquin-space-in-the-parliamentary-precinct.html",
+  "file": "cirnac-algonquin-parliamentary-precinct.html",
+  "extractedText": "cirnac-algonquin-parliamentary-precinct.txt",
+  "sha256": "b20dd776919c80fe4478badd0e9806c7f854e05eee722787a8b70c789d8610c2",
+  "extractedTextSha256": "8276d6ce5e2ec94e9cf29a39be32a1a7dadcf09cd067b863b3478388349a5727",
+  "bytes": 37852,
+  "retrievedAt": "2026-09-08",
+  "licence": "Crown copyright, Government of Canada. Cited and paraphrased; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Traditional signing ceremony marks the commitment to establish a dedicated Algonquin space in the Parliamentary Precinct"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "A dated news release, not a maintained page",
+      "problem": "This is a point-in-time release from 5 June 2024, not a page anyone keeps current. It is cited for a statement about territory, which does not expire, but the document around it may be withdrawn or rewritten. The maintained alternative, RCAANC's Algonquins of Ontario land-claim page, states the same two facts in separate sentences: the treaty sentence never names Ottawa, and the Ottawa sentence describes the extent of a claim rather than a Crown finding. Only this release carries both halves in one contiguous string, which is what a quote has to be.",
+      "affects": [
+        "Traditional signing ceremony marks the commitment to establish a dedicated Algonquin space in the Parliamentary Precinct"
+      ],
+      "grain": "chapter",
+      "action": "re-fetch and re-hash if the claim is ever challenged"
+    }
+  ],
+  "grainNote": "One web page, one chapter. `pages` is absent because the source is not paginated, so the contract test's missing-page fault correctly does not fire."
+}

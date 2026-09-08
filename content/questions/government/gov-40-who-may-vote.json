@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-40-who-may-vote",
+  "subject": "government",
+  "prompt": {
+    "en": "Who may vote in a federal election?",
+    "fr": "Qui peut voter à une élection fédérale?"
+  },
+  "options": [
+    {
+      "en": "Any permanent resident aged 18 or older.",
+      "fr": "Tout résident permanent âgé de 18 ans ou plus."
+    },
+    {
+      "en": "Anyone who has lived in Canada for five years.",
+      "fr": "Toute personne qui vit au Canada depuis cinq ans."
+    },
+    {
+      "en": "A Canadian citizen who is at least 18 on voting day and is on the voters' list.",
+      "fr": "Un citoyen canadien âgé d'au moins 18 ans le jour du scrutin et inscrit sur la liste électorale."
+    },
+    {
+      "en": "Any Canadian citizen aged 16 or older.",
+      "fr": "Tout citoyen canadien âgé de 16 ans ou plus."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "All three conditions must be met, and citizenship is the one people miss. Permanent residents live in Canada and pay taxes here, but they cannot vote federally until they become citizens.",
+    "fr": "Les trois conditions doivent être remplies, et c'est la citoyenneté qu'on oublie le plus souvent. Les résidents permanents vivent au Canada et y paient des impôts, mais ils ne peuvent pas voter au fédéral avant d'obtenir la citoyenneté."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 61,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "You are eligible to vote in a federal election or cast a ballot in a federal referendum if you are: • a Canadian citizen; and • at least 18 years old on voting day; and • on the voters’ list."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -6,10 +6,11 @@
  * The domain therefore never calls `Math.random()`; it takes a `RandomSource`.
  * A seeded implementation makes a failing exam draw replayable from its seed.
  *
- * PROVISIONAL (ADR-0008) — nothing imports this port and nothing implements it
- * yet. First call site: slice 1 task 1.4 (`QuestionScheduler`, seeded RNG).
- * Whoever writes the first implementation may change this interface without an
- * ADR, and removes this marker in the same change.
+ * The ADR-0008 marker is gone: `ScheduleReview` (slice 1 task 1.5) is the first
+ * call site. It passes this port straight into the domain draw, which declares
+ * its own one-method `Randomness` because `domain-is-pure` forbids it importing
+ * the application layer; `RandomSource` satisfies that structurally, so a seeded
+ * stream reaches the scheduler with no adapter in between.
  */
 
 export interface RandomSource {
