@@ -1,0 +1,41 @@
+# Dependency updates. Every dependency in this repository is pinned to an exact
+# version on purpose, which means nothing updates unless something opens a pull
+# request - this is that something.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    labels:
+      - dependencies
+    groups:
+      # One pull request per family keeps CI runs down and makes a bad update
+      # easy to revert as a unit.
+      dev-tooling:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "typescript-eslint"
+          - "typescript"
+          - "vite"
+          - "vitest"
+          - "@vitest/*"
+          - "dependency-cruiser"
+      playwright:
+        patterns:
+          - "@playwright/*"
+          - "@axe-core/*"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - ci

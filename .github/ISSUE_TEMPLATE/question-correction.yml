@@ -1,0 +1,68 @@
+name: Question correction
+description: A question, answer, distractor or translation is wrong, misleading or out of date.
+title: "[Question] "
+labels: ["content", "needs-verification"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. People sit a real exam on this material, so a wrong question is a
+        correctness bug, not a nitpick.
+
+        A correction goes through the same verifier as a new question: the answer must
+        be entailed by the cited *Discover Canada* section on canada.ca, each distractor
+        must not be, and the wording must not be verbatim. Please do not open a pull
+        request that edits `content/questions/**` and marks it verified - the author and
+        the verifier are deliberately different people.
+
+  - type: input
+    id: question-id
+    attributes:
+      label: Question id
+      description: The `id` field from the question, e.g. `q-rights-0007`. If you cannot find it, paste the question text.
+      placeholder: q-rights-0007
+    validations:
+      required: true
+
+  - type: dropdown
+    id: locale
+    attributes:
+      label: Which language is affected?
+      options:
+        - English
+        - French
+        - Both
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is wrong?
+      options:
+        - The correct answer is wrong
+        - A distractor is also correct
+        - The question is ambiguous or unanswerable
+        - The French translation does not match the English
+        - The wording is copied verbatim from the source
+        - The fact is out of date
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: What is wrong, and what should it say?
+      description: Quote the current text and the correction.
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: A link to the canada.ca page or chapter that supports the correction.
+      placeholder: https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/...
+    validations:
+      required: true

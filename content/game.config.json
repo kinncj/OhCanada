@@ -1,0 +1,71 @@
+{
+  "$schema": "./schemas/game.config.schema.json",
+  "title": "TrueNorth",
+  "version": "0.1.0",
+  "basePath": "/OhCanada/",
+  "defaultLocale": "en",
+  "locales": ["en", "fr"],
+  "designWidth": 1080,
+  "designHeight": 1920,
+  "levels": [],
+  "unlockRules": {
+    "initialLevels": [],
+    "order": [],
+    "stampsToUnlockNext": 1
+  },
+  "exam": {
+    "questionCount": 20,
+    "passMark": 15,
+    "timeLimitSeconds": 1800,
+    "timerOptional": true
+  },
+  "scheduler": {
+    "exclusionWindow": 20,
+    "wrongWeight": 3,
+    "dailyNewLimit": 10
+  },
+  "graphicsPresets": {
+    "low": {
+      "renderScale": 0.75,
+      "maxPixelRatio": 1,
+      "particles": 150,
+      "parallaxLayers": 2,
+      "postProcessing": false
+    },
+    "medium": {
+      "renderScale": 1,
+      "maxPixelRatio": 2,
+      "particles": 400,
+      "parallaxLayers": 4,
+      "postProcessing": false
+    },
+    "high": {
+      "renderScale": 1,
+      "maxPixelRatio": 3,
+      "particles": 1500,
+      "parallaxLayers": 6,
+      "postProcessing": true
+    }
+  },
+  "budgets": {
+    "initialPayloadBytes": 8388608,
+    "levelPayloadBytes": 8388608,
+    "totalPayloadBytes": 104857600,
+    "textureMemoryMbPerLevel": 64,
+    "timeToPlayMs": 6000,
+    "frameTimeMs": 16.7
+  },
+  "featureFlags": {
+    "debugOverlay": false,
+    "autoMove": true,
+    "serviceWorker": false,
+    "switchMode": true
+  },
+  "theme": {
+    "sky": "#0f3057",
+    "ground": "#12352a",
+    "horizon": "#e8eef4",
+    "ink": "#ffffff",
+    "inkMuted": "#a8c4dc"
+  }
+}

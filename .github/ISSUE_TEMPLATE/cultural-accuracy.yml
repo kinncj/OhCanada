@@ -1,0 +1,61 @@
+name: Cultural accuracy
+description: Art, a character, a place or wording misrepresents a people, a place or a culture.
+title: "[Cultural accuracy] "
+labels: ["content", "cultural-accuracy", "needs-verification"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These are treated as correctness bugs, on the same footing as a wrong answer.
+
+        The rules this project holds itself to are in `docs/content-review.md`: name the
+        nation depicted, no invented patterns, no sacred items used as props, no
+        caricature, and identical cartoon proportions for every character. Landmarks and
+        clothing are reference-accurate and simplified, never invented.
+
+        If you would rather not write this in public, `SECURITY.md` has a private
+        contact route; it is fine to use it for this.
+
+  - type: input
+    id: where
+    attributes:
+      label: Where is it?
+      description: Level, screen, character or file path - whatever you can give.
+      placeholder: Level 2, the canoe scene / assets/src/svg/...
+    validations:
+      required: true
+
+  - type: input
+    id: nation
+    attributes:
+      label: Which people, nation or community is depicted or affected?
+      description: If the depiction is unattributed and that is the problem, say so.
+    validations:
+      required: false
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: What is wrong?
+      description: |
+        What does the game show or say, and why is it wrong or harmful? Be as concrete
+        as you can - "the pattern on the blanket is invented" is more actionable than
+        "the art is disrespectful".
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction
+    attributes:
+      label: What would be right?
+      description: A correction, a reference, or a community source we should follow. Optional.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: acknowledgement
+    attributes:
+      label: Before you submit
+      options:
+        - label: I understand this will be reviewed against `docs/content-review.md` and may be discussed in public.
+          required: true

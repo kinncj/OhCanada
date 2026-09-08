@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/common.schema.json",
+  "title": "TrueNorth shared definitions",
+  "description": "Reusable $defs shared by every TrueNorth content schema. This file defines no root shape; it is referenced, never validated against.",
+  "$defs": {
+    "id": {
+      "title": "Identifier",
+      "description": "Stable kebab-case identifier, unique within its collection.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "locale": {
+      "title": "Locale",
+      "description": "A supported UI locale. EN and FR ship from the first commit.",
+      "type": "string",
+      "enum": ["en", "fr"]
+    },
+    "localizedText": {
+      "title": "Localized text",
+      "description": "A string in every supported locale. Both EN and FR are mandatory.",
+      "type": "object",
+      "properties": {
+        "en": { "type": "string", "minLength": 1 },
+        "fr": { "type": "string", "minLength": 1 }
+      },
+      "required": ["en", "fr"],
+      "additionalProperties": false
+    },
+    "hexColour": {
+      "title": "Hex colour",
+      "description": "An sRGB colour as #RRGGBB.",
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "vec2": {
+      "title": "2D vector",
+      "description": "A point or size in design-resolution pixels (1080x1920).",
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "required": ["x", "y"],
+      "additionalProperties": false
+    }
+  }
+}

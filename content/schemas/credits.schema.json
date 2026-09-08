@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/credits.schema.json",
+  "title": "Asset credits",
+  "description": "Attribution for every shipped asset. ADR-0004: third-party assets are CC0 or CC-BY only, and every file under assets/dist must appear here.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "assets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/creditedAsset" }
+    }
+  },
+  "required": ["$schema", "assets"],
+  "additionalProperties": false,
+
+  "$defs": {
+    "creditedAsset": {
+      "title": "Credited asset",
+      "type": "object",
+      "properties": {
+        "path": {
+          "description": "Path relative to assets/dist, exactly as shipped.",
+          "type": "string",
+          "minLength": 1
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "author": { "type": "string", "minLength": 1 },
+        "licence": {
+          "type": "string",
+          "enum": ["CC0-1.0", "CC-BY-4.0", "CC-BY-SA-4.0", "MIT", "Apache-2.0"]
+        },
+        "source": { "type": "string", "format": "uri" },
+        "modifications": { "type": "string" }
+      },
+      "required": ["path", "title", "author", "licence", "source"],
+      "additionalProperties": false
+    }
+  }
+}

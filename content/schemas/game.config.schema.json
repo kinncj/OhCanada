@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/game.config.schema.json",
+  "title": "TrueNorth game configuration",
+  "description": "The single source of truth for base path, locales, design resolution, unlock rules, exam rules, scheduler tuning, graphics presets, performance budgets and feature flags.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "description": "Semantic version of the configuration payload.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "basePath": {
+      "description": "Vite base and router prefix. Must start and end with a slash (ADR-0006).",
+      "type": "string",
+      "pattern": "^/(?:[A-Za-z0-9._~-]+/)*$"
+    },
+    "defaultLocale": {
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/locale"
+    },
+    "locales": {
+      "type": "array",
+      "items": {
+        "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/locale"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "designWidth": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "designHeight": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "levels": {
+      "description": "Level ids in authoring order. Empty until slice 1.",
+      "type": "array",
+      "items": {
+        "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "unlockRules": { "$ref": "#/$defs/unlockRules" },
+    "exam": { "$ref": "#/$defs/exam" },
+    "scheduler": { "$ref": "#/$defs/scheduler" },
+    "graphicsPresets": { "$ref": "#/$defs/graphicsPresets" },
+    "budgets": { "$ref": "#/$defs/budgets" },
+    "featureFlags": { "$ref": "#/$defs/featureFlags" },
+    "theme": { "$ref": "#/$defs/theme" }
+  },
+  "required": [
+    "$schema",
+    "title",
+    "version",
+    "basePath",
+    "defaultLocale",
+    "locales",
+    "designWidth",
+    "designHeight",
+    "levels",
+    "unlockRules",
+    "exam",
+    "scheduler",
+    "graphicsPresets",
+    "budgets",
+    "featureFlags"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "unlockRules": {
+      "title": "Unlock rules",
+      "type": "object",
+      "properties": {
+        "initialLevels": {
+          "description": "Levels playable before any stamp is earned.",
+          "type": "array",
+          "items": {
+            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "order": {
+          "description": "Progression order used when a level is unlocked by the previous one.",
+          "type": "array",
+          "items": {
+            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "stampsToUnlockNext": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["initialLevels", "order", "stampsToUnlockNext"],
+      "additionalProperties": false
+    },
+
+    "exam": {
+      "title": "Exam rules",
+      "description": "Mirrors IRCC: 20 questions, 15 to pass, 30 minutes, timer optional.",
+      "type": "object",
+      "properties": {
+        "questionCount": { "type": "integer", "minimum": 1 },
+        "passMark": { "type": "integer", "minimum": 1 },
+        "timeLimitSeconds": { "type": "integer", "minimum": 1 },
+        "timerOptional": { "type": "boolean" }
+      },
+      "required": ["questionCount", "passMark", "timeLimitSeconds", "timerOptional"],
+      "additionalProperties": false
+    },
+
+    "scheduler": {
+      "title": "Scheduler tuning",
+      "description": "Tuning for the FSRS-backed review scheduler in the domain layer.",
+      "type": "object",
+      "properties": {
+        "exclusionWindow": {
+          "description": "Number of recent questions that may not repeat.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "wrongWeight": {
+          "description": "Relative draw weight of a previously wrong question.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "dailyNewLimit": {
+          "description": "Maximum unseen questions introduced per day.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["exclusionWindow", "wrongWeight", "dailyNewLimit"],
+      "additionalProperties": false
+    },
+
+    "graphicsPreset": {
+      "title": "Graphics preset",
+      "type": "object",
+      "properties": {
+        "renderScale": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "maxPixelRatio": { "type": "number", "exclusiveMinimum": 0 },
+        "particles": { "type": "integer", "minimum": 0 },
+        "parallaxLayers": { "type": "integer", "minimum": 0 },
+        "postProcessing": { "type": "boolean" }
+      },
+      "required": [
+        "renderScale",
+        "maxPixelRatio",
+        "particles",
+        "parallaxLayers",
+        "postProcessing"
+      ],
+      "additionalProperties": false
+    },
+
+    "graphicsPresets": {
+      "title": "Graphics presets",
+      "type": "object",
+      "properties": {
+        "low": { "$ref": "#/$defs/graphicsPreset" },
+        "medium": { "$ref": "#/$defs/graphicsPreset" },
+        "high": { "$ref": "#/$defs/graphicsPreset" }
+      },
+      "required": ["low", "medium", "high"],
+      "additionalProperties": false
+    },
+
+    "budgets": {
+      "title": "Performance budgets",
+      "description": "CI gates. Breaching any of these fails the build.",
+      "type": "object",
+      "properties": {
+        "initialPayloadBytes": { "type": "integer", "minimum": 1 },
+        "levelPayloadBytes": { "type": "integer", "minimum": 1 },
+        "totalPayloadBytes": { "type": "integer", "minimum": 1 },
+        "textureMemoryMbPerLevel": { "type": "integer", "minimum": 1 },
+        "timeToPlayMs": { "type": "integer", "minimum": 1 },
+        "frameTimeMs": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "required": [
+        "initialPayloadBytes",
+        "levelPayloadBytes",
+        "totalPayloadBytes",
+        "textureMemoryMbPerLevel",
+        "timeToPlayMs",
+        "frameTimeMs"
+      ],
+      "additionalProperties": false
+    },
+
+    "featureFlags": {
+      "title": "Feature flags",
+      "type": "object",
+      "properties": {
+        "debugOverlay": { "type": "boolean" },
+        "autoMove": { "type": "boolean" },
+        "serviceWorker": { "type": "boolean" },
+        "switchMode": { "type": "boolean" }
+      },
+      "required": ["debugOverlay", "autoMove", "serviceWorker", "switchMode"],
+      "additionalProperties": false
+    },
+
+    "theme": {
+      "title": "Colour theme",
+      "description": "The palette a scene paints itself from: a vertical sky-to-ground gradient, the horizon rule across it, and the two text colours that must stay readable on both ends of that gradient (ADR-0002). The same shape is reused per level, so a level document can override the whole block without an engine change; when it is absent the renderer keeps its built-in default.",
+      "type": "object",
+      "properties": {
+        "sky": {
+          "description": "Top of the vertical gradient. Also the renderer clear colour and the page background behind the letterboxed canvas.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/hexColour"
+        },
+        "ground": {
+          "description": "Bottom of the vertical gradient.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/hexColour"
+        },
+        "horizon": {
+          "description": "The horizon rule at two-thirds height. Must read as a bright line against the gradient behind it.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/hexColour"
+        },
+        "ink": {
+          "description": "Primary on-canvas text. Needs at least 4.5:1 against every stop of the gradient.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/hexColour"
+        },
+        "inkMuted": {
+          "description": "Secondary on-canvas text. Same contrast floor as ink.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/hexColour"
+        }
+      },
+      "required": ["sky", "ground", "horizon", "ink", "inkMuted"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,96 @@
+# Source of truth: infra/github/workflows/deploy-pages.yml
+# .github/workflows/deploy-pages.yml is a byte-identical copy; scripts/deploy-check.mjs
+# fails the build if the two drift.
+#
+# Rollback: re-run the last successful run of this workflow from the Actions tab
+# (see docs/runbook.md). Nothing else is needed - Pages serves whatever artefact
+# the most recent successful run uploaded.
+#
+# WHY THIS JOB RUNS THE WHOLE GATE SET
+# `vite build` does not typecheck and does not run a test. Until now this
+# workflow ran `validate-content assets build` and nothing else, and ci.yml was a
+# separate workflow on the same `push: main` trigger with no relationship to it -
+# so a defect that only appears on the merged tree (a type error, a broken test,
+# an axe violation) turned CI red while this workflow published the artefact
+# regardless. Two ways to close that: gate on `workflow_run` of CI, or run the
+# gates here. This picks the second, because:
+#   - the bytes that get uploaded are then built by the same job that verified
+#     them; a `workflow_run` gate verifies a SHA and trusts that the deploy job
+#     checks out the same one;
+#   - `workflow_run` deploys fail *open* in the confusing direction - if the
+#     event is missed or the conclusion filter is wrong, nothing deploys and
+#     nobody is told;
+#   - `workflow_dispatch` (the rollback path) has no `workflow_run` payload, so
+#     that design needs a second, untested code path for exactly the case we
+#     most need to work.
+# The cost is wall-clock, not duplicated work: ci.yml no longer triggers on
+# `push: main`, because this job is now the same gate.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  # `false` on purpose: cancelling a run that is midway through
+  # upload-pages-artifact or deploy-pages can leave the Pages deployment stuck in
+  # a pending state that only a manual retry clears. A queued run costs minutes;
+  # a wedged deployment costs the site. This matches GitHub's own guidance for
+  # the `pages` group.
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Gate, build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: make setup
+
+      - name: Lint, typecheck, unit tests, content and art verification
+        run: make lint typecheck test validate-content verify-content verify-art
+
+      - name: Build assets and the site
+        run: make assets build
+
+      - name: End-to-end, performance and accessibility suites
+        run: make test-e2e test-perf test-a11y
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,85 @@
+# Source of truth: infra/github/workflows/ci.yml
+# .github/workflows/ci.yml is a byte-identical copy; scripts/deploy-check.mjs
+# fails the build if the two drift.
+#
+# Pull requests only. `push: main` used to be here too, but deploy-pages.yml now
+# runs this same gate set before it publishes, so a second copy on the same
+# trigger would only double the queue and split the signal across two workflows.
+name: CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: Lint, types, unit tests, content
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: make setup
+
+      - name: Lint, typecheck, test, validate and verify content and art
+        run: make lint typecheck test validate-content verify-content verify-art
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+          if-no-files-found: ignore
+          retention-days: 7
+
+  browser:
+    name: Build, e2e, perf, a11y
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: make setup
+
+      # `assets` is included so a pull request builds exactly what
+      # deploy-pages.yml builds; without it CI would be checking a different
+      # dist/ from the one that ships.
+      - name: Build and run the browser suites
+        run: make assets build test-e2e test-perf test-a11y
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+          if-no-files-found: ignore
+          retention-days: 7

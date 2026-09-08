@@ -1,0 +1,17 @@
+# Asset licences
+
+**Original art** created for this project (everything under `assets/src/`) is licensed
+**CC BY 4.0** — https://creativecommons.org/licenses/by/4.0/
+Attribute as: "TrueNorth contributors, CC BY 4.0".
+
+**Question data** (`content/questions/`) is dedicated to the public domain under
+**CC0 1.0** — https://creativecommons.org/publicdomain/zero/1.0/
+Facts are paraphrased from *Discover Canada* (Immigration, Refugees and Citizenship
+Canada). This project is not affiliated with or endorsed by the Government of Canada.
+
+**Third-party assets** must be CC0 or CC BY (no NC, no ND, no SA-incompatible terms) and
+every one is listed in `assets/credits.json` with author, licence and source URL.
+`make validate-content` fails on any file in `assets/dist/` that is not credited.
+
+**Reference photographs** in `assets/refs/` are used only as drawing references and for
+automated art verification; they are not redistributed in the built game.

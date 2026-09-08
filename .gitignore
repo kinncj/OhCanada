@@ -1,0 +1,21 @@
+node_modules/
+
+# Anchored to the repository root on purpose. An unanchored `dist/` also matches
+# `assets/dist/`, which silently deleted the tracked `assets/dist/.gitkeep` and
+# every other skeleton directory ending in one of these names.
+/dist/
+/coverage/
+/playwright-report/
+/test-results/
+/.vite/
+
+*.log
+.DS_Store
+.env
+.env.*
+
+
+# Scratch files written by scripts/assets.mjs while it packs. Now that `/dist/`
+# is anchored this rule is reachable; before, `dist/` swallowed the whole
+# directory and this line was dead.
+assets/dist/**/*.tmp
