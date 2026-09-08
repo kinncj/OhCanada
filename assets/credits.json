@@ -812,6 +812,134 @@
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
       "notes": "Prompt assets/prompts/peace-tower.json (seed 909). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/beaver.glb",
+      "title": "beaver (generated fauna, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/beaver.json (seed 202). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/black-bear.glb",
+      "title": "black-bear (generated fauna, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/black-bear.json (seed 204). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/canada-goose.glb",
+      "title": "canada-goose (generated fauna, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/canada-goose.json (seed 205). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/canoe-voyageur.glb",
+      "title": "canoe-voyageur (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/canoe-voyageur.json (seed 303). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/centre-block.glb",
+      "title": "centre-block (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/centre-block.json (seed 102). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/chateau-frontenac.glb",
+      "title": "chateau-frontenac (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/chateau-frontenac.json (seed 106). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/chateau-laurier.glb",
+      "title": "chateau-laurier (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/chateau-laurier.json (seed 103). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/cn-tower.glb",
+      "title": "cn-tower (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/cn-tower.json (seed 404). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/fiddle.glb",
+      "title": "fiddle (generated prop, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/fiddle.json (seed 404). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/grain-elevator.glb",
+      "title": "grain-elevator (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/grain-elevator.json (seed 108). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/hockey-stick.glb",
+      "title": "hockey-stick (generated prop, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/hockey-stick.json (seed 117). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/inukshuk.glb",
+      "title": "inukshuk (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/inukshuk.json (seed 109). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/loon.glb",
+      "title": "loon (generated fauna, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/loon.json (seed 606). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/niagara-falls-cliff.glb",
+      "title": "niagara-falls-cliff (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/niagara-falls-cliff.json (seed 111). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/orca.glb",
+      "title": "orca (generated fauna, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/orca.json (seed 101). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/peggys-cove-lighthouse.glb",
+      "title": "peggys-cove-lighthouse (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/peggys-cove-lighthouse.json (seed 404). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
     }
   ]
 }

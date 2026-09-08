@@ -340,6 +340,188 @@
       "radius": 2.02,
       "category": "prop"
     },
+    "beaver": {
+      "path": "models/hero/beaver.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 8000,
+        "LOD1": 1600
+      },
+      "height": 0.4,
+      "radius": 0.28,
+      "category": "fauna"
+    },
+    "black-bear": {
+      "path": "models/hero/black-bear.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 12000,
+        "LOD1": 2400
+      },
+      "height": 1,
+      "radius": 0.36,
+      "category": "fauna"
+    },
+    "canada-goose": {
+      "path": "models/hero/canada-goose.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 8000,
+        "LOD1": 1600
+      },
+      "height": 0.7,
+      "radius": 0.35,
+      "category": "fauna"
+    },
+    "canoe-voyageur": {
+      "path": "models/hero/canoe-voyageur.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 10000,
+        "LOD1": 2000
+      },
+      "height": 1.2,
+      "radius": 2.49,
+      "category": "hero"
+    },
+    "centre-block": {
+      "path": "models/hero/centre-block.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 25000,
+        "LOD1": 5000
+      },
+      "height": 40,
+      "radius": 20.51,
+      "category": "hero"
+    },
+    "chateau-frontenac": {
+      "path": "models/hero/chateau-frontenac.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 25000,
+        "LOD1": 5000
+      },
+      "height": 60,
+      "radius": 36.15,
+      "category": "hero"
+    },
+    "chateau-laurier": {
+      "path": "models/hero/chateau-laurier.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 25000,
+        "LOD1": 5000
+      },
+      "height": 45,
+      "radius": 22.42,
+      "category": "hero"
+    },
+    "cn-tower": {
+      "path": "models/hero/cn-tower.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 20000,
+        "LOD1": 4000
+      },
+      "height": 120,
+      "radius": 47.67,
+      "category": "hero"
+    },
+    "fiddle": {
+      "path": "models/hero/fiddle.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6000,
+        "LOD1": 1200
+      },
+      "height": 0.6,
+      "radius": 0.27,
+      "category": "prop"
+    },
+    "grain-elevator": {
+      "path": "models/hero/grain-elevator.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 15999,
+        "LOD1": 3198
+      },
+      "height": 25,
+      "radius": 12.52,
+      "category": "hero"
+    },
+    "hockey-stick": {
+      "path": "models/hero/hockey-stick.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 4000,
+        "LOD1": 800
+      },
+      "height": 1.5,
+      "radius": 0.64,
+      "category": "prop"
+    },
+    "inukshuk": {
+      "path": "models/hero/inukshuk.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 10000,
+        "LOD1": 2000
+      },
+      "height": 3,
+      "radius": 1.14,
+      "category": "hero"
+    },
+    "loon": {
+      "path": "models/hero/loon.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 8000,
+        "LOD1": 1600
+      },
+      "height": 0.35,
+      "radius": 0.33,
+      "category": "fauna"
+    },
     "moose": {
       "path": "models/hero/moose.glb",
       "lods": [
@@ -351,7 +533,35 @@
         "LOD1": 2400
       },
       "height": 2.1,
-      "radius": 1.14,
+      "radius": 1.01,
+      "category": "fauna"
+    },
+    "niagara-falls-cliff": {
+      "path": "models/hero/niagara-falls-cliff.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 18000,
+        "LOD1": 3600
+      },
+      "height": 20,
+      "radius": 12.08,
+      "category": "hero"
+    },
+    "orca": {
+      "path": "models/hero/orca.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 9999,
+        "LOD1": 1999
+      },
+      "height": 2,
+      "radius": 2,
       "category": "fauna"
     },
     "peace-tower": {
@@ -366,6 +576,20 @@
       },
       "height": 92,
       "radius": 8.86,
+      "category": "hero"
+    },
+    "peggys-cove-lighthouse": {
+      "path": "models/hero/peggys-cove-lighthouse.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 12000,
+        "LOD1": 2344
+      },
+      "height": 15,
+      "radius": 4.24,
       "category": "hero"
     }
   },
