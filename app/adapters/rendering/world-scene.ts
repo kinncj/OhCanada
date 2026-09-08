@@ -152,6 +152,8 @@ export class WorldScene {
     }
     for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
 
+    onProgress?.(0.93, 'vegetation');
+    await yieldToBrowser();
     const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, castShadows: policy === 'full', ...(protos ? { protos } : {}) });
     const scene = new WorldScene(district, heightAt, terrain, vegetation);
     scene.drawDistance = preset.drawDistance;
@@ -161,6 +163,8 @@ export class WorldScene {
     scene.group.add(vegetation.group);
     scene.kit = kit;
 
+    onProgress?.(0.95, 'water');
+    await yieldToBrowser();
     const frozen = s.ambience.weather === 'snow';
     for (const w of s.water ?? []) {
       const mesh = buildWater(w.position, w.size, frozen);
@@ -177,6 +181,8 @@ export class WorldScene {
       if (b.footprint.w > 3) scene.occluders.push(b.object);
       b.object.position.y += heightAt(l.position[0], l.position[2]);
     }
+    onProgress?.(0.96, 'markers');
+    await yieldToBrowser();
     for (const poi of district.pois) {
       if (!poi.fastTravel) continue;
       const beacon = scene.buildMarker('portal', 2.2);
@@ -194,6 +200,8 @@ export class WorldScene {
       scene.pending.push(marker);
       scene.markers.push({ id: t.id, object: marker });
     }
+    onProgress?.(0.98, 'fauna');
+    await yieldToBrowser();
     if (policy !== 'lite') {
       const fauna = new FaunaSystem(library, heightAt);
       await Promise.race([
@@ -203,7 +211,7 @@ export class WorldScene {
       scene.pending.push(fauna.group);
       scene.fauna = fauna;
     }
-    onProgress?.(0.8, 'fauna');
+    onProgress?.(1, 'scene ready');
     return scene;
   }
 

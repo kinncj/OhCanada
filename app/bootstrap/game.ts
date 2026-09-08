@@ -245,8 +245,14 @@ export class Game {
     onProgress?.(0.5);
     // Physics
     const t = world.terrain;
+    onProgress?.(0.51, 'physics: ground');
+    await new Promise((r) => setTimeout(r, 0));
     this.deps.physics.addHeightfield([0, 0, 0], district.scene.size, t.heights, t.rows, t.cols, t.maxHeight);
+    onProgress?.(0.52, `physics: ${world.colliders.length} colliders`);
+    await new Promise((r) => setTimeout(r, 0));
+    let colliderCount = 0;
     for (const c of world.colliders) {
+      if (++colliderCount % 20 === 0) await new Promise((r) => setTimeout(r, 0));
       if (c.kind === 'box') this.deps.physics.addBox(c.center, c.halfExtents, c.rotationY);
       else this.deps.physics.addCylinder(c.center, c.halfExtents[1], c.halfExtents[0]);
     }
@@ -254,7 +260,9 @@ export class Game {
     onProgress?.(0.55, 'physics');
     // NPCs
     this.npcBrain.setHeightFunction(world.heightAt);
+    let npcCount = 0;
     for (const npc of district.npcs) {
+      onProgress?.(0.6 + 0.1 * (npcCount / Math.max(1, district.npcs.length)), `people ${++npcCount}/${district.npcs.length}`);
       const view = (await this.phase(`npc:${npc.id}`, 12_000, this.makeCharacter(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? (hashNpc(npc.id) ? 'female' : 'male') }))))
         ?? new CharacterView(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? 'male' }));
       view.root.name = `npc:${npc.id}`;
