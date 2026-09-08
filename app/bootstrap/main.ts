@@ -23,6 +23,8 @@ import { attachTelemetry } from './telemetry';
 declare const __APP_VERSION__: string;
 
 const BENCH_KEY = 'truenorth.benchmark.v1';
+const FORCE_WEBGL_KEY = 'truenorth.forceWebGL.v1';
+const HEAL_KEY = 'truenorth.heal.v1';
 
 class SystemClock implements Clock {
   now(): number {
@@ -108,7 +110,7 @@ async function boot(): Promise<void> {
   // so the proven WebGL2 path is the default on Safari; ?webgpu=1 opts back in for testing.
   const ua = navigator.userAgent;
   const isSafari = /^((?!chrome|android|crios|fxios|edg).)*safari/i.test(ua) || /iPad|iPhone|iPod/.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
-  const forceWebGL = params.get('webgl') === '1' || (isSafari && params.get('webgpu') !== '1');
+  const forceWebGL = params.get('webgl') === '1' || safeGet(FORCE_WEBGL_KEY) === '1' || (isSafari && params.get('webgpu') !== '1');
   let game: Game;
   try {
     try {
@@ -159,6 +161,7 @@ async function boot(): Promise<void> {
   };
   applySettings(settings());
 
+  const watchForBlankRenderer = makeBlankRendererWatchdog(game, ui, t, forceWebGL);
   let flow: Flow | null = null;
   let menu: MainMenu | null = null;
   let creator: CharacterCreator | null = null;
@@ -285,6 +288,7 @@ async function boot(): Promise<void> {
     await game.setPlayerAppearance(ch.appearance);
     const f = ensureFlow();
     await f.enterWorld(); // loadDistrict is single-flight and reuses the hub already loaded as the menu backdrop
+    watchForBlankRenderer();
     if (game.district) {
       const sp = game.district.spawn;
       game.teleport(sp.position[0], sp.position[2], sp.yaw);
@@ -295,6 +299,9 @@ async function boot(): Promise<void> {
   window.clearTimeout(watchdog);
   loading.hide();
   showMenu();
+  window.setTimeout(() => {
+    if (game.renderer.stats().drawCalls > 0 && safeGet(HEAL_KEY)) safeSet(HEAL_KEY, '');
+  }, 20_000);
 
   if (config.featureFlags.serviceWorker && import.meta.env.PROD && 'serviceWorker' in navigator && !e2e) {
     // Reload once when an updated worker takes control so the page never runs a stale shell against new assets.
@@ -305,6 +312,45 @@ async function boot(): Promise<void> {
     });
     navigator.serviceWorker.register(`${base}sw.js`, { scope: base, updateViaCache: 'none' }).then((reg) => reg.update().catch(() => undefined)).catch(() => undefined);
   }
+}
+
+/**
+ * A populated world that draws nothing means the GPU path failed silently — the black canvas with a working
+ * HUD. Rather than leaving the player staring at it, step down a ladder: WebGL2 backend → minimal preset →
+ * an on-screen report of what was tried. Each step reloads once and is remembered, so it cannot loop.
+ */
+function makeBlankRendererWatchdog(game: Game, ui: HTMLElement, t: { t(key: string): string }, forcedWebGL: boolean) {
+  return function watchForBlankRenderer(): void {
+    let blank = 0;
+    const step = Number(safeGet(HEAL_KEY) ?? '0');
+    const timer = window.setInterval(() => {
+      if (!game.district) return;
+      const stats = game.renderer.stats();
+      blank = stats.drawCalls === 0 ? blank + 1 : 0;
+      if (blank < 6) return; // ~6 s of drawing nothing
+      window.clearInterval(timer);
+      console.warn(`[truenorth] ${JSON.stringify({ type: 'render:blank', payload: { backend: game.backend, preset: game.presetLabel, step } })}`);
+      if (!forcedWebGL && step < 1) {
+        safeSet(FORCE_WEBGL_KEY, '1');
+        safeSet(HEAL_KEY, '1');
+        location.reload();
+      } else if (step < 2) {
+        safeSet(BENCH_KEY, 'minimal');
+        safeSet(HEAL_KEY, '2');
+        location.reload();
+      } else {
+        ui.append(
+          el('div', { class: 'screen', dataset: { screen: 'render-error' } },
+            el('div', { class: 'panel' },
+              el('h2', {}, 'TrueNorth'),
+              el('p', {}, t.t('errors.webgl')),
+              el('p', { class: 'source' }, `backend ${game.backend} · preset ${game.presetLabel} · draw calls 0 · recovery steps tried: ${step}`),
+            ),
+          ),
+        );
+      }
+    }, 1000);
+  };
 }
 
 function safeGet(key: string): string | null {

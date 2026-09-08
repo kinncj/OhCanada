@@ -17,6 +17,7 @@ export class Environment {
   private readonly sky: SkyMesh;
   private readonly stars: THREE.Points;
   private readonly sunDir = new THREE.Vector3();
+  private useSky = true;
 
   constructor(
     private readonly scene: THREE.Scene,
@@ -76,6 +77,9 @@ export class Environment {
     this.sky.rayleigh.value = w === 'rain' || w === 'fog' ? 0.6 : w === 'snow' ? 1.6 : 2.2;
     this.sky.mieCoefficient.value = w === 'fog' ? 0.03 : 0.006;
     this.sky.mieDirectionalG.value = w === 'snow' ? 0.85 : 0.8;
+    // The Preetham sky is one of the largest shaders in the build; the phone tier gets a gradient instead.
+    this.useSky = preset.assetPolicy !== 'lite';
+    this.sky.visible = this.useSky;
     this.cycleSpeed = cycleEnabled ? 1 / 3600 : 0; // full day in an hour: a short session should not end at midnight
     // Fog is authored per district but must scale with the map: exp2 fog at a fixed density that suited a
     // 260 m block turns a 1.3 km district into haze. Keep roughly one map-width of visibility.
@@ -125,12 +129,18 @@ export class Environment {
     this.scene.backgroundIntensity = 0.06 + day * 0.95;
     this.fogColor.setHSL(0.58, 0.35 + dusk * 0.3, 0.2 + day * 0.62);
     (this.scene.fog as THREE.FogExp2).color.copy(this.fogColor);
-    this.sky.sunPosition.value.copy(dir).multiplyScalar(40000);
-    this.sky.position.copy(focus);
+    if (this.useSky) {
+      this.sky.sunPosition.value.copy(dir).multiplyScalar(40000);
+      this.sky.position.copy(focus);
+    } else if (this.scene.background instanceof THREE.Color) {
+      this.scene.background.copy(this.fogColor);
+    } else {
+      this.scene.background = this.fogColor.clone();
+    }
     this.stars.position.copy(focus);
     const night = THREE.MathUtils.clamp(-elev * 3, 0, 1);
     (this.stars.material as THREE.PointsNodeMaterial).opacity = night * 0.9;
-    this.stars.visible = night > 0.01;
+    this.stars.visible = this.useSky && night > 0.01;
   }
 
   get isNight(): boolean {

@@ -69,7 +69,7 @@ export class Game {
   private readonly playerPos = new THREE.Vector3();
   paused = false;
   /** In-flight district load (single-flight: a second request for the same district reuses it). */
-  private loadingDistrict: { id: string; promise: Promise<void> } | null = null;
+  private loadingDistrict: { id: string; promise: Promise<void>; listeners: Set<(f: number, stage?: string) => void> } | null = null;
   /** Set by Flow; when false, movement input is ignored (menus open). */
   gameplayEnabled = false;
   onFrame: ((dt: number) => void) | null = null;
@@ -162,10 +162,13 @@ export class Game {
   }
 
   async loadDistrict(district: District, onProgress?: (f: number, stage?: string) => void): Promise<void> {
-    if (this.loadingDistrict) {
-      // Wait for whatever is loading; if it is the same district we are done.
-      const pending = this.loadingDistrict;
+    const pending = this.loadingDistrict;
+    if (pending) {
+      // The menu already started this district as its backdrop. Join that load and, crucially, subscribe to
+      // its progress — otherwise the player watches a frozen bar for the whole of someone else's load.
+      if (onProgress) pending.listeners.add(onProgress);
       await pending.promise.catch(() => undefined);
+      if (onProgress) pending.listeners.delete(onProgress);
       if (pending.id === district.id && this.district?.id === district.id) {
         onProgress?.(1);
         return;
@@ -173,10 +176,15 @@ export class Game {
     }
     if (this.district?.id === district.id && this.world) {
       onProgress?.(1);
-      return; // already resident (e.g. hub loaded as the menu backdrop)
+      return; // already resident
     }
-    const promise = this.loadDistrictInner(district, onProgress);
-    this.loadingDistrict = { id: district.id, promise };
+    const listeners = new Set<(f: number, stage?: string) => void>();
+    if (onProgress) listeners.add(onProgress);
+    const notify = (f: number, stage?: string): void => {
+      for (const l of listeners) l(f, stage);
+    };
+    const promise = this.loadDistrictInner(district, notify);
+    this.loadingDistrict = { id: district.id, promise, listeners };
     try {
       await promise;
     } finally {
@@ -222,11 +230,14 @@ export class Game {
     this.setZoneAudio(district.scene.ambience.soundscape);
     stage('environment');
     onProgress?.(0.9, 'sky and weather');
-    // Compile every material/pipeline while the loading screen is still up instead of stalling the first frames.
-    try {
-      await this.renderer.renderer.compileAsync(this.scene, this.rig.camera);
-    } catch (e) {
-      console.warn('[truenorth] precompile failed', e);
+    // Compile ahead of time so the first frames do not stall — except on the phone tier, where there is
+    // little to compile and the wait is more expensive than the occasional hitch.
+    if (this.preset.assetPolicy !== 'lite') {
+      try {
+        await this.renderer.renderer.compileAsync(this.scene, this.rig.camera);
+      } catch (e) {
+        console.warn('[truenorth] precompile failed', e);
+      }
     }
     stage('compile');
     onProgress?.(0.97, 'compiling shaders');
