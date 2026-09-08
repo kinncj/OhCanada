@@ -73,29 +73,47 @@ def decimate(mesh: trimesh.Trimesh, target_faces: int) -> trimesh.Trimesh:
 
 # ------------------------------------------------------------ orientation ----
 def _silhouette(xy: np.ndarray, faces: np.ndarray, res: int) -> np.ndarray:
-    """Binary raster of the mesh projected to `xy` (already normalised to the unit square, y up)."""
+    """Binary raster of the mesh projected to `xy` (already fitted to the [0,1] box, y up)."""
     img = np.zeros((res, res), np.uint8)
     pts = np.stack([xy[:, 0] * (res - 1), (1 - xy[:, 1]) * (res - 1)], axis=1).astype(np.int32)
     cv2.fillPoly(img, [pts[f] for f in faces], 1)
     return img.astype(bool)
 
 
-def _normalise_xy(v: np.ndarray) -> np.ndarray:
+def _fit_xy(v: np.ndarray) -> np.ndarray:
+    """Fit XY into [0,1]² **preserving aspect ratio** (one scale for both axes), centred.
+
+    Normalising each axis independently would stretch every orientation to fill the frame, so a mesh lying on its
+    side scores as well as the upright one and the search picks an arbitrary rotation.
+    """
     lo, hi = v.min(axis=0), v.max(axis=0)
-    return (v - lo) / np.maximum(hi - lo, 1e-9)
+    scale = 1.0 / max(float((hi - lo).max()), 1e-9)
+    centred = (v - (lo + hi) / 2) * scale
+    return centred + 0.5
+
+
+def _fit_mask(mask: np.ndarray, res: int) -> np.ndarray:
+    """Crop the mask to its bounding box and letterbox it into res×res, preserving aspect ratio."""
+    ys, xs = np.nonzero(mask)
+    crop = mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1].astype(np.uint8)
+    h, w = crop.shape
+    scale = (res - 1) / max(h, w)
+    small = cv2.resize(crop, (max(1, int(round(w * scale))), max(1, int(round(h * scale)))), interpolation=cv2.INTER_AREA)
+    out = np.zeros((res, res), np.uint8)
+    y0, x0 = (res - small.shape[0]) // 2, (res - small.shape[1]) // 2
+    out[y0:y0 + small.shape[0], x0:x0 + small.shape[1]] = small
+    return out.astype(bool)
 
 
 def best_orientation(mesh: trimesh.Trimesh, mask: np.ndarray, res: int = 128) -> tuple[np.ndarray, float]:
     """Rotation matrix (applied as v @ R.T) that makes the mesh's +Z-facing silhouette match the concept mask best."""
-    ys, xs = np.nonzero(mask)
-    crop = mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-    target = cv2.resize(crop.astype(np.uint8), (res, res), interpolation=cv2.INTER_AREA).astype(bool)
+    target = _fit_mask(mask, res)
     # Sample faces for speed on dense raw meshes.
     faces = mesh.faces if len(mesh.faces) <= 60000 else mesh.faces[np.random.default_rng(0).choice(len(mesh.faces), 60000, replace=False)]
     best, best_iou = np.eye(3), -1.0
     for r in _ROTATIONS:
         v = mesh.vertices @ r.T
-        sil = _silhouette(_normalise_xy(v[:, :2]), faces, res)
+        sil = _silhouette(_fit_xy(v[:, :2]), faces, res)
         iou = np.logical_and(sil, target).sum() / max(1, np.logical_or(sil, target).sum())
         if iou > best_iou:
             best, best_iou = r, iou

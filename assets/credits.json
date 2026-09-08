@@ -940,6 +940,54 @@
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
       "notes": "Prompt assets/prompts/peggys-cove-lighthouse.json (seed 404). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/polar-bear.glb",
+      "title": "polar-bear (generated fauna, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/polar-bear.json (seed 206). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/qamutiik.glb",
+      "title": "qamutiik (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/qamutiik.json (seed 114). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/stampede-grandstand.glb",
+      "title": "stampede-grandstand (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/stampede-grandstand.json (seed 707). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/stetson-hat.glb",
+      "title": "stetson-hat (generated prop, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/stetson-hat.json (seed 115). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+    },
+    {
+      "path": "models/hero/totem-pole.glb",
+      "title": "totem-pole (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/totem-pole.json (seed 404). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License. Requires cultural review before release."
+    },
+    {
+      "path": "models/hero/war-memorial.glb",
+      "title": "war-memorial (generated hero, LOD0/LOD1)",
+      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "license": "Generated",
+      "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
+      "notes": "Prompt assets/prompts/war-memorial.json (seed 104). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
     }
   ]
 }

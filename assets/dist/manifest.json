@@ -365,7 +365,7 @@
         "LOD1": 2400
       },
       "height": 1,
-      "radius": 0.36,
+      "radius": 1.03,
       "category": "fauna"
     },
     "canada-goose": {
@@ -590,6 +590,90 @@
       },
       "height": 15,
       "radius": 4.24,
+      "category": "hero"
+    },
+    "polar-bear": {
+      "path": "models/hero/polar-bear.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 12000,
+        "LOD1": 2400
+      },
+      "height": 1.3,
+      "radius": 0.87,
+      "category": "fauna"
+    },
+    "qamutiik": {
+      "path": "models/hero/qamutiik.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 7999,
+        "LOD1": 1599
+      },
+      "height": 0.8,
+      "radius": 0.26,
+      "category": "hero"
+    },
+    "stampede-grandstand": {
+      "path": "models/hero/stampede-grandstand.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 16000,
+        "LOD1": 3194
+      },
+      "height": 15,
+      "radius": 4.88,
+      "category": "hero"
+    },
+    "stetson-hat": {
+      "path": "models/hero/stetson-hat.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 6000,
+        "LOD1": 1200
+      },
+      "height": 0.15,
+      "radius": 0.08,
+      "category": "prop"
+    },
+    "totem-pole": {
+      "path": "models/hero/totem-pole.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 16000,
+        "LOD1": 3200
+      },
+      "height": 8,
+      "radius": 2.65,
+      "category": "hero"
+    },
+    "war-memorial": {
+      "path": "models/hero/war-memorial.glb",
+      "lods": [
+        "LOD0",
+        "LOD1"
+      ],
+      "triangles": {
+        "LOD0": 25000,
+        "LOD1": 4994
+      },
+      "height": 21,
+      "radius": 8.63,
       "category": "hero"
     }
   },
