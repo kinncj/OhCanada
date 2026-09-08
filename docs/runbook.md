@@ -158,9 +158,37 @@ Two things that would stop it recurring, neither of them mine to do alone:
 - **Make the repository public.** Public repositories have no Actions storage charge, and the project is
   meant to be public anyway — the licence is MIT/CC-BY/CC0, and `.github/CODEOWNERS` already assumes pull
   requests from strangers. The private setting is the anomaly here, not the quota.
-- **Stop Playwright writing 500 MB reports on failure.** A half-gigabyte report is video and traces. The
-  knobs are `video`, `trace` and `screenshot` in `tests/*/playwright.config.ts`, which the test owner
-  controls. The workflows keep these artifacts for 3 days, which caps the damage but does not prevent it.
+- **Stop Playwright writing 500 MB reports on failure.** Written up immediately below. Infra does not own
+  `tests/*/playwright.config.ts`; this is a proposal for whoever does.
+
+#### Proposed: bound the cost of a failing Playwright run
+
+Not a freak event — it is what the current settings cost when a run fails broadly. All three configs
+(`tests/e2e`, `tests/perf`, `tests/a11y`) share the same `use` block: `trace: 'retain-on-failure'`,
+`video: 'retain-on-failure'`, `screenshot: 'only-on-failure'`, `retries: 1` on CI, and no `maxFailures`.
+Ordered by how much they would have helped, most first:
+
+1. **`maxFailures: process.env.CI ? 5 : undefined`.** This is the big one, and it is the only change that
+   bounds the *worst* case rather than the average. Nothing currently stops a systemic breakage — the app
+   failing to boot at all — from failing every test in the suite and producing a full artifact set for
+   each one. A 524 MB report is not one pathological test; it is the whole suite failing together. Stop
+   after a handful and the signal is identical: when everything is broken, the sixth failure teaches you
+   nothing the first did not.
+2. **`trace: 'on-first-retry'`.** Playwright's own recommendation for CI, and it pairs with the `retries: 1`
+   already set: the first attempt runs untraced, only the retry is traced. Traces are the bulk of the
+   weight because they embed network response bodies — with a 1.4 MB initial payload today, and ~15 MB of
+   models and textures in the archived 3D build that produced these artifacts.
+3. **`video: 'off'`, or at most `'on-first-retry'`.** `retain-on-failure` still *records* video for every
+   test and throws it away on success, so the CPU cost is paid on every green run too. For a canvas
+   animating at 60 fps that is not cheap. It is also the least informative artifact here: a trace already
+   carries a screencast timeline plus DOM snapshots, so video is largely duplicate evidence.
+4. **Upload one artifact, not two.** This half is infra's and needs the test owner's input on which to
+   keep. CI uploads both `playwright-report/` and `test-results/`; the HTML reporter embeds its own copy of
+   every attachment, so the two together roughly double the storage for one run's evidence. Keeping the
+   HTML report alone is probably right — it is self-contained and browsable — but that depends on how the
+   suite is actually debugged.
+
+`screenshot: 'only-on-failure'` is fine as it stands; screenshots are kilobytes.
 
 ### Dependabot
 
@@ -297,8 +325,10 @@ Recorded here rather than left implicit. None of these are "fine"; they are simp
   private, which is what put a 500 MB Actions storage cap in the way of a deploy on 2026-09-08 (§3). Not
   an infra decision to make unilaterally; flagged for the owner.
 - **A 500 MB Playwright report is one failing CI run away.** Retention on the failure-only artifacts is
-  now 3 days, which caps how long the damage lasts but not the size. The `video`/`trace`/`screenshot`
-  settings in `tests/*/playwright.config.ts` are the actual fix and belong to whoever owns `tests/`.
+  now 3 days, which caps how long the damage lasts but not its size. The actual fix is four changes to
+  `tests/*/playwright.config.ts`, proposed in §3 under "bound the cost of a failing Playwright run" and
+  routed to the owning agent — `maxFailures` matters most, because nothing today stops a broad breakage
+  producing one artifact set per failing test.
 - ~~**A stray directory named `git@github.com:kinncj/`**, created by a `git clone <url> <url>` typo.~~
   Closed. Inspected before removal: 18 files, all stock hook samples, no remotes, an unborn `master` with no
   commits and empty `objects/` — nothing recoverable. Deleted, along with the `.gitignore` rule that existed
