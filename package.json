@@ -22,9 +22,6 @@
     "deploy-check": "node scripts/deploy-check.mjs"
   },
   "dependencies": {
-    "@babylonjs/core": "^9.25.0",
-    "@babylonjs/loaders": "^9.25.0",
-    "@babylonjs/materials": "^9.25.0",
     "@dimforge/rapier3d-compat": "0.20.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",

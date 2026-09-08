@@ -54,6 +54,9 @@ export class WorldScene {
     const snow = s.terrain.snow ?? false;
     const texKeys = ['grass', 'forest-floor', 'rock', 'snow', 'cobble'];
     const policy = preset.assetPolicy ?? 'full';
+    // Every distinct model brings its own texture set; phones lose the GL context on count, not just bytes.
+    const modelBudget = policy === 'lite' ? 0 : policy === 'standard' ? 6 : 24;
+    let modelsLoaded = 0;
     // lite (CI / weak devices): characters only — untextured terrain and architecture keep shader compiles minimal.
     const texPromise = policy !== 'lite' && library && library.hasTexture('grass') && library.hasTexture('forest-floor') && library.hasTexture('rock')
       ? (async (): Promise<TerrainTextures | null> => {
@@ -79,7 +82,8 @@ export class WorldScene {
         for (const key of KIND_MODELS[kind]) {
           if (!library.hasModel(key)) continue;
           try {
-            if (!library.withinBudget) return;
+            if (!library.withinBudget || modelsLoaded >= modelBudget) return;
+            modelsLoaded++;
             const model = await library.model(key);
             tick();
             const tint = kind === 'maple' ? 0xc8683a : kind === 'birch' ? 0xb9d27a : undefined;
@@ -112,8 +116,9 @@ export class WorldScene {
     // POIs may carry a hero asset key (assets/dist/manifest models) or a procedural landmark type.
     for (const poi of district.pois) {
       if (!poi.landmark) continue;
-      if (library?.hasModel(poi.landmark)) {
+      if (library?.hasModel(poi.landmark) && library.withinBudget && modelsLoaded < modelBudget) {
         try {
+          modelsLoaded++;
           const model = await library.model(poi.landmark);
           const obj = model.lods[0]!.clone(true);
           obj.name = `hero:${poi.id}`;

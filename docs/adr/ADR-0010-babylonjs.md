@@ -1,6 +1,6 @@
 # ADR-0010: Move the rendering adapter to Babylon.js
 
-- Status: Accepted (2026-09-07)
+- Status: **Rejected (2026-09-07)** — superseded by device evidence gathered after the decision was taken.
 - Supersedes the renderer half of ADR-0002 and revises ADR-0008.
 
 ## Context
@@ -9,7 +9,7 @@ ADR-0001 named Babylon.js the strongest alternative and set the trigger: adopt i
 The deciding factor is not capability, it is **verifiability**: WebKit cannot be run on the development machine (missing system libraries, and browser automation is off-limits on the owner's laptop), so every Three fix has been reasoned from photographs instead of reproduced. Continuing to guess against an unreproducible target is worse engineering than moving to the stack with the widest first-party iOS coverage, which is the owner's explicit decision.
 
 ## Decision
-Replace `app/adapters/rendering/*` with a Babylon.js 9 adapter behind the same ports.
+~~Replace `app/adapters/rendering/*` with a Babylon.js 9 adapter behind the same ports.~~ (Not carried out — see below.)
 - **Engine**: `@babylonjs/core` on WebGL2. Babylon's WebGL2 renderer is its default, most-tested path on Safari and iOS; WebGPU stays available but is not the default anywhere.
 - **Post-processing**: `DefaultRenderingPipeline` (tone mapping, bloom, FXAA, vignette, colour grading) — one well-trodden pipeline instead of hand-assembled TSL nodes.
 - **Sky and lighting**: `SkyMaterial` dome, directional sun with a cascaded shadow generator, hemispheric fill, exponential fog.
@@ -18,6 +18,21 @@ Replace `app/adapters/rendering/*` with a Babylon.js 9 adapter behind the same p
 - **Characters**: glTF skeletons and animation groups, with the procedural humanoid retained as the fallback.
 
 Unchanged: domain, application, UI, content, physics (Rapier), audio, i18n, persistence, and the whole asset pipeline apart from texture format. That is the layering from ADR-0004 paying for itself — the swap is confined to one adapter directory plus the composition root.
+
+## Why it was rejected before implementation finished
+A diagnostic run on the actual device (iPhone, iOS 18.7, Safari 27) settled the question the day the port began:
+
+| Probe | Result |
+|---|---|
+| Shader compile | **40 programs linked in 272 ms** — compilation was never the bottleneck |
+| WebGL2 + ASTC/ETC compressed textures | supported |
+| Texture memory ladder | **context lost at ~96 textures ≈ 538 MB** |
+
+The failure was GPU texture memory, not the rendering framework: the world asked for roughly 190 textures and `AssetLibrary` never released any of them, so the context was lost and the canvas went black. No framework choice changes that arithmetic.
+
+Worse, the move would have made this specific failure harder: Babylon fetches its KTX2 transcoders from a CDN, which ADR-0005 forbids, so the port planned to fall back to **WebP — uncompressed on the GPU, four bytes per texel instead of ASTC's one**, against a ceiling the device had just demonstrated.
+
+The engine adapter written for this ADR was therefore removed rather than finished. It remains in git history at the commit that added it, should the decision be revisited.
 
 ## Consequences
 - Effects with no direct Babylon equivalent in this pass (screen-space GI, TRAA) are dropped; SSAO and SSR remain available through Babylon's own pipelines if wanted later.

@@ -133,7 +133,8 @@ export class Game {
   private async makeCharacter(spec: AppearanceSpec): Promise<CharacterView | SkinnedCharacterView> {
     const lib = this.library;
     const bodyKey = spec.body === 'slim' || spec.body === 'tall' ? 'female' : 'male';
-    if (lib?.hasCharacter(bodyKey)) {
+    const richCharacters = this.preset.assetPolicy !== 'lite';
+    if (richCharacters && lib?.hasCharacter(bodyKey)) {
       try {
         this.playerBodyKey = bodyKey;
       const gltf = await lib.character(bodyKey);
