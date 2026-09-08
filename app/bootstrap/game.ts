@@ -73,7 +73,7 @@ export class Game {
   private readonly playerPos = new THREE.Vector3();
   paused = false;
   /** In-flight district load (single-flight: a second request for the same district reuses it). */
-  private loadingDistrict: { id: string; promise: Promise<void>; listeners: Set<(f: number, stage?: string) => void> } | null = null;
+  private loadingDistrict: { id: string; promise: Promise<void>; listeners: Set<(f: number, stage?: string) => void>; last: { f: number; stage?: string } } | null = null;
   /** Set by Flow; when false, movement input is ignored (menus open). */
   gameplayEnabled = false;
   onFrame: ((dt: number) => void) | null = null;
@@ -173,7 +173,10 @@ export class Game {
     if (pending) {
       // The menu already started this district as its backdrop. Join that load and, crucially, subscribe to
       // its progress — otherwise the player watches a frozen bar for the whole of someone else's load.
-      if (onProgress) pending.listeners.add(onProgress);
+      if (onProgress) {
+        pending.listeners.add(onProgress);
+        onProgress(pending.last.f, pending.last.stage); // replay: a joiner must not stare at an empty bar
+      }
       await pending.promise.catch(() => undefined);
       if (onProgress) pending.listeners.delete(onProgress);
       if (pending.id === district.id && this.district?.id === district.id) {
@@ -187,11 +190,19 @@ export class Game {
     }
     const listeners = new Set<(f: number, stage?: string) => void>();
     if (onProgress) listeners.add(onProgress);
+    const record: { id: string; promise: Promise<void>; listeners: typeof listeners; last: { f: number; stage?: string } } = {
+      id: district.id,
+      promise: Promise.resolve(),
+      listeners,
+      last: { f: 0 },
+    };
     const notify = (f: number, stage?: string): void => {
+      record.last = stage === undefined ? { f } : { f, stage };
       for (const l of listeners) l(f, stage);
     };
     const promise = this.loadDistrictInner(district, notify);
-    this.loadingDistrict = { id: district.id, promise, listeners };
+    record.promise = promise;
+    this.loadingDistrict = record;
     try {
       await promise;
     } finally {
@@ -200,6 +211,7 @@ export class Game {
   }
 
   private async loadDistrictInner(district: District, onProgress?: (f: number, stage?: string) => void): Promise<void> {
+    this.clearCharacterStudio();
     this.deps.bus.emit('district:load-requested', { district: district.id });
     const t0 = performance.now();
     const stage = (name: string) => console.info(`[truenorth] ${JSON.stringify({ type: 'load:stage', payload: { name, ms: Math.round(performance.now() - t0) } })}`);
@@ -454,6 +466,35 @@ export class Game {
     const audio = this.deps.audio as AudioPort & { setSoundscape?(z: Soundscape): void };
     if (audio.setSoundscape) audio.setSoundscape(zone);
     else this.deps.audio.playAmbience(zone.loop);
+  }
+
+  /** Small lit platform for the character creator: enough to see the character without building a district. */
+  showCharacterStudio(): void {
+    if (this.scene.getObjectByName('studio')) return;
+    const studio = new THREE.Group();
+    studio.name = 'studio';
+    const disc = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, 0.3, 48), new THREE.MeshStandardNodeMaterial({ color: 0x2a3140, roughness: 0.8 }));
+    disc.position.y = -0.15;
+    disc.receiveShadow = true;
+    studio.add(disc);
+    const key = new THREE.DirectionalLight(0xfff0dc, 2.6);
+    key.position.set(4, 7, 6);
+    const rim = new THREE.DirectionalLight(0x9fc2e6, 1.2);
+    rim.position.set(-5, 4, -4);
+    studio.add(key, rim, new THREE.HemisphereLight(0xbfd8ff, 0x33384a, 0.7));
+    this.scene.add(studio);
+  }
+
+  private clearCharacterStudio(): void {
+    const studio = this.scene.getObjectByName('studio');
+    if (!studio) return;
+    studio.traverse((o) => {
+      if (o instanceof THREE.Mesh) {
+        o.geometry.dispose();
+        (o.material as THREE.Material).dispose();
+      }
+    });
+    this.scene.remove(studio);
   }
 
   /** Fast travel to a POI of the current district. */

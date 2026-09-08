@@ -243,15 +243,11 @@ async function boot(): Promise<void> {
       },
     });
     ui.append(menu.render(!!store.progress.character, __APP_VERSION__));
-    // Idle backdrop: the hub, slowly orbiting.
-    void backdrop();
+    void calibrateGraphics();
   };
 
-  const backdrop = async (): Promise<void> => {
-    const hub = await content.getDistrict(config.startDistrict);
-    if (!hub.ok || game.district) return;
-    await game.loadDistrict(hub.value);
-
+  /** Choose a graphics preset without building a world: the benchmark runs on whatever is on screen. */
+  const calibrateGraphics = async (): Promise<void> => {
     game.gameplayEnabled = false;
     game.start();
     const forcedPreset = params.get('preset');
@@ -291,7 +287,7 @@ async function boot(): Promise<void> {
     creator = new CharacterCreator(t, catalog, {
       onPreview: (c: Character) => {
         void game.setPlayerAppearance(c.appearance);
-        if (!game.district) void backdrop();
+        game.showCharacterStudio();
         game.gameplayEnabled = false;
         game.rig.distance = 3.2;
         game.rig.pitch = 0.05;
@@ -324,7 +320,7 @@ async function boot(): Promise<void> {
     if (!ch) return showCreator();
     await game.setPlayerAppearance(ch.appearance);
     const f = ensureFlow();
-    await f.enterWorld(); // loadDistrict is single-flight and reuses the hub already loaded as the menu backdrop
+    await f.enterWorld();
     watchForBlankRenderer();
     if (game.district) {
       const sp = game.district.spawn;
