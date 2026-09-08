@@ -243,12 +243,220 @@ describe('separation of duties, over git history (ADR-0003)', () => {
     expect(result.out).toContain('changes the question\'s own fields AND changes');
   });
 
-  it('accepts an author editing text and leaving the verification block alone', () => {
-    const root = tree('a-edit-only', [question()]);
+  it('fails ONE COMMIT that authors one file and grants another, touching neither twice', () => {
+    // The rule used to be stated over one DOCUMENT, which is right on the case
+    // that prompted it and silent on the natural one. With a 57-file bank a
+    // commit touches many files: rewording qA while flipping qB from the null
+    // form to `verified` showed nothing in either file on its own - for qA the
+    // block was unchanged, for qB the author fields were unchanged - and the
+    // gate fired nothing. The property is "did one actor do both jobs", and
+    // what carries it is the commit.
+    const root = tree('a-two-files-one-commit', [
+      question({ id: 'q-a', verification: NULL_FORM }),
+      question({ id: 'q-b', verification: NULL_FORM }),
+    ]);
     initRepo(root);
-    // The seed commit is itself a breach, so it is made before the range starts
-    // and the gate is pointed at what came after with --since.
-    commit(root, 'Seed');
+    commit(root, 'Author two questions in the null form');
+    const rewordedA = question({
+      id: 'q-a',
+      verification: NULL_FORM,
+      explanation: { en: 'Reworded by the author.', fr: 'Reformule.' },
+    });
+    write(root, 'content/questions/government/fix-0.json', rewordedA);
+    write(root, 'content/questions/government/fix-1.json', question({ id: 'q-b' }));
+    commit(root, 'Reword qA and verify qB');
+    // A third commit grants qA as well, so the tree ends fully verified and the
+    // only thing left to fail on is the separation rule itself.
+    write(root, 'content/questions/government/fix-0.json', {
+      ...rewordedA,
+      verification: question().verification,
+    });
+    commit(root, 'Verify qA');
+
+    const result = run(root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('Reword qA and verify qB');
+    expect(result.out).toContain('AND authors content in 1 other file(s)');
+    expect(result.out).toContain('even though no single file shows it');
+  });
+
+  it('accepts one commit that grants many files and authors none', () => {
+    // The negative case that matters most: verifying a bank is ONE job and it
+    // arrives as one commit over 57 files. A rule that failed this would forbid
+    // the workflow it exists to protect.
+    const root = tree('a-bulk-verify', [
+      question({ id: 'q-a', verification: NULL_FORM }),
+      question({ id: 'q-b', verification: NULL_FORM }),
+    ]);
+    initRepo(root);
+    commit(root, 'Author two questions in the null form');
+    write(root, 'content/questions/government/fix-0.json', question({ id: 'q-a' }));
+    write(root, 'content/questions/government/fix-1.json', question({ id: 'q-b' }));
+    commit(root, 'Verify the bank');
+
+    const result = run(root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  it('accepts one commit that edits one file and ADDS another in the null form', () => {
+    // Authoring is also one job across many files, and a new file must carry
+    // the block. The null form is not a grant, so it does not put the commit on
+    // both sides of the rule.
+    const root = tree('a-bulk-author', [question({ id: 'q-a', verification: NULL_FORM })]);
+    initRepo(root);
+    commit(root, 'Author one question');
+    const reworded = question({
+      id: 'q-a',
+      verification: NULL_FORM,
+      explanation: { en: 'Reworded.', fr: 'Reformule.' },
+    });
+    write(root, 'content/questions/government/fix-0.json', reworded);
+    write(root, 'content/questions/government/fix-1.json', question({ id: 'q-b', verification: NULL_FORM }));
+    commit(root, 'Reword qA and add qB in the null form');
+    write(root, 'content/questions/government/fix-0.json', { ...reworded, verification: question().verification });
+    write(root, 'content/questions/government/fix-1.json', question({ id: 'q-b' }));
+    commit(root, 'Verify the bank');
+
+    const result = run(root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  it('accepts a verifier appending a live check to the register while granting statuses', () => {
+    // ADR-0016 makes a live check the VERIFIER's own record, so a commit that
+    // grants statuses and appends one is one job, not two. The first draft of
+    // the per-commit rule read the register as authored content and fired 57
+    // times on the real `Verify the question bank` commit; the separation rules
+    // are scoped to claim-bearing documents for that reason.
+    const root = tree('a-register-edit', [question({ verification: NULL_FORM })]);
+    initRepo(root);
+    commit(root, 'Author a question in the null form');
+    write(root, 'content/questions/government/fix-0.json', question());
+    write(
+      root,
+      'content/sources/fixture-source.json',
+      manifest({
+        liveChecks: [
+          {
+            checkedAt: dateAgo(1),
+            checkedBy: 'fixture',
+            finding: 'source-unrevised',
+            consequence: 'recorded',
+            pages: [
+              {
+                url: 'https://example.invalid/chapter',
+                chapter: CHAPTER,
+                sourceDateModified: '2017-12-21',
+                agreesWithCache: true,
+                claimsCompared: ['the three parts of Parliament'],
+              },
+            ],
+          },
+        ],
+      }),
+    );
+    commit(root, 'Verify the bank and record the live check');
+
+    const result = run(root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  /* --- A4: a grant is a grant OF something -------------------------------- */
+  //
+  // This block replaces a case that read "accepts an author editing text and
+  // leaving the verification block alone", over a fixture whose default
+  // verification is already `verified`. That case ASSERTED THE DEFECT: it took
+  // the untouched block as proof that nothing was wrong, when an untouched
+  // block over changed text is precisely the failure. `verification.sourceHash`
+  // binds a grant to the SOURCE and nothing bound it to the CLAIM, so the
+  // sequence below used to exit 0 with the correct answer replaced.
+  //
+  // Leaving the block alone is still the author's obligation. What is no longer
+  // accepted is leaving a GRANTED block alone; the null form is untouched by
+  // definition, and that is the negative case immediately after.
+
+  it('fails an author who edits the question after its verification was granted', () => {
+    const root = tree('a-edit-after-grant', [question({ verification: NULL_FORM })]);
+    initRepo(root);
+    commit(root, 'Author a question in the null form');
+    write(root, 'content/questions/government/fix-0.json', question());
+    commit(root, 'Verify it');
+    // Three properly separated commits, and the third breaks nothing the old
+    // gate knew about: the block is byte-identical, the source has not moved,
+    // the quote and the evidence are untouched. Only the answer changed.
+    write(
+      root,
+      'content/questions/government/fix-0.json',
+      question({
+        correctIndex: 1,
+        prompt: { en: 'How many parts does Parliament really have?', fr: 'Combien vraiment ?' },
+      }),
+    );
+    commit(root, 'Reword the prompt and change the answer');
+
+    const result = run(root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('was granted in');
+    expect(result.out).toContain('the claim\'s own fields have changed since');
+    expect(result.out).toContain('Verify it');
+  });
+
+  it('accepts an author editing text while the verification is still the null form', () => {
+    // The legitimate case this is closest to, and the reason the rule is about
+    // a GRANT and not about any verification block: before a verifier has
+    // granted anything there is nothing for an edit to invalidate. Authoring is
+    // iterative and must stay that way.
+    const root = tree('a-edit-before-grant', [question({ verification: NULL_FORM })]);
+    initRepo(root);
+    commit(root, 'Author a question in the null form');
+    const reworded = question({
+      verification: NULL_FORM,
+      explanation: { en: 'Reworded before anyone checked it.', fr: 'Reformule.' },
+    });
+    write(root, 'content/questions/government/fix-0.json', reworded);
+    commit(root, 'Reword the explanation');
+    write(root, 'content/questions/government/fix-0.json', { ...reworded, verification: question().verification });
+    commit(root, 'Verify it');
+
+    const result = run(root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  it('clears the failure when the verifier re-verifies the edited question', () => {
+    // A4 is evaluated at HEAD, not at the offending commit, precisely so there
+    // is a way back. A permanent historical failure would leave the only exit
+    // as rewriting history.
+    const root = tree('a-edit-then-reverify', [question({ verification: NULL_FORM })]);
+    initRepo(root);
+    commit(root, 'Author a question in the null form');
+    write(root, 'content/questions/government/fix-0.json', question());
+    commit(root, 'Verify it');
+    const edited = question({ explanation: { en: 'Reworded, nothing else.', fr: 'Reformule.' } });
+    write(root, 'content/questions/government/fix-0.json', edited);
+    commit(root, 'Reword the explanation');
+    expect(run(root).status).toBe(1);
+
+    write(root, 'content/questions/government/fix-0.json', {
+      ...edited,
+      verification: { ...(question().verification as Json), checkedAt: daysAgo(1) },
+    });
+    commit(root, 'Re-verify the reworded question');
+
+    const result = run(root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  it('binds a grant made before an explicit --since, rather than exempting it', () => {
+    // --since seeds A4's state from the range's base commit. Without that seed
+    // a range would report green over exactly the edit A4 exists to catch,
+    // which is how the replaced test passed: it pointed --since past the grant.
+    const root = tree('a-edit-since', [question()]);
+    initRepo(root);
+    commit(root, 'Seed, with the grant already in place');
     write(
       root,
       'content/questions/government/fix-0.json',
@@ -257,6 +465,33 @@ describe('separation of duties, over git history (ADR-0003)', () => {
     commit(root, 'Reword the explanation');
 
     const result = run(root, ['--since', 'HEAD~1']);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('the base of HEAD~1');
+    expect(result.out).toContain('the claim\'s own fields have changed since');
+  });
+
+  it('does not fire on a verifier quarantining a question, which changes no claim', () => {
+    const root = tree('a-quarantine-no-a4', [question({ verification: NULL_FORM })]);
+    initRepo(root);
+    commit(root, 'Author a question in the null form');
+    write(root, 'content/questions/government/fix-0.json', question());
+    commit(root, 'Verify it');
+    write(
+      root,
+      'content/questions/government/fix-0.json',
+      question({
+        verification: {
+          status: 'quarantined',
+          model: 'fixture-model',
+          checkedAt: daysAgo(1),
+          sourceHash: SOURCE_SHA,
+          evidence: 'Parliament has three parts: the Sovereign',
+        },
+      }),
+    );
+    commit(root, 'Quarantine it');
+
+    const result = run(root);
     expect(result.out).toContain('verify-content: OK.');
     expect(result.status).toBe(0);
   });
@@ -418,6 +653,151 @@ describe('separation of duties, over git history (ADR-0003)', () => {
     expect(result.status).toBe(0);
     expect(result.out).toContain('commit AUTHORSHIP is not established here');
     expect(result.out).toContain('One agent committing twice is indistinguishable from two agents');
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/* The recogniser every rule in gate A is scoped by                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A minimal `common.schema.json`, carrying only what the recogniser self-test
+ * reads: the two `required` lists. `extra` adds a required key the way an ADR
+ * amendment does - which is the whole point of these cases, because the
+ * previous recogniser matched on an EXACT key set and stopped recognising a
+ * block the moment the schema grew a field.
+ */
+const commonSchema = (extra: { verification?: readonly string[]; review?: readonly string[] } = {}): Json => ({
+  $schema: 'https://json-schema.org/draft/2020-12/schema',
+  $id: 'https://truenorth.app/schemas/common.schema.json',
+  $defs: {
+    factVerification: {
+      type: 'object',
+      required: ['status', 'model', 'checkedAt', 'sourceHash', 'evidence', ...(extra.verification ?? [])],
+    },
+    communityReview: {
+      type: 'object',
+      required: ['status', 'reviewer', 'organisation', 'date', 'scope', 'note', ...(extra.review ?? [])],
+    },
+  },
+});
+
+const guide = (review: Json): Json => ({
+  id: 'guide',
+  indigenous: true,
+  nation: 'Algonquin Anishinaabe',
+  communityReview: review,
+});
+
+const GRANTED_REVIEW = {
+  status: 'granted',
+  reviewer: 'Elder Jane Doe',
+  organisation: 'A Real Organisation',
+  date: '2026-09-01T00:00:00Z',
+  scope: 'the whole character',
+  note: '',
+};
+
+describe('the recogniser gate A is scoped by (ADR-0003 as amended, ADR-0019)', () => {
+  it('fails a fabricated sign-off that carries a key the recogniser has never seen', () => {
+    // THE DEFECT. ADR-0003's amendment made `record` required whenever the
+    // status is not `not-sought`. The recogniser matched an EXACT key set, so
+    // the six-key block failed correctly and the SEVEN-key block that the
+    // amendment mandates - same fabricated grant, same named person, one extra
+    // field - exited 0. The only signal was the block count in the summary
+    // dropping from 2 to 1, on a line nobody diffs.
+    const root = tree('r-record-field', [question()]);
+    write(root, 'content/schemas/common.schema.json', commonSchema({ review: ['record'] }));
+    initRepo(root);
+    commit(root, 'Seed');
+    write(
+      root,
+      'content/characters/guide.json',
+      guide({ ...GRANTED_REVIEW, record: 'https://example.invalid/letter' }),
+    );
+    commit(root, 'Record the community sign-off');
+
+    const result = run(root, ['--since', 'HEAD~1']);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('sets communityReview.status to "granted"');
+    expect(result.out).toContain('naming Elder Jane Doe');
+    expect(result.out).toContain('1 communityReview block(s) inspected');
+  });
+
+  it('fails the same sign-off without that key, so the six-key case did not regress', () => {
+    const root = tree('r-no-record-field', [question()]);
+    write(root, 'content/schemas/common.schema.json', commonSchema());
+    initRepo(root);
+    commit(root, 'Seed');
+    write(root, 'content/characters/guide.json', guide(GRANTED_REVIEW));
+    commit(root, 'Record the community sign-off');
+
+    const result = run(root, ['--since', 'HEAD~1']);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('sets communityReview.status to "granted"');
+  });
+
+  it('fails when the schema requires a key the recogniser identifies blocks by', () => {
+    // The other direction, and the one that decays silently: if the schema
+    // stops requiring a field this file matches on, legitimate blocks written
+    // without it are not recognised and every rule scoped by the recogniser
+    // skips them. Here `scope` is dropped from the schema's required list.
+    const root = tree('r-schema-drift', [question()]);
+    write(root, 'content/schemas/common.schema.json', {
+      ...commonSchema(),
+      $defs: {
+        factVerification: {
+          type: 'object',
+          required: ['status', 'model', 'checkedAt', 'sourceHash', 'evidence'],
+        },
+        communityReview: {
+          type: 'object',
+          required: ['status', 'reviewer', 'organisation', 'date', 'note'],
+        },
+      },
+    });
+    const result = runFlat(root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('this gate identifies the block by "scope"');
+    expect(result.out).toContain('would not be recognised');
+  });
+
+  it('says out loud when it could not check the recogniser against a schema', () => {
+    const result = runFlat(tree('r-no-schema', [question()]));
+    expect(result.out).toContain('the recogniser self-test did not run');
+    expect(result.status).toBe(0);
+  });
+
+  it('still refuses to read the schema that DEFINES a block as an instance of one', () => {
+    // Matching on a required SUBSET is only safe while this holds. A JSON
+    // Schema's `properties` object for factVerification has exactly the five
+    // key names; what rejects it is that `status` there is a subschema and not
+    // one of the four status strings.
+    const root = tree('r-definition-not-instance', [question({ verification: NULL_FORM })]);
+    write(root, 'content/schemas/common.schema.json', commonSchema({ review: ['record'] }));
+    write(root, 'content/schemas/question.schema.json', {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      properties: {
+        verification: {
+          properties: {
+            status: { enum: ['unverified', 'verified', 'quarantined', 'rejected'] },
+            model: { type: 'string' },
+            checkedAt: { type: 'string' },
+            sourceHash: { type: 'string' },
+            evidence: { type: 'string' },
+          },
+        },
+      },
+    });
+    initRepo(root);
+    commit(root, 'Add the schemas and a question');
+    write(root, 'content/questions/government/fix-0.json', question());
+    commit(root, 'Verify it');
+
+    const result = run(root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+    expect(result.out).toContain('2 verification block(s)');
   });
 });
 

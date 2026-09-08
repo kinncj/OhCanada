@@ -572,24 +572,7 @@ const blocksIn = (document) => {
  */
 const GOVERNED_BLOCK = '<verification or communityReview block>';
 
-/**
- * The document with every NOT-AUTHOR-OWNED region replaced by a constant, so
- * that "did the author-owned fields of this document change?" is one string
- * comparison. Three regions are masked:
- *
- *   - a `verification` block, which only the verifier writes (ADR-0003);
- *   - a `communityReview` block, which no agent may write at all;
- *   - `liveChecks[]`, which ADR-0016 makes the VERIFIER's record of what the
- *     live page still says. Without this third one the per-commit rule below
- *     reads the verifier's own bookkeeping as authoring: commit e4f2c89 granted
- *     54 statuses and appended one live check to the register in the same
- *     commit, which is one job done properly, and the rule fired 57 times on it.
- *     Masked by FIELD NAME rather than by file path, because what carries the
- *     property is the field ADR-0016 gives to the verifier, not the directory
- *     it happens to live in (ADR-0019). No other schema declares the name.
- */
-const VERIFIER_OWNED_FIELDS = ['liveChecks'];
-
+/** The document with every governed block replaced by a constant. */
 const authorFieldsOf = (node) => {
   if (isVerification(node) || isCommunityReview(node)) return GOVERNED_BLOCK;
   if (Array.isArray(node)) return node.map(authorFieldsOf);
@@ -597,14 +580,36 @@ const authorFieldsOf = (node) => {
     return Object.fromEntries(
       Object.keys(node)
         .sort()
-        .map((key) => [
-          key,
-          VERIFIER_OWNED_FIELDS.includes(key) ? GOVERNED_BLOCK : authorFieldsOf(node[key]),
-        ]),
+        .map((key) => [key, authorFieldsOf(node[key])]),
     );
   }
   return node;
 };
+
+/**
+ * WHICH DOCUMENTS THE SEPARATION OF DUTIES GOVERNS, and it is not "every file
+ * under content/".
+ *
+ * ADR-0003 splits authoring a CLAIM from granting its verification. A source
+ * register carries no claim: it records where a document was fetched from, what
+ * it hashes to, which regions are known stale, and — per ADR-0016 — the live
+ * checks a named checker made against it. Both roles legitimately write to it,
+ * and the first draft of the per-commit rule below therefore fired 57 times on
+ * commit e4f2c89, which granted 54 statuses and, in the same commit, appended
+ * the live check and the `upstream` / `bannedFromAnswers` declarations that
+ * ADR-0016 makes the checker's own judgement. That is one job done properly.
+ *
+ * So A0, A1/A2 and A4 are scoped to claim-bearing documents. A3 is not: it
+ * refuses a cultural sign-off wherever one appears, because there the cost of
+ * missing one is a fabricated review naming a real person.
+ *
+ * The stated limit, since an exclusion that is not written down reads as
+ * coverage: a commit that edits a source register is NOT held to the
+ * one-commit-one-job rule. What records who made a live check is the register's
+ * own `liveChecks[].checkedBy` field, which is self-attested exactly like a git
+ * identity — see the authorship note at the top of this file.
+ */
+const bearsClaims = (path) => !path.startsWith('content/sources/');
 
 const canonical = (value) => JSON.stringify(value);
 
@@ -1214,7 +1219,7 @@ const runHistoryGate = () => {
       const paths = git(['ls-tree', '-r', '--name-only', base, '--', 'content'])
         .split('\n')
         .map((line) => line.trim())
-        .filter((line) => line !== '' && isGovernedPath(line));
+        .filter((line) => line !== '' && isGovernedPath(line) && bearsClaims(line));
       for (const path of paths) {
         const document = blobAt(base, path);
         if (document !== null) {
@@ -1269,7 +1274,8 @@ const runHistoryGate = () => {
       history.reviews += afterBlocks.review.size;
 
       const authorChanged =
-        before === null || canonical(authorFieldsOf(before)) !== canonical(authorFieldsOf(after));
+        bearsClaims(path) &&
+        (before === null || canonical(authorFieldsOf(before)) !== canonical(authorFieldsOf(after)));
       if (authorChanged) authored.push(path);
 
       /* --- A0: the rule as ADR-0003 words it, when a role is knowable ---- */
@@ -1278,7 +1284,7 @@ const runHistoryGate = () => {
       // stronger than A1/A2 below, because it does not need the commit to have
       // done both jobs at once: an author-role commit that grants a status,
       // alone, in its own commit, fails here and would pass there.
-      if (role === 'author') {
+      if (role === 'author' && bearsClaims(path)) {
         for (const [pointer, block] of afterBlocks.verification) {
           const previous = beforeBlocks.verification.get(pointer);
           if (previous !== undefined && canonical(previous) === canonical(block)) continue;
@@ -1301,7 +1307,7 @@ const runHistoryGate = () => {
       }
 
       /* --- collect this document's grants, for the per-commit rule ------- */
-      for (const [pointer, block] of afterBlocks.verification) {
+      for (const [pointer, block] of bearsClaims(path) ? afterBlocks.verification : []) {
         const previous = beforeBlocks.verification.get(pointer);
         if (previous !== undefined && canonical(previous) === canonical(block)) continue;
         // The one allowance: a new file must carry the block, and the null form
@@ -1334,6 +1340,7 @@ const runHistoryGate = () => {
       }
 
       // A4's state, after the rules that read the diff.
+      if (!bearsClaims(path)) continue;
       recordRevision(path, after, short, subject, (pointer, block) => {
         const previous = beforeBlocks.verification.get(pointer);
         return previous === undefined || canonical(previous) !== canonical(block);
