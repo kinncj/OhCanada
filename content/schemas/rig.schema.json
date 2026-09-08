@@ -1,0 +1,458 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/rig.schema.json",
+  "title": "TrueNorth character rig contract",
+  "description": "The shared character rig: its parts and their z-order, its animation states and keyframes, the state-machine input vocabulary, the skin slots and their options, and the atlas frames that resolve them. One rig, every character. ADR-0017. This document is the AUTHORITY ON THE VOCABULARY; `character.schema.json` describes one character SELECTING from it. What a schema can hold and what it cannot is split deliberately: shapes, enums and the local conditionals are here, and the cross-field constraints that make the rig coherent - the head-proportion identity, the dense z-order, every `{brace}` naming a declared slot - are in tests/unit/contracts/rig-is-coherent.test.ts, because JSON Schema cannot compare a value with a sibling. A rig that satisfies this file and fails that test is still a broken rig; neither half is the contract on its own.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "$comment": {
+      "description": "Prose about the document, as a line array so a long note diffs a line at a time. Not read by anything.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "version": { "type": "integer", "minimum": 1 },
+    "licence": {
+      "description": "The rig is original art, so ADR-0004's redistribution test applies to it and a licence id is the right shape here - unlike a cited source, which is a document the project reads.",
+      "type": "string",
+      "minLength": 1
+    },
+    "designResolution": { "$ref": "#/$defs/dimensions" },
+    "characterSpace": { "$ref": "#/$defs/characterSpace" },
+    "artboards": {
+      "description": "One per character that plays this rig. `characterId` joins to content/characters/<id>.json.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/rigArtboard" },
+      "minItems": 1
+    },
+    "stateMachine": { "$ref": "#/$defs/rigStateMachine" },
+    "selector": { "$ref": "#/$defs/rigSelector" },
+    "expressions": { "$ref": "#/$defs/rigExpressions" },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/rigEvent" }
+    },
+    "slots": { "$ref": "#/$defs/rigSlots" },
+    "slotIndependence": { "$ref": "#/$defs/slotIndependence" },
+    "parts": {
+      "description": "Every drawable part, in no particular order; `z` carries the order. A part is a window into character space, so its `pivot` is stated in that space.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/rigPart" },
+      "minItems": 1
+    },
+    "atlas": { "$ref": "#/$defs/rigAtlas" },
+    "states": {
+      "description": "The animation states, keyed by name. A `selector.rules[].state` names one of these keys.",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/rigState" },
+      "minProperties": 1
+    },
+    "frames": {
+      "description": "Every atlas frame the rig can resolve to, keyed by frame key. A part whose resolved template is absent from this map draws nothing, which is how every \"none\" option works without a special case in either backend.",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/rigFrame" },
+      "minProperties": 1
+    }
+  },
+  "required": [
+    "version",
+    "licence",
+    "designResolution",
+    "characterSpace",
+    "artboards",
+    "stateMachine",
+    "selector",
+    "expressions",
+    "slots",
+    "slotIndependence",
+    "parts",
+    "atlas",
+    "states",
+    "frames"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "dimensions": {
+      "title": "Dimensions",
+      "type": "object",
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["width", "height"],
+      "additionalProperties": false
+    },
+
+    "characterSpace": {
+      "title": "Character space",
+      "description": "The coordinate space every part window and pivot is stated in. `heightPx`, `headPx` and `heightHeads` are three numbers describing one fact, and the identity `heightPx / headPx == heightHeads` is checked by the contract test - which is the point of recording all three rather than deriving one. The 6-head proportion is a canon rule (assets/style/art-bible.md) and identical for every character, so a rig that quietly changes `headPx` without changing `heightHeads` would move one character off the canon while the file still claimed to be on it.",
+      "type": "object",
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "centreX": { "type": "integer" },
+        "crownY": { "type": "integer" },
+        "soleY": { "type": "integer" },
+        "groundLineY": { "type": "integer" },
+        "heightPx": {
+          "description": "Crown to sole, in character space. Not the artboard height: the artboard carries margin.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "headPx": { "type": "integer", "minimum": 1 },
+        "heightHeads": {
+          "description": "The canon proportion. 6 for every TrueNorth character - cartoon proportions are identical for all characters (docs/content-review.md), which is itself an anti-caricature rule and not a style preference.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["width", "height", "centreX", "crownY", "soleY", "heightPx", "headPx", "heightHeads"],
+      "additionalProperties": false
+    },
+
+    "rigArtboard": {
+      "title": "Rig artboard",
+      "type": "object",
+      "properties": {
+        "characterId": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId" },
+        "artboard": { "type": "string", "minLength": 1 },
+        "stateMachine": { "type": "string", "minLength": 1 },
+        "skins": {
+          "description": "The slot choices this artboard ships with. Keys must be declared slots and values must be options of them - checked by the contract test.",
+          "type": "object",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
+        "playerSelectableSlots": {
+          "description": "Which slots the character creator offers for this artboard. Every entry must be a declared slot whose `playerSelectable` is true; an empty array is a real answer and is what an NPC has.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["characterId", "artboard", "stateMachine", "skins", "playerSelectableSlots"],
+      "additionalProperties": false
+    },
+
+    "rigStateMachine": {
+      "title": "Rig state machine",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "inputs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rigInput" },
+          "minItems": 1
+        }
+      },
+      "required": ["name", "inputs"],
+      "additionalProperties": false
+    },
+
+    "rigInput": {
+      "title": "Rig state-machine input",
+      "description": "One input both backends must expose under this exact name. `type` is what ICharacterRenderer's setBool, setNumber and fire address. The conditionals below are the whole reason this is a schema rather than a list: a `number` without a range is a value nothing can clamp, and a `trigger` with a `fallback` is the easy mistake - a trigger is an event, it has no resting value, and a default for one is meaningless. Both were reachable in prose and are unreachable here.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "enum": ["bool", "number", "trigger"] },
+        "fallback": { "type": ["boolean", "number"] },
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "meaning": { "type": "string", "minLength": 1 }
+      },
+      "required": ["name", "type", "meaning"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "A number input carries its range and a numeric resting value. Only property names this object already declares appear here (ADR-0007).",
+          "if": { "properties": { "type": { "const": "number" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "fallback": { "type": "number" },
+              "min": { "type": "number" },
+              "max": { "type": "number" }
+            },
+            "required": ["fallback", "min", "max"]
+          }
+        },
+        {
+          "$comment": "A bool input carries a boolean resting value and no range.",
+          "if": { "properties": { "type": { "const": "bool" } }, "required": ["type"] },
+          "then": {
+            "properties": { "fallback": { "type": "boolean" } },
+            "required": ["fallback"],
+            "allOf": [
+              { "not": { "required": ["min"] } },
+              { "not": { "required": ["max"] } }
+            ]
+          }
+        },
+        {
+          "$comment": "A trigger is an event. It has no resting value and no range, and a `fallback` on one is meaningless - it is the mistake this conditional exists to make unwritable.",
+          "if": { "properties": { "type": { "const": "trigger" } }, "required": ["type"] },
+          "then": {
+            "allOf": [
+              { "not": { "required": ["fallback"] } },
+              { "not": { "required": ["min"] } },
+              { "not": { "required": ["max"] } }
+            ]
+          }
+        }
+      ]
+    },
+
+    "rigSelector": {
+      "title": "Rig selector",
+      "description": "The Rive state machine written out as an ordered first-match-wins table, so a sprite adapter evaluates the SAME rules in the SAME order and a contract test can drive both backends through it and compare the selected state. That is what makes the fallback a swap rather than a second implementation.",
+      "type": "object",
+      "properties": {
+        "note": { "type": "string", "minLength": 1 },
+        "rules": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rigSelectorRule" },
+          "minItems": 1
+        }
+      },
+      "required": ["rules"],
+      "additionalProperties": false
+    },
+
+    "rigSelectorRule": {
+      "title": "Rig selector rule",
+      "type": "object",
+      "properties": {
+        "when": {
+          "description": "The condition in words. Deliberately prose and not an expression grammar: an executable condition here would be a second implementation of the state machine that could disagree with both backends, and inventing a mini-language is how a data file becomes code nobody tests.",
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "description": "The state selected when `when` holds. Must be a key of `states` - checked by the contract test, because a rule naming a state that does not exist is a rule that selects nothing.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["when", "state"],
+      "additionalProperties": false
+    },
+
+    "rigExpressions": {
+      "title": "Rig expressions",
+      "description": "Named face poses. `fallback` must be one of `names` - checked by the contract test. Every pose must differ in the SHAPE of brow, pupil and mouth so it survives greyscale, high contrast and the plain Canvas tier, which has no Filter pipeline (ADR-0011). That last rule is art review's; nothing here can check it.",
+      "type": "object",
+      "properties": {
+        "names": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "fallback": { "type": "string", "minLength": 1 },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["names", "fallback"],
+      "additionalProperties": false
+    },
+
+    "rigEvent": {
+      "title": "Rig event",
+      "description": "A named moment the animation reports, so audio, subtitles and UI agree with the art rather than guessing at it.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "when": { "type": "string", "minLength": 1 },
+        "use": { "type": "string", "minLength": 1 }
+      },
+      "required": ["name", "when", "use"],
+      "additionalProperties": false
+    },
+
+    "rigSlots": {
+      "title": "Rig slots",
+      "description": "The runtime-swappable slots, keyed by slot name. The names are FIXED by this schema, and that is the anti-caricature mechanism rather than tidiness: `hairShape` and `hairColour` are two slots precisely so that a coupling - \"the coily one only in black\" - cannot hide inside a single combined list of twenty options. Merging them would be a schema change and a visible one. `presentation` is likewise named here while reserved, so the slot cannot be quietly filled in without touching this contract while OQ-ART-08 is open (docs/content-review.md 8.2).",
+      "type": "object",
+      "properties": {
+        "skin": { "$ref": "#/$defs/rigSlot" },
+        "hairShape": { "$ref": "#/$defs/rigSlot" },
+        "hairColour": { "$ref": "#/$defs/rigSlot" },
+        "headCovering": { "$ref": "#/$defs/rigSlot" },
+        "feature": { "$ref": "#/$defs/rigSlot" },
+        "costume": { "$ref": "#/$defs/rigSlot" },
+        "presentation": { "$ref": "#/$defs/rigSlot" }
+      },
+      "required": ["skin", "hairShape", "hairColour", "headCovering", "feature", "costume", "presentation"],
+      "additionalProperties": false
+    },
+
+    "rigSlot": {
+      "title": "Rig slot",
+      "description": "One slot and the options the artwork provides for it. `fallback` is the option used when nothing has been chosen - an NPC, or save recovery when a saved option id no longer exists. It is NOT a pre-selection: no skin tone is the default (assets/style/art-bible.md 8), and the creator randomises uniformly on open.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "fallback": { "type": ["string", "null"], "minLength": 1 },
+        "playerSelectable": { "type": "boolean" },
+        "status": {
+          "description": "`reserved` means the slot NAME exists so the Rive file and the atlas agree, and nothing may fill it yet. Absent means the slot is live.",
+          "type": "string",
+          "enum": ["reserved"]
+        },
+        "blockedBy": {
+          "description": "Which open question holds a reserved slot shut. Required when `status` is `reserved`: a slot reserved for no stated reason is one nobody can ever decide to open.",
+          "type": "string",
+          "minLength": 1
+        },
+        "namesOwnedBy": { "type": "string", "minLength": 1 },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["options", "fallback", "playerSelectable"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "A reserved slot has exactly zero options and a null fallback, and says what it is blocked by. This is what stops a reserved slot being quietly populated: filling it in requires removing `status`, which is a visible edit to the contract rather than one more entry in a list. Only property names this object already declares appear here (ADR-0007).",
+          "if": { "properties": { "status": { "const": "reserved" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "options": { "type": "array", "maxItems": 0 },
+              "fallback": { "type": "null" },
+              "blockedBy": { "type": "string", "minLength": 1 }
+            },
+            "required": ["options", "fallback", "blockedBy"]
+          },
+          "else": {
+            "properties": {
+              "options": { "type": "array", "minItems": 1 },
+              "fallback": { "type": "string", "minLength": 1 }
+            },
+            "required": ["options", "fallback"]
+          }
+        }
+      ]
+    },
+
+    "slotIndependence": {
+      "title": "Slot independence",
+      "description": "The anti-caricature rule, stated in the rig so it travels with the thing it constrains (docs/content-review.md 8.2). `checkable` records HOW it is checked, which is what stops it being a sentiment: the product of the option counts equals the number of valid combinations, and no part frame template names two slots that constrain each other. The contract test evaluates the second half from `parts[].frame`.",
+      "type": "object",
+      "properties": {
+        "rule": { "type": "string", "minLength": 1 },
+        "checkable": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 }
+      },
+      "required": ["rule", "checkable", "source"],
+      "additionalProperties": false
+    },
+
+    "rigPart": {
+      "title": "Rig part",
+      "description": "One drawable part. `frame` is a template: literal text plus `{slot}` or `{expression}` braces, each of which must name a declared slot or the expression list - checked by the contract test. That check is what makes slot independence MECHANICAL rather than a promise: a template naming two slots that constrain each other is visible in the template.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "z": {
+          "description": "Draw order, back to front. The set of `z` over all parts must be a dense permutation of 1..n - checked by the contract test. Dense because a gap is an ambiguity about what was meant to be there, and a duplicate is two parts whose order is decided by array position, which is not a contract.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame": { "type": "string", "minLength": 1 },
+        "pivot": {
+          "description": "Rotation origin in character space, [x, y].",
+          "type": "array",
+          "prefixItems": [{ "type": "number" }, { "type": "number" }],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "mirrorX": { "type": "boolean" },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["name", "z", "frame", "pivot", "mirrorX"],
+      "additionalProperties": false
+    },
+
+    "rigAtlas": {
+      "title": "Rig atlas",
+      "description": "How a resolved frame template becomes an atlas frame key. Every key of `frames` must start with `framePrefix` - checked by the contract test - so the rig's frames cannot collide with a level's.",
+      "type": "object",
+      "properties": {
+        "framePrefix": { "type": "string", "minLength": 1 },
+        "grammar": { "type": "string", "minLength": 1 },
+        "rule": { "type": "string", "minLength": 1 },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["framePrefix", "grammar", "rule"],
+      "additionalProperties": false
+    },
+
+    "rigState": {
+      "title": "Rig state",
+      "description": "One animation state. `keys[].t` is normalised time and must run 0 to 1 in ascending order - checked by the contract test - so a state's timeline cannot depend on `durationMs` being read first.",
+      "type": "object",
+      "properties": {
+        "loop": {
+          "description": "`loop` repeats, `once` plays and returns to the selector, `hold` plays and stops on the last key until an input changes.",
+          "type": "string",
+          "enum": ["loop", "once", "hold"]
+        },
+        "durationMs": { "type": "integer", "minimum": 1 },
+        "keys": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rigKeyframe" },
+          "minItems": 2
+        },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "required": ["loop", "durationMs", "keys"],
+      "additionalProperties": false
+    },
+
+    "rigKeyframe": {
+      "title": "Rig keyframe",
+      "type": "object",
+      "properties": {
+        "t": {
+          "description": "Normalised time within the state, 0 to 1.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "parts": {
+          "description": "Per-part transform at this instant, keyed by part name: [rotationDeg, dx, dy]. Every key must be a declared part - checked by the contract test, because a keyframe naming a part that does not exist animates nothing and looks like it animates something.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "prefixItems": [{ "type": "number" }, { "type": "number" }, { "type": "number" }],
+            "items": false,
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "minProperties": 1
+        }
+      },
+      "required": ["t", "parts"],
+      "additionalProperties": false
+    },
+
+    "rigFrame": {
+      "title": "Rig frame",
+      "description": "One atlas frame: where its source art lives and the window it occupies in character space. `x`/`y` may be negative - a toque crosses the crown line - so no minimum is set on them.",
+      "type": "object",
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "w": { "type": "integer", "minimum": 1 },
+        "h": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["source", "x", "y", "w", "h"],
+      "additionalProperties": false
+    }
+  }
+}

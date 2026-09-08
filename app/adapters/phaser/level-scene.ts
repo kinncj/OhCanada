@@ -4,7 +4,9 @@ import type { LocomotionIntent, LocomotionState, LocomotionTuning, Vec2 } from '
 
 import { blendColors, mixColor, toPhaserColor } from './boot-config';
 import { groundYAt, levelBounds, slopeAt, type LevelBounds } from './ground-profile';
+import type { LoadRequest } from './level-assets';
 import { createLevelEffects, selectLayers, type LevelEffects } from './level-effects';
+import type { SceneEventListener, SceneEventName } from './level-events';
 import { followCamera } from './level-camera';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
@@ -99,8 +101,30 @@ export interface LevelSceneOptions {
   readonly marker: PlayableMarker | null;
   /** The tier the renderer probe measured. `null` until the first window closes. */
   readonly profile: RenderProfile | null;
+  /**
+   * The textures this level draws from, resolved from `assets/dist/manifest.json`
+   * by `level-assets.ts` before the scene was constructed.
+   *
+   * Empty is legal and is what a build with no art produces: every layer takes
+   * the placeholder band. It is **not** silent any more — `create` publishes
+   * `layers` and `layersTextured` and the e2e suite fails when they differ,
+   * which is the assertion that was missing while the deployed level drew no
+   * art at all.
+   */
+  readonly assets?: readonly LoadRequest[];
   /** Called once the first playable frame exists. */
   readonly onReady?: (levelId: string) => void;
+  /**
+   * Every fact the level publishes, as it happens.
+   *
+   * The composition root turns these into typed bus events, which is how the
+   * HUD, the POI card and the live region hear about them without anything in
+   * this directory importing `app/ui` (ADR-0005). The probe's trace is *also*
+   * fed, unchanged: the trace answers "was it emitted, on which frame", which a
+   * bus subscription cannot, and the bus reaches the parts of the game a
+   * Playwright assertion is not.
+   */
+  readonly onEvent?: SceneEventListener;
 }
 
 /** One placeholder or textured parallax band, plus the document row it came from. */
@@ -111,6 +135,24 @@ interface LayerView {
     setVisible(visible: boolean): unknown;
     setDepth(depth: number): unknown;
   };
+  /**
+   * A repeating band is drawn **viewport-wide and scrolled by its tile offset**,
+   * not world-wide and scrolled by the camera.
+   *
+   * The difference is the whole cost of a parallax layer. Ottawa is 9000 design
+   * pixels long and the camera sees 1080 of them, so a `tileSprite` sized to the
+   * world submits a quad eight times wider than anything that can be seen, and —
+   * because these textures are not power-of-two — Phaser builds a POT copy of it
+   * to make `repeat` wrap. Six of those is megabytes of texture nobody asked for
+   * and eight screens of geometry per frame. Pinning the quad to the viewport
+   * and advancing `tilePositionX` instead draws exactly one screen per layer and
+   * needs no copy.
+   *
+   * `factorX` is the layer's parallax rate, and it lives here rather than on the
+   * game object because the object's `scrollFactor.x` is now always 0 — the quad
+   * does not move, its contents do. `null` for a layer that is not tiled.
+   */
+  readonly tiled: { factorX: number } | null;
 }
 
 interface Flake {
@@ -181,6 +223,21 @@ export class LevelScene extends Phaser.Scene {
     return profile === null ? [] : this.#effects.registry.plan(profile);
   }
 
+  /**
+   * Ask Phaser for every texture the level resolved.
+   *
+   * Phaser runs `preload` and holds `create` until the queue drains, so by the
+   * time a layer asks `textures.exists(key)` the answer is the truth about this
+   * build rather than "nobody has tried yet" — which is what it used to be, for
+   * every layer, in production.
+   */
+  preload(): void {
+    for (const request of this.#options.assets ?? []) {
+      if (request.kind === 'image') this.load.image(request.key, request.url);
+      else this.load.atlas(request.key, request.textureUrl, request.dataUrl);
+    }
+  }
+
   create(): void {
     const { level } = this.#options;
 
@@ -215,6 +272,8 @@ export class LevelScene extends Phaser.Scene {
       facing: this.#state.facing,
       grounded: true,
       cameraX: this.#camera.x,
+      layers: level.layers.length,
+      layersTextured: this.#texturedLayers,
     });
     this.#emit('level/ready', level.id);
     this.#options.onReady?.(level.id);
@@ -244,14 +303,25 @@ export class LevelScene extends Phaser.Scene {
       /* Pinned to the world first, then the drift effect may override it. A
          skipped effect therefore means "no independent movement", which is what
          reduced motion asks for — not a missing backdrop. */
-      layer.object.setScrollFactor(1, 1);
+      this.#setLayerRate(layer, 1, 1);
       if (!visible) continue;
       applyEffect(
         this.#effects.parallaxDrift,
-        Object.assign(layer.object, { layerKey: layer.key }),
+        /*
+         * The effect is handed a *target*, not the game object, so a tiled band
+         * can take the same instruction — "scroll at this rate" — and honour it
+         * by moving its tile offset instead of its quad. `level-effects.ts` is
+         * unchanged and still knows nothing about how a layer is drawn, which is
+         * what lets its policy stay unit tested with no Phaser.
+         */
+        {
+          layerKey: layer.key,
+          setScrollFactor: (x: number, y: number) => this.#setLayerRate(layer, x, y),
+        },
         profile,
       );
     }
+    this.#scrollLayers();
 
     this.#snowQuantity = 0;
     const emitter = {
@@ -306,6 +376,7 @@ export class LevelScene extends Phaser.Scene {
     this.cameras.main.setScroll(this.#camera.x, this.#camera.y);
 
     this.#player?.setPosition(this.#state.x, this.#state.y);
+    this.#scrollLayers();
     this.#updateSnow(dt);
 
     const probe = this.#options.probe;
@@ -384,6 +455,8 @@ export class LevelScene extends Phaser.Scene {
 
   #lastJumpHeld = false;
   #lastInteract = false;
+  /** How many parallax layers drew from a texture. See `SceneSnapshot.layers`. */
+  #texturedLayers = 0;
 
   /* --------------------------------------------------------------- camera --- */
 
@@ -404,9 +477,16 @@ export class LevelScene extends Phaser.Scene {
 
   /* --------------------------------------------------------------- events --- */
 
-  #emit(name: string, detail?: string): void {
+  #emit(name: SceneEventName, detail?: string): void {
     if (detail === undefined) this.#options.probe?.recordEvent(name);
     else this.#options.probe?.recordEvent(name, detail);
+    /* Spread rather than a conditional call for the same reason the probe above
+       has two branches: `exactOptionalPropertyTypes` makes an explicit
+       `undefined` a different thing from an omitted argument, and a listener
+       that receives `detail: undefined` cannot tell "no subject" from "a subject
+       nobody set". */
+    if (detail === undefined) this.#options.onEvent?.(name);
+    else this.#options.onEvent?.(name, detail);
   }
 
   /**
@@ -526,19 +606,28 @@ export class LevelScene extends Phaser.Scene {
    * changes nothing about where, how fast or in what order.
    */
   #buildLayers(): void {
-    const { level } = this.#options;
+    const { level, designWidth } = this.#options;
     const ordered = [...level.layers].sort((a, b) => a.depth - b.depth);
+    this.#texturedLayers = 0;
 
     ordered.forEach((layer, index) => {
       const depth = DEPTH_LAYERS + index;
       if (this.textures.exists(layer.key)) {
-        const width = layer.repeatX ? level.size.x : this.textures.get(layer.key).getSourceImage().width;
-        const height = this.textures.get(layer.key).getSourceImage().height;
+        this.#texturedLayers += 1;
+        const source = this.textures.get(layer.key).getSourceImage();
+        const height = source.height;
+        /* One screen wide, plus one tile of slack so the seam is always off
+           screen — never `level.size.x`. See `LayerView.tiled`. */
+        const width = layer.repeatX ? designWidth + source.width : source.width;
         const sprite = this.add
           .tileSprite(layer.offset.x, layer.offset.y, width, height, layer.key)
           .setOrigin(0, 0)
           .setDepth(depth);
-        this.#layers.push({ key: layer.key, object: sprite });
+        this.#layers.push({
+          key: layer.key,
+          object: sprite,
+          tiled: layer.repeatX ? { factorX: 1 } : null,
+        });
         return;
       }
 
@@ -554,8 +643,40 @@ export class LevelScene extends Phaser.Scene {
       );
       band.fillStyle(colour, 1);
       band.fillRect(0, layer.offset.y, level.size.x, PLACEHOLDER_BAND_HEIGHT);
-      this.#layers.push({ key: layer.key, object: band });
+      this.#layers.push({ key: layer.key, object: band, tiled: null });
     });
+  }
+
+  /**
+   * Apply a parallax rate to one layer.
+   *
+   * A tiled band keeps its quad still — `scrollFactor.x` of 0 — and remembers
+   * the rate for {@link #scrollLayers}. Everything else takes the rate the way
+   * it always did. Vertical is unchanged in both: portrait levels move very
+   * little vertically and a screen-tall band has no equivalent trick.
+   */
+  #setLayerRate(layer: LayerView, x: number, y: number): void {
+    if (layer.tiled === null) {
+      layer.object.setScrollFactor(x, y);
+      return;
+    }
+    layer.tiled.factorX = x;
+    layer.object.setScrollFactor(0, y);
+  }
+
+  /**
+   * Move the contents of every tiled band, once per frame.
+   *
+   * `tilePositionX = cameraX * rate` is exactly what `scrollFactor.x = rate`
+   * did to the quad, applied to the texture instead — so the picture is the
+   * same and the cost is one screen rather than the whole level.
+   */
+  #scrollLayers(): void {
+    for (const layer of this.#layers) {
+      if (layer.tiled === null) continue;
+      (layer.object as Phaser.GameObjects.TileSprite).tilePositionX =
+        this.#camera.x * layer.tiled.factorX;
+    }
   }
 
   /**

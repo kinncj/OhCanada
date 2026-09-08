@@ -69,7 +69,7 @@
       "items": { "$ref": "#/$defs/levelCharacter" }
     },
     "assets": {
-      "description": "Preload manifest. The sum of decodedBytes is checked against textureBudgetBytes in CI and again by the loader before it commits (docs/architecture.md 3).",
+      "description": "The art this level needs, by KEY. Optional since ADR-0020: the loader is manifest-driven, so a level does not have to restate what it already names in layers[].key, pois[].artKey and characters[]. What a human writes here is key and kind; url, bytes and decodedBytes are build-derived and belong to assets/dist/manifest.json, which is the only place they can be true after a content-hashing build. The per-level texture budget is enforced from the manifest, not from this array - see ADR-0020 for why the previous arrangement left TN-LEVEL-02's runtime refusal summing an empty list.",
       "type": "array",
       "items": { "$ref": "#/$defs/levelAssetRef" }
     },
@@ -248,7 +248,7 @@
     "levelAssetKind": {
       "title": "Level asset kind",
       "type": "string",
-      "enum": ["atlas", "rive", "audio", "font", "tilemap", "json"]
+      "enum": ["atlas", "image", "rive", "audio", "font", "tilemap", "json"]
     },
 
     "levelAssetRef": {
@@ -261,23 +261,23 @@
         },
         "kind": { "$ref": "#/$defs/levelAssetKind" },
         "url": {
-          "description": "Path relative to the site base, as shipped under assets/dist.",
+          "description": "BUILD-DERIVED. Path relative to the site base, as shipped under assets/dist. Optional since ADR-0020 and NOT hand-authorable: the pipeline content-hashes every output and emits a 1x and a 2x variant per key, so a path written by a person is wrong at the next `make assets` and names only one of the two scales. A level document names a KEY; assets/dist/manifest.json resolves it.",
           "type": "string",
           "format": "uri-reference",
           "minLength": 1
         },
         "bytes": {
-          "description": "Transfer size. Summed against the 8 MB per-level payload budget.",
+          "description": "Transfer size at the WORST device scale, summed against the 8 MB per-level payload budget. Hand-written and machine-checked: scripts/lib/texture-memory.mjs asserts every declared figure against assets/dist/manifest.json, so this is a number somebody writes and CI re-derives - which is the arrangement ADR-0013 asks for, not the one it warns about.",
           "type": "integer",
           "minimum": 0
         },
         "decodedBytes": {
-          "description": "Decoded (not transfer) size for textures; 0 for non-texture assets.",
+          "description": "Decoded (not transfer) size for textures at the WORST device scale; 0 for non-texture assets. This is what TN-LEVEL-02 sums to refuse an over-budget level before any asset is fetched, so it stays REQUIRED - an optional one would default to zero and re-create the exact defect ADR-0020 records, a refusal that cannot fire. ADR-0013 forbids trusting a decodedBytes nobody re-derives; scripts/lib/texture-memory.mjs re-derives it from the manifest, which is what makes a hand-written figure legitimate here.",
           "type": "integer",
           "minimum": 0
         }
       },
-      "required": ["key", "kind", "url", "bytes", "decodedBytes"],
+      "required": ["key", "kind", "bytes", "decodedBytes"],
       "additionalProperties": false
     },
 

@@ -155,13 +155,13 @@
       "modifications": "Downscaled to 1600 px long edge; metadata stripped."
     },
     {
-      "path": "src/svg/ottawa/landmark-parliament-hill.svg",
+      "path": "src/svg/ottawa/landmark-parliament-hill@1x.svg",
       "kind": "shipped",
       "title": "Parliament Hill, Ottawa - Centre Block, the Peace Tower and the Library of Parliament",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/landmark-parliament-hill.svg",
-      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key ottawa-landmark-parliament-hill is unchanged and no level document moves. It is a full-width background the player skates past, not something held close to the camera, and at 2x it cost 17.14 MiB of decoded texture - 36% of the level - to sharpen it."
     },
     {
       "path": "src/svg/ottawa/layer-10-sky.svg",

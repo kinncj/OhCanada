@@ -1,180 +1,612 @@
 {
   "id": "truenorth-art-verification",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "owner": "art-verifier",
   "runOn": "2026-09-08",
-  "runBy": "manual blind pass (make verify-art is still the slice-0 stub)",
+  "runBy": "art-verifier agent, via the make art-handoff / commit / reveal / score harness",
   "method": "docs/art-verification-method.md",
-  "renderedFrom": "assets/src/svg/ottawa/*.svg rasterised with sharp at 1000/300/140 px wide, plus a 1080x1920 composite built from the layer offsets in content/levels/ottawa.json",
+  "supersedes": "the 2026-09-08 hand pass, which reported blindnessHeld: false and marked every identification untrusted",
   "runIntegrity": {
-    "blindnessHeld": false,
-    "why": "The renders had to be located before they could be rasterised, and listing assets/src/svg/ottawa/ shows the filenames. 'landmark-parliament-hill.svg' names its subject. The identification below was therefore CLOSED-SET (the candidate answers were visible) rather than open-set.",
-    "consequence": "Every identification verdict in this file is marked untrusted. Feature audits are unaffected by the leak and are reported as trusted.",
-    "fixNeeded": "Renders must be handed to the identifier under content-addressed names, by a step the identifier does not run. See docs/art-verification-method.md."
+    "handoffRunId": "e6e867a5dee44d6c",
+    "blindnessHeld": "partial",
+    "commitmentProven": true,
+    "committedAnswersSha256": "43dca365846399d32db4d9053deb1e7d3e8d0500073de55ab63a5ec3f6878ed5",
+    "whatIsProven": [
+      "The ten identifications were written from image bytes under opaque 16-hex names, with no filename, label or reference photograph in view, and were hashed by `verify-art commit` BEFORE `reveal` opened the keymap. `score` re-checked the hash and it matched.",
+      "No render source drew text, no handed-over PNG carried metadata, and no handed-over file carried a leaking token."
+    ],
+    "whatIsNotProven": [
+      "That the identification was OPEN-SET. It was not fully open-set: two of the three subject ids were disclosed to me before I saw an image, by the harness's own operator-facing output. See `leaks` below. I did not know WHICH render was which, and the officer's specific force and the landmark's specific building were still mine to name, but the candidate set was narrowed and the record should not claim otherwise."
+    ],
+    "leaks": [
+      {
+        "where": "stdout of `make art-handoff`, which the task instructed me to run myself",
+        "leaked": "`officer` and `parliament-hill-skyline` named in plain text, plus the skin and hair slot values",
+        "effect": "Two of three subject ids disclosed pre-image. The third (`rideau-canal-skateway`) stayed genuinely open-set.",
+        "severity": "high"
+      },
+      {
+        "where": "Makefile comment on the `verify-art` target, and the header of scripts/verify-art.mjs",
+        "leaked": "`landmark-parliament-hill.svg`",
+        "effect": "Discloses that a Parliament Hill render exists in the tree. Repeated verbatim in my own task brief.",
+        "severity": "medium"
+      },
+      {
+        "where": "`--variants N  officer figures per run` in `verify-art --help`",
+        "leaked": "`officer`",
+        "effect": "Same disclosure as the stdout line, reachable from --help alone.",
+        "severity": "medium"
+      },
+      {
+        "where": "the hand-off output directory",
+        "leaked": "a previous run's ten PNGs were still present alongside this run's, and six of the ten had byte-identical file sizes across the two runs",
+        "effect": "File size relinks names across runs, which is exactly the property the content-addressed naming exists to deny. I scored only the ten renders listed in answers.json.",
+        "severity": "medium"
+      }
+    ],
+    "consequence": "Identifications are recorded as `trusted-with-caveat` for peace-tower and officer, and `trusted` for rideau-canal-skateway. Feature audits are unaffected by pre-image subject disclosure and are trusted throughout."
   },
   "results": [
     {
-      "assetId": "ottawa/landmark-parliament-hill.svg",
+      "assetId": "src/svg/ottawa/landmark-parliament-hill.svg",
       "judgedAgainstSubject": "peace-tower",
-      "blindIdentification": "Centre Block, Parliament Hill, Ottawa; the central tower is the Peace Tower. Cues used, in order: the Canadian flag at the masthead; green copper roof and spire on buff sandstone; a clock tower centred over a pointed-arch entrance; symmetrical wings with a Gothic arcade.",
+      "blindIdentification": "The Centre Block of the Parliament of Canada on Parliament Hill, Ottawa, seen head-on from the front lawn; the central tower is the Peace Tower. Cues, most important first: a single tall clock tower centred on a long symmetric facade; a white four-faced clock high on the shaft; a green copper spire above it flying the National Flag of Canada from a mast at the apex; green copper roofs on the wings and on the end pavilions; a continuous rhythm of tall pointed Gothic-arch windows; a large pointed-arch entrance on the tower's centre line.",
       "identificationMatchesExpected": true,
-      "identificationVerdict": "untrusted",
+      "identificationVerdict": "trusted-with-caveat",
+      "identificationCaveat": "`parliament-hill-skyline` had been named to me by the hand-off's own stdout before I saw any image, so 'Parliament Hill' was in view as a candidate. Naming the Peace Tower specifically, and reading it off the clock, spire, flag and Gothic arcade, was mine.",
+      "confidence": 0.92,
       "featureVerdict": "pass",
       "missingFeatures": [],
       "measured": {
-        "spireFractionOfTowerHeight": 0.21,
-        "spireBaseWidthFractionOfShaft": 0.75,
-        "dialFractionOfShaftWidth": 0.55,
-        "dialCentreFractionOfTowerHeight": 0.72,
-        "shaftWidthToTotalHeight": "1:7.79"
+        "spireFractionOfTowerHeight": 0.189,
+        "spireApexAngleDegrees": 26.7,
+        "spireBaseWidthFractionOfShaft": 0.7,
+        "dialFractionOfShaftWidth": 0.54,
+        "dialCentreFractionOfTowerHeight": 0.725,
+        "shaftWidthToTotalHeight": "1:7.73",
+        "measuredFrom": "the 1080x1040 gating render, spire apex y=96, spire base y=261, dial bbox y306-366 x509-570, shaft x483-596, terrace y=970"
       },
-      "note": "Every mustBeRight feature is present and all five measured ratios match the amended contract exactly; the identification is sound but cannot be called blind because the filename named the subject."
+      "note": "All seven mustBeRight features present and every measured ratio matches the amended contract, including the two deliberate clock exaggerations; identified unprompted at 1x and still identified at 300 px and 140 px wide."
     },
     {
-      "assetId": "ottawa/layer-50-canalwall.svg",
+      "assetId": "src/svg/ottawa/layer-60-ice.svg + src/svg/ottawa/layer-50-canalwall.svg (composite)",
       "judgedAgainstSubject": "rideau-canal-skateway",
-      "blindIdentification": "The Rideau Canal Skateway, Ottawa, in winter. Cues: a straight channel with a dressed-stone retaining wall and iron railing, a road bridge on piers crossing it, lamp standards, people skating on the channel floor, and a wooden warming hut.",
+      "blindIdentification": "An outdoor skating rink on a frozen urban canal in winter, with a road bridge crossing overhead and a wooden warming hut on the bank. I named it as the Rideau Canal Skateway in Ottawa, but I said at the time that I was naming it from the genre and not from any unique landmark in the picture. Cues: a long straight ribbon of pale ice with scored skate arcs; five figures in coats and toques in a glide stance travelling along it; a low masonry retaining wall with an iron railing running the full width behind, snow banked at its foot; a concrete road bridge on piers with lamp standards; a small timber shed reading as a Skateway changing hut.",
       "identificationMatchesExpected": true,
-      "identificationVerdict": "untrusted",
-      "featureVerdict": "pass-in-composite",
-      "missingFeatures": [
-        "scored skate marks in the ice - absent from this file; supplied by ottawa/layer-60-ice.svg, so the feature only exists once the layers are composited"
+      "identificationVerdict": "trusted",
+      "identificationCaveat": null,
+      "confidence": 0.6,
+      "featureVerdict": "pass",
+      "missingFeatures": [],
+      "note": "All five mustBeRight features present in the composite, including the scored skate marks the previous single-file pass had to record as missing; but see `findings.canalNamingIsThin` - the render carries nothing that says Ottawa, by the contract's own instruction, so the gating answer is a genre inference."
+    },
+    {
+      "assetId": "src/svg/shared/character/*-serge.svg + head/face/hair slots (rig composite, 2 variants)",
+      "judgedAgainstSubject": "officer",
+      "blindIdentification": "A Royal Canadian Mounted Police officer in Red Serge full dress - the ceremonial Mountie uniform. Cues, most important first: the brown felt Stetson with a flat level brim and a pinched crown; the scarlet high-collar tunic with a single centre row of brass buttons and two scalloped-flap breast pockets; the brown Sam Browne belt with the cross-strap from the wearer's right shoulder to the left hip; midnight-blue breeches with a broad yellow stripe down the outer seam; high brown riding boots; the navy collar and shoulder straps; a white lanyard.",
+      "identificationMatchesExpected": true,
+      "identificationVerdict": "trusted-with-caveat",
+      "identificationCaveat": "`officer` had been named to me by the hand-off's stdout and by `--help` before I saw any image. Reading the specific uniform as RCMP Red Serge, from the Stetson, the cross-strap and the leg stripe, was mine.",
+      "confidence": 0.95,
+      "featureVerdict": "pass",
+      "missingFeatures": [],
+      "variantsSeen": [
+        {
+          "render": "6c90627529907b7e.png",
+          "hair": "coiled fair",
+          "note": "identified independently as Red Serge"
+        },
+        {
+          "render": "c448ca3b62b5c106.png",
+          "hair": "long grey",
+          "note": "identified independently as Red Serge"
+        }
       ],
-      "note": "Built edges, skaters with visible blades in a glide stance, the crossing bridge and the cold palette are all present; the one missing feature lives in a different file, which is a contract-granularity problem rather than an art problem."
+      "note": "All eight mustBeRight present and every neverAdd item absent - no crest, no bison device, no wordmark, no collar dog, no shoulder flash, no chevron; the only hat hardware is the band buckle the contract requires."
     },
     {
-      "assetId": "ottawa/layer-20-skyline.svg",
-      "judgedAgainstSubject": null,
-      "blindIdentification": "A distant, desaturated city skyline of plain flat-topped mid-rise blocks with snow caps and bare trees. I could not name a city from it.",
+      "assetId": "src/svg/ottawa/layer-20-skyline.svg",
+      "judgedAgainstSubject": "parliament-hill-skyline",
+      "blindIdentification": null,
       "identificationMatchesExpected": null,
       "identificationVerdict": "not-applicable",
       "featureVerdict": "not-applicable",
       "missingFeatures": [],
-      "note": "Deliberately generic background massing, not a landmark; it is not the parliament-hill-skyline subject despite the similar name."
-    },
-    {
-      "assetId": "ottawa/layer-30-escarpment.svg",
-      "judgedAgainstSubject": null,
-      "blindIdentification": "A dense boreal conifer forest slope under snow. Generic; not a place.",
-      "identificationMatchesExpected": null,
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "Supplies the 'dark green mass' the escarpment feature asks for, but reads as a low wooded bank rather than a cliff."
-    },
-    {
-      "assetId": "ottawa/layer-10-sky.svg",
-      "blindIdentification": "Flat blue sky with stylised flat-bottomed cumulus and a horizon band.",
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "Non-representational background; no subject to identify."
-    },
-    {
-      "assetId": "ottawa/layer-40-treeline.svg",
-      "blindIdentification": "Winter treeline: snow-capped bare deciduous trees and snowy conifers on a drift.",
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "Generic Canadian winter vegetation; no subject to identify."
-    },
-    {
-      "assetId": "ottawa/layer-60-ice.svg",
-      "blindIdentification": "A frozen water surface with curved skate scratch marks.",
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "Carries the 'scored skate marks' feature that rideau-canal-skateway requires."
-    },
-    {
-      "assetId": "ottawa/particle-snow.svg",
-      "blindIdentification": "Snow particle sprite: three white discs in three sizes.",
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "Utility sprite."
-    },
-    {
-      "assetId": "ottawa/poi-marker-active.svg",
-      "blindIdentification": "A point-of-interest marker in its active/selected state: a gold ring on a signboard on a post.",
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "UI affordance; correctly distinguishable from the idle state by more than colour alone is NOT established - see open concerns."
-    },
-    {
-      "assetId": "ottawa/poi-marker-idle.svg",
-      "blindIdentification": "A point-of-interest marker in its idle state: a white ring on a signboard on a post.",
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "Identical geometry to the active marker; the two differ only in ring colour and ring thickness."
+      "note": "UNRENDERED by decision - no image was handed over and none was judged; this is neither a pass nor a failure, and an audit of it would be an audit of something nobody was shown."
     }
   ],
-  "subjectsWithNoRender": [
-    {
-      "subject": "parliament-hill-skyline",
-      "why": "No asset in assets/src/svg/ottawa/ draws Parliament Hill as a distant massing. layer-20-skyline.svg is generic city blocks. The subject is unrendered, not failed."
-    },
-    {
-      "subject": "officer",
-      "why": "The character rig is in flight and is what is breaking `make assets` on the texture budget. Nothing to verify. NOT VERIFIED - no judgement made."
-    }
-  ],
-  "contractDefects": [
-    {
-      "id": "AV-01",
-      "severity": "blocking-for-automation",
-      "what": "There is no mapping from an asset file to a subject id. Nothing in references.json, credits.json, content/levels/ottawa.json or the asset manifest says which subject landmark-parliament-hill.svg is judged against.",
-      "whyItMatters": "The same render passes `peace-tower` on 7 of 7 features and fails `parliament-hill-skyline` on 2 of 4. Which verdict is correct is currently a matter of opinion."
-    },
-    {
-      "id": "AV-02",
-      "severity": "blocking-for-automation",
-      "what": "peace-tower.neverAdd forbids 'a second tower or spire on the Centre Block'. parliament-hill-skyline.mustBeRight requires the Library of Parliament's polygonal roof behind and right of the tower. landmark-parliament-hill.svg draws it, and its own <title> says it depicts the Library.",
-      "whyItMatters": "The denylist entry and the requirement describe the same shape. A verifier applying peace-tower literally would fail the render for drawing a required feature."
-    },
-    {
-      "id": "AV-03",
-      "severity": "correction-needed",
-      "what": "peace-tower.mustBeRight.clock-face justifies the 0.55 exaggeration with 'because 0.40 is 24 px at design resolution'. The shipped shaft is 113 px at design resolution, so 0.40 is 45 px, not 24. The figure that is actually about 16-24 px is the dial on a 390 pt phone, not at design resolution.",
-      "whyItMatters": "This is a third unmeasured number in the same file, of the same kind as the two already corrected. The decision it justifies is sound - the size test below confirms it - but the number stated is wrong and should be corrected in place rather than left to look like a measurement."
-    },
-    {
-      "id": "AV-04",
-      "severity": "granularity",
-      "what": "Subjects are composites; assets are layers. rideau-canal-skateway requires skate marks that live in layer-60, built edges that live in layer-50, and cold light that comes from layer-10. peace-tower's 'symmetrical wing block' is inside the landmark file but its escarpment is in layer-30.",
-      "whyItMatters": "Per-file verification cannot answer a per-subject contract. The verifier must be given a composite, built from content/levels/ottawa.json, not a directory of layers."
-    }
-  ],
-  "artConcerns": [
-    {
-      "id": "AV-05",
-      "severity": "accuracy",
-      "what": "In the 1080x1920 composite the landmark is drawn in front of the escarpment band, not on top of it. Parliament Hill ends up standing at canal level on flat snow, with no hill, cliff or terrace beneath it.",
-      "whyItMatters": "Centre Block stands roughly 50 m above the Ottawa River on a cliff; the name Parliament HILL is the fact. A learner who has never been to Ottawa would take from this scene that Parliament sits at the water's edge. This is the only thing in the level I judge as actively misleading. It is invisible in the single file and only appears in the composite.",
-      "caveat": "Derived from my own composite using content/levels/ottawa.json offsets as top-left origins. If Phaser anchors those layers differently the occlusion may differ. Confirm against a running scene before acting."
-    },
-    {
-      "id": "AV-06",
-      "severity": "accessibility",
-      "what": "poi-marker-idle and poi-marker-active are geometrically identical and differ only in ring colour (white vs gold) and ring stroke width.",
-      "whyItMatters": "CLAUDE.md requires that colour is never the only signal. The stroke-width difference is a second signal but a weak one at marker size. Worth an explicit check by whoever owns the HUD."
-    }
-  ],
-  "sizeTest": {
-    "subject": "peace-tower",
-    "onScreenSize": "The landmark is 1080 px wide at a design resolution of 1080, so it is drawn essentially full-bleed. The 1000 px reading is the operative one.",
-    "w1000": "Full identification. Clock hands legible.",
-    "w420_composite": "Full identification. Clock, spire, flag and arcade all read.",
-    "w300": "Full identification holds.",
-    "w140": "The clock collapses to a featureless white dot and the hands are gone. Identification survives only on the flag, the green spire and the symmetry.",
-    "conclusion": "The clock-dial exaggeration is load-bearing and reads as accurate, not as wrong. At the contract's measured 0.40 the dial would have gone featureless earlier than it does."
+  "sizeLadder": {
+    "question": "the landmark now ships at 1x rather than 2x, recovering 12.85 MiB - does it still identify at the size a player sees it?",
+    "answer": "yes at the shipped size, with a caveat about the smallest probe",
+    "detail": [
+      "1x gating render (1080x1040): identified unprompted, confidence 0.92. Clock dial 61 px, legible hands.",
+      "300 px wide: identified unprompted, confidence 0.88. Clock still reads as a clock; the flag and green spire carry most of the load.",
+      "140 px wide: identified unprompted, confidence 0.75. The dial has collapsed to a pale disc with a dark rim and the Gothic window rhythm has become texture; the flag and the copper green are doing nearly all of the work.",
+      "The canal degrades faster: identified at full size and at 300 px, and at 140 px I could only say 'people skating on ice under a bridge' and explicitly declined to name a place. That is the diagnostic probe behaving as designed, not an art defect."
+    ],
+    "verdict": "1x is enough. I do not need 2x restored. I would not go below 300 px wide for the landmark in any context where a player is meant to recognise it."
   },
-  "flagMaskExperiment": {
-    "what": "The Canadian flag was masked out of the render and the identification re-attempted.",
-    "fullBuildingNoFlag": "Confidence fell from about 90 percent to about 65 percent. I would have said 'Gothic Revival parliamentary building with a central clock tower, most likely Canada's Centre Block' and named Westminster as a live alternative.",
-    "towerCropNoFlag": "Identification failed. I would have said 'a Big Ben-like Gothic clock tower' and would not have named the Peace Tower.",
-    "conclusion": "The flag is doing a large share of the recognition work. That is legitimate - it is a mustBeRight feature and the real tower flies one - but the contract should not be read as evidence that the architecture alone is diagnostic. It is not."
+  "findings": {
+    "canalNamingIsThin": "The canal's expectedBlindAnswer requires 'Rideau Canal' or 'skating on a frozen canal in Ottawa', and the render deliberately contains nothing that says Ottawa - the contract's own notes forbid drawing the Chateau Laurier as a recognisable landmark here. My gating answer matched only because I inferred the intended subject from genre plus the project's context. A verifier with no context would say 'an urban frozen-canal skating rink' and fail the gate. Either the art needs one legitimate Ottawa cue on a non-droppable layer, or the contract should accept 'a frozen canal skating rink' and stop claiming the render identifies a city.",
+    "maskRegionWanted": [
+      {
+        "subject": "peace-tower",
+        "feature": "national flag on the mast above the spire",
+        "why": "At 140 px the flag and the green spire are carrying the identification almost alone. A maskRegion over the flag would answer whether the tower still reads as the Peace Tower without it, which is the one thing the size ladder cannot tell me. The previous pass reports exactly this crop failing outright, and that result is information, not a defect."
+      },
+      {
+        "subject": "officer",
+        "feature": "dark breeches with a yellow-gold stripe down the outer seam",
+        "why": "The contract says this feature 'does more identification work than its area suggests. If it disappears first at small size, thicken it.' That is a testable claim and there is currently no way to test it. A maskRegion over the leg stripe would say whether the Stetson and the cross-strap alone still read as Red Serge."
+      }
+    ],
+    "proportionFeatureNotVisuallyTestable": "'cartoon proportions identical to every other character' cannot be judged from this hand-off, because the hand-off contains no other character. I recorded it present on the strength of assets/style/rig-contract.json, where `characterSpace` (240x470, crownY 40, soleY 460, heightPx 420, headPx 70, heightHeads 6) is shared by the player and officer artboards, which differ only in the costume skin, and tests/unit/contracts/rig-is-coherent.test.ts asserts it. That is a code-level verification wearing an art verifier's clothes. Handing over one player figure alongside the officer would make it a real visual check.",
+    "handoffLeaksItsOwnSubjects": "The single largest weakness in the harness is not in the images, it is in the operator-facing text. See runIntegrity.leaks. The handoff summary, --help and the Makefile comments all name subject ids in plain language, and the task instructed me to run `make art-handoff` myself, which the Makefile itself warns against. Either a second party must run it, or handoff needs a --quiet mode that prints counts without ids.",
+    "staleHandoffDirectory": "`handoff` wrote into a directory that already held a previous run's PNGs and did not refuse or clear it. Six of the ten files had byte-identical sizes across the two runs, which relinks the supposedly unlinkable names."
+  },
+  "handoffRun": {
+    "keymap": {
+      "id": "truenorth-art-handoff-keymap",
+      "version": 1,
+      "runId": "e6e867a5dee44d6c",
+      "createdAt": "2026-09-08T21:23:12.938Z",
+      "seeded": false,
+      "handoffDir": "/tmp/claude-1000/-home-kinncj-Development-KinnCJ-OhCanada/1691849f-8d81-4fd9-a2cd-a5a7bb256b4c/scratchpad/ho/handoff",
+      "entries": [
+        {
+          "render": "ff560b5b59afa18e.png",
+          "subjectId": "rideau-canal-skateway",
+          "probe": "w300",
+          "gating": false,
+          "width": 300,
+          "height": 170,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/ottawa/layer-50-canalwall.svg",
+            "src/svg/ottawa/layer-60-ice.svg"
+          ],
+          "slots": {
+            "iceTop": 580
+          },
+          "sha256": "3cf8184a1c4d3c8e2b382b4652514229e6471c19983fa6c562147b7944796f46"
+        },
+        {
+          "render": "57266dc381ff43cd.png",
+          "subjectId": "rideau-canal-skateway",
+          "probe": "full",
+          "gating": true,
+          "width": 2016,
+          "height": 1140,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/ottawa/layer-50-canalwall.svg",
+            "src/svg/ottawa/layer-60-ice.svg"
+          ],
+          "slots": {
+            "iceTop": 580
+          },
+          "sha256": "bfcec5463f93e9d5abdea8b8534d3e7ff5536cb286d9c3d3900e37345671e60e"
+        },
+        {
+          "render": "2cfdd7f25b14f556.png",
+          "subjectId": "peace-tower",
+          "probe": "w300",
+          "gating": false,
+          "width": 300,
+          "height": 289,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/ottawa/landmark-parliament-hill.svg"
+          ],
+          "slots": {},
+          "sha256": "dc25a199ced15d4b5b0d2ca37e5c5c1d3b992ebfa6f05e7e6030c4c7cd30a0c5"
+        },
+        {
+          "render": "6488829b16f06f39.png",
+          "subjectId": "peace-tower",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 135,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/ottawa/landmark-parliament-hill.svg"
+          ],
+          "slots": {},
+          "sha256": "41ae23c0afa6d0c40d49e6f2aa2da056db04e38ee0aa607fd9b1dcc8c5a5c7cd"
+        },
+        {
+          "render": "c3075e1ff1d2eab1.png",
+          "subjectId": "officer",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 274,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-5.svg",
+            "src/svg/shared/character/face-thinking.svg",
+            "src/svg/shared/character/hair-coil-blond.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-5",
+            "hairShape": "coil",
+            "hairColour": "blond",
+            "expression": "thinking",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 1
+          },
+          "sha256": "45335a8c875a3abc02b10aeb7402783f7779e15421d519efce2503cc9f5813ea"
+        },
+        {
+          "render": "fe027064e360a6b8.png",
+          "subjectId": "rideau-canal-skateway",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 79,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/ottawa/layer-50-canalwall.svg",
+            "src/svg/ottawa/layer-60-ice.svg"
+          ],
+          "slots": {
+            "iceTop": 580
+          },
+          "sha256": "e1030f351f9230e0022197c2ea6e85c16bccf90f0faf1e99908cfea234719e49"
+        },
+        {
+          "render": "6c90627529907b7e.png",
+          "subjectId": "officer",
+          "probe": "full",
+          "gating": true,
+          "width": 240,
+          "height": 470,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-5.svg",
+            "src/svg/shared/character/face-thinking.svg",
+            "src/svg/shared/character/hair-coil-blond.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-5",
+            "hairShape": "coil",
+            "hairColour": "blond",
+            "expression": "thinking",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 1
+          },
+          "sha256": "60d6f298e19e5d2b8574c6471f104f08cd98104f60304b2a20bf9f1d9195a2d0"
+        },
+        {
+          "render": "c448ca3b62b5c106.png",
+          "subjectId": "officer",
+          "probe": "full",
+          "gating": true,
+          "width": 240,
+          "height": 470,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-4.svg",
+            "src/svg/shared/character/face-neutral.svg",
+            "src/svg/shared/character/hair-long-grey.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-4",
+            "hairShape": "long",
+            "hairColour": "grey",
+            "expression": "neutral",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 0
+          },
+          "sha256": "1bca72a539ab9b1d1cf9ff2bb0b2db54b2f36cd5022e9345398cb166a45e3ec0"
+        },
+        {
+          "render": "e98ad4408a20ec99.png",
+          "subjectId": "officer",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 274,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-4.svg",
+            "src/svg/shared/character/face-neutral.svg",
+            "src/svg/shared/character/hair-long-grey.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-4",
+            "hairShape": "long",
+            "hairColour": "grey",
+            "expression": "neutral",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 0
+          },
+          "sha256": "0e98b350456f6f180ceae703b828073150bf7bbb5bc331404a02cec4fffad84c"
+        },
+        {
+          "render": "a4d34a7cfdb950d9.png",
+          "subjectId": "peace-tower",
+          "probe": "full",
+          "gating": true,
+          "width": 1080,
+          "height": 1040,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/ottawa/landmark-parliament-hill.svg"
+          ],
+          "slots": {},
+          "sha256": "bd7000100f5da9921b088fcf59e133f40ff25ce4fe3988833e7f6ee10b3c2c0d"
+        }
+      ],
+      "unrendered": [
+        {
+          "subjectId": "parliament-hill-skyline",
+          "why": "UNRENDERED, by decision. No source answers this subject. `layer-20-skyline.svg` is a GENERIC winter city and must stay generic: it is a repeating parallax tile that the medium and low presets drop, and the art bible forbids putting an identifying feature on a droppable layer. A verifier that could name Ottawa from it would be reporting a defect, not a pass. The Hill's own skyline features live in `landmark-parliament-hill.svg`, which is judged as `peace-tower`."
+        }
+      ],
+      "committedAnswersSha256": "43dca365846399d32db4d9053deb1e7d3e8d0500073de55ab63a5ec3f6878ed5",
+      "revealedAt": "2026-09-08T21:25:57.366Z",
+      "committedAt": "2026-09-08T21:25:51.874Z"
+    },
+    "answers": {
+      "runId": "e6e867a5dee44d6c",
+      "identifications": [
+        {
+          "render": "ff560b5b59afa18e.png",
+          "width": 300,
+          "height": 170,
+          "answer": "Same scene at a smaller size: an urban frozen-canal skating rink under a road bridge - most probably the Rideau Canal Skateway, Ottawa.",
+          "cues": "Bridge on piers with lamp standards, ice ribbon with skaters in a line, warming hut, conifers, snow banks. The skating action still reads clearly.",
+          "confidence": 0.55,
+          "moreCertain": "Same as the large version - a named Ottawa cue. The hut is now a brown blob, so even the changing-hut hint is weaker."
+        },
+        {
+          "render": "57266dc381ff43cd.png",
+          "width": 2016,
+          "height": 1140,
+          "answer": "An outdoor skating rink on a frozen urban canal in winter, with a road bridge crossing over it and a wooden warming hut on the bank. I believe this is meant to be the Rideau Canal Skateway in Ottawa, but I am naming it from the genre, not from a unique landmark in the picture.",
+          "cues": "A long straight ribbon of pale blue ice with skate-scored arcs, filling the bottom two thirds; five figures in winter coats, toques and skates all travelling along the ribbon in the same direction; a low concrete road bridge with a railing and a raised deck on piers spanning the whole width above; tall lamp standards with amber globes along the bridge; snow banks and snow-topped conifers on both banks; a small brown timber shed with a door and one window sitting on the snow at the ice edge, which reads as a Skateway changing hut.",
+          "confidence": 0.6,
+          "moreCertain": "Nothing in this frame is uniquely Rideau. Any of the Chateau Laurier's turrets, the Ottawa Locks staircase, the Peace Tower on the skyline, or the Skateway's signature beavertail/refreshment chalet would take this from a plausible guess to a certainty. As drawn it would serve equally well as any Canadian city's frozen-canal rink."
+        },
+        {
+          "render": "2cfdd7f25b14f556.png",
+          "width": 300,
+          "height": 289,
+          "answer": "Same subject at a smaller size: Centre Block / Peace Tower, Parliament Hill, Ottawa.",
+          "cues": "Still legible at this size - clock face, green copper spire, Canadian flag on the mast, green roofline, Gothic arcade of pointed windows, symmetric wings. I read it correctly without needing to enlarge it.",
+          "confidence": 0.88,
+          "moreCertain": "The clock hands are near the limit of legibility here; the flag and the green spire are doing most of the work. Same stone-colour reservation as the large render."
+        },
+        {
+          "render": "6488829b16f06f39.png",
+          "width": 140,
+          "height": 135,
+          "answer": "Same subject again, very small: Centre Block / Peace Tower, Parliament Hill, Ottawa. Recognisable but the clock is now only a pale disc.",
+          "cues": "Flag silhouette and red maple leaf still read; green spire and green roofline read; the clock survives as a light circle with a dark rim rather than a legible dial; the Gothic window rhythm has collapsed to texture.",
+          "confidence": 0.75,
+          "moreCertain": "A legible clock dial. At this size the identification is carried almost entirely by the flag and the green copper - remove the flag and I would be much less sure."
+        },
+        {
+          "render": "c3075e1ff1d2eab1.png",
+          "width": 140,
+          "height": 274,
+          "answer": "RCMP officer in Red Serge, smaller size - the fair-haired figure.",
+          "cues": "Stetson brim, scarlet tunic, gold button row, diagonal Sam Browne strap, yellow leg stripe on dark blue, brown boots. All the load-bearing cues survive the reduction.",
+          "confidence": 0.9,
+          "moreCertain": "The lanyard and the buttons are close to merging; a readable badge would help."
+        },
+        {
+          "render": "fe027064e360a6b8.png",
+          "width": 140,
+          "height": 79,
+          "answer": "Same scene, very small. I can still tell it is people skating on ice under a bridge in winter, but I could not name a place from this render alone.",
+          "cues": "Horizontal ice band, small dark figures in a skating pose, an overhead deck line with dots for lamps, dark conifer triangles, one brown blob on the bank. The subject matter survives; the location does not.",
+          "confidence": 0.3,
+          "moreCertain": "At this size only a silhouette-level landmark would survive. If this size is ever used at gameplay scale it needs a distinctive skyline shape behind it."
+        },
+        {
+          "render": "6c90627529907b7e.png",
+          "width": 240,
+          "height": 470,
+          "answer": "A Royal Canadian Mounted Police (RCMP/GRC) officer in Red Serge full dress - the ceremonial Mountie uniform. This figure has coiled fair hair under the hat.",
+          "cues": "Scarlet high-collar tunic with a row of gold buttons and pleated breast pockets; the brown felt Stetson campaign hat with a flat brim and a dark hat band; the brown leather Sam Browne belt with the diagonal cross strap over the right shoulder; midnight-blue breeches with a broad yellow stripe down the outer seam; brown high riding boots; the blue collar showing at the neck; a white lanyard looped on the chest. That combination is the RCMP Red Serge and is not the uniform of any other force.",
+          "confidence": 0.95,
+          "moreCertain": "The RCMP cap badge (bison head and crown) on the front of the Stetson is not readable, and there are no rank chevrons or collar insignia. Brown gauntlets and the yellow-and-blue shoulder flash would also settle it beyond doubt."
+        },
+        {
+          "render": "c448ca3b62b5c106.png",
+          "width": 240,
+          "height": 470,
+          "answer": "A second RCMP officer in Red Serge - same uniform, a different person: long grey hair, and a slightly different skin tone from the other figure.",
+          "cues": "Identical uniform reading - Stetson, scarlet tunic with gold buttons, Sam Browne cross strap, yellow-striped blue breeches, brown boots, white lanyard. The figure differs only in hair and complexion, which is exactly what I would expect from a character rendered as variants.",
+          "confidence": 0.95,
+          "moreCertain": "Same as the other figure: a readable cap badge. I will also note that the two skin tones in this run are close enough that I would not have called them different without comparing the two files side by side."
+        },
+        {
+          "render": "e98ad4408a20ec99.png",
+          "width": 140,
+          "height": 274,
+          "answer": "RCMP officer in Red Serge, smaller size - the grey-haired figure.",
+          "cues": "Same uniform cues survive: hat brim, scarlet tunic, cross strap, yellow leg stripe, brown boots. Hair colour still distinguishes it from the other small figure.",
+          "confidence": 0.9,
+          "moreCertain": "A readable cap badge. The face detail is essentially gone at this size, but the uniform is what identifies the role and it holds up."
+        },
+        {
+          "render": "a4d34a7cfdb950d9.png",
+          "width": 1080,
+          "height": 1040,
+          "answer": "The Centre Block of the Parliament of Canada on Parliament Hill, Ottawa, seen head-on from the front lawn - specifically the Peace Tower rising from the centre of the main facade.",
+          "cues": "A single tall clock tower centred on a long symmetric facade, with a four-faced white clock high on the shaft; a green copper spire above it flying the Canadian flag (red-white-red with a single red maple leaf) from a mast at the very tip; green copper pitched roof running the whole length of the wing with green pyramidal roofs on the end pavilions; a continuous row of tall pointed Gothic-arch windows; a big pointed-arch main doorway directly under the tower. The flag plus the clock plus the green copper is the Peace Tower and nothing else.",
+          "confidence": 0.92,
+          "moreCertain": "Correct stone colour - the real Centre Block is cool grey Nepean sandstone and this is rendered a warm tan/sand, which is the one thing that made me hesitate. Also the dark spire sits off to the right of the tower; on the real building the Library of Parliament dome is centred behind the tower and is not seen from the front. A hint of the flanking towers' vertical buttressing would help too."
+        }
+      ]
+    },
+    "audit": {
+      "runId": "e6e867a5dee44d6c",
+      "audits": [
+        {
+          "subjectId": "peace-tower",
+          "featuresPresent": [
+            "green copper spire",
+            "clock face",
+            "national flag on the mast above the spire",
+            "pale warm sandstone shaft",
+            "tall pointed arch at the base",
+            "tower rises from the centre of a symmetrical wing block",
+            "vertical proportion"
+          ],
+          "featuresAbsent": [],
+          "forbiddenPresent": []
+        },
+        {
+          "subjectId": "rideau-canal-skateway",
+          "featuresPresent": [
+            "the ice lane is contained by built edges, not by a natural shore",
+            "scored skate marks in the ice",
+            "people skating, not walking",
+            "a road bridge crossing overhead",
+            "cold overcast or low winter light"
+          ],
+          "featuresAbsent": [],
+          "forbiddenPresent": []
+        },
+        {
+          "subjectId": "officer",
+          "featuresPresent": [
+            "scarlet tunic",
+            "dark collar and shoulder straps",
+            "wide-brimmed felt hat",
+            "brown leather belt with a diagonal cross-strap",
+            "dark breeches with a yellow-gold stripe down the outer seam",
+            "high brown riding boots",
+            "brass buttons in a single centre row",
+            "cartoon proportions identical to every other character"
+          ],
+          "featuresAbsent": [],
+          "forbiddenPresent": []
+        }
+      ]
+    }
   }
 }

@@ -171,6 +171,69 @@ describe('applyTierMarkers', () => {
     });
   });
 
+  it('publishes a classification as the device, never the raw GPU string', () => {
+    const target = marker();
+    const profile = resolveRenderProfile({
+      tier: 'medium',
+      motion: 'full',
+      formFactor: 'phone',
+      presets: PRESETS,
+      filtersAvailable: true,
+    });
+    const named = identifyRenderer('webgl', {
+      getExtension: () => ({ UNMASKED_VENDOR_WEBGL: 0x9245, UNMASKED_RENDERER_WEBGL: 0x9246 }),
+      getParameter: (parameter: number) =>
+        parameter === 0x9246 ? 'ANGLE (NVIDIA, GeForce RTX 4090, OpenGL 4.6)' : 'NVIDIA',
+    } as never);
+
+    applyTierMarkers(
+      target,
+      profile,
+      { tier: 'medium', measured: true, windows: 2, reasons: [] },
+      named,
+    );
+
+    /*
+     * ADR-0011, verbatim: "`UNMASKED_RENDERER_WEBGL` is read, reduced to one of
+     * three words, and discarded — it is never written to the DOM. Publishing
+     * the raw string would add a fingerprinting surface to a site that collects
+     * nothing." This attribute carried `describeRenderer(identity)`, which
+     * interpolates that string, so the deployed page published every visitor's
+     * GPU model. The rule is asserted against the whole dataset rather than
+     * against `tnDevice` alone, so a future attribute cannot reintroduce it.
+     */
+    for (const [name, value] of Object.entries(target.dataset)) {
+      expect(String(value), `${name} carries the raw device string`).not.toContain('GeForce');
+      expect(String(value), `${name} carries the raw device string`).not.toContain('ANGLE');
+    }
+    expect(target.dataset['tnDevice']).toBe('webgl/hardware/phone');
+  });
+
+  it('publishes onto every target it is given, so <html> carries the tier too', () => {
+    const canvas = marker();
+    const html = marker();
+    const profile = resolveRenderProfile({
+      tier: 'high',
+      motion: 'full',
+      formFactor: 'large',
+      presets: PRESETS,
+      filtersAvailable: true,
+    });
+
+    applyTierMarkers(
+      [canvas, html],
+      profile,
+      { tier: 'high', measured: true, windows: 3, reasons: [] },
+      CANVAS,
+    );
+
+    /* `<html>` is where a bug report looks, beside `data-tn-boot` and
+       `data-tn-level`. On the canvas alone it read as absent on three devices,
+       which is the diagnostic ADR-0011 kept these attributes for, not working. */
+    expect(html.dataset['tnTier']).toBe('high');
+    expect(canvas.dataset['tnTier']).toBe('high');
+  });
+
   it('is a no-op without a target, so a headless game does not crash on boot', () => {
     const profile = resolveRenderProfile({
       tier: 'low',

@@ -339,6 +339,13 @@ Named here so a later slice picks them up on purpose rather than inventing them 
 - ~~**Four verification statuses in the port, three in ADR-0003.**~~ The schema keeps four and ADR-0003's
   second amendment names the fourth, so the ADR was widened deliberately rather than by a file it did not
   mention. `rejected` goes back to the author; `quarantined` goes back to the verifier.
+- **The character vocabulary is declared twice.** `content/schemas/rig.schema.json` (ADR-0017) declares the
+  slots, their options and the state-machine inputs for the shared rig; `character.schema.json` declares
+  `slots[]` and `inputs[]` again, per character, with `kind` where the rig says `type`. **The rig owns the
+  vocabulary and a character selects from it** — that direction is decided, and the edit that realises it is
+  deliberately deferred until `content/characters/` holds a document to design against. Until then a
+  character can name a slot option the rig has no frame for, and the failure is a part that silently draws
+  nothing, which is indistinguishable from a deliberate "none".
 - **Id constructors.** Ids are branded types with no parse functions yet; the content adapter casts once,
   immediately after schema validation. `parseLevelId`-style validators land with the entities. The brands
   themselves are now load-bearing at the schema boundary: `common.schema.json` declares a `$def` per id and

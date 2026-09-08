@@ -1,6 +1,15 @@
 # ADR-0013: Decoded texture memory is the binding budget, and full-screen layers ship at 1× only
 
 - Status: Accepted (2026-09-08)
+- Amended 2026-09-08: §5 said the 64 MiB figure is a floor on VRAM and named Rive's canvas surfaces as one
+  of the things it cannot see. The art agent has since derived what that costs, and the number is large
+  enough to change how the remaining headroom is spent. See "What the uncounted surfaces actually cost".
+- Amended 2026-09-08 (second): the per-character surface figure in that section was **1.54 MiB, derived, and
+  wrong by one term**. Engine measured **1.72 MiB**; the surface is the artboard (`characterSpace.height`),
+  not the crown-to-sole span (`heightPx`). Six characters is 10.33 MiB rather than 9.23. Corrected in place,
+  with the reason for the gap kept — the number alone would not stop the substitution recurring.
+- Amended 2026-09-08 (third): §4's landmark paragraph was replaced. Scale is a per-asset authoring decision
+  recorded in the source filename, not a rule about a category. See that section.
 
 ## Context
 
@@ -109,6 +118,153 @@ So a level that passes at 63 MiB may hold more than 64 MiB on a device. That is 
 implicit because it is the reason the budget is 64 MiB and not the device's limit: **the headroom between our
 number and the hardware's is what the uncounted things live in.** Raising the ceiling toward the hardware
 limit would spend that headroom on the one class of allocation this gate cannot see.
+
+## What the uncounted surfaces actually cost (amendment, 2026-09-08)
+
+§5 asked for this derivation by naming the gap. Here it is, from the art agent:
+
+| | Decoded | Counted by the gate? |
+|---|---|---|
+| One Rive character surface at 2× | **1.72 MiB** (measured) | **no** |
+| Six on screen at 2× | **10.33 MiB** (measured) | **no** |
+| Ottawa with Rive, landmark at 2× | 46.15 + 10.33 = **56.48 MiB of 64 MiB — 88 %** | partly |
+| Ottawa with Rive, landmark at 1× *(shipped)* | 33.30 + 10.33 = **43.63 MiB of 64 MiB — 68 %** | partly |
+
+Both rows are recomputed on the measured surface below; the file totals are the manifest's
+(`decodedTextureBytes: 34 918 576` = 33.30 MiB for the shipped build, 46.15 MiB before the landmark was
+pinned to 1×).
+
+At 88 % there would be **under 8 MiB left for Phaser's render targets and the browser's own allocations**, on
+the class of device this budget exists to protect. That is not a comfortable margin; it is the margin §5 said
+the uncounted things live in, largely spent. **The shipped configuration is the 68 % row**, and it is 68 %
+rather than 66 % because the surface figure was corrected upward — see immediately below.
+
+**The per-character figure is derivable, and the derivation had a one-term error that a measurement
+caught.** It is worth keeping both numbers and the reason for the gap, because correcting only the number
+would leave the mistake available to whoever derives it next.
+
+|  | Term | Result |
+|---|---|---|
+| My estimate | `characterSpace.width × characterSpace.heightPx` = 240 × 420 | 1 612 800 B = **1.5381 MiB** |
+| Engine, measured | `characterSpace.width × characterSpace.height` = 240 × 470 | 1 804 800 B = **1.7212 MiB** |
+
+Both times 4 for the 2× scale's pixel count and 4 bytes for RGBA8888. **The surface is the artboard, not the
+crown-to-sole span.** `heightPx` is the character's drawn height — what the 6-head proportion is measured
+against — and it is the wrong term here: a Rive surface is sized to the artboard, which carries margin. The
+two differ by 12 %, and the substitution is easy to make precisely because `heightPx` is the number the rig
+talks about most.
+
+**The correction is worse than the estimate, which for a floor is the direction that matters.** A floor that
+was too low was under-reporting the thing this section exists to expose. Six characters is **10.33 MiB**, not
+9.23 — 1.10 MiB more uncounted than this ADR claimed a day ago.
+
+Recomputed against the shipped manifest (`assets/dist/manifest.json`, `decodedTextureBytes: 34 918 576` =
+33.30 MiB at 2×, with the landmark at 1×): Ottawa with six Rive characters is **43.63 MiB of 64 MiB, 68.2 %**
+— against 42.53 MiB / 66.5 % on the old figure. Engine reports 1.72 MiB as a **floor** on an *empty*
+artboard, and asserts it in one direction only: the test can fail against Rive, never for it. Real artboards
+will not be cheaper.
+
+Every term remains data the repository holds — ADR-0017 put `characterSpace` in
+`content/schemas/rig.schema.json` and `level.schema.json` already declares `characters[]` — so §4's formula
+below stands with `height` substituted for `heightPx`. That substitution is the entire correction, and it is
+the reason a measurement was worth taking rather than trusting the arithmetic.
+
+### The decision that follows
+
+**A Rive character surface stops being uncounted.** It was excluded because "their size is a property of the
+display, not of a file, and this gate only measures files" — true when it was written, and no longer the
+whole truth. The size is a property of *the rig* and *the device scale*, and both are now declared:
+
+```
+surfaceBytes(level, scale) = level.characters.length
+                           × rig.characterSpace.width
+                           × rig.characterSpace.height
+                           × scale²
+                           × 4
+```
+
+- **OBLIGATION due=2026-11-08 owner=infra** — charge that figure against each level's budget in
+  `scripts/lib/texture-memory.mjs`, per device scale, **reported as a separate line** from the file total.
+  Separate because they are differently trustworthy: the file total is re-derived from bytes on disk, and
+  this one is derived from a declaration, so folding them into one number would launder an estimate into a
+  measurement. The gate must also fail when a level declares characters and no rig document can be resolved,
+  rather than charging zero — a level whose characters cost nothing is the vacuum this project keeps closing.
+
+### Scale is a per-asset authoring decision, not a rule about a category
+
+**This paragraph replaces one that was wrong, and the way it was wrong is worth keeping.** It read
+*"landmarks are not moved to 1× by this amendment"*, reasoning that a landmark is a point of interest a
+player walks up to and engages, therefore it belongs to the category 2× exists for. That is a rule drawn
+around a **category** when the property belongs to the **individual asset**, and it was written without
+knowing that the question had already been answered empirically for the only landmark that exists.
+
+Parliament Hill ships at 1×, as `assets/src/svg/ottawa/landmark-parliament-hill@1x.svg`, and it got there by
+measurement rather than by budget pressure. Art ran the art-bible §5 two-size test at the shipping size of
+1080 × 1040:
+
+- **1:1** — clock face with hands, copper spire, flag with its maple leaf, corner pinnacles, all clean.
+- **25 %** — every `mustBeRight` feature survives, including the Library's polygonal roof.
+- **120 px black silhouette** — tower, flag and flanking wings still read as a parliament.
+
+In art's words: *"Nothing on this landmark was drawn to need 2×… I would have said so if it failed; the
+megabytes are not worth a landmark that fails blind identification."* The 12 px minimum-shape rule is why —
+the same reason the parallax layers survived being told their scale after they were drawn. The result is
+**46.15 → 33.30 MiB, 96 % → 69 % of Ottawa's declared budget**, and ≈ 42.5 MiB rather than ≈ 55.4 once six
+Rive surfaces are folded in.
+
+So the decision is:
+
+- **The default for a landmark, a character and a prop is 2×.** Unchanged, and it is what §1's rule means by
+  "things the player looks at closely".
+- **An asset may ship at 1× when its artist has run the two-size test and it passes.** The departure is
+  recorded where art already records it: **in the source filename**, `…@1x.svg`, in the tree art owns. Scale
+  is authored, not inferred.
+- **No blanket rule and no threshold decides this.** Infra refused both, correctly and for the reasons this
+  ADR would have given: an every-POI-is-1× rule would assert *in a build script* that no POI is ever held
+  close to the camera, and a megapixel threshold would demote the character atlas — which is precisely what
+  2× exists for, and precisely the mistake §2 already rejected for full-screen layers.
+
+**The objection the old paragraph was protecting survives intact, and it is the part to keep**: a quality cut
+applied across every landmark in the game to pay for character count is the wrong trade, and if the measured
+total does not fit once the surfaces are counted, the answer is **fewer simultaneous Rive characters** — a
+level-authoring decision with a visible cost. What was wrong was treating "is this asset legible at 1×" as a
+question answerable from the asset's *category*. It is answerable only by looking at the drawing, which is
+the artist's judgement, and it had already been exercised.
+
+This is the third time in this repository a rule has been drawn around a container when the property belonged
+to its contents. See **ADR-0019**, which was written because of this one.
+
+### Every number in this ADR is a budget for art the running game has never loaded
+
+Recorded here, prominently, because it changes how much any figure above should be trusted and because it
+was found by a person instrumenting the live site rather than by any gate.
+
+The deployed build issues **zero requests for `.webp` or for `manifest.json`.** Every parallax layer renders
+the engine's fallback band. The assets are deployed and the keys match; nothing fetches them. Thirty-six e2e
+tests pass, because not one of them distinguishes *"drew its art"* from *"drew a coloured band"* — an
+anti-vacuum failure (ADR-0014) one layer over from where this ADR was looking.
+
+Two consequences for this ADR specifically, both uncomfortable and neither invalidating:
+
+- **The gate itself is still sound.** It measures files on disk against a declared budget, and that is a true
+  bound on what a correct loader would hold. It is a *ceiling on a load path*, and the load path not
+  executing does not make the ceiling wrong.
+- **The claim in "Alternatives considered" that CI and the runtime "check different populations of level
+  document" is currently half-true at best.** `content/levels/ottawa.json` declares `"assets": []`, so
+  `refuseOverBudget` sums zero and cannot fire — a level document that declares six `layers[]` and no assets
+  to preload. That is a defect in *this* layer, not the engine's, and it is now gated: see
+  `tests/unit/contracts/level-declares-the-art-it-draws.test.ts`.
+
+The general lesson is the one this project keeps relearning and is worth stating in the ADR that most depends
+on it: **a budget checked against files is not evidence that the files are used.** Both halves need a gate,
+and until this session only one had one.
+
+### What is still uncounted, and stays that way
+
+Mipmaps (+33 %, not generated) and Phaser's render targets. Render targets remain genuinely display-sized and
+genuinely outside any file or declaration, so the floor-not-ceiling clause survives this amendment — it is
+just a good deal tighter. **The budget stays at 64 MiB and not the device's limit** for precisely that
+residue.
 
 ## Alternatives considered
 

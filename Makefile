@@ -5,7 +5,7 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup lint typecheck test test-e2e test-perf test-a11y \
-        assets check-assets check-textures validate-content verify-content verify-art build preview clean \
+        assets check-assets check-textures validate-content verify-content verify-art art-handoff art-handoff-blind build preview clean \
         check-obligations
 
 help: ## List every target
@@ -100,8 +100,65 @@ validate-content: ## Validate every content file against its JSON Schema
 verify-content: ## ADR-0003/ADR-0016: separation of duties, the CI clause, the re-check table
 	npm run verify-content
 
-verify-art: ## Verify art against the style guide and references
+# THE ART GATE IS A HARNESS, NOT AN IDENTIFIER, and the distinction is the whole
+# task. Naming what a render depicts is the art-verifier's judgement; a
+# `verify-art` that answered its own question would be the machine equivalent of
+# an author verifying their own question, which ADR-0003 forbids for people. So
+# a verdict comes IN as data and this scores it against assets/refs/references.json.
+#
+# What this target establishes, every run:
+#   - an ANONYMISED HAND-OFF can still be built from today's tree. Every subject
+#     rasterises, every composite assembles, no render source draws text, no
+#     handed-over file carries a token that names a subject, no PNG carries
+#     metadata, and every render is named after sixteen hex characters.
+#
+# What it does NOT establish: that any identification was made blind. The first
+# real pass (2026-09-08) COULD NOT run blind -- it had to locate the renders to
+# rasterise them, and the source listing spells a subject out in a filename --
+# and it marked every verdict untrusted rather than report a pass it could not
+# stand behind. Nothing in this file names a subject, for the same reason: the
+# SECOND run leaked through operator-facing text rather than through the images. Only the hand-off can give blindness, and only if it
+# holds in use. BLINDNESS LEAKS SILENTLY: a leaked run's output is identical to a
+# clean one's, which is why this target prints what it did not prove alongside
+# what it did, and never a bare OK.
+#
+# There is no scored verdict record yet -- docs/art-verification.json is that
+# hand pass and says of itself `blindnessHeld: false` -- so the gate reports
+# `identification: NOT ESTABLISHED` and exits 0 on the half it can prove.
+# `--require-identification` makes the missing record a failure, and is the
+# one-flag change that makes this fully gating once a clean run is recorded.
+verify-art: ## Build + leak-check the blind hand-off, and score any recorded verdict
 	npm run verify-art
+
+# TWO TARGETS, AND PICKING THE WRONG ONE COSTS THE RUN.
+#
+# Both build the directory the identifier is handed and the keymap it must not
+# be. They differ only in what they PRINT, and that turned out to be where the
+# second real run leaked: `art-handoff` named two of the three subjects in its
+# own progress output, and the identifier had read them before it saw a pixel.
+# The images were clean the whole time. The terminal was not.
+#
+#   art-handoff        loud. Names each subject as it builds. For someone running
+#                      it FOR an identifier, who may read anything.
+#   art-handoff-blind  quiet. Counts, totals and the run id, and no subject id
+#                      anywhere. Safe to run AS the identifier when there is no
+#                      second party -- which is the situation that produced the
+#                      leak, because the old advice ("run this for the identifier,
+#                      not as it") was correct and impossible to follow alone.
+#
+# Two separate temp roots by default, so the keymap is not even a sibling an idle
+# `ls ..` would turn up. Override with OUT= and KEYMAP=. A non-empty output
+# directory is REFUSED, not overwritten: two runs side by side relink by file
+# size and by count what the salt renamed. Pass --force to clear one.
+art-handoff: ## Build an anonymised hand-off FOR an identifier (names subjects as it builds)
+	@out="$${OUT:-$$(mktemp -d -t truenorth-art-handoff-XXXXXX)}"; \
+	 key="$${KEYMAP:-$$(mktemp -d -t truenorth-art-keymap-XXXXXX)/keymap.json}"; \
+	 node scripts/verify-art.mjs handoff --out "$$out" --keymap "$$key"
+
+art-handoff-blind: ## Same, printing no subject id: safe to run AS the identifier
+	@out="$${OUT:-$$(mktemp -d -t truenorth-art-handoff-XXXXXX)}"; \
+	 key="$${KEYMAP:-$$(mktemp -d -t truenorth-art-keymap-XXXXXX)/keymap.json}"; \
+	 node scripts/verify-art.mjs handoff --quiet --out "$$out" --keymap "$$key"
 
 build: validate-content ## Validate content, build the site, then check the artefact
 	npm run build

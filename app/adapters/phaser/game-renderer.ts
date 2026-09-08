@@ -5,8 +5,16 @@ import type { ThemeColours } from '@application/ports';
 import { BootScene, HORIZON_FRACTION } from './boot-scene';
 import { blendColors, toCssColor, toPhaserColor } from './boot-config';
 import type { BootConfig } from './boot-config';
+import {
+  parseAssetManifest,
+  preferredAssetScale,
+  selectLevelAssets,
+  type AssetManifest,
+  type LoadRequest,
+} from './level-assets';
 import { bundledLevelCatalog, type LevelCatalog } from './level-catalog';
 import type { SceneLevel } from './level-document';
+import type { SceneEventListener } from './level-events';
 import { LevelScene } from './level-scene';
 import { createPlayableMarker, type MarkerHost, type PlayableMarker } from './playable-marker';
 import { appErr, ok, type Result } from '@common/result';
@@ -99,10 +107,31 @@ export interface GameRendererOptions {
    * `content/levels/`; injectable so the failure path can be driven.
    */
   readonly levels?: LevelCatalog;
+  /**
+   * Every fact the open level publishes: `level/ready`, `player/moved`,
+   * `poi/entered` and the rest of `level-events.ts`.
+   *
+   * The adapter's whole outbound edge. `app/bootstrap` binds it to the typed
+   * event bus and the DOM layer subscribes there, so the HUD and the live region
+   * hear about the level without this directory knowing they exist (ADR-0005).
+   */
+  readonly onLevelEvent?: SceneEventListener;
+  /**
+   * Where `assets/dist/manifest.json` is served from, and how to fetch it.
+   *
+   * Defaults to `<base>manifest.json` through the page's `fetch`. Injectable so
+   * the failure path — no manifest, an unreadable one, a version this build does
+   * not read — can be driven without a network.
+   */
+  readonly assetsBaseUrl?: string;
+  readonly fetch?: typeof globalThis.fetch;
+  /** Overrides `devicePixelRatio` when choosing between the 1x and 2x sets. */
+  readonly devicePixelRatio?: number;
 }
 
 export class GameRenderer {
   readonly #game: Phaser.Game;
+  readonly #options: GameRendererOptions;
   readonly #config: BootConfig;
   readonly #ready: Promise<void>;
   readonly #catalog: LevelCatalog;
@@ -111,6 +140,8 @@ export class GameRenderer {
   #level: LevelScene | null = null;
   #levelDocument: SceneLevel | null = null;
   #marker: PlayableMarker | null = null;
+  /** One manifest fetch per session, shared by every level that opens after. */
+  #manifest: Promise<Result<AssetManifest>> | null = null;
   /**
    * Mirrors the rotate overlay, because `postBoot` is async: on a landscape
    * first load the overlay calls `pause()` before the probe exists, and
@@ -120,6 +151,7 @@ export class GameRenderer {
   #paused = false;
 
   constructor(options: GameRendererOptions) {
+    this.#options = options;
     this.#config = options.config;
     this.#catalog = options.levels ?? bundledLevelCatalog;
 
@@ -195,6 +227,18 @@ export class GameRenderer {
   }
 
   /**
+   * The open level's document, or `null`.
+   *
+   * Read-only, and it is the *parsed* document rather than the raw JSON, so the
+   * composition root gets the level's own localised strings — its title, its
+   * points of interest and their blurbs — without re-parsing content the adapter
+   * has already validated. ADR-0010: a level's strings travel with the level.
+   */
+  get level(): SceneLevel | null {
+    return this.#levelDocument;
+  }
+
+  /**
    * How much this device is being asked to draw, right now.
    *
    * `null` until `postBoot` has run. Scenes read this instead of asking the
@@ -246,6 +290,20 @@ export class GameRenderer {
     const document = await this.#catalog.load(id);
     if (!document.ok) return document;
 
+    /*
+     * Resolve the level's textures BEFORE the scene is constructed.
+     *
+     * This is the line whose absence shipped an Ottawa level that drew no art at
+     * all: `level-scene.ts` asks `textures.exists(key)` and falls back to a flat
+     * band, nothing had ever queued a load, and so every layer took the fallback
+     * silently and permanently. A manifest that will not load is NOT a level
+     * failure — the level still opens on placeholder bands, which is what a
+     * build with no art has always done — but it is no longer invisible: the
+     * scene publishes `data-layers-textured`, and `tests/e2e/level-art.spec.ts`
+     * fails when it is short of `data-layers`.
+     */
+    const assets = await this.#resolveAssets(id);
+
     const marker = this.#marker;
     marker?.hide();
 
@@ -261,6 +319,10 @@ export class GameRenderer {
       probe: this.#scene,
       marker,
       profile: this.renderProfile,
+      assets,
+      ...(this.#options.onLevelEvent === undefined
+        ? {}
+        : { onEvent: this.#options.onLevelEvent }),
     });
     this.#level = scene;
     this.#levelDocument = document.value;
@@ -274,6 +336,52 @@ export class GameRenderer {
     }
     if (this.#paused) this.#game.scene.pause(LevelScene.KEY);
     return ok();
+  }
+
+  /**
+   * The manifest, once per session, turned into this level's load list.
+   *
+   * Every failure lands in the same place — an empty list and one console line —
+   * because every one of them means the same thing to a player: the level draws
+   * its placeholder bands. What must never happen is that it means *nothing* to
+   * anybody, which is what it meant before.
+   */
+  async #resolveAssets(id: string): Promise<readonly LoadRequest[]> {
+    const base = this.#options.assetsBaseUrl ?? assetsBaseUrl();
+    const fetchImpl = this.#options.fetch ?? globalThis.fetch?.bind(globalThis);
+    if (fetchImpl === undefined) return [];
+
+    try {
+      this.#manifest ??= (async () => {
+        const response = await fetchImpl(`${base}manifest.json`);
+        if (!response.ok) {
+          throw new Error(`manifest.json returned ${String(response.status)}`);
+        }
+        return parseAssetManifest(await response.json());
+      })();
+      const manifest = await this.#manifest;
+      if (!manifest.ok) {
+        console.error(`[renderer] ${manifest.error.code}: ${manifest.error.message}`);
+        return [];
+      }
+      const scale = preferredAssetScale(
+        this.#options.devicePixelRatio ??
+          (typeof window === 'undefined' ? 1 : window.devicePixelRatio),
+      );
+      const requests = selectLevelAssets(manifest.value, id, { scale, baseUrl: base });
+      if (requests.length === 0) {
+        console.error(
+          `[renderer] the asset manifest lists nothing for level "${id}"; every layer will ` +
+            `draw its placeholder band.`,
+        );
+      }
+      return requests;
+    } catch (cause) {
+      /* The level is still playable on placeholders, so this is reported and not
+         returned: a level a player can walk beats a blank page. */
+      console.error(`[renderer] could not read the asset manifest.`, cause);
+      return [];
+    }
   }
 
   /** The ids of every authored level, derived from `content/levels/`. */
@@ -394,7 +502,12 @@ function startRendererProbe(
       heightCssPx: window.innerHeight,
       coarsePointerQuery: mediaQuery('(pointer: coarse)'),
     }),
-    marker: game.canvas ?? null,
+    /* Both: the canvas carries the classification of the surface it describes,
+       and `<html>` is where a bug report will look for it, beside the other
+       `data-tn-*` state. See `RenderTierProbeOptions.marker`. */
+    marker: [game.canvas, typeof document === 'undefined' ? null : document.documentElement].filter(
+      (element): element is HTMLElement => element !== null && element !== undefined,
+    ),
     /* One mechanism, not two: the tier the renderer probe measured is published
        through the same element a locomotion scenario reads. */
     onProfile: (profile) => {
@@ -450,6 +563,19 @@ function installPlayableMarker(host: HTMLElement): PlayableMarker | null {
 function removeSceneProbeGlobal(): void {
   if (typeof window === 'undefined') return;
   delete (window as unknown as Record<string, unknown>)[SCENE_PROBE_GLOBAL];
+}
+
+/**
+ * Where `assets/dist/manifest.json` and everything it names are served from.
+ *
+ * `assets/dist` is Vite's `publicDir`, so its contents land at the deploy's base
+ * path verbatim. `import.meta.env.BASE_URL` is that path — `/OhCanada/` on
+ * Pages, `/` in a dev server — and reading it here rather than hardcoding a
+ * slash is what keeps ADR-0006's sub-path deploy working.
+ */
+function assetsBaseUrl(): string {
+  const base = import.meta.env.BASE_URL;
+  return typeof base === 'string' && base.length > 0 ? base : '/';
 }
 
 /** The query string, when there is a `location` to read it from. */

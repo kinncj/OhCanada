@@ -115,6 +115,22 @@ export interface SceneSnapshot {
   readonly cameraX?: number;
   readonly parallaxEasing?: boolean;
   readonly particles?: number;
+  /**
+   * Parallax layers the level authored, and how many of them drew from a real
+   * texture rather than from the placeholder band.
+   *
+   * These exist because the shipped Ottawa level **never drew its art and
+   * nothing noticed**. `level-scene.ts` falls back to a flat theme-coloured band
+   * when `textures.exists(key)` is false, which is the right behaviour while the
+   * atlas is in flight and is indistinguishable from success at the level of
+   * "the scene reached ready" — so forty e2e tests passed over a level with no
+   * art in it, in production, and the network log was the only evidence.
+   *
+   * A fallback that nothing can observe is a fallback that becomes permanent.
+   * `layersTextured < layers` is now a fact a test can fail on.
+   */
+  readonly layers?: number;
+  readonly layersTextured?: number;
   readonly tier?: VisualTier;
   readonly motion?: MotionLevel;
   readonly renderer?: string;
@@ -219,6 +235,8 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'grounded',
   'parallaxEasing',
   'particles',
+  'layers',
+  'layersTextured',
   'tier',
   'motion',
   'renderer',
@@ -250,6 +268,8 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-parallax-easing':
       snapshot.parallaxEasing === undefined ? 'unknown' : snapshot.parallaxEasing ? 'on' : 'off',
     'data-particles': num(snapshot.particles),
+    'data-layers': num(snapshot.layers),
+    'data-layers-textured': num(snapshot.layersTextured),
     'data-tier': text(snapshot.tier),
     'data-motion': text(snapshot.motion),
     'data-renderer': text(snapshot.renderer),

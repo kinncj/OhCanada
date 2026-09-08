@@ -160,8 +160,14 @@ export interface NationSource {
  * as doing so — a type constrains a value, not its author. What they do is force
  * a fabricated sign-off to name a person, an organisation, a date and a scope,
  * which is a specific and checkable lie rather than a flag flip, and force
- * `not-sought` to carry no names so a review cannot be half-claimed. The author
- * rule needs a gate that reads git history; that is slice 1 task 1.17's.
+ * `not-sought` to carry no names so a review cannot be half-claimed.
+ *
+ * The git-history gate landed in slice 1 and found that authorship is **not
+ * establishable** from this repository — one identity per commit, no signatures —
+ * so `verify-content`'s rule A3 refuses every transition off `not-sought`
+ * outright. ADR-0003's 2026-09-08 amendment ratifies that: a genuine human
+ * sign-off cannot be recorded today, the refusal is still correct, and the route
+ * out is an identity the committer does not control — never a looser gate.
  */
 export interface CommunityReview {
   readonly status: 'not-sought' | 'sought' | 'granted' | 'refused';
@@ -171,6 +177,18 @@ export interface CommunityReview {
   readonly date: IsoInstant | null;
   /** What exactly was reviewed. A sign-off on a hat is not a sign-off on a character. */
   readonly scope: string | null;
+  /**
+   * Where the sign-off can be read, independently of this file: a URL to a
+   * published statement, or a repository path to a committed letter. `null` if
+   * and only if `status` is `not-sought`.
+   *
+   * The other four fields *name* a claim; this one *points at* the evidence.
+   * Without it a later reader can only re-read the same assertion in the same
+   * file. No schema and no gate can check that the artefact says what this block
+   * claims — that is stated in ADR-0003's amendment rather than implied by the
+   * field's presence.
+   */
+  readonly record: string | null;
   readonly note: string;
 }
 
@@ -403,15 +421,47 @@ export interface LevelCharacter {
   readonly questId?: QuestId;
 }
 
-export type LevelAssetKind = 'atlas' | 'rive' | 'audio' | 'font' | 'tilemap' | 'json';
+/**
+ * `image` is here because the pipeline emits it and the enum did not have it
+ * (ADR-0020). Seven of Ottawa's eight pieces of art are standalone images —
+ * six parallax layers and the landmark — because they are wider than the
+ * 2048 px atlas limit and cannot be packed. An enum that cannot name what the
+ * build produces makes the array unfillable, which is how `assets: []` survived.
+ */
+export type LevelAssetKind =
+  | 'atlas'
+  | 'image'
+  | 'rive'
+  | 'audio'
+  | 'font'
+  | 'tilemap'
+  | 'json';
 
+/**
+ * What art a level needs, **by key**.
+ *
+ * **`url` is optional and build-derived** (ADR-0020). The pipeline content-hashes
+ * every output and emits a 1× and a 2× variant per key, so a path written by a
+ * person is wrong at the next `make assets` and names only one of the two scales.
+ * `assets/dist/manifest.json` resolves a key to its files; a level names the key.
+ *
+ * **`bytes` and `decodedBytes` stay required**, and the distinction matters.
+ * `decodedBytes` is what TN-LEVEL-02 sums to refuse an over-budget level before
+ * anything is fetched — an optional one would default to zero and re-create the
+ * defect ADR-0020 records, a refusal that cannot fire. ADR-0013 forbids trusting
+ * a `decodedBytes` nobody re-derives, and `scripts/lib/texture-memory.mjs`
+ * re-derives every declared figure from the manifest. Hand-written and
+ * machine-checked is the arrangement ADR-0013 asks for; hand-written and
+ * unchecked is the one it warns about.
+ */
 export interface LevelAssetRef {
   readonly key: string;
   readonly kind: LevelAssetKind;
-  readonly url: string;
-  /** Transfer size, summed against the 8 MB per-level payload budget. */
+  /** Build-derived; the manifest resolves `key`. See above. */
+  readonly url?: string;
+  /** Transfer size at the worst device scale, against the 8 MB per-level payload budget. */
   readonly bytes: number;
-  /** Decoded (not transfer) size for textures; 0 for non-texture assets. */
+  /** Decoded size at the worst device scale; 0 for non-texture assets. */
   readonly decodedBytes: number;
 }
 
@@ -553,7 +603,17 @@ export interface QuestionDocument {
  * content/characters/<id>.json — schema: content/schemas/character.schema.json
  * ----------------------------------------------------------------------- */
 
-/** One state-machine input, in the vocabulary `ICharacterRenderer` addresses. */
+/**
+ * One state-machine input, in the vocabulary `ICharacterRenderer` addresses.
+ *
+ * `kind` here and `type` in `rig.schema.json#/$defs/rigInput` are the same field
+ * under two names, and that overlap is a known boundary defect rather than a
+ * coincidence — see ADR-0017. **The rig owns the vocabulary; a character selects
+ * from it.** Until `character.schema.json` is rewritten to reference the rig
+ * (deliberately deferred: `content/characters/` has no documents yet, so the
+ * shape would be designed against nothing), a character can declare an input or
+ * a slot option the rig has no frame for and nothing joins the two.
+ */
 export interface CharacterInput {
   readonly name: string;
   readonly kind: 'bool' | 'number' | 'trigger';
@@ -567,7 +627,18 @@ export interface CharacterSkinOption {
 }
 
 /**
- * One runtime-swappable slot: skin tone, hair, coat. Slot and option names are
+ * One runtime-swappable slot: skin tone, hair, coat.
+ *
+ * The slot NAMES are the rig's, and `rig.schema.json` fixes them: `skin`,
+ * `hairShape`, `hairColour`, `headCovering`, `feature`, `costume`,
+ * `presentation`. `hairShape` and `hairColour` are two slots and not one
+ * because `docs/content-review.md` §8.2 makes slot independence the
+ * anti-caricature check, and the failure mode is a MERGE — one `hair` slot of
+ * twenty combined options in which "the coily one only in black" is invisible.
+ * Two slots make that coupling expressible only as a missing atlas frame, which
+ * a contract test can and does refuse (ADR-0017).
+ *
+ * Slot and option names are
  * identical in Rive and in the atlas, which is what makes the fallback a swap.
  */
 export interface CharacterSlot {

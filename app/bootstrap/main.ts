@@ -10,10 +10,24 @@
 
 import gameConfigDocument from '@content/game.config.json';
 
-import { GameRenderer, parseBootConfig } from '@adapters/phaser';
+import { GameRenderer, parseBootConfig, type SceneLevel } from '@adapters/phaser';
+import type { LocalizedText } from '@application/ports';
 import { createBuildStatus } from '@ui/build-status';
+import type { UiLocale } from '@ui/copy';
+import { createHud, type Hud } from '@ui/hud';
+import { createLevelAnnouncer } from '@ui/level-events';
+import { createLevelError } from '@ui/level-screens';
 import { announce, mountLiveRegion } from '@ui/live-region';
+import { createPoiCard } from '@ui/poi-card';
 import { createRotateOverlay } from '@ui/rotate-overlay';
+
+import {
+  createGameEventBus,
+  levelEventSource,
+  publishLevelFailed,
+  publishSceneEvent,
+  type GameEventBus,
+} from './game-events';
 
 /**
  * The config is imported, not fetched. It is on the 6 s time-to-play budget and
@@ -45,6 +59,19 @@ function main(): void {
    */
   mountLiveRegion(uiHost);
 
+  /*
+   * The bus, before the renderer that publishes on it.
+   *
+   * CLAUDE.md: "Systems communicate over the typed event bus, not direct
+   * references." Until now the level's facts went to exactly one place — the
+   * `?e2e=1` probe's event trace — which meant the only consumer of a
+   * `poi/entered` was a Playwright assertion, and the live region a
+   * screen-reader user depends on heard nothing at all. This is the line that
+   * makes the DOM layer a real subscriber: the scene publishes, the bus carries,
+   * `app/ui` listens, and neither end knows the other exists (ADR-0005).
+   */
+  const bus = createGameEventBus();
+
   const parsed = parseBootConfig(gameConfigDocument);
   if (!parsed.ok) {
     reportFailure(`${parsed.error.code}: ${parsed.error.message}`);
@@ -54,6 +81,7 @@ function main(): void {
 
   document.title = config.title;
   root.lang = config.defaultLocale;
+  const locale = toUiLocale(config.defaultLocale);
 
   /*
    * Which level to open, if any — decided here, before anything is mounted,
@@ -90,7 +118,13 @@ function main(): void {
    */
   if (opensALevel) root.dataset['tnLevel'] = 'loading';
 
-  const renderer = new GameRenderer({ parent: gameHost, config });
+  const renderer = new GameRenderer({
+    parent: gameHost,
+    config,
+    onLevelEvent: (name, detail) => {
+      publishSceneEvent(bus, name, detail);
+    },
+  });
   applyPageTheme(renderer);
 
   /*
@@ -116,10 +150,46 @@ function main(): void {
    */
   const status = opensALevel
     ? null
-    : createBuildStatus(uiHost, { locale: toUiLocale(config.defaultLocale) });
+    : createBuildStatus(uiHost, { locale });
+
+  /*
+   * The HUD, and with it the page's one `<main>`.
+   *
+   * Mounted only over a level, because a HUD is what a *level* has. Two things
+   * are decided here rather than in `app/ui`, because both are composition
+   * decisions (ADR-0005):
+   *
+   *  1. **`canvasHost`.** `createHud` moves `#game` inside the `<main>` it
+   *     creates. The canvas is `aria-hidden` either way, so nothing changes in
+   *     the accessibility tree — what changes is that `<main>` contains the
+   *     thing the page is *for* instead of being a wrapper invented to satisfy a
+   *     scanner, which is what `TN-HUD-07` asks for and what lets axe's `region`
+   *     and `landmark-one-main` rules run with nothing disabled.
+   *  2. **Where a modal goes.** Every dialog opened over a level is mounted into
+   *     `hud.main`, not into `#ui`. A `dialog` is not a landmark, so a modal
+   *     mounted beside `<main>` puts its content outside every landmark and
+   *     axe's `region` rule is right to complain. Inside `<main>` it is content
+   *     in a landmark, and the rule passes because the page is correct rather
+   *     than because the rule was switched off.
+   */
+  const hud: Hud | null = opensALevel
+    ? createHud(uiHost, {
+        locale,
+        announce,
+        canvasHost: gameHost,
+        onPause: () => {
+          renderer.pause();
+          root.dataset['tnPaused'] = 'true';
+        },
+        onResume: () => {
+          renderer.resume();
+          root.dataset['tnPaused'] = 'false';
+        },
+      })
+    : null;
 
   const overlay = createRotateOverlay(uiHost, {
-    locale: toUiLocale(config.defaultLocale),
+    locale,
     onShow: () => {
       renderer.pause();
       root.dataset['tnPaused'] = 'true';
@@ -151,14 +221,28 @@ function main(): void {
    * and "Go back" (TN-LEVEL-02) is DOM and belongs to the UI agent — this is the
    * seam it hangs on.
    */
-  if (opensALevel && requested !== null) {
+  if (opensALevel && requested !== null && hud !== null) {
+    subscribeLevelUi({ bus, hud, renderer, locale });
+
     void renderer.ready
       .then(() => renderer.loadLevel(requested))
       .then((result) => {
         if (!result.ok) {
           root.dataset['tnLevel'] = 'failed';
-          console.error(`[bootstrap] ${result.error.code}: ${result.error.message}`);
-          announce(`Could not open the level "${requested}".`);
+          /* The level id belongs here and not in the announcement: it is
+             developer vocabulary, and a player hears `app/ui`'s copy instead. It
+             is interpolated rather than left to the error's own message because
+             not every failure names the level it happened to. */
+          console.error(
+            `[bootstrap] level "${requested}" failed. ` +
+              `${result.error.code}: ${result.error.message}`,
+          );
+          /* On the bus, not straight to `announce`: `app/ui` owns what a level
+             failure sounds like (`SPEAKS['level/failed']` is `true` and the
+             announcer draws `level.error.title`), and the error card below
+             subscribes to the same event. One fact, one publisher, two
+             listeners — which is the point of the bus. */
+          publishLevelFailed(bus, requested);
           return;
         }
         root.dataset['tnLevel'] = 'ready';
@@ -185,6 +269,98 @@ function main(): void {
      */
     announce(status === null ? `${config.title} ready.` : `${config.title} ready. ${status.message}`);
   });
+}
+
+/**
+ * Everything the DOM layer does with a level's events, in one place.
+ *
+ * Nothing below reaches into the scene and nothing below is reachable from it.
+ * The subscription is the injected function `app/ui/level-events.ts` asks for,
+ * and every screen mounted here is mounted into `hud.main`.
+ *
+ * ## Two copy gaps, wired around rather than papered over
+ *
+ * `TN-LEVEL-08` wants an arrival sentence ("You are on the Rideau Canal in
+ * Ottawa. Skating.") and `TN-COPY-06` wants an interact prompt ("Talk to the
+ * officer"). **Neither string exists**: `app/ui/copy.ts` has no
+ * `announce.arrived.*` or `hud.interact.*` row, and `content/schemas/level.schema.json`
+ * gives a level nowhere to carry one.
+ *
+ * So the arrival announcement is the **level document's own localised title** —
+ * a real string, owned by content, in the player's language (ADR-0010) — and it
+ * is thinner than the story asks for. And `targets` is deliberately **not**
+ * passed, which makes `createLevelAnnouncer` treat every `poi/entered` as an
+ * offer it has no words for and show no prompt. That is its documented
+ * behaviour, and it is the honest one: a prompt reading "Interact" would be this
+ * file inventing player-facing copy, which ADR-0010 forbids and which would hide
+ * the gap behind something that looked finished.
+ */
+function subscribeLevelUi(wiring: {
+  readonly bus: GameEventBus;
+  readonly hud: Hud;
+  readonly renderer: GameRenderer;
+  readonly locale: UiLocale;
+}): void {
+  const { bus, hud, renderer, locale } = wiring;
+
+  /* A modal over a level pauses it, and closing resumes. The card takes focus
+     and is read on arrival, which is why `SPEAKS['poi/engaged']` is `false` —
+     announcing it as well would say everything twice. */
+  const card = createPoiCard(hud.main, {
+    locale,
+    announce,
+    onClose: () => {
+      renderer.resume();
+      document.documentElement.dataset['tnPaused'] = 'false';
+    },
+    restoreFocusTo: () => hud.prompt,
+  });
+
+  const failure = createLevelError(hud.main, {
+    locale,
+    onBack: () => {
+      window.location.search = '';
+    },
+    onRetry: () => {
+      window.location.reload();
+    },
+  });
+
+  createLevelAnnouncer(levelEventSource(bus), {
+    locale,
+    announce,
+    /* See the note above: the level's own title, because no arrival copy
+       exists. Empty is impossible — `parseLevelDocument` requires a title. */
+    arrival: localised(renderer.level?.title, locale),
+  });
+
+  bus.on('level/failed', () => {
+    failure.show();
+  });
+
+  /*
+   * A point of interest the player engaged, drawn from the level document.
+   *
+   * `name` and `blurb` are localised text the level already carries, so this is
+   * content reaching the screen rather than copy invented here. An id the level
+   * does not declare opens nothing: the engine and the document disagreeing is
+   * not something to render.
+   */
+  bus.on('poi/engaged', ({ detail }) => {
+    const level: SceneLevel | null = renderer.level;
+    if (detail === undefined || level === null) return;
+    const poi = level.pois.find((candidate) => candidate.id === detail);
+    if (poi === undefined) return;
+    renderer.pause();
+    document.documentElement.dataset['tnPaused'] = 'true';
+    card.show({ title: localised(poi.name, locale), body: [localised(poi.blurb, locale)] });
+  });
+}
+
+/** A `LocalizedText` in the player's language, falling back to English. */
+function localised(value: LocalizedText | undefined, locale: UiLocale): string {
+  if (value === undefined) return '';
+  return locale === 'fr' ? value.fr : value.en;
 }
 
 /**

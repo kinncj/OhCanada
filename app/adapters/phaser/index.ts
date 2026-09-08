@@ -219,3 +219,62 @@ export {
   type MarkerHost,
   type PlayableMarker,
 } from './playable-marker';
+
+/*
+  Task 1.12's other half: the names the level publishes.
+
+  Exported because `app/bootstrap` binds them to the typed event bus, which is
+  the only way `app/ui` can hear about a level without importing an adapter
+  (ADR-0005). The scene itself stays unexported; what leaves this directory is
+  the vocabulary, not the thing that speaks it.
+*/
+export {
+  SCENE_EVENT_NAMES,
+  isSceneEventName,
+  type SceneEventListener,
+  type SceneEventName,
+} from './level-events';
+
+/*
+  Task 1.12: the sprite-atlas half of `ICharacterRenderer`.
+
+  The Rive half is `app/adapters/rive`, and the two never import each other — the
+  composition root picks one. Both answer `skinSlots`/`skinOptions` out of the
+  same `CharacterRendererSpec.slots`, so "identical slot names" is structural
+  rather than a convention two files have to keep.
+*/
+export {
+  DEFAULT_FPS,
+  EXPRESSION_LAYER,
+  IDLE_CLIP,
+  MAX_CLIP_FRAMES,
+  createSpriteCharacterRenderer,
+  createSpriteCharacterRendererFactory,
+  selectClip,
+  spriteFrameName,
+  type SpriteCharacterRendererOptions,
+  type SpriteFrameSource,
+  type SpriteLayerHost,
+  type SpriteLayerObject,
+} from './sprite-character-renderer';
+
+/*
+  What a level loads, and the reason this module exists.
+
+  The deployed Ottawa level drew no art at all: nothing ever queued a texture,
+  every parallax band took `level-scene.ts`'s placeholder, and the scene reported
+  itself ready. Exported so the selection rules — scale resolved per key, so a
+  pinned `@1x` landmark is honoured; an atlas without its frame data refused —
+  are unit tested with no browser and no network.
+*/
+export {
+  SUPPORTED_MANIFEST_VERSION,
+  atlasKeyOf,
+  keysIn,
+  parseAssetManifest,
+  preferredAssetScale,
+  selectLevelAssets,
+  type AssetManifest,
+  type AssetManifestFile,
+  type LoadRequest,
+} from './level-assets';

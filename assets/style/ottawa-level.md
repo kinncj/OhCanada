@@ -195,9 +195,51 @@ Against `content/levels/ottawa.json`'s declared `textureBudgetBytes` of 32 MiB a
 *planned*. The pipeline ships a different mix, and the difference is worth writing down rather than quietly
 editing over the old numbers. **§5a is the current truth; §5 is history.**
 
-**The landmark ships at 2×, not at 1×.** `scripts/assets.mjs` emits 1× only for a source whose key appears
-in a level document's `layers[]`, and the landmark is a POI's `artKey`, not a layer. There is no way for
-this sheet to ask for 1×. The level's declared budget was raised from 32 MiB to 48 MiB to absorb it.
+**The landmark now ships at 1×, and this sheet can finally say so in a form the pipeline reads.**
+
+For one task it did not. `scripts/assets.mjs` emitted 1× only for a source whose key appeared in a level
+document's `layers[]`, and the landmark is a POI's `artKey`, not a layer — so it shipped at 2× at
+**17.14 MiB, 36 % of the level's budget**, while §5 of this page had said "the landmark at 1×" from the day
+it was written. The budget was raised from 32 MiB to 48 MiB to absorb a number nobody had chosen.
+
+**The mechanism: a source pins its own scale in its filename.** `landmark-parliament-hill.svg` became
+`landmark-parliament-hill@1x.svg` and nothing else changed. The suffix is stripped before the texture key is
+formed, so `ottawa-landmark-parliament-hill` is unchanged, `content/levels/ottawa.json` does not move, and a
+pinned source is standalone for the same reason a layer is — one atlas page cannot carry two scale sets.
+The pin is **one-directional**: `@2x` is a hard error, because the only thing it could mean is "ignore the
+owner's decision that layers ship at 1×", and a filename does not get to overrule that.
+
+Infra declined to widen the `layers[]` rule instead, and the reasoning belongs on this page because it is
+about who decides. Making every `pois[].artKey` 1× would assert *in a build script* that no POI is ever held
+close to the camera — a judgement about art. A megapixel threshold would demote the character atlas
+(1268 × 2048, 9.91 MiB), which is exactly what 2× exists for. So the author says it, in the tree the author
+owns. That is the right seam.
+
+**Checked before accepting it, then checked again by someone else.** The two-size test in `art-bible.md` §5 was re-run against what actually
+ships now, 1080 × 1040: at 1:1 the clock face reads with its hands, the copper spire, the flag and its maple
+leaf, and the corner pinnacles; at 25 % every `mustBeRight` feature survives; as a black silhouette 120 px
+tall the tower, the flag and the flanking wings are still the shape of a parliament. **Nothing on this
+landmark was drawn to need 2×** — the 12 px minimum-shape rule is why, and it is the same reason the
+parallax layers survived being told after they were drawn which scale they ship at.
+
+A blind pass then identified the pinned render cold, before its keymap opened: *"Centre Block, Parliament
+Hill, Ottawa — the central tower is the Peace Tower"*, **confidence 0.92**, with every measured ratio inside
+the amended contract — spire 0.189 of tower height, apex 26.7°, dial 0.54 centred at 0.725, shaft-to-height
+1:7.73 — including the two clock exaggerations `references.json` labels as deliberate. Its verdict on the
+trade: *"Yes. I do not need 2× back."*
+
+### The placement floor the size ladder found
+
+Identification held at 0.88 at 300 px and fell to 0.75 at 140 px, where the dial collapses to a pale disc
+with a dark rim and the Gothic arcade to texture, leaving the flag and the copper green carrying it almost
+alone.
+
+> **Do not draw this landmark below 300 px wide anywhere the player is meant to recognise it.**
+
+That is a **level-design constraint, not a drawing one**, and it belongs on this page rather than in the SVG:
+no amount of redrawing buys back a 62 px dial rendered at 8 px. It bounds the POI's on-screen scale and any
+future map, menu or passport thumbnail of the Hill. It is recorded in `references.json` under `peace-tower`
+as well, so it travels with the subject and not only with this level.
 
 `make assets`, 2026-09-08, after task 1.11:
 
@@ -212,8 +254,8 @@ texture-memory: OK - ottawa 46.15 MiB of 48.00 MiB (96%, 1934672 B spare)
 
 | texture | scale | px | decoded |
 |---|---|---|---|
-| `ottawa-landmark-parliament-hill` | **2×** | 2160 × 2080 | **17.14 MiB** |
-| `shared` character atlas | 2× | 1282 × 2035 | 9.95 MiB |
+| `shared` character atlas | 2× | 1268 × 2048 | **9.91 MiB** |
+| `ottawa-landmark-parliament-hill` | **1×, source-pinned** | 1080 × 1040 | 4.28 MiB |
 | `ottawa-layer-50-canalwall` | 1× | 2016 × 640 | 4.92 MiB |
 | `ottawa-layer-10-sky` | 1× | 1080 × 1160 | 4.78 MiB |
 | `ottawa-layer-60-ice` | 1× | 1440 × 560 | 3.08 MiB |
@@ -221,12 +263,33 @@ texture-memory: OK - ottawa 46.15 MiB of 48.00 MiB (96%, 1934672 B spare)
 | `ottawa-layer-40-treeline` | 1× | 1440 × 340 | 1.87 MiB |
 | `ottawa-layer-30-escarpment` | 1× | 1440 × 320 | 1.76 MiB |
 | `ottawa` atlas (2 markers + snow particle) | 2× | 230 × 738 | 0.65 MiB |
-| **total at a 2× device** | | | **48,391,884 B = 46.15 MiB of 48.00** |
+| **total at a 2× device** | | | **34,918,576 B = 33.30 MiB of 48.00 — 69 %** |
 
-**The single largest lever on this level is the landmark's scale, not the characters.** Shipping it at 1× as
-this sheet always intended would return **12.85 MiB** — six times what cropping its empty rows saved, and
-more than the entire character library costs. It needs `scripts/assets.mjs` to learn a second way to say
-"1× only", or the level document to say it. Routed to infra as `OQ-LEVEL-ART-1`.
+**`OQ-LEVEL-ART-1` is closed.** The pin returned **12.85 MiB** — six times what cropping the landmark's
+empty rows saved, and more than the entire character library costs. The level went from 96 % of its budget
+to 69 %, with 15,413,072 B spare.
+
+### What the number still does not include
+
+The gate says so itself now, unconditionally:
+
+> EXCLUDES character render surfaces, which are allocated at runtime and are not files: this total is a
+> floor, not what the GPU will hold.
+
+A `.riv` is charged `decodedBytes: 0`, correctly — a Rive artboard renders to a canvas surface sized by the
+display, not by the file. **That surface is real VRAM and no gate can see it.** A character is 240 × 470 in
+character space, so at a 2× device scale the surface is 480 × 840 × 4 = **1,612,800 B ≈ 1.54 MiB each**, and
+task 1.12's cap of six on screen is **≈ 9.2 MiB nothing measures**. The sprite backend adds none of it: its
+parts are already inside the counted atlas.
+
+So Ottawa's honest worst case is ≈ 42.5 MiB against `CLAUDE.md`'s 64 MiB per-level ceiling, which is a
+comfortable level. Before the pin it was ≈ 55.4 MiB, which was not. That figure is recorded here and in the
+ADR rather than printed by the gate, deliberately: a number the gate cannot re-derive would look checked.
+
+**The binding constraint is now the character atlas, not the landmark.** `atlas/shared@2x` is at the packer's
+2048 px height cap with 6.09 MiB of width left before it spills to a second page, and it holds all 3 840
+option combinations so the player can wear one. That is `OQ-RIG-1`, and it is a pipeline change beyond
+slice 1.
 
 For comparison, the whole set at 2× is **93.61 MiB** — nearly three times the level's own declared budget, and
 `ottawa-layer-10-sky@2x` alone is 19.12 MiB. A full-screen background at 2× spends nineteen megabytes

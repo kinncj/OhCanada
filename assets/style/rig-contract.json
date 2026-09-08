@@ -1,11 +1,13 @@
 {
+  "$schema": "../../content/schemas/rig.schema.json",
   "$comment": [
     "The TrueNorth character rig contract, task 1.11. NORMATIVE: assets/style/rig-contract.md is the prose;",
-    "this file is the same contract as data, and it is what a contract test loads.",
-    "It is authored under assets/ because assets/** is the art agent boundary. Its home is",
-    "content/characters/rig.json (CLAUDE.md, Characters) once a rig schema exists. The fields such a schema",
-    "would need are listed in rig-contract.md section 9 and are REQUESTED, not assumed: this file names no",
-    "schema path until that file exists. Moving it is then a copy, not a rewrite.",
+    "this file is the same contract as data, and it is what the contract tests load.",
+    "It is authored under assets/ because assets/** is the art agent boundary. content/schemas/rig.schema.json",
+    "(ADR-0017) validates this shape and tests/unit/contracts/rig-is-coherent.test.ts reads it from here, so",
+    "the $schema line above already points at the real schema and the eventual move to",
+    "content/characters/rig.json (the path CLAUDE.md names, which does not exist yet) is a git mv plus a",
+    "one-line relative-path edit. No key changes.",
     "Every name here appears IDENTICALLY in the Rive file and in the sprite atlas. That identity is the",
     "whole point of ICharacterRenderer: gameplay code must not be able to tell which backend it got."
   ],

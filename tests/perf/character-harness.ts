@@ -138,12 +138,37 @@ const CLIPS = ['idle', 'moving', 'speed'] as const;
 const WARMUP_FRAMES = 30;
 const WINDOW_FRAMES = 60;
 
+/**
+ * One closed window, plus the one statistic `frame-cost.ts` deliberately does
+ * not carry.
+ *
+ * `FrameCostSummary` reports a **median** because ADR-0011 chose one: a single
+ * 400 ms GC pause moves a 30-sample mean by 13 ms and would demote a healthy
+ * device a whole tier, and it moves the median by nothing. That is the right
+ * choice for a *tier decision* and the wrong one for *this* measurement, for a
+ * reason that only shows up at this magnitude: Chromium clamps
+ * `performance.now()` to 100 microseconds, so every individual frame cost is a
+ * multiple of 0.1 ms and a median is always exactly one of those multiples. Six
+ * sprite characters cost less than one tick, and the median can only report "one
+ * tick" or "zero".
+ *
+ * The mean over a 60-frame window has no such floor: the clamping error is
+ * roughly uniform and averages down with the window size, so it resolves well
+ * below the tick. It is used for the per-character arithmetic, and `costP50`,
+ * `costP95` and `worstCostMs` are reported beside it so that a mean pulled up by
+ * a GC pause is visible rather than hidden — which is the objection ADR-0011
+ * raised, answered by reporting both instead of choosing.
+ */
+export interface CostWindow extends FrameCostSummary {
+  readonly meanCostMs: number;
+}
+
 export interface CostReport {
   readonly backend: string;
   readonly characters: number;
   readonly renderer: string;
   /** Closed measurement windows, oldest first. */
-  readonly windows: readonly FrameCostSummary[];
+  readonly windows: readonly CostWindow[];
   /** Layers actually drawn per character, so overdraw can be checked against it. */
   readonly layersPerCharacter: number;
 }
@@ -380,7 +405,9 @@ const recorder = createFrameCostRecorder({
   warmupFrames: WARMUP_FRAMES,
   windowFrames: WINDOW_FRAMES,
 });
-const windows: FrameCostSummary[] = [];
+const windows: CostWindow[] = [];
+/** Raw per-frame costs of the window being filled, for the mean above. */
+let pendingCosts: number[] = [];
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -409,8 +436,17 @@ game.events.on(Phaser.Core.Events.PRE_STEP, () => {
 game.events.on(Phaser.Core.Events.POST_RENDER, () => {
   const sample = timer.end(performance.now());
   if (sample === null) return;
+  /* Read before `record`, which is what consumes a warm-up frame. */
+  const measured = recorder.warmupRemaining === 0;
   const summary = recorder.record(sample);
-  if (summary !== null) windows.push(summary);
+  if (measured) pendingCosts.push(sample.costMs);
+  if (summary === null) return;
+  const total = pendingCosts.reduce((sum, cost) => sum + cost, 0);
+  windows.push({
+    ...summary,
+    meanCostMs: pendingCosts.length === 0 ? 0 : total / pendingCosts.length,
+  });
+  pendingCosts = [];
 });
 
 function rendererName(): string {

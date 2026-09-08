@@ -20,7 +20,7 @@ import {
   type FrameCostRecorder,
   type FrameCostSummary,
 } from './frame-cost';
-import { describeRenderer, type RendererIdentity } from './renderer-identity';
+import type { RendererIdentity } from './renderer-identity';
 import {
   classifyFormFactor,
   createTierTracker,
@@ -118,8 +118,21 @@ export interface RenderTierProbeOptions {
   readonly formFactor: FormFactor;
   /** Called on the provisional profile and again whenever the tier changes. */
   readonly onProfile?: (profile: RenderProfile, decision: TierDecision) => void;
-  /** Element the decision is published onto, usually the canvas. */
-  readonly marker?: TierMarkerTarget | null;
+  /**
+   * Elements the decision is published onto.
+   *
+   * More than one, because it has to be readable in two places for two reasons.
+   * The canvas is where the classification belongs semantically — it describes
+   * how *that* surface is being drawn — and it is what this suite's e2e tests
+   * read. `<html>` is where a person filing a bug report will find it, beside
+   * `data-tn-boot`, `data-tn-level` and `data-tn-paused`; ADR-0011 kept these
+   * attributes on the grounds that "a player reporting 'it's slow' with the tier
+   * already in the DOM turns an unreproducible complaint into a triaged one",
+   * and that only works if looking at `<html>` — the first thing anyone looks at
+   * — answers the question. It was on the canvas alone, and three people on
+   * three devices read `data-tn-tier` as absent.
+   */
+  readonly marker?: TierMarkerTarget | readonly TierMarkerTarget[] | null;
   readonly recorder?: FrameCostRecorder;
   readonly promoteAfterWindows?: number;
 }
@@ -160,21 +173,33 @@ export interface RenderTierProbe {
  * SwiftShader, so that distinction is live today.
  */
 export function applyTierMarkers(
-  target: TierMarkerTarget | null | undefined,
+  target: TierMarkerTarget | readonly TierMarkerTarget[] | null | undefined,
   profile: RenderProfile,
   decision: TierDecision,
   identity: RendererIdentity,
 ): void {
   if (target === null || target === undefined) return;
-  const dataset = target.dataset;
-  dataset['tnTier'] = profile.tier;
-  dataset['tnTierMeasured'] = String(decision.measured);
-  dataset['tnMotion'] = profile.motion;
-  dataset['tnFormFactor'] = profile.formFactor;
-  dataset['tnRenderer'] = identity.kind;
-  dataset['tnRasterizer'] = identity.rasterizer;
-  dataset['tnFilters'] = String(profile.filters);
-  dataset['tnDevice'] = describeRenderer(identity);
+  for (const one of Array.isArray(target) ? (target as readonly TierMarkerTarget[]) : [target as TierMarkerTarget]) {
+    const dataset = one.dataset;
+    dataset['tnTier'] = profile.tier;
+    dataset['tnTierMeasured'] = String(decision.measured);
+    dataset['tnMotion'] = profile.motion;
+    dataset['tnFormFactor'] = profile.formFactor;
+    dataset['tnRenderer'] = identity.kind;
+    dataset['tnRasterizer'] = identity.rasterizer;
+    dataset['tnFilters'] = String(profile.filters);
+    /*
+     * Classifications only. ADR-0011 is explicit: "`UNMASKED_RENDERER_WEBGL` is
+     * read, reduced to one of three words, and discarded — it is never written
+     * to the DOM. Publishing the raw string would add a fingerprinting surface
+     * to a site that collects nothing." This attribute used to carry
+     * `describeRenderer(identity)`, which interpolates that exact string, so the
+     * deployed page published the GPU model of every visitor. The raw string is
+     * still in `identity.note` for the console, where a person reads it and a
+     * script does not.
+     */
+    dataset['tnDevice'] = `${identity.kind}/${identity.rasterizer}/${profile.formFactor}`;
+  }
 }
 
 /**

@@ -1,6 +1,10 @@
 # ADR-0011: The visual tier comes from a measured frame cost, never from a capability bit
 
 - Status: Accepted (2026-09-08)
+- Amended 2026-09-08: **both of this ADR's unmechanised clauses were violated in implementation and
+  shipped.** The `data-tn-device` attribute published the raw `UNMASKED_RENDERER_WEBGL` string to a public
+  page, and a frame-time gate used one budget at every tier. Neither was a disagreement with the decision;
+  both were the decision not being enforced by anything. See "Two clauses that were prose, and both broke".
 
 ## Context
 
@@ -92,6 +96,58 @@ be written down before the next slice has to re-derive it.
   as out of scope is how it stays visible rather than becoming an unrecorded assumption.
 - The tier is a *classification*, and nothing derived from it is more specific than the classification. See
   the two judgement calls below.
+
+## Two clauses that were prose, and both broke (amendment, 2026-09-08)
+
+This ADR ends with two judgement calls I ratified, each on the strength of a constraint stated in words. Both
+constraints were violated by the implementation, both shipped, and both were found by a person rather than by
+a check. That is the finding, and it is about this ADR's drafting rather than about the engineering.
+
+### The raw device string was published
+
+The clause read: the `UNMASKED_RENDERER_WEBGL` string "is read, reduced to one of three words, and discarded
+— it is **never** written to the DOM", because publishing it "would add a fingerprinting surface to a site
+that collects nothing". `data-tn-tier`, `data-tn-rasterizer` and `data-tn-device` were kept on every load
+*on the strength of that clause*.
+
+The deployed page carried:
+
+```
+CANVAS.tnDevice = "webgl/software (ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver))"
+```
+
+On a real visitor that is their actual GPU model. Engine has fixed it to `kind/rasterizer/formFactor` and
+added a test that scans the **whole dataset** for the raw string, so a future attribute cannot reintroduce
+it — which is the right shape, because the hazard was never specific to `data-tn-device`.
+
+What this ADR should have done, and now does: **a privacy constraint attached to a feature is part of the
+feature's acceptance, not part of its rationale.** The sentence "these attributes carry classifications only,
+never the raw device string" was written as a condition and read as a description. A condition that nothing
+tests is a description of an intention.
+
+### A frame-time gate used one budget at every tier
+
+This ADR's Consequences say it outright: *"any future frame-time gate must report the tier it measured at, or
+the number means nothing. A budget met at `low` and a budget met at `high` are different claims."*
+`tests/perf/budgets.spec.ts` used `highCostP50Ms` at **every** tier, while the cadence assertion immediately
+beside it selected by tier.
+
+It passed for exactly as long as the level drew nothing, and failed by 5 ms the first time it drew six
+layers — so its greenness was measuring an empty scene, not a met budget. **A gate guarding this ADR
+contained the precise mistake this ADR names**, in a file whose neighbouring assertion did it correctly.
+
+### What follows
+
+- **Both are the same failure**: a clause in an ADR's prose that no gate reads, in a document whose own
+  Context argues that every gate this project trusts is mechanical. Naming it in Consequences is not
+  enforcement.
+- **The tier-reporting rule is restated as an acceptance criterion**: a performance assertion selects its
+  budget by the tier it measured at, and reports that tier in its failure message. A perf test that names one
+  budget for all tiers fails review.
+- **This is why ADR-0009 exists**, and it is worth noticing that ADR-0009's own gate cannot help here: these
+  were not dated obligations that expired, they were claims that were never true. `docs/adr` has no mechanism
+  for "this sentence is a requirement" versus "this sentence is background", and both of the above read
+  identically to a parser. Recording that as a known gap rather than inventing a marker for it today.
 
 ## Two judgement calls, ratified rather than left to be discovered
 

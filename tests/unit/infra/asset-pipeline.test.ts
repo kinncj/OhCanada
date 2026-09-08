@@ -45,6 +45,7 @@ interface ManifestFile {
   readonly kind: string;
   readonly role: string;
   readonly group: string;
+  readonly scalePin: number | null;
   readonly scale: number | null;
   readonly width?: number;
   readonly height?: number;
@@ -264,6 +265,76 @@ describe('make assets builds WebP from SVG', () => {
     expect(manifest.levels.ottawa?.payloadBytes).toBeGreaterThan(0);
   });
 
+  it('ships a source pinned "@1x" at 1x only, standalone, with the key unchanged', () => {
+    // OQ-LEVEL-ART-1. `ottawa-landmark-parliament-hill` is a POI's artKey, not a
+    // layer, so nothing could ask for 1x and it shipped at 2x for 17.14 MiB --
+    // 37% of the level -- against art's own written plan. The pin is how a
+    // source says so, and the suffix must not reach the key: content/levels/
+    // still says "ottawa-landmark", and renaming art to pin it must not rename
+    // what the level document refers to.
+    const built = build({
+      sources: {
+        'svg/ottawa/landmark@1x.svg': svg(1080, 1040, '#e6eff7'),
+        'svg/ottawa/bench.svg': svg(180, 120, '#3d8ccb'),
+      },
+      levelDocs: { ottawa: levelDoc('ottawa', [], ['ottawa-landmark', 'ottawa-bench']) },
+    });
+    expect(built.status).toBe(0);
+    const manifest = built.manifest();
+    const landmark = manifest.files.filter((f) => f.keys.includes('ottawa-landmark'));
+    expect(landmark).toHaveLength(1);
+    expect(landmark[0]?.scale).toBe(1);
+    expect(landmark[0]?.scalePin).toBe(1);
+    expect(landmark[0]?.kind).toBe('image');
+    // Not a layer: the pin is the author's, the layer rule is the owner's, and
+    // the manifest must not confuse the two.
+    expect(landmark[0]?.role).toBe('sprite');
+    expect(landmark[0]?.width).toBe(1080);
+    expect(landmark[0]?.height).toBe(1040);
+    expect(landmark[0]?.path).not.toContain('@1x@');
+    // The unpinned prop still gets both scales.
+    expect(manifest.files.filter((f) => f.keys.includes('ottawa-bench') && f.kind === 'atlas')).toHaveLength(2);
+    expect(built.stdout).toContain('1 source-pinned file(s)');
+  });
+
+  it('saves the memory the pin exists for, and says so in the texture line', () => {
+    // Same art, pinned and not, so the saving is measured rather than asserted:
+    // 2160x2080 at 2x is 17.14 MiB and 1080x1040 at 1x is 4.28 MiB.
+    const sources = { 'svg/ottawa/landmark.svg': svg(1080, 1040, '#e6eff7') };
+    const docs = { ottawa: levelDoc('ottawa', [], ['ottawa-landmark']) };
+    const unpinned = build({ sources, levelDocs: docs });
+    const pinned = build({
+      sources: { 'svg/ottawa/landmark@1x.svg': svg(1080, 1040, '#e6eff7') },
+      levelDocs: docs,
+    });
+    expect(unpinned.status).toBe(0);
+    expect(pinned.status).toBe(0);
+    const before = unpinned.manifest().levels.ottawa?.decodedTextureBytes ?? 0;
+    const after = pinned.manifest().levels.ottawa?.decodedTextureBytes ?? 0;
+    expect(before).toBe(2160 * 2080 * 4);
+    expect(after).toBe(1080 * 1040 * 4);
+    expect(before - after).toBe(13_478_400);
+    expect(pinned.stdout).toContain('1 source-pinned to 1x');
+  });
+
+  it('names the heaviest texture and its share of budget on a GREEN run', () => {
+    // The gate that only speaks when the total is breached let one asset become
+    // 37% of a level unremarked. No threshold is invented; the concentration is
+    // simply stated, in a line that appears in every CI log.
+    const built = build({
+      // 1100 px is 2200 at 2x, past what a 2048 px page can hold, so it is a
+      // standalone image and its path is predictable.
+      sources: {
+        'svg/ottawa/mural.svg': svg(1100, 1100, '#3d8ccb'),
+        'svg/ottawa/bench.svg': svg(180, 120, '#3d8ccb'),
+      },
+      levelDocs: { ottawa: levelDoc('ottawa', [], ['ottawa-mural', 'ottawa-bench'], 64 * 1024 * 1024) },
+    });
+    expect(built.status).toBe(0);
+    expect(built.stdout).toContain('heaviest img/ottawa-mural@2x');
+    expect(built.stdout).toContain('2200x2200 18.46 MiB = 29% of budget');
+  });
+
   it('keeps a full-screen layer out of the atlas even when it would fit in one', () => {
     // A layer small enough to pack is still a layer. Packing it would put a
     // layer and a prop on one page, and the page would have no single role to
@@ -344,6 +415,20 @@ describe('make assets refuses to finish', () => {
     expect(built.output).toContain('assets: build rejected.');
     // And nothing is left where publicDir would pick it up.
     expect(readdirSync(built.dist)).toEqual([]);
+  });
+
+  it('when a source asks to be pinned UP, which a filename does not get to do', () => {
+    // "@2x" can only mean one of two things: "give me what I already get", or
+    // "ignore the owner's decision that full-screen layers ship at 1x". The
+    // second is not the author's call, so the suffix is refused rather than
+    // quietly ignored.
+    const built = build({
+      sources: { 'svg/ottawa/sky@2x.svg': svg(180, 120, '#a5d6ee') },
+      levelDocs: { ottawa: levelDoc('ottawa', ['ottawa-sky']) },
+    });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('asks for "@2x". A source may only pin itself DOWN, to "@1x"');
+    expect(built.output).toContain("would be asking to overrule the owner's decision");
   });
 
   it('when a level document names an art key no source produces', () => {

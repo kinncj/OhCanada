@@ -48,7 +48,9 @@
     {
       "id": "peace-tower",
       "subject": "The Peace Tower, Centre Block, Parliament Hill, Ottawa",
-      "renders": ["src/svg/ottawa/landmark-parliament-hill.svg"],
+      "renders": [
+        "src/svg/ottawa/landmark-parliament-hill.svg"
+      ],
       "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers.",
       "expectedBlindAnswer": [
         "Peace Tower",
@@ -77,7 +79,14 @@
         },
         {
           "feature": "national flag on the mast above the spire",
-          "detail": "A single flagpole rising from the spire apex, flying the National Flag of Canada. The flag reads at small size only if it is drawn at least 40 px wide at design resolution."
+          "detail": "A single flagpole rising from the spire apex, flying the National Flag of Canada. The flag reads at small size only if it is drawn at least 40 px wide at design resolution.",
+          "maskRegion": {
+            "x": 530,
+            "y": 2,
+            "w": 138,
+            "h": 122
+          },
+          "whyMasked": "MEASURED against the shipped 1080x1040 render: the flag and its mast occupy rows 2-123, and the copper spire's apex begins at row 125, so this rectangle removes the flag and leaves every other feature intact. A hand pass found masking the flag dropped identification from about 0.90 to about 0.65, and on a tower crop it failed outright - 'a Big Ben-like Gothic clock tower'. That is the most useful single fact anyone has measured about this subject and it had no way to be re-measured. Now it does. DIAGNOSTIC, never gating: a subject leaning on one strong cue is information, not a defect."
         },
         {
           "feature": "pale warm sandstone shaft",
@@ -125,7 +134,14 @@
         "`peace-tower-clock-face.jpg` is a night exposure with a purple cast; use it for the dial layout",
         "and the numeral style, not for colour.",
         "peace-tower-clock-daylight.jpg (CC BY 2.0, added 2026-09-08 once the credits enum could express the licence) is the daylight dial: use it for the dial layout, the surround and the belfry, not peace-tower-clock-face.jpg, which is a night exposure with a purple cast.",
-        "officer-and-peace-tower-portrait.jpg is public domain and frames the whole composition this level wants - Centre Block symmetrical about the tower, green copper wing roofs intact, seen from the lawn. It predates 1965, so the mast flies the Canadian Red Ensign; the level draws the National Flag of Canada."
+        "officer-and-peace-tower-portrait.jpg is public domain and frames the whole composition this level wants - Centre Block symmetrical about the tower, green copper wing roofs intact, seen from the lawn. It predates 1965, so the mast flies the Canadian Red Ensign; the level draws the National Flag of Canada.",
+        "PLACEMENT FLOOR, from the size ladder: do not draw this landmark below 300 px wide anywhere the player",
+        "is meant to recognise it. Measured cold - 0.92 at full size, 0.88 at 300 px, 0.75 at 140 px, where the",
+        "dial has collapsed to a pale disc with a dark rim and the Gothic arcade to texture, leaving the flag and",
+        "the copper green carrying it almost alone. This is a level-design constraint, not a drawing one: no",
+        "amount of redrawing buys back a 62 px dial rendered at 8 px.",
+        "The 1x source pin was checked before it was accepted and passed cold at 0.92 with the verifier's own",
+        "verdict recorded: it does not need 2x back."
       ]
     },
     {
@@ -179,13 +195,19 @@
     },
     {
       "id": "rideau-canal-skateway",
-      "renders": ["src/svg/ottawa/layer-60-ice.svg", "src/svg/ottawa/layer-50-canalwall.svg"],
+      "renders": [
+        "src/svg/ottawa/layer-60-ice.svg",
+        "src/svg/ottawa/layer-50-canalwall.svg"
+      ],
       "renderRecipe": "Composite the two, canal wall above ice, ice placed 580 px below the wall's top edge (world y 1280 against 700). Neither file answers the subject alone: ice with no wall is a frozen pond, and a wall with no ice is a wall.",
       "subject": "The Rideau Canal Skateway, Ottawa, in winter",
       "expectedBlindAnswer": [
+        "a frozen canal",
+        "an outdoor skating rink on a frozen canal",
+        "a canal skateway",
+        "skating on a frozen urban canal",
         "Rideau Canal",
-        "Rideau Canal Skateway",
-        "skating on a frozen canal in Ottawa"
+        "Rideau Canal Skateway"
       ],
       "referenceFiles": [
         "ottawa/rideau-canal-skateway-ice.jpg",
@@ -232,6 +254,27 @@
         "`rideau-canal-skateway-portrait.jpg` is the closest reference to the shipped aspect ratio and",
         "is the primary composition reference for the level.",
         "The road bridge is drawn end-on, because a bridge crossing the canal is seen as a portal the skater passes through when the camera looks across the canal rather than along it."
+      ],
+      "expectedBlindAnswerNote": [
+        "AMENDED 2026-09-08. This list used to require 'Rideau Canal' or 'skating on a frozen canal in Ottawa',",
+        "and the render contains no Ottawa cue at all. The first honest blind pass matched it anyway, at 0.60, and",
+        "said so in its own answer: 'I am naming it from the genre, not from a unique landmark in the picture.' It",
+        "inferred the intent from project context. A verifier without that context answers 'an urban frozen-canal",
+        "skating rink' and fails a gate that the art satisfies. A contract that demands more than the art is",
+        "allowed to show fails an honest verifier and passes a compliant one, which is the wrong way round.",
+        "So the generic answers now PASS, and the two specific ones stay in the list because they are still",
+        "correct - a verifier that names the Rideau Canal is not wrong, it is just not required to.",
+        "WHY NO OTTAWA CUE IS COMING. This is not a drawing that could be improved. The subject's render is",
+        "`layer-50-canalwall` over `layer-60-ice`, and BOTH ARE REPEATING PARALLAX TILES - 2016 px and 1440 px.",
+        "A unique landmark drawn on a repeating tile appears three times across the level, so the Chateau Laurier",
+        "instruction in `notes` is a consequence of the tiling, not a scope decision that could be reversed. The",
+        "same rule blocks the locks, the Parliament silhouette and anything else that names a city. And the tile",
+        "is the one that must survive the `low` preset dropping to two layers, so a cue cannot be exiled to a",
+        "droppable layer either.",
+        "WHERE OTTAWA ACTUALLY COMES FROM. The level composite: `ottawa-landmark-parliament-hill`, a separate,",
+        "non-repeating subject that identified cold at 0.92. The canal is where the player skates; the Hill is",
+        "what says which country and which city. Splitting them across two subjects is what lets each one be",
+        "judged on what it actually contains."
       ]
     },
     {
@@ -251,7 +294,7 @@
         "src/svg/shared/character/hair-crop-black.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
-      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with costume=serge and any skin, hairShape, hairColour, expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. Every listed file is unidentifiable alone; a sleeve is a red capsule. The skin and hair choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of.",
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with costume=serge and any skin, hairShape, hairColour, expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. Every listed file is unidentifiable alone; a sleeve is a red capsule. The skin and hair choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the officer (costume=serge) and the player (costume=parka), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry, and two figures that differ only in costume answer it visually in the way the rule intends.",
       "subject": "A Canadian police constable in ceremonial scarlet review order (the 'Mountie' silhouette)",
       "expectedBlindAnswer": [
         "Mountie",
@@ -297,7 +340,14 @@
           "feature": "dark breeches with a yellow-gold stripe down the outer seam",
           "why": "Does more identification work than its area suggests. If it disappears first at small size, thicken it.",
           "detail": "Midnight blue, full at the thigh and close below the knee, one broad stripe running the full leg.",
-          "palette": "navy, brass"
+          "palette": "navy, brass",
+          "maskRegion": {
+            "x": 55,
+            "y": 262,
+            "w": 130,
+            "h": 120
+          },
+          "whyMasked": "MEASURED against the 240x470 composite the renderRecipe builds: this rectangle covers both thighs and both gold stripes and leaves the tunic, hat, gloves and boots untouched. It exists because assets/style/officer.md asserts the stripe 'does more identification work than its area suggests' and 'if it disappears first at small size, thicken it' - a testable claim that until now had no test. One rectangle covers both stripes only because it covers the breeches too, which is correct: the FEATURE is the breeches-with-stripe, not the stripe alone."
         },
         {
           "feature": "high brown riding boots",
@@ -311,8 +361,9 @@
         },
         {
           "feature": "cartoon proportions identical to every other character",
-          "why": "CLAUDE.md requires it, and this is the character most likely to tempt an artist into breaking it.",
-          "detail": "6 heads tall, 420 px at design resolution, same shoulder width, hands, feet, eye line and detail budget as the player."
+          "why": "CLAUDE.md requires it, and this is the character most likely to tempt an artist into breaking it. A verifier shown ONE figure cannot check this and must not be asked to: confirming it from rig-contract.json is a code-level check wearing an art verifier's clothes, and docs/content-review.md 6.2 is explicit that \"comparison only works if everyone is compared\". The hand-off therefore carries a second figure - the player, same rig, different costume - beside the officer in one image, and the check is that nothing but the costume differs. Without that figure this entry is UNCHECKABLE and must be reported as such rather than scored present.",
+          "detail": "6 heads tall, 420 px at design resolution, same shoulder width, hands, feet, eye line and detail budget as the player.",
+          "requiresComparisonFigure": true
         }
       ],
       "simplifyAway": [

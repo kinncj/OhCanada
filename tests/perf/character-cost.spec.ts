@@ -71,8 +71,22 @@ const CHARACTER_SCALE = 2;
  */
 const WINDOWS_TO_COLLECT = 2;
 
-interface FrameCostSummary {
+interface CostWindow {
   readonly samples: number;
+  /**
+   * The mean cost over the window, and the number the arithmetic below uses.
+   *
+   * Not the median, and the reason is a measurement floor rather than a change
+   * of mind about ADR-0011: Chromium clamps `performance.now()` to 100 us, so
+   * every per-frame cost is a multiple of 0.1 ms and a median is always exactly
+   * one of those multiples. Six sprite characters cost less than one tick, so a
+   * median can only say "0.1" or "0" and a per-character figure derived from it
+   * would be an artefact of the clock. A 60-frame mean resolves below the tick.
+   * `costP50`, `costP95` and `worstCostMs` are printed beside it so a mean
+   * inflated by one GC pause is visible — which is exactly the objection
+   * ADR-0011 raises against means, answered by reporting both.
+   */
+  readonly meanCostMs: number;
   readonly costP50: number;
   readonly costP95: number;
   readonly intervalP50: number;
@@ -83,7 +97,7 @@ interface CostReport {
   readonly backend: string;
   readonly characters: number;
   readonly renderer: string;
-  readonly windows: readonly FrameCostSummary[];
+  readonly windows: readonly CostWindow[];
   readonly layersPerCharacter: number;
 }
 
@@ -110,15 +124,15 @@ async function measure(page: Page, backend: string, characters: number): Promise
 }
 
 /** The last closed window is the settled one; the first still carries warm-up. */
-function settled(report: CostReport): FrameCostSummary {
+function settled(report: CostReport): CostWindow {
   const last = report.windows.at(-1);
   if (last === undefined) throw new Error(`${report.backend}: no measurement window closed`);
   return last;
 }
 
 /** `(cost with N - cost with 0) / N`, floored at 0: a negative cost is noise. */
-function perCharacterMs(baseline: FrameCostSummary, loaded: FrameCostSummary, n: number): number {
-  return Math.max(0, (loaded.costP50 - baseline.costP50) / n);
+function perCharacterMs(baseline: CostWindow, loaded: CostWindow, n: number): number {
+  return Math.max(0, (loaded.meanCostMs - baseline.meanCostMs) / n);
 }
 
 function describeReport(
@@ -130,10 +144,14 @@ function describeReport(
   const base = settled(baseline);
   return (
     `${what} on "${many.renderer}": ` +
-    `baseline costP50 ${base.costP50.toFixed(3)} ms (p95 ${base.costP95.toFixed(3)}); ` +
-    `1 character ${settled(one).costP50.toFixed(3)} ms ` +
+    `baseline mean ${base.meanCostMs.toFixed(3)} ms ` +
+    `(p50 ${base.costP50.toFixed(1)}, p95 ${base.costP95.toFixed(1)}, ` +
+    `worst ${base.worstCostMs.toFixed(1)}, interval ${base.intervalP50.toFixed(1)}); ` +
+    `1 character mean ${settled(one).meanCostMs.toFixed(3)} ms ` +
     `-> ${perCharacterMs(base, settled(one), 1).toFixed(3)} ms each; ` +
-    `${String(MANY)} characters ${settled(many).costP50.toFixed(3)} ms ` +
+    `${String(MANY)} characters mean ${settled(many).meanCostMs.toFixed(3)} ms ` +
+    `(p95 ${settled(many).costP95.toFixed(1)}, worst ${settled(many).worstCostMs.toFixed(1)}, ` +
+    `interval ${settled(many).intervalP50.toFixed(1)}) ` +
     `-> ${perCharacterMs(base, settled(many), MANY).toFixed(3)} ms each; ` +
     `${String(many.layersPerCharacter)} draw(s) per character`
   );
@@ -175,7 +193,7 @@ test.describe('character renderer cost', () => {
     /* The whole-frame consequence, which the per-character number hides: six
        characters must still leave the level a frame to be drawn in. */
     expect(
-      settled(many).costP50 - base.costP50,
+      settled(many).meanCostMs - base.meanCostMs,
       `six sprite characters add more than the whole ${String(PER_CHARACTER_BUDGET_MS * MANY)} ` +
         `ms they are allowed together — ${where}`,
     ).toBeLessThanOrEqual(PER_CHARACTER_BUDGET_MS * MANY);

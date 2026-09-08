@@ -264,6 +264,90 @@ be ruled out, and silently dropping it would be the unsafe direction.
 Over-marking is deliberately **not** a fault. A fact can be volatile for a reason the register has not
 noticed, and that is precisely the judgement the staleness gate says it cannot make.
 
+## Amendment, 2026-09-08: a closed door is the right answer, and it needs a designed way through
+
+`scripts/verify-content.mjs` shipped in slice 1. Authorship turned out not to be establishable from this
+repository's history — every commit carries one identity and no signature — so the gate enforces the
+**checkable consequence** instead: within one document, one commit may not both author a claim and grant its
+verification. That is a good substitution and it is not the whole rule.
+
+For `communityReview` there is no checkable consequence to fall back on, so rule A3 refuses **every**
+transition off `not-sought` outright. Infra flagged the result plainly: **a genuine human sign-off cannot
+currently be recorded.** That was raised as a deliberate choice for the architect to rule on. Here is the
+ruling, in three parts.
+
+### 1. The refusal is correct and stays
+
+It is not a defect and it is not a temporary hack. Today there is no reviewer, no process, and no artefact
+format, so the only actor who could make that transition is an agent — and the cost of guessing wrong is a
+fabricated sign-off naming a real person at a real organisation. `docs/content-review.md` §1 does not say
+"prefer not to"; it says *never, for any reason*. A gate that can be satisfied by the one actor the rule
+forbids is not enforcing the rule.
+
+Note what kind of failure this is. Failing closed here blocks the **correct** action, not the incorrect one,
+which is unusual and worth being uncomfortable about. It is still right, because the incorrect action is
+irreversible in a way the correct one is not: a delayed genuine sign-off costs time, and a fabricated one
+invents the consent of a real person and cannot be taken back once it has shipped.
+
+### 2. Loosening rule A3 is not on the list of answers
+
+Stated as a non-answer, in the manner of the runbook's texture-budget guidance, because it is the thing that
+will look reasonable at the moment it is most dangerous — when a real reviewer has really said yes and the
+build is red.
+
+The only acceptable route is infra's own option 3: **an identity the committer does not control.** A signed
+commit, or a GitHub review approval under CODEOWNERS with branch protection refusing a self-approved change —
+an assertion made by something other than the actor making the claim about itself. When that exists, A3 is
+replaced by a rule that reads it. Until then A3 stands.
+
+The failure this avoids is not "somebody edits the gate maliciously". It is that **a gate which must be
+disabled in order to do the right thing teaches everybody that gates are disabled to do the right thing**,
+and the next one disabled will be one that mattered.
+
+- **OBLIGATION due=2026-12-08 owner=infra** — land an identity the committer does not control (signed
+  commits, or CODEOWNERS plus branch protection on `content/characters/**` and `content/questions/**`), and
+  replace rule A3 with one that reads it rather than refusing outright. Until this lands, the project can
+  seek community review but cannot record the answer, and that is a real limit on shipping any Indigenous
+  content — not merely a gate inconvenience.
+
+### 3. The record gains a pointer to evidence
+
+`communityReview` named a claim — reviewer, organisation, date, scope — and pointed at nothing. A later
+reader wanting to check it could only re-read the same assertion in the same file.
+
+`record` is added and is required whenever `status` is not `not-sought`: a URL to a published statement, or a
+repository path to a committed letter or meeting record. It is `null` on `not-sought`, like every other
+field, so an agent writing the only status it may write still cannot smuggle anything into the block.
+
+Two honest limits, because a required field reads as a guarantee and this one is not:
+
+- **No schema and no gate can check that the artefact exists, or that it says what the block claims.** This
+  raises the cost and specificity of a lie again — the same argument this ADR already makes about naming a
+  person — and does not prevent one.
+- **It is designed before it can be used**, which normally this project refuses (ADR-0008). The exception is
+  argued rather than assumed: a port written early costs a wrong interface, while *this* record will be
+  written for the first time by somebody who has never written one, at the end of a real relationship with a
+  real community, under the pressure of wanting to get it right. The shape is what tells them evidence is
+  expected. Designing it then, from nothing, is the failure mode "seams deliberately left open" was written
+  to prevent.
+
+### 4. `content/schemas/palette.schema.json` validated nothing, and now does
+
+Recorded here because it is the same defect class as this ADR's subject — a check that reads as enforced
+because both halves exist, while nothing joins them.
+
+`palette.schema.json` existed and `assets/style/palette.json` existed, and no gate compared them: the schema
+walk covers `content/`, and the palette is (correctly) excluded from the credit walk, so it fell between the
+two. ADR-0007's problem inverted. `scripts/validate-content.mjs` now validates it in place.
+
+**The palette does not move to `content/style/palette.json`.** `assets/style/art-bible.md`'s `OQ-ART-01`
+claimed it had to, because no palette schema existed and "the canonical palette path named in `CLAUDE.md`"
+required it. Both halves of that premise were false: the schema exists, and **CLAUDE.md names no palette
+path at all**. The file is the colour allow-list every SVG is linted against — an art artefact, read by the
+art pipeline, never by the game — so `assets/` is where it belongs, and moving it would have created the
+two-live-paths drift its own table exists to catch. `OQ-ART-01` can be closed as answered rather than
+discharged; the work it asked for was not the work that was needed.
+
 ## Alternatives considered
 - **One agent authoring and verifying** — rejected: a model that wrote an answer is the worst judge of it.
 - **Human review gate** — rejected for this project: no reviewer exists, and a gate nobody staffs is a lie.

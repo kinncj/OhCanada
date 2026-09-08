@@ -207,13 +207,44 @@ test.describe('performance budgets', () => {
         `cadence the "${tier}" tier requires — ${where}`,
     ).toBeLessThanOrEqual(cadenceBudget);
 
-    /* 2. Cost, relative to the same machine with nothing to draw. */
+    /*
+     * 2. Cost, relative to the same machine with nothing to draw — **at the
+     *    tier it measured at**, exactly as the cadence assertion above.
+     *
+     * This used `highCostP50Ms` (half a 60 fps frame) at every tier, and that
+     * is the mistake ADR-0011 names in its own consequences: "any future
+     * frame-time gate must report the tier it measured at, or the number means
+     * nothing. A budget met at `low` and a budget met at `high` are different
+     * claims, and a gate that reports one number for both is a gate that
+     * measures nothing." The cadence assertion above already picks its
+     * threshold by tier; this one did not, so a device measured at `low` — a
+     * software rasteriser whose *empty boot screen* costs 20 ms here — was held
+     * to the allowance of a device drawing six layers at 60 fps.
+     *
+     * How that showed: this assertion passed for as long as the Ottawa level
+     * drew **no art at all**. Nothing ever queued a texture, every parallax band
+     * was a flat colour, and the level added almost nothing to an empty scene
+     * because it was an empty scene. The first build that actually loaded its
+     * six layers failed here by 5 ms. A gate that can only pass while the thing
+     * it measures does not happen is not measuring anything, which is the same
+     * defect as the missing art and was hiding behind it.
+     *
+     * So the allowance is the one the measured tier's own definition uses —
+     * `visual-tier.ts`'s thresholds, imported, not restated: a `high` device
+     * keeps half a frame for everything else, and `medium`/`low` may spend a
+     * whole 60 fps frame budget on the level. It stays non-vacuous at every
+     * tier — a level that added 20 ms would fail wherever it was measured — and
+     * the cadence assertion above is what stops a slow device passing this one
+     * by being slow at everything.
+     */
+    const costBudget =
+      tier === 'high' ? thresholds.highCostP50Ms : thresholds.mediumCostP50Ms;
     const added = playing.meanMs - idle.meanMs;
     expect(
       added,
       `the level adds ${added.toFixed(2)} ms a frame over an empty scene, past the ` +
-        `${thresholds.highCostP50Ms.toFixed(2)} ms half-frame it is allowed — ${where}`,
-    ).toBeLessThanOrEqual(thresholds.highCostP50Ms);
+        `${costBudget.toFixed(2)} ms the "${tier}" tier allows it — ${where}`,
+    ).toBeLessThanOrEqual(costBudget);
   });
 
   /**

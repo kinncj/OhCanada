@@ -23,10 +23,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
  * contract is why a level error card can be built without the UI agent having to
  * re-derive the page's state from a query string.
  *
+ * Since task 1.12 it also pins the **event-bus wiring**: the scene's events reach
+ * `app/ui` through the typed bus rather than through a test harness, and the two
+ * composition decisions that make the page's landmarks correct — `#game` handed
+ * to the HUD as `canvasHost`, and every modal opened over a level mounted into
+ * `hud.main` rather than beside it — are asserted here because they are
+ * decisions, and decisions live in the composition root.
+ *
  * `node` environment, no jsdom: the fake DOM below supplies the handful of calls
- * the boot path makes, as `live-region-order.test.ts` does. If `main.ts` starts
- * needing more of the DOM than this, it has grown something that belongs in
- * `app/ui`.
+ * the boot path makes, as `live-region-order.test.ts` does. The DOM *screens*
+ * are mocked, exactly as the Phaser adapter is, for the same reason: this suite
+ * asks what bootstrap decided, not what a `<button>` looks like. `app/ui` has its
+ * own suites and its own axe scans, and re-testing them through a hand-rolled
+ * DOM would test the hand-rolled DOM. What is deliberately **not** mocked is
+ * `@ui/level-events`: it is pure, it is the subscriber the bus exists to feed,
+ * and mocking it would leave the wiring unproven.
  */
 
 const hoisted = vi.hoisted(() => {
@@ -34,10 +45,29 @@ const hoisted = vi.hoisted(() => {
     loadCalls: string[];
     loadResult: unknown;
     search: string;
+    /** The options `createHud` was called with, and the host it was given. */
+    hudOptions: Record<string, unknown> | null;
+    hudHost: unknown;
+    /** Which host each modal was mounted into. */
+    modalHosts: Record<string, unknown>;
+    /** The open level document the renderer reports. */
+    level: unknown;
+    paused: number;
+    resumed: number;
+    poiShown: unknown[];
+    errorShown: number;
   } = {
     loadCalls: [],
     loadResult: { ok: true, value: undefined },
     search: '',
+    hudOptions: null,
+    hudHost: null,
+    modalHosts: {},
+    level: null,
+    paused: 0,
+    resumed: 0,
+    poiShown: [],
+    errorShown: 0,
   };
   return { state };
 });
@@ -64,8 +94,76 @@ vi.mock('@adapters/phaser', () => ({
       hoisted.state.loadCalls.push(id);
       return Promise.resolve(hoisted.state.loadResult);
     }
-    pause(): void {}
-    resume(): void {}
+    get level(): unknown {
+      return hoisted.state.level;
+    }
+    pause(): void {
+      hoisted.state.paused += 1;
+    }
+    resume(): void {
+      hoisted.state.resumed += 1;
+    }
+  },
+}));
+
+/*
+ * The DOM screens, mocked at the seam bootstrap actually uses.
+ *
+ * Each records the host it was mounted into, which is the whole of what this
+ * suite has to say about them: `hud.main` for anything opened over a level, and
+ * `#game` handed to the HUD so the canvas ends up inside the one `<main>`.
+ */
+vi.mock('@ui/hud', () => ({
+  createHud: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.hudHost = host;
+    hoisted.state.hudOptions = options;
+    const main = { id: 'tn-main' };
+    return {
+      element: {},
+      main,
+      menu: {},
+      prompt: null,
+      setMode: () => undefined,
+      setTask: () => undefined,
+      setPrompt: () => undefined,
+      setStorageWarning: () => undefined,
+      openMenu: () => undefined,
+      closeMenu: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
+      destroy: () => undefined,
+    };
+  },
+}));
+
+vi.mock('@ui/poi-card', () => ({
+  createPoiCard: (host: unknown): unknown => {
+    hoisted.state.modalHosts['poi-card'] = host;
+    return {
+      element: {},
+      visible: false,
+      show: (content: unknown) => hoisted.state.poiShown.push(content),
+      hide: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
+      destroy: () => undefined,
+    };
+  },
+}));
+
+vi.mock('@ui/level-screens', () => ({
+  createLevelError: (host: unknown): unknown => {
+    hoisted.state.modalHosts['level-error'] = host;
+    return {
+      element: {},
+      visible: false,
+      show: () => {
+        hoisted.state.errorShown += 1;
+      },
+      hide: () => undefined,
+      setLocale: () => undefined,
+      destroy: () => undefined,
+    };
   },
 }));
 
@@ -197,6 +295,14 @@ beforeEach(() => {
   vi.useFakeTimers();
   hoisted.state.loadCalls = [];
   hoisted.state.loadResult = { ok: true, value: undefined };
+  hoisted.state.hudOptions = null;
+  hoisted.state.hudHost = null;
+  hoisted.state.modalHosts = {};
+  hoisted.state.level = null;
+  hoisted.state.paused = 0;
+  hoisted.state.resumed = 0;
+  hoisted.state.poiShown = [];
+  hoisted.state.errorShown = 0;
   doc = mountPage();
   vi.stubGlobal('document', asDocument(doc));
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -291,6 +397,49 @@ describe('data-tn-level is the state app/ui routes on', () => {
     await boot('?level=atlantis');
 
     expect(levelState()).toBe('failed');
-    expect(announcement()).toContain('atlantis');
+    /*
+     * The id is on the console and NOT in the announcement, and that is the
+     * change task 1.12 made deliberately. It used to be announced, because
+     * bootstrap called `announce` with a sentence it had written itself. A level
+     * id is developer vocabulary and this file may not author player-facing copy
+     * (ADR-0010), so the failure now goes on the bus and `app/ui` says what a
+     * player hears — `level.error.title`, from the copy table, in their language.
+     */
+    expect(vi.mocked(console.error).mock.calls.flat().join(' ')).toContain('atlantis');
+    expect(announcement()).toContain('could not load');
+  });
+});
+
+describe('the page has one <main>, and every modal is inside it (TN-HUD-07)', () => {
+  it('hands the canvas host to the HUD, so <main> holds what the page is for', async () => {
+    await boot('?level=ottawa');
+
+    expect(
+      hoisted.state.hudOptions?.['canvasHost'],
+      'the HUD was mounted without the canvas host, so <main> is a wrapper invented ' +
+        'to satisfy a scanner rather than the content of the page',
+    ).toBe(doc.getElementById('game'));
+    expect(hoisted.state.hudHost, 'the HUD belongs in the #ui layer').toBe(
+      doc.getElementById('ui'),
+    );
+  });
+
+  it('mounts every modal opened over a level into hud.main, never beside it', async () => {
+    await boot('?level=ottawa');
+
+    /* A `dialog` is not a landmark. A modal mounted beside `<main>` puts its
+       content outside every landmark, and axe's `region` rule is right to
+       complain — the fix is the page, not the rule. */
+    for (const [what, host] of Object.entries(hoisted.state.modalHosts)) {
+      expect(host, `${what} was mounted outside <main>`).toEqual({ id: 'tn-main' });
+    }
+    expect(Object.keys(hoisted.state.modalHosts).sort()).toEqual(['level-error', 'poi-card']);
+  });
+
+  it('mounts no HUD and no modal on the foundation shell', async () => {
+    await boot('');
+
+    expect(hoisted.state.hudOptions, 'a page with no level was given a level HUD').toBeNull();
+    expect(hoisted.state.modalHosts).toEqual({});
   });
 });

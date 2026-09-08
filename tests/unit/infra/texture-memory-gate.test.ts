@@ -68,6 +68,7 @@ interface FixtureFile {
   readonly kind?: string;
   readonly role?: string;
   readonly group?: string;
+  readonly scalePin?: number | null;
   readonly scale?: number | null;
   readonly keys?: readonly string[];
   readonly levels?: readonly string[];
@@ -145,6 +146,7 @@ async function run(fixture: Fixture): Promise<Run> {
       levels: file.levels ?? Object.keys(fixture.levels),
       keys: file.keys ?? [],
     };
+    if (file.scalePin !== undefined) entry.scalePin = file.scalePin;
     if (file.omitGroup !== true) entry.group = file.group ?? `img:${file.path}`;
 
     if (file.pixels !== undefined) {
@@ -349,6 +351,48 @@ describe('the decoded-texture gate fails', () => {
     expect(result.output).toContain('content/levels/ draws as a full-screen parallax layer');
     expect(result.output).toContain('the manifest records role "sprite"');
     expect(result.output).toContain('a mislabelled layer is a layer with no rule');
+  });
+
+  it('when a file ships above the scalePin its source asked for', async () => {
+    // OQ-LEVEL-ART-1's rule, checked. A pin can only ever remove a variant, so a
+    // manifest that forgot one costs memory rather than hiding it -- but a pin
+    // that is RECORDED and then contradicted reads as a saving that never
+    // happened, and that is a pipeline bug worth failing on.
+    const result = await run({
+      levels: { ottawa: { pois: ['ottawa-landmark'], textureBudgetBytes: 64 * MIB } },
+      files: [
+        {
+          path: 'img/ottawa-landmark@2x.aaaaaaaa.webp',
+          group: 'img:ottawa-landmark',
+          scale: 2,
+          scalePin: 1,
+          keys: ['ottawa-landmark'],
+          pixels: { w: 1024, h: 1024 },
+        },
+      ],
+    });
+    expect(result.status).toBe(1);
+    expect(result.output).toContain('records scalePin 1 but ships at 2x');
+    expect(result.output).toContain('The source asked to be capped and was not');
+  });
+
+  it('when an atlas page carries a scalePin, which cannot describe one frame', async () => {
+    const result = await run({
+      levels: { ottawa: { pois: ['ottawa-bench'], textureBudgetBytes: 64 * MIB } },
+      files: [
+        {
+          path: 'atlas/ottawa@1x.aaaaaaaa.webp',
+          kind: 'atlas',
+          group: 'atlas:ottawa:0',
+          scale: 1,
+          scalePin: 1,
+          keys: ['ottawa-bench'],
+          pixels: { w: 256, h: 256 },
+        },
+      ],
+    });
+    expect(result.status).toBe(1);
+    expect(result.output).toContain('is an atlas page carrying a scalePin');
   });
 
   it('when a file claims role "layer" for a key no level document draws as one', async () => {
@@ -595,8 +639,12 @@ describe('the decoded-texture gate passes', () => {
     expect(result.stdout).toContain('ottawa 2.89 MiB of 8.00 MiB');
     expect(result.stdout).toContain('budget from content/levels/ottawa.json');
     expect(result.stdout).toContain('1x device 2.21 MiB / 2x device 2.89 MiB');
-    expect(result.stdout).toContain('1 full-screen layer file(s), all at 1x');
+    expect(result.stdout).toContain('1 full-screen layer file(s), all at 1x; 0 source-pinned to 1x');
     expect(result.stdout).toContain('3 file(s) measured from their own headers at 4 B/px');
+    // The concentration, on a GREEN run: 1.98 MiB of an 8 MiB budget. The gate
+    // that only spoke when the total was breached let one asset become 37% of a
+    // level unremarked (OQ-LEVEL-ART-1).
+    expect(result.stdout).toContain('heaviest img/ottawa-sky@1x.aaaaaaaa.webp 540x960 1.98 MiB = 25% of budget');
   });
 
   it('and holds a level to the 64 MiB cap when its own budget is looser than its art', async () => {
@@ -688,6 +736,54 @@ describe('the decoded-texture gate passes', () => {
     expect(result.output).toContain('level "ottawa" holds 6.00 MiB');
     expect(result.output).toContain('1048576 B over');
     expect(result.output).not.toContain('level "vancouver" holds');
+  });
+
+  it('and honours a scalePin that was honoured, counting only the 1x variant', async () => {
+    const result = await run({
+      levels: { ottawa: { pois: ['ottawa-landmark'], textureBudgetBytes: 64 * MIB } },
+      files: [
+        {
+          path: 'img/ottawa-landmark@1x.aaaaaaaa.webp',
+          group: 'img:ottawa-landmark',
+          scale: 1,
+          scalePin: 1,
+          keys: ['ottawa-landmark'],
+          pixels: { w: 1024, h: 1024 },
+        },
+      ],
+    });
+    expect(result.status).toBe(0);
+    // 4 MiB at both device scales: with no 2x variant to resolve to, a 2x device
+    // holds the 1x art, which is the entire point of the pin.
+    expect(result.stdout).toContain('1x device 4.00 MiB / 2x device 4.00 MiB');
+    expect(result.stdout).toContain('0 full-screen layer file(s), all at 1x; 1 source-pinned to 1x');
+  });
+
+  it('says out loud that it cannot see character surfaces, EVEN WITH NO RIVE FILES', async () => {
+    // The sharpest instance of "this number is a floor", and a correction to
+    // what I first wrote: the caveat used to print only when the manifest held a
+    // `.riv`. assets/src/rive/ is empty and the surfaces exist anyway -
+    // ICharacterRenderer allocates them at runtime - so the sentence vanished in
+    // exactly the case where the number is most misleading. Both fixtures below
+    // are the no-Rive case, on purpose.
+    const result = await run({
+      levels: { ottawa: { pois: ['ottawa-bench'], textureBudgetBytes: 8 * MIB } },
+      files: [
+        {
+          path: 'img/ottawa-bench@1x.aaaaaaaa.webp',
+          group: 'img:ottawa-bench',
+          scale: 1,
+          keys: ['ottawa-bench'],
+          pixels: { w: 256, h: 256 },
+        },
+      ],
+    });
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('EXCLUDES character render surfaces');
+    expect(result.stdout).toContain('this total is a floor, not what the GPU will hold');
+    // And no manifest entry is what makes it necessary, so it must not be
+    // conditional on one.
+    expect(result.stdout).not.toContain('Rive file(s)');
   });
 
   it('and does not charge the GPU for atlas JSON or Rive files', async () => {

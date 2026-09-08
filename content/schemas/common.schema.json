@@ -249,7 +249,7 @@
 
     "communityReview": {
       "title": "Community review",
-      "description": "Whether the nation depicted has been asked, and what they said. docs/content-review.md 1 extends ADR-0003's separation of duties one step: no agent may grant cultural sign-off, ever, for any reason - an agent may write status \"not-sought\" and nothing else. THE SCHEMA CANNOT ENFORCE THAT AND MUST NOT BE READ AS DOING SO: a schema constrains a value, not its author, and any schema that permits \"granted\" at all permits an agent to write it. What the schema does is raise the cost and change the shape of the lie - a fabricated sign-off must now name a person, an organisation, a date and a scope, which is a specific and checkable falsehood rather than a flag flip, and \"not-sought\" is forced to carry no names at all so a review cannot be half-claimed. The author rule itself needs a gate that reads git history: verify-content must fail when a commit authored by an agent moves status away from not-sought. That is slice 1 task 1.17's, and until it exists this block is enforced by review.",
+      "description": "Whether the nation depicted has been asked, and what they said. docs/content-review.md 1 extends ADR-0003's separation of duties one step: no agent may grant cultural sign-off, ever, for any reason - an agent may write status \"not-sought\" and nothing else. THE SCHEMA CANNOT ENFORCE THAT AND MUST NOT BE READ AS DOING SO: a schema constrains a value, not its author, and any schema that permits \"granted\" at all permits an agent to write it. What the schema does is raise the cost and change the shape of the lie - a fabricated sign-off must now name a person, an organisation, a date and a scope, which is a specific and checkable falsehood rather than a flag flip, and \"not-sought\" is forced to carry no names at all so a review cannot be half-claimed. The author rule itself needs a gate that reads git history. scripts/verify-content.mjs shipped in slice 1 and found that authorship is NOT establishable from this repository - every commit carries one identity and no signature - so its rule A3 refuses every transition off not-sought outright rather than guessing. Ratified by ADR-0003's 2026-09-08 amendment: the refusal is correct, loosening it is not on the list of answers, and the way through is an identity the committer does not control. The consequence, stated plainly because a required field reads as a guarantee: a GENUINE human sign-off cannot be recorded today either.",
       "type": "object",
       "properties": {
         "status": {
@@ -270,9 +270,13 @@
           "description": "What exactly was reviewed. A sign-off on a hat is not a sign-off on a character.",
           "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
         },
+        "record": {
+          "description": "Where the sign-off itself can be read, independently of this file: a URL to a published statement, or a repository path to a committed letter or meeting record. Null if and only if `status` is `not-sought`. ADR-0003 (amended): the other four fields NAME a claim; this one POINTS AT the evidence, and without it a later reader can only re-read the same assertion in the same file. The schema cannot check that the artefact exists or that it says what this block claims — no schema can — and it is required anyway, because the first genuine review will be recorded by somebody who has never done it before and the shape is what tells them evidence is expected.",
+          "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+        },
         "note": { "type": "string" }
       },
-      "required": ["status", "reviewer", "organisation", "date", "scope", "note"],
+      "required": ["status", "reviewer", "organisation", "date", "scope", "record", "note"],
       "additionalProperties": false,
       "allOf": [
         {
@@ -286,7 +290,8 @@
               "reviewer": { "type": "null" },
               "organisation": { "type": "null" },
               "date": { "type": "null" },
-              "scope": { "type": "null" }
+              "scope": { "type": "null" },
+              "record": { "type": "null" }
             }
           },
           "else": {
@@ -294,9 +299,10 @@
               "reviewer": { "not": { "type": "null" } },
               "organisation": { "not": { "type": "null" } },
               "date": { "not": { "type": "null" } },
-              "scope": { "not": { "type": "null" } }
+              "scope": { "not": { "type": "null" } },
+              "record": { "not": { "type": "null" } }
             },
-            "required": ["reviewer", "organisation", "date", "scope"]
+            "required": ["reviewer", "organisation", "date", "scope", "record"]
           }
         }
       ]

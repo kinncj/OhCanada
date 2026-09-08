@@ -99,12 +99,19 @@ describe('formatProbeNumber', () => {
 describe('snapshotToAttributes', () => {
   it('emits exactly the attribute names docs/stories/README.md fixes', () => {
     /* Restated here on purpose: this list is the contract other agents write
-       their scenarios against, so a rename must break a test and not a story. */
+       their scenarios against, so a rename must break a test and not a story.
+       `data-layers` and `data-layers-textured` are not in
+       `docs/stories/README.md` and were added by the engine agent: they are what
+       separates "this level drew its art" from "this level drew a coloured
+       band", which is the distinction a deployed Ottawa with no art in it passed
+       forty e2e tests by blurring. */
     expect(Object.keys(snapshotToAttributes({})).sort()).toEqual(
       [
         'data-camera-x',
         'data-facing',
         'data-grounded',
+        'data-layers',
+        'data-layers-textured',
         'data-level',
         'data-mode',
         'data-motion',

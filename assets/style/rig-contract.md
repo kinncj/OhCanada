@@ -434,13 +434,18 @@ is not claiming otherwise: every mention of it below is a destination, not a cit
 agent's boundary and `content/**` is not, and because `content/` rejects any file without a `$schema` that
 `make validate-content` can resolve.
 
-**Requested from the architect** (`content/schemas/**` is theirs, and this page does not name a schema path
-until the file exists — a document that cites a schema nobody wrote is the defect the
-`documents-name-real-schemas` gate was written for).
+**Answered.** `content/schemas/rig.schema.json` exists (ADR-0017) and `rig-contract.json` now carries a
+`$schema` line pointing at it. `tests/unit/contracts/rig-is-coherent.test.ts` reads the contract **from
+`assets/style/`** and passes 15 checks, so the shape is validated where it is authored and the move below is
+a `git mv` plus a one-line relative path.
 
-The contract **should** be a validated shape rather than a document, because §7's assertions are only as
-good as the file they read: a contract test that loads a malformed rig JSON and finds no inputs to check
-would report a pass. What a rig schema needs to constrain, all of it already present in `rig-contract.json`:
+That mattered more than it looked: §7's assertions are only as good as the file they read, and a contract
+test that loaded a malformed rig JSON, found no inputs, and checked none of them would report a pass. This
+page asked for the schema **without naming its path**, because a document that cites a schema nobody wrote
+is the defect the `documents-name-real-schemas` gate was written for. The path is named here now because the
+file is there now.
+
+What the schema constrains, all of it already present in `rig-contract.json`:
 
 | key | shape | the constraint worth having |
 |---|---|---|
@@ -455,12 +460,10 @@ would report a pass. What a rig schema needs to constrain, all of it already pre
 | `states` | `durationMs`, `loop` ∈ `loop \| once \| hold`, `keys[]` | `t` ascending, first 0 and last 1; every part named in a key is a declared part |
 | `events[]` | `name`, `when`, `use` | unique names |
 
-Then the file is created at `content/characters/rig.json` (the path `CLAUDE.md` names, which is empty today)
-with a `$schema` line. It
-is a copy, not a rewrite — no key changes, and this page's citations are updated in the same commit that
-creates the schema, never before.
-
-Until then this is the normative copy and the contract test reads it from `assets/style/`.
+**What is still open** is only the move: `content/characters/rig.json`, the path `CLAUDE.md` names, **does
+not exist**. Creating it is a `git mv` and a `$schema` value of `../schemas/rig.schema.json` instead of
+`../../content/schemas/rig.schema.json` — no key changes and no rewrite. Until then this is the normative
+copy, it validates in place, and the contract tests read it from `assets/style/`.
 
 Two smaller notes for the architect, recorded rather than assumed:
 

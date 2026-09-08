@@ -17,6 +17,14 @@ export default tseslint.config(
       'playwright-report/**',
       'test-results/**',
       'assets/**',
+      // ADR-0021. The one place a throwaway probe may live, and a DIRECTORY
+      // rather than a filename pattern: a probe must import the repository's
+      // real dependencies, Node resolves `node_modules` upward from the
+      // importing file, so a probe under /tmp cannot run and lands at the repo
+      // root instead -- where it breaks `eslint .` for everyone. A pattern would
+      // hide an abandoned probe wherever it sat; a directory localises the mess
+      // and is visible in `ls`. Mirrored in .gitignore.
+      'scratch/**',
     ],
   },
 

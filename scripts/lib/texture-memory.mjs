@@ -105,14 +105,25 @@
  * scripts/assets.mjs records `decodedBytes: 0` for every `.riv`, and that is
  * correct — a Rive artboard is vector and renders to a canvas surface sized by
  * the display, so no number derived from the file would be true. The
- * consequence is that THIS GATE STRUCTURALLY CANNOT SEE RIVE CHARACTERS. On a
- * level sitting at 96% of its budget, that is not a footnote: the characters are
- * the part of the frame the player looks at, they are the reason
- * `ICharacterRenderer` exists, and the number this gate prints does not include
- * them. Do not read a green run as "this level fits in VRAM". Read it as "the
- * textures that come from files fit, and the Rive surfaces are on top of that,
- * unmeasured". Measuring them needs the renderer's real allocation at runtime,
- * which is a different instrument from a build-time gate over a manifest.
+ * consequence is that THIS GATE STRUCTURALLY CANNOT SEE CHARACTER SURFACES.
+ *
+ * It is worse than "a file whose cost is recorded as zero", and it is worth
+ * being exact about why: as of 2026-09-08 `assets/src/rive/` holds no files at
+ * all, so there is not even a manifest entry to hang the caveat on, and the
+ * surfaces exist regardless — `ICharacterRenderer` allocates them at runtime.
+ * Art measured about 1.54 MiB per surface, six on Ottawa, roughly 9.2 MiB. That
+ * is 20% of a 46 MiB level, invisible here by construction rather than by
+ * oversight.
+ *
+ * So: do not read a green run as "this level fits in VRAM". Read it as "the
+ * textures that come from files fit, and the character surfaces are on top of
+ * that, unmeasured". Two things follow. Any budget derived from this gate's
+ * number must RESERVE headroom for the surfaces rather than spend it, and
+ * measuring them needs the renderer's real allocation at runtime —
+ * tests/perf/character-cost.spec.ts, a different instrument from a build-time
+ * gate over a manifest. This gate deliberately does not quote art's figure: a
+ * number it cannot re-derive is exactly what it refuses to trust everywhere
+ * else, and printing one here would make it look checked.
  */
 
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -682,17 +693,30 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
 
   const layerFiles = measured.filter((f) => f.role === 'layer');
   const pinned = measured.filter((f) => f.scalePin !== null);
-  const rive = measured.filter((f) => f.kind === 'rive');
+
+  /**
+   * The caveat is UNCONDITIONAL, and that is a correction.
+   *
+   * It used to print only when the manifest contained a `.riv`, on the reasoning
+   * that there was nothing to caveat otherwise. That was exactly backwards.
+   * assets/src/rive/ holds no files at all today, and the character surfaces
+   * exist anyway: `ICharacterRenderer` allocates them at runtime, sized by the
+   * display, from an artboard that need never have been a file in this manifest.
+   * So the sentence disappeared precisely in the case where the number is most
+   * misleading -- 33.3 MiB counted against roughly 42.5 MiB real, on a 64 MiB
+   * ceiling (art's measurement, 2026-09-08: about 1.54 MiB per surface, six on
+   * Ottawa).
+   *
+   * A caveat that vanishes when it is most needed is worse than no caveat, so it
+   * is always printed. No figure is quoted here: this gate measures files and
+   * that number came from an instrument it does not own.
+   */
   const summary =
     `${report.length} level(s) — ${perLevel}. ` +
     `${layerFiles.length} full-screen layer file(s), all at 1x; ${pinned.length} source-pinned to 1x. ` +
-    `${measured.length} file(s) measured from their own headers at ${BYTES_PER_PIXEL} B/px` +
-    // Named in the summary, not only in the header: a reader deciding whether a
-    // level fits needs to know what this number leaves out, at the moment they
-    // read it.
-    (rive.length > 0
-      ? `, plus ${rive.length} Rive file(s) whose runtime surfaces this gate cannot measure.`
-      : '.');
+    `${measured.length} file(s) measured from their own headers at ${BYTES_PER_PIXEL} B/px. ` +
+    'EXCLUDES character render surfaces, which are allocated at runtime and are not files: ' +
+    'this total is a floor, not what the GPU will hold.';
 
   return { failures, summary, levels: report };
 }

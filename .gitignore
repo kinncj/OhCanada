@@ -39,3 +39,29 @@ node_modules/
 content/sources/*.pdf
 content/sources/*.txt
 content/sources/*.html
+
+# ADR-0021: the one place a throwaway probe may live.
+#
+# A probe that interrogates ajv, sharp or a build script has to import the
+# REPOSITORY'S real dependencies -- that is ADR-0014's method -- and Node
+# resolves `node_modules` by walking UP from the importing file. A probe under
+# /tmp therefore dies with ERR_MODULE_NOT_FOUND, so it lands at the repository
+# root instead and breaks `eslint .` for everyone. That happened twice in one
+# session before anyone found the cause, and a ban would simply be routed around
+# by people who agreed with it (ADR-0009's lesson).
+#
+# So: a DIRECTORY, not a filename pattern. A pattern like `.tn-*.mjs` would hide
+# a file wherever it sat -- an abandoned probe in app/adapters/ would go silently
+# unlinted, which is the opposite of localising the mess -- and it would encode a
+# naming convention nobody is told, so the next agent writes `probe.mjs` and
+# breaks lint anyway. `scratch/` shows up in `ls`, which is what makes the
+# convention discoverable rather than buried in a config.
+#
+# Mirrored in eslint.config.js `ignores`. tsconfig.json needs no entry: its
+# `include` is an explicit list, so an unlisted directory is already outside
+# `make typecheck`, and adding it would restate a fact and go stale.
+#
+# Scratch DATA -- fixtures, backups, captured output -- still belongs in the
+# agent scratchpad. Only executable probes need to be inside the package.
+/scratch/*
+!/scratch/.gitkeep

@@ -66,12 +66,26 @@ const PORTS_INDEX = `${PORTS_DIR}index.ts`;
 const PORTS_INDEX_LABEL = 'app/application/ports/index.ts';
 
 /**
- * Schema files whose **root** intentionally has no port type. The skip is
- * root-only on purpose: a file-level skip also hid every object under that
- * file's `$defs`, and cross-file `$ref`s into `$defs` (`common.schema.json#/$defs/localizedText`)
- * are how slice 1's schemas share shapes — hiding them would reopen the hole
- * this gate exists to close. Their `$defs` are still bound and must be skipped
- * one at a time in `SKIPPED_DEFS`.
+ * Schema files whose **root** intentionally has no port type.
+ *
+ * The skip used to be strictly root-only, and the reason was a real defect: a
+ * file-level skip also hid every object under that file's `$defs`, and cross-file
+ * `$ref`s into `$defs` (`common.schema.json#/$defs/localizedText`) are how slice 1's
+ * schemas share shapes — hiding them reopened the hole this gate exists to close.
+ *
+ * That fix was right about the hazard and wrong about the boundary. The thing that
+ * makes a `$def` dangerous to hide is not that its file is skipped; it is that a
+ * NON-skipped schema reaches it. So the skip now cascades to a file's `$defs`
+ * **only where no schema outside this table `$ref`s them** — see
+ * `cascadeSkippedDefs`. `common.schema.json`'s defs are referenced by
+ * `level`, `question` and `character`, so they stay bound exactly as before and a
+ * test below asserts it. `rig.schema.json`'s seventeen defs are reachable only from
+ * `rig.schema.json`, so the root's reason genuinely covers them and repeating it
+ * seventeen times would be a maintenance tax that grows with the schema.
+ *
+ * The cascade is better than a list in one way that matters: if a runtime schema
+ * later `$ref`s into a skipped file, that def becomes bound again **automatically**,
+ * rather than depending on somebody remembering to delete an entry.
  *
  * A name here that no longer exists on disk fails the run, and so does a name
  * here whose port type has since been written, so the list cannot go stale in
@@ -105,12 +119,32 @@ const SKIPPED_SCHEMAS: Readonly<Record<string, string>> = {
   // document, ADR-0007 applies to it, and this entry is deleted.
   'source.schema.json':
     'verification-time register (ADR-0003) — read by verify-content, never by the application at runtime',
+  // The shared character rig (ADR-0017). It is the contract the `.riv` file, the
+  // sprite atlas and the art pipeline are all checked AGAINST, loaded by
+  // `tests/unit/contracts/rig-is-coherent.test.ts` — not by the game. The Rive
+  // adapter reads its vocabulary from `content/characters/<id>.json` via
+  // `CharacterRendererSpec`, and nothing under `app/` opens the rig document.
+  //
+  // The condition that reverses this, stated so it is not left to be noticed: if
+  // a sprite fallback ever reads this document at runtime to draw from — its
+  // parts, z-order and keyframes are exactly what such an adapter would need —
+  // then it is a document the application reads, ADR-0007 applies, and this
+  // entry is deleted along with the cascade that follows from it.
+  'rig.schema.json':
+    'the rig contract (ADR-0017) — loaded by a contract test and the art pipeline, never by the application at runtime',
 };
 
 /**
  * `$defs` objects that intentionally have no port type, keyed by
  * `<schema file>#<json pointer>`. Same staleness rules as `SKIPPED_SCHEMAS`: the
  * pointer must exist, and the type it would bind to must not.
+ *
+ * This table is now for the case the cascade cannot cover: a `$def` in a file
+ * whose ROOT has a port type, or a `$def` that a non-skipped schema `$ref`s and
+ * that still has no type. Entries whose file is skipped and whose def nothing
+ * else references are redundant, and the staleness test below reports them —
+ * a redundant exemption reads as coverage of something that is already covered
+ * and hides the day it stops being.
  */
 const SKIPPED_DEFS: Readonly<Record<string, string>> = {
   // The item shape of the build-time credits artefact above; it inherits that
@@ -120,20 +154,6 @@ const SKIPPED_DEFS: Readonly<Record<string, string>> = {
   // gone, deleted by the rule that put them there: slice 1's documents read both
   // shapes, so `LocalizedText` and `Vec2` are now port types with consumers, and
   // this table's staleness check fails on an entry whose type has been written.
-  'credits.schema.json#/$defs/creditedAsset':
-    'item of the build-time credits artefact (ADR-0004) — never read by the application at runtime',
-  'palette.schema.json#/$defs/paletteRamp':
-    'part of the build-time palette artefact (ADR-0004) — never read by the application at runtime',
-  'palette.schema.json#/$defs/designResolution':
-    'part of the build-time palette artefact (ADR-0004) — never read by the application at runtime',
-  'source.schema.json#/$defs/sourceChapter':
-    'part of the verification-time source register (ADR-0003) — never read by the application at runtime',
-  'source.schema.json#/$defs/knownStaleness':
-    'part of the verification-time source register (ADR-0003) — never read by the application at runtime',
-  'source.schema.json#/$defs/liveCheck':
-    'the live-source check record (ADR-0016) — read by verify-content, never by the application at runtime',
-  'source.schema.json#/$defs/liveCheckPage':
-    'one page of a live-source check (ADR-0016) — read by verify-content, never by the application at runtime',
 };
 
 /**
@@ -495,10 +515,69 @@ const inlineObjectsIn = (file: string): readonly string[] => {
   return found;
 };
 
+/* -------------------------------------------------------------------------- */
+/* the cascade: a skipped file's $defs, where nothing outside reaches them     */
+/* -------------------------------------------------------------------------- */
+
+/** Every `$ref` string anywhere in a parsed schema, however deeply nested. */
+const refsIn = (node: unknown, found: string[] = []): readonly string[] => {
+  if (Array.isArray(node)) {
+    for (const item of node) refsIn(item, found);
+    return found;
+  }
+  if (typeof node !== 'object' || node === null) return found;
+  for (const [key, value] of Object.entries(node)) {
+    if (key === '$ref' && typeof value === 'string') found.push(value);
+    else refsIn(value, found);
+  }
+  return found;
+};
+
+/**
+ * `$defs` pointers reachable from a schema file whose root is NOT skipped.
+ *
+ * A `$ref` is either absolute (`https://truenorth.app/schemas/common.schema.json#/$defs/id`)
+ * or local (`#/$defs/rigSlot`). Both are reduced to `<file>#/$defs/<name>`, a
+ * local one resolving against the file it appears in — which is why the walk is
+ * per file rather than over one merged document.
+ */
+const defsReachedFromLiveSchemas = (): ReadonlySet<string> => {
+  const reached = new Set<string>();
+  for (const file of schemaFiles) {
+    if (SKIPPED_SCHEMAS[file] !== undefined) continue;
+    for (const ref of refsIn(readSchema(file))) {
+      const [target = '', pointer] = ref.split('#');
+      if (pointer === undefined || !pointer.startsWith('/$defs/')) continue;
+      // A local `#/$defs/x` resolves against the file the `$ref` sits in; an
+      // absolute one names its own file. Both reduce to `<file>#/$defs/<name>`.
+      const targetFile = target === '' ? file : (target.split('/').pop() ?? '');
+      reached.add(`${targetFile}#${pointer}`);
+    }
+  }
+  return reached;
+};
+
+const reachedFromLive = defsReachedFromLiveSchemas();
+
+/**
+ * Is this `$def` covered by its file's root skip?
+ *
+ * Only when the file is skipped AND no live schema reaches the def. That second
+ * clause is the whole safety property: it is what keeps `common.schema.json`'s
+ * shared shapes bound, which is the defect the original root-only rule was
+ * written to fix.
+ */
+const isCascadeSkipped = (file: string, pointer: string): boolean =>
+  SKIPPED_SCHEMAS[file] !== undefined &&
+  pointer.startsWith('#/$defs/') &&
+  !reachedFromLive.has(`${file}${pointer}`);
+
 const allCandidates = schemaFiles.flatMap(candidatesFor);
 const candidateKeys = allCandidates.map((binding) => `${binding.file}${binding.pointer}`);
 const allBindings = allCandidates.filter(
-  (binding) => SKIPPED_DEFS[`${binding.file}${binding.pointer}`] === undefined,
+  (binding) =>
+    SKIPPED_DEFS[`${binding.file}${binding.pointer}`] === undefined &&
+    !isCascadeSkipped(binding.file, binding.pointer),
 );
 const checkedFiles = [...new Set(allBindings.map((binding) => binding.file))].sort();
 
@@ -1084,6 +1163,45 @@ describe('content schemas are the port contract (ADR-0007)', () => {
       0,
     );
     expect(allBindings.length).toBeGreaterThan(0);
+  });
+
+  it('keeps a skipped file\'s shared $defs bound when a live schema reaches them', () => {
+    // The safety property of the cascade, asserted rather than described.
+    //
+    // `common.schema.json`'s root is skipped — it declares no root shape — and
+    // hiding its `$defs` with it was a real defect: `LocalizedText`, `Vec2` and
+    // the branded ids are exactly the shapes `level`, `question` and `character`
+    // share, and they are the ones this gate exists to pin. If the cascade ever
+    // swallows them, that hole is reopened and this is what says so.
+    const commonDefs = allCandidates.filter(
+      (candidate) => candidate.file === 'common.schema.json' && candidate.pointer !== '#',
+    );
+    expect(commonDefs.length, 'common.schema.json declares no $defs objects').toBeGreaterThan(0);
+
+    const boundKeys = new Set(allBindings.map((binding) => `${binding.file}${binding.pointer}`));
+    const swallowed = commonDefs
+      .filter((candidate) => !boundKeys.has(`${candidate.file}${candidate.pointer}`))
+      .map((candidate) => `${candidate.file}${candidate.pointer}`);
+    expect(
+      swallowed,
+      `the cascade has hidden ${swallowed.join(', ')}. A \`$def\` a live schema \`$ref\`s must stay ` +
+        `bound however its own file's root is treated — that is the difference between "this file ` +
+        `has no root shape" and "nothing in this file is read".`,
+    ).toEqual([]);
+  });
+
+  it('reports a SKIPPED_DEFS entry the cascade already covers', () => {
+    // A redundant exemption is not harmless. It reads as a decision protecting
+    // something, so a reader trusts it, and it goes on reading that way on the
+    // day the cascade stops covering the def and the entry becomes the only
+    // thing hiding a real binding. One reason per fact.
+    const redundant = Object.keys(SKIPPED_DEFS)
+      .filter((key) => {
+        const [file = '', pointer = ''] = key.split(/(?=#)/u);
+        return isCascadeSkipped(file, pointer);
+      })
+      .map((key) => `${key} — its file's root skip already covers it`);
+    expect(redundant, redundant.join('\n')).toEqual([]);
   });
 
   it('keeps SKIPPED_DEFS and TYPE_NAME_OVERRIDES pinned to pointers that exist', () => {
