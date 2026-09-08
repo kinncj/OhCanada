@@ -217,11 +217,22 @@ than advice to someone who has not agreed to it.
   triggers only the read-only gate set and can never reach the job holding `pages: write`, and it runs with
   a read-only token and no secrets. Nothing in the deploy path depends on a secret being available to a
   fork, so nothing in the pipeline has to change for outside contributions.
-- **OBLIGATION due=2026-09-22 owner=infra** — re-confirm the fork-safety property stated above against the
-  current workflow files, and record the result in `docs/runbook.md` §3, before the repository is opened to
-  outside pull requests. The statement above is the architect's read of someone else's files, and an
-  architect's read is not a verification. Under this decision it is a security property with strangers on
-  the other side of it, so it needs its owner's signature rather than mine.
+
+  The dangerous trigger is absent, and that was checked rather than assumed: the only occurrence of the
+  string `pull_request_target` anywhere in `.github/` is a **comment** on `deploy-pages.yml:42` explaining
+  what `checkout` v7 blocks under it. It is not a trigger. That matters because `pull_request_target` is the
+  one event that runs fork-authored refs with the base repository's write-scoped token, and adding it to fix
+  a permissions symptom is the standard way this property gets lost later.
+
+  This was verified by the repository owner before the switch was flipped, and independently by the
+  architect against the same files; infra is reviewing it as a third read. Two things follow. The property
+  is not one person's assertion — and it now has strangers on the other side of it, so it belongs in the
+  runbook as a named invariant rather than only in an ADR paragraph.
+- **OBLIGATION due=2026-09-22 owner=infra** — record the fork-safety property above in `docs/runbook.md` §3
+  as a named invariant, including the `pull_request_target` prohibition and why it matters, so that a future
+  change to either workflow's `on:` or `permissions:` block is visibly changing something load-bearing.
+  Three independent reads agreeing is what this claim rests on today; a runbook invariant is what will keep
+  it true after all three readers have moved on.
 - **The source is already published, and now consistently so.** `vite.config.ts` sets `build.sourcemap: true`
   for every chunk, and the emitted maps carry `sourcesContent` with original paths. Verified against the
   current `dist/`: `dist/assets/index-*.js.map` lists sources such as `../../app/adapters/phaser/boot-scene.ts`
@@ -231,8 +242,16 @@ than advice to someone who has not agreed to it.
   the decision and is stronger under it: **never place a secret in this tree.** It is published twice over —
   once as the repository and once as the sourcemaps — and neither publication can be taken back.
 - **The licences in ADR-0004 become exercisable by the people they were written for.** `.github/CODEOWNERS`
-  already describes this contribution model in its own comment, so it needs no change; `CONTRIBUTING.md`
-  does, per precondition 3 above.
-- **The full history is public, not just the current tree.** That is the irreversible part of this decision,
-  and precondition 1 is the only thing standing between it and a published secret.
+  already describes this contribution model in its own comment — "This repository is open source; assume
+  pull requests from strangers" — which was aspirational when written and is now a description of reality.
+  It still wants a read by infra, for the opposite reason to the one that would have applied under a private
+  repository: not because the comment is false, but because it is now true. The rule underneath it is what
+  stands between a stranger's pull request and the workflow file holding `pages: write`. A comment that was
+  decoration is now load-bearing and should be read as a control rather than as prose. `CONTRIBUTING.md` is
+  the part that genuinely needs rewriting, per precondition 3 above.
+- **The full history is public, not just the current tree.** That is the irreversible part of this decision.
+  Precondition 1 was what stood between it and a published secret, and it was discharged *before* the flip
+  rather than after, across all 41 commits on every ref rather than at the tip. From here the protection is
+  prospective only: nothing published can be un-published, so the rule is **never place a secret in this
+  tree**, and the response to a credential-shaped commit is a rotation, never a revert.
 - If the repository approaches 1 GB, serve `assets/dist` from a Release — that needs its own ADR.
