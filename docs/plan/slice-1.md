@@ -12,7 +12,7 @@ reference-critical (red serge, Stetson, Sam Browne belt, no RCMP crest or name).
 
 | # | Task | Owner | Acceptance | Status |
 |---|---|---|---|---|
-| 1.1 | Stories: level, creator, quest, question card, Study mode, save/reload — each with a11y and bilingual scenarios | po | `docs/stories/` covers every player-facing behaviour in this slice | Not started |
+| 1.1 | Stories: level, creator, quest, question card, Study mode, save/reload, **settings** — each with a11y and bilingual scenarios | po | `docs/stories/` covers every player-facing behaviour in this slice | Done |
 | 1.2 | Schemas: `level`, `quest`, `question`, `character`, `locale`, `progress` | architect + infra | Written before the content; `ports-match-schemas` binds all six automatically, and compares property *types*, not just names — branded ids must survive; no inline object schemas (ADR-0007) | Not started |
 | 1.3 | Domain entities: Player, Quest, Level, Question, Progress, Character | domain | Pure, ≥ 90% coverage, no framework imports | Not started |
 | 1.4 | `QuestionScheduler` (FSRS) | domain | 50 draws from a 30-question pool never repeat inside the exclusion window, seeded RNG | Not started |
@@ -31,6 +31,14 @@ reference-critical (red serge, Stetson, Sam Browne belt, no RCMP crest or name).
 | 1.17 | `make verify-content` implemented (author/verifier separation enforced) | content-verifier + infra | Quarantined items excluded from the build; a question with status `verified` and an empty evidence quote fails the gate (ADR-0003 CI clause) | Not started |
 | 1.18 | Screenshots on iPhone, iPad and desktop via Playwright MCP | orchestrator | Attached to the slice; portrait canvas correct on all three | Not started |
 | 1.19 | Renderer capability probe + visual tiers (WebGL / software-WebGL / Canvas) | engine | Tier chosen from a measured frame cost, not a feature flag; every effect has a no-Filter path | Not started |
+
+## Level 4 — subject and setting
+
+Subject: **How Canadians Govern Themselves** / « Comment les Canadiens se gouvernent ». `slices.md` named a
+subject for every level except 3 and 4; this closes 4. Setting is Ottawa — Parliament Hill and the Rideau
+Canal, skate locomotion. The NPC wears the recognisable red-serge silhouette without any protected mark: no
+crest, no wordmark, no exact insignia, and named generically rather than as a member of a named force. That
+is the owner's decision, taken after the licensing risk was raised.
 
 ## Definition of done
 
