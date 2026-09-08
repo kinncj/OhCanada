@@ -2,8 +2,10 @@ import Phaser from 'phaser';
 
 import type { ThemeColours } from '@application/ports';
 
-import { BootScene } from './boot-scene';
+import { BootScene, HORIZON_FRACTION } from './boot-scene';
+import { blendColors, toCssColor, toPhaserColor } from './boot-config';
 import type { BootConfig } from './boot-config';
+import { LAND_SHADE, landBand } from './horizon-profile';
 
 /**
  * GameRenderer — the Phaser adapter's whole surface to the composition root.
@@ -28,6 +30,13 @@ import type { BootConfig } from './boot-config';
  * gradients run top-to-bottom over the same box height, the sky and ground read
  * as continuing past the edges of the canvas instead of stopping at it. Cost:
  * zero draw calls, zero overdraw, and no second camera to keep in tune.
+ *
+ * The land at the horizon rides on the same mechanism. `cssVariables()` also
+ * hands out the land's colour and the three heights it occupies, and the page
+ * lays a second gradient over the first from them — so the hills continue into
+ * the panels instead of ending on a hard vertical edge, which turned the canvas
+ * into a framed picture on a wide window. Still zero draw calls: the panels are
+ * CSS, and the scene never learns that they exist.
  */
 
 export interface GameRendererOptions {
@@ -105,10 +114,21 @@ export class GameRenderer {
    * stays out of the page's styling.
    */
   cssVariables(): Readonly<Record<string, string>> {
+    const band = landBand(this.#config.designHeight, HORIZON_FRACTION);
+    const percent = (fraction: number): string => `${(fraction * 100).toFixed(3)}%`;
+
     return {
       '--tn-sky': this.#config.palette.sky,
       '--tn-ground': this.#config.palette.ground,
       '--tn-horizon': this.#config.palette.horizon,
+      /* A shade of the ground, computed once here so the page and the scene
+         cannot disagree about the colour of the same hill. */
+      '--tn-land': toCssColor(
+        blendColors(toPhaserColor(this.#config.palette.ground), 0x000000, LAND_SHADE),
+      ),
+      '--tn-land-crest': percent(band.crest),
+      '--tn-land-skirt': percent(band.skirt),
+      '--tn-land-end': percent(band.end),
     };
   }
 

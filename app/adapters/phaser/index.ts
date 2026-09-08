@@ -12,8 +12,10 @@ export { BootScene, HORIZON_FRACTION } from './boot-scene';
 */
 export {
   DEFAULT_PALETTE,
+  blendColors,
   mixColor,
   parseBootConfig,
+  toCssColor,
   toPhaserColor,
   type BootConfig,
 } from './boot-config';

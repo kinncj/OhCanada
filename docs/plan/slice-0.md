@@ -34,3 +34,20 @@ but the procedure itself has never been exercised — there has been no deploy t
 opened 2026-09-08, due once two successful deploys exist (ADR-0006, amended).
 
 **Explicitly not in this slice.** Gameplay, art, questions, Rive, audio, scheduler — all slice 1 or later.
+
+**Post-deploy defect, closed 2026-09-08 (engine).** The live boot screen was reported twice, from two
+devices, as "stuck at the loading screen". Nothing was broken: the page reached `data-tn-boot="ready"` with
+no console errors and no failed requests. A title, a version number and a straight bright rule across an
+otherwise empty screen *is* the visual grammar of a stalled loader, and the screen said so. Three changes,
+all of them permanent constraints rather than slice-0 patches:
+
+- the horizon keeps ADR-0002's two-thirds position and loses its straightness — `horizon-profile.ts` gives it
+  rolling hills and conifers that average out on the line, and `tests/e2e/boot.spec.ts` now fails a flat
+  horizon by name instead of accepting any bright band;
+- the page says what it is: one plain-language EN/FR sentence in the DOM (`app/ui/build-status.ts`), because
+  the canvas is `aria-hidden` and a screen-reader user previously got "TrueNorth ready" and nothing more.
+  It moves to `content/locales` with the rotate overlay's copy in slice 1, in one change;
+- the land continues into the desktop side panels through `cssVariables()`, so a wide window no longer shows
+  the scene as a framed picture.
+
+Nothing on this screen may read as a progress indicator. That is now asserted, not remembered.

@@ -5,7 +5,13 @@ import { describe, expect, it } from 'vitest';
 
 import gameConfigJson from '@content/game.config.json';
 import type { ThemeColours } from '@application/ports';
-import { DEFAULT_PALETTE } from '@adapters/phaser/boot-config';
+import {
+  DEFAULT_PALETTE,
+  blendColors,
+  toCssColor,
+  toPhaserColor,
+} from '@adapters/phaser/boot-config';
+import { LAND_SHADE, landBand } from '@adapters/phaser/horizon-profile';
 
 /**
  * The pre-boot paint contract.
@@ -33,6 +39,10 @@ const INDEX_HTML = readFileSync(
 );
 
 const theme = (gameConfigJson as { theme?: ThemeColours }).theme;
+
+/** The design space and composition the page's pre-boot land literals assume. */
+const DESIGN_HEIGHT = 1920;
+const HORIZON_FRACTION = 2 / 3;
 
 /** Colours the page paints before boot. The rest of the palette is canvas-only. */
 const PRE_BOOT_KEYS = ['sky', 'ground', 'horizon'] as const;
@@ -63,6 +73,13 @@ const readCustomProperty = (name: string): string | null => {
     'u',
   ).exec(INDEX_HTML);
   return match?.[1]?.toLowerCase() ?? null;
+};
+
+/** The declared value of a `--tn-*` custom property that is a percentage. */
+const readPercentProperty = (name: string): number | null => {
+  const match = new RegExp(`--tn-${name}\\s*:\\s*([0-9.]+)%\\s*;`, 'u').exec(INDEX_HTML);
+  const value = match?.[1];
+  return value === undefined ? null : Number.parseFloat(value) / 100;
 };
 
 const readThemeColorMeta = (): string | null => {
@@ -104,5 +121,54 @@ describe('index.html pre-boot theme', () => {
     for (const key of PRE_BOOT_KEYS) {
       expect(DEFAULT_PALETTE[key]).toMatch(/^#[0-9a-f]{6}$/);
     }
+  });
+});
+
+/**
+ * The land under the horizon is drawn on the canvas *and* continued into the
+ * desktop side panels by the page, so `index.html` carries four more pre-boot
+ * literals: the land colour and the three heights it occupies. They are
+ * overwritten by `GameRenderer.cssVariables()` at boot like every other one, so
+ * they are only the first frame — but a first frame with the hills in the wrong
+ * place is a visible jump, and a stale colour is a visible seam at the letterbox
+ * edge. None of these values is authored: each is derived from something the
+ * adapter already computes, so this block is the derivation, run.
+ *
+ * Why the checks are approximate: the literals are rounded to three decimals for
+ * legibility in the stylesheet, and a sub-pixel difference at 1920 px of design
+ * space is not a defect. Anything larger is.
+ */
+describe('index.html pre-boot land', () => {
+  const band = landBand(DESIGN_HEIGHT, HORIZON_FRACTION);
+
+  it('paints --tn-land with the shade of the ground the renderer computes', () => {
+    const ground = theme?.ground ?? DEFAULT_PALETTE.ground;
+    const expected = toCssColor(blendColors(toPhaserColor(ground), 0x000000, LAND_SHADE));
+
+    expect(
+      readCustomProperty('land'),
+      `index.html --tn-land must be ${expected}, the shade of theme.ground the ` +
+        'scene and the side panels both use. Update index.html, or drop the literal.',
+    ).toBe(expected);
+  });
+
+  it.each([
+    ['land-crest', () => band.crest],
+    ['land-skirt', () => band.skirt],
+    ['land-end', () => band.end],
+  ])('places --tn-%s where the scene puts it', (name, expected) => {
+    const declared = readPercentProperty(name);
+
+    expect(declared, `index.html declares no --tn-${name}`).not.toBeNull();
+    expect(declared ?? 0).toBeCloseTo(expected(), 4);
+  });
+
+  it('keeps the land clear of the bottom, so the panels still end on the ground', () => {
+    /*
+      The canvas fades its land back into the gradient above the last row, and
+      the page has to stop at the same height or the two disagree exactly where
+      they meet.
+    */
+    expect(readPercentProperty('land-end') ?? 1).toBeLessThan(1);
   });
 });

@@ -11,8 +11,9 @@
 import gameConfigDocument from '@content/game.config.json';
 
 import { GameRenderer, parseBootConfig, type BootConfig } from '@adapters/phaser';
+import { createBuildStatus } from '@ui/build-status';
 import { announce, mountLiveRegion } from '@ui/live-region';
-import { createRotateOverlay, type OverlayLocale } from '@ui/rotate-overlay';
+import { createRotateOverlay } from '@ui/rotate-overlay';
 
 /**
  * The config is imported, not fetched. It is on the 6 s time-to-play budget and
@@ -57,8 +58,17 @@ function main(): void {
   const renderer = new GameRenderer({ parent: gameHost, config });
   applyPageTheme(renderer.cssVariables(), config);
 
+  /*
+   * What the screen says about itself. The canvas is `aria-hidden`, so the one
+   * sentence explaining that this is a foundation build with nothing to play
+   * yet has to be DOM or it does not exist for a screen-reader user. It goes up
+   * with the page rather than after `renderer.ready`, so it is there whether or
+   * not the canvas ever comes back.
+   */
+  const status = createBuildStatus(uiHost, { locale: toUiLocale(config.defaultLocale) });
+
   const overlay = createRotateOverlay(uiHost, {
-    locale: toOverlayLocale(config.defaultLocale),
+    locale: toUiLocale(config.defaultLocale),
     onShow: () => {
       renderer.pause();
       root.dataset['tnPaused'] = 'true';
@@ -83,8 +93,14 @@ function main(): void {
 
   void renderer.ready.then(() => {
     root.dataset['tnBoot'] = 'ready';
-    /* TODO(slice-1): localised through the LocalizerPort, like every other string. */
-    announce(`${config.title} ready`);
+    /*
+     * TODO(slice-1): localised through the LocalizerPort, like every other string.
+     * "ready" alone was the whole of what assistive technology could perceive on
+     * this page, and it left a screen-reader user with no way to tell a finished
+     * boot from a stalled one. The build-status sentence is appended so the
+     * announcement says the same thing the screen does.
+     */
+    announce(`${config.title} ready. ${status.message}`);
   });
 }
 
@@ -108,7 +124,7 @@ function applyPageTheme(
 }
 
 /** EN and FR ship from the first commit; anything else falls back to EN. */
-function toOverlayLocale(locale: string): OverlayLocale {
+function toUiLocale(locale: string): 'en' | 'fr' {
   return locale.toLowerCase().startsWith('fr') ? 'fr' : 'en';
 }
 

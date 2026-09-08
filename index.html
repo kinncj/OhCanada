@@ -46,6 +46,20 @@
         --tn-horizon: #e8eef4;
         --tn-page: #060d16;
 
+        /*
+          The land at the horizon, and the three heights it occupies, as a
+          fraction of the page. Same pre-boot story as the colours above:
+          app/adapters/phaser computes all four from the palette and the ridge
+          profile and app/bootstrap writes them over these, so the literals are
+          only ever the first frame. `--tn-land` is a shade of `--tn-ground`;
+          tests/unit/bootstrap/pre-boot-theme.test.ts fails if it stops being
+          the shade the renderer actually uses.
+        */
+        --tn-land: #081813;
+        --tn-land-crest: 68.190%;
+        --tn-land-skirt: 69.688%;
+        --tn-land-end: 92.083%;
+
         /* Mirrored as custom properties so the debug overlay can print the
            insets the browser actually reported. */
         --tn-safe-top: env(safe-area-inset-top, 0px);
@@ -76,11 +90,32 @@
 
           The canvas is Scale.FIT and is never stretched, so a window wider than
           9:16 leaves letterbox space to the left and right of it. That space is
-          this gradient: the same two colours the scene paints, running
-          top-to-bottom over the same box height, so sky and ground read as
+          these gradients: the same colours the scene paints, running
+          top-to-bottom over the same box height, so sky, land and ground read as
           continuing past the canvas edge. No second camera, no extra draw calls.
+
+          Two layers, front to back. The first is the land under the horizon —
+          opaque from the crest to the foot of the hills, then fading out exactly
+          where the scene's own land fades back into the gradient. Without it the
+          hills stopped dead at the letterbox edge and a wide window showed the
+          canvas as a framed picture. The second is the sky-to-ground gradient
+          the panels have always been.
+
+          The heights line up wherever they are visible: side panels exist only
+          when the viewport is wider than 9:16, and such a viewport is
+          height-constrained under FIT, so the canvas is exactly as tall as this
+          box. On a portrait phone the canvas is full width and the land layer is
+          hidden behind it. See `landBand` in app/adapters/phaser.
         */
         background:
+          linear-gradient(
+              180deg,
+              transparent var(--tn-land-crest),
+              var(--tn-land) var(--tn-land-crest),
+              var(--tn-land) var(--tn-land-skirt),
+              transparent var(--tn-land-end)
+            )
+            no-repeat fixed,
           linear-gradient(180deg, var(--tn-sky) 0%, var(--tn-ground) 100%) no-repeat fixed;
         background-color: var(--tn-page);
 

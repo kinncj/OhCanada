@@ -95,6 +95,17 @@ export function toPhaserColor(hex: string): number {
   return Number.parseInt(hex.slice(1), 16);
 }
 
+/**
+ * `0xrrggbb` -> `#rrggbb`. The way back out, for the colours the *page* is
+ * painted with: CSS custom properties are strings, and the land under the
+ * horizon is a computed shade rather than a palette literal
+ * (`GameRenderer.cssVariables`). Values outside 24 bits are masked rather than
+ * throwing — a colour is not worth a failed boot.
+ */
+export function toCssColor(value: number): string {
+  return `#${(Math.round(value) & 0xffffff).toString(16).padStart(6, '0')}`;
+}
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -219,13 +230,26 @@ export function parseBootConfig(raw: unknown): Result<BootConfig> {
  * `position` is clamped to 0..1; a non-finite position resolves to `from`.
  */
 export function mixColor(from: string, to: string, position: number): number {
+  return blendColors(toPhaserColor(from), toPhaserColor(to), position);
+}
+
+/**
+ * The same blend between two colours that are already Phaser integers.
+ *
+ * The land at the horizon is painted by mixing a shade of `palette.ground` back
+ * into the sky-to-ground gradient it sits on, and both of those are computed
+ * values rather than palette literals — so the mix has to take integers. Keeping
+ * one implementation means the land and the sky cannot round differently and
+ * leave a seam between them (`boot-scene.ts`, `#paintLand`).
+ *
+ * `position` is clamped to 0..1; a non-finite position resolves to `from`.
+ */
+export function blendColors(from: number, to: number, position: number): number {
   const t = Number.isFinite(position) ? Math.min(1, Math.max(0, position)) : 0;
-  const a = toPhaserColor(from);
-  const b = toPhaserColor(to);
 
   const channel = (shift: number): number => {
-    const start = (a >> shift) & 0xff;
-    const end = (b >> shift) & 0xff;
+    const start = (from >> shift) & 0xff;
+    const end = (to >> shift) & 0xff;
     return Math.round(start + (end - start) * t) & 0xff;
   };
 

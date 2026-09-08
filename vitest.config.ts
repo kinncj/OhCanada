@@ -39,9 +39,14 @@ export default defineConfig({
        * So the set below is "every module that is pure enough to be exercised
        * under `environment: 'node'`", not "every layer the architecture names":
        * the ports (for when they grow runtime code), `common/`, the pure UI
-       * helpers and the pure adapter config parsers. Browser entry points are
+       * helpers and the pure parts of the adapters. Browser entry points are
        * excluded by name below - they are proven by the Playwright suites, not
        * here, and listing them would only re-create the vacuum in reverse.
+       *
+       * `app/adapters/**` rather than a suffix glob: the first adapter module
+       * that was pure but not named `*-config.ts` (the horizon profile) would
+       * otherwise have been tested and unmeasured, which is the same lie as an
+       * `include` that matches nothing, told one file at a time.
        *
        * `scripts/coverage-floor.mjs` runs straight after `vitest` and fails if
        * this set ever collapses back to (almost) nothing, so an `include` that
@@ -51,7 +56,7 @@ export default defineConfig({
         'app/domain/**',
         'app/application/**',
         'app/ui/**',
-        'app/adapters/**/*-config.ts',
+        'app/adapters/**',
         'common/**',
       ],
       exclude: [
@@ -60,6 +65,10 @@ export default defineConfig({
         'app/bootstrap/main.ts',
         'app/adapters/phaser/boot-scene.ts',
         'app/adapters/phaser/game-renderer.ts',
+        // Re-export barrels. They hold no logic, and the modules behind them are
+        // imported directly by their own suites, so counting the barrel would
+        // only measure whether a test happened to go through the front door.
+        'app/adapters/*/index.ts',
         '**/*.d.ts',
       ],
       thresholds: {

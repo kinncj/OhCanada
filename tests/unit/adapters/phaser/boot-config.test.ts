@@ -4,8 +4,10 @@ import gameConfigJson from '@content/game.config.json';
 import type { ThemeColours } from '@application/ports';
 import {
   DEFAULT_PALETTE,
+  blendColors,
   mixColor,
   parseBootConfig,
+  toCssColor,
   toPhaserColor,
 } from '@adapters/phaser/boot-config';
 
@@ -168,6 +170,42 @@ describe('toPhaserColor', () => {
     expect(toPhaserColor('#ffffff')).toBe(0xffffff);
     expect(toPhaserColor('#0f3057')).toBe(0x0f3057);
     expect(toPhaserColor('#0F3057')).toBe(0x0f3057);
+  });
+});
+
+describe('toCssColor', () => {
+  it('is the inverse of toPhaserColor, padding included', () => {
+    for (const hex of ['#000000', '#ffffff', '#0f3057', '#010203']) {
+      expect(toCssColor(toPhaserColor(hex))).toBe(hex);
+    }
+  });
+
+  it('masks rather than throws, because a colour is not worth a failed boot', () => {
+    expect(toCssColor(0x1ffffff)).toBe('#ffffff');
+    expect(toCssColor(-1)).toBe('#ffffff');
+    expect(toCssColor(12.6)).toBe('#00000d');
+  });
+});
+
+describe('blendColors', () => {
+  it('is what mixColor is made of, so the page and the scene cannot round apart', () => {
+    /*
+      The land under the horizon is a shade of `theme.ground` computed as an
+      integer for the canvas and handed to CSS as a string. One implementation
+      means the hills in the side panels are the same colour as the hills on the
+      canvas, to the byte.
+    */
+    for (const position of [0, 0.25, 0.55, 1]) {
+      expect(blendColors(0x0f3057, 0x12352a, position)).toBe(
+        mixColor('#0f3057', '#12352a', position),
+      );
+    }
+  });
+
+  it('darkens towards black without wrapping a channel', () => {
+    expect(blendColors(0x12352a, 0x000000, 0)).toBe(0x12352a);
+    expect(blendColors(0x12352a, 0x000000, 1)).toBe(0x000000);
+    expect(blendColors(0xffffff, 0x000000, 0.5)).toBe(0x808080);
   });
 });
 

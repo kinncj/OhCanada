@@ -62,8 +62,82 @@ test.describe('accessibility', () => {
     expect(response, 'no response from vite preview').not.toBeNull();
     expect(response?.status()).toBeLessThan(400);
 
+    /*
+     * Guard the premise. The canvas is excluded from every scan by design, so
+     * with no DOM on the page this test scanned an empty document and passed
+     * vacuously — the same failure mode as the `fixme` bodies further down.
+     * Slice 0 has exactly one thing to scan, and this is the assertion that it
+     * was really there when axe ran.
+     */
+    await expect(page.locator('#tn-build-status')).toBeVisible();
+
     const results = await scan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  /**
+   * The build-status line, which is the only thing on this page a screen reader
+   * can perceive besides the announcer. It is scanned under the full ruleset —
+   * the WCAG sets do not check colour contrast against a *computable*
+   * background, and this panel is deliberately opaque so that the check has an
+   * answer rather than returning "incomplete".
+   */
+  test('the build-status line is perceivable, contrasted and not a second announcer', async ({
+    page,
+  }) => {
+    await page.goto('./');
+
+    const status = page.locator('#tn-build-status');
+    await expect(status).toBeVisible();
+
+    const results = await scan(page, RULESET).include('#tn-build-status').analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+
+    /* axe reports contrast it cannot compute as "incomplete", not as a pass. */
+    const contrast = results.incomplete.filter((issue) => issue.id === 'color-contrast');
+    expect(
+      contrast,
+      `contrast of the build-status panel is unknown, not proven: ${JSON.stringify(contrast, null, 2)}`,
+    ).toEqual([]);
+
+    /*
+     * It is read as static text. A second polite live region is a well-known way
+     * to make a screen reader go quiet, and `app/ui/live-region` owns the one
+     * channel this game has.
+     */
+    await expect(status).toHaveAttribute('lang', /^(en|fr)$/);
+    expect(await page.locator('[aria-live]').count()).toBe(1);
+    expect(await status.getAttribute('aria-live')).toBeNull();
+    expect(await status.getAttribute('aria-hidden')).toBeNull();
+  });
+
+  test('the build-status line goes inert behind the rotate overlay, and comes back', async ({
+    page,
+  }) => {
+    await page.setViewportSize(PORTRAIT_PHONE);
+    await page.goto('./');
+    await expect(page.locator('#tn-build-status')).toBeVisible();
+
+    await page.setViewportSize(LANDSCAPE_PHONE);
+    await page.locator(VISIBLE_OVERLAY).waitFor({ state: 'visible' });
+
+    /*
+     * `aria-modal="true"` promises that nothing behind the dialog is reachable.
+     * Static text is not focusable, so only `inert` can keep that promise for
+     * it — otherwise a screen-reader user browsing the page while the game is
+     * paused and covered still finds this line.
+     */
+    expect(
+      await page.evaluate(() => document.getElementById('tn-build-status')?.inert ?? null),
+    ).toBe(true);
+
+    await page.setViewportSize(PORTRAIT_PHONE);
+    await page.locator(OVERLAY).waitFor({ state: 'hidden' });
+
+    expect(
+      await page.evaluate(() => document.getElementById('tn-build-status')?.inert ?? null),
+      'the page must not stay inert once the overlay closes',
+    ).toBe(false);
   });
 
   /**
