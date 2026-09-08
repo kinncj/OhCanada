@@ -49,6 +49,11 @@ jobs:
       - name: Lint, typecheck, test, validate and verify content and art
         run: make lint typecheck test validate-content verify-content verify-art
 
+      # 14 days, not the 90-day repository default and not the 3 days this was
+      # cut to during the artifact-quota incident. 3 days was a quota measure and
+      # the quota is gone (docs/runbook.md 3); what is left is the only question
+      # that matters - how long before someone reads it. That is a review cycle,
+      # and a pull request from an outside contributor can easily sit a week.
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v7
@@ -56,7 +61,7 @@ jobs:
           name: coverage
           path: coverage
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 14
 
   browser:
     name: Build, e2e, perf, a11y
@@ -79,6 +84,12 @@ jobs:
       - name: Build and run the browser suites
         run: make assets build test-e2e test-perf test-a11y
 
+      # On failure only, and one artifact rather than two. `test-results/` used to
+      # be uploaded alongside this; the HTML reporter copies every attachment it
+      # references into `playwright-report/data/`, so the pair roughly doubled the
+      # bytes for one run's evidence and the second copy was browsable only by
+      # hand. The report is self-contained - open index.html, click the failing
+      # test, the trace viewer loads from within it.
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
@@ -86,13 +97,4 @@ jobs:
           name: playwright-report
           path: playwright-report
           if-no-files-found: ignore
-          retention-days: 3
-
-      - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: test-results
-          path: test-results
-          if-no-files-found: ignore
-          retention-days: 3
+          retention-days: 14

@@ -91,6 +91,10 @@ jobs:
       - name: End-to-end, performance and accessibility suites
         run: make test-e2e test-perf test-a11y
 
+      # Failure only: on a green run this step never fires, and the deploy below
+      # is the artefact that matters. 14 days matches ci.yml - long enough that
+      # the report is still there when someone comes back to a failed deploy.
+      # What bounds its *size* is tests/*/playwright.config.ts, not this number.
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
@@ -98,7 +102,7 @@ jobs:
           name: playwright-report
           path: playwright-report
           if-no-files-found: ignore
-          retention-days: 3
+          retention-days: 14
 
       - name: Configure Pages
         uses: actions/configure-pages@v6

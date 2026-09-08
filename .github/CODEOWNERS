@@ -1,16 +1,40 @@
 # Code owners. GitHub requests a review from these owners on every pull request
 # that touches a matching path.
 #
+# This repository has been public since 2026-09-08 (ADR-0006), so "pull requests
+# from strangers" is a description of reality rather than an aspiration. The
+# comment here used to say "assume pull requests from strangers" as a hedge; it
+# is now the operating condition.
+#
 # .github/workflows contains a job with `pages: write` and `id-token: write`. A
 # pull request that edits it is a pull request that can publish to the live site
 # or mint an OIDC token, so it does not merge without the repository owner
-# looking at it. This repository is open source; assume pull requests from
-# strangers.
+# looking at it. What stops a fork pull request from *running* that job is a
+# separate and stronger control - the invariant in docs/runbook.md 3, "a fork
+# pull request cannot reach the deploy job". Read that before changing any
+# workflow's `on:` or `permissions:` block. This file is the review control; the
+# invariant is the execution control. They are not substitutes.
+#
+# WHAT THIS FILE DOES AND DOES NOT DO - read this before relying on it.
+# CODEOWNERS *requests* a review. It does not *require* one. Requiring it is a
+# branch-protection setting ("Require review from Code Owners") on `main`, and
+# `main` currently has no branch protection and no ruleset. So today this file
+# guarantees the owner is asked, not that the owner answered. That was an
+# acceptable gap for a private repository with one maintainer; it is the largest
+# remaining hole now that anyone can open a pull request, and it is logged in
+# docs/runbook.md 6. Do not read the rules below as an enforced gate until a
+# ruleset exists.
 #
 # This rule, not a directory layout, is what makes those files owned. The
 # workflows briefly lived in infra/ as well so that "the pipeline is infra's";
 # that mirror bought nothing and cost a red pull request per action bump
-# (infra/README.md). The review requirement below is the real control.
+# (infra/README.md). Ownership belongs in this file, not in a path.
+#
+# The `*` line already assigns every path to the same owner, so the four
+# specific rules below change no outcome while there is a single maintainer.
+# They are kept because they are the list of paths whose ownership must survive
+# a second maintainer being added: the day `*` becomes a team, these four must
+# not silently widen with it.
 
 *                       @kinncj
 

@@ -116,8 +116,11 @@ is live:
   alternative (`workflow_run` gating on CI) is discussed in the header comment of that file.
 - Everything a workflow does is a `make` target. If you cannot reproduce a CI failure locally by running
   the same target, that is a bug in the pipeline, not a flake to be re-run.
+- **Before editing either workflow's `on:` or `permissions:` block, read the invariant below** ("a fork
+  pull request cannot reach the deploy job"). Those two blocks are the whole of what keeps outside
+  contribution safe.
 
-### Deploy fails at "Upload artifact" with a 403
+### Deploy fails at "Upload artifact" with a 403 — private repositories only
 
 Seen for real on 2026-09-08, run
 [34247227799](https://github.com/kinncj/OhCanada/actions/runs/34247227799). Every gate passed, the artefact
@@ -131,11 +134,20 @@ Finalizing artifact upload
          Failed request: (403) Forbidden: Error from intermediary with HTTP status code 403 "Forbidden"
 ```
 
-**This is the Actions storage quota, not a permissions problem.** The message says "Forbidden" and points
-nowhere useful. The repository is currently **private**, so it has a 500 MB Actions artifact allowance; it
-was holding 1,088 MB, of which two failed-CI `playwright-report` artifacts from the archived 3D branch were
-524 MB and 537 MB. The content upload succeeds and only the finalize call is rejected, which is why it
-looks like an auth failure.
+**A 403 on `FinalizeArtifact` is the Actions storage quota, not a permissions problem.** The message says
+"Forbidden", points nowhere useful, and sends people to read `permissions:` blocks for an hour. The tell is
+that the *content* upload succeeds and only the finalize call is rejected: the runner had every permission
+it needed to write the bytes, and was refused only when it asked for the artifact to be kept.
+
+**Does this apply to this repository? No — not since 2026-09-08.** TrueNorth is public (ADR-0006) and
+public repositories carry no Actions artifact storage charge at all, so this failure cannot recur here.
+The section stays because it *can* happen in any **private fork or clone** of this repository, which gets
+the private tier's 500 MB allowance, and because the symptom is misleading enough to be worth writing down
+permanently.
+
+What it looked like when it happened here, while the repository was still private: the allowance was
+500 MB, storage was holding 1,088 MB, and two failed-CI `playwright-report` artifacts left over from the
+archived 3D branch were **524 MB and 537 MB** on their own.
 
 Diagnose and fix:
 
@@ -153,42 +165,119 @@ storage to 26 MB and the re-run deployed cleanly.
 serving the last successful deployment. Check that before doing anything dramatic — the site is almost
 certainly fine.
 
-Two things that would stop it recurring, neither of them mine to do alone:
+Both of the things that would have stopped it recurring are now done:
 
-- **Make the repository public.** Public repositories have no Actions storage charge, and the project is
-  meant to be public anyway — the licence is MIT/CC-BY/CC0, and `.github/CODEOWNERS` already assumes pull
-  requests from strangers. The private setting is the anomaly here, not the quota.
-- **Stop Playwright writing 500 MB reports on failure.** Written up immediately below. Infra does not own
-  `tests/*/playwright.config.ts`; this is a proposal for whoever does.
+- **The repository is public** as of 2026-09-08 (ADR-0006), which removes the quota entirely rather than
+  managing it. That is why there is no artefact size gate in `make`: a limit with no consequence behind it
+  is machinery that exists to look rigorous.
+- **Playwright no longer writes reports that size**, for the separate and still-good reason below.
 
-#### Proposed: bound the cost of a failing Playwright run
+#### Bounding the cost of a failing Playwright run — landed 2026-09-08
 
-Not a freak event — it is what the current settings cost when a run fails broadly. All three configs
-(`tests/e2e`, `tests/perf`, `tests/a11y`) share the same `use` block: `trace: 'retain-on-failure'`,
-`video: 'retain-on-failure'`, `screenshot: 'only-on-failure'`, `retries: 1` on CI, and no `maxFailures`.
-Ordered by how much they would have helped, most first:
+Hygiene, not survival. Since the repository went public the storage quota is gone, so nothing *breaks* when
+a report is large. What remains is the reason that outlives the quota: a half-gigabyte report is miserable
+to download, slow to open and no more informative than a small one, and the people downloading it now
+include outside contributors. There is deliberately **no enforced size ceiling** anywhere in `make` or the
+workflows — a gate that fails a build for crossing a line with nothing behind it is theatre.
 
-1. **`maxFailures: process.env.CI ? 5 : undefined`.** This is the big one, and it is the only change that
-   bounds the *worst* case rather than the average. Nothing currently stops a systemic breakage — the app
-   failing to boot at all — from failing every test in the suite and producing a full artifact set for
-   each one. A 524 MB report is not one pathological test; it is the whole suite failing together. Stop
-   after a handful and the signal is identical: when everything is broken, the sixth failure teaches you
-   nothing the first did not.
-2. **`trace: 'on-first-retry'`.** Playwright's own recommendation for CI, and it pairs with the `retries: 1`
-   already set: the first attempt runs untraced, only the retry is traced. Traces are the bulk of the
-   weight because they embed network response bodies — with a 1.4 MB initial payload today, and ~15 MB of
-   models and textures in the archived 3D build that produced these artifacts.
-3. **`video: 'off'`, or at most `'on-first-retry'`.** `retain-on-failure` still *records* video for every
-   test and throws it away on success, so the CPU cost is paid on every green run too. For a canvas
-   animating at 60 fps that is not cheap. It is also the least informative artifact here: a trace already
-   carries a screencast timeline plus DOM snapshots, so video is largely duplicate evidence.
-4. **Upload one artifact, not two.** This half is infra's and needs the test owner's input on which to
-   keep. CI uploads both `playwright-report/` and `test-results/`; the HTML reporter embeds its own copy of
-   every attachment, so the two together roughly double the storage for one run's evidence. Keeping the
-   HTML report alone is probably right — it is self-contained and browsable — but that depends on how the
-   suite is actually debugged.
+All three configs (`tests/e2e`, `tests/perf`, `tests/a11y`) shared one `use` block. What changed, and what
+each change costs:
 
-`screenshot: 'only-on-failure'` is fine as it stands; screenshots are kilobytes.
+| Setting | Was | Now | What it trades away |
+|---|---|---|---|
+| `maxFailures` | unset | `5` on CI, uncapped locally | **The failure list becomes a sample, not a census.** "5 failed" no longer means "only 5 are broken", and one test is reported as `did not run`. Accepted because the case it bounds is the systemic one — the app not booting — where the sixth failure repeats the first. |
+| `trace` | `retain-on-failure` | `on-first-retry` on CI, `retain-on-failure` locally | **On CI you get no trace from the first attempt**, only from its retry (`retries: 1` guarantees there is one). A failure that does not reproduce on retry leaves a screenshot and an error context but no trace. Locally nothing is lost. |
+| `video` | `retain-on-failure` | `off` on CI, `retain-on-failure` locally | **No video on CI at all.** Least costly of the three: a trace already carries a screencast timeline and DOM snapshots, so video was mostly duplicate evidence. `retain-on-failure` also *records* every test and discards on success, so green runs paid for it too. |
+| `screenshot` | `only-on-failure` | unchanged | Nothing. Screenshots are tens of kilobytes. |
+| CI upload | `playwright-report/` **and** `test-results/` | `playwright-report/` only | **The raw output directory is no longer downloadable.** The HTML reporter copies every attachment it references into `playwright-report/data/` — traces included — so the report is self-contained: open `index.html`, click the failing test, the trace viewer loads from inside it. The pair was close to two copies of the same evidence. |
+| Retention | 3 days | 14 days | Nothing; storage is free now. 3 days was a quota measure. 14 days is "how long before someone actually reads it", which is a review cycle. |
+
+Local behaviour is deliberately untouched. Disk is free on a laptop and the person who can act on a failure
+immediately should not have evidence withheld from them.
+
+##### Measured, not asserted
+
+Reproduced the incident locally: `make build`, then broke the built shell so the **whole suite fails
+together** — the systemic case, not one flaky test — and ran `tests/e2e` twice under `CI=1` against the
+identical broken build, once with the old settings and once with the committed ones.
+
+| | Old settings | New settings |
+|---|---|---|
+| Result | 6 failed, 1 passed, all ran | 5 failed, 1 passed, **1 did not run** (`maxFailures` fired) |
+| Wall clock | 2.2 min | 1.8 min |
+| `playwright-report/` | 2,827,789 B | 2,062,113 B |
+| `test-results/` | 1,136,652 B (also uploaded) | 324,142 B (no longer uploaded) |
+| **Total uploaded** | **3,964,441 B (3.78 MiB)** | **2,062,113 B (1.97 MiB)** |
+| Evidence net of the fixed 1.30 MiB trace-viewer boilerplate | 2.48 MiB | 0.66 MiB | 
+| `.webm` files written | 24 | 0 |
+
+A second run of the same experiment against a build whose *entry chunk* 404s — so Phaser still loads and
+the traces carry real network bodies, which is the shape that produces big reports — gave per-failure
+evidence of **395,631 B** under the old settings against **62,731 B** under the new: **6.3x**. That ratio,
+not the absolute numbers from a 1.4 MB app, is what would have applied to the 524 MB artifacts, which came
+from a build shipping ~15 MB of models and textures.
+
+The fixed 1.30 MiB of trace-viewer boilerplate is present in every HTML report regardless of settings and
+is the floor; it is not worth attacking.
+
+### INVARIANT — a fork pull request cannot reach the deploy job
+
+This is a *rule*, not a description of how the workflows happen to be arranged today. It is what makes
+public contribution safe, and every clause below is load-bearing. Changing any of them is changing a
+security property, not a workflow detail. Recorded per ADR-0006.
+
+1. **`deploy-pages.yml` — the job holding `pages: write` and `id-token: write` — may be triggered only by
+   `push` to `main` and by `workflow_dispatch`.** Neither is available to someone without write access to
+   this repository. No trigger may be added to it that an outside contributor can cause.
+2. **`ci.yml` — the workflow a pull request runs — declares `permissions: contents: read` at the top level
+   and no job overrides it.** It requests nothing writable, references no secret, and has nothing to
+   escalate to. It never gets `pages:` or `id-token:`.
+3. **No workflow in this repository may use `pull_request_target`.** This is the clause that will be
+   removed by someone who does not know why it is here, so: `pull_request_target` runs the *base*
+   repository's workflow with a **write-scoped token and access to secrets**, while checking out a ref the
+   pull request author controls. It exists to let fork PRs use secrets, and it is the single most common way
+   a public repository is compromised through Actions. It is typically added by someone debugging a
+   "resource not accessible by integration" error — that is, by someone treating a permissions symptom. If
+   you are reaching for it, the answer is that fork PRs here do not need secrets and never will.
+   The only occurrence of the string in this repository is a comment in `deploy-pages.yml` explaining what
+   `checkout` v7 blocks under it. Grep before you trust: `grep -rn pull_request_target .github/`.
+4. **`workflow_run` is likewise prohibited** for the deploy path, for the same reason plus a second one:
+   it runs in the base context with the base token, and it fails open in the confusing direction. The
+   header comment of `deploy-pages.yml` records why the deploy job runs its own gates instead.
+5. **No `${{ github.event.* }}` interpolation inside a `run:` block.** Pull-request titles, branch names
+   and body text are attacker-controlled strings, and interpolating them into a shell is script injection.
+   Today the only interpolations anywhere are `steps.deployment.outputs.page_url` and
+   `github.workflow`/`github.ref` in a concurrency group.
+6. **No self-hosted runners.** A fork pull request executes arbitrary code from the pull request — `make
+   setup` runs `npm ci`, which runs lifecycle scripts from the PR's own `package.json`. That is normal and
+   acceptable *because* the runner is ephemeral, GitHub-hosted, holds a read-only token and sees no
+   secrets. On a self-hosted runner none of that is true.
+
+Repository-level settings that back the invariant, current as of 2026-09-08 and worth re-checking if
+anything odd happens:
+
+```
+gh api repos/kinncj/OhCanada/actions/permissions/workflow
+  -> {"default_workflow_permissions":"read","can_approve_pull_request_reviews":false}
+gh api repos/kinncj/OhCanada/actions/permissions/fork-pr-contributor-approval
+  -> {"approval_policy":"first_time_contributors"}
+gh api repos/kinncj/OhCanada/environments/github-pages
+  -> protection_rules: [branch_policy]; deployment branch policy allows "main" only
+gh api repos/kinncj/OhCanada/pages
+  -> {"build_type":"workflow", ...}
+```
+
+The `github-pages` environment's branch policy is a genuine second line: even if a deploy job were somehow
+triggered on another ref, the environment refuses the deployment. The `first_time_contributors` approval
+policy means a new contributor's first pull request does not run until a maintainer presses Approve.
+
+**Known weakness, deliberately accepted:** `main` has no branch protection and no rulesets
+(`gh api repos/kinncj/OhCanada/branches/main/protection` returns 404, `.../rulesets` returns `[]`). CI is
+therefore a check that is *run*, not a check that is *required*, and `.github/CODEOWNERS` currently only
+**requests** a review — "require review from code owners" is a branch-protection setting, and there is no
+branch protection. Nothing here lets an outsider merge: a fork PR still needs a maintainer to press Merge.
+It does mean the owner can push straight to `main` and deploy without review, which was fine for a
+single-maintainer private repository and is worth revisiting now. Recorded in §6.
 
 ### Dependabot
 
@@ -281,7 +370,13 @@ delete `infra/pages/sw.js`, the plugin in `vite.config.ts`, and the `sw.js` clau
 statically references plus everything those chunks reach by static ES import, excluding `.map` files and
 excluding dynamic `import()`. Source maps ship — they cost a player nothing because a browser fetches them
 only with DevTools open, and this is an open-source project where being debuggable in the field is worth
-more than the bytes in the repository.
+more than the bytes in the repository. That justification was thin while the repository was private and is
+sound now that it is not: `vite.config.ts` emits maps with `sourcesContent`, so the TypeScript has always
+been readable at the Pages URL, and since 2026-09-08 it is readable in the repository too. Publishing it
+twice is consistent rather than incongruous, and `sourcemap: true` stays. The 10.9 MiB of `.map` counts
+against the 1 GB repository cap and the 100 MB per-file cap, both of which are checked above and neither of
+which is close. The rule that follows from it is unchanged and absolute: **never place a secret in this
+tree** — it is published as the repository and again as the sourcemaps, and neither can be taken back.
 
 If a budget is genuinely too small for what the game needs, the fix is an ADR that changes the number in
 `content/game.config.json`, not a change to the check.
@@ -320,15 +415,31 @@ Recorded here rather than left implicit. None of these are "fine"; they are simp
 - ~~**No Pages deploy has ever run.**~~ Closed 2026-09-08. The site is live at
   <https://kinncj.github.io/OhCanada/> and the pipeline has deployed repeatedly, including two re-runs of
   older commits during the §1 drill.
-- **The repository is private while the project is open source.** MIT/CC-BY/CC0 licences, a CODEOWNERS
-  file that assumes pull requests from strangers, and a public Pages site — but the repository itself is
-  private, which is what put a 500 MB Actions storage cap in the way of a deploy on 2026-09-08 (§3). Not
-  an infra decision to make unilaterally; flagged for the owner.
-- **A 500 MB Playwright report is one failing CI run away.** Retention on the failure-only artifacts is
-  now 3 days, which caps how long the damage lasts but not its size. The actual fix is four changes to
-  `tests/*/playwright.config.ts`, proposed in §3 under "bound the cost of a failing Playwright run" and
-  routed to the owning agent — `maxFailures` matters most, because nothing today stops a broad breakage
-  producing one artifact set per failing test.
+- ~~**The repository is private while the project is open source.**~~ Closed 2026-09-08 by the owner, and
+  recorded in ADR-0006. The repository is public; the 500 MB Actions storage cap that blocked a deploy that
+  morning no longer applies, and the §3 write-up of that failure has been reframed as a private-fork
+  concern rather than a description of this repository.
+- ~~**A 500 MB Playwright report is one failing CI run away.**~~ Closed 2026-09-08, as hygiene rather than
+  necessity — the quota that made it urgent is gone. `maxFailures: 5` on CI, `trace: 'on-first-retry'`,
+  `video: 'off'`, one uploaded artifact instead of two, 14-day retention. Measured against a deliberately
+  broken build: 3.78 MiB uploaded before, 1.97 MiB after, and 6.3x less evidence per failure on a build
+  large enough to make traces heavy. Numbers, and what each setting trades away, are in §3. **No size
+  ceiling was added**, deliberately: nothing breaks when one is crossed, and a gate with no consequence is
+  worse than no gate.
+- ~~**OBLIGATION due=2026-09-22 owner=infra** — record the fork-safety property in `docs/runbook.md` §3 as
+  a named invariant, including the `pull_request_target` prohibition and why it matters (ADR-0006).~~
+  **DISCHARGED 2026-09-08** — §3 carries it as "INVARIANT — a fork pull request cannot reach the deploy
+  job": six numbered rules, the reasoning behind the `pull_request_target` and `workflow_run` prohibitions,
+  the backing repository settings with the `gh api` calls that read them, and the one accepted weakness.
+  Written as rules rather than as a description of the present arrangement, which was the point.
+- **`main` has no branch protection and no ruleset.** CI is run on every pull request but is not *required*
+  to pass before merge, and `.github/CODEOWNERS` therefore only requests a review rather than requiring one
+  — "require review from code owners" needs branch protection to exist. That was tolerable for a private
+  single-maintainer repository. Now that anyone can open a pull request it means the only thing standing
+  between an unreviewed change to a `pages: write` workflow and `main` is the maintainer's own discipline.
+  Not an infra decision — it is a repository setting the owner has to make — but it is the largest remaining
+  gap in §3's invariant and it should be closed with a ruleset requiring the `CI` checks and code-owner
+  review on `main`.
 - ~~**A stray directory named `git@github.com:kinncj/`**, created by a `git clone <url> <url>` typo.~~
   Closed. Inspected before removal: 18 files, all stock hook samples, no remotes, an unborn `master` with no
   commits and empty `objects/` — nothing recoverable. Deleted, along with the `.gitignore` rule that existed
