@@ -64,6 +64,7 @@ export class Game {
   private elapsed = 0;
   private accumulator = 0;
   private lastTime = 0;
+  private loopErrors = 0;
   private readonly insideTriggers = new Set<string>();
   private currentPoi: string | null = null;
   private readonly tmpF = new THREE.Vector3();
@@ -329,8 +330,20 @@ export class Game {
       const now = performance.now();
       const dt = Math.min(0.1, (now - this.lastTime) / 1000);
       this.lastTime = now;
-      this.tick(dt);
-      await this.renderer.render();
+      try {
+        this.tick(dt);
+        await this.renderer.render();
+        this.loopErrors = 0;
+      } catch (e) {
+        // A throwing frame used to kill the loop silently, leaving a frozen canvas and no clue why.
+        this.loopErrors++;
+        console.error('[truenorth] frame failed', e);
+        if (this.loopErrors === 1) this.deps.bus.emit('progress:error', { message: `Frame error: ${(e as Error).message}` });
+        if (this.loopErrors > 30) {
+          this.running = false;
+          throw e instanceof Error ? e : new Error(String(e));
+        }
+      }
       requestAnimationFrame(() => void loop());
     };
     void loop();

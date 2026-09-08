@@ -330,13 +330,26 @@ async function boot(): Promise<void> {
   }, 20_000);
 
   if (config.featureFlags.serviceWorker && import.meta.env.PROD && 'serviceWorker' in navigator && !e2e) {
-    // Reload once when an updated worker takes control so the page never runs a stale shell against new assets.
     let hadController = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (hadController) location.reload();
       hadController = true;
     });
     navigator.serviceWorker.register(`${base}sw.js`, { scope: base, updateViaCache: 'none' }).then((reg) => reg.update().catch(() => undefined)).catch(() => undefined);
+  } else if ('serviceWorker' in navigator) {
+    // Offline play is off: actively evict any worker and cache from an earlier build. A stale app shell on a
+    // phone is undebuggable from here — it makes every fix look like it changed nothing.
+    void navigator.serviceWorker.getRegistrations().then(async (regs) => {
+      if (regs.length === 0) return;
+      for (const r of regs) await r.unregister();
+      try {
+        for (const k of await caches.keys()) await caches.delete(k);
+      } catch {
+        /* ignore */
+      }
+      console.info(`[truenorth] ${JSON.stringify({ type: 'sw:evicted', payload: { count: regs.length } })}`);
+      location.reload();
+    }).catch(() => undefined);
   }
 }
 

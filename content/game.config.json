@@ -145,7 +145,7 @@
     "debugOverlay": false,
     "weather": true,
     "dayNightCycle": true,
-    "serviceWorker": true,
+    "serviceWorker": false,
     "gamepad": true,
     "touchControls": true
   },

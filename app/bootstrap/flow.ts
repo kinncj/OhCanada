@@ -87,6 +87,7 @@ export class Flow {
       bus.on('quest:updated', ({ quest, state }) => void this.onQuestUpdated(quest, state)),
       bus.on('quest:completed', ({ quest }) => void this.onQuestCompleted(quest)),
       bus.on('quest:failed', () => this.hud.toast(t.t('quest.failed'), true)),
+      bus.on('progress:error', ({ message }) => this.hud.toast(message, true)),
       bus.on('stamp:earned', ({ total }) => {
         this.hud.setStamps(total);
         this.hud.toast(t.t('quest.stampEarned', { total }));
