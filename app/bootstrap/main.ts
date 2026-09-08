@@ -185,6 +185,19 @@ async function boot(): Promise<void> {
   };
   applySettings(settings());
 
+  // A lost context is a hard GPU-memory failure: step down a preset and reload rather than show a black canvas.
+  game.renderer.onContextLost = () => {
+    const order: PresetName[] = ['minimal', 'low', 'medium', 'high', 'ultra'];
+    const current = resolvePreset();
+    const next = order[Math.max(0, order.indexOf(current) - 1)] ?? 'minimal';
+    if (next !== current) {
+      safeSet(BENCH_KEY, next);
+      location.reload();
+    } else {
+      safeSet(SAFE_KEY, '1');
+      location.reload();
+    }
+  };
   const watchForBlankRenderer = makeBlankRendererWatchdog(game, ui, t, forceWebGL);
   let flow: Flow | null = null;
   let menu: MainMenu | null = null;

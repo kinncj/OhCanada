@@ -79,6 +79,7 @@ export class WorldScene {
         for (const key of KIND_MODELS[kind]) {
           if (!library.hasModel(key)) continue;
           try {
+            if (!library.withinBudget) return;
             const model = await library.model(key);
             tick();
             const tint = kind === 'maple' ? 0xc8683a : kind === 'birch' ? 0xb9d27a : undefined;
@@ -135,7 +136,7 @@ export class WorldScene {
     }
     for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
 
-    const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, protos, castShadows: policy === 'full' });
+    const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, castShadows: policy === 'full', ...(protos ? { protos } : {}) });
     const scene = new WorldScene(district, heightAt, terrain, vegetation);
     scene.drawDistance = preset.drawDistance;
     scene.group.name = `district:${district.id}`;

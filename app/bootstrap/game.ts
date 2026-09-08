@@ -58,6 +58,7 @@ export class Game {
   private playerHandle = -1;
   private readonly npcViews = new Map<string, CharacterView | SkinnedCharacterView>();
   private readonly talking = new Set<string>();
+  private playerBodyKey = 'male';
   private preset: GraphicsPreset;
   private presetName = 'medium';
   private running = false;
@@ -115,6 +116,7 @@ export class Game {
 
     this.rig.reducedMotion = reducedMotion;
     this.renderer.applyPreset(this.preset, reducedMotion);
+    this.library?.setTextureBudget(this.preset.textureBudgetMb);
     this.weather.set(this.district?.scene.ambience.weather ?? 'clear', name === 'minimal' ? 0 : Math.round(this.preset.maxInstances * 0.5));
   }
 
@@ -133,7 +135,8 @@ export class Game {
     const bodyKey = spec.body === 'slim' || spec.body === 'tall' ? 'female' : 'male';
     if (lib?.hasCharacter(bodyKey)) {
       try {
-        const gltf = await lib.character(bodyKey);
+        this.playerBodyKey = bodyKey;
+      const gltf = await lib.character(bodyKey);
         const entry = lib.characterEntry(bodyKey)!;
         return new SkinnedCharacterView(gltf, entry, bodyKey, spec, lib, this.preset.assetPolicy === 'lite');
       } catch (e) {
@@ -255,6 +258,9 @@ export class Game {
   }
 
   unloadDistrict(): void {
+    // Textures and meshes from the district we are leaving must go, or travelling accumulates GPU memory
+    // until the context is lost.
+    this.library?.releaseUnused([], [this.playerBodyKey]);
     if (this.world) {
       this.world.dispose();
       this.world = null;

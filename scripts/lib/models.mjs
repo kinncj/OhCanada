@@ -18,8 +18,8 @@ import { download } from './polyhaven.mjs';
 export const BUDGET = { tree: 15000, sapling: 15000, rock: 6000, prop: 6000, structure: 6000, foliage: 3000 };
 /** Texture edge per slot per category: colour/ARM and normal (normal maps are UASTC and cost ~4x per pixel). */
 export const TEX = {
-  tree: { color: 1024, normal: 512 }, sapling: { color: 1024, normal: 512 }, rock: { color: 1024, normal: 512 },
-  prop: { color: 512, normal: 512 }, structure: { color: 512, normal: 256 }, foliage: { color: 1024, normal: 512 },
+  tree: { color: 512, normal: 256 }, sapling: { color: 512, normal: 256 }, rock: { color: 512, normal: 256 },
+  prop: { color: 256, normal: 256 }, structure: { color: 512, normal: 256 }, foliage: { color: 512, normal: 256 },
 };
 const NORMAL_SLOTS = /normalTexture/;
 const COLOR_SLOTS = /baseColorTexture|metallicRoughnessTexture|occlusionTexture|emissiveTexture/;

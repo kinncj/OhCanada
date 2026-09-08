@@ -302,6 +302,11 @@
           "minimum": 80,
           "maximum": 2000,
           "description": "Metres beyond which vegetation, fauna and small landmarks stop drawing."
+        },
+        "textureBudgetMb": {
+          "type": "number",
+          "minimum": 32,
+          "maximum": 2048
         }
       },
       "required": [
@@ -317,7 +322,8 @@
         "maxPixelRatio",
         "shadows",
         "postProcessing",
-        "drawDistance"
+        "drawDistance",
+        "textureBudgetMb"
       ],
       "additionalProperties": false
     }

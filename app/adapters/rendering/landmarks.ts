@@ -60,7 +60,7 @@ function tiled(tex: PbrTextureSet, extra: Partial<THREE.MeshStandardNodeMaterial
 export async function buildMaterialKit(lib: AssetLibrary | null, modelKeys: readonly string[]): Promise<MaterialKit> {
   const solid = (color: number, roughness: number, metalness = 0) => new THREE.MeshStandardNodeMaterial({ color, roughness, metalness });
   const tex = async (key: string, fallback: THREE.Material, extra?: Partial<THREE.MeshStandardNodeMaterialParameters>): Promise<THREE.Material> => {
-    if (!lib?.hasTexture(key)) return fallback;
+    if (!lib?.hasTexture(key) || !lib.withinBudget) return fallback;
     try {
       return tiled(await lib.texture(key), extra);
     } catch {

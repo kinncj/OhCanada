@@ -162,7 +162,7 @@ for (const [key, spec] of Object.entries(manifest.polyhaven?.models ?? {})) {
 
 // 6. Poly Haven tiling textures → textures/<id>/{diff,nor,arm}.<ext>
 const textures = {};
-const TEX_SIZE = { diff: 1024, nor: 512, arm: 512 };
+const TEX_SIZE = { diff: 512, nor: 256, arm: 256 };
 const TEX_KIND = { diff: 'color', nor: 'normal', arm: 'data' };
 for (const [key, spec] of Object.entries(manifest.polyhaven?.textures ?? {})) {
   const maps = ['diff', 'nor', 'arm'];
@@ -212,6 +212,8 @@ const ensurePacks = async () => {
 };
 for (const body of manifest.characters?.bodies ?? []) {
   if (!BODIES[body]) { warn(`unknown character body "${body}"`); continue; }
+  // Characters come from itch.io, which rate-limits. If the packs are unavailable, keep whatever is already
+  // built rather than failing the run (and losing the humans from the shipped manifest).
   const rel = `models/characters/${body}.glb`;
   const skinRel = { light: `textures/characters/${body}_skin_light.${ext}`, dark: `textures/characters/${body}_skin_dark.${ext}` };
   let bytes;
@@ -222,7 +224,7 @@ for (const body of manifest.characters?.bodies ?? []) {
     const built = await buildCharacter(io, { body, ubcDir, ualGlb, textureFormat, log: console.log });
     bytes = built.glb;
     if (!exists(rel)) writeIfChanged(rel, bytes);
-    for (const tone of ['light', 'dark']) if (!exists(skinRel[tone])) writeIfChanged(skinRel[tone], await encodeTexture(built.skin[tone], { kind: 'color', size: 1024, format: textureFormat, tmpDir }));
+    for (const tone of ['light', 'dark']) if (!exists(skinRel[tone])) writeIfChanged(skinRel[tone], await encodeTexture(built.skin[tone], { kind: 'color', size: 512, format: textureFormat, tmpDir }));
   }
   const info = await inspectCharacter(io, bytes);
   const problems = [];

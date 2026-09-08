@@ -33,6 +33,9 @@ export class GameRenderer {
   private blankFrames = 0;
   /** Set when the blank-frame watchdog has already disabled post-processing. */
   postDisabled = false;
+  contextLost = false;
+  /** Set by bootstrap so a lost context can drop to a lighter preset instead of showing a black screen. */
+  onContextLost: (() => void) | null = null;
 
   private constructor(renderer: THREE.WebGPURenderer, backend: 'webgpu' | 'webgl2') {
     this.renderer = renderer;
@@ -49,7 +52,19 @@ export class GameRenderer {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     const backend = (renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend ? 'webgpu' : 'webgl2';
-    return new GameRenderer(renderer, backend);
+    const game = new GameRenderer(renderer, backend);
+    // iOS drops the GL context when GPU memory runs out; without this the canvas just goes black forever.
+    opts.canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      game.contextLost = true;
+      console.error('[truenorth] WebGL context lost (GPU memory) — falling back');
+      game.onContextLost?.();
+    });
+    opts.canvas.addEventListener('webglcontextrestored', () => {
+      game.contextLost = false;
+      console.warn('[truenorth] WebGL context restored');
+    });
+    return game;
   }
 
   attach(scene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
@@ -130,7 +145,7 @@ export class GameRenderer {
   }
 
   async render(): Promise<void> {
-    if (!this.scene || !this.camera) return;
+    if (!this.scene || !this.camera || this.contextLost) return;
     const now = performance.now();
     const dt = now - this.lastFrame;
     this.lastFrame = now;

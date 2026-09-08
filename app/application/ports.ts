@@ -24,6 +24,8 @@ export interface GraphicsPreset {
   readonly antialias: 'none' | 'fxaa' | 'taa' | 'msaa';
   readonly maxInstances: number;
   readonly drawDistance: number;
+  /** GPU texture ceiling: exceeding it costs the WebGL context on mobile hardware. */
+  readonly textureBudgetMb: number;
   readonly anisotropy: number;
   readonly volumetricFog: boolean;
 }

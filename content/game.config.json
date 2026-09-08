@@ -62,7 +62,8 @@
       "anisotropy": 1,
       "volumetricFog": false,
       "assetPolicy": "lite",
-      "drawDistance": 140
+      "drawDistance": 140,
+      "textureBudgetMb": 64
     },
     "low": {
       "renderScale": 0.8,
@@ -78,7 +79,8 @@
       "anisotropy": 2,
       "volumetricFog": false,
       "assetPolicy": "standard",
-      "drawDistance": 260
+      "drawDistance": 260,
+      "textureBudgetMb": 140
     },
     "medium": {
       "renderScale": 1,
@@ -94,7 +96,8 @@
       "anisotropy": 4,
       "volumetricFog": true,
       "assetPolicy": "full",
-      "drawDistance": 420
+      "drawDistance": 420,
+      "textureBudgetMb": 280
     },
     "high": {
       "renderScale": 1,
@@ -111,7 +114,8 @@
       "volumetricFog": true,
       "screenSpaceGI": false,
       "assetPolicy": "full",
-      "drawDistance": 650
+      "drawDistance": 650,
+      "textureBudgetMb": 480
     },
     "ultra": {
       "renderScale": 1.25,
@@ -128,7 +132,8 @@
       "volumetricFog": true,
       "screenSpaceGI": true,
       "assetPolicy": "full",
-      "drawDistance": 900
+      "drawDistance": 900,
+      "textureBudgetMb": 700
     }
   },
   "benchmark": {

@@ -79,6 +79,9 @@ export class AssetLibrary {
   private readonly textures = new Map<string, Promise<PbrTextureSet>>();
   private readonly characters = new Map<string, Promise<GLTF>>();
   private readonly loose = new Map<string, Promise<THREE.Texture>>();
+  /** Rough GPU cost tracker: phones lose the WebGL context somewhere north of ~500 MB of textures. */
+  private textureBudgetBytes = 160 * 1024 * 1024;
+  private spentBytes = 0;
 
   private constructor(
     private readonly base: string,
@@ -110,6 +113,52 @@ export class AssetLibrary {
       manifest = null;
     }
     return new AssetLibrary(base, manifest, renderer);
+  }
+
+  setTextureBudget(mb: number): void {
+    this.textureBudgetBytes = mb * 1024 * 1024;
+  }
+
+  /** True while there is room for more texture memory; builders fall back to untextured when it runs out. */
+  get withinBudget(): boolean {
+    return this.spentBytes < this.textureBudgetBytes;
+  }
+
+  get spentMb(): number {
+    return this.spentBytes / 1048576;
+  }
+
+  private charge(bytes: number): void {
+    this.spentBytes += bytes;
+  }
+
+  /** Free everything except the keys still in use (called when a district unloads). */
+  releaseUnused(keepModels: readonly string[], keepCharacters: readonly string[]): void {
+    for (const [key, p] of [...this.models]) {
+      if (keepModels.includes(key)) continue;
+      this.models.delete(key);
+      void p.then((m) => {
+        for (const lod of m.lods) lod.traverse((o) => {
+          if (o instanceof THREE.Mesh) {
+            o.geometry.dispose();
+            const mats = Array.isArray(o.material) ? o.material : [o.material];
+            for (const mat of mats) {
+              for (const slot of ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'aoMap'] as const) {
+                const tex = (mat as THREE.MeshStandardMaterial)[slot];
+                if (tex) tex.dispose();
+              }
+              mat.dispose();
+            }
+          }
+        });
+      }).catch(() => undefined);
+    }
+    for (const [key, p] of [...this.characters]) {
+      if (keepCharacters.includes(key)) continue;
+      this.characters.delete(key);
+      void p.catch(() => undefined);
+    }
+    this.spentBytes = 0;
   }
 
   get available(): boolean {
@@ -196,6 +245,10 @@ export class AssetLibrary {
         t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
         t.anisotropy = 8;
         if (!relPath.endsWith('.ktx2')) t.generateMipmaps = true;
+        const img = t.image as { width?: number; height?: number } | undefined;
+        // Compressed formats cost ~1 byte/texel on iOS (ASTC/ETC); uncompressed costs 4. Mips add a third.
+        const texels = (img?.width ?? 1024) * (img?.height ?? 1024);
+        this.charge(texels * (relPath.endsWith('.ktx2') ? 1 : 4) * 1.34);
         return t;
       });
       this.loose.set(relPath, p);
