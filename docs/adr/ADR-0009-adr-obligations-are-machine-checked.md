@@ -198,10 +198,18 @@ Named so nobody mistakes the gate's silence for compliance:
 Written in the format it specifies, because an ADR that defines a discipline and exempts itself from it is
 the first place the discipline breaks.
 
-- **OBLIGATION due=2026-10-08 owner=infra** — implement this gate under `scripts/` to the specification
+- ~~**OBLIGATION due=2026-10-08 owner=infra** — implement this gate under `scripts/` to the specification
   above and wire it into `make lint`, including a test that exercises the overdue, malformed, dangling,
   double-closure, discharged and voided cases against a fixed `TRUENORTH_OBLIGATION_TODAY`. The corpus
   already contains one of each terminal state — ADR-0006 carries a `DISCHARGED` rollback obligation and a
   `VOIDED` artefact-ceiling one — so both parse paths have a real example to run against. Until this lands,
   this ADR describes a gate
-  that does not exist, and the obligations already written in the marker format are checked by nothing.
+  that does not exist, and the obligations already written in the marker format are checked by nothing.~~
+  **DISCHARGED 2026-09-08** — `scripts/check-obligations.mjs`, wired as the last step of `npm run lint`
+  and therefore of `make lint`, which both `ci.yml` and `deploy-pages.yml` run: an overdue obligation now
+  blocks a pull request *and* a deploy. `tests/unit/infra/obligation-gate.test.ts` runs the real CLI over
+  fixture corpora at a fixed `TRUENORTH_OBLIGATION_TODAY=2026-09-08` — 15 cases covering overdue, due-today,
+  malformed obligation, undated closure, dangling closure, closure in a neighbouring list item, double
+  closure, impossible due date, future-dated closure, discharged, voided, code-block exclusion, sort order,
+  and the clock-tick property itself: identical bytes green on 2026-09-08 and red on 2026-09-09. Every
+  failure condition was also reproduced by hand on scratch corpora before the gate was trusted.

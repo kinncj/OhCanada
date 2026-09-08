@@ -5,7 +5,8 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup lint typecheck test test-e2e test-perf test-a11y \
-        assets validate-content verify-content verify-art build preview clean
+        assets validate-content verify-content verify-art build preview clean \
+        check-obligations
 
 help: ## List every target
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -16,8 +17,17 @@ setup: ## Install dependencies and the Playwright browser
 	npm ci
 	npx playwright install --with-deps chromium
 
-lint: ## ESLint plus the dependency-cruiser architecture rules
+lint: ## ESLint, the dependency-cruiser architecture rules, the ADR-0009 obligation gate
 	npm run lint
+
+# `lint` carries the obligation gate (ADR-0009) as its last step, so it runs in
+# the pull-request gate set and again before a deploy publishes. That gate reads
+# the clock: it can fail on a commit that passed yesterday, because an
+# obligation in docs/ fell due overnight. That is the decision, not a bug -- see
+# the message it prints. This target runs it alone, for when that is all you
+# want to look at.
+check-obligations: ## ADR-0009: dated obligations in docs/ are discharged, voided, or not yet due
+	npm run check-obligations
 
 typecheck: ## TypeScript strict typecheck, no emit
 	npm run typecheck
