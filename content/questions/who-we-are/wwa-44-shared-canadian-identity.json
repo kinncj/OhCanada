@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-44-shared-canadian-identity",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What do Canada's diverse groups have in common?",
+    "fr": "Qu'est-ce que les divers groupes du Canada ont en commun?"
+  },
+  "options": [
+    {
+      "en": "A common Canadian identity, which together makes up today's multicultural society.",
+      "fr": "Une identité canadienne commune, qui forme ensemble la société multiculturelle d'aujourd'hui."
+    },
+    {
+      "en": "One shared language.",
+      "fr": "Une seule langue commune."
+    },
+    {
+      "en": "One shared religion.",
+      "fr": "Une seule religion commune."
+    },
+    {
+      "en": "A separate society for each group.",
+      "fr": "Une société distincte pour chaque groupe."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Multiculturalism in Canada is not many separate societies. The diverse groups share a common Canadian identity and together make up today's multicultural society.",
+    "fr": "Le multiculturalisme au Canada n'est pas une somme de sociétés séparées. Les divers groupes partagent une identité canadienne commune et forment ensemble la société multiculturelle d'aujourd'hui."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 22,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Together, these diverse groups, sharing a common Canadian identity, make up today’s multicultural society."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

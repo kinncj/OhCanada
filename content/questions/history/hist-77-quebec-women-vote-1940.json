@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-77-quebec-women-vote-1940",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year did Quebec grant women the vote?",
+    "fr": "En quelle année le Québec a-t-il accordé le droit de vote aux femmes?"
+  },
+  "options": [
+    {
+      "en": "1940.",
+      "fr": "En 1940."
+    },
+    {
+      "en": "1916.",
+      "fr": "En 1916."
+    },
+    {
+      "en": "1918.",
+      "fr": "En 1918."
+    },
+    {
+      "en": "1921.",
+      "fr": "En 1921."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Thanks to the work of Thérèse Casgrain and others, Quebec granted women the vote in 1940 — the last province to do so.",
+    "fr": "Grâce au travail de Thérèse Casgrain et d'autres, le Québec a accordé le droit de vote aux femmes en 1940, la dernière province à le faire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 40,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Due to the work of Thérèse Casgrain and others, Quebec granted women the vote in 1940."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

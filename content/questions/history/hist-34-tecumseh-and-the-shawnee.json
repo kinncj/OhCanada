@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-34-tecumseh-and-the-shawnee",
+  "subject": "history",
+  "prompt": {
+    "en": "Who led the Shawnee who supported British soldiers in the defence of Canada in 1812?",
+    "fr": "Qui a dirigé les Shawnees qui ont appuyé les soldats britanniques dans la défense du Canada en 1812?"
+  },
+  "options": [
+    {
+      "en": "Chief Tecumseh.",
+      "fr": "Le chef Tecumseh."
+    },
+    {
+      "en": "Joseph Brant.",
+      "fr": "Joseph Brant."
+    },
+    {
+      "en": "Sir Isaac Brock.",
+      "fr": "Sir Isaac Brock."
+    },
+    {
+      "en": "Charles de Salaberry.",
+      "fr": "Charles de Salaberry."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadian volunteers and First Nations, including the Shawnee led by Chief Tecumseh, supported British soldiers in Canada's defence. Brock and de Salaberry were British and Canadian commanders in the same war.",
+    "fr": "Des volontaires canadiens et des Premières Nations, dont les Shawnees dirigés par le chef Tecumseh, ont appuyé les soldats britanniques dans la défense du Canada. Brock et de Salaberry étaient des commandants britannique et canadien de la même guerre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 29,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canadian volunteers and First Nations, including Shawnee led by Chief Tecumseh, supported British soldiers in Canada’s defence."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

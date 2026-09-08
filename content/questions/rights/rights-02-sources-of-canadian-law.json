@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-02-sources-of-canadian-law",
+  "subject": "rights",
+  "prompt": {
+    "en": "Which of these is one of the sources of Canadian law?",
+    "fr": "Laquelle de ces sources fait partie des sources du droit canadien?"
+  },
+  "options": [
+    {
+      "en": "English common law.",
+      "fr": "La common law anglaise."
+    },
+    {
+      "en": "Roman law, as it was written down in ancient Rome.",
+      "fr": "Le droit romain, tel qu'il a été écrit dans la Rome antique."
+    },
+    {
+      "en": "The law of the United States, because the two countries share a border.",
+      "fr": "Le droit des États-Unis, parce que les deux pays partagent une frontière."
+    },
+    {
+      "en": "The law of Spain, brought by the first explorers.",
+      "fr": "Le droit de l'Espagne, apporté par les premiers explorateurs."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadian law has several sources: laws passed by Parliament and the provincial legislatures, English common law, the civil code of France, and the unwritten constitution inherited from Great Britain.",
+    "fr": "Le droit canadien a plusieurs sources : les lois adoptées par le Parlement et les assemblées législatives provinciales, la common law anglaise, le code civil de la France et la constitution non écrite héritée de la Grande-Bretagne."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canadian law has several sources, including laws passed by Parliament and the provincial legislatures, English common law, the civil code of France and the unwritten constitution that we have inherited from Great Britain."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

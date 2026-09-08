@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-28-acadian-deportation-share",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "How many of the Acadians were deported from their homeland between 1755 and 1763?",
+    "fr": "Quelle proportion des Acadiens a été déportée de sa terre natale entre 1755 et 1763?"
+  },
+  "options": [
+    {
+      "en": "More than two-thirds of them.",
+      "fr": "Plus des deux tiers d'entre eux."
+    },
+    {
+      "en": "About one in ten.",
+      "fr": "Environ un sur dix."
+    },
+    {
+      "en": "A few hundred families.",
+      "fr": "Quelques centaines de familles."
+    },
+    {
+      "en": "All of them, without exception.",
+      "fr": "Tous, sans exception."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "More than two-thirds of the Acadians were deported during the war between Britain and France. Enough remained, and enough returned, for Acadian culture to survive and flourish today.",
+    "fr": "Plus des deux tiers des Acadiens ont été déportés pendant la guerre entre la Grande-Bretagne et la France. Il en est resté, et il en est revenu, assez pour que la culture acadienne survive et s'épanouisse aujourd'hui."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 19,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Between 1755 and 1763, during the war between Britain and France, more than two-thirds of the Acadians were deported from their homeland."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

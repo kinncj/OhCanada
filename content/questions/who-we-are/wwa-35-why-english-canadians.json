@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-35-why-english-canadians",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Why are Anglophones generally referred to as English Canadians?",
+    "fr": "Pourquoi appelle-t-on généralement les anglophones des Canadiens anglais?"
+  },
+  "options": [
+    {
+      "en": "Because generations of settlers and builders of British origins laid the foundations of the country.",
+      "fr": "Parce que des générations de colons et de bâtisseurs d'origine britannique ont jeté les bases du pays."
+    },
+    {
+      "en": "Because they were all born in England.",
+      "fr": "Parce qu'ils sont tous nés en Angleterre."
+    },
+    {
+      "en": "Because English is the only official language.",
+      "fr": "Parce que l'anglais est la seule langue officielle."
+    },
+    {
+      "en": "Because Parliament gave them that name in 1867.",
+      "fr": "Parce que le Parlement leur a donné ce nom en 1867."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Generations of pioneers and builders of British origins, along with other groups, invested and endured hardship in laying the foundations of Canada. That history is why English speakers are generally called English Canadians.",
+    "fr": "Des générations de pionniers et de bâtisseurs d'origine britannique, ainsi que d'autres groupes, ont investi et enduré des épreuves pour jeter les bases du Canada. C'est cette histoire qui explique pourquoi on appelle généralement les anglophones des Canadiens anglais."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 20,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "This helps explain why Anglophones (English speakers) are generally referred to as English Canadians."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

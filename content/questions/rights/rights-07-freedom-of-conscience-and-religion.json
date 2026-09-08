@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-07-freedom-of-conscience-and-religion",
+  "subject": "rights",
+  "prompt": {
+    "en": "Which fundamental freedom lets you follow your own beliefs and practise your own religion?",
+    "fr": "Quelle liberté fondamentale vous permet de suivre vos propres croyances et de pratiquer votre religion?"
+  },
+  "options": [
+    {
+      "en": "Freedom of conscience and religion.",
+      "fr": "La liberté de conscience et de religion."
+    },
+    {
+      "en": "Freedom of association.",
+      "fr": "La liberté d'association."
+    },
+    {
+      "en": "Freedom of peaceful assembly.",
+      "fr": "La liberté de réunion pacifique."
+    },
+    {
+      "en": "Mobility rights.",
+      "fr": "La liberté de circulation et d'établissement."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Freedom of conscience and religion is one of the fundamental freedoms Canadians hold. Conscience and religion are named together in a single freedom.",
+    "fr": "La liberté de conscience et de religion est l'une des libertés fondamentales des Canadiens. La conscience et la religion y sont nommées ensemble, dans une seule et même liberté."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Freedom of conscience and religion;"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

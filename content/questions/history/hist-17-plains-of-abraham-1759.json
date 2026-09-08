@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-17-plains-of-abraham-1759",
+  "subject": "history",
+  "prompt": {
+    "en": "Which battle at Québec City in 1759 marked the end of France's empire in America?",
+    "fr": "Quelle bataille livrée à Québec en 1759 a marqué la fin de l'empire français en Amérique?"
+  },
+  "options": [
+    {
+      "en": "The Battle of the Plains of Abraham.",
+      "fr": "La bataille des plaines d'Abraham."
+    },
+    {
+      "en": "The Battle of Queenston Heights.",
+      "fr": "La bataille de Queenston Heights."
+    },
+    {
+      "en": "The Battle of Châteauguay.",
+      "fr": "La bataille de Châteauguay."
+    },
+    {
+      "en": "The Battle of Beaver Dams.",
+      "fr": "La bataille de Beaver Dams."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1759 the British defeated the French at the Battle of the Plains of Abraham at Québec City. The other three battles listed belong to the War of 1812, fifty years later.",
+    "fr": "En 1759, les Britanniques ont vaincu les Français à la bataille des plaines d'Abraham, à Québec. Les trois autres batailles nommées appartiennent à la guerre de 1812, cinquante ans plus tard."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 25,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1759, the British defeated the French in the Battle of the Plains of Abraham at Québec City"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

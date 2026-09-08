@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-15-hudsons-bay-company-1670",
+  "subject": "history",
+  "prompt": {
+    "en": "Which company was granted exclusive trading rights in 1670 over the whole watershed draining into Hudson Bay?",
+    "fr": "Quelle compagnie a obtenu en 1670 des droits de commerce exclusifs sur tout le bassin hydrographique se déversant dans la baie d'Hudson?"
+  },
+  "options": [
+    {
+      "en": "The Hudson's Bay Company.",
+      "fr": "La Compagnie de la Baie d'Hudson."
+    },
+    {
+      "en": "The Canadian Pacific Railway.",
+      "fr": "Le Canadien Pacifique."
+    },
+    {
+      "en": "The Montreal Stock Exchange.",
+      "fr": "La Bourse de Montréal."
+    },
+    {
+      "en": "The North West Mounted Police.",
+      "fr": "La Police à cheval du Nord-Ouest."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1670 the Hudson's Bay Company received exclusive trading rights over the watershed draining into Hudson Bay. For the next hundred years it competed with Montreal-based traders.",
+    "fr": "En 1670, la Compagnie de la Baie d'Hudson a reçu des droits de commerce exclusifs sur le bassin hydrographique se déversant dans la baie d'Hudson. Pendant les cent années suivantes, elle a rivalisé avec les commerçants établis à Montréal."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 25,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "granted the Hudson’s Bay Company exclusive trading rights over the watershed draining into Hudson Bay."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

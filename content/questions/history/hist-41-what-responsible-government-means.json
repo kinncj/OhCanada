@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-41-what-responsible-government-means",
+  "subject": "history",
+  "prompt": {
+    "en": "What does responsible government mean?",
+    "fr": "Que signifie « gouvernement responsable »?"
+  },
+  "options": [
+    {
+      "en": "The ministers of the Crown must have the support of a majority of the elected representatives in order to govern.",
+      "fr": "Les ministres de la Couronne doivent avoir l'appui de la majorité des représentants élus pour gouverner."
+    },
+    {
+      "en": "The government must balance its budget every year.",
+      "fr": "Le gouvernement doit équilibrer son budget chaque année."
+    },
+    {
+      "en": "Ministers are chosen by the courts.",
+      "fr": "Les ministres sont choisis par les tribunaux."
+    },
+    {
+      "en": "Every law must be approved by a public vote.",
+      "fr": "Chaque loi doit être approuvée par un vote populaire."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Responsible government means the ministers of the Crown must have the support of a majority of the elected representatives in order to govern. It is the system Canada still uses: a government that loses a confidence vote must resign.",
+    "fr": "Le gouvernement responsable signifie que les ministres de la Couronne doivent avoir l'appui de la majorité des représentants élus pour gouverner. C'est le système que le Canada utilise encore : un gouvernement qui perd un vote de confiance doit démissionner."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 31,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "This meant that the ministers of the Crown must have the support of a majority of the elected representatives in order to govern."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

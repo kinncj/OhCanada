@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-58-how-riel-is-seen",
+  "subject": "history",
+  "prompt": {
+    "en": "How is Louis Riel seen by many Canadians?",
+    "fr": "Comment beaucoup de Canadiens voient-ils Louis Riel?"
+  },
+  "options": [
+    {
+      "en": "As a hero, a defender of Métis rights and the father of Manitoba.",
+      "fr": "Comme un héros, un défenseur des droits des Métis et le père du Manitoba."
+    },
+    {
+      "en": "As the first Prime Minister of Canada.",
+      "fr": "Comme le premier premier ministre du Canada."
+    },
+    {
+      "en": "As the founder of the North West Mounted Police.",
+      "fr": "Comme le fondateur de la Police à cheval du Nord-Ouest."
+    },
+    {
+      "en": "As the builder of the Canadian Pacific Railway.",
+      "fr": "Comme le bâtisseur du chemin de fer Canadien Pacifique."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A second rebellion in 1885, in what is now Saskatchewan, led to Riel's trial and execution for high treason, a decision strongly opposed in Quebec. Many see him as a hero, a defender of Métis rights and the father of Manitoba.",
+    "fr": "Une deuxième rébellion, en 1885, dans ce qui est aujourd'hui la Saskatchewan, a mené au procès et à l'exécution de Riel pour haute trahison, une décision vivement contestée au Québec. Beaucoup le voient comme un héros, un défenseur des droits des Métis et le père du Manitoba."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 36,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Riel is seen by many as a hero, a defender of Métis rights and the father of Manitoba."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

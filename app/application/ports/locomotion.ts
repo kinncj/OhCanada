@@ -47,16 +47,22 @@
 
 import type { Result } from '@common/result';
 
-/** `level.schema.json#/$defs/locomotionMode`. */
-export type LocomotionMode =
-  | 'walk'
-  | 'canoe'
-  | 'skate'
-  | 'bike'
-  | 'train'
-  | 'horse'
-  | 'skateboard'
-  | 'dogsled';
+/**
+ * The name of a way to move. `level.schema.json#/$defs/locomotionMode`.
+ *
+ * **Not a union of eight literals any more** (ADR-0023). A mode carries no
+ * behaviour: there is exactly one `step`, every mode goes through it, and the
+ * only thing that varies is a `LocomotionTuning` read out of a level document —
+ * a rule enforced by a gate that strips the comments out of the strategy file
+ * and fails if a single mode name survives in the code.
+ *
+ * So the legal set is *data*, and it lives in
+ * `content/game.config.json#/locomotionModes`. That is where a name is
+ * validated, which keeps a typo a build failure rather than a load-time
+ * surprise. It is the same treatment `LevelId` gets, for the same reason: ten
+ * levels are not an enum, and neither are nine ways of crossing them.
+ */
+export type LocomotionMode = string;
 
 /**
  * How movement is driven.

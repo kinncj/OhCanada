@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-28-voting-which-elections",
+  "subject": "rights",
+  "prompt": {
+    "en": "In which elections does the responsibility to vote apply?",
+    "fr": "À quelles élections s'applique la responsabilité de voter?"
+  },
+  "options": [
+    {
+      "en": "Federal, provincial or territorial, and local elections.",
+      "fr": "Aux élections fédérales, provinciales ou territoriales et locales."
+    },
+    {
+      "en": "Federal elections only.",
+      "fr": "Aux élections fédérales seulement."
+    },
+    {
+      "en": "Provincial elections only.",
+      "fr": "Aux élections provinciales seulement."
+    },
+    {
+      "en": "Only elections held in the year a person becomes a citizen.",
+      "fr": "Seulement aux élections tenues l'année où une personne devient citoyenne."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The right to vote comes with a responsibility to use it at every level: federal, provincial or territorial, and local.",
+    "fr": "Le droit de vote s'accompagne de la responsabilité de l'exercer à tous les ordres de gouvernement : fédéral, provincial ou territorial, et local."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Voting in elections — The right to vote comes with a responsibility to vote in federal, provincial or territorial and local elections."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

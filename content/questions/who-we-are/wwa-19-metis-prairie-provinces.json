@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-19-metis-prairie-provinces",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Where do most Métis live?",
+    "fr": "Où vit la majorité des Métis?"
+  },
+  "options": [
+    {
+      "en": "In the Prairie provinces.",
+      "fr": "Dans les provinces des Prairies."
+    },
+    {
+      "en": "In Quebec.",
+      "fr": "Au Québec."
+    },
+    {
+      "en": "In the Atlantic provinces.",
+      "fr": "Dans les provinces de l'Atlantique."
+    },
+    {
+      "en": "In the three territories.",
+      "fr": "Dans les trois territoires."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Métis are a distinct people of mixed Aboriginal and European ancestry, and the majority of them live in the Prairie provinces.",
+    "fr": "Les Métis sont un peuple distinct d'ascendance mixte autochtone et européenne, et la majorité d'entre eux vivent dans les provinces des Prairies."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 18,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Métis are a distinct people of mixed Aboriginal and European ancestry, the majority of whom live in the Prairie provinces."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

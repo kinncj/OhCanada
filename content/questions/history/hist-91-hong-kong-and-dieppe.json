@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-91-hong-kong-and-dieppe",
+  "subject": "history",
+  "prompt": {
+    "en": "In which two operations did Canadians fight bravely but suffer losses in defeat?",
+    "fr": "Dans quelles deux opérations les Canadiens se sont-ils battus courageusement, mais ont subi des pertes dans la défaite?"
+  },
+  "options": [
+    {
+      "en": "The defence of Hong Kong in 1941 and the raid on Dieppe in 1942.",
+      "fr": "La défense de Hong Kong en 1941 et le raid sur Dieppe en 1942."
+    },
+    {
+      "en": "The capture of Juno Beach and the liberation of the Netherlands.",
+      "fr": "La prise de la plage Juno et la libération des Pays-Bas."
+    },
+    {
+      "en": "The Battle of the Atlantic and the Battle of Britain.",
+      "fr": "La bataille de l'Atlantique et la bataille d'Angleterre."
+    },
+    {
+      "en": "The Battle of Amiens and the capture of Vimy Ridge.",
+      "fr": "La bataille d'Amiens et la prise de la crête de Vimy."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadians fought bravely and suffered losses in the unsuccessful defence of Hong Kong in 1941 and in a failed raid on Dieppe, on the coast of France, in 1942.",
+    "fr": "Les Canadiens se sont battus courageusement et ont subi des pertes lors de la défense infructueuse de Hong Kong en 1941 et d'un raid raté sur Dieppe, sur la côte française, en 1942."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 44,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "the unsuccessful defence of Hong Kong (1941) from attack by Imperial Japan, and in a failed raid on Nazi-controlled Dieppe on the coast of France (1942)."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-25-constitutional-act-1791",
+  "subject": "history",
+  "prompt": {
+    "en": "What did the Constitutional Act of 1791 do?",
+    "fr": "Qu'a fait l'Acte constitutionnel de 1791?"
+  },
+  "options": [
+    {
+      "en": "It divided the Province of Quebec into Upper Canada and Lower Canada.",
+      "fr": "Il a divisé la province de Québec en Haut-Canada et en Bas-Canada."
+    },
+    {
+      "en": "It united Upper and Lower Canada into one province.",
+      "fr": "Il a uni le Haut-Canada et le Bas-Canada en une seule province."
+    },
+    {
+      "en": "It created the Dominion of Canada.",
+      "fr": "Il a créé le Dominion du Canada."
+    },
+    {
+      "en": "It gave Nova Scotia responsible government.",
+      "fr": "Il a accordé le gouvernement responsable à la Nouvelle-Écosse."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Constitutional Act of 1791 split the Province of Quebec into Upper Canada, which later became Ontario, and Lower Canada, which later became Quebec. The union of the two came later, in 1840.",
+    "fr": "L'Acte constitutionnel de 1791 a divisé la province de Québec en Haut-Canada, devenu plus tard l'Ontario, et en Bas-Canada, devenu plus tard le Québec. L'union des deux est venue plus tard, en 1840."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 27,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Constitutional Act of 1791 divided the Province of Quebec into Upper Canada (later Ontario)"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

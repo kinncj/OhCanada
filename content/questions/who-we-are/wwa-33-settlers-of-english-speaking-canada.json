@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-33-settlers-of-english-speaking-canada",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Who established the basic way of life in English-speaking areas of Canada?",
+    "fr": "Qui a établi le mode de vie de base dans les régions anglophones du Canada?"
+  },
+  "options": [
+    {
+      "en": "Hundreds of thousands of English, Welsh, Scottish and Irish settlers, soldiers and migrants.",
+      "fr": "Des centaines de milliers de colons, de soldats et de migrants anglais, gallois, écossais et irlandais."
+    },
+    {
+      "en": "Settlers from England only.",
+      "fr": "Des colons venus d'Angleterre seulement."
+    },
+    {
+      "en": "Settlers from the United States after 1867.",
+      "fr": "Des colons venus des États-Unis après 1867."
+    },
+    {
+      "en": "Settlers from Germany and Scandinavia.",
+      "fr": "Des colons venus d'Allemagne et de Scandinavie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "From the 1600s to the 20th century, hundreds of thousands of English, Welsh, Scottish and Irish settlers, soldiers and migrants established the basic way of life in English-speaking areas. British does not mean English alone.",
+    "fr": "Des années 1600 jusqu'au XXe siècle, des centaines de milliers de colons, de soldats et de migrants anglais, gallois, écossais et irlandais ont établi le mode de vie de base dans les régions anglophones. « Britannique » ne veut pas dire « anglais » uniquement."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 20,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "established by hundreds of thousands of English, Welsh, Scottish and Irish settlers, soldiers and migrants from the 1600s to the 20th century."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -711,6 +711,177 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
       "modifications": "Original work, 363 bytes. Carries ONLY the contract surface - the player and officer artboards, the motion state machine and its nine typed inputs - and no drawable content, so a contract test can assert the Rive and atlas vocabularies agree. Deliberately NOT under assets/src/rive/, so the asset pipeline never emits it and nothing can load it as a character. Byte-for-byte reproducible from the format table and hex dump in assets/style/rig-contract.md section 8."
+    },
+    {
+      "path": "refs/quebec-city/chateau-frontenac-portrait.jpg",
+      "kind": "reference",
+      "title": "Chateau Frontenac and the Dufferin Terrace retaining wall, Quebec City, in late winter",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ch%C3%A2teau_Frontenac,_Quebec_ville,_Canada_232.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/chateau-frontenac-street-elevation.jpg",
+      "kind": "reference",
+      "title": "Chateau Frontenac from a street in Old Quebec",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Chateau_Frontenac_from_a_street_in_Old_Quebec.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/chateau-frontenac-tower-2024.jpg",
+      "kind": "reference",
+      "title": "Fairmont Le Chateau Frontenac from the Place d'Armes side, 2024",
+      "author": "MallardTV",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Fairmont_Le_Chateau_Frontenac_2024.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped. NOTE: this file carries no colour profile and its white balance is markedly cool; it is used for geometry only."
+    },
+    {
+      "path": "refs/quebec-city/chateau-frontenac-dusk.jpg",
+      "kind": "reference",
+      "title": "Chateau Frontenac at dusk, Quebec City",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Chateau_Frontenac_at_dusk_in_Quebec_City.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/dufferin-terrace-boardwalk.jpg",
+      "kind": "reference",
+      "title": "People on the Dufferin Terrace, Quebec City",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:People_on_Dufferin_Terrace_2.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/dufferin-terrace-toboggan-slide-1905.jpg",
+      "kind": "reference",
+      "title": "Glissade de la terrasse Dufferin, Quebec City, about 1905",
+      "author": "Unknown photographer (Bibliotheque et Archives nationales du Quebec, P600,S6,D1,P410)",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Glissade_de_la_terrasse_Dufferin_vers_1905.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. Copyright expired; the source page evidences the public-domain status."
+    },
+    {
+      "path": "refs/quebec-city/toboggan-slide-riders.jpg",
+      "kind": "reference",
+      "title": "The Toboggan Slide, Quebec City / Glissade, Quebec (Quebec)",
+      "author": "William B. Edwards; Library and Archives Canada PA-098954, via BiblioArchives / LibraryArchives",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:The_Toboggan_Slide,_Quebec_City,_Quebec_Glissade,_Qu%C3%A9bec_(Qu%C3%A9bec)_(34410554856).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The archival caption is burnt into the negative and is part of the photograph; it is a drawing reference only and is never traced, filtered or shipped."
+    },
+    {
+      "path": "refs/quebec-city/quebec-city-waterfront-winter.jpg",
+      "kind": "reference",
+      "title": "Waterfront and hillside across the Saint Lawrence at Quebec City, in winter",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Quebec_City_waterfront_and_skyline_in_winter.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/levis-far-shore-winter.jpg",
+      "kind": "reference",
+      "title": "Levis seen across the Saint Lawrence from Quebec City, in winter",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Levis_seen_from_Quebec_City_in_winter.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/quebec-ramparts-snow.jpg",
+      "kind": "reference",
+      "title": "The ramparts of Quebec in falling snow, from the Citadelle",
+      "author": "DeadEyeArrow",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Quebec_Ramparts.JPG",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg",
+      "kind": "shipped",
+      "title": "Chateau Frontenac, Quebec City - the level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/landmark-chateau-frontenac@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key quebec-city-landmark-chateau-frontenac is unchanged and no level document moves. The art-bible section 5 two-size test was run at the shipping size of 1080 x 900 and passed at both probes, which is what ADR-0013 as amended requires before a landmark departs from the 2x default; at 2x it would cost 14.83 MiB of decoded texture instead of 3.71."
+    },
+    {
+      "path": "src/svg/quebec-city/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Quebec City winter sky - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "src/svg/quebec-city/layer-20-farbank.svg",
+      "kind": "shipped",
+      "title": "The far bank across the Saint Lawrence - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/layer-20-farbank.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "src/svg/quebec-city/layer-30-river.svg",
+      "kind": "shipped",
+      "title": "The Saint Lawrence with drifting ice - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/layer-30-river.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "src/svg/quebec-city/layer-50-terrace.svg",
+      "kind": "shipped",
+      "title": "Dufferin Terrace: railing, lamps, kiosk, footbridge - parallax layer, depth 50",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/layer-50-terrace.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "src/svg/quebec-city/layer-60-slope.svg",
+      "kind": "shipped",
+      "title": "The toboggan run - parallax layer, depth 60",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/layer-60-slope.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "src/svg/quebec-city/poi-marker-idle.svg",
+      "kind": "shipped",
+      "title": "Point-of-interest marker, not in reach",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/poi-marker-idle.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "src/svg/quebec-city/poi-marker-active.svg",
+      "kind": "shipped",
+      "title": "Point-of-interest marker, in reach",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/poi-marker-active.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "src/svg/quebec-city/particle-snow.svg",
+      "kind": "shipped",
+      "title": "Falling snow particle, three sizes",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/particle-snow.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
     }
   ]
 }

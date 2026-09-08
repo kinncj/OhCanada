@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-68-internment-1914-1920",
+  "subject": "history",
+  "prompt": {
+    "en": "Who did Ottawa intern in 24 labour camps between 1914 and 1920?",
+    "fr": "Qui Ottawa a-t-il interné dans 24 camps de travail entre 1914 et 1920?"
+  },
+  "options": [
+    {
+      "en": "Over 8,000 former Austro-Hungarian subjects, mainly Ukrainian men.",
+      "fr": "Plus de 8 000 anciens sujets austro-hongrois, surtout des hommes ukrainiens."
+    },
+    {
+      "en": "Canadians of Japanese origin.",
+      "fr": "Des Canadiens d'origine japonaise."
+    },
+    {
+      "en": "Chinese railway workers.",
+      "fr": "Des cheminots chinois."
+    },
+    {
+      "en": "Refugees from Nazi Germany.",
+      "fr": "Des réfugiés de l'Allemagne nazie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "From 1914 to 1920, Ottawa interned over 8,000 former Austro-Hungarian subjects, mainly Ukrainian men, as enemy aliens in 24 labour camps across Canada, even though Britain advised against the policy. The internment of Canadians of Japanese origin came in the Second World War.",
+    "fr": "De 1914 à 1920, Ottawa a interné plus de 8 000 anciens sujets austro-hongrois, surtout des hommes ukrainiens, comme « sujets d'un pays ennemi », dans 24 camps de travail partout au Canada, même si la Grande-Bretagne avait déconseillé cette politique. L'internement des Canadiens d'origine japonaise a eu lieu pendant la Seconde Guerre mondiale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 39,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Ottawa interned over 8,000 former Austro-Hungarian subjects, mainly Ukrainian men, as “enemy aliens” in 24 labour camps across Canada"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

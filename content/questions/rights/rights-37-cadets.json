@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-37-cadets",
+  "subject": "rights",
+  "prompt": {
+    "en": "What can young people learn by getting involved in the cadets?",
+    "fr": "Qu'est-ce que les jeunes peuvent apprendre en participant aux cadets?"
+  },
+  "options": [
+    {
+      "en": "Discipline, responsibility and skills.",
+      "fr": "La discipline, le sens des responsabilités et des compétences."
+    },
+    {
+      "en": "How to become a police officer without training.",
+      "fr": "Comment devenir policier sans formation."
+    },
+    {
+      "en": "A trade that guarantees a job in the navy.",
+      "fr": "Un métier qui garantit un emploi dans la marine."
+    },
+    {
+      "en": "The right to vote before the age of eighteen.",
+      "fr": "Le droit de voter avant l'âge de dix-huit ans."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The cadets are named as a way for young people to learn discipline, responsibility and skills. They are a youth programme, not a way of enlisting.",
+    "fr": "Les cadets sont présentés comme un moyen pour les jeunes d'apprendre la discipline, le sens des responsabilités et des compétences. C'est un programme jeunesse, et non une façon de s'enrôler."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Young people can learn discipline, responsibility, and skills by getting involved in the cadets"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-18-charter-and-treaty-rights",
+  "subject": "rights",
+  "prompt": {
+    "en": "What does the Charter say about the treaty rights of Aboriginal peoples?",
+    "fr": "Que dit la Charte au sujet des droits issus de traités des peuples autochtones?"
+  },
+  "options": [
+    {
+      "en": "The rights guaranteed in the Charter will not take away any treaty or other rights and freedoms of Aboriginal peoples.",
+      "fr": "Les droits garantis par la Charte ne portent atteinte à aucun droit ni à aucune liberté issus de traités ou autres des peuples autochtones."
+    },
+    {
+      "en": "The Charter replaced all earlier treaties with a single national agreement.",
+      "fr": "La Charte a remplacé tous les traités antérieurs par une seule entente nationale."
+    },
+    {
+      "en": "The Charter says nothing at all about treaty rights.",
+      "fr": "La Charte ne dit rien au sujet des droits issus de traités."
+    },
+    {
+      "en": "Treaty rights apply only in the three territories.",
+      "fr": "Les droits issus de traités ne s'appliquent que dans les trois territoires."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Charter names Aboriginal peoples' rights among the rights it sets out. Its guarantees do not adversely affect treaty or other rights and freedoms that Aboriginal peoples already hold.",
+    "fr": "La Charte nomme les droits des peuples autochtones parmi les droits qu'elle énonce. Ses garanties ne portent pas atteinte aux droits et libertés, issus de traités ou autres, que les peuples autochtones détiennent déjà."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 12,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Aboriginal Peoples’ Rights — The rights guaranteed in the Charter will not adversely affect any treaty or other rights or freedoms of Aboriginal peoples."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

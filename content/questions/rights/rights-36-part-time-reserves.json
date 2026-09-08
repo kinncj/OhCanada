@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-36-part-time-reserves",
+  "subject": "rights",
+  "prompt": {
+    "en": "How can someone serve part time in their own community?",
+    "fr": "Comment peut-on servir à temps partiel dans sa propre collectivité?"
+  },
+  "options": [
+    {
+      "en": "By joining the local navy, militia or air reserves.",
+      "fr": "En se joignant à la réserve navale, à la milice ou à la réserve aérienne de sa région."
+    },
+    {
+      "en": "By joining the regular navy for a short contract.",
+      "fr": "En s'engageant dans la marine régulière pour un court contrat."
+    },
+    {
+      "en": "Part-time service does not exist in Canada.",
+      "fr": "Le service à temps partiel n'existe pas au Canada."
+    },
+    {
+      "en": "By taking a paid course offered by the province.",
+      "fr": "En suivant un cours payant offert par la province."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "You can serve in your local part-time navy, militia and air reserves. It is a way to gain valuable experience, skills and contacts while staying in your community.",
+    "fr": "On peut servir à temps partiel dans la réserve navale, la milice et la réserve aérienne de sa région. C'est une façon d'acquérir une expérience, des compétences et des contacts précieux tout en restant dans sa collectivité."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "You can serve in your local part-time navy, militia and air reserves and gain valuable experience, skills and contacts."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

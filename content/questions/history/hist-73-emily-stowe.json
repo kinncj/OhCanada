@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-73-emily-stowe",
+  "subject": "history",
+  "prompt": {
+    "en": "Who founded the women's suffrage movement in Canada?",
+    "fr": "Qui a fondé le mouvement pour le droit de vote des femmes au Canada?"
+  },
+  "options": [
+    {
+      "en": "Dr. Emily Stowe, the first Canadian woman to practise medicine in Canada.",
+      "fr": "La docteure Emily Stowe, première Canadienne à pratiquer la médecine au Canada."
+    },
+    {
+      "en": "Agnes Macphail, the first woman MP.",
+      "fr": "Agnes Macphail, première femme députée."
+    },
+    {
+      "en": "Thérèse Casgrain.",
+      "fr": "Thérèse Casgrain."
+    },
+    {
+      "en": "Mary Ann Shadd Carey.",
+      "fr": "Mary Ann Shadd Carey."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The founder of the women's suffrage movement in Canada was Dr. Emily Stowe, the first Canadian woman to practise medicine in Canada. Macphail and Casgrain came later in the same story.",
+    "fr": "La fondatrice du mouvement pour le droit de vote des femmes au Canada était la docteure Emily Stowe, première Canadienne à pratiquer la médecine au pays. Macphail et Casgrain arrivent plus tard dans la même histoire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 40,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Its founder in Canada was Dr. Emily Stowe, the first Canadian woman to practise medicine in Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

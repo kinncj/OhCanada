@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-78-remembrance-day",
+  "subject": "history",
+  "prompt": {
+    "en": "What do Canadians do on Remembrance Day?",
+    "fr": "Que font les Canadiens le jour du Souvenir?"
+  },
+  "options": [
+    {
+      "en": "They wear the red poppy and observe a moment of silence at the 11th hour of the 11th day of the 11th month.",
+      "fr": "Ils portent le coquelicot rouge et observent une minute de silence à la 11e heure du 11e jour du 11e mois."
+    },
+    {
+      "en": "They wear the maple leaf and light candles at midnight.",
+      "fr": "Ils portent la feuille d'érable et allument des chandelles à minuit."
+    },
+    {
+      "en": "They hold a national holiday on the first day of July.",
+      "fr": "Ils célèbrent un congé national le premier jour de juillet."
+    },
+    {
+      "en": "They fly the flag at half-mast for a full week.",
+      "fr": "Ils mettent le drapeau en berne pendant une semaine entière."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Each year on November 11 Canadians remember the sacrifices of veterans and the fallen in all wars. They wear the red poppy and keep a moment of silence at the 11th hour of the 11th day of the 11th month.",
+    "fr": "Chaque année, le 11 novembre, les Canadiens se souviennent des sacrifices des anciens combattants et des disparus de toutes les guerres. Ils portent le coquelicot rouge et observent une minute de silence à la 11e heure du 11e jour du 11e mois."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 41,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canadians wear the red poppy and observe a moment of silence at the 11th hour of the 11th day of the 11th month"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

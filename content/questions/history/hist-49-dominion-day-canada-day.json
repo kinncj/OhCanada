@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-49-dominion-day-canada-day",
+  "subject": "history",
+  "prompt": {
+    "en": "What was July 1 called before 1982?",
+    "fr": "Comment appelait-on le 1er juillet avant 1982?"
+  },
+  "options": [
+    {
+      "en": "Dominion Day.",
+      "fr": "Le jour du Dominion."
+    },
+    {
+      "en": "Confederation Day.",
+      "fr": "Le jour de la Confédération."
+    },
+    {
+      "en": "Victoria Day.",
+      "fr": "La fête de Victoria."
+    },
+    {
+      "en": "Empire Day.",
+      "fr": "Le jour de l'Empire."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Until 1982, July 1 was celebrated as Dominion Day, marking the day Canada became a self-governing Dominion. Today it is officially known as Canada Day.",
+    "fr": "Jusqu'en 1982, le 1er juillet était célébré comme le jour du Dominion, qui marquait le jour où le Canada est devenu un Dominion autonome. Il porte aujourd'hui officiellement le nom de fête du Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 33,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Until 1982, July 1 was celebrated as “Dominion Day” to commemorate the day that Canada became a self-governing Dominion."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-25-responsibility-for-self-and-family",
+  "subject": "rights",
+  "prompt": {
+    "en": "Which of these is named as an important Canadian value and a responsibility of citizenship?",
+    "fr": "Lequel de ces éléments est présenté comme une valeur canadienne importante et une responsabilité de la citoyenneté?"
+  },
+  "options": [
+    {
+      "en": "Getting a job, caring for your family, and working hard according to your abilities.",
+      "fr": "Trouver un emploi, prendre soin de sa famille et travailler fort selon ses capacités."
+    },
+    {
+      "en": "Owning a home before you apply for citizenship.",
+      "fr": "Être propriétaire d'une maison avant de demander la citoyenneté."
+    },
+    {
+      "en": "Joining a political party.",
+      "fr": "Adhérer à un parti politique."
+    },
+    {
+      "en": "Learning both official languages fluently.",
+      "fr": "Apprendre à parler couramment les deux langues officielles."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Taking responsibility for yourself and your family is one of the responsibilities the guide lists. Getting a job, caring for your family and working hard in keeping with your abilities are named as important Canadian values.",
+    "fr": "Assumer la responsabilité de soi-même et de sa famille est l'une des responsabilités énumérées dans le guide. Trouver un emploi, prendre soin de sa famille et travailler fort selon ses capacités sont présentés comme des valeurs canadiennes importantes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Getting a job, taking care of one’s family and working hard in keeping with one’s abilities are important Canadian values."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

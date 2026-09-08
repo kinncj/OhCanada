@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-16-voyageurs-and-coureurs-des-bois",
+  "subject": "history",
+  "prompt": {
+    "en": "What were the men who travelled the fur-trade routes by canoe called?",
+    "fr": "Comment appelait-on les hommes qui parcouraient en canot les routes de la traite des fourrures?"
+  },
+  "options": [
+    {
+      "en": "Voyageurs and coureurs des bois.",
+      "fr": "Des voyageurs et des coureurs des bois."
+    },
+    {
+      "en": "Habitants and Canadiens.",
+      "fr": "Des habitants et des Canadiens."
+    },
+    {
+      "en": "Loyalists.",
+      "fr": "Des loyalistes."
+    },
+    {
+      "en": "Mounties.",
+      "fr": "Des membres de la police montée."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The skilled and courageous men who travelled by canoe were called voyageurs and coureurs des bois, and they formed strong alliances with First Nations.",
+    "fr": "Les hommes habiles et courageux qui voyageaient en canot étaient appelés voyageurs et coureurs des bois, et ils ont noué de solides alliances avec les Premières Nations."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 25,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The skilled and courageous men who travelled by canoe were called voyageurs and coureurs des bois, and formed strong alliances with First Nations."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

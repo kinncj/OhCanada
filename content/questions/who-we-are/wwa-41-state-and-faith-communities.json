@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-41-state-and-faith-communities",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "How has the state in Canada traditionally worked with faith communities?",
+    "fr": "Comment l'État canadien a-t-il traditionnellement collaboré avec les communautés religieuses?"
+  },
+  "options": [
+    {
+      "en": "As partners in providing schools and health care, resettling refugees, and upholding religious freedom.",
+      "fr": "Comme partenaires pour offrir des écoles et des soins de santé, réinstaller des réfugiés et défendre la liberté de religion."
+    },
+    {
+      "en": "By keeping them entirely separate from all public life.",
+      "fr": "En les tenant entièrement à l'écart de toute la vie publique."
+    },
+    {
+      "en": "By choosing one church to speak for the country.",
+      "fr": "En choisissant une Église pour parler au nom du pays."
+    },
+    {
+      "en": "By funding places of worship out of federal taxes.",
+      "fr": "En finançant les lieux de culte à même les impôts fédéraux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In Canada the state has traditionally partnered with faith communities to promote social welfare, harmony and mutual respect, to provide schools and health care, to resettle refugees, and to uphold religious freedom, religious expression and freedom of conscience.",
+    "fr": "Au Canada, l'État s'est traditionnellement associé aux communautés religieuses pour favoriser le bien-être social, l'harmonie et le respect mutuel, offrir des écoles et des soins de santé, réinstaller des réfugiés et défendre la liberté de religion, l'expression religieuse et la liberté de conscience."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 21,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In Canada the state has traditionally partnered with faith communities to promote social welfare, harmony and mutual respect; to provide schools and health care; to resettle refugees; and to uphold religious freedom, religious expression and freedom of conscience."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

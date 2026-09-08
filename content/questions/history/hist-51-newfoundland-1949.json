@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-51-newfoundland-1949",
+  "subject": "history",
+  "prompt": {
+    "en": "Which was the last province to join Canada, in 1949?",
+    "fr": "Quelle a été la dernière province à se joindre au Canada, en 1949?"
+  },
+  "options": [
+    {
+      "en": "Newfoundland and Labrador.",
+      "fr": "Terre-Neuve-et-Labrador."
+    },
+    {
+      "en": "Prince Edward Island.",
+      "fr": "L'Île-du-Prince-Édouard."
+    },
+    {
+      "en": "Saskatchewan.",
+      "fr": "La Saskatchewan."
+    },
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Newfoundland and Labrador joined Canada in 1949, the last province to do so. Prince Edward Island joined in 1873, British Columbia in 1871, and Alberta and Saskatchewan in 1905.",
+    "fr": "Terre-Neuve-et-Labrador s'est jointe au Canada en 1949, la dernière province à le faire. L'Île-du-Prince-Édouard s'est jointe en 1873, la Colombie-Britannique en 1871, et l'Alberta et la Saskatchewan en 1905."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 34,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "1949 – Newfoundland and Labrador"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

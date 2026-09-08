@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-06-first-200-years-of-bonds",
+  "subject": "history",
+  "prompt": {
+    "en": "What laid the foundations of Canada in the first 200 years after Europeans arrived?",
+    "fr": "Qu'est-ce qui a jeté les bases du Canada pendant les 200 premières années suivant l'arrivée des Européens?"
+  },
+  "options": [
+    {
+      "en": "Strong economic, religious and military bonds between Aboriginal peoples and Europeans.",
+      "fr": "De solides liens économiques, religieux et militaires entre les peuples autochtones et les Européens."
+    },
+    {
+      "en": "A written constitution agreed by both sides.",
+      "fr": "Une constitution écrite acceptée par les deux parties."
+    },
+    {
+      "en": "The building of the first railway.",
+      "fr": "La construction du premier chemin de fer."
+    },
+    {
+      "en": "A single treaty covering all of North America.",
+      "fr": "Un seul traité couvrant toute l'Amérique du Nord."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In the first 200 years of coexistence, Aboriginal peoples and Europeans formed strong economic, religious and military bonds, and those bonds laid the foundations of Canada.",
+    "fr": "Pendant les 200 premières années de coexistence, les peuples autochtones et les Européens ont formé de solides liens économiques, religieux et militaires, et ces liens ont jeté les bases du Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 23,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Aboriginals and Europeans formed strong economic, religious and military bonds in the first 200 years of coexistence which laid the foundations of Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

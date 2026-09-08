@@ -119,19 +119,16 @@ const SKIPPED_SCHEMAS: Readonly<Record<string, string>> = {
   // document, ADR-0007 applies to it, and this entry is deleted.
   'source.schema.json':
     'verification-time register (ADR-0003) — read by verify-content, never by the application at runtime',
-  // The shared character rig (ADR-0017). It is the contract the `.riv` file, the
-  // sprite atlas and the art pipeline are all checked AGAINST, loaded by
-  // `tests/unit/contracts/rig-is-coherent.test.ts` — not by the game. The Rive
-  // adapter reads its vocabulary from `content/characters/<id>.json` via
-  // `CharacterRendererSpec`, and nothing under `app/` opens the rig document.
-  //
-  // The condition that reverses this, stated so it is not left to be noticed: if
-  // a sprite fallback ever reads this document at runtime to draw from — its
-  // parts, z-order and keyframes are exactly what such an adapter would need —
-  // then it is a document the application reads, ADR-0007 applies, and this
-  // entry is deleted along with the cascade that follows from it.
-  'rig.schema.json':
-    'the rig contract (ADR-0017) — loaded by a contract test and the art pipeline, never by the application at runtime',
+  // `rig.schema.json` WAS here, with a written condition for its own removal:
+  // "if a renderer ever reads this document at runtime to draw from … ADR-0007
+  // applies, and this entry is deleted along with the cascade that follows from
+  // it." That condition fired within a day (ADR-0022): the shipped atlas is a
+  // cut-out puppet, the sprite renderer has to read `parts`, `states`, `frames`
+  // and `selector` to draw it, and no other model can compose 480 appearances
+  // from 21 drawings. The entry is gone and eighteen shapes are mirrored in
+  // `content-repository.ts` — which is the ADR-0008 bargain working as intended:
+  // an exemption that names the thing that would revoke it gets revoked on time
+  // rather than argued about.
 };
 
 /**
@@ -834,11 +831,34 @@ const describeNode = (node: JsonSchemaObject): string => {
  * `boolean` is a union of `true | false` inside the compiler, so it must not be
  * split the way a real union is; everything else splits normally.
  */
+/**
+ * The members of a union, with `undefined` dropped.
+ *
+ * `undefined` is never a *value* a schema can describe — JSON has `null` and has
+ * absence, and absence is expressed by leaving a property out of `required`,
+ * which the property-set test above already checks. So an `undefined` reaching
+ * here is always optionality leaking out of the name level into the value level,
+ * and matching it against the schema's branches asks the schema for something it
+ * has no vocabulary for.
+ *
+ * This was a real defect, found when `RigStateMachineInput.fallback?: boolean |
+ * number` was reported as "`undefined` satisfies no branch the schema offers"
+ * (ADR-0022). `withoutUndefined` below already handled the single-branch case —
+ * `foo?: string` collapsed to `string` — and silently gave up on a union of two
+ * or more, because it had no way to rebuild a `ts.Type`. The filter belongs here,
+ * where the union is taken apart anyway and nothing has to be reconstructed.
+ */
 const constituentsOf = (type: ts.Type): readonly ts.Type[] => {
   if ((type.flags & ts.TypeFlags.BooleanLike) !== 0) return [type];
-  return type.isUnion() ? type.types : [type];
+  if (!type.isUnion()) return [type];
+  return type.types.filter((part) => (part.flags & ts.TypeFlags.Undefined) === 0);
 };
 
+/**
+ * Collapse `T | undefined` to `T` so error messages name `string` rather than
+ * `string | undefined`. Cosmetic since `constituentsOf` filters; kept because a
+ * failure message is read by a person.
+ */
 const withoutUndefined = (type: ts.Type): ts.Type => {
   if (!type.isUnion()) return type;
   const kept = type.types.filter((part) => (part.flags & ts.TypeFlags.Undefined) === 0);

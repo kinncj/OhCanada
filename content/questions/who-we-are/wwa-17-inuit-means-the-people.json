@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-17-inuit-means-the-people",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What does the word Inuit mean in the Inuktitut language?",
+    "fr": "Que signifie le mot « Inuit » dans la langue inuktitut?"
+  },
+  "options": [
+    {
+      "en": "The people.",
+      "fr": "Le peuple."
+    },
+    {
+      "en": "The north.",
+      "fr": "Le nord."
+    },
+    {
+      "en": "The village.",
+      "fr": "Le village."
+    },
+    {
+      "en": "The sea.",
+      "fr": "La mer."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Inuit means the people in Inuktitut. The Inuit live in small, scattered communities across the Arctic.",
+    "fr": "« Inuit » signifie « le peuple » en inuktitut. Les Inuit vivent dans de petites collectivités dispersées partout dans l'Arctique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 18,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Inuit, which means “the people” in the Inuktitut language, live in small, scattered communities across the Arctic."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

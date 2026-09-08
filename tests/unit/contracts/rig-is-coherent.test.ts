@@ -132,16 +132,26 @@ describe('the rig satisfies its schema (ADR-0017)', () => {
   });
 
   it('is not an empty document that a shape check would wave through', () => {
-    // The anti-vacuum floor, and the reason this file exists at all. Every count
-    // below is a floor on the gate's own inputs, not a claim about the art: a
-    // rig that lost its inputs, parts, states or frames would satisfy every
-    // assertion in this file by having nothing to check.
-    expect(rig.stateMachine.inputs.length, 'the rig declares no state-machine inputs').toBeGreaterThan(0);
-    expect(rig.parts.length, 'the rig declares no parts').toBeGreaterThan(0);
-    expect(Object.keys(rig.states).length, 'the rig declares no states').toBeGreaterThan(0);
-    expect(Object.keys(rig.frames).length, 'the rig declares no atlas frames').toBeGreaterThan(0);
-    expect(Object.keys(rig.slots).length, 'the rig declares no slots').toBeGreaterThan(0);
-    expect(rig.artboards.length, 'the rig declares no artboards').toBeGreaterThan(0);
+    // The anti-vacuum floor, and the reason this file exists at all: a rig that
+    // lost its inputs, parts, states or frames would satisfy every assertion
+    // below by having nothing to check.
+    //
+    // These were `toBeGreaterThan(0)` and that is decoration, by the standard
+    // ADR-0014 sets and ADR-0024 restates: a floor at zero catches a rig that
+    // vanished and passes a rig truncated to one part, which is the failure that
+    // would actually happen. The numbers below are well under the shipped counts
+    // (9 inputs, 20 parts, 8 states, 50 frames, 7 slots, 2 artboards) so honest
+    // authoring has room, and well above one so a truncation fails.
+    //
+    // `slots` is exact: the schema fixes all seven by name because two of them
+    // being separate is the anti-caricature mechanism (ADR-0017), so any other
+    // number means the contract moved.
+    expect(rig.stateMachine.inputs.length, 'the rig declares too few state-machine inputs').toBeGreaterThanOrEqual(5);
+    expect(rig.parts.length, 'the rig declares too few parts to be a puppet').toBeGreaterThanOrEqual(10);
+    expect(Object.keys(rig.states).length, 'the rig declares too few animation states').toBeGreaterThanOrEqual(4);
+    expect(Object.keys(rig.frames).length, 'the rig declares too few atlas frames').toBeGreaterThanOrEqual(20);
+    expect(Object.keys(rig.slots).length, 'the rig does not declare exactly the seven named slots').toBe(7);
+    expect(rig.artboards.length, 'the rig declares no artboards').toBeGreaterThanOrEqual(2);
   });
 });
 

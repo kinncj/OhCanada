@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-40-laura-secord",
+  "subject": "history",
+  "prompt": {
+    "en": "What did Laura Secord do in 1813?",
+    "fr": "Qu'a fait Laura Secord en 1813?"
+  },
+  "options": [
+    {
+      "en": "She walked 30 km to warn of a planned American attack.",
+      "fr": "Elle a marché 30 km pour avertir d'une attaque américaine imminente."
+    },
+    {
+      "en": "She led a company of militia into battle.",
+      "fr": "Elle a mené une compagnie de miliciens au combat."
+    },
+    {
+      "en": "She founded the first newspaper in Upper Canada.",
+      "fr": "Elle a fondé le premier journal du Haut-Canada."
+    },
+    {
+      "en": "She nursed the wounded at Queenston Heights.",
+      "fr": "Elle a soigné les blessés à Queenston Heights."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1813 Laura Secord made a dangerous 19-mile (30-km) journey on foot to warn Lieutenant James FitzGibbon of a planned American attack. Her bravery contributed to the victory at the Battle of Beaver Dams.",
+    "fr": "En 1813, Laura Secord a parcouru à pied un dangereux trajet de 19 milles (30 km) pour avertir le lieutenant James FitzGibbon d'une attaque américaine imminente. Son courage a contribué à la victoire de la bataille de Beaver Dams."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 31,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "made a dangerous 19-mile (30-km) journey on foot to warn Lieutenant James FitzGibbon of a planned American attack."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

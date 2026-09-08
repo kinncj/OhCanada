@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-65-boer-war-volunteers",
+  "subject": "history",
+  "prompt": {
+    "en": "About how many Canadians volunteered to fight in the South African War of 1899-1902?",
+    "fr": "Environ combien de Canadiens se sont portés volontaires pour combattre dans la guerre d'Afrique du Sud de 1899-1902?"
+  },
+  "options": [
+    {
+      "en": "Over 7,000.",
+      "fr": "Plus de 7 000."
+    },
+    {
+      "en": "Over 70,000.",
+      "fr": "Plus de 70 000."
+    },
+    {
+      "en": "Over 600,000.",
+      "fr": "Plus de 600 000."
+    },
+    {
+      "en": "Fewer than 300.",
+      "fr": "Moins de 300."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Over 7,000 Canadians volunteered for the South African War, popularly known as the Boer War, and over 260 died. In 1900 Canadians took part in the victories at Paardeberg and Lillefontein.",
+    "fr": "Plus de 7 000 Canadiens se sont portés volontaires pour la guerre d'Afrique du Sud, communément appelée la guerre des Boers, et plus de 260 y ont perdu la vie. En 1900, des Canadiens ont participé aux victoires de Paardeberg et de Lillefontein."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 38,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Over 7,000 volunteered to fight in the South African War (1899–1902), popularly known as the Boer War, and over 260 died."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

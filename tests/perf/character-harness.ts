@@ -74,17 +74,24 @@ import {
   type FrameCostSummary,
 } from '@adapters/phaser/frame-cost';
 import {
-  createSpriteCharacterRendererFactory,
-  spriteFrameName,
-  type SpriteLayerObject,
+  createSpriteCharacterRenderer,
+  type SpritePartObject,
 } from '@adapters/phaser/sprite-character-renderer';
 import { createRiveCharacterRendererFactory } from '@adapters/rive';
 import { createBrowserRiveRuntime } from '@adapters/rive/rive-runtime';
-import type {
-  CharacterInput,
-  CharacterRendererSpec,
-  ICharacterRenderer,
-} from '@application/ports';
+import type { CharacterRendererSpec, ICharacterRenderer, RigDocument } from '@application/ports';
+import rigJson from '@content/characters/rig.json';
+
+/**
+ * The real rig, so the number is about the character that ships.
+ *
+ * This harness measured a four-layer stand-in while the renderer was a flipbook.
+ * The rig is a **twenty-part cut-out puppet** and the shipped figure composes
+ * from all twenty, so a four-layer measurement understated draw calls by 5x. It
+ * reads `content/characters/rig.json` — tracked content, not build output, so
+ * this runs on a clean checkout.
+ */
+const RIG = rigJson as unknown as RigDocument;
 import type { CharacterId } from '@domain/ids';
 
 /*
@@ -94,26 +101,6 @@ import type { CharacterId } from '@domain/ids';
  * `make assets` cannot emit it and nothing can mistake it for a character.
  */
 import rigContractUrl from '../../assets/style/rig-contract.riv?url';
-
-/**
- * The nine inputs `assets/style/rig-contract.json` declares, at their declared
- * types. Restated here rather than loaded because the contract file lives under
- * `assets/` (the art agent's boundary) and has no schema yet — when it moves to
- * `content/characters/rig.json` this list is deleted and the document is read.
- * The adapter refuses construction if the `.riv` does not expose all nine, so a
- * drift between this list and the file fails the harness loudly.
- */
-const RIG_INPUTS: readonly CharacterInput[] = [
-  { name: 'grounded', kind: 'bool' },
-  { name: 'moving', kind: 'bool' },
-  { name: 'talking', kind: 'bool' },
-  { name: 'reducedMotion', kind: 'bool' },
-  { name: 'speed', kind: 'number' },
-  { name: 'verticalSpeed', kind: 'number' },
-  { name: 'jump', kind: 'trigger' },
-  { name: 'land', kind: 'trigger' },
-  { name: 'interact', kind: 'trigger' },
-];
 
 /** The design resolution, from `content/game.config.json`. Portrait, always. */
 const DESIGN_WIDTH = 1080;
@@ -125,14 +112,8 @@ const DESIGN_HEIGHT = 1920;
  * a per-character cost measured at a different size is a measurement of a
  * different character.
  */
-const CHARACTER_WIDTH = 240;
-const CHARACTER_HEIGHT = 470;
-
-/** Frames per clip in the generated atlas. Four is a short cartoon cycle. */
-const FRAMES_PER_CLIP = 4;
-
-/** The clips the harness rig declares, in the order the selector reads them. */
-const CLIPS = ['idle', 'moving', 'speed'] as const;
+const CHARACTER_WIDTH = RIG.characterSpace.width;
+const CHARACTER_HEIGHT = RIG.characterSpace.height;
 
 /** How many frames of warm-up and how many are measured per window. */
 const WARMUP_FRAMES = 30;
@@ -181,41 +162,14 @@ const backend = params.get('backend') ?? 'sprite';
 /* the rig the harness draws                                                  */
 /* -------------------------------------------------------------------------- */
 
-/**
- * A rig of the shape `assets/style/rig-contract.json` describes, cut to the part
- * that costs anything: how many layers are composited per character.
- *
- * The real contract declares twenty parts. Four layers here is deliberate and is
- * stated in the report rather than hidden — the reader multiplies. Using twenty
- * would measure an atlas nobody has packed, at a part count the art agent has
- * already had to cut once for the texture budget.
- */
-const SLOTS = [
-  { name: 'skin', options: ['skin-1', 'skin-2'] },
-  { name: 'costume', options: ['parka', 'serge'] },
-  { name: 'hairShape', options: ['bob', 'curls'] },
-] as const;
-
-const EXPRESSIONS = ['neutral', 'thinking'] as const;
-
+/** The officer, composed from the rig exactly as `level-scene.ts` composes it. */
 function specFor(index: number): CharacterRendererSpec {
+  const artboard = RIG.artboards[index % RIG.artboards.length];
   return {
-    characterId: `harness-${String(index)}` as CharacterId,
-    artboard: 'harness',
-    stateMachine: 'motion',
-    inputs: [
-      { name: 'moving', kind: 'bool' },
-      { name: 'speed', kind: 'number' },
-      { name: 'jump', kind: 'trigger' },
-    ],
-    slots: SLOTS.map((slot) => ({
-      name: slot.name,
-      labelKey: `creator.slot.${slot.name}`,
-      playerSelectable: true,
-      options: slot.options.map((id) => ({ id, labelKey: `creator.${slot.name}.${id}` })),
-      fallback: slot.options[0],
-    })),
-    expressions: [...EXPRESSIONS],
+    characterId: (artboard?.characterId ?? 'officer') as CharacterId,
+    artboard: artboard?.artboard ?? 'officer',
+    stateMachine: RIG.stateMachine.name,
+    rig: RIG,
     skins: {},
     widthPx: CHARACTER_WIDTH,
     heightPx: CHARACTER_HEIGHT,
@@ -244,44 +198,35 @@ class CostScene extends Phaser.Scene {
   }
 
   /**
-   * The sprite path: one atlas, four layers per character, drawn through the
-   * shipping adapter.
+   * The sprite path: one atlas, twenty parts per character, composed and
+   * animated through the shipping adapter and the shipping rig.
    */
   #buildSprites(): void {
     const atlasKey = 'harness-atlas';
     buildAtlas(this, atlasKey);
 
-    const factory = createSpriteCharacterRendererFactory({
-      textureKey: atlasKey,
-      frames: {
-        hasFrame: (key, frame) => this.textures.get(key).has(frame),
-      },
-      host: {
-        createLayer: (index): SpriteLayerObject => {
-          const image = this.add.image(0, 0, atlasKey);
-          image.setDisplaySize(CHARACTER_WIDTH, CHARACTER_HEIGHT);
-          image.setDepth(index);
-          return {
-            setTexture: (key, frame) => image.setTexture(key, frame),
-            setFlipX: (flip) => image.setFlipX(flip),
-            setVisible: (visible) => image.setVisible(visible),
-            destroy: () => image.destroy(),
-          };
-        },
-      },
-    });
-
     for (let index = 0; index < characterCount; index += 1) {
-      void factory.create(specFor(index)).then((created) => {
-        if (!created.ok) throw new Error(created.error.message);
-        created.value.setNumber('speed', 0.7);
-        this.#characters.push(created.value);
-        /* Spread across the portrait canvas so the draws do not all land on the
-           same pixels — overlapping quads would be measured once by the
-           rasteriser's early-out and would understate the cost. */
-        const spread = (index + 0.5) / Math.max(1, characterCount);
-        placeLayers(this, index, spread);
+      const built = createSpriteCharacterRenderer(specFor(index), {
+        textureKey: atlasKey,
+        frames: { hasFrame: (key, frame) => this.textures.get(key).has(frame) },
+        host: {
+          createPart: (): SpritePartObject => this.add.image(0, 0, atlasKey),
+        },
+        baseDepth: index * RIG.parts.length,
       });
+      if (!built.ok) throw new Error(`${built.error.code}: ${built.error.message}`);
+
+      /* Walking, and spread across the portrait canvas so the draws do not all
+         land on the same pixels — overlapping quads would be measured once by
+         the rasteriser's early-out and would understate the cost. */
+      built.value.setBool('grounded', true);
+      built.value.setBool('moving', true);
+      built.value.setNumber('speed', 0.7);
+      built.value.setPosition(
+        ((index + 0.5) / Math.max(1, characterCount)) * DESIGN_WIDTH,
+        DESIGN_HEIGHT * 0.7,
+      );
+      this.#characters.push(built.value);
     }
   }
 
@@ -310,12 +255,7 @@ class CostScene extends Phaser.Scene {
     });
 
     for (let index = 0; index < characterCount; index += 1) {
-      const spec: CharacterRendererSpec = {
-        ...specFor(index),
-        artboard: 'officer',
-        stateMachine: 'motion',
-        inputs: RIG_INPUTS,
-      };
+      const spec: CharacterRendererSpec = { ...specFor(index), artboard: 'officer' };
       void factory.create(spec).then((created) => {
         if (!created.ok) throw new Error(`${created.error.code}: ${created.error.message}`);
         created.value.setBool('moving', true);
@@ -344,55 +284,32 @@ class CostScene extends Phaser.Scene {
   }
 }
 
-/** Position one character's layers. Called once the renderer's layers exist. */
-function placeLayers(scene: Phaser.Scene, index: number, spread: number): void {
-  const images = scene.children.list.filter(
-    (child): child is Phaser.GameObjects.Image => child instanceof Phaser.GameObjects.Image,
-  );
-  const layersPer = SLOTS.length + 1;
-  for (let layer = 0; layer < layersPer; layer += 1) {
-    const image = images[index * layersPer + layer];
-    if (image === undefined) continue;
-    image.setPosition(spread * DESIGN_WIDTH, DESIGN_HEIGHT * 0.6);
-  }
-}
-
 /**
  * Build the atlas the sprite backend reads, at runtime.
  *
- * Every frame is the same source rectangle: the cost being measured is the
- * per-layer draw and the per-frame `setTexture`, not the texture's contents, and
- * an atlas with 56 distinct pictures in it would measure a texture upload that
- * happens once. What must be real is the *frame table* — the adapter asks the
- * texture manager for each name and gets a hit or a miss for real.
+ * Every frame is registered under the name the **rig** declares and at the size
+ * the rig declares, so the adapter's frame table, its pivot-to-origin
+ * arithmetic and the area each part covers are all real. What is not real is the
+ * picture inside them: the cost being measured is the per-part draw and the
+ * per-frame transform, and fifty distinct images would measure an upload that
+ * happens once.
  */
 function buildAtlas(scene: Phaser.Scene, key: string): void {
   const canvas = document.createElement('canvas');
-  canvas.width = 128;
+  canvas.width = 256;
   canvas.height = 256;
   const context = canvas.getContext('2d');
   if (context !== null) {
     context.fillStyle = '#f4d35e';
-    context.fillRect(0, 0, 128, 256);
+    context.fillRect(0, 0, 256, 256);
     context.fillStyle = '#0d2135';
     context.fillRect(16, 16, 96, 96);
   }
   const texture = scene.textures.addCanvas(key, canvas);
   if (texture === null) return;
 
-  const layers: [string, readonly string[]][] = [
-    ...SLOTS.map((slot) => [slot.name, slot.options] as [string, readonly string[]]),
-    ['expression', EXPRESSIONS],
-  ];
-
-  for (const [layer, options] of layers) {
-    for (const option of options) {
-      for (const clip of CLIPS) {
-        for (let index = 0; index < FRAMES_PER_CLIP; index += 1) {
-          texture.add(spriteFrameName('harness', layer, option, clip, index), 0, 0, 0, 128, 256);
-        }
-      }
-    }
+  for (const [name, window] of Object.entries(RIG.frames)) {
+    texture.add(name, 0, 0, 0, Math.max(1, window.w), Math.max(1, window.h));
   }
 }
 
@@ -466,5 +383,5 @@ function rendererName(): string {
   characters: characterCount,
   renderer: rendererName(),
   windows: [...windows],
-  layersPerCharacter: backend === 'rive-floor' ? 1 : SLOTS.length + 1,
+  layersPerCharacter: backend === 'rive-floor' ? 1 : RIG.parts.length,
 });

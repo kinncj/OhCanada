@@ -1,315 +1,415 @@
 /**
- * The sprite fallback's own rules — the ones that have no counterpart on the
- * Rive side and so cannot live in `character-renderer-swap.test.ts`.
+ * The puppet's own rules — the half that has no counterpart on the Rive side,
+ * where an artboard does this work.
  *
- * Everything a *caller* can observe is asserted there, against both backends.
- * What is here is the half that is this backend's business: which frame of which
- * clip is on which layer, what happens when the atlas has not been packed yet,
- * and the two structural facts that keep a character legible on a device with no
- * Filter pipeline.
+ * Everything a *caller* can observe is asserted for both backends in
+ * `tests/unit/adapters/character-renderer-swap.test.ts`. What is here is how
+ * twenty cut-out parts become a character: which frame each part resolves to,
+ * where it is placed, what it rotates about, how a state is chosen and how a
+ * keyframe is interpolated.
+ *
+ * Driven by the **real** `content/characters/rig.json` throughout. A fixture rig
+ * would prove this file self-consistent; the rig is the contract, it is tracked
+ * content validated by `make validate-content`, and both backends read their
+ * whole vocabulary out of it (ADR-0022).
  */
 
 import { describe, expect, it } from 'vitest';
 
-import type { CharacterRendererSpec } from '@application/ports';
+import type { CharacterRendererSpec, RigDocument, RigPart } from '@application/ports';
 import {
-  DEFAULT_FPS,
-  EXPRESSION_LAYER,
-  IDLE_CLIP,
-  MAX_CLIP_FRAMES,
+  IDLE_STATE,
+  RUN_THRESHOLD,
   createSpriteCharacterRenderer,
-  selectClip,
-  spriteFrameName,
-  type SpriteLayerObject,
+  partTransformAt,
+  phaseOf,
+  resolveFrameTemplate,
+  selectState,
+  type SpritePartObject,
 } from '@adapters/phaser/sprite-character-renderer';
-import { characterId, makeCharacter } from '../../support/fixtures';
+import rigJson from '@content/characters/rig.json';
+import { characterId } from '../../support/fixtures';
 
+const RIG = rigJson as unknown as RigDocument;
 const ATLAS = 'characters';
-
-const rig = makeCharacter({
-  id: characterId('officer'),
-  artboard: 'officer',
-  inputs: [
-    { name: 'airborne', kind: 'bool' },
-    { name: 'speed', kind: 'number' },
-    { name: 'jump', kind: 'trigger' },
-  ],
-});
+const FRAMES = new Set(Object.keys(RIG.frames));
 
 interface Painted {
-  readonly index: number;
-  readonly frames: string[];
-  visible: boolean;
+  readonly part: RigPart;
+  frame: string | null;
+  origin: [number, number] | null;
+  position: [number, number] | null;
+  angle: number | null;
   flipped: boolean;
+  depth: number | null;
   destroyed: boolean;
 }
 
 function harness(
-  hasFrame: (frame: string) => boolean,
   overrides: Partial<CharacterRendererSpec> = {},
-): { renderer: ReturnType<typeof createSpriteCharacterRenderer>; layers: Painted[] } {
-  const layers: Painted[] = [];
+  packed: (frame: string) => boolean = (frame) => FRAMES.has(frame),
+): {
+  renderer: ReturnType<typeof createSpriteCharacterRenderer>;
+  parts: Painted[];
+} {
+  const parts: Painted[] = [];
   const spec: CharacterRendererSpec = {
-    characterId: rig.id,
-    artboard: rig.artboard,
-    stateMachine: rig.stateMachine,
-    inputs: rig.inputs,
-    slots: rig.slots,
-    expressions: ['neutral', 'thinking'],
+    characterId: characterId('officer'),
+    artboard: 'officer',
+    stateMachine: RIG.stateMachine.name,
+    rig: RIG,
     skins: {},
-    widthPx: 256,
-    heightPx: 512,
+    widthPx: RIG.characterSpace.width,
+    heightPx: RIG.characterSpace.height,
     ...overrides,
   };
 
   const renderer = createSpriteCharacterRenderer(spec, {
     textureKey: ATLAS,
-    frames: { hasFrame: (_key, frame) => hasFrame(frame) },
+    frames: { hasFrame: (_key, frame) => packed(frame) },
     host: {
-      createLayer: (index): SpriteLayerObject => {
+      createPart: (part): SpritePartObject => {
         const painted: Painted = {
-          index,
-          frames: [],
-          visible: false,
+          part,
+          frame: null,
+          origin: null,
+          position: null,
+          angle: null,
           flipped: false,
+          depth: null,
           destroyed: false,
         };
-        layers.push(painted);
+        parts.push(painted);
         return {
-          setTexture: (_key, frame) => painted.frames.push(frame),
-          setVisible: (value) => (painted.visible = value),
-          setFlipX: (value) => (painted.flipped = value),
+          setTexture: (_key, frame) => (painted.frame = frame),
+          setOrigin: (x, y) => (painted.origin = [x, y]),
+          setPosition: (x, y) => (painted.position = [x, y]),
+          setAngle: (degrees) => (painted.angle = degrees),
+          setFlipX: (flip) => (painted.flipped = flip),
+          setDepth: (depth) => (painted.depth = depth),
+          setVisible: () => undefined,
           destroy: () => (painted.destroyed = true),
         };
       },
     },
   });
 
-  return { renderer, layers };
+  return { renderer, parts };
 }
 
-/** Four frames per clip, which is what an atlas of a short cycle looks like. */
-const fourFrames = (frame: string): boolean => /\/[0-3]$/u.test(frame);
-
-function unwrap(result: ReturnType<typeof createSpriteCharacterRenderer>): NonNullable<
-  Extract<ReturnType<typeof createSpriteCharacterRenderer>, { ok: true }>['value']
-> {
+function unwrap(
+  result: ReturnType<typeof createSpriteCharacterRenderer>,
+): Extract<typeof result, { ok: true }>['value'] {
   if (!result.ok) throw new Error(`expected a renderer, got ${result.error.code}`);
   return result.value;
 }
 
-describe('spriteFrameName', () => {
-  it('is the five-part name the atlas is packed under', () => {
-    expect(spriteFrameName('officer', 'coat', 'coat-red', 'idle', 0)).toBe(
-      'officer/coat/coat-red/idle/0',
+/** The parts still alive after the last `dress()`, in draw order. */
+const live = (parts: Painted[]): Painted[] => parts.filter((part) => !part.destroyed);
+
+describe('resolveFrameTemplate', () => {
+  it('fills every brace from the character’s choices', () => {
+    const chosen = new Map([
+      ['hairShape', 'curly'],
+      ['hairColour', 'black'],
+    ]);
+    expect(resolveFrameTemplate('hair-{hairShape}-{hairColour}', chosen)).toBe('hair-curly-black');
+  });
+
+  it('passes a template with no braces straight through', () => {
+    expect(resolveFrameTemplate('ground-shadow', new Map())).toBe('ground-shadow');
+  });
+
+  it('resolves to nothing when a brace names something unchosen', () => {
+    /* Which is how every "none" option works — `head-covering-none` is a frame
+       that does not exist, and the part draws nothing with no special case in
+       either backend. */
+    expect(resolveFrameTemplate('hat-{costume}', new Map())).toBeNull();
+  });
+});
+
+describe('selectState', () => {
+  const context = (
+    values: Record<string, boolean | number>,
+    pending: string | null = null,
+  ): Parameters<typeof selectState>[1] => ({
+    value: (name) => values[name],
+    pending,
+  });
+
+  it('is idle when nothing is happening', () => {
+    expect(selectState(RIG.selector.rules, context({ grounded: true }))).toBe(IDLE_STATE);
+  });
+
+  it('walks below the run threshold and runs at or above it', () => {
+    const walking = { grounded: true, moving: true, speed: RUN_THRESHOLD - 0.01 };
+    const running = { grounded: true, moving: true, speed: RUN_THRESHOLD };
+    expect(selectState(RIG.selector.rules, context(walking))).toBe('walk');
+    expect(selectState(RIG.selector.rules, context(running))).toBe('run');
+  });
+
+  it('splits rising from falling while airborne, and outranks moving', () => {
+    const airborne = { grounded: false, moving: true, speed: 1 };
+    expect(selectState(RIG.selector.rules, context({ ...airborne, verticalSpeed: 0.5 }))).toBe(
+      'jump-rise',
     );
-    expect(spriteFrameName('officer', EXPRESSION_LAYER, 'thinking', 'speed', 11)).toBe(
-      'officer/expression/thinking/speed/11',
+    expect(selectState(RIG.selector.rules, context({ ...airborne, verticalSpeed: -0.5 }))).toBe(
+      'jump-fall',
     );
   });
-});
 
-describe('selectClip', () => {
-  const inputs = rig.inputs;
-
-  it('is idle when nothing is active', () => {
-    expect(selectClip(inputs, new Map(), null)).toBe(IDLE_CLIP);
+  it('lets a fired trigger outrank every state, in the rig’s order', () => {
+    const busy = { grounded: false, moving: true, speed: 1, talking: true };
+    expect(selectState(RIG.selector.rules, context(busy, 'interact'))).toBe('interact');
+    expect(selectState(RIG.selector.rules, context({ grounded: true }, 'land'))).toBe('land');
   });
 
-  it('takes the first active input in the document order, so priority is content', () => {
-    const values = new Map<string, boolean | number>([
-      ['airborne', true],
-      ['speed', 400],
-    ]);
-    expect(selectClip(inputs, values, null)).toBe('airborne');
-
-    /* Reversed document, same values, other answer: the rig decided, not this code. */
-    const reversed = [...inputs].reverse();
-    expect(selectClip(reversed, values, null)).toBe('speed');
+  it('suppresses the landing flourish under reduced motion, as the rig asks', () => {
+    /* `reducedMotion` is an input, not a setting the renderer reads — the port
+       is explicit that the renderer never reads settings itself. */
+    expect(
+      selectState(RIG.selector.rules, context({ grounded: true, reducedMotion: true }, 'land')),
+    ).toBe(IDLE_STATE);
   });
 
-  it('lets a fired trigger outrank every state', () => {
-    const values = new Map<string, boolean | number>([['speed', 400]]);
-    expect(selectClip(inputs, values, 'jump')).toBe('jump');
-  });
-
-  it('treats a zero number and a false bool as inactive', () => {
-    const values = new Map<string, boolean | number>([
-      ['airborne', false],
-      ['speed', 0],
-    ]);
-    expect(selectClip(inputs, values, null)).toBe(IDLE_CLIP);
-  });
-
-  it('never selects a trigger by its value: a trigger has none', () => {
-    const values = new Map<string, boolean | number>([['jump', true]]);
-    expect(selectClip(inputs, values, null)).toBe(IDLE_CLIP);
+  it('is first-match-wins in the document’s order, so priority is content', () => {
+    const reversed = [...RIG.selector.rules].reverse();
+    /* The same values, the rules the other way up, a different answer: the rig
+       decided, not this code. */
+    expect(selectState(reversed, context({ grounded: true, talking: true }))).toBe(IDLE_STATE);
+    expect(selectState(RIG.selector.rules, context({ grounded: true, talking: true }))).toBe('talk');
   });
 });
 
-describe('the sprite renderer draws from the atlas', () => {
-  it('gives every declared slot a layer, in the document order, plus a face on top', () => {
-    const { layers } = harness(fourFrames);
-    /* Three slots in the fixture, and the expression layer above them. */
-    expect(layers).toHaveLength(rig.slots.length + 1);
-    expect(layers.map((layer) => layer.index)).toEqual([0, 1, 2, 3]);
+describe('partTransformAt', () => {
+  const walk = RIG.states['walk'];
+
+  it('reads a keyframe exactly at its own t', () => {
+    const at = partTransformAt(walk?.keys ?? [], 'arm-upper-r', 0.25);
+    /* The third slot is rotation: `arm-upper-r` swings -26 degrees at a quarter
+       of the walk cycle. See `partTransformAt`'s comment for how the tuple order
+       was settled — the two documents disagree and the data decides. */
+    expect(at.rotation).toBeCloseTo(-26, 5);
+    expect(at.dx).toBe(0);
   });
 
-  it('paints the idle clip before the first update, so a placed character is drawn', () => {
-    const { layers } = harness(fourFrames);
-    expect(layers[0]?.frames[0]).toBe('officer/skin/skin-1/idle/0');
-    expect(layers[3]?.frames[0]).toBe('officer/expression/neutral/idle/0');
+  it('interpolates between the surrounding keys', () => {
+    const at = partTransformAt(walk?.keys ?? [], 'arm-upper-r', 0.125);
+    expect(at.rotation).toBeCloseTo(-13, 5);
   });
 
-  it('advances one frame per 1/fps of elapsed time and wraps at the clip length', () => {
-    const { renderer, layers } = harness(fourFrames);
-    const character = unwrap(renderer);
-    const step = 1000 / DEFAULT_FPS;
-
-    for (let frame = 0; frame < 5; frame += 1) character.update(step);
-
-    const drawn = layers[0]?.frames ?? [];
-    /* The first entry is the pre-update paint; the five after it are the updates. */
-    expect(drawn.slice(1)).toEqual([
-      'officer/skin/skin-1/idle/1',
-      'officer/skin/skin-1/idle/2',
-      'officer/skin/skin-1/idle/3',
-      'officer/skin/skin-1/idle/0',
-      'officer/skin/skin-1/idle/1',
-    ]);
-  });
-
-  it('plays the clip the inputs select', () => {
-    const { renderer, layers } = harness(fourFrames);
-    const character = unwrap(renderer);
-
-    character.setNumber('speed', 420);
-    character.update(0);
-    expect(layers[0]?.frames.at(-1)).toBe('officer/skin/skin-1/speed/0');
-  });
-
-  it('releases a fired trigger after the frame it played on', () => {
-    const { renderer, layers } = harness(fourFrames);
-    const character = unwrap(renderer);
-
-    character.setNumber('speed', 420);
-    character.fire('jump');
-    character.update(0);
-    expect(layers[0]?.frames.at(-1)).toBe('officer/skin/skin-1/jump/0');
-
-    character.update(0);
-    expect(layers[0]?.frames.at(-1)).toBe('officer/skin/skin-1/speed/0');
-  });
-
-  it('draws the swapped skin on the slot that owns it and leaves the others alone', () => {
-    const { renderer, layers } = harness(fourFrames);
-    const character = unwrap(renderer);
-
-    character.setSkin('coat', 'coat-blue');
-    expect(layers[1]?.frames.at(-1)).toBe('officer/coat/coat-blue/idle/0');
-    expect(layers[0]?.frames.at(-1)).toBe('officer/skin/skin-1/idle/0');
-  });
-
-  it('draws the expression on the face layer', () => {
-    const { renderer, layers } = harness(fourFrames);
-    unwrap(renderer).setExpression('thinking');
-    expect(layers[3]?.frames.at(-1)).toBe('officer/expression/thinking/idle/0');
-  });
-
-  it('honours a skin the caller chose over the slot fallback', () => {
-    const { layers } = harness(fourFrames, { skins: { coat: 'coat-blue' } });
-    expect(layers[1]?.frames[0]).toBe('officer/coat/coat-blue/idle/0');
-  });
-
-  it('mirrors rather than duplicating art, and only when the facing changes', () => {
-    const { renderer, layers } = harness(fourFrames);
-    const character = unwrap(renderer);
-
-    character.setFacing('right');
-    expect(layers.every((layer) => !layer.flipped)).toBe(true);
-
-    character.setFacing('left');
-    expect(layers.every((layer) => layer.flipped)).toBe(true);
-  });
-
-  it('destroys every layer on dispose', () => {
-    const { renderer, layers } = harness(fourFrames);
-    unwrap(renderer).dispose();
-    expect(layers.every((layer) => layer.destroyed)).toBe(true);
-  });
-});
-
-describe('the sprite renderer survives an atlas that is not there yet', () => {
-  it('falls back to the idle clip when the selected one has no frames', () => {
-    /* Only `idle` was packed — the state art is still being drawn. */
-    const packed = (frame: string): boolean => frame.includes('/idle/') && /\/[0-1]$/u.test(frame);
-    const { renderer, layers } = harness(packed);
-    const character = unwrap(renderer);
-
-    character.setNumber('speed', 420);
-    character.update(0);
-    expect(layers[0]?.frames.at(-1)).toBe('officer/skin/skin-1/idle/0');
-  });
-
-  it('hides a layer the atlas has nothing for, rather than throwing on the first frame', () => {
-    const { layers } = harness(() => false);
-    expect(layers.every((layer) => !layer.visible)).toBe(true);
-    expect(layers.every((layer) => layer.frames.length === 0)).toBe(true);
-  });
-
-  it('stops probing a clip at the ceiling, so a pathological atlas is bounded', () => {
-    let asked = 0;
-    const { renderer } = harness(() => {
-      asked += 1;
-      return true;
+  it('leaves a part the state never mentions at rest', () => {
+    expect(partTransformAt(walk?.keys ?? [], 'ground-shadow', 0.5)).toEqual({
+      dx: 0,
+      dy: 0,
+      rotation: 0,
     });
-    unwrap(renderer).update(0);
-    /* Four layers, and each stops asking at MAX_CLIP_FRAMES. */
-    expect(asked).toBeLessThanOrEqual(MAX_CLIP_FRAMES * 4);
-    expect(asked).toBeGreaterThan(0);
+  });
+
+  it('clamps a t outside 0..1 rather than extrapolating a limb off its body', () => {
+    const keys = walk?.keys ?? [];
+    expect(partTransformAt(keys, 'arm-upper-r', -1)).toEqual(partTransformAt(keys, 'arm-upper-r', 0));
+    expect(partTransformAt(keys, 'arm-upper-r', 9)).toEqual(partTransformAt(keys, 'arm-upper-r', 1));
+  });
+
+  it('is at rest with no keys at all', () => {
+    expect(partTransformAt([], 'torso', 0.5)).toEqual({ dx: 0, dy: 0, rotation: 0 });
   });
 });
 
-describe('a character state on this path is shape, never colour', () => {
-  /**
-   * The structural half of ADR-0011's rule that every effect has a plain path,
-   * applied to characters. Phaser's Canvas renderer has no Filter pipeline and
-   * CLAUDE.md says colour is never the only signal, so a state distinguished by
-   * a glow or a tint would simply not exist for a share of players.
-   *
-   * This is asserted against the *type* the renderer is allowed to touch rather
-   * than against behaviour, because behaviour can only prove the tint that was
-   * not used today. A `SpriteLayerObject` has no colour channel at all, so the
-   * mistake cannot be written down.
-   */
-  it('can only address a layer through texture, mirror and visibility', () => {
-    const seen = new Set<string>();
-    const { renderer } = harness(fourFrames);
-    const character = unwrap(renderer);
+describe('phaseOf', () => {
+  it('wraps a looping state', () => {
+    expect(phaseOf('loop', 450, 900)).toBeCloseTo(0.5, 5);
+    expect(phaseOf('loop', 1350, 900)).toBeCloseTo(0.5, 5);
+  });
 
-    /* Rebuild the harness through a Proxy that records every property the
-       renderer reaches for on a layer. */
-    const layers: SpriteLayerObject[] = [];
-    const probe = createSpriteCharacterRenderer(
+  it('stops on the last key for once and hold', () => {
+    expect(phaseOf('once', 1800, 900)).toBe(1);
+    expect(phaseOf('hold', 1800, 900)).toBe(1);
+  });
+
+  it('is 0 for a state with no duration, rather than dividing by it', () => {
+    expect(phaseOf('loop', 100, 0)).toBe(0);
+  });
+});
+
+describe('the puppet composes a character from the rig', () => {
+  it('draws one part per resolvable template, in the rig’s z order', () => {
+    const { parts } = harness();
+    const drawn = live(parts);
+
+    expect(drawn.length).toBeGreaterThan(10);
+    const depths = drawn.map((part) => part.depth ?? 0);
+    expect([...depths].sort((a, b) => a - b)).toEqual(depths);
+    expect(drawn.map((part) => part.part.z)).toEqual(drawn.map((part) => part.part.z).sort((a, b) => a - b));
+  });
+
+  it('dresses an NPC from the artboard the rig ships, without being told', () => {
+    const { parts } = harness();
+    /* The officer's artboard entry says `costume: serge`. Nobody passed it. */
+    const torso = live(parts).find((part) => part.part.name === 'torso');
+    expect(torso?.frame).toBe('character-torso-serge');
+  });
+
+  it('takes the caller’s choice over the artboard’s', () => {
+    const { parts } = harness({ skins: { costume: 'parka' } });
+    expect(live(parts).find((part) => part.part.name === 'torso')?.frame).toBe(
+      'character-torso-parka',
+    );
+  });
+
+  it('omits a part whose resolved frame the atlas does not carry', () => {
+    /* "A part whose resolved template is not in `frames` draws nothing." That is
+       every "none" option, and it is also what keeps a half-packed atlas from
+       throwing on the first frame. */
+    const { parts } = harness({}, (frame) => FRAMES.has(frame) && !frame.includes('hair'));
+    expect(live(parts).some((part) => part.part.name === 'hair')).toBe(false);
+    expect(live(parts).some((part) => part.part.name === 'torso')).toBe(true);
+  });
+
+  it('puts the rotation origin on the pivot, measured against the window as placed', () => {
+    const { renderer, parts } = harness();
+    unwrap(renderer).setPosition(500, 1200);
+    const space = RIG.characterSpace;
+
+    /* An unmirrored part: the pivot's fraction of its own frame window. */
+    const torso = live(parts).find((part) => part.part.name === 'torso');
+    const torsoWindow = RIG.frames[torso?.frame ?? ''];
+    expect(torso?.origin?.[0]).toBeCloseTo(
+      ((torso?.part.pivot[0] ?? 0) - (torsoWindow?.x ?? 0)) / (torsoWindow?.w ?? 1),
+      5,
+    );
+
+    /*
+     * A mirrored part, which is the case that shipped a detached arm.
+     *
+     * `arm-upper-r` and `arm-upper-l` share one frame — arms are symmetric about
+     * `centreX`, so the rig mirrors the far one — and that frame's window is
+     * stated for the arm it was drawn for. Measuring the right arm's pivot
+     * against the *unreflected* window gives `(60 - 166) / 41`, which is -2.6,
+     * and drew the limb two and a half of its own widths off the body.
+     */
+    const arm = live(parts).find((part) => part.part.name === 'arm-upper-r');
+    const armWindow = RIG.frames[arm?.frame ?? ''];
+    expect(arm?.part.mirrorX, 'the fixture stopped exercising the mirrored case').toBe(true);
+    const reflectedLeft = 2 * space.centreX - ((armWindow?.x ?? 0) + (armWindow?.w ?? 0));
+    expect(arm?.origin?.[0]).toBeCloseTo(
+      ((arm?.part.pivot[0] ?? 0) - reflectedLeft) / (armWindow?.w ?? 1),
+      5,
+    );
+    expect(arm?.origin?.[0] ?? -1).toBeGreaterThanOrEqual(0);
+    expect(arm?.origin?.[0] ?? 2).toBeLessThanOrEqual(1);
+  });
+
+  it('anchors the character on the ground between its feet', () => {
+    const { renderer, parts } = harness();
+    unwrap(renderer).setPosition(500, 1200);
+
+    const shadow = live(parts).find((part) => part.part.name === 'ground-shadow');
+    const space = RIG.characterSpace;
+    expect(shadow?.position?.[0]).toBeCloseTo(500 + (space.centreX - space.centreX), 5);
+    expect(shadow?.position?.[1]).toBeCloseTo(1200 + ((shadow?.part.pivot[1] ?? 0) - space.soleY), 5);
+  });
+
+  it('mirrors the composite about the character’s centre when it faces left', () => {
+    const { renderer, parts } = harness();
+    const character = unwrap(renderer);
+    character.setPosition(500, 1200);
+
+    const head = (): Painted | undefined => live(parts).find((part) => part.part.name === 'arm-upper-r');
+    const rightFacing = head()?.position?.[0] ?? 0;
+    character.setFacing('left');
+    const leftFacing = head()?.position?.[0] ?? 0;
+
+    /* Reflected about the anchor, and the part's own `mirrorX` composes with the
+       composite flip rather than fighting it — one frame serves both arms. */
+    expect(leftFacing - 500).toBeCloseTo(-(rightFacing - 500), 5);
+    expect(head()?.flipped).toBe(head()?.part.mirrorX !== true);
+  });
+
+  it('animates: the same part is somewhere else a quarter of a walk later', () => {
+    const { renderer, parts } = harness();
+    const character = unwrap(renderer);
+    character.setPosition(500, 1200);
+    character.setBool('grounded', true);
+    character.setBool('moving', true);
+    character.setNumber('speed', 0.3);
+
+    const arm = (): Painted | undefined => live(parts).find((part) => part.part.name === 'arm-upper-r');
+    character.update(0);
+    const atRest = arm()?.angle ?? 0;
+    character.update((RIG.states['walk']?.durationMs ?? 900) / 4);
+    const quarter = arm()?.angle ?? 0;
+
+    expect(quarter).not.toBeCloseTo(atRest, 3);
+    expect(quarter).toBeCloseTo(-26, 3);
+  });
+
+  it('re-dresses on a skin change without leaking the parts it replaced', () => {
+    const { renderer, parts } = harness();
+    const before = parts.length;
+    expect(unwrap(renderer).setSkin('costume', 'parka').ok).toBe(true);
+
+    expect(parts.length).toBeGreaterThan(before);
+    expect(parts.slice(0, before).every((part) => part.destroyed)).toBe(true);
+    expect(live(parts).find((part) => part.part.name === 'torso')?.frame).toBe(
+      'character-torso-parka',
+    );
+  });
+
+  it('changes the face without touching the body', () => {
+    const { renderer, parts } = harness();
+    expect(unwrap(renderer).setExpression('thinking').ok).toBe(true);
+    expect(live(parts).find((part) => part.part.name === 'face')?.frame).toBe(
+      'character-face-thinking',
+    );
+  });
+
+  it('destroys every part on dispose', () => {
+    const { renderer, parts } = harness();
+    unwrap(renderer).dispose();
+    expect(parts.every((part) => part.destroyed)).toBe(true);
+  });
+});
+
+describe('a character state is shape, never colour', () => {
+  /**
+   * The structural half of ADR-0011's "every effect has a plain path", applied
+   * to characters. Canvas has no Filter pipeline and CLAUDE.md says colour is
+   * never the only signal, so a state distinguished by a glow or a tint would
+   * simply not exist for a share of players.
+   *
+   * Asserted against the *type* the renderer may touch rather than against
+   * behaviour, because behaviour can only ever prove the tint that was not used
+   * today. A `SpritePartObject` has no colour channel at all, so the mistake
+   * cannot be written down.
+   */
+  it('can only address a part through texture, transform, mirror and visibility', () => {
+    const seen = new Set<string>();
+    const parts: SpritePartObject[] = [];
+
+    const built = createSpriteCharacterRenderer(
       {
-        characterId: rig.id,
-        artboard: rig.artboard,
-        stateMachine: rig.stateMachine,
-        inputs: rig.inputs,
-        slots: rig.slots,
-        expressions: ['neutral'],
+        characterId: characterId('officer'),
+        artboard: 'officer',
+        stateMachine: RIG.stateMachine.name,
+        rig: RIG,
         skins: {},
-        widthPx: 256,
-        heightPx: 512,
+        widthPx: RIG.characterSpace.width,
+        heightPx: RIG.characterSpace.height,
       },
       {
         textureKey: ATLAS,
-        frames: { hasFrame: (_key, frame) => fourFrames(frame) },
+        frames: { hasFrame: (_key, frame) => FRAMES.has(frame) },
         host: {
-          createLayer: (): SpriteLayerObject => {
-            const target: SpriteLayerObject = {
+          createPart: (): SpritePartObject => {
+            const target: SpritePartObject = {
               setTexture: () => undefined,
+              setOrigin: () => undefined,
+              setPosition: () => undefined,
+              setAngle: () => undefined,
               setFlipX: () => undefined,
+              setDepth: () => undefined,
               setVisible: () => undefined,
               destroy: () => undefined,
             };
@@ -319,22 +419,42 @@ describe('a character state on this path is shape, never colour', () => {
                 return Reflect.get(object, property, receiver) as unknown;
               },
             });
-            layers.push(proxied);
+            parts.push(proxied);
             return proxied;
           },
         },
       },
     );
 
-    const probed = unwrap(probe);
-    probed.setFacing('left');
-    probed.setNumber('speed', 200);
-    probed.update(16.7);
-    probed.setSkin('coat', 'coat-blue');
-    probed.setExpression('neutral');
-    probed.dispose();
+    const character = unwrap(built);
+    character.setPosition(400, 1200);
+    character.setFacing('left');
+    character.setBool('moving', true);
+    character.setNumber('speed', 0.9);
+    character.update(16.7);
+    character.setSkin('costume', 'parka');
+    character.setExpression('happy');
     character.dispose();
 
-    expect([...seen].sort()).toEqual(['destroy', 'setFlipX', 'setTexture', 'setVisible']);
+    expect([...seen].sort()).toEqual([
+      'destroy',
+      'setAngle',
+      'setDepth',
+      'setFlipX',
+      'setOrigin',
+      'setPosition',
+      'setTexture',
+      'setVisible',
+    ]);
+  });
+
+  it('gives every expression a distinct frame, so the four differ as shape', () => {
+    const frames = RIG.expressions.names.map((name) =>
+      resolveFrameTemplate('face-{expression}', new Map([['expression', name]])),
+    );
+    expect(new Set(frames).size).toBe(RIG.expressions.names.length);
+    for (const frame of frames) {
+      expect(FRAMES.has(`${RIG.atlas.framePrefix}${String(frame)}`)).toBe(true);
+    }
   });
 });

@@ -52,6 +52,11 @@ export interface Progress extends Player {
   readonly character: PlayerCharacter | null;
   readonly settings: Settings;
   readonly levels: readonly LevelProgress[];
+  /**
+   * The level the player was last in, so the title screen can offer Continue.
+   * `null` until one has been entered. The LEVEL, not the screen (ADR-0023).
+   */
+  readonly lastPlayedLevelId: LevelId | null;
   readonly reviews: readonly ReviewRecord[];
   readonly subjectsStarted: readonly SubjectId[];
   readonly exams: readonly ExamAttempt[];
@@ -65,6 +70,7 @@ export const newProgress = (
   character: null,
   settings,
   levels: unlockedLevelIds.map((levelId) => emptyLevelProgress(levelId, true)),
+  lastPlayedLevelId: null,
   reviews: [],
   subjectsStarted: [],
   exams: [],

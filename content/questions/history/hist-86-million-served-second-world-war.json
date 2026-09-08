@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-86-million-served-second-world-war",
+  "subject": "history",
+  "prompt": {
+    "en": "How many Canadians and Newfoundlanders served in the Second World War?",
+    "fr": "Combien de Canadiens et de Terre-Neuviens ont servi durant la Seconde Guerre mondiale?"
+  },
+  "options": [
+    {
+      "en": "More than one million, out of a population of 11.5 million.",
+      "fr": "Plus d'un million, sur une population de 11,5 millions d'habitants."
+    },
+    {
+      "en": "About 600,000, out of a population of eight million.",
+      "fr": "Environ 600 000, sur une population de huit millions d'habitants."
+    },
+    {
+      "en": "About 130,000.",
+      "fr": "Environ 130 000."
+    },
+    {
+      "en": "About 44,000.",
+      "fr": "Environ 44 000."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "More than one million Canadians and Newfoundlanders served, out of a population of 11.5 million, and 44,000 of them were killed. Newfoundland was still a separate British entity and only joined Canada in 1949.",
+    "fr": "Plus d'un million de Canadiens et de Terre-Neuviens ont servi, sur une population de 11,5 millions d'habitants, et 44 000 d'entre eux ont été tués. Terre-Neuve était encore une entité britannique distincte et ne s'est jointe au Canada qu'en 1949."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 43,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "More than one million Canadians and Newfoundlanders (Newfoundland was a separate British entity) served in the Second World War, out of a population of 11.5 million."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

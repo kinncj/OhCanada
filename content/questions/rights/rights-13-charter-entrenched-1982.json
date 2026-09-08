@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-13-charter-entrenched-1982",
+  "subject": "rights",
+  "prompt": {
+    "en": "In what year was the Constitution changed to include the Canadian Charter of Rights and Freedoms?",
+    "fr": "En quelle année la Constitution a-t-elle été modifiée pour y inscrire la Charte canadienne des droits et libertés?"
+  },
+  "options": [
+    {
+      "en": "1982.",
+      "fr": "En 1982."
+    },
+    {
+      "en": "1867.",
+      "fr": "En 1867."
+    },
+    {
+      "en": "1215.",
+      "fr": "En 1215."
+    },
+    {
+      "en": "1949.",
+      "fr": "En 1949."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Constitution of Canada was amended in 1982 so that the Canadian Charter of Rights and Freedoms became part of it. Confederation, in 1867, is a different and earlier event.",
+    "fr": "La Constitution du Canada a été modifiée en 1982 pour y intégrer la Charte canadienne des droits et libertés. La Confédération, en 1867, est un événement différent et plus ancien."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 12,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Constitution of Canada was amended in 1982 to entrench the Canadian Charter of Rights and Freedoms"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

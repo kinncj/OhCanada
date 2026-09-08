@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-10-kanata-means-village",
+  "subject": "history",
+  "prompt": {
+    "en": "The name Canada comes from the Iroquoian word kanata. What does that word mean?",
+    "fr": "Le nom « Canada » vient du mot iroquoien « kanata ». Que signifie ce mot?"
+  },
+  "options": [
+    {
+      "en": "Village.",
+      "fr": "Village."
+    },
+    {
+      "en": "Great river.",
+      "fr": "Grande rivière."
+    },
+    {
+      "en": "Big land.",
+      "fr": "Grande terre."
+    },
+    {
+      "en": "New land.",
+      "fr": "Terre neuve."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Cartier heard two captured guides use the Iroquoian word kanata, meaning village. By the 1550s the name Canada was appearing on maps.",
+    "fr": "Cartier a entendu deux guides capturés employer le mot iroquoien « kanata », qui signifie « village ». Dès les années 1550, le nom « Canada » figurait sur les cartes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 24,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Cartier heard two captured guides speak the Iroquoian word kanata, meaning “village.”"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

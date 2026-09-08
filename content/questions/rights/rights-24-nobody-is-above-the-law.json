@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-24-nobody-is-above-the-law",
+  "subject": "rights",
+  "prompt": {
+    "en": "Who is above the law in Canada?",
+    "fr": "Qui est au-dessus de la loi au Canada?"
+  },
+  "options": [
+    {
+      "en": "No person and no group.",
+      "fr": "Aucune personne et aucun groupe."
+    },
+    {
+      "en": "Elected members of Parliament, while they hold office.",
+      "fr": "Les députés élus, pendant qu'ils sont en poste."
+    },
+    {
+      "en": "Police officers, when they are on duty.",
+      "fr": "Les policiers, lorsqu'ils sont en service."
+    },
+    {
+      "en": "Judges, because they interpret the law.",
+      "fr": "Les juges, parce qu'ils interprètent la loi."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "People and governments alike are governed by laws, not by decisions taken at will. No person and no group in Canada is above the law.",
+    "fr": "Les personnes comme les gouvernements sont régis par des lois, et non par des décisions arbitraires. Aucune personne ni aucun groupe n'est au-dessus de la loi au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Individuals and governments are regulated by laws and not by arbitrary actions. No person or group is above the law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-33-heritage-includes-buildings",
+  "subject": "rights",
+  "prompt": {
+    "en": "Which kinds of heritage are citizens asked to protect for future generations?",
+    "fr": "Quels types de patrimoine les citoyens sont-ils invités à protéger pour les générations futures?"
+  },
+  "options": [
+    {
+      "en": "Natural, cultural and architectural heritage.",
+      "fr": "Le patrimoine naturel, culturel et architectural."
+    },
+    {
+      "en": "Natural heritage only, such as parks and rivers.",
+      "fr": "Le patrimoine naturel seulement, comme les parcs et les rivières."
+    },
+    {
+      "en": "Only sites that are already on a national list.",
+      "fr": "Seulement les sites qui figurent déjà sur une liste nationale."
+    },
+    {
+      "en": "Only heritage in the province where a person lives.",
+      "fr": "Seulement le patrimoine de la province où la personne habite."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The responsibility covers more than nature. Canada's natural, cultural and architectural heritage are all named, and every citizen has a part in protecting them.",
+    "fr": "Cette responsabilité ne se limite pas à la nature. Le patrimoine naturel, culturel et architectural du Canada est nommé, et chaque citoyen a un rôle à jouer pour le protéger."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Every citizen has a role to play in avoiding waste and pollution while protecting Canada’s natural, cultural and architectural heritage for future generations."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

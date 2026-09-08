@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-10-treaties-not-always-respected",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What does the guide say about the treaties negotiated with newcomers?",
+    "fr": "Que dit le guide au sujet des traités négociés avec les nouveaux arrivants?"
+  },
+  "options": [
+    {
+      "en": "They were not always fully respected.",
+      "fr": "Ils n'ont pas toujours été pleinement respectés."
+    },
+    {
+      "en": "They were always fully respected.",
+      "fr": "Ils ont toujours été pleinement respectés."
+    },
+    {
+      "en": "They were cancelled in 1867.",
+      "fr": "Ils ont été annulés en 1867."
+    },
+    {
+      "en": "They applied only to the three territories.",
+      "fr": "Ils ne s'appliquaient qu'aux trois territoires."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Royal Proclamation of 1763 set the basis for negotiating treaties with newcomers, and the guide states plainly that those treaties were not always fully respected.",
+    "fr": "La Proclamation royale de 1763 a établi la base de la négociation de traités avec les nouveaux arrivants, et le guide indique clairement que ces traités n'ont pas toujours été pleinement respectés."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 17,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "treaties that were not always fully respected."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

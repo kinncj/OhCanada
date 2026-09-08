@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-29-underground-railroad",
+  "subject": "history",
+  "prompt": {
+    "en": "What was the Underground Railroad?",
+    "fr": "Qu'était le chemin de fer clandestin?"
+  },
+  "options": [
+    {
+      "en": "A Christian anti-slavery network that helped people escaping slavery reach Canada.",
+      "fr": "Un réseau chrétien antiesclavagiste qui aidait les personnes fuyant l'esclavage à gagner le Canada."
+    },
+    {
+      "en": "The first railway line built between Montreal and Toronto.",
+      "fr": "La première ligne de chemin de fer construite entre Montréal et Toronto."
+    },
+    {
+      "en": "A tunnel dug beneath the Canada-United States border.",
+      "fr": "Un tunnel creusé sous la frontière canado-américaine."
+    },
+    {
+      "en": "A trading route used by the Hudson's Bay Company.",
+      "fr": "Une route commerciale utilisée par la Compagnie de la Baie d'Hudson."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "It was not a railway at all. Thousands of people escaping slavery in the United States followed the North Star and settled in Canada by way of the Underground Railroad, a Christian anti-slavery network.",
+    "fr": "Ce n'était pas du tout un chemin de fer. Des milliers de personnes fuyant l'esclavage aux États-Unis ont suivi l'étoile du Nord et se sont établies au Canada grâce au chemin de fer clandestin, un réseau chrétien antiesclavagiste."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 28,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "settled in Canada via the Underground Railroad, a Christian anti-slavery network."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

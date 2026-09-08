@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-75-women-federal-vote-1918",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year were most Canadian women aged 21 and over granted the right to vote in federal elections?",
+    "fr": "En quelle année la plupart des Canadiennes de 21 ans et plus ont-elles obtenu le droit de voter aux élections fédérales?"
+  },
+  "options": [
+    {
+      "en": "1918.",
+      "fr": "En 1918."
+    },
+    {
+      "en": "1916.",
+      "fr": "En 1916."
+    },
+    {
+      "en": "1921.",
+      "fr": "En 1921."
+    },
+    {
+      "en": "1940.",
+      "fr": "En 1940."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1917 the federal government gave the vote first to nurses at the front and then to women related to men in active service. In 1918 most Canadian female citizens aged 21 and over were granted the right to vote in federal elections.",
+    "fr": "En 1917, le gouvernement fédéral a d'abord accordé le droit de vote aux infirmières au front, puis aux femmes apparentées à des hommes en service actif. En 1918, la plupart des citoyennes canadiennes de 21 ans et plus ont obtenu le droit de voter aux élections fédérales."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 40,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1918, most Canadian female citizens aged 21 and over were granted the right to vote in federal elections."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

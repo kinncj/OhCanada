@@ -20,7 +20,13 @@
     "three wrong. They are corrected in place, with the measurement and the file it came from, and",
     "the places where the shipped drawing deliberately departs from the measurement are now labelled",
     "as exaggerations rather than left to look like accuracy. A contract that a render cannot be",
-    "checked against is worse than no contract."
+    "checked against is worse than no contract.",
+    "AMENDED 2026-09-08 while drawing slice 2 (Quebec City). Three subjects added. Every ratio in",
+    "`chateau-frontenac.mustBeRight` was MEASURED off a named reference file, in pixels, before anything was",
+    "drawn - the Ottawa entry had to be corrected twice for asserting ratios from memory, and the correction",
+    "was cheaper to make once here than twice there. Where three views of the same building bracket a ratio,",
+    "the bracket is recorded AND the one internally consistent view is named, because a drawing built from the",
+    "middle of three brackets satisfies none of them: that is a mistake this pass made and undid."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -396,6 +402,264 @@
         "officer-and-peace-tower-portrait.jpg is public domain (Crown copyright expired) and is the composition reference: scarlet review order, full length, standing on Parliament Hill with the Peace Tower behind, in portrait. It shows an identifiable person - rule 4 in assets/refs/README.md applies, it is a reference for uniform, posture and framing and never a portrait to reproduce.",
         "red-serge-and-working-uniform.jpg shows ceremonial scarlet beside the modern working uniform, which is the visual answer to OQ-LEVEL-2 if the PO chooses the winter option."
       ]
+    },
+    {
+      "id": "chateau-frontenac",
+      "subject": "The Chateau Frontenac, Quebec City",
+      "renders": [
+        "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. scripts/lib/art-handoff.mjs builds it with `singleSource()`, the same builder as peace-tower.",
+      "expectedBlindAnswer": [
+        "Chateau Frontenac",
+        "Fairmont Le Chateau Frontenac",
+        "Quebec City",
+        "the castle hotel in Quebec City",
+        "Chateau Frontenac, Quebec"
+      ],
+      "expectedBlindAnswerNote": [
+        "This subject is ALLOWED to demand a place name, unlike the toboggan-run subject below, and the difference",
+        "is not a preference: this render is a single non-repeating POI hero that draws one specific building, so a",
+        "verifier who cannot name it is reporting a defect in the drawing. The toboggan run is two repeating parallax",
+        "tiles that may not carry a landmark at all, so a verifier who names Quebec City from THEM would be reporting",
+        "a defect too - in the opposite direction. Ottawa learned that the hard way: its canal contract demanded",
+        "\"Ottawa\" from a tile its own notes forbade putting an Ottawa cue on, and it passed on the verifier's",
+        "inference rather than on the art."
+      ],
+      "referenceFiles": [
+        "quebec-city/chateau-frontenac-portrait.jpg",
+        "quebec-city/chateau-frontenac-street-elevation.jpg",
+        "quebec-city/chateau-frontenac-tower-2024.jpg",
+        "quebec-city/chateau-frontenac-dusk.jpg",
+        "quebec-city/dufferin-terrace-toboggan-slide-1905.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "green copper roofs over red-brown brick walls",
+          "why": "The single strongest cue and the one a newcomer carries in their head. Green roofs on red-brown brick is the Chateau Frontenac and very little else in Canada. It is also the pair that separates this landmark from Ottawa's: Parliament Hill is green copper over PALE BUFF SANDSTONE, and if both landmarks are drawn in the same stone the game has two buildings that look like each other.",
+          "detail": "Use the `copper` ramp for the wing and turret roofs and the `brick` ramp for the walls. `brick` was added to palette.json for this landmark, base hsl(18,52%,44%): MEASURED 2026-09-08 as the hue-filtered median of 106441 sunlit wall pixels in chateau-frontenac-street-elevation.jpg, #a27447 = hsl(29,42%,46%) under low warm autumn sun, against #735749 = hsl(20,21%,37%) for the same wall under overcast winter light in chateau-frontenac-portrait.jpg. The base sits between them and more saturated, per art-bible section 2. Pale stone banding runs horizontally across the brick; use `stone-light`. NOT grey, NOT sandstone buff for the walls.",
+          "palette": "copper, brick, stone"
+        },
+        {
+          "feature": "very steep roofs, 60 degrees or more from horizontal",
+          "why": "The defining property of the chateau style and the thing that is lost first when a cartoon flattens a roof. A 30 degree roof on this massing is a Victorian hotel, not a chateau, and no amount of green brings it back.",
+          "detail": "MEASURED from the roof silhouette by sky segmentation rather than by eye: the central tower's roof slope is 64.5 and 64.4 degrees on the two sides in chateau-frontenac-dusk.jpg (left slope (600,244)->(660,118), right slope (960,139)->(1030,285)), 62.7 degrees in chateau-frontenac-portrait.jpg, and 60.2 degrees in chateau-frontenac-street-elevation.jpg ((890,376)->(945,280)). The shipped art draws every roof end, gable and lucarne at 62 degrees and the tower roof at 62.3. Anything under 45 degrees stops being a chateau roof."
+        },
+        {
+          "feature": "one dominant square tower with a pyramidal roof, rising from the centre of a long mass",
+          "why": "The composition. Without the tower this reads as a generic Victorian railway hotel - which is what the maskRegion below exists to test, and it is the most useful single thing anyone can measure about this subject.",
+          "detail": "MEASURED in chateau-frontenac-portrait.jpg (1124x1600), the long-lens near-orthographic elevation, which is the ONE internally consistent view of the three and is therefore the one the drawing is built to. Tower width 161.7 px; total height base(620) to crest(91.7) = 528.3, so WIDTH : HEIGHT = 1 : 3.27. Wing ridge at y=380, so wing height 240 and TOWER : WING = 2.20. Tower standing above the wing ridge = 288.3, which is 0.55 of the total and 1.78 of the tower's width. The other two views bracket these: chateau-frontenac-street-elevation.jpg gives 1:2.85 and 1.84 (oblique, so the tower's width is inflated by seeing two faces), chateau-frontenac-dusk.jpg gives 2.30 (close, from below, base hidden behind the wings, so its width:height of 1:1.40 is DISCARDED rather than averaged). The shipped art is 220 x 720 = 1 : 3.27, tower:wing 2.20, 0.55 above the ridge, 1.79 of the width above it. Anything squatter than 1 : 2.5 stops being this tower.",
+          "maskRegion": {
+            "x": 404,
+            "y": 0,
+            "w": 272,
+            "h": 473
+          },
+          "whyMasked": "MEASURED against the shipped 1080x900 render: this rectangle covers the tower's finial, its pyramidal roof, the roof's eaves board and the shaft down to the wing ridge at world y 773 (render row 473), and leaves both wings, all four turret cones, every green roof, the brick, the banding, the arcade and the rock untouched. Verified by compositing the mask and looking. DIAGNOSTIC, never gating: it exists to put a number on the claim that the tower is what makes this the Chateau Frontenac rather than a chateau-style hotel, which is otherwise an assertion nobody can check."
+        },
+        {
+          "feature": "the tower roof is markedly darker than the wing roofs",
+          "why": "It is true in every reference here and it is what stops the building reading as one flat green mass. Drawing the tower roof green as well loses the tonal hierarchy that makes the tower dominant.",
+          "detail": "The wings and turret cones are green copper; the central tower's roof is a dark slate-grey-green in chateau-frontenac-portrait.jpg, chateau-frontenac-street-elevation.jpg, chateau-frontenac-tower-2024.jpg and chateau-frontenac-dusk.jpg alike. The shipped art uses the `slate` ramp for it against `copper` for the wings.",
+          "palette": "slate"
+        },
+        {
+          "feature": "conical turrets, several of them, in a rhythm along the mass",
+          "why": "The turret count is what makes the building read as a chateau at small size; when everything else has collapsed, the cone silhouette is still there.",
+          "detail": "MEASURED apex angles: 33-36 degrees for the tall corner turrets in chateau-frontenac-portrait.jpg (three turrets on the right wing at crop x 920-970, 1020-1090 and 1140-1200), and up to 50 degrees for the smaller ones in chateau-frontenac-street-elevation.jpg. The shipped art draws every cone at a 40 degree apex, inside that band. RHYTHM, NOT COUNT (art-bible rule 3): the number of turrets may differ from the photograph; the apex angle and the spacing may not. A cone wider than a 60 degree apex reads as a circus tent and is wrong."
+        },
+        {
+          "feature": "gabled dormers in a rhythm along the green roofs",
+          "why": "It is what stops the long roofs reading as plain green wedges, and it is present in every reference.",
+          "detail": "Lucarnes with their own steep gables at the same pitch as the roof, breaking the ridge line, with a small finial. Spacing to width about 1.6, measured on the long wing in chateau-frontenac-portrait.jpg (seven dormers at about 45 crop px spacing on 28 crop px width). The number may differ from the photograph; the ratio may not."
+        },
+        {
+          "feature": "the building stands on rock, above a terrace, not on flat ground",
+          "why": "Half of what the photographs show is that this building is on a cliff. Cap Diamant is why the Chateau is where it is, and a chateau on flat ground is a hotel.",
+          "detail": "A rock mass in vertical facets under the terrace level, with snow lying on its ledges and a few spruces at its foot. chateau-frontenac-portrait.jpg shows the terrace's buttressed retaining wall dropping away below the building; dufferin-terrace-toboggan-slide-1905.jpg shows the same drop from the other side."
+        }
+      ],
+      "simplifyAway": [
+        "brick coursing and mortar joints",
+        "window mullions, transoms and glazing bars",
+        "the individual facets of the polygonal turret roofs: four facets read as a cone, sixteen read as noise",
+        "balcony ironwork and fire escapes",
+        "roof vents, aerials, satellite dishes and the rooftop plant enclosure that sits on the tower's flat deck",
+        "the hotel's own signage, awnings and flags: nothing in this level draws lettering of any kind",
+        "the corbelled corner bartizans on the tower shaft. DROPPED, NOT APPROXIMATED, and it took three attempts to admit it: at 220 px of tower width a bartizan is a 46 px drum under a 27 px cone and it reads as a brown lozenge stuck to the tower. Art-bible rule 4 is drop, never substitute. The stone quoin strips at the tower's corners, which are also really there, stay and do the job."
+      ],
+      "neverAdd": [
+        "a clock face anywhere on this building. There is no clock on the Chateau Frontenac, and a cartoon tower tempts an artist into one; drawing it would also make this landmark and Ottawa's the same landmark",
+        "battlements, crenellation or arrow slits: this is an 1893 railway hotel in chateau style, not a fortress, and the difference is the whole point of the roofs",
+        "a dome, a minaret, or a second dominant tower",
+        "a drawbridge, a portcullis or a moat",
+        "the fleur-de-lys or any flag, coat of arms, wordmark or emblem: the game draws no lettering and no heraldry, and a flag on this building would assert something the art has not verified",
+        "snow lying in a sheet on the roof planes. At 62 degrees these roofs shed, and every winter reference here shows them clear; snow lies on the ledges, the dormer heads, the cornices and the ground"
+      ],
+      "openQuestions": [
+        "OQ-ART-04",
+        "OQ-QUEBEC-1",
+        "OQ-QUEBEC-2"
+      ],
+      "notes": [
+        "chateau-frontenac-portrait.jpg is the PRIMARY reference and the only one whose ratios are internally",
+        "consistent. Measure against it; use the others to bracket and to sanity-check.",
+        "chateau-frontenac-tower-2024.jpg carries no colour profile and its white balance is markedly cool - a",
+        "hue-filtered median over its whole facade returns ZERO brick-hued pixels. Use it for geometry only. It is",
+        "the same trap as Ottawa's night clock photograph, in a different disguise.",
+        "chateau-frontenac-dusk.jpg is a dusk exposure with the building floodlit and coloured architectural lighting",
+        "on the tower. Use it for massing and for the roof-slope measurement, never for colour.",
+        "PLACEMENT FLOOR: do not draw this landmark below 300 px wide anywhere the player is meant to recognise it.",
+        "That is the verifier's floor from Ottawa, adopted here rather than re-derived, because no blind pass has been",
+        "run on this subject yet. What the size ladder shows as a DRAWING OBSERVATION, which is not an identification:",
+        "at 300 px every mustBeRight feature is legible including the lucarne rhythm; at 140 px the lucarnes, the stone",
+        "banding and the windows have collapsed to speckle and the read rests entirely on the four cone silhouettes,",
+        "the dark central pyramid and the green-on-red contrast. Whether that is still enough is the identifier's call,",
+        "not the artist's, and the floor stays at 300 until someone makes it.",
+        "The two-size test in art-bible section 5 was run at the shipping size of 1080 x 900 and passed at both probes.",
+        "That is what ADR-0013 as amended requires before a landmark ships at 1x rather than the 2x default; the",
+        "measured saving is 14.83 MiB -> 3.71 MiB of decoded texture. See assets/style/quebec-city-level.md section 5."
+      ]
+    },
+    {
+      "id": "dufferin-terrace-toboggan-run",
+      "subject": "A toboggan run beside a railed winter promenade",
+      "renders": [
+        "src/svg/quebec-city/layer-50-terrace.svg",
+        "src/svg/quebec-city/layer-60-slope.svg"
+      ],
+      "renderRecipe": "Composite the two, terrace above run, the run placed 580 px below the terrace tile's top edge (world y 1280 against 700). Both are repeating parallax tiles, so lay each from x=0 and REPEAT it to the wider of the two (2016 and 1440) rather than laying them side by side, and draw the run over the terrace where they overlap, which is the order the level uses. Neither file answers the subject alone: a run with no promenade is a snowy field, and a promenade with no run is a fence. scripts/lib/art-handoff.mjs builds it with `twoParallaxTiles({ farMatch: 'terrace', nearMatch: 'slope', nearTop: 580 })`, the same shape and the same offset as the Rideau Canal.",
+      "expectedBlindAnswer": [
+        "a toboggan run",
+        "a snow slide",
+        "an ice slide",
+        "a sledding run",
+        "a snow chute",
+        "a winter promenade",
+        "a boardwalk and a snow chute",
+        "a railed promenade and a snow run"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, and this list is the whole reason this note exists. Both renders are REPEATING parallax",
+        "tiles - 2016 px and 1440 px - so a unique landmark drawn on either appears three or four times across the",
+        "level. Nothing on them may name a city, and it follows that nothing may be DEMANDED of them that names one.",
+        "Ottawa's canal subject asked its verifier for \"Ottawa\" from a tile whose own notes forbade drawing the one",
+        "landmark that would have said Ottawa; it passed on the verifier's inference from project context rather than",
+        "on the art, and had to be amended. That mistake is not repeated here: no answer in this list names Quebec",
+        "City, Quebec, the Dufferin Terrace or the Chateau Frontenac, and a verifier who does name one of them is not",
+        "wrong - they are just not required to, and the gate must not reward it.",
+        "WHERE QUEBEC CITY ACTUALLY COMES FROM: the level composite. `quebec-city-landmark-chateau-frontenac` is a",
+        "separate, non-repeating subject that draws one specific building and IS required to be named. The run is where",
+        "the player toboggans; the Chateau is what says which city. Splitting them is what lets each be judged on what",
+        "it actually contains.",
+        "Every answer here is deliberately free of ordinary connectives four letters or longer. \"a boardwalk with an ornate railing above a snow slope\" was in this list for one run and failed the hand-off's leak scan on the token \"with\". See the note on quebec-city-riverfront."
+      ],
+      "referenceFiles": [
+        "quebec-city/dufferin-terrace-toboggan-slide-1905.jpg",
+        "quebec-city/toboggan-slide-riders.jpg",
+        "quebec-city/dufferin-terrace-boardwalk.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the snow lane is a built chute with edges, not open hillside",
+          "why": "This is a toboggan RUN, not a snowy field. The containment is the whole read, exactly as the built edges are what make Ottawa's ice a canal rather than a pond.",
+          "detail": "Both references show a chute with high walls and long straight lane dividers running downhill. TrueNorth is a portrait side-scroller and looks ACROSS the run, where the view down it does not exist, so in the side view the containment reads as: a low timber wall running the full width along the far side of the lane with snow capping it, two straight level lane-divider ridges running the full width, and a near snow bank framing the bottom of the frame. Straight, level, parallel edges - a built chute, never a natural slope."
+        },
+        {
+          "feature": "straight parallel runner marks in the lane",
+          "why": "A toboggan runner scores STRAIGHT lines. The curved arcs that are correct on skated ice would say skating rink, which is a different level of this game and a different sport.",
+          "detail": "Sparse, straight, level, parallel streaks in `snow-light` at 0.30-0.42 opacity, authored as shapes. Never noise, never arcs."
+        },
+        {
+          "feature": "a promenade above the run with an ornate cast-iron railing",
+          "why": "It is what makes the run a town amenity rather than a hillside, and the scroll-panel railing is the strongest single piece of built character on these tiles.",
+          "detail": "A masonry parapet with a snow-capped coping, and along its head a dark green cast-iron railing of repeating scroll panels between posts with urn finials, drawn from dufferin-terrace-boardwalk.jpg. Two arcs and a ring per bay - rhythm, not tracery."
+        },
+        {
+          "feature": "globe lamp standards in a rhythm along the promenade",
+          "why": "Present in both terrace references and in the 1905 photograph; it is what dates and places the promenade without naming it.",
+          "detail": "Dark green columns with a cluster of three white opal globes, one central and two on curved brackets."
+        },
+        {
+          "feature": "people in winter coats, standing and walking, not skating or skiing",
+          "why": "CLAUDE.md requires identical cartoon proportions for every character, and background figures are where that rule is quietly broken first.",
+          "detail": "Six heads tall, the same proportion canon as the player, drawn small because they are further away and never because they matter less. Winter coats, toques, mitts, boots. No outline: a figure authored into a parallax tile is background. NO CULTURAL MARKER OF ANY KIND on any of them - docs/content-review.md 3.3 outcome 2, and it is a rule here rather than an oversight."
+        },
+        {
+          "feature": "cold winter light on snow that is not flat white",
+          "why": "Snow reads as a surface only against a second tone; a single white fills the lower third with nothing.",
+          "detail": "Use the `ice` ramp for the polished lane against `snow` for the banks, so the lane is a distinct surface."
+        }
+      ],
+      "simplifyAway": [
+        "individual planks in the boardwalk decking",
+        "the cast-iron railing's real tracery: two arcs and a ring per bay is the rhythm, and the rest is below 12 px",
+        "street furniture above the lamp line",
+        "faces on the background figures below 12 px"
+      ],
+      "neverAdd": [
+        "the Chateau Frontenac, or any other named or recognisable building, drawn into either of these two REPEATING tiles. Scoped deliberately: the Chateau is required on the chateau-frontenac subject and forbidden here, and the reason is the tiling, not the building. A prohibition on one subject may not forbid a requirement of another (verifyArtProtocol.contradictionRule), so this one names the tiles it applies to",
+        "hockey boards, nets or line markings: this is a slide, not a rink",
+        "a ski lift, a chairlift or a tow rope",
+        "mountains on the horizon",
+        "any lettering, signage or wordmark, in either language"
+      ],
+      "notes": [
+        "dufferin-terrace-toboggan-slide-1905.jpg is the level's composition reference: the chute, its walls, the",
+        "promenade beside it and the crowd, in one frame. toboggan-slide-riders.jpg gives the riders' posture -",
+        "seated, knees up, leaning back on a flat wooden toboggan - and the lane structure.",
+        "Both historical photographs show timber hoop arches over the run. The shipped tile draws ONE timber",
+        "footbridge per 2016 px tile instead: a run of hoops would be overhead in every frame including the one",
+        "framing the landmark, and the bridge is the same 'portal the player passes through' that Ottawa validated.",
+        "Where it falls, and why it matters: see assets/style/quebec-city-level.md section 3."
+      ]
+    },
+    {
+      "id": "quebec-city-riverfront",
+      "renders": [],
+      "renderRecipe": "UNRENDERED, by decision, and the same decision Ottawa made about its skyline. No source answers this subject. `layer-20-farbank.svg` and `layer-30-river.svg` are a GENERIC winter river town and open water and must stay generic: they are repeating parallax tiles that the low preset drops, and the art bible forbids putting an identifying feature on a droppable layer. A verifier able to name Quebec City from them would be reporting a defect, not a pass. The city's own identifying feature lives in `landmark-chateau-frontenac@1x.svg`, which is judged as `chateau-frontenac`.",
+      "subject": "Quebec City seen from across the Saint Lawrence: the Chateau Frontenac on Cap Diamant above the Old Town",
+      "expectedBlindAnswer": [
+        "Quebec City",
+        "Quebec",
+        "Chateau Frontenac"
+      ],
+      "referenceFiles": [
+        "quebec-city/quebec-city-waterfront-winter.jpg",
+        "quebec-city/levis-far-shore-winter.jpg",
+        "quebec-city/quebec-ramparts-snow.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the city stands on a cliff above the river",
+          "why": "Cap Diamant is why Quebec City is where it is, and the height is the first thing the view from the water shows.",
+          "detail": "A rock bluff with snow on its ledges, rising out of the water, with the town on top rather than beside it."
+        },
+        {
+          "feature": "the Chateau Frontenac on the skyline, above everything else",
+          "why": "From the river it is the one silhouette that names the city.",
+          "detail": "Green copper roofs and one dark pyramidal tower, standing clear of the roofline around it. See the chateau-frontenac subject for the measured proportions."
+        },
+        {
+          "feature": "steep metal roofs on the town below",
+          "why": "The vernacular roofline is what places the town in Quebec rather than anywhere else in North America.",
+          "detail": "Steep pitched roofs in pale metal with snow on the ridges, dormers, and a parish steeple, packed close. Rhythm, not count."
+        }
+      ],
+      "simplifyAway": [
+        "individual windows below 6 px",
+        "modern towers behind the Old Town",
+        "cranes and port machinery"
+      ],
+      "neverAdd": [
+        "mountains behind the city",
+        "a bridge across the river in the same frame as the Old Town"
+      ],
+      "notes": [
+        "Recorded rather than dropped, so that a later level or a map screen that DOES draw Quebec City from the water",
+        "has the contract waiting instead of inventing one. Its lists are dormant while `renders` is empty.",
+        "The id avoids ordinary English words on purpose. It was `quebec-city-from-the-river` for one run and the leak scanner in scripts/lib/art-handoff.mjs failed the hand-off on the token \"from\", which the briefing it writes obviously contains. That scanner takes single words from `id` and `expectedBlindAnswer` only, and its own comment says it was narrowed to those because an earlier version fired on \"from\", \"with\" and \"every\" - it assumes those two fields hold only distinctive words. THAT ASSUMPTION IS A CONSTRAINT ON THIS FILE and nothing states it here, so it is stated here: no subject id and no expectedBlindAnswer may contain a common English word of four letters or more. It cost one red run to find."
+      ]
     }
   ],
   "licenceAudit": {
@@ -408,6 +672,6 @@
       "CC-BY-3.0",
       "CC-BY-4.0"
     ],
-    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md."
+    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa."
   }
 }

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-45-black-loyalists-1780s",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "In the 1780s, who fled to Canada from America, where slavery stayed legal until 1863?",
+    "fr": "Dans les années 1780, qui a fui vers le Canada depuis l'Amérique, où l'esclavage est demeuré légal jusqu'en 1863?"
+  },
+  "options": [
+    {
+      "en": "Escaped slaves and free men and women of African origin.",
+      "fr": "Des esclaves en fuite ainsi que des hommes et des femmes libres d'origine africaine."
+    },
+    {
+      "en": "French colonists from Louisiana.",
+      "fr": "Des colons français de la Louisiane."
+    },
+    {
+      "en": "Settlers from Ireland after a famine.",
+      "fr": "Des colons irlandais fuyant une famine."
+    },
+    {
+      "en": "Refugees from the Caribbean after a war.",
+      "fr": "Des réfugiés des Caraïbes après une guerre."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Escaped slaves and free men and women of African origin fled north to Canada in the 1780s. Slavery remained legal in America until 1863.",
+    "fr": "Des esclaves en fuite ainsi que des hommes et des femmes libres d'origine africaine ont fui vers le nord, au Canada, dans les années 1780. L'esclavage est demeuré légal en Amérique jusqu'en 1863."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 22,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "escaped slaves and freed men and women of African origin who in the 1780s fled to Canada from America, where slavery remained legal until 1863"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

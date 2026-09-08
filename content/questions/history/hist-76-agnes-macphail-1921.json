@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-76-agnes-macphail-1921",
+  "subject": "history",
+  "prompt": {
+    "en": "Who became the first woman Member of Parliament, in 1921?",
+    "fr": "Qui est devenue la première femme députée, en 1921?"
+  },
+  "options": [
+    {
+      "en": "Agnes Macphail, a farmer and teacher.",
+      "fr": "Agnes Macphail, agricultrice et enseignante."
+    },
+    {
+      "en": "Dr. Emily Stowe.",
+      "fr": "La docteure Emily Stowe."
+    },
+    {
+      "en": "Thérèse Casgrain.",
+      "fr": "Thérèse Casgrain."
+    },
+    {
+      "en": "Laura Secord.",
+      "fr": "Laura Secord."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Agnes Macphail, a farmer and teacher, became the first woman Member of Parliament in 1921, three years after most Canadian women won the federal vote.",
+    "fr": "Agnes Macphail, agricultrice et enseignante, est devenue la première femme députée en 1921, trois ans après que la plupart des Canadiennes eurent obtenu le droit de vote fédéral."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 40,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1921 Agnes Macphail, a farmer and teacher, became the first woman MP."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

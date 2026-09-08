@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-92-japan-surrendered-1945",
+  "subject": "history",
+  "prompt": {
+    "en": "On what date did Japan surrender, ending four years of war in the Pacific?",
+    "fr": "À quelle date le Japon a-t-il capitulé, mettant fin à quatre ans de guerre dans le Pacifique?"
+  },
+  "options": [
+    {
+      "en": "August 14, 1945.",
+      "fr": "Le 14 août 1945."
+    },
+    {
+      "en": "May 8, 1945.",
+      "fr": "Le 8 mai 1945."
+    },
+    {
+      "en": "June 6, 1944.",
+      "fr": "Le 6 juin 1944."
+    },
+    {
+      "en": "November 11, 1918.",
+      "fr": "Le 11 novembre 1918."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Japan surrendered on August 14, 1945, ending four years of war in the Pacific. May 8, 1945 was the German surrender, which ended six years of war in Europe.",
+    "fr": "Le Japon a capitulé le 14 août 1945, mettant fin à quatre ans de guerre dans le Pacifique. Le 8 mai 1945 correspond à la capitulation allemande, qui a mis fin à six ans de guerre en Europe."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 44,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Japan surrendered on August 14, 1945—the end of four years of war in the Pacific."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

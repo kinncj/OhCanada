@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-18-inuit-knowledge-of-the-land",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What allowed the Inuit to adapt to one of the harshest environments on earth?",
+    "fr": "Qu'est-ce qui a permis aux Inuit de s'adapter à l'un des milieux les plus rudes de la planète?"
+  },
+  "options": [
+    {
+      "en": "Their knowledge of the land, the sea and wildlife.",
+      "fr": "Leur connaissance de la terre, de la mer et de la faune."
+    },
+    {
+      "en": "Equipment brought by European traders.",
+      "fr": "Le matériel apporté par les commerçants européens."
+    },
+    {
+      "en": "Moving south each winter.",
+      "fr": "Le déplacement vers le sud chaque hiver."
+    },
+    {
+      "en": "Farming crops suited to cold weather.",
+      "fr": "La culture de plantes adaptées au froid."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Knowledge of the land, the sea and wildlife is what allowed the Inuit to adapt to one of the harshest environments on earth.",
+    "fr": "C'est la connaissance de la terre, de la mer et de la faune qui a permis aux Inuit de s'adapter à l'un des milieux les plus rudes de la planète."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 18,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Their knowledge of the land, sea and wildlife enabled them to adapt to one of the harshest environments on earth."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

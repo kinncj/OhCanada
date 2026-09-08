@@ -18,7 +18,11 @@
  * at 200 % text.
  */
 
+import type { LevelId } from '../../app/domain/ids';
+
 import { createCharacterCreator, type CreatorSlot } from '../../app/ui/character-creator';
+import type { MapEntry } from '../../app/ui/level-select';
+import { createShell } from '../../app/ui/shell';
 import { createDialogue } from '../../app/ui/dialogue';
 import { createHud } from '../../app/ui/hud';
 import { createLevelAnnouncer, type LevelEvent } from '../../app/ui/level-events';
@@ -61,7 +65,7 @@ const apply = (): void =>
 apply();
 store.subscribe(apply);
 
-const SLOTS: readonly CreatorSlot[] = [
+const slotsFor = (locale: UiLocale): readonly CreatorSlot[] => [
   {
     id: 'skin',
     testId: 'slot-skin',
@@ -95,6 +99,8 @@ const SLOTS: readonly CreatorSlot[] = [
     ],
   },
 ];
+
+const SLOTS: readonly CreatorSlot[] = slotsFor(locale);
 
 const LONG_PROMPT_EN =
   'Which of these best describes what the Constitution Act, 1867 set up for Canada, ' +
@@ -171,6 +177,42 @@ const LEVEL = {
     },
   },
 } as const;
+
+/**
+ * The shell's map entries.
+ *
+ * **No copy here.** `TN-TITLE`, `TN-MAP`, `TN-FLOW` and `TN-LEVELS` write every
+ * string these screens draw, so `app/ui/copy.ts` carries the rows and the shell
+ * takes none as an option. What is left is the *state* of the journey, which is
+ * data: ten entries in map order, from `TN-LEVELS-2-to-10-spine.md`, with levels
+ * 2 and 10 carrying no id because that file deliberately leaves them unscoped.
+ *
+ * The default fixture shows all three card states at once — Ottawa open, Halifax
+ * built and not yet earned, the other eight not made yet — because `TN-MAP-05`
+ * is about telling the last two apart, and a scan that never draws both proves
+ * nothing about it.
+ */
+const PLACES: readonly (readonly [number, string | undefined])[] = [
+  [1, 'halifax'],
+  [2, undefined],
+  [3, 'quebec-city'],
+  [4, 'ottawa'],
+  [5, 'toronto'],
+  [6, 'winnipeg'],
+  [7, 'prairie-rail'],
+  [8, 'alberta-foothills'],
+  [9, 'vancouver'],
+  [10, undefined],
+];
+
+const mapEntries = (built: readonly string[]): readonly MapEntry[] =>
+  PLACES.map(([number, id]) => ({
+    number,
+    ...(id === undefined ? {} : { id: id as LevelId }),
+    built: id !== undefined && built.includes(id),
+    unlocked: id === 'ottawa',
+    stamped: false,
+  }));
 
 const level = LEVEL[locale];
 
@@ -414,6 +456,49 @@ switch (screen) {
       default:
         break;
     }
+    break;
+  }
+
+  /*
+   * The shell: the game's front door, and the page a cold load lands on.
+   *
+   * This is the one case in this harness that is a whole *page* rather than a
+   * component — a `<main>` landmark with real content in it — so its scan runs
+   * with axe's `region` and `landmark-one-main` rules ON. See
+   * `tests/a11y/shell.spec.ts`.
+   */
+  case 'shell': {
+    const view = params.get('view') ?? 'title';
+    const built =
+      params.get('levels') === 'none'
+        ? []
+        : params.get('levels') === 'one'
+          ? ['ottawa']
+          : ['ottawa', 'halifax'];
+
+    const shell = createShell(ui, {
+      store,
+      entries: mapEntries(built),
+      stampsToUnlock: 1,
+      creator: {
+        slots: { en: slotsFor('en'), fr: slotsFor('fr') },
+        /* First-run only when the creator is what is being scanned: otherwise
+           Play would go through the creator and never reach the level select,
+           which is the flow these scans are about. */
+        required: view === 'creator',
+        /* Fixed rather than random, so a scan is reproducible. */
+        initialSelection: { skin: 'skin-3', hair: 'curly', coat: 'parka' },
+      },
+      announce,
+      onPlayLevel: () => undefined,
+      ...(params.get('resume') === '1' ? { resumeLevelId: 'ottawa' as LevelId } : {}),
+      ...(params.get('study') === '1' ? { onOpenStudy: (): void => undefined } : {}),
+      ...(params.get('export') === '1' ? { onExportSave: (): void => undefined } : {}),
+    });
+
+    shell.start();
+    if (params.get('storage') === 'blocked') shell.setStorageWarning(true);
+    if (view === 'creator' || view === 'level-select') shell.show(view);
     break;
   }
 

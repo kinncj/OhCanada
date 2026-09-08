@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-42-nova-scotia-responsible-government",
+  "subject": "history",
+  "prompt": {
+    "en": "Which colony was the first in British North America to attain full responsible government?",
+    "fr": "Quelle colonie a été la première en Amérique du Nord britannique à obtenir le gouvernement responsable complet?"
+  },
+  "options": [
+    {
+      "en": "Nova Scotia, in 1847-48.",
+      "fr": "La Nouvelle-Écosse, en 1847-1848."
+    },
+    {
+      "en": "The Province of Canada, in 1840.",
+      "fr": "La province du Canada, en 1840."
+    },
+    {
+      "en": "New Brunswick, in 1785.",
+      "fr": "Le Nouveau-Brunswick, en 1785."
+    },
+    {
+      "en": "Prince Edward Island, in 1873.",
+      "fr": "L'Île-du-Prince-Édouard, en 1873."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Nova Scotia was the first colony in British North America to attain full responsible government, in 1847-48. United Canada followed in 1848-49.",
+    "fr": "La Nouvelle-Écosse a été la première colonie de l'Amérique du Nord britannique à obtenir le gouvernement responsable complet, en 1847-1848. Le Canada-Uni a suivi en 1848-1849."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 32,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The first British North American colony to attain full responsible government was Nova Scotia in 1847–48."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

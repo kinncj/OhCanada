@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-90-third-largest-navy",
+  "subject": "history",
+  "prompt": {
+    "en": "How large was Canada's navy at the end of the Second World War?",
+    "fr": "Quelle était l'importance de la marine canadienne à la fin de la Seconde Guerre mondiale?"
+  },
+  "options": [
+    {
+      "en": "The third-largest navy in the world.",
+      "fr": "La troisième marine en importance au monde."
+    },
+    {
+      "en": "The largest navy in the world.",
+      "fr": "La plus grande marine au monde."
+    },
+    {
+      "en": "The tenth-largest navy in the world.",
+      "fr": "La dixième marine en importance au monde."
+    },
+    {
+      "en": "The largest navy in the Commonwealth after Britain and Australia.",
+      "fr": "La plus grande marine du Commonwealth après celles de la Grande-Bretagne et de l'Australie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Royal Canadian Navy's finest hour was the Battle of the Atlantic, protecting convoys of merchant ships against German submarines. At the end of the war Canada had the third-largest navy in the world.",
+    "fr": "L'heure de gloire de la Marine royale canadienne a été la bataille de l'Atlantique, où elle protégeait les convois de navires marchands contre les sous-marins allemands. À la fin de la guerre, le Canada possédait la troisième marine en importance au monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 44,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "At the end of the Second World War, Canada had the third-largest navy in the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

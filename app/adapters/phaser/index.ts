@@ -192,9 +192,12 @@ export {
 
 export {
   PINNED_SCROLL_FACTOR,
+  PLACEHOLDER_BAND_HEIGHT,
   createLevelEffects,
+  layerCoverage,
   particleBudget,
   selectLayers,
+  type LayerViewport,
   type EmitterTarget,
   type LevelEffects,
   type ScrollTarget,
@@ -244,19 +247,22 @@ export {
   rather than a convention two files have to keep.
 */
 export {
-  DEFAULT_FPS,
-  EXPRESSION_LAYER,
-  IDLE_CLIP,
-  MAX_CLIP_FRAMES,
+  IDLE_STATE,
+  RUN_THRESHOLD,
   createSpriteCharacterRenderer,
   createSpriteCharacterRendererFactory,
-  selectClip,
-  spriteFrameName,
+  partTransformAt,
+  phaseOf,
+  resolveFrameTemplate,
+  selectState,
+  validateSpec,
+  type SelectorContext,
   type SpriteCharacterRendererOptions,
   type SpriteFrameSource,
-  type SpriteLayerHost,
-  type SpriteLayerObject,
+  type SpritePartHost,
+  type SpritePartObject,
 } from './sprite-character-renderer';
+
 
 /*
   What a level loads, and the reason this module exists.

@@ -104,14 +104,22 @@ describe('snapshotToAttributes', () => {
        `docs/stories/README.md` and were added by the engine agent: they are what
        separates "this level drew its art" from "this level drew a coloured
        band", which is the distinction a deployed Ottawa with no art in it passed
-       forty e2e tests by blurring. */
+       forty e2e tests by blurring. `data-actors-drawn` is the same distinction
+       for the officer and the Peace Tower, which shipped as a rounded rectangle
+       and a rectangle-plus-triangle. `*-visible` is the pair that replaced them
+       as the assertion: those count what the camera can see, and read 0 for the
+       screen that read 6/6 and 2/2. */
     expect(Object.keys(snapshotToAttributes({})).sort()).toEqual(
       [
         'data-camera-x',
         'data-facing',
+        'data-actors',
+        'data-actors-drawn',
+        'data-actors-visible',
         'data-grounded',
         'data-layers',
         'data-layers-textured',
+        'data-layers-visible',
         'data-level',
         'data-mode',
         'data-motion',

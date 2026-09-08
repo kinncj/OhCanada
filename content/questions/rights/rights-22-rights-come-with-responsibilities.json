@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-22-rights-come-with-responsibilities",
+  "subject": "rights",
+  "prompt": {
+    "en": "In Canada, what comes with rights?",
+    "fr": "Au Canada, qu'est-ce qui accompagne les droits?"
+  },
+  "options": [
+    {
+      "en": "Responsibilities.",
+      "fr": "Des responsabilités."
+    },
+    {
+      "en": "A fee paid once a year.",
+      "fr": "Des frais à payer une fois par année."
+    },
+    {
+      "en": "A period of military service.",
+      "fr": "Une période de service militaire."
+    },
+    {
+      "en": "Nothing; rights stand on their own.",
+      "fr": "Rien : les droits existent seuls."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Citizenship in Canada is not a list of entitlements only. Rights come with responsibilities, such as obeying the law, serving on a jury, voting, helping others and protecting our heritage and environment.",
+    "fr": "La citoyenneté canadienne n'est pas seulement une liste d'avantages. Les droits s'accompagnent de responsabilités : respecter la loi, faire partie d'un jury, voter, aider les autres et protéger notre patrimoine et notre environnement."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In Canada, rights come with responsibilities."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

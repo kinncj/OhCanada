@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-04-west-coast-preserved-fish",
+  "subject": "history",
+  "prompt": {
+    "en": "How did the peoples of the West Coast preserve fish?",
+    "fr": "Comment les peuples de la côte Ouest conservaient-ils le poisson?"
+  },
+  "options": [
+    {
+      "en": "By drying and smoking it.",
+      "fr": "En le faisant sécher et en le fumant."
+    },
+    {
+      "en": "By salting it in barrels.",
+      "fr": "En le salant dans des barils."
+    },
+    {
+      "en": "By freezing it in ice houses.",
+      "fr": "En le congelant dans des glacières."
+    },
+    {
+      "en": "By trading it away the same day.",
+      "fr": "En l'échangeant le jour même."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "West Coast peoples preserved fish by drying and smoking it. Each region had its own way of living from the land and the sea.",
+    "fr": "Les peuples de la côte Ouest conservaient le poisson en le faisant sécher et en le fumant. Chaque région avait sa propre façon de vivre de la terre et de la mer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 23,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "West Coast natives preserved fish by drying and smoking."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

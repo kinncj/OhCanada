@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-16-mobility-rights",
+  "subject": "rights",
+  "prompt": {
+    "en": "What do mobility rights allow Canadians to do?",
+    "fr": "Que permet la liberté de circulation et d'établissement aux Canadiens?"
+  },
+  "options": [
+    {
+      "en": "Live and work anywhere in Canada, and enter and leave the country freely.",
+      "fr": "Vivre et travailler partout au Canada, et entrer au pays et en sortir librement."
+    },
+    {
+      "en": "Move to any country they choose and become a citizen there.",
+      "fr": "S'installer dans le pays de leur choix et en devenir citoyens."
+    },
+    {
+      "en": "Move to another province once they have permission from that province.",
+      "fr": "Déménager dans une autre province une fois qu'ils en ont obtenu la permission."
+    },
+    {
+      "en": "Travel free of charge on public transport in any city.",
+      "fr": "Voyager gratuitement dans les transports en commun de n'importe quelle ville."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Mobility rights mean Canadians can choose where in Canada to live and work, and can leave the country and come back freely. No province's permission is needed.",
+    "fr": "La liberté de circulation et d'établissement signifie que les Canadiens peuvent choisir où vivre et travailler au Canada, et qu'ils peuvent quitter le pays et y revenir librement. Aucune permission d'une province n'est nécessaire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 12,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Mobility Rights — Canadians can live and work anywhere they choose in Canada, enter and leave the country freely, and apply for a passport."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

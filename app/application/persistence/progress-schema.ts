@@ -152,6 +152,7 @@ const PROGRESS_SHAPE: Shape = object({
   settings,
   character: nullable(playerCharacter),
   levels: { kind: 'array', items: levelProgress },
+  lastPlayedLevelId: nullable(id),
   reviews: { kind: 'array', items: reviewState },
   subjectsStarted: { kind: 'array', items: id, uniqueItems: true },
   exams: { kind: 'array', items: examAttempt },

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-13-apology-2008",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "In what year did the federal government formally apologize to the former students of the residential schools?",
+    "fr": "En quelle année le gouvernement fédéral a-t-il présenté des excuses officielles aux anciens élèves des pensionnats?"
+  },
+  "options": [
+    {
+      "en": "2008.",
+      "fr": "En 2008."
+    },
+    {
+      "en": "1988.",
+      "fr": "En 1988."
+    },
+    {
+      "en": "2006.",
+      "fr": "En 2006."
+    },
+    {
+      "en": "1982.",
+      "fr": "En 1982."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The formal apology to the former students came in 2008. Two other apologies appear in this guide and are easy to mix up: 2006 for the Chinese Head Tax and 1988 for wartime wrongs done to Canadians of Japanese origin.",
+    "fr": "Les excuses officielles aux anciens élèves ont été présentées en 2008. Deux autres excuses figurent dans ce guide et sont faciles à confondre : celles de 2006 pour la taxe d'entrée imposée aux Chinois et celles de 1988 pour les torts causés en temps de guerre aux Canadiens d'origine japonaise."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 17,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 2008, Ottawa formally apologized to the former students."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

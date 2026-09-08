@@ -21,9 +21,12 @@ import type { GraphicsPresets, ParallaxLayer } from '@application/ports';
 
 import {
   createLevelEffects,
+  layerCoverage,
   particleBudget,
+  PLACEHOLDER_BAND_HEIGHT,
   selectLayers,
   type EmitterTarget,
+  type LayerViewport,
   type ScrollTarget,
   type TintTarget,
 } from '@adapters/phaser/level-effects';
@@ -61,28 +64,150 @@ const SIX: readonly ParallaxLayer[] = [
   layer('snowbank', 60),
 ];
 
+/**
+ * A viewport where every layer is the same size, so the depth tie-break — and
+ * only the tie-break — decides. Sizes vary in the Ottawa cases below.
+ */
+const UNIFORM: LayerViewport = {
+  width: 1080,
+  height: 1920,
+  horizonY: 1920,
+  sizeOf: () => ({ width: 1080, height: 300 }),
+};
+
+describe('layerCoverage', () => {
+  it('gives a repeating band the whole viewport width, whatever its texture is', () => {
+    const narrow: LayerViewport = { ...UNIFORM, sizeOf: () => ({ width: 200, height: 300 }) };
+    expect(layerCoverage(layer('band', 10), narrow)).toBe(1080 * 300);
+  });
+
+  it('gives a single image only its own width', () => {
+    const once = { ...layer('once', 10), repeatX: false };
+    const narrow: LayerViewport = { ...UNIFORM, sizeOf: () => ({ width: 200, height: 300 }) };
+    expect(layerCoverage(once, narrow)).toBe(200 * 300);
+  });
+
+  it('does not count what is under the ground', () => {
+    /*
+     * The reason the old rule chose so badly. Ottawa's canal wall sits at
+     * `offset.y` 1120 under a ground line at 1210, so nine tenths of its 640
+     * pixels are painted over by the ground polygon — and it was one of the two
+     * bands the low tier kept, over the sky.
+     */
+    const wall = { ...layer('canalwall', 50), offset: { x: 0, y: 1120 } };
+    const view: LayerViewport = {
+      ...UNIFORM,
+      horizonY: 1210,
+      sizeOf: () => ({ width: 2016, height: 640 }),
+    };
+    expect(layerCoverage(wall, view)).toBe(1080 * 90);
+  });
+
+  it('is zero for a band entirely below the ground', () => {
+    const ice = { ...layer('ice', 60), offset: { x: 0, y: 1400 } };
+    expect(layerCoverage(ice, { ...UNIFORM, horizonY: 1210 })).toBe(0);
+  });
+
+  it('falls back to a placeholder band when the art has not landed', () => {
+    /* The same height `level-scene.ts` draws for a missing texture, so what is
+       ranked and what is drawn cannot disagree on a build with no art. */
+    const nothing: LayerViewport = { ...UNIFORM, sizeOf: () => null };
+    expect(layerCoverage(layer('band', 10), nothing)).toBe(1080 * PLACEHOLDER_BAND_HEIGHT);
+  });
+});
+
 describe('selectLayers', () => {
-  it('keeps the highest depths, which is what the schema says', () => {
-    expect(selectLayers(SIX, 2).map((entry) => entry.key)).toEqual(['canal-bank', 'snowbank']);
+  /**
+   * Ottawa's six bands at their real sizes and offsets, under its real ground
+   * line. This is the case the rule was changed for, so it is asserted against
+   * the numbers rather than against a fixture that could be made to agree.
+   */
+  const OTTAWA: readonly ParallaxLayer[] = [
+    { ...layer('sky', 10), offset: { x: 0, y: 0 } },
+    { ...layer('skyline', 20), offset: { x: 0, y: 780 } },
+    { ...layer('escarpment', 30), offset: { x: 0, y: 900 } },
+    { ...layer('treeline', 40), offset: { x: 0, y: 1020 } },
+    { ...layer('canalwall', 50), offset: { x: 0, y: 1120 } },
+    { ...layer('ice', 60), offset: { x: 0, y: 1210 } },
+  ];
+  const SIZES: Readonly<Record<string, { width: number; height: number }>> = {
+    sky: { width: 1080, height: 1160 },
+    skyline: { width: 1800, height: 300 },
+    escarpment: { width: 1440, height: 320 },
+    treeline: { width: 1440, height: 340 },
+    canalwall: { width: 2016, height: 640 },
+    ice: { width: 1440, height: 560 },
+  };
+  const OTTAWA_VIEW: LayerViewport = {
+    width: 1080,
+    height: 1920,
+    horizonY: 1210,
+    sizeOf: (key) => SIZES[key] ?? null,
+  };
+
+  it('keeps the bands that cover the most screen, not the nearest ones', () => {
+    /*
+     * The defect this replaced, in one assertion. Nearest-first kept
+     * `canalwall` and `ice` here — one nine-tenths behind the ground and one
+     * entirely behind it — and dropped the sky and Parliament's silhouette. The
+     * screen was a gradient with a rectangle on it, at the tier that exists to
+     * protect a weaker device.
+     */
+    expect(selectLayers(OTTAWA, 2, OTTAWA_VIEW).map((entry) => entry.key)).toEqual([
+      'sky',
+      'escarpment',
+    ]);
+  });
+
+  it('keeps the level readable as itself at every tier', () => {
+    /*
+     * The property worth having: whatever the budget, the band carrying the
+     * level's identity survives. Ottawa's is its sky — the only one covering the
+     * whole screen — and it is derived here from the level's own geometry rather
+     * than declared, which is why this holds without a schema flag. A level
+     * whose identity is NOT its largest band would need one; that is reported
+     * with the task rather than guessed at.
+     */
+    const identity = [...OTTAWA].sort(
+      (a, b) => layerCoverage(b, OTTAWA_VIEW) - layerCoverage(a, OTTAWA_VIEW),
+    )[0];
+    for (const budget of [1, 2, 4, 6]) {
+      expect(
+        selectLayers(OTTAWA, budget, OTTAWA_VIEW).map((entry) => entry.key),
+        `at a budget of ${String(budget)} the level loses the band that makes it recognisable`,
+      ).toContain(identity?.key);
+    }
+  });
+
+  it('never keeps a band that is entirely behind the ground while dropping a visible one', () => {
+    const kept = selectLayers(OTTAWA, 4, OTTAWA_VIEW).map((entry) => entry.key);
+    expect(kept, 'a band with zero visible area was kept over one with some').not.toContain('ice');
   });
 
   it('returns them in draw order, lowest depth first', () => {
-    const kept = selectLayers(SIX, 4);
-    expect(kept.map((entry) => entry.depth)).toEqual([30, 40, 50, 60]);
+    const kept = selectLayers(OTTAWA, 4, OTTAWA_VIEW);
+    expect(kept.map((entry) => entry.depth)).toEqual([...kept.map((e) => e.depth)].sort((a, b) => a - b));
+  });
+
+  it('breaks a tie towards the nearer band, so equal art still degrades front to back', () => {
+    expect(selectLayers(SIX, 2, UNIFORM).map((entry) => entry.key)).toEqual([
+      'canal-bank',
+      'snowbank',
+    ]);
   });
 
   it('keeps everything when the budget is larger than the level', () => {
-    expect(selectLayers(SIX, 12)).toHaveLength(6);
+    expect(selectLayers(SIX, 12, UNIFORM)).toHaveLength(6);
   });
 
   it('keeps nothing at zero, and does not throw doing it', () => {
-    expect(selectLayers(SIX, 0)).toEqual([]);
-    expect(selectLayers(SIX, -3)).toEqual([]);
+    expect(selectLayers(SIX, 0, UNIFORM)).toEqual([]);
+    expect(selectLayers(SIX, -3, UNIFORM)).toEqual([]);
   });
 
   it('sorts a document that authored its layers out of order', () => {
     const shuffled = [layer('b', 20), layer('a', 10), layer('c', 30)];
-    expect(selectLayers(shuffled, 2).map((entry) => entry.key)).toEqual(['b', 'c']);
+    expect(selectLayers(shuffled, 2, UNIFORM).map((entry) => entry.key)).toEqual(['b', 'c']);
   });
 
   it.each([
@@ -91,12 +216,14 @@ describe('selectLayers', () => {
     ['high', 6],
   ] as const)('draws %s tier at the preset count (%i)', (tier, expected) => {
     expect(PRESETS[tier].parallaxLayers).toBe(expected);
-    expect(selectLayers(SIX, profileFor(tier).parallaxLayers)).toHaveLength(expected);
+    expect(selectLayers(SIX, profileFor(tier).parallaxLayers, UNIFORM)).toHaveLength(expected);
   });
 
   it('draws one layer under reduced motion at every tier — scenery, not parallax', () => {
     for (const tier of ['low', 'medium', 'high'] as const) {
-      expect(selectLayers(SIX, profileFor(tier, 'reduced').parallaxLayers)).toHaveLength(1);
+      expect(
+        selectLayers(SIX, profileFor(tier, 'reduced').parallaxLayers, UNIFORM),
+      ).toHaveLength(1);
     }
   });
 });
@@ -260,6 +387,6 @@ describe('a level with one layer is still a level', () => {
   it('does not divide by zero deriving a placeholder shade', () => {
     const single = createLevelEffects({ layers: [layer('only', 1)], requestedParticles: 0 });
     expect(single.registry.size).toBe(4);
-    expect(selectLayers([layer('only', 1)], 6)).toHaveLength(1);
+    expect(selectLayers([layer('only', 1)], 6, UNIFORM)).toHaveLength(1);
   });
 });

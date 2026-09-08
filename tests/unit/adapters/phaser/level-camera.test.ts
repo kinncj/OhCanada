@@ -21,9 +21,11 @@ import { describe, expect, it } from 'vitest';
 
 import type { CameraTuning, Vec2 } from '@application/ports';
 import {
+  cameraView,
   desiredScroll,
   followCamera,
   followLerpFor,
+  intersectsView,
   scaledViewport,
   screenFraction,
   scrollBounds,
@@ -336,3 +338,57 @@ function settle(target: Vec2, velocityX: number): Vec2 {
   for (let index = 0; index < 600; index += 1) camera = follow(camera, target, velocityX);
   return camera;
 }
+
+describe('what the camera can actually see', () => {
+  /*
+   * `data-layers-textured: 6` and `data-actors-drawn: 2` were both true of a
+   * build whose screen was a gradient, an ice band, snow and one rounded
+   * rectangle: the officer and the landmark were drawn correctly, 1 760 and
+   * 4 760 design pixels off to the right. A count whose passing value does not
+   * require the outcome is not a check (ADR-0024). This is the geometry that
+   * replaced it.
+   */
+  const view = { x: 1000, y: 0, width: 1080, height: 1920 };
+
+  it('sees something inside it', () => {
+    expect(intersectsView({ x: 1200, y: 800, width: 240, height: 470 }, view)).toBe(true);
+  });
+
+  it('sees something that overlaps an edge', () => {
+    expect(intersectsView({ x: 900, y: 0, width: 240, height: 470 }, view)).toBe(true);
+    expect(intersectsView({ x: 2000, y: 0, width: 240, height: 470 }, view)).toBe(true);
+  });
+
+  it('does not see what is beyond it — which is the whole point', () => {
+    /* Ottawa's officer, from the spawn: drawn, textured, faithfully composed,
+       and 1 760 pixels away. */
+    expect(intersectsView({ x: 2280, y: 800, width: 240, height: 470 }, view)).toBe(false);
+    expect(intersectsView({ x: 100, y: 0, width: 240, height: 470 }, view)).toBe(false);
+  });
+
+  it('does not see something with no area, rather than counting it as touching', () => {
+    /* A zero-sized frame is a packing failure, and "it is at a point inside the
+       view" is the kind of true statement that would let one through. */
+    expect(intersectsView({ x: 1200, y: 800, width: 0, height: 470 }, view)).toBe(false);
+    expect(intersectsView({ x: 1200, y: 800, width: 240, height: 0 }, view)).toBe(false);
+  });
+
+  it('reports the world the camera sees, scaled by its zoom', () => {
+    const viewport = VIEWPORT;
+    expect(cameraView({ x: 300, y: 40 }, viewport, { ...ottawa.camera, zoom: 1 })).toEqual({
+      x: 300,
+      y: 40,
+      width: 1080,
+      height: 1920,
+    });
+    /* At zoom 2 the camera sees half as much world, so half as much art is on
+       screen — the counter has to move with the zoom or it is describing a
+       different camera. */
+    expect(cameraView({ x: 0, y: 0 }, viewport, { ...ottawa.camera, zoom: 2 })).toEqual({
+      x: 0,
+      y: 0,
+      width: 540,
+      height: 960,
+    });
+  });
+});

@@ -171,6 +171,21 @@ export interface ProgressSnapshot {
   /** `null` before the creator has run; settings persist from the first screen. */
   readonly character: PlayerCharacterDocument | null;
   readonly levels: readonly LevelProgressDocument[];
+  /**
+   * The level the player was last in, so the title screen can offer **Continue**.
+   * `null` before any level has been entered.
+   *
+   * The level, not the screen. `TN-SAVE`'s survives table takes "the level last
+   * played"; "which screen the player was on" is explicitly in the *does not*
+   * survive table, and the distinction is the reason this field is a `LevelId`
+   * and not a route: restoring a player into a modal, a summary or a question
+   * card they have no context for is worse than putting them back on the map.
+   *
+   * Nothing fails closed without it — "Choose a level" still reaches every
+   * unlocked level — so this is a convenience the save carries, not a
+   * dependency (OQ-FLOW-4 / OQ-SAVE-7).
+   */
+  readonly lastPlayedLevelId: LevelId | null;
   readonly reviews: readonly ReviewStateDocument[];
   readonly subjectsStarted: readonly SubjectId[];
   readonly exams: readonly ExamAttemptDocument[];

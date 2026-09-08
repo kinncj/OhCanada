@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-01-oldest-constitutional-tradition",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What does the guide say Canadians have inherited?",
+    "fr": "Selon le guide, de quoi les Canadiens ont-ils hérité?"
+  },
+  "options": [
+    {
+      "en": "The oldest continuous constitutional tradition in the world.",
+      "fr": "La plus ancienne tradition constitutionnelle ininterrompue au monde."
+    },
+    {
+      "en": "The largest written constitution in the world.",
+      "fr": "La plus longue constitution écrite au monde."
+    },
+    {
+      "en": "The newest constitution in North America.",
+      "fr": "La plus récente constitution d'Amérique du Nord."
+    },
+    {
+      "en": "A constitution copied from the United States.",
+      "fr": "Une constitution copiée sur celle des États-Unis."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada is a young country with a very old constitutional inheritance. Canadians have inherited the oldest continuous constitutional tradition in the world.",
+    "fr": "Le Canada est un jeune pays doté d'un très vieil héritage constitutionnel. Les Canadiens ont hérité de la plus ancienne tradition constitutionnelle ininterrompue au monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 16,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "We have inherited the oldest continuous constitutional tradition in the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

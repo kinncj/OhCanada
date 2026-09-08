@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-62-last-spike-1885",
+  "subject": "history",
+  "prompt": {
+    "en": "What happened on November 7, 1885?",
+    "fr": "Que s'est-il passé le 7 novembre 1885?"
+  },
+  "options": [
+    {
+      "en": "The last spike of the Canadian Pacific Railway was driven.",
+      "fr": "Le dernier crampon du chemin de fer Canadien Pacifique a été enfoncé."
+    },
+    {
+      "en": "British Columbia joined Canada.",
+      "fr": "La Colombie-Britannique s'est jointe au Canada."
+    },
+    {
+      "en": "The Dominion of Canada was born.",
+      "fr": "Le Dominion du Canada est né."
+    },
+    {
+      "en": "The Bank of Canada was created.",
+      "fr": "La Banque du Canada a été créée."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "On November 7, 1885, Donald Smith, Lord Strathcona, a director of the Canadian Pacific Railway, drove the last spike. The railway was a powerful symbol of unity, and it fulfilled a national dream.",
+    "fr": "Le 7 novembre 1885, Donald Smith, lord Strathcona, administrateur du chemin de fer Canadien Pacifique, a enfoncé le dernier crampon. Le chemin de fer était un puissant symbole d'unité et il a réalisé un rêve national."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 37,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "On November 7, 1885, a powerful symbol of unity was completed when Donald Smith (Lord Strathcona), the Scottish-born director of the Canadian Pacific Railway (CPR), drove the last spike."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-36-chateauguay-1813",
+  "subject": "history",
+  "prompt": {
+    "en": "At Châteauguay in 1813, how many American invaders were turned back by 460 soldiers, most of them French Canadiens?",
+    "fr": "À Châteauguay en 1813, combien d'envahisseurs américains ont été repoussés par 460 soldats, en majorité des Canadiens français?"
+  },
+  "options": [
+    {
+      "en": "4,000.",
+      "fr": "4 000."
+    },
+    {
+      "en": "400.",
+      "fr": "400."
+    },
+    {
+      "en": "40,000.",
+      "fr": "40 000."
+    },
+    {
+      "en": "460.",
+      "fr": "460."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1813 Lieutenant-Colonel Charles de Salaberry and 460 soldiers, mostly French Canadiens, turned back 4,000 American invaders at Châteauguay, south of Montreal.",
+    "fr": "En 1813, le lieutenant-colonel Charles de Salaberry et 460 soldats, en majorité des Canadiens français, ont repoussé 4 000 envahisseurs américains à Châteauguay, au sud de Montréal."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 30,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "back 4,000 American invaders at Châteauguay, south of Montreal."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

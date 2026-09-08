@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-09-freedom-of-peaceful-assembly",
+  "subject": "rights",
+  "prompt": {
+    "en": "Which fundamental freedom protects the right to gather with others in a peaceful way?",
+    "fr": "Quelle liberté fondamentale protège le droit de se rassembler pacifiquement avec d'autres personnes?"
+  },
+  "options": [
+    {
+      "en": "Freedom of peaceful assembly.",
+      "fr": "La liberté de réunion pacifique."
+    },
+    {
+      "en": "Freedom of conscience and religion.",
+      "fr": "La liberté de conscience et de religion."
+    },
+    {
+      "en": "Freedom of thought, belief, opinion and expression.",
+      "fr": "La liberté de pensée, de croyance, d'opinion et d'expression."
+    },
+    {
+      "en": "The right to challenge unlawful detention.",
+      "fr": "Le droit de contester une détention illégale."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Freedom of peaceful assembly is one of the fundamental freedoms. The word peaceful is part of the freedom: it does not protect violence.",
+    "fr": "La liberté de réunion pacifique est l'une des libertés fondamentales. Le mot « pacifique » fait partie de la liberté : elle ne protège pas la violence."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Freedom of peaceful assembly; and"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -4,13 +4,42 @@
   "version": "0.1.0",
   "basePath": "/OhCanada/",
   "defaultLocale": "en",
-  "locales": ["en", "fr"],
+  "locales": [
+    "en",
+    "fr"
+  ],
   "designWidth": 1080,
   "designHeight": 1920,
-  "levels": [],
+  "levels": [
+    "ottawa"
+  ],
+  "locomotionModes": [
+    "walk",
+    "canoe",
+    "skate",
+    "toboggan",
+    "bike",
+    "train",
+    "horse",
+    "skateboard",
+    "dogsled"
+  ],
   "unlockRules": {
-    "initialLevels": [],
-    "order": [],
+    "initialLevels": [
+      "ottawa"
+    ],
+    "order": [
+      "halifax",
+      "mikmaki",
+      "quebec-city",
+      "ottawa",
+      "toronto",
+      "winnipeg",
+      "prairie-rail",
+      "alberta",
+      "rockies",
+      "the-north"
+    ],
     "stampsToUnlockNext": 1
   },
   "exam": {

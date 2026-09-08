@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-29-voting-right-and-responsibility",
+  "subject": "rights",
+  "prompt": {
+    "en": "Is voting in Canada a right or a responsibility?",
+    "fr": "Le vote au Canada est-il un droit ou une responsabilité?"
+  },
+  "options": [
+    {
+      "en": "Both: the right to vote comes with a responsibility to vote.",
+      "fr": "Les deux : le droit de vote s'accompagne de la responsabilité de voter."
+    },
+    {
+      "en": "A right only; nothing is expected of the voter.",
+      "fr": "Un droit seulement; rien n'est attendu de l'électeur."
+    },
+    {
+      "en": "A responsibility only; a citizen who does not vote is fined.",
+      "fr": "Une responsabilité seulement; un citoyen qui ne vote pas reçoit une amende."
+    },
+    {
+      "en": "Neither; voting is a service a citizen may buy into.",
+      "fr": "Ni l'un ni l'autre; le vote est un service auquel un citoyen peut adhérer."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Voting is listed among the responsibilities of citizenship precisely because it is a right. The right to vote carries a responsibility to use it.",
+    "fr": "Le vote figure parmi les responsabilités de la citoyenneté justement parce qu'il s'agit d'un droit. Le droit de vote comporte la responsabilité de l'exercer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Voting in elections — The right to vote comes with a responsibility to vote in federal, provincial or territorial and local elections."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

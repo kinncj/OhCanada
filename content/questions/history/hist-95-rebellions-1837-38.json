@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-95-rebellions-1837-38",
+  "subject": "history",
+  "prompt": {
+    "en": "Why did the armed rebellions of 1837-38 fail?",
+    "fr": "Pourquoi les rébellions armées de 1837-1838 ont-elles échoué?"
+  },
+  "options": [
+    {
+      "en": "The rebels did not have enough public support, and were defeated by British troops and Canadian volunteers.",
+      "fr": "Les rebelles n'avaient pas assez d'appui populaire et ont été défaits par les troupes britanniques et des volontaires canadiens."
+    },
+    {
+      "en": "The rebels changed their minds and went home.",
+      "fr": "Les rebelles ont changé d'avis et sont rentrés chez eux."
+    },
+    {
+      "en": "The United States sent an army against them.",
+      "fr": "Les États-Unis ont envoyé une armée contre eux."
+    },
+    {
+      "en": "Their demands were granted before any fighting began.",
+      "fr": "Leurs demandes ont été accordées avant le début des combats."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Reformers in the 1830s thought progress toward full democracy was too slow, and some wanted Canada to adopt American republican values. When armed rebellions broke out in 1837-38 the rebels lacked public support and were defeated by British troops and Canadian volunteers.",
+    "fr": "Dans les années 1830, des réformistes trouvaient que les progrès vers une démocratie complète étaient trop lents, et certains voulaient que le Canada adopte les valeurs républicaines américaines. Lorsque des rébellions armées ont éclaté en 1837-1838, les rebelles manquaient d'appui populaire et ont été défaits par les troupes britanniques et des volontaires canadiens."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 31,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "the rebels did not have enough public support to succeed. They were defeated by British troops and Canadian volunteers."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

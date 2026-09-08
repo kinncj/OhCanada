@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-08-freedom-of-expression-includes-press",
+  "subject": "rights",
+  "prompt": {
+    "en": "Freedom of the press is part of which fundamental freedom?",
+    "fr": "La liberté de la presse fait partie de quelle liberté fondamentale?"
+  },
+  "options": [
+    {
+      "en": "Freedom of thought, belief, opinion and expression.",
+      "fr": "La liberté de pensée, de croyance, d'opinion et d'expression."
+    },
+    {
+      "en": "Freedom of association.",
+      "fr": "La liberté d'association."
+    },
+    {
+      "en": "Freedom of conscience and religion.",
+      "fr": "La liberté de conscience et de religion."
+    },
+    {
+      "en": "Freedom of peaceful assembly.",
+      "fr": "La liberté de réunion pacifique."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Freedom of thought, belief, opinion and expression covers both freedom of speech and freedom of the press. The press is not a separate freedom belonging only to journalists.",
+    "fr": "La liberté de pensée, de croyance, d'opinion et d'expression comprend à la fois la liberté de parole et la liberté de la presse. La presse ne constitue pas une liberté distincte réservée aux journalistes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Freedom of thought, belief, opinion and expression, including freedom of speech and of the press;"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -53,6 +53,8 @@ export interface HudOptions {
   readonly onOpenSettings?: () => void;
   readonly onOpenStudy?: () => void;
   readonly onOpenPassport?: () => void;
+  /** `flow.leaveLevel`: the route out of the level (`TN-FLOW-03`, `TN-HUD-02`). */
+  readonly onLeaveLevel?: () => void;
   /** Tapping `interact-prompt` does what tapping the target does (`TN-LEVEL-05`). */
   readonly onInteract?: () => void;
   /** `TN-HUD-03`: the way out the warning has to offer. */
@@ -165,6 +167,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     ...(options.onOpenSettings === undefined ? {} : { onOpenSettings: options.onOpenSettings }),
     ...(options.onOpenStudy === undefined ? {} : { onOpenStudy: options.onOpenStudy }),
     ...(options.onOpenPassport === undefined ? {} : { onOpenPassport: options.onOpenPassport }),
+    ...(options.onLeaveLevel === undefined ? {} : { onLeaveLevel: options.onLeaveLevel }),
     onDismiss: () => {
       options.onResume?.();
     },

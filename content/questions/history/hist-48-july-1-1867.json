@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-48-july-1-1867",
+  "subject": "history",
+  "prompt": {
+    "en": "On what date was the Dominion of Canada officially born?",
+    "fr": "À quelle date le Dominion du Canada est-il officiellement né?"
+  },
+  "options": [
+    {
+      "en": "July 1, 1867.",
+      "fr": "Le 1er juillet 1867."
+    },
+    {
+      "en": "January 11, 1867.",
+      "fr": "Le 11 janvier 1867."
+    },
+    {
+      "en": "November 7, 1885.",
+      "fr": "Le 7 novembre 1885."
+    },
+    {
+      "en": "April 17, 1982.",
+      "fr": "Le 17 avril 1982."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The British Parliament passed the British North America Act in 1867, and the Dominion of Canada was officially born on July 1 of that year.",
+    "fr": "Le Parlement britannique a adopté l'Acte de l'Amérique du Nord britannique en 1867, et le Dominion du Canada est officiellement né le 1er juillet de cette année-là."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 33,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Dominion of Canada was officially born on July 1, 1867."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

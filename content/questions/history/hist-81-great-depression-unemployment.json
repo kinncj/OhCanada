@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-81-great-depression-unemployment",
+  "subject": "history",
+  "prompt": {
+    "en": "How high did unemployment reach in 1933, during the Great Depression?",
+    "fr": "Quel sommet le chômage a-t-il atteint en 1933, pendant la Grande Dépression?"
+  },
+  "options": [
+    {
+      "en": "27%.",
+      "fr": "27 %."
+    },
+    {
+      "en": "7%.",
+      "fr": "7 %."
+    },
+    {
+      "en": "13%.",
+      "fr": "13 %."
+    },
+    {
+      "en": "50%.",
+      "fr": "50 %."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The stock market crash of 1929 led to the Great Depression, also called the Dirty Thirties. Unemployment reached 27% in 1933 and many businesses were wiped out.",
+    "fr": "Le krach boursier de 1929 a mené à la Grande Dépression, aussi appelée les « années trente de misère ». Le chômage a atteint 27 % en 1933 et de nombreuses entreprises ont été ruinées."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 42,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Unemployment reached 27% in 1933 and many businesses were wiped out."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

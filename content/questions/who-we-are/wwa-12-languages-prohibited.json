@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-12-languages-prohibited",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What happened to Aboriginal languages and cultural practices in the residential schools?",
+    "fr": "Qu'est-il arrivé aux langues et aux pratiques culturelles autochtones dans les pensionnats?"
+  },
+  "options": [
+    {
+      "en": "They were mostly prohibited.",
+      "fr": "Elles ont été interdites pour la plupart."
+    },
+    {
+      "en": "They were taught alongside English and French.",
+      "fr": "Elles étaient enseignées en même temps que l'anglais et le français."
+    },
+    {
+      "en": "They were recorded and preserved by the schools.",
+      "fr": "Elles ont été consignées et préservées par les pensionnats."
+    },
+    {
+      "en": "They were left entirely to the families.",
+      "fr": "Elles étaient laissées entièrement aux familles."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The schools were poorly funded and inflicted hardship on the students, and Aboriginal languages and cultural practices were mostly prohibited in them.",
+    "fr": "Les pensionnats étaient mal financés et ont infligé des épreuves aux élèves, et les langues et les pratiques culturelles autochtones y étaient interdites pour la plupart."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 17,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Aboriginal languages and cultural practices were mostly prohibited."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

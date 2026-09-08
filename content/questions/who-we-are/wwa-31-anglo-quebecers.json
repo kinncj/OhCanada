@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-31-anglo-quebecers",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "How long a heritage do the million Anglo-Quebecers have in Quebec?",
+    "fr": "De quelle ancienneté est le patrimoine du million d'Anglo-Québécois au Québec?"
+  },
+  "options": [
+    {
+      "en": "About 250 years.",
+      "fr": "Environ 250 ans."
+    },
+    {
+      "en": "About 50 years.",
+      "fr": "Environ 50 ans."
+    },
+    {
+      "en": "About 400 years.",
+      "fr": "Environ 400 ans."
+    },
+    {
+      "en": "About 100 years.",
+      "fr": "Environ 100 ans."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A million Anglo-Quebecers have a heritage of 250 years and form a lively part of the fabric of Quebec. Quebec has never been only French-speaking.",
+    "fr": "Un million d'Anglo-Québécois possèdent un patrimoine de 250 ans et forment une partie dynamique du tissu québécois. Le Québec n'a jamais été uniquement francophone."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 20,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "One million Anglo-Quebecers have a heritage of 250 years and form a vibrant part of the Quebec fabric."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -53,6 +53,20 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
 
 - `ottawa/` — the slice-1 Level 4 subjects: the Peace Tower and Centre Block, Parliament Hill as a skyline,
   and the Rideau Canal Skateway.
+- `quebec-city/` — the slice-2 Level 3 subjects: the Château Frontenac (four views), the Dufferin Terrace and
+  its toboggan run (two historical photographs and one modern), and the river, the far bank and the ramparts
+  in winter. Ten files, licence-checked against the Commons API on **2026-09-08** before any was downloaded:
+  seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one
+  CC BY 3.0. Three better photographs — the ice slide in use, the terrace kiosks in winter, the Château after
+  freezing rain — are CC BY-SA and were rejected on licence, not on quality, exactly as three were for Ottawa.
+
+  **Two of the ten are colour traps and are labelled as such in `references.json`.**
+  `chateau-frontenac-tower-2024.jpg` carries no ICC profile and its white balance is markedly cool: a
+  hue-filtered median over its entire façade returns *zero* brick-hued pixels. `chateau-frontenac-dusk.jpg` is
+  a dusk exposure with the building floodlit and coloured architectural lighting on the tower. Both are
+  geometry references only. Every file in this directory was **converted from its embedded profile to sRGB
+  before any colour was sampled off it**, so the colours measured are the colours a browser shows — a step
+  that was skipped on the first pass and produced brick that sampled as blue-grey.
 - `officer/` — the slice-1 NPC: the scarlet review-order uniform, the wide-brimmed felt hat and Sam Browne
   belt hardware. The design sheet is `assets/style/officer.md`, which also records the marks that must
   **never** be drawn and why. The uniform silhouette is drawn; the insignia are not.

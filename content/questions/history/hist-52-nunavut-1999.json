@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-52-nunavut-1999",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year did Nunavut join the Dominion's list of provinces and territories?",
+    "fr": "En quelle année le Nunavut s'est-il ajouté à la liste des provinces et territoires?"
+  },
+  "options": [
+    {
+      "en": "1999.",
+      "fr": "En 1999."
+    },
+    {
+      "en": "1949.",
+      "fr": "En 1949."
+    },
+    {
+      "en": "1905.",
+      "fr": "En 1905."
+    },
+    {
+      "en": "1898.",
+      "fr": "En 1898."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Nunavut was added in 1999, the most recent entry in the expansion of the Dominion. Yukon Territory dates from 1898, Alberta and Saskatchewan from 1905, and Newfoundland and Labrador from 1949.",
+    "fr": "Le Nunavut s'est ajouté en 1999, l'entrée la plus récente dans l'expansion du Dominion. Le Yukon date de 1898, l'Alberta et la Saskatchewan de 1905, et Terre-Neuve-et-Labrador de 1949."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 34,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "1999 – Nunavut"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

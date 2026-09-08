@@ -22,6 +22,14 @@ Every item below is asserted by a scenario in `TN-SAVE-01`. Nothing else is prom
 | 6 | The Ottawa stamp, once earned | The stamp is in the passport |
 | 7 | For every question ever answered: that it was seen, whether the last answer was right, and when it should come back | Questions I got wrong come back first — including on the way back in (`TN-RESUME-01`) |
 | 8 | Which subjects have been started | Study offers the same drill |
+| 9 | The level last played | "Continue" on the title screen opens that level (`TN-FLOW-02`) |
+
+**Row 9 was added 2026-09-08**, when `TN-FLOW-first-run-and-return.md` specified what a cold load lands on.
+"Continue" cannot name a level the save does not remember, and the alternative — reopening whichever level
+sorts first — would silently take a player somewhere they had not been. `TN-FLOW` owns what Continue does
+and this row is what makes it possible; `OQ-SAVE-7` is the schema gap underneath it. It stores an id and
+nothing else: **where the skater was standing is still not saved**, deliberately, and the second table below
+is unchanged on that point.
 
 ## What does not survive, on purpose
 
@@ -34,6 +42,7 @@ Every item below is asserted by a scenario in `TN-SAVE-01`. Nothing else is prom
 | Which questions this sitting has already put on screen | A question that is ready to come back may be asked again after a reload, even if it was asked before the tab closed. Row 7 above is why; `TN-RESUME-02` proves it |
 | The single-switch highlight position | Starts at the first item |
 | A load error | The game tries again |
+| Which screen the player was on | A cold load lands on the title screen, whatever screen the tab closed on (`TN-FLOW-04`) |
 
 **Amended 2026-09-08.** The fifth row of that second table is new, and the fourth scenario of `TN-SAVE-01`
 was rewritten to match it. As written before, that scenario said the questions already answered are never
@@ -95,6 +104,12 @@ Feature: Progress survives a closed tab
     And engaging Parliament Hill offers the question I answered wrongly before the one I answered rightly
     And the creator is not shown
 
+  Scenario: The level I was in is the one Continue offers
+    When I close the tab and open the game again
+    Then the title screen names Ottawa as the level I last played
+    And "title-continue" opens Ottawa
+    And it opens at the level's spawn point, as TN-SAVE-02 requires
+
   Scenario: The stamp survives
     Given I finished the quest and earned the Ottawa stamp
     When I close the tab and open the game again
@@ -135,7 +150,7 @@ Feature: Progress survives a closed tab
 Feature: Transient state is not saved
   Scenario: The player restarts at the spawn point
     Given I skated far up the canal and the tab was closed
-    When I open the game again
+    When I open the game again and continue
     Then "scene-state" reports "data-player-x" equal to the level's spawn x
     And "data-speed" is "0"
 
@@ -158,6 +173,12 @@ Feature: Transient state is not saved
     Then no dialogue is shown
     And the quest is in the state it was in before the dialogue opened
 
+  Scenario: The screen I was on does not come back
+    Given the tab closed while the level select, Study or Settings was open
+    When I open the game again
+    Then the title screen is shown, as TN-FLOW-04 requires
+    And no screen is restored over it
+
   Scenario: The list of questions already put on screen does not come back
     Given three questions were asked and answered in the last sitting
     When I open the game again
@@ -177,6 +198,7 @@ Feature: Saving at the right moments
     Examples:
       | thing happens |
       | I finish the character creator |
+      | a level becomes ready |
       | I accept the quest |
       | I decline the quest |
       | a quest step completes |
@@ -201,6 +223,7 @@ Feature: Saving at the right moments
     And it contains no list of which questions a quest step has already asked
     And it contains no free text typed by the player
     And it contains nothing that identifies the device or the player
+    And the only level it names as "last played" is one the player opened themselves
 ```
 
 ## TN-SAVE-04 — A save that cannot be read (failure path)
@@ -225,7 +248,7 @@ Feature: A broken, foreign or newer save
     Given the element "save-error" is visible
     When I tap "Start again"
     Then the stored value is replaced with a new game
-    And the character creator is shown
+    And the title screen is shown as it is for a first-time player, as TN-TITLE-04 requires
 
   Scenario: Keeping the old file
     Given the element "save-error" is visible
@@ -245,6 +268,13 @@ Feature: A broken, foreign or newer save
     When I open the game
     Then the game opens with that progress
     And the stored value is rewritten at the current version
+
+  Scenario: A save that names a level this build does not have
+    Given the saved document names a last-played level with no document in this build
+    When I open the game
+    Then no error is shown
+    And the title screen offers "Choose a level" instead of "Continue", as TN-TITLE-04 requires
+    And every other item of progress is intact
 ```
 
 ## TN-SAVE-05 — Storage is not available (failure path)
@@ -254,7 +284,7 @@ Feature: Playing where nothing can be stored
   Scenario: Private browsing or blocked storage
     Given local storage cannot be read or written
     When I open the game
-    Then the game still reaches the character creator
+    Then the game still reaches the title screen and the character creator
     And the element "storage-warning" says "This browser is not saving your progress."
     And it says "You can keep playing, but everything will be gone when you close the tab."
     And the warning is announced in "#tn-live-region"
@@ -272,7 +302,7 @@ Feature: Playing where nothing can be stored
     When I open the game
     Then no error is shown
     And no storage warning is shown
-    And the character creator opens
+    And the title screen opens with "Play"
 ```
 
 ## TN-SAVE-06 — Taking the save with me
@@ -313,7 +343,7 @@ Feature: Export and import
     When I tap "Delete my progress"
     Then I am asked "This cannot be undone. Delete everything?"
     And choosing no changes nothing
-    And choosing yes clears storage and opens the character creator
+    And choosing yes clears storage and opens the title screen as it is for a first-time player
 ```
 
 ## TN-SAVE-07 — Save and reload from the keyboard
@@ -355,7 +385,7 @@ Feature: Single-switch persistence
     Given single-switch mode is on
     When I close the tab and open the game again
     Then single-switch mode is still on
-    And the game is operable with the switch from the first screen, without opening Settings
+    And the game is operable with the switch from the title screen, without opening Settings
 
   Scenario: Nothing is confirmed for the player
     Given a confirmation is open
@@ -479,3 +509,10 @@ Feature: Saving and reloading in French
   contradicted `TN-CARD-02`, `TN-CARD-04` and this file's own row 7. It was rewritten to assert what it was
   actually protecting. The decision, the two rejected alternatives and the cost are in
   `TN-RESUME-questions-after-a-reload.md`.
+- **`OQ-SAVE-7` — the save has nowhere to record row 9.** `content/schemas/progress.schema.json` carries
+  `levels[]`, `character`, `settings`, `reviews`, `subjectsStarted` and `exams`, and no field for the level
+  last played. *Recommendation:* a nullable `lastPlayedLevelId`, written when a level emits `level/ready` —
+  the same shape and the same owner as `OQ-SAVE-1`. It is `OQ-FLOW-4` in
+  `TN-FLOW-first-run-and-return.md`, recorded here too because this file's table is what promises it. Until
+  it exists, `title-continue` is absent and the route still works through "Choose a level", so nothing in
+  this file fails closed on it.

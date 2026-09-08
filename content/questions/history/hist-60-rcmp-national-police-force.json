@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-60-rcmp-national-police-force",
+  "subject": "history",
+  "prompt": {
+    "en": "What grew out of the North West Mounted Police?",
+    "fr": "Qu'est-ce qui est issu de la Police à cheval du Nord-Ouest?"
+  },
+  "options": [
+    {
+      "en": "The Royal Canadian Mounted Police, Canada's national police force.",
+      "fr": "La Gendarmerie royale du Canada, le corps de police national du pays."
+    },
+    {
+      "en": "The Canadian Coast Guard.",
+      "fr": "La Garde côtière canadienne."
+    },
+    {
+      "en": "The Canadian army.",
+      "fr": "L'armée canadienne."
+    },
+    {
+      "en": "The provincial police of Ontario and Quebec.",
+      "fr": "Les polices provinciales de l'Ontario et du Québec."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The force established in 1873 became the Royal Canadian Mounted Police, known as the Mounties. It is Canada's national police force and one of the country's best-known symbols.",
+    "fr": "Le corps créé en 1873 est devenu la Gendarmerie royale du Canada, dont les membres sont surnommés les « Mounties ». C'est le corps de police national du Canada et l'un des symboles les plus connus du pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 36,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "Today, the Royal Canadian Mounted Police (RCMP or “the Mounties”) are the national police force and one of Canada’s best-known symbols."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

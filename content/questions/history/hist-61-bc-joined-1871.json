@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-61-bc-joined-1871",
+  "subject": "history",
+  "prompt": {
+    "en": "What did Ottawa promise to persuade British Columbia to join Canada in 1871?",
+    "fr": "Qu'a promis Ottawa pour convaincre la Colombie-Britannique de se joindre au Canada en 1871?"
+  },
+  "options": [
+    {
+      "en": "To build a railway to the West Coast.",
+      "fr": "De construire un chemin de fer jusqu'à la côte Ouest."
+    },
+    {
+      "en": "To make Victoria the national capital.",
+      "fr": "De faire de Victoria la capitale nationale."
+    },
+    {
+      "en": "To pay off the colony's debts to Britain.",
+      "fr": "De rembourser les dettes de la colonie envers la Grande-Bretagne."
+    },
+    {
+      "en": "To give the province two official languages.",
+      "fr": "De donner à la province deux langues officielles."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "British Columbia joined Canada in 1871 after Ottawa promised to build a railway to the West Coast. The promise was kept when the last spike was driven in 1885.",
+    "fr": "La Colombie-Britannique s'est jointe au Canada en 1871 après qu'Ottawa eut promis de construire un chemin de fer jusqu'à la côte Ouest. La promesse a été tenue lorsque le dernier crampon a été enfoncé en 1885."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 37,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "British Columbia joined Canada in 1871 after Ottawa promised to build a railway to the West Coast."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

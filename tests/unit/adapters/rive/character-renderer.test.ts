@@ -23,29 +23,25 @@ import {
   type RiveInstance,
   type RiveInstanceRequest,
 } from '@adapters/rive';
-import { characterId, makeCharacter } from '../../support/fixtures';
+import type { RigDocument } from '@application/ports';
+import rigJson from '@content/characters/rig.json';
+import { characterId } from '../../support/fixtures';
 
-const rig = makeCharacter({
-  id: characterId('officer'),
-  artboard: 'officer',
-  stateMachine: 'locomotion',
-  inputs: [
-    { name: 'airborne', kind: 'bool' },
-    { name: 'speed', kind: 'number' },
-    { name: 'jump', kind: 'trigger' },
-  ],
-});
+/** The real rig: both backends read their vocabulary out of it (ADR-0022). */
+const RIG = rigJson as unknown as RigDocument;
+const INPUT_NAMES = RIG.stateMachine.inputs.map((input) => input.name);
+const SLOT_NAMES = Object.entries(RIG.slots)
+  .filter(([, slot]) => slot.status !== 'reserved')
+  .map(([name]) => name);
 
 const spec: CharacterRendererSpec = {
-  characterId: rig.id,
-  artboard: rig.artboard,
-  stateMachine: rig.stateMachine,
-  inputs: rig.inputs,
-  slots: rig.slots,
-  expressions: ['neutral', 'thinking'],
+  characterId: characterId('officer'),
+  artboard: 'officer',
+  stateMachine: RIG.stateMachine.name,
+  rig: RIG,
   skins: {},
-  widthPx: 240,
-  heightPx: 480,
+  widthPx: RIG.characterSpace.width,
+  heightPx: RIG.characterSpace.height,
 };
 
 interface FakeInstance extends RiveInstance {
@@ -96,7 +92,7 @@ describe('the Rive backend and the rig contract', () => {
     let seen: RiveInstanceRequest | null = null;
     const factory = factoryFor((request) => {
       seen = request;
-      return Promise.resolve(fakeInstance(['airborne', 'speed', 'jump']));
+      return Promise.resolve(fakeInstance(INPUT_NAMES));
     });
 
     const created = await factory.create(spec);
@@ -104,19 +100,19 @@ describe('the Rive backend and the rig contract', () => {
 
     const request = seen as RiveInstanceRequest | null;
     expect(request?.artboard).toBe('officer');
-    expect(request?.stateMachine).toBe('locomotion');
-    expect(request?.widthPx).toBe(240);
+    expect(request?.stateMachine).toBe(RIG.stateMachine.name);
+    expect(request?.widthPx).toBe(RIG.characterSpace.width);
     /* Order is part of the contract: a rig that encodes an option as an index
        encodes this one, so a reordered document is a different rig. */
-    expect(request?.slots.map((slot) => slot.name)).toEqual(
-      rig.slots.map((slot) => slot.name),
+    expect(request?.slots.map((slot) => slot.name)).toEqual(SLOT_NAMES);
+    expect(request?.slots.find((slot) => slot.name === 'costume')?.options).toEqual(
+      RIG.slots.costume.options,
     );
-    expect(request?.slots[1]?.options).toEqual(['coat-red', 'coat-blue']);
-    expect(request?.expressions).toEqual(['neutral', 'thinking']);
+    expect(request?.expressions).toEqual(RIG.expressions.names);
   });
 
   it('refuses a rig that does not expose an input the document declares', async () => {
-    const instance = fakeInstance(['airborne', 'speed']);
+    const instance = fakeInstance(INPUT_NAMES.filter((name) => name !== 'jump'));
     const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
 
     expect(created.ok).toBe(false);
@@ -140,22 +136,21 @@ describe('the Rive backend and the rig contract', () => {
     expect(created.error.cause).toBeInstanceOf(Error);
   });
 
-  it('dresses the character before the first frame, from the document fallbacks', async () => {
-    const instance = fakeInstance(['airborne', 'speed', 'jump']);
+  it('dresses the character before the first frame, from the rig’s own fallbacks', async () => {
+    const instance = fakeInstance(INPUT_NAMES);
     await factoryFor(() => Promise.resolve(instance)).create({
       ...spec,
-      skins: { coat: 'coat-blue' },
+      skins: { costume: 'parka' },
     });
 
-    expect(instance.skins).toEqual([
-      ['skin', 'skin-1'],
-      ['coat', 'coat-blue'],
-      ['badge', 'badge-none'],
-    ]);
+    /* Every non-reserved slot is set once, the caller's choice wins over the
+       artboard's, and the artboard's wins over the slot fallback. */
+    expect(instance.skins.map(([slot]) => slot)).toEqual(SLOT_NAMES);
+    expect(instance.skins.find(([slot]) => slot === 'costume')?.[1]).toBe('parka');
   });
 
   it('advances in seconds, not milliseconds', async () => {
-    const instance = fakeInstance(['airborne', 'speed', 'jump']);
+    const instance = fakeInstance(INPUT_NAMES);
     const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
     if (!created.ok) throw new Error(created.error.code);
 
@@ -164,7 +159,7 @@ describe('the Rive backend and the rig contract', () => {
   });
 
   it('does not advance a disposed character, and destroys the instance once', async () => {
-    const instance = fakeInstance(['airborne', 'speed', 'jump']);
+    const instance = fakeInstance(INPUT_NAMES);
     const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
     if (!created.ok) throw new Error(created.error.code);
 
@@ -179,7 +174,7 @@ describe('the Rive backend and the rig contract', () => {
   });
 
   it('mirrors through the runtime rather than duplicating art', async () => {
-    const instance = fakeInstance(['airborne', 'speed', 'jump']);
+    const instance = fakeInstance(INPUT_NAMES);
     const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
     if (!created.ok) throw new Error(created.error.code);
 
@@ -195,14 +190,11 @@ describe('the Rive backend and the rig contract', () => {
    */
   describe('when the loaded artboard disagrees with the document', () => {
     it('reports an input the runtime refuses as not-found, naming the artboard', async () => {
-      const instance = fakeInstance(
-        ['airborne', 'speed', 'jump'],
-        new Set(['speed']),
-      );
+      const instance = fakeInstance(INPUT_NAMES, new Set(['speed']));
       const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
       if (!created.ok) throw new Error(created.error.code);
 
-      const result = created.value.setNumber('speed', 400);
+      const result = created.value.setNumber('speed', 0.7);
       expect(result.ok).toBe(false);
       if (result.ok) return;
       expect(result.error.code).toBe('character.input.unknown');
@@ -210,11 +202,11 @@ describe('the Rive backend and the rig contract', () => {
     });
 
     it('reports a slot the runtime refuses as an unknown skin', async () => {
-      const instance = fakeInstance(['airborne', 'speed', 'jump'], new Set(['coat']));
+      const instance = fakeInstance(INPUT_NAMES, new Set(['costume']));
       const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
       if (!created.ok) throw new Error(created.error.code);
 
-      const result = created.value.setSkin('coat', 'coat-blue');
+      const result = created.value.setSkin('costume', 'parka');
       expect(result.ok).toBe(false);
       if (result.ok) return;
       expect(result.error.code).toBe('character.skin.unknown');
@@ -222,7 +214,7 @@ describe('the Rive backend and the rig contract', () => {
     });
 
     it('reports an expression the runtime refuses as unknown, naming the artboard', async () => {
-      const instance = fakeInstance(['airborne', 'speed', 'jump'], new Set(['thinking']));
+      const instance = fakeInstance(INPUT_NAMES, new Set(['thinking']));
       const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
       if (!created.ok) throw new Error(created.error.code);
 
@@ -234,7 +226,7 @@ describe('the Rive backend and the rig contract', () => {
     });
 
     it('reports a trigger the runtime refuses', async () => {
-      const instance = fakeInstance(['airborne', 'speed', 'jump'], new Set(['jump']));
+      const instance = fakeInstance(INPUT_NAMES, new Set(['jump']));
       const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
       if (!created.ok) throw new Error(created.error.code);
 
@@ -245,11 +237,11 @@ describe('the Rive backend and the rig contract', () => {
     });
 
     it('reports a bool the runtime refuses', async () => {
-      const instance = fakeInstance(['airborne', 'speed', 'jump'], new Set(['airborne']));
+      const instance = fakeInstance(INPUT_NAMES, new Set(['grounded']));
       const created = await factoryFor(() => Promise.resolve(instance)).create(spec);
       if (!created.ok) throw new Error(created.error.code);
 
-      expect(created.value.setBool('airborne', true).ok).toBe(false);
+      expect(created.value.setBool('grounded', true).ok).toBe(false);
     });
   });
 
@@ -261,14 +253,17 @@ describe('the Rive backend and the rig contract', () => {
 
   it('charges the offscreen surface against the level budget, because no asset gate can', async () => {
     const created = await factoryFor(() =>
-      Promise.resolve(fakeInstance(['airborne', 'speed', 'jump'])),
+      Promise.resolve(fakeInstance(INPUT_NAMES)),
     ).create(spec);
     if (!created.ok) throw new Error(created.error.code);
 
-    /* 240x480 RGBA = 450 KiB, held by a character that ships in no file and is
-       therefore invisible to `make check-textures`. This method is the only
-       place a level's texture budget can learn about it. */
-    expect(created.value.estimatedTextureBytes()).toBe(240 * 480 * 4);
+    /* Character space in RGBA, held by a character that ships in no file and is
+       therefore invisible to `make check-textures` — `scripts/assets.mjs`
+       records `decodedBytes: 0` for a `.riv`. This method is the only place a
+       level's texture budget can learn about it. */
+    expect(created.value.estimatedTextureBytes()).toBe(
+      RIG.characterSpace.width * RIG.characterSpace.height * 4,
+    );
     expect(created.value.surface.textureKey).toBe('rive:officer');
   });
 });

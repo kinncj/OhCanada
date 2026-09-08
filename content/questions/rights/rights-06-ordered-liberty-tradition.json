@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-06-ordered-liberty-tradition",
+  "subject": "rights",
+  "prompt": {
+    "en": "How old is the tradition of ordered liberty that Canadians have inherited?",
+    "fr": "Quel âge a la tradition de liberté ordonnée dont les Canadiens ont hérité?"
+  },
+  "options": [
+    {
+      "en": "About 800 years.",
+      "fr": "Environ 800 ans."
+    },
+    {
+      "en": "About 150 years.",
+      "fr": "Environ 150 ans."
+    },
+    {
+      "en": "About 400 years.",
+      "fr": "Environ 400 ans."
+    },
+    {
+      "en": "About 40 years.",
+      "fr": "Environ 40 ans."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The sources of Canadian law together give Canadians a tradition of ordered liberty that is about 800 years old, going back to Magna Carta in 1215.",
+    "fr": "Les sources du droit canadien donnent ensemble aux Canadiens une tradition de liberté ordonnée vieille d'environ 800 ans, qui remonte à la Magna Carta de 1215."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms)"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

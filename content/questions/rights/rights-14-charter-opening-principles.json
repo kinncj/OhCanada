@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-14-charter-opening-principles",
+  "subject": "rights",
+  "prompt": {
+    "en": "Which two principles does the Canadian Charter of Rights and Freedoms name in its opening words?",
+    "fr": "Quels deux principes la Charte canadienne des droits et libertés nomme-t-elle dès ses premiers mots?"
+  },
+  "options": [
+    {
+      "en": "The supremacy of God and the rule of law.",
+      "fr": "La suprématie de Dieu et la primauté du droit."
+    },
+    {
+      "en": "Peace and good government.",
+      "fr": "La paix et le bon gouvernement."
+    },
+    {
+      "en": "Liberty and equality.",
+      "fr": "La liberté et l'égalité."
+    },
+    {
+      "en": "The two official languages, English and French.",
+      "fr": "Les deux langues officielles, l'anglais et le français."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Charter opens by saying Canada is founded on principles that recognize the supremacy of God and the rule of law. Those words point to the place of religious traditions in Canadian society and to the dignity and worth of the person.",
+    "fr": "La Charte s'ouvre en affirmant que le Canada est fondé sur des principes qui reconnaissent la suprématie de Dieu et la primauté du droit. Ces mots soulignent la place des traditions religieuses dans la société canadienne ainsi que la dignité et la valeur de la personne."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 12,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Whereas Canada is founded upon principles that recognize the supremacy of God and the rule of law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

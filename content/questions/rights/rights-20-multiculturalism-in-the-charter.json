@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-20-multiculturalism-in-the-charter",
+  "subject": "rights",
+  "prompt": {
+    "en": "How does the Charter describe multiculturalism?",
+    "fr": "Comment la Charte décrit-elle le multiculturalisme?"
+  },
+  "options": [
+    {
+      "en": "As a fundamental characteristic of Canadian heritage and identity.",
+      "fr": "Comme une caractéristique fondamentale du patrimoine et de l'identité du Canada."
+    },
+    {
+      "en": "As a government programme that can be ended at any time.",
+      "fr": "Comme un programme gouvernemental qui peut prendre fin à tout moment."
+    },
+    {
+      "en": "As a rule that applies only to new immigrants.",
+      "fr": "Comme une règle qui s'applique seulement aux nouveaux immigrants."
+    },
+    {
+      "en": "As a policy of the province where a person lives.",
+      "fr": "Comme une politique de la province où une personne habite."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Multiculturalism is named among the rights the Charter sets out, as a fundamental characteristic of Canadian heritage and identity. Canadians work to respect pluralism and live in harmony.",
+    "fr": "Le multiculturalisme figure parmi les droits énoncés dans la Charte, comme une caractéristique fondamentale du patrimoine et de l'identité du Canada. Les Canadiens s'efforcent de respecter le pluralisme et de vivre en harmonie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 12,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Multiculturalism — A fundamental characteristic of the Canadian heritage and identity."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

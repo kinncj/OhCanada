@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-09-cartier-three-voyages",
+  "subject": "history",
+  "prompt": {
+    "en": "Who made three voyages across the Atlantic between 1534 and 1542 and claimed the land for the King of France?",
+    "fr": "Qui a fait trois voyages à travers l'Atlantique entre 1534 et 1542 et a revendiqué le territoire au nom du roi de France?"
+  },
+  "options": [
+    {
+      "en": "Jacques Cartier.",
+      "fr": "Jacques Cartier."
+    },
+    {
+      "en": "Samuel de Champlain.",
+      "fr": "Samuel de Champlain."
+    },
+    {
+      "en": "John Cabot.",
+      "fr": "Jean Cabot."
+    },
+    {
+      "en": "Count Frontenac.",
+      "fr": "Le comte de Frontenac."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Jacques Cartier crossed the Atlantic three times between 1534 and 1542 and claimed the land for France. He was the first European to explore the St. Lawrence River. Champlain came later and built the fortress at Québec.",
+    "fr": "Jacques Cartier a traversé l'Atlantique trois fois entre 1534 et 1542 et a revendiqué le territoire au nom de la France. Il a été le premier Européen à explorer le fleuve Saint-Laurent. Champlain est venu plus tard et a construit la forteresse de Québec."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 24,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Between 1534 and 1542, Jacques Cartier made three voyages across the Atlantic, claiming the land for King Francis I of France."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

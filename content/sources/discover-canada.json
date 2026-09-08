@@ -79,13 +79,17 @@
   "knownStaleness": [
     {
       "topic": "Oath of Citizenship",
-      "problem": "Names Her Majesty Queen Elizabeth II. The reigning monarch is King Charles III, and the Oath was amended in June 2021 to add recognition of Aboriginal and treaty rights of First Nations, Inuit and Metis peoples.",
+      "problem": "Names Her Majesty Queen Elizabeth II. The reigning monarch is King Charles III, and the Oath was amended in June 2021 to add recognition of Aboriginal and treaty rights of First Nations, Inuit and Metis peoples. Recorded at chapter grain until 2026-09-08, which forced volatile on all 38 questions in Rights and Responsibilities while the Oath is not in that chapter's pages at all — a flag firing on everything, which carries the same information as one firing on nothing. Both pages are listed because the extraction prints a page number after that page's text, so the Oath sits after marker 2 and is page 3 by that convention while the manifest records page 2; the wider span is the safe direction until the convention is settled.",
       "affects": [
         "Rights and Responsibilities of Citizenship"
       ],
       "action": "volatile: verify against the live canada.ca page, never against this file",
-      "grain": "chapter",
-      "upstream": "unknown"
+      "grain": "pages",
+      "upstream": "unknown",
+      "pages": [
+        2,
+        3
+      ]
     },
     {
       "topic": "The monarch and the Governor General",
@@ -102,7 +106,7 @@
       "upstream": "does-not-revise",
       "bannedFromAnswers": [
         "Her Majesty",
-        "Sa Majest\u00e9",
+        "Sa Majesté",
         "Queen Elizabeth",
         "Elizabeth II",
         "His Majesty",
@@ -113,7 +117,7 @@
         "Governor General David Johnston",
         "Justin Trudeau",
         "Her Majesty's Loyal Opposition",
-        "loyale opposition de Sa Majest\u00e9"
+        "loyale opposition de Sa Majesté"
       ]
     },
     {
@@ -134,7 +138,7 @@
       "upstream": "does-not-revise",
       "bannedFromAnswers": [
         "Her Majesty",
-        "Sa Majest\u00e9",
+        "Sa Majesté",
         "Queen Elizabeth",
         "Elizabeth II",
         "His Majesty",
@@ -145,7 +149,7 @@
         "Governor General David Johnston",
         "Justin Trudeau",
         "Her Majesty's Loyal Opposition",
-        "loyale opposition de Sa Majest\u00e9"
+        "loyale opposition de Sa Majesté"
       ]
     },
     {
@@ -156,13 +160,14 @@
       ],
       "action": "volatile: verify against the live canada.ca page, never against this file",
       "pages": [
-        2
+        2,
+        3
       ],
       "grain": "pages",
       "upstream": "does-not-revise",
       "bannedFromAnswers": [
         "Her Majesty",
-        "Sa Majest\u00e9",
+        "Sa Majesté",
         "Queen Elizabeth",
         "Elizabeth II"
       ]

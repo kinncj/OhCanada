@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-11-habeas-corpus-meaning",
+  "subject": "rights",
+  "prompt": {
+    "en": "What does habeas corpus protect?",
+    "fr": "Que protège l'habeas corpus?"
+  },
+  "options": [
+    {
+      "en": "The right to challenge unlawful detention by the state.",
+      "fr": "Le droit de contester une détention illégale par l'État."
+    },
+    {
+      "en": "The right to a free lawyer in every court case.",
+      "fr": "Le droit à un avocat gratuit dans toutes les causes."
+    },
+    {
+      "en": "The right to refuse to pay a fine you disagree with.",
+      "fr": "Le droit de refuser de payer une amende que l'on juge injuste."
+    },
+    {
+      "en": "The right to leave Canada and settle in another country.",
+      "fr": "Le droit de quitter le Canada pour s'établir dans un autre pays."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Habeas corpus is the right to challenge unlawful detention by the state. It is the protection that stops a government from holding a person without answering for it in court.",
+    "fr": "L'habeas corpus est le droit de contester une détention illégale par l'État. C'est la protection qui empêche un gouvernement de détenir une personne sans devoir en répondre devant un tribunal."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Habeas corpus, the right to challenge unlawful detention by the state, comes from English common law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

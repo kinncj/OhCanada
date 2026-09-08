@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-38-burning-of-york-1813",
+  "subject": "history",
+  "prompt": {
+    "en": "What did the Americans burn in York, now Toronto, in 1813?",
+    "fr": "Qu'est-ce que les Américains ont incendié à York, aujourd'hui Toronto, en 1813?"
+  },
+  "options": [
+    {
+      "en": "Government House and the Parliament Buildings.",
+      "fr": "La maison du gouvernement et les édifices du Parlement."
+    },
+    {
+      "en": "The naval drydock and the Citadel.",
+      "fr": "La cale sèche navale et la Citadelle."
+    },
+    {
+      "en": "Fort Henry.",
+      "fr": "Le fort Henry."
+    },
+    {
+      "en": "The Rideau Canal locks.",
+      "fr": "Les écluses du canal Rideau."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1813 the Americans burned Government House and the Parliament Buildings in York, now Toronto. In retaliation in 1814, an expedition from Nova Scotia burned the White House and other public buildings in Washington.",
+    "fr": "En 1813, les Américains ont incendié la maison du gouvernement et les édifices du Parlement à York, aujourd'hui Toronto. En représailles, en 1814, une expédition partie de la Nouvelle-Écosse a incendié la Maison-Blanche et d'autres édifices publics à Washington."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 30,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1813 the Americans burned Government House and the Parliament Buildings in York (now Toronto)."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

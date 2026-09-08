@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-15-three-distinct-groups",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "In this guide, the term Aboriginal peoples covers three distinct groups. Which three?",
+    "fr": "Dans ce guide, l'expression « peuples autochtones » désigne trois groupes distincts. Lesquels?"
+  },
+  "options": [
+    {
+      "en": "First Nations, Inuit and Métis.",
+      "fr": "Les Premières Nations, les Inuit et les Métis."
+    },
+    {
+      "en": "First Nations and Inuit only.",
+      "fr": "Les Premières Nations et les Inuit seulement."
+    },
+    {
+      "en": "First Nations, Acadians and Métis.",
+      "fr": "Les Premières Nations, les Acadiens et les Métis."
+    },
+    {
+      "en": "Inuit, Métis and Quebecers.",
+      "fr": "Les Inuit, les Métis et les Québécois."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide uses Aboriginal peoples as a term covering three distinct groups: First Nations, Inuit and Métis. Each is its own people, not a branch of another.",
+    "fr": "Le guide emploie l'expression « peuples autochtones » pour désigner trois groupes distincts : les Premières Nations, les Inuit et les Métis. Chacun est un peuple à part entière, et non une branche d'un autre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 17,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Today, the term Aboriginal peoples refers to three distinct groups:"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

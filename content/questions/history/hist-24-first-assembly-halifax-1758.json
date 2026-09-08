@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-24-first-assembly-halifax-1758",
+  "subject": "history",
+  "prompt": {
+    "en": "Where was Canada's first representative assembly elected, in 1758?",
+    "fr": "Où la première assemblée représentative du Canada a-t-elle été élue, en 1758?"
+  },
+  "options": [
+    {
+      "en": "Halifax, Nova Scotia.",
+      "fr": "À Halifax, en Nouvelle-Écosse."
+    },
+    {
+      "en": "Québec City.",
+      "fr": "À Québec."
+    },
+    {
+      "en": "Toronto, then called York.",
+      "fr": "À Toronto, alors appelée York."
+    },
+    {
+      "en": "Charlottetown, Prince Edward Island.",
+      "fr": "À Charlottetown, à l'Île-du-Prince-Édouard."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Democratic institutions grew gradually and peacefully. The first representative assembly was elected in Halifax, Nova Scotia in 1758; Prince Edward Island followed in 1773 and New Brunswick in 1785.",
+    "fr": "Les institutions démocratiques se sont développées graduellement et pacifiquement. La première assemblée représentative a été élue à Halifax, en Nouvelle-Écosse, en 1758; l'Île-du-Prince-Édouard a suivi en 1773 et le Nouveau-Brunswick en 1785."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 27,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The first representative assembly was elected in Halifax, Nova Scotia, in 1758."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

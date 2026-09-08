@@ -240,6 +240,26 @@ const handoff = (root: string, extra: readonly string[] = [], seed: string | nul
  * 1. The real repository
  * ================================================================== */
 
+interface ReferenceSubject {
+  readonly id: string;
+  readonly renders: readonly string[];
+  readonly expectedBlindAnswer: readonly string[];
+}
+
+/**
+ * The subjects the contract declares, read at run time. Every case that needs
+ * to know what the set contains reads it from here rather than listing members:
+ * the set grows by one level at a time and an assertion pinned to today's
+ * members fails on every legitimate addition and catches none of the defects it
+ * was written for.
+ */
+const subjectsOf = (root: string): readonly ReferenceSubject[] =>
+  (
+    JSON.parse(readFileSync(join(root, 'assets', 'refs', 'references.json'), 'utf8')) as {
+      subjects: ReferenceSubject[];
+    }
+  ).subjects;
+
 describe('the gate over the repository as it stands', () => {
   const gate = run(['--root', REPO]);
 
@@ -258,16 +278,27 @@ describe('the gate over the repository as it stands', () => {
     expect(gate.stdout).toMatch(/NOT ESTABLISHED|does not establish that the verdict was made blind/);
   });
 
-  it('names the unrendered subject as neither a pass nor a failure', () => {
-    // `parliament-hill-skyline` is unrendered ON PURPOSE: the skyline tile is a
-    // droppable repeating parallax layer, and a verifier able to name Ottawa
-    // from one would be reporting a defect. It must not read as a failure, and
-    // it must not read as a pass.
-    expect(gate.stdout).toContain(
-      'parliament-hill-skyline is UNRENDERED by decision - not a pass and not a failure',
-    );
-    expect(gate.stdout).not.toMatch(/PASS parliament-hill-skyline/);
-    expect(gate.stdout).not.toMatch(/FAIL parliament-hill-skyline/);
+  it('names EVERY unrendered subject as neither a pass nor a failure', () => {
+    // A subject with no renders is unrendered ON PURPOSE: its only sources are
+    // droppable repeating parallax layers, and a verifier able to name the city
+    // from one would be reporting a defect, not a pass. It must not read as a
+    // failure and it must not read as a pass.
+    //
+    // DERIVED FROM THE CONTRACT, not listed. This case named
+    // `parliament-hill-skyline` and nothing else, so when Quebec City arrived
+    // with `quebec-city-riverfront` - the same decision, for the same reason -
+    // the case still passed while asserting nothing about it. An assertion that
+    // covers the member that prompted it and not the next one is the shape this
+    // repository keeps finding (ADR-0019).
+    const unrendered = subjectsOf(REPO).filter((s) => s.renders.length === 0);
+    expect(unrendered.length, 'no subject is unrendered; this case has nothing to check').toBeGreaterThan(0);
+    for (const subject of unrendered) {
+      expect(gate.stdout).toContain(
+        `${subject.id} is UNRENDERED by decision - not a pass and not a failure`,
+      );
+      expect(gate.stdout).not.toMatch(new RegExp(`PASS ${subject.id}`));
+      expect(gate.stdout).not.toMatch(new RegExp(`FAIL ${subject.id}`));
+    }
   });
 
   it('varies the officer between runs, because a character is never judged from one file', () => {
@@ -560,6 +591,14 @@ describe('what the harness PRINTS, and what its own entry points say', () => {
    * Subject ids, render source filenames and whole candidate answers are the
    * things that narrow a candidate set, and they are asserted exactly.
    */
+  /**
+   * Twenty, against 68 today. Not `> 0`, which would be decoration by ADR-0014's
+   * standard: a one-subject contract yields about five tokens and would sail
+   * past it. Not a number near 68 either, because retiring a subject is
+   * legitimate and this floor must not fail on it.
+   */
+  const MINIMUM_ANSWER_TOKENS = 20;
+
   const answerTokens = (): string[] => {
     const references = JSON.parse(
       readFileSync(join(REPO, 'assets', 'refs', 'references.json'), 'utf8'),
@@ -576,7 +615,19 @@ describe('what the harness PRINTS, and what its own entry points say', () => {
       }
     }
     tokens.delete('');
-    return [...tokens];
+    const all = [...tokens];
+    // ADR-0024, in the place where a vacuum would be most expensive: every leak
+    // case in this describe reduces to `hits === []`, and `[].filter(...)` is
+    // `[]` for any text at all. An empty or truncated contract would make all of
+    // them pass while establishing nothing, and the blind pass this harness
+    // exists for leaked precisely because subject ids reached the terminal.
+    // Today's contract yields 68 tokens over 7 subjects; the floor is set to
+    // catch a contract truncated to one subject - roughly 5 tokens - while
+    // leaving room for a subject to be retired.
+    expect(all.length, `the leak check has only ${String(all.length)} token(s) to look for`).toBeGreaterThan(
+      MINIMUM_ANSWER_TOKENS,
+    );
+    return all;
   };
 
   const assertClean = (label: string, text: string): void => {

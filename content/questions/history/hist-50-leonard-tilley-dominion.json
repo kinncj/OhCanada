@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-50-leonard-tilley-dominion",
+  "subject": "history",
+  "prompt": {
+    "en": "Who suggested the term Dominion of Canada in 1864?",
+    "fr": "Qui a proposé l'expression « Dominion du Canada » en 1864?"
+  },
+  "options": [
+    {
+      "en": "Sir Leonard Tilley, a Father of Confederation from New Brunswick.",
+      "fr": "Sir Leonard Tilley, un Père de la Confédération du Nouveau-Brunswick."
+    },
+    {
+      "en": "Sir John A. Macdonald.",
+      "fr": "Sir John A. Macdonald."
+    },
+    {
+      "en": "Sir George-Étienne Cartier.",
+      "fr": "Sir George-Étienne Cartier."
+    },
+    {
+      "en": "Lord Elgin.",
+      "fr": "Lord Elgin."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Sir Leonard Tilley, an elected official and Father of Confederation from New Brunswick, suggested the term in 1864. He was inspired by a verse in the Bible about dominion from sea to sea.",
+    "fr": "Sir Leonard Tilley, élu et Père de la Confédération du Nouveau-Brunswick, a proposé cette expression en 1864. Il s'est inspiré d'un verset de la Bible évoquant une domination d'une mer à l'autre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 33,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Sir Leonard Tilley, an elected official and Father of Confederation from New Brunswick, suggested the term Dominion of Canada in 1864."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

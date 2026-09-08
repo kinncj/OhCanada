@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-89-air-training-plan",
+  "subject": "history",
+  "prompt": {
+    "en": "How many Allied air crew were trained in Canada under the British Commonwealth Air Training Plan?",
+    "fr": "Combien de membres d'équipage aérien alliés ont été formés au Canada dans le cadre du Programme d'entraînement aérien du Commonwealth britannique?"
+  },
+  "options": [
+    {
+      "en": "Over 130,000.",
+      "fr": "Plus de 130 000."
+    },
+    {
+      "en": "About 13,000.",
+      "fr": "Environ 13 000."
+    },
+    {
+      "en": "About 44,000.",
+      "fr": "Environ 44 000."
+    },
+    {
+      "en": "Over one million.",
+      "fr": "Plus d'un million."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada contributed more to the Allied air effort than any other Commonwealth country, with over 130,000 Allied air crew trained here under the British Commonwealth Air Training Plan.",
+    "fr": "Le Canada a contribué à l'effort aérien allié plus que tout autre pays du Commonwealth : plus de 130 000 membres d'équipage aérien alliés y ont été formés dans le cadre du Programme d'entraînement aérien du Commonwealth britannique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 44,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "with over 130,000 Allied air crew trained in Canada under the British Commonwealth Air Training Plan."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

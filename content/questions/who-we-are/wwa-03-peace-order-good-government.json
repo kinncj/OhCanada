@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-03-peace-order-good-government",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Which key phrase from Canada's original constitutional document of 1867 do Canadian institutions uphold?",
+    "fr": "Quelle expression clé du document constitutionnel original du Canada de 1867 les institutions canadiennes défendent-elles?"
+  },
+  "options": [
+    {
+      "en": "Peace, Order, and Good Government.",
+      "fr": "Paix, ordre et bon gouvernement."
+    },
+    {
+      "en": "Life, liberty and the pursuit of happiness.",
+      "fr": "La vie, la liberté et la recherche du bonheur."
+    },
+    {
+      "en": "Liberty, equality, fraternity.",
+      "fr": "Liberté, égalité, fraternité."
+    },
+    {
+      "en": "From sea to sea.",
+      "fr": "D'un océan à l'autre."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Peace, Order, and Good Government is a key phrase from the British North America Act of 1867, Canada's original constitutional document. The other phrases belong to other countries or to a different part of Canada's story.",
+    "fr": "« Paix, ordre et bon gouvernement » est une expression clé de l'Acte de l'Amérique du Nord britannique de 1867, le document constitutionnel original du Canada. Les autres expressions appartiennent à d'autres pays ou à un autre chapitre de l'histoire canadienne."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 16,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Our institutions uphold a commitment to Peace, Order, and Good Government, a key phrase in Canada’s original constitutional document in 1867, the British North America Act."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

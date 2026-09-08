@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-59-nwmp-1873",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year was the North West Mounted Police established?",
+    "fr": "En quelle année la Police à cheval du Nord-Ouest a-t-elle été créée?"
+  },
+  "options": [
+    {
+      "en": "1873.",
+      "fr": "En 1873."
+    },
+    {
+      "en": "1867.",
+      "fr": "En 1867."
+    },
+    {
+      "en": "1885.",
+      "fr": "En 1885."
+    },
+    {
+      "en": "1905.",
+      "fr": "En 1905."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Prime Minister Macdonald established the North West Mounted Police in 1873. It founded Fort Calgary, Fort MacLeod and other centres that are cities and towns today, and Regina became its headquarters.",
+    "fr": "Le premier ministre Macdonald a créé la Police à cheval du Nord-Ouest en 1873. Elle a fondé Fort Calgary, Fort MacLeod et d'autres centres qui sont aujourd'hui des villes et des villages, et Regina en est devenue le quartier général."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 36,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "established the North West Mounted Police (NWMP) in 1873"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

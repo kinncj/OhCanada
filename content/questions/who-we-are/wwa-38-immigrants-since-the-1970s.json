@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-38-immigrants-since-the-1970s",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Since the 1970s, where have most immigrants to Canada come from?",
+    "fr": "Depuis les années 1970, d'où viennent la plupart des immigrants au Canada?"
+  },
+  "options": [
+    {
+      "en": "Asian countries.",
+      "fr": "De pays d'Asie."
+    },
+    {
+      "en": "European countries.",
+      "fr": "De pays d'Europe."
+    },
+    {
+      "en": "The United States.",
+      "fr": "Des États-Unis."
+    },
+    {
+      "en": "Caribbean countries.",
+      "fr": "De pays des Caraïbes."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Earlier waves of immigration came largely from Europe, but since the 1970s most immigrants have come from Asian countries.",
+    "fr": "Les vagues d'immigration antérieures venaient surtout d'Europe, mais depuis les années 1970, la plupart des immigrants viennent de pays d'Asie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 21,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "Since the 1970s, most immigrants have come from Asian countries."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

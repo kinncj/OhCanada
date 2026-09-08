@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-30-quebecois-nation-2006",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What did the House of Commons recognize in 2006?",
+    "fr": "Qu'est-ce que la Chambre des communes a reconnu en 2006?"
+  },
+  "options": [
+    {
+      "en": "That the Québécois form a nation within a united Canada.",
+      "fr": "Que les Québécois forment une nation au sein d'un Canada uni."
+    },
+    {
+      "en": "That Quebec is a separate country.",
+      "fr": "Que le Québec est un pays distinct."
+    },
+    {
+      "en": "That French is the only official language of Quebec.",
+      "fr": "Que le français est la seule langue officielle du Québec."
+    },
+    {
+      "en": "That Quebec may write its own constitution.",
+      "fr": "Que le Québec peut rédiger sa propre constitution."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 2006 the House of Commons recognized that the Québécois form a nation within a united Canada. The recognition is of a nation inside Canada, not of a separate country.",
+    "fr": "En 2006, la Chambre des communes a reconnu que les Québécois forment une nation au sein d'un Canada uni. Il s'agit de la reconnaissance d'une nation à l'intérieur du Canada, et non d'un pays distinct."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 20,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "recognized in 2006 that the Quebecois form a nation within a united Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

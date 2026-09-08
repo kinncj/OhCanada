@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-83-western-farmers-depression",
+  "subject": "history",
+  "prompt": {
+    "en": "Who was hit hardest by the Great Depression in Canada?",
+    "fr": "Qui a été le plus durement touché par la Grande Dépression au Canada?"
+  },
+  "options": [
+    {
+      "en": "Farmers in Western Canada, by low grain prices and a terrible drought.",
+      "fr": "Les agriculteurs de l'Ouest canadien, par les bas prix du grain et une terrible sécheresse."
+    },
+    {
+      "en": "Fishing communities in the Atlantic provinces.",
+      "fr": "Les collectivités de pêche des provinces de l'Atlantique."
+    },
+    {
+      "en": "Miners in the three territories.",
+      "fr": "Les mineurs des trois territoires."
+    },
+    {
+      "en": "Factory workers in Quebec City.",
+      "fr": "Les ouvriers d'usine de la ville de Québec."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Farmers in Western Canada were hit hardest by the Depression, by low grain prices and a terrible drought. The hardship led to growing demand for a social safety net.",
+    "fr": "Les agriculteurs de l'Ouest canadien ont été les plus durement touchés par la Dépression, en raison des bas prix du grain et d'une terrible sécheresse. Ces épreuves ont fait grandir la demande d'un filet de sécurité sociale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 42,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Farmers in Western Canada were hit hardest by low grain prices and a terrible drought."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

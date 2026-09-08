@@ -345,14 +345,80 @@ async function tileTo(buf, width) {
  * `{ png, sources, slots }`. A subject in references.json with a non-empty
  * `renders` and no entry here FAILS the gate.
  */
+/**
+ * TWO SHAPES, NOT N COPIES.
+ *
+ * The table below is keyed by subject id because `renderRecipe` is prose and a
+ * subject's decisions belong beside its id. What a builder DOES, though, is not
+ * a property of the subject - it is a property of how many sources answer it and
+ * how they stack. Quebec City arriving proved that: its two rendered subjects
+ * are, in the art agent's own words in `references.json`, "the `peace-tower`
+ * builder unchanged" and "the `rideau-canal-skateway` builder with two filename
+ * matches changed". Copying both would have made the next level a third copy,
+ * and the copies would drift.
+ *
+ * So the two shapes are factories and each entry names its shape and its
+ * parameters. A new landmark is one line; a new two-tile composite is four. The
+ * per-subject prose stays where it was, because that is the part that is
+ * genuinely per subject.
+ */
+
+/** A single source, rasterised on its own at 1x, flattened onto the matte. */
+const singleSource = () => async ({ assets, subject, failures }) => {
+  const rel = subject.renders[0];
+  const buf = await rasterise(assets, rel, failures);
+  if (!buf) return null;
+  return { png: await flatten(sharp(buf)), sources: [rel], slots: {} };
+};
+
+/**
+ * Two repeating parallax tiles, the near one laid `nearTop` px below the far
+ * one's top edge and drawn over it. Both are laid from x = 0 and REPEATED to the
+ * wider of the two rather than laid side by side: they are tiles the level
+ * scrolls, so repeating is what the player sees, and laying them side by side at
+ * their natural widths leaves the narrower one's band as bare matte.
+ *
+ * `farMatch` / `nearMatch` are substrings of the render paths, so `renders[]`
+ * can be listed in any order and a missing half is a named failure rather than
+ * an undefined composite.
+ */
+const twoParallaxTiles = ({ farMatch, nearMatch, nearTop, what }) =>
+  async ({ assets, subject, failures }) => {
+    const farRel = subject.renders.find((r) => r.includes(farMatch));
+    const nearRel = subject.renders.find((r) => r.includes(nearMatch));
+    if (!farRel || !nearRel) {
+      failures.push(`${subject.id}: renders[] must list ${what}`);
+      return null;
+    }
+    const far = await rasterise(assets, farRel, failures);
+    const near = await rasterise(assets, nearRel, failures);
+    if (!far || !near) return null;
+
+    const fm = await sharp(far).metadata();
+    const nm = await sharp(near).metadata();
+    const width = Math.max(fm.width, nm.width);
+    const height = Math.max(fm.height, nearTop + nm.height);
+
+    const png = await flatten(
+      canvas(width, height).composite([
+        { input: await tileTo(far, width), left: 0, top: 0 },
+        { input: await tileTo(near, width), left: 0, top: nearTop },
+      ]),
+    );
+    return { png, sources: [farRel, nearRel], slots: { nearTop } };
+  };
+
 const RECIPES = {
   /** A single source, rasterised on its own at 1x. */
-  'peace-tower': async ({ assets, subject, failures }) => {
-    const rel = subject.renders[0];
-    const buf = await rasterise(assets, rel, failures);
-    if (!buf) return null;
-    return { png: await flatten(sharp(buf)), sources: [rel], slots: {} };
-  },
+  'peace-tower': singleSource(),
+
+  /**
+   * The POI hero for Quebec City, and the only source that carries the city's
+   * identifying feature: `references.json` puts the riverfront tiles explicitly
+   * out of scope because the low preset drops them and the art bible forbids an
+   * identifying feature on a droppable layer.
+   */
+  'chateau-frontenac': singleSource(),
 
   /**
    * "Composite the two, canal wall above ice, ice placed 580 px below the wall's
@@ -369,33 +435,25 @@ const RECIPES = {
    *   - z: the nearer parallax layer draws over the further one, which is the
    *     order the level uses. They overlap by 60 px.
    */
-  'rideau-canal-skateway': async ({ assets, subject, failures }) => {
-    const [wallRel, iceRel] = [
-      subject.renders.find((r) => r.includes('canalwall')),
-      subject.renders.find((r) => r.includes('ice')),
-    ];
-    if (!wallRel || !iceRel) {
-      failures.push(`rideau-canal-skateway: renders[] must list a canal wall and an ice layer`);
-      return null;
-    }
-    const wall = await rasterise(assets, wallRel, failures);
-    const ice = await rasterise(assets, iceRel, failures);
-    if (!wall || !ice) return null;
+  'rideau-canal-skateway': twoParallaxTiles({
+    farMatch: 'canalwall',
+    nearMatch: 'ice',
+    nearTop: 580,
+    what: 'a canal wall and an ice layer',
+  }),
 
-    const wm = await sharp(wall).metadata();
-    const im = await sharp(ice).metadata();
-    const ICE_TOP = 580;
-    const width = Math.max(wm.width, im.width);
-    const height = Math.max(wm.height, ICE_TOP + im.height);
-
-    const png = await flatten(
-      canvas(width, height).composite([
-        { input: await tileTo(wall, width), left: 0, top: 0 },
-        { input: await tileTo(ice, width), left: 0, top: ICE_TOP },
-      ]),
-    );
-    return { png, sources: [wallRel, iceRel], slots: { iceTop: ICE_TOP } };
-  },
+  /**
+   * The same shape as the canal, with the same 580 px offset and the same
+   * reason: world y 1280 against 700. Neither file answers the subject alone -
+   * a run with no promenade is a snowy field, and a promenade with no run is a
+   * fence - which is why the subject is the composite and not either tile.
+   */
+  'dufferin-terrace-toboggan-run': twoParallaxTiles({
+    farMatch: 'terrace',
+    nearMatch: 'slope',
+    nearTop: 580,
+    what: 'a terrace promenade and a toboggan slope',
+  }),
 
   /**
    * "A CHARACTER IS NEVER JUDGED FROM ONE FILE." Every part is unidentifiable

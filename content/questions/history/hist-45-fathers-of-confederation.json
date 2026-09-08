@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-45-fathers-of-confederation",
+  "subject": "history",
+  "prompt": {
+    "en": "Who are known as the Fathers of Confederation?",
+    "fr": "Qui appelle-t-on les Pères de la Confédération?"
+  },
+  "options": [
+    {
+      "en": "The representatives of Nova Scotia, New Brunswick and the Province of Canada who worked from 1864 to 1867 to build a new country.",
+      "fr": "Les représentants de la Nouvelle-Écosse, du Nouveau-Brunswick et de la province du Canada qui ont travaillé de 1864 à 1867 à bâtir un nouveau pays."
+    },
+    {
+      "en": "The British governors who ruled the colonies before 1867.",
+      "fr": "Les gouverneurs britanniques qui dirigeaient les colonies avant 1867."
+    },
+    {
+      "en": "The first judges of Canada's courts.",
+      "fr": "Les premiers juges des tribunaux du Canada."
+    },
+    {
+      "en": "The reformers who led the rebellions of 1837-38.",
+      "fr": "Les réformistes qui ont mené les rébellions de 1837-1838."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "From 1864 to 1867, representatives of Nova Scotia, New Brunswick and the Province of Canada worked with British support to establish a new country. These men are known as the Fathers of Confederation.",
+    "fr": "De 1864 à 1867, des représentants de la Nouvelle-Écosse, du Nouveau-Brunswick et de la province du Canada ont travaillé, avec l'appui britannique, à créer un nouveau pays. Ces hommes sont connus comme les Pères de la Confédération."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 33,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "These men are known as the Fathers of Confederation."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

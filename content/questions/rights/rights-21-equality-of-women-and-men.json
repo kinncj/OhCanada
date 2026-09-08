@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-21-equality-of-women-and-men",
+  "subject": "rights",
+  "prompt": {
+    "en": "What does Canadian law say about women and men?",
+    "fr": "Que dit le droit canadien au sujet des femmes et des hommes?"
+  },
+  "options": [
+    {
+      "en": "They are equal under the law.",
+      "fr": "Ils sont égaux devant la loi."
+    },
+    {
+      "en": "They are equal at work but not in the family.",
+      "fr": "Ils sont égaux au travail, mais pas dans la famille."
+    },
+    {
+      "en": "Equality is a goal that the law encourages but does not require.",
+      "fr": "L'égalité est un objectif que la loi encourage sans l'exiger."
+    },
+    {
+      "en": "Each province decides whether they are equal.",
+      "fr": "Chaque province décide s'ils sont égaux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In Canada, men and women are equal under the law. This is the law across the whole country, not a goal and not a provincial choice.",
+    "fr": "Au Canada, les hommes et les femmes sont égaux devant la loi. C'est le droit dans tout le pays, et non un objectif ni un choix provincial."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In Canada, men and women are equal under the law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

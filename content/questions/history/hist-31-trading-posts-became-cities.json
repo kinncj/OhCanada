@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-31-trading-posts-became-cities",
+  "subject": "history",
+  "prompt": {
+    "en": "What became of the Hudson's Bay Company posts such as Fort Garry, Fort Edmonton and Fort Victoria?",
+    "fr": "Que sont devenus les postes de la Compagnie de la Baie d'Hudson comme Fort Garry, Fort Edmonton et Fort Victoria?"
+  },
+  "options": [
+    {
+      "en": "They later became cities.",
+      "fr": "Ils sont devenus des villes."
+    },
+    {
+      "en": "They were abandoned and are now empty.",
+      "fr": "Ils ont été abandonnés et sont aujourd'hui déserts."
+    },
+    {
+      "en": "They became national parks.",
+      "fr": "Ils sont devenus des parcs nationaux."
+    },
+    {
+      "en": "They were rebuilt as military forts.",
+      "fr": "Ils ont été reconstruits comme forts militaires."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Hudson's Bay Company, with French, British and Aboriginal employees, dominated the northwest trade from posts including Fort Garry, Fort Edmonton, Fort Langley and Fort Victoria. Those trading posts later became cities.",
+    "fr": "La Compagnie de la Baie d'Hudson, avec ses employés français, britanniques et autochtones, a dominé le commerce du Nord-Ouest depuis des postes comme Fort Garry, Fort Edmonton, Fort Langley et Fort Victoria. Ces postes de traite sont devenus des villes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 29,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "trading posts that later became cities."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

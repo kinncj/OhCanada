@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-14-fur-trade-beaver-pelts",
+  "subject": "history",
+  "prompt": {
+    "en": "What drove the vast fur-trade economy of New France?",
+    "fr": "Qu'est-ce qui alimentait la vaste économie de la traite des fourrures en Nouvelle-France?"
+  },
+  "options": [
+    {
+      "en": "European demand for beaver pelts.",
+      "fr": "La demande européenne de peaux de castor."
+    },
+    {
+      "en": "European demand for timber.",
+      "fr": "La demande européenne de bois d'œuvre."
+    },
+    {
+      "en": "The search for gold.",
+      "fr": "La recherche de l'or."
+    },
+    {
+      "en": "The cod fishery.",
+      "fr": "La pêche à la morue."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The French and Aboriginal people worked together in a vast fur-trade economy, and what drove it was the demand for beaver pelts in Europe.",
+    "fr": "Les Français et les peuples autochtones ont collaboré dans une vaste économie de la traite des fourrures, alimentée par la demande de peaux de castor en Europe."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 25,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "driven by the demand for beaver pelts in Europe."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

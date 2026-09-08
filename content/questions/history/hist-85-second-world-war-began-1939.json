@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-85-second-world-war-began-1939",
+  "subject": "history",
+  "prompt": {
+    "en": "What event began the Second World War in 1939?",
+    "fr": "Quel événement a déclenché la Seconde Guerre mondiale en 1939?"
+  },
+  "options": [
+    {
+      "en": "The Nazi dictator of Germany invaded Poland.",
+      "fr": "Le dictateur nazi de l'Allemagne a envahi la Pologne."
+    },
+    {
+      "en": "Japan attacked the Aleutian Islands.",
+      "fr": "Le Japon a attaqué les îles Aléoutiennes."
+    },
+    {
+      "en": "Germany attacked Belgium and France.",
+      "fr": "L'Allemagne a attaqué la Belgique et la France."
+    },
+    {
+      "en": "The Allies invaded Normandy.",
+      "fr": "Les Alliés ont envahi la Normandie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Second World War began in 1939 when the Nazi dictator of Germany invaded Poland and conquered much of Europe. The attack on Belgium and France in 1914 belongs to the First World War.",
+    "fr": "La Seconde Guerre mondiale a commencé en 1939 lorsque le dictateur nazi de l'Allemagne a envahi la Pologne et conquis une grande partie de l'Europe. L'attaque contre la Belgique et la France en 1914 appartient à la Première Guerre mondiale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 43,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Second World War began in 1939 when Adolf Hitler, the National Socialist (Nazi) dictator of Germany, invaded Poland"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

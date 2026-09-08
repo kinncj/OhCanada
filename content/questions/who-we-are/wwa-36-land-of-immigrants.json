@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-36-land-of-immigrants",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Why is Canada often called a land of immigrants?",
+    "fr": "Pourquoi appelle-t-on souvent le Canada une terre d'immigration?"
+  },
+  "options": [
+    {
+      "en": "Because over the past 200 years millions of newcomers have helped build and defend the country's way of life.",
+      "fr": "Parce que, depuis 200 ans, des millions de nouveaux arrivants ont contribué à bâtir et à défendre le mode de vie du pays."
+    },
+    {
+      "en": "Because most Canadians today were born in another country.",
+      "fr": "Parce que la plupart des Canadiens d'aujourd'hui sont nés dans un autre pays."
+    },
+    {
+      "en": "Because immigration only began after the Second World War.",
+      "fr": "Parce que l'immigration n'a commencé qu'après la Seconde Guerre mondiale."
+    },
+    {
+      "en": "Because the government requires a set number of newcomers each year.",
+      "fr": "Parce que le gouvernement exige un nombre déterminé de nouveaux arrivants chaque année."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Most Canadians were born here, and Canada is still called a land of immigrants: over the past 200 years millions of newcomers have helped to build and defend the Canadian way of life.",
+    "fr": "La majorité des Canadiens sont nés ici, et pourtant on appelle toujours le Canada une terre d'immigration : depuis 200 ans, des millions de nouveaux arrivants ont contribué à bâtir et à défendre le mode de vie canadien."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 21,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "over the past 200 years, millions of newcomers have helped to build and defend our way of life."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

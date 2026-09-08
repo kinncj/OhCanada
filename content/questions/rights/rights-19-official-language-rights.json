@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-19-official-language-rights",
+  "subject": "rights",
+  "prompt": {
+    "en": "What do official language rights say about French and English?",
+    "fr": "Que disent les droits relatifs aux langues officielles au sujet du français et de l'anglais?"
+  },
+  "options": [
+    {
+      "en": "They have equal status in Parliament and throughout the government.",
+      "fr": "Ils ont un statut égal au Parlement et dans l'ensemble du gouvernement."
+    },
+    {
+      "en": "English comes first and French is used where there is demand.",
+      "fr": "L'anglais vient en premier et le français est utilisé là où la demande existe."
+    },
+    {
+      "en": "French has equal status only inside the province of Quebec.",
+      "fr": "Le français a un statut égal seulement dans la province de Québec."
+    },
+    {
+      "en": "Each province chooses which of the two it will use.",
+      "fr": "Chaque province choisit laquelle des deux langues elle utilisera."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "French and English have equal status in Parliament and across the government. Neither language comes second, and the rule is not limited to one province.",
+    "fr": "Le français et l'anglais ont un statut égal au Parlement et dans l'ensemble du gouvernement. Aucune des deux langues n'est secondaire, et la règle ne se limite pas à une seule province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 12,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Official Language Rights and Minority Language Educational Rights — French and English have equal status in Parliament and throughout the government."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

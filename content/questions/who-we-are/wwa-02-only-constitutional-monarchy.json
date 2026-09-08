@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-02-only-constitutional-monarchy",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Which country is the only constitutional monarchy in North America?",
+    "fr": "Quel pays est la seule monarchie constitutionnelle d'Amérique du Nord?"
+  },
+  "options": [
+    {
+      "en": "Canada.",
+      "fr": "Le Canada."
+    },
+    {
+      "en": "Mexico.",
+      "fr": "Le Mexique."
+    },
+    {
+      "en": "The United States.",
+      "fr": "Les États-Unis."
+    },
+    {
+      "en": "There is none; every country there is a republic.",
+      "fr": "Aucun; tous les pays y sont des républiques."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada is the only constitutional monarchy in North America. Its neighbours are republics, which is what makes the fact worth knowing.",
+    "fr": "Le Canada est la seule monarchie constitutionnelle d'Amérique du Nord. Ses voisins sont des républiques, ce qui rend ce fait remarquable."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 16,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "We are the only constitutional monarchy in North America."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

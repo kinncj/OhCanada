@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-08-lanse-aux-meadows",
+  "subject": "history",
+  "prompt": {
+    "en": "Whose settlement at l'Anse aux Meadows is a World Heritage site?",
+    "fr": "À qui appartient l'établissement de l'Anse aux Meadows, qui est un site du patrimoine mondial?"
+  },
+  "options": [
+    {
+      "en": "The Vikings, who reached Labrador and Newfoundland about a thousand years ago.",
+      "fr": "Aux Vikings, qui ont atteint le Labrador et Terre-Neuve il y a environ mille ans."
+    },
+    {
+      "en": "French colonists led by Champlain.",
+      "fr": "Aux colons français dirigés par Champlain."
+    },
+    {
+      "en": "English settlers who arrived in 1610.",
+      "fr": "Aux colons anglais arrivés en 1610."
+    },
+    {
+      "en": "Portuguese fishermen of the 1500s.",
+      "fr": "Aux pêcheurs portugais des années 1500."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Vikings from Iceland who colonized Greenland a thousand years ago also reached Labrador and Newfoundland. The remains of their settlement at l'Anse aux Meadows are a World Heritage site.",
+    "fr": "Les Vikings d'Islande qui ont colonisé le Groenland il y a mille ans ont aussi atteint le Labrador et Terre-Neuve. Les vestiges de leur établissement de l'Anse aux Meadows constituent un site du patrimoine mondial."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 24,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The remains of their settlement, l’Anse aux Meadows, are a World Heritage site."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

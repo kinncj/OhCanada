@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-93-apology-1988",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year did the Government of Canada apologize for the wartime treatment of Canadians of Japanese origin?",
+    "fr": "En quelle année le gouvernement du Canada a-t-il présenté des excuses pour le traitement infligé en temps de guerre aux Canadiens d'origine japonaise?"
+  },
+  "options": [
+    {
+      "en": "1988.",
+      "fr": "En 1988."
+    },
+    {
+      "en": "1945.",
+      "fr": "En 1945."
+    },
+    {
+      "en": "2006.",
+      "fr": "En 2006."
+    },
+    {
+      "en": "2008.",
+      "fr": "En 2008."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadians of Japanese origin were forcibly relocated and their property sold without compensation, even though the military and the RCMP told Ottawa they posed little danger. The Government of Canada apologized in 1988 and compensated the victims.",
+    "fr": "Des Canadiens d'origine japonaise ont été déplacés de force et leurs biens vendus sans compensation, même si l'armée et la GRC avaient dit à Ottawa qu'ils représentaient peu de danger. Le gouvernement du Canada a présenté des excuses en 1988 et a indemnisé les victimes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 44,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Government of Canada apologized in 1988 for wartime wrongs and compensated the victims."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

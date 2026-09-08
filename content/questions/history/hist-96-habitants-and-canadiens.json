@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-96-habitants-and-canadiens",
+  "subject": "history",
+  "prompt": {
+    "en": "What were the French-speaking Catholic people of the Province of Quebec known as?",
+    "fr": "Comment appelait-on les catholiques francophones de la province de Québec?"
+  },
+  "options": [
+    {
+      "en": "Habitants or Canadiens.",
+      "fr": "Des habitants ou des Canadiens."
+    },
+    {
+      "en": "Loyalists.",
+      "fr": "Des loyalistes."
+    },
+    {
+      "en": "Acadians.",
+      "fr": "Des Acadiens."
+    },
+    {
+      "en": "Voyageurs.",
+      "fr": "Des voyageurs."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "After the war Great Britain renamed the colony the Province of Quebec. Its French-speaking Catholic people, known as habitants or Canadiens, worked to keep their way of life in an English-speaking, Protestant-ruled empire.",
+    "fr": "Après la guerre, la Grande-Bretagne a renommé la colonie « province de Québec ». Ses catholiques francophones, appelés habitants ou Canadiens, se sont efforcés de préserver leur mode de vie dans un empire anglophone dirigé par des protestants."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 26,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The French-speaking Catholic people, known as habitants or Canadiens"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

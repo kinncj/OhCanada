@@ -150,6 +150,7 @@ describe('the domain aggregate is a player', () => {
         volumes: { master: 1, music: 1, sfx: 1, voice: 1 },
       },
       levels: [],
+      lastPlayedLevelId: null,
       reviews: [],
       subjectsStarted: [],
       exams: [],

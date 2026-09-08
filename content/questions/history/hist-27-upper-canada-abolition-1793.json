@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-27-upper-canada-abolition-1793",
+  "subject": "history",
+  "prompt": {
+    "en": "Which was the first province in the British Empire to move toward abolishing slavery?",
+    "fr": "Quelle a été la première province de l'Empire britannique à s'engager vers l'abolition de l'esclavage?"
+  },
+  "options": [
+    {
+      "en": "Upper Canada, in 1793.",
+      "fr": "Le Haut-Canada, en 1793."
+    },
+    {
+      "en": "Lower Canada, in 1793.",
+      "fr": "Le Bas-Canada, en 1793."
+    },
+    {
+      "en": "Nova Scotia, in 1758.",
+      "fr": "La Nouvelle-Écosse, en 1758."
+    },
+    {
+      "en": "New Brunswick, in 1785.",
+      "fr": "Le Nouveau-Brunswick, en 1785."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1793 Upper Canada, led by Lieutenant Governor John Graves Simcoe, became the first province in the Empire to move toward abolition. Simcoe also founded the City of York, now Toronto.",
+    "fr": "En 1793, le Haut-Canada, dirigé par le lieutenant-gouverneur John Graves Simcoe, est devenu la première province de l'Empire à s'engager vers l'abolition. Simcoe a aussi fondé la ville d'York, aujourd'hui Toronto."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 28,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1793, Upper Canada, led by Lieutenant Governor John Graves Simcoe, a Loyalist military officer, became the first province in the Empire to move toward abolition."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

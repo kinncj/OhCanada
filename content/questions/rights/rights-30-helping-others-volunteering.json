@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-30-helping-others-volunteering",
+  "subject": "rights",
+  "prompt": {
+    "en": "How do millions of Canadians carry out the responsibility of helping others in the community?",
+    "fr": "Comment des millions de Canadiens assument-ils la responsabilité d'aider les autres dans leur collectivité?"
+  },
+  "options": [
+    {
+      "en": "They volunteer, giving their time to help others without pay.",
+      "fr": "Ils font du bénévolat en donnant de leur temps pour aider les autres sans être payés."
+    },
+    {
+      "en": "They pay an extra tax that funds community services.",
+      "fr": "Ils paient une taxe supplémentaire qui finance les services communautaires."
+    },
+    {
+      "en": "They are assigned community work by their municipality.",
+      "fr": "Leur municipalité leur assigne des travaux communautaires."
+    },
+    {
+      "en": "They must complete one year of national service.",
+      "fr": "Ils doivent effectuer une année de service national."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Millions of volunteers freely give their time without pay: helping people in need, assisting at a child's school, working at a food bank or other charity, or helping newcomers settle in.",
+    "fr": "Des millions de bénévoles donnent librement de leur temps sans être payés : aider les personnes dans le besoin, prêter main-forte à l'école de leur enfant, travailler dans une banque alimentaire ou un organisme de bienfaisance, ou aider les nouveaux arrivants à s'intégrer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Millions of volunteers freely donate their time to help others without pay"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

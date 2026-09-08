@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-32-montreal-stock-exchange-1832",
+  "subject": "history",
+  "prompt": {
+    "en": "Which stock exchange opened in 1832?",
+    "fr": "Quelle bourse a ouvert ses portes en 1832?"
+  },
+  "options": [
+    {
+      "en": "The Montreal Stock Exchange.",
+      "fr": "La Bourse de Montréal."
+    },
+    {
+      "en": "The Toronto Stock Exchange.",
+      "fr": "La Bourse de Toronto."
+    },
+    {
+      "en": "The Halifax Stock Exchange.",
+      "fr": "La Bourse de Halifax."
+    },
+    {
+      "en": "The Vancouver Stock Exchange.",
+      "fr": "La Bourse de Vancouver."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The first financial institutions opened in the late 18th and early 19th centuries, and the Montreal Stock Exchange opened in 1832.",
+    "fr": "Les premières institutions financières ont ouvert à la fin du XVIIIe et au début du XIXe siècle, et la Bourse de Montréal a ouvert ses portes en 1832."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 29,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Montreal Stock Exchange opened in 1832."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-26-jury-duty-is-required",
+  "subject": "rights",
+  "prompt": {
+    "en": "What must you do if you are called to serve on a jury?",
+    "fr": "Que devez-vous faire si vous êtes convoqué pour faire partie d'un jury?"
+  },
+  "options": [
+    {
+      "en": "You are legally required to serve.",
+      "fr": "Vous êtes légalement tenu d'y participer."
+    },
+    {
+      "en": "You may serve if you have the time.",
+      "fr": "Vous pouvez y participer si vous avez le temps."
+    },
+    {
+      "en": "You must pay a fee if you do not wish to serve.",
+      "fr": "Vous devez payer des frais si vous ne souhaitez pas y participer."
+    },
+    {
+      "en": "You serve only if you have lived in Canada for ten years.",
+      "fr": "Vous y participez seulement si vous vivez au Canada depuis dix ans."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Serving on a jury is one of the responsibilities of citizenship. When you are called, the law requires you to serve.",
+    "fr": "Faire partie d'un jury est l'une des responsabilités de la citoyenneté. Lorsque vous êtes convoqué, la loi vous oblige à y participer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Serving on a jury — When called to do so, you are legally required to serve."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

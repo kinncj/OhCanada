@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-11-residential-schools-period",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Over what period did the federal government place many Aboriginal children in residential schools?",
+    "fr": "Pendant quelle période le gouvernement fédéral a-t-il placé de nombreux enfants autochtones dans des pensionnats?"
+  },
+  "options": [
+    {
+      "en": "From the 1800s until the 1980s.",
+      "fr": "Des années 1800 jusqu'aux années 1980."
+    },
+    {
+      "en": "From the 1600s until the 1700s.",
+      "fr": "Des années 1600 jusqu'aux années 1700."
+    },
+    {
+      "en": "From 1914 until 1920.",
+      "fr": "De 1914 à 1920."
+    },
+    {
+      "en": "From 1867 until 1900.",
+      "fr": "De 1867 à 1900."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The residential schools ran for well over a century: from the 1800s until the 1980s. This is recent history, not distant history.",
+    "fr": "Les pensionnats ont existé pendant bien plus d'un siècle : des années 1800 jusqu'aux années 1980. Il s'agit d'histoire récente, et non lointaine."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 17,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "From the 1800s until the 1980s, the federal government placed many Aboriginal children in residential schools"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

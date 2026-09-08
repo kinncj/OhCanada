@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-34-no-compulsory-military-service",
+  "subject": "rights",
+  "prompt": {
+    "en": "Is military service compulsory in Canada?",
+    "fr": "Le service militaire est-il obligatoire au Canada?"
+  },
+  "options": [
+    {
+      "en": "No. There is no compulsory military service in Canada.",
+      "fr": "Non. Il n'y a pas de service militaire obligatoire au Canada."
+    },
+    {
+      "en": "Yes, for one year, after a person turns eighteen.",
+      "fr": "Oui, pendant un an, après l'âge de dix-huit ans."
+    },
+    {
+      "en": "Yes, but only for new citizens.",
+      "fr": "Oui, mais seulement pour les nouveaux citoyens."
+    },
+    {
+      "en": "Yes, in some provinces and not in others.",
+      "fr": "Oui, dans certaines provinces et non dans d'autres."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada has no compulsory military service. Serving is a choice, and the guide describes it as a noble way to contribute and a good career.",
+    "fr": "Le Canada n'a pas de service militaire obligatoire. Servir est un choix, et le guide le décrit comme une noble façon de contribuer et comme une bonne carrière."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "There is no compulsory military service in Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

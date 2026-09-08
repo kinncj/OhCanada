@@ -64,6 +64,10 @@ describe('a new game', () => {
     expect(Object.keys(base()).sort()).toEqual([
       'character',
       'exams',
+      // The level last played, so the title screen can offer Continue. It is in
+      // TN-SAVE's *survives* table; "which screen the player was on" is
+      // explicitly in the does-not table (ADR-0023).
+      'lastPlayedLevelId',
       'levels',
       'reviews',
       'settings',

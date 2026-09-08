@@ -235,6 +235,28 @@ describe('the menu', () => {
     expect(at('menu-close')?.textContent).toBe('Close');
   });
 
+  it('offers the way out of the level when there is one, and only then', () => {
+    /*
+     * `TN-HUD-02`, amended 2026-09-08, and `TN-FLOW-03`. Before this item a
+     * player who reached a level from the level select had no way back except
+     * the browser's back button, which this game must not depend on. The second
+     * half matters as much: a menu with nothing to leave does not offer it.
+     */
+    const onLeaveLevel = vi.fn();
+    const { at } = mount({ onLeaveLevel });
+    at('menu-button')?.click();
+    expect(at('menu-leave')?.textContent).toBe('Leave the level');
+
+    at('menu-leave')?.click();
+    expect(onLeaveLevel).toHaveBeenCalledTimes(1);
+    /* One screen at a time: the menu is gone before the route is taken. */
+    expect(at('menu')?.hidden).toBe(true);
+
+    const without = mount();
+    without.at('menu-button')?.click();
+    expect(without.at('menu-leave')).toBeNull();
+  });
+
   it('makes the HUD inert while it is open, so the menu cannot be opened over itself', () => {
     /* TN-HUD-04, and the same mechanism that stops a modal being reached over a
        question card: the trap inerts everything outside the dialog. */

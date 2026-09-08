@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-26-first-elected-assemblies-1791",
+  "subject": "history",
+  "prompt": {
+    "en": "What else did the Constitutional Act of 1791 grant the Canadas for the first time?",
+    "fr": "Qu'est-ce que l'Acte constitutionnel de 1791 a accordé pour la première fois aux Canadas?"
+  },
+  "options": [
+    {
+      "en": "Legislative assemblies elected by the people.",
+      "fr": "Des assemblées législatives élues par le peuple."
+    },
+    {
+      "en": "The right to choose their own governor.",
+      "fr": "Le droit de choisir leur propre gouverneur."
+    },
+    {
+      "en": "Full independence from Great Britain.",
+      "fr": "La pleine indépendance de la Grande-Bretagne."
+    },
+    {
+      "en": "The right to vote for women.",
+      "fr": "Le droit de vote pour les femmes."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Act granted the Canadas legislative assemblies elected by the people for the first time. The name Canada also became official then, and the Atlantic colonies with the two Canadas were known as British North America.",
+    "fr": "L'Acte a accordé pour la première fois aux Canadas des assemblées législatives élues par le peuple. Le nom « Canada » est aussi devenu officiel à ce moment, et les colonies de l'Atlantique et les deux Canadas ont été désignés sous le nom d'Amérique du Nord britannique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 27,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Act also granted to the Canadas, for the first time, legislative assemblies elected by the people."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

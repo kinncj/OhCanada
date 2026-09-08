@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-20-michif",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What is the name of the dialect spoken by the Métis?",
+    "fr": "Quel est le nom du dialecte parlé par les Métis?"
+  },
+  "options": [
+    {
+      "en": "Michif.",
+      "fr": "Le michif."
+    },
+    {
+      "en": "Inuktitut.",
+      "fr": "L'inuktitut."
+    },
+    {
+      "en": "Acadian French.",
+      "fr": "Le français acadien."
+    },
+    {
+      "en": "Cree.",
+      "fr": "Le cri."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Métis come from both French-speaking and English-speaking backgrounds and speak their own dialect, Michif.",
+    "fr": "Les Métis viennent à la fois de milieux francophones et anglophones et parlent leur propre dialecte, le michif."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 18,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "They come from both French- and English-speaking backgrounds and speak their own dialect, Michif."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

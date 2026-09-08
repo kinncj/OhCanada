@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-11-first-settlement-1604",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year was the first European settlement north of Florida established?",
+    "fr": "En quelle année le premier établissement européen au nord de la Floride a-t-il été fondé?"
+  },
+  "options": [
+    {
+      "en": "1604.",
+      "fr": "En 1604."
+    },
+    {
+      "en": "1497.",
+      "fr": "En 1497."
+    },
+    {
+      "en": "1670.",
+      "fr": "En 1670."
+    },
+    {
+      "en": "1759.",
+      "fr": "En 1759."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In 1604 the French explorers Pierre de Monts and Samuel de Champlain founded the first European settlement north of Florida: first on St. Croix Island, then at Port-Royal in Acadia.",
+    "fr": "En 1604, les explorateurs français Pierre de Monts et Samuel de Champlain ont fondé le premier établissement européen au nord de la Floride : d'abord sur l'île Sainte-Croix, puis à Port-Royal, en Acadie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 24,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1604, the first European settlement north of Florida was established by French explorers Pierre de Monts and Samuel de Champlain"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

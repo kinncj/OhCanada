@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-42-growing-religious-groups",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Besides Muslims, Jews, Hindus, Sikhs and members of other religions, which group is also growing in Canada?",
+    "fr": "Outre les musulmans, les juifs, les hindous, les sikhs et les membres d'autres religions, quel groupe est aussi en croissance au Canada?"
+  },
+  "options": [
+    {
+      "en": "People who state that they have no religion.",
+      "fr": "Les personnes qui déclarent n'avoir aucune religion."
+    },
+    {
+      "en": "People who refuse to answer the census.",
+      "fr": "Les personnes qui refusent de répondre au recensement."
+    },
+    {
+      "en": "People who belong to two religions at once.",
+      "fr": "Les personnes qui appartiennent à deux religions à la fois."
+    },
+    {
+      "en": "No other group is growing.",
+      "fr": "Aucun autre groupe n'est en croissance."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The numbers of Muslims, Jews, Hindus, Sikhs and members of other religions are growing, and so is the number of people who state that they have no religion.",
+    "fr": "Le nombre de musulmans, de juifs, d'hindous, de sikhs et de membres d'autres religions augmente, tout comme le nombre de personnes qui déclarent n'avoir aucune religion."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 21,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "as well as people who state “no religion” are also growing."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

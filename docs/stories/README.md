@@ -1,4 +1,4 @@
-# Stories — slice 1 (vertical proof, Level 4 Ottawa)
+# Stories — slice 1 (vertical proof, Level 4 Ottawa), plus the front door and the spine
 
 These files are the acceptance criteria for slice 1. Every other task in `docs/plan/slice-1.md` builds
 against them. If a scenario here and an implementation disagree, the scenario is the specification until a
@@ -8,10 +8,21 @@ The slice's definition of done, as a sentence: *a player can create a character,
 talk to the officer, accept and finish one quest, answer three scheduled questions, earn a stamp, run a
 Study drill, close the tab and come back to the same state.* One file per clause.
 
+**Amended 2026-09-08 with the three files that make that sentence reachable.** A staff review found that
+nothing in slice 1 was reachable: `app/bootstrap` mounted four things, the only way into a level was a
+`?level=` URL parameter, and a player opening the deployed page was told "there is no level to play yet" —
+the caption behaving correctly on a game with no entrance. The screens existed and had no consumer. The
+front door had no stories, so `TN-TITLE`, `TN-MAP` and `TN-FLOW` are those stories, and `TN-LEVELS` is the
+spine the other nine levels need before slice 2 starts.
+
 | File | Area | Covers |
 |---|---|---|
+| `TN-TITLE-title-screen.md` | `TN-TITLE` | The first screen on a cold load: Play, Continue, Study, Settings |
+| `TN-MAP-level-select.md` | `TN-MAP` | The ten levels, their order and their three states |
+| `TN-FLOW-first-run-and-return.md` | `TN-FLOW` | The route between screens, first run, return, and back out |
 | `TN-CREATOR-character-creator.md` | `TN-CREATOR` | Making a character before the first level |
 | `TN-LEVEL-ottawa.md` | `TN-LEVEL` | Loading Level 4, skate locomotion, camera, POIs, pause |
+| `TN-LEVELS-2-to-10-spine.md` | `TN-LEVELS` | The nine levels after Ottawa: subject, place, locomotion, landmark, NPC, blockers |
 | `TN-HUD-hud-and-menu.md` | `TN-HUD` | The lower-third HUD, the menu, the storage warning, the page's landmarks |
 | `TN-QUEST-parliament-hill.md` | `TN-QUEST` | Offer, accept, decline, track, complete, stamp |
 | `TN-CARD-question-card.md` | `TN-CARD` | The question card: arrival, right, wrong, leaving |
@@ -45,6 +56,14 @@ question they got wrong comes back soon. Building the domain proved the two cann
 reader who finds one story contradicting another trusts neither. **When a seam between two stories has to be
 decided, the decision goes in a file, with what it costs, and both sides point at it.**
 
+`TN-FLOW` is the second application of that rule, and it moved two other files. `TN-CREATOR-01` said the
+creator was the first screen a new player sees and that a returning player "reaches `playable` without
+choosing anything" — both true of a game with no front door, both wrong once one exists. `TN-FLOW` owns
+where a cold load lands and what the creator hands to; `TN-CREATOR` is amended and points at it.
+`TN-SAVE`'s survives table gained a ninth row, the level last played, because "Continue" cannot name a level
+the save does not remember. `TN-HUD-02`'s menu gained a fourth item, "Leave the level", because a player who
+reached a level from the map had no way back except the browser's back button.
+
 ## Rules these stories are written to
 
 - **Accessibility is acceptance, not a section.** Every file carries its own keyboard-only, single-switch,
@@ -54,21 +73,29 @@ decided, the decision goes in a file, with what it costs, and both sides point a
   both languages so the UI agent is not inventing copy. Where a string is not written here, it is an open
   question in that file, not a licence to improvise.
 - **A string is written down once.** One key, one copy table, one file. Where a second screen needs the same
-  words it names the key and the file that owns it (`TN-HUD` does this for eight keys). Two tables carrying
-  the same words is how they stop being the same words.
+  words it names the key and the file that owns it (`TN-HUD` does this for nine keys, `TN-MAP` for the ten
+  level names and `TN-TITLE` for four). Two tables carrying the same words is how they stop being the same
+  words.
 - **A rule is written down once, too.** Where two stories describe the same moment, one of them owns it and
-  the other links. `TN-RESUME` owns what happens to the questions when a step is resumed; `TN-SAVE` and
-  `TN-CARD` name it and do not restate it.
+  the other links. `TN-RESUME` owns what happens to the questions when a step is resumed; `TN-FLOW` owns
+  where a cold load lands and what "back" means; `TN-SAVE`, `TN-CARD`, `TN-CREATOR` and `TN-HUD` name them
+  and do not restate them.
 - **Counts and state words follow `TN-COPY-strings-and-counts.md`**, not each screen's judgement. It has one
   rule for plurals in both languages, and it exists because "1 questions" is not a Study bug, it is a bug in
   every string with a number in it.
 - **A screen that is waiting says what it is doing, not how far along it is** (`TN-COPY-07`). No percentage,
   no step count, no ellipsis, no bar with a value, unless the game really knows both halves of the fraction —
   and in slice 1 it never does. The honest answer to a long wait is the escape route in `TN-LEVEL-02`.
+- **A screen never describes a state it is not in.** This project has shipped that defect three times: a boot
+  screen that read as a stalled progress bar, a caption saying there was no level to play over a running
+  level, and a game whose only entrance was a URL parameter. `TN-MAP-04` is the current form of the rule —
+  a level nobody has built yet is described as unbuilt, not as locked and not as an error.
 - **Plain language**, roughly CLB 4 / grade 6. Short sentences. No jargon the player did not bring with them:
   the words *spaced repetition*, *FSRS*, *scheduler*, *due*, *card state* never appear on screen.
 - **One thumb, portrait.** Hold to move, tap to jump, tap an NPC or POI to engage. No scenario may need two
-  hands, a pinch, a swipe, a drag or a double tap.
+  hands, a pinch, a swipe, a drag or a double tap. This binds the map too: ten places east to west is a
+  horizontal shape in a vertical window, and `TN-MAP` resolves it as a vertical list rather than a panned map
+  (`OQ-MAP-2`).
 - **No timers.** Exam mode is not in this slice. Nothing on screen counts down, and no scenario may pass or
   fail on how fast the player acts. Load timeouts are not player timers and are allowed to appear as an
   escape route from a stall.
@@ -95,11 +122,15 @@ the same footing as its accessibility and bilingual ones:
   (§8.3). A weighted default player is a statement made in code.
 - **No French copy about the player requires gender agreement** (§8.6). FR scenarios assert the wording, and
   the wording never contains `(e)`, `·e` or a bracketed ending. This binds copy about *characters* too where
-  a story fixes their name: see `OQ-LEVEL-8`.
+  a story fixes their name: see `OQ-LEVEL-8`, and `TN-LEVELS`'s NPC table, which chooses epicene French role
+  nouns so that seven of eight levels never have to answer the question.
 - **A nation's own name is identical in EN and FR** (§9.3). Where a story writes one, both columns match.
 - **Territory is stated, not performed.** Any level story includes the "About this place" panel: reachable
   from pause and from credits, never modal, never dismissed to reach gameplay, EN and FR, keyboard and
   single switch (§10.2).
+- **A blocked level is not scoped.** `TN-LEVELS` leaves level 2 and level 10 without a place, a landmark, an
+  NPC or an id, because §1's shipping rule blocks both and `OQ-REVIEW-2` is unanswered. Filling those cells
+  in would make a blocked level look schedulable, and a plan that reads as schedulable gets scheduled.
 
 What a story must **not** do: assert that a depiction is approved. No scenario may encode a cultural
 sign-off, because no agent may grant one (`docs/content-review.md` §1). A story states what is on screen;
@@ -112,7 +143,9 @@ whether it may be on screen at all is that document's shipping rule, not a test.
   space inside.
 - FR copy is a translation of meaning, never of word order. It is held to the same grade-6 bar as EN, and it
   may take a different shape from the English where the English shape is what breaks it: `study.summary.score`
-  is a sentence in English and a label in French, and `TN-STUDY` says why.
+  is a sentence in English and a label in French, and `TN-STUDY` says why. `title.lastPlayed` is a label in
+  both, because a sentence would need a preposition in front of a place name and French does not use one
+  preposition for all ten places.
 - Numbers are formatted for the locale, never concatenated: « 0,6 », « 150 % » with a space.
   `TN-COPY-strings-and-counts.md` says why this is a rule and not a preference.
 
@@ -127,6 +160,7 @@ provides it.
 |---|---|
 | **a sitting** | One run of the page: from opening the game to closing the tab. What the game remembers only for a sitting is listed in `TN-SAVE`'s "does not survive" table. `TN-RESUME` defines the term and owns what depends on it. |
 | **ready to come back** | The scheduler would offer this question now. Never said on screen — the player sees only "New" or "Seen before". |
+| **open / locked / not made yet** | The three states a level can be in on the map. `TN-MAP` owns the rule that decides which, and the rule that "not made yet" wins over both other states. |
 
 ### DOM markers
 
@@ -135,8 +169,10 @@ provides it.
 | `playable` | The level is loaded and accepts input. Already used by `tests/perf` and `tests/a11y`. |
 | `level-loading`, `level-error` | Load in progress; load failed. `level-loading` carries `level.loading` (`TN-LEVEL-01`). |
 | `scene-state` | The E2E scene probe — see below. |
+| `title-screen`, `title-play`, `title-continue`, `title-choose-level`, `title-study`, `title-settings` | The title screen (`TN-TITLE`). `title-play` and `title-continue` are never both present. |
+| `level-select`, `level-card-<id>` | The level select (`TN-MAP`). Each card reports `data-state` as `open`, `locked` or `not-built`. |
 | `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). `hud` is a region named by `hud.label`. |
-| `menu` | The menu opened from `menu-button` (`TN-HUD-02`). |
+| `menu` | The menu opened from `menu-button` (`TN-HUD-02`). It carries Settings, Study, the passport and "Leave the level". |
 | `move-left`, `move-right`, `turn-around` | The hold-to-move controls (see `OQ-INPUT-1`). |
 | `interact-prompt` | The "you can engage this" button shown when a target is in reach. |
 | `character-creator`, `character-preview`, `slot-skin`, `slot-hair`, `slot-coat`, `randomise-character`, `start-playing`, `creator-settings`, `creator-save-error`, `creator-retry`, `creator-continue` | Character creator. |
@@ -147,7 +183,7 @@ provides it.
 | `quest-complete-card`, `passport`, `stamp-ottawa` | Quest completion and the passport. |
 | `study-screen`, `study-count`, `study-start`, `study-empty`, `study-empty-title`, `study-practise-new`, `study-error`, `study-retry`, `study-left-notice`, `study-summary`, `study-summary-score`, `study-summary-returning`, `study-again`, `study-exit` | Study mode. |
 | `settings-screen`, `settings-close`, `setting-language`, `setting-auto-move`, `setting-single-switch`, `setting-hold-time`, `setting-reduced-motion`, `setting-high-contrast`, `setting-dyslexia-font`, `setting-text-size`, `setting-text-size-value`, `setting-subtitles`, `setting-sound` | Settings. `setting-sound` is present only when a sound ships (`TN-SET-01`). |
-| `storage-warning`, `save-error`, `save-export`, `save-import`, `save-import-error` | Persistence. `storage-warning` is owned by `TN-HUD-03`. |
+| `storage-warning`, `save-error`, `save-export`, `save-import`, `save-import-error` | Persistence. `storage-warning` is owned by `TN-HUD-03` and appears on the title screen too (`OQ-HUD-3`). |
 
 ### The scene probe
 
@@ -165,12 +201,14 @@ It carries no player-facing text, so it is invisible to axe and to a screen read
 Proposed by these stories, fixed by the use cases that emit them (task 1.5). `level/ready`, `player/moved`,
 `quest/step-completed` and `question/answered` are already named in `docs/architecture.md`.
 
-`level/ready` · `level/failed` · `player/moved` · `player/jumped` · `player/stopped` · `player/braked` ·
-`poi/entered` · `poi/left` · `poi/engaged` · `npc/engaged` · `dialogue/opened` · `dialogue/closed` ·
-`quest/offered` · `quest/accepted` · `quest/declined` · `quest/step-completed` · `quest/completed` ·
-`stamp/earned` · `question/asked` · `question/answered` · `question/dismissed` · `study/started` ·
-`study/finished` · `character/created` · `settings/changed` · `locale/changed` · `progress/saved` ·
-`progress/save-failed` · `progress/loaded`.
+`title/opened` · `map/opened` · `level/chosen` · `level/left` · `level/ready` · `level/failed` ·
+`player/moved` · `player/jumped` · `player/stopped` · `player/braked` · `poi/entered` · `poi/left` ·
+`poi/engaged` · `npc/engaged` · `dialogue/opened` · `dialogue/closed` · `quest/offered` · `quest/accepted` ·
+`quest/declined` · `quest/step-completed` · `quest/completed` · `stamp/earned` · `question/asked` ·
+`question/answered` · `question/dismissed` · `study/started` · `study/finished` · `character/created` ·
+`settings/changed` · `locale/changed` · `progress/saved` · `progress/save-failed` · `progress/loaded`.
+
+The first four are new with `TN-FLOW` and are covered by `OQ-EVENT-1` like the rest.
 
 ### The single-switch contract
 
@@ -182,7 +220,8 @@ these stories use:
   highlighted item;
 - nothing scans on its own, nothing expires, and the player may take as long as they like.
 
-Every story proves that its whole flow is completable with those two gestures alone. See `OQ-SWITCH-1`.
+Every story proves that its whole flow is completable with those two gestures alone, and `TN-FLOW-07` proves
+the *route between* them is too — which is the case a per-screen proof cannot reach. See `OQ-SWITCH-1`.
 
 **The "no countdown" half of that contract is structural, not promised.** Task 1.15 classified a press *on
 release*, from two timestamps, and `tests/unit/ui/single-switch.test.ts` greps `app/ui/single-switch.ts` for
@@ -208,7 +247,8 @@ the composition root. A component that passes a harness can still be mounted twi
 
 The claim is honest and it is narrow, so it is written down rather than left to be inferred from a green
 tick. Closing the gap is `OQ-TEST-2`, which the whole-page scan **does not close**: that scan runs against
-the harness's page, not `dist/`.
+the harness's page, not `dist/`. `TN-FLOW-08` is where that closure becomes acceptance: it requires the scan
+to run at each screen of the route **against the built output**.
 
 The scans do fail when something is wrong, which is the only reason to keep them. Two real defects were
 found by axe in task 1.15's own code before it went green: an empty unnamed button, caused by a CSS rule
@@ -249,10 +289,11 @@ answer nobody has given. Cross-cutting ones live here.
 - **`OQ-TEST-2` — when is the *page* scanned, rather than the components?** **Still open.** The whole-page
   scan added with `TN-HUD` runs against the harness's assembled page, because `app/bootstrap` does not yet
   mount these screens; it is a real page with real landmarks and it is not the shipped one.
-  *Recommendation:* when the screens are routed, add the same scan against the built output — the creator,
-  then the level with its HUD, then one modal open over it — and keep the per-component and harness-page
-  scans as well. Three scans answer three different questions and none replaces another. Until the built
-  output is scanned, no report may describe the a11y suite as proving the shipped page.
+  *Recommendation:* when the screens are routed, add the same scan against the built output — the title
+  screen, the creator, the level select, then the level with its HUD, then one modal open over it — and keep
+  the per-component and harness-page scans as well. Three scans answer three different questions and none
+  replaces another. `TN-FLOW-08` states it as acceptance. Until the built output is scanned, no report may
+  describe the a11y suite as proving the shipped page.
 - **`OQ-TEST-3` — can a test move the clock?** Several scenarios in `TN-RESUME` say "an hour has passed",
   because what the scheduler offers depends on time and nothing else can express that. If the time the
   scheduler reads is not a port with a fake, those scenarios can only be written as sleeps, which is how a
@@ -263,21 +304,31 @@ answer nobody has given. Cross-cutting ones live here.
   scheduling primitive at all, which is the strongest form of that argument.
 - **`OQ-EVENT-1` — do these event names match what task 1.5 emits?** They are the PO's proposal. If the use
   cases pick other names, the stories are updated, not the tests quietly.
-- **`OQ-SUBJECT-1` — Level 4's subject is not written down anywhere.** `docs/plan/slices.md` names the
-  subject of every level except 3 and 4. *Recommendation:* "How Canadians Govern Themselves" /
-  « Comment les Canadiens se gouvernent », `subject.government`. Needs a decision before task 1.7 authors a
-  question against it.
+- ~~**`OQ-SUBJECT-1` — Level 4's subject is not written down anywhere.**~~ **Answered.**
+  `docs/plan/slice-1.md` records it — "How Canadians Govern Themselves" / « Comment les Canadiens se
+  gouvernent » — and all 57 shipped questions carry `subject: "government"`. The remaining subject question
+  is the *opposite* one and it is new: level 5's subject is Federal Elections and roughly a dozen of those 57
+  questions are about ballots and voting, so two levels currently draw from one bank. `OQ-SPINE-3` in
+  `TN-LEVELS-2-to-10-spine.md`.
 - ~~**`OQ-REVIEW-1` — `docs/content-review.md` does not exist.**~~ **Answered 2026-09-08** — it exists now,
-  and the questions it could not answer moved into it as `OQ-REVIEW-2` … `OQ-REVIEW-11`. Two of those still
+  and the questions it could not answer moved into it as `OQ-REVIEW-2` … `OQ-REVIEW-11`. Three of those now
   reach back into these stories: `OQ-REVIEW-6` recommends the skin-tone option names that `OQ-CREATOR-5`
-  asked for, and `OQ-REVIEW-2` — who may grant cultural sign-off — is unanswered and blocks nothing in
-  slice 1 only because slice 1 depicts no nation. `OQ-LEVEL-3` (the officer's gender presentation and skin
-  tone) is answered in part: whatever is chosen, §6 of that document fixes the proportions and §8.6 fixes
-  how the option is labelled — and `OQ-LEVEL-8` now names the three French strings that move together with
-  it.
+  asked for; `OQ-REVIEW-2` — who may grant cultural sign-off — is unanswered and blocks nothing in slice 1
+  only because slice 1 depicts no nation, while it blocks **levels 2 and 10 outright** (`TN-LEVELS`); and
+  `OQ-REVIEW-10` — the canoe, the kayak, the dogsled and the qamutiik — is unanswered and is attached to
+  those same two levels' locomotion modes. `OQ-LEVEL-3` (the officer's gender presentation and skin tone) is
+  answered in part: whatever is chosen, §6 of that document fixes the proportions and §8.6 fixes how the
+  option is labelled — and `OQ-LEVEL-8` now names the three French strings that move together with it.
 - ~~**`OQ-REVIEW-7` — `CharacterSlot.default` versus "no tone is the default".**~~ **Answered 2026-09-08 —
   in the art bible's favour, and the whole conflict was the name.** The architect renamed the field to
   `fallback`, which is what `content/schemas/character.schema.json` now requires; nothing about the
   behaviour changed, and `TN-CREATOR-01` ("each group already has one option chosen") is unaffected. One
   stale reference remains outside this directory: `docs/content-review.md` still calls the field `default`
   in its open-questions section. That file is not this agent's to edit — flagged for its owner.
+- **`OQ-ENTRY-1` — the game's data says there is no game.** `content/game.config.json` carries
+  `"levels": []` and `unlockRules` with empty `initialLevels` and `order`, while `content/levels/ottawa.json`
+  exists. `unlockedLevelIds` on that config returns nothing, so as the repository stands **every level is
+  locked, including the only one that is built**, and the map `TN-MAP` describes would be a wall.
+  *Recommendation:* `OQ-MAP-1` — ten entries in `game.config.json`, `initialLevels: ["ottawa"]`, and the
+  catalogue left to answer "is it built". Routed to the architect and the plan owner; `content/` is not this
+  directory's to edit, and `TN-MAP-06`'s first scenario is written to fail on exactly this.

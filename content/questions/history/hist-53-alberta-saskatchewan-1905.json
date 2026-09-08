@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-53-alberta-saskatchewan-1905",
+  "subject": "history",
+  "prompt": {
+    "en": "Which two provinces joined Canada in 1905?",
+    "fr": "Quelles deux provinces se sont jointes au Canada en 1905?"
+  },
+  "options": [
+    {
+      "en": "Alberta and Saskatchewan.",
+      "fr": "L'Alberta et la Saskatchewan."
+    },
+    {
+      "en": "Manitoba and British Columbia.",
+      "fr": "Le Manitoba et la Colombie-Britannique."
+    },
+    {
+      "en": "Ontario and Quebec.",
+      "fr": "L'Ontario et le Québec."
+    },
+    {
+      "en": "Prince Edward Island and Newfoundland and Labrador.",
+      "fr": "L'Île-du-Prince-Édouard et Terre-Neuve-et-Labrador."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Alberta and Saskatchewan joined in 1905. Manitoba and the Northwest Territories came in 1870, British Columbia in 1871 and Prince Edward Island in 1873.",
+    "fr": "L'Alberta et la Saskatchewan se sont jointes en 1905. Le Manitoba et les Territoires du Nord-Ouest sont arrivés en 1870, la Colombie-Britannique en 1871 et l'Île-du-Prince-Édouard en 1873."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 34,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "1905 – Alberta, Saskatchewan"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

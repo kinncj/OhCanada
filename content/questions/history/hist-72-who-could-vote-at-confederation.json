@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-72-who-could-vote-at-confederation",
+  "subject": "history",
+  "prompt": {
+    "en": "Who could vote at the time of Confederation?",
+    "fr": "Qui pouvait voter à l'époque de la Confédération?"
+  },
+  "options": [
+    {
+      "en": "Property-owning adult white males.",
+      "fr": "Les hommes blancs adultes propriétaires."
+    },
+    {
+      "en": "All adults over 21.",
+      "fr": "Tous les adultes de plus de 21 ans."
+    },
+    {
+      "en": "All men and women who paid taxes.",
+      "fr": "Tous les hommes et les femmes qui payaient des impôts."
+    },
+    {
+      "en": "Only members of the legislature.",
+      "fr": "Seulement les membres de l'assemblée législative."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "At the time of Confederation the vote was limited to property-owning adult white males, which was common in most democratic countries then. The right to vote was widened over the following century.",
+    "fr": "À l'époque de la Confédération, le droit de vote était réservé aux hommes blancs adultes propriétaires, ce qui était courant dans la plupart des pays démocratiques de l'époque. Le droit de vote a été élargi au cours du siècle suivant."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 40,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "the vote was limited to property- owning adult white males."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

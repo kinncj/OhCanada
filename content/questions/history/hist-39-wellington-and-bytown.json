@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-39-wellington-and-bytown",
+  "subject": "history",
+  "prompt": {
+    "en": "Which town, chosen as the endpoint of the Rideau Canal, later became Canada's national capital?",
+    "fr": "Quelle ville, choisie comme point d'arrivée du canal Rideau, est devenue plus tard la capitale nationale du Canada?"
+  },
+  "options": [
+    {
+      "en": "Bytown, now Ottawa.",
+      "fr": "Bytown, aujourd'hui Ottawa."
+    },
+    {
+      "en": "Kingston.",
+      "fr": "Kingston."
+    },
+    {
+      "en": "York, now Toronto.",
+      "fr": "York, aujourd'hui Toronto."
+    },
+    {
+      "en": "Halifax.",
+      "fr": "Halifax."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Duke of Wellington chose Bytown, now Ottawa, as the endpoint of the Rideau Canal, part of a network of forts meant to prevent another invasion. He therefore played a direct role in founding the national capital.",
+    "fr": "Le duc de Wellington a choisi Bytown, aujourd'hui Ottawa, comme point d'arrivée du canal Rideau, qui faisait partie d'un réseau de forts destiné à prévenir une nouvelle invasion. Il a donc joué un rôle direct dans la fondation de la capitale nationale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 30,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-87-juno-beach",
+  "subject": "history",
+  "prompt": {
+    "en": "Which beach did 15,000 Canadian troops storm and capture on D-Day, June 6, 1944?",
+    "fr": "Quelle plage 15 000 soldats canadiens ont-ils prise d'assaut le jour J, le 6 juin 1944?"
+  },
+  "options": [
+    {
+      "en": "Juno Beach.",
+      "fr": "La plage Juno."
+    },
+    {
+      "en": "Omaha Beach.",
+      "fr": "La plage Omaha."
+    },
+    {
+      "en": "Dieppe.",
+      "fr": "Dieppe."
+    },
+    {
+      "en": "Vimy Beach.",
+      "fr": "La plage de Vimy."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In the invasion of Normandy on June 6, 1944, known as D-Day, 15,000 Canadian troops stormed and captured Juno Beach. About one in ten Allied soldiers that day was Canadian.",
+    "fr": "Lors du débarquement de Normandie, le 6 juin 1944, connu sous le nom de jour J, 15 000 soldats canadiens ont pris d'assaut la plage Juno et s'en sont emparés. Environ un soldat allié sur dix ce jour-là était canadien."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 43,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "15,000 Canadian troops stormed and captured Juno Beach from the German Army"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

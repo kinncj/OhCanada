@@ -37,6 +37,14 @@ export interface MenuOptions {
   /** `passport.open`. `OQ-HUD-2` keeps this item in slice 1. */
   readonly onOpenPassport?: () => void;
   /**
+   * `flow.leaveLevel` — the way out of a level, to the level select
+   * (`TN-FLOW-03`). Absent draws no item, which is `TN-HUD-02`'s "leaving is not
+   * offered where there is nothing to leave": the same rule every other item
+   * here follows, and the reason a menu opened anywhere but over a level cannot
+   * offer it.
+   */
+  readonly onLeaveLevel?: () => void;
+  /**
    * Close, or Escape: the player asked for nothing and the level resumes.
    * Never called when an item was chosen — the screen that opened owns the
    * resume from then on.
@@ -91,11 +99,15 @@ export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
   screen.card.append(title, actions);
 
-  const items = (): readonly Item[] => [
-    { key: 'common.settings', testId: 'menu-settings', handler: options.onOpenSettings },
-    { key: 'study.open', testId: 'menu-study', handler: options.onOpenStudy },
-    { key: 'passport.open', testId: 'menu-passport', handler: options.onOpenPassport },
-  ];
+  const items = (): readonly Item[] =>
+    [
+      { key: 'common.settings', testId: 'menu-settings', handler: options.onOpenSettings },
+      { key: 'study.open', testId: 'menu-study', handler: options.onOpenStudy },
+      { key: 'passport.open', testId: 'menu-passport', handler: options.onOpenPassport },
+      { key: 'flow.leaveLevel', testId: 'menu-leave', handler: options.onLeaveLevel },
+      /* An item with no handler is not drawn. Three of the four are always
+         wired by the HUD's caller; the fourth is only true over a level. */
+    ].filter((item) => item.testId !== 'menu-leave' || item.handler !== undefined) as Item[];
 
   const render = (): void => {
     title.textContent = text(locale, 'hud.menu.title');

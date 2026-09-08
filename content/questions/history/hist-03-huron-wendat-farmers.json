@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-03-huron-wendat-farmers",
+  "subject": "history",
+  "prompt": {
+    "en": "When Europeans explored Canada, which people of the Great Lakes region were farmers and hunters?",
+    "fr": "À l'époque où les Européens ont exploré le Canada, quel peuple de la région des Grands Lacs était agriculteur et chasseur?"
+  },
+  "options": [
+    {
+      "en": "The Huron-Wendat.",
+      "fr": "Les Hurons-Wendat."
+    },
+    {
+      "en": "The Cree.",
+      "fr": "Les Cris."
+    },
+    {
+      "en": "The Sioux.",
+      "fr": "Les Sioux."
+    },
+    {
+      "en": "The Inuit.",
+      "fr": "Les Inuit."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Huron-Wendat of the Great Lakes region, like the Iroquois, were farmers and hunters. Not every people lived the same way: some raised crops and others hunted and gathered.",
+    "fr": "Les Hurons-Wendat de la région des Grands Lacs, comme les Iroquois, étaient agriculteurs et chasseurs. Tous les peuples ne vivaient pas de la même façon : certains cultivaient la terre, d'autres chassaient et cueillaient."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 23,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Huron-Wendat of the Great Lakes region, like the Iroquois, were farmers and hunters."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

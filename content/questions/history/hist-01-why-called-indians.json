@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-01-why-called-indians",
+  "subject": "history",
+  "prompt": {
+    "en": "Why did the first European explorers call the peoples they met in Canada \"Indians\"?",
+    "fr": "Pourquoi les premiers explorateurs européens ont-ils appelé « Indiens » les peuples qu'ils ont rencontrés au Canada?"
+  },
+  "options": [
+    {
+      "en": "Because they thought they had reached the East Indies.",
+      "fr": "Parce qu'ils croyaient être arrivés aux Indes orientales."
+    },
+    {
+      "en": "Because it was the name those peoples used for themselves.",
+      "fr": "Parce que c'était le nom que ces peuples se donnaient."
+    },
+    {
+      "en": "Because a French king chose the name.",
+      "fr": "Parce qu'un roi de France a choisi ce nom."
+    },
+    {
+      "en": "Because it was the name used on the earliest maps of Europe.",
+      "fr": "Parce que c'était le nom utilisé sur les plus anciennes cartes d'Europe."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The name came from a mistake in navigation, not from the peoples themselves. The first explorers believed they had reached the East Indies.",
+    "fr": "Ce nom vient d'une erreur de navigation, et non des peuples eux-mêmes. Les premiers explorateurs croyaient être arrivés aux Indes orientales."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 23,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "because the first explorers thought they had reached the East Indies."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

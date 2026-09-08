@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-28-slavery-abolished-1833",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year did the British Parliament abolish slavery throughout the Empire?",
+    "fr": "En quelle année le Parlement britannique a-t-il aboli l'esclavage dans tout l'Empire?"
+  },
+  "options": [
+    {
+      "en": "1833.",
+      "fr": "En 1833."
+    },
+    {
+      "en": "1793.",
+      "fr": "En 1793."
+    },
+    {
+      "en": "1807.",
+      "fr": "En 1807."
+    },
+    {
+      "en": "1863.",
+      "fr": "En 1863."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The British Parliament prohibited the buying and selling of slaves in 1807 and abolished slavery throughout the Empire in 1833. In the United States slavery remained legal until 1863.",
+    "fr": "Le Parlement britannique a interdit l'achat et la vente d'esclaves en 1807 et a aboli l'esclavage dans tout l'Empire en 1833. Aux États-Unis, l'esclavage est demeuré légal jusqu'en 1863."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 28,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1807, the British Parliament prohibited the buying and selling of slaves, and in 1833 abolished slavery throughout the Empire."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

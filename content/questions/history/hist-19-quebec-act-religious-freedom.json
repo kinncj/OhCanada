@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-19-quebec-act-religious-freedom",
+  "subject": "history",
+  "prompt": {
+    "en": "What did the Quebec Act of 1774 allow Catholics to do?",
+    "fr": "Qu'est-ce que l'Acte de Québec de 1774 a permis aux catholiques de faire?"
+  },
+  "options": [
+    {
+      "en": "Practise their religion freely and hold public office.",
+      "fr": "Pratiquer librement leur religion et occuper une charge publique."
+    },
+    {
+      "en": "Elect their own assembly.",
+      "fr": "Élire leur propre assemblée."
+    },
+    {
+      "en": "Choose their own governor.",
+      "fr": "Choisir leur propre gouverneur."
+    },
+    {
+      "en": "Trade freely with France.",
+      "fr": "Commercer librement avec la France."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Quebec Act of 1774 allowed religious freedom for Catholics and let them hold public office — something not then allowed in Britain itself. It is one of the constitutional foundations of Canada.",
+    "fr": "L'Acte de Québec de 1774 a accordé la liberté de religion aux catholiques et leur a permis d'occuper une charge publique, ce qui n'était pas encore permis en Grande-Bretagne même. C'est l'un des fondements constitutionnels du Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 26,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "It allowed religious freedom for Catholics and permitted them to hold public office, a practice not then allowed in Britain."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

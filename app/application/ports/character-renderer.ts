@@ -38,7 +38,7 @@
 
 import type { CharacterId } from '@domain/ids';
 import type { Result } from '@common/result';
-import type { CharacterInput, CharacterSlot } from './content-repository';
+import type { RigDocument } from './content-repository';
 
 export type ArtboardName = string;
 export type StateMachineName = string;
@@ -68,32 +68,33 @@ export interface CharacterRendererSpec {
   readonly artboard: ArtboardName;
   readonly stateMachine: StateMachineName;
   /**
-   * Every state-machine input the rig declares, from `CharacterDocument.inputs`.
-   * A backend refuses any name that is not in here, so a typo in gameplay code
-   * is a `not-found` rather than a character that quietly never animates.
-   */
-  readonly inputs: readonly CharacterInput[];
-  /**
-   * Every skin slot and its options, from `CharacterDocument.slots`. **This is
-   * the field that makes the fallback a swap:** both backends answer
-   * `skinSlots` and `skinOptions` out of this one list, so the names are
-   * identical because they are the same strings, not because two adapters agreed.
-   */
-  readonly slots: readonly CharacterSlot[];
-  /**
-   * Named face poses this rig offers.
+   * **The rig — the whole shared vocabulary, and the field that makes the
+   * fallback a swap.**
    *
-   * ASSUMPTION, reported with task 1.12: `content/schemas/character.schema.json`
-   * declares `inputs` and `slots` but no expression list, so this arrives from
-   * the caller rather than from the document. When the rig contract lands one,
-   * this becomes `CharacterDocument.expressions` and nothing else changes.
+   * `content/characters/rig.json` (ADR-0017, ADR-0022): the parts, their draw
+   * order, pivots and frame templates; the state machine's inputs; the selector
+   * that orders them; the slots and their options; the animation states and
+   * their keyframes; every atlas frame. Both backends answer `skinSlots`,
+   * `skinOptions` and every input and expression out of *this* object, so the
+   * names are identical because they are the same strings — not because two
+   * adapters agreed to keep them so.
    *
-   * Empty is a real answer — a character with one face — and `setExpression`
-   * then fails `not-found` for every name, in both backends alike.
+   * It arrives here rather than being opened by an adapter, and that is the
+   * ruling in ADR-0022: an adapter doing content I/O would bypass ajv
+   * validation, the repository cache and `unload` — the last being how the
+   * per-level texture budget is honoured at all.
    */
-  readonly expressions: readonly ExpressionName[];
-  /** Initial skin choice per slot. Missing slots use the slot's `fallback`. */
+  readonly rig: RigDocument;
+  /**
+   * This character's choices over the rig's vocabulary: slot name -> option.
+   *
+   * A slot left out falls back to what the rig's own `artboards[]` entry ships
+   * with, and then to the slot's `fallback`. A `fallback` is not a
+   * pre-selection — no skin tone is the default (`assets/style/art-bible.md` §8)
+   * — it is what an NPC wears and what save recovery uses.
+   */
   readonly skins: Readonly<Record<SkinSlotName, SkinOptionName>>;
+  /** One of `rig.expressions.names`. Omitted takes `rig.expressions.fallback`. */
   readonly expression?: ExpressionName;
   /** Render resolution; the renderer may clamp it to honour the texture budget. */
   readonly widthPx: number;
@@ -119,6 +120,18 @@ export interface ICharacterRenderer {
 
   /** Horizontal facing; both backends mirror rather than duplicate art. */
   setFacing(facing: 'left' | 'right'): void;
+
+  /**
+   * Where the character stands, in design pixels: the point on the ground
+   * between its feet, which is `characterSpace`'s `centreX` / `soleY`.
+   *
+   * On the port rather than left to the scene because a caller must be able to
+   * move a character without knowing which backend drew it. The sprite backend
+   * places its twenty parts relative to this; the Rive backend records it, and
+   * the scene reads it back when it positions the surface named by
+   * {@link SurfaceHandle}. One anchor, one meaning, both backends.
+   */
+  setPosition(x: number, y: number): void;
 
   /**
    * Advance one frame. `deltaMs` is the frame delta, already scaled by the game's

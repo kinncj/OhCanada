@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-05-great-dominion",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What have poets and songwriters called Canada?",
+    "fr": "Comment les poètes et les auteurs-compositeurs ont-ils appelé le Canada?"
+  },
+  "options": [
+    {
+      "en": "The Great Dominion.",
+      "fr": "Le Grand Dominion."
+    },
+    {
+      "en": "The Great Republic.",
+      "fr": "La Grande République."
+    },
+    {
+      "en": "The New World.",
+      "fr": "Le Nouveau Monde."
+    },
+    {
+      "en": "The Great Charter.",
+      "fr": "La Grande Charte."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadians built a prosperous society in a rugged land that runs from the Atlantic to the Pacific and up to the Arctic Circle. Poets and songwriters have called the country the Great Dominion.",
+    "fr": "Les Canadiens ont bâti une société prospère dans un pays rude qui s'étend de l'Atlantique au Pacifique et jusqu'au cercle arctique. Les poètes et les auteurs-compositeurs ont appelé le pays le Grand Dominion."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 16,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "poets and songwriters have hailed Canada as the “Great Dominion.”"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

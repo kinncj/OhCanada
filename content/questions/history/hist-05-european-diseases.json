@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-05-european-diseases",
+  "subject": "history",
+  "prompt": {
+    "en": "What caused large numbers of Aboriginal people to die after Europeans arrived?",
+    "fr": "Qu'est-ce qui a causé la mort d'un grand nombre de personnes autochtones après l'arrivée des Européens?"
+  },
+  "options": [
+    {
+      "en": "European diseases they had no immunity to.",
+      "fr": "Des maladies européennes contre lesquelles elles n'avaient aucune immunité."
+    },
+    {
+      "en": "A long famine in the Great Lakes region.",
+      "fr": "Une longue famine dans la région des Grands Lacs."
+    },
+    {
+      "en": "A change in the climate.",
+      "fr": "Un changement de climat."
+    },
+    {
+      "en": "The collapse of the fur trade.",
+      "fr": "L'effondrement de la traite des fourrures."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The arrival of European traders, missionaries, soldiers and colonists changed life here forever. Large numbers of Aboriginal people died of European diseases to which they had no immunity.",
+    "fr": "L'arrivée des commerçants, des missionnaires, des soldats et des colons européens a changé la vie ici pour toujours. Un grand nombre de personnes autochtones sont mortes de maladies européennes contre lesquelles elles n'avaient aucune immunité."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 23,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Large numbers of Aboriginals died of European diseases to which they lacked immunity."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

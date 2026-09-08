@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-10-freedom-of-association",
+  "subject": "rights",
+  "prompt": {
+    "en": "Which of these is one of the four fundamental freedoms listed in the guide?",
+    "fr": "Laquelle de ces libertés fait partie des quatre libertés fondamentales énumérées dans le guide?"
+  },
+  "options": [
+    {
+      "en": "Freedom of association.",
+      "fr": "La liberté d'association."
+    },
+    {
+      "en": "Freedom to own property anywhere in the world.",
+      "fr": "La liberté de posséder des biens partout dans le monde."
+    },
+    {
+      "en": "Freedom from paying taxes.",
+      "fr": "La liberté de ne pas payer d'impôts."
+    },
+    {
+      "en": "Freedom to refuse jury duty.",
+      "fr": "La liberté de refuser de faire partie d'un jury."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The four fundamental freedoms are conscience and religion; thought, belief, opinion and expression; peaceful assembly; and association. Jury duty is a responsibility, not a freedom you can refuse.",
+    "fr": "Les quatre libertés fondamentales sont la conscience et la religion; la pensée, la croyance, l'opinion et l'expression; la réunion pacifique; et l'association. Faire partie d'un jury est une responsabilité, et non une liberté que l'on peut refuser."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Freedom of association."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-22-joseph-brant",
+  "subject": "history",
+  "prompt": {
+    "en": "Who led thousands of Loyalist Mohawk into Canada?",
+    "fr": "Qui a conduit des milliers de Mohawks loyalistes au Canada?"
+  },
+  "options": [
+    {
+      "en": "Joseph Brant.",
+      "fr": "Joseph Brant."
+    },
+    {
+      "en": "Chief Tecumseh.",
+      "fr": "Le chef Tecumseh."
+    },
+    {
+      "en": "Louis Riel.",
+      "fr": "Louis Riel."
+    },
+    {
+      "en": "Gabriel Dumont.",
+      "fr": "Gabriel Dumont."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Joseph Brant led thousands of Loyalist Mohawk into Canada after the American Revolution. Tecumseh led the Shawnee in the War of 1812, a generation later.",
+    "fr": "Joseph Brant a conduit des milliers de Mohawks loyalistes au Canada après la révolution américaine. Tecumseh a dirigé les Shawnees pendant la guerre de 1812, une génération plus tard."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 26,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Joseph Brant led thousands of Loyalist Mohawk Indians into Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

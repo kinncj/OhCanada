@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-33-us-invasion-june-1812",
+  "subject": "history",
+  "prompt": {
+    "en": "Why did the United States launch an invasion of Canada in June 1812?",
+    "fr": "Pourquoi les États-Unis ont-ils lancé une invasion du Canada en juin 1812?"
+  },
+  "options": [
+    {
+      "en": "They believed Canada would be easy to conquer.",
+      "fr": "Ils croyaient que le Canada serait facile à conquérir."
+    },
+    {
+      "en": "They had been attacked from Canada first.",
+      "fr": "Ils avaient d'abord été attaqués à partir du Canada."
+    },
+    {
+      "en": "France had asked them to.",
+      "fr": "La France le leur avait demandé."
+    },
+    {
+      "en": "They wanted to end the fur trade.",
+      "fr": "Ils voulaient mettre fin à la traite des fourrures."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Believing it would be easy to conquer Canada, the United States launched an invasion in June 1812. The guide is blunt about the result: the Americans were mistaken.",
+    "fr": "Croyant qu'il serait facile de conquérir le Canada, les États-Unis ont lancé une invasion en juin 1812. Le guide est direct quant au résultat : les Américains se trompaient."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 29,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Believing it would be easy to conquer Canada, the United States launched an invasion in June 1812."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

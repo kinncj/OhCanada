@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-31-what-volunteering-gives-back",
+  "subject": "rights",
+  "prompt": {
+    "en": "What does the guide say a volunteer gains from volunteering?",
+    "fr": "Selon le guide, qu'est-ce qu'une personne gagne à faire du bénévolat?"
+  },
+  "options": [
+    {
+      "en": "Useful skills, friends and contacts.",
+      "fr": "Des compétences utiles, des amis et des contacts."
+    },
+    {
+      "en": "A payment from the federal government.",
+      "fr": "Un paiement du gouvernement fédéral."
+    },
+    {
+      "en": "Credit toward the residence requirement for citizenship.",
+      "fr": "Du crédit pour l'exigence de résidence en vue de la citoyenneté."
+    },
+    {
+      "en": "A reduction in provincial taxes.",
+      "fr": "Une réduction des impôts provinciaux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Volunteering is described as an excellent way to gain useful skills and to build friendships and contacts, as well as a way to help others.",
+    "fr": "Le bénévolat est décrit comme un excellent moyen d'acquérir des compétences utiles et de nouer des amitiés et des contacts, en plus d'aider les autres."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Volunteering is an excellent way to gain useful skills and develop friends and contacts."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

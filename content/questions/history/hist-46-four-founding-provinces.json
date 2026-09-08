@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-46-four-founding-provinces",
+  "subject": "history",
+  "prompt": {
+    "en": "Which four provinces formed the Dominion of Canada in 1867?",
+    "fr": "Quelles quatre provinces ont formé le Dominion du Canada en 1867?"
+  },
+  "options": [
+    {
+      "en": "Ontario, Quebec, New Brunswick and Nova Scotia.",
+      "fr": "L'Ontario, le Québec, le Nouveau-Brunswick et la Nouvelle-Écosse."
+    },
+    {
+      "en": "Ontario, Quebec, Manitoba and Nova Scotia.",
+      "fr": "L'Ontario, le Québec, le Manitoba et la Nouvelle-Écosse."
+    },
+    {
+      "en": "Ontario, Quebec, Prince Edward Island and New Brunswick.",
+      "fr": "L'Ontario, le Québec, l'Île-du-Prince-Édouard et le Nouveau-Brunswick."
+    },
+    {
+      "en": "Quebec, Nova Scotia, New Brunswick and British Columbia.",
+      "fr": "Le Québec, la Nouvelle-Écosse, le Nouveau-Brunswick et la Colombie-Britannique."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The old Province of Canada was split into Ontario and Quebec. Together with New Brunswick and Nova Scotia they formed the new country, the Dominion of Canada. Manitoba, British Columbia and Prince Edward Island joined later.",
+    "fr": "L'ancienne province du Canada a été divisée en Ontario et en Québec. Avec le Nouveau-Brunswick et la Nouvelle-Écosse, ces provinces ont formé le nouveau pays, le Dominion du Canada. Le Manitoba, la Colombie-Britannique et l'Île-du-Prince-Édouard se sont joints plus tard."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 33,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The old Province of Canada was split into two new provinces: Ontario and Quebec"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

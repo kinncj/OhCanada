@@ -42,6 +42,16 @@ if (rootFlag !== -1 && argv[rootFlag + 1] === undefined) {
 
 const ROOT =
   rootFlag === -1 ? fileURLToPath(new URL('..', import.meta.url)) : resolve(argv[rootFlag + 1]);
+
+/**
+ * ADR-0024: zero is legal only when a caller declares it legal. The
+ * content-document floor below is the repository's floor, and the fixtures in
+ * `tests/unit/infra/**` deliberately build minimal trees to exercise ONE
+ * section of this gate -- the palette rules, the credit rules -- over a tree
+ * that legitimately has no questions or levels in it. They pass this flag, at
+ * the call site, where a reader sees the waiver. Nothing else may.
+ */
+const ALLOW_EMPTY_CONTENT = argv.includes('--allow-empty-content');
 const CONTENT_DIR = join(ROOT, 'content');
 const SCHEMA_DIR = join(CONTENT_DIR, 'schemas');
 const CREDITS_FILE = join(ROOT, 'assets', 'credits.json');
@@ -163,8 +173,19 @@ for (const { file, why } of EXTERNAL_DATA_FILES) {
   }
 }
 
+/**
+ * Kept separate from the two external documents on purpose. The anti-vacuum
+ * floor below is about `content/` being empty, and `assets/credits.json` plus
+ * `assets/style/palette.json` are always on this list — a floor on the combined
+ * length can never reach zero, which is a floor that cannot fire.
+ */
+const contentDocuments = walk(
+  CONTENT_DIR,
+  (f) => extname(f) === '.json' && !f.startsWith(SCHEMA_DIR + sep),
+);
+
 const dataFiles = [
-  ...walk(CONTENT_DIR, (f) => extname(f) === '.json' && !f.startsWith(SCHEMA_DIR + sep)),
+  ...contentDocuments,
   ...EXTERNAL_DATA_FILES.map((e) => e.file).filter((f) => existsSync(f)),
 ];
 
@@ -588,6 +609,152 @@ if (existsSync(PALETTE_FILE)) {
   }
 }
 
+// -------------------------------------------- anti-vacuum, per printed count ---
+
+/**
+ * ADR-0024's mechanical form, applied to this gate's own summary line: a gate
+ * that reports a count fails when the count is zero, unless zero is explicitly
+ * declared legal in the gate, with a reason.
+ *
+ * ZERO IS DECLARED LEGAL HERE, and this is the declaration. `content/locales/en`
+ * and `content/locales/fr` are empty, so this gate has been printing
+ * "0 locale bundle(s) in EN/FR parity" as a pass on every run since it was
+ * written — the project's hardest content guarantee, CLAUDE.md's "EN and FR from
+ * the first commit", reporting success about nothing.
+ *
+ * The reason zero is legal rather than a failure, stated so it can be argued
+ * with: THE GUARANTEE IS HELD, JUST NOT HERE. Every player-facing string the DOM
+ * screens draw is in `app/ui/copy.ts`, whose `FR` table is typed
+ * `Readonly<Record<keyof typeof EN, string>>`. A French string that is missing
+ * or misspelt is a COMPILE ERROR, caught by `make typecheck` on every run and in
+ * CI. That is a stronger check than this one — it is exhaustive over the keys by
+ * construction, where this gate compares two files that both have to exist — and
+ * it covers the strings that actually ship today. Failing here would turn the
+ * build red over a guarantee that is already enforced, one directory over.
+ *
+ * THE TASK THAT ENDS IT: ADR-0010 puts UI vocabulary in
+ * `content/locales/<locale>/<bundle>.json` and `app/ui/copy.ts` carries
+ * `TODO(slice-1): move to content/locales and read through the LocalizerPort`.
+ * When that move lands, the bundles exist, this gate counts them, and the
+ * declaration below stops applying on its own. Tracked as ADR-0024's obligation
+ * (owner=infra, due=2026-10-08); the DEADLINE lives in the ADR and is enforced
+ * by `make lint`, not duplicated here, because two places holding one date is
+ * two places to keep in step.
+ *
+ * THE DECLARATION IS SELF-LIMITING, which is what keeps it from becoming
+ * permanent by inattention. It is conditional on both halves of its premise
+ * still being true, and each half failing is a different failure with a
+ * different fix:
+ *
+ *   1. BOTH locale directories are still empty. The moment either holds a
+ *      bundle, zero stops being legal: a count of zero then means the walk is
+ *      broken or the bundles were deleted, not that the migration has not
+ *      started. (Parity itself is already checked above, in both directions.)
+ *   2. `app/ui/copy.ts` still holds EN/FR parity by TYPE. If that mechanism is
+ *      removed or renamed, the reason this declaration gives is no longer true,
+ *      and a declaration whose premise has gone is worth less than no
+ *      declaration at all. This is a deliberately narrow textual check on
+ *      another agent's file: it can only fail loudly, it names exactly what to
+ *      do, and the alternative — trusting a comment — is what produced the
+ *      defect being fixed. It is not a substitute for `make typecheck`, which
+ *      is what actually proves the parity; it checks that the mechanism is
+ *      still the one this gate is relying on.
+ */
+const UI_COPY_FILE = join(ROOT, 'app', 'ui', 'copy.ts');
+/**
+ * BOTH halves, because either alone is satisfiable by the wrong thing. The
+ * first draft looked for `Readonly<Record<CopyRow, string>>` and a scratch copy
+ * with `const FR` de-typed still passed it — the string was matched by the
+ * unrelated `TABLES` declaration further down the file. What must be true is
+ * that a row type is DERIVED FROM EN and that a table is typed BY IT; a match
+ * for the second without the first proves nothing about French.
+ *
+ * Both patterns are DECLARATION-shaped, not prose-shaped. A first attempt
+ * matched a bare `keyof typeof EN`, which the file's own header comment
+ * contains, so retyping `CopyRow` to `string` still passed. A gate that reads a
+ * comment as evidence of the code is the failure this gate is about.
+ */
+const UI_COPY_ROW_TYPE = /type\s+CopyRow\s*=\s*keyof\s+typeof\s+EN\b/;
+const UI_COPY_TABLE_TYPE = /Record<\s*CopyRow\s*,/;
+
+if (localeBundlesChecked === 0) {
+  const enEmpty = walk(join(LOCALES_DIR, 'en'), (f) => extname(f) === '.json').length === 0;
+  const frEmpty = walk(join(LOCALES_DIR, 'fr'), (f) => extname(f) === '.json').length === 0;
+  // The premise check is about THIS repository's UI strings, so it only applies
+  // to a tree that has a UI. A --root with no `app/ui/` has no player-facing UI
+  // strings at all, so there is nothing for EN/FR parity to be about and zero
+  // bundles is trivially right; the fixtures other gates build are exactly that
+  // shape, and a first draft failed all of them. `app/ui/` present with copy.ts
+  // gone is the case that matters and it still fails below.
+  const hasUi = existsSync(join(ROOT, 'app', 'ui'));
+  const copy = existsSync(UI_COPY_FILE) ? readFileSync(UI_COPY_FILE, 'utf8') : null;
+
+  if (!enEmpty || !frEmpty) {
+    fail(
+      'locales',
+      'checked 0 locale bundle(s) for EN/FR parity, and the locale directories are NOT empty. ' +
+        'Zero is declared legal in this gate only while the migration to content/locales has not ' +
+        'started; with bundles on disk it means the walk is broken or a bundle was deleted, and ' +
+        'reporting it as a pass is the defect ADR-0024 names.',
+    );
+  } else if (hasUi && (copy === null || !UI_COPY_ROW_TYPE.test(copy) || !UI_COPY_TABLE_TYPE.test(copy))) {
+    fail(
+      'locales',
+      'checked 0 locale bundle(s) for EN/FR parity. Zero is declared legal in this gate ONLY ' +
+        "because app/ui/copy.ts holds every shipped string's French by type — a missing FR row is " +
+        'a compile error — and that mechanism is no longer there (' +
+        `${copy === null ? 'the file is missing' : !UI_COPY_ROW_TYPE.test(copy) ? 'no row type is derived from EN' : 'no table is typed by the row type'}). ` +
+        "CLAUDE.md requires EN and FR from the first commit; with neither the bundles nor the type " +
+        'binding, nothing is enforcing it. Restore the binding, or land ADR-0010\'s move to ' +
+        'content/locales so this gate has bundles to count.',
+    );
+  }
+}
+
+/**
+ * The other four numbers on that line, audited for the same property. Three
+ * were already floored and one was not.
+ *
+ *   - `creditedAssets` / `shippedEntries` / `referenceEntries` — floored above:
+ *     zero asset files fails, and an asset that exists without a credit entry
+ *     fails per file, so a zero here cannot be reached quietly.
+ *   - `paletteColours` / `paletteRamps` — floored in the palette section: a
+ *     palette declaring no colours or no ramps fails there.
+ *   - `localeBundlesChecked` — the declaration above.
+ *   - `validated` / `dataFiles.length` — NOT floored until now. An empty
+ *     `content/` prints "0/0 content file(s) valid against 12 schema(s)" and
+ *     exits 0: `every([])` is vacuously true and reads exactly like a clean
+ *     bill. It is the same shape as `progress.schema.json` being validated by
+ *     nothing, which ADR-0024 records as the sharpest instance of the class.
+ *     A broken walk, an incomplete checkout or a bad `--root` all land here.
+ */
+if (contentDocuments.length === 0 && ALLOW_EMPTY_CONTENT) {
+  // The waiver is never silent. A fixture that deliberately builds a tree with
+  // no content documents says so at its call site and the run says so in its
+  // output, which is the difference between a declared exemption and a hole.
+  console.log(
+    'validate-content: --allow-empty-content: content/ holds no document and that was DECLARED ' +
+      'legal by the caller. The schema half of this gate validated nothing under content/. Never ' +
+      'pass this from the Makefile or from CI.',
+  );
+} else if (contentDocuments.length === 0) {
+  fail(
+    'content',
+    'found 0 document(s) under content/ to validate. Every schema in content/schemas/ was then ' +
+      'checked against nothing, and "all valid" over an empty set is vacuously true — it reads ' +
+      'exactly like a clean bill. Either the walk is broken, --root points somewhere unexpected, ' +
+      'or the checkout is incomplete. Counted over content/ alone and not over dataFiles, which ' +
+      'always carries assets/credits.json and assets/style/palette.json and so can never be ' +
+      'empty: a floor that cannot fire is decoration (ADR-0014).',
+  );
+} else if (validated === 0) {
+  fail(
+    'content',
+    `found ${String(dataFiles.length)} content document(s) and validated none of them. A document ` +
+      'that was skipped is not a document that passed.',
+  );
+}
+
 // ------------------------------------------------------------------ report ---
 
 if (failures.length > 0) {
@@ -601,7 +768,10 @@ if (failures.length > 0) {
 
 console.log(
   `validate-content: OK - ${validated}/${dataFiles.length} content file(s) valid against ` +
-    `${schemasByPath.size} schema(s), ${localeBundlesChecked} locale bundle(s) in EN/FR parity, ` +
+    `${schemasByPath.size} schema(s), ` +
+    `${localeBundlesChecked === 0
+      ? 'NO locale bundles exist yet, so EN/FR parity is held by app/ui/copy.ts and make typecheck, not here (ADR-0010, ADR-0024)'
+      : `${localeBundlesChecked} locale bundle(s) in EN/FR parity`}, ` +
     `${creditedAssets} asset file(s) under assets/ credited ` +
     `(${shippedEntries} shipped, ${referenceEntries} reference), ` +
     `palette ${paletteColours} colour(s) in ${paletteRamps} ramp(s), every tone and ink resolved.`,

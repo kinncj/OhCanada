@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-22-official-languages-services",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "In which languages must the federal government provide services across Canada?",
+    "fr": "Dans quelles langues le gouvernement fédéral doit-il offrir ses services partout au Canada?"
+  },
+  "options": [
+    {
+      "en": "English and French.",
+      "fr": "En anglais et en français."
+    },
+    {
+      "en": "English only, except in Quebec.",
+      "fr": "En anglais seulement, sauf au Québec."
+    },
+    {
+      "en": "The language chosen by each province.",
+      "fr": "Dans la langue choisie par chaque province."
+    },
+    {
+      "en": "Any language a community asks for.",
+      "fr": "Dans toute langue demandée par une collectivité."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "English and French are Canada's official languages, and the law requires the federal government to provide services in both throughout the country.",
+    "fr": "L'anglais et le français sont les langues officielles du Canada, et la loi oblige le gouvernement fédéral à offrir des services dans les deux langues partout au pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 19,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The federal government is required by law to provide services throughout Canada in English and French."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

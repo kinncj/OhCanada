@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-57-manitoba-created-1870",
+  "subject": "history",
+  "prompt": {
+    "en": "Which new province did Canada establish after soldiers retook Fort Garry in 1870?",
+    "fr": "Quelle nouvelle province le Canada a-t-il créée après que des soldats eurent repris Fort Garry en 1870?"
+  },
+  "options": [
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    },
+    {
+      "en": "Saskatchewan.",
+      "fr": "La Saskatchewan."
+    },
+    {
+      "en": "Alberta.",
+      "fr": "L'Alberta."
+    },
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Ottawa sent soldiers to retake Fort Garry in 1870. Riel fled to the United States and Canada established a new province: Manitoba.",
+    "fr": "Ottawa a envoyé des soldats reprendre Fort Garry en 1870. Riel s'est enfui aux États-Unis et le Canada a créé une nouvelle province : le Manitoba."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 36,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Riel fled to the United States and Canada established a new province: Manitoba."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

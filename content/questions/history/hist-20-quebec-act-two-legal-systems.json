@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-20-quebec-act-two-legal-systems",
+  "subject": "history",
+  "prompt": {
+    "en": "What did the Quebec Act of 1774 do about the law in the colony?",
+    "fr": "Qu'a fait l'Acte de Québec de 1774 au sujet du droit dans la colonie?"
+  },
+  "options": [
+    {
+      "en": "It restored French civil law while keeping British criminal law.",
+      "fr": "Il a rétabli le droit civil français tout en maintenant le droit criminel britannique."
+    },
+    {
+      "en": "It replaced all French law with British law.",
+      "fr": "Il a remplacé tout le droit français par le droit britannique."
+    },
+    {
+      "en": "It replaced all British law with French law.",
+      "fr": "Il a remplacé tout le droit britannique par le droit français."
+    },
+    {
+      "en": "It left every question of law to each parish.",
+      "fr": "Il a laissé toutes les questions de droit à chaque paroisse."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Quebec Act restored French civil law while maintaining British criminal law. That is why Canada still lives with two legal traditions today.",
+    "fr": "L'Acte de Québec a rétabli le droit civil français tout en maintenant le droit criminel britannique. C'est pourquoi le Canada vit encore aujourd'hui avec deux traditions juridiques."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 26,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Quebec Act restored French civil law while maintaining British criminal law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-35-three-parts-of-canadian-forces",
+  "subject": "rights",
+  "prompt": {
+    "en": "What are the three parts of the regular Canadian Forces?",
+    "fr": "Quelles sont les trois composantes des Forces canadiennes régulières?"
+  },
+  "options": [
+    {
+      "en": "The navy, the army and the air force.",
+      "fr": "La marine, l'armée de terre et l'aviation."
+    },
+    {
+      "en": "The navy, the army and the Mounted Police.",
+      "fr": "La marine, l'armée de terre et la police montée."
+    },
+    {
+      "en": "The army, the air force and the Coast Guard.",
+      "fr": "L'armée de terre, l'aviation et la Garde côtière."
+    },
+    {
+      "en": "The army, the cadets and the militia.",
+      "fr": "L'armée de terre, les cadets et la milice."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The regular Canadian Forces are the navy, the army and the air force. The Coast Guard and the police are separate services you may also join.",
+    "fr": "Les Forces canadiennes régulières comprennent la marine, l'armée de terre et l'aviation. La Garde côtière et la police sont des services distincts auxquels on peut aussi se joindre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 14,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "serving in the regular Canadian Forces (navy, army and air force) is a noble way to contribute to Canada and an excellent career choice"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

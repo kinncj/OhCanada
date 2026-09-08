@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-43-la-fontaine",
+  "subject": "history",
+  "prompt": {
+    "en": "Who became the first leader of a responsible government in the Canadas?",
+    "fr": "Qui est devenu le premier chef d'un gouvernement responsable dans les Canadas?"
+  },
+  "options": [
+    {
+      "en": "Sir Louis-Hippolyte La Fontaine.",
+      "fr": "Sir Louis-Hippolyte La Fontaine."
+    },
+    {
+      "en": "Sir John A. Macdonald.",
+      "fr": "Sir John A. Macdonald."
+    },
+    {
+      "en": "Lord Durham.",
+      "fr": "Lord Durham."
+    },
+    {
+      "en": "Joseph Howe.",
+      "fr": "Joseph Howe."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Sir Louis-Hippolyte La Fontaine, a champion of democracy and of French language rights, became the first leader of a responsible government in the Canadas. Macdonald became Canada's first Prime Minister later, in 1867.",
+    "fr": "Sir Louis-Hippolyte La Fontaine, défenseur de la démocratie et des droits linguistiques des francophones, est devenu le premier chef d'un gouvernement responsable dans les Canadas. Macdonald est devenu le premier premier ministre du Canada plus tard, en 1867."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 32,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "became the first leader of a responsible government in the Canadas."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

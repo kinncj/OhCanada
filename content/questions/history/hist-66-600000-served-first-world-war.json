@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-66-600000-served-first-world-war",
+  "subject": "history",
+  "prompt": {
+    "en": "How many Canadians served in the First World War, out of a population of eight million?",
+    "fr": "Combien de Canadiens ont servi durant la Première Guerre mondiale, sur une population de huit millions d'habitants?"
+  },
+  "options": [
+    {
+      "en": "More than 600,000, most of them volunteers.",
+      "fr": "Plus de 600 000, en majorité des volontaires."
+    },
+    {
+      "en": "About 60,000, all of them conscripts.",
+      "fr": "Environ 60 000, tous des conscrits."
+    },
+    {
+      "en": "More than one million.",
+      "fr": "Plus d'un million."
+    },
+    {
+      "en": "About 130,000.",
+      "fr": "Environ 130 000."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "More than 600,000 Canadians served in the First World War, most of them volunteers, out of a total population of eight million. In all, 60,000 were killed and 170,000 wounded.",
+    "fr": "Plus de 600 000 Canadiens ont servi durant la Première Guerre mondiale, en majorité des volontaires, sur une population totale de huit millions d'habitants. Au total, 60 000 ont été tués et 170 000 blessés."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 38,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "More than 600,000 Canadians served in the war, most of them volunteers, out of a total population of eight million."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

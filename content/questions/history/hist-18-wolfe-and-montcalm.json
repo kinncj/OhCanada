@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-18-wolfe-and-montcalm",
+  "subject": "history",
+  "prompt": {
+    "en": "What happened to the commanders of the two armies at the Plains of Abraham?",
+    "fr": "Qu'est-il arrivé aux commandants des deux armées aux plaines d'Abraham?"
+  },
+  "options": [
+    {
+      "en": "Both were killed leading their troops in battle.",
+      "fr": "Les deux ont été tués en menant leurs troupes au combat."
+    },
+    {
+      "en": "Only the French commander was killed.",
+      "fr": "Seul le commandant français a été tué."
+    },
+    {
+      "en": "Only the British commander was killed.",
+      "fr": "Seul le commandant britannique a été tué."
+    },
+    {
+      "en": "Both survived and signed a treaty.",
+      "fr": "Les deux ont survécu et ont signé un traité."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Brigadier James Wolfe of the British army and the Marquis de Montcalm of the French army were both killed leading their troops at the Plains of Abraham.",
+    "fr": "Le brigadier James Wolfe, de l'armée britannique, et le marquis de Montcalm, de l'armée française, ont tous deux été tués en menant leurs troupes aux plaines d'Abraham."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 25,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Brigadier James Wolfe and the Marquis de Montcalm, were killed leading their troops in battle."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

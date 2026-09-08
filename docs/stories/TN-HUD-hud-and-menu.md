@@ -12,6 +12,11 @@ It is now this one.
 
 It also settles where the page's landmarks are, which is not a detail: see *Landmarks* below.
 
+**Amended 2026-09-08 — the menu carries a fourth item, "Leave the level".** `TN-FLOW-first-run-and-return.md`
+specifies the route out of a level, and a player who reached a level from the level select had no way back
+except the browser's back button, which this game must not depend on. `TN-FLOW` owns the route and the
+string; this file lists the item and does not restate either.
+
 Read `README.md` in this directory first. `TN-COPY-strings-and-counts.md` fixes the plural and state-word
 rules this file uses.
 
@@ -54,6 +59,7 @@ Everything else the HUD and the menu draw is defined elsewhere and is referenced
 | `common.settings` | `TN-SET-settings.md` | The menu's Settings item |
 | `study.open` | `TN-STUDY-study-mode.md` | The menu's Study item |
 | `passport.open` | `TN-QUEST-parliament-hill.md` | The menu's passport item |
+| `flow.leaveLevel` | `TN-FLOW-first-run-and-return.md` | The menu's leave item |
 | `common.close` | `TN-SET-settings.md` | The menu's close control |
 | `locomotion.skate.label` | `TN-LEVEL-ottawa.md` | `hud-mode-label` |
 | `hud.task`, `quest.step.*` | `TN-QUEST-parliament-hill.md` | `hud-quest-tracker` |
@@ -161,7 +167,7 @@ Feature: Reaching the other screens
     And holding "move-right" does not move the skater
 
   Scenario: What the menu offers in this slice
-    Then it shows "Settings", "Study" and "See my passport"
+    Then it shows "Settings", "Study", "See my passport" and "Leave the level"
     And a "Close" control is offered
     And each is at least 44 CSS px wide and tall
     And each has a visible label, not an icon alone
@@ -173,6 +179,16 @@ Feature: Reaching the other screens
     Then the element "study-screen" is visible
     When I tap "See my passport"
     Then the element "passport" is visible
+
+  Scenario: Leaving the level is a way out, not another screen over the level
+    When I tap "Leave the level"
+    Then the route described in TN-FLOW-03 is taken
+    And the element "playable" is not present
+    And the element "menu" is gone
+
+  Scenario: Leaving is not offered where there is nothing to leave
+    Given no level is playable
+    Then no menu anywhere in the game offers "Leave the level"
 
   Scenario: Closing the menu returns the player to the ice
     When I tap "Close"
@@ -292,6 +308,7 @@ Feature: Keyboard-only HUD
   Scenario: Every screen is reachable from the keyboard alone
     When I use only the keyboard
     Then I can open Settings, Study and the passport, and return to the game from each
+    And I can leave the level, and land where TN-FLOW-06 says I land
 ```
 
 ## TN-HUD-06 — The HUD with one switch
@@ -310,7 +327,7 @@ Feature: Single-switch HUD
 
   Scenario: Every menu item can be chosen with the switch
     When I use only short and long presses
-    Then I can reach and choose "Settings", "Study" and "See my passport"
+    Then I can reach and choose "Settings", "Study", "See my passport" and "Leave the level"
     And I can close the menu and return to the game
 
   Scenario: The warning does not interrupt the ring
@@ -399,6 +416,7 @@ Feature: The HUD honours the settings it opens
     When the menu opens
     Then every item is reachable, by scrolling inside "menu" if needed
     And no item's label is truncated with an ellipsis
+    And the whole of "Quitter le niveau" is visible when the language is French
 ```
 
 ## TN-HUD-09 — The HUD in French
@@ -420,7 +438,7 @@ Feature: The HUD in French
 
   Scenario: The menu is French
     When I tap "Menu"
-    Then the items read "Réglages", "Réviser" and "Voir mon passeport"
+    Then the items read "Réglages", "Réviser", "Voir mon passeport" and "Quitter le niveau"
     And the close control reads "Fermer"
     And no English word appears in "menu"
 
@@ -498,9 +516,10 @@ Feature: Guarding the green tick on the landmark rules
   and without a menu route the only way to see it after a reload is to finish the quest again, which is not
   possible.
 - **`OQ-HUD-3` — where does the storage warning sit when the HUD is not on screen?** `TN-CREATOR-03` shows it
-  during character creation, before any level exists. *Recommendation:* the warning belongs to the page, not
-  to the level: one element, drawn inside `hud` when there is a HUD and above the creator's card when there
-  is not. One element means one announcement, which is what `TN-HUD-03` asserts.
+  during character creation, and `TN-TITLE-04` shows it on the title screen, before any level exists.
+  *Recommendation:* the warning belongs to the page, not to the level: one element, drawn inside `hud` when
+  there is a HUD and above the screen's card when there is not. One element means one announcement, which is
+  what `TN-HUD-03` asserts.
 - **`OQ-HUD-4` — is there a pause item in the menu?** Opening the menu already pauses, so a pause item would
   do nothing. *Recommendation:* no pause item; `TN-LEVEL-12` already covers pausing by rotation, by menu and
   by hiding the tab.
@@ -521,3 +540,8 @@ Feature: Guarding the green tick on the landmark rules
   fixes that, the scenario fails and the negative control can be simplified. *Recommendation:* keep it and
   let it fail loudly — a scenario that fails when a tool gets better is a scenario that told us the tool
   changed. What must not happen is the simplification being made without the failure.
+- **`OQ-HUD-8` — does "Leave the level" need a confirmation?** `TN-FLOW-03` says no, because every item in
+  `TN-SAVE`'s survives table is written at the moment it changes and nothing is in flight: the menu cannot be
+  opened over a question card (`TN-HUD-04`), so there is no half-answered question to lose.
+  *Recommendation:* no confirmation. A dialog that always says "nothing will be lost" teaches the player to
+  dismiss dialogs. Revisit only if something ever becomes losable, and then fix the losable thing first.

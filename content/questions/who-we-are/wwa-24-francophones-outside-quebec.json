@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-24-francophones-outside-quebec",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Outside Quebec, in which three provinces do about a million Francophones live?",
+    "fr": "À l'extérieur du Québec, dans quelles trois provinces vit environ un million de francophones?"
+  },
+  "options": [
+    {
+      "en": "Ontario, New Brunswick and Manitoba.",
+      "fr": "En Ontario, au Nouveau-Brunswick et au Manitoba."
+    },
+    {
+      "en": "British Columbia, Alberta and Saskatchewan.",
+      "fr": "En Colombie-Britannique, en Alberta et en Saskatchewan."
+    },
+    {
+      "en": "Nova Scotia, Prince Edward Island and Newfoundland and Labrador.",
+      "fr": "En Nouvelle-Écosse, à l'Île-du-Prince-Édouard et à Terre-Neuve-et-Labrador."
+    },
+    {
+      "en": "Ontario, Alberta and Nova Scotia.",
+      "fr": "En Ontario, en Alberta et en Nouvelle-Écosse."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Most Francophones live in Quebec, but about a million live in Ontario, New Brunswick and Manitoba, with smaller numbers in other provinces.",
+    "fr": "La majorité des francophones vivent au Québec, mais environ un million vivent en Ontario, au Nouveau-Brunswick et au Manitoba, et un plus petit nombre dans les autres provinces."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 19,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "one million Francophones live in Ontario, New Brunswick and Manitoba, with a smaller presence in other provinces."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

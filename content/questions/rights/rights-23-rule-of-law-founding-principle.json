@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-23-rule-of-law-founding-principle",
+  "subject": "rights",
+  "prompt": {
+    "en": "Obeying the law is a responsibility of citizenship. Which founding principle of Canada does it rest on?",
+    "fr": "Respecter la loi est une responsabilité de la citoyenneté. Sur quel principe fondateur du Canada repose-t-elle?"
+  },
+  "options": [
+    {
+      "en": "The rule of law.",
+      "fr": "La primauté du droit."
+    },
+    {
+      "en": "Free trade.",
+      "fr": "Le libre-échange."
+    },
+    {
+      "en": "Multiculturalism.",
+      "fr": "Le multiculturalisme."
+    },
+    {
+      "en": "Bilingualism.",
+      "fr": "Le bilinguisme."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "One of Canada's founding principles is the rule of law. It means power is exercised through law rather than by decisions taken at will.",
+    "fr": "L'un des principes fondateurs du Canada est la primauté du droit. Cela signifie que le pouvoir s'exerce par la loi, et non par des décisions prises au gré des circonstances."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Obeying the law — One of Canada’s founding principles is the rule of law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

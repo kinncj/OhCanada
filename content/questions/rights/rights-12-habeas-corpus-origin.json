@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-12-habeas-corpus-origin",
+  "subject": "rights",
+  "prompt": {
+    "en": "Where does habeas corpus come from?",
+    "fr": "D'où vient l'habeas corpus?"
+  },
+  "options": [
+    {
+      "en": "English common law.",
+      "fr": "De la common law anglaise."
+    },
+    {
+      "en": "The civil code of France.",
+      "fr": "Du code civil de la France."
+    },
+    {
+      "en": "The Canadian Charter of Rights and Freedoms of 1982.",
+      "fr": "De la Charte canadienne des droits et libertés de 1982."
+    },
+    {
+      "en": "A treaty signed by the United Nations.",
+      "fr": "D'un traité signé par les Nations Unies."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The name is Latin, but the protection reached Canada through English common law. It is older than the Charter, which came in 1982.",
+    "fr": "Le nom est latin, mais cette protection est arrivée au Canada par la common law anglaise. Elle est plus ancienne que la Charte, qui date de 1982."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Habeas corpus, the right to challenge unlawful detention by the state, comes from English common law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

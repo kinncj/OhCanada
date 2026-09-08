@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-27-great-upheaval",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What is the name given to the deportation of the Acadians between 1755 and 1763?",
+    "fr": "Quel nom donne-t-on à la déportation des Acadiens entre 1755 et 1763?"
+  },
+  "options": [
+    {
+      "en": "The Great Upheaval.",
+      "fr": "Le Grand Dérangement."
+    },
+    {
+      "en": "The Great Migration.",
+      "fr": "La Grande Migration."
+    },
+    {
+      "en": "The Conquest.",
+      "fr": "La Conquête."
+    },
+    {
+      "en": "The Great Charter.",
+      "fr": "La Grande Charte."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "During the war between Britain and France, more than two-thirds of the Acadians were deported from their homeland. That ordeal is known as the Great Upheaval, and the Acadians survived it and kept their own identity.",
+    "fr": "Pendant la guerre entre la Grande-Bretagne et la France, plus des deux tiers des Acadiens ont été déportés de leur terre natale. Cette épreuve est connue sous le nom de Grand Dérangement; les Acadiens y ont survécu et ont conservé leur identité."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 19,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Despite this ordeal, known as the “Great Upheaval,” the Acadians survived and maintained their unique identity."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

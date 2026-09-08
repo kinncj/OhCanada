@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-94-durham-assimilation",
+  "subject": "history",
+  "prompt": {
+    "en": "What does the guide say about Lord Durham's advice that the Canadiens should assimilate into English-speaking Protestant culture?",
+    "fr": "Que dit le guide au sujet du conseil de lord Durham selon lequel les Canadiens devaient s'assimiler à la culture protestante anglophone?"
+  },
+  "options": [
+    {
+      "en": "It showed a complete lack of understanding of French Canadians.",
+      "fr": "Il révélait une incompréhension totale des Canadiens français."
+    },
+    {
+      "en": "It was the wisest part of his report.",
+      "fr": "C'était la partie la plus sage de son rapport."
+    },
+    {
+      "en": "It was accepted by the reformers of Lower Canada.",
+      "fr": "Il a été accepté par les réformistes du Bas-Canada."
+    },
+    {
+      "en": "It was never written down.",
+      "fr": "Il n'a jamais été mis par écrit."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Lord Durham recommended merging Upper and Lower Canada and granting responsible government. Controversially, he also said assimilation was the quickest route to progress for the Canadiens, and the guide states that this showed a complete lack of understanding of French Canadians, who sought to uphold the distinct identity of French Canada.",
+    "fr": "Lord Durham a recommandé de fusionner le Haut-Canada et le Bas-Canada et d'accorder le gouvernement responsable. De façon controversée, il a aussi affirmé que l'assimilation était la voie la plus rapide vers le progrès pour les Canadiens; le guide indique que cela révélait une incompréhension totale des Canadiens français, qui cherchaient à préserver l'identité distincte du Canada français."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 31,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "This recommendation demonstrated a complete lack of understanding of French Canadians"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

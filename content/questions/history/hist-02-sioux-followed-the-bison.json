@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-02-sioux-followed-the-bison",
+  "subject": "history",
+  "prompt": {
+    "en": "When Europeans explored Canada, which people were nomadic and followed the bison herd?",
+    "fr": "À l'époque où les Européens ont exploré le Canada, quel peuple était nomade et suivait les troupeaux de bisons?"
+  },
+  "options": [
+    {
+      "en": "The Sioux.",
+      "fr": "Les Sioux."
+    },
+    {
+      "en": "The Huron-Wendat.",
+      "fr": "Les Hurons-Wendat."
+    },
+    {
+      "en": "The Inuit.",
+      "fr": "Les Inuit."
+    },
+    {
+      "en": "The Dene.",
+      "fr": "Les Dénés."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "At that time the Sioux were nomadic and followed the bison herd. The Cree and Dene of the Northwest were hunter-gatherers, and the Huron-Wendat of the Great Lakes were farmers and hunters.",
+    "fr": "À cette époque, les Sioux étaient nomades et suivaient les troupeaux de bisons. Les Cris et les Dénés du Nord-Ouest étaient chasseurs-cueilleurs, et les Hurons-Wendat de la région des Grands Lacs étaient agriculteurs et chasseurs."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 23,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Sioux were nomadic, following the bison (buffalo) herd."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

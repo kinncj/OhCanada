@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-13-peace-with-iroquois-1701",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year did the French and the Iroquois make peace?",
+    "fr": "En quelle année les Français et les Iroquois ont-ils fait la paix?"
+  },
+  "options": [
+    {
+      "en": "1701.",
+      "fr": "En 1701."
+    },
+    {
+      "en": "1608.",
+      "fr": "En 1608."
+    },
+    {
+      "en": "1759.",
+      "fr": "En 1759."
+    },
+    {
+      "en": "1774.",
+      "fr": "En 1774."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Champlain allied the colony with the Algonquin, Montagnais and Huron. The Iroquois, a confederation of five and later six First Nations, fought the French settlements for a century, and the two sides made peace in 1701.",
+    "fr": "Champlain a allié la colonie aux Algonquins, aux Montagnais et aux Hurons. Les Iroquois, une confédération de cinq puis de six Premières Nations, ont combattu les établissements français pendant un siècle, et les deux camps ont fait la paix en 1701."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 25,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The French and the Iroquois made peace in 1701."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

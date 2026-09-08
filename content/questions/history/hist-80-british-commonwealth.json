@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-80-british-commonwealth",
+  "subject": "history",
+  "prompt": {
+    "en": "What did the British Empire become after the First World War?",
+    "fr": "Qu'est devenu l'Empire britannique après la Première Guerre mondiale?"
+  },
+  "options": [
+    {
+      "en": "A free association of states known as the British Commonwealth of Nations.",
+      "fr": "Une libre association d'États appelée le Commonwealth britannique des Nations."
+    },
+    {
+      "en": "A single federal country.",
+      "fr": "Un seul pays fédéral."
+    },
+    {
+      "en": "A military alliance against the Soviet Union.",
+      "fr": "Une alliance militaire contre l'Union soviétique."
+    },
+    {
+      "en": "A trading bloc with fixed prices.",
+      "fr": "Un bloc commercial à prix fixes."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "After the First World War the British Empire evolved into a free association of states known as the British Commonwealth of Nations. Canada remains a leading member, alongside other successor states of the Empire.",
+    "fr": "Après la Première Guerre mondiale, l'Empire britannique s'est transformé en une libre association d'États appelée le Commonwealth britannique des Nations. Le Canada en demeure un membre de premier plan, aux côtés d'autres États successeurs de l'Empire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 42,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "the British Empire evolved into a free association of states known as the British Commonwealth of Nations."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

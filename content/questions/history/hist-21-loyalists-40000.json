@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-21-loyalists-40000",
+  "subject": "history",
+  "prompt": {
+    "en": "Who were the Loyalists?",
+    "fr": "Qui étaient les loyalistes?"
+  },
+  "options": [
+    {
+      "en": "More than 40,000 people loyal to the Crown who moved north to Nova Scotia and Quebec.",
+      "fr": "Plus de 40 000 personnes fidèles à la Couronne qui se sont installées en Nouvelle-Écosse et au Québec."
+    },
+    {
+      "en": "French settlers who stayed after the Conquest.",
+      "fr": "Des colons français restés après la Conquête."
+    },
+    {
+      "en": "British soldiers sent to defend Canada in 1812.",
+      "fr": "Des soldats britanniques envoyés défendre le Canada en 1812."
+    },
+    {
+      "en": "Reformers who wanted responsible government.",
+      "fr": "Des réformistes qui réclamaient le gouvernement responsable."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "When the 13 colonies to the south declared independence in 1776, more than 40,000 people loyal to the Crown moved north to settle in Nova Scotia and Quebec. They came from many backgrounds and many religions.",
+    "fr": "Lorsque les 13 colonies du Sud ont déclaré leur indépendance en 1776, plus de 40 000 personnes fidèles à la Couronne sont parties vers le nord pour s'établir en Nouvelle-Écosse et au Québec. Elles venaient de milieux et de religions très variés."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 26,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "More than 40,000 people loyal to the Crown, called “Loyalists,” fled the oppression of the American Revolution to settle in Nova Scotia and Quebec."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

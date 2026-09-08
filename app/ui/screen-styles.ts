@@ -257,6 +257,72 @@ const CSS = `
 }
 
 /* ------------------------------------------------------------------ *
+ * The shell: the title screen and the level select.
+ *
+ * The shell's root is the page's <main>. It carries .tn-screen for the
+ * presentation every surface here shares -- 44 pt controls, a focus ring that
+ * is a change of geometry, reduced motion, high contrast -- and it is a
+ * landmark, not a dialog, so it sits UNDER the dialogs it hosts.
+ * ------------------------------------------------------------------ */
+
+.tn-shell { z-index: 30; }
+
+.tn-levels__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/*
+  At 200 % text a place name and its badge do not fit on one 390 px line, so the
+  row wraps rather than clipping the name. min-inline-size: 0 is what lets a
+  flex item shrink below its content width at all -- without it the name keeps
+  its intrinsic size and overflows the button instead of wrapping.
+*/
+.tn-levels button { flex-wrap: wrap; }
+
+.tn-levels__number {
+  flex: 0 0 auto;
+  font-weight: 700;
+}
+
+.tn-levels__name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+/* The subject line takes a line of its own, so a card reads number and place,
+   then what it teaches, and neither is squeezed at 200 % text. */
+.tn-levels__subject {
+  flex: 1 1 100%;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.tn-levels .tn-screen__state {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/*
+  Locked and not-yet-built are told apart by SHAPE and by a WORD, never by
+  colour: a dashed edge for a place that can be earned, a dotted one for a place
+  that is not in the game yet, and the badge beside the name says which. Nothing
+  is dimmed with opacity -- that would trade one signal for a contrast failure.
+*/
+.tn-levels [data-state="locked"] { border-style: dashed; }
+.tn-levels [data-state="not-built"] { border-style: dotted; }
+.tn-levels [aria-disabled="true"] { cursor: default; }
+
+@media (forced-colors: active) {
+  .tn-levels [data-state="locked"] { border: 2px dashed ButtonText; }
+  .tn-levels [data-state="not-built"] { border: 2px dotted ButtonText; }
+}
+
+/* ------------------------------------------------------------------ *
  * The page under the screens: one <main>, one lower-third HUD.
  *
  * Two things here are acceptance criteria (TN-HUD-01, TN-HUD-08):

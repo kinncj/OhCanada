@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-15-what-the-charter-does",
+  "subject": "rights",
+  "prompt": {
+    "en": "What does the Canadian Charter of Rights and Freedoms do?",
+    "fr": "Que fait la Charte canadienne des droits et libertés?"
+  },
+  "options": [
+    {
+      "en": "It sums up the fundamental freedoms and also sets out further rights.",
+      "fr": "Elle résume les libertés fondamentales et énonce aussi d'autres droits."
+    },
+    {
+      "en": "It replaces every law passed before 1982.",
+      "fr": "Elle remplace toutes les lois adoptées avant 1982."
+    },
+    {
+      "en": "It lists the duties of the provinces and the federal government.",
+      "fr": "Elle énumère les compétences des provinces et du gouvernement fédéral."
+    },
+    {
+      "en": "It sets the rules for federal elections.",
+      "fr": "Elle fixe les règles des élections fédérales."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Charter gathers the fundamental freedoms in one place and adds more rights beside them. It did not invent the freedoms; Canada already had them.",
+    "fr": "La Charte rassemble les libertés fondamentales en un seul endroit et y ajoute d'autres droits. Elle n'a pas inventé ces libertés : le Canada les possédait déjà."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 12,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Charter attempts to summarize fundamental freedoms while also setting out additional rights."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

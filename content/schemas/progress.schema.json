@@ -25,6 +25,10 @@
       "type": "array",
       "items": { "$ref": "#/$defs/levelProgress" }
     },
+    "lastPlayedLevelId": {
+      "description": "The level the player was last in, so the title screen can offer Continue. Null before any level has been entered. THE LEVEL, NOT THE SCREEN: TN-SAVE's survives table takes the level last played, and which screen the player was on is explicitly in the does-not-survive table. Restoring a player into a modal, a summary or a question card they have no context for is worse than putting them back on the map. Required rather than optional so that \"no level yet\" and \"this build did not record one\" are different states. Nothing fails closed without it - Choose a level still reaches every unlocked level - so it is a convenience the save carries, not a dependency (OQ-FLOW-4 / OQ-SAVE-7, ADR-0023).",
+      "anyOf": [{ "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId" }, { "type": "null" }]
+    },
     "reviews": {
       "type": "array",
       "items": { "$ref": "#/$defs/reviewState" }
@@ -46,6 +50,7 @@
     "settings",
     "character",
     "levels",
+    "lastPlayedLevelId",
     "reviews",
     "subjectsStarted",
     "exams"

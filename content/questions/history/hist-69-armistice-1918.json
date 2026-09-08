@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-69-armistice-1918",
+  "subject": "history",
+  "prompt": {
+    "en": "On what date did the First World War end in the Armistice?",
+    "fr": "À quelle date la Première Guerre mondiale a-t-elle pris fin par l'Armistice?"
+  },
+  "options": [
+    {
+      "en": "November 11, 1918.",
+      "fr": "Le 11 novembre 1918."
+    },
+    {
+      "en": "August 8, 1918.",
+      "fr": "Le 8 août 1918."
+    },
+    {
+      "en": "April 9, 1917.",
+      "fr": "Le 9 avril 1917."
+    },
+    {
+      "en": "May 8, 1945.",
+      "fr": "Le 8 mai 1945."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The war ended in the Armistice of November 11, 1918. In total, 60,000 Canadians were killed and 170,000 wounded. That is why Remembrance Day falls on November 11.",
+    "fr": "La guerre a pris fin par l'Armistice du 11 novembre 1918. Au total, 60 000 Canadiens ont été tués et 170 000 blessés. C'est pourquoi le jour du Souvenir tombe le 11 novembre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 39,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "the war ended in the Armistice on November 11, 1918. In total 60,000 Canadians were killed and 170,000 wounded."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

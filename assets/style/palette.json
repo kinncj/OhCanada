@@ -112,6 +112,9 @@
     "stone-light": "#d2c5a3",
     "stone-base": "#bc9c6d",
     "stone-shade": "#9a623e",
+    "brick-light": "#cb8f62",
+    "brick-base": "#ab5936",
+    "brick-shade": "#6f271f",
     "copper-light": "#80caaa",
     "copper-base": "#46b896",
     "copper-shade": "#2b8179",
@@ -228,6 +231,13 @@
       "shade": "stone-shade",
       "derived": true,
       "material": "Nepean sandstone. Parliament Hill walls and the Peace Tower shaft."
+    },
+    "brick": {
+      "light": "brick-light",
+      "base": "brick-base",
+      "shade": "brick-shade",
+      "derived": true,
+      "material": "Red-brown facing brick. The Chateau Frontenac's walls, and the Old Quebec brick terraces. Base authored 2026-09-08 from assets/refs/quebec-city/chateau-frontenac-street-elevation.jpg, hue-filtered median of 106441 wall pixels = #a27447 hsl(29,42%,46%) under low warm autumn sun; the same wall in assets/refs/quebec-city/chateau-frontenac-portrait.jpg under overcast winter light medians #735749 hsl(20,21%,37%). The base is set between them and more saturated: hsl(18,52%,44%). It exists because `stone` is Nepean sandstone buff - drawing the Chateau in it would make Quebec City's landmark the same colour as Ottawa's, which is the one confusion this palette must not create."
     },
     "copper": {
       "light": "copper-light",
@@ -429,6 +439,17 @@
       "medium and low visual tiers without the scene losing its sky (ADR-0011).",
       "`sky` is sky-shade rather than sky-base because it is the zenith, not the mid band."
     ],
+    "quebec-city-winter": {
+      "sky": "sky-base",
+      "ground": "snow-base",
+      "horizon": "cloud-base",
+      "why": "Deliberately NOT Ottawa's set. Ottawa's zenith is `sky-shade` over a `sky-light` horizon: a deep, clear, cold blue. Quebec City is a paler, hazier winter afternoon - `sky-base` at the zenith fading to a `cloud-base` haze at the horizon rule - which is what assets/refs/quebec-city/quebec-ramparts-snow.jpg and quebec-city-waterfront-winter.jpg both show, and which keeps two winter levels from looking like the same level.",
+      "skyBandStops": {
+        "note": "Design-resolution y at which layer-10-sky.svg changes band, matching the three gradient stops in order so the medium and low presets can drop the sky layer without the scene losing its sky (ADR-0011).",
+        "baseToLight": 700,
+        "lightToCloud": 980
+      }
+    },
     "ottawa-winter": {
       "sky": "sky-shade",
       "ground": "snow-base",

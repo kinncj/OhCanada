@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-88-liberation-of-the-netherlands",
+  "subject": "history",
+  "prompt": {
+    "en": "Which country did the Canadian Army liberate in 1944-45?",
+    "fr": "Quel pays l'Armée canadienne a-t-elle libéré en 1944-1945?"
+  },
+  "options": [
+    {
+      "en": "The Netherlands.",
+      "fr": "Les Pays-Bas."
+    },
+    {
+      "en": "Belgium.",
+      "fr": "La Belgique."
+    },
+    {
+      "en": "Norway.",
+      "fr": "La Norvège."
+    },
+    {
+      "en": "Poland.",
+      "fr": "La Pologne."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Canadian Army liberated the Netherlands in 1944-45 and helped force the German surrender of May 8, 1945, which ended six years of war in Europe. Canadians had also taken part in the liberation of Italy in 1943-44.",
+    "fr": "L'Armée canadienne a libéré les Pays-Bas en 1944-1945 et a contribué à forcer la capitulation allemande du 8 mai 1945, qui a mis fin à six ans de guerre en Europe. Des Canadiens avaient aussi participé à la libération de l'Italie en 1943-1944."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 43,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Canadian Army liberated the Netherlands in 1944–45 and helped force the German surrender of May 8, 1945"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

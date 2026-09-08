@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-43-equal-treatment-civil-marriage",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What does the law give gay and lesbian Canadians?",
+    "fr": "Qu'est-ce que la loi accorde aux Canadiennes et aux Canadiens gais et lesbiennes?"
+  },
+  "options": [
+    {
+      "en": "Full protection and equal treatment under the law, including access to civil marriage.",
+      "fr": "La pleine protection et l'égalité de traitement devant la loi, y compris l'accès au mariage civil."
+    },
+    {
+      "en": "Protection in some provinces only.",
+      "fr": "Une protection dans certaines provinces seulement."
+    },
+    {
+      "en": "Equal treatment at work, but not in family law.",
+      "fr": "L'égalité de traitement au travail, mais pas en droit de la famille."
+    },
+    {
+      "en": "A separate legal status created for that purpose.",
+      "fr": "Un statut juridique distinct créé à cette fin."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada's diversity includes gay and lesbian Canadians, who have the full protection of the law and equal treatment under it, including access to civil marriage.",
+    "fr": "La diversité canadienne comprend les Canadiennes et les Canadiens gais et lesbiennes, qui jouissent de la pleine protection de la loi et de l'égalité de traitement devant elle, y compris l'accès au mariage civil."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 22,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "who enjoy the full protection of and equal treatment under the law, including access to civil marriage."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

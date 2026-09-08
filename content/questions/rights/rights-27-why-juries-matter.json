@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-27-why-juries-matter",
+  "subject": "rights",
+  "prompt": {
+    "en": "Why does the justice system depend on juries?",
+    "fr": "Pourquoi le système de justice dépend-il des jurys?"
+  },
+  "options": [
+    {
+      "en": "Because juries are impartial and are made up of citizens.",
+      "fr": "Parce que les jurys sont impartiaux et composés de citoyens."
+    },
+    {
+      "en": "Because juries are made up of trained lawyers.",
+      "fr": "Parce que les jurys sont composés d'avocats formés."
+    },
+    {
+      "en": "Because juries are chosen by the judge in each case.",
+      "fr": "Parce que les jurys sont choisis par le juge dans chaque cause."
+    },
+    {
+      "en": "Because juries are appointed by the government.",
+      "fr": "Parce que les jurys sont nommés par le gouvernement."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Serving on a jury is called a privilege because the justice system works only if juries are impartial and made up of ordinary citizens rather than officials or experts.",
+    "fr": "Faire partie d'un jury est présenté comme un privilège, car le système de justice ne fonctionne que si les jurys sont impartiaux et composés de citoyens ordinaires plutôt que de fonctionnaires ou d'experts."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Serving on a jury is a privilege that makes the justice system work as it depends on impartial juries made up of citizens."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

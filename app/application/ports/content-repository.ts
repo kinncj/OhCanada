@@ -334,6 +334,12 @@ export interface GameConfigDocument {
   readonly designHeight: number;
   /** Level ids in authoring order. */
   readonly levels: readonly LevelId[];
+  /**
+   * Every way a level may declare that the player moves — the legal set, as data
+   * (ADR-0023). A new mode is a name here, a `LocomotionTuning` in the level
+   * document and a `labelKey` in the locale bundles. No code.
+   */
+  readonly locomotionModes: readonly string[];
   readonly unlockRules: UnlockRules;
   readonly exam: ExamRules;
   readonly scheduler: SchedulerTuning;
@@ -717,6 +723,248 @@ export interface LocaleBundle {
   readonly strings: Readonly<Record<string, string>>;
 }
 
+/* --------------------------------------------------------------------------
+ * content/characters/rig.json — schema: content/schemas/rig.schema.json
+ *
+ * The SHARED character rig: one skeleton, every character. ADR-0017 put the
+ * vocabulary here and ADR-0022 made this a document the application reads, so
+ * ADR-0007 applies and these types mirror the schema.
+ *
+ * Why it is read at runtime, in one line: the shipped atlas is a CUT-OUT PUPPET
+ * — 20 parts placed by `pivot`, `z` and `mirrorX` and animated by keyframes —
+ * and a puppet is the only model that can compose 480 player-selectable
+ * appearances from 21 drawings. A pre-rendered flipbook would have to bake each
+ * combination, which is what `docs/content-review.md` §8.2 forbids.
+ *
+ * The adapter does NOT open this file. `ContentRepository.rig()` loads it and it
+ * reaches a renderer through `CharacterRendererSpec`, the same field-of-the-same
+ * -spec route that already makes `skinSlots` identical in both backends.
+ * ----------------------------------------------------------------------- */
+
+/** Pixel dimensions of the design surface. */
+export interface Dimensions {
+  readonly width: number;
+  readonly height: number;
+}
+
+/**
+ * The coordinate space every part window and pivot is stated in.
+ *
+ * `heightPx`, `headPx` and `heightHeads` are three numbers describing one fact,
+ * and `heightPx / headPx === heightHeads` is asserted by
+ * `tests/unit/contracts/rig-is-coherent.test.ts`. The 6-head proportion is a
+ * canon rule identical for every character, which is an anti-caricature rule and
+ * not a style preference.
+ *
+ * `height` is the ARTBOARD and `heightPx` is the crown-to-sole span; they are
+ * different numbers and confusing them under-counts a Rive surface by 12 %
+ * (ADR-0013, second amendment).
+ */
+export interface CharacterSpace {
+  readonly width: number;
+  readonly height: number;
+  readonly centreX: number;
+  readonly crownY: number;
+  readonly soleY: number;
+  readonly groundLineY?: number;
+  readonly heightPx: number;
+  readonly headPx: number;
+  readonly heightHeads: number;
+  readonly note?: string;
+}
+
+/** One character that plays this rig. `characterId` joins to `content/characters/<id>.json`. */
+export interface RigArtboard {
+  readonly characterId: CharacterId;
+  readonly artboard: string;
+  readonly stateMachine: string;
+  /** Slot choices this artboard ships with: slot name -> option name. */
+  readonly skins: Readonly<Record<string, string>>;
+  /** Slots the creator offers for this artboard. Empty is a real answer, and is what an NPC has. */
+  readonly playerSelectableSlots: readonly string[];
+  readonly note?: string;
+}
+
+/**
+ * One input both backends expose under this exact name.
+ *
+ * A `number` carries `min`/`max` and a numeric `fallback`; a `bool` carries a
+ * boolean one; **a `trigger` carries no `fallback` at all** — it is an event, it
+ * has no resting value, and the schema makes that unwritable rather than merely
+ * discouraged.
+ */
+export interface RigStateMachineInput {
+  readonly name: string;
+  readonly type: 'bool' | 'number' | 'trigger';
+  readonly fallback?: boolean | number;
+  readonly min?: number;
+  readonly max?: number;
+  readonly meaning: string;
+}
+
+export interface RigStateMachine {
+  readonly name: string;
+  readonly inputs: readonly RigStateMachineInput[];
+}
+
+/** One first-match-wins rule. `state` must be a key of `RigDocument.states`. */
+export interface RigSelectorRule {
+  /**
+   * The condition in words, deliberately prose. An executable condition here
+   * would be a second implementation of the state machine that could disagree
+   * with both backends.
+   */
+  readonly when: string;
+  readonly state: string;
+}
+
+/**
+ * The Rive state machine written out as an ordered table, so a sprite adapter
+ * evaluates the same rules in the same order and a conformance suite can drive
+ * both backends through it and compare the selected state.
+ */
+export interface RigSelector {
+  readonly note?: string;
+  readonly rules: readonly RigSelectorRule[];
+}
+
+/** Named face poses. `fallback` is one of `names`. */
+export interface RigExpressions {
+  readonly names: readonly string[];
+  readonly fallback: string;
+  readonly note?: string;
+}
+
+/** A named moment the animation reports, so audio, subtitles and UI agree with the art. */
+export interface RigEvent {
+  readonly name: string;
+  readonly when: string;
+  readonly use: string;
+}
+
+/**
+ * One slot and the options the artwork provides.
+ *
+ * `fallback` is the option used when nothing has been chosen — an NPC, or save
+ * recovery when a saved option id no longer exists. It is **not** a
+ * pre-selection: no skin tone is the default, and the creator randomises
+ * uniformly on open. It is `null` exactly when `status` is `reserved`, and a
+ * reserved slot has zero options and names what blocks it.
+ */
+export interface RigSlot {
+  readonly options: readonly string[];
+  readonly fallback: string | null;
+  readonly playerSelectable: boolean;
+  readonly status?: 'reserved';
+  readonly blockedBy?: string;
+  readonly namesOwnedBy?: string;
+  readonly note?: string;
+}
+
+/**
+ * The runtime-swappable slots. The names are fixed by the schema, and that is
+ * the anti-caricature mechanism rather than tidiness: `hairShape` and
+ * `hairColour` are two slots precisely so a coupling — "the coily one only in
+ * black" — cannot hide inside one combined list of twenty options.
+ */
+export interface RigSlots {
+  readonly skin: RigSlot;
+  readonly hairShape: RigSlot;
+  readonly hairColour: RigSlot;
+  readonly headCovering: RigSlot;
+  readonly feature: RigSlot;
+  readonly costume: RigSlot;
+  readonly presentation: RigSlot;
+}
+
+/** The anti-caricature rule, stated in the rig so it travels with what it constrains. */
+export interface SlotIndependence {
+  readonly rule: string;
+  /** How it is checked. What stops the rule being a sentiment. */
+  readonly checkable: string;
+  readonly source: string;
+}
+
+/**
+ * One drawable part.
+ *
+ * `frame` is a template: literal text plus `{slot}` or `{expression}` braces,
+ * each naming a declared slot or the expression list. That is what makes slot
+ * independence mechanical — a template naming two slots that constrain each
+ * other is visible in the template.
+ */
+export interface RigPart {
+  readonly name: string;
+  /** Draw order, back to front. The set over all parts is a dense 1..n permutation. */
+  readonly z: number;
+  readonly frame: string;
+  /** Rotation origin in character space. */
+  readonly pivot: readonly [number, number];
+  readonly mirrorX: boolean;
+  readonly note?: string;
+}
+
+/** How a resolved frame template becomes an atlas frame key. */
+export interface RigAtlas {
+  readonly framePrefix: string;
+  readonly grammar: string;
+  readonly rule: string;
+  readonly note?: string;
+}
+
+/** Per-part transform at one instant: `[rotationDeg, dx, dy]`, keyed by part name. */
+export interface RigKeyframe {
+  /** Normalised time within the state, 0 to 1. Ascending, first 0, last 1. */
+  readonly t: number;
+  readonly parts: Readonly<Record<string, readonly [number, number, number]>>;
+}
+
+/** One animation state. */
+export interface RigState {
+  /** `loop` repeats; `once` plays and returns to the selector; `hold` stops on the last key. */
+  readonly loop: 'loop' | 'once' | 'hold';
+  readonly durationMs: number;
+  readonly keys: readonly RigKeyframe[];
+  readonly note?: string;
+}
+
+/** One atlas frame: its source art and the window it occupies in character space. */
+export interface RigFrame {
+  readonly source: string;
+  /** May be negative — a toque crosses the crown line. */
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+  readonly h: number;
+}
+
+export interface RigDocument {
+  readonly $schema?: string;
+  /** Prose about the document, a line array so a long note diffs a line at a time. */
+  readonly $comment?: readonly string[];
+  readonly version: number;
+  readonly licence: string;
+  readonly designResolution: Dimensions;
+  readonly characterSpace: CharacterSpace;
+  readonly artboards: readonly RigArtboard[];
+  readonly stateMachine: RigStateMachine;
+  readonly selector: RigSelector;
+  readonly expressions: RigExpressions;
+  readonly events?: readonly RigEvent[];
+  readonly slots: RigSlots;
+  readonly slotIndependence: SlotIndependence;
+  readonly parts: readonly RigPart[];
+  readonly atlas: RigAtlas;
+  /** Animation states by name. A `selector.rules[].state` names one of these keys. */
+  readonly states: Readonly<Record<string, RigState>>;
+  /**
+   * Every atlas frame the rig can resolve to, by frame key. A part whose resolved
+   * template is absent draws nothing, which is how every "none" option works
+   * without a special case in either backend.
+   */
+  readonly frames: Readonly<Record<string, RigFrame>>;
+}
+
 export interface ContentRepository {
   gameConfig(): Promise<Result<GameConfigDocument>>;
   /** Cheap list for the world map — never loads level payloads. */
@@ -726,6 +974,15 @@ export interface ContentRepository {
   /** The whole bank for a subject; the scheduler picks from it in the domain. */
   questions(subject: SubjectId): Promise<Result<readonly QuestionDocument[]>>;
   character(id: CharacterId): Promise<Result<CharacterDocument>>;
+  /**
+   * The shared character rig, `content/characters/rig.json` (ADR-0022).
+   *
+   * One rig, every character, so it is fetched once and cached like any other
+   * document. It is here rather than on the renderer because an adapter does not
+   * do content I/O: this port hides fetch, ajv and caching, and the rig reaches a
+   * backend through `CharacterRendererSpec`.
+   */
+  rig(): Promise<Result<RigDocument>>;
   locale(code: LocaleCode): Promise<Result<LocaleBundle>>;
   /**
    * Drop everything cached for a level. Called before the next level loads so the

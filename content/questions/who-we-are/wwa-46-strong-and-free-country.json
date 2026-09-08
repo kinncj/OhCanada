@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-46-strong-and-free-country",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "How is Canada known around the world?",
+    "fr": "Comment le Canada est-il connu dans le monde?"
+  },
+  "options": [
+    {
+      "en": "As a strong and free country.",
+      "fr": "Comme un pays fort et libre."
+    },
+    {
+      "en": "As the largest country in the world.",
+      "fr": "Comme le plus grand pays du monde."
+    },
+    {
+      "en": "As the oldest country in the Americas.",
+      "fr": "Comme le plus ancien pays des Amériques."
+    },
+    {
+      "en": "As a country with one language and one culture.",
+      "fr": "Comme un pays d'une seule langue et d'une seule culture."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada is known around the world as a strong and free country, and Canadians are proud of their own identity.",
+    "fr": "Le Canada est connu dans le monde entier comme un pays fort et libre, et les Canadiens sont fiers de leur identité."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 16,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada is known around the world as a strong and free country."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="160" viewBox="0 0 1800 160" shape-rendering="geometricPrecision">
+  <title>The St Lawrence in winter: a haze band that matches the theme gradient at its top edge, three flat water bands, and drifting ice pans that grow larger and paler toward the near shore. GENERIC - open water names no city; this tile repeats. World y 930..1090.</title>
+  <rect x="0" y="0" width="1800" height="16" fill="#dce9f3"/>
+  <rect x="0" y="16" width="1800" height="46" fill="#1a487a"/>
+  <rect x="0" y="62" width="1800" height="50" fill="#2c8cba"/>
+  <rect x="0" y="112" width="1800" height="48" fill="#5cbfd6"/>
+  <ellipse cx="96" cy="34" rx="54" ry="10" fill="#a9d0e5"/>
+  <ellipse cx="85.2" cy="31.2" rx="36.72" ry="5.2" fill="#e4f2f6"/>
+  <ellipse cx="352" cy="30" rx="44" ry="9" fill="#a9d0e5"/>
+  <ellipse cx="343.2" cy="27.48" rx="29.92" ry="4.68" fill="#e4f2f6"/>
+  <ellipse cx="612" cy="38" rx="61" ry="10" fill="#a9d0e5"/>
+  <ellipse cx="599.8" cy="35.2" rx="41.48" ry="5.2" fill="#e4f2f6"/>
+  <ellipse cx="900" cy="32" rx="48" ry="9" fill="#a9d0e5"/>
+  <ellipse cx="890.4" cy="29.48" rx="32.64" ry="4.68" fill="#e4f2f6"/>
+  <ellipse cx="1188" cy="40" rx="66" ry="11" fill="#a9d0e5"/>
+  <ellipse cx="1174.8" cy="36.92" rx="44.88" ry="5.72" fill="#e4f2f6"/>
+  <ellipse cx="1466" cy="31" rx="50" ry="10" fill="#a9d0e5"/>
+  <ellipse cx="1456" cy="28.2" rx="34" ry="5.2" fill="#e4f2f6"/>
+  <ellipse cx="1700" cy="37" rx="55" ry="10" fill="#a9d0e5"/>
+  <ellipse cx="1689" cy="34.2" rx="37.4" ry="5.2" fill="#e4f2f6"/>
+  <ellipse cx="40" cy="76" rx="79" ry="13" fill="#a9d0e5"/>
+  <ellipse cx="24.2" cy="72.36" rx="53.72" ry="6.76" fill="#e4f2f6"/>
+  <ellipse cx="330" cy="84" rx="65" ry="12" fill="#a9d0e5"/>
+  <ellipse cx="317" cy="80.64" rx="44.2" ry="6.24" fill="#e4f2f6"/>
+  <ellipse cx="640" cy="75" rx="88" ry="14" fill="#a9d0e5"/>
+  <ellipse cx="622.4" cy="71.08" rx="59.84" ry="7.28" fill="#e4f2f6"/>
+  <ellipse cx="980" cy="87" rx="71" ry="13" fill="#a9d0e5"/>
+  <ellipse cx="965.8" cy="83.36" rx="48.28" ry="6.76" fill="#e4f2f6"/>
+  <ellipse cx="1290" cy="77" rx="83" ry="14" fill="#a9d0e5"/>
+  <ellipse cx="1273.4" cy="73.08" rx="56.44" ry="7.28" fill="#e4f2f6"/>
+  <ellipse cx="1590" cy="85" rx="69" ry="13" fill="#a9d0e5"/>
+  <ellipse cx="1576.2" cy="81.36" rx="46.92" ry="6.76" fill="#e4f2f6"/>
+  <ellipse cx="170" cy="126" rx="100" ry="15" fill="#a9d0e5"/>
+  <ellipse cx="150" cy="121.8" rx="68" ry="7.8" fill="#e4f2f6"/>
+  <ellipse cx="560" cy="131" rx="83" ry="14" fill="#a9d0e5"/>
+  <ellipse cx="543.4" cy="127.08" rx="56.44" ry="7.28" fill="#e4f2f6"/>
+  <ellipse cx="930" cy="125" rx="107" ry="16" fill="#a9d0e5"/>
+  <ellipse cx="908.6" cy="120.52" rx="72.76" ry="8.32" fill="#e4f2f6"/>
+  <ellipse cx="1330" cy="132" rx="90" ry="15" fill="#a9d0e5"/>
+  <ellipse cx="1312" cy="127.8" rx="61.2" ry="7.8" fill="#e4f2f6"/>
+  <ellipse cx="1660" cy="126" rx="94" ry="15" fill="#a9d0e5"/>
+  <ellipse cx="1641.2" cy="121.8" rx="63.92" ry="7.8" fill="#e4f2f6"/>
+</svg>

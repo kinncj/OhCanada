@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-06-migration-from-asia",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Where are the ancestors of Aboriginal peoples believed to have migrated from?",
+    "fr": "D'où les ancêtres des peuples autochtones auraient-ils migré?"
+  },
+  "options": [
+    {
+      "en": "From Asia, many thousands of years ago.",
+      "fr": "D'Asie, il y a plusieurs milliers d'années."
+    },
+    {
+      "en": "From Europe, about a thousand years ago.",
+      "fr": "D'Europe, il y a environ mille ans."
+    },
+    {
+      "en": "From Africa, in the 1500s.",
+      "fr": "D'Afrique, dans les années 1500."
+    },
+    {
+      "en": "From South America, after the arrival of Europeans.",
+      "fr": "D'Amérique du Sud, après l'arrivée des Européens."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The ancestors of Aboriginal peoples are believed to have migrated from Asia many thousands of years ago — long before any explorer from Europe reached North America.",
+    "fr": "On croit que les ancêtres des peuples autochtones ont migré d'Asie il y a plusieurs milliers d'années, bien avant qu'un explorateur européen n'atteigne l'Amérique du Nord."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 16,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The ancestors of Aboriginal peoples are believed to have migrated from Asia many thousands of years ago."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

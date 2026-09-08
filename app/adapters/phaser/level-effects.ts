@@ -34,24 +34,106 @@ import { createEffectRegistry, defineEffect, type EffectRegistry } from './visua
 import type { RenderProfile } from './visual-tier';
 
 /**
+ * A band with no texture yet is drawn as a placeholder this tall.
+ *
+ * Exported so `level-scene.ts` draws the same height this module ranks by: a
+ * placeholder measured one way and selected another would drop the wrong bands
+ * on a build whose art has not landed.
+ */
+export const PLACEHOLDER_BAND_HEIGHT = 230;
+
+/** What a layer has to cover, and how to find out how big it is. */
+export interface LayerViewport {
+  readonly width: number;
+  readonly height: number;
+  /**
+   * The highest point of the ground polyline.
+   *
+   * Anything below it is behind the ground and cannot be seen, which is the
+   * whole reason the old rule chose so badly: Ottawa's canal wall sits at
+   * `offset.y` 1120 under a ground line at ~1210, so nine tenths of it is
+   * painted over — and it was one of the two bands the low tier kept.
+   */
+  readonly horizonY: number;
+  /** The layer's drawn size, or `null` when no texture has been loaded for it. */
+  readonly sizeOf: (key: string) => { readonly width: number; readonly height: number } | null;
+}
+
+/**
+ * How much of the screen this layer actually covers, in design pixels squared.
+ *
+ * A repeating band tiles across the whole viewport however wide its texture is;
+ * a single image covers at most its own width. Vertically it is clipped to the
+ * viewport at the top and to the **ground** at the bottom, because a band under
+ * the ground polygon is not visible however tall it is.
+ */
+export function layerCoverage(layer: ParallaxLayer, viewport: LayerViewport): number {
+  const size = viewport.sizeOf(layer.key);
+  const height = size?.height ?? PLACEHOLDER_BAND_HEIGHT;
+  const width = size?.width ?? viewport.width;
+
+  const floor =
+    viewport.horizonY > 0 && viewport.horizonY < viewport.height
+      ? viewport.horizonY
+      : viewport.height;
+  const top = Math.max(0, layer.offset.y);
+  const bottom = Math.min(floor, layer.offset.y + height);
+  const visibleHeight = Math.max(0, bottom - top);
+  const visibleWidth = layer.repeatX ? viewport.width : Math.min(width, viewport.width);
+
+  return Math.max(0, visibleWidth) * visibleHeight;
+}
+
+/**
  * The layers this profile may draw, in draw order.
  *
- * `level.schema.json` fixes the rule: "The graphics preset's parallaxLayers
- * count keeps the highest-depth layers and drops the rest, so decoration must
- * sit at a lower depth than anything load-bearing." Highest depth is nearest the
- * player, so a low-tier device keeps the ground and the nearest band and loses
- * the far ones — the reading that keeps a level playable rather than pretty.
+ * ### The rule, and the one it replaced
  *
- * Returned sorted ascending, because that is the order they are added in and a
- * scene should not have to sort what it was handed.
+ * **Keep the layers that cover the most screen.** The rule before was "keep the
+ * highest-depth layers", which is nearest-first, and it is a good convention in
+ * a game whose camera looks *into* a scene. This is a portrait side-scroller
+ * where the far layers **are** the picture, and the result was that the tier
+ * which exists to protect a weaker device is the one that made the level
+ * unrecognisable: Ottawa at `medium` dropped the sky and Parliament's silhouette
+ * and kept the canal wall, nine tenths of which is behind the ground. At `low`
+ * it kept two bands that are both largely occluded, and the screen was a
+ * gradient with a rectangle on it.
+ *
+ * Reversing the depth order would have been the same mistake with the sign
+ * flipped — it would drop the ground on a level whose foreground carries its
+ * identity. Coverage is the criterion that gets Ottawa right *for the reason
+ * that generalises*, and it needs no per-level tuning: a band under the ground
+ * ranks low because it cannot be seen, wherever it sits in the stack.
+ *
+ * Ties go to the nearer band, so a level whose layers genuinely cover the same
+ * area still degrades front to back.
+ *
+ * Returned sorted ascending by depth, because that is the order they are added
+ * in and a scene should not have to sort what it was handed.
+ *
+ * **Reported, not worked around:** `content/schemas/level.schema.json` describes
+ * the old rule in `ParallaxLayer.depth` ("keeps the highest-depth layers and
+ * drops the rest"), and so does the mirroring comment in
+ * `app/application/ports/content-repository.ts`. Both are now stale and belong
+ * to their owners to correct. Neither is load-bearing on this code — the shapes
+ * are unchanged, so no gate reads them — which is precisely why they would rot
+ * quietly if nobody said so.
  */
 export function selectLayers(
   layers: readonly ParallaxLayer[],
   maxLayers: number,
+  viewport: LayerViewport,
 ): readonly ParallaxLayer[] {
   const keep = Math.max(0, Math.floor(maxLayers));
   const byDepth = [...layers].sort((a, b) => a.depth - b.depth);
-  return keep >= byDepth.length ? byDepth : byDepth.slice(byDepth.length - keep);
+  if (keep >= byDepth.length) return byDepth;
+
+  const ranked = [...byDepth].sort((a, b) => {
+    const difference = layerCoverage(b, viewport) - layerCoverage(a, viewport);
+    return difference !== 0 ? difference : b.depth - a.depth;
+  });
+  const kept = new Set(ranked.slice(0, keep).map((layer) => layer.key));
+  return byDepth.filter((layer) => kept.has(layer.key));
 }
 
 /**

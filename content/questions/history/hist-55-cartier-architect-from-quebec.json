@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-55-cartier-architect-from-quebec",
+  "subject": "history",
+  "prompt": {
+    "en": "Who led Quebec into Confederation and helped negotiate the entry of Manitoba, British Columbia and the Northwest Territories?",
+    "fr": "Qui a mené le Québec dans la Confédération et a aidé à négocier l'entrée du Manitoba, de la Colombie-Britannique et des Territoires du Nord-Ouest?"
+  },
+  "options": [
+    {
+      "en": "Sir George-Étienne Cartier.",
+      "fr": "Sir George-Étienne Cartier."
+    },
+    {
+      "en": "Sir Louis-Hippolyte La Fontaine.",
+      "fr": "Sir Louis-Hippolyte La Fontaine."
+    },
+    {
+      "en": "Sir Wilfrid Laurier.",
+      "fr": "Sir Wilfrid Laurier."
+    },
+    {
+      "en": "Sir Étienne-Paschal Taché.",
+      "fr": "Sir Étienne-Paschal Taché."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Sir George-Étienne Cartier was the key architect of Confederation from Quebec. A railway lawyer and Montrealer, he led Quebec into Confederation and helped negotiate the entry of the Northwest Territories, Manitoba and British Columbia.",
+    "fr": "Sir George-Étienne Cartier a été le principal architecte de la Confédération du côté québécois. Avocat spécialisé dans les chemins de fer et Montréalais, il a mené le Québec dans la Confédération et a aidé à négocier l'entrée des Territoires du Nord-Ouest, du Manitoba et de la Colombie-Britannique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 35,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Cartier led Quebec into Confederation and helped negotiate the entry of the Northwest Territories, Manitoba and British Columbia into Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

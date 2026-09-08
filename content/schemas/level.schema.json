@@ -283,9 +283,8 @@
 
     "locomotionMode": {
       "title": "Locomotion mode",
-      "description": "Every way TrueNorth crosses Canada. A mode is one pure strategy plus the tuning below; adding one never touches a scene, a camera or an input handler.",
-      "type": "string",
-      "enum": ["walk", "canoe", "skate", "bike", "train", "horse", "skateboard", "dogsled"]
+      "description": "Every way TrueNorth crosses Canada. A mode is a NAME over a tuning record and carries no behaviour of its own: there is exactly one `step` in app/adapters/phaser/locomotion.ts, every mode goes through it, and a gate strips the comments out of that file and fails if a single mode name survives in the code. So the legal set is data, and it lives in content/game.config.json#/locomotionModes rather than in this enum (ADR-0023). It was a closed enum of eight, written in slice 0 against ten planned levels before any of them existed, and it was wrong at the first level that was not Ottawa - a toboggan for Quebec City. A mode name is validated against the config, not against this schema; the same treatment `LevelId` already gets, and for the same reason.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
     },
 
     "movementDrive": {

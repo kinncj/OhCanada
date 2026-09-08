@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-01-where-rights-come-from",
+  "subject": "rights",
+  "prompt": {
+    "en": "Where do the rights and responsibilities of Canadian citizens come from?",
+    "fr": "D'où viennent les droits et les responsabilités des citoyens canadiens?"
+  },
+  "options": [
+    {
+      "en": "From Canada's history, from Canadian law, and from shared traditions, identity and values.",
+      "fr": "De l'histoire du Canada, du droit canadien, ainsi que des traditions, de l'identité et des valeurs communes."
+    },
+    {
+      "en": "From the United Nations, which sets the same list for every member country.",
+      "fr": "Des Nations Unies, qui fixent la même liste pour chaque pays membre."
+    },
+    {
+      "en": "From each province, which writes its own list of rights and responsibilities.",
+      "fr": "De chaque province, qui rédige sa propre liste de droits et de responsabilités."
+    },
+    {
+      "en": "From the citizenship ceremony, which creates them on the day a person becomes a citizen.",
+      "fr": "De la cérémonie de citoyenneté, qui les crée le jour où une personne devient citoyenne."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada's rights and responsibilities are not made in one place or on one day. They grew out of the country's history, they are protected by Canadian law, and they reflect traditions and values Canadians share.",
+    "fr": "Les droits et les responsabilités du Canada ne sont pas créés à un seul endroit ni en un seul jour. Ils sont nés de l'histoire du pays, ils sont protégés par le droit canadien et ils reflètent des traditions et des valeurs que les Canadiens ont en commun."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canadian citizens have rights and responsibilities. These come to us from our history, are secured by Canadian law, and reflect our shared traditions, identity, and values."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

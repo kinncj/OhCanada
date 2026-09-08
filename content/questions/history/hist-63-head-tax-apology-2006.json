@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-63-head-tax-apology-2006",
+  "subject": "history",
+  "prompt": {
+    "en": "In what year did the Government of Canada apologize for the Head Tax imposed on Chinese immigrants?",
+    "fr": "En quelle année le gouvernement du Canada a-t-il présenté des excuses pour la taxe d'entrée imposée aux immigrants chinois?"
+  },
+  "options": [
+    {
+      "en": "2006.",
+      "fr": "En 2006."
+    },
+    {
+      "en": "1988.",
+      "fr": "En 1988."
+    },
+    {
+      "en": "2008.",
+      "fr": "En 2008."
+    },
+    {
+      "en": "1885.",
+      "fr": "En 1885."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The railway was built by both European and Chinese labour. Afterwards Chinese workers faced discrimination, including the Head Tax, a race-based entry fee, and the Government of Canada apologized for that policy in 2006.",
+    "fr": "Le chemin de fer a été construit par une main-d'œuvre à la fois européenne et chinoise. Par la suite, les travailleurs chinois ont subi de la discrimination, dont la taxe d'entrée, un droit fondé sur la race, et le gouvernement du Canada a présenté des excuses pour cette politique en 2006."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 37,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Afterwards the Chinese were subject to discrimination, including the Head Tax, a race-based entry fee. The Government of Canada apologized in 2006 for this discriminatory policy."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

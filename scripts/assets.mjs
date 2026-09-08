@@ -111,7 +111,17 @@
  */
 
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
 import { basename, dirname, extname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -332,17 +342,70 @@ const chargedTo = (owner) => (owner === SHARED_OWNER ? [...LEVELS] : [owner]);
 
 const files = [];
 
+/**
+ * STAGE FIRST, PROMOTE LAST. Nothing under `assets/dist/` is destroyed until a
+ * complete, budget-checked set of outputs exists somewhere else.
+ *
+ * The previous shape wiped `assets/dist/` and then built into it, and it wiped
+ * it again on any failure. The wipe itself was right and its reason still holds:
+ * `emit` writes as it goes, so an error found halfway through used to exit 1
+ * over a directory holding most of an atlas set and no manifest, and
+ * `publicDir: 'assets/dist'` let the very next `make build` copy that half-built
+ * tree into `dist/` and ship it with no manifest to weigh it against.
+ *
+ * THE BUG WAS THE ORDERING, NOT THE WIPE. An INPUT error - a source under a
+ * directory that is not a level id, which is what happens whenever art lands a
+ * level's sources before its level document exists - is found before a single
+ * byte has been written, and the wipe had already run. One untracked directory
+ * emptied `assets/dist/`, left no manifest, no atlas and no layer images, and
+ * took a playable build down over a condition that should have failed the build
+ * and left the last good output alone.
+ *
+ * Both properties are achievable together and this is how:
+ *
+ *   - inputs are validated before anything is staged, and an input error
+ *     touches `assets/dist/` not at all;
+ *   - the build writes to a temp directory OUTSIDE the repository, so a run
+ *     that is killed leaves nothing behind for `publicDir` to find - staging
+ *     inside `assets/dist/` would be invisible to the payload gate, whose
+ *     stray-file scan reads files at that root and not directories;
+ *   - the budget gates run against the staged tree, so output that fails a
+ *     budget is discarded before it can replace anything;
+ *   - promotion writes the MANIFEST LAST. If promotion is interrupted, what is
+ *     left is a tree with no manifest, which `make check-assets` fails on
+ *     loudly. That is the same protection the wipe was giving, without spending
+ *     the previous good build to get it.
+ */
+const STAGE_DIR = mkdtempSync(join(tmpdir(), 'truenorth-assets-'));
+
 function emit(path, buffer, entry) {
-  const full = join(DIST_DIR, ...path.split('/'));
+  const full = join(STAGE_DIR, ...path.split('/'));
   mkdirSync(dirname(full), { recursive: true });
   writeFileSync(full, buffer);
   files.push({ path, bytes: buffer.length, ...entry });
 }
 
-function clean() {
+/** Throw the staged build away. `assets/dist/` is not touched. */
+function discard() {
+  rmSync(STAGE_DIR, { recursive: true, force: true });
+}
+
+// Any exit path at all, including a throw or a signal-free crash, takes the
+// temp directory with it. A staging directory that outlives its run is the one
+// way this design could leak, so it is closed here rather than at each site.
+process.on('exit', discard);
+
+/** Replace assets/dist's outputs with the staged ones. Manifest last. */
+function promote() {
   for (const dir of OUTPUT_DIRS) rmSync(join(DIST_DIR, dir), { recursive: true, force: true });
   rmSync(join(DIST_DIR, MANIFEST_NAME), { force: true });
   mkdirSync(DIST_DIR, { recursive: true });
+  for (const dir of OUTPUT_DIRS) {
+    const from = join(STAGE_DIR, dir);
+    if (existsSync(from)) cpSync(from, join(DIST_DIR, dir), { recursive: true });
+  }
+  cpSync(join(STAGE_DIR, MANIFEST_NAME), join(DIST_DIR, MANIFEST_NAME));
+  discard();
 }
 
 // -------------------------------------------------------------------- main ---
@@ -364,9 +427,9 @@ for (const source of [...sources, ...riveSources]) {
   seen.set(source.key, source.file);
 }
 
+// Input validation, before anything is staged and long before anything in
+// assets/dist is touched. This is the line the ordering defect was on.
 if (errors.length > 0) report();
-
-clean();
 
 let atlasPages = 0;
 let standalone = 0;
@@ -609,7 +672,7 @@ for (const id of LEVELS) {
 if (errors.length > 0) report();
 
 writeFileSync(
-  join(DIST_DIR, MANIFEST_NAME),
+  join(STAGE_DIR, MANIFEST_NAME),
   `${JSON.stringify(
     { version: MANIFEST_VERSION, generator: 'scripts/assets.mjs', atlasMaxPx: ATLAS_MAX_PX, scales: SCALES, outputDirs: OUTPUT_DIRS, levels, files },
     null,
@@ -642,13 +705,15 @@ console.log(
  * Both run before either can reject the build, so a tree that breaks both is
  * reported once with both reasons rather than twice with one each.
  */
-const payload = checkLevelPayload({ root: ROOT, dir: DIST_DIR, scanRoot: true, source: 'assets/dist' });
-const textures = checkTextureMemory({ root: ROOT, dir: DIST_DIR, source: 'assets/dist' });
+// Weighed in the staging tree, and NAMED as assets/dist because that is where it
+// is going and where a reader will look for it. Nothing has been promoted yet,
+// so a build that fails a budget is discarded rather than shipped - and, unlike
+// before, the previous good output is still there.
+const payload = checkLevelPayload({ root: ROOT, dir: STAGE_DIR, scanRoot: true, source: 'assets/dist' });
+const textures = checkTextureMemory({ root: ROOT, dir: STAGE_DIR, source: 'assets/dist' });
 
 if (payload.failures.length > 0 || textures.failures.length > 0) {
-  // Same reasoning as report(): output that failed a budget must not be left
-  // where `publicDir` will pick it up on the next build.
-  clean();
+  discard();
   for (const [name, result] of [['level-payload', payload], ['texture-memory', textures]]) {
     if (result.failures.length === 0) {
       // Say so explicitly. "It printed nothing" must not be readable as "it did
@@ -664,22 +729,26 @@ if (payload.failures.length > 0 || textures.failures.length > 0) {
   process.exit(1);
 }
 
+// The only place assets/dist is written. Everything above this line is either
+// validation or a staged build in a temp directory.
+promote();
+
 console.log(`level-payload: OK - ${payload.summary}`);
 console.log(`texture-memory: OK - ${textures.summary}`);
 
 /**
- * Print the errors and stop — after wiping assets/dist.
+ * Print the errors and stop, discarding the staged build and leaving
+ * `assets/dist/` exactly as it was.
  *
- * A failed build must leave nothing behind. `emit` writes as it goes, so an
- * error found halfway through used to exit 1 over a directory holding most of
- * an atlas set and no manifest; `publicDir: 'assets/dist'` then let the very
- * next `make build` copy that half-built tree into `dist/` and ship it, with no
- * manifest for the payload gate to weigh it against. A half-built asset tree
- * that ships is worse than no asset tree at all, so failure cleans up after
- * itself and the level is loudly empty instead of quietly wrong.
+ * A failed build must leave nothing HALF-BUILT behind; it must not also destroy
+ * a complete build that was there before it. Those were conflated, and the cost
+ * was that an input error - reached before a single byte is written - emptied
+ * `assets/dist/` and took the playable build with it. What ships is either the
+ * previous complete set with its manifest, or nothing at all in a fresh
+ * checkout. Neither is a half-built tree, which is what the rule was for.
  */
 function report() {
-  clean();
+  discard();
   console.error('assets: FAILED');
   for (const error of errors) console.error(`  - ${error}`);
   console.error(`assets: ${errors.length} error(s).`);

@@ -9,6 +9,7 @@ import {
   formatNumber,
   percent,
   pluralCategory,
+  pluralise,
   preferredLocale,
   text,
   UI_LOCALES,
@@ -274,14 +275,37 @@ describe('the copy table', () => {
     ]);
     const REPORTED_TO_THE_PO: string[] = [];
 
+    /*
+     * The rule is about a noun that follows **a number that changes**, so the
+     * placeholder has to be a count for the word after it to be at risk.
+     * `map.locked.after` — "Finish {{level}} first." — put a word after a
+     * *place name*, which has no plural category and cannot make "first" agree
+     * with anything. Widening the rule to every placeholder would have made
+     * that a finding, and a rule with a false finding in it gets an exemption
+     * list, which is what rule 1 exists to avoid.
+     */
+    const COUNTED = new Set(['n', 'seconds', 'total', 'correct', 'earned', 'ready']);
+    const nounAfterACount = (value: string): string | null => {
+      const match = /\{\{(\w+)\}\} ([a-zà-ÿ]+)/u.exec(value);
+      if (match === null) return null;
+      if (!COUNTED.has(match[1] ?? '')) return null;
+      return FUNCTION_WORDS.has(match[2] ?? '') ? null : (match[2] ?? '');
+    };
+
+    /* The positive control, so the empty list below means "nothing was found"
+       and never "nothing was looked at". */
+    expect(nounAfterACount('{{n}} questions'), 'the rule stopped finding anything').toBe(
+      'questions',
+    );
+    expect(nounAfterACount('{{n}} of {{total}}')).toBeNull();
+    expect(nounAfterACount('Finish {{level}} first.')).toBeNull();
+
     const offenders: string[] = [];
     for (const locale of UI_LOCALES) {
       for (const key of KEYS) {
         if (key.endsWith('.one') || key.endsWith('.other')) continue;
         const value = text(locale, key as Parameters<typeof text>[1]);
-        const after = /\{\{\w+\}\} ([a-zà-ÿ]+)/u.exec(value);
-        if (after === null) continue;
-        if (FUNCTION_WORDS.has(after[1] ?? '')) continue;
+        if (nounAfterACount(value) === null) continue;
         offenders.push(`${key} (${locale})`);
       }
     }
@@ -366,7 +390,10 @@ describe('the copy table', () => {
 const KEYS = (() => {
   const source = readFileSync(new URL('../../../app/ui/copy.ts', import.meta.url), 'utf8');
   const block = source.split('const EN = {')[1]?.split('} as const;')[0] ?? '';
-  const keys = [...block.matchAll(/^\s{2}'([\w.]+)':/gm)].map((match) => match[1] ?? '');
+  /* Hyphens are part of a key: the map draws `level.quebec-city.title` and
+     `level.prairie-rail.title`, and a pattern that stopped at the hyphen would
+     drop those rows from every rule below without failing anything. */
+  const keys = [...block.matchAll(/^\s{2}'([\w.-]+)':/gm)].map((match) => match[1] ?? '');
   if (keys.length === 0) throw new Error('copy.ts: no keys found — the parser has drifted');
   return keys as Parameters<typeof text>[1][];
 })();
@@ -378,5 +405,48 @@ describe('the copy table parser used by this suite', () => {
     expect(KEYS).toContain('study.summary.score');
     expect(KEYS).toContain('study.count.one');
     expect(everyString('en').length).toBeGreaterThan(10);
+  });
+});
+
+/**
+ * Counted strings that arrive as data.
+ *
+ * The level select's "how many stamps open this place" has no table row yet, so
+ * the caller supplies both forms. The *choice* between them still has to be
+ * `Intl.PluralRules`, which is the whole point: English and French disagree at
+ * zero, so a caller's `n === 1` would be wrong in one of the two official
+ * languages every time the number is nought.
+ */
+describe('a counted string supplied as data', () => {
+  const FORMS = { one: '{{n}} stamp', other: '{{n}} stamps' };
+
+  it('picks the form Intl picks, not the one a comparison would', () => {
+    expect(pluralise('en', FORMS, 1)).toBe('1 stamp');
+    expect(pluralise('en', FORMS, 2)).toBe('2 stamps');
+  });
+
+  it('is plural at zero in English and singular at zero in French', () => {
+    expect(pluralise('en', FORMS, 0)).toBe('0 stamps');
+    expect(pluralise('fr', { one: '{{n}} timbre', other: '{{n}} timbres' }, 0)).toBe('0 timbre');
+  });
+
+  it('formats the number for the locale rather than concatenating it', () => {
+    expect(pluralise('fr', { one: '{{n}} timbre', other: '{{n}} timbres' }, 1.5)).toBe(
+      `${formatNumber('fr', 1.5)} timbre`,
+    );
+  });
+
+  it('falls back to `other` visibly when a locale asks for a form nobody wrote', () => {
+    /* `few` exists in other languages and in neither of ours; a screen that
+       rendered nothing would be worse than one with the wrong ending. */
+    expect(pluralise('en', { other: '{{n}} stamps' }, 1)).toBe('1 stamps');
+  });
+
+  it('fills extra placeholders like the table does', () => {
+    expect(
+      pluralise('en', { one: '{{n}} stamp for {{place}}', other: '{{n}} stamps for {{place}}' }, 2, {
+        place: 'Halifax',
+      }),
+    ).toBe('2 stamps for Halifax');
   });
 });

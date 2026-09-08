@@ -50,6 +50,13 @@
       },
       "uniqueItems": true
     },
+    "locomotionModes": {
+      "description": "Every way a level may declare that the player moves. THE LEGAL SET, as data (ADR-0023). A mode carries no behaviour: there is one `step` and every mode goes through it, differing only by the `LocomotionTuning` a level document supplies - so a new mode is a name here plus a tuning there plus a `labelKey` in the locale bundles, and no code at all. It was an eight-value enum in level.schema.json until Quebec City wanted a toboggan and slice 2, whose whole purpose is proving a level is addable by JSON and assets alone, would have had to begin by editing a schema and a port. A name here is what a level document's `locomotion[].mode` is checked against, so a typo is still a build failure and not a load-time surprise.",
+      "type": "array",
+      "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "unlockRules": { "$ref": "#/$defs/unlockRules" },
     "exam": { "$ref": "#/$defs/exam" },
     "scheduler": { "$ref": "#/$defs/scheduler" },
@@ -70,6 +77,7 @@
     "designWidth",
     "designHeight",
     "levels",
+    "locomotionModes",
     "unlockRules",
     "exam",
     "scheduler",

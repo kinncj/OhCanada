@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-25-new-brunswick-bilingual",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Which province is the only officially bilingual province?",
+    "fr": "Quelle province est la seule province officiellement bilingue?"
+  },
+  "options": [
+    {
+      "en": "New Brunswick.",
+      "fr": "Le Nouveau-Brunswick."
+    },
+    {
+      "en": "Quebec.",
+      "fr": "Le Québec."
+    },
+    {
+      "en": "Ontario.",
+      "fr": "L'Ontario."
+    },
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "New Brunswick is the only officially bilingual province. English and French are Canada's official languages at the federal level, but only one province has made both official for itself.",
+    "fr": "Le Nouveau-Brunswick est la seule province officiellement bilingue. L'anglais et le français sont les langues officielles du Canada au niveau fédéral, mais une seule province a rendu les deux langues officielles chez elle."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 19,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "New Brunswick is the only officially bilingual province."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

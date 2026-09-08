@@ -138,7 +138,7 @@ const PALETTE = {
  * passing run now writes *nothing* to stderr.
  */
 function gate(args: readonly string[]): Run {
-  const result = spawnSync(process.execPath, [SCRIPT, ...args], {
+  const result = spawnSync(process.execPath, [SCRIPT, ...args, '--allow-empty-content'], {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   });

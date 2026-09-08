@@ -6,6 +6,16 @@ with one thumb, and the game never blocks them on a choice.
 Read `README.md` in this directory first: it fixes the shared markers, the event names and the
 single-switch contract these scenarios use.
 
+**Amended 2026-09-08 — the creator is no longer the first screen, and a returning player no longer lands in
+a level.** This file used to say that a new player meets the creator on a cold load and that a returning
+player "reaches `playable` without choosing anything". Both were true of a game with no front door, and both
+became wrong the moment one was specified. `TN-FLOW-first-run-and-return.md` owns the route now: a cold load
+lands on the title screen, "Play" opens this screen, and finishing it opens the level select rather than a
+level. The reasoning, and what the extra tap costs, is in that file's *Two seams this file decides* section —
+this file does not restate it. Where a scenario below still says "the Ottawa level loads" after
+`start-playing`, it means the route in `TN-FLOW-01` completes to the Ottawa level; nothing else about those
+scenarios changed.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -54,10 +64,11 @@ Feature: Choosing how the player looks
 
   Background:
     Given I have no saved game
-    And I open the game
+    And I opened the game and chose "Play" on the title screen
 
-  Scenario: The creator is the first screen a new player sees
+  Scenario: The creator is what Play opens for a new player
     Then the element "character-creator" is visible
+    And the element "title-screen" is gone
     And it shows the heading "Make your character"
     And it shows "character-preview"
     And the groups "slot-skin", "slot-hair" and "slot-coat" are each visible
@@ -76,19 +87,23 @@ Feature: Choosing how the player looks
     And at least one group's chosen option is different from before
     And the button "start-playing" is still enabled
 
-  Scenario: Starting play carries the character into the level
+  Scenario: Starting play carries the character into the game
     When I tap "start-playing"
     Then the event "character/created" is emitted with one option per slot
     And the event "progress/saved" is emitted
-    And the Ottawa level loads
+    And the element "level-select" is visible, as TN-FLOW-01 describes
+    When I choose the one open level
+    Then the Ottawa level loads
     And the element "playable" appears
     And "scene-state" reports "data-mode" equal to "skate"
+    And the skater uses the options I chose
 
   Scenario: A returning player does not see the creator again
     Given I have a saved game with a character
     When I open the game
-    Then the element "character-creator" is not shown
-    And I reach "playable" without choosing anything
+    Then the element "title-screen" is visible, as TN-FLOW-02 describes
+    And the element "character-creator" is not shown
+    And one tap on "title-continue" reaches "playable"
 ```
 
 ## TN-CREATOR-02 — Every choice is reachable with one thumb, in portrait
@@ -127,13 +142,13 @@ Feature: Storage refuses the character
     When I tap "Try again"
     Then the event "progress/saved" is emitted
     And the message is dismissed
-    And the Ottawa level loads
+    And the route carries on to the level select, as TN-FLOW-05 describes
 
   Scenario: Choosing to keep playing does not lose the session
     Given the save failed and the message is shown
     When I tap "Keep playing"
-    Then the Ottawa level loads
-    And the character in the level uses the options I chose
+    Then the route carries on to the level select
+    And the character in the level I open uses the options I chose
     And the warning "storage-warning" stays visible in the HUD, as TN-HUD-03 describes
 
   Scenario: The preview art fails to load
@@ -170,8 +185,8 @@ Feature: Keyboard-only character creation
     And I press "Tab" until focus is on "start-playing"
     And I press "Enter"
     Then the event "character/created" is emitted
-    And the Ottawa level loads
-    And focus moves to the HUD, not to the body element
+    And the element "level-select" is visible with a card focused
+    And focus is not on the body element
 
   Scenario: Every focused control is visibly focused
     When I press "Tab" through every control in "character-creator"
@@ -207,7 +222,7 @@ Feature: Single-switch character creation
   Scenario: The flow can be finished with the switch alone
     When I use only short and long presses
     Then I can reach and activate "start-playing"
-    And the Ottawa level loads
+    And the level select opens, and the Ottawa level can be opened from it
 ```
 
 ## TN-CREATOR-06 — Every choice is announced (screen reader)
@@ -328,17 +343,17 @@ Feature: Language switching mid-flow
   Scenario: The language chosen here is the language the level speaks
     Given the language is French
     When I tap "Commencer à jouer"
-    Then the HUD, the dialogue and the question card are in French
+    Then the level select, the HUD, the dialogue and the question card are in French
     And "#tn-live-region" announces in French
 ```
 
 ## TN-CREATOR-11 — Settings, before there is a game to pause
 
 ```gherkin
-Feature: Reaching Settings from the first screen
+Feature: Reaching Settings from the creator
   As a player who needs one-button mode or 200 % text
   I want the settings before I am asked to choose anything
-  So that the first screen of the game is not the one I cannot use
+  So that the screen where I make my first choices is not the one I cannot use
 
   Background:
     Given I have no saved game
@@ -371,6 +386,11 @@ Feature: Reaching Settings from the first screen
     When I open Settings, turn on "One-button mode" and close it
     Then I can finish TN-CREATOR-05 with short and long presses alone
     And I never had to use a second input to get there
+
+  Scenario: The same screen is reachable one step earlier
+    Then "title-settings" on the title screen opens the same settings screen,
+      as TN-TITLE-01 and TN-FLOW-07 require
+    And a player who needs one-button mode never has to reach the creator to turn it on
 
   Scenario: From the keyboard
     Given I am using a keyboard only
@@ -425,3 +445,8 @@ Feature: Reaching Settings from the first screen
 - **`OQ-CREATOR-5` — skin tone option names.** Naming skin tones in two languages is a content-review
   matter, not a UI one. *Recommendation:* neutral, non-food names decided under `docs/content-review.md`
   (`OQ-REVIEW-6`), never a colour word alone.
+- **`OQ-CREATOR-6` — is the creator still the right place for a first-run player to meet Settings?**
+  `TN-CREATOR-11` was written when this was the first screen. It is now the second, and `TN-TITLE` puts a
+  settings control one step earlier. *Recommendation:* keep both. Two routes to Settings cost one button and
+  remove the case where a player who cannot use the creator has already passed the only way to fix that.
+  The scenario that asserts they open the same screen is what stops them drifting into two screens.

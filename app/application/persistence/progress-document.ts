@@ -199,6 +199,7 @@ export const toProgressSnapshot = (
     settings: progress.settings,
     character: progress.character,
     levels: levels.value,
+    lastPlayedLevelId: progress.lastPlayedLevelId,
     reviews: reviews.value,
     subjectsStarted: progress.subjectsStarted,
     exams: exams.value,
@@ -228,6 +229,10 @@ export const fromProgressSnapshot = (
     character: snapshot.character,
     settings: clampSettings(snapshot.settings, fallbackLocale),
     levels: levels.value,
+    // Carried straight through. It is not validated against `levels` on purpose:
+    // a save whose last level is one this build no longer ships should offer a
+    // Continue that fails gracefully at load, not fail to import (ADR-0023).
+    lastPlayedLevelId: snapshot.lastPlayedLevelId,
     reviews: reviews.value,
     subjectsStarted: snapshot.subjectsStarted,
     exams: exams.value,

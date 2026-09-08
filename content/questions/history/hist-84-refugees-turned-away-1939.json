@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-84-refugees-turned-away-1939",
+  "subject": "history",
+  "prompt": {
+    "en": "What happened to immigration to Canada during the Depression years?",
+    "fr": "Qu'est-il arrivé à l'immigration au Canada pendant les années de la Dépression?"
+  },
+  "options": [
+    {
+      "en": "It dropped, and many refugees were turned away, including Jews trying to flee Nazi Germany in 1939.",
+      "fr": "Elle a chuté, et de nombreux réfugiés ont été refoulés, dont des juifs qui tentaient de fuir l'Allemagne nazie en 1939."
+    },
+    {
+      "en": "It rose sharply as Canada needed workers.",
+      "fr": "Elle a fortement augmenté parce que le Canada avait besoin de travailleurs."
+    },
+    {
+      "en": "It stayed at the same level as in the 1920s.",
+      "fr": "Elle est restée au même niveau que dans les années 1920."
+    },
+    {
+      "en": "It was limited to people from the Commonwealth.",
+      "fr": "Elle a été réservée aux ressortissants du Commonwealth."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Immigration dropped during the Depression and many refugees were turned away, including Jews trying to flee Nazi Germany in 1939.",
+    "fr": "L'immigration a chuté pendant la Dépression et de nombreux réfugiés ont été refoulés, dont des juifs qui tentaient de fuir l'Allemagne nazie en 1939."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 42,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Immigration dropped and many refugees were turned away, including Jews trying to flee Nazi Germany in 1939."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -382,6 +382,138 @@ describe('make assets builds WebP from SVG', () => {
   });
 });
 
+/* ======================================================================
+ * A failed build must not destroy the last good one
+ * ====================================================================== */
+
+/**
+ * `make assets` used to wipe `assets/dist/` and then build into it, and to wipe
+ * it again on any failure. The wipe's reason was sound - `emit` writes as it
+ * goes, so an error found halfway through left most of an atlas set and no
+ * manifest, and `publicDir: 'assets/dist'` let the next `make build` copy that
+ * half-built tree into `dist/` and ship it unweighed.
+ *
+ * THE BUG WAS THE ORDERING. Art landed nine Quebec City sources before
+ * `content/levels/quebec-city.json` existed. The level-ownership rule refused
+ * them, correctly - and by then the wipe had already run. `assets/dist/` held
+ * only `.gitkeep`: no manifest, no atlas, no layer images, no playable build,
+ * and six e2e tests down, over a condition that should have failed the build and
+ * left the previous output alone.
+ *
+ * These cases are the pair of properties, which are achievable together: nothing
+ * is destroyed until a complete, budget-checked set exists somewhere else.
+ */
+describe('a failed build leaves the last good output where it was', () => {
+  /** Re-run the pipeline over a tree that has already been built once. */
+  const rerun = (root: string, sources: Record<string, string> = {}): { status: number; output: string } => {
+    for (const [rel, contents] of Object.entries(sources)) {
+      const full = join(root, 'assets', 'src', ...rel.split('/'));
+      mkdirSync(dirname(full), { recursive: true });
+      writeFileSync(full, contents, 'utf8');
+    }
+    const result = spawnSync(process.execPath, [SCRIPT, '--root', root], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    return { status: result.status ?? -1, output: `${result.stdout ?? ''}${result.stderr ?? ''}` };
+  };
+
+  const contentsOf = (dist: string): readonly string[] => readdirSync(dist).sort();
+
+  it('an INPUT error touches assets/dist not at all', () => {
+    // THE CASE THAT TOOK THE TREE DOWN, in its general form: a source under a
+    // directory that is not a level id. It is found before a single byte is
+    // written, which is exactly why the old ordering was so expensive.
+    const built = build({
+      sources: { 'svg/ottawa/skyline.svg': svg(1080, 1920, '#a5d6ee') },
+      levelDocs: { ottawa: levelDoc('ottawa', ['ottawa-skyline']) },
+    });
+    expect(built.status, built.output).toBe(0);
+    const before = contentsOf(built.dist);
+    expect(before).toContain('manifest.json');
+    expect(before).toContain('img');
+    const manifestBefore = readFileSync(join(built.dist, 'manifest.json'), 'utf8');
+
+    const second = rerun(built.root, {
+      'svg/quebec-city/landmark-chateau-frontenac@1x.svg': svg(400, 700, '#c8d8e8'),
+    });
+    expect(second.status).toBe(1);
+    expect(second.output).toContain('which is neither "shared" nor a level id');
+
+    expect(contentsOf(built.dist)).toEqual(before);
+    expect(readFileSync(join(built.dist, 'manifest.json'), 'utf8')).toBe(manifestBefore);
+  });
+
+  it('a BUDGET rejection also leaves it, because nothing was promoted', () => {
+    // The other failure path, and the one that runs after a complete set has
+    // been built. It is discarded from the staging tree rather than swapped in.
+    const built = build({
+      sources: { 'svg/ottawa/skyline.svg': svg(1080, 1920, '#a5d6ee') },
+      levelDocs: { ottawa: levelDoc('ottawa', ['ottawa-skyline']) },
+    });
+    expect(built.status, built.output).toBe(0);
+    const manifestBefore = readFileSync(join(built.dist, 'manifest.json'), 'utf8');
+
+    writeFileSync(
+      join(built.root, 'content', 'game.config.json'),
+      JSON.stringify({ basePath: '/OhCanada/', budgets: { levelPayloadBytes: 4096 } }),
+      'utf8',
+    );
+    const second = rerun(built.root);
+    expect(second.status).toBe(1);
+    expect(second.output).toContain('assets: build rejected.');
+    expect(readFileSync(join(built.dist, 'manifest.json'), 'utf8')).toBe(manifestBefore);
+  });
+
+  it('a SUCCESSFUL build still replaces it, rather than merging into it', () => {
+    // The negative case that keeps the fix honest. Staging must not turn into
+    // "leave whatever was there": a key that no longer has a source has to
+    // disappear, or the payload gate starts weighing files nothing claims.
+    const built = build({
+      sources: {
+        'svg/ottawa/skyline.svg': svg(1080, 1920, '#a5d6ee'),
+        'svg/ottawa/canalwall.svg': svg(600, 400, '#3d8ccb'),
+      },
+      levelDocs: { ottawa: levelDoc('ottawa', ['ottawa-skyline', 'ottawa-canalwall']) },
+    });
+    expect(built.status, built.output).toBe(0);
+    const first = built.manifest();
+    expect(first.files.length).toBeGreaterThan(1);
+
+    rmSync(join(built.root, 'assets', 'src', 'svg', 'ottawa', 'canalwall.svg'));
+    writeFileSync(
+      join(built.root, 'content', 'levels', 'ottawa.json'),
+      JSON.stringify(levelDoc('ottawa', ['ottawa-skyline'])),
+      'utf8',
+    );
+    const second = rerun(built.root);
+    expect(second.status, second.output).toBe(0);
+
+    const after = built.manifest();
+    expect(after.files.map((f) => f.path).join(' ')).not.toContain('canalwall');
+    // and the dropped file is gone from disk, not merely unlisted
+    const onDisk = readdirSync(join(built.dist, 'img'));
+    expect(onDisk.join(' ')).not.toContain('canalwall');
+  });
+
+  it('leaves no staging directory behind, on any path', () => {
+    // Staging lives outside the repository on purpose: a directory inside
+    // assets/dist would be invisible to the payload gate, whose stray-file scan
+    // reads FILES at that root and not directories, and `publicDir` would copy
+    // it into a shipped build. This asserts the repository side of that.
+    const built = build({
+      sources: { 'svg/ottawa/skyline.svg': svg(1080, 1920, '#a5d6ee') },
+      levelDocs: { ottawa: levelDoc('ottawa', ['ottawa-skyline']) },
+    });
+    expect(built.status, built.output).toBe(0);
+    rerun(built.root, { 'svg/nowhere/stray.svg': svg(10, 10, '#000000') });
+
+    for (const dir of [built.dist, join(built.root, 'assets'), built.root]) {
+      expect(readdirSync(dir).filter((n) => n.startsWith('.dist') || n.includes('staging'))).toEqual([]);
+    }
+  });
+});
+
 describe('make assets refuses to finish', () => {
   it('when a level goes over budgets.levelPayloadBytes', () => {
     // The gate runs over the pipeline's own output, in the same process and

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-54-first-prime-minister",
+  "subject": "history",
+  "prompt": {
+    "en": "Who became Canada's first Prime Minister in 1867?",
+    "fr": "Qui est devenu le premier premier ministre du Canada en 1867?"
+  },
+  "options": [
+    {
+      "en": "Sir John Alexander Macdonald.",
+      "fr": "Sir John Alexander Macdonald."
+    },
+    {
+      "en": "Sir Wilfrid Laurier.",
+      "fr": "Sir Wilfrid Laurier."
+    },
+    {
+      "en": "Sir George-Étienne Cartier.",
+      "fr": "Sir George-Étienne Cartier."
+    },
+    {
+      "en": "Sir Leonard Tilley.",
+      "fr": "Sir Leonard Tilley."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Sir John Alexander Macdonald, a Father of Confederation, became Canada's first Prime Minister in 1867. Parliament has recognized January 11, his birthday, as Sir John A. Macdonald Day.",
+    "fr": "Sir John Alexander Macdonald, Père de la Confédération, est devenu le premier premier ministre du Canada en 1867. Le Parlement a fait du 11 janvier, jour de sa naissance, la Journée sir John A. Macdonald."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 35,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

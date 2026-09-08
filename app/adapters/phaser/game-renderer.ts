@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import type { ThemeColours } from '@application/ports';
+import type { RigDocument, ThemeColours } from '@application/ports';
 
 import { BootScene, HORIZON_FRACTION } from './boot-scene';
 import { blendColors, toCssColor, toPhaserColor } from './boot-config';
@@ -143,6 +143,8 @@ export class GameRenderer {
   #marker: PlayableMarker | null = null;
   /** One manifest fetch per session, shared by every level that opens after. */
   #manifest: Promise<Result<AssetManifest>> | null = null;
+  /** One rig fetch per session, shared by every level that opens after. */
+  #rig: Promise<RigDocument> | null = null;
   /**
    * Mirrors the rotate overlay, because `postBoot` is async: on a landscape
    * first load the overlay calls `pause()` before the probe exists, and
@@ -304,6 +306,7 @@ export class GameRenderer {
      * fails when it is short of `data-layers`.
      */
     const assets = await this.#resolveAssets(id);
+    const rig = await this.#resolveRig();
 
     const marker = this.#marker;
     marker?.hide();
@@ -321,6 +324,7 @@ export class GameRenderer {
       marker,
       profile: this.renderProfile,
       assets,
+      rig,
       ...(this.#options.onLevelEvent === undefined
         ? {}
         : { onEvent: this.#options.onLevelEvent }),
@@ -382,6 +386,29 @@ export class GameRenderer {
          returned: a level a player can walk beats a blank page. */
       console.error(`[renderer] could not read the asset manifest.`, cause);
       return [];
+    }
+  }
+
+  /**
+   * The shared character rig, once per session.
+   *
+   * Imported dynamically rather than statically: it is 72 kB of JSON that a page
+   * with no level open never needs, and the initial payload budget is 8 MB with
+   * a 6 s time-to-play target (CLAUDE.md). A level that opens pays for it once.
+   *
+   * `null` on failure rather than a level failure: a character drawn as a
+   * placeholder is a worse level, not a broken one, and `data-actors-drawn` is
+   * what makes the difference visible instead of silent.
+   */
+  async #resolveRig(): Promise<RigDocument | null> {
+    try {
+      this.#rig ??= import('@content/characters/rig.json').then(
+        (module) => (module.default ?? module) as unknown as RigDocument,
+      );
+      return await this.#rig;
+    } catch (cause) {
+      console.error('[renderer] could not load the character rig.', cause);
+      return null;
     }
   }
 

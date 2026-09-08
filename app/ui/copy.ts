@@ -161,6 +161,77 @@ const EN = {
   'level.error.body': 'Check your connection and try again.',
   'level.error.retry': 'Try again',
   'level.error.back': 'Go back',
+  /* docs/stories/TN-TITLE-title-screen.md */
+  /* `title.game` is the product's name and is the same string in both
+     languages, like the language names in `TN-SET`. It is never translated. */
+  'title.game': 'TrueNorth',
+  'title.tagline': 'Get ready for the Canadian citizenship test.',
+  /* On the first screen, not in a credits page nobody opens: this game teaches
+     an official exam and is not from IRCC (`TN-TITLE-01`). */
+  'title.notOfficial': 'This game is not made by the Government of Canada.',
+  'title.play': 'Play',
+  'title.continue': 'Continue',
+  /* A label, not a sentence. "You were in Ottawa" needs a preposition in front
+     of a place name and French does not use one preposition for all ten places
+     (« à Ottawa », « dans le Nord »). The noun goes in front of the placeholder
+     and nothing follows it — `TN-COPY`'s counting rule 1, applied to a
+     preposition. */
+  'title.lastPlayed': 'Last played: {{level}}',
+
+  /* docs/stories/TN-MAP-level-select.md */
+  'map.open': 'Choose a level',
+  'map.title': 'Choose a level',
+  'map.stamps': 'Stamps: {{earned}} of {{total}}',
+  'map.levelsReady': 'Levels ready: {{ready}} of {{total}}',
+  'map.moreComing': 'More are coming.',
+  'map.state.open': 'Open',
+  'map.state.locked': 'Locked',
+  /* "Not made yet", never "Coming soon": "soon" is a promise with a date in it
+     and this project has no date (`TN-MAP`, and `TN-MAP-04`'s "it is not drawn
+     as an error"). Neither this row nor its help may acquire a date, a version
+     number or a percentage. */
+  'map.state.notBuilt': 'Not made yet',
+  'map.open.help': 'You can play this now.',
+  'map.locked.after': 'Finish {{level}} first.',
+  'map.locked.stamps.one': 'Earn {{n}} more stamp to open this.',
+  'map.locked.stamps.other': 'Earn {{n}} more stamps to open this.',
+  'map.notBuilt.help': 'We are still making this level.',
+  'map.number': 'Level {{n}}',
+
+  /* docs/stories/TN-FLOW-first-run-and-return.md */
+  'common.back': 'Back',
+  'flow.leaveLevel': 'Leave the level',
+
+  /* docs/stories/TN-LEVELS-2-to-10-spine.md owns the place name and the subject
+     line for the nine levels that are not Ottawa; `TN-LEVEL-ottawa.md` owns
+     Ottawa's pair. They are rows here because the map draws all ten and nine of
+     them have no level document to carry their own text.
+
+     Levels 2 and 10 have no id yet, so their rows are keyed on the map number.
+     **Level 2 has a subject line and no place name**, and that is the rule
+     working rather than an omission: naming a nation's territory as the setting
+     of a level nobody may build yet states a plan this project has not earned
+     the right to state (`docs/content-review.md` §1). `TN-MAP-04` requires the
+     card to draw no placeholder in its place. */
+  'level.halifax.title': 'Halifax',
+  'level.halifax.subtitle': 'Rights and responsibilities',
+  'level.2.subtitle': 'Who we are',
+  'level.quebec-city.title': 'Québec City',
+  'level.quebec-city.subtitle': "Canada's history",
+  'level.ottawa.title': 'Ottawa',
+  'level.ottawa.subtitle': 'How Canadians govern themselves',
+  'level.toronto.title': 'Toronto',
+  'level.toronto.subtitle': 'Federal elections',
+  'level.winnipeg.title': 'Winnipeg',
+  'level.winnipeg.subtitle': 'The justice system',
+  'level.prairie-rail.title': 'The Prairies',
+  'level.prairie-rail.subtitle': 'Modern Canada',
+  'level.alberta-foothills.title': 'The Alberta foothills',
+  'level.alberta-foothills.subtitle': "Canada's economy",
+  'level.vancouver.title': 'Vancouver',
+  'level.vancouver.subtitle': 'Canadian symbols',
+  'level.10.title': 'The North',
+  'level.10.subtitle': "Canada's regions",
 } as const;
 
 /** Every row in the table, plural forms included. */
@@ -298,6 +369,50 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.error.body': 'Vérifiez votre connexion et réessayez.',
   'level.error.retry': 'Réessayer',
   'level.error.back': 'Retour',
+  'title.game': 'TrueNorth',
+  'title.tagline': "Préparez-vous à l'examen de citoyenneté canadienne.",
+  'title.notOfficial': "Ce jeu n'est pas fait par le gouvernement du Canada.",
+  'title.play': 'Jouer',
+  'title.continue': 'Continuer',
+  'title.lastPlayed': 'Dernier niveau : {{level}}',
+
+  'map.open': 'Choisir un niveau',
+  'map.title': 'Choisir un niveau',
+  'map.stamps': 'Timbres : {{earned}} sur {{total}}',
+  'map.levelsReady': 'Niveaux prêts : {{ready}} sur {{total}}',
+  'map.moreComing': "D'autres arrivent.",
+  'map.state.open': 'Ouvert',
+  'map.state.locked': 'Verrouillé',
+  'map.state.notBuilt': 'Pas encore créé',
+  'map.open.help': 'Vous pouvez y jouer maintenant.',
+  'map.locked.after': "Terminez d'abord {{level}}.",
+  'map.locked.stamps.one': 'Gagnez encore {{n}} timbre pour ouvrir ce niveau.',
+  'map.locked.stamps.other': 'Gagnez encore {{n}} timbres pour ouvrir ce niveau.',
+  'map.notBuilt.help': 'Ce niveau est encore en préparation.',
+  'map.number': 'Niveau {{n}}',
+
+  'common.back': 'Retour',
+  'flow.leaveLevel': 'Quitter le niveau',
+
+  'level.halifax.title': 'Halifax',
+  'level.halifax.subtitle': 'Droits et responsabilités',
+  'level.2.subtitle': 'Qui nous sommes',
+  'level.quebec-city.title': 'Ville de Québec',
+  'level.quebec-city.subtitle': "L'histoire du Canada",
+  'level.ottawa.title': 'Ottawa',
+  'level.ottawa.subtitle': 'Comment les Canadiens se gouvernent',
+  'level.toronto.title': 'Toronto',
+  'level.toronto.subtitle': 'Les élections fédérales',
+  'level.winnipeg.title': 'Winnipeg',
+  'level.winnipeg.subtitle': 'Le système de justice',
+  'level.prairie-rail.title': 'Les Prairies',
+  'level.prairie-rail.subtitle': 'Le Canada moderne',
+  'level.alberta-foothills.title': 'Les contreforts de l\'Alberta',
+  'level.alberta-foothills.subtitle': "L'économie du Canada",
+  'level.vancouver.title': 'Vancouver',
+  'level.vancouver.subtitle': 'Les symboles canadiens',
+  'level.10.title': 'Le Nord',
+  'level.10.subtitle': 'Les régions du Canada',
 };
 
 /**
@@ -412,6 +527,41 @@ export function count(
   const wanted = `${key}.${category}` as CopyRow;
   const row = wanted in table ? wanted : (`${key}.other` as CopyRow);
   return interpolate(table[row], { n: formatNumber(locale, value), ...params });
+}
+
+/**
+ * The plural forms of a counted string that arrives as **data** rather than as a
+ * row in the table above.
+ *
+ * `count` is the right tool for a string this module owns. Some strings it does
+ * not own: the level select's "how many stamps open this place" is supplied by
+ * the caller, because no story table carries it yet. A caller holding two
+ * strings is one `n === 1` away from being wrong in French, where zero is
+ * singular — so the forms come in as data and the *choice between them* stays
+ * here, on `Intl.PluralRules`, where `count` already makes it.
+ *
+ * `other` is required by the type: it is the only category every locale has, so
+ * a caller cannot supply a set of forms that has no answer.
+ */
+export type PluralForms = Readonly<Partial<Record<Intl.LDMLPluralRule, string>>> & {
+  readonly other: string;
+};
+
+/**
+ * Draw a counted string from caller-supplied forms.
+ *
+ * `{{n}}` is filled with the locale-formatted number, exactly as {@link count}
+ * fills it; extra placeholders come from `params`.
+ */
+export function pluralise(
+  locale: UiLocale,
+  forms: PluralForms,
+  value: number,
+  params?: CopyParams,
+): string {
+  const category = pluralCategory(locale, value);
+  const template = forms[category] ?? forms.other;
+  return interpolate(template, { n: formatNumber(locale, value), ...params });
 }
 
 /**

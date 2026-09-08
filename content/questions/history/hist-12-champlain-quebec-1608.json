@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-12-champlain-quebec-1608",
+  "subject": "history",
+  "prompt": {
+    "en": "Who built a fortress in 1608 at the place we now call Québec City?",
+    "fr": "Qui a construit une forteresse en 1608 à l'endroit que nous appelons aujourd'hui la ville de Québec?"
+  },
+  "options": [
+    {
+      "en": "Samuel de Champlain.",
+      "fr": "Samuel de Champlain."
+    },
+    {
+      "en": "Jacques Cartier.",
+      "fr": "Jacques Cartier."
+    },
+    {
+      "en": "Jean Talon.",
+      "fr": "Jean Talon."
+    },
+    {
+      "en": "Bishop Laval.",
+      "fr": "Monseigneur de Laval."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Champlain built a fortress in 1608 at what is now Québec City. The colonists there struggled against a harsh climate.",
+    "fr": "Champlain a construit une forteresse en 1608 à l'emplacement actuel de la ville de Québec. Les colons y ont lutté contre un climat rigoureux."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 24,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1608 Champlain built a fortress at what is now Québec City."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

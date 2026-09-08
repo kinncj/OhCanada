@@ -131,6 +131,33 @@ export interface SceneSnapshot {
    */
   readonly layers?: number;
   readonly layersTextured?: number;
+  /**
+   * Points of interest and characters the level places, and how many of them
+   * drew real art rather than a placeholder shape.
+   *
+   * The same distinction `layersTextured` draws, for the two things a player
+   * actually looks at. Every character in the game was a rounded rectangle in
+   * production — the red serge, the reference-critical uniform that was the
+   * reason Ottawa is the first level, was never on screen — and no gate could
+   * see it, because a scene that draws a rectangle reaches `ready` exactly like
+   * one that draws a Mountie.
+   */
+  readonly actors?: number;
+  readonly actorsDrawn?: number;
+  /**
+   * How many of those are **inside the camera's view right now**.
+   *
+   * The counters above answer "was it given a texture"; these answer "is it on
+   * the screen". Both were needed because the first pair read full marks on a
+   * build showing a gradient, an ice band, snow and one rounded rectangle — the
+   * officer and the landmark were drawn correctly, a long way off to the right.
+   *
+   * They change as the camera moves, which is what lets a test see the same
+   * counter say `0` and then `1` in one run rather than trusting a number that
+   * is the same whether or not anything worked.
+   */
+  readonly layersVisible?: number;
+  readonly actorsVisible?: number;
   readonly tier?: VisualTier;
   readonly motion?: MotionLevel;
   readonly renderer?: string;
@@ -237,6 +264,10 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'particles',
   'layers',
   'layersTextured',
+  'actors',
+  'actorsDrawn',
+  'layersVisible',
+  'actorsVisible',
   'tier',
   'motion',
   'renderer',
@@ -270,6 +301,10 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-particles': num(snapshot.particles),
     'data-layers': num(snapshot.layers),
     'data-layers-textured': num(snapshot.layersTextured),
+    'data-actors': num(snapshot.actors),
+    'data-actors-drawn': num(snapshot.actorsDrawn),
+    'data-layers-visible': num(snapshot.layersVisible),
+    'data-actors-visible': num(snapshot.actorsVisible),
     'data-tier': text(snapshot.tier),
     'data-motion': text(snapshot.motion),
     'data-renderer': text(snapshot.renderer),

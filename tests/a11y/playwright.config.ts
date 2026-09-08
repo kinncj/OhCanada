@@ -26,7 +26,19 @@ const PORT = 4175;
  * The dev server is the same Vite, the same aliases and the same TypeScript, so
  * what axe sees is the real component. What it does *not* prove is that the
  * screens survive a production build; that becomes true, and this server goes
- * away, when task 1.16 wires them into `app/bootstrap`.
+ * away, when task 1.20 wires them into `app/bootstrap`.
+ *
+ * **Half of that is now done, and this note says which half.** `app/ui/shell.ts`
+ * exists: one entry point that mounts the title screen, the creator and the
+ * level select, and `tests/a11y/shell.spec.ts` scans the whole page it builds
+ * with `region` and `landmark-one-main` enabled and nothing disabled. What is
+ * still missing is the *call*: `app/bootstrap/main.ts` does not construct the
+ * shell yet, so `dist/` is still the foundation shell and the `vite preview`
+ * server below still serves a page with no screens on it. `OQ-TEST-2`'s
+ * whole-page scan against `dist/` is written out at the bottom of
+ * `shell.spec.ts` and is `test.fixme` for exactly that reason: when the
+ * composition root calls `createShell`, deleting `.fixme` is the whole change,
+ * and until then no report may describe this suite as proving the shipped page.
  */
 const HARNESS_PORT = 4176;
 const BASE_PATH = '/OhCanada/';

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-03-civil-code-of-france",
+  "subject": "rights",
+  "prompt": {
+    "en": "Canadian law draws on a civil code. Which country's civil code is it?",
+    "fr": "Le droit canadien s'inspire d'un code civil. De quel pays vient ce code civil?"
+  },
+  "options": [
+    {
+      "en": "France.",
+      "fr": "La France."
+    },
+    {
+      "en": "Great Britain.",
+      "fr": "La Grande-Bretagne."
+    },
+    {
+      "en": "Italy.",
+      "fr": "L'Italie."
+    },
+    {
+      "en": "The Netherlands.",
+      "fr": "Les Pays-Bas."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada inherited two European legal traditions at once. English common law is one source of Canadian law and the civil code of France is another.",
+    "fr": "Le Canada a hérité de deux traditions juridiques européennes à la fois. La common law anglaise est une source du droit canadien et le code civil de la France en est une autre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canadian law has several sources, including laws passed by Parliament and the provincial legislatures, English common law, the civil code of France and the unwritten constitution that we have inherited from Great Britain."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

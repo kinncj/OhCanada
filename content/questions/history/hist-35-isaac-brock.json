@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-35-isaac-brock",
+  "subject": "history",
+  "prompt": {
+    "en": "Which commander captured Detroit in July 1812 and was later killed at Queenston Heights?",
+    "fr": "Quel commandant a pris Détroit en juillet 1812 avant d'être tué à Queenston Heights?"
+  },
+  "options": [
+    {
+      "en": "Major-General Sir Isaac Brock.",
+      "fr": "Le major-général sir Isaac Brock."
+    },
+    {
+      "en": "Major-General Robert Ross.",
+      "fr": "Le major-général Robert Ross."
+    },
+    {
+      "en": "Lieutenant-Colonel Charles de Salaberry.",
+      "fr": "Le lieutenant-colonel Charles de Salaberry."
+    },
+    {
+      "en": "General Sir Arthur Currie.",
+      "fr": "Le général sir Arthur Currie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Major-General Sir Isaac Brock captured Detroit in July 1812 and was killed defending against an American attack at Queenston Heights, near Niagara Falls — a battle the Americans lost.",
+    "fr": "Le major-général sir Isaac Brock a pris Détroit en juillet 1812 et a été tué en défendant Queenston Heights, près des chutes Niagara, contre une attaque américaine — une bataille que les Américains ont perdue."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 29,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Major-General Sir Isaac Brock captured Detroit but was killed while defending against an American attack at Queenston Heights, near Niagara Falls, a battle the Americans lost."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

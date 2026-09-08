@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-04-magna-carta-year",
+  "subject": "rights",
+  "prompt": {
+    "en": "In what year was Magna Carta signed?",
+    "fr": "En quelle année la Magna Carta a-t-elle été signée?"
+  },
+  "options": [
+    {
+      "en": "1215.",
+      "fr": "En 1215."
+    },
+    {
+      "en": "1497.",
+      "fr": "En 1497."
+    },
+    {
+      "en": "1867.",
+      "fr": "En 1867."
+    },
+    {
+      "en": "1982.",
+      "fr": "En 1982."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Magna Carta was signed in England in 1215. It is the start of the 800-year-old tradition of ordered liberty that Canadians inherited.",
+    "fr": "La Magna Carta a été signée en Angleterre en 1215. Elle marque le début de la tradition de liberté ordonnée, vieille de 800 ans, dont les Canadiens ont hérité."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 11,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms)"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

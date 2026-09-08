@@ -158,3 +158,53 @@ export function screenFraction(
     y: view.height === 0 ? 0 : (target.y - camera.y) / view.height,
   };
 }
+
+/** An axis-aligned world-space rectangle. */
+export interface WorldRect {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+/**
+ * Is any of this rectangle inside the camera's view?
+ *
+ * ### What this is for, and what it is not
+ *
+ * `data-layers-textured: 6` and `data-actors-drawn: 2` were both true of a build
+ * whose visible output was a gradient, an ice band, snow and one rounded
+ * rectangle. They counted a texture **assigned**, and the level places its
+ * officer 1 760 design pixels to the right of the spawn and its landmark 4 760
+ * — so both were faithfully drawn where nobody could see them.
+ *
+ * This is the cheapest honest improvement on that: geometry. A subject whose
+ * bounds do not meet the camera's view is **not on the screen**, whatever it was
+ * given. It is deterministic, it needs no threshold, and it reports `0` for the
+ * screenshot that started this.
+ *
+ * **What it still does not prove is that pixels were lit.** A fully transparent
+ * texture, or one drawn under an opaque layer, intersects the view exactly like
+ * a Mountie. That gap is real and is stated here rather than left for somebody
+ * to assume away — see the note in `tests/e2e/level-art.spec.ts` for what was
+ * measured when this was attempted with pixel statistics instead.
+ */
+export function intersectsView(rect: WorldRect, view: WorldRect): boolean {
+  if (!(rect.width > 0) || !(rect.height > 0)) return false;
+  return (
+    rect.x < view.x + view.width &&
+    rect.x + rect.width > view.x &&
+    rect.y < view.y + view.height &&
+    rect.y + rect.height > view.y
+  );
+}
+
+/** The world the camera can see right now: its scroll, and its scaled viewport. */
+export function cameraView(
+  scroll: Vec2,
+  viewport: CameraViewport,
+  tuning: CameraTuning,
+): WorldRect {
+  const view = scaledViewport(viewport, tuning);
+  return { x: scroll.x, y: scroll.y, width: view.width, height: view.height };
+}

@@ -9,9 +9,11 @@
  * checking one against the other -- ADR-0007's problem inverted, and it reads as
  * enforced precisely because both halves exist.
  *
- * It is not a hypothetical file: 97 colours in 31 ramps generated from a
- * published formula, and the art agent's own checker caught six ramps
- * contradicting the rule it had just written, on its first pass.
+ * It is not a hypothetical file: around a hundred colours in thirty-odd ramps
+ * generated from a published formula, and the art agent's own checker caught six
+ * ramps contradicting the rule it had just written, on its first pass. The count
+ * is deliberately not written down here as a number - see MINIMUM_RAMPS below
+ * for why an exact count is the wrong thing to assert about it.
  *
  * Every case drives the real CLI over a scratch tree with the REAL schemas
  * copied in. A fixture with stubbed schemas would prove the copy agrees with the
@@ -117,7 +119,7 @@ function run(palette: Record<string, unknown> | null): Run {
     writeFileSync(join(root, 'assets', 'style', 'palette.json'), `${JSON.stringify(palette, null, 2)}\n`, 'utf8');
   }
 
-  const result = spawnSync(process.execPath, [SCRIPT, '--root', root], {
+  const result = spawnSync(process.execPath, [SCRIPT, '--root', root, '--allow-empty-content'], {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   });
@@ -232,10 +234,38 @@ describe('the palette gate passes', () => {
     expect(result.stdout).toContain('palette 7 colour(s) in 2 ramp(s), every tone and ink resolved');
   });
 
+  /**
+   * FLOORS, not equalities. This case asserted `97 colour(s) in 31 ramp(s)`
+   * exactly, and Quebec City's colours took the palette to 100 in 32 and turned
+   * it red. An equality over a number designed to grow fails on every
+   * legitimate palette change and passes on none of the defects this file
+   * exists for: it is a tripwire pointed at the art agent doing its job.
+   *
+   * What is asserted instead, in three layers, none of which goes stale:
+   *
+   *   1. THE GATE REPORTS WHAT IT READ. The counts on the summary line must
+   *      equal the counts derivable from the document the test just loaded.
+   *      That is the defect this whole file was written for - a schema and a
+   *      document named after each other with nothing checking one against the
+   *      other - and it is caught by comparing a claim against another claim
+   *      rather than against a constant (ADR-0024).
+   *   2. THE DOCUMENT'S OWN INVARIANT. `shading.tones` is 3 and the rule beside
+   *      it says "exactly three flat fills per material, no fourth tone", so
+   *      every ramp must resolve at least that many colours. A ramp that lost
+   *      its `shade` is a real defect and no aggregate count would show it.
+   *   3. A TRUNCATION FLOOR. A bare `> 0` would be decoration by ADR-0014's
+   *      standard - it passes a palette cut to one ramp, which is exactly the
+   *      failure a floor is for. 24 is chosen: Ottawa alone needed 31 ramps, so
+   *      the floor tolerates removing 8 in one change while catching a palette
+   *      truncated to a handful by a bad generator run or a bad merge. It only
+   *      ever needs revisiting downward, which is the property the equality
+   *      lacked.
+   */
+  const MINIMUM_RAMPS = 24;
+
   it('over the palette this repository actually ships', () => {
     // The scratch cases prove the rules; this proves they hold for the document
-    // the schema was written for -- 97 colours in 31 ramps, generated from a
-    // published formula, which is the whole reason a schema was wanted.
+    // the schema was written for, which is the whole reason a schema was wanted.
     //
     // The real palette is copied into a scratch tree rather than the gate being
     // run over the repository itself. Running it in place would couple this case
@@ -249,7 +279,33 @@ describe('the palette gate passes', () => {
     >;
     const result = run(palette);
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain('palette 97 colour(s) in 31 ramp(s), every tone and ink resolved');
+
+    const reported = /palette (\d+) colour\(s\) in (\d+) ramp\(s\), every tone and ink resolved/.exec(
+      result.stdout,
+    );
+    expect(reported, `no palette line in: ${result.stdout}`).not.toBeNull();
+
+    const colours = palette.colours as Record<string, string>;
+    const ramps = palette.ramps as Record<string, Record<string, unknown>>;
+    const tones = (palette.shading as { tones: number }).tones;
+
+    // 1. the gate counted the document, not something else
+    expect(Number(reported?.[1])).toBe(Object.keys(colours).length);
+    expect(Number(reported?.[2])).toBe(Object.keys(ramps).length);
+
+    // 2. the document's own three-tone rule, per ramp
+    for (const [name, ramp] of Object.entries(ramps)) {
+      const resolved = Object.values(ramp).filter(
+        (value) => typeof value === 'string' && value in colours,
+      );
+      expect(resolved.length, `ramp "${name}" resolves ${String(resolved.length)} colour(s)`).toBeGreaterThanOrEqual(
+        tones,
+      );
+    }
+
+    // 3. the truncation floor
+    expect(Object.keys(ramps).length).toBeGreaterThanOrEqual(MINIMUM_RAMPS);
+    expect(Object.keys(colours).length).toBeGreaterThanOrEqual(MINIMUM_RAMPS * tones);
   });
 
   it('and the shipped tree reports nothing against the palette, whatever else is in flight', () => {

@@ -131,11 +131,8 @@ export function createRiveCharacterRendererFactory(
           widthPx: spec.widthPx,
           heightPx: spec.heightPx,
           textureKey: textureKeyFor(spec),
-          slots: spec.slots.map((slot) => ({
-            name: slot.name,
-            options: slot.options.map((option) => option.id),
-          })),
-          expressions: spec.expressions,
+          slots: rigSlots(spec),
+          expressions: spec.rig.expressions.names,
         });
       } catch (cause) {
         /* `io`, not `invalid`: the file did not arrive or the runtime did not
@@ -162,7 +159,7 @@ export function createRiveCharacterRendererFactory(
        * character who never plays their jump.
        */
       const exposed = new Set(instance.inputNames);
-      const missing = spec.inputs
+      const missing = spec.rig.stateMachine.inputs
         .map((input) => input.name)
         .filter((name) => !exposed.has(name));
       if (missing.length > 0) {
@@ -190,11 +187,15 @@ function bind(
   instance: RiveInstance,
   textureKey: string,
 ): ICharacterRenderer {
-  const kinds = new Map(spec.inputs.map((input) => [input.name, input.kind] as const));
+  const kinds = new Map(
+    spec.rig.stateMachine.inputs.map((input) => [input.name, input.type] as const),
+  );
   const optionsBySlot = new Map(
-    spec.slots.map((slot) => [slot.name, slot.options.map((option) => option.id)] as const),
+    rigSlots(spec).map((slot) => [slot.name, slot.options] as const),
   );
   let disposed = false;
+  let anchorX = 0;
+  let anchorY = 0;
 
   const surface: SurfaceHandle = {
     textureKey,
@@ -243,11 +244,12 @@ function bind(
      wrong coat for one frame. Slots the runtime does not offer are ignored
      here rather than failing construction: `setSkin` reports them, and a
      costume slot the artboard lost is a wardrobe defect, not a dead level. */
-  for (const slot of spec.slots) {
-    instance.setSkin(slot.name, spec.skins[slot.name] ?? slot.fallback);
+  const artboard = spec.rig.artboards.find((candidate) => candidate.artboard === spec.artboard);
+  for (const slot of rigSlots(spec)) {
+    const choice = spec.skins[slot.name] ?? artboard?.skins[slot.name] ?? slot.fallback;
+    if (choice !== undefined) instance.setSkin(slot.name, choice);
   }
-  const initialExpression = spec.expression ?? spec.expressions[0];
-  if (initialExpression !== undefined) instance.setExpression(initialExpression);
+  instance.setExpression(spec.expression ?? spec.rig.expressions.fallback);
 
   return {
     characterId: spec.characterId,
@@ -321,12 +323,12 @@ function bind(
 
     setExpression(expression: ExpressionName) {
       if (disposed) return disposedError(spec.characterId);
-      if (!spec.expressions.includes(expression)) {
+      if (!spec.rig.expressions.names.includes(expression)) {
         return appErr(
           'not-found',
           'character.expression.unknown',
           `character "${String(spec.characterId)}" has no expression "${expression}".`,
-          { character: spec.characterId, expression, declared: spec.expressions },
+          { character: spec.characterId, expression, declared: spec.rig.expressions.names },
         );
       }
       if (!instance.setExpression(expression)) {
@@ -343,6 +345,23 @@ function bind(
     setFacing(facing) {
       if (disposed) return;
       instance.setFacing(facing);
+    },
+
+    /**
+     * Recorded, not drawn.
+     *
+     * A Rive character is one surface that the *scene* composites, so this
+     * backend cannot place itself — what it can do is answer where it stands,
+     * so a caller moves a character the same way whichever backend drew it. The
+     * scene reads it back beside {@link SurfaceHandle} when it positions the
+     * quad. The sprite backend, which owns twenty game objects, places them.
+     */
+    setPosition(x, y) {
+      if (disposed) return;
+      anchorX = x;
+      anchorY = y;
+      void anchorX;
+      void anchorY;
     },
 
     update(deltaMs) {
@@ -381,47 +400,57 @@ function bind(
  * device fell back.
  */
 function validateSpec(spec: CharacterRendererSpec): Result<never> | null {
-  if (spec.slots.length === 0) {
+  const rig = spec.rig;
+
+  if (rig.parts.length === 0) {
     return appErr(
       'invalid',
-      'character.rig.noSlots',
-      `character "${String(spec.characterId)}" declares no skin slots; the rig contract ` +
-        `requires at least one.`,
+      'character.rig.noParts',
+      'the rig declares no parts, so a character would draw nothing.',
       { character: spec.characterId },
     );
   }
-  for (const slot of spec.slots) {
-    const ids = slot.options.map((option) => option.id);
-    if (!ids.includes(slot.fallback)) {
+
+  for (const slot of rigSlots(spec)) {
+    if (slot.fallback !== undefined && !slot.options.includes(slot.fallback)) {
       return appErr(
         'invalid',
         'character.rig.fallbackMissing',
-        `skin slot "${slot.name}" of character "${String(spec.characterId)}" falls back to ` +
-          `"${slot.fallback}", which is not one of its options.`,
-        { character: spec.characterId, slot: slot.name, fallback: slot.fallback, options: ids },
+        `skin slot "${slot.name}" falls back to "${slot.fallback}", which is not one of its ` +
+          `options.`,
+        { character: spec.characterId, slot: slot.name, fallback: slot.fallback },
       );
     }
   }
+
+  const declared = new Map(rigSlots(spec).map((slot) => [slot.name, slot.options] as const));
   for (const [slot, option] of Object.entries(spec.skins)) {
-    const declared = spec.slots.find((candidate) => candidate.name === slot);
-    if (declared === undefined) {
-      return appErr(
-        'not-found',
-        'character.slot.unknown',
-        `character "${String(spec.characterId)}" has no skin slot "${slot}".`,
-        { character: spec.characterId, slot },
-      );
+    const options = declared.get(slot);
+    if (options === undefined) {
+      return appErr('not-found', 'character.slot.unknown', `the rig has no skin slot "${slot}".`, {
+        character: spec.characterId,
+        slot,
+      });
     }
-    if (!declared.options.some((candidate) => candidate.id === option)) {
+    if (!options.includes(option)) {
       return appErr(
         'not-found',
         'character.skin.unknown',
-        `skin slot "${slot}" of character "${String(spec.characterId)}" has no option ` +
-          `"${option}".`,
+        `skin slot "${slot}" has no option "${option}".`,
         { character: spec.characterId, slot, option },
       );
     }
   }
+
+  if (spec.expression !== undefined && !rig.expressions.names.includes(spec.expression)) {
+    return appErr(
+      'not-found',
+      'character.expression.unknown',
+      `the rig has no expression "${spec.expression}".`,
+      { character: spec.characterId, expression: spec.expression },
+    );
+  }
+
   if (spec.widthPx <= 0 || spec.heightPx <= 0) {
     return appErr(
       'invalid',
@@ -432,6 +461,25 @@ function validateSpec(spec: CharacterRendererSpec): Result<never> | null {
     );
   }
   return null;
+}
+
+/**
+ * The rig's slots as a list, minus the reserved ones.
+ *
+ * `RigSlots` is an object with fixed keys — the schema fixes the names, which is
+ * the anti-caricature mechanism rather than tidiness — and a `reserved` slot has
+ * zero options and a null fallback, so it is not something a character can wear.
+ */
+function rigSlots(
+  spec: CharacterRendererSpec,
+): readonly { readonly name: string; readonly options: readonly string[]; readonly fallback?: string }[] {
+  return Object.entries(spec.rig.slots)
+    .filter(([, slot]) => slot.status !== 'reserved')
+    .map(([name, slot]) => ({
+      name,
+      options: slot.options,
+      ...(slot.fallback === null ? {} : { fallback: slot.fallback }),
+    }));
 }
 
 function disposedError(character: unknown): Result<never> {

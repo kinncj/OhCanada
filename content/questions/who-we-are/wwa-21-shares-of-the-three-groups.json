@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-21-shares-of-the-three-groups",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "Which of the three groups makes up the largest share of Aboriginal people in Canada?",
+    "fr": "Lequel des trois groupes forme la plus grande part des personnes autochtones au Canada?"
+  },
+  "options": [
+    {
+      "en": "First Nations, at about 65%.",
+      "fr": "Les Premières Nations, avec environ 65 %."
+    },
+    {
+      "en": "Métis, at about 65%.",
+      "fr": "Les Métis, avec environ 65 %."
+    },
+    {
+      "en": "Inuit, at about 65%.",
+      "fr": "Les Inuit, avec environ 65 %."
+    },
+    {
+      "en": "The three groups are about equal in size.",
+      "fr": "Les trois groupes sont à peu près de taille égale."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "About 65% of Aboriginal people are First Nations, about 30% are Métis and about 4% are Inuit. The three groups are not equal in size.",
+    "fr": "Environ 65 % des personnes autochtones sont des membres des Premières Nations, environ 30 % sont des Métis et environ 4 % sont des Inuit. Les trois groupes ne sont pas de taille égale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 18,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "About 65% of the Aboriginal people are First Nations, while 30% are Métis and 4% Inuit."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
