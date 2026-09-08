@@ -200,16 +200,12 @@ export class WorldScene {
       scene.pending.push(marker);
       scene.markers.push({ id: t.id, object: marker });
     }
-    onProgress?.(0.98, 'fauna');
-    await yieldToBrowser();
-    if (policy !== 'lite') {
+    if (policy === 'full' && library?.withinBudget) {
       const fauna = new FaunaSystem(library, heightAt);
-      await Promise.race([
-        fauna.populate(district.pois, s.seed, s.water?.[0]?.position[1] ?? -0.6),
-        new Promise<void>((resolve) => setTimeout(resolve, 8000)),
-      ]);
-      scene.pending.push(fauna.group);
       scene.fauna = fauna;
+      scene.pending.push(fauna.group);
+      // Deliberately not awaited: the animals populate after the player is already in the world.
+      void fauna.populate(district.pois, s.seed, s.water?.[0]?.position[1] ?? -0.6).catch(() => undefined);
     }
     onProgress?.(1, 'scene ready');
     return scene;

@@ -170,11 +170,16 @@ async function boot(): Promise<void> {
   const PRESETS: readonly PresetName[] = ['minimal', 'low', 'medium', 'high', 'ultra'];
   const isPreset = (v: string | null): v is PresetName => !!v && (PRESETS as readonly string[]).includes(v);
   const resolvePreset = (): PresetName => {
-    const s = settings().graphicsPreset;
-    if (s !== 'auto') return s;
+    const forced = params.get('preset');
+    if (isPreset(forced)) return forced;
+    const chosenInSettings = settings().graphicsPreset;
+    if (chosenInSettings !== 'auto') return chosenInSettings;
     const stored = safeGet(BENCH_KEY);
-    if (isPreset(stored)) return stored;
-    return isMobile ? config.benchmark.mobileDefault : 'medium';
+    const auto = isPreset(stored) ? stored : isMobile ? config.benchmark.mobileDefault : 'medium';
+    // Phones stay on the procedural tier unless the player asks otherwise: a stored benchmark or a recovery
+    // step must not silently put a phone back on glTF and KTX2 decoding.
+    if (isMobile && PRESETS.indexOf(auto) > PRESETS.indexOf(config.benchmark.mobileDefault)) return config.benchmark.mobileDefault;
+    return auto;
   };
   const applySettings = (s: Settings): void => {
     document.documentElement.dataset.cb = s.colourBlindSafe ? '1' : '0';
