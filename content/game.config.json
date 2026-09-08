@@ -58,10 +58,11 @@
       "ssao": false,
       "bloom": false,
       "antialias": "none",
-      "maxInstances": 350,
+      "maxInstances": 200,
       "anisotropy": 1,
       "volumetricFog": false,
-      "assetPolicy": "lite"
+      "assetPolicy": "lite",
+      "drawDistance": 140
     },
     "low": {
       "renderScale": 0.8,
@@ -73,10 +74,11 @@
       "ssao": false,
       "bloom": false,
       "antialias": "fxaa",
-      "maxInstances": 700,
+      "maxInstances": 420,
       "anisotropy": 2,
       "volumetricFog": false,
-      "assetPolicy": "standard"
+      "assetPolicy": "standard",
+      "drawDistance": 260
     },
     "medium": {
       "renderScale": 1,
@@ -91,7 +93,8 @@
       "maxInstances": 1500,
       "anisotropy": 4,
       "volumetricFog": true,
-      "assetPolicy": "full"
+      "assetPolicy": "full",
+      "drawDistance": 420
     },
     "high": {
       "renderScale": 1,
@@ -107,7 +110,8 @@
       "anisotropy": 8,
       "volumetricFog": true,
       "screenSpaceGI": false,
-      "assetPolicy": "full"
+      "assetPolicy": "full",
+      "drawDistance": 650
     },
     "ultra": {
       "renderScale": 1.25,
@@ -123,7 +127,8 @@
       "anisotropy": 16,
       "volumetricFog": true,
       "screenSpaceGI": true,
-      "assetPolicy": "full"
+      "assetPolicy": "full",
+      "drawDistance": 900
     }
   },
   "benchmark": {

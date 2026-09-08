@@ -30,6 +30,9 @@ export class GameRenderer {
   private frameTimes: number[] = [];
   private lastFrame = performance.now();
   private lastInfo = { drawCalls: 0, triangles: 0 };
+  private blankFrames = 0;
+  /** Set when the blank-frame watchdog has already disabled post-processing. */
+  postDisabled = false;
 
   private constructor(renderer: THREE.WebGPURenderer, backend: 'webgpu' | 'webgl2') {
     this.renderer = renderer;
@@ -136,6 +139,17 @@ export class GameRenderer {
     if (this.post) this.post.render();
     else this.renderer.render(this.scene, this.camera);
     this.lastInfo = { drawCalls: this.renderer.info.render.drawCalls, triangles: this.renderer.info.render.triangles };
+    // Watchdog: a scene with content that draws nothing means the pipeline failed silently (this is what a
+    // black canvas with a working HUD looks like). Drop post-processing, which is the fragile part.
+    if (this.post && !this.postDisabled && this.scene.children.length > 2) {
+      this.blankFrames = this.lastInfo.drawCalls === 0 ? this.blankFrames + 1 : 0;
+      if (this.blankFrames > 90) {
+        console.warn('[truenorth] no draw calls for 90 frames — disabling post-processing');
+        this.post = null;
+        this.postDisabled = true;
+        this.blankFrames = 0;
+      }
+    }
   }
 
   stats(): RenderStats {

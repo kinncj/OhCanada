@@ -76,7 +76,7 @@ export class Environment {
     this.sky.rayleigh.value = w === 'rain' || w === 'fog' ? 0.6 : w === 'snow' ? 1.6 : 2.2;
     this.sky.mieCoefficient.value = w === 'fog' ? 0.03 : 0.006;
     this.sky.mieDirectionalG.value = w === 'snow' ? 0.85 : 0.8;
-    this.cycleSpeed = cycleEnabled ? 1 / 600 : 0; // full day in 10 minutes
+    this.cycleSpeed = cycleEnabled ? 1 / 3600 : 0; // full day in an hour: a short session should not end at midnight
     // Fog is authored per district but must scale with the map: exp2 fog at a fixed density that suited a
     // 260 m block turns a 1.3 km district into haze. Keep roughly one map-width of visibility.
     const reach = (ambience.weather === 'fog' ? 2.2 : ambience.weather === 'rain' || ambience.weather === 'snow' ? 1.4 : 0.85) / Math.max(120, worldSize);

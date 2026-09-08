@@ -1,9 +1,9 @@
 {
   "key": "qamutiik",
   "category": "hero",
-  "prompt": "an Inuit qamutiik wooden sled, two long wooden runners with upturned front ends and many wooden cross slats lashed on top with cord, no dogs, side view slightly from above, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "prompt": "an Inuit qamutiik wooden sled resting flat on the ground on its two long runners, wooden cross slats lashed on top with cord, the whole sled seen from a three quarter angle from above and the side, runners down, no dogs, no snow, seen from a three quarter angle showing two sides at once, isolated on a plain white background, the whole object in frame with empty margins, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "hands, people, text, watermark, multiple objects, cropped, cut off, blurry, low quality, background scenery, dogs, snow",
-  "seed": 114,
+  "seed": 606,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
   "targetHeightMeters": 0.8,
   "polyBudget": 8000,

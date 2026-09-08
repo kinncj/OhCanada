@@ -1,9 +1,9 @@
 {
   "key": "chateau-laurier",
   "category": "hero",
-  "prompt": "the Chateau Laurier hotel in Ottawa, a chateauesque grand hotel of pale limestone with steep green copper roofs, many pointed copper turrets and dormers, front elevation view, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "prompt": "a miniature architectural model of the Chateau Laurier hotel, a chateauesque grand hotel of pale limestone with steep green copper roofs and many pointed copper turrets, viewed from a high three quarter corner angle so two facades and the roofs are visible, a solid three dimensional building block, no cars, no trees, seen from a three quarter angle showing two sides at once, isolated on a plain white background, the whole object in frame with empty margins, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds",
-  "seed": 103,
+  "seed": 303,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
   "targetHeightMeters": 45,
   "polyBudget": 25000,

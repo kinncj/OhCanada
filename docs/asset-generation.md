@@ -70,6 +70,14 @@ marching cubes on the CPU. It costs a few seconds per mesh and is otherwise equi
   face respectively).
 - Animals need "dry, no water, no reflection" or the matte keeps a puddle, which the shape model then extrudes into
   a slab under the animal.
+- **A straight-on view produces a flat relief.** This is the failure that costs the most rework: given a head-on
+  elevation, Hunyuan3D has no parallax to work from and returns a billboard. The first `loon` came out 0.005 m deep
+  and the first `chateau-laurier` was a 0.97 m facade card. Asking for "a three quarter angle showing two sides at
+  once" fixes both. Check the printed `size` of every new asset — a depth far below the other two dimensions means a
+  relief, not a model.
+- Souvenir framing has a cost: it often adds a base plate, and a wide one becomes part of the mesh (the first
+  `cn-tower` was 95 m across at 120 m tall because of its display disc). "no base plate, no stand, no platform"
+  removes it.
 
 ## Parametric fallback
 

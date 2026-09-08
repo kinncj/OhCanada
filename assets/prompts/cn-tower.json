@@ -1,7 +1,7 @@
 {
   "key": "cn-tower",
   "category": "hero",
-  "prompt": "a miniature souvenir model of the CN Tower Toronto, an extremely tall needle thin tapering concrete tower with a small round doughnut observation pod high up near the top, a tiny second pod above it and a long thin antenna spire at the very tip, six sided tapering shaft, a small souvenir desk model standing on a plain white surface, the whole miniature visible from base to top with empty space above it, studio product photo, plain white background, soft even lighting, sharp focus",
+  "prompt": "a miniature souvenir model of the CN Tower Toronto, an extremely tall needle thin tapering concrete tower with a small round doughnut observation pod high up near the top and a long thin antenna spire at the tip, the bare tower only with no base plate, no stand, no platform, no city, no buildings, seen from a three quarter angle showing two sides at once, isolated on a plain white background, the whole object in frame with empty margins, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds, city skyline, other buildings",
   "seed": 404,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",

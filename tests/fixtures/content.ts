@@ -31,7 +31,7 @@ export const CONFIG: GameConfig = {
 };
 
 function preset() {
-  return { renderScale: 1, maxPixelRatio: 1, shadows: false, postProcessing: false, shadowMapSize: 1024, shadowCascades: 1, ssao: false, bloom: false, antialias: 'none' as const, maxInstances: 10, anisotropy: 1, volumetricFog: false };
+  return { renderScale: 1, maxPixelRatio: 1, shadows: false, postProcessing: false, shadowMapSize: 1024, shadowCascades: 1, ssao: false, bloom: false, antialias: 'none' as const, maxInstances: 10, drawDistance: 200, anisotropy: 1, volumetricFog: false };
 }
 
 export function q(id: string, subject: Subject, volatile = false, asOf = '2026-09-01'): Question {

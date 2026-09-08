@@ -296,6 +296,12 @@
             "standard",
             "full"
           ]
+        },
+        "drawDistance": {
+          "type": "number",
+          "minimum": 80,
+          "maximum": 2000,
+          "description": "Metres beyond which vegetation, fauna and small landmarks stop drawing."
         }
       },
       "required": [
@@ -310,7 +316,8 @@
         "volumetricFog",
         "maxPixelRatio",
         "shadows",
-        "postProcessing"
+        "postProcessing",
+        "drawDistance"
       ],
       "additionalProperties": false
     }

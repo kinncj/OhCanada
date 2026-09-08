@@ -32,6 +32,7 @@ export class WorldScene {
   readonly pending: THREE.Object3D[] = [];
   /** Distance-culled landmarks: big silhouettes stay visible far away, street furniture drops out early. */
   private readonly culled: { obj: THREE.Object3D; pos: THREE.Vector3; range: number }[] = [];
+  drawDistance = 400;
   private hydrationBudget = 2;
 
   private constructor(
@@ -134,8 +135,9 @@ export class WorldScene {
     }
     for (const { l, b } of landmarkBuilds) if (b.footprint.w > 3) rects.push({ x: l.position[0], z: l.position[2], w: b.footprint.w * (l.scale ?? 1), d: b.footprint.d * (l.scale ?? 1) });
 
-    const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, protos });
+    const vegetation = new Vegetation({ size: s.size, density: s.vegetation.density, kinds: s.vegetation.kinds, seed: s.seed, maxInstances: preset.maxInstances, heightAt, exclusions, rects, protos, castShadows: policy === 'full' });
     const scene = new WorldScene(district, heightAt, terrain, vegetation);
+    scene.drawDistance = preset.drawDistance;
     scene.group.name = `district:${district.id}`;
     scene.group.add(terrain.mesh);
     scene.occluders.push(terrain.mesh);
@@ -225,7 +227,7 @@ export class WorldScene {
       const want = d < c.range * (c.obj.visible ? 1.12 : 1); // hysteresis so objects do not flicker at the boundary
       if (c.obj.visible !== want) c.obj.visible = want;
     }
-    this.vegetation.updateLod(cameraPos);
+    this.vegetation.updateLod(cameraPos, this.drawDistance);
     this.fauna?.update(dt, elapsed);
     for (const m of this.markers) {
       m.object.rotation.y += dt * 0.6;

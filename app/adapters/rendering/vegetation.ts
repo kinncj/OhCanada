@@ -17,7 +17,6 @@ interface Proto {
 }
 
 const CHUNKS = 6;
-const LOD_DISTANCE = 70;
 
 function tinted(): THREE.MeshStandardNodeMaterial {
   return new THREE.MeshStandardNodeMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 });
@@ -132,6 +131,8 @@ export interface VegetationOptions {
   readonly heightAt: HeightFn;
   readonly exclusions: readonly { x: number; z: number; r: number }[];
   readonly rects: readonly { x: number; z: number; w: number; d: number }[];
+  /** Vegetation shadow casting doubles its geometry cost; only the full asset policy pays it. */
+  readonly castShadows?: boolean;
   /** Real-asset prototypes per kind (several for variety); falls back to procedural when absent. */
   readonly protos?: Partial<Record<VegetationKind, Proto[]>>;
 }
@@ -150,6 +151,7 @@ export class Vegetation {
   readonly group = new THREE.Group();
   private readonly chunks: Chunk[] = [];
   private readonly owned: THREE.InstancedMesh[] = [];
+  private chunkExtent = 40;
 
   constructor(opts: VegetationOptions) {
     proceduralProtos ??= procedural();
@@ -163,6 +165,7 @@ export class Vegetation {
     const total = Math.min(opts.maxInstances, Math.floor(opts.density * opts.size * opts.size * 0.02));
     const half = opts.size / 2;
     const chunkSize = opts.size / CHUNKS;
+    this.chunkExtent = chunkSize * 0.71; // half-diagonal: a chunk is visible until its far corner leaves range
     const placements = new Map<string, THREE.Matrix4[]>(); // `${cx}:${cz}:${kind}:${variant}`
     const m = new THREE.Matrix4();
     const q = new THREE.Quaternion();
@@ -209,7 +212,7 @@ export class Vegetation {
               parts.map((part) => {
                 const im = new THREE.InstancedMesh(part.geometry, part.material, list.length);
                 list.forEach((mat, i) => im.setMatrixAt(i, mat));
-                im.castShadow = high && proto.castShadow;
+                im.castShadow = high && proto.castShadow && (opts.castShadows ?? true);
                 im.receiveShadow = true;
                 im.computeBoundingSphere();
                 im.visible = high;
@@ -226,9 +229,23 @@ export class Vegetation {
     }
   }
 
-  updateLod(camera: THREE.Vector3): void {
+  /**
+   * Per chunk: nothing beyond the draw distance is submitted at all, and only the closest quarter of that
+   * range uses LOD0. Without the cull a 1 km district draws every scanned tree (14k triangles each) plus a
+   * shadow pass, which is what made phones crawl.
+   */
+  updateLod(camera: THREE.Vector3, drawDistance = 400): void {
+    const half = this.chunkExtent;
+    const cull = drawDistance + half;
+    const lod0 = drawDistance * 0.25 + half;
     for (const c of this.chunks) {
-      const near = c.center.distanceTo(camera) < LOD_DISTANCE;
+      const d = c.center.distanceTo(camera);
+      if (d > cull) {
+        for (const m of c.high) m.visible = false;
+        for (const m of c.low) m.visible = false;
+        continue;
+      }
+      const near = d < lod0;
       for (const h of c.high) h.visible = near;
       for (const l of c.low) l.visible = !near;
     }

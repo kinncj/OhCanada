@@ -1,9 +1,9 @@
 {
   "key": "war-memorial",
   "category": "hero",
-  "prompt": "a scale model of the National War Memorial in Ottawa, a tall grey granite triumphal arch with two bronze winged figures on top and a group of bronze soldier figures marching through the arch on a stepped granite base, front view, isolated on a plain white background, centered, the whole object fully inside the frame with empty margin around it, soft even studio lighting, sharp focus, 3d render, high detail",
+  "prompt": "a miniature model of the National War Memorial in Ottawa, a deep granite triumphal arch with thick stone piers, bronze winged figures on top and bronze soldier figures marching through the archway, viewed from a three quarter corner angle so the depth of the arch is visible, a solid three dimensional monument, seen from a three quarter angle showing two sides at once, isolated on a plain white background, the whole object in frame with empty margins, soft even studio lighting, sharp focus, product photo of a 3d model",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds",
-  "seed": 104,
+  "seed": 404,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
   "targetHeightMeters": 21,
   "polyBudget": 25000,

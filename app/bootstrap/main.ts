@@ -104,10 +104,15 @@ async function boot(): Promise<void> {
   }
   loading.set(t.t('app.loading'), 0.4);
 
+  // Safari (iOS included) reports navigator.gpu but Three's WebGPU backend renders a black canvas there,
+  // so the proven WebGL2 path is the default on Safari; ?webgpu=1 opts back in for testing.
+  const ua = navigator.userAgent;
+  const isSafari = /^((?!chrome|android|crios|fxios|edg).)*safari/i.test(ua) || /iPad|iPhone|iPod/.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+  const forceWebGL = params.get('webgl') === '1' || (isSafari && params.get('webgpu') !== '1');
   let game: Game;
   try {
     try {
-      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL: params.get('webgl') === '1' });
+      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL });
     } catch (first) {
       console.warn('[truenorth] renderer init failed, retrying with WebGL2', first);
       game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL: true });

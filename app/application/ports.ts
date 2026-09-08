@@ -23,6 +23,7 @@ export interface GraphicsPreset {
   readonly bloom: boolean;
   readonly antialias: 'none' | 'fxaa' | 'taa' | 'msaa';
   readonly maxInstances: number;
+  readonly drawDistance: number;
   readonly anisotropy: number;
   readonly volumetricFog: boolean;
 }
