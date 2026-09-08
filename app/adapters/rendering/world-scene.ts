@@ -196,7 +196,10 @@ export class WorldScene {
     }
     if (policy !== 'lite') {
       const fauna = new FaunaSystem(library, heightAt);
-      await fauna.populate(district.pois, s.seed, (s.water?.[0]?.position[1] ?? -0.6));
+      await Promise.race([
+        fauna.populate(district.pois, s.seed, s.water?.[0]?.position[1] ?? -0.6),
+        new Promise<void>((resolve) => setTimeout(resolve, 8000)),
+      ]);
       scene.pending.push(fauna.group);
       scene.fauna = fauna;
     }

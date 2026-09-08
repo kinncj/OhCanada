@@ -98,7 +98,10 @@ export class Environment {
       delete (this.sun.shadow as { shadowNode?: THREE.Node }).shadowNode;
     }
     try {
-      const tex = await new HDRLoader().loadAsync(`${this.assetBase}${ambience.hdri}`);
+      const tex = await Promise.race([
+        new HDRLoader().loadAsync(`${this.assetBase}${ambience.hdri}`),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('HDRI timed out')), 8000)),
+      ]);
       tex.mapping = THREE.EquirectangularReflectionMapping;
       this.hdri?.dispose();
       this.hdri = tex;

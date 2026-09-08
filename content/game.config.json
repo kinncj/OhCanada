@@ -144,7 +144,7 @@
       "high": 55,
       "ultra": 100
     },
-    "mobileDefault": "low"
+    "mobileDefault": "minimal"
   },
   "featureFlags": {
     "debugOverlay": false,

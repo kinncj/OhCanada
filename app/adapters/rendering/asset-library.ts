@@ -182,7 +182,7 @@ export class AssetLibrary {
     if (!entry) return Promise.reject(new Error(`Model ${key} not in manifest`));
     let p = this.models.get(key);
     if (!p) {
-      p = withTimeout(this.gltf.loadAsync(`${this.base}${entry.path}`), 25_000, entry.path).then((g) => {
+      p = withTimeout(this.gltf.loadAsync(`${this.base}${entry.path}`), 8_000, entry.path).then((g) => {
         const lods = entry.lods.map((name) => g.scene.getObjectByName(name) ?? g.scene).map((o) => {
           o.traverse((c) => {
             if (c instanceof THREE.Mesh) {
@@ -225,7 +225,7 @@ export class AssetLibrary {
     if (!entry) return Promise.reject(new Error(`Character ${key} not in manifest`));
     let p = this.characters.get(key);
     if (!p) {
-      p = withTimeout(this.gltf.loadAsync(`${this.base}${entry.path}`), 30_000, entry.path);
+      p = withTimeout(this.gltf.loadAsync(`${this.base}${entry.path}`), 12_000, entry.path);
       this.characters.set(key, p);
     }
     return p;
@@ -240,7 +240,7 @@ export class AssetLibrary {
     if (!p) {
       const url = `${this.base}${relPath}`;
       const loader: { loadAsync(url: string): Promise<THREE.Texture> } = relPath.endsWith('.ktx2') && this.ktx2 ? this.ktx2 : this.texLoader;
-      p = withTimeout(loader.loadAsync(url), 20_000, relPath).then((t) => {
+      p = withTimeout(loader.loadAsync(url), 8_000, relPath).then((t) => {
         t.wrapS = t.wrapT = THREE.RepeatWrapping;
         t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
         t.anisotropy = 8;

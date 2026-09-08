@@ -210,6 +210,25 @@ export class Game {
     }
   }
 
+  /** Run a load phase with a deadline; on overrun we continue without it rather than stranding the player. */
+  private async phase<T>(label: string, ms: number, work: Promise<T>): Promise<T | null> {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<null>((resolve) => {
+      timer = setTimeout(() => {
+        console.warn(`[truenorth] ${JSON.stringify({ type: 'load:phase-timeout', payload: { label, ms } })}`);
+        resolve(null);
+      }, ms);
+    });
+    try {
+      return await Promise.race([work.catch((e: unknown) => {
+        console.warn(`[truenorth] phase ${label} failed`, e);
+        return null;
+      }), deadline]);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   private async loadDistrictInner(district: District, onProgress?: (f: number, stage?: string) => void): Promise<void> {
     this.clearCharacterStudio();
     this.deps.bus.emit('district:load-requested', { district: district.id });
@@ -218,7 +237,8 @@ export class Game {
     onProgress?.(0.05);
     this.unloadDistrict();
     this.district = district;
-    const world = await WorldScene.create(district, this.preset, this.library, (f, stage) => onProgress?.(0.05 + f * 0.45, stage));
+    const world = (await this.phase('world', 25_000, WorldScene.create(district, this.preset, this.library, (f, stage) => onProgress?.(0.05 + f * 0.45, stage))))
+      ?? (await WorldScene.create(district, { ...this.preset, assetPolicy: 'lite' }, null));
     this.world = world;
     this.scene.add(world.group);
     stage('world');
@@ -235,7 +255,8 @@ export class Game {
     // NPCs
     this.npcBrain.setHeightFunction(world.heightAt);
     for (const npc of district.npcs) {
-      const view = await this.makeCharacter(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? (hashNpc(npc.id) ? 'female' : 'male') }));
+      const view = (await this.phase(`npc:${npc.id}`, 12_000, this.makeCharacter(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? (hashNpc(npc.id) ? 'female' : 'male') }))))
+        ?? new CharacterView(this.resolve({ ...npc.appearance, body: npc.appearance.body ?? 'male' }));
       view.root.name = `npc:${npc.id}`;
       this.scene.add(view.root);
       this.npcViews.set(npc.id, view);
@@ -244,7 +265,7 @@ export class Game {
     }
     stage('npcs');
     onProgress?.(0.7, 'people');
-    await this.environment.load(district.scene.ambience, this.preset, this.deps.config.featureFlags.dayNightCycle ?? true, district.scene.size);
+    await this.phase('environment', 12_000, this.environment.load(district.scene.ambience, this.preset, this.deps.config.featureFlags.dayNightCycle ?? true, district.scene.size));
     this.weather.set(this.deps.config.featureFlags.weather === false ? 'clear' : district.scene.ambience.weather, Math.round(this.preset.maxInstances * 0.5));
     this.setZoneAudio(district.scene.ambience.soundscape);
     stage('environment');
