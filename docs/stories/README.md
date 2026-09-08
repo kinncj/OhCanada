@@ -19,7 +19,7 @@ Study drill, close the tab and come back to the same state.* One file per clause
 | `TN-SAVE-save-and-reload.md` | `TN-SAVE` | Exactly what survives a closed tab; export and import |
 | `TN-RESUME-questions-after-a-reload.md` | `TN-RESUME` | Which question is asked when an answer step is resumed |
 | `TN-SET-settings.md` | `TN-SET` | Language, hold time, and the accessibility switches the other stories set |
-| `TN-COPY-strings-and-counts.md` | `TN-COPY` | The rules every copy table obeys: plurals, state words, missing strings |
+| `TN-COPY-strings-and-counts.md` | `TN-COPY` | The rules every copy table obeys: plurals, state words, waiting copy, missing strings |
 
 `TN-SET` is not in the task-1.1 list. It is here because every other story states an accessibility
 precondition ("Given single-switch mode is on"), and a precondition nobody can set is not testable. It is
@@ -29,6 +29,13 @@ deliberately small.
 vocabulary in this file and the acceptance criteria of no file. `storage-warning` was required by
 `TN-SET-03` and `TN-CREATOR-03` and owned by nobody; `study.count` drew "1 questions" because one copy table
 row cannot say two things. A rule with no story is a rule nothing can fail.
+
+Two more strings joined their tables on 2026-09-08, both found the same way — the screens had to take them
+from the caller as **required** options, so no screen could be mounted without somebody inventing a word.
+`hud.label`, the accessible name of the `hud` region that `TN-HUD-07` requires, is now in `TN-HUD`;
+`level.loading`, the text `TN-LEVEL-01` requires instead of a bare spinner, is now in `TN-LEVEL`, with the
+rule that it may not claim progress the game cannot measure. **A gap reported under `TN-COPY-06` is a debt,
+not a home.** A string that lives in a caller forever is a string two callers will eventually disagree about.
 
 `TN-RESUME` was added on 2026-09-08 for the sharpest version of that problem: not a rule nobody owned, but a
 moment **two stories owned and answered differently**. `TN-SAVE-01` said a question already answered is never
@@ -55,6 +62,9 @@ decided, the decision goes in a file, with what it costs, and both sides point a
 - **Counts and state words follow `TN-COPY-strings-and-counts.md`**, not each screen's judgement. It has one
   rule for plurals in both languages, and it exists because "1 questions" is not a Study bug, it is a bug in
   every string with a number in it.
+- **A screen that is waiting says what it is doing, not how far along it is** (`TN-COPY-07`). No percentage,
+  no step count, no ellipsis, no bar with a value, unless the game really knows both halves of the fraction —
+  and in slice 1 it never does. The honest answer to a long wait is the escape route in `TN-LEVEL-02`.
 - **Plain language**, roughly CLB 4 / grade 6. Short sentences. No jargon the player did not bring with them:
   the words *spaced repetition*, *FSRS*, *scheduler*, *due*, *card state* never appear on screen.
 - **One thumb, portrait.** Hold to move, tap to jump, tap an NPC or POI to engage. No scenario may need two
@@ -65,6 +75,10 @@ decided, the decision goes in a file, with what it costs, and both sides point a
 - **A scenario must be able to fail.** If a step could be written today against an empty page and still pass,
   it is wrong. Waiting for a marker before asserting anything is the pattern (`tests/a11y/screens.spec.ts`
   already does this).
+- **A check that passes is not the same as a check that ran.** A lint rule that never executed, a scan rule
+  that self-passed and a test that was skipped all report exactly what a clean run reports. Where a story
+  leans on a tool's green tick, it also says how that tick can be made to go red — `TN-HUD-10` is the worked
+  example, and it exists because `landmark-one-main` passed on a page with no `<main>` at all.
 
 ## Depiction is acceptance too
 
@@ -96,7 +110,9 @@ whether it may be on screen at all is that document's shipping rule, not a test.
 - Vouvoiement (« vous »), to match IRCC's own French. See `OQ-STYLE-1` in `TN-SET-settings.md`.
 - Canadian French typography: **no** space before `?` and `!`; a space before `:`. Guillemets « » with a
   space inside.
-- FR copy is a translation of meaning, never of word order. It is held to the same grade-6 bar as EN.
+- FR copy is a translation of meaning, never of word order. It is held to the same grade-6 bar as EN, and it
+  may take a different shape from the English where the English shape is what breaks it: `study.summary.score`
+  is a sentence in English and a label in French, and `TN-STUDY` says why.
 - Numbers are formatted for the locale, never concatenated: « 0,6 », « 150 % » with a space.
   `TN-COPY-strings-and-counts.md` says why this is a rule and not a preference.
 
@@ -117,9 +133,9 @@ provides it.
 | `data-testid` | What it marks |
 |---|---|
 | `playable` | The level is loaded and accepts input. Already used by `tests/perf` and `tests/a11y`. |
-| `level-loading`, `level-error` | Load in progress; load failed. |
+| `level-loading`, `level-error` | Load in progress; load failed. `level-loading` carries `level.loading` (`TN-LEVEL-01`). |
 | `scene-state` | The E2E scene probe — see below. |
-| `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). |
+| `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). `hud` is a region named by `hud.label`. |
 | `menu` | The menu opened from `menu-button` (`TN-HUD-02`). |
 | `move-left`, `move-right`, `turn-around` | The hold-to-move controls (see `OQ-INPUT-1`). |
 | `interact-prompt` | The "you can engage this" button shown when a target is in reach. |
@@ -182,29 +198,38 @@ the player cannot make.
 
 ## What the a11y suite proves, and what it does not
 
-`tests/a11y` mounts each DOM screen in a harness and runs axe-core against it. Eighty-seven passing checks
-mean **the components are accessible in isolation**. They do not mean the shipped page is accessible, and
-nobody should read them that way, because the screens are not yet routed through `app/bootstrap`: nothing
-in that suite exercises the production build, the composition root, or two screens on the same page at the
-same time. A component that passes a harness can still be mounted twice, mounted inside an `aria-hidden`
-subtree, or never mounted at all.
+`tests/a11y` mounts each DOM screen in a harness and runs axe-core against it, and — since `TN-HUD` shipped —
+also assembles them into one page and scans that. A hundred and twenty-two passing checks mean **the
+components are accessible in isolation, and the harness's assembled page is accessible with no rule turned
+off**. They do not mean the shipped page is accessible, and nobody should read them that way, because the
+screens are still not routed through `app/bootstrap`: nothing in that suite exercises the production build or
+the composition root. A component that passes a harness can still be mounted twice, mounted inside an
+`aria-hidden` subtree, or never mounted at all.
 
 The claim is honest and it is narrow, so it is written down rather than left to be inferred from a green
-tick. Closing the gap is `OQ-TEST-2`.
+tick. Closing the gap is `OQ-TEST-2`, which the whole-page scan **does not close**: that scan runs against
+the harness's page, not `dist/`.
 
 The scans do fail when something is wrong, which is the only reason to keep them. Two real defects were
 found by axe in task 1.15's own code before it went green: an empty unnamed button, caused by a CSS rule
 overriding `[hidden]`, and `color-contrast` returning *incomplete* on symbol-only nodes. Neither was
 visible by reading the code.
 
-### The two disabled axe rules
+### The two axe rules that were disabled, and are not any more
 
-`region` and `landmark-one-main` are disabled in the a11y spec, with the reason written beside them: a
+`region` and `landmark-one-main` were disabled in the a11y spec, with the reason written beside them: a
 single modal over an `aria-hidden` canvas has no document landmarks, and inventing a `<main>` to satisfy a
-scanner is not accessibility. **Agreed, for exactly as long as that is true.** `TN-HUD` builds the page
-those rules describe — one `<main>`, a named `hud` region, real content outside the modals — and
-`TN-HUD-07` requires both rules back on for the whole-page scan. A rule disabled because a page did not
-exist yet has to be re-enabled when the page exists, or the reason has quietly become a habit.
+scanner is not accessibility. That reason expired the moment `TN-HUD` built the page those rules describe —
+one `<main>`, a named `hud` region, real content outside the modals — and `TN-HUD-07` required both rules
+back on for the whole-page scan. They are on, and that scan disables nothing at all.
+
+**Being enabled is not the same as being enforced.** `landmark-one-main` self-passed on this page even with
+`<main>` removed: the `<section aria-label>` on the HUD kept the content inside a landmark, and axe's
+`passForModal` heuristic read the full-bleed `#game` div as a modal. The negative control had to unwrap
+`<main>` *and* strip the region's label before the rule would fire. So the green tick carries two guards —
+the rule ids are asserted to appear in the results, because a rule that never ran also reports no violations,
+and the negative control is asserted to fail — and `TN-HUD-10` is the story that keeps them there. Nobody
+simplifies a guard away on the grounds that the scan is green; the scan being green is what is being checked.
 
 Any further rule this project disables carries its reason in the file **and** a line here, naming the
 condition under which it goes back on. A suppression with no expiry is a lowered bar with a comment.
@@ -221,12 +246,13 @@ answer nobody has given. Cross-cutting ones live here.
 - **`OQ-TEST-1` — is the scene probe acceptable?** Camera and momentum cannot otherwise be asserted from
   Playwright. *Recommendation:* yes, gated behind `?e2e=1` and stripped from production builds; the
   alternative is screenshot diffing, which fails for the wrong reasons.
-- **`OQ-TEST-2` — when is the *page* scanned, rather than the components?** The a11y suite runs against a
-  harness because `app/bootstrap` does not yet mount these screens. *Recommendation:* when the screens are
-  routed (with `TN-HUD`), add one whole-page scan against the built output — the creator, then the level
-  with its HUD, then one modal open over it — with `region` and `landmark-one-main` enabled, and keep the
-  per-component scans as well. Two scans answer two different questions and neither replaces the other.
-  Until that exists, no report may describe the a11y suite as proving the shipped page.
+- **`OQ-TEST-2` — when is the *page* scanned, rather than the components?** **Still open.** The whole-page
+  scan added with `TN-HUD` runs against the harness's assembled page, because `app/bootstrap` does not yet
+  mount these screens; it is a real page with real landmarks and it is not the shipped one.
+  *Recommendation:* when the screens are routed, add the same scan against the built output — the creator,
+  then the level with its HUD, then one modal open over it — and keep the per-component and harness-page
+  scans as well. Three scans answer three different questions and none replaces another. Until the built
+  output is scanned, no report may describe the a11y suite as proving the shipped page.
 - **`OQ-TEST-3` — can a test move the clock?** Several scenarios in `TN-RESUME` say "an hour has passed",
   because what the scheduler offers depends on time and nothing else can express that. If the time the
   scheduler reads is not a port with a fake, those scenarios can only be written as sleeps, which is how a

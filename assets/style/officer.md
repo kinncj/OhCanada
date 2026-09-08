@@ -107,9 +107,27 @@ name. The copy is the PO's; this is the constraint the copy has to satisfy.
 
 ---
 
-## 6. Rig notes for task 1.11
+## 6. Rig notes for task 1.11 — SUPERSEDED by `assets/style/rig-contract.md`
 
-Not the rig contract — that is `content/characters/rig.json` — but the parts this design implies, so the SVG
+**Task 1.11 has landed and the contract is `assets/style/rig-contract.md` plus `rig-contract.json`.** The
+part list below was this sheet's guess and the shipped rig differs from it in three ways worth knowing:
+
+- **Twenty parts, not twenty-one.** There is no separate `hat-band`, `pouch`, `collar`, `cross-strap` or
+  `lanyard` part: the standing collar, the shoulder straps, the Sam Browne and its diagonal, the buttons,
+  the pocket flaps and the lanyard are all drawn **into `torso-serge`**, because none of them articulates
+  independently of the tunic and each one as its own atlas frame would be decoded texture spent on nothing.
+- **Left and right arms and legs are one frame, mirrored.** Only the feet are sided. The far-side art drawn
+  a ramp step darker cost ≈ 1.5 MiB of decoded texture per level and Ottawa could not carry it.
+- **The costume is a slot, not a character.** `costume: serge` is what makes this character the officer;
+  everything else — skin, hair shape, hair colour, expression, head covering, feature — is the same rig the
+  player uses, with the same proportions, which is exactly what §1 of this sheet asks for.
+
+The original note is kept below because its **skin-slot instinct was right** and it is why the art was
+authored separable from the start.
+
+
+
+Not the rig contract — that was expected to be `content/characters/rig.json`, which **still does not exist**; see the block above for where the contract actually landed — but the parts this design implies, so the SVG
 is authored separable from the start:
 
 `hat`, `hat-band`, `head`, `hair`, `face`, `collar`, `torso`, `arm-upper-l/r`, `arm-lower-l/r`, `glove-l/r`,

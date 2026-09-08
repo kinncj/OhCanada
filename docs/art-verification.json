@@ -1,0 +1,180 @@
+{
+  "id": "truenorth-art-verification",
+  "version": "1.0.0",
+  "owner": "art-verifier",
+  "runOn": "2026-09-08",
+  "runBy": "manual blind pass (make verify-art is still the slice-0 stub)",
+  "method": "docs/art-verification-method.md",
+  "renderedFrom": "assets/src/svg/ottawa/*.svg rasterised with sharp at 1000/300/140 px wide, plus a 1080x1920 composite built from the layer offsets in content/levels/ottawa.json",
+  "runIntegrity": {
+    "blindnessHeld": false,
+    "why": "The renders had to be located before they could be rasterised, and listing assets/src/svg/ottawa/ shows the filenames. 'landmark-parliament-hill.svg' names its subject. The identification below was therefore CLOSED-SET (the candidate answers were visible) rather than open-set.",
+    "consequence": "Every identification verdict in this file is marked untrusted. Feature audits are unaffected by the leak and are reported as trusted.",
+    "fixNeeded": "Renders must be handed to the identifier under content-addressed names, by a step the identifier does not run. See docs/art-verification-method.md."
+  },
+  "results": [
+    {
+      "assetId": "ottawa/landmark-parliament-hill.svg",
+      "judgedAgainstSubject": "peace-tower",
+      "blindIdentification": "Centre Block, Parliament Hill, Ottawa; the central tower is the Peace Tower. Cues used, in order: the Canadian flag at the masthead; green copper roof and spire on buff sandstone; a clock tower centred over a pointed-arch entrance; symmetrical wings with a Gothic arcade.",
+      "identificationMatchesExpected": true,
+      "identificationVerdict": "untrusted",
+      "featureVerdict": "pass",
+      "missingFeatures": [],
+      "measured": {
+        "spireFractionOfTowerHeight": 0.21,
+        "spireBaseWidthFractionOfShaft": 0.75,
+        "dialFractionOfShaftWidth": 0.55,
+        "dialCentreFractionOfTowerHeight": 0.72,
+        "shaftWidthToTotalHeight": "1:7.79"
+      },
+      "note": "Every mustBeRight feature is present and all five measured ratios match the amended contract exactly; the identification is sound but cannot be called blind because the filename named the subject."
+    },
+    {
+      "assetId": "ottawa/layer-50-canalwall.svg",
+      "judgedAgainstSubject": "rideau-canal-skateway",
+      "blindIdentification": "The Rideau Canal Skateway, Ottawa, in winter. Cues: a straight channel with a dressed-stone retaining wall and iron railing, a road bridge on piers crossing it, lamp standards, people skating on the channel floor, and a wooden warming hut.",
+      "identificationMatchesExpected": true,
+      "identificationVerdict": "untrusted",
+      "featureVerdict": "pass-in-composite",
+      "missingFeatures": [
+        "scored skate marks in the ice - absent from this file; supplied by ottawa/layer-60-ice.svg, so the feature only exists once the layers are composited"
+      ],
+      "note": "Built edges, skaters with visible blades in a glide stance, the crossing bridge and the cold palette are all present; the one missing feature lives in a different file, which is a contract-granularity problem rather than an art problem."
+    },
+    {
+      "assetId": "ottawa/layer-20-skyline.svg",
+      "judgedAgainstSubject": null,
+      "blindIdentification": "A distant, desaturated city skyline of plain flat-topped mid-rise blocks with snow caps and bare trees. I could not name a city from it.",
+      "identificationMatchesExpected": null,
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "Deliberately generic background massing, not a landmark; it is not the parliament-hill-skyline subject despite the similar name."
+    },
+    {
+      "assetId": "ottawa/layer-30-escarpment.svg",
+      "judgedAgainstSubject": null,
+      "blindIdentification": "A dense boreal conifer forest slope under snow. Generic; not a place.",
+      "identificationMatchesExpected": null,
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "Supplies the 'dark green mass' the escarpment feature asks for, but reads as a low wooded bank rather than a cliff."
+    },
+    {
+      "assetId": "ottawa/layer-10-sky.svg",
+      "blindIdentification": "Flat blue sky with stylised flat-bottomed cumulus and a horizon band.",
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "Non-representational background; no subject to identify."
+    },
+    {
+      "assetId": "ottawa/layer-40-treeline.svg",
+      "blindIdentification": "Winter treeline: snow-capped bare deciduous trees and snowy conifers on a drift.",
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "Generic Canadian winter vegetation; no subject to identify."
+    },
+    {
+      "assetId": "ottawa/layer-60-ice.svg",
+      "blindIdentification": "A frozen water surface with curved skate scratch marks.",
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "Carries the 'scored skate marks' feature that rideau-canal-skateway requires."
+    },
+    {
+      "assetId": "ottawa/particle-snow.svg",
+      "blindIdentification": "Snow particle sprite: three white discs in three sizes.",
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "Utility sprite."
+    },
+    {
+      "assetId": "ottawa/poi-marker-active.svg",
+      "blindIdentification": "A point-of-interest marker in its active/selected state: a gold ring on a signboard on a post.",
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "UI affordance; correctly distinguishable from the idle state by more than colour alone is NOT established - see open concerns."
+    },
+    {
+      "assetId": "ottawa/poi-marker-idle.svg",
+      "blindIdentification": "A point-of-interest marker in its idle state: a white ring on a signboard on a post.",
+      "identificationVerdict": "not-applicable",
+      "featureVerdict": "not-applicable",
+      "missingFeatures": [],
+      "note": "Identical geometry to the active marker; the two differ only in ring colour and ring thickness."
+    }
+  ],
+  "subjectsWithNoRender": [
+    {
+      "subject": "parliament-hill-skyline",
+      "why": "No asset in assets/src/svg/ottawa/ draws Parliament Hill as a distant massing. layer-20-skyline.svg is generic city blocks. The subject is unrendered, not failed."
+    },
+    {
+      "subject": "officer",
+      "why": "The character rig is in flight and is what is breaking `make assets` on the texture budget. Nothing to verify. NOT VERIFIED - no judgement made."
+    }
+  ],
+  "contractDefects": [
+    {
+      "id": "AV-01",
+      "severity": "blocking-for-automation",
+      "what": "There is no mapping from an asset file to a subject id. Nothing in references.json, credits.json, content/levels/ottawa.json or the asset manifest says which subject landmark-parliament-hill.svg is judged against.",
+      "whyItMatters": "The same render passes `peace-tower` on 7 of 7 features and fails `parliament-hill-skyline` on 2 of 4. Which verdict is correct is currently a matter of opinion."
+    },
+    {
+      "id": "AV-02",
+      "severity": "blocking-for-automation",
+      "what": "peace-tower.neverAdd forbids 'a second tower or spire on the Centre Block'. parliament-hill-skyline.mustBeRight requires the Library of Parliament's polygonal roof behind and right of the tower. landmark-parliament-hill.svg draws it, and its own <title> says it depicts the Library.",
+      "whyItMatters": "The denylist entry and the requirement describe the same shape. A verifier applying peace-tower literally would fail the render for drawing a required feature."
+    },
+    {
+      "id": "AV-03",
+      "severity": "correction-needed",
+      "what": "peace-tower.mustBeRight.clock-face justifies the 0.55 exaggeration with 'because 0.40 is 24 px at design resolution'. The shipped shaft is 113 px at design resolution, so 0.40 is 45 px, not 24. The figure that is actually about 16-24 px is the dial on a 390 pt phone, not at design resolution.",
+      "whyItMatters": "This is a third unmeasured number in the same file, of the same kind as the two already corrected. The decision it justifies is sound - the size test below confirms it - but the number stated is wrong and should be corrected in place rather than left to look like a measurement."
+    },
+    {
+      "id": "AV-04",
+      "severity": "granularity",
+      "what": "Subjects are composites; assets are layers. rideau-canal-skateway requires skate marks that live in layer-60, built edges that live in layer-50, and cold light that comes from layer-10. peace-tower's 'symmetrical wing block' is inside the landmark file but its escarpment is in layer-30.",
+      "whyItMatters": "Per-file verification cannot answer a per-subject contract. The verifier must be given a composite, built from content/levels/ottawa.json, not a directory of layers."
+    }
+  ],
+  "artConcerns": [
+    {
+      "id": "AV-05",
+      "severity": "accuracy",
+      "what": "In the 1080x1920 composite the landmark is drawn in front of the escarpment band, not on top of it. Parliament Hill ends up standing at canal level on flat snow, with no hill, cliff or terrace beneath it.",
+      "whyItMatters": "Centre Block stands roughly 50 m above the Ottawa River on a cliff; the name Parliament HILL is the fact. A learner who has never been to Ottawa would take from this scene that Parliament sits at the water's edge. This is the only thing in the level I judge as actively misleading. It is invisible in the single file and only appears in the composite.",
+      "caveat": "Derived from my own composite using content/levels/ottawa.json offsets as top-left origins. If Phaser anchors those layers differently the occlusion may differ. Confirm against a running scene before acting."
+    },
+    {
+      "id": "AV-06",
+      "severity": "accessibility",
+      "what": "poi-marker-idle and poi-marker-active are geometrically identical and differ only in ring colour (white vs gold) and ring stroke width.",
+      "whyItMatters": "CLAUDE.md requires that colour is never the only signal. The stroke-width difference is a second signal but a weak one at marker size. Worth an explicit check by whoever owns the HUD."
+    }
+  ],
+  "sizeTest": {
+    "subject": "peace-tower",
+    "onScreenSize": "The landmark is 1080 px wide at a design resolution of 1080, so it is drawn essentially full-bleed. The 1000 px reading is the operative one.",
+    "w1000": "Full identification. Clock hands legible.",
+    "w420_composite": "Full identification. Clock, spire, flag and arcade all read.",
+    "w300": "Full identification holds.",
+    "w140": "The clock collapses to a featureless white dot and the hands are gone. Identification survives only on the flag, the green spire and the symmetry.",
+    "conclusion": "The clock-dial exaggeration is load-bearing and reads as accurate, not as wrong. At the contract's measured 0.40 the dial would have gone featureless earlier than it does."
+  },
+  "flagMaskExperiment": {
+    "what": "The Canadian flag was masked out of the render and the identification re-attempted.",
+    "fullBuildingNoFlag": "Confidence fell from about 90 percent to about 65 percent. I would have said 'Gothic Revival parliamentary building with a central clock tower, most likely Canada's Centre Block' and named Westminster as a live alternative.",
+    "towerCropNoFlag": "Identification failed. I would have said 'a Big Ben-like Gothic clock tower' and would not have named the Peace Tower.",
+    "conclusion": "The flag is doing a large share of the recognition work. That is legitimate - it is a mustBeRight feature and the real tower flies one - but the contract should not be read as evidence that the architecture alone is diagnostic. It is not."
+  }
+}

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { text } from '@ui/copy';
 import { createLevelError, createLevelLoading } from '@ui/level-screens';
 
 import { buildPage, press, type FakeElement, type FakePage } from './support/fake-dom';
@@ -28,9 +29,11 @@ function openLoading(
   const screen = createLevelLoading(page.host, {
     locale: 'en',
     title: 'Ottawa',
-    /* Fixture wording. The sentence is the caller's: no story table carries a
-       `level.loading` row, and this directory does not author one. */
-    message: 'Getting the canal ready.',
+    /* The sentence is still the caller's — `OQ-LEVEL-9` keeps the wording with
+       the level that waits — but it is no longer invented here: `level.loading`
+       is a row now, and this is the call Ottawa's composition root will make.
+       The assertions below stay literal, so reading the row is not circular. */
+    message: text('en', 'level.loading'),
     onBack,
     ...overrides,
   });
@@ -67,6 +70,17 @@ describe('the level is loading', () => {
     expect(onBack).toHaveBeenCalledTimes(1);
   });
 
+  it('adds the escape beside the message, never in place of it', () => {
+    /* `TN-COPY-07`: "the same sentence is shown for the whole wait", and "any
+       control that appears later is added beside it". A screen that swaps its
+       sentence for "Still working…" once a load is slow is making a second
+       claim about progress it still cannot measure. */
+    const { screen, at } = openLoading();
+    screen.offerEscape();
+
+    expect(at('level-loading')?.textContent).toContain('Getting the canal ready.');
+  });
+
   it('offers it on its own after the stall budget, when it was given one', () => {
     vi.useFakeTimers();
     try {
@@ -100,7 +114,7 @@ describe('the level is loading', () => {
     const screen = createLevelLoading(page.host, {
       locale: 'en',
       title: 'Ottawa',
-      message: 'Getting the canal ready.',
+      message: text('en', 'level.loading'),
     });
     screen.show();
     screen.offerEscape();

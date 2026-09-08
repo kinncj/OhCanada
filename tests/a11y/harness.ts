@@ -35,7 +35,7 @@ import {
   prefersReducedMotion,
   type Settings,
 } from '../../app/ui/settings';
-import { isUiLocale, type UiLocale } from '../../app/ui/copy';
+import { isUiLocale, text, type UiLocale } from '../../app/ui/copy';
 
 const params = new URLSearchParams(window.location.search);
 const ui = document.getElementById('ui');
@@ -134,15 +134,16 @@ const QUESTION: QuestionView = {
  * belongs to the level document (ADR-0010) and reaches `app/ui` as data — the
  * components take it as a required option rather than owning it.
  *
- * `hud.label` and the loading sentence are the two exceptions: no story table
- * carries them, so these are placeholders standing in for a row the PO owns, and
- * they are reported as gaps rather than being added to `app/ui/copy.ts`.
+ * The two strings that used to be placeholders here — the region's name and the
+ * loading sentence — are gone: `TN-HUD` and `TN-LEVEL` write them down, so
+ * `hud.label` and `level.loading` are rows in `app/ui/copy.ts`. The HUD names
+ * itself from the table, and the loading sentence is read from the table below
+ * rather than retyped, so a wording change reaches the scan without this fixture
+ * being edited.
  */
 const LEVEL = {
   en: {
     title: 'Ottawa',
-    hud: 'Game controls',
-    loading: 'Getting the canal ready.',
     mode: 'Skating',
     task: 'Answer 3 questions (0 of 3)',
     officer: 'Talk to the officer',
@@ -157,8 +158,6 @@ const LEVEL = {
   },
   fr: {
     title: 'Ottawa',
-    hud: 'Commandes du jeu',
-    loading: 'Préparation du canal.',
     mode: 'Patinage',
     task: 'Répondez à 3 questions (0 sur 3)',
     officer: "Parler à l'agent",
@@ -289,7 +288,9 @@ switch (screen) {
     const loading = createLevelLoading(ui, {
       locale,
       title: level.title,
-      message: level.loading,
+      /* Ottawa's own sentence, from the table `TN-LEVEL` owns. The screen takes
+         it as data because the level owns the wording (`OQ-LEVEL-9`). */
+      message: text(locale, 'level.loading'),
       onBack: () => undefined,
       singleSwitch: store.current.singleSwitch,
     });
@@ -330,7 +331,6 @@ switch (screen) {
     const game = document.getElementById('game');
     const hud = createHud(ui, {
       locale,
-      label: level.hud,
       announce,
       onPause: () => undefined,
       onResume: () => undefined,

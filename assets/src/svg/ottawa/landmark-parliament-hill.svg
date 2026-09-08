@@ -1,10 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1040" viewBox="0 120 1080 1040" shape-rendering="geometricPrecision">
   <title>Parliament Hill, Ottawa: Centre Block, the Peace Tower and the Library of Parliament, seen from the Rideau Canal. Simplified from assets/refs/ottawa/.</title>
-  <rect x="0" y="1120" width="1080" height="40" fill="#154536"/>
-  <path d="M 0 1092 Q 210 1078 470 1090 Q 760 1080 1080 1094 L 1080 1152 L 0 1152 Z" fill="#e6eff7"/>
-  <path d="M 0 1092 Q 210 1078 470 1090 Q 760 1080 1080 1094 L 1080 1101 L 0 1101 Z" fill="#ffffff"/>
-  <rect x="0" y="1148" width="1080" height="12" fill="#e6eff7"/>
-  <rect x="0" y="1148" width="1080" height="11" fill="#ffffff"/>
+  <!-- The bluff. Centre Block stands about 50 m above the river, and "Parliament Hill" is the fact the
+       level teaches, so the hill is drawn rather than implied: a stone cliff face in vertical facets
+       with a snow crest and a spruce line at its foot for scale. Added in task 1.11 after a composite
+       showed the building standing on flat snow. It fits inside the existing art band, so it costs no
+       decoded texture. The rest of the elevation is a DEPTH decision, not a drawing one: the POI sits
+       between depth 40 and depth 50, so layer-50-canalwall is drawn in front of the bluff foot.
+       See assets/style/ottawa-level.md section 3. -->
+  <rect x="0" y="1128" width="1080" height="32" fill="#e6eff7"/>
+  <path d="M 0 1090 Q 260 1077 540 1087 Q 800 1078 1080 1091 L 1080 1152 L 0 1152 Z" fill="#9a623e"/>
+  <path d="M -30 1094 L 66 1092 L 51 1152 L -11 1152 Z" fill="#bc9c6d"/>
+  <path d="M 140 1087 L 290 1092 L 280 1152 L 157 1152 Z" fill="#bc9c6d"/>
+  <path d="M 364 1089 L 514 1088 L 493 1152 L 381 1152 Z" fill="#bc9c6d"/>
+  <path d="M 610 1093 L 760 1095 L 740 1152 L 622 1152 Z" fill="#bc9c6d"/>
+  <path d="M 814 1088 L 964 1092 L 948 1152 L 835 1152 Z" fill="#bc9c6d"/>
+  <path d="M 1018 1087 L 1168 1085 L 1146 1152 L 1037 1152 Z" fill="#bc9c6d"/>
+  <path d="M 0 1090 Q 260 1077 540 1087 Q 800 1078 1080 1091 L 1080 1102 Q 800 1089 540 1098 Q 260 1088 0 1101 Z" fill="#ffffff"/>
+  <path d="M 34 1105 L 50 1150 L 18 1150 Z" fill="#154536"/>
+  <path d="M 34 1112 L 22 1150 L 30 1150 Z" fill="#2c8055"/>
+  <path d="M 162 1102 L 179 1150 L 145 1150 Z" fill="#154536"/>
+  <path d="M 162 1109 L 149 1150 L 158 1150 Z" fill="#2c8055"/>
+  <path d="M 269 1103 L 286 1150 L 252 1150 Z" fill="#154536"/>
+  <path d="M 269 1110 L 256 1150 L 265 1150 Z" fill="#2c8055"/>
+  <path d="M 391 1091 L 409 1150 L 373 1150 Z" fill="#154536"/>
+  <path d="M 391 1098 L 377 1150 L 387 1150 Z" fill="#2c8055"/>
+  <path d="M 476 1090 L 493 1150 L 459 1150 Z" fill="#154536"/>
+  <path d="M 476 1097 L 463 1150 L 472 1150 Z" fill="#2c8055"/>
+  <path d="M 596 1095 L 614 1150 L 578 1150 Z" fill="#154536"/>
+  <path d="M 596 1102 L 582 1150 L 592 1150 Z" fill="#2c8055"/>
+  <path d="M 734 1089 L 751 1150 L 717 1150 Z" fill="#154536"/>
+  <path d="M 734 1096 L 721 1150 L 730 1150 Z" fill="#2c8055"/>
+  <path d="M 843 1101 L 857 1150 L 829 1150 Z" fill="#154536"/>
+  <path d="M 843 1108 L 833 1150 L 840 1150 Z" fill="#2c8055"/>
+  <path d="M 981 1103 L 995 1150 L 967 1150 Z" fill="#154536"/>
+  <path d="M 981 1110 L 971 1150 L 978 1150 Z" fill="#2c8055"/>
+  <rect x="0" y="1148" width="1080" height="12" fill="#ffffff"/>
   <rect x="712" y="925.6" width="176" height="116" fill="#bc9c6d"/>
   <rect x="712" y="925.6" width="50" height="116" fill="#d2c5a3"/>
   <rect x="860" y="925.6" width="28" height="116" fill="#9a623e"/>

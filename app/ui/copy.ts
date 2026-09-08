@@ -11,8 +11,9 @@
  * The wording is not this module's to choose. Every key below is transcribed
  * from a "Player-facing copy" table in `docs/stories/`; the story file is named
  * above each block. There are no exceptions left: {@link COPY_GAPS} is empty,
- * and the two strings these screens need that no table carries are taken from
- * the caller as data instead of being authored here — see that constant.
+ * and the two strings that used to be missing — `hud.label` and `level.loading`
+ * — are now rows here, transcribed from `TN-HUD` and `TN-LEVEL` like the rest.
+ * See that constant for what stays a caller's option and why.
  *
  * Counted strings (`study.count`, `settings.holdTime.seconds`) are two rows and
  * are reached through {@link count}, never {@link text}: the type makes that a
@@ -129,6 +130,11 @@ const EN = {
   'passport.open': 'See my passport',
 
   /* docs/stories/TN-HUD-hud-and-menu.md */
+  /* The accessible name of the `hud` region (`TN-HUD-07`). It names what the
+     region is *for*, and the story's table rules out "HUD", "Heads-up display",
+     "Region", "Section" and the empty string by name — which is why the HUD
+     draws this row rather than taking a name from its caller. */
+  'hud.label': 'Game controls',
   'hud.menu': 'Menu',
   'hud.menu.title': 'Menu',
   /* docs/stories/TN-QUEST-parliament-hill.md — drawn by `hud-quest-tracker`. */
@@ -142,6 +148,14 @@ const EN = {
   'save.export': 'Save to a file',
 
   /* docs/stories/TN-LEVEL-ottawa.md */
+  /* The waiting sentence `TN-LEVEL-01` asks for instead of a bare spinner,
+     under `TN-COPY-07`'s waiting rule: it names the work and claims no progress
+     the game cannot measure — no percentage, no fraction, no "2 of 4", no
+     ellipsis, no bar with a value — and it does not change while the load runs.
+     It names the canal, so it is Ottawa's; `OQ-LEVEL-9` keeps the key and lets
+     each level own the wording, which is why `createLevelLoading` still takes
+     the sentence as data. */
+  'level.loading': 'Getting the canal ready.',
   'locomotion.skate.label': 'Skating',
   'level.error.title': 'We could not load Ottawa.',
   'level.error.body': 'Check your connection and try again.',
@@ -258,7 +272,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
     "Nous n'avons pas pu charger les questions. Vérifiez votre connexion et réessayez.",
   'study.error.retry': 'Réessayer',
   'study.summary.title': 'Terminé',
-  'study.summary.score': 'Vous avez {{correct}} bonnes réponses sur {{total}}.',
+  'study.summary.score': 'Bonnes réponses : {{correct}} sur {{total}}',
   'study.summary.comeBack': 'Nous reposerons ces questions :',
   'study.summary.allRight': 'Vous avez tout bon.',
   'study.again': 'Réviser encore',
@@ -268,6 +282,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
 
   'passport.open': 'Voir mon passeport',
 
+  'hud.label': 'Commandes du jeu',
   'hud.menu': 'Menu',
   'hud.menu.title': 'Menu',
   'hud.task': 'Mission',
@@ -277,6 +292,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
     "Vous pouvez continuer à jouer, mais tout sera perdu à la fermeture de l'onglet.",
   'save.export': 'Enregistrer dans un fichier',
 
+  'level.loading': 'Préparation du canal.',
   'locomotion.skate.label': 'Patinage',
   'level.error.title': "Nous n'avons pas pu charger Ottawa.",
   'level.error.body': 'Vérifiez votre connexion et réessayez.',
@@ -287,17 +303,28 @@ const FR: Readonly<Record<CopyRow, string>> = {
 /**
  * Strings this module had to write because no story table carries them.
  *
- * Empty, and it is meant to stay empty. `settings.state.on` / `.off` used to be
- * here and are now written down in `TN-COPY-strings-and-counts.md`, so nothing
- * in this table is invented: every row above is transcribed from a "Player-facing
- * copy" table and names the story file it came from.
+ * Empty, and it is meant to stay empty. `settings.state.on` / `.off`,
+ * `hud.label` and `level.loading` were each reported as a gap and are each
+ * written down now — in `TN-COPY-strings-and-counts.md`, `TN-HUD` and
+ * `TN-LEVEL` — so nothing in this table is invented: every row above is
+ * transcribed from a "Player-facing copy" table and names the story file it
+ * came from.
  *
- * Two strings these screens *need* and no table carries are not listed here,
- * because they are not authored here either — they are taken from the caller as
- * data, which is the other half of `TN-COPY-06`: the `hud` region's accessible
- * name (`app/ui/hud.ts`, required option) and the level-loading sentence
- * (`app/ui/level-screens.ts`, required option). Both are reported as gaps with
- * the task. A required option cannot be forgotten; a defaulted one can.
+ * The two closed gaps landed differently, on purpose:
+ *
+ *  - `hud.label` is drawn here by the HUD itself, like `hud.menu`. It is one
+ *    name for the whole game, `TN-HUD-09` requires it to become French when the
+ *    player changes language without reloading the level, and `TN-HUD`'s table
+ *    rules out "HUD", "Region" and the empty string — none of which a
+ *    caller-supplied `string` can be stopped from being. A row the region reads
+ *    itself is stronger than a required option: the name cannot be omitted *or*
+ *    replaced with a wrong one.
+ *  - `level.loading` stays a **required option** on `createLevelLoading`. The
+ *    sentence names the canal, `OQ-LEVEL-9` keeps the wording with the level
+ *    that waits, and under ADR-0010 a level file carries its own text — so the
+ *    screen takes it as data and Ottawa's caller passes this row. Required, not
+ *    defaulted: a screen that waits without saying what for is `TN-LEVEL-01`'s
+ *    named defect, and a required option cannot be forgotten.
  *
  * The unit suite asserts this list is empty *and* that the marker this module
  * used to carry beside an invented string survives nowhere in the source, so a

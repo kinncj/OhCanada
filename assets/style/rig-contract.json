@@ -1,0 +1,3708 @@
+{
+  "$comment": [
+    "The TrueNorth character rig contract, task 1.11. NORMATIVE: assets/style/rig-contract.md is the prose;",
+    "this file is the same contract as data, and it is what a contract test loads.",
+    "It is authored under assets/ because assets/** is the art agent boundary. Its home is",
+    "content/characters/rig.json (CLAUDE.md, Characters) once a rig schema exists. The fields such a schema",
+    "would need are listed in rig-contract.md section 9 and are REQUESTED, not assumed: this file names no",
+    "schema path until that file exists. Moving it is then a copy, not a rewrite.",
+    "Every name here appears IDENTICALLY in the Rive file and in the sprite atlas. That identity is the",
+    "whole point of ICharacterRenderer: gameplay code must not be able to tell which backend it got."
+  ],
+  "version": 1,
+  "licence": "CC-BY-4.0",
+  "designResolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "characterSpace": {
+    "width": 240,
+    "height": 470,
+    "centreX": 120,
+    "crownY": 40,
+    "soleY": 460,
+    "groundLineY": 1280,
+    "heightPx": 420,
+    "headPx": 70,
+    "heightHeads": 6,
+    "note": "Part windows are given in THIS space, so a window origin IS the part offset. To place a character at world (x, y) with its feet on the ground, draw each part at (x - 120 + frame.x, y - 460 + frame.y)."
+  },
+  "artboards": [
+    {
+      "characterId": "player",
+      "artboard": "player",
+      "stateMachine": "motion",
+      "skins": {
+        "costume": "parka"
+      },
+      "playerSelectableSlots": [
+        "skin",
+        "hairShape",
+        "hairColour",
+        "headCovering",
+        "feature"
+      ]
+    },
+    {
+      "characterId": "officer",
+      "artboard": "officer",
+      "stateMachine": "motion",
+      "skins": {
+        "costume": "serge"
+      },
+      "playerSelectableSlots": [],
+      "note": "Generic constable. Never named as a member of a real force, and the artboard carries no crest, wordmark, collar dog, shoulder flash, chevron or service number."
+    }
+  ],
+  "stateMachine": {
+    "name": "motion",
+    "inputs": [
+      {
+        "name": "grounded",
+        "type": "bool",
+        "fallback": true,
+        "meaning": "Feet are on the ground polyline."
+      },
+      {
+        "name": "moving",
+        "type": "bool",
+        "fallback": false,
+        "meaning": "The traversal system wants forward motion (hold-to-move, or auto-move)."
+      },
+      {
+        "name": "talking",
+        "type": "bool",
+        "fallback": false,
+        "meaning": "A dialogue or question card owns this character."
+      },
+      {
+        "name": "reducedMotion",
+        "type": "bool",
+        "fallback": false,
+        "meaning": "Suppress squash-and-stretch and hold the idle key. Set by the caller from settings; the renderer never reads settings itself."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "fallback": 0,
+        "min": 0,
+        "max": 1,
+        "meaning": "Horizontal speed normalised to this character top speed. Selects walk below 0.55 and run at or above it."
+      },
+      {
+        "name": "verticalSpeed",
+        "type": "number",
+        "fallback": 0,
+        "min": -1,
+        "max": 1,
+        "meaning": "Vertical velocity normalised: positive rising, negative falling. Only read while grounded is false."
+      },
+      {
+        "name": "jump",
+        "type": "trigger",
+        "meaning": "Fired at take-off."
+      },
+      {
+        "name": "land",
+        "type": "trigger",
+        "meaning": "Fired on ground contact."
+      },
+      {
+        "name": "interact",
+        "type": "trigger",
+        "meaning": "Fired when the player taps an NPC or a POI in range."
+      }
+    ]
+  },
+  "selector": {
+    "note": "First match wins. This is the Rive state machine written out, and it is exactly what a sprite adapter evaluates - same inputs, same order, same answer. A contract test can drive both backends through this table and compare the selected state.",
+    "rules": [
+      {
+        "when": "interact fired and its state has not finished",
+        "state": "interact"
+      },
+      {
+        "when": "land fired and its state has not finished and not reducedMotion",
+        "state": "land"
+      },
+      {
+        "when": "not grounded and verticalSpeed > 0",
+        "state": "jump-rise"
+      },
+      {
+        "when": "not grounded",
+        "state": "jump-fall"
+      },
+      {
+        "when": "talking",
+        "state": "talk"
+      },
+      {
+        "when": "moving and speed >= 0.55",
+        "state": "run"
+      },
+      {
+        "when": "moving",
+        "state": "walk"
+      },
+      {
+        "when": "otherwise",
+        "state": "idle"
+      }
+    ]
+  },
+  "expressions": {
+    "names": [
+      "neutral",
+      "happy",
+      "thinking",
+      "surprised"
+    ],
+    "fallback": "neutral",
+    "note": "setExpression(name) resolves the {expression} template variable. Every pose differs in the SHAPE of brow, pupil and mouth, so it survives greyscale, high contrast and the plain Canvas tier, which has no Filter pipeline (ADR-0011)."
+  },
+  "events": [
+    {
+      "name": "footfall",
+      "when": "Each foot plant in walk and run, at t 0.0 and 0.5.",
+      "use": "Step audio and its subtitle equivalent."
+    },
+    {
+      "name": "interactReach",
+      "when": "t 0.4 of the interact state.",
+      "use": "The moment the POI or dialogue opens, so art and UI agree."
+    },
+    {
+      "name": "landImpact",
+      "when": "t 0.0 of the land state. Still fired under reducedMotion even though the state is skipped.",
+      "use": "Impact audio, camera shake where enabled."
+    }
+  ],
+  "slots": {
+    "skin": {
+      "options": [
+        "skin-1",
+        "skin-2",
+        "skin-3",
+        "skin-4",
+        "skin-5",
+        "skin-6"
+      ],
+      "fallback": "skin-3",
+      "playerSelectable": true,
+      "namesOwnedBy": "ui-a11y localiser keys",
+      "note": "The six ramps ship UNNAMED here: naming is docs/content-review.md 8.1 and OQ-REVIEW-6, not art. fallback is for NPC documents and save recovery only; it is arbitrary (the middle of the ordinal ramp) and the creator never renders it as a pre-selection - it randomises uniformly on open."
+    },
+    "hairShape": {
+      "options": [
+        "crop",
+        "coil",
+        "bob",
+        "long"
+      ],
+      "fallback": "crop",
+      "playerSelectable": true
+    },
+    "hairColour": {
+      "options": [
+        "black",
+        "brown",
+        "blond",
+        "red",
+        "grey"
+      ],
+      "fallback": "brown",
+      "playerSelectable": true
+    },
+    "headCovering": {
+      "options": [
+        "none",
+        "toque"
+      ],
+      "fallback": "none",
+      "playerSelectable": true
+    },
+    "feature": {
+      "options": [
+        "none",
+        "glasses"
+      ],
+      "fallback": "none",
+      "playerSelectable": true
+    },
+    "costume": {
+      "options": [
+        "parka",
+        "serge"
+      ],
+      "fallback": "parka",
+      "playerSelectable": false
+    },
+    "presentation": {
+      "options": [],
+      "fallback": null,
+      "playerSelectable": false,
+      "status": "reserved",
+      "blockedBy": "OQ-ART-08 / OQ-LEVEL-3",
+      "note": "The slot NAME is reserved so the Rive file and the atlas agree when the question is answered. It has no options today and a contract test skips reserved slots. It will be a slot on the one artboard with the one proportion canon - never a second artboard and never a second rig."
+    }
+  },
+  "slotIndependence": {
+    "rule": "Every option in every slot is available with every option in every other slot.",
+    "checkable": "The product of the option counts equals the number of valid combinations; no part frame template names two slots that constrain each other. hairShape and hairColour are separate slots for exactly this reason: one slot of 20 combined options could hide a coupling.",
+    "source": "docs/content-review.md 8.2"
+  },
+  "parts": [
+    {
+      "name": "ground-shadow",
+      "z": 1,
+      "frame": "ground-shadow",
+      "pivot": [
+        120,
+        457
+      ],
+      "mirrorX": false,
+      "note": "Baked contact shadow. Never rotates."
+    },
+    {
+      "name": "arm-upper-r",
+      "z": 2,
+      "frame": "arm-upper-{costume}",
+      "pivot": [
+        60,
+        142
+      ],
+      "mirrorX": true
+    },
+    {
+      "name": "arm-lower-r",
+      "z": 3,
+      "frame": "arm-lower-{costume}",
+      "pivot": [
+        55,
+        214
+      ],
+      "mirrorX": true
+    },
+    {
+      "name": "hand-r",
+      "z": 4,
+      "frame": "hand-{costume}",
+      "pivot": [
+        52,
+        282
+      ],
+      "mirrorX": true
+    },
+    {
+      "name": "leg-upper-r",
+      "z": 5,
+      "frame": "leg-upper-{costume}",
+      "pivot": [
+        94,
+        264
+      ],
+      "mirrorX": true
+    },
+    {
+      "name": "leg-lower-r",
+      "z": 6,
+      "frame": "leg-lower-{costume}",
+      "pivot": [
+        92,
+        362
+      ],
+      "mirrorX": true
+    },
+    {
+      "name": "foot-r",
+      "z": 7,
+      "frame": "foot-r-{costume}",
+      "pivot": [
+        90,
+        436
+      ],
+      "mirrorX": false,
+      "note": "Feet are the one pair that is not mirrored: a mirrored foot points backwards."
+    },
+    {
+      "name": "leg-upper-l",
+      "z": 8,
+      "frame": "leg-upper-{costume}",
+      "pivot": [
+        146,
+        264
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "leg-lower-l",
+      "z": 9,
+      "frame": "leg-lower-{costume}",
+      "pivot": [
+        148,
+        362
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "foot-l",
+      "z": 10,
+      "frame": "foot-l-{costume}",
+      "pivot": [
+        150,
+        436
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "torso",
+      "z": 11,
+      "frame": "torso-{costume}",
+      "pivot": [
+        120,
+        264
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "head",
+      "z": 12,
+      "frame": "head-{skin}",
+      "pivot": [
+        120,
+        112
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "face",
+      "z": 13,
+      "frame": "face-{expression}",
+      "pivot": [
+        120,
+        112
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "hair",
+      "z": 14,
+      "frame": "hair-{hairShape}-{hairColour}",
+      "pivot": [
+        120,
+        112
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "head-covering",
+      "z": 15,
+      "frame": "head-covering-{headCovering}",
+      "pivot": [
+        120,
+        112
+      ],
+      "mirrorX": false,
+      "note": "Resolves to no frame when headCovering is \"none\"."
+    },
+    {
+      "name": "hat",
+      "z": 16,
+      "frame": "hat-{costume}",
+      "pivot": [
+        120,
+        112
+      ],
+      "mirrorX": false,
+      "note": "Costume headwear. Resolves to no frame for the parka."
+    },
+    {
+      "name": "feature",
+      "z": 17,
+      "frame": "feature-{feature}",
+      "pivot": [
+        120,
+        112
+      ],
+      "mirrorX": false,
+      "note": "Resolves to no frame when feature is \"none\"."
+    },
+    {
+      "name": "arm-upper-l",
+      "z": 18,
+      "frame": "arm-upper-{costume}",
+      "pivot": [
+        180,
+        142
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "arm-lower-l",
+      "z": 19,
+      "frame": "arm-lower-{costume}",
+      "pivot": [
+        185,
+        214
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "hand-l",
+      "z": 20,
+      "frame": "hand-{costume}",
+      "pivot": [
+        188,
+        282
+      ],
+      "mirrorX": false
+    }
+  ],
+  "atlas": {
+    "framePrefix": "character-",
+    "grammar": "character-<resolved frame template>",
+    "rule": "A part whose resolved template is not in \"frames\" draws nothing. That is how every \"none\" option works, and it needs no special case in either backend.",
+    "note": "assets/src/svg/shared/character/<name>.svg becomes atlas frame key character-<name> (scripts/assets.mjs, shared owner). The Rive file uses the SAME strings as its slot names."
+  },
+  "states": {
+    "idle": {
+      "loop": "loop",
+      "durationMs": 2400,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              0,
+              0
+            ],
+            "head": [
+              0,
+              0.0,
+              0.0
+            ],
+            "face": [
+              0,
+              0.0,
+              0.0
+            ],
+            "hair": [
+              0,
+              0.0,
+              0.0
+            ],
+            "head-covering": [
+              0,
+              0.0,
+              0.0
+            ],
+            "hat": [
+              0,
+              0.0,
+              0.0
+            ],
+            "feature": [
+              0,
+              0.0,
+              0.0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -1.6,
+              0
+            ],
+            "head": [
+              0,
+              -1.6,
+              0.0
+            ],
+            "face": [
+              0,
+              -1.6,
+              0.0
+            ],
+            "hair": [
+              0,
+              -1.6,
+              0.0
+            ],
+            "head-covering": [
+              0,
+              -1.6,
+              0.0
+            ],
+            "hat": [
+              0,
+              -1.6,
+              0.0
+            ],
+            "feature": [
+              0,
+              -1.6,
+              0.0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              0,
+              0
+            ],
+            "head": [
+              0,
+              0.0,
+              0.0
+            ],
+            "face": [
+              0,
+              0.0,
+              0.0
+            ],
+            "hair": [
+              0,
+              0.0,
+              0.0
+            ],
+            "head-covering": [
+              0,
+              0.0,
+              0.0
+            ],
+            "hat": [
+              0,
+              0.0,
+              0.0
+            ],
+            "feature": [
+              0,
+              0.0,
+              0.0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "Breathing only: the torso and head rise 1.6 px. Under reducedMotion the state holds key 0."
+    },
+    "walk": {
+      "loop": "loop",
+      "durationMs": 900,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -8.0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -8.0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0.0
+            ],
+            "torso": [
+              0,
+              -2.5,
+              0
+            ],
+            "head": [
+              0,
+              -2.5,
+              0
+            ],
+            "face": [
+              0,
+              -2.5,
+              0
+            ],
+            "hair": [
+              0,
+              -2.5,
+              0
+            ],
+            "head-covering": [
+              0,
+              -2.5,
+              0
+            ],
+            "hat": [
+              0,
+              -2.5,
+              0
+            ],
+            "feature": [
+              0,
+              -2.5,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.25,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -26.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -22.0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              26.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              6.0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              24.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              -10.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -24.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              20.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              10.0
+            ],
+            "torso": [
+              0,
+              -0.0,
+              0
+            ],
+            "head": [
+              0,
+              -0.0,
+              0
+            ],
+            "face": [
+              0,
+              -0.0,
+              0
+            ],
+            "hair": [
+              0,
+              -0.0,
+              0
+            ],
+            "head-covering": [
+              0,
+              -0.0,
+              0
+            ],
+            "hat": [
+              0,
+              -0.0,
+              0
+            ],
+            "feature": [
+              0,
+              -0.0,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -8.0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -8.0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0.0
+            ],
+            "torso": [
+              0,
+              -2.5,
+              0
+            ],
+            "head": [
+              0,
+              -2.5,
+              0
+            ],
+            "face": [
+              0,
+              -2.5,
+              0
+            ],
+            "hair": [
+              0,
+              -2.5,
+              0
+            ],
+            "head-covering": [
+              0,
+              -2.5,
+              0
+            ],
+            "hat": [
+              0,
+              -2.5,
+              0
+            ],
+            "feature": [
+              0,
+              -2.5,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.75,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              26.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              6.0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -26.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -22.0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -24.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              20.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              10.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              24.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              -10.0
+            ],
+            "torso": [
+              0,
+              -0.0,
+              0
+            ],
+            "head": [
+              0,
+              -0.0,
+              0
+            ],
+            "face": [
+              0,
+              -0.0,
+              0
+            ],
+            "hair": [
+              0,
+              -0.0,
+              0
+            ],
+            "head-covering": [
+              0,
+              -0.0,
+              0
+            ],
+            "hat": [
+              0,
+              -0.0,
+              0
+            ],
+            "feature": [
+              0,
+              -0.0,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -8.0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -8.0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "torso": [
+              0,
+              -2.5,
+              0
+            ],
+            "head": [
+              0,
+              -2.5,
+              0
+            ],
+            "face": [
+              0,
+              -2.5,
+              0
+            ],
+            "hair": [
+              0,
+              -2.5,
+              0
+            ],
+            "head-covering": [
+              0,
+              -2.5,
+              0
+            ],
+            "hat": [
+              0,
+              -2.5,
+              0
+            ],
+            "feature": [
+              0,
+              -2.5,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "run": {
+      "loop": "loop",
+      "durationMs": 620,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -11.6
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -11.6
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0.0
+            ],
+            "torso": [
+              0,
+              -3.62,
+              0
+            ],
+            "head": [
+              0,
+              -3.62,
+              0
+            ],
+            "face": [
+              0,
+              -3.62,
+              0
+            ],
+            "hair": [
+              0,
+              -3.62,
+              0
+            ],
+            "head-covering": [
+              0,
+              -3.62,
+              0
+            ],
+            "hat": [
+              0,
+              -3.62,
+              0
+            ],
+            "feature": [
+              0,
+              -3.62,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.25,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -37.7
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -31.9
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              37.7
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              8.7
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              34.8
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              -14.5
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -34.8
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              29.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              14.5
+            ],
+            "torso": [
+              0,
+              -0.0,
+              0
+            ],
+            "head": [
+              0,
+              -0.0,
+              0
+            ],
+            "face": [
+              0,
+              -0.0,
+              0
+            ],
+            "hair": [
+              0,
+              -0.0,
+              0
+            ],
+            "head-covering": [
+              0,
+              -0.0,
+              0
+            ],
+            "hat": [
+              0,
+              -0.0,
+              0
+            ],
+            "feature": [
+              0,
+              -0.0,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -11.6
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -11.6
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0.0
+            ],
+            "torso": [
+              0,
+              -3.62,
+              0
+            ],
+            "head": [
+              0,
+              -3.62,
+              0
+            ],
+            "face": [
+              0,
+              -3.62,
+              0
+            ],
+            "hair": [
+              0,
+              -3.62,
+              0
+            ],
+            "head-covering": [
+              0,
+              -3.62,
+              0
+            ],
+            "hat": [
+              0,
+              -3.62,
+              0
+            ],
+            "feature": [
+              0,
+              -3.62,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.75,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              37.7
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              8.7
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -37.7
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -31.9
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -34.8
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              29.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              14.5
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              34.8
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              -14.5
+            ],
+            "torso": [
+              0,
+              -0.0,
+              0
+            ],
+            "head": [
+              0,
+              -0.0,
+              0
+            ],
+            "face": [
+              0,
+              -0.0,
+              0
+            ],
+            "hair": [
+              0,
+              -0.0,
+              0
+            ],
+            "head-covering": [
+              0,
+              -0.0,
+              0
+            ],
+            "hat": [
+              0,
+              -0.0,
+              0
+            ],
+            "feature": [
+              0,
+              -0.0,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0.0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -11.6
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -11.6
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -0.0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0.0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0.0
+            ],
+            "foot-l": [
+              0,
+              0,
+              -0.0
+            ],
+            "torso": [
+              0,
+              -3.62,
+              0
+            ],
+            "head": [
+              0,
+              -3.62,
+              0
+            ],
+            "face": [
+              0,
+              -3.62,
+              0
+            ],
+            "hair": [
+              0,
+              -3.62,
+              0
+            ],
+            "head-covering": [
+              0,
+              -3.62,
+              0
+            ],
+            "hat": [
+              0,
+              -3.62,
+              0
+            ],
+            "feature": [
+              0,
+              -3.62,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "jump-rise": {
+      "loop": "hold",
+      "durationMs": 260,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -52
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -18
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              52
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              18
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              20
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              -34
+            ],
+            "foot-r": [
+              0,
+              0,
+              -8
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -12
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              18
+            ],
+            "foot-l": [
+              0,
+              0,
+              8
+            ],
+            "torso": [
+              0,
+              -4,
+              0
+            ],
+            "head": [
+              0,
+              -4,
+              -3
+            ],
+            "face": [
+              0,
+              -4,
+              -3
+            ],
+            "hair": [
+              0,
+              -4,
+              -3
+            ],
+            "head-covering": [
+              0,
+              -4,
+              -3
+            ],
+            "hat": [
+              0,
+              -4,
+              -3
+            ],
+            "feature": [
+              0,
+              -4,
+              -3
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -52
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              -18
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              52
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              18
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              20
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              -34
+            ],
+            "foot-r": [
+              0,
+              0,
+              -8
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -12
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              18
+            ],
+            "foot-l": [
+              0,
+              0,
+              8
+            ],
+            "torso": [
+              0,
+              -4,
+              0
+            ],
+            "head": [
+              0,
+              -4,
+              -3
+            ],
+            "face": [
+              0,
+              -4,
+              -3
+            ],
+            "hair": [
+              0,
+              -4,
+              -3
+            ],
+            "head-covering": [
+              0,
+              -4,
+              -3
+            ],
+            "hat": [
+              0,
+              -4,
+              -3
+            ],
+            "feature": [
+              0,
+              -4,
+              -3
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "jump-fall": {
+      "loop": "hold",
+      "durationMs": 260,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -18
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              10
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              18
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -10
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -14
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              10
+            ],
+            "foot-r": [
+              0,
+              0,
+              -8
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -22
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              26
+            ],
+            "foot-l": [
+              0,
+              0,
+              8
+            ],
+            "torso": [
+              0,
+              2,
+              0
+            ],
+            "head": [
+              0,
+              2,
+              4
+            ],
+            "face": [
+              0,
+              2,
+              4
+            ],
+            "hair": [
+              0,
+              2,
+              4
+            ],
+            "head-covering": [
+              0,
+              2,
+              4
+            ],
+            "hat": [
+              0,
+              2,
+              4
+            ],
+            "feature": [
+              0,
+              2,
+              4
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              -18
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              10
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              18
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -10
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -14
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              10
+            ],
+            "foot-r": [
+              0,
+              0,
+              -8
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              -22
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              26
+            ],
+            "foot-l": [
+              0,
+              0,
+              8
+            ],
+            "torso": [
+              0,
+              2,
+              0
+            ],
+            "head": [
+              0,
+              2,
+              4
+            ],
+            "face": [
+              0,
+              2,
+              4
+            ],
+            "hair": [
+              0,
+              2,
+              4
+            ],
+            "head-covering": [
+              0,
+              2,
+              4
+            ],
+            "hat": [
+              0,
+              2,
+              4
+            ],
+            "feature": [
+              0,
+              2,
+              4
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "land": {
+      "loop": "once",
+      "durationMs": 200,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -6
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              12
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              6
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              12
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              9,
+              0
+            ],
+            "head": [
+              0,
+              11,
+              0
+            ],
+            "face": [
+              0,
+              11,
+              0
+            ],
+            "hair": [
+              0,
+              11,
+              0
+            ],
+            "head-covering": [
+              0,
+              11,
+              0
+            ],
+            "hat": [
+              0,
+              11,
+              0
+            ],
+            "feature": [
+              0,
+              11,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.55,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -2.7
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              5.4
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              2.7
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              5.4
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              4.05,
+              0
+            ],
+            "head": [
+              0,
+              4.95,
+              0
+            ],
+            "face": [
+              0,
+              4.95,
+              0
+            ],
+            "hair": [
+              0,
+              4.95,
+              0
+            ],
+            "head-covering": [
+              0,
+              4.95,
+              0
+            ],
+            "hat": [
+              0,
+              4.95,
+              0
+            ],
+            "feature": [
+              0,
+              4.95,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              0,
+              0
+            ],
+            "head": [
+              0,
+              0,
+              0
+            ],
+            "face": [
+              0,
+              0,
+              0
+            ],
+            "hair": [
+              0,
+              0,
+              0
+            ],
+            "head-covering": [
+              0,
+              0,
+              0
+            ],
+            "hat": [
+              0,
+              0,
+              0
+            ],
+            "feature": [
+              0,
+              0,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "The only squash-and-stretch in the rig. Under reducedMotion this state is skipped entirely and the machine goes straight to idle or walk; no extra frames exist for the reduced path and none are needed."
+    },
+    "talk": {
+      "loop": "loop",
+      "durationMs": 1600,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -4.9
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -10.5
+            ],
+            "hand-l": [
+              0,
+              0,
+              -4.2
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -0.35,
+              0
+            ],
+            "head": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "face": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "hair": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "head-covering": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "hat": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "feature": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -14.0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -30.0
+            ],
+            "hand-l": [
+              0,
+              0,
+              -12.0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -1.0,
+              0
+            ],
+            "head": [
+              0,
+              -1.0,
+              2.5
+            ],
+            "face": [
+              0,
+              -1.0,
+              2.5
+            ],
+            "hair": [
+              0,
+              -1.0,
+              2.5
+            ],
+            "head-covering": [
+              0,
+              -1.0,
+              2.5
+            ],
+            "hat": [
+              0,
+              -1.0,
+              2.5
+            ],
+            "feature": [
+              0,
+              -1.0,
+              2.5
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -4.9
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -10.5
+            ],
+            "hand-l": [
+              0,
+              0,
+              -4.2
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -0.35,
+              0
+            ],
+            "head": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "face": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "hair": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "head-covering": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "hat": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "feature": [
+              0,
+              -0.35,
+              0.88
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "An open near-side hand and a small head tilt. Dialogue text is DOM and carries the words; this state only says WHO is speaking, which is the visual equivalent the a11y rules ask for."
+    },
+    "interact": {
+      "loop": "once",
+      "durationMs": 420,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              0,
+              0
+            ],
+            "head": [
+              0,
+              0,
+              0
+            ],
+            "face": [
+              0,
+              0,
+              0
+            ],
+            "hair": [
+              0,
+              0,
+              0
+            ],
+            "head-covering": [
+              0,
+              0,
+              0
+            ],
+            "hat": [
+              0,
+              0,
+              0
+            ],
+            "feature": [
+              0,
+              0,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.4,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -64
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -24
+            ],
+            "hand-l": [
+              0,
+              0,
+              -10
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -2,
+              0
+            ],
+            "head": [
+              0,
+              -2,
+              -4
+            ],
+            "face": [
+              0,
+              -2,
+              -4
+            ],
+            "hair": [
+              0,
+              -2,
+              -4
+            ],
+            "head-covering": [
+              0,
+              -2,
+              -4
+            ],
+            "hat": [
+              0,
+              -2,
+              -4
+            ],
+            "feature": [
+              0,
+              -2,
+              -4
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.75,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              -64
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              -24
+            ],
+            "hand-l": [
+              0,
+              0,
+              -10
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              -2,
+              0
+            ],
+            "head": [
+              0,
+              -2,
+              -4
+            ],
+            "face": [
+              0,
+              -2,
+              -4
+            ],
+            "hair": [
+              0,
+              -2,
+              -4
+            ],
+            "head-covering": [
+              0,
+              -2,
+              -4
+            ],
+            "hat": [
+              0,
+              -2,
+              -4
+            ],
+            "feature": [
+              0,
+              -2,
+              -4
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "arm-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "hand-r": [
+              0,
+              0,
+              0
+            ],
+            "arm-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "arm-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "hand-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "leg-upper-l": [
+              0,
+              0,
+              0
+            ],
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
+              0,
+              0,
+              0
+            ],
+            "torso": [
+              0,
+              0,
+              0
+            ],
+            "head": [
+              0,
+              0,
+              0
+            ],
+            "face": [
+              0,
+              0,
+              0
+            ],
+            "hair": [
+              0,
+              0,
+              0
+            ],
+            "head-covering": [
+              0,
+              0,
+              0
+            ],
+            "hat": [
+              0,
+              0,
+              0
+            ],
+            "feature": [
+              0,
+              0,
+              0
+            ],
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "frames": {
+    "character-arm-lower-parka": {
+      "source": "src/svg/shared/character/arm-lower-parka.svg",
+      "x": 166,
+      "y": 195,
+      "w": 41,
+      "h": 106
+    },
+    "character-arm-lower-serge": {
+      "source": "src/svg/shared/character/arm-lower-serge.svg",
+      "x": 166,
+      "y": 195,
+      "w": 41,
+      "h": 106
+    },
+    "character-arm-upper-parka": {
+      "source": "src/svg/shared/character/arm-upper-parka.svg",
+      "x": 159,
+      "y": 121,
+      "w": 47,
+      "h": 114
+    },
+    "character-arm-upper-serge": {
+      "source": "src/svg/shared/character/arm-upper-serge.svg",
+      "x": 159,
+      "y": 121,
+      "w": 47,
+      "h": 114
+    },
+    "character-face-happy": {
+      "source": "src/svg/shared/character/face-happy.svg",
+      "x": 92,
+      "y": 48,
+      "w": 56,
+      "h": 64
+    },
+    "character-face-neutral": {
+      "source": "src/svg/shared/character/face-neutral.svg",
+      "x": 92,
+      "y": 48,
+      "w": 56,
+      "h": 64
+    },
+    "character-face-surprised": {
+      "source": "src/svg/shared/character/face-surprised.svg",
+      "x": 92,
+      "y": 48,
+      "w": 56,
+      "h": 64
+    },
+    "character-face-thinking": {
+      "source": "src/svg/shared/character/face-thinking.svg",
+      "x": 92,
+      "y": 48,
+      "w": 56,
+      "h": 64
+    },
+    "character-feature-glasses": {
+      "source": "src/svg/shared/character/feature-glasses.svg",
+      "x": 83,
+      "y": 58,
+      "w": 74,
+      "h": 34
+    },
+    "character-foot-l-parka": {
+      "source": "src/svg/shared/character/foot-l-parka.svg",
+      "x": 128,
+      "y": 424,
+      "w": 59,
+      "h": 38
+    },
+    "character-foot-l-serge": {
+      "source": "src/svg/shared/character/foot-l-serge.svg",
+      "x": 128,
+      "y": 424,
+      "w": 59,
+      "h": 38
+    },
+    "character-foot-r-parka": {
+      "source": "src/svg/shared/character/foot-r-parka.svg",
+      "x": 68,
+      "y": 424,
+      "w": 59,
+      "h": 38
+    },
+    "character-foot-r-serge": {
+      "source": "src/svg/shared/character/foot-r-serge.svg",
+      "x": 68,
+      "y": 424,
+      "w": 59,
+      "h": 38
+    },
+    "character-ground-shadow": {
+      "source": "src/svg/shared/character/ground-shadow.svg",
+      "x": 64,
+      "y": 445,
+      "w": 112,
+      "h": 24
+    },
+    "character-hair-bob-black": {
+      "source": "src/svg/shared/character/hair-bob-black.svg",
+      "x": 72,
+      "y": 29,
+      "w": 96,
+      "h": 89
+    },
+    "character-hair-bob-blond": {
+      "source": "src/svg/shared/character/hair-bob-blond.svg",
+      "x": 72,
+      "y": 29,
+      "w": 96,
+      "h": 89
+    },
+    "character-hair-bob-brown": {
+      "source": "src/svg/shared/character/hair-bob-brown.svg",
+      "x": 72,
+      "y": 29,
+      "w": 96,
+      "h": 89
+    },
+    "character-hair-bob-grey": {
+      "source": "src/svg/shared/character/hair-bob-grey.svg",
+      "x": 72,
+      "y": 29,
+      "w": 96,
+      "h": 89
+    },
+    "character-hair-bob-red": {
+      "source": "src/svg/shared/character/hair-bob-red.svg",
+      "x": 72,
+      "y": 29,
+      "w": 96,
+      "h": 89
+    },
+    "character-hair-coil-black": {
+      "source": "src/svg/shared/character/hair-coil-black.svg",
+      "x": 72,
+      "y": 17,
+      "w": 100,
+      "h": 79
+    },
+    "character-hair-coil-blond": {
+      "source": "src/svg/shared/character/hair-coil-blond.svg",
+      "x": 72,
+      "y": 17,
+      "w": 100,
+      "h": 79
+    },
+    "character-hair-coil-brown": {
+      "source": "src/svg/shared/character/hair-coil-brown.svg",
+      "x": 72,
+      "y": 17,
+      "w": 100,
+      "h": 79
+    },
+    "character-hair-coil-grey": {
+      "source": "src/svg/shared/character/hair-coil-grey.svg",
+      "x": 72,
+      "y": 17,
+      "w": 100,
+      "h": 79
+    },
+    "character-hair-coil-red": {
+      "source": "src/svg/shared/character/hair-coil-red.svg",
+      "x": 72,
+      "y": 17,
+      "w": 100,
+      "h": 79
+    },
+    "character-hair-crop-black": {
+      "source": "src/svg/shared/character/hair-crop-black.svg",
+      "x": 83,
+      "y": 32,
+      "w": 74,
+      "h": 62
+    },
+    "character-hair-crop-blond": {
+      "source": "src/svg/shared/character/hair-crop-blond.svg",
+      "x": 83,
+      "y": 32,
+      "w": 74,
+      "h": 62
+    },
+    "character-hair-crop-brown": {
+      "source": "src/svg/shared/character/hair-crop-brown.svg",
+      "x": 83,
+      "y": 32,
+      "w": 74,
+      "h": 62
+    },
+    "character-hair-crop-grey": {
+      "source": "src/svg/shared/character/hair-crop-grey.svg",
+      "x": 83,
+      "y": 32,
+      "w": 74,
+      "h": 62
+    },
+    "character-hair-crop-red": {
+      "source": "src/svg/shared/character/hair-crop-red.svg",
+      "x": 83,
+      "y": 32,
+      "w": 74,
+      "h": 62
+    },
+    "character-hair-long-black": {
+      "source": "src/svg/shared/character/hair-long-black.svg",
+      "x": 56,
+      "y": 27,
+      "w": 128,
+      "h": 139
+    },
+    "character-hair-long-blond": {
+      "source": "src/svg/shared/character/hair-long-blond.svg",
+      "x": 56,
+      "y": 27,
+      "w": 128,
+      "h": 139
+    },
+    "character-hair-long-brown": {
+      "source": "src/svg/shared/character/hair-long-brown.svg",
+      "x": 56,
+      "y": 27,
+      "w": 128,
+      "h": 139
+    },
+    "character-hair-long-grey": {
+      "source": "src/svg/shared/character/hair-long-grey.svg",
+      "x": 56,
+      "y": 27,
+      "w": 128,
+      "h": 139
+    },
+    "character-hair-long-red": {
+      "source": "src/svg/shared/character/hair-long-red.svg",
+      "x": 56,
+      "y": 27,
+      "w": 128,
+      "h": 139
+    },
+    "character-hand-parka": {
+      "source": "src/svg/shared/character/hand-parka.svg",
+      "x": 162,
+      "y": 276,
+      "w": 60,
+      "h": 52
+    },
+    "character-hand-serge": {
+      "source": "src/svg/shared/character/hand-serge.svg",
+      "x": 162,
+      "y": 264,
+      "w": 60,
+      "h": 64
+    },
+    "character-hat-serge": {
+      "source": "src/svg/shared/character/hat-serge.svg",
+      "x": 70,
+      "y": 6,
+      "w": 100,
+      "h": 64
+    },
+    "character-head-covering-toque": {
+      "source": "src/svg/shared/character/head-covering-toque.svg",
+      "x": 75,
+      "y": -1,
+      "w": 90,
+      "h": 71
+    },
+    "character-head-skin-1": {
+      "source": "src/svg/shared/character/head-skin-1.svg",
+      "x": 80,
+      "y": 30,
+      "w": 80,
+      "h": 98
+    },
+    "character-head-skin-2": {
+      "source": "src/svg/shared/character/head-skin-2.svg",
+      "x": 80,
+      "y": 30,
+      "w": 80,
+      "h": 98
+    },
+    "character-head-skin-3": {
+      "source": "src/svg/shared/character/head-skin-3.svg",
+      "x": 80,
+      "y": 30,
+      "w": 80,
+      "h": 98
+    },
+    "character-head-skin-4": {
+      "source": "src/svg/shared/character/head-skin-4.svg",
+      "x": 80,
+      "y": 30,
+      "w": 80,
+      "h": 98
+    },
+    "character-head-skin-5": {
+      "source": "src/svg/shared/character/head-skin-5.svg",
+      "x": 80,
+      "y": 30,
+      "w": 80,
+      "h": 98
+    },
+    "character-head-skin-6": {
+      "source": "src/svg/shared/character/head-skin-6.svg",
+      "x": 80,
+      "y": 30,
+      "w": 80,
+      "h": 98
+    },
+    "character-leg-lower-parka": {
+      "source": "src/svg/shared/character/leg-lower-parka.svg",
+      "x": 125,
+      "y": 339,
+      "w": 48,
+      "h": 120
+    },
+    "character-leg-lower-serge": {
+      "source": "src/svg/shared/character/leg-lower-serge.svg",
+      "x": 125,
+      "y": 355,
+      "w": 48,
+      "h": 106
+    },
+    "character-leg-upper-parka": {
+      "source": "src/svg/shared/character/leg-upper-parka.svg",
+      "x": 119,
+      "y": 237,
+      "w": 56,
+      "h": 152
+    },
+    "character-leg-upper-serge": {
+      "source": "src/svg/shared/character/leg-upper-serge.svg",
+      "x": 108,
+      "y": 260,
+      "w": 76,
+      "h": 144
+    },
+    "character-torso-parka": {
+      "source": "src/svg/shared/character/torso-parka.svg",
+      "x": 39,
+      "y": 120,
+      "w": 162,
+      "h": 184
+    },
+    "character-torso-serge": {
+      "source": "src/svg/shared/character/torso-serge.svg",
+      "x": 39,
+      "y": 120,
+      "w": 162,
+      "h": 180
+    }
+  }
+}

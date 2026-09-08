@@ -9,11 +9,15 @@
  * running level. Both times a screen described a state it was not in. So:
  *
  *  - **The loading screen shows text, not only a spinner** (`TN-LEVEL-01`), and
- *    the text is supplied by the caller. No copy table in `docs/stories/` carries
- *    a loading sentence, and inventing one here is what `docs/stories/README.md`
- *    forbids — so {@link LevelLoadingOptions.message} is required, and the
- *    missing `level.loading` row is reported as a gap with the task. A required
- *    option cannot silently become a placeholder.
+ *    the text is supplied by the caller. `level.loading` is a row in
+ *    `app/ui/copy.ts` now — it was reported as a gap and `TN-LEVEL` writes it
+ *    down — but it stays a *required option* rather than being read here,
+ *    because the sentence names the canal: `OQ-LEVEL-9` keeps the wording with
+ *    the level that waits, and under ADR-0010 a level file carries its own text.
+ *    Ottawa's caller passes `text(locale, 'level.loading')`; level 2 will pass
+ *    its own. Required, not defaulted: a waiting screen that does not say what
+ *    it is waiting for is the defect `TN-LEVEL-01` was written against, and a
+ *    required option cannot silently become a placeholder.
  *  - **A stalled load can always be left** (`TN-LEVEL-02`). The escape is a
  *    focusable "Go back" button, and it is the one timer this directory allows:
  *    a load timeout is not a player timer, nothing about it counts down on
@@ -37,8 +41,11 @@ export interface LevelLoadingOptions {
   readonly locale: UiLocale;
   /**
    * What the player reads while the level opens, already localised. Required:
-   * see the note above. It must never describe progress it cannot measure — no
-   * percentage, no ellipsis that stands in for one.
+   * see the note above. `TN-COPY-07`'s waiting rule binds whatever is passed —
+   * it names the work and claims no progress the game cannot measure: no
+   * percentage, no fraction, no "2 of 4", no ellipsis, no bar carrying a value.
+   * It is drawn once and never rewritten while the load runs; the escape route
+   * below appears *beside* it, never in place of it.
    */
   readonly message: string;
   /** Names the dialog: the level's title, already localised. */

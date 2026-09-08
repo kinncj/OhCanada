@@ -6,13 +6,14 @@ feeling like ice, not like pavement.
 
 Read `README.md` in this directory first: it fixes the shared markers, the scene probe, the event names and
 the single-switch contract these scenarios use. The HUD this level draws into is `TN-HUD-hud-and-menu.md`.
+The waiting rule `level.loading` obeys is in `TN-COPY-strings-and-counts.md`.
 
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-LEVEL-06` — *Skating and engaging with a keyboard* |
-| Single switch | `TN-LEVEL-07` — *The level is completable with one switch* |
+| Keyboard only | `TN-LEVEL-06` — *Skating and engaging with a keyboard*; `TN-LEVEL-02` for the stalled load |
+| Single switch | `TN-LEVEL-07` — *The level is completable with one switch*; `TN-LEVEL-02` for the stalled load |
 | Screen reader | `TN-LEVEL-08` — *The canvas is silent, the live region is not* |
 | Reduced motion | `TN-LEVEL-09` — *No parallax easing, no particles, same physics* |
 | 200 % text | `TN-LEVEL-10` — *The HUD at 200 %* |
@@ -25,6 +26,7 @@ the single-switch contract these scenarios use. The HUD this level draws into is
 |---|---|---|
 | `level.ottawa.title` | Ottawa | Ottawa |
 | `level.ottawa.subtitle` | How Canadians govern themselves | Comment les Canadiens se gouvernent |
+| `level.loading` | Getting the canal ready. | Préparation du canal. |
 | `locomotion.skate.label` | Skating | Patinage |
 | `npc.officer.name` | The officer | L'agent |
 | `hud.interact.officer` | Talk to the officer | Parler à l'agent |
@@ -41,6 +43,22 @@ the single-switch contract these scenarios use. The HUD this level draws into is
 
 `poi.parliamentHill.body` is a factual claim and goes through the same verification as a question — see
 `OQ-LEVEL-4`.
+
+**`level.loading` is the text `TN-LEVEL-01` requires when it says the loading screen shows "text, not only a
+spinner".** It was reported as a gap under `TN-COPY-06` — the screen took it from the caller as a required
+option, so no screen could be mounted without somebody inventing a sentence — and it is written here now.
+
+It says what is being prepared and **nothing about how far along the load is**, because the game does not
+know: assets arrive over a connection with no honest percentage, and the load's steps are not comparable in
+size. So the string carries no percentage, no fraction, no "step 2 of 4", no progress bar with a value, and
+no ellipsis. A bar that stops moving reads as a crash — this project has already shipped a screen that read
+as a stalled progress bar — and three dots are a sentence nobody wrote. The honest answer to a long wait is
+the escape route in `TN-LEVEL-02`, not a bigger number. `TN-COPY-07` binds every other waiting screen to the
+same rule; this file owns the words.
+
+The French is a noun phrase where the English is a sentence, and both end in a full stop: « Préparation du
+canal. » is what a French speaker says about work in progress, and « Nous préparons le canal. » would promise
+a « nous » that no other string in this level uses.
 
 **`npc.officer.name` is the speaker's label**, and it is the string `TN-QUEST-08` needs when it requires the
 dialogue to have "an accessible name naming the speaker". It is drawn as the dialogue's heading and is that
@@ -99,11 +117,31 @@ Feature: Loading Level 4
     And "scene-state" reports "data-facing" equal to "right"
     And "scene-state" reports "data-speed" equal to "0"
 
-  Scenario: Loading shows progress, not a blank screen
+  Scenario: Loading says what is happening, in words
     Given the level assets are still downloading
     Then the element "level-loading" is visible
-    And it shows text, not only a spinner
+    And it reads "Getting the canal ready."
+    And it is text, not only a spinner
     And the element "playable" is not present yet
+
+  Scenario: The loading text claims no progress the game cannot measure
+    Given the element "level-loading" is visible
+    Then its text contains no percentage
+    And it contains no fraction and no step count such as "2 of 4"
+    And it contains no "…" and no "..."
+    And no progress bar carrying a value is drawn
+    And nothing on it counts down
+
+  Scenario: The loading text does not change while the load runs
+    Given the element "level-loading" is visible
+    When the load continues past the time-to-play budget in "game.config.json"
+    Then "level-loading" still reads "Getting the canal ready."
+    And the escape route described in TN-LEVEL-02 appears beside it, not instead of it
+
+  Scenario: The loading screen goes when the level is playable
+    When the event "level/ready" is emitted
+    Then the element "level-loading" is not present in the accessibility tree
+    And it is not merely hidden behind a style rule
 
   Scenario: The level is built from data alone
     Given the level file "levels/ottawa.json" declares the parallax layers, the ground polyline, the points of interest and the skate tuning
@@ -125,6 +163,7 @@ Feature: A failed or stalled level load
     And a button "Go back" is offered
     And the failure is announced in "#tn-live-region"
     And the element "playable" is never present
+    And the element "level-loading" is gone
 
   Scenario: Trying again after the network comes back
     Given the element "level-error" is visible
@@ -138,6 +177,15 @@ Feature: A failed or stalled level load
     When the load has not finished after the time-to-play budget in "game.config.json" has passed twice
     Then a "Go back" button is visible and focusable
     And tapping it leaves the level without reloading the page
+    And the waiting message is unchanged
+
+  Scenario: The escape route is reachable without a mouse
+    Given the "Go back" button on a stalled load is visible
+    And I am using a keyboard only
+    Then it is reachable with "Tab" and activates with "Enter"
+    Given single-switch mode is on
+    Then it is reachable with a short press and chosen with a long press
+    And it is at least 44 CSS px wide and tall
 
   Scenario: A level that cannot fit the texture budget is refused, not crashed into
     Given the level file declares decoded texture bytes above the per-level ceiling
@@ -399,6 +447,12 @@ Feature: Playing Ottawa with a screen reader
     Then the canvas element is "aria-hidden"
     And exactly one element on the page has an "aria-live" attribute
 
+  Scenario: Waiting is announced once
+    When the level starts loading
+    Then "#tn-live-region" reads "Getting the canal ready."
+    And it is not repeated while the load continues
+    And "level-loading" has no "aria-live" attribute of its own
+
   Scenario: Arriving is announced
     When the event "level/ready" is emitted
     Then "#tn-live-region" reads "You are on the Rideau Canal in Ottawa. Skating."
@@ -431,23 +485,32 @@ Feature: Playing Ottawa with a screen reader
 Feature: Reduced motion in the level
   Background:
     Given reduced motion is on, from the browser or from "setting-reduced-motion"
-    And the Ottawa level is playable
+
+  Scenario: The loading screen is text, and it is still
+    Given the level assets are still downloading
+    Then "level-loading" reads "Getting the canal ready."
+    And nothing on it spins, pulses, slides or flashes
+    And the message is what tells me the game is working, not an animation
 
   Scenario: Parallax stops easing and the snow stops falling
+    Given the Ottawa level is playable
     Then "scene-state" reports "data-parallax-easing" equal to "off"
     And "scene-state" reports "data-particles" equal to "0"
     And the skater is drawn without squash and stretch
 
   Scenario: The camera follows without overshoot
+    Given the Ottawa level is playable
     When I hold "move-right" for three seconds and release
     Then "data-camera-x" never moves past the skater and back
 
   Scenario: The game is not made easier or harder
+    Given the Ottawa level is playable
     Then the skate tuning values are unchanged
     And the glide distance after a release is the same as with motion on
     And every point of interest is still reachable
 
   Scenario: The HUD keeps its meaning
+    Given the Ottawa level is playable
     Then every state shown by an animation is also shown by a word or a shape
 ```
 
@@ -469,6 +532,15 @@ Feature: Large text over the level
     And the language is French
     When the officer comes into reach
     Then "interact-prompt" shows the whole of "Parler à l'agent"
+
+  Scenario: The loading and error screens fit too
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    When "level-loading" is visible
+    Then the whole of its message is visible, not cut off
+    When "level-error" is visible
+    Then both of its sentences are readable, by scrolling if needed
+    And "Try again" and "Go back" are fully visible and at least 44 CSS px tall
 ```
 
 ## TN-LEVEL-11 — Ottawa in French
@@ -477,9 +549,15 @@ Feature: Large text over the level
 Feature: The level in French
   Background:
     Given the language is French
-    And the Ottawa level is playable
+
+  Scenario: Waiting is French, and says no more than the English does
+    Given the level assets are still downloading
+    Then "level-loading" reads "Préparation du canal."
+    And it contains no percentage, no step count and no ellipsis
+    And "#tn-live-region" reads it once, with "lang" equal to "fr"
 
   Scenario: Everything the player reads is French
+    Given the Ottawa level is playable
     Then the HUD reads "Patinage"
     And the level title reads "Ottawa" with the subtitle "Comment les Canadiens se gouvernent"
     When the officer comes into reach
@@ -488,6 +566,7 @@ Feature: The level in French
     Then "interact-prompt" reads "Regarder la Colline du Parlement"
 
   Scenario: The speaker's label is French
+    Given the Ottawa level is playable
     When I engage the officer
     Then "dialogue-speaker" reads "L'agent"
     And it is the accessible name of "dialogue"
@@ -498,6 +577,7 @@ Feature: The level in French
     And no string in either language names a police force
 
   Scenario: The landmark card is French
+    Given the Ottawa level is playable
     When I engage Parliament Hill
     Then "poi-card" shows "La Colline du Parlement"
     And it shows "Les édifices du Parlement sont à Ottawa. La haute tour de l'horloge s'appelle la tour de la Paix."
@@ -594,3 +674,14 @@ Feature: Pausing
   named the same way in every string" in `TN-LEVEL-11` is what stops two of them changing and the third not.
   Do **not** reach for « l'agent(e) » or « l'agent·e »: `docs/content-review.md` §8.6 forbids the bracketed
   form, and it is unreadable to a screen reader in either language.
+- **`OQ-LEVEL-9` — one loading string, or one per level?** `level.loading` names the canal, which is true of
+  Ottawa and of nothing else; level 2 cannot use this sentence. *Recommendation:* keep the key `level.loading`
+  and let the level own the wording — under ADR-0010 the level file already carries inline `localizedText`
+  for its own content — so each level says what *it* is getting ready and no screen has to fall back to
+  "Loading". If instead a single shared sentence is wanted, it names no place ("Getting the level ready." /
+  « Préparation du niveau. ») and this file's scenarios change with it. What must not happen is one level's
+  sentence being shown while another level loads.
+- **`OQ-LEVEL-10` — is anything else in the game allowed a determinate progress figure?** `TN-COPY-07` allows
+  one where the completed and total parts are both really known, and nothing in slice 1 knows both.
+  *Recommendation:* leave it unused until something honestly measurable exists — a file import with a byte
+  count is the first plausible candidate — and treat any percentage that appears before then as a defect.

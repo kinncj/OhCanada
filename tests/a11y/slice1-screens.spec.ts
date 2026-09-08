@@ -658,7 +658,7 @@ test.describe('study', () => {
   test('is French end to end', async ({ page }) => {
     const root = await openScreen(page, 'study', { locale: 'fr', state: 'summary' });
     await expect(root).toContainText('Terminé');
-    await expect(root).toContainText('Vous avez 4 bonnes réponses sur 5.');
+    await expect(root).toContainText('Bonnes réponses : 4 sur 5');
     await expect(root).toContainText('Nous reposerons ces questions :');
     await expect(root.locator('[data-testid="study-again"]')).toHaveText('Réviser encore');
     await expect(root.locator('[data-testid="study-exit"]')).toHaveText('Retour au jeu');

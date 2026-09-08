@@ -73,6 +73,15 @@ export default defineConfig({
         // which ARE measured here. If this file starts growing rules rather than
         // wiring, that is the signal to move them out, not to widen this list.
         'app/adapters/phaser/level-scene.ts',
+        // The `@rive-app/canvas` binding. It imports the runtime (and its WASM)
+        // at module scope and creates a `<canvas>` per character, so
+        // `environment: 'node'` cannot load it either. It is the one file in the
+        // Rive adapter with no decisions in it, deliberately: everything that
+        // judges anything lives in `app/adapters/rive/character-renderer.ts`,
+        // which is pure, is measured here, and is tested against a fake runtime.
+        // If this file starts deciding something, move the decision out rather
+        // than widening this list.
+        'app/adapters/rive/rive-runtime.ts',
         // Re-export barrels. They hold no logic, and the modules behind them are
         // imported directly by their own suites, so counting the barrel would
         // only measure whether a test happened to go through the front door.

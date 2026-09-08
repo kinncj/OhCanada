@@ -63,7 +63,8 @@
  *     the number: that would only prove a library agrees with itself. A recorded
  *     `decodedBytes` that nobody re-derives is a number a level goes under
  *     budget by editing.
- *  5. No file providing a full-screen layer key ships above 1x.
+ *  5. No file providing a full-screen layer key ships above 1x, and no file
+ *     ships above a `scalePin` its source asked for.
  *  6. Per level, decoded texture memory <= min(textureBudgetBytes, 64 MiB).
  *  7. The manifest's own arithmetic (`levels[].decodedTextureBytes`) agrees with
  *     the gate's recomputation from disk. The gate never trusts a total it did
@@ -93,11 +94,25 @@
  * 4 bytes per pixel is RGBA8888, which is what Phaser uploads: the pipeline
  * emits no compressed-texture format, and WebP's compression is a transfer
  * property that ends at decode. Mipmaps (+33%) are not counted because the
- * pipeline does not generate them; render targets and Rive's canvas surfaces are
- * not counted because their size is a property of the display, not of a file,
- * and this gate only measures files. It is therefore a FLOOR on what a level
- * costs in VRAM, never a ceiling — which is the safe direction for it to be
- * wrong in, and it is why the budget is 64 MiB and not the device's limit.
+ * pipeline does not generate them; render targets are not counted because their
+ * size is a property of the display, not of a file, and this gate only measures
+ * files. It is therefore a FLOOR on what a level costs in VRAM, never a ceiling
+ * — which is the safe direction for it to be wrong in, and it is why the budget
+ * is 64 MiB and not the device's limit.
+ *
+ * THE SHARPEST INSTANCE OF THAT, NAMED: RIVE IS INVISIBLE HERE.
+ *
+ * scripts/assets.mjs records `decodedBytes: 0` for every `.riv`, and that is
+ * correct — a Rive artboard is vector and renders to a canvas surface sized by
+ * the display, so no number derived from the file would be true. The
+ * consequence is that THIS GATE STRUCTURALLY CANNOT SEE RIVE CHARACTERS. On a
+ * level sitting at 96% of its budget, that is not a footnote: the characters are
+ * the part of the frame the player looks at, they are the reason
+ * `ICharacterRenderer` exists, and the number this gate prints does not include
+ * them. Do not read a green run as "this level fits in VRAM". Read it as "the
+ * textures that come from files fit, and the Rive surfaces are on top of that,
+ * unmeasured". Measuring them needs the renderer's real allocation at runtime,
+ * which is a different instrument from a build-time gate over a manifest.
  */
 
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -347,7 +362,19 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
             'texture unit ever holds.',
         );
       }
-      measured.push({ path, kind, role, group, scale, keys, levels: owners, decodedBytes: 0, width: null, height: null });
+      measured.push({
+        path,
+        kind,
+        role,
+        group,
+        scale,
+        scalePin: typeof entry.scalePin === 'number' ? entry.scalePin : null,
+        keys,
+        levels: owners,
+        decodedBytes: 0,
+        width: null,
+        height: null,
+      });
       return;
     }
 
@@ -390,6 +417,7 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
       role,
       group,
       scale,
+      scalePin: typeof entry.scalePin === 'number' ? entry.scalePin : null,
       keys,
       levels: owners,
       decodedBytes: decoded,
@@ -455,6 +483,31 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
           `(${file.keys.map((k) => `"${k}"`).join(', ') || 'it has none'}) appears in any level ` +
           "document's layers[]. Full-screen is defined by content/levels/, not by the manifest; a " +
           'role that outlives the layer it described will pin a prop to 1x for no reason.',
+      );
+    }
+
+    /**
+     * The source's own pin. Unlike `role`, this is NOT re-derived from another
+     * tree: the pin lives in a source filename under assets/src, which this gate
+     * does not read, and it does not need to. A pin can only ever REMOVE a
+     * larger variant, so a manifest that forgot one costs memory rather than
+     * hiding it, and the memory is measured from the files either way. What is
+     * checked is that a recorded pin was honoured — a pin that appears in the
+     * manifest and is contradicted two entries later is a pipeline bug, and it
+     * would read as a saving that never happened.
+     */
+    if (file.scalePin !== null && file.scale !== null && file.scale > file.scalePin) {
+      fail(
+        `${source}/${file.path} records scalePin ${file.scalePin} but ships at ${file.scale}x ` +
+          `(${file.width}x${file.height} px = ${mib(file.decodedBytes)} decoded). The source asked to ` +
+          'be capped and was not.',
+      );
+    }
+    if (file.scalePin !== null && file.kind === 'atlas') {
+      fail(
+        `${source}/${file.path} is an atlas page carrying a scalePin. A page is one texture at one ` +
+          'scale for every frame on it, so a pin on it describes some of its frames and not others; ' +
+          'a pinned source is meant to be standalone.',
       );
     }
 
@@ -551,7 +604,32 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
       );
     }
 
-    report.push({ id, worst, budget, budgetSource: source_, perScale, fileCount: own.length });
+    /**
+     * The single heaviest texture, printed on a GREEN run as well as a red one.
+     *
+     * OQ-LEVEL-ART-1: `ottawa-landmark-parliament-hill` shipped at 2x for 17.14
+     * MiB — 37% of the whole level — against art's own written plan of 1x, and
+     * nothing said so until a person went looking. A budget gate that only
+     * speaks when the total is breached will let one asset quietly become a
+     * third of a level. There is deliberately no threshold and no warning here:
+     * a share that is "too high" is a judgement, and inventing a number for it
+     * would be the magic constant this gate refuses elsewhere. It states the
+     * concentration and leaves the judgement to a person, in a line they will
+     * read in every CI log.
+     */
+    const heaviest = own
+      .slice()
+      .sort((a, b) => b.decodedBytes - a.decodedBytes)[0];
+
+    report.push({
+      id,
+      worst,
+      budget,
+      budgetSource: source_,
+      perScale,
+      fileCount: own.length,
+      heaviest: heaviest === undefined ? null : heaviest,
+    });
   }
 
   // ------------------------------- level documents' own preload manifest ---
@@ -588,19 +666,33 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
   if (failures.length > 0) return { failures, summary: null, levels: report };
 
   const perLevel = report
-    .map(
-      (r) =>
+    .map((r) => {
+      const heaviest =
+        r.heaviest === null || r.heaviest.decodedBytes === 0
+          ? ''
+          : `, heaviest ${r.heaviest.path} ${r.heaviest.width}x${r.heaviest.height} ` +
+            `${mib(r.heaviest.decodedBytes)} = ${((r.heaviest.decodedBytes / r.budget) * 100).toFixed(0)}% of budget`;
+      return (
         `${r.id} ${mib(r.worst)} of ${mib(r.budget)} (${((r.worst / r.budget) * 100).toFixed(0)}%, ` +
         `${r.budget - r.worst} B spare, budget from ${r.budgetSource}) over ${r.fileCount} file(s) ` +
-        `[${r.perScale.map(([s, b]) => `${s}x device ${mib(b)}`).join(' / ')}]`,
-    )
+        `[${r.perScale.map(([s, b]) => `${s}x device ${mib(b)}`).join(' / ')}]${heaviest}`
+      );
+    })
     .join('; ');
 
   const layerFiles = measured.filter((f) => f.role === 'layer');
+  const pinned = measured.filter((f) => f.scalePin !== null);
+  const rive = measured.filter((f) => f.kind === 'rive');
   const summary =
     `${report.length} level(s) — ${perLevel}. ` +
-    `${layerFiles.length} full-screen layer file(s), all at 1x. ` +
-    `${measured.length} file(s) measured from their own headers at ${BYTES_PER_PIXEL} B/px.`;
+    `${layerFiles.length} full-screen layer file(s), all at 1x; ${pinned.length} source-pinned to 1x. ` +
+    `${measured.length} file(s) measured from their own headers at ${BYTES_PER_PIXEL} B/px` +
+    // Named in the summary, not only in the header: a reader deciding whether a
+    // level fits needs to know what this number leaves out, at the moment they
+    // read it.
+    (rive.length > 0
+      ? `, plus ${rive.length} Rive file(s) whose runtime surfaces this gate cannot measure.`
+      : '.');
 
   return { failures, summary, levels: report };
 }

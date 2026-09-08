@@ -22,13 +22,25 @@ Ten SVG sources. `scripts/assets.mjs` reads the level from the path, so everythi
 | `ottawa-layer-40-treeline` | `layer-40-treeline.svg` | 1440 × 340 | bare trees and spruces on the bank |
 | `ottawa-layer-50-canalwall` | `layer-50-canalwall.svg` | 2016 × 640 | retaining wall, railing, lamps, warming hut, lane spruces, skaters, one road bridge |
 | `ottawa-layer-60-ice` | `layer-60-ice.svg` | 1440 × 560 | the skateway lane, sheen and skate scoring |
-| `ottawa-landmark-parliament-hill` | `landmark-parliament-hill.svg` | 1080 × 1160 | **the POI hero**: Centre Block, the Peace Tower, the Library of Parliament |
+| `ottawa-landmark-parliament-hill` | `landmark-parliament-hill.svg` | 1080 × 1040 | **the POI hero**: Centre Block, the Peace Tower, the Library of Parliament |
 | `ottawa-poi-marker-idle` | `poi-marker-idle.svg` | 132 × 176 | tappable POI marker, not in reach |
 | `ottawa-poi-marker-active` | `poi-marker-active.svg` | 132 × 176 | tappable POI marker, in reach |
 | `ottawa-particle-snow` | `particle-snow.svg` | 96 × 32 | three snow-flake sizes |
 
 There is no officer and no `.riv` here. The officer is a character artboard and belongs to task 1.11 with the
 rig contract; drawing it now would fix a rig it has not seen.
+
+**Task 1.11 landed and changed two numbers on this page.**
+
+1. **The landmark was cropped from 1080 × 1160 to 1080 × 1040.** Its first painted row was y = 127; the
+   120 rows above it were empty and were costing **2.08 MiB of decoded texture at 2×** to hold nothing.
+   That is this sheet's own rule — crop each tile to the world band it actually covers — finally applied to
+   the one source that had been exempt from it. The `viewBox` now starts at y = 120, so **the placement
+   offset changes from `(poiX − 540, 0)` to `(poiX − 540, 120)`** and every world coordinate quoted in §3
+   (flag top 140, clock centre 456, terrace 1090) is unchanged. Nothing in `content/levels/ottawa.json`
+   changes: a POI carries a `position`, not an offset, and the offset rule lives here.
+2. **The characters land in this level's budget.** They are `shared/` sources, so they are charged to every
+   level; today Ottawa is the only level, so the whole cost is here. See §5.
 
 **There are no standalone prop files.** An earlier pass shipped `prop-warming-hut`, `prop-lamp-standard`,
 `prop-spruce-marker`, `prop-canal-bench`, `prop-bridge-portal` and `prop-skater` as separate sources. Every one
@@ -92,7 +104,20 @@ nothing to disagree with. Same for the ground: the ice layer's bands run full wi
 
 - **Ground polyline y = 1280.** `layer-60-ice`'s local y 0 *is* that line, so the ice is placed at
   `offset.y = 1280` and nothing has to be worked out twice.
-- **The landmark's local y is world y.** Place it at `offset` `(poiX − 540, 0)` and the art bible's
+- **The landmark is drawn at depth 45 — between the treeline and the canal wall.** This is the number this
+  sheet was missing, and its absence is why a composite showed Centre Block standing on flat ice: drawn in
+  front of everything, the Hill has nothing in front of its foot and reads as a building on the canal.
+  At depth 45 the escarpment (30) and treeline (40) sit behind it and **`layer-50-canalwall` (50) is drawn
+  in front of the bluff's foot**, which is the correct geometry — the retaining wall and the skateway are
+  nearer to the player than the Hill is — and it hides the landmark's hard bottom edge at world y = 1160.
+  **Confirm this in a running scene before anything is redrawn**: the depth is a claim about paint order that
+  no SVG can prove, and the composite that found the problem noted it was assuming top-left anchoring.
+- **The bluff is now drawn, not implied.** `landmark-parliament-hill.svg` carried a flat snow shelf under the
+  terrace. Centre Block stands about 50 m above the river and *Parliament Hill* is the fact the level teaches,
+  so the shelf is now a stone cliff face in vertical facets with a snow crest at y = 1090 and a spruce line
+  at its foot for scale. It fits inside the existing art band and costs **no decoded texture**. The rest of
+  the elevation is carried by the depth above, not by more pixels.
+- **The landmark's local y is world y, offset by 120.** Place it at `offset` `(poiX − 540, 120)` and the art bible's
   composition rules hold by construction: flag top at y = 140 (clear of the 120 px system band), clock centre
   at y = 456 (above the y = 520 rule), terrace at y = 1090 (the canal wall head), nothing identifying within
   64 px of a side edge.
@@ -163,6 +188,45 @@ parallax layers and the landmark at 1×, the small-art atlas at 2×**:
 
 Against `content/levels/ottawa.json`'s declared `textureBudgetBytes` of 32 MiB and CLAUDE.md's 64 MB ceiling.
 25 % headroom.
+
+### 5a. What actually shipped, measured again after task 1.11
+
+§5 above is the task-1.9 record, dated and left alone: it is what was measured then and what this sheet
+*planned*. The pipeline ships a different mix, and the difference is worth writing down rather than quietly
+editing over the old numbers. **§5a is the current truth; §5 is history.**
+
+**The landmark ships at 2×, not at 1×.** `scripts/assets.mjs` emits 1× only for a source whose key appears
+in a level document's `layers[]`, and the landmark is a POI's `artKey`, not a layer. There is no way for
+this sheet to ask for 1×. The level's declared budget was raised from 32 MiB to 48 MiB to absorb it.
+
+`make assets`, 2026-09-08, after task 1.11:
+
+```
+assets: 60 SVG + 0 Rive source(s) -> 16 file(s) in assets/dist
+        (4 atlas page(s) <= 2048 px, 8 standalone image(s),
+         6 full-screen layer file(s) at 1x only), 1x + 2x,
+        0.55 MiB on disk across 1 level(s).
+level-payload:  OK - ottawa 0.40 MiB of 8.00 MiB
+texture-memory: OK - ottawa 46.15 MiB of 48.00 MiB (96%, 1934672 B spare)
+```
+
+| texture | scale | px | decoded |
+|---|---|---|---|
+| `ottawa-landmark-parliament-hill` | **2×** | 2160 × 2080 | **17.14 MiB** |
+| `shared` character atlas | 2× | 1282 × 2035 | 9.95 MiB |
+| `ottawa-layer-50-canalwall` | 1× | 2016 × 640 | 4.92 MiB |
+| `ottawa-layer-10-sky` | 1× | 1080 × 1160 | 4.78 MiB |
+| `ottawa-layer-60-ice` | 1× | 1440 × 560 | 3.08 MiB |
+| `ottawa-layer-20-skyline` | 1× | 1800 × 300 | 2.06 MiB |
+| `ottawa-layer-40-treeline` | 1× | 1440 × 340 | 1.87 MiB |
+| `ottawa-layer-30-escarpment` | 1× | 1440 × 320 | 1.76 MiB |
+| `ottawa` atlas (2 markers + snow particle) | 2× | 230 × 738 | 0.65 MiB |
+| **total at a 2× device** | | | **48,391,884 B = 46.15 MiB of 48.00** |
+
+**The single largest lever on this level is the landmark's scale, not the characters.** Shipping it at 1× as
+this sheet always intended would return **12.85 MiB** — six times what cropping its empty rows saved, and
+more than the entire character library costs. It needs `scripts/assets.mjs` to learn a second way to say
+"1× only", or the level document to say it. Routed to infra as `OQ-LEVEL-ART-1`.
 
 For comparison, the whole set at 2× is **93.61 MiB** — nearly three times the level's own declared budget, and
 `ottawa-layer-10-sky@2x` alone is 19.12 MiB. A full-screen background at 2× spends nineteen megabytes

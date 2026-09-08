@@ -96,6 +96,13 @@ cannot be expressed as a Rive shape stroke.
 **Ink colour is never `#000000`.** Pick the ink whose hue family matches the character's largest colour area:
 `ink-warm` for warm-dominant, `ink-cool` for cool-dominant, `ink-neutral` only as a last resort.
 
+**One ink for the whole character rig, and it is `ink-warm`.** The rule above is written per character, and
+task 1.11 made that unusable: the head, the face and all twenty hair parts are **shared by every character
+in the game**, so a per-character ink would mean drawing the same face twice in two inks. The rig therefore
+fixes one ink for every character part. `ink-warm` is the right one because the shared parts *are* skin and
+hair, both warm, and because a warm-brown outline sits correctly on the scarlet serge and on a green parka
+alike. A costume whose largest area is cool does not get its own ink. See `rig-contract.md`.
+
 **Backgrounds separate by tone, not by line.** If a background shape does not read without a line, its tone
 is wrong. Change the tone. The moment you outline a building, the character stops being the thing the eye
 goes to, and one-thumb play depends on the player finding the character instantly.
@@ -263,9 +270,13 @@ not resolve that conflict and does not need to: the schema decided, and this sec
 
 - Author in SVG under `assets/src/svg/`. One file per logical asset. `viewBox` in design-resolution units.
 - Every fill and stroke references a colour that exists in `palette.json` `colours`.
-- Character parts are separate `<g>` elements named for their rig slot, so `content/characters/rig.json`
-  (task 1.11) can bind them. Sprite-sheet fallbacks use the identical slot names so content JSON never
-  changes.
+- **Character parts are one SVG per part, not `<g>` elements in one file.** Task 1.11 settled this: the
+  asset pipeline makes one atlas frame per source file, so a part that is a `<g>` inside a shared file
+  cannot be a frame. Each part is authored in the **shared 240 × 470 character space** and its `viewBox` is
+  its window in that space, so the window origin is the part's offset and no placement number is written
+  twice. `assets/style/rig-contract.md` is the contract — parts, draw order, pivots, slots, state-machine
+  inputs, expressions and events — and `rig-contract.json` is the same thing as data. Sprite-sheet fallbacks
+  use the identical slot names so content JSON never changes.
 - `make assets` rasterises and packs, at 1× and 2×, and runs the per-level payload gate; a failure there
   fails the build. Per-level payload ≤ 8 MB, atlas page ≤ 2048 px, standalone texture ≤ 4096 px, decoded
   texture memory ≤ 64 MB per level and whatever the level document's own `textureBudgetBytes` declares,
@@ -318,7 +329,7 @@ Recorded rather than resolved. Inventing a detail is worse than leaving a questi
 
 | id | question | owner | blocks |
 |---|---|---|---|
-| **OQ-ART-01** | `content/schemas/palette.schema.json` does not exist, so the palette cannot live at `content/style/palette.json` without turning `make validate-content` red. Add the schema, then move the file. | architect | the canonical palette path named in `CLAUDE.md` |
+| **OQ-ART-01** | ~~`content/schemas/palette.schema.json` does not exist~~ **HALF CLOSED 2026-09-08: the schema exists and the palette is validated against it in place** — `make validate-content` reports `palette 97 colour(s) in 31 ramp(s), every tone and ink resolved`. What is still open is only the **move**: the palette is authored at `assets/style/palette.json` and `CLAUDE.md` names `content/style/palette.json`. Two live paths for one allow-list is the kind of drift this table exists to catch, so it stays open until one of them is the only one. `content/**` is not art's to move. | architect | the canonical palette path named in `CLAUDE.md` |
 | ~~**OQ-ART-02**~~ | ~~The credit gate reads `assets/dist/` only, so an asset committed anywhere else under `assets/` is credited by nobody and the check stays green. All 14 references here are credited by hand.~~ **CLOSED 2026-09-08 by infra.** The gate walks `assets/`, asserts set equality in both directions, and reports 14. It is a denylist, so an unrecognised file type defaults to "must be credited" — the first `.riv`, `.woff2` or `.ogg` cannot land uncredited. `credits.json` `path` is now relative to `assets/`, and every entry carries `kind`. Kept struck through because the next artist should know the hand-checking described in `assets/refs/README.md` rule 3 stopped for a reason, not by being forgotten. | infra | ADR-0006 obligation `due=2026-09-15 owner=art` |
 | ~~**OQ-ART-03**~~ | ~~May this project depict the red-serge uniform, the wide-brimmed hat and the Sam Browne belt?~~ **ANSWERED 2026-09-08 by the repository owner: yes — the recognisable silhouette, without the protected marks.** Kept struck through rather than deleted, because the next artist needs to know the omissions in §9 were decided, not overlooked. See `assets/style/officer.md`. | user | — |
 | **OQ-ART-04** | Which red is the National Flag of Canada? The Federal Identity Program specifies Pantone 032; renderings in the wild vary from `#FF0000` to `#D52B1E`. `flag-red-base` is currently `#d8262c`, chosen to read well in a saturated cartoon palette, not from a specification. | content-verifier | flag colour accuracy |

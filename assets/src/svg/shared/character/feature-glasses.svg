@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="74" height="34" viewBox="83 58 74 34" shape-rendering="geometricPrecision">
+  <title>Glasses. A cosmetic feature that works in every locomotion mode the game has, which is the bar an option has to clear before it is offered at all.</title>
+  <rect x="95.5" y="64.5" width="23" height="21" rx="8" fill="none" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 98,73 L 102,67" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="121.5" y="64.5" width="23" height="21" rx="8" fill="none" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 142,73 L 138,67" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 109,75 L 131,75" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 96,72 L 89,77" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 144,72 L 151,77" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

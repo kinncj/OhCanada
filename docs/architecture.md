@@ -285,7 +285,7 @@ is recorded there.
 | `Clock` | `Date.now`, `performance.now` | `now()` for scheduling, `elapsed()` monotonic for timers. **No `nowIso()`** — ADR-0015 removed it; `toIsoInstant(clock.now())` is the one conversion | Consumed |
 | `RandomSource` | `Math.random` | Seeded variant makes an exam draw replayable | Consumed |
 | `Locomotion` | how a mode moves | Pure `step`; implementations live in the domain | Consumed |
-| `ICharacterRenderer` | Rive vs. sprite atlas | Identical artboard, input, slot and expression names in both | `PROVISIONAL` → slice 1 tasks 1.11, 1.12 |
+| `ICharacterRenderer` | Rive vs. sprite atlas | Identical artboard, input, slot and expression names in both — and identical *structurally*: both backends answer `skinSlots`/`skinOptions` out of `CharacterRendererSpec.slots`, one array from one character document | Consumed by `app/adapters/rive` and `app/adapters/phaser/sprite-character-renderer.ts` (slice 1 task 1.12) |
 | `AudioPort` | howler, autoplay unlock | Every cue carries a `captionKey` — sound always has a visual twin | `PROVISIONAL`, **no task** — delete it if slice 2 closes without an audio adapter |
 | `LocalizerPort` | i18next | No literal player-facing string exists anywhere else | `PROVISIONAL` → slice 1 task 1.15 |
 | `InputPort` | touch, keyboard, gamepad, switch | Keyboard bindings keyed by `KeyboardEvent.code` | `PROVISIONAL` → slice 1 task 1.15 |

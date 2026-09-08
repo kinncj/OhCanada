@@ -88,7 +88,16 @@ check-textures: ## Decoded texture memory per level vs textureBudgetBytes and th
 validate-content: ## Validate every content file against its JSON Schema
 	npm run validate-content
 
-verify-content: ## Verify questions against the Discover Canada sources
+# THE SEPARATION-OF-DUTIES GATE LIVES HERE, and it reads git history, so this
+# target needs the history to be present. Both workflows set `fetch-depth: 0` on
+# their checkout for that reason and the script refuses to run on a shallow clone
+# rather than report green over commits it cannot see.
+#
+# It does NOT fetch canada.ca. A live check is a judgement recorded by a named
+# checker in a source register's `liveChecks[]` (ADR-0016); a CI job that fetched
+# a page and wrote its own finding would be granting itself the attestation the
+# separation of duties exists to withhold. This target reads the record.
+verify-content: ## ADR-0003/ADR-0016: separation of duties, the CI clause, the re-check table
 	npm run verify-content
 
 verify-art: ## Verify art against the style guide and references

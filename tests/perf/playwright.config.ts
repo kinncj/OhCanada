@@ -12,7 +12,23 @@ import { defineConfig, devices } from '@playwright/test';
  */
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url));
 const PORT = 4174;
+/**
+ * The character-cost harness (`tests/perf/character-harness.ts`) is served by a
+ * *dev* server, not by `vite preview`, for the reason `tests/a11y`'s harness is:
+ * `dist/` contains exactly what `vite.config.ts` declares as a build input, and
+ * that is one page. Characters are not placed in a level yet — task 1.13 does
+ * that when the atlas lands — so measuring them through the production artefact
+ * would mean measuring a page with no characters on it.
+ *
+ * It is the same Vite, the same aliases and the same TypeScript, so what is
+ * measured is the real adapter compiled the real way. What it does not prove is
+ * that the numbers survive a production build's minification; that becomes true,
+ * and this server goes away, when a level draws characters.
+ */
+const HARNESS_PORT = 4177;
 const BASE_PATH = '/OhCanada/';
+export const CHARACTER_HARNESS_URL =
+  `http://127.0.0.1:${HARNESS_PORT}${BASE_PATH}tests/perf/character-harness.html`;
 
 export default defineConfig({
   testDir: '.',
@@ -98,13 +114,24 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: `npx vite preview --port ${PORT} --strictPort --host 127.0.0.1`,
-    cwd: REPO_ROOT,
-    url: `http://127.0.0.1:${PORT}${BASE_PATH}`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-    stdout: 'ignore',
-    stderr: 'pipe',
-  },
+  webServer: [
+    {
+      command: `npx vite preview --port ${PORT} --strictPort --host 127.0.0.1`,
+      cwd: REPO_ROOT,
+      url: `http://127.0.0.1:${PORT}${BASE_PATH}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      stdout: 'ignore',
+      stderr: 'pipe',
+    },
+    {
+      command: `npx vite --port ${HARNESS_PORT} --strictPort --host 127.0.0.1`,
+      cwd: REPO_ROOT,
+      url: CHARACTER_HARNESS_URL,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      stdout: 'ignore',
+      stderr: 'pipe',
+    },
+  ],
 });

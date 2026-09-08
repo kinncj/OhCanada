@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="64" viewBox="92 48 56 64" shape-rendering="geometricPrecision">
+  <title>Face pose &quot;happy&quot; (a correct answer, a greeting). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale, high contrast and the plain Canvas tier, which has no Filters. Identical geometry for every character and every skin ramp.</title>
+  <ellipse cx="107" cy="75" rx="6.5" ry="6.2" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="107" cy="75.4" rx="4.2" ry="4.7" fill="#3a2018"/>
+  <ellipse cx="133" cy="75" rx="6.5" ry="6.2" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="133" cy="75.4" rx="4.2" ry="4.7" fill="#3a2018"/>
+  <path d="M 102,63 Q 108.5,58 115,60" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 125,60 Q 131.5,61 138,63" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 120,82 L 120,88 L 125,89" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 107,94 Q 120,109 133,94 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

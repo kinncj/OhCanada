@@ -6,14 +6,19 @@
  * the page's landmarks, which is not a detail — see *Landmarks* below.
  *
  * **Copy.** Everything drawn here is defined in a story table and referenced,
- * never copied: `hud.menu`, `hud.task`, `common.settings`, `study.open`,
- * `passport.open`, `common.close`, `storage.warning`. The two strings that vary
- * per level — the mode label (`locomotion.skate.label`) and the quest step
- * (`quest.step.*`) — arrive as data, because the level and the quest own them.
- * One string has no table anywhere and is a **reported gap**: the accessible
- * name of the `hud` region itself. It is a required option rather than a
- * defaulted one, so it cannot be forgotten into an unnamed region, and it is
- * listed with the task rather than invented here (`TN-COPY-06`).
+ * never copied: `hud.label`, `hud.menu`, `hud.task`, `common.settings`,
+ * `study.open`, `passport.open`, `common.close`, `storage.warning`. The two
+ * strings that vary per level — the mode label (`locomotion.skate.label`) and
+ * the quest step (`quest.step.*`) — arrive as data, because the level and the
+ * quest own them.
+ *
+ * `hud.label`, the accessible name of the region, used to be a required option
+ * because no table carried it (`TN-COPY-06`). `TN-HUD` writes it down now, so
+ * the region reads the row like every other string it draws, and the option is
+ * gone. That is the stronger guarantee, not the weaker one: a caller could not
+ * omit the name before, but it could pass "HUD" or "Section", which `TN-HUD`'s
+ * table names as defects — and a caller-supplied name could not become French
+ * on a language change without a reload, which `TN-HUD-09` requires.
  *
  * **Landmarks.** `TN-HUD-07` requires the page to have exactly one `<main>`,
  * with the `aria-hidden` canvas inside it and `hud` as a named region — and it
@@ -39,14 +44,6 @@ import { createStorageWarning, type StorageWarning } from './storage-warning';
 
 export interface HudOptions {
   readonly locale: UiLocale;
-  /**
-   * The accessible name of the `hud` region.
-   *
-   * Required and taken as data: no copy table in `docs/stories/` carries a name
-   * for the region, and `docs/stories/README.md` forbids this directory from
-   * inventing one. Reported as a gap with the task.
-   */
-  readonly label: string;
   /** The one live region (`app/ui/live-region.ts`). */
   readonly announce?: (message: string, lang?: string) => void;
   /** Opening the menu pauses the level (`TN-HUD-02`). */
@@ -144,7 +141,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   const region = element(doc, 'section', {
     testId: 'hud',
     className: 'tn-hud',
-    attrs: { 'aria-label': options.label },
+    attrs: { 'aria-label': text(locale, 'hud.label') },
     children: [status, warningSlot, promptSlot, menuButton],
   });
   main.append(region);
@@ -287,6 +284,9 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     setLocale(next): void {
       locale = next;
       region.setAttribute('lang', next);
+      /* `TN-HUD-09`: the region's name changes with the language, without the
+         level reloading. */
+      region.setAttribute('aria-label', text(next, 'hud.label'));
       menuButton.textContent = text(next, 'hud.menu');
       renderTask();
       warning.setLocale(next);

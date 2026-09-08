@@ -26,12 +26,30 @@
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
     "then": "Only then is the render compared against `referenceFiles` and `mustBeRight` for that subject.",
     "pass": "The unprompted identification matches `subject` AND every entry in `mustBeRight` is present.",
-    "fail": "Recognisable only once you know what it is, any missing `mustBeRight` entry, or any entry from `neverAdd` present."
+    "fail": "Recognisable only once you know what it is, any missing `mustBeRight` entry, or any entry from `neverAdd` present.",
+    "whichFileAnswersWhichSubject": [
+      "`renders` on each subject is the answer, and it exists because without it the same image passed one",
+      "subject and failed another and there was no way to say which verdict counted. A subject with an empty",
+      "`renders` is UNRENDERED, not failed: no image is judged against it and its lists are dormant.",
+      "`renderRecipe` says how to build the image. A single-file subject is that file rasterised. A CHARACTER",
+      "cannot be judged from any single file: it is a rig of separate parts and every one of them is",
+      "unidentifiable alone. Its recipe names the parts, their draw order and the slot choices, all of which",
+      "come from assets/style/rig-contract.json - the parts list, the z order and the frame templates."
+    ],
+    "contradictionRule": "An entry in one subject's `neverAdd` may not forbid an entry in another subject's `mustBeRight`. Where two subjects cover overlapping geometry, the narrower prohibition wins and is scoped in its own text.",
+    "anonymisedHandOff": [
+      "An identifier that finds its own inputs has already read their filenames, so it is not blind.",
+      "The rasterise-and-rename step must be run by something the identifier does not run, and the identifier",
+      "must be handed image bytes with a neutral name and no directory listing. Recorded here after a pass",
+      "marked all of its own verdicts untrusted for exactly this reason, which was the right call."
+    ]
   },
   "subjects": [
     {
       "id": "peace-tower",
       "subject": "The Peace Tower, Centre Block, Parliament Hill, Ottawa",
+      "renders": ["src/svg/ottawa/landmark-parliament-hill.svg"],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers.",
       "expectedBlindAnswer": [
         "Peace Tower",
         "Parliament Hill",
@@ -55,7 +73,7 @@
         {
           "feature": "clock face",
           "why": "Named in the brief and in every photograph a learner has seen. Without it the tower is a generic Gothic spire.",
-          "detail": "One large circular white clock face centred on the tower shaft, just below the belfry stage. MEASURED: centre at 0.74 of the tower height above the terrace (0.62 was recorded here before measurement and was wrong), dial diameter 0.40 of the shaft width. Dark surround, dark hands. DELIBERATE EXAGGERATION: the shipped art draws the dial at 0.55 of the shaft width and centres it at 0.72, because 0.40 is 24 px at design resolution and stops being a clock on a phone. Exaggerating an identifying feature is simplification (art-bible section 5, rule 2); this is the only feature on this subject that is exaggerated, and the spire is NOT, so the two do not collide."
+          "detail": "One large circular white clock face centred on the tower shaft, just below the belfry stage. MEASURED: centre at 0.74 of the tower height above the terrace (0.62 was recorded here before measurement and was wrong), dial diameter 0.40 of the shaft width. Dark surround, dark hands. DELIBERATE EXAGGERATION: the shipped art draws the dial at 0.55 of the shaft width and centres it at 0.72, because the shipped shaft is 113 px wide at design resolution, so a true 0.40 dial is 45 px there and about 16 px on a phone held at arm's length, where it stops being a clock and becomes a white dot. MEASURED, and the third figure in this file that was asserted before it was measured: the quantity is the dial ON A PHONE, not at design resolution. Exaggerating an identifying feature is simplification (art-bible section 5, rule 2); this is the only feature on this subject that is exaggerated, and the spire is NOT, so the two do not collide."
         },
         {
           "feature": "national flag on the mast above the spire",
@@ -89,7 +107,7 @@
         "the eleven-point outline of the maple leaf on the flag: at a 59 px flag the notches are 3 px, so the leaf is drawn as a bold five-lobe silhouette"
       ],
       "neverAdd": [
-        "a second tower or spire on the Centre Block",
+        "a second tower or spire ON THE PEACE TOWER ITSELF, and no twin tower flanking it. SCOPED 2026-09-08: this read as a blanket ban on any other roofline on the Hill, which contradicted parliament-hill-skyline's mustBeRight entry for the Library of Parliament's polygonal roof - a real building that the shipped render draws and that its own <title> names. A neverAdd on one subject may not forbid a mustBeRight on another; that contradiction is what makes a literal verifier fail a render for drawing a required feature.",
         "a dome",
         "round or rose windows",
         "battlements or crenellation on the tower shaft",
@@ -112,6 +130,8 @@
     },
     {
       "id": "parliament-hill-skyline",
+      "renders": [],
+      "renderRecipe": "UNRENDERED, by decision. No source answers this subject. `layer-20-skyline.svg` is a GENERIC winter city and must stay generic: it is a repeating parallax tile that the medium and low presets drop, and the art bible forbids putting an identifying feature on a droppable layer. A verifier that could name Ottawa from it would be reporting a defect, not a pass. The Hill's own skyline features live in `landmark-parliament-hill.svg`, which is judged as `peace-tower`.",
       "subject": "Parliament Hill seen from a distance: Centre Block, Peace Tower, Library of Parliament",
       "expectedBlindAnswer": [
         "Parliament Hill",
@@ -159,6 +179,8 @@
     },
     {
       "id": "rideau-canal-skateway",
+      "renders": ["src/svg/ottawa/layer-60-ice.svg", "src/svg/ottawa/layer-50-canalwall.svg"],
+      "renderRecipe": "Composite the two, canal wall above ice, ice placed 580 px below the wall's top edge (world y 1280 against 700). Neither file answers the subject alone: ice with no wall is a frozen pond, and a wall with no ice is a wall.",
       "subject": "The Rideau Canal Skateway, Ottawa, in winter",
       "expectedBlindAnswer": [
         "Rideau Canal",
@@ -214,6 +236,22 @@
     },
     {
       "id": "officer",
+      "renders": [
+        "src/svg/shared/character/torso-serge.svg",
+        "src/svg/shared/character/hat-serge.svg",
+        "src/svg/shared/character/arm-upper-serge.svg",
+        "src/svg/shared/character/arm-lower-serge.svg",
+        "src/svg/shared/character/hand-serge.svg",
+        "src/svg/shared/character/leg-upper-serge.svg",
+        "src/svg/shared/character/leg-lower-serge.svg",
+        "src/svg/shared/character/foot-r-serge.svg",
+        "src/svg/shared/character/foot-l-serge.svg",
+        "src/svg/shared/character/head-skin-4.svg",
+        "src/svg/shared/character/face-neutral.svg",
+        "src/svg/shared/character/hair-crop-black.svg",
+        "src/svg/shared/character/ground-shadow.svg"
+      ],
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with costume=serge and any skin, hairShape, hairColour, expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. Every listed file is unidentifiable alone; a sleeve is a red capsule. The skin and hair choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of.",
       "subject": "A Canadian police constable in ceremonial scarlet review order (the 'Mountie' silhouette)",
       "expectedBlindAnswer": [
         "Mountie",

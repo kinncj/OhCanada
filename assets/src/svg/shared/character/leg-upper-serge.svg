@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="76" height="144" viewBox="108 260 76 144" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. Midnight-blue breech: full at the thigh, close below the knee, with one broad yellow-gold stripe down the outer seam. At 120 px tall the stripe is doing more identification work than its area suggests, so it is drawn broad.</title>
+  <path d="M 120,264 C 113,269.6 110.72,296.13 112,312 C 113.28,327.87 124.82,389.73 131,400 C 137.18,410.27 159.28,410.27 165,400 C 170.72,389.73 179.18,327.87 180,312 C 180.82,296.13 179,269.6 172,264 C 165,258.4 127,258.4 120,264 Z" fill="#2b3660" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="br"><path d="M 120,264 C 113,269.6 110.72,296.13 112,312 C 113.28,327.87 124.82,389.73 131,400 C 137.18,410.27 159.28,410.27 165,400 C 170.72,389.73 179.18,327.87 180,312 C 180.82,296.13 179,269.6 172,264 C 165,258.4 127,258.4 120,264 Z"/></clipPath></defs>
+  <g clip-path="url(#br)">
+    <ellipse cx="125" cy="296" rx="10" ry="30" fill="#464c92"/>
+    <ellipse cx="173" cy="344" rx="10" ry="32" fill="#101629"/>
+  </g>
+  <path d="M 167.02,271.59 L 157.02,393.59 C 156.71,397.28 166.68,398.1 166.98,394.41 L 176.98,272.41 C 177.29,268.72 167.32,267.9 167.02,271.59 Z" fill="#d6a727"/>
+</svg>

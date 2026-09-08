@@ -21,18 +21,31 @@ rules this file uses.
 |---|---|
 | Keyboard only | `TN-HUD-05` |
 | Single switch | `TN-HUD-06` |
-| Screen reader | `TN-HUD-07` |
+| Screen reader | `TN-HUD-07`, and `TN-HUD-10` for the scan that proves it |
 | Reduced motion | `TN-HUD-08` |
 | 200 % text | `TN-HUD-08` |
 | Bilingual | `TN-HUD-09` |
-| Failure path | `TN-HUD-03` (the storage warning), `TN-HUD-04` (the menu over a modal) |
+| Failure path | `TN-HUD-03` (the storage warning), `TN-HUD-04` (the menu over a modal), `TN-HUD-10` (a landmark scan that cannot fail) |
 
 ## Player-facing copy
 
 | Key | EN | FR |
 |---|---|---|
+| `hud.label` | Game controls | Commandes du jeu |
 | `hud.menu` | Menu | Menu |
 | `hud.menu.title` | Menu | Menu |
+
+**`hud.label` is the accessible name of the `hud` region**, and it is the string `TN-HUD-07` needs when it
+requires the region to have a name. It was reported as a gap under `TN-COPY-06` — the screen took it from
+the caller as a required option, so no screen could be mounted without somebody inventing a word — and it is
+written here now, so nobody invents one twice. It names what the region is *for* ("Game controls"), not what
+it is made of: "HUD", "Heads-up display", "Region", "Section" and the empty string are all defects, because a
+screen-reader user landing on a region called "HUD" has been told the name of a widget rather than what is
+inside it.
+
+It may be carried as the region's `aria-label` or as a visible heading the region points at — the scenarios
+assert the accessible name, not the mechanism. It is player-facing either way, because a screen reader reads
+it out, so it is translated like every other string.
 
 Everything else the HUD and the menu draw is defined elsewhere and is referenced, never copied:
 
@@ -55,16 +68,44 @@ words.
 
 The page has one `<main>`. It contains the canvas — which is `aria-hidden`, so it contributes nothing — and
 the HUD, which is real content and is the reason `<main>` is not an empty wrapper invented for a scanner.
-`hud` is a named region inside it. Modal screens (`settings-screen`, `question-card`, `dialogue`,
-`study-screen`, `save-error`) are dialogs over that page and make the rest of it inert; they are not
-landmarks and do not need to be.
+`hud` is a named region inside it, and `hud.label` is its name. Modal screens (`settings-screen`,
+`question-card`, `dialogue`, `study-screen`, `save-error`) are dialogs over that page and make the rest of it
+inert; they are not landmarks and do not need to be.
 
-This matters to the a11y gate. While the screens are scanned on their own, a modal sits alone on a page with
-no landmark at all, and axe's `region` and `landmark-one-main` rules have nothing true to say — which is why
-they are disabled, with the reason written in the spec file. Once this story ships and the screens are
-reached through a real page, both rules describe something that exists, and `TN-HUD-07` requires them back
-on for the whole-page scan. A rule disabled because a page was not built yet has to be re-enabled when the
-page is built, or the reason has quietly become a habit. See `OQ-TEST-2` in `README.md`.
+This mattered to the a11y gate. While the screens were scanned on their own, a modal sat alone on a page with
+no landmark at all, and axe's `region` and `landmark-one-main` rules had nothing true to say — which is why
+they were disabled, with the reason written in the spec file. Now that this story has shipped and the screens
+are reached through a real page, both rules describe something that exists, and `TN-HUD-07` requires them on
+for a whole-page scan that disables nothing at all. A rule disabled because a page was not built yet has to
+be re-enabled when the page is built, or the reason has quietly become a habit.
+
+### Why `TN-HUD-10` exists
+
+Re-enabling a rule is not the same as being checked by it, and on this page `landmark-one-main` is not the
+check it sounds like. It was found to **pass with `<main>` removed entirely**, for two reasons that both have
+nothing to do with the page being correct:
+
+- the `<section>` carrying `hud.label` is itself a landmark, so content outside `<main>` is still inside
+  *something*, and
+- axe's `passForModal` heuristic reads the full-bleed `#game` element as a modal, and a rule that believes it
+  is looking at a modal stops asking for `<main>`.
+
+Getting the rule to fire needed the negative control to unwrap `<main>` **and** strip the region's name.
+Taken at face value, then, this rule would have reported success on a page with no `<main>` at all — so two
+guards sit on the green tick, and `TN-HUD-10` is where they are written down:
+
+1. the rule ids are asserted to be **present in the axe results**, because a rule that never ran also
+   reports no violations, and
+2. the negative control removes both the `<main>` wrapper and the region's name, and the scan is asserted to
+   fail.
+
+Nobody should simplify either guard away on the grounds that the scan is green. The scan being green is the
+thing being checked. `TN-HUD-07` says the page is right; `TN-HUD-10` says the scan is able to tell.
+
+**What the whole-page scan is, and is not.** It runs against the harness's page, not against `dist/`, because
+`app/bootstrap` does not yet mount these screens. It is a real page with real landmarks and it is worth more
+than a per-component scan, and it is still not the shipped page. `OQ-TEST-2` in `README.md` stays open until
+the built output is scanned, and no report may describe this scan as proving the shipped page.
 
 ---
 
@@ -297,10 +338,17 @@ Feature: Announcing the HUD
     And "hud" is a region with an accessible name
     And every piece of visible text on the page is inside a landmark
 
+  Scenario: The region is named for what is in it
+    Then the accessible name of "hud" is "Game controls"
+    And it is not "HUD", "Heads-up display", "Region", "Section" or empty
+    And the name is read when focus first enters the region
+
   Scenario: The scanner is not asked to ignore what now exists
     When axe-core runs against the whole page
     Then the rules "region" and "landmark-one-main" are enabled
+    And no axe rule is disabled for this scan
     And the scan passes with no violations
+    And the guards in TN-HUD-10 pass in the same run
 
   Scenario: The menu is a named dialog
     When the menu opens
@@ -365,6 +413,11 @@ Feature: The HUD in French
     Then "hud-mode-label" reads "Patinage"
     And "menu-button" reads "Menu"
 
+  Scenario: The region's name is French
+    Then the accessible name of "hud" is "Commandes du jeu"
+    And it is not "Game controls"
+    And it contains no "(e)", "·e" or bracketed ending
+
   Scenario: The menu is French
     When I tap "Menu"
     Then the items read "Réglages", "Réviser" and "Voir mon passeport"
@@ -381,8 +434,54 @@ Feature: The HUD in French
     When I open Settings from the menu and change the language to French
     Then "hud-mode-label" reads "Patinage"
     And "hud-quest-tracker" reads "Répondez à 3 questions (0 sur 3)"
+    And the accessible name of "hud" is "Commandes du jeu"
     And "data-player-x" is unchanged
     And the level is not reloaded
+
+  Scenario: The whole page is scanned in French too
+    When axe-core runs against the whole page in French
+    Then the rules "region" and "landmark-one-main" are enabled
+    And the scan passes with no violations
+    And the document's "lang" is "fr"
+```
+
+## TN-HUD-10 — The landmark scan is able to fail (failure path)
+
+```gherkin
+Feature: Guarding the green tick on the landmark rules
+  Background:
+    Given the whole page is scanned with "region" and "landmark-one-main" enabled
+
+  Scenario: Both rules actually ran
+    When axe-core runs against the whole page
+    Then "region" is named among the rules the results report as run
+    And "landmark-one-main" is named among the rules the results report as run
+    And a result carrying neither a violation nor a run for one of those rules fails this scenario
+
+  Scenario: The negative control makes the scan fail
+    Given the same page is built with the "main" wrapper removed
+    And the "hud" region is built with no accessible name
+    When axe-core runs against it
+    Then a violation of "landmark-one-main" is reported
+    And the negative control is asserted to fail, not skipped
+
+  Scenario: Removing the main wrapper alone does not make the rule fire
+    Given the same page is built with the "main" wrapper removed
+    And "hud" keeps its accessible name "Game controls"
+    When axe-core runs against it
+    Then no violation of "landmark-one-main" is reported
+    And this is why the negative control also strips the region's name
+
+  Scenario: A named region is not what makes the real page pass
+    Given the page has its "main" wrapper
+    When the region's name is removed and the page is scanned again
+    Then "landmark-one-main" still reports no violation, satisfied by "main"
+    And "region" reports a violation, because the region is now unnamed
+
+  Scenario: The guards outlive a green run
+    Then both guards run in the same suite as the passing scan
+    And neither is removed on the grounds that the scan passes
+    And a change that makes the negative control pass is a failure of this suite
 ```
 
 ---
@@ -405,3 +504,20 @@ Feature: The HUD in French
 - **`OQ-HUD-4` — is there a pause item in the menu?** Opening the menu already pauses, so a pause item would
   do nothing. *Recommendation:* no pause item; `TN-LEVEL-12` already covers pausing by rotation, by menu and
   by hiding the tab.
+- **`OQ-HUD-5` — is "Game controls" the right name when the movement controls may not be in the region?**
+  `OQ-HUD-1` recommends splitting the chrome from the movement layer, which would leave a region named
+  "Game controls" holding the mode, the task, the menu button and a warning — labels and one control.
+  *Recommendation:* keep the name. It is what the strip is for from the player's side, and the alternatives
+  ("Game status", « État du jeu ») describe the half a switch user cannot press. Revisit if the movement
+  controls ever move inside the same region, at which point the name becomes exactly right instead of
+  roughly right.
+- **`OQ-HUD-6` — should the region's name also be visible on screen?** Today it is announced and not drawn,
+  which is why the copy table calls it player-facing anyway. A visible "Game controls" heading would take
+  vertical space in the lower third at 200 % text and tell a sighted player nothing they cannot already see.
+  *Recommendation:* keep it announced only, and keep `TN-HUD-07` asserting the accessible name rather than a
+  mechanism, so a visible heading stays legal if a later design wants one.
+- **`OQ-HUD-7` — does `TN-HUD-10`'s third scenario belong in a suite at all?** It asserts what axe does
+  today: `landmark-one-main` passing on a page with no `<main>` because of `passForModal`. If a future axe
+  fixes that, the scenario fails and the negative control can be simplified. *Recommendation:* keep it and
+  let it fail loudly — a scenario that fails when a tool gets better is a scenario that told us the tool
+  changed. What must not happen is the simplification being made without the failure.

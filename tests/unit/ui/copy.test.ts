@@ -113,22 +113,75 @@ describe('the copy table', () => {
     expect(source.includes(marker), `${marker} survives in copy.ts`).toBe(false);
   });
 
-  it('takes the two strings no table carries from the caller, as required options', () => {
+  it('names the hud region from the table, and still takes the waiting sentence as data', () => {
     /*
-     * The other half of `TN-COPY-06`: "the string is taken from the caller as
-     * data, or the key is listed as a gap". Two screens need a string no story
-     * table writes — the `hud` region's accessible name and the level-loading
-     * sentence — and both are *required* options, so neither can quietly become
-     * a default this directory authored. Read from the source, so deleting the
-     * word `readonly label: string` fails here rather than at review.
+     * `TN-COPY-06` closed both gaps, and they landed differently on purpose.
+     *
+     * `hud.label` is one name for the whole game, so the region reads the row
+     * itself: a caller-supplied `string` could be "HUD" — which `TN-HUD` calls a
+     * defect — and could not turn French on the language change `TN-HUD-09`
+     * requires without a reload. There is no `label` option left to forget.
+     *
+     * `level.loading` names the canal, so `OQ-LEVEL-9` keeps the wording with
+     * the level that waits and the screen still takes it as a **required**
+     * option. Required, never defaulted: a screen that waits without saying what
+     * for is `TN-LEVEL-01`'s defect. Read from the source, so deleting the word
+     * `readonly message: string` fails here rather than at review.
      */
     const hud = readFileSync(new URL('../../../app/ui/hud.ts', import.meta.url), 'utf8');
     const level = readFileSync(new URL('../../../app/ui/level-screens.ts', import.meta.url), 'utf8');
 
-    expect(hud).toMatch(/readonly label: string;/);
-    expect(hud).not.toMatch(/options\.label \?\?/);
+    expect(hud).toMatch(/'aria-label': text\(locale, 'hud\.label'\)/);
+    expect(hud, 'the region name came back as a caller option').not.toMatch(/readonly label:/);
     expect(level).toMatch(/readonly message: string;/);
     expect(level).not.toMatch(/options\.message \?\?/);
+  });
+
+  it('names the hud region for what it holds, not for what it is', () => {
+    /*
+     * `TN-HUD`'s copy table writes `hud.label` down and names its defects: "HUD",
+     * "Heads-up display", "Region", "Section" and the empty string. A
+     * screen-reader user landing on a region called "HUD" has been told the name
+     * of a widget rather than what is inside it. The row is checked here because
+     * this is where the words are; `tests/unit/ui/hud.test.ts` checks that the
+     * region carries it and that it turns French with the language.
+     */
+    const banned = ['hud', 'heads-up display', 'region', 'section', ''];
+    expect(text('en', 'hud.label')).toBe('Game controls');
+    expect(text('fr', 'hud.label')).toBe('Commandes du jeu');
+    for (const locale of UI_LOCALES) {
+      const value = text(locale, 'hud.label').trim();
+      expect(banned, `hud.label (${locale}) is "${value}"`).not.toContain(value.toLowerCase());
+    }
+  });
+
+  it('waits without claiming a figure it cannot measure, in either language', () => {
+    /*
+     * `TN-COPY-07`, the waiting rule, held over the table rather than over one
+     * screen: it names the work, and it carries no percentage, no fraction, no
+     * step count such as "2 of 4", and no ellipsis. `level.loading` is the only
+     * waiting row today; the pattern is what makes the next one inherit the rule
+     * instead of being reviewed for it.
+     */
+    const waiting = KEYS.filter((key) => String(key).endsWith('.loading'));
+    expect(waiting, 'no waiting row found — this rule must not pass vacuously').not.toEqual([]);
+
+    for (const locale of UI_LOCALES) {
+      for (const key of waiting) {
+        const value = text(locale, key);
+        expect(value, `${String(key)} (${locale}) is empty`).not.toBe('');
+        expect(/\d/u.test(value), `${String(key)} (${locale}) carries a figure: ${value}`).toBe(
+          false,
+        );
+        expect(value.includes('%'), `${String(key)} (${locale}) carries a percentage`).toBe(false);
+        expect(
+          value.includes('…') || value.includes('...'),
+          `${String(key)} (${locale}) ends in an ellipsis: ${value}`,
+        ).toBe(false);
+      }
+    }
+    expect(text('en', 'level.loading')).toBe('Getting the canal ready.');
+    expect(text('fr', 'level.loading')).toBe('Préparation du canal.');
   });
 
   it('counts through Intl.PluralRules, in English', () => {
@@ -202,19 +255,24 @@ describe('the copy table', () => {
      * noun does not follow the number that changes — so the function words are
      * skipped rather than the keys being exempted.
      *
-     * What is left is a real finding and it is reported rather than silenced:
-     * `study.summary.score` in French reads « Vous avez 1 bonnes réponses sur 5 »
-     * when the player got one right. The wording belongs to
-     * `docs/stories/TN-STUDY-study-mode.md`, which this directory may not edit,
-     * so the key is listed here with its language and reported with the task.
-     * The assertion is an equality, not an allowance: fixing the string fails
-     * this test, and so does adding a second offender.
+     * The one finding this rule ever had is fixed. `study.summary.score` in
+     * French used to read « Vous avez 1 bonnes réponses sur 5 » when the player
+     * got one right; `TN-STUDY` rewords it to « Bonnes réponses : 1 sur 5 », the
+     * noun in front of the number and « sur » after it, which is rule 1's
+     * recommended form and the same shape as `card.progress`. So the list below
+     * is empty.
+     *
+     * It stays an equality rather than becoming `toEqual([])` with no name,
+     * because `TN-COPY`'s scenario "a recorded offender is not an excused one"
+     * asks for exactly this: the list fails when an offender is added *and* when
+     * a recorded one is fixed without being struck off. An allowance nobody has
+     * to remove is an allowance that outlives its reason.
      */
     const FUNCTION_WORDS = new Set([
       'of', 'out', 'on', 'in', 'for', 'and', 'or', 'to',
       'sur', 'de', 'des', 'du', 'et', 'ou', 'en', 'au',
     ]);
-    const REPORTED_TO_THE_PO = ['study.summary.score (fr)'];
+    const REPORTED_TO_THE_PO: string[] = [];
 
     const offenders: string[] = [];
     for (const locale of UI_LOCALES) {

@@ -55,7 +55,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      # FULL HISTORY, DELIBERATELY. `make verify-content` carries ADR-0003's
+      # separation-of-duties gate, and that gate is a question about COMMITS:
+      # may this one have both authored a claim and granted its verification?
+      # `actions/checkout` defaults to `fetch-depth: 1`, which is one commit, and
+      # a history gate over one commit inspects almost nothing and reports green
+      # -- the quietest way for the only thing standing between an agent and
+      # marking its own work verified to become decorative. The script refuses to
+      # run on a shallow clone rather than pass over what it cannot see, so
+      # removing this line turns the gate red, not silent. That is on purpose.
+      # The repository is small; a full fetch costs seconds.
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:

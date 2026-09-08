@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="120" viewBox="125 339 48 120" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. Snow-trouser shin.</title>
+  <path d="M 129.01,362.51 L 131.01,436.51 C 131.39,450.57 169.37,449.54 168.99,435.49 L 166.99,361.49 C 166.61,347.43 128.63,348.46 129.01,362.51 Z" fill="#2b3660" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 154.46,365.84 L 156.46,431.84 C 156.58,435.78 167.21,435.46 167.09,431.52 L 165.09,365.52 C 164.97,361.59 154.34,361.91 154.46,365.84 Z" fill="#464c92"/>
+  <path d="M 131.67,366.46 L 133.67,432.46 C 133.77,435.83 142.88,435.55 142.78,432.18 L 140.78,366.18 C 140.68,362.81 131.56,363.08 131.67,366.46 Z" fill="#101629"/>
+</svg>

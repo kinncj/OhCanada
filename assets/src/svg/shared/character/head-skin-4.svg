@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="98" viewBox="80 30 80 98" shape-rendering="geometricPrecision">
+  <title>Head, neck and ears in skin ramp 4. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default tone.</title>
+  <path d="M 107,100 L 107,122 C 107,131.62 133,131.62 133,122 L 133,100 C 133,90.38 107,90.38 107,100 Z" fill="#593327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="89" cy="80" rx="6.5" ry="9.5" fill="#9e6334" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="151" cy="80" rx="6.5" ry="9.5" fill="#9e6334" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 90,66 C 90,48 103,40 120,40 C 137,40 150,48 150,66 L 150,88 C 150,102 138,110 120,110 C 102,110 90,102 90,88 Z" fill="#9e6334" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="hd"><path d="M 90,66 C 90,48 103,40 120,40 C 137,40 150,48 150,66 L 150,88 C 150,102 138,110 120,110 C 102,110 90,102 90,88 Z"/></clipPath></defs>
+  <g clip-path="url(#hd)">
+    <ellipse cx="98" cy="54" rx="22" ry="22" fill="#bc9662"/>
+    <ellipse cx="158" cy="104" rx="20" ry="20" fill="#593327"/>
+  </g>
+  <g clip-path="url(#hd)">
+    <ellipse cx="120" cy="116" rx="24" ry="12" fill="#16203a" opacity="0.18"/>
+  </g>
+</svg>

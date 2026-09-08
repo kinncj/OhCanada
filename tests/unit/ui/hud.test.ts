@@ -40,7 +40,6 @@ function mount(overrides: Partial<Parameters<typeof createHud>[1]> = {}): Fixtur
 
   const hud = createHud(page.host, {
     locale: 'en',
-    label: 'Game controls',
     announce,
     ...handlers,
     now: () => clock.now,
@@ -58,6 +57,9 @@ describe('the HUD is there while the player plays', () => {
 
     const region = at('hud');
     expect(region?.tagName).toBe('SECTION');
+    /* The name comes from `hud.label`, which `TN-HUD` writes down. It names what
+       the region is for; the story lists "HUD", "Region" and the empty string as
+       defects, and `tests/unit/ui/copy.test.ts` holds that rule over the row. */
     expect(region?.getAttribute('aria-label')).toBe('Game controls');
     expect(region?.closest('main')).toBe(hud.main);
     expect(at('hud-mode-label')?.textContent).toBe('Skating');
@@ -65,8 +67,8 @@ describe('the HUD is there while the player plays', () => {
 
   it('builds one main however many HUDs are mounted', () => {
     const page = buildPage();
-    const first = createHud(page.host, { locale: 'en', label: 'Game controls' });
-    const second = createHud(page.host, { locale: 'en', label: 'Game controls' });
+    const first = createHud(page.host, { locale: 'en' });
+    const second = createHud(page.host, { locale: 'en' });
 
     expect(page.doc.querySelectorAll('main')).toHaveLength(1);
     expect(second.main).toBe(first.main);
@@ -76,7 +78,6 @@ describe('the HUD is there while the player plays', () => {
     const page = buildPage();
     const hud = createHud(page.host, {
       locale: 'en',
-      label: 'Game controls',
       canvasHost: page.game as unknown as HTMLElement,
     });
 
@@ -325,6 +326,8 @@ describe('the HUD in French', () => {
     hud.setStorageWarning(true);
 
     expect(at('menu-button')?.textContent).toBe('Menu');
+    /* TN-HUD-09, "The region's name is French". */
+    expect(at('hud')?.getAttribute('aria-label')).toBe('Commandes du jeu');
     expect(at('hud-mode-label')?.textContent).toBe('Patinage');
     /* Canadian French puts a space before a colon. */
     expect(at('hud-quest-tracker')?.textContent).toBe('Mission : Répondez à 3 questions (0 sur 3)');
@@ -341,6 +344,10 @@ describe('the HUD in French', () => {
     hud.setLocale('fr');
     at('menu-button')?.click();
 
+    /* TN-HUD-09's last scenario: the language changes from the menu and the
+       region's name changes with it, without the level being rebuilt. A name
+       supplied by the caller could not do this. */
+    expect(at('hud')?.getAttribute('aria-label')).toBe('Commandes du jeu');
     expect(at('hud-quest-tracker')?.textContent).toContain('Mission :');
     expect(at('storage-warning')?.textContent).toContain('Ce navigateur');
     expect(at('menu-settings')?.textContent).toBe('Réglages');

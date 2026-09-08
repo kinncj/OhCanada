@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="106" viewBox="125 355 48 106" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. Brown riding-boot shaft, to just below the knee, with a strap and buckle at the ankle. The breech tucks in.</title>
+  <path d="M 129.01,378.63 L 131.01,438.63 C 131.48,452.69 169.46,451.42 168.99,437.37 L 166.99,377.37 C 166.52,363.31 128.54,364.58 129.01,378.63 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 154.46,381.81 L 156.46,433.81 C 156.61,437.75 167.24,437.34 167.09,433.4 L 165.09,381.4 C 164.94,377.47 154.31,377.88 154.46,381.81 Z" fill="#b4733b"/>
+  <path d="M 131.67,382.57 L 133.67,434.57 C 133.8,437.94 142.91,437.59 142.78,434.22 L 140.78,382.22 C 140.65,378.84 131.54,379.2 131.67,382.57 Z" fill="#401812"/>
+  <path d="M 132,429 L 168,429 C 171.7,429 171.7,419 168,419 L 132,419 C 128.3,419 128.3,429 132,429 Z" fill="#401812"/>
+  <rect x="154" y="418" width="12" height="12" rx="3" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
+</svg>

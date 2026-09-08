@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="162" height="184" viewBox="39 120 162 184" shape-rendering="geometricPrecision">
+  <title>Winter parka: hooded-collar band, centre closure and a snow-white hem trim. Warm, dry and the right coat for a January canal - the costume distinguishes the character; the body does not.</title>
+  <path d="M 120,124 C 132.67,124 146.33,124.67 158,128 C 169.67,131.33 183.5,137 190,144 C 196.5,151 199,154 197,170 C 195,186 180.17,219.67 178,240 C 175.83,260.33 193.67,282 184,292 C 174.33,302 141.33,300 120,300 C 98.67,300 65.67,302 56,292 C 46.33,282 64.17,260.33 62,240 C 59.83,219.67 45,186 43,170 C 41,154 43.5,151 50,144 C 56.5,137 70.33,131.33 82,128 C 93.67,124.67 107.33,124 120,124 Z" fill="#2c8055" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="pk"><path d="M 120,124 C 132.67,124 146.33,124.67 158,128 C 169.67,131.33 183.5,137 190,144 C 196.5,151 199,154 197,170 C 195,186 180.17,219.67 178,240 C 175.83,260.33 193.67,282 184,292 C 174.33,302 141.33,300 120,300 C 98.67,300 65.67,302 56,292 C 46.33,282 64.17,260.33 62,240 C 59.83,219.67 45,186 43,170 C 41,154 43.5,151 50,144 C 56.5,137 70.33,131.33 82,128 C 93.67,124.67 107.33,124 120,124 Z"/></clipPath></defs>
+  <g clip-path="url(#pk)">
+    <path d="M 49.02,154.73 L 55.02,244.73 C 55.57,252.85 77.52,251.39 76.98,243.27 L 70.98,153.27 C 70.43,145.15 48.48,146.61 49.02,154.73 Z" fill="#41b76b"/>
+    <path d="M 172.02,159.31 L 166.02,263.31 C 165.51,272.18 189.47,273.56 189.98,264.69 L 195.98,160.69 C 196.49,151.82 172.53,150.44 172.02,159.31 Z" fill="#154536"/>
+    <path d="M 40,282 L 200,282 L 200,306 L 40,306 Z" fill="#154536"/>
+    <path d="M 40,278 L 200,278" fill="none" stroke="#e6eff7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 120,152 L 120,278" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="120" cy="130" rx="44" ry="16" fill="#16203a" opacity="0.18"/>
+  </g>
+  <path d="M 103,154 L 137,154 C 146.62,154 146.62,128 137,128 L 103,128 C 93.38,128 93.38,154 103,154 Z" fill="#c2d6e8" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 105,144 L 135,144 C 140.18,144 140.18,130 135,130 L 105,130 C 99.82,130 99.82,144 105,144 Z" fill="#ffffff"/>
+</svg>

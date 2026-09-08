@@ -254,7 +254,10 @@ describe('French', () => {
     const { screen, root } = open({ kind: 'summary', correct: 4, total: 5, returning: ['Q'] });
     screen.setLocale('fr');
     expect(root.textContent).toContain('Terminé');
-    expect(root.textContent).toContain('Vous avez 4 bonnes réponses sur 5.');
+    /* Reworded by `TN-STUDY`: the noun is in front of the number, so nothing
+       has to agree with it — « Bonnes réponses : 1 sur 5 » reads correctly at
+       one. Rule 1 of `TN-COPY` before rule 2: no plural rows needed. */
+    expect(root.textContent).toContain('Bonnes réponses : 4 sur 5');
     expect(root.textContent).toContain('Nous reposerons ces questions :');
     expect(root.byTestId('study-again')?.textContent).toBe('Réviser encore');
   });

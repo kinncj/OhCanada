@@ -6,7 +6,8 @@ and no agent ever has to invent one.
 This file exists because a bug found on one screen is a bug on every screen. `study.count` drew
 **"1 questions"** and « 1 questions », and the same defect is waiting in every string that carries a number.
 Deciding it per screen produces ten answers; deciding it here produces one. The same is true of the word a
-switch shows for its state, and of what an agent does when a story forgets a string.
+switch shows for its state, of what a screen says while the player waits, and of what an agent does when a
+story forgets a string.
 
 The rules here bind every other file in this directory. Where a rule and a copy table disagree, this file is
 the specification until the table is fixed on purpose.
@@ -19,15 +20,15 @@ Read `README.md` in this directory first.
 |---|---|
 | Keyboard only | `TN-COPY-05` — the same string is what a keyboard player reads and what focus announces |
 | Single switch | `TN-COPY-05` — the state word is the only signal a switch user gets |
-| Screen reader | `TN-COPY-05` |
-| Reduced motion | `TN-COPY-05` — the state word is what replaces the animation `TN-SET-07` removes |
+| Screen reader | `TN-COPY-05`; `TN-COPY-07` for the waiting message |
+| Reduced motion | `TN-COPY-05` — the state word is what replaces the animation `TN-SET-07` removes; `TN-COPY-07` — the waiting *text* is what replaces the spinner |
 | 200 % text | `TN-COPY-04` — a plural form is longer than a singular one and must still fit |
 | Bilingual | Every scenario in this file is written in both languages; `TN-COPY-02` is the French-only rule |
-| Failure path | `TN-COPY-03` (a form is missing), `TN-COPY-06` (a string is missing) |
+| Failure path | `TN-COPY-03` (a form is missing), `TN-COPY-06` (a string is missing), `TN-COPY-07` (a wait that never ends) |
 
 ## Player-facing copy
 
-This file owns two strings and one rule about a third.
+This file owns two strings and rules about everybody else's.
 
 | Key | EN | FR |
 |---|---|---|
@@ -48,10 +49,11 @@ is correct. It is never concatenated into a sentence about the label.
 
 Written once, obeyed by every table.
 
-1. **Prefer wording with no counted noun.** "Question 1 of 3" / « Question 1 sur 3 » and
-   "You got 4 out of 5 right." / « Vous avez 4 bonnes réponses sur 5. » have no plural problem, because
-   the noun does not follow the number that changes. Reach for this first. A string that needs no rule
-   cannot break under one.
+1. **Prefer wording where the number is followed by a preposition, not by a noun.** "Question 1 of 3" /
+   « Question 1 sur 3 » (`card.progress`, `TN-CARD`) has no plural problem in either language, because the
+   word after the number never has to change. Reach for this first: a string that needs no rule cannot break
+   under one. Where the counted thing has to be named, name it *before* the number — "Right answers: 1 out
+   of 5" / « Bonnes réponses : 1 sur 5 » — so the noun is a label and not an agreement.
 2. **Where a counted noun is unavoidable, the table carries a row per plural category**, suffixed `.one`
    and `.other`, in both languages. `study.count.one` and `study.count.other` are two rows, not one row
    with a trailing "s".
@@ -67,15 +69,40 @@ Written once, obeyed by every table.
 
    `Intl` is in the platform. It is not a dependency, it is not a translation table, and it already knows
    that French treats a fractional value below two as singular. Hand-written rules do not.
-4. **A number is formatted for its locale**, not concatenated: « 0,3 » with a comma, « 150 % » with a
+4. **The category is chosen by the number the noun follows**, not by some other number in the same string.
+   In « {{correct}} bonnes réponses sur {{total}} » the noun follows `correct`, so `total` is irrelevant to
+   the form; a string that picks its form from the wrong placeholder is wrong at exactly the values nobody
+   tests.
+5. **A number is formatted for its locale**, not concatenated: « 0,3 » with a comma, « 150 % » with a
    non-breaking space. The same `Intl` that chooses the category formats the number.
-5. **Authored content is exempt, and says so.** A quest step whose prompt is written by a content author
+6. **Authored content is exempt, and says so.** A quest step whose prompt is written by a content author
    ("Answer 3 questions") carries a fixed number the author can see; they write the right form once. The
    rule binds *templates* — strings with a `{{placeholder}}` next to a noun — not authored sentences.
-6. **A count string that can be zero needs a zero row or a screen that owns zero.** Study has an empty
+7. **A count string that can be zero needs a zero row or a screen that owns zero.** Study has an empty
    state, so `study.count` is never drawn at 0. Where no screen owns zero, the table adds a `.zero` row
    with wording that is a sentence, not a number: "No questions yet" reads better than "0 questions" in
    both languages.
+8. **The rule is checked per language, not per key.** A template is safe only if it is safe in every
+   language it is written in. See the worked example below, and `TN-COPY-03`.
+
+### The worked example, because this rule was wrong about its own example
+
+Until 2026-09-08 rule 1 above cited `study.summary.score` — "You got 4 out of 5 right." /
+« Vous avez 4 bonnes réponses sur 5. » — as a pair with no plural problem. **The English was safe and the
+French was not.** « bonnes réponses » follows `{{correct}}`, so at one right answer the French drew:
+
+> « Vous avez 1 bonnes réponses sur 5 »
+
+while the English drew the perfectly correct "You got 1 out of 5 right." One key, two languages, one defect,
+and reading the English told you nothing. That is why this rule is written about **templates and not about
+screens**, and why rule 8 exists.
+
+The French is now « Bonnes réponses : {{correct}} sur {{total}} » — the noun moved in front of the number and
+the number is followed by « sur », which is rule 1's recommended form. `TN-STUDY-study-mode.md` owns the
+string and explains why the French is a label where the English is a sentence.
+
+`card.progress` was checked at the same time and is **not** affected: « Question {{n}} sur {{total}} » already
+puts a preposition after the number. A rule that flags everything is not a rule, and this one discriminates.
 
 ### Strings this rule changes today
 
@@ -84,9 +111,30 @@ Written once, obeyed by every table.
 | `study.count` | `study.count.one`, `study.count.other` — `TN-STUDY` |
 | `study.short` | `study.short.one`, `study.short.other` — `TN-STUDY` |
 | `settings.holdTime.seconds` | `settings.holdTime.seconds.one`, `.other` — `TN-SET` |
+| `study.summary.score` (FR only) | reworded to « Bonnes réponses : {{correct}} sur {{total}} » — `TN-STUDY`. Reworded rather than split, because rule 1 comes before rule 2 and a string with no counted noun needs no plural rows at all. |
 
-Nothing else in this directory carries a counted noun after a placeholder today. `TN-COPY-04` is the
-scenario that keeps that true as tables grow.
+With that fix, no string in this directory places a counted noun immediately after a placeholder in either
+language. `TN-COPY-03` and `TN-COPY-04` are what keep that true as tables grow.
+
+## Waiting copy
+
+A screen that is waiting says what it is doing. It does not say how far along it is unless the game actually
+knows, and this game usually does not: a browser download has no honest percentage, and a level load is a
+list of steps whose sizes are not comparable.
+
+1. **A waiting message names the work.** "Getting the canal ready." / « Préparation du canal. » — a
+   sentence about what is being prepared, owned by the screen that waits (`level.loading` belongs to
+   `TN-LEVEL-ottawa.md`).
+2. **No figure the game cannot measure.** No percentage, no fraction, no "step 2 of 4", and no progress bar
+   carrying a value. A bar that stops moving reads as a crash, and a percentage that jumps from 12 to 100
+   teaches the player not to believe the next one.
+3. **No ellipsis.** "Loading…" is three dots standing in for a sentence nobody wrote, it is read aloud
+   inconsistently by screen readers, and it is what a stalled screen looks like.
+4. **The honest answer to a long wait is a way out**, not a bigger number: after the budget in
+   `game.config.json` has passed twice, a control to leave is visible and focusable (`TN-LEVEL-02`).
+   Nothing counts down; a load budget is not a player timer (`README.md`).
+5. **The text is the signal, not the animation.** Under reduced motion the message is still there and
+   nothing spins.
 
 ---
 
@@ -126,6 +174,13 @@ Feature: Counting in English
     Then it reads "1 second"
     When it is rendered with 2
     Then it reads "2 seconds"
+
+  Scenario: The score line has no counted noun to get wrong
+    When the string "study.summary.score" is rendered with 1 correct out of 5
+    Then it reads "You got 1 out of 5 right."
+    When it is rendered with 4 correct out of 5
+    Then it reads "You got 4 out of 5 right."
+    And the only difference between the two readings is the number
 ```
 
 ## TN-COPY-02 — A count reads correctly in French, including where French differs
@@ -169,6 +224,13 @@ Feature: Counting in French
     Given text scaling is 150 %
     Then "setting-text-size-value" shows "150 %" with a space before the sign
     And the English reading of the same value is "150%" with no space
+
+  Scenario: A template that is safe in English can still be wrong in French
+    When the string "study.summary.score" is rendered with 1 correct out of 5
+    Then the French reading is "Bonnes réponses : 1 sur 5"
+    And it does not read "1 bonnes réponses"
+    And the English reading of the same string with the same numbers is "You got 1 out of 5 right."
+    And neither reading changes any word except the number when rendered with 4 correct out of 5
 ```
 
 ## TN-COPY-03 — A missing or wrong plural form is a build failure, not a screen (failure path)
@@ -191,6 +253,20 @@ Feature: Plural forms cannot go missing quietly
     Then the build fails, naming the key and pointing at this file
     And the check reports every such key, not only the first
 
+  Scenario: The check reads every language of a key, not only the English one
+    Given a key whose English value places no noun after its placeholder
+    And whose French value places a noun immediately after the same placeholder
+    When the content check runs
+    Then the build fails, naming the key and the French value
+    And the report says which language is at fault
+
+  Scenario: A recorded offender is not an excused one
+    Given a key that places a noun immediately after a placeholder
+    Then the check reports it, whether or not it has been reported before
+    And where a list of already-reported keys exists, it is asserted by equality
+    And fixing a key on that list fails the assertion until the list is updated
+    And adding a new offender fails it too
+
   Scenario: A category the table does not carry falls back visibly, not silently
     Given the active locale asks for a plural category no row declares
     Then the "other" row is drawn
@@ -198,6 +274,12 @@ Feature: Plural forms cannot go missing quietly
 
   Scenario: Hand-written pluralisation is refused
     Given a string is chosen by comparing a count to 1 rather than by its plural category
+    When the unit suite runs
+    Then it fails, naming the string
+
+  Scenario: A form chosen from the wrong number is refused
+    Given a string carries two placeholders and a noun after the first
+    And its form is chosen from the second placeholder
     When the unit suite runs
     Then it fails, naming the string
 ```
@@ -273,6 +355,12 @@ Feature: Nobody authors copy except this directory
     Then the gap list is empty
     And no key in the source is marked as needing copy
 
+  Scenario: A reported gap ends in a copy table, not in a caller forever
+    Given a key was reported as a gap and a story copy table now carries it
+    Then the screen reads the wording from that table
+    And no screen can be mounted without a value for it
+    And the key is no longer listed as a gap
+
   Scenario: A string invented outside this directory is visible
     Given a screen draws a player-facing string that no copy table and no caller supplied
     When the unit suite runs
@@ -282,6 +370,56 @@ Feature: Nobody authors copy except this directory
     Given a copy table carries an English string
     Then it carries the French string with the same key
     And a key present in one language and absent in the other fails the check
+```
+
+## TN-COPY-07 — Waiting says what is happening, not how far along it is
+
+```gherkin
+Feature: Honest waiting copy
+  Scenario: A waiting message names the work
+    Given a screen is waiting for something to load
+    Then its message is a sentence naming what is being prepared
+    And it is text, not only a spinner
+
+  Scenario: No figure the game cannot measure
+    Given a waiting message is visible
+    Then it contains no percentage
+    And it contains no fraction and no step count such as "2 of 4"
+    And no progress bar carrying a value is drawn
+    And it contains no "…" and no "..."
+
+  Scenario: A figure may be drawn only where one is really known
+    Given a wait whose completed and total parts are both known
+    Then a figure may be drawn, and it names what it counts
+    And where they are not both known, nothing that looks like a measurement is drawn
+
+  Scenario: The wording does not change while the wait runs
+    Given a waiting message is visible
+    Then the same sentence is shown for the whole wait
+    And any control that appears later is added beside it
+    And nothing replaces it with a different claim about progress
+
+  Scenario: A wait that is taking too long offers a way out, not a bigger number
+    Given the wait has passed the budget in "game.config.json" twice
+    Then a control to leave is visible and focusable
+    And nothing on the screen counts down
+
+  Scenario: The message survives reduced motion
+    Given reduced motion is on
+    When a screen is waiting
+    Then the message is still shown as text
+    And nothing spins, pulses or slides
+
+  Scenario: The message is announced once
+    When the wait begins
+    Then "#tn-live-region" reads the waiting message once
+    And it is not repeated while the wait continues
+
+  Scenario: Both languages wait the same way
+    Given the language is French
+    Then the waiting message is French
+    And it contains no percentage, no step count and no ellipsis
+    And the announcing element carries "lang" equal to "fr"
 ```
 
 ---
@@ -302,3 +440,14 @@ Feature: Nobody authors copy except this directory
   agreement argument entirely and is what an appliance says. *Recommendation:* keep « Activé » /
   « Désactivé »: it is what software says in Canadian French, it is what a screen reader user expects from
   every other application, and the label-and-value form already makes the agreement question moot.
+- **`OQ-COPY-4` — is a label acceptable where the English is a sentence?** The fix to `study.summary.score`
+  makes the French « Bonnes réponses : 4 sur 5 » where the English stays "You got 4 out of 5 right." The
+  meaning is the same and the register is not. *Recommendation:* accept it, and put it in front of a French
+  reviewer with the first French pass. If they prefer a sentence, the sentence keeps the number in front of a
+  preposition (« Vous avez bien répondu à 4 sur 5. ») or the key splits into `.one` and `.other` under rule
+  2. What it may not do is go back to a noun straight after the placeholder.
+- **`OQ-COPY-5` — how does the check find a noun?** `TN-COPY-03` refuses "a noun immediately after a
+  placeholder", and nothing in this project parses French for parts of speech. *Recommendation:* the check
+  is a lint, not a linguist — flag any template where a placeholder is followed by a space and a word, and
+  let the table answer by using the recommended form. A blunt check with no escape hatch is worth more than a
+  clever one with one, because the escape hatch is where the next « 1 bonnes réponses » will live.

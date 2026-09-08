@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="59" height="38" viewBox="128 424 59 38" shape-rendering="geometricPrecision">
+  <title>Winter boot, the wearer's left, the near side of the canonical pose. A single rounded wedge. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.</title>
+  <path d="M 134,428 C 139.25,427.07 171.28,428.6 177,430 C 182.72,431.4 182.53,436.73 183,440 C 183.47,443.27 186.48,455.9 181,458 C 175.52,460.1 141.72,460.33 136,458 C 130.28,455.67 132.23,441.5 132,438 C 131.77,434.5 128.75,428.93 134,428 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="bt"><path d="M 134,428 C 139.25,427.07 171.28,428.6 177,430 C 182.72,431.4 182.53,436.73 183,440 C 183.47,443.27 186.48,455.9 181,458 C 175.52,460.1 141.72,460.33 136,458 C 130.28,455.67 132.23,441.5 132,438 C 131.77,434.5 128.75,428.93 134,428 Z"/></clipPath></defs>
+  <g clip-path="url(#bt)">
+    <ellipse cx="140" cy="436" rx="14" ry="8" fill="#c5994d"/>
+    <ellipse cx="158" cy="454" rx="26" ry="8" fill="#5a2d19"/>
+  </g>
+</svg>

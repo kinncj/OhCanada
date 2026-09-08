@@ -39,7 +39,7 @@ Read `README.md` in this directory first. Every count on this screen follows the
 | `study.error` | We could not load the questions. Check your connection and try again. | Nous n'avons pas pu charger les questions. Vérifiez votre connexion et réessayez. |
 | `study.error.retry` | Try again | Réessayer |
 | `study.summary.title` | Finished | Terminé |
-| `study.summary.score` | You got {{correct}} out of {{total}} right. | Vous avez {{correct}} bonnes réponses sur {{total}}. |
+| `study.summary.score` | You got {{correct}} out of {{total}} right. | Bonnes réponses : {{correct}} sur {{total}} |
 | `study.summary.comeBack` | We will ask these again: | Nous reposerons ces questions : |
 | `study.summary.allRight` | You got them all right. | Vous avez tout bon. |
 | `study.again` | Study again | Réviser encore |
@@ -53,6 +53,19 @@ the same condition. `study.error` deliberately mirrors `level.error.title` and `
 `TN-LEVEL-ottawa.md`: the same failure said the same way, so the player learns one sentence, not two.
 `study.error.retry` is the same two words as `level.error.retry` and a separate key, so the two screens can
 be reworded independently.
+
+**`study.summary.score` changed in French on 2026-09-08, and the English did not.** It used to read
+« Vous avez {{correct}} bonnes réponses sur {{total}}. », which puts a counted noun straight after the
+placeholder and therefore drew « Vous avez 1 bonnes réponses sur 5 » at one right answer. The English —
+"You got 1 out of 5 right." — was correct the whole time, which is why the defect survived being read.
+The French is now a label and a value, « Bonnes réponses : 4 sur 5 »: the noun is in front of the number and
+the number is followed by « sur », which is `TN-COPY`'s recommended form and the same shape as
+`card.progress` (« Question 1 sur 3 »). Rewording is preferred to splitting the key into `.one` and `.other`,
+because a string with no counted noun cannot be got wrong at any value.
+
+The French line carries no full stop: it is a label-and-value line, not a sentence, and it is the only string
+in this file where the two languages take a different shape. `OQ-COPY-4` records that a French reviewer may
+prefer a sentence, and what a sentence would have to do to stay correct.
 
 ---
 
@@ -243,6 +256,13 @@ Feature: The end of a drill
     And it shows "You got 4 out of 5 right." when four were right
     And no percentage, grade, streak or star rating is shown
 
+  Scenario: The score line reads correctly at every number it can show
+    Given exactly one answer was right
+    Then "study-summary-score" reads "You got 1 out of 5 right."
+    Given every answer was wrong
+    Then "study-summary-score" reads "You got 0 out of 5 right."
+    And no word in the line changes between those two readings
+
   Scenario: The summary names what is coming back
     Then it shows "We will ask these again:" followed by the questions I got wrong
     And each is shown by its question wording, not by an id
@@ -374,6 +394,11 @@ Feature: Study with a screen reader
     Then focus moves to "study-summary"
     And its first line reads "You got 4 out of 5 right."
     And the list of returning questions is a list in the accessibility tree
+
+  Scenario: The score line reads as one phrase in either language
+    Then "study-summary-score" is a single text node in the accessibility tree
+    And the number is not read separately from the words around it
+    And in French it reads "Bonnes réponses : 4 sur 5"
 ```
 
 ## TN-STUDY-09 — The summary appears without motion
@@ -404,6 +429,13 @@ Feature: Large text in Study
     And the list of returning questions can be read by scrolling down inside the summary
     And "Study again" and "Back to the game" are both reachable and at least 44 CSS px tall
     And the page does not scroll sideways
+
+  Scenario: The French score line fits too
+    Given text scaling is 200 %
+    And the language is French
+    When "study-summary" is visible after a drill of five
+    Then the whole of "Bonnes réponses : 4 sur 5" is visible on one or two lines
+    And it is not truncated with an ellipsis
 
   Scenario: The failure message fits too
     Given text scaling is 200 %
@@ -449,9 +481,22 @@ Feature: Study in French
   Scenario: The summary is French
     When I finish a drill with four right out of five
     Then it shows "Terminé"
-    And it shows "Vous avez 4 bonnes réponses sur 5."
+    And "study-summary-score" reads "Bonnes réponses : 4 sur 5"
+    And there is a space before the colon
     And it shows "Nous reposerons ces questions :"
     And the buttons read "Réviser encore" and "Retour au jeu"
+
+  Scenario: The French score line is right at one, which it used to get wrong
+    When I finish a drill with one right out of five
+    Then "study-summary-score" reads "Bonnes réponses : 1 sur 5"
+    And it does not read "1 bonnes réponses"
+    And it does not read "Vous avez 1 bonnes réponses sur 5"
+    And no word in the line differs from the reading at four right
+
+  Scenario: A clean sweep in French
+    Given every answer was right
+    Then it shows "Vous avez tout bon."
+    And the returning-questions list is not shown
 
   Scenario: The questions are the French ones
     Then every prompt, option and explanation in the drill is French
@@ -462,6 +507,12 @@ Feature: Study in French
     When I change the language to French and tap "Réviser encore"
     Then the new drill is French
     And the questions chosen are the same ones the English drill would have chosen
+
+  Scenario: Switching language on the summary redraws the score line in the other shape
+    Given the summary is showing "You got 4 out of 5 right."
+    When I change the language to French
+    Then "study-summary-score" reads "Bonnes réponses : 4 sur 5"
+    And no English word remains in "study-summary"
 ```
 
 ---
@@ -487,3 +538,8 @@ Feature: Study in French
   one thing for both, because the player's action is the same either way and a player cannot fix a corrupt
   bundle. *Recommendation:* keep one message; if telemetry ever existed it would tell us the difference, and
   this game has none by decision (CLAUDE.md, Storage).
+- **`OQ-STUDY-7` — does the English score line want the same treatment as the French?** "You got 4 out of 5
+  right." is correct at every value and needs no change; keeping it means the two languages have different
+  shapes on the same line, which `OQ-COPY-4` puts in front of a French reviewer. *Recommendation:* leave the
+  English alone. Changing a correct string to match the shape of a fixed one is how a fix turns into a
+  rewrite, and the English wording is already printed in `TN-STUDY-01`, `TN-STUDY-04` and `TN-STUDY-08`.

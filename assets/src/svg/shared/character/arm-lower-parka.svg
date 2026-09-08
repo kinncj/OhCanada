@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="106" viewBox="166 195 41 106" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, lower.</title>
+  <path d="M 170.01,214.66 L 173.01,282.66 C 173.5,293.75 203.47,292.43 202.99,281.34 L 199.99,213.34 C 199.5,202.25 169.53,203.57 170.01,214.66 Z" fill="#2c8055" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 190.1,217.8 L 193.1,277.8 C 193.25,280.9 201.64,280.48 201.49,277.38 L 198.49,217.38 C 198.33,214.28 189.94,214.7 190.1,217.8 Z" fill="#41b76b"/>
+  <path d="M 172.11,218.59 L 175.11,278.59 C 175.25,281.25 182.44,280.89 182.3,278.23 L 179.3,218.23 C 179.17,215.57 171.98,215.93 172.11,218.59 Z" fill="#154536"/>
+</svg>

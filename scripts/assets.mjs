@@ -67,6 +67,34 @@
  * same set from content/levels/ and fails the build if the labels have drifted,
  * so `role` is a checked fact rather than a note.
  *
+ * AND ANY SOURCE MAY PIN ITSELF TO 1x: `<name>@1x.svg`
+ *
+ * "Full-screen parallax layer" and "large art that does not need 2x" turned out
+ * not to be the same set, and the gap cost 12.85 MiB (OQ-LEVEL-ART-1, found by
+ * art 2026-09-08). `ottawa-landmark-parliament-hill` is a POI's `artKey`, not a
+ * layer: 1080x1040, drawn once, at a fixed place in the world. It has every
+ * property that put layers on 1x except appearing in `layers[]`, and
+ * assets/style/ottawa-level.md had said "the landmark at 1x" and "the landmark
+ * is not a layer" from the start. There was no way to say it, so it shipped at
+ * 2x and cost 17.14 MiB -- 37% of the level.
+ *
+ * The fix is not a wider rule. Making every `pois[].artKey` 1x would decide on
+ * art's behalf that no POI is ever held close to the camera, and a
+ * megapixel threshold would demote the character atlas, which is exactly what 2x
+ * is FOR. So the author says, in the filename, in the tree the author owns:
+ *
+ *   assets/src/svg/ottawa/landmark-parliament-hill@1x.svg   -> 1x only
+ *
+ * The suffix is stripped before the key is formed, so the key is unchanged and
+ * nothing in content/levels/ moves. It is one-directional on purpose: a source
+ * can only pin itself DOWN. `@2x` is a hard error, because the only thing it
+ * could mean is "ignore the layers[] rule", and that rule is the owner's
+ * decision, not the author's. A pinned source is standalone for the same reason
+ * a layer is: one atlas page cannot have two scale sets.
+ *
+ * This is still no-judgement-to-evaluate. Given the tree, the answer is
+ * determined; the judgement is the author's, recorded in a filename, once.
+ *
  * WHY LOSSLESS WEBP
  *
  * The house style is flat: three tones per material, no gradients, no noise, no
@@ -115,6 +143,10 @@ Source layout (the level a file belongs to is read from its path):
   assets/src/svg/shared/<name>.svg       every level, key <name>
   assets/src/svg/<levelId>-<name>.svg    level <levelId>, key <levelId>-<name>
   assets/src/rive/<levelId|shared>/<name>.riv   same rule, copied verbatim
+
+A source may pin itself to 1x by ending its name "@1x" (the suffix is stripped
+from the key). Use it for large art that is drawn once at a fixed place and does
+not need retina pixels. "@2x" is an error: a source may only pin itself down.
 
 <levelId> is the "id" of a document in content/levels/. A source whose level
 cannot be worked out is an error, never a guess.
@@ -202,8 +234,28 @@ const { ids: LEVELS, layerKeys: LAYER_KEYS } = readLevels();
  * manifest.
  */
 const isFullScreenLayer = (key) => LAYER_KEYS.has(key);
-const scalesFor = (key) => (isFullScreenLayer(key) ? [1] : SCALES);
 const roleOf = (key) => (isFullScreenLayer(key) ? 'layer' : 'sprite');
+
+/**
+ * The scales to emit: the source's own pin if it set one, else 1x for a
+ * full-screen layer, else every scale.
+ *
+ * The pin can only narrow this. `assign` has already refused anything but
+ * `@1x`, so there is no path here by which a filename widens what a level
+ * document decided.
+ */
+const scalesFor = (key, pin) => (pin !== null ? [pin] : isFullScreenLayer(key) ? [1] : SCALES);
+
+/**
+ * Layers and pinned sources are standalone, never atlas frames.
+ *
+ * An atlas page is one texture with one scale for every frame on it. A page
+ * holding a 1x-only source next to a 1x/2x source would have to be built twice
+ * with different contents, and `role`/`scalePin` would describe some of its
+ * frames and not others. One extra texture unit for a small pinned source is
+ * cheaper than a rule that cannot be stated per file.
+ */
+const mustStandAlone = (key, pin) => pin !== null || isFullScreenLayer(key);
 
 /**
  * Work out the owning level and the texture key for a source file.
@@ -215,15 +267,43 @@ const roleOf = (key) => (isFullScreenLayer(key) ? 'layer' : 'sprite');
  */
 function assign(file, base) {
   const parts = relative(base, file).split(sep);
-  const name = basename(parts[parts.length - 1], extname(parts[parts.length - 1]));
+  const raw = basename(parts[parts.length - 1], extname(parts[parts.length - 1]));
   const inner = parts.slice(0, -1);
+
+  /**
+   * A trailing `@1x` pins the source to 1x and is stripped from the key, so the
+   * pin never reaches content/levels/ and renaming a source to pin it does not
+   * rename the key anything refers to.
+   */
+  const pinMatch = /^(.*)@(\d+)x$/.exec(raw);
+  let pin = null;
+  let name = raw;
+  if (pinMatch !== null) {
+    name = pinMatch[1];
+    const asked = Number(pinMatch[2]);
+    if (asked !== 1) {
+      fatal(
+        `${rel(file)} asks for "@${asked}x". A source may only pin itself DOWN, to "@1x". ` +
+          `${SCALES.map((s) => `${s}x`).join(' and ')} are emitted by default for anything that is ` +
+          'not a full-screen parallax layer, so "@2x" asks for nothing new -- and for a layer it ' +
+          "would be asking to overrule the owner's decision that full-screen layers ship at 1x, " +
+          'which a filename does not get to do. Drop the suffix, or use "@1x".',
+      );
+      return null;
+    }
+    if (name.length === 0) {
+      fatal(`${rel(file)} is named only "@1x"; the pin is a suffix on a name, not a name.`);
+      return null;
+    }
+    pin = 1;
+  }
 
   if (inner.length > 0) {
     const owner = inner[0];
     const tail = [...inner.slice(1), name].join('-');
-    if (owner === SHARED_OWNER) return { owner, key: tail };
+    if (owner === SHARED_OWNER) return { owner, key: tail, pin };
     if (LEVELS.includes(owner)) {
-      return { owner, key: tail.startsWith(`${owner}-`) ? tail : `${owner}-${tail}` };
+      return { owner, key: tail.startsWith(`${owner}-`) ? tail : `${owner}-${tail}`, pin };
     }
     fatal(
       `${rel(file)} sits under "${owner}/", which is neither "${SHARED_OWNER}" nor a level id in ` +
@@ -234,7 +314,7 @@ function assign(file, base) {
   }
 
   const owner = LEVELS.find((id) => name.startsWith(`${id}-`));
-  if (owner !== undefined) return { owner, key: name };
+  if (owner !== undefined) return { owner, key: name, pin };
 
   fatal(
     `${rel(file)} is at the top of its source tree and its name does not start with a level id ` +
@@ -301,9 +381,9 @@ let standalone = 0;
  */
 const packable = new Map();
 
-for (const { file, owner, key } of sources) {
+for (const { file, owner, key, pin } of sources) {
   const svg = readFileSync(file);
-  const wanted = scalesFor(key);
+  const wanted = scalesFor(key, pin);
   const rasters = [];
   for (const scale of wanted) {
     try {
@@ -325,7 +405,7 @@ for (const { file, owner, key } of sources) {
   // which is nothing next to a rule that cannot be evaluated.
   const fitsEveryScale = rasters.every((r) => r.width <= room && r.height <= room);
 
-  if (fitsEveryScale && !isFullScreenLayer(key)) {
+  if (fitsEveryScale && !mustStandAlone(key, pin)) {
     if (!packable.has(owner)) packable.set(owner, new Map());
     for (const r of rasters) {
       const bucket = packable.get(owner);
@@ -358,6 +438,10 @@ for (const { file, owner, key } of sources) {
       // texture-memory.mjs works out what it holds at once now that layers and
       // props no longer ship at the same scale.
       group: `img:${key}`,
+      // What the source asked for, or null. Recorded so a reader of the
+      // manifest can tell "1x because it is a layer" from "1x because the
+      // author said so", and so the gate can check the pin was honoured.
+      scalePin: pin,
       scale: r.scale,
       width: r.width,
       height: r.height,
@@ -437,6 +521,8 @@ for (const [owner, byScale] of [...packable.entries()].sort((a, b) => a[0].local
         // always props; texture-memory.mjs checks that claim against
         // content/levels/ rather than taking it.
         role: 'sprite',
+        // Always null: a pinned source never reaches an atlas (mustStandAlone).
+        scalePin: null,
         group: `atlas:${owner}:${ordinal}`,
         scale,
         width: meta.width,
@@ -448,6 +534,7 @@ for (const [owner, byScale] of [...packable.entries()].sort((a, b) => a[0].local
       emit(`atlas/${page}.${hash8(dataBuffer)}.json`, dataBuffer, {
         kind: 'atlas-data',
         role: 'sprite',
+        scalePin: null,
         group: `atlas-data:${owner}:${ordinal}`,
         scale,
         // Frame coordinates, not pixels: this file costs bytes over the wire and
@@ -461,11 +548,20 @@ for (const [owner, byScale] of [...packable.entries()].sort((a, b) => a[0].local
   }
 }
 
-for (const { file, owner, key } of riveSources) {
+for (const { file, owner, key, pin } of riveSources) {
+  if (pin !== null) {
+    // Not a harmless no-op to ignore: a Rive artboard is vector and renders to a
+    // surface sized by the display, so "@1x" on one is an instruction that
+    // cannot be carried out, and silently dropping it would leave the author
+    // believing something was pinned.
+    fatal(`${rel(file)} is a Rive file pinned "@1x". A Rive artboard is resolution-independent; it has no raster scale to pin.`);
+    continue;
+  }
   const buffer = readFileSync(file);
   emit(`rive/${key}.${hash8(buffer)}.riv`, buffer, {
     kind: 'rive',
     role: roleOf(key),
+    scalePin: null,
     group: `rive:${key}`,
     // Rive artboards are vector and resolution-independent: one file serves
     // both scales, so it is charged once rather than to a scale bucket.
@@ -524,10 +620,12 @@ writeFileSync(
 
 const totalBytes = files.reduce((sum, f) => sum + f.bytes, 0);
 const layerFiles = files.filter((f) => f.role === 'layer').length;
+const pinnedFiles = files.filter((f) => f.scalePin !== null && f.scalePin !== undefined).length;
 console.log(
   `assets: ${sources.length} SVG + ${riveSources.length} Rive source(s) -> ${files.length} file(s) ` +
     `in assets/dist (${atlasPages} atlas page(s) <= ${ATLAS_MAX_PX} px, ${standalone} standalone image(s), ` +
-    `${layerFiles} full-screen layer file(s) at 1x only), ` +
+    `${layerFiles} full-screen layer file(s) at 1x only, ` +
+    `${pinnedFiles} source-pinned file(s)), ` +
     `${SCALES.map((s) => `${s}x`).join(' + ')}, ${mib(totalBytes)} on disk across ` +
     `${Object.keys(levels).length} level(s).`,
 );

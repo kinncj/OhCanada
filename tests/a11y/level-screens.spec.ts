@@ -213,6 +213,44 @@ test.describe('the page the HUD builds', () => {
     ).toContain('region');
   });
 
+  test('removing the main wrapper alone does not make landmark-one-main fire', async ({
+    page,
+  }) => {
+    /*
+     * `TN-HUD-10`, third scenario, and the reason the negative control above
+     * strips *both* landmarks rather than just the `<main>`.
+     *
+     * Take away the `<main>` and leave the region named, and axe still reports
+     * no `landmark-one-main` violation: the rule passes for a page whose content
+     * is inside another landmark (`passForModal`). A negative control that only
+     * unwrapped the `<main>` would therefore be green, and would have proved
+     * nothing at all.
+     *
+     * `OQ-HUD-7` records the trade: this asserts what axe does *today*. If a
+     * future axe tightens the rule, this test goes red — which is the point. It
+     * is not flaky; it is the notice that the tool changed and the control above
+     * can be simplified. Read the open question before deleting it.
+     */
+    await open(page, 'level', { task: true, warning: true });
+    await page.evaluate(() => {
+      const main = document.querySelector('main');
+      if (main === null) throw new Error('the page has no main to unwrap');
+      const replacement = document.createElement('div');
+      replacement.append(...main.childNodes);
+      main.replaceWith(replacement);
+    });
+
+    await expect(page.locator('main')).toHaveCount(0);
+    await expect(page.locator('[data-testid="hud"]')).toHaveAccessibleName(/\S/);
+
+    const results = await pageScan(page).analyze();
+    const ids = results.violations.map((violation) => violation.id);
+    expect(
+      ids,
+      'axe now fails landmark-one-main on a page with no main: simplify the negative control',
+    ).not.toContain('landmark-one-main');
+  });
+
   for (const over of ['menu', 'settings', 'card', 'poi'] as const) {
     test(`stays clean with ${over} open over the level`, async ({ page }) => {
       await open(page, 'level', { task: true, prompt: true, warning: true, over });

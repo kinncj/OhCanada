@@ -96,7 +96,7 @@ describe('the landmark card', () => {
      * inherited.
      */
     const page = buildPage();
-    const hud = createHud(page.host, { locale: 'en', label: 'Game controls' });
+    const hud = createHud(page.host, { locale: 'en' });
     hud.setPrompt('Look at Parliament Hill');
 
     const card = createPoiCard(page.host, {

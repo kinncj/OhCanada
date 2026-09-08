@@ -20,14 +20,25 @@
  * `estimatedTextureBytes` is here because characters are charged against the 64 MB
  * per-level decoded-texture budget like any other asset.
  *
- * PROVISIONAL (ADR-0008) — nothing imports this port and nothing implements it
- * yet. First call sites: slice 1 task 1.11 (the Rive rig contract) and 1.12 (both
- * renderers). Whoever writes the first implementation may change this interface
- * without an ADR, and removes this marker in the same change.
+ * The ADR-0008 marker that stood here is gone: slice 1 task 1.12 landed both
+ * implementations — `app/adapters/rive` and `app/adapters/phaser`'s sprite
+ * fallback — and the licence that marker carried to change this interface
+ * without an ADR was used once, here:
+ *
+ *   `CharacterRendererSpec` now carries the **rig contract itself** — the
+ *   declared inputs, the declared slots and their options — rather than only the
+ *   caller's chosen skins. Before, each backend had to be told the vocabulary
+ *   some other way, and "the slot names are identical in both" (CLAUDE.md,
+ *   Characters) was a convention two files had to keep. Now both backends read
+ *   the *same field of the same spec*, which comes from the *same*
+ *   `content/characters/<id>.json`, so the names cannot drift: the identity is
+ *   structural rather than agreed. That is the difference between a seam and two
+ *   parallel implementations.
  */
 
 import type { CharacterId } from '@domain/ids';
 import type { Result } from '@common/result';
+import type { CharacterInput, CharacterSlot } from './content-repository';
 
 export type ArtboardName = string;
 export type StateMachineName = string;
@@ -56,7 +67,32 @@ export interface CharacterRendererSpec {
   readonly characterId: CharacterId;
   readonly artboard: ArtboardName;
   readonly stateMachine: StateMachineName;
-  /** Initial skin choice per slot. Missing slots use the artboard default. */
+  /**
+   * Every state-machine input the rig declares, from `CharacterDocument.inputs`.
+   * A backend refuses any name that is not in here, so a typo in gameplay code
+   * is a `not-found` rather than a character that quietly never animates.
+   */
+  readonly inputs: readonly CharacterInput[];
+  /**
+   * Every skin slot and its options, from `CharacterDocument.slots`. **This is
+   * the field that makes the fallback a swap:** both backends answer
+   * `skinSlots` and `skinOptions` out of this one list, so the names are
+   * identical because they are the same strings, not because two adapters agreed.
+   */
+  readonly slots: readonly CharacterSlot[];
+  /**
+   * Named face poses this rig offers.
+   *
+   * ASSUMPTION, reported with task 1.12: `content/schemas/character.schema.json`
+   * declares `inputs` and `slots` but no expression list, so this arrives from
+   * the caller rather than from the document. When the rig contract lands one,
+   * this becomes `CharacterDocument.expressions` and nothing else changes.
+   *
+   * Empty is a real answer — a character with one face — and `setExpression`
+   * then fails `not-found` for every name, in both backends alike.
+   */
+  readonly expressions: readonly ExpressionName[];
+  /** Initial skin choice per slot. Missing slots use the slot's `fallback`. */
   readonly skins: Readonly<Record<SkinSlotName, SkinOptionName>>;
   readonly expression?: ExpressionName;
   /** Render resolution; the renderer may clamp it to honour the texture budget. */
@@ -91,7 +127,23 @@ export interface ICharacterRenderer {
    */
   update(deltaMs: number): void;
 
-  /** Decoded bytes this instance holds, counted against the per-level budget. */
+  /**
+   * Decoded bytes this instance holds, counted against the per-level budget.
+   *
+   * **The two backends' numbers are not comparable, and a caller that adds them
+   * together is wrong.** The sprite backend returns `0` because its frames live
+   * in an atlas that `make check-textures` already weighs — charging it again
+   * per instance would count one page once per character sharing it. The Rive
+   * backend returns a real `width x height x 4`, because its surface is sized by
+   * the *display*, ships in no file, and is invisible to that gate:
+   * `scripts/assets.mjs` records `decodedBytes: 0` for a `.riv` and is right to.
+   *
+   * So this method answers one question — *what does this instance hold that
+   * nothing else has already counted?* — and the level loader adds it to what the
+   * asset gate measured. Reading it as "how much memory does a character cost"
+   * gives the sprite path a free ride and makes the two look like a fair
+   * comparison, which is the specific lie this comment exists to prevent.
+   */
   estimatedTextureBytes(): number;
 
   /** Release GPU and runtime resources. Idempotent; the instance is dead afterwards. */
