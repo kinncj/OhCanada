@@ -48,7 +48,7 @@ make test       # unit tests with coverage
 make preview    # build and serve locally
 ```
 
-You will need Node 20+. Everything CI does is a `make` target, so anything that runs in the pipeline
+You will need Node 22+ (`package.json` declares it, and both workflows pin it). Everything CI does is a `make` target, so anything that runs in the pipeline
 runs the same way on your machine.
 
 ## Contributing

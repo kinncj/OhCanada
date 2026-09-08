@@ -1,6 +1,9 @@
 # Blank issues stay enabled: a bug that fits no template is still a bug.
 blank_issues_enabled: true
 contact_links:
+  - name: How to contribute
+    url: https://github.com/kinncj/OhCanada/blob/main/CONTRIBUTING.md
+    about: New here? How to run the project, what happens to a pull request, and why questions are verified by someone other than their author.
   - name: Security or privacy problem
     url: https://github.com/kinncj/OhCanada/security/policy
     about: Please report these privately. See SECURITY.md.

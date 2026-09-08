@@ -1,0 +1,435 @@
+# TN-QUEST — "Skate to Parliament Hill"
+
+**Intent.** The officer gives the player one small job, the player always knows what it is and how far
+through it they are, and finishing it earns the Ottawa stamp.
+
+The quest is `quest.ottawa.parliament-hill`, with three steps:
+
+| # | Kind | Target | Done when |
+|---|---|---|---|
+| 1 | talk | `npc.officer` | The player accepts the offer |
+| 2 | visit | `poi.parliament-hill` | The player engages the landmark |
+| 3 | answer | three scheduled questions | The third question is answered — right or wrong |
+
+Answering wrongly still finishes the step. This is a learning tool, not a test: see `TN-CARD` for what a
+wrong answer does instead.
+
+Read `README.md` in this directory first. The question card itself is `TN-CARD-question-card.md`.
+
+## Accessibility and bilingual coverage map
+
+| Path | Discharged by |
+|---|---|
+| Keyboard only | `TN-QUEST-06` — *Accepting and following the quest with a keyboard* |
+| Single switch | `TN-QUEST-07` — *Accepting with one switch* |
+| Screen reader | `TN-QUEST-08` — *The quest is audible: offer, step, completion, stamp* |
+| Reduced motion | `TN-QUEST-09` — *The stamp lands without animation* |
+| 200 % text | `TN-QUEST-10` — *The tracker and the dialogue at 200 %* |
+| Bilingual | `TN-QUEST-11` — *The whole quest in French* |
+| Failure path | `TN-QUEST-03` (declining), `TN-QUEST-05` (no questions available) |
+
+## Player-facing copy
+
+| Key | EN | FR |
+|---|---|---|
+| `officer.greet` | Hello! Welcome to Ottawa. Ottawa is Canada's capital city. | Bonjour! Bienvenue à Ottawa. Ottawa est la capitale du Canada. |
+| `officer.offer` | Skate up the canal to Parliament Hill and find the Peace Tower. Then answer three questions. | Patinez sur le canal jusqu'à la Colline du Parlement et trouvez la tour de la Paix. Ensuite, répondez à trois questions. |
+| `quest.accept` | Yes, let's go | Oui, allons-y |
+| `quest.decline` | Not now | Pas maintenant |
+| `officer.declined` | No problem. Come back when you are ready. | Pas de problème. Revenez quand vous serez prêt. |
+| `officer.reminder` | Parliament Hill is that way. Keep going. | La Colline du Parlement est par là. Continuez. |
+| `officer.afterStamp` | Well done. Enjoy the canal. | Bravo. Profitez bien du canal. |
+| `hud.task` | Task | Mission |
+| `quest.step.talk` | Talk to the officer | Parlez à l'agent |
+| `quest.step.visit` | Find the Peace Tower | Trouvez la tour de la Paix |
+| `quest.step.answer` | Answer 3 questions ({{done}} of 3) | Répondez à 3 questions ({{done}} sur 3) |
+| `quest.done.title` | Task done! | Mission accomplie! |
+| `quest.done.body` | You skated to Parliament Hill and answered three questions. | Vous avez patiné jusqu'à la Colline du Parlement et répondu à trois questions. |
+| `stamp.ottawa.earned` | You earned the Ottawa stamp. | Vous avez obtenu le timbre d'Ottawa. |
+| `passport.open` | See my passport | Voir mon passeport |
+| `common.keepPlaying` | Keep playing | Continuer à jouer |
+| `quest.noQuestions` | The questions are not ready right now. Try again later. | Les questions ne sont pas prêtes pour l'instant. Réessayez plus tard. |
+
+`officer.greet` states a fact about Canada and is verified like a question (`OQ-LEVEL-4`).
+
+---
+
+## TN-QUEST-01 — The officer offers the task
+
+```gherkin
+Feature: Being offered the quest
+  As a player skating the canal
+  I want the officer to tell me plainly what to do
+  So that I never have to guess where to go
+
+  Background:
+    Given the Ottawa level is playable
+    And I have not accepted "quest.ottawa.parliament-hill"
+
+  Scenario: Talking to the officer opens the offer
+    When I engage the officer
+    Then the event "dialogue/opened" is emitted
+    And the event "quest/offered" is emitted for "quest.ottawa.parliament-hill"
+    And the element "dialogue" shows "Hello! Welcome to Ottawa. Ottawa is Canada's capital city."
+    And then it shows "Skate up the canal to Parliament Hill and find the Peace Tower. Then answer three questions."
+    And the buttons "dialogue-accept" and "dialogue-decline" read "Yes, let's go" and "Not now"
+
+  Scenario: The dialogue reads at a plain-language level
+    Then every sentence in the dialogue is at most 20 words
+    And the dialogue is written at roughly a grade-6 reading level in both languages
+
+  Scenario: Subtitles are on without being asked for
+    Given I have never opened Settings
+    When the officer speaks
+    Then the words are shown as text
+    And "setting-subtitles" is on
+
+  Scenario: The offer waits for the player
+    When I leave the dialogue open and do nothing for two minutes
+    Then the dialogue is still open
+    And nothing has been accepted or declined for me
+    And nothing on screen counts down
+```
+
+## TN-QUEST-02 — Accepting, and following the task
+
+```gherkin
+Feature: Accepting and tracking the quest
+  Background:
+    Given the Ottawa level is playable
+    And the officer's offer is open
+
+  Scenario: Accepting closes the dialogue and starts the tracker
+    When I tap "Yes, let's go"
+    Then the event "quest/accepted" is emitted for "quest.ottawa.parliament-hill"
+    And the event "quest/step-completed" is emitted for step 1
+    And the event "progress/saved" is emitted
+    And the element "dialogue" is gone
+    And the element "hud-quest-tracker" shows "Task" and "Find the Peace Tower"
+    And the skater can move again
+
+  Scenario: The tracker says what to do now, not what the quest is called
+    Then "hud-quest-tracker" shows the current step, not the whole list
+    And it is readable without opening a menu
+
+  Scenario: Reaching the landmark completes the second step
+    Given I have accepted the quest
+    When I engage "poi.parliament-hill"
+    Then the event "quest/step-completed" is emitted for step 2
+    And "hud-quest-tracker" shows "Answer 3 questions (0 of 3)"
+    And the change is announced in "#tn-live-region"
+
+  Scenario: The tracker counts the questions as they are answered
+    Given I am on step 3
+    When I answer one question
+    Then "hud-quest-tracker" shows "Answer 3 questions (1 of 3)"
+    And the count rises whether the answer was right or wrong
+
+  Scenario: Talking to the officer again while the quest is on gives a reminder, not a second offer
+    Given I have accepted the quest
+    When I engage the officer
+    Then the dialogue shows "Parliament Hill is that way. Keep going."
+    And no second "quest/offered" event is emitted
+    And the quest step does not change
+```
+
+## TN-QUEST-03 — Declining, and changing my mind (failure path)
+
+```gherkin
+Feature: Saying no
+  Scenario: Declining leaves the player free and the quest available
+    Given the officer's offer is open
+    When I tap "Not now"
+    Then the event "quest/declined" is emitted for "quest.ottawa.parliament-hill"
+    And the dialogue shows "No problem. Come back when you are ready."
+    And the element "hud-quest-tracker" is not shown
+    And the skater can move again
+
+  Scenario: The quest can be accepted later
+    Given I declined the quest
+    When I engage the officer again
+    Then the event "quest/offered" is emitted again
+    And I can accept it
+
+  Scenario: The landmark still works without the quest
+    Given I have not accepted the quest
+    When I engage "poi.parliament-hill"
+    Then the element "poi-card" is shown
+    And no "quest/step-completed" event is emitted
+    And no question card appears
+
+  Scenario: Leaving the dialogue without choosing is not a decline
+    Given the officer's offer is open
+    When I press "Escape" or tap the close control
+    Then the event "dialogue/closed" is emitted
+    And no "quest/accepted" and no "quest/declined" event is emitted
+    And engaging the officer again shows the offer from the start
+```
+
+## TN-QUEST-04 — Finishing the task and earning the stamp
+
+```gherkin
+Feature: Completing the quest
+  Background:
+    Given I have accepted the quest
+    And I have engaged Parliament Hill
+    And I have answered two of the three questions
+
+  Scenario: The third answer finishes the quest
+    When I answer the third question
+    Then the event "quest/step-completed" is emitted for step 3
+    And the event "quest/completed" is emitted for "quest.ottawa.parliament-hill"
+    And the event "stamp/earned" is emitted for "ottawa"
+    And the event "progress/saved" is emitted
+    And the element "quest-complete-card" shows "Task done!"
+    And it shows "You skated to Parliament Hill and answered three questions."
+    And it shows "You earned the Ottawa stamp."
+    And the buttons "See my passport" and "Keep playing" are offered
+
+  Scenario: A wrong answer still finishes the quest
+    Given my three answers were all wrong
+    When I answer the third question
+    Then the event "quest/completed" is emitted
+    And the stamp is still earned
+    And no message tells me I failed
+
+  Scenario: The stamp appears in the passport
+    When I tap "See my passport"
+    Then the element "passport" is visible
+    And it contains "stamp-ottawa"
+    And "stamp-ottawa" has a text label naming Ottawa, not only a picture
+
+  Scenario: Going back to the ice
+    When I tap "Keep playing"
+    Then the element "quest-complete-card" is gone
+    And the element "playable" accepts input again
+    And "hud-quest-tracker" is no longer shown
+
+  Scenario: The quest cannot be completed twice
+    Given the quest is complete
+    When I engage the officer
+    Then the dialogue shows "Well done. Enjoy the canal."
+    And no second "stamp/earned" event is emitted
+    And the passport still contains exactly one Ottawa stamp
+
+  Scenario: Steps cannot be skipped
+    Given I have accepted the quest
+    When the game tries to complete step 3 before step 2
+    Then the step is refused
+    And "hud-quest-tracker" still shows "Find the Peace Tower"
+```
+
+## TN-QUEST-05 — No questions are available (failure path)
+
+```gherkin
+Feature: The answer step cannot start
+  Scenario: The question bank is empty or every question is quarantined
+    Given no verified question exists for this level's subject
+    And I have accepted the quest and engaged Parliament Hill
+    Then a message says "The questions are not ready right now. Try again later."
+    And the message is announced in "#tn-live-region"
+    And "hud-quest-tracker" still shows "Answer 3 questions (0 of 3)"
+    And the skater can move away
+    And no "quest/completed" and no "stamp/earned" event is emitted
+
+  Scenario: Fewer than three questions exist
+    Given only two verified questions exist for this level's subject
+    When I reach the answer step
+    Then two questions are asked
+    And no question is asked twice to make up the number
+    And the quest does not complete
+    And the message explains that more questions are coming
+
+  Scenario: A question cannot be shown because it has no French text
+    Given the language is French
+    And one question in the bank has no French wording
+    Then that question is never shown
+    And the build has already failed the content check for it
+```
+
+## TN-QUEST-06 — Accepting and following the quest with a keyboard
+
+```gherkin
+Feature: Keyboard-only quest
+  Background:
+    Given I am using a keyboard only
+    And the Ottawa level is playable
+
+  Scenario: The dialogue takes and keeps focus
+    When I engage the officer with the key bound to "interact"
+    Then focus moves into "dialogue"
+    And pressing "Tab" repeatedly never leaves "dialogue"
+    And the accept and decline buttons are reachable with "Tab"
+
+  Scenario: Accepting from the keyboard
+    When I press "Tab" until focus is on "dialogue-accept"
+    And I press "Enter"
+    Then the event "quest/accepted" is emitted
+    And focus returns to the HUD, not to the body element
+
+  Scenario: Escape closes the dialogue and gives focus back
+    When I press "Escape"
+    Then the dialogue closes
+    And focus returns to "interact-prompt"
+
+  Scenario: The whole quest finishes from the keyboard
+    When I use only the keyboard
+    Then I can accept, reach the landmark, answer three questions and open the passport
+```
+
+## TN-QUEST-07 — Accepting with one switch
+
+```gherkin
+Feature: Single-switch quest
+  Background:
+    Given single-switch mode is on
+    And the officer's offer is open
+
+  Scenario: The two choices are reachable with short presses
+    When I press the switch briefly
+    Then the highlight moves between "Yes, let's go" and "Not now" and back
+    And the highlighted choice is announced in "#tn-live-region"
+
+  Scenario: A long press accepts
+    Given the highlight is on "Yes, let's go"
+    When I hold the switch past the hold-to-choose threshold
+    Then the event "quest/accepted" is emitted
+
+  Scenario: Nothing is chosen for the player
+    When I do nothing for one minute
+    Then neither choice has been taken
+    And nothing on screen counts down
+
+  Scenario: The whole quest finishes with the switch alone
+    When I use only short and long presses
+    Then I can accept, reach the landmark, answer three questions and earn the stamp
+```
+
+## TN-QUEST-08 — The quest is audible
+
+```gherkin
+Feature: The quest with a screen reader
+  Scenario: The dialogue is a named dialog
+    When the officer's offer opens
+    Then "dialogue" has role "dialog" with "aria-modal" true
+    And it has an accessible name naming the speaker
+    And the rest of the page is inert while it is open
+
+  Scenario: Each step change is announced once
+    When I accept the quest
+    Then "#tn-live-region" reads "Task: Find the Peace Tower"
+    When I engage Parliament Hill
+    Then "#tn-live-region" reads "Task: Answer 3 questions, 0 of 3"
+    And no announcement is repeated for the same step
+
+  Scenario: Completion and the stamp are announced
+    When the quest completes
+    Then "#tn-live-region" reads "Task done. You earned the Ottawa stamp."
+    And focus moves to "quest-complete-card"
+
+  Scenario: The tracker is readable at any time, not only when it changes
+    Then "hud-quest-tracker" is in the accessibility tree as text
+    And it is reachable without moving the skater
+```
+
+## TN-QUEST-09 — The stamp lands without animation
+
+```gherkin
+Feature: Reduced motion for the quest
+  Background:
+    Given reduced motion is on
+
+  Scenario: The completion card appears without movement
+    When the quest completes
+    Then "quest-complete-card" appears with no slide, bounce or scale
+    And no confetti or particle is drawn
+    And "scene-state" reports "data-particles" equal to "0"
+
+  Scenario: The stamp is still clearly earned
+    Then "stamp-ottawa" is shown in the passport
+    And the earning is announced in "#tn-live-region"
+    And the stamp is distinguishable from an unearned slot by a shape and a label, not by colour alone
+
+  Scenario: The tracker updates without flashing
+    When a step completes
+    Then "hud-quest-tracker" changes its text with no flash or shake
+```
+
+## TN-QUEST-10 — The tracker and the dialogue at 200 %
+
+```gherkin
+Feature: Large text for the quest
+  Scenario: The dialogue fits
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    When the officer's offer opens
+    Then the whole of both dialogue lines is visible, by scrolling inside the dialogue if needed
+    And "dialogue-accept" and "dialogue-decline" are both fully visible and at least 44 CSS px tall
+    And the page does not scroll sideways
+
+  Scenario: The tracker does not cover the playfield
+    Given text scaling is 200 %
+    And the quest is accepted
+    Then "hud-quest-tracker" stays inside the lower third of the canvas
+    And its text is not cut off
+    And the skater is still visible
+```
+
+## TN-QUEST-11 — The whole quest in French
+
+```gherkin
+Feature: The quest in French
+  Background:
+    Given the language is French
+    And the Ottawa level is playable
+
+  Scenario: The offer is French
+    When I engage the officer
+    Then the dialogue shows "Bonjour! Bienvenue à Ottawa. Ottawa est la capitale du Canada."
+    And it shows "Patinez sur le canal jusqu'à la Colline du Parlement et trouvez la tour de la Paix. Ensuite, répondez à trois questions."
+    And the buttons read "Oui, allons-y" and "Pas maintenant"
+
+  Scenario: The tracker is French
+    When I accept the quest
+    Then "hud-quest-tracker" shows "Mission" and "Trouvez la tour de la Paix"
+    When I engage Parliament Hill
+    Then it shows "Répondez à 3 questions (0 sur 3)"
+
+  Scenario: Completion is French
+    When the quest completes
+    Then "quest-complete-card" shows "Mission accomplie!"
+    And it shows "Vous avez patiné jusqu'à la Colline du Parlement et répondu à trois questions."
+    And it shows "Vous avez obtenu le timbre d'Ottawa."
+    And the buttons read "Voir mon passeport" and "Continuer à jouer"
+
+  Scenario: The declined line is French
+    When I tap "Pas maintenant"
+    Then the dialogue shows "Pas de problème. Revenez quand vous serez prêt."
+
+  Scenario: Switching language mid-quest keeps the progress
+    Given I have accepted the quest in English and engaged Parliament Hill
+    When I change the language to French
+    Then "hud-quest-tracker" shows "Répondez à 3 questions (0 sur 3)"
+    And the quest is still accepted and still on step 3
+```
+
+---
+
+## Open questions
+
+- **`OQ-QUEST-1` — how does an `answer` step name its questions?** `QuestStepDocument` declares
+  `questionIds`, but the three questions are meant to be *chosen* by the scheduler, so a fixed list and a
+  scheduler cannot both be in charge. *Recommendation:* task 1.2 gives the `answer` step a `subject` and a
+  `count`, and the scheduler picks; `questionIds` becomes an optional authored pool the scheduler picks
+  *from*. Until this is settled, `TN-CARD-02` cannot be implemented as written.
+- **`OQ-QUEST-2` — where does a stamp live in the save?** `ProgressSnapshot` has `levels[].completedQuests`
+  and no stamps. *Recommendation:* one stamp per completed level quest, derived rather than stored, or an
+  explicit `stamps` array in `progress.schema.json`. Either is fine; nothing is fine.
+- **`OQ-QUEST-3` — can a player abandon an accepted quest?** These scenarios say no: the quest simply waits.
+  *Recommendation:* keep it that way in slice 1; there is one quest and nothing to abandon it for.
+- **`OQ-QUEST-4` — is the passport a screen or a panel?** `TN-QUEST-04` only requires that
+  `stamp-ottawa` becomes visible inside `passport`. *Recommendation:* a full screen reached from the menu and
+  from the completion card, so slice 2 can add nine more stamps without redesigning a panel.
+- **`OQ-QUEST-5` — does the player have to skate back to the officer?** These scenarios say no; the quest
+  ends at the Hill. It costs the slice a return trip and gains it nothing. If the design wants the return
+  trip for the feel of turning around on ice, it is a fourth step and this file changes.
