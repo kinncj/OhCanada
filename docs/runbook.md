@@ -208,7 +208,7 @@ identical broken build, once with the old settings and once with the committed o
 | `playwright-report/` | 2,827,789 B | 2,062,113 B |
 | `test-results/` | 1,136,652 B (also uploaded) | 324,142 B (no longer uploaded) |
 | **Total uploaded** | **3,964,441 B (3.78 MiB)** | **2,062,113 B (1.97 MiB)** |
-| Evidence net of the fixed 1.30 MiB trace-viewer boilerplate | 2.48 MiB | 0.66 MiB | 
+| Evidence net of the fixed 1.30 MiB trace-viewer boilerplate | 2.48 MiB | 0.66 MiB |
 | `.webm` files written | 24 | 0 |
 
 A second run of the same experiment against a build whose *entry chunk* 404s — so Phaser still loads and
