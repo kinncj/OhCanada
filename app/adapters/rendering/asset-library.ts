@@ -100,10 +100,11 @@ export class AssetLibrary {
     }
   }
 
-  static async create(base: string, renderer: THREE.WebGPURenderer): Promise<AssetLibrary> {
+  static async create(base: string, renderer: THREE.WebGPURenderer, safeMode = false): Promise<AssetLibrary> {
     let manifest: AssetManifest | null = null;
+    if (safeMode) return new AssetLibrary(base, null, renderer); // procedural everything: no glTF, no KTX2
     try {
-      const res = await fetch(`${base}manifest.json`, { cache: 'no-cache' });
+      const res = await fetch(`${base}manifest.json`, { cache: 'no-cache', signal: AbortSignal.timeout(10_000) });
       if (res.ok) manifest = (await res.json()) as AssetManifest;
     } catch {
       manifest = null;

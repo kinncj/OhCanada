@@ -25,6 +25,7 @@ declare const __APP_VERSION__: string;
 const BENCH_KEY = 'truenorth.benchmark.v1';
 const FORCE_WEBGL_KEY = 'truenorth.forceWebGL.v1';
 const HEAL_KEY = 'truenorth.heal.v1';
+const SAFE_KEY = 'truenorth.safe.v1';
 
 class SystemClock implements Clock {
   now(): number {
@@ -59,6 +60,29 @@ async function boot(): Promise<void> {
     });
     loading.root.append(el('p', { class: 'source', style: 'margin-top:1rem;color:#fff' }, 'Taking longer than usual…'), btn);
   }, 20_000);
+  // Last resort: if the menu never appears, reload once with every asset disabled so the game still opens.
+  const escalate = window.setTimeout(() => {
+    if (booted || safeMode) return;
+    safeSet(SAFE_KEY, '1');
+    location.reload();
+  }, 35_000);
+
+  const safeMode = params.get('safe') === '1' || safeGet(SAFE_KEY) === '1';
+  // Anything thrown before the world is up is shown on screen: a blank phone screen with no explanation is
+  // the worst possible failure mode, and a device far from a debugger cannot report anything else.
+  const problems: string[] = [];
+  let booted = false;
+  const reportFatal = (what: string): void => {
+    if (problems.length > 3) return;
+    problems.push(what);
+    if (booted) return;
+    const panel = document.getElementById('boot-error') ?? el('div', { class: 'screen', id: 'boot-error', dataset: { screen: 'boot-error' } }, el('div', { class: 'panel' }, el('h2', {}, 'TrueNorth could not start'), el('pre', { id: 'boot-error-text', style: 'white-space:pre-wrap;font-size:0.8rem' })));
+    const text = panel.querySelector('#boot-error-text');
+    if (text) text.textContent = problems.join('\n\n');
+    if (!panel.isConnected) ui.append(panel);
+  };
+  window.addEventListener('error', (e) => reportFatal(`${e.message} (${e.filename}:${e.lineno})`));
+  window.addEventListener('unhandledrejection', (e) => reportFatal(`Unhandled rejection: ${String((e.reason as Error)?.message ?? e.reason)}`));
 
   const bus = new EventBus<GameEvents>();
   attachTelemetry(bus);
@@ -114,10 +138,10 @@ async function boot(): Promise<void> {
   let game: Game;
   try {
     try {
-      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL });
+      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL, safeMode });
     } catch (first) {
       console.warn('[truenorth] renderer init failed, retrying with WebGL2', first);
-      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL: true });
+      game = await Game.create({ canvas, bus, config, physics, input, audio, catalog, assetBase: base, forceWebGL: true, safeMode });
     }
   } catch (e) {
     loading.hide();
@@ -297,6 +321,8 @@ async function boot(): Promise<void> {
   };
 
   window.clearTimeout(watchdog);
+  window.clearTimeout(escalate);
+  booted = true;
   loading.hide();
   showMenu();
   window.setTimeout(() => {

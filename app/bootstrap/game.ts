@@ -21,6 +21,8 @@ export interface GameDeps {
   readonly catalog: CharacterCatalog;
   readonly assetBase: string;
   readonly forceWebGL?: boolean;
+  /** Safe mode: no asset library at all — procedural geometry only. */
+  readonly safeMode?: boolean;
 }
 
 export interface Nearby {
@@ -93,7 +95,7 @@ export class Game {
     const renderer = await GameRenderer.create({ canvas: deps.canvas, forceWebGL: deps.forceWebGL ?? false });
     await deps.physics.init();
     const game = new Game(deps, renderer);
-    game.library = await AssetLibrary.create(deps.assetBase, renderer.renderer);
+    game.library = await AssetLibrary.create(deps.assetBase, renderer.renderer, deps.safeMode ?? false);
     game.playerHandle = deps.physics.createCharacter([0, 5, 0], PLAYER_RADIUS, PLAYER_HALF_HEIGHT);
     return game;
   }

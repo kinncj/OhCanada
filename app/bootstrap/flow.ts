@@ -123,7 +123,28 @@ export class Flow {
     this.setModal('loading');
     this.d.ui.append(this.loading.root);
     this.loading.set(this.d.t.t('loadingDistrict', { district: this.d.t.pick(res.value.name) }), 0);
-    await this.d.game.loadDistrict(res.value, (f, stage) => this.loading.set(this.d.t.t('loadingDistrict', { district: this.d.t.pick(res.value.name) }), f, stage));
+    // A district that never finishes must not strand the player on a loading screen: after 45 s, reload once
+    // with assets disabled so the world at least opens.
+    let lastStage = 'start';
+    const stall = window.setTimeout(() => {
+      console.warn(`[truenorth] ${JSON.stringify({ type: 'load:stalled', payload: { district: id, stage: lastStage } })}`);
+      try {
+        if (localStorage.getItem('truenorth.safe.v1') !== '1') {
+          localStorage.setItem('truenorth.safe.v1', '1');
+          location.reload();
+        }
+      } catch {
+        /* storage unavailable: leave the loading screen up rather than looping */
+      }
+    }, 45_000);
+    try {
+      await this.d.game.loadDistrict(res.value, (f, stage) => {
+        if (stage) lastStage = stage;
+        this.loading.set(this.d.t.t('loadingDistrict', { district: this.d.t.pick(res.value.name) }), f, stage);
+      });
+    } finally {
+      window.clearTimeout(stall);
+    }
     this.loading.hide();
     this.setModal('none');
     await this.autosave();
