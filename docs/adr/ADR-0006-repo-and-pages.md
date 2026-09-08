@@ -23,6 +23,13 @@
   looks like unmotivated housekeeping. A same-day reversal is precisely the kind of thing a decision record
   exists to preserve. Consequences that were premised on private are corrected below, not silently dropped,
   and the obligation the private decision opened is marked **voided** rather than deleted.
+- Amended 2026-09-08 (sixth): the fork-safety obligation below is **discharged** — the invariant landed in
+  `docs/runbook.md` §3. Infra's independent verification found no hole in the analysis recorded here and
+  turned up four corroborating repository settings nobody had checked, added to the consequence below.
+  Separately, **`main` now has branch protection**, decided by the repository owner after that verification
+  named its absence as the largest remaining gap. That closes the gap for pull requests and leaves a smaller,
+  deliberate one: `enforce_admins` is off, so the owner's own direct pushes are unreviewed. Recorded as an
+  accepted trade, not as an obligation.
 
 ## Context
 One product, many kinds of artefact: code, content, art, pipeline, infra, tests, docs. Hosting is GitHub
@@ -224,15 +231,67 @@ than advice to someone who has not agreed to it.
   one event that runs fork-authored refs with the base repository's write-scoped token, and adding it to fix
   a permissions symptom is the standard way this property gets lost later.
 
-  This was verified by the repository owner before the switch was flipped, and independently by the
-  architect against the same files; infra is reviewing it as a third read. Two things follow. The property
-  is not one person's assertion — and it now has strangers on the other side of it, so it belongs in the
-  runbook as a named invariant rather than only in an ADR paragraph.
-- **OBLIGATION due=2026-09-22 owner=infra** — record the fork-safety property above in `docs/runbook.md` §3
-  as a named invariant, including the `pull_request_target` prohibition and why it matters, so that a future
-  change to either workflow's `on:` or `permissions:` block is visibly changing something load-bearing.
-  Three independent reads agreeing is what this claim rests on today; a runbook invariant is what will keep
-  it true after all three readers have moved on.
+  This was verified by the repository owner before the switch was flipped, independently by the architect
+  against the same files, and a third time by infra — which re-derived the property from the workflow files
+  and from repository settings rather than reading either summary, and confirmed the trigger and permission
+  blocks by parsing the YAML rather than by grep alone. It found no hole in the analysis above. Two things
+  follow. The property is not one person's assertion — and it now has strangers on the other side of it, so
+  it belongs in the runbook as a named invariant rather than only in an ADR paragraph.
+- ~~**OBLIGATION due=2026-09-22 owner=infra** — record the fork-safety property above in `docs/runbook.md`
+  §3 as a named invariant, including the `pull_request_target` prohibition and why it matters, so that a
+  future change to either workflow's `on:` or `permissions:` block is visibly changing something
+  load-bearing. Three independent reads agreeing is what this claim rests on today; a runbook invariant is
+  what will keep it true after all three readers have moved on.~~
+  **DISCHARGED 2026-09-08** — `docs/runbook.md` §3 carries it as its own section, *INVARIANT — a fork pull
+  request cannot reach the deploy job*, written as **six numbered rules** rather than as a description of
+  today's files, which was the point: rules 1 and 2 fix the trigger and permission blocks of
+  `deploy-pages.yml` and `ci.yml`; rule 3 is the `pull_request_target` prohibition with the reasoning
+  attached — that it runs fork-authored refs against the base repository's write-scoped token with access
+  to secrets, that it is typically added by someone debugging a "resource not accessible by integration"
+  error, and that the answer is simply never to use it because fork pull requests here never need secrets;
+  rule 4 extends the prohibition to `workflow_run`; rule 5 bans `github.event.*` interpolation inside
+  `run:` blocks; rule 6 records that the absence of self-hosted runners is the condition that makes running
+  arbitrary fork code acceptable at all. The backing repository settings are recorded there with the
+  `gh api` calls that read them, so a future reader can re-check rather than re-trust.
+- **Four repository settings corroborate the invariant**, found by infra's verification and checked by
+  neither the owner's read nor the architect's. Each is defence the pipeline does not have to provide:
+  - `default_workflow_permissions` is `read` at the repository level, so a workflow that declares no
+    `permissions:` block at all still inherits a read-only token. `ci.yml`'s explicit
+    `permissions: contents: read` is belt and braces rather than the only thing holding.
+  - `fork-pr-contributor-approval` is `first_time_contributors`, so a new contributor's first pull request
+    does not run any workflow until a maintainer approves it.
+  - The `github-pages` environment carries a `branch_policy` allowing **`main` only**. A deploy job somehow
+    triggered on another ref is refused at the environment gate, after the workflow-level controls. `pages`
+    reports `build_type: workflow`, so nothing publishes from a branch push either.
+  - **No `github.event.*` interpolation appears in any `run:` block** — in fact the string appears nowhere
+    in `.github/` at all — so rule 5 above is satisfied in fact and there is no script-injection vector
+    through a pull-request title or a branch name.
+- **`main` is branch-protected, and that closes the gap this section used to carry.** Until 2026-09-08 the
+  branch had no protection and no ruleset: CI was a check that *ran*, not one that was *required*, and
+  `.github/CODEOWNERS` only **requested** review, because "require review from Code Owners" is a
+  branch-protection setting. The control the CODEOWNERS comment describes over the workflow file holding
+  `pages: write` was therefore advisory. The repository owner closed that, and the settings are recorded
+  here because the invariant above now partly rests on them:
+  - **Required status checks**, `strict: true`: `Lint, types, unit tests, content` and
+    `Build, e2e, perf, a11y`. Those two strings are exactly the `name:` values of `ci.yml`'s two jobs,
+    checked rather than assumed — a required context that no job ever reports leaves every pull request
+    pending forever, which is the usual way this setting is got wrong.
+  - **`require_code_owner_reviews: true`**, one approval, `dismiss_stale_reviews: true`, so a push after
+    approval re-opens the review. `required_conversation_resolution: true`. Force pushes and branch
+    deletion are forbidden.
+  - **`enforce_admins: false`, deliberately.** The owner keeps direct push access to `main`; an outside
+    pull request can neither merge red nor bypass code-owner review. That is the trade, and it is the
+    honest residue of this section: the protection binds contributors, not the maintainer. It was verified
+    empirically rather than by reading the setting — a direct push succeeded and a force-push was refused —
+    and one artefact of that test, the empty commit `6919e87`, is permanently on `main` precisely because
+    force pushes are now refused. The protection working as intended is why the test could not be tidied up.
+  - Implemented through the classic branch-protection API; `repos/kinncj/OhCanada/rulesets` is still `[]`.
+    A future move to rulesets is a re-implementation of the same intent, not a new decision.
+
+  One consequence for ADR-0009: its obligation gate, once wired into `make lint`, becomes merge-blocking
+  through the required `Lint, types, unit tests, content` context. A dated obligation that goes past due
+  will then stop a pull request rather than annoy a reader, which is the enforcement that ADR describes and
+  does not yet have.
 - **The source is already published, and now consistently so.** `vite.config.ts` sets `build.sourcemap: true`
   for every chunk, and the emitted maps carry `sourcesContent` with original paths. Verified against the
   current `dist/`: `dist/assets/index-*.js.map` lists sources such as `../../app/adapters/phaser/boot-scene.ts`
