@@ -42,7 +42,7 @@ export class WorldScene {
     private readonly vegetation: Vegetation,
   ) {}
 
-  static async create(district: District, preset: GraphicsPreset, library: AssetLibrary | null, onProgress?: (f: number) => void): Promise<WorldScene> {
+  static async create(district: District, preset: GraphicsPreset, library: AssetLibrary | null, onProgress?: (f: number, stage?: string) => void): Promise<WorldScene> {
     const s = district.scene;
     const flatSpots = s.landmarks.map((l) => ({ x: l.position[0], z: l.position[2], r: 18 }));
     for (const t of district.triggers) flatSpots.push({ x: t.position[0], z: t.position[2], r: t.radius + 4 });
@@ -70,7 +70,7 @@ export class WorldScene {
     const vegKinds = policy === 'lite' ? [] : s.vegetation.kinds.filter((k): k is VegetationKind => k in KIND_MODELS).slice(0, policy === 'standard' ? 2 : 99);
     let loaded = 0;
     const totalToLoad = vegKinds.reduce((n, k) => n + KIND_MODELS[k].length, 0) + 1;
-    const tick = () => onProgress?.(0.4 + 0.35 * Math.min(1, ++loaded / totalToLoad));
+    const tick = () => onProgress?.(0.4 + 0.35 * Math.min(1, ++loaded / totalToLoad), `models ${loaded}/${totalToLoad}`);
     const vegPromise = (async () => {
       const protos: Partial<Record<VegetationKind, ReturnType<typeof protoFromModel>[]>> = {};
       if (!library) return protos;
@@ -95,14 +95,14 @@ export class WorldScene {
       return protos;
     })();
 
-    onProgress?.(0.15);
+    onProgress?.(0.15, 'terrain');
     const textures = await texPromise;
     // Terrain resolution follows world size (≈5 m quads, capped) so 1 km+ districts stay smooth and cheap.
     const segments = policy === 'lite' ? Math.min(96, Math.max(48, Math.round(s.size / 16))) : Math.min(320, Math.max(96, Math.round(s.size / 5)));
     const terrain = buildTerrain(s.size, heightAt, s.terrain.palette, snow, textures, segments, district.subject === 'hub' ? 34 : 22);
-    onProgress?.(0.4);
+    onProgress?.(0.4, 'textures and models');
     const [kit, protos] = await Promise.all([kitPromise, vegPromise]);
-    onProgress?.(0.78);
+    onProgress?.(0.78, 'placing landmarks');
 
     const rects: { x: number; z: number; w: number; d: number }[] = [];
     for (const w of s.water ?? []) rects.push({ x: w.position[0], z: w.position[2], w: w.size[0], d: w.size[1] });
@@ -181,7 +181,7 @@ export class WorldScene {
       scene.pending.push(fauna.group);
       scene.fauna = fauna;
     }
-    onProgress?.(0.8);
+    onProgress?.(0.8, 'fauna');
     return scene;
   }
 

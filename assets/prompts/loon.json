@@ -1,9 +1,9 @@
 {
   "key": "loon",
   "category": "fauna",
-  "prompt": "a common loon bird figure, the whole bird seen from a three quarter front angle, black head, black and white checkered back, white breast, red eye, standing on its belly on a plain white surface, completely dry, no water, no reflection, seen from a three quarter angle showing two sides at once, isolated on a plain white background, the whole object in frame with empty margins, soft even studio lighting, sharp focus, product photo of a 3d model",
+  "prompt": "a carved and painted wooden loon decoy, a solid rounded bird body with a smooth back, black head and neck, white breast, black and white checkered pattern painted on the back, red eye, standing on a plain white table, seen from a three quarter front angle from slightly above so the rounded body has depth, no water, no reflection, isolated on a plain white background, the whole bird in frame with empty margins, soft even studio lighting, sharp focus",
   "negativePrompt": "text, watermark, multiple animals, cropped, cut off, blurry, low quality, background scenery, grass, water, cartoon, deformed, extra limbs",
-  "seed": 303,
+  "seed": 333,
   "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
   "targetHeightMeters": 0.35,
   "polyBudget": 8000,

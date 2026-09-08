@@ -161,7 +161,7 @@ export class Game {
     };
   }
 
-  async loadDistrict(district: District, onProgress?: (f: number) => void): Promise<void> {
+  async loadDistrict(district: District, onProgress?: (f: number, stage?: string) => void): Promise<void> {
     if (this.loadingDistrict) {
       // Wait for whatever is loading; if it is the same district we are done.
       const pending = this.loadingDistrict;
@@ -184,14 +184,14 @@ export class Game {
     }
   }
 
-  private async loadDistrictInner(district: District, onProgress?: (f: number) => void): Promise<void> {
+  private async loadDistrictInner(district: District, onProgress?: (f: number, stage?: string) => void): Promise<void> {
     this.deps.bus.emit('district:load-requested', { district: district.id });
     const t0 = performance.now();
     const stage = (name: string) => console.info(`[truenorth] ${JSON.stringify({ type: 'load:stage', payload: { name, ms: Math.round(performance.now() - t0) } })}`);
     onProgress?.(0.05);
     this.unloadDistrict();
     this.district = district;
-    const world = await WorldScene.create(district, this.preset, this.library, (f) => onProgress?.(0.05 + f * 0.45));
+    const world = await WorldScene.create(district, this.preset, this.library, (f, stage) => onProgress?.(0.05 + f * 0.45, stage));
     this.world = world;
     this.scene.add(world.group);
     stage('world');
@@ -204,7 +204,7 @@ export class Game {
       else this.deps.physics.addCylinder(c.center, c.halfExtents[1], c.halfExtents[0]);
     }
     stage('physics');
-    onProgress?.(0.55);
+    onProgress?.(0.55, 'physics');
     // NPCs
     this.npcBrain.setHeightFunction(world.heightAt);
     for (const npc of district.npcs) {
@@ -216,12 +216,12 @@ export class Game {
       this.npcBrain.add(npc.id, [npc.position[0], y, npc.position[2]], npc.behavior, npc.wanderRadius ?? 6);
     }
     stage('npcs');
-    onProgress?.(0.7);
+    onProgress?.(0.7, 'people');
     await this.environment.load(district.scene.ambience, this.preset, this.deps.config.featureFlags.dayNightCycle ?? true, district.scene.size);
     this.weather.set(this.deps.config.featureFlags.weather === false ? 'clear' : district.scene.ambience.weather, Math.round(this.preset.maxInstances * 0.5));
     this.setZoneAudio(district.scene.ambience.soundscape);
     stage('environment');
-    onProgress?.(0.9);
+    onProgress?.(0.9, 'sky and weather');
     // Compile every material/pipeline while the loading screen is still up instead of stalling the first frames.
     try {
       await this.renderer.renderer.compileAsync(this.scene, this.rig.camera);
@@ -229,7 +229,7 @@ export class Game {
       console.warn('[truenorth] precompile failed', e);
     }
     stage('compile');
-    onProgress?.(0.97);
+    onProgress?.(0.97, 'compiling shaders');
     // Player
     const sp = district.spawn.position;
     this.teleport(sp[0], sp[2], district.spawn.yaw);

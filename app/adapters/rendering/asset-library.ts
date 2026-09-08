@@ -53,6 +53,23 @@ export interface LoadedModel {
  * clone what they place in the scene. When no manifest exists (fresh checkout without `make assets`),
  * `available` is false and builders fall back to procedural geometry.
  */
+/** Rejects if a load takes too long: a hung transcoder must degrade to procedural, never block the game. */
+function withTimeout<T>(promise: Promise<T>, ms: number, what: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Timed out after ${ms} ms loading ${what}`)), ms);
+    promise.then(
+      (v) => {
+        clearTimeout(timer);
+        resolve(v);
+      },
+      (e: unknown) => {
+        clearTimeout(timer);
+        reject(e instanceof Error ? e : new Error(String(e)));
+      },
+    );
+  });
+}
+
 export class AssetLibrary {
   readonly manifest: AssetManifest | null;
   private readonly gltf: GLTFLoader;
@@ -115,7 +132,7 @@ export class AssetLibrary {
     if (!entry) return Promise.reject(new Error(`Model ${key} not in manifest`));
     let p = this.models.get(key);
     if (!p) {
-      p = this.gltf.loadAsync(`${this.base}${entry.path}`).then((g) => {
+      p = withTimeout(this.gltf.loadAsync(`${this.base}${entry.path}`), 25_000, entry.path).then((g) => {
         const lods = entry.lods.map((name) => g.scene.getObjectByName(name) ?? g.scene).map((o) => {
           o.traverse((c) => {
             if (c instanceof THREE.Mesh) {
@@ -158,7 +175,7 @@ export class AssetLibrary {
     if (!entry) return Promise.reject(new Error(`Character ${key} not in manifest`));
     let p = this.characters.get(key);
     if (!p) {
-      p = this.gltf.loadAsync(`${this.base}${entry.path}`);
+      p = withTimeout(this.gltf.loadAsync(`${this.base}${entry.path}`), 30_000, entry.path);
       this.characters.set(key, p);
     }
     return p;
@@ -173,7 +190,7 @@ export class AssetLibrary {
     if (!p) {
       const url = `${this.base}${relPath}`;
       const loader: { loadAsync(url: string): Promise<THREE.Texture> } = relPath.endsWith('.ktx2') && this.ktx2 ? this.ktx2 : this.texLoader;
-      p = loader.loadAsync(url).then((t) => {
+      p = withTimeout(loader.loadAsync(url), 20_000, relPath).then((t) => {
         t.wrapS = t.wrapT = THREE.RepeatWrapping;
         t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
         t.anisotropy = 8;

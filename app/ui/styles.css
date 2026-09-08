@@ -107,7 +107,7 @@ label.field input, label.field select { font: inherit; padding: 0.55rem 0.7rem; 
 .loading .bar { width: min(60vw, 420px); height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; margin-top: 1rem; }
 .loading .bar > div { height: 100%; width: 0; background: var(--red); transition: width 0.2s; }
 /* Debug */
-.debug { position: absolute; left: 0.6rem; bottom: 2.4rem; font: 12px/1.4 ui-monospace, Menlo, monospace; color: #9fe; background: rgba(0,0,0,0.6); padding: 0.4rem 0.6rem; border-radius: 6px; white-space: pre; }
+.debug { position: absolute; z-index: 20; left: 0.6rem; bottom: 2.4rem; font: 12px/1.4 ui-monospace, Menlo, monospace; color: #9fe; background: rgba(0,0,0,0.6); padding: 0.4rem 0.6rem; border-radius: 6px; white-space: pre; }
 /* Touch */
 .touch { position: absolute; inset: 0; pointer-events: none; }
 .touch .stick { position: absolute; left: 6vw; bottom: 8vh; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.3); pointer-events: auto; touch-action: none; }

@@ -145,7 +145,67 @@ def peace_tower(height: float = 92.0) -> trimesh.Trimesh:
     return mesh
 
 
-BUILDERS = {'peace-tower': peace_tower}
+def cn_tower(height: float = 120.0) -> trimesh.Trimesh:
+    """Toronto's CN Tower, scaled to `height` (real 553 m; the world uses 120 m).
+
+    The souvenir framing the image path needs always sits the tower on a wide display disc, and that disc becomes
+    part of the mesh (95 m across at 120 m tall). The real silhouette is unmistakable and simple, so it is built
+    here: a hexagonal shaft tapering from 0.055 h to 0.017 h, the SkyPod doughnut at 0.62 h, the smaller upper pod
+    at 0.79 h, and a needle antenna running to the tip.
+    """
+    h = height
+    parts: list[trimesh.Trimesh] = []
+    CONCRETE = [214, 210, 202, 255]
+    CONCRETE_DARK = [176, 172, 164, 255]
+    POD = [198, 194, 186, 255]
+    GLASS = [92, 104, 112, 255]
+    ANTENNA = [150, 148, 144, 255]
+
+    # Hexagonal shaft as stacked tapering drums (a cone would read too smooth at game distance).
+    shaft_top = h * 0.80
+    steps = 12
+    for i in range(steps):
+        y0, y1 = shaft_top * i / steps, shaft_top * (i + 1) / steps
+        t = (y0 + y1) / 2 / shaft_top
+        r = h * (0.055 * (1 - t) + 0.017 * t) / 2
+        parts.append(_cylinder(r, y1 - y0, [0, (y0 + y1) / 2, 0], CONCRETE if i % 2 else CONCRETE_DARK, sections=6, axis='y'))
+
+    # Three tapering legs flaring out at the base (the tower's Y-shaped foot).
+    for k in range(3):
+        a = 2 * np.pi * k / 3
+        for j in range(4):
+            y0, y1 = h * 0.02 * j, h * 0.02 * (j + 1)
+            off = h * (0.055 - 0.011 * j)
+            parts.append(_box([h * 0.018, y1 - y0, h * 0.018], [np.cos(a) * off, (y0 + y1) / 2, np.sin(a) * off], CONCRETE_DARK))
+
+    # SkyPod: the seven-storey doughnut, its glass band and the sloped underside.
+    pod_y = h * 0.62
+    parts.append(_cylinder(h * 0.052, h * 0.020, [0, pod_y - h * 0.018, 0], CONCRETE_DARK, sections=16, axis='y'))
+    parts.append(_cylinder(h * 0.060, h * 0.030, [0, pod_y, 0], POD, sections=16, axis='y'))
+    parts.append(_cylinder(h * 0.062, h * 0.012, [0, pod_y + h * 0.010, 0], GLASS, sections=16, axis='y'))
+    parts.append(_cylinder(h * 0.050, h * 0.014, [0, pod_y + h * 0.024, 0], POD, sections=16, axis='y'))
+
+    # Upper (SkyPod observation) level and the antenna mast.
+    up_y = h * 0.79
+    parts.append(_cylinder(h * 0.028, h * 0.022, [0, up_y, 0], POD, sections=12, axis='y'))
+    parts.append(_cylinder(h * 0.030, h * 0.008, [0, up_y + h * 0.006, 0], GLASS, sections=12, axis='y'))
+    mast_bottom, mast_top = h * 0.805, h * 0.985
+    rungs = 6
+    for i in range(rungs):
+        y0, y1 = mast_bottom + (mast_top - mast_bottom) * i / rungs, mast_bottom + (mast_top - mast_bottom) * (i + 1) / rungs
+        t = i / rungs
+        parts.append(_cylinder(h * (0.010 * (1 - t) + 0.004 * t), y1 - y0, [0, (y0 + y1) / 2, 0], ANTENNA, sections=8, axis='y'))
+    parts.append(_cylinder(h * 0.0018, h * 0.020, [0, h * 0.993, 0], ANTENNA, sections=6, axis='y'))
+
+    mesh = trimesh.util.concatenate(parts)
+    mesh.merge_vertices()
+    lo, hi = mesh.bounds
+    mesh.apply_translation([-(lo[0] + hi[0]) / 2, -lo[1], -(lo[2] + hi[2]) / 2])
+    mesh.apply_scale(height / (hi[1] - lo[1]))
+    return mesh
+
+
+BUILDERS = {'peace-tower': peace_tower, 'cn-tower': cn_tower}
 
 
 def build(key: str, prompt: dict, out_path: Path) -> dict:

@@ -99,6 +99,7 @@ export class Flow {
       }),
     );
     this.d.game.onFrame = () => this.frame();
+    if (this.debug) this.debug.update({ fps: 0, frameMs: 0, drawCalls: 0, triangles: 0, memoryMb: 0, chunks: 0, backend: this.d.game.backend, preset: this.d.game.presetLabel, position: [0, 0, 0] });
     this.autosaveTimer = window.setInterval(() => void this.autosave(), 60_000);
   }
 
@@ -122,7 +123,7 @@ export class Flow {
     this.setModal('loading');
     this.d.ui.append(this.loading.root);
     this.loading.set(this.d.t.t('loadingDistrict', { district: this.d.t.pick(res.value.name) }), 0);
-    await this.d.game.loadDistrict(res.value, (f) => this.loading.set(this.d.t.t('loadingDistrict', { district: this.d.t.pick(res.value.name) }), f));
+    await this.d.game.loadDistrict(res.value, (f, stage) => this.loading.set(this.d.t.t('loadingDistrict', { district: this.d.t.pick(res.value.name) }), f, stage));
     this.loading.hide();
     this.setModal('none');
     await this.autosave();
