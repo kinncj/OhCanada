@@ -4,8 +4,8 @@
   "prompt": "a freestanding gothic campanile bell tower, a single square stone tower alone with no church and no building attached to it, very tall and narrow, beige sandstone, one round clock face near the top of each face, narrow pointed arch openings, four small pinnacles around a steep pointed green copper spire, a small souvenir desk model of the tower alone standing on a plain white surface, the whole tower visible from base to spire with empty space around it, studio product photo, plain white background, soft even lighting, sharp focus",
   "negativePrompt": "people, cars, trees, text, watermark, multiple buildings, cropped, cut off, blurry, low quality, background scenery, sky, clouds",
   "seed": 909,
-  "model": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+  "model": "scripts/gen3d/parametric.py (hand-authored geometry; prompt kept for reference)",
   "targetHeightMeters": 92,
   "polyBudget": 25000,
-  "notes": "Landmark: Parliament Hill, Ottawa. Front view; symmetric so the mirrored back projection is faithful."
+  "notes": "Landmark: Parliament Hill, Ottawa. Front view; symmetric so the mirrored back projection is faithful. Parametric build: the image model always attached a church nave to the tower."
 }

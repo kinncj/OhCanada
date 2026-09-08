@@ -205,10 +205,11 @@ export async function processHeroAssets({ srcDir, distDir, upsertCredit, toktx, 
     upsertCredit?.({
       path: rel,
       title: `${key} (generated ${category}, LOD0/LOD1)`,
-      author: 'TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)',
+      // Attribution follows the recipe: most assets are diffusion output, a few are hand-authored geometry.
+      author: `TrueNorth (${/parametric/i.test(prompt.model ?? '') ? 'scripts/gen3d/parametric.py: hand-authored geometry' : 'scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image'})`,
       license: 'Generated',
       source: 'https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d',
-      notes: `Prompt assets/prompts/${key}.json (seed ${prompt.seed ?? 'n/a'}). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License.${/culturalReview: true/.test(prompt.notes ?? '') ? ' Requires cultural review before release.' : ''}`,
+      notes: `Prompt assets/prompts/${key}.json (seed ${prompt.seed ?? 'n/a'}).${/parametric/i.test(prompt.model ?? '') ? '' : ' Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License.'}${/culturalReview: true/.test(prompt.notes ?? '') || /cultural/i.test(prompt.notes ?? '') ? ' Requires cultural review before release.' : ''}`,
     });
   }
   return entries;

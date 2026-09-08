@@ -435,7 +435,7 @@
         "LOD1": 5000
       },
       "height": 45,
-      "radius": 22.42,
+      "radius": 27.25,
       "category": "hero"
     },
     "cn-tower": {
@@ -445,11 +445,11 @@
         "LOD1"
       ],
       "triangles": {
-        "LOD0": 20000,
-        "LOD1": 4000
+        "LOD0": 1000,
+        "LOD1": 200
       },
       "height": 120,
-      "radius": 47.67,
+      "radius": 7.54,
       "category": "hero"
     },
     "fiddle": {
@@ -519,7 +519,7 @@
         "LOD1": 1600
       },
       "height": 0.35,
-      "radius": 0.33,
+      "radius": 0.35,
       "category": "fauna"
     },
     "moose": {
@@ -586,7 +586,7 @@
       ],
       "triangles": {
         "LOD0": 12000,
-        "LOD1": 2344
+        "LOD1": 2348
       },
       "height": 15,
       "radius": 4.24,
@@ -613,11 +613,11 @@
         "LOD1"
       ],
       "triangles": {
-        "LOD0": 7999,
-        "LOD1": 1599
+        "LOD0": 8000,
+        "LOD1": 1580
       },
       "height": 0.8,
-      "radius": 0.26,
+      "radius": 0.69,
       "category": "hero"
     },
     "stampede-grandstand": {
@@ -628,10 +628,10 @@
       ],
       "triangles": {
         "LOD0": 16000,
-        "LOD1": 3194
+        "LOD1": 3200
       },
       "height": 15,
-      "radius": 4.88,
+      "radius": 16.28,
       "category": "hero"
     },
     "stetson-hat": {
@@ -645,7 +645,7 @@
         "LOD1": 1200
       },
       "height": 0.15,
-      "radius": 0.08,
+      "radius": 0.07,
       "category": "prop"
     },
     "totem-pole": {
@@ -670,10 +670,10 @@
       ],
       "triangles": {
         "LOD0": 25000,
-        "LOD1": 4994
+        "LOD1": 5000
       },
       "height": 21,
-      "radius": 8.63,
+      "radius": 11.36,
       "category": "hero"
     }
   },

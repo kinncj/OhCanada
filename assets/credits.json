@@ -808,10 +808,10 @@
     {
       "path": "models/hero/peace-tower.glb",
       "title": "peace-tower (generated hero, LOD0/LOD1)",
-      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "author": "TrueNorth (scripts/gen3d/parametric.py: hand-authored geometry)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
-      "notes": "Prompt assets/prompts/peace-tower.json (seed 909). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+      "notes": "Prompt assets/prompts/peace-tower.json (seed 909)."
     },
     {
       "path": "models/hero/beaver.glb",
@@ -867,15 +867,15 @@
       "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
-      "notes": "Prompt assets/prompts/chateau-laurier.json (seed 103). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+      "notes": "Prompt assets/prompts/chateau-laurier.json (seed 303). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
     },
     {
       "path": "models/hero/cn-tower.glb",
       "title": "cn-tower (generated hero, LOD0/LOD1)",
-      "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
+      "author": "TrueNorth (scripts/gen3d/parametric.py: hand-authored geometry)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
-      "notes": "Prompt assets/prompts/cn-tower.json (seed 404). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+      "notes": "Prompt assets/prompts/cn-tower.json (seed 404)."
     },
     {
       "path": "models/hero/fiddle.glb",
@@ -907,7 +907,7 @@
       "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
-      "notes": "Prompt assets/prompts/inukshuk.json (seed 109). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+      "notes": "Prompt assets/prompts/inukshuk.json (seed 109). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License. Requires cultural review before release."
     },
     {
       "path": "models/hero/loon.glb",
@@ -915,7 +915,7 @@
       "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
-      "notes": "Prompt assets/prompts/loon.json (seed 606). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+      "notes": "Prompt assets/prompts/loon.json (seed 333). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
     },
     {
       "path": "models/hero/niagara-falls-cliff.glb",
@@ -955,7 +955,7 @@
       "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
-      "notes": "Prompt assets/prompts/qamutiik.json (seed 114). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+      "notes": "Prompt assets/prompts/qamutiik.json (seed 606). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License. Requires cultural review before release."
     },
     {
       "path": "models/hero/stampede-grandstand.glb",
@@ -987,7 +987,7 @@
       "author": "TrueNorth (scripts/gen3d: Hunyuan3D-2mini shape from an SDXL-Turbo concept image)",
       "license": "Generated",
       "source": "https://github.com/kinncj/OhCanada/tree/main/scripts/gen3d",
-      "notes": "Prompt assets/prompts/war-memorial.json (seed 104). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
+      "notes": "Prompt assets/prompts/war-memorial.json (seed 404). Model weights: Tencent Hunyuan Community License; SDXL-Turbo: Stability AI Community License."
     }
   ]
 }

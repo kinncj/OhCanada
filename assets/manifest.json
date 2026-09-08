@@ -98,13 +98,13 @@
       "category": "hero",
       "path": "models/hero/cn-tower.glb",
       "source": "generated",
-      "generator": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+      "generator": "scripts/gen3d/parametric.py (hand-authored geometry; prompt kept for reference)",
       "prompt": "assets/prompts/cn-tower.json",
       "license": "CC0-1.0",
       "polyBudget": 20000,
-      "triangles": 20000,
+      "triangles": 1000,
       "targetHeightMeters": 120,
-      "notes": "Landmark: Toronto. Real height 553 m; scaled to 120 m for the world."
+      "notes": "Landmark: Toronto. Real height 553 m; scaled to 120 m for the world. Parametric build: souvenir framing always added a display disc ~95 m across."
     },
     {
       "key": "fiddle",
@@ -215,13 +215,13 @@
       "category": "hero",
       "path": "models/hero/peace-tower.glb",
       "source": "generated",
-      "generator": "tencent/Hunyuan3D-2mini (hunyuan3d-dit-v2-mini-turbo + hunyuan3d-vae-v2-mini-turbo) conditioned on stabilityai/sdxl-turbo",
+      "generator": "scripts/gen3d/parametric.py (hand-authored geometry; prompt kept for reference)",
       "prompt": "assets/prompts/peace-tower.json",
       "license": "CC0-1.0",
       "polyBudget": 25000,
       "triangles": 1232,
       "targetHeightMeters": 92,
-      "notes": "Landmark: Parliament Hill, Ottawa. Front view; symmetric so the mirrored back projection is faithful."
+      "notes": "Landmark: Parliament Hill, Ottawa. Front view; symmetric so the mirrored back projection is faithful. Parametric build: the image model always attached a church nave to the tower."
     },
     {
       "key": "peggys-cove-lighthouse",
@@ -258,7 +258,7 @@
       "prompt": "assets/prompts/qamutiik.json",
       "license": "CC0-1.0",
       "polyBudget": 8000,
-      "triangles": 7999,
+      "triangles": 8000,
       "targetHeightMeters": 0.8,
       "notes": "Cultural: Inuit sled. Height 0.8 m."
     },
