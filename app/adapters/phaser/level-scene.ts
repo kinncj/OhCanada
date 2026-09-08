@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import type { LocomotionIntent, LocomotionState, LocomotionTuning, Vec2 } from '@application/ports';
 
 import { blendColors, mixColor, toPhaserColor } from './boot-config';
+import { backingScaleOf, fitCameraToDesign } from './design-viewport';
 import { groundYAt, levelBounds, slopeAt, type LevelBounds } from './ground-profile';
 import type { LoadRequest } from './level-assets';
 import { createLevelEffects, selectLayers, type LevelEffects } from './level-effects';
@@ -239,7 +240,7 @@ export class LevelScene extends Phaser.Scene {
   }
 
   create(): void {
-    const { level } = this.#options;
+    const { level, designWidth } = this.#options;
 
     this.#paintSky();
     this.#buildLayers();
@@ -252,7 +253,22 @@ export class LevelScene extends Phaser.Scene {
     this.#buildTargets();
 
     const camera = this.cameras.main;
-    camera.setZoom(level.camera.zoom);
+    /*
+     * Zoom from the top-left, not from the middle.
+     *
+     * Phaser anchors zoom on the camera's origin, which defaults to the centre.
+     * Every screen-locked thing this scene draws — the sky gradient, the
+     * parallax bands, the two overlays, the snow — is positioned in *design*
+     * coordinates from (0, 0), so a centre-anchored zoom of 0.75 would render
+     * them inset by 12.5% of the canvas on the left and overflowing it on the
+     * right. At origin (0, 0) a design rect from (0,0) to (1080,1920) lands
+     * exactly on a canvas of 1080z x 1920z, whatever z is.
+     *
+     * This was latent before and cost nothing only because Ottawa's zoom is 1.
+     * `renderScale` is what makes z leave 1 on a real device, so it is fixed
+     * here rather than discovered as a band of background colour down one edge.
+     */
+    fitCameraToDesign(camera, this.scale.gameSize.width, designWidth, level.camera.zoom);
     camera.setBounds(0, 0, level.size.x, level.size.y);
     this.#camera = followCamera(this.#followInput(0));
     camera.setScroll(this.#camera.x, this.#camera.y);
@@ -295,6 +311,16 @@ export class LevelScene extends Phaser.Scene {
   applyProfile(profile: RenderProfile | null): void {
     this.#profile = profile;
     if (profile === null) return;
+
+    /* The renderer may have resized the drawing buffer for this tier just
+       before calling us, so the camera's zoom is re-derived rather than
+       remembered — same reason everything else here is. */
+    fitCameraToDesign(
+      this.cameras.main,
+      this.scale.gameSize.width,
+      this.#options.designWidth,
+      this.#options.level.camera.zoom,
+    );
 
     const kept = new Set(selectLayers(this.#options.level.layers, profile.parallaxLayers).map((l) => l.key));
     for (const layer of this.#layers) {
@@ -458,17 +484,38 @@ export class LevelScene extends Phaser.Scene {
   /** How many parallax layers drew from a texture. See `SceneSnapshot.layers`. */
   #texturedLayers = 0;
 
+  /**
+   * Canvas pixels per design pixel, read from the scale manager rather than
+   * passed in.
+   *
+   * `GameRenderer` resizes the drawing buffer when the tier changes, and the
+   * scale manager is then the one true statement of how big it is. A copy
+   * handed to the scene could disagree with the canvas for a frame, and a
+   * camera zoom that disagrees with the canvas is a mis-framed level.
+   */
+  #backingScale(): number {
+    return backingScaleOf(this.scale.gameSize.width, this.#options.designWidth);
+  }
+
   /* --------------------------------------------------------------- camera --- */
 
   #followInput(dtSeconds: number): Parameters<typeof followCamera>[0] {
     const { level, designWidth, designHeight } = this.#options;
+    /*
+     * Both the viewport and the zoom carry the backing scale, so their quotient
+     * — the world the camera can see, which is the only thing `followCamera`
+     * uses them for — is unchanged. Framing is therefore identical at every
+     * render scale, which is the property `tests/e2e/level-ottawa.spec.ts`'s
+     * "between 25 and 70 percent of the canvas width" scenario asserts.
+     */
+    const scale = this.#backingScale();
     return {
       camera: this.#camera,
       target: { x: this.#state.x, y: this.#state.y },
       velocityX: this.#state.velocityX,
       facing: this.#state.facing,
-      tuning: level.camera,
-      viewport: { width: designWidth, height: designHeight },
+      tuning: { ...level.camera, zoom: level.camera.zoom * scale },
+      viewport: { width: designWidth * scale, height: designHeight * scale },
       world: level.size,
       dtSeconds,
       reducedMotion: this.#profile?.motion === 'reduced',

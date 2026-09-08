@@ -32,6 +32,7 @@ import {
   type FrameSignals,
   type RenderTierProbe,
 } from './render-tier-probe';
+import { backingScaleFor } from './visual-tier';
 import type { RenderProfile, TierDecision } from './visual-tier';
 import {
   SCENE_PROBE_GLOBAL,
@@ -511,6 +512,22 @@ function startRendererProbe(
     /* One mechanism, not two: the tier the renderer probe measured is published
        through the same element a locomotion scenario reads. */
     onProfile: (profile) => {
+      /*
+       * Fewer pixels, before anything is told about the new tier.
+       *
+       * `renderScale` and `maxPixelRatio` were resolved into `RenderProfile` and
+       * applied by nothing: the tier degraded particle count and parallax layer
+       * count and never the fragment count, which is the dominant cost on the
+       * exact devices ADR-0011 exists to keep playable. `Scale.FIT` keeps the
+       * canvas *backing store* at the design resolution and stretches it with
+       * CSS, so this resizes the buffer and lets CSS stretch a smaller one — the
+       * letterbox, the aspect ratio and the world the camera sees are all
+       * unchanged, there are simply fewer fragments to shade.
+       *
+       * Before `onProfileChanged`, because the scene re-derives its camera zoom
+       * from the scale manager and must read the new size, not the old one.
+       */
+      applyBackingScale(game, config, profile);
       scene?.publish({ ...profileToSnapshot(profile), renderer: identity.kind });
       /* The level re-derives everything the tier controls from the new profile:
          how many parallax layers are drawn and how much snow falls. This is the
@@ -518,6 +535,27 @@ function startRendererProbe(
       onProfileChanged(profile);
     },
   });
+}
+
+/**
+ * Resize the drawing buffer to what the tier asks for.
+ *
+ * Guarded on an actual change: `resize` fires `RESIZE`, which re-sizes every
+ * camera in every scene, and doing that on every closed measurement window
+ * would be work the measurement then reports.
+ */
+function applyBackingScale(game: Phaser.Game, config: BootConfig, profile: RenderProfile): void {
+  const scale = backingScaleFor({
+    renderScale: profile.renderScale,
+    maxPixelRatio: profile.maxPixelRatio,
+    designWidth: config.designWidth,
+    displayWidthCss: game.scale.displaySize.width,
+  });
+
+  const width = Math.round(config.designWidth * scale);
+  const height = Math.round(config.designHeight * scale);
+  if (game.scale.gameSize.width === width && game.scale.gameSize.height === height) return;
+  game.scale.resize(width, height);
 }
 
 /**

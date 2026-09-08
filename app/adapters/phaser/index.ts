@@ -278,3 +278,19 @@ export {
   type AssetManifestFile,
   type LoadRequest,
 } from './level-assets';
+
+/*
+  One design resolution, any number of canvas pixels (task 1.19, completed).
+
+  `renderScale` and `maxPixelRatio` were declared in every graphics preset and
+  applied by nothing, so the tier degraded particle count and parallax layer
+  count and never the fragment count — the dominant cost on exactly the software
+  rasterisers ADR-0011 exists to keep playable. Exported so the camera-origin
+  rule, which is what keeps a smaller buffer from becoming a mis-framed portrait
+  canvas, is asserted without a browser.
+*/
+export {
+  backingScaleOf,
+  fitCameraToDesign,
+  type DesignCamera,
+} from './design-viewport';

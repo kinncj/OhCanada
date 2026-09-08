@@ -22,18 +22,20 @@ import type { GraphicsPresets } from '@application/ports';
 import type { FrameCostSummary } from '@adapters/phaser/frame-cost';
 import { identifyRenderer, type RendererIdentity } from '@adapters/phaser/renderer-identity';
 import {
-  LARGE_PARTICLE_CEILING,
-  PHONE_PARTICLE_CEILING,
-  TIER_ORDER,
+  backingScaleFor,
   classifyFormFactor,
   createTierTracker,
   isPromotion,
+  LARGE_PARTICLE_CEILING,
+  MIN_BACKING_SCALE,
   minTier,
   particleCeilingFor,
+  PHONE_PARTICLE_CEILING,
   provisionalTier,
   resolveRenderProfile,
   stepUp,
   thresholdsFor,
+  TIER_ORDER,
   tierCeilingFor,
   tierFromFrameCost,
   type VisualTier,
@@ -351,5 +353,104 @@ describe('resolveRenderProfile', () => {
 
     expect(profile.preset.particles).toBe(PRESETS.high.particles);
     expect(profile.particles).toBe(0);
+  });
+});
+
+describe('backingScaleFor — the pixel count the tier degrades', () => {
+  /*
+   * `renderScale` and `maxPixelRatio` sat in `RenderProfile` and in
+   * `content/game.config.json` and were applied by nothing, so the tier
+   * degraded particles and parallax layers and never the fragment count — the
+   * dominant cost on exactly the software rasterisers ADR-0011 exists to keep
+   * playable. These are the rules that turned two read-only numbers into the
+   * size of the drawing buffer.
+   */
+  const design = 1080;
+
+  it('takes the tier multiplier when the pixel ratio is not the binding limit', () => {
+    /* A 1080-wide canvas shown 1080 CSS px wide is already 1:1, so a cap of 2
+       has nothing to bite on and `renderScale` decides alone. */
+    expect(
+      backingScaleFor({
+        renderScale: 0.75,
+        maxPixelRatio: 2,
+        designWidth: design,
+        displayWidthCss: 1080,
+      }),
+    ).toBeCloseTo(0.75, 5);
+  });
+
+  it('takes the pixel-ratio cap when it is the sharper of the two', () => {
+    /* The perf suite's phone: 1080 design pixels shown across 390 CSS pixels is
+       a natural ratio of 2.77, and the low preset says at most 1. That is a 7.7x
+       reduction in fragments and it is what the preset has always asked for. */
+    const scale = backingScaleFor({
+      renderScale: 0.75,
+      maxPixelRatio: 1,
+      designWidth: design,
+      displayWidthCss: 390,
+    });
+    expect(scale).toBeCloseTo(390 / 1080, 5);
+    expect(scale).toBeLessThan(0.75);
+  });
+
+  it('never draws more pixels than the design resolution', () => {
+    /* A content edit asking for 2x must not silently turn on supersampling —
+       that is a decision this project has not taken. */
+    expect(
+      backingScaleFor({
+        renderScale: 2,
+        maxPixelRatio: 4,
+        designWidth: design,
+        displayWidthCss: 1080,
+      }),
+    ).toBe(1);
+  });
+
+  it('never falls below the floor, whatever the numbers say', () => {
+    expect(
+      backingScaleFor({
+        renderScale: 0.01,
+        maxPixelRatio: 0.01,
+        designWidth: design,
+        displayWidthCss: 4000,
+      }),
+    ).toBe(MIN_BACKING_SCALE);
+  });
+
+  it('applies only the tier multiplier when there is no display to measure', () => {
+    /* A headless boot, or a canvas that has not been laid out yet. Guessing a
+       display size here would be guessing the cap. */
+    expect(
+      backingScaleFor({
+        renderScale: 0.75,
+        maxPixelRatio: 1,
+        designWidth: design,
+        displayWidthCss: 0,
+      }),
+    ).toBeCloseTo(0.75, 5);
+  });
+
+  it('survives numbers that are not numbers', () => {
+    expect(
+      backingScaleFor({
+        renderScale: Number.NaN,
+        maxPixelRatio: Number.NaN,
+        designWidth: Number.NaN,
+        displayWidthCss: Number.NaN,
+      }),
+    ).toBe(1);
+  });
+
+  it('leaves the high tier at full resolution, which is what "high" means', () => {
+    const high = PRESETS.high;
+    expect(
+      backingScaleFor({
+        renderScale: high.renderScale,
+        maxPixelRatio: high.maxPixelRatio,
+        designWidth: design,
+        displayWidthCss: 1080,
+      }),
+    ).toBe(1);
   });
 });

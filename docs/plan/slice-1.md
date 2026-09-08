@@ -31,6 +31,7 @@ reference-critical (red serge, Stetson, Sam Browne belt, no RCMP crest or name).
 | 1.17 | `make verify-content` implemented (author/verifier separation enforced) | content-verifier + infra | Quarantined items excluded from the build; a question with status `verified` and an empty evidence quote fails the gate (ADR-0003 CI clause) | Done, with one stated gap — 46 fixtures; ADR-0003 CI clause + ADR-0016 §2 table enforced; separation of duties enforced as *no single commit both authors a claim and grants its verification*, because **commit authorship is not establishable in this repository** (one identity, no signatures, trailers forbidden). `scripts/verify-content.mjs`'s header specifies the three things that would make it establishable; a `scripts/content-roles.json` map is already wired and absent. |
 | 1.18 | Screenshots on iPhone, iPad and desktop via Playwright MCP | orchestrator | Attached to the slice; portrait canvas correct on all three | Done (iPhone 13, iPad Mini, desktop, against the live site) |
 | 1.19 | Renderer capability probe + visual tiers (WebGL / software-WebGL / Canvas) | engine | Tier chosen from a measured frame cost, not a feature flag; every effect has a no-Filter path | Done (ADR-0011) |
+| 1.20 | Compose the DOM layer in `app/bootstrap`: creator, HUD, menu, dialogue, question card, study, settings, POI card, level screens | engine + ui-a11y | Every slice-1 screen reachable in the built artefact; the a11y suite scans `dist/`, not a harness; the two character renderers are constructed | **Not started** |
 
 ## Level 4 — subject and setting
 
@@ -124,3 +125,25 @@ back to the same state.
 - **A diagnostic shipped a fingerprinting surface.** `data-tn-device` published the raw
   `UNMASKED_RENDERER_WEBGL` string on every load, against the explicit clause in ADR-0011 that kept the
   diagnostics in the first place. Live on a public site until found.
+
+## What "done" meant in the task table, and what it did not
+
+A staff review of the committed slice (`208d8f3..3c5a6e4`) found the table asserting completion for work the
+shipped artefact does not contain. The tasks were built; the game was not assembled. Recorded here because a
+plan that overstates is worse than one that is behind — the next reader trusts it.
+
+- **Nothing composes the DOM layer.** `app/bootstrap/main.ts` mounts four things: the live region, the rotate
+  overlay, the build-status caption and the renderer. The character creator, HUD, menu, dialogue, question
+  card, study screen, settings, POI card and level screens have **zero consumers under `app/`** — roughly
+  4,000 lines reachable only from tests, along with both character renderers, the persistence adapter, the
+  four use cases and the scheduler. No task in the table owned the wiring, which is why nothing did it. That
+  is task 1.20 now.
+- **The accessibility claim is narrower than it sounds.** 123 axe checks pass against a dev-server harness
+  that mounts components directly. `tests/a11y/playwright.config.ts` says so in its own header. They prove
+  the components; they say nothing about the shipped page, and there is no shipped page for them to be about.
+- **The officer is a rounded rectangle and the Peace Tower is not drawn.** `level-scene.ts` paints every
+  character with `fillRoundedRect` unconditionally. The reference-critical red serge — the stated reason
+  Ottawa was chosen first — is not in the running game.
+- **ADR-0008 cannot see this.** Its gate reads import edges, so a port with two implementations looks
+  consumed even when nothing constructs either. "A port exists when something calls it" is satisfied by an
+  implementation nothing composes.

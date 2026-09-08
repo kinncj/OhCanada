@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 
+import { fitCameraToDesign } from './design-viewport';
+
 import { blendColors, mixColor, toPhaserColor, type BootConfig } from './boot-config';
 import {
   CONIFERS,
@@ -85,6 +87,21 @@ export class BootScene extends Phaser.Scene {
   create(): void {
     const { config } = this.#options;
     const width = config.designWidth;
+
+    /*
+     * The boot screen draws in design coordinates like every other scene, and
+     * the drawing buffer is no longer the design resolution — the visual tier
+     * degrades pixel count now (`renderScale`, `maxPixelRatio`). Two lines, and
+     * re-applied on resize because the tier changes its mind as it measures.
+     */
+    const fit = (): void => {
+      fitCameraToDesign(this.cameras.main, this.scale.gameSize.width, config.designWidth);
+    };
+    fit();
+    this.scale.on(Phaser.Scale.Events.RESIZE, fit);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.scale.off(Phaser.Scale.Events.RESIZE, fit);
+    });
     const height = config.designHeight;
     const horizonY = Math.round(height * HORIZON_FRACTION);
 

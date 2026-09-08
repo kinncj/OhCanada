@@ -587,6 +587,72 @@ test.describe('TN-LEVEL-04 — the camera, in portrait', () => {
     expect(box).not.toBeNull();
     expect((box?.width ?? 0) / (box?.height ?? 1)).toBeCloseTo(1080 / 1920, 2);
   });
+
+  /**
+   * The tier may draw fewer pixels; it may not draw a different picture.
+   *
+   * `renderScale` and `maxPixelRatio` were declared in every graphics preset and
+   * applied by nothing, so the tier degraded particles and parallax layers and
+   * never the fragment count — the dominant cost on the software rasterisers
+   * ADR-0011 exists to keep playable. Wiring them shrinks the canvas *backing
+   * store* and lets `Scale.FIT`'s CSS stretch it back, which is invisible except
+   * as speed. These are the assertions that keep "invisible" true, because the
+   * way this goes wrong is a mis-framed portrait canvas rather than an error:
+   *
+   *   - the backing store is smaller than the design resolution on this device
+   *     (otherwise nothing is being degraded and the wiring is decorative);
+   *   - it keeps the design aspect ratio exactly, so nothing is stretched;
+   *   - the CSS size is unchanged — the letterbox is where it was;
+   *   - the camera still shows the same world, which the "25 to 70 percent"
+   *     scenario above asserts by reading design-space coordinates.
+   */
+  test('draws fewer pixels at a degraded tier without changing the picture', async ({ page }) => {
+    await openLevel(page);
+    const probe = page.locator('[data-testid="scene-state"]');
+    /* Wait for a measured tier: before the first window closes the buffer is
+       still the provisional tier's, and this would test the guess. */
+    await expect(probe).toHaveAttribute('data-tier', /^(low|medium|high)$/);
+    await expect(page.locator('#game canvas')).toHaveAttribute('data-tn-tier-measured', 'true');
+
+    const canvas = await page.locator('#game canvas').evaluate((node) => {
+      const element = node as HTMLCanvasElement;
+      const rect = element.getBoundingClientRect();
+      return {
+        backingWidth: element.width,
+        backingHeight: element.height,
+        cssWidth: rect.width,
+        cssHeight: rect.height,
+      };
+    });
+    const tier = await probe.getAttribute('data-tier');
+    const where =
+      `tier "${String(tier)}": backing ${String(canvas.backingWidth)}x` +
+      `${String(canvas.backingHeight)}, css ${canvas.cssWidth.toFixed(1)}x` +
+      `${canvas.cssHeight.toFixed(1)}`;
+
+    /* This suite runs Chromium on SwiftShader, which `tierCeilingFor` caps at
+       medium, and both low and medium ask for fewer pixels than the design
+       resolution on a 390 CSS px viewport. A full-size buffer here means the
+       presets are being read and thrown away, which is the defect. */
+    expect(
+      canvas.backingWidth,
+      `the drawing buffer is still the full design width, so the tier's renderScale and ` +
+        `maxPixelRatio are being resolved and ignored — ${where}`,
+    ).toBeLessThan(1080);
+    expect(canvas.backingWidth, `the buffer collapsed — ${where}`).toBeGreaterThanOrEqual(270);
+
+    expect(
+      canvas.backingWidth / canvas.backingHeight,
+      `the drawing buffer is not the design aspect ratio, so the picture is stretched — ${where}`,
+    ).toBeCloseTo(1080 / 1920, 2);
+
+    /* The letterbox is CSS and must not have moved: FIT sizes the element from
+       the parent, and shrinking the buffer is meant to be invisible. */
+    expect(
+      canvas.cssWidth / canvas.cssHeight,
+      `the canvas element changed shape — ${where}`,
+    ).toBeCloseTo(1080 / 1920, 2);
+  });
 });
 
 test.describe('TN-LEVEL-05 — coming into reach', () => {

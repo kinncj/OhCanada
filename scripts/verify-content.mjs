@@ -410,19 +410,122 @@ const longestSharedRun = (haystack, text) => {
 
 const VERIFICATION_KEYS = ['status', 'model', 'checkedAt', 'sourceHash', 'evidence'];
 const VERIFICATION_STATUSES = ['unverified', 'verified', 'quarantined', 'rejected'];
-const REVIEW_KEYS = ['status', 'reviewer', 'organisation', 'date', 'scope', 'note'];
+const REVIEW_KEYS = ['status', 'reviewer', 'organisation', 'date', 'scope'];
 const REVIEW_STATUSES = ['not-sought', 'sought', 'granted', 'refused'];
 
-const looksLike = (value, keys, statuses) => {
-  if (!isObject(value)) return false;
-  if (!keys.every((key) => key in value)) return false;
-  const extra = Object.keys(value).filter((key) => !keys.includes(key));
-  if (extra.length > 0) return false;
-  return statuses.includes(str(value.status) ?? '');
-};
+/**
+ * REQUIRED SUBSET, NOT EXACT KEY SET. This predicate previously also refused
+ * any block carrying a key it did not know about, and that made the recogniser
+ * a function of the SCHEMA'S CURRENT SHAPE rather than of the block's identity.
+ * ADR-0003's amendment added `record` to `communityReview`; the seven-key block
+ * that field makes mandatory stopped being recognised, so rule A3 — the one
+ * standing between an agent and a fabricated Indigenous sign-off naming a real
+ * person — silently stopped firing on the exact documents the amendment
+ * created. The only visible signal was a count in the summary going down.
+ *
+ * The property being tested is "is this an instance of the block?", and what
+ * carries it is the keys the block MUST have plus a legal `status` — not the
+ * keys it must NOT have (ADR-0019). Extra keys are schema growth, which is
+ * expected; a missing required key or an illegal status is what says "not an
+ * instance".
+ *
+ * The false-positive this widening could have opened, and why it does not: a
+ * JSON Schema's `properties` object for `factVerification` has exactly these
+ * five key names, so key presence alone would match the files that DEFINE the
+ * blocks. `status` there is a subschema object, not one of the four status
+ * strings, so the status test rejects it. `assertRecogniserIsLive` below proves
+ * both directions against the real schema on every run, and the fixtures prove
+ * them against a schema mutated the way the next amendment will mutate it.
+ */
+const looksLike = (value, keys, statuses) =>
+  isObject(value) &&
+  keys.every((key) => key in value) &&
+  statuses.includes(str(value.status) ?? '');
 
 const isVerification = (value) => looksLike(value, VERIFICATION_KEYS, VERIFICATION_STATUSES);
 const isCommunityReview = (value) => looksLike(value, REVIEW_KEYS, REVIEW_STATUSES);
+
+/**
+ * THE FLOOR UNDER THE RECOGNISER, anchored to the schema rather than to a
+ * comment. Every rule in gate A is scoped by these two predicates: if either
+ * stops recognising the blocks the schema requires, A0/A1/A2/A3/A4 and the
+ * null-form allowance all stop firing at once, over a corpus that still looks
+ * fully inspected. That is the failure this run has already had once, so it is
+ * a case rather than a note.
+ *
+ * Three assertions, each of which the `record` amendment would have tripped:
+ *
+ *   1. Every key this file uses to identify a block is still REQUIRED by the
+ *      schema. If the schema drops one, the identifying set is over-specified
+ *      and would miss legitimate blocks — fail rather than under-match.
+ *   2. A synthetic block carrying EXACTLY the schema's current required keys is
+ *      recognised, for every legal status. This is the assertion that fails if
+ *      anyone reintroduces an exact-key-set test, because the schema's required
+ *      list is longer than the identifying set and always will be after an
+ *      amendment.
+ *   3. A JSON Schema `properties` object built from the same key names is NOT
+ *      recognised. The widening in (2) is only safe while this holds.
+ */
+const assertRecogniserIsLive = () => {
+  const path = join(CONTENT_DIR, 'schemas', 'common.schema.json');
+  if (!existsSync(path)) {
+    note(
+      `content/schemas/common.schema.json is absent, so the recogniser self-test did not run. ` +
+        `Gate A's rules are only as wide as isVerification()/isCommunityReview(), and nothing here ` +
+        `checked them against the schema that defines the blocks.`,
+    );
+    return;
+  }
+  const schema = readJson(path);
+  const defs = isObject(schema?.$defs) ? schema.$defs : {};
+  const cases = [
+    ['factVerification', VERIFICATION_KEYS, VERIFICATION_STATUSES, isVerification],
+    ['communityReview', REVIEW_KEYS, REVIEW_STATUSES, isCommunityReview],
+  ];
+  for (const [def, keys, statuses, recognise] of cases) {
+    const required = Array.isArray(defs[def]?.required) ? defs[def].required.filter((k) => str(k) !== null) : null;
+    if (required === null) {
+      fail(
+        `content/schemas/common.schema.json has no $defs.${def}.required, so the recogniser this ` +
+          `gate scopes every rule by cannot be checked against the schema. Either the def was ` +
+          `renamed — in which case this file must follow it — or the schema stopped requiring a ` +
+          `shape, in which case there is nothing left to recognise.`,
+      );
+      continue;
+    }
+    for (const key of keys) {
+      if (!required.includes(key)) {
+        fail(
+          `${def}: this gate identifies the block by "${key}" and the schema no longer requires it. ` +
+            `A legitimate block written without that key would not be recognised, and every rule ` +
+            `scoped by the recogniser would skip it silently. Drop it from the identifying set here, ` +
+            `deliberately, or put it back in the schema.`,
+        );
+      }
+    }
+    for (const status of statuses) {
+      const instance = Object.fromEntries(required.map((key) => [key, key === 'status' ? status : null]));
+      if (!recognise(instance)) {
+        fail(
+          `${def}: a block carrying exactly the schema's ${String(required.length)} required key(s) ` +
+            `(${required.join(', ')}) with status "${status}" is NOT recognised by this gate. The ` +
+            `schema and the recogniser have diverged, and every rule scoped by it is now skipping ` +
+            `the blocks the schema mandates — which is a silent pass, not a failure. This is the ` +
+            `defect ADR-0003's "record" amendment produced: an exact-key-set test disabled rule A3 ` +
+            `the moment the schema grew a field.`,
+        );
+      }
+    }
+    const definition = Object.fromEntries(required.map((key) => [key, { type: 'string' }]));
+    if (recognise(definition)) {
+      fail(
+        `${def}: a JSON Schema properties object built from the same key names IS recognised as an ` +
+          `instance of the block. The recogniser matches on a required subset, which is only safe ` +
+          `while the files that DEFINE the blocks cannot match it.`,
+      );
+    }
+  }
+};
 
 /**
  * ADR-0003: "The null form is now the ONLY legal shape of an unverified block".
@@ -469,7 +572,24 @@ const blocksIn = (document) => {
  */
 const GOVERNED_BLOCK = '<verification or communityReview block>';
 
-/** The document with every governed block replaced by a constant. */
+/**
+ * The document with every NOT-AUTHOR-OWNED region replaced by a constant, so
+ * that "did the author-owned fields of this document change?" is one string
+ * comparison. Three regions are masked:
+ *
+ *   - a `verification` block, which only the verifier writes (ADR-0003);
+ *   - a `communityReview` block, which no agent may write at all;
+ *   - `liveChecks[]`, which ADR-0016 makes the VERIFIER's record of what the
+ *     live page still says. Without this third one the per-commit rule below
+ *     reads the verifier's own bookkeeping as authoring: commit e4f2c89 granted
+ *     54 statuses and appended one live check to the register in the same
+ *     commit, which is one job done properly, and the rule fired 57 times on it.
+ *     Masked by FIELD NAME rather than by file path, because what carries the
+ *     property is the field ADR-0016 gives to the verifier, not the directory
+ *     it happens to live in (ADR-0019). No other schema declares the name.
+ */
+const VERIFIER_OWNED_FIELDS = ['liveChecks'];
+
 const authorFieldsOf = (node) => {
   if (isVerification(node) || isCommunityReview(node)) return GOVERNED_BLOCK;
   if (Array.isArray(node)) return node.map(authorFieldsOf);
@@ -477,13 +597,18 @@ const authorFieldsOf = (node) => {
     return Object.fromEntries(
       Object.keys(node)
         .sort()
-        .map((key) => [key, authorFieldsOf(node[key])]),
+        .map((key) => [
+          key,
+          VERIFIER_OWNED_FIELDS.includes(key) ? GOVERNED_BLOCK : authorFieldsOf(node[key]),
+        ]),
     );
   }
   return node;
 };
 
 const canonical = (value) => JSON.stringify(value);
+
+assertRecogniserIsLive();
 
 /* -------------------------------------------------------------------------- */
 /* Sources: the register, and the cached extraction when we have it            */
@@ -962,7 +1087,7 @@ const git = (args) =>
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 
-const history = { commits: 0, documents: 0, grants: 0, reviews: 0, roled: 0, ran: false };
+const history = { commits: 0, documents: 0, grants: 0, reviews: 0, roled: 0, bound: 0, ran: false };
 
 const runHistoryGate = () => {
   try {
@@ -991,13 +1116,113 @@ const runHistoryGate = () => {
   }
 
   const range = SINCE === null ? [] : [`${SINCE}..HEAD`];
-  const commits = git(['log', '--no-merges', '--format=%H', ...range, '--', 'content'])
+  // `--reverse`: oldest first. A4 below is a state machine over "what did the
+  // claim look like when its grant was written", and git log's default
+  // newest-first order asks that question backwards.
+  const commits = git(['log', '--reverse', '--no-merges', '--format=%H', ...range, '--', 'content'])
     .split('\n')
     .map((line) => line.trim())
     .filter((line) => line !== '');
 
   history.ran = true;
   history.commits = commits.length;
+
+  const blobAt = (rev, path) => {
+    try {
+      return JSON.parse(git(['show', `${rev}:${path}`]));
+    } catch {
+      return null;
+    }
+  };
+
+  const isGovernedPath = (path) => path.endsWith('.json') && !path.startsWith('content/schemas/');
+
+  /* ------------------------------------------------------------------------ */
+  /* A4 — a grant is a grant OF something                                      */
+  /* ------------------------------------------------------------------------ */
+  /*
+   * `verification.sourceHash` binds a granted status to the SOURCE. Nothing
+   * bound it to the CLAIM, so this sequence used to pass, exit 0, with three
+   * properly separated commits and no rule to break:
+   *
+   *   1. author writes the question with the null form
+   *   2. verifier grants "verified"
+   *   3. author changes correctIndex 3 -> 0 and rewrites the prompt
+   *
+   * A1/A2 do not see it because commit 3 does not touch the block. B2 does not
+   * see it because the source did not move. The question then ships a wrong
+   * answer under a status granted for a different question.
+   *
+   * The fix needs no new schema field: the bytes a grant was granted against
+   * are recoverable from history. For each verification block, remember the
+   * document's AUTHOR-OWNED fields as they stood in the commit that last wrote
+   * that block, and compare them with the fields as they stand now. The unit is
+   * the claim, which is what it should have been.
+   *
+   * It is deliberately evaluated at HEAD rather than at the offending commit,
+   * because unlike A1/A2 this is RECOVERABLE: re-verifying rewrites the block,
+   * which re-binds the grant and clears the failure. A permanent historical
+   * failure would leave no way back. In the interval the tree is red — exactly
+   * as it is red between an author's commit and the verifier's, since B1
+   * already fails a shipped claim that is not verified.
+   *
+   * A rename is reported by diff-tree as a delete plus an add, so the added
+   * path is bound to its own new bytes. That does not open a hole: an add whose
+   * verification block is already granted is a grant in a commit that also
+   * authors that file, which A1/A2 fails.
+   */
+  const grantState = new Map(); // `${path} ${pointer}` -> { author, sha, subject }
+  const latestAuthor = new Map(); // path -> canonical author fields, latest revision seen
+  const latestGrants = new Map(); // path -> Map(pointer -> block), latest revision seen
+  const stateKey = (path, pointer) => `${path} ${pointer}`;
+
+  const recordRevision = (path, document, sha, subject, rebind) => {
+    const blocks = blocksIn(document).verification;
+    const author = canonical(authorFieldsOf(document));
+    for (const [pointer, block] of blocks) {
+      const key = stateKey(path, pointer);
+      if (rebind(pointer, block) || !grantState.has(key)) {
+        grantState.set(key, { author, sha, subject });
+      }
+    }
+    for (const key of [...grantState.keys()]) {
+      if (key.startsWith(`${path} `) && !blocks.has(key.slice(path.length + 1))) grantState.delete(key);
+    }
+    latestAuthor.set(path, author);
+    latestGrants.set(path, blocks);
+  };
+
+  const forgetPath = (path) => {
+    for (const key of [...grantState.keys()]) if (key.startsWith(`${path} `)) grantState.delete(key);
+    latestAuthor.delete(path);
+    latestGrants.delete(path);
+  };
+
+  // An explicit --since means the grant may have been written before the range
+  // starts. Seed from the range's base commit so those grants are bound to the
+  // text as it stood there, rather than being silently exempt: an unseeded
+  // range would report green over exactly the edit A4 exists to catch.
+  if (SINCE !== null) {
+    const base = (() => {
+      try {
+        return git(['rev-parse', '--verify', `${SINCE}^{commit}`]).trim();
+      } catch {
+        return null;
+      }
+    })();
+    if (base !== null) {
+      const paths = git(['ls-tree', '-r', '--name-only', base, '--', 'content'])
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line !== '' && isGovernedPath(line));
+      for (const path of paths) {
+        const document = blobAt(base, path);
+        if (document !== null) {
+          recordRevision(path, document, base.slice(0, 9), `the base of ${SINCE}`, () => true);
+        }
+      }
+    }
+  }
 
   for (const sha of commits) {
     const parent = (() => {
@@ -1016,23 +1241,23 @@ const runHistoryGate = () => {
         const [statusCode, ...rest] = line.split('\t');
         return { statusCode: statusCode.charAt(0), path: rest.at(-1) ?? '' };
       })
-      .filter(({ path }) => path.endsWith('.json') && !path.startsWith('content/schemas/'));
-
-    const blobAt = (rev, path) => {
-      try {
-        return JSON.parse(git(['show', `${rev}:${path}`]));
-      } catch {
-        return null;
-      }
-    };
+      .filter(({ path }) => isGovernedPath(path));
 
     const subject = git(['log', '-1', '--format=%s', sha]).trim();
     const short = sha.slice(0, 9);
     const role = roleOf(git(['log', '-1', '--format=%ae', sha]).trim());
     if (role !== null) history.roled += 1;
 
+    // A1/A2 are collected across the WHOLE COMMIT and judged at the end of it.
+    // See "ONE COMMIT may not do both jobs" below.
+    const authored = [];
+    const granted = [];
+
     for (const { statusCode, path } of changed) {
-      if (statusCode === 'D') continue;
+      if (statusCode === 'D') {
+        forgetPath(path);
+        continue;
+      }
       const after = blobAt(sha, path);
       if (after === null) continue;
       const before = statusCode === 'A' ? null : blobAt(parent, path);
@@ -1045,6 +1270,7 @@ const runHistoryGate = () => {
 
       const authorChanged =
         before === null || canonical(authorFieldsOf(before)) !== canonical(authorFieldsOf(after));
+      if (authorChanged) authored.push(path);
 
       /* --- A0: the rule as ADR-0003 words it, when a role is knowable ---- */
       //
@@ -1074,24 +1300,15 @@ const runHistoryGate = () => {
         );
       }
 
-      /* --- A1/A2: one commit may not do both jobs in one document -------- */
+      /* --- collect this document's grants, for the per-commit rule ------- */
       for (const [pointer, block] of afterBlocks.verification) {
         const previous = beforeBlocks.verification.get(pointer);
-        const changed_ = previous === undefined || canonical(previous) !== canonical(block);
-        if (!changed_ || !authorChanged) continue;
+        if (previous !== undefined && canonical(previous) === canonical(block)) continue;
         // The one allowance: a new file must carry the block, and the null form
-        // is the only shape an author may write it in.
+        // is the only shape an author may write it in. That is authoring, not
+        // granting, so it does not count as a grant here.
         if (previous === undefined && isNullForm(block)) continue;
-        fail(
-          `${short} "${subject}" — ${path}${pointer === '' ? '' : ` at ${pointer}`}: this commit ` +
-            `changes the question's own fields AND ${previous === undefined ? 'writes' : 'changes'} ` +
-            `its verification block (status "${str(block.status) ?? '?'}"). ADR-0003 splits ` +
-            `authoring from verifying between two agents with no shared context: an author-authored ` +
-            `commit may write a verification object only in the null form and may never change one ` +
-            `that exists. One commit doing both jobs is one actor doing both jobs. Split it: the ` +
-            `authored text in one commit with the null form, the granted status in another that ` +
-            `touches nothing else.`,
-        );
+        granted.push({ path, pointer, block, previous });
       }
 
       /* --- A3: no agent grants cultural sign-off ------------------------- */
@@ -1115,7 +1332,75 @@ const runHistoryGate = () => {
             `exists this record cannot hold one.`,
         );
       }
+
+      // A4's state, after the rules that read the diff.
+      recordRevision(path, after, short, subject, (pointer, block) => {
+        const previous = beforeBlocks.verification.get(pointer);
+        return previous === undefined || canonical(previous) !== canonical(block);
+      });
     }
+
+    /* --- A1/A2: ONE COMMIT may not do both jobs ------------------------- */
+    //
+    // Stated over the COMMIT, not over the document. The rule was previously
+    // "within one document", which is right on the case that prompted it — a
+    // file arriving with its own grant — and silent on the natural one: with a
+    // 57-file bank, an agent's commit touches many files, and rewording qA
+    // while flipping qB from the null form to `verified` fired nothing. For qA
+    // the block was unchanged; for qB the author fields were unchanged. The
+    // property is "did one actor do both jobs", and what carries it is the
+    // commit (ADR-0019).
+    for (const { path, pointer, block, previous } of granted) {
+      const at = pointer === '' ? '' : ` at ${pointer}`;
+      const wrote = previous === undefined ? 'writes' : 'changes';
+      if (authored.includes(path)) {
+        fail(
+          `${short} "${subject}" — ${path}${at}: this commit ` +
+            `changes the question's own fields AND ${wrote} ` +
+            `its verification block (status "${str(block.status) ?? '?'}"). ADR-0003 splits ` +
+            `authoring from verifying between two agents with no shared context: an author-authored ` +
+            `commit may write a verification object only in the null form and may never change one ` +
+            `that exists. One commit doing both jobs is one actor doing both jobs. Split it: the ` +
+            `authored text in one commit with the null form, the granted status in another that ` +
+            `touches nothing else.`,
+        );
+        continue;
+      }
+      if (authored.length === 0) continue;
+      fail(
+        `${short} "${subject}" — ${path}${at}: this commit ${wrote} a verification block (status ` +
+          `"${str(block.status) ?? '?'}") AND authors content in ${String(authored.length)} other ` +
+          `file(s) — ${authored.slice(0, 3).join(', ')}${authored.length > 3 ? ', and more' : ''}. ` +
+          `The two jobs are in one commit, which is one actor doing both, even though no single ` +
+          `file shows it: the file it granted was not edited, and the files it edited were not ` +
+          `granted. ADR-0003 splits authoring from verifying between two agents. Split the commit: ` +
+          `authored text in one, granted statuses in another that touches nothing else.`,
+      );
+    }
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* A4, evaluated at HEAD                                                     */
+  /* ------------------------------------------------------------------------ */
+  for (const [key, record] of grantState) {
+    const cut = key.indexOf(' ');
+    const path = key.slice(0, cut);
+    const pointer = key.slice(cut + 1);
+    const block = latestGrants.get(path)?.get(pointer);
+    if (block === undefined) continue;
+    history.bound += 1;
+    if (str(block.status) !== 'verified') continue;
+    const now = latestAuthor.get(path);
+    if (now === undefined || now === record.author) continue;
+    fail(
+      `${path}${pointer === '' ? '' : ` at ${pointer}`}: the status "verified" was granted in ` +
+        `${record.sha} "${record.subject}", and the claim's own fields have changed since without ` +
+        `the verification block being rewritten. verification.sourceHash binds a grant to the ` +
+        `SOURCE, and nothing bound it to the CLAIM, so an edit to the prompt, the options or ` +
+        `correctIndex inherits a status granted for different text — including an edit that changes ` +
+        `which answer is correct. Re-verify against the current wording, or quarantine. This is ` +
+        `recoverable: rewriting the block re-binds the grant and clears it.`,
+    );
   }
 };
 

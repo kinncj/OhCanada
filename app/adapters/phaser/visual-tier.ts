@@ -109,6 +109,77 @@ export function thresholdsFor(frameTimeMs: number): TierThresholds {
 }
 
 /**
+ * Never render below a quarter of the design resolution.
+ *
+ * A floor rather than trust: `renderScale` and `maxPixelRatio` are content
+ * (`content/game.config.json`), a measurement feeds the tier that picks them,
+ * and the product of a bad edit and an unlucky display could otherwise ask for a
+ * canvas a few pixels wide. 0.25 of 1080x1920 is 270x480, which is ugly and is
+ * still a game.
+ */
+export const MIN_BACKING_SCALE = 0.25;
+
+export interface BackingScaleInput {
+  /** `preset.renderScale` — the tier's own multiplier. */
+  readonly renderScale: number;
+  /** `preset.maxPixelRatio` — canvas pixels per CSS pixel, at most. */
+  readonly maxPixelRatio: number;
+  /** The design resolution's width, 1080. */
+  readonly designWidth: number;
+  /** What the canvas is *displayed* at, in CSS pixels, after `Scale.FIT`. */
+  readonly displayWidthCss: number;
+}
+
+/**
+ * How many canvas pixels to draw, as a fraction of the design resolution.
+ *
+ * ### Why this exists
+ *
+ * `graphicsPresets` declares `renderScale` and `maxPixelRatio` at every tier and
+ * **nothing applied either of them**. The tier degraded particle count and
+ * parallax layer count and never the one quantity that dominates on a software
+ * rasteriser: the number of fragments. ADR-0011 says "what degrades is the
+ * visual tier" and names render scale and pixel ratio as part of it; until now
+ * that was two numbers a human read.
+ *
+ * ### The two limits, and why `maxPixelRatio` is the sharper one
+ *
+ * `Scale.FIT` keeps the canvas *backing store* at the design resolution and
+ * stretches it with CSS, so a 1080-wide canvas shown 390 CSS pixels wide is
+ * already drawing 2.77 canvas pixels for every CSS pixel — a pixel ratio nobody
+ * asked for and the device may not be able to afford. `maxPixelRatio` is the cap
+ * on exactly that number, so it is expressed here as the factor that brings the
+ * *natural* ratio down to it. `renderScale` is the tier's flat multiplier on top.
+ * The smaller wins, because both are ceilings.
+ *
+ * Never above 1: a preset may ask for fewer pixels than the design resolution,
+ * never for more. Supersampling is not a thing this project has decided to do,
+ * and a `renderScale` above 1 in a content file should not silently become one.
+ */
+export function backingScaleFor(input: BackingScaleInput): number {
+  const requested = finiteOr(input.renderScale, 1);
+  const design = finiteOr(input.designWidth, 0);
+  const display = finiteOr(input.displayWidthCss, 0);
+  const ratioCap = finiteOr(input.maxPixelRatio, 0);
+
+  /* No display to measure against (a headless boot, a canvas not yet laid out):
+     the pixel-ratio cap has nothing to bite on, so only the flat scale applies.
+     Guessing a display size here would guess the cap. */
+  const natural = design > 0 && display > 0 ? design / display : 0;
+  const byRatio = natural > 0 && ratioCap > 0 ? ratioCap / natural : Number.POSITIVE_INFINITY;
+
+  return clamp(Math.min(requested, byRatio), MIN_BACKING_SCALE, 1);
+}
+
+function finiteOr(value: number, fallback: number): number {
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function clamp(value: number, low: number, high: number): number {
+  return Math.min(high, Math.max(low, value));
+}
+
+/**
  * The highest tier this renderer may ever reach, whatever it measures.
  *
  * This is the only place the device's self-description constrains the outcome,
