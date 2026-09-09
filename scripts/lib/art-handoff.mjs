@@ -915,7 +915,23 @@ function pngChunks(buf) {
  * when somebody is identifying something — a leak that appears on a Tuesday and
  * is noticed at the next hand-off is a leak that has already happened.
  */
-export function scanForLeaks({ handoffDir, keymapPath, tokens }) {
+/**
+ * How many files the surrounding working area may hold before this refuses to
+ * vouch for it. A hand-off directory shares its parent with a keymap and,
+ * usually, an answers file; two hundred is far past that and far short of a
+ * directory nobody should be pointing `--out` at. Hitting it is a FAILURE and
+ * not a truncation: a scan that silently stopped early would report exactly
+ * what a clean area reports.
+ */
+const WORKING_AREA_FILE_CAP = 200;
+
+/**
+ * Directories that are never a previous run's artefacts and are always
+ * enormous. Skipped by name, and the cap above catches anything else.
+ */
+const WORKING_AREA_SKIP = new Set(['node_modules', '.git', 'handoff']);
+
+export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = null }) {
   const failures = [];
   const dir = resolve(handoffDir);
   const keymap = resolve(keymapPath);
@@ -968,6 +984,78 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens }) {
       }
     }
   }
+
+  /* ---------------------------------------------------------------- *
+   * The area AROUND the hand-off, when the operator named one
+   * ---------------------------------------------------------------- */
+  /*
+   * A hand-off that is clean in itself is not a blind hand-off if the previous
+   * run's answers are sitting next to it. That is not hypothetical: an
+   * `audit.json` from an earlier run - which names every subject and every
+   * `mustBeRight` feature verbatim, because it is written AFTER reveal - stayed
+   * in the session scratchpad and was readable throughout a later run's blind
+   * phase. The scratchpad is the directory agents are TOLD to use for working
+   * files, so an identifier following its own instructions is one `cat` from
+   * the answers.
+   *
+   * `scoreRun` refuses a stale audit by run id, which is right at score time
+   * and is no protection at identify time. What kept that run honest was the
+   * verifier not opening the file and checking timestamps to prove it, and
+   * discipline is not a control.
+   *
+   * REFUSED, NOT SWEPT. Deleting the file automatically would destroy a
+   * previous verification's evidence to make the next one convenient, so this
+   * names what to move and stops. And it only runs when the operator passed
+   * `--out`: the gate builds into a fresh mkdtemp whose parent is the system
+   * temp directory, which is not a working area and must never be walked.
+   */
+  if (workingArea !== null) {
+    const area = resolve(workingArea);
+    const seen = [];
+    const collect = (from, depth) => {
+      if (seen.length > WORKING_AREA_FILE_CAP || depth > 4) return;
+      for (const entry of existsSync(from) ? readdirSync(from, { withFileTypes: true }) : []) {
+        const full = join(from, entry.name);
+        if (entry.isDirectory()) {
+          if (WORKING_AREA_SKIP.has(entry.name) || full === dir) continue;
+          collect(full, depth + 1);
+          continue;
+        }
+        if (!entry.isFile() || full === keymap) continue;
+        seen.push(full);
+        if (seen.length > WORKING_AREA_FILE_CAP) return;
+      }
+    };
+    collect(area, 0);
+
+    if (seen.length > WORKING_AREA_FILE_CAP) {
+      failures.push(
+        `the working area ${area} holds more than ${String(WORKING_AREA_FILE_CAP)} file(s), so ` +
+          `this cannot check that none of them names an answer. Point --out at a directory used ` +
+          `for this hand-off and nothing else. Reporting a partial scan as a clean one is how a ` +
+          `leak check becomes decorative.`,
+      );
+    }
+
+    for (const path of seen) {
+      const text = readFileSync(path).toString('utf8').toLowerCase();
+      const name = basename(path).toLowerCase();
+      for (const token of lowered) {
+        if (text.includes(token) || name.includes(token)) {
+          failures.push(
+            `${relative(area, path)} is in the identifier's working area and names "${token}". ` +
+              `An earlier run's output must not be reachable during a later run's blind phase - ` +
+              `an audit file names every subject and every mustBeRight feature, because it is ` +
+              `written after reveal. Move it somewhere this run does not hand over, then build ` +
+              `the hand-off again. It is not deleted for you: it is a previous verification's ` +
+              `evidence.`,
+          );
+          break;
+        }
+      }
+    }
+  }
+
   return failures;
 }
 
@@ -1010,6 +1098,7 @@ export async function buildHandoff({
   variants = 2,
   sizeLadder = true,
   force = false,
+  workingArea = null,
 }) {
   const failures = [];
   const { assets, references, rig } = loadContract({ root });
@@ -1106,12 +1195,57 @@ export async function buildHandoff({
   mkdirSync(handoffDir, { recursive: true });
   mkdirSync(resolve(keymapPath, '..'), { recursive: true });
 
+  /* ------------------------------------------------------------------ *
+   * ONE CANVAS SIZE FOR THE WHOLE RUN
+   * ------------------------------------------------------------------ */
+  /*
+   * PIXEL DIMENSIONS WERE A SIDE CHANNEL, and a sharper one than file size.
+   * Order was shuffled and byte length was padded, but the sizes partitioned
+   * the set into subject-pure classes: 240x470 appeared exactly four times, all
+   * the same subject; 140x274 twice, same subject; 300x170 and 140x79 twice
+   * each, one per composite. An identifier could link every ladder rung to its
+   * full-size render WITHOUT OPENING EITHER, straight out of answers.json.
+   *
+   * Jitter does not fix it. Any padding that preserves approximate scale leaves
+   * the classes clustered, and clustering is all the linkage needs. So every
+   * render is composited onto the SAME canvas, matte-filled, at the largest
+   * width and height in the run: the dimensions become a constant and carry no
+   * information at all, in answers.json or in the PNG header.
+   *
+   * WHAT THIS DOES NOT FIX, stated because a fix that is read as bigger than it
+   * is, is worse than none. The drawing's own extent is still measurable by
+   * anyone who OPENS the image and looks at where the matte stops. That is the
+   * bar this raises it to and no higher. And it does nothing about the limit the
+   * verifier established and then respected: a ladder cannot measure
+   * recognition at its bottom rung once the top rung has been shown to the same
+   * identifier. That is a hand-off SHAPE question - the small renders need to
+   * reach someone who has not seen the large one - and it needs a decision, not
+   * a padding change.
+   */
+  const natural = await Promise.all(
+    ordered.map(async (item) => {
+      const meta = await sharp(item.png).metadata();
+      return { width: meta.width, height: meta.height };
+    }),
+  );
+  const canvasWidth = Math.max(...natural.map((n) => n.width));
+  const canvasHeight = Math.max(...natural.map((n) => n.height));
+
   const entries = [];
   const seen = new Set();
-  for (const item of ordered) {
+  for (const [index, item] of ordered.entries()) {
+    const uniform = await flatten(
+      canvas(canvasWidth, canvasHeight).composite([
+        {
+          input: item.png,
+          left: Math.floor((canvasWidth - natural[index].width) / 2),
+          top: Math.floor((canvasHeight - natural[index].height) / 2),
+        },
+      ]),
+    );
     // Padded BEFORE naming, so the name is the hash of the bytes that are
     // written and the two cannot drift apart.
-    const png = padPng(item.png, Math.floor(rng() * 4096));
+    const png = padPng(uniform, Math.floor(rng() * 4096));
     const meta = await sharp(png).metadata();
     const name = `${createHash('sha256')
       .update(salt)
@@ -1132,8 +1266,16 @@ export async function buildHandoff({
       subjectId: item.subjectId,
       probe: item.probe,
       gating: item.gating,
+      // What was handed over: the uniform canvas, identical for every render in
+      // the run, which is what answers.json shows and what the PNG header says.
       width: meta.width,
       height: meta.height,
+      // What was DRAWN, before the canvas was padded round it. The keymap is
+      // never handed to the identifier, so recording the natural extent here
+      // costs nothing and keeps the size ladder meaningful: it is the only
+      // remaining record of which rung a render is.
+      naturalWidth: natural[index].width,
+      naturalHeight: natural[index].height,
       bytes: png.length,
       matte: MATTE,
       sources: item.sources,
@@ -1178,7 +1320,7 @@ export async function buildHandoff({
   writeFileSync(keymapPath, `${JSON.stringify(keymap, null, 2)}\n`, { mode: 0o600 });
 
   failures.push(
-    ...scanForLeaks({ handoffDir, keymapPath, tokens: leakTokens({ references }) }),
+    ...scanForLeaks({ handoffDir, keymapPath, tokens: leakTokens({ references }), workingArea }),
   );
 
   return { keymap, failures, runId };

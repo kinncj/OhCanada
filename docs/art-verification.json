@@ -1,165 +1,197 @@
 {
   "id": "truenorth-art-verification",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "owner": "art-verifier",
   "runOn": "2026-09-08",
-  "runBy": "art-verifier agent, via the make art-handoff / commit / reveal / score harness",
+  "runBy": "art-verifier agent, via make art-handoff-blind / commit / reveal / score",
   "method": "docs/art-verification-method.md",
-  "supersedes": "the 2026-09-08 hand pass, which reported blindnessHeld: false and marked every identification untrusted",
+  "supersedes": "3.0.0 (handoffRunId c3d5c9fb89330709) for the two composite subjects ONLY. 3.0.0 remains the most recent verdict on peace-tower, chateau-frontenac and officer, and it reports its own blindness as partial for three of those.",
+  "scope": {
+    "why": "Re-run commissioned to settle ONE question: for each of the two multi-tile composites, does the render support naming a place, or does it not? 3.0.0 could not answer it because its briefing named the subjects before it looked.",
+    "judgedThisRun": [
+      "rideau-canal-skateway",
+      "dufferin-terrace-toboggan-run"
+    ],
+    "handedOverAndDeliberatelyNotOpened": [
+      "peace-tower",
+      "chateau-frontenac",
+      "officer"
+    ],
+    "consequence": [
+      "`make verify-art` FAILS on this record, and the failure is correct rather than a bug to route around.",
+      "It fails for two different reasons and they must not be conflated:",
+      "  1. dufferin-terrace-toboggan-run - a REAL defect, recorded below. This is the finding.",
+      "  2. peace-tower / chateau-frontenac / officer - not judged this run. The scorer reports them as",
+      "     unidentified and unaudited because they were, and that is the honest state. Restoring them to",
+      "     a pass needs a full run, not an edit to this file.",
+      "Dropping the `handoffRun` block would make CI green and would be the quietest possible way to claim",
+      "a verification that never happened. It stays."
+    ]
+  },
   "runIntegrity": {
-    "handoffRunId": "e6e867a5dee44d6c",
-    "blindnessHeld": "partial",
+    "handoffRunId": "d3a2f74f85f01b83",
+    "blindnessHeld": true,
     "commitmentProven": true,
-    "committedAnswersSha256": "43dca365846399d32db4d9053deb1e7d3e8d0500073de55ab63a5ec3f6878ed5",
+    "committedAnswersSha256": "b728c0523825b2dedbef3660bf330c985d02c6602f525d18c309fb301f58f0f4",
     "whatIsProven": [
-      "The ten identifications were written from image bytes under opaque 16-hex names, with no filename, label or reference photograph in view, and were hashed by `verify-art commit` BEFORE `reveal` opened the keymap. `score` re-checked the hash and it matched.",
-      "No render source drew text, no handed-over PNG carried metadata, and no handed-over file carried a leaking token."
+      "The two composite identifications were written from image bytes alone, under opaque 16-hex names, with no filename, label, contract or reference photograph in view, and were hashed by `verify-art commit` BEFORE `reveal` opened the keymap. `score` re-checked the hash and it matched.",
+      "This run was OPEN-SET for both composites. Nothing in the briefing, the harness output, READ-ME-FIRST.txt or answers.json named a subject, a city or a level. The briefing was written in counts and capabilities on purpose, and it held.",
+      "Pre-commit reads, in full: the Makefile target lines, a listing of docs/ and scripts/, the hand-off directory, READ-ME-FIRST.txt, answers.json, and the two composite PNGs. Nothing else. references.json, the level sheets and assets/style/*.md were opened only after commit.",
+      "Anonymisation held again: 21 renders, 16-hex names, all 21 file sizes distinct, no PNG metadata, order not grouped by subject, keymap outside the working directory."
     ],
     "whatIsNotProven": [
-      "That the identification was OPEN-SET. It was not fully open-set: two of the three subject ids were disclosed to me before I saw an image, by the harness's own operator-facing output. See `leaks` below. I did not know WHICH render was which, and the officer's specific force and the landmark's specific building were still mine to name, but the candidate set was narrowed and the record should not claim otherwise."
+      "Anything about peace-tower, chateau-frontenac or officer. Their renders were handed over and never opened.",
+      "Anything about the size-ladder rungs of the two composites. See `sizeLadder` below: they are burned for this identifier."
     ],
     "leaks": [
       {
-        "where": "stdout of `make art-handoff`, which the task instructed me to run myself",
-        "leaked": "`officer` and `parliament-hill-skyline` named in plain text, plus the skin and hair slot values",
-        "effect": "Two of three subject ids disclosed pre-image. The third (`rideau-canal-skateway`) stayed genuinely open-set.",
-        "severity": "high"
+        "where": "the session scratchpad, /tmp/claude-1000/<session>/scratchpad/audit.json",
+        "leaked": "a complete feature audit from the PREVIOUS run (c3d5c9fb89330709), naming all five subjects and every mustBeRight feature verbatim",
+        "effect": "None on this run - it was not read until after commit, and it is timestamped 19:50 against this hand-off's 19:57, so it is a leftover from an earlier session, not an artefact of this one.",
+        "severity": "high-if-unfixed",
+        "note": "The scratchpad is the directory the identifier is TOLD to use for working files, so poking at it during the blind phase is the natural thing to do, and doing so would have handed over the whole answer key. `scoreRun` refuses it as stale by run id, which is the right behaviour at score time and no protection at all at identify time. The hand-off is clean; the identifier's own workspace is not. Suggested fix, for the harness owner rather than for me: have `handoff` refuse to build when a prior audit or keymap is reachable from the identifier's cwd or scratchpad, the same way it refuses a stale --out directory."
       },
       {
-        "where": "Makefile comment on the `verify-art` target, and the header of scripts/verify-art.mjs",
-        "leaked": "`landmark-parliament-hill.svg`",
-        "effect": "Discloses that a Parliament Hill render exists in the tree. Repeated verbatim in my own task brief.",
-        "severity": "medium"
-      },
-      {
-        "where": "`--variants N  officer figures per run` in `verify-art --help`",
-        "leaked": "`officer`",
-        "effect": "Same disclosure as the stdout line, reachable from --help alone.",
-        "severity": "medium"
-      },
-      {
-        "where": "the hand-off output directory",
-        "leaked": "a previous run's ten PNGs were still present alongside this run's, and six of the ten had byte-identical file sizes across the two runs",
-        "effect": "File size relinks names across runs, which is exactly the property the content-addressed naming exists to deny. I scored only the ten renders listed in answers.json.",
-        "severity": "medium"
+        "where": "answers.json, in the harness's own blind output",
+        "leaked": "no subject name, but the `width`/`height` fields partition the 21 renders into subject-pure classes",
+        "effect": "I picked the two composites out of 21 without opening any of the other 19, purely from the dimension arithmetic (2016 x 1140 appears exactly twice, and 2016 = 3 x 672, the repeat count the contracts describe). Useful to me this run; corrosive in general.",
+        "severity": "medium",
+        "note": "Dimensions group renders by subject even though the ORDER does not: 240x470 appears exactly four times and all four are officer; 140x274 twice, both officer; 300x170 twice, one per composite; 140x79 twice, one per composite. So an identifier can tell WHICH renders share a subject before opening them, and can then transfer a confident reading from the 2016 px render to the 140 px one. That is precisely the inference the size ladder exists to measure independently, which means the ladder can be defeated from metadata alone. Not a subject leak. Still a real one."
       }
-    ],
-    "consequence": "Identifications are recorded as `trusted-with-caveat` for peace-tower and officer, and `trusted` for rideau-canal-skateway. Feature audits are unaffected by pre-image subject disclosure and are trusted throughout."
+    ]
+  },
+  "theQuestionThisRunWasAskedToSettle": {
+    "question": "One composite failed its contract on the previous run with every required feature present. Two possible causes: (1) WORDING - the accepted phrases are too narrow for a substring scorer; (2) SIGNAL - the render carries more place-identity than its contract says it should. Which?",
+    "answer": "BOTH ARE REAL, and they landed on different subjects, which is what made them separable.",
+    "cause2_signal": "dufferin-terrace-toboggan-run. Unprimed, I named Terrasse Dufferin, Quebec City, off DRAWN detail, not off project context: the green-and-white striped conical kiosk roof with a white finial, the specific green cast-iron scroll railing, and the three-globe candelabra lamp standards. The kiosk is an individual, named, photographable structure and it is drawn on a REPEATING 2016 px tile, so it will appear across the level. The subject's own `neverAdd` forbids exactly this: 'any other named or recognisable building, drawn into either of these two REPEATING tiles'. The contract is right and the art breaks it. This is a defect in the ART, in the opposite direction from the one suspected.",
+    "cause1_wording": "rideau-canal-skateway, and the evidence is stronger BECAUSE that subject PASSED. My answer matched only on the two specific phrases 'Rideau Canal' and 'Rideau Canal Skateway'. Every one of the six generic phrases failed: I wrote 'an outdoor public skating rink on a frozen city canal', and 'an outdoor skating rink on a frozen canal' did not match because of the inserted word 'city', and 'a frozen canal' did not match for the same reason. So the subject whose contract was AMENDED to accept a generic answer still rejects a genuine generic answer, and passed this run only because I happened to volunteer the place name the amendment says is not required. That is a false pass in method terms, and it is the cleanest available proof that a substring scorer cannot grade free prose.",
+    "implication": "These two are independent and both need fixing. Fixing the wording would not have saved Dufferin: my answer named a city and a terrace, and no reasonable generic phrase list should accept that. Fixing the art would not have saved Rideau's method: it passed on a name its own contract calls optional."
   },
   "results": [
     {
-      "assetId": "src/svg/ottawa/landmark-parliament-hill.svg",
-      "judgedAgainstSubject": "peace-tower",
-      "blindIdentification": "The Centre Block of the Parliament of Canada on Parliament Hill, Ottawa, seen head-on from the front lawn; the central tower is the Peace Tower. Cues, most important first: a single tall clock tower centred on a long symmetric facade; a white four-faced clock high on the shaft; a green copper spire above it flying the National Flag of Canada from a mast at the apex; green copper roofs on the wings and on the end pavilions; a continuous rhythm of tall pointed Gothic-arch windows; a large pointed-arch entrance on the tower's centre line.",
-      "identificationMatchesExpected": true,
-      "identificationVerdict": "trusted-with-caveat",
-      "identificationCaveat": "`parliament-hill-skyline` had been named to me by the hand-off's own stdout before I saw any image, so 'Parliament Hill' was in view as a candidate. Naming the Peace Tower specifically, and reading it off the clock, spire, flag and Gothic arcade, was mine.",
-      "confidence": 0.92,
-      "featureVerdict": "pass",
-      "missingFeatures": [],
-      "measured": {
-        "spireFractionOfTowerHeight": 0.189,
-        "spireApexAngleDegrees": 26.7,
-        "spireBaseWidthFractionOfShaft": 0.7,
-        "dialFractionOfShaftWidth": 0.54,
-        "dialCentreFractionOfTowerHeight": 0.725,
-        "shaftWidthToTotalHeight": "1:7.73",
-        "measuredFrom": "the 1080x1040 gating render, spire apex y=96, spire base y=261, dial bbox y306-366 x509-570, shaft x483-596, terrace y=970"
-      },
-      "note": "All seven mustBeRight features present and every measured ratio matches the amended contract, including the two deliberate clock exaggerations; identified unprompted at 1x and still identified at 300 px and 140 px wide."
-    },
-    {
-      "assetId": "src/svg/ottawa/layer-60-ice.svg + src/svg/ottawa/layer-50-canalwall.svg (composite)",
+      "assetId": "src/svg/ottawa/layer-60-ice.svg + src/svg/ottawa/layer-50-canalwall.svg",
       "judgedAgainstSubject": "rideau-canal-skateway",
-      "blindIdentification": "An outdoor skating rink on a frozen urban canal in winter, with a road bridge crossing overhead and a wooden warming hut on the bank. I named it as the Rideau Canal Skateway in Ottawa, but I said at the time that I was naming it from the genre and not from any unique landmark in the picture. Cues: a long straight ribbon of pale ice with scored skate arcs; five figures in coats and toques in a glide stance travelling along it; a low masonry retaining wall with an iron railing running the full width behind, snow banked at its foot; a concrete road bridge on piers with lamp standards; a small timber shed reading as a Skateway changing hut.",
+      "composite": true,
+      "blindIdentification": "An outdoor public skating rink on a frozen city canal in winter: a long straight walled ice channel with skaters on it, a road bridge crossing overhead on square piers, a lamp-lit railed embankment, spruce and a small wooden warming hut on the bank. Named the Rideau Canal Skateway, Ottawa - but from the CONCEPT (a city canal people skate on, under road bridges, with wooden huts beside it), not from anything drawn.",
       "identificationMatchesExpected": true,
-      "identificationVerdict": "trusted",
-      "identificationCaveat": null,
-      "confidence": 0.6,
-      "featureVerdict": "pass",
+      "identificationVerdict": "matched, on the specific phrases only",
+      "identificationCaveat": "THE MATCH IS NOT WHAT IT LOOKS LIKE. Of the six accepted phrases, only 'Rideau Canal' and 'Rideau Canal Skateway' matched. All four generic phrases failed against genuinely generic prose. Had I written only what the image supports, this subject would have FAILED the contract that was amended precisely so it would not.",
+      "confidence": 0.55,
+      "confidenceSplit": "0.85 that this is a frozen urban canal used as a skating rink. About 0.50 that it is the Rideau specifically. The gap between those two numbers is the honest measurement, and it is the number the contract's amendment predicted.",
+      "doesTheRenderSupportNamingAPlace": "NO. Correctly so. Nothing drawn is a unique landmark - bridge, railing, lamp standards, hut, trees and skaters are all generic, the far bank is empty grey sky, and there is no city behind the canal. I named Ottawa from world knowledge about which canal is famously skated, which is inference, not recognition. The tile behaves exactly as its contract intends.",
+      "featureVerdict": "all 5 present",
       "missingFeatures": [],
-      "note": "All five mustBeRight features present in the composite, including the scored skate marks the previous single-file pass had to record as missing; but see `findings.canalNamingIsThin` - the render carries nothing that says Ottawa, by the contract's own instruction, so the gating answer is a genre inference."
-    },
-    {
-      "assetId": "src/svg/shared/character/*-serge.svg + head/face/hair slots (rig composite, 2 variants)",
-      "judgedAgainstSubject": "officer",
-      "blindIdentification": "A Royal Canadian Mounted Police officer in Red Serge full dress - the ceremonial Mountie uniform. Cues, most important first: the brown felt Stetson with a flat level brim and a pinched crown; the scarlet high-collar tunic with a single centre row of brass buttons and two scalloped-flap breast pockets; the brown Sam Browne belt with the cross-strap from the wearer's right shoulder to the left hip; midnight-blue breeches with a broad yellow stripe down the outer seam; high brown riding boots; the navy collar and shoulder straps; a white lanyard.",
-      "identificationMatchesExpected": true,
-      "identificationVerdict": "trusted-with-caveat",
-      "identificationCaveat": "`officer` had been named to me by the hand-off's stdout and by `--help` before I saw any image. Reading the specific uniform as RCMP Red Serge, from the Stetson, the cross-strap and the leg stripe, was mine.",
-      "confidence": 0.95,
-      "featureVerdict": "pass",
-      "missingFeatures": [],
-      "variantsSeen": [
-        {
-          "render": "6c90627529907b7e.png",
-          "hair": "coiled fair",
-          "note": "identified independently as Red Serge"
-        },
-        {
-          "render": "c448ca3b62b5c106.png",
-          "hair": "long grey",
-          "note": "identified independently as Red Serge"
-        }
+      "forbiddenFound": [],
+      "overallVerdict": "pass on features and on the art's intent; the identification match is recorded as UNSOUND and should not be cited as evidence the generic phrasing works",
+      "watchItems": [
+        "The lamp standards sit above the wall line, which `simplifyAway` asks to remove ('street furniture above the wall line'). Not a mustBeRight, so not a failure. Worth a decision either way rather than a silent divergence.",
+        "The wooden hut is not in the contract at all. It reads as a generic warming or refreshment hut and it is the right kind of thing for a repeating tile, but it is drawn once per 2016 px and will repeat. Keep it generic: a signboard, a distinctive roofline or a wordmark would turn it into the landmark the tiling forbids.",
+        "The skaters' blades sit on the pale snow strip just above the blue ice band rather than clearly on the ice. It read correctly to me, but it is a millimetre from reading as people skating on the bank."
       ],
-      "note": "All eight mustBeRight present and every neverAdd item absent - no crest, no bison device, no wordmark, no collar dog, no shoulder flash, no chevron; the only hat hardware is the band buckle the contract requires."
+      "note": "The art is clean and the contract is right about it; the gate around it is what failed here."
     },
     {
-      "assetId": "src/svg/ottawa/layer-20-skyline.svg",
+      "assetId": "src/svg/quebec-city/layer-50-terrace.svg + src/svg/quebec-city/layer-60-slope.svg",
+      "judgedAgainstSubject": "dufferin-terrace-toboggan-run",
+      "composite": true,
+      "blindIdentification": "A Victorian-era wooden boardwalk promenade on a masonry river wall in winter, above a frozen ice-covered river. Ornate dark-green cast-iron balustrade of repeating arches with rings, green lamp standards carrying clusters of white globes, a green-and-white striped conical-roofed kiosk with a finial, benches, strollers in coats and toques, and a large X-braced timber frame on the left. Named Terrasse Dufferin, Quebec City, with the timber frame read as the head of a toboggan slide.",
+      "identificationMatchesExpected": false,
+      "identificationVerdict": "FAILED, and the failure is informative in two separate ways",
+      "confidence": 0.6,
+      "confidenceSplit": "0.85 that this is a heritage waterfront boardwalk promenade above frozen water. 0.55-0.60 that it is Dufferin Terrace specifically.",
+      "doesTheRenderSupportNamingAPlace": "YES, AND IT MUST NOT. This is the defect. I named the city and the terrace unprompted, off drawn detail. The decisive cue is the kiosk: green and white radial roof stripes, white finial, white pavilion with dark bays - the Dufferin Terrace kiosk as photographed in dufferin-terrace-boardwalk.jpg. Supporting cues, the green scroll railing and the three-globe candelabra, are in `mustBeRight` and are meant to 'date and place the promenade without naming it'; drawn at this fidelity and combined with the kiosk, they name it.",
+      "featureVerdict": "5 of 6 present, 1 absent, 1 forbidden element found",
+      "missingFeatures": [
+        "the snow lane is a built chute with edges, not open hillside"
+      ],
+      "whyThatFeatureIsMissing": [
+        "The contract's own `why` says the containment 'is the whole read'. It did not survive.",
+        "Of the three parts the detail asks for: the low timber wall along the far side of the lane IS drawn, with a snow cap. The two lane-divider ridges are drawn as flat colour-band boundaries with no ridge modelling, no thickness and no cel shading, so they read as tonal bands rather than as structure. The near snow bank framing the bottom is a single faint pale curve dissolving into flat white.",
+        "Net effect on an unprimed viewer: I read the whole lower half as a frozen river and wrote 'frozen ice-covered river' and 'wind-blown ice streaks'. I did not see a toboggan run. Not one of the eight accepted answers is about water, so this is not a wording near-miss - the subject was not read at all.",
+        "The proximate cause is feature 6 fighting feature 1. Feature 6 instructs 'use the `ice` ramp for the polished lane against `snow` for the banks'. Drawn as instructed, the lane is the same blue-white ice ramp as the Rideau Canal's ice in the very same hand-off, so the strongest colour signal in the frame says WATER. The straight runner marks, which feature 2 gets right and which exist to distinguish a run from a rink, cannot outvote it: I read them as wind streaks on ice.",
+        "Everything is also dead level. A run is a slope, the side-scrolling camera cannot show the slope, and no substitute cue for downhill was drawn. There are no toboggans and no riders anywhere."
+      ],
+      "forbiddenFound": [
+        "the Chateau Frontenac, or any other named or recognisable building, drawn into either of these two REPEATING tiles - breached by the Dufferin Terrace kiosk"
+      ],
+      "overallVerdict": "FAIL",
+      "twoReadingsOfTheFailure": [
+        "READING 1, WORDING, REJECTED as the explanation. My prose does contain 'promenade' and 'winter', but not the literal 'a winter promenade', so a substring scorer misses it. That is a real scorer flaw and it is demonstrated far more cleanly on the Rideau subject. It is not what happened here.",
+        "READING 2, SIGNAL, ACCEPTED. Two independent defects, pulling in opposite directions. The tile carries place-identity it is forbidden to carry (the kiosk), and it FAILS to carry the subject-identity it is required to carry (the chute). It says 'Quebec City' when it must not and it does not say 'toboggan run' when it must. The previous run recorded this feature PRESENT; I record it ABSENT, and the disagreement is the point of running unprimed."
+      ],
+      "suggestedFixes": [
+        "For the art team, not applied by me. (a) Remove the kiosk from layer-50-terrace, or reduce it to a plain unstriped shelter with no finial: the stripes and the finial are the whole of the recognition. (b) Give the lane snow tone, not the ice ramp, and reserve the ice ramp for the Ottawa canal so the two levels do not share a surface colour. (c) Model the two lane dividers as ridges with a lit top and a shaded side rather than as flat band edges. (d) Put one seated rider on a flat toboggan somewhere in the 2016 px, which is generic, names nothing, and would have made the subject unmissable.",
+        "Fix (a) is required by `neverAdd` regardless of anything else here."
+      ],
+      "note": "The composite that failed last run failed again, unprimed, for reasons that have nothing to do with phrasing: it names a city it must not name and does not read as the thing it is."
+    },
+    {
+      "assetId": null,
+      "judgedAgainstSubject": "peace-tower",
+      "overallVerdict": "not judged this run",
+      "note": "Handed over as 4 renders and deliberately not opened; this run was scoped to the two composites. Last verdict is 3.0.0, which reports its own identification as compromised by a pre-image briefing leak."
+    },
+    {
+      "assetId": null,
+      "judgedAgainstSubject": "chateau-frontenac",
+      "overallVerdict": "not judged this run",
+      "note": "Handed over as 4 renders and deliberately not opened. Last verdict is 3.0.0, likewise compromised by the 3.0.0 briefing leak."
+    },
+    {
+      "assetId": null,
+      "judgedAgainstSubject": "officer",
+      "overallVerdict": "not judged this run",
+      "note": "Handed over as 7 renders and deliberately not opened. Last verdict is 3.0.0, likewise compromised by the 3.0.0 briefing leak."
+    },
+    {
+      "assetId": null,
       "judgedAgainstSubject": "parliament-hill-skyline",
-      "blindIdentification": null,
-      "identificationMatchesExpected": null,
-      "identificationVerdict": "not-applicable",
-      "featureVerdict": "not-applicable",
-      "missingFeatures": [],
-      "note": "UNRENDERED by decision - no image was handed over and none was judged; this is neither a pass nor a failure, and an audit of it would be an audit of something nobody was shown."
+      "overallVerdict": "unrendered by decision",
+      "note": "Neither a pass nor a failure. Not handed over, so there was nothing to look at."
+    },
+    {
+      "assetId": null,
+      "judgedAgainstSubject": "quebec-city-riverfront",
+      "overallVerdict": "unrendered by decision",
+      "note": "Neither a pass nor a failure. Not handed over, so there was nothing to look at."
     }
   ],
   "sizeLadder": {
-    "question": "the landmark now ships at 1x rather than 2x, recovering 12.85 MiB - does it still identify at the size a player sees it?",
-    "answer": "yes at the shipped size, with a caveat about the smallest probe",
+    "question": "do the two composites still identify at 300 px and 140 px?",
+    "answer": "NOT ANSWERED, AND NOT ANSWERABLE BY ME. Recorded as refused, not as a pass.",
     "detail": [
-      "1x gating render (1080x1040): identified unprompted, confidence 0.92. Clock dial 61 px, legible hands.",
-      "300 px wide: identified unprompted, confidence 0.88. Clock still reads as a clock; the flag and green spire carry most of the load.",
-      "140 px wide: identified unprompted, confidence 0.75. The dial has collapsed to a pale disc with a dark rim and the Gothic window rhythm has become texture; the flag and the copper green are doing nearly all of the work.",
-      "The canal degrades faster: identified at full size and at 300 px, and at 140 px I could only say 'people skating on ice under a bridge' and explicitly declined to name a place. That is the diagnostic probe behaving as designed, not an art defect."
-    ],
-    "verdict": "1x is enough. I do not need 2x restored. I would not go below 300 px wide for the landmark in any context where a player is meant to recognise it."
+      "The four ladder rungs for these two subjects (300x170 and 140x79, one pair each) were handed over and I did not open them. I marked all four NOT EXAMINED before commit and the scorer treats them as diagnostic, so they cost nothing.",
+      "Refusing them was deliberate and it is the limit established in 3.0.0, applied prospectively for once rather than confessed afterwards: a size ladder cannot measure recognition at its bottom rung once the top rung has been shown to the same identifier. I had already read both composites at 2016 px in full. Any reading I then gave of the 140 px version would measure my memory, not the art.",
+      "Worse here than in 3.0.0, because of the dimension leak recorded above: I could tell which small renders belonged to which composite from answers.json metadata alone, without opening them. So for this run the ladder was defeated twice over.",
+      "To get a real answer, hand the 300 px and 140 px rungs to a FRESH identifier who has never seen the 2016 px composites, ideally in a hand-off that contains no large render of the same subject at all."
+    ]
   },
-  "findings": {
-    "canalNamingIsThin": "The canal's expectedBlindAnswer requires 'Rideau Canal' or 'skating on a frozen canal in Ottawa', and the render deliberately contains nothing that says Ottawa - the contract's own notes forbid drawing the Chateau Laurier as a recognisable landmark here. My gating answer matched only because I inferred the intended subject from genre plus the project's context. A verifier with no context would say 'an urban frozen-canal skating rink' and fail the gate. Either the art needs one legitimate Ottawa cue on a non-droppable layer, or the contract should accept 'a frozen canal skating rink' and stop claiming the render identifies a city.",
-    "maskRegionWanted": [
-      {
-        "subject": "peace-tower",
-        "feature": "national flag on the mast above the spire",
-        "why": "At 140 px the flag and the green spire are carrying the identification almost alone. A maskRegion over the flag would answer whether the tower still reads as the Peace Tower without it, which is the one thing the size ladder cannot tell me. The previous pass reports exactly this crop failing outright, and that result is information, not a defect."
-      },
-      {
-        "subject": "officer",
-        "feature": "dark breeches with a yellow-gold stripe down the outer seam",
-        "why": "The contract says this feature 'does more identification work than its area suggests. If it disappears first at small size, thicken it.' That is a testable claim and there is currently no way to test it. A maskRegion over the leg stripe would say whether the Stetson and the cross-strap alone still read as Red Serge."
-      }
-    ],
-    "proportionFeatureNotVisuallyTestable": "'cartoon proportions identical to every other character' cannot be judged from this hand-off, because the hand-off contains no other character. I recorded it present on the strength of assets/style/rig-contract.json, where `characterSpace` (240x470, crownY 40, soleY 460, heightPx 420, headPx 70, heightHeads 6) is shared by the player and officer artboards, which differ only in the costume skin, and tests/unit/contracts/rig-is-coherent.test.ts asserts it. That is a code-level verification wearing an art verifier's clothes. Handing over one player figure alongside the officer would make it a real visual check.",
-    "handoffLeaksItsOwnSubjects": "The single largest weakness in the harness is not in the images, it is in the operator-facing text. See runIntegrity.leaks. The handoff summary, --help and the Makefile comments all name subject ids in plain language, and the task instructed me to run `make art-handoff` myself, which the Makefile itself warns against. Either a second party must run it, or handoff needs a --quiet mode that prints counts without ids.",
-    "staleHandoffDirectory": "`handoff` wrote into a directory that already held a previous run's PNGs and did not refuse or clear it. Six of the ten files had byte-identical sizes across the two runs, which relinks the supposedly unlinkable names."
-  },
+  "findings": [
+    "The briefing worked. Written in counts and capabilities with no subject named, it produced the first genuinely open-set reading of both composites, and it is the only reason cause (1) and cause (2) could be told apart.",
+    "dufferin-terrace-toboggan-run is a real FAIL on two counts: a forbidden recognisable building on a repeating tile, and a required feature that does not read. Both are defects in the art, not in the contract, and the contract predicted both in prose before either happened.",
+    "rideau-canal-skateway's PASS is unsound as method evidence. Its four generic accepted phrases do not match generic prose; it passed only on the place name its own amendment calls optional. A verifier who obeyed the contract exactly would have failed it.",
+    "The substring scorer is the common weakness. `matchesExpected` in scripts/lib/art-score.mjs pads and substring-matches whole phrases, so one inserted adjective defeats a correct answer. Phrase lists longer than about four words are effectively dead entries. Recommend either much shorter required tokens (for example 'canal' plus 'skat', 'toboggan' or 'slide' plus 'run') or moving identification scoring off substring matching entirely.",
+    "New leak vector, and the most serious thing in this report: a stale feature audit naming every subject and feature was sitting in the identifier's own scratchpad, readable throughout the blind phase. The harness refuses it at score time and does nothing about it at identify time.",
+    "Second leak vector: render dimensions in answers.json partition the set into subject-pure classes, which lets an identifier link the ladder rungs to their full-size render without opening either.",
+    "`make verify-art` will fail on this record. Two of the failures are the Dufferin defect. The rest are three subjects this run did not judge, reported honestly as unjudged."
+  ],
   "handoffRun": {
     "keymap": {
       "id": "truenorth-art-handoff-keymap",
       "version": 1,
-      "runId": "e6e867a5dee44d6c",
-      "createdAt": "2026-09-08T21:23:12.938Z",
+      "runId": "d3a2f74f85f01b83",
+      "createdAt": "2026-09-08T23:57:16.180Z",
       "seeded": false,
-      "handoffDir": "/tmp/claude-1000/-home-kinncj-Development-KinnCJ-OhCanada/1691849f-8d81-4fd9-a2cd-a5a7bb256b4c/scratchpad/ho/handoff",
+      "handoffDir": "/tmp/truenorth-art-handoff-4Loc6a/handoff",
       "entries": [
         {
-          "render": "ff560b5b59afa18e.png",
-          "subjectId": "rideau-canal-skateway",
-          "probe": "w300",
+          "render": "86f974ce90023627.png",
+          "subjectId": "peace-tower",
+          "probe": "mask:national flag on the mast above the spire",
           "gating": false,
-          "width": 300,
-          "height": 170,
+          "width": 1080,
+          "height": 1040,
+          "bytes": 80935,
           "matte": {
             "r": 204,
             "g": 204,
@@ -167,21 +199,134 @@
             "alpha": 1
           },
           "sources": [
-            "src/svg/ottawa/layer-50-canalwall.svg",
-            "src/svg/ottawa/layer-60-ice.svg"
+            "src/svg/ottawa/landmark-parliament-hill.svg"
           ],
-          "slots": {
-            "iceTop": 580
-          },
-          "sha256": "3cf8184a1c4d3c8e2b382b4652514229e6471c19983fa6c562147b7944796f46"
+          "slots": {},
+          "sha256": "677d171267cdd50dd945881e2f5eef7a2ada2b9197d5023a0217ee69b6b5d102"
         },
         {
-          "render": "57266dc381ff43cd.png",
+          "render": "90c7f31e43257bc9.png",
+          "subjectId": "dufferin-terrace-toboggan-run",
+          "probe": "w300",
+          "gating": false,
+          "width": 300,
+          "height": 170,
+          "bytes": 28045,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/quebec-city/layer-50-terrace.svg",
+            "src/svg/quebec-city/layer-60-slope.svg"
+          ],
+          "slots": {
+            "nearTop": 580
+          },
+          "sha256": "eb09bebb7dd14b604e4d5cdcfbb399fc597b57e41188fd8a375de7dc70aa50f2"
+        },
+        {
+          "render": "aa0fc0aa668d3dc7.png",
+          "subjectId": "officer",
+          "probe": "mask:dark breeches with a yellow-gold stripe down the outer seam",
+          "gating": false,
+          "width": 240,
+          "height": 470,
+          "bytes": 29318,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-1.svg",
+            "src/svg/shared/character/face-surprised.svg",
+            "src/svg/shared/character/hair-long-black.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-1",
+            "hairShape": "long",
+            "hairColour": "black",
+            "expression": "surprised",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 0
+          },
+          "sha256": "13ab950af806becb4b93d3a81bc8dc6a92ea56f57545ed0ac7ca68ea4d4aecba"
+        },
+        {
+          "render": "088c9ccc26b696a7.png",
+          "subjectId": "officer",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 274,
+          "bytes": 36371,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-1.svg",
+            "src/svg/shared/character/face-surprised.svg",
+            "src/svg/shared/character/hair-long-black.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-1",
+            "hairShape": "long",
+            "hairColour": "black",
+            "expression": "surprised",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 0
+          },
+          "sha256": "bdcd32637393b30c83f490103d8c8879b15f2a3c2db855db36f0e48b4caec227"
+        },
+        {
+          "render": "f432448fc9519b90.png",
           "subjectId": "rideau-canal-skateway",
           "probe": "full",
           "gating": true,
           "width": 2016,
           "height": 1140,
+          "bytes": 112777,
           "matte": {
             "r": 204,
             "g": 204,
@@ -193,17 +338,213 @@
             "src/svg/ottawa/layer-60-ice.svg"
           ],
           "slots": {
-            "iceTop": 580
+            "nearTop": 580
           },
-          "sha256": "bfcec5463f93e9d5abdea8b8534d3e7ff5536cb286d9c3d3900e37345671e60e"
+          "sha256": "078633854ae41dbbf07e8ecfc1d43af6f3c35079ecd31d94fdf9c6bf9773fcbf"
         },
         {
-          "render": "2cfdd7f25b14f556.png",
+          "render": "5cf33b54c7bb6dfd.png",
+          "subjectId": "chateau-frontenac",
+          "probe": "w300",
+          "gating": false,
+          "width": 300,
+          "height": 250,
+          "bytes": 46668,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg"
+          ],
+          "slots": {},
+          "sha256": "a8bfa0b1d7ee3dafe43775d5de83282a9e118ae72ece47181ba0c9651dce99a9"
+        },
+        {
+          "render": "860a17e3c5f18c6a.png",
+          "subjectId": "rideau-canal-skateway",
+          "probe": "w300",
+          "gating": false,
+          "width": 300,
+          "height": 170,
+          "bytes": 26100,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/ottawa/layer-50-canalwall.svg",
+            "src/svg/ottawa/layer-60-ice.svg"
+          ],
+          "slots": {
+            "nearTop": 580
+          },
+          "sha256": "1e1e03cdd307b41766d378a1c82dc074b4a6a6414b05a8032247f6742d7f5732"
+        },
+        {
+          "render": "751052715cfbff49.png",
+          "subjectId": "officer",
+          "probe": "comparison",
+          "gating": false,
+          "width": 480,
+          "height": 470,
+          "bytes": 61100,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-4.svg",
+            "src/svg/shared/character/face-surprised.svg",
+            "src/svg/shared/character/hair-coil-red.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-parka.svg",
+            "src/svg/shared/character/arm-lower-parka.svg",
+            "src/svg/shared/character/hand-parka.svg",
+            "src/svg/shared/character/leg-upper-parka.svg",
+            "src/svg/shared/character/leg-lower-parka.svg",
+            "src/svg/shared/character/foot-r-parka.svg",
+            "src/svg/shared/character/foot-l-parka.svg",
+            "src/svg/shared/character/torso-parka.svg",
+            "src/svg/shared/character/head-skin-3.svg",
+            "src/svg/shared/character/face-thinking.svg",
+            "src/svg/shared/character/hair-crop-black.svg"
+          ],
+          "slots": {
+            "subjectSide": "left",
+            "subject": {
+              "costume": "serge",
+              "skin": "skin-4",
+              "hairShape": "coil",
+              "hairColour": "red",
+              "expression": "surprised",
+              "headCovering": "none",
+              "feature": "none"
+            },
+            "comparison": {
+              "costume": "parka",
+              "skin": "skin-3",
+              "hairShape": "crop",
+              "hairColour": "black",
+              "expression": "thinking",
+              "headCovering": "none",
+              "feature": "none"
+            }
+          },
+          "sha256": "ebd85f3d24cbb4a450b14e69429ab976431c8eddd56d3e9796cdfd33f7a96420"
+        },
+        {
+          "render": "91b1e8d35712d5e6.png",
+          "subjectId": "dufferin-terrace-toboggan-run",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 79,
+          "bytes": 12136,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/quebec-city/layer-50-terrace.svg",
+            "src/svg/quebec-city/layer-60-slope.svg"
+          ],
+          "slots": {
+            "nearTop": 580
+          },
+          "sha256": "7a1435183005a802c9d99d073787ef3499aca00fa24972b78ba4d55f54b524f3"
+        },
+        {
+          "render": "fca42cbff5dbc580.png",
+          "subjectId": "officer",
+          "probe": "full",
+          "gating": true,
+          "width": 240,
+          "height": 470,
+          "bytes": 33664,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-3.svg",
+            "src/svg/shared/character/face-thinking.svg",
+            "src/svg/shared/character/hair-coil-black.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-3",
+            "hairShape": "coil",
+            "hairColour": "black",
+            "expression": "thinking",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 1
+          },
+          "sha256": "2f0f0750eb5f1ebf662b5049551d277d8695e5286580bf82688d905c51d0ca6d"
+        },
+        {
+          "render": "78dfbc4847191a73.png",
+          "subjectId": "chateau-frontenac",
+          "probe": "mask:one dominant square tower with a pyramidal roof, rising from the centre of a long mass",
+          "gating": false,
+          "width": 1080,
+          "height": 900,
+          "bytes": 65995,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg"
+          ],
+          "slots": {},
+          "sha256": "8bea81380c3c6896034bfd29c6f47a251114c0e22a198e8ca384da92813e1520"
+        },
+        {
+          "render": "c1b14a38013b5f9b.png",
           "subjectId": "peace-tower",
           "probe": "w300",
           "gating": false,
           "width": 300,
           "height": 289,
+          "bytes": 31810,
           "matte": {
             "r": 204,
             "g": 204,
@@ -214,15 +555,36 @@
             "src/svg/ottawa/landmark-parliament-hill.svg"
           ],
           "slots": {},
-          "sha256": "dc25a199ced15d4b5b0d2ca37e5c5c1d3b992ebfa6f05e7e6030c4c7cd30a0c5"
+          "sha256": "840e763ee69a708c5647ae8374a4f845a4c403bdbda186f8996f8f7e76a81481"
         },
         {
-          "render": "6488829b16f06f39.png",
+          "render": "e2d5c870a29bb0d5.png",
+          "subjectId": "chateau-frontenac",
+          "probe": "full",
+          "gating": true,
+          "width": 1080,
+          "height": 900,
+          "bytes": 64768,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg"
+          ],
+          "slots": {},
+          "sha256": "c3cd1a54fa5be5d4f9d86827402d7dc55953788de39db7facffaf011f1c771fc"
+        },
+        {
+          "render": "1b21d11a2057fc5b.png",
           "subjectId": "peace-tower",
-          "probe": "w140",
-          "gating": false,
-          "width": 140,
-          "height": 135,
+          "probe": "full",
+          "gating": true,
+          "width": 1080,
+          "height": 1040,
+          "bytes": 63864,
           "matte": {
             "r": 204,
             "g": 204,
@@ -233,15 +595,16 @@
             "src/svg/ottawa/landmark-parliament-hill.svg"
           ],
           "slots": {},
-          "sha256": "41ae23c0afa6d0c40d49e6f2aa2da056db04e38ee0aa607fd9b1dcc8c5a5c7cd"
+          "sha256": "78508e5554033cc935c0b364dd5f60e470ddce363f2d17cdda7a1349e3cd145c"
         },
         {
-          "render": "c3075e1ff1d2eab1.png",
+          "render": "fa83e6c177f9a39e.png",
           "subjectId": "officer",
-          "probe": "w140",
+          "probe": "mask:dark breeches with a yellow-gold stripe down the outer seam",
           "gating": false,
-          "width": 140,
-          "height": 274,
+          "width": 240,
+          "height": 470,
+          "bytes": 29558,
           "matte": {
             "r": 204,
             "g": 204,
@@ -260,9 +623,9 @@
             "src/svg/shared/character/leg-lower-serge.svg",
             "src/svg/shared/character/foot-l-serge.svg",
             "src/svg/shared/character/torso-serge.svg",
-            "src/svg/shared/character/head-skin-5.svg",
+            "src/svg/shared/character/head-skin-3.svg",
             "src/svg/shared/character/face-thinking.svg",
-            "src/svg/shared/character/hair-coil-blond.svg",
+            "src/svg/shared/character/hair-coil-black.svg",
             "src/svg/shared/character/hat-serge.svg",
             "src/svg/shared/character/arm-upper-serge.svg",
             "src/svg/shared/character/arm-lower-serge.svg",
@@ -270,23 +633,44 @@
           ],
           "slots": {
             "costume": "serge",
-            "skin": "skin-5",
+            "skin": "skin-3",
             "hairShape": "coil",
-            "hairColour": "blond",
+            "hairColour": "black",
             "expression": "thinking",
             "headCovering": "none",
             "feature": "none",
             "variantIndex": 1
           },
-          "sha256": "45335a8c875a3abc02b10aeb7402783f7779e15421d519efce2503cc9f5813ea"
+          "sha256": "4428e967ecddc42f05d1c4a94324c7f3c5b1079f58308993df455278c2aa3328"
         },
         {
-          "render": "fe027064e360a6b8.png",
+          "render": "54dea73d92748c69.png",
+          "subjectId": "chateau-frontenac",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 117,
+          "bytes": 20382,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg"
+          ],
+          "slots": {},
+          "sha256": "00c8a6e3a658a57e76888ac9ea6fd14da23f8207e23a891ea576cea915929aec"
+        },
+        {
+          "render": "e167ed404a4d2c61.png",
           "subjectId": "rideau-canal-skateway",
           "probe": "w140",
           "gating": false,
           "width": 140,
           "height": 79,
+          "bytes": 9744,
           "matte": {
             "r": 204,
             "g": 204,
@@ -298,152 +682,18 @@
             "src/svg/ottawa/layer-60-ice.svg"
           ],
           "slots": {
-            "iceTop": 580
+            "nearTop": 580
           },
-          "sha256": "e1030f351f9230e0022197c2ea6e85c16bccf90f0faf1e99908cfea234719e49"
+          "sha256": "ece7b002cca2c12b449ba80a461446dd6c7bd1ff219f29a31181385baa362c32"
         },
         {
-          "render": "6c90627529907b7e.png",
-          "subjectId": "officer",
-          "probe": "full",
-          "gating": true,
-          "width": 240,
-          "height": 470,
-          "matte": {
-            "r": 204,
-            "g": 204,
-            "b": 204,
-            "alpha": 1
-          },
-          "sources": [
-            "src/svg/shared/character/ground-shadow.svg",
-            "src/svg/shared/character/arm-upper-serge.svg",
-            "src/svg/shared/character/arm-lower-serge.svg",
-            "src/svg/shared/character/hand-serge.svg",
-            "src/svg/shared/character/leg-upper-serge.svg",
-            "src/svg/shared/character/leg-lower-serge.svg",
-            "src/svg/shared/character/foot-r-serge.svg",
-            "src/svg/shared/character/leg-upper-serge.svg",
-            "src/svg/shared/character/leg-lower-serge.svg",
-            "src/svg/shared/character/foot-l-serge.svg",
-            "src/svg/shared/character/torso-serge.svg",
-            "src/svg/shared/character/head-skin-5.svg",
-            "src/svg/shared/character/face-thinking.svg",
-            "src/svg/shared/character/hair-coil-blond.svg",
-            "src/svg/shared/character/hat-serge.svg",
-            "src/svg/shared/character/arm-upper-serge.svg",
-            "src/svg/shared/character/arm-lower-serge.svg",
-            "src/svg/shared/character/hand-serge.svg"
-          ],
-          "slots": {
-            "costume": "serge",
-            "skin": "skin-5",
-            "hairShape": "coil",
-            "hairColour": "blond",
-            "expression": "thinking",
-            "headCovering": "none",
-            "feature": "none",
-            "variantIndex": 1
-          },
-          "sha256": "60d6f298e19e5d2b8574c6471f104f08cd98104f60304b2a20bf9f1d9195a2d0"
-        },
-        {
-          "render": "c448ca3b62b5c106.png",
-          "subjectId": "officer",
-          "probe": "full",
-          "gating": true,
-          "width": 240,
-          "height": 470,
-          "matte": {
-            "r": 204,
-            "g": 204,
-            "b": 204,
-            "alpha": 1
-          },
-          "sources": [
-            "src/svg/shared/character/ground-shadow.svg",
-            "src/svg/shared/character/arm-upper-serge.svg",
-            "src/svg/shared/character/arm-lower-serge.svg",
-            "src/svg/shared/character/hand-serge.svg",
-            "src/svg/shared/character/leg-upper-serge.svg",
-            "src/svg/shared/character/leg-lower-serge.svg",
-            "src/svg/shared/character/foot-r-serge.svg",
-            "src/svg/shared/character/leg-upper-serge.svg",
-            "src/svg/shared/character/leg-lower-serge.svg",
-            "src/svg/shared/character/foot-l-serge.svg",
-            "src/svg/shared/character/torso-serge.svg",
-            "src/svg/shared/character/head-skin-4.svg",
-            "src/svg/shared/character/face-neutral.svg",
-            "src/svg/shared/character/hair-long-grey.svg",
-            "src/svg/shared/character/hat-serge.svg",
-            "src/svg/shared/character/arm-upper-serge.svg",
-            "src/svg/shared/character/arm-lower-serge.svg",
-            "src/svg/shared/character/hand-serge.svg"
-          ],
-          "slots": {
-            "costume": "serge",
-            "skin": "skin-4",
-            "hairShape": "long",
-            "hairColour": "grey",
-            "expression": "neutral",
-            "headCovering": "none",
-            "feature": "none",
-            "variantIndex": 0
-          },
-          "sha256": "1bca72a539ab9b1d1cf9ff2bb0b2db54b2f36cd5022e9345398cb166a45e3ec0"
-        },
-        {
-          "render": "e98ad4408a20ec99.png",
-          "subjectId": "officer",
+          "render": "a4eddc062a7d9095.png",
+          "subjectId": "peace-tower",
           "probe": "w140",
           "gating": false,
           "width": 140,
-          "height": 274,
-          "matte": {
-            "r": 204,
-            "g": 204,
-            "b": 204,
-            "alpha": 1
-          },
-          "sources": [
-            "src/svg/shared/character/ground-shadow.svg",
-            "src/svg/shared/character/arm-upper-serge.svg",
-            "src/svg/shared/character/arm-lower-serge.svg",
-            "src/svg/shared/character/hand-serge.svg",
-            "src/svg/shared/character/leg-upper-serge.svg",
-            "src/svg/shared/character/leg-lower-serge.svg",
-            "src/svg/shared/character/foot-r-serge.svg",
-            "src/svg/shared/character/leg-upper-serge.svg",
-            "src/svg/shared/character/leg-lower-serge.svg",
-            "src/svg/shared/character/foot-l-serge.svg",
-            "src/svg/shared/character/torso-serge.svg",
-            "src/svg/shared/character/head-skin-4.svg",
-            "src/svg/shared/character/face-neutral.svg",
-            "src/svg/shared/character/hair-long-grey.svg",
-            "src/svg/shared/character/hat-serge.svg",
-            "src/svg/shared/character/arm-upper-serge.svg",
-            "src/svg/shared/character/arm-lower-serge.svg",
-            "src/svg/shared/character/hand-serge.svg"
-          ],
-          "slots": {
-            "costume": "serge",
-            "skin": "skin-4",
-            "hairShape": "long",
-            "hairColour": "grey",
-            "expression": "neutral",
-            "headCovering": "none",
-            "feature": "none",
-            "variantIndex": 0
-          },
-          "sha256": "0e98b350456f6f180ceae703b828073150bf7bbb5bc331404a02cec4fffad84c"
-        },
-        {
-          "render": "a4d34a7cfdb950d9.png",
-          "subjectId": "peace-tower",
-          "probe": "full",
-          "gating": true,
-          "width": 1080,
-          "height": 1040,
+          "height": 135,
+          "bytes": 14886,
           "matte": {
             "r": 204,
             "g": 204,
@@ -454,131 +704,341 @@
             "src/svg/ottawa/landmark-parliament-hill.svg"
           ],
           "slots": {},
-          "sha256": "bd7000100f5da9921b088fcf59e133f40ff25ce4fe3988833e7f6ee10b3c2c0d"
+          "sha256": "12b7f29237055a088ff5ba65f36fbe5e044e6f21be266058ed3452f67bb0f35e"
+        },
+        {
+          "render": "19e36531f24711f0.png",
+          "subjectId": "dufferin-terrace-toboggan-run",
+          "probe": "full",
+          "gating": true,
+          "width": 2016,
+          "height": 1140,
+          "bytes": 99467,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/quebec-city/layer-50-terrace.svg",
+            "src/svg/quebec-city/layer-60-slope.svg"
+          ],
+          "slots": {
+            "nearTop": 580
+          },
+          "sha256": "356657b9d9410fcb593b5981f850e3c12a9b0828d154e8fd9790e8a9a441bb7c"
+        },
+        {
+          "render": "876a5643ced5fe49.png",
+          "subjectId": "officer",
+          "probe": "full",
+          "gating": true,
+          "width": 240,
+          "height": 470,
+          "bytes": 33377,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-1.svg",
+            "src/svg/shared/character/face-surprised.svg",
+            "src/svg/shared/character/hair-long-black.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-1",
+            "hairShape": "long",
+            "hairColour": "black",
+            "expression": "surprised",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 0
+          },
+          "sha256": "0f3d410d76190ff295c2364d54446fe393137e74b5a24d55f06a5aa51aae932a"
+        },
+        {
+          "render": "3d657c03e43d5bc6.png",
+          "subjectId": "officer",
+          "probe": "w140",
+          "gating": false,
+          "width": 140,
+          "height": 274,
+          "bytes": 35969,
+          "matte": {
+            "r": 204,
+            "g": 204,
+            "b": 204,
+            "alpha": 1
+          },
+          "sources": [
+            "src/svg/shared/character/ground-shadow.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-r-serge.svg",
+            "src/svg/shared/character/leg-upper-serge.svg",
+            "src/svg/shared/character/leg-lower-serge.svg",
+            "src/svg/shared/character/foot-l-serge.svg",
+            "src/svg/shared/character/torso-serge.svg",
+            "src/svg/shared/character/head-skin-3.svg",
+            "src/svg/shared/character/face-thinking.svg",
+            "src/svg/shared/character/hair-coil-black.svg",
+            "src/svg/shared/character/hat-serge.svg",
+            "src/svg/shared/character/arm-upper-serge.svg",
+            "src/svg/shared/character/arm-lower-serge.svg",
+            "src/svg/shared/character/hand-serge.svg"
+          ],
+          "slots": {
+            "costume": "serge",
+            "skin": "skin-3",
+            "hairShape": "coil",
+            "hairColour": "black",
+            "expression": "thinking",
+            "headCovering": "none",
+            "feature": "none",
+            "variantIndex": 1
+          },
+          "sha256": "bf168670dafbd660c9b5148d8a840f7343bbeb5a200181d302616994de30af15"
         }
       ],
       "unrendered": [
         {
           "subjectId": "parliament-hill-skyline",
           "why": "UNRENDERED, by decision. No source answers this subject. `layer-20-skyline.svg` is a GENERIC winter city and must stay generic: it is a repeating parallax tile that the medium and low presets drop, and the art bible forbids putting an identifying feature on a droppable layer. A verifier that could name Ottawa from it would be reporting a defect, not a pass. The Hill's own skyline features live in `landmark-parliament-hill.svg`, which is judged as `peace-tower`."
+        },
+        {
+          "subjectId": "quebec-city-riverfront",
+          "why": "UNRENDERED, by decision, and the same decision Ottawa made about its skyline. No source answers this subject. `layer-20-farbank.svg` and `layer-30-river.svg` are a GENERIC winter river town and open water and must stay generic: they are repeating parallax tiles that the low preset drops, and the art bible forbids putting an identifying feature on a droppable layer. A verifier able to name Quebec City from them would be reporting a defect, not a pass. The city's own identifying feature lives in `landmark-chateau-frontenac@1x.svg`, which is judged as `chateau-frontenac`."
         }
       ],
-      "committedAnswersSha256": "43dca365846399d32db4d9053deb1e7d3e8d0500073de55ab63a5ec3f6878ed5",
-      "revealedAt": "2026-09-08T21:25:57.366Z",
-      "committedAt": "2026-09-08T21:25:51.874Z"
+      "committedAnswersSha256": "b728c0523825b2dedbef3660bf330c985d02c6602f525d18c309fb301f58f0f4",
+      "revealedAt": "2026-09-09T00:00:46.902Z",
+      "committedAt": "2026-09-09T00:00:43.386Z"
     },
     "answers": {
-      "runId": "e6e867a5dee44d6c",
+      "runId": "d3a2f74f85f01b83",
       "identifications": [
         {
-          "render": "ff560b5b59afa18e.png",
-          "width": 300,
-          "height": 170,
-          "answer": "Same scene at a smaller size: an urban frozen-canal skating rink under a road bridge - most probably the Rideau Canal Skateway, Ottawa.",
-          "cues": "Bridge on piers with lamp standards, ice ribbon with skaters in a line, warming hut, conifers, snow banks. The skating action still reads clearly.",
-          "confidence": 0.55,
-          "moreCertain": "Same as the large version - a named Ottawa cue. The hut is now a brown blob, so even the changing-hut hint is weaker."
-        },
-        {
-          "render": "57266dc381ff43cd.png",
-          "width": 2016,
-          "height": 1140,
-          "answer": "An outdoor skating rink on a frozen urban canal in winter, with a road bridge crossing over it and a wooden warming hut on the bank. I believe this is meant to be the Rideau Canal Skateway in Ottawa, but I am naming it from the genre, not from a unique landmark in the picture.",
-          "cues": "A long straight ribbon of pale blue ice with skate-scored arcs, filling the bottom two thirds; five figures in winter coats, toques and skates all travelling along the ribbon in the same direction; a low concrete road bridge with a railing and a raised deck on piers spanning the whole width above; tall lamp standards with amber globes along the bridge; snow banks and snow-topped conifers on both banks; a small brown timber shed with a door and one window sitting on the snow at the ice edge, which reads as a Skateway changing hut.",
-          "confidence": 0.6,
-          "moreCertain": "Nothing in this frame is uniquely Rideau. Any of the Chateau Laurier's turrets, the Ottawa Locks staircase, the Peace Tower on the skyline, or the Skateway's signature beavertail/refreshment chalet would take this from a plausible guess to a certainty. As drawn it would serve equally well as any Canadian city's frozen-canal rink."
-        },
-        {
-          "render": "2cfdd7f25b14f556.png",
-          "width": 300,
-          "height": 289,
-          "answer": "Same subject at a smaller size: Centre Block / Peace Tower, Parliament Hill, Ottawa.",
-          "cues": "Still legible at this size - clock face, green copper spire, Canadian flag on the mast, green roofline, Gothic arcade of pointed windows, symmetric wings. I read it correctly without needing to enlarge it.",
-          "confidence": 0.88,
-          "moreCertain": "The clock hands are near the limit of legibility here; the flag and the green spire are doing most of the work. Same stone-colour reservation as the large render."
-        },
-        {
-          "render": "6488829b16f06f39.png",
-          "width": 140,
-          "height": 135,
-          "answer": "Same subject again, very small: Centre Block / Peace Tower, Parliament Hill, Ottawa. Recognisable but the clock is now only a pale disc.",
-          "cues": "Flag silhouette and red maple leaf still read; green spire and green roofline read; the clock survives as a light circle with a dark rim rather than a legible dial; the Gothic window rhythm has collapsed to texture.",
-          "confidence": 0.75,
-          "moreCertain": "A legible clock dial. At this size the identification is carried almost entirely by the flag and the green copper - remove the flag and I would be much less sure."
-        },
-        {
-          "render": "c3075e1ff1d2eab1.png",
-          "width": 140,
-          "height": 274,
-          "answer": "RCMP officer in Red Serge, smaller size - the fair-haired figure.",
-          "cues": "Stetson brim, scarlet tunic, gold button row, diagonal Sam Browne strap, yellow leg stripe on dark blue, brown boots. All the load-bearing cues survive the reduction.",
-          "confidence": 0.9,
-          "moreCertain": "The lanyard and the buttons are close to merging; a readable badge would help."
-        },
-        {
-          "render": "fe027064e360a6b8.png",
-          "width": 140,
-          "height": 79,
-          "answer": "Same scene, very small. I can still tell it is people skating on ice under a bridge in winter, but I could not name a place from this render alone.",
-          "cues": "Horizontal ice band, small dark figures in a skating pose, an overhead deck line with dots for lamps, dark conifer triangles, one brown blob on the bank. The subject matter survives; the location does not.",
-          "confidence": 0.3,
-          "moreCertain": "At this size only a silhouette-level landmark would survive. If this size is ever used at gameplay scale it needs a distinctive skyline shape behind it."
-        },
-        {
-          "render": "6c90627529907b7e.png",
-          "width": 240,
-          "height": 470,
-          "answer": "A Royal Canadian Mounted Police (RCMP/GRC) officer in Red Serge full dress - the ceremonial Mountie uniform. This figure has coiled fair hair under the hat.",
-          "cues": "Scarlet high-collar tunic with a row of gold buttons and pleated breast pockets; the brown felt Stetson campaign hat with a flat brim and a dark hat band; the brown leather Sam Browne belt with the diagonal cross strap over the right shoulder; midnight-blue breeches with a broad yellow stripe down the outer seam; brown high riding boots; the blue collar showing at the neck; a white lanyard looped on the chest. That combination is the RCMP Red Serge and is not the uniform of any other force.",
-          "confidence": 0.95,
-          "moreCertain": "The RCMP cap badge (bison head and crown) on the front of the Stetson is not readable, and there are no rank chevrons or collar insignia. Brown gauntlets and the yellow-and-blue shoulder flash would also settle it beyond doubt."
-        },
-        {
-          "render": "c448ca3b62b5c106.png",
-          "width": 240,
-          "height": 470,
-          "answer": "A second RCMP officer in Red Serge - same uniform, a different person: long grey hair, and a slightly different skin tone from the other figure.",
-          "cues": "Identical uniform reading - Stetson, scarlet tunic with gold buttons, Sam Browne cross strap, yellow-striped blue breeches, brown boots, white lanyard. The figure differs only in hair and complexion, which is exactly what I would expect from a character rendered as variants.",
-          "confidence": 0.95,
-          "moreCertain": "Same as the other figure: a readable cap badge. I will also note that the two skin tones in this run are close enough that I would not have called them different without comparing the two files side by side."
-        },
-        {
-          "render": "e98ad4408a20ec99.png",
-          "width": 140,
-          "height": 274,
-          "answer": "RCMP officer in Red Serge, smaller size - the grey-haired figure.",
-          "cues": "Same uniform cues survive: hat brim, scarlet tunic, cross strap, yellow leg stripe, brown boots. Hair colour still distinguishes it from the other small figure.",
-          "confidence": 0.9,
-          "moreCertain": "A readable cap badge. The face detail is essentially gone at this size, but the uniform is what identifies the role and it holds up."
-        },
-        {
-          "render": "a4d34a7cfdb950d9.png",
+          "render": "86f974ce90023627.png",
           "width": 1080,
           "height": 1040,
-          "answer": "The Centre Block of the Parliament of Canada on Parliament Hill, Ottawa, seen head-on from the front lawn - specifically the Peace Tower rising from the centre of the main facade.",
-          "cues": "A single tall clock tower centred on a long symmetric facade, with a four-faced white clock high on the shaft; a green copper spire above it flying the Canadian flag (red-white-red with a single red maple leaf) from a mast at the very tip; green copper pitched roof running the whole length of the wing with green pyramidal roofs on the end pavilions; a continuous row of tall pointed Gothic-arch windows; a big pointed-arch main doorway directly under the tower. The flag plus the clock plus the green copper is the Peace Tower and nothing else.",
-          "confidence": 0.92,
-          "moreCertain": "Correct stone colour - the real Centre Block is cool grey Nepean sandstone and this is rendered a warm tan/sand, which is the one thing that made me hesitate. Also the dark spire sits off to the right of the tower; on the real building the Library of Parliament dome is centred behind the tower and is not seen from the front. A hint of the flanking towers' vertical buttressing would help too."
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "90c7f31e43257bc9.png",
+          "width": 300,
+          "height": 170,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "aa0fc0aa668d3dc7.png",
+          "width": 240,
+          "height": 470,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "088c9ccc26b696a7.png",
+          "width": 140,
+          "height": 274,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "f432448fc9519b90.png",
+          "width": 2016,
+          "height": 1140,
+          "answer": "An outdoor public skating rink on a frozen city canal in winter. A long, straight, walled ice channel with skaters on it, a concrete/steel road bridge crossing overhead on square piers, a lamp-lit embankment path, spruce trees and a small wooden warming/change hut on the bank. If this is a specific place, I would name the Rideau Canal Skateway in Ottawa - but I want to be exact about why: I am naming it from the CONCEPT (a city canal that people skate on, under road bridges, with wooden huts beside it), not from anything drawn. No object in this image is a unique landmark. The bridge, the railing, the lamp standards, the hut, the trees and the skaters are all generic. Strip out my outside knowledge that the Rideau is the famous skated canal and the honest ceiling of this image is 'a frozen urban canal used as a skating rink in a cold-winter city'.",
+          "cues": "1. The ice is a long straight channel of uniform width with parallel built banks - a canal, not a lake or a pond. 2. People in winter coats and toques in skating stride on that channel, so the canal itself is the rink. 3. A road bridge crosses it on heavy square piers with a guard-railed deck, placing it inside a city rather than in open country. 4. A small wooden hut sits on the bank at the ice edge - reads as a warming/change hut or a refreshment stand serving the rink. 5. Globe-topped lamp standards along a railed embankment promenade. 6. Snow banks and conifers set the season and the climate.",
+          "confidence": 0.55,
+          "moreCertain": "Any single drawn landmark rather than a concept: a Gothic-revival parliamentary skyline or a copper-roofed chateau hotel on the far bank, a named lock station with its stepped lock gates, a bilingual sign, or a distinctive named bridge. Also: the far bank is empty grey sky, so the image gives me no city behind the canal at all. Confidence 0.85 that this is a frozen urban canal skateway; only about 0.5 that it is the Rideau. Those two numbers are the finding."
+        },
+        {
+          "render": "5cf33b54c7bb6dfd.png",
+          "width": 300,
+          "height": 250,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "860a17e3c5f18c6a.png",
+          "width": 300,
+          "height": 170,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "751052715cfbff49.png",
+          "width": 480,
+          "height": 470,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "91b1e8d35712d5e6.png",
+          "width": 140,
+          "height": 79,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "fca42cbff5dbc580.png",
+          "width": 240,
+          "height": 470,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "78dfbc4847191a73.png",
+          "width": 1080,
+          "height": 900,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "c1b14a38013b5f9b.png",
+          "width": 300,
+          "height": 289,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "e2d5c870a29bb0d5.png",
+          "width": 1080,
+          "height": 900,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "1b21d11a2057fc5b.png",
+          "width": 1080,
+          "height": 1040,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "fa83e6c177f9a39e.png",
+          "width": 240,
+          "height": 470,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "54dea73d92748c69.png",
+          "width": 140,
+          "height": 117,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "e167ed404a4d2c61.png",
+          "width": 140,
+          "height": 79,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "a4eddc062a7d9095.png",
+          "width": 140,
+          "height": 135,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "19e36531f24711f0.png",
+          "width": 2016,
+          "height": 1140,
+          "answer": "A Victorian-era wooden boardwalk promenade on top of a masonry river wall, in winter, overlooking a frozen/ice-covered river below. Ornate dark-green cast-iron balustrade with a repeating arcade-and-finial pattern, green lamp standards carrying clusters of white globe lights, green-and-white striped conical-roofed kiosk with a finial, park benches, strollers in winter coats and toques, and a large timber frame with X-bracing and a railed platform on the left. Unprompted, I would name Terrasse Dufferin (Dufferin Terrace) in Quebec City, with the timber frame being the head of the toboggan slide. I am naming a place here off DRAWN detail, not off concept: the striped kiosk roof, the specific ironwork and the globe candelabra are architectural quotations, not generic street furniture.",
+          "cues": "1. The green-and-white striped conical kiosk roof with a white finial - a specific, quotable piece of architecture, not generic park furniture. 2. Ornate dark-green cast-iron balustrade with a repeating pointed-arch/picket motif running the whole width. 3. Green lamp standards with clustered white glass globes on branched arms - a heritage promenade fitting, not a modern street light. 4. A plank boardwalk deck sitting on a coursed stone/masonry embankment wall above the water - a terrace built out over a river bank. 5. The heavy timber A-frame with X-bracing and a railed platform on the left, which reads as the launch head of a toboggan slide, not as a bridge or a crane. 6. Frozen water with wind-blown ice streaks below; winter clothing above.",
+          "confidence": 0.6,
+          "moreCertain": "The stone fortifications, the citadel, or a large green copper-roofed chateau hotel behind the terrace - the render shows only flat grey sky above the railing, so the setting that would confirm it is absent. Also a clearer read on the timber structure: if the slide chutes ran down from that platform it would be decisive; as drawn I can see the frame but not the run. Confidence about 0.85 that this is a heritage waterfront boardwalk promenade above a frozen river in a cold-winter city; about 0.55-0.6 that it is Dufferin Terrace specifically."
+        },
+        {
+          "render": "876a5643ced5fe49.png",
+          "width": 240,
+          "height": 470,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
+        },
+        {
+          "render": "3d657c03e43d5bc6.png",
+          "width": 140,
+          "height": 274,
+          "answer": "NOT EXAMINED. Out of scope for this run: I was asked to identify only the two multi-tile composite renders and to leave the rest unopened. I have not viewed this image, so I have no identification and none should be inferred from this entry.",
+          "cues": "None - image not opened.",
+          "confidence": 0.0,
+          "moreCertain": "Not applicable. Scoring this entry would be scoring a blank, not a miss."
         }
       ]
     },
     "audit": {
-      "runId": "e6e867a5dee44d6c",
+      "runId": "d3a2f74f85f01b83",
+      "note": [
+        "Audits ONLY the two composite subjects this run was scoped to. peace-tower, chateau-frontenac",
+        "and officer were handed over and deliberately not opened, so no audit is submitted for them and",
+        "the scorer correctly reports them as unaudited. That is the true state of this run, not a defect",
+        "in the record."
+      ],
       "audits": [
-        {
-          "subjectId": "peace-tower",
-          "featuresPresent": [
-            "green copper spire",
-            "clock face",
-            "national flag on the mast above the spire",
-            "pale warm sandstone shaft",
-            "tall pointed arch at the base",
-            "tower rises from the centre of a symmetrical wing block",
-            "vertical proportion"
-          ],
-          "featuresAbsent": [],
-          "forbiddenPresent": []
-        },
         {
           "subjectId": "rideau-canal-skateway",
           "featuresPresent": [
@@ -589,22 +1049,25 @@
             "cold overcast or low winter light"
           ],
           "featuresAbsent": [],
+          "featuresUncheckable": [],
           "forbiddenPresent": []
         },
         {
-          "subjectId": "officer",
+          "subjectId": "dufferin-terrace-toboggan-run",
           "featuresPresent": [
-            "scarlet tunic",
-            "dark collar and shoulder straps",
-            "wide-brimmed felt hat",
-            "brown leather belt with a diagonal cross-strap",
-            "dark breeches with a yellow-gold stripe down the outer seam",
-            "high brown riding boots",
-            "brass buttons in a single centre row",
-            "cartoon proportions identical to every other character"
+            "straight parallel runner marks in the lane",
+            "a promenade above the run with an ornate cast-iron railing",
+            "globe lamp standards in a rhythm along the promenade",
+            "people in winter coats, standing and walking, not skating or skiing",
+            "cold winter light on snow that is not flat white"
           ],
-          "featuresAbsent": [],
-          "forbiddenPresent": []
+          "featuresAbsent": [
+            "the snow lane is a built chute with edges, not open hillside"
+          ],
+          "featuresUncheckable": [],
+          "forbiddenPresent": [
+            "a recognisable named building on a repeating tile: the green-and-white striped conical-roofed kiosk with a white finial is the Dufferin Terrace kiosk, reproduced from dufferin-terrace-boardwalk.jpg closely enough that it is the single cue that made me name Quebec City unprompted"
+          ]
         }
       ]
     }

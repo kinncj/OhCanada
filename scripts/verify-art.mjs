@@ -271,6 +271,11 @@ if (command === 'handoff') {
     variants,
     sizeLadder,
     force,
+    // The operator named this directory, so it is the identifier's working
+    // area and a previous run's artefacts in it are reachable during this
+    // run's blind phase. The gate path below passes nothing: its parent is the
+    // system temp directory.
+    workingArea: outDir,
   });
   report(failures);
   printHandoffSummary(keymap, { where: handoffDir });

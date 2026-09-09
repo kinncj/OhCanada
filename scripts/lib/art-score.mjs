@@ -51,9 +51,69 @@ import { normalise } from './art-handoff.mjs';
 /** ` foo ` padding so "canal" does not match inside "canalisation". */
 const padded = (value) => ` ${normalise(value)} `;
 
+/**
+ * HOW MANY WORDS AN ANSWER MAY INSERT INTO AN EXPECTED PHRASE AND STILL MATCH.
+ *
+ * A contiguous substring match cannot accept a correct answer phrased with an
+ * extra adjective, and that is not hypothetical: `rideau-canal-skateway`'s
+ * contract was amended to accept a GENERIC answer, and a genuinely blind run
+ * answered "an outdoor public skating rink on a frozen CITY canal". All four
+ * generic phrases failed - "an outdoor skating rink on a frozen canal" is not a
+ * substring of it - and the subject passed only because the verifier
+ * volunteered "Rideau Canal", the place name the amendment makes optional. A
+ * verifier obeying the contract exactly would have been marked wrong. The
+ * contract was doing the right thing and the matcher was not.
+ *
+ * So a candidate matches when its words appear IN ORDER, with at most this many
+ * of the answer's own words between any two of them. Order is kept because it
+ * is what distinguishes a phrase from a bag of words; the gap is bounded
+ * because an unbounded one would let a candidate match words scattered across
+ * an unrelated paragraph, which is a different and worse failure than the one
+ * being fixed.
+ *
+ * Two, measured against the case that produced it - one insertion per gap
+ * ("public" after "outdoor", "city" after "frozen") - with one word of headroom
+ * for the same shape twice ("a large frozen city canal"). It is not a threshold
+ * anyone should tune upward without a run that needed it: at three, "rideau" and
+ * "canal" match across "the Rideau is definitely not a canal".
+ */
+const MAX_INSERTED_WORDS = 2;
+
+/**
+ * Does `candidate`'s word sequence occur in `answer` in order, with no gap
+ * wider than MAX_INSERTED_WORDS? Greedy from each possible start, which is
+ * correct here because a wider gap can only be MORE permissive: if a later
+ * occurrence of a word would match, an earlier one inside the gap budget does
+ * too, and the loop restarts at every candidate start position.
+ */
+const containsInOrder = (answerWords, candidateWords) => {
+  if (candidateWords.length === 0) return false;
+  for (let start = 0; start <= answerWords.length - candidateWords.length; start += 1) {
+    if (answerWords[start] !== candidateWords[0]) continue;
+    let at = start + 1;
+    let matched = 1;
+    while (matched < candidateWords.length && at < answerWords.length) {
+      const found = answerWords.indexOf(candidateWords[matched], at);
+      if (found === -1 || found - at > MAX_INSERTED_WORDS) break;
+      at = found + 1;
+      matched += 1;
+    }
+    if (matched === candidateWords.length) return true;
+  }
+  return false;
+};
+
+const wordsOf = (value) => normalise(value).split(' ').filter((word) => word !== '');
+
 const matchesExpected = (answer, expected) => {
   const haystack = padded(answer);
-  return expected.some((candidate) => haystack.includes(padded(candidate)));
+  const answerWords = wordsOf(answer);
+  return expected.some(
+    (candidate) =>
+      // The exact phrase first, so the common case costs one string search and
+      // reads the way the contract is written.
+      haystack.includes(padded(candidate)) || containsInOrder(answerWords, wordsOf(candidate)),
+  );
 };
 
 /**

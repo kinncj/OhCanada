@@ -32,6 +32,7 @@
 import { spawnSync } from 'node:child_process';
 import {
   copyFileSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -264,18 +265,36 @@ describe('the gate over the repository as it stands', () => {
   const gate = run(['--root', REPO]);
 
   it('builds an anonymised hand-off and reports what it did not establish', () => {
-    expect(gate.status, gate.output).toBe(0);
+    // NOT an assertion about the exit code. The gate scores the live verdict
+    // record over the art as it currently stands, and BOTH of those are other
+    // agents' work in progress: the day art ships a defect, or a subject has no
+    // verdict yet, this gate exits 1 and is RIGHT to. A case pinned to 0 fails
+    // on a correct refusal and passes on none of the defects it was written
+    // for - the same shape as an assertion pinned to a count that grows.
+    //
+    // What is this file's to assert is the half that must hold either way: a
+    // hand-off was built, and the anonymisation over it held. The scoring half
+    // is asserted below over records this file constructs.
     expect(gate.stdout).toMatch(/hand-off run [0-9a-f]{16} - \d+ render\(s\) over \d+ subject\(s\)/);
     expect(gate.stdout).toContain('anonymisation held');
+  });
 
-    // The whole point. A gate that printed a bare OK would be indistinguishable
-    // from one that had established blind identification, which is the shape of
-    // the failure this task exists to prevent. Asserted on the DISCLAIMER rather
-    // than on "NOT ESTABLISHED": once a verdict record exists the gate scores it
-    // and stops printing that phrase, and a test pinned to it would have started
-    // demanding the harness stay unused.
-    expect(gate.stdout).toContain('no output can prove it after the fact');
-    expect(gate.stdout).toMatch(/NOT ESTABLISHED|does not establish that the verdict was made blind/);
+  it('never prints a bare OK, on a run that does pass', () => {
+    // The whole point, and it has to be asserted on a run that actually
+    // SUCCEEDS: a gate that printed a bare OK would be indistinguishable from
+    // one that had established blind identification, which is the failure this
+    // harness exists to prevent. The live record cannot carry this case any
+    // more - it legitimately fails today, and on a failing run there is no
+    // success line to inspect - so the passing run is constructed here.
+    const path = join(scratch('no-identification'), 'art-verification.json');
+    writeFileSync(path, JSON.stringify({ runIntegrity: { blindnessHeld: false }, results: [] }));
+    const result = run(['--root', REPO, ...CHEAP, '--record', path]);
+
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain('verify-art: OK');
+    // and the OK is qualified, every time
+    expect(result.stdout).toContain('no output can prove it after the fact');
+    expect(result.stdout).toMatch(/NOT ESTABLISHED|does not establish that the verdict was made blind/);
   });
 
   it('names EVERY unrendered subject as neither a pass nor a failure', () => {
@@ -329,6 +348,237 @@ describe('the gate over the repository as it stands', () => {
 /* ================================================================== *
  * 2. The anonymisation actually anonymises
  * ================================================================== */
+
+/* ================================================================== *
+ * Two leaks a genuinely unprimed run found, both metadata, not images
+ * ================================================================== */
+
+describe('the answer matcher accepts a correct answer worded differently', () => {
+  /**
+   * A padded SUBSTRING match cannot accept a correct answer phrased with an
+   * extra adjective, and that cost a real run its meaning.
+   * `rideau-canal-skateway`'s contract was amended to accept a GENERIC answer -
+   * the place name is explicitly optional - and a genuinely blind run said "an
+   * outdoor public skating rink on a frozen CITY canal". All four generic
+   * phrases failed on one inserted word, and the subject passed ONLY because
+   * the verifier volunteered "Rideau Canal". A verifier obeying the contract
+   * exactly would have been marked wrong: the contract was right and the
+   * matcher was not.
+   */
+  const scoreAnswer = (subjectId: string, answer: string): { status: number; output: string } => {
+    const references = JSON.parse(
+      readFileSync(join(REPO, 'assets', 'refs', 'references.json'), 'utf8'),
+    ) as { subjects: { id: string; mustBeRight: { feature: string }[] }[] };
+    const subject = references.subjects.find((s) => s.id === subjectId);
+    const record = {
+      runIntegrity: { blindnessHeld: true },
+      results: [],
+      handoffRun: {
+        keymap: {
+          id: 'truenorth-art-handoff-keymap',
+          version: 1,
+          runId: 'matcherfixture01',
+          entries: [
+            {
+              render: 'fedcba9876543210.png',
+              subjectId,
+              probe: 'full',
+              gating: true,
+              width: 100,
+              height: 100,
+              naturalWidth: 100,
+              naturalHeight: 100,
+            },
+          ],
+          unrendered: [],
+        },
+        answers: {
+          runId: 'matcherfixture01',
+          identifications: [{ render: 'fedcba9876543210.png', answer }],
+        },
+        audit: {
+          runId: 'matcherfixture01',
+          audits: [
+            {
+              subjectId,
+              featuresPresent: (subject?.mustBeRight ?? []).map((m) => m.feature),
+              featuresAbsent: [],
+              featuresUncheckable: [],
+              forbiddenPresent: [],
+            },
+          ],
+        },
+      },
+    };
+    const path = join(scratch('matcher'), 'art-verification.json');
+    writeFileSync(path, JSON.stringify(record, null, 2));
+    return run(['--root', REPO, ...CHEAP, '--record', path]);
+  };
+
+  const SUBJECT = 'rideau-canal-skateway';
+
+  it('accepts the generic answer the contract asks for, with an adjective inserted', () => {
+    // No place name anywhere in this string. Under a substring match it failed.
+    const result = scoreAnswer(
+      SUBJECT,
+      'An outdoor public skating rink on a frozen city canal in winter, with skaters on the ice.',
+    );
+    expect(result.output).not.toContain('the unprompted answer did not name the subject');
+    expect(result.output).toContain(`PASS ${SUBJECT}`);
+  });
+
+  it('still accepts the exact phrase, which is the common case', () => {
+    const result = scoreAnswer(SUBJECT, 'an outdoor skating rink on a frozen canal');
+    expect(result.output).toContain(`PASS ${SUBJECT}`);
+  });
+
+  it('does not accept words merely scattered through an answer', () => {
+    // The bound is what stops "in order, with gaps" from becoming a bag of
+    // words. Three words apart is not a phrase, and a negation is not an
+    // identification.
+    const result = scoreAnswer(SUBJECT, 'the Rideau is definitely not a canal, and there is no ice');
+    expect(result.output).toContain('the unprompted answer did not name the subject');
+  });
+
+  it('does not accept a different subject entirely', () => {
+    const result = scoreAnswer(SUBJECT, 'a photograph of a mountain range at sunset');
+    expect(result.output).toContain('the unprompted answer did not name the subject');
+  });
+});
+
+describe('an earlier run must not be reachable during a later run\'s blind phase', () => {
+  /**
+   * The leak: an `audit.json` left in the session scratchpad from a previous
+   * run. An audit is written AFTER reveal, so it names every subject and every
+   * `mustBeRight` feature verbatim - and the scratchpad is the directory agents
+   * are TOLD to use for working files, so an identifier following its own
+   * instructions is one `cat` from the answers.
+   *
+   * `scoreRun` refuses a stale audit by run id, which is correct at score time
+   * and no protection at identify time. The run that found it stayed honest
+   * because the verifier did not open the file and checked timestamps to prove
+   * it. That is discipline, and discipline is not a control.
+   */
+  /**
+   * Any subject will do - the point is that the audit names ONE - so this takes
+   * the first and asserts the contract is not empty rather than indexing into
+   * it and hoping.
+   */
+  const someSubjectId = (): string => {
+    const subjects = subjectsOf(REPO);
+    expect(subjects.length, 'the contract names no subjects').toBeGreaterThan(0);
+    return subjects[0]?.id ?? '';
+  };
+
+  const staleAudit = (subjectId: string): string =>
+    JSON.stringify({
+      runId: 'c3d5c9fb89330709',
+      audits: [{ subjectId, featuresPresent: ['a frozen canal with skaters'] }],
+    });
+
+  it('refuses a hand-off when a previous run\'s audit sits beside it', () => {
+    const out = scratch('working-area');
+    const subjectId = someSubjectId();
+    writeFileSync(join(out, 'audit.json'), staleAudit(subjectId));
+
+    const result = run(['handoff', '--root', REPO, '--out', out, ...CHEAP, '--seed', 'wa-1']);
+    expect(result.status, result.output).toBe(1);
+    expect(result.output).toContain('audit.json is in the identifier\'s working area');
+    expect(result.output).toContain(subjectId);
+    expect(result.output).toContain('must not be reachable during a later run\'s blind phase');
+  });
+
+  it('says it will not delete the file, because it is a previous verification\'s evidence', () => {
+    const out = scratch('working-area-keep');
+    writeFileSync(join(out, 'audit.json'), staleAudit(someSubjectId()));
+    const result = run(['handoff', '--root', REPO, '--out', out, ...CHEAP, '--seed', 'wa-2']);
+    expect(result.output).toContain('It is not deleted for you');
+    expect(existsSync(join(out, 'audit.json'))).toBe(true);
+  });
+
+  it('builds once the artefact is moved away, which is the fix it asks for', () => {
+    // The negative case. A refusal with no way through is a gate people turn
+    // off, so the instruction it prints has to be one that works.
+    const out = scratch('working-area-cleared');
+    writeFileSync(join(out, 'audit.json'), staleAudit(someSubjectId()));
+    expect(run(['handoff', '--root', REPO, '--out', out, ...CHEAP, '--seed', 'wa-3']).status).toBe(1);
+
+    const archive = join(scratch('archive'), 'audit.json');
+    writeFileSync(archive, readFileSync(join(out, 'audit.json'), 'utf8'));
+    rmSync(join(out, 'audit.json'));
+    rmSync(join(out, 'handoff'), { recursive: true, force: true });
+
+    const second = run(['handoff', '--root', REPO, '--out', out, ...CHEAP, '--seed', 'wa-4']);
+    expect(second.status, second.output).toBe(0);
+  });
+
+  it('does not object to the run\'s own keymap, which the briefing already covers', () => {
+    // The keymap sits in the working area BY DESIGN - `--out DIR` puts it at
+    // DIR/keymap.json - and it names every subject. It is excluded because it
+    // is this run's own artefact and the identifier is told not to open it;
+    // the rule being added is about UNKNOWN files, which no briefing covers.
+    const built = handoff(REPO, [...CHEAP]);
+    expect(built.result.status, built.result.output).toBe(0);
+    expect(readFileSync(built.keymapPath, 'utf8')).toContain(someSubjectId());
+  });
+
+  it('does not walk the surroundings when no working area was named', () => {
+    // The gate builds into a fresh mkdtemp whose parent is the SYSTEM TEMP
+    // directory - thousands of unrelated files, including other agents' work.
+    // Walking that would be both meaningless and slow, so the scan runs only
+    // when the operator passed --out. This asserts the gate still completes.
+    const result = run(['--root', REPO, ...CHEAP]);
+    expect(result.stdout).toContain('anonymisation held');
+  });
+});
+
+describe('pixel dimensions do not partition the set', () => {
+  /**
+   * Order was shuffled and byte length was padded, and the SIZES still gave it
+   * away: 240x470 appeared four times, all one subject; 140x274 twice, same
+   * subject; and so on for nine of eleven size classes, covering seventeen of
+   * twenty-one renders. An identifier could link every ladder rung to its
+   * full-size render out of answers.json WITHOUT OPENING AN IMAGE.
+   */
+  const built = handoff(REPO, ['--variants', '2']);
+  const keymap = readKeymap(built.keymapPath) as {
+    entries: { subjectId: string; width: number; height: number; naturalWidth: number }[];
+  };
+
+  it('hands over every render on one canvas, so no size class is subject-pure', () => {
+    const classes = new Map<string, Set<string>>();
+    for (const entry of keymap.entries) {
+      const size = `${String(entry.width)}x${String(entry.height)}`;
+      classes.set(size, (classes.get(size) ?? new Set()).add(entry.subjectId));
+    }
+    expect(classes.size, 'more than one size class still partitions the set').toBe(1);
+    // and the one class holds every subject in the run, which is the property
+    // that class being singular is FOR.
+    const subjects = new Set(keymap.entries.map((e) => e.subjectId));
+    expect([...classes.values()][0]?.size).toBe(subjects.size);
+    expect(subjects.size).toBeGreaterThan(1);
+  });
+
+  it('shows the identifier nothing in answers.json it could sort by', () => {
+    const answers = JSON.parse(readFileSync(built.answersPath, 'utf8')) as {
+      identifications: { width: number; height: number }[];
+    };
+    const sizes = new Set(answers.identifications.map((i) => `${String(i.width)}x${String(i.height)}`));
+    expect(sizes.size).toBe(1);
+    expect(answers.identifications.length).toBeGreaterThan(1);
+  });
+
+  it('still records what was DRAWN in the keymap, which the identifier never reads', () => {
+    // The ladder is only meaningful if something remembers which rung a render
+    // is. Padding away the natural extent everywhere would have made the size
+    // ladder unscoreable, which is trading one silent loss for another.
+    const natural = new Set(keymap.entries.map((e) => e.naturalWidth));
+    expect(natural.size).toBeGreaterThan(1);
+    for (const entry of keymap.entries) {
+      expect(entry.naturalWidth).toBeLessThanOrEqual(entry.width);
+    }
+  });
+});
 
 describe('the anonymisation', () => {
   const built = handoff(REPO);
@@ -1289,8 +1539,12 @@ describe('probes', () => {
       // the subject. "Two cartoon people" must not fail anything.
       expect(entry.gating).toBe(false);
       const { subject, comparison } = entry.slots;
-      expect(entry.width).toBe(480);
-      expect(entry.height).toBe(470);
+      // The DRAWN extent. `width`/`height` are the run's uniform canvas now -
+      // every render shares one size so that pixel dimensions cannot partition
+      // the set into subject-pure classes - so what this case is about, two
+      // figures side by side on one canvas, is `natural*`.
+      expect(entry.naturalWidth).toBe(480);
+      expect(entry.naturalHeight).toBe(470);
       // Different in everything the rig can vary, so that identical proportions
       // are the one thing left to read. Two figures alike but for costume would
       // prove far less.
@@ -1381,14 +1635,83 @@ describe('--require-identification', () => {
   });
 
   it('turns a stale record into a failure rather than scoring round it', () => {
-    // docs/art-verification.json now carries a real harness run, and that run
-    // predates `requiresComparisonFigure`, so one entry in it is UNCHECKABLE.
-    // The default gate reports that and exits 0 -- the record is stale, not
-    // wrong. Under this flag it is a failure, which is what makes the flag the
-    // one-line change that turns identification into a hard gate.
-    const result = run(['--root', REPO, ...CHEAP, '--require-identification']);
+    // A record whose hand-off could not answer a `requiresComparisonFigure`
+    // entry is STALE, not wrong: the default gate reports it and exits 0, and
+    // under this flag it is a failure. That is what makes the flag the one-line
+    // change turning identification into a hard gate.
+    //
+    // CONSTRUCTED, not observed. This read the live docs/art-verification.json
+    // and depended on it happening to contain a stale entry. That stopped being
+    // true the moment the verifier re-made the run - and the failure mode is the
+    // bad one: a record with no stale entry does not make this case fail loudly,
+    // it makes it test nothing. The condition is built here instead, from the
+    // real contract, so it holds whatever today's record says.
+    const references = JSON.parse(
+      readFileSync(join(REPO, 'assets', 'refs', 'references.json'), 'utf8'),
+    ) as {
+      subjects: {
+        id: string;
+        expectedBlindAnswer: string[];
+        mustBeRight: { feature: string; requiresComparisonFigure?: boolean }[];
+      }[];
+    };
+    const subject = references.subjects.find((s) =>
+      (s.mustBeRight ?? []).some((m) => m.requiresComparisonFigure === true),
+    );
+    expect(subject, 'no subject requires a comparison figure, so STALE is unreachable').toBeDefined();
+    const id = subject?.id ?? '';
+
+    // One gating render, identified correctly, every mustBeRight feature
+    // audited present - and NO comparison figure in the keymap, which is
+    // exactly what a hand-off built before the requirement looked like.
+    const record = {
+      runIntegrity: { blindnessHeld: true },
+      results: [],
+      handoffRun: {
+        keymap: {
+          id: 'truenorth-art-handoff-keymap',
+          version: 1,
+          runId: 'stalefixture0001',
+          entries: [
+            {
+              render: '0123456789abcdef.png',
+              subjectId: id,
+              probe: 'full',
+              gating: true,
+              width: 100,
+              height: 100,
+              naturalWidth: 100,
+              naturalHeight: 100,
+            },
+          ],
+          unrendered: [],
+        },
+        answers: {
+          runId: 'stalefixture0001',
+          identifications: [
+            { render: '0123456789abcdef.png', answer: subject?.expectedBlindAnswer[0] ?? '' },
+          ],
+        },
+        audit: {
+          runId: 'stalefixture0001',
+          audits: [
+            {
+              subjectId: id,
+              featuresPresent: (subject?.mustBeRight ?? []).map((m) => m.feature),
+              featuresAbsent: [],
+              featuresUncheckable: [],
+              forbiddenPresent: [],
+            },
+          ],
+        },
+      },
+    };
+    const path = join(scratch('stale-record'), 'art-verification.json');
+    writeFileSync(path, JSON.stringify(record, null, 2));
+
+    const result = run(['--root', REPO, ...CHEAP, '--require-identification', '--record', path]);
+    expect(result.stdout, result.output).toContain('STALE');
     expect(result.status, result.output).toBe(1);
-    expect(result.stdout).toContain('STALE');
     expect(result.stderr).toContain('NOT ESTABLISHED');
   });
 
