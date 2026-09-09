@@ -39,6 +39,12 @@ import {
   type CastGap,
 } from './character-cast';
 import {
+  brakingTuning,
+  createAutoStop,
+  type AutoStopSubject,
+  type AutoStopWatch,
+} from './auto-stop';
+import {
   affordanceMarks,
   markPulse,
   type AffordanceMark,
@@ -340,6 +346,24 @@ export class LevelScene extends Phaser.Scene {
    * `#tuning`, which is what reach, jump and the animation binding still read.
    */
   #locomotion: ReturnType<typeof createLocomotion>;
+  /**
+   * The same mode with its brake on, built once.
+   *
+   * Stepped instead of {@link #locomotion} on the frames an automatic drive is
+   * being brought to rest, so a halt is the mode's own `turnAcceleration` and no
+   * direction is ever synthesised into `LocomotionIntent.move`. See
+   * `auto-stop.ts`; it does not depend on the accessibility option, so it is
+   * built with the tuning and never rebuilt.
+   */
+  readonly #braking: ReturnType<typeof createLocomotion>;
+  /**
+   * What an automatic drive stops for, and what lets it go again.
+   *
+   * The rule is `auto-stop.ts`'s, not this file's, for the reason `level-exit.ts`
+   * gives: `environment: 'node'` cannot load a module that imports Phaser, so a
+   * rule left in here is a rule proved only by a browser.
+   */
+  readonly #autoStop: AutoStopWatch;
   readonly #tuning: LocomotionTuning;
   readonly #bounds: LevelBounds;
   /**
@@ -389,6 +413,14 @@ export class LevelScene extends Phaser.Scene {
     readonly npc: boolean;
     readonly rect: TargetRect;
   }[] = [];
+  /**
+   * The same set again, as `auto-stop.ts` wants it: an id and a world x.
+   *
+   * Derived once with `#reachTargets` rather than mapped every frame, because
+   * this is read on every update and the list does not change for the life of
+   * the level.
+   */
+  #stopSubjects: readonly AutoStopSubject[] = [];
   /** Where each engageable thing was drawn, filled in by the paint passes. */
   readonly #drawnRects = new Map<string, TargetRect>();
   #jumpQueued = false;
@@ -471,6 +503,8 @@ export class LevelScene extends Phaser.Scene {
     }
     this.#tuning = tuning;
     this.#locomotion = createLocomotion(tuning);
+    this.#braking = createLocomotion(brakingTuning(tuning));
+    this.#autoStop = createAutoStop(tuning);
     this.#bounds = levelBounds(options.level.ground, options.level.size);
     /*
      * `designWidth / zoom` is what the camera can see, in world units, at every
@@ -771,7 +805,24 @@ export class LevelScene extends Phaser.Scene {
     const dt = Math.min(MAX_STEP_SECONDS, Math.max(0, delta / 1000));
     const intent = this.#sampleIntent();
 
-    const step = this.#locomotion.step(this.#state, intent, dt);
+    /*
+     * Does an automatic drive have to let go of this frame?
+     *
+     * Asked after the intent, because the player's own direction is what
+     * overrules it, and before the step, because the answer chooses which
+     * strategy takes the step. `true` is the brake; nothing is added to the
+     * intent, so a trace of a hands-off run still reads as zero on every frame.
+     */
+    const halted = this.#autoStop.update({
+      automatic: this.#automaticDrive(),
+      playerX: this.#state.x,
+      velocityX: this.#state.velocityX,
+      playerMove: intent.move,
+      subjects: this.#stopSubjects,
+      completed: this.#completed,
+    });
+
+    const step = (halted ? this.#braking : this.#locomotion).step(this.#state, intent, dt);
     this.#state = applyBounds(step.state, this.#bounds, this.#tuning, dt);
 
     for (const event of step.events) this.#publishLocomotionEvent(event.kind);
@@ -1120,6 +1171,18 @@ export class LevelScene extends Phaser.Scene {
     return this.#autoMove;
   }
 
+  /**
+   * Is the player being carried rather than holding?
+   *
+   * True for the accessibility option **and** for a level that declares
+   * `drive: "auto"` — prairie-rail's train does, with `requiresStop: true`. One
+   * question, so the train's halt and auto-move's halt are the same code path
+   * and a level can have the behaviour from JSON alone.
+   */
+  #automaticDrive(): boolean {
+    return this.#autoMove || this.#tuning.drive === 'auto';
+  }
+
   #lastJumpHeld = false;
   #lastInteract = false;
   /** How many parallax layers drew from a texture. See `SceneSnapshot.layers`. */
@@ -1314,6 +1377,10 @@ export class LevelScene extends Phaser.Scene {
         rect: rectFor(character.characterId as string, character.position),
       })),
     ];
+    this.#stopSubjects = this.#reachTargets.map((target) => ({
+      id: target.id,
+      x: target.position.x,
+    }));
   }
 
   #reachPx(): number {
@@ -1369,6 +1436,16 @@ export class LevelScene extends Phaser.Scene {
       }
     }
     if (best === null) return;
+    /*
+     * The player is done being stopped here.
+     *
+     * An automatic drive that halted for this subject lets go now, so the world
+     * moves on when the card the engagement opens is closed — the level is
+     * paused while it is open, so nothing slides underneath it. This is the
+     * resume that matters: a player who chose auto-move because they cannot hold
+     * a contact must not need to hold one to leave the first landmark.
+     */
+    this.#autoStop.release();
     /* The rig has a `once` interact state; firing it is what makes an engagement
        visible in the world rather than only in the DOM above it. A rig that
        declares no such trigger simply has nothing fired at it. */
