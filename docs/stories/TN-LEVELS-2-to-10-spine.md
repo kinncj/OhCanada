@@ -10,17 +10,28 @@ accessibility and bilingual scenarios, in the slice that builds it — the same 
 contracts that bind all nine: a level is added by data and assets alone, and a level whose depiction is
 blocked is not authored at all.
 
-**Amended 2026-09-08: three more levels have documents, so three more have copy.** `content/levels/` now
-holds `halifax`, `quebec-city`, `ottawa` and `toronto`, and the game opens on Halifax. Levels 1, 3 and 5
+**Amended 2026-09-08: three more levels have documents, so three more have copy.** `content/levels/` held
+`halifax`, `quebec-city`, `ottawa` and `toronto`, and the game opens on Halifax. Levels 1, 3 and 5
 therefore have *partial* story files — `TN-LEVEL-halifax.md`, `TN-LEVEL-quebec-city.md` and
 `TN-LEVEL-toronto.md` — which own the copy each of those levels draws today and nothing else. The full
 stories still belong to the slices that build the locomotion, the NPC and the quest. A level a player can
 already open cannot wait for its slice to be told what to say.
 
+**Amended again 2026-09-09: levels 6 and 7 shipped documents and art, so they have partial story files
+too.** `content/levels/winnipeg.json` and `content/levels/prairie-rail.json` are built, listed in
+`content/game.config.json`, drawn (`assets/style/winnipeg-level.md`, `assets/style/prairie-rail-level.md`)
+and each carries a question bank of its own. `TN-LEVEL-winnipeg.md` and `TN-LEVEL-prairie-rail.md` own their
+copy. Three things follow that are worth naming here rather than in a level file: **`train` is the first
+locomotion mode a level document has added since ADR-0023 opened the set**, and it cost exactly one row in
+`TN-MOVE`; **these are the first two levels with no NPC and no quest at all**, so the only way to finish
+either is to reach its end (`TN-DONE`); and **the question banks are no longer one bank** — seven subjects
+now have their own directory under `content/questions/`, which closes `OQ-SPINE-3`.
+
 Read `README.md` in this directory first. `TN-MAP-level-select.md` draws the ten entries below;
 `TN-LEVEL-ottawa.md` is the worked example of what each of these rows becomes;
-`TN-MOVE-locomotion-labels.md` owns what the HUD calls each locomotion mode in the table below, and
-`TN-WAIT-a-level-opens-or-it-does-not.md` owns the two strings every built level needs.
+`TN-MOVE-locomotion-labels.md` owns what the HUD calls each locomotion mode in the table below,
+`TN-WAIT-a-level-opens-or-it-does-not.md` owns the two strings every built level needs, and
+`TN-GUIDE-the-guide.md` owns the one NPC name that is written down today.
 
 ## Three things that block work in this table, stated before the table
 
@@ -35,7 +46,9 @@ answered.
    depicts the peoples of Inuit Nunangat or removes them from a level about where they live. Both readings
    need Tier 3. Level 2 and level 10 are therefore **not scoped below** — no landmark, no NPC, no id. Filling
    those cells in would make a blocked level look schedulable, and a plan that reads as schedulable gets
-   scheduled. `TN-MOVE` applies the same rule to their locomotion labels and writes neither.
+   scheduled. `TN-MOVE` applies the same rule to their locomotion labels and writes neither. **Level 2's
+   question bank exists** — 46 verified questions under `who-we-are` — and that changes nothing: a bank is
+   not a licence to depict, and the block is about depiction.
 2. **`OQ-REVIEW-10` is unanswered and three locomotion modes depend on it.** The canoe (level 2), the kayak
    (named in that question and not assigned to a level) and the dogsled and qamutiik (level 10) are Indigenous
    technology used as generic Canadian symbols. `docs/content-review.md` §5.4 says so, and adds the sentence
@@ -48,9 +61,10 @@ answered.
    `content/schemas/level.schema.json` and `app/application/ports/locomotion.ts` enumerated. ADR-0023 moved
    the legal set of modes into `content/game.config.json#/locomotionModes`, which now lists nine including
    `toboggan`, and `content/levels/quebec-city.json` declares it. Slice 2's claim survives: adding a mode is
-   a content edit and a locale key, not a schema and a port change. The ADR records one obligation that is
-   not this file's — `app/adapters/phaser/level-document.ts` still holds a hard-coded copy of the eight
-   names, so the claim is not fully true until that reads the config. See `OQ-SPINE-1`.
+   a content edit and a locale key, not a schema and a port change — and `prairie-rail`'s `train` is the
+   first mode added *after* the ADR, which paid exactly that price and no more. The ADR records one
+   obligation that is not this file's — `app/adapters/phaser/level-document.ts` still holds a hard-coded
+   copy of the eight names, so the claim is not fully true until that reads the config. See `OQ-SPINE-1`.
 
 ## The ten levels
 
@@ -59,21 +73,29 @@ is north, which is why no copy in `TN-MAP` claims the journey is east to west (`
 
 | # | Level id | Subject (bank key) | Place | Locomotion | Landmark that must survive blind identification | NPC | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | `halifax` | `rights` | Halifax, Nova Scotia | `walk` | Pier 21's waterfront frontage and Immigration Hall, with the harbour behind — see the note below on how weak this is | the guide | **Built, and the game opens here** — copy in `TN-LEVEL-halifax.md`; full story pending |
-| 2 | *not fixed* | `who-we-are` | *not scoped* | `canoe` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`** |
-| 3 | `quebec-city` | `history` | Québec City (Old Québec) | `toboggan` | Château Frontenac seen from Dufferin Terrace, with the ramparts | the archivist | **Built** — copy in `TN-LEVEL-quebec-city.md`; full story pending |
-| 4 | `ottawa` | `government` | Ottawa | `skate` | Centre Block and the Peace Tower from the canal | the officer | **Shipped** — `TN-LEVEL-ottawa.md` |
-| 5 | `toronto` | `elections` | Toronto | `bike` | Toronto City Hall's two curved towers across Nathan Phillips Square — **but the shipped document draws the CN Tower**, `OQ-TORONTO-2` | the volunteer | **Built** — copy in `TN-LEVEL-toronto.md`; full story pending, `OQ-SPINE-3` |
-| 6 | `winnipeg` | `justice` | Winnipeg | `walk` | The Canadian Museum for Human Rights, by its tower silhouette | the judge | Ready to scope |
-| 7 | `prairie-rail` | `modern-canada` | The Prairies | `train` | A wooden prairie grain elevator beside the track — a *named, cited* one, see below | the journalist | Ready to scope |
-| 8 | `alberta-foothills` | `economy` | The Alberta foothills | `horse` | A working ranch's gate and barn against the foothills, with the Rockies on the horizon | the rancher | Ready to scope, weak blind ID |
-| 9 | `vancouver` | `symbols` | Vancouver | `skateboard` | Canada Place's white sails on the waterfront | the artist | Ready to scope — **read the trap below** |
-| 10 | *not fixed* | `regions` | The North | `dogsled` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`** |
+| 1 | `halifax` | `rights` | Halifax, Nova Scotia | `walk` | Pier 21's waterfront frontage and Immigration Hall, with the harbour behind — see the note below on how weak this is | the guide | **Built, and the game opens here** — copy in `TN-LEVEL-halifax.md`; quest authored; bank 37 verified; full story pending |
+| 2 | *not fixed* | `who-we-are` | *not scoped* | `canoe` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`**; bank 46 verified and unusable until the block lifts |
+| 3 | `quebec-city` | `history` | Québec City (Old Québec) | `toboggan` | Château Frontenac seen from Dufferin Terrace, with the ramparts | the guide | **Built** — copy in `TN-LEVEL-quebec-city.md`; quest authored; bank 96 verified; full story pending |
+| 4 | `ottawa` | `government` | Ottawa | `skate` | Centre Block and the Peace Tower from the canal | the officer | **Shipped** — `TN-LEVEL-ottawa.md`; bank 38 verified |
+| 5 | `toronto` | `elections` | Toronto | `bike` | Toronto City Hall's two curved towers across Nathan Phillips Square — **but the shipped document draws the CN Tower**, `OQ-TORONTO-2` | the guide | **Built** — copy in `TN-LEVEL-toronto.md`; quest authored; bank 36 verified; full story pending |
+| 6 | `winnipeg` | `justice` | Winnipeg (The Forks) | `walk` | The Canadian Museum for Human Rights, by its tower silhouette | the judge — **not placed yet** | **Built** — copy in `TN-LEVEL-winnipeg.md`; no NPC, no quest; bank 31 verified |
+| 7 | `prairie-rail` | `modern-canada` | The Prairies (southern Saskatchewan) | `train` | A wooden prairie grain elevator beside the track — a standard plan, drawn from a cited building, shipping **blank**, see below | the journalist — **not placed yet** | **Built** — copy in `TN-LEVEL-prairie-rail.md`; no NPC, no quest; bank 39 verified |
+| 8 | `alberta-foothills` | `economy` | The Alberta foothills | `horse` | A working ranch's gate and barn against the foothills, with the Rockies on the horizon | the rancher | Ready to scope, weak blind ID; **no bank yet** |
+| 9 | `vancouver` | `symbols` | Vancouver | `skateboard` | Canada Place's white sails on the waterfront | the artist | Ready to scope — **read the trap below**; **no bank yet** |
+| 10 | *not fixed* | `regions` | The North | `dogsled` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`**; no bank |
 
 **"Built" is not "shipped".** A built level has a document, a place on the map, a waiting sentence, an error
-title and a mode label, and can be opened. It does not yet have its own locomotion tuning proved by
-scenarios, its NPC, its quest, or the thirty verified questions `CLAUDE.md` requires for its subject before
-it ships. `TN-LEVELS-03` is the floor each of them still has to clear.
+title, a stamp sentence, a play label and a mode label, and can be opened. It does not yet have its own
+locomotion tuning proved by scenarios, its NPC or its quest. **What it no longer lacks is questions**: the
+six built levels each have a bank of their own above `CLAUDE.md`'s floor of thirty verified.
+`TN-LEVELS-03` is the rest of the floor each of them still has to clear.
+
+**Three of the four authored quests are given by the guide.** `content/quests/halifax-clock-and-pier.json`,
+`quebec-city-chateau-frontenac.json` and `toronto-cn-tower.json` all declare `"giver": "guide"`, and the
+three level documents place `characterId: "guide"` beside the quest. The NPC column above says "the guide"
+for those three levels because that is what shipped, not because the table was rewritten: level 1 was always
+the guide's, and levels 3 and 5 are now too. Its name is `npc.guide.name` and it is written in
+`TN-GUIDE-the-guide.md`.
 
 ### Level 1 — Halifax, `rights`, walk
 
@@ -97,7 +119,9 @@ player waits past is the shape §10.2 rules out and a compressed paraphrase is a
 ### Level 2 — `who-we-are`, canoe: not scoped, on purpose
 
 Blocked by `docs/content-review.md` §1, shipping-rule item 5, and by `OQ-REVIEW-10` for its locomotion. The
-place, the landmark and the NPC are deliberately blank. `OQ-REVIEW-3` recommends that
+place, the landmark and the NPC are deliberately blank. **A bank of 46 verified questions exists for this
+subject and does not unblock it**: the block is on depicting a nation and on setting a level in its
+territory, not on asking a question sourced from *Discover Canada*. `OQ-REVIEW-3` recommends that
 `docs/plan/slices.md` re-orders so this slice is not started and then abandoned mid-flight; that
 re-ordering is the plan owner's.
 
@@ -106,37 +130,55 @@ re-ordering is the plan owner's.
 The Château Frontenac is one of the most identifiable buildings in Canada and blind identification should be
 straightforward. The level runs along Dufferin Terrace and the Old Québec ramparts. The locomotion mode was
 the problem and is not any more: ADR-0023 opened the set of modes to content and the shipped document
-declares `toboggan` first and `walk` second. The building may be named on its point-of-interest card and
-nowhere else (`TN-NAMES`), which is why the level's waiting sentence names the slope instead.
+declares `toboggan` first and `walk` second. The building may be named on its point-of-interest card, and —
+since `TN-DIALOGUE-what-a-quest-giver-says.md` — in this level's own quest, where the guide sends the player
+to it. It may appear nowhere else (`TN-NAMES`), which is why the level's waiting sentence names the slope.
 
 ### Level 5 — Toronto, `elections`, bike
 
 Toronto City Hall is civic, unmistakable in silhouette, and about the thing the level teaches. The CN Tower
 can stand on the skyline as a second recognisability anchor; it must not carry a wordmark or a logo, under
 the same rule that keeps the RCMP's marks off the officer. **The shipped document has this the other way
-round** — one point of interest, and it is the tower — which is `OQ-TORONTO-2` and has to be settled before
-the level's full story is written.
+round** — one point of interest, and it is the tower, and the quest is named after it — which is
+`OQ-TORONTO-2` and has to be settled before the level's full story is written.
 
-**The question bank for this level may already be inside level 4's.** All 57 shipped questions are filed
-under `government`, and a dozen of them are about ballots, electoral districts, advance polls and who may
-vote — which is level 5's subject. Two levels cannot share one bank and both claim thirty verified questions
-from it. `OQ-SPINE-3`.
+**This level's bank is no longer inside level 4's.** `content/questions/elections/` holds 36 verified
+questions, including the ballot, advance-poll and electoral-district questions that were filed under
+`government` when this file first flagged the overlap; `government` keeps 38. The split this file asked for
+happened, and `TN-LEVELS-03`'s last row is what keeps them apart.
 
 ### Level 6 — Winnipeg, `justice`, walk
 
 The Canadian Museum for Human Rights has a silhouette nothing else in Canada has, and a level about the
-justice system standing beside it is coherent. The Golden Boy on the Manitoba Legislative Building is the
-fallback anchor. The Forks is a confluence and a historic meeting place; if the level goes there, the
-territorial fact belongs in "About this place" and no depiction follows from it.
+justice system standing beside it is coherent. **The shipped level takes it and does not take the fallback**,
+and `assets/style/winnipeg-level.md` §0 gives the reason this file should carry too: the Golden Boy stands on
+a *provincial legislature*, which is where law is made, and this level teaches the courts, the police and the
+rule of law. A legislature on a justice level teaches the wrong institution as confidently as it teaches the
+right city. The consequence is structural and is stated rather than discovered: **Winnipeg as a place rests
+on that one render**, because the four parallax layers repeat and none of them may carry anything
+identifying.
+
+The level is set at The Forks, a confluence and a historic meeting place. The territorial fact — Treaty
+No. 1, and the homeland of the Red River Métis — is quoted from Parks Canada's own page and lives in "About
+this place", and no depiction follows from it. `TN-LEVEL-winnipeg.md` keeps it off the loading screen and
+off the stamp, and `OQ-WINNIPEG-3` records the one real problem with it: the level document has one
+`nationSource` and the quoted sentence names seven nations.
 
 ### Level 7 — The Prairies, `modern-canada`, train
 
 The grain elevator is the one prairie silhouette a person recognises without being told, and it is a *type*
-rather than a named landmark — which is a problem for this project's rules, not a licence. **The reference
-must be one specific surviving elevator**, recorded in `assets/refs/references.json` with its own credit, so
-the art is drawn from a thing that exists rather than assembled from memory. `assets/style/art-bible.md`'s
-"drop, never substitute" applies: an elevator with an invented company name painted on it is an invented
-surface.
+rather than a named landmark — which is a problem for this project's rules, not a licence. This file asked
+for **one specific surviving elevator**, recorded with its own credit, and that is what was drawn.
+**It did not solve the identification problem, and the reason is worth carrying here**: every wooden prairie
+elevator has its company's and its town's name painted across the crib, and `make verify-art` refuses a
+`<text>` element in a render source, so the building ships **blank** and its blind contract is deliberately
+never asked for a place (`assets/style/prairie-rail-level.md` §0). `assets/style/art-bible.md`'s "drop, never
+substitute" is why no invented company name went on in place of the real one. `OQ-PRAIRIE-3` records what
+that does to `TN-NAMES`'s list.
+
+This is also the first level whose **id is not its place**: `prairie-rail` against "The Prairies". Every key
+is keyed on the id and every sentence names the place, and levels 8 and 10 will be the same shape
+(`OQ-PRAIRIE-4`).
 
 ### Level 8 — The Alberta foothills, `economy`, horse
 
@@ -147,7 +189,10 @@ that would identify the place — Head-Smashed-In Buffalo Jump is the obvious on
 that stay inside the rules: a specific, cited, named ranch (the Bar U Ranch National Historic Site is one),
 or the level's anchor moving to the Rockies on the horizon and accepting "the Canadian Rockies" as the blind
 answer. Decide it with the art agent before the blind contract is written, because slice 1's recorded
-failure was exactly a contract asking for more than the art was allowed to show.
+failure was exactly a contract asking for more than the art was allowed to show. **Level 7 has just been
+through the same argument and lost it**, which is the strongest available evidence that this row needs
+deciding early. This level also has **no question bank yet**, which levels 6 and 7 no longer have as an
+excuse.
 
 ### Level 9 — Vancouver, `symbols`, skateboard: the trap
 
@@ -163,7 +208,10 @@ for are on the presumed-restricted or ambiguous lists:
 Written here so that the answer is already on the page when the art ticket is opened. Canada Place is a
 building, drawn from a cited reference, and it carries none of this; the Lions Gate Bridge is the fallback.
 The level's symbols content — the flag, the maple leaf, the beaver, the anthem — comes from *Discover
-Canada* under ADR-0003 like any other question.
+Canada* under ADR-0003 like any other question, and **no `symbols` bank exists yet**. **The beaver is also
+this game's companion character**, and `TN-GUIDE-the-guide.md` is why that costs nothing here: the guide is
+named by role, never "the beaver", so a level that teaches the symbol is not competing with a label the
+player has been reading since level 1.
 
 ### Level 10 — The North, `regions`, dogsled: not scoped, on purpose
 
@@ -175,19 +223,18 @@ scoped**, and the map draws it as "Not made yet" like the rest (`TN-MAP-04`).
 ## The NPCs, and one French decision that is cheaper made once
 
 Every NPC is named by role, never by an organisation, exactly as `TN-LEVEL-ottawa.md` names "the officer" /
-« l'agent » and never names a police force.
+« l'agent » and never names a police force, and as `TN-GUIDE-the-guide.md` names "the guide" / « le guide »
+and never gives the beaver a proper name.
 
 `OQ-LEVEL-8` asks whether Ottawa's officer is « l'agent » or « l'agente », and notes that three French
 strings move together with the answer. That question repeats for every level, and it can be made much
-cheaper: **French has role nouns that do not change form**, only their article does. Six of the eight NPCs
-above were chosen on that basis:
+cheaper: **French has role nouns that do not change form**, only their article does. Most of the NPCs above
+were chosen on that basis:
 
 | Level | NPC, EN | NPC, FR | Same form for any gender? |
 |---|---|---|---|
-| 1 | the guide | le guide / la guide | Yes |
-| 3 | the archivist | l'archiviste | Yes |
+| 1, 3, 5 | the guide | le guide | Yes — and the referent is an animal, so the question does not arise at all (`TN-GUIDE`) |
 | 4 | the officer | l'agent / l'agente | **No** — `OQ-LEVEL-8` |
-| 5 | the volunteer | le bénévole / la bénévole | Yes |
 | 6 | the judge | le juge / la juge | Yes |
 | 7 | the journalist | le journaliste / la journaliste | Yes |
 | 8 | the rancher | l'éleveur / l'éleveuse | **No** — `OQ-SPINE-4` |
@@ -196,12 +243,14 @@ above were chosen on that basis:
 `docs/content-review.md` §8.6 forbids « l'agent(e) » and « l'agent·e », and forbids any French copy about the
 *player* needing agreement. This table is about characters, not the player, so the rule that binds is
 `TN-LEVEL-11`'s: every French string naming a character uses the same form, and no bracketed ending appears
-anywhere. Choosing epicene roles means seven of the eight levels never have to answer the question at all.
-"The archivist" is the one row where plain language and this rule pull against each other — see `OQ-SPINE-4`.
+anywhere. Choosing epicene roles means most of the levels never have to answer the question at all.
 
-**No NPC name is written as copy yet for levels 1, 3 and 5.** The three partial level files deliberately
-write only what those levels draw today; a speaker's label with no dialogue behind it is copy for behaviour
-nothing performs.
+**The archivist and the volunteer are gone from this table**, and that is what shipping did rather than a
+decision taken here: levels 1, 3 and 5 all place the guide, so the roles this file once proposed for them
+(the archivist, the volunteer) are not in any level document. `OQ-SPINE-4`'s worry about « archiviste » not
+being a grade-6 word is answered by the same fact. **Levels 6 and 7 place no character at all yet**, so "the
+judge" and "the journalist" are proposals, and no name is written as copy for either — a speaker's label
+with no dialogue behind it is copy for behaviour nothing performs.
 
 ## Player-facing copy
 
@@ -211,7 +260,7 @@ Ottawa's pair stays in `TN-LEVEL-ottawa.md`.
 
 Two other kinds of level string are **not** here, and the split is deliberate: the waiting sentence and the
 error title belong to the level and are written in the level's own story file (`TN-WAIT`), and the mode label
-belongs to the *mode* and is written once in `TN-MOVE-locomotion-labels.md` — `walk` appears three times in
+belongs to the *mode* and is written once in `TN-MOVE-locomotion-labels.md` — `walk` appears four times in
 the table above and is one string.
 
 | Key | EN | FR |
@@ -240,13 +289,13 @@ this project has not earned the right to state. `TN-MAP-04` requires a card with
 placeholder — no "TBD", no "???", no empty box. Level 10 keeps "The North" because it is a region, not a
 nation's name for itself.
 
-**Four of these ids are decisions now, not proposals.** `content/levels/halifax.json`,
-`quebec-city.json`, `ottawa.json` and `toronto.json` exist, and `content/game.config.json` lists the same
-four in `levels` and in `unlockRules.order` and holds a ten-slot `journey` whose two nulls are levels 2 and
-10. The remaining ids are still proposals: the first file written fixes each one
-(`app/adapters/phaser/level-catalog.ts`). Levels 2 and 10 have no id here on purpose. Subject lines are
-paraphrases of *Discover Canada*'s chapter names and go through the same verification as any other claim —
-`OQ-SPINE-2`.
+**Six of these ids are decisions now, not proposals.** `content/levels/halifax.json`,
+`quebec-city.json`, `ottawa.json`, `toronto.json`, `winnipeg.json` and `prairie-rail.json` exist, and
+`content/game.config.json` lists the same six in `levels` and in `unlockRules.order` and holds a ten-slot
+`journey` whose two nulls are levels 2 and 10. The remaining ids are still proposals: the first file written
+fixes each one (`app/adapters/phaser/level-catalog.ts`). Levels 2 and 10 have no id here on purpose. Subject
+lines are paraphrases of *Discover Canada*'s chapter names and go through the same verification as any other
+claim — `OQ-SPINE-2`.
 
 ---
 
@@ -280,8 +329,14 @@ Feature: Adding a level without touching the engine
     Then the build fails, naming the mode and the registry that would have to change
     And the failure names "content/game.config.json", not a schema and not a port
 
+  Scenario: A new mode costs a locale key and nothing else
+    Given a level document declares a mode the config lists and no other level uses
+    Then the only change outside "content/" is one row in TN-MOVE's table
+    And no schema, port or adapter enumerates the mode by name
+
   Scenario: A new level costs its own words, and the build says so
-    Given a valid level document is added with no waiting sentence, error title or mode label
+    Given a valid level document is added with no waiting sentence, error title, stamp sentence,
+      play label or mode label
     When the content check runs
     Then the build fails, naming the level and each missing string
     And no level draws another level's words while that check is red
@@ -307,6 +362,18 @@ Feature: The content-review shipping rule is a gate, not a paragraph
     And no community review with status "granted" names a person or organisation and a date
     When the content check runs
     Then the build fails, naming the document and pointing at "docs/content-review.md" §1
+
+  Scenario: A citation is not a depiction
+    Given a level document carries a territorial statement quoted from a named source
+    And nothing in the level depicts any nation it names
+    Then the check passes on that ground alone
+    And the statement is drawn only by "about-this-place"
+
+  Scenario: A bank is not a licence
+    Given a subject has a full bank of verified questions
+    And the level that would teach it is blocked under §1
+    Then no level document for it may be authored
+    And the check fails for one that is
 
   Scenario: An agent cannot grant the review it needs
     Given a document sets a community review status other than "not-sought"
@@ -354,8 +421,10 @@ Feature: The floor every level story stands on
       | its title and subject line have a value in "en" and in "fr" |
       | its own waiting sentence names what it is preparing, with no percentage, fraction, step count or ellipsis |
       | its own error title names it, in both languages, written out rather than templated |
+      | its own stamp sentence and play label are written out per level, in both languages |
       | the mode it declares has a label in both languages, and the HUD is never empty |
-      | its NPC has a name that is a role, never an organisation, and never "Speaker", "NPC" or empty |
+      | its NPC, if it places one, has a name that is a role, never an organisation, and never "Speaker", "NPC" or empty |
+      | a quest it declares can be offered, which means its giver has a name before it has lines |
       | its landmark is reference-accurate and simplified, with references and credits recorded |
       | its landmark returns the intended subject under blind identification, and the contract asks for nothing the art is forbidden to draw |
       | its "About this place" panel is reachable from pause and from credits, is never modal, and states a sourced territorial fact |
@@ -382,48 +451,52 @@ Feature: The floor every level story stands on
   because the set moved rather than vanished. **One obligation is outstanding and the claim is not fully true
   until it lands** (ADR-0023, due 2026-10-08, owner engine): `app/adapters/phaser/level-document.ts` still
   holds a hard-coded `LOCOMOTION_MODES` literal, so a level declaring a mode the adapter does not know passes
-  `validate-content` and fails at load — a worse failure than the one that was fixed. Not this directory's to
-  close; recorded so nobody reads "answered" as "done".
+  `validate-content` and fails at load — a worse failure than the one that was fixed. **`prairie-rail` makes
+  this live rather than hypothetical**: it declares `train`, which is in the config's nine, and whether the
+  adapter's literal contains it decides whether the level opens at all. Not this directory's to close;
+  recorded so nobody reads "answered" as "done".
 - **`OQ-SPINE-2` — are the subject lines the official chapter names, and who verifies them?** The ten
   subjects are *Discover Canada*'s chapters, and IRCC publishes both languages. The French written above is a
   translation of meaning; the official French chapter titles exist and are citable. *Recommendation:* the
   `content-verifier` checks each pair against canada.ca and records the source, exactly as for a question —
   a subject line is on screen and states what a chapter is called. Where the official title differs from the
   table above, the official title wins and this file is amended.
-- **`OQ-SPINE-3` — level 4's and level 5's question banks overlap today.** All 57 shipped questions carry
-  `subject: "government"`, and roughly a dozen of them are about ballots, advance polls, electoral districts
-  and who may vote — which is level 5's subject, Federal Elections. `CLAUDE.md` requires ≥ 30 verified
-  questions *per subject* before a level ships, and two levels drawing from one bank would meet that bar
-  twice with one set of questions. **Three levels now make this worse rather than one**: `halifax`,
-  `quebec-city` and `toronto` are openable and declare `rights`, `history` and `elections`, and no verified
-  question carries any of those three subjects. *Recommendation:* the content lead splits the bank before
-  level 5 is authored and fills the other three, and `TN-LEVELS-03`'s last row is the check that keeps them
-  split. Routed to content; this file only records that the overlap exists.
-- **`OQ-SPINE-4` — two NPC roles need the French agreement decision, and one of them is not plain language.**
-  Level 8's « éleveur / éleveuse » has the same shape as `OQ-LEVEL-8`'s « agent / agente ». Level 3's
-  « archiviste » is epicene and is *not* a grade-6 word in either language, which is the bar `CLAUDE.md`
-  sets for dialogue. *Recommendation:* answer `OQ-LEVEL-8` once for all ten levels rather than eight times,
-  and if the answer is a form that agrees, prefer an epicene role for every remaining level. For level 3,
-  put a plainer epicene role in front of the content author — « le guide » is taken by level 1, and
-  « le/la libraire » or a simple "the neighbour" may serve the same scene. Do not reach for a bracketed
-  ending in either case.
+- ~~**`OQ-SPINE-3` — level 4's and level 5's question banks overlap.**~~ **Answered 2026-09-09, by the split
+  this question asked for.** When it was written, all 57 shipped questions carried `subject: "government"`
+  and a dozen of them were about ballots, advance polls, electoral districts and who may vote — level 5's
+  subject. `content/questions/` now holds seven subject directories, and the elections questions are in
+  theirs: `rights` 37 verified, `who-we-are` 46, `history` 96, `government` 38, `elections` 36, `justice` 31,
+  `modern-canada` 39. Every built level's bank clears `CLAUDE.md`'s thirty and no two levels draw from one.
+  **What is left is the other end of the list**: `economy`, `symbols` and `regions` have no bank at all, so
+  levels 8, 9 and 10 cannot ship, and `TN-LEVELS-03`'s last row is what keeps the seven that exist apart.
+  Routed to content as a smaller question than it was.
+- **`OQ-SPINE-4` — one NPC role still needs the French agreement decision, and one worry answered itself.**
+  Level 8's « éleveur / éleveuse » has the same shape as `OQ-LEVEL-8`'s « agent / agente ».
+  **« Archiviste » is no longer a problem**: level 3 places the guide, not an archivist, so the one epicene
+  role that was not grade-6 is not in any document. *Recommendation:* answer `OQ-LEVEL-8` once for all ten
+  levels rather than eight times, and if the answer is a form that agrees, prefer an epicene role for every
+  remaining level. Do not reach for a bracketed ending in any case.
 - **`OQ-SPINE-5` — do modern buildings and named venues raise the same question the RCMP uniform did?**
   Levels 5, 6 and 9 name buildings completed well within living memory, and one of them (the CN Tower) has a
   trademarked name. `OQ-LEVEL-1` established that this project asks before drawing something protected rather
   than after. **Answered in part by `TN-NAMES-naming-real-places.md`** for the *copy* half — the name is text,
-  in a point-of-interest card's body, once, with no mark and no claim of association — and the art half is
-  unchanged: draw the form, carry no wordmark, no logo and no signage, cite the reference, credit the
-  photograph. What is still the project owner's is whether trade names may appear at all (`OQ-NAMES-1`).
+  in a point-of-interest card's body or in the words a quest's giver says about going there, once, with no
+  mark and no claim of association — and the art half is unchanged: draw the form, carry no wordmark, no logo
+  and no signage, cite the reference, credit the photograph. What is still the project owner's is whether
+  trade names may appear at all (`OQ-NAMES-1`), and that question is now larger than it was, because three
+  shipped quest documents name their destination (`OQ-DIALOGUE-5`).
 - **`OQ-SPINE-6` — is a level's *place* allowed to be a region rather than a city?** Levels 7, 8 and 10 are
   regions, and `TN-MAP` draws a place name for each. A region is harder to identify blind than a city and
-  harder to reference accurately. *Recommendation:* accept regions for those three, and require each to name
-  one specific, cited, existing structure as its recognisability anchor — which is what the level 7 and
-  level 8 notes above already do. A region with no specific reference is where an invented landmark comes
-  from.
+  harder to reference accurately. **Level 7 has now answered the copy half of it and confirmed the worry on
+  the art half**: its four rows work (`TN-PRAIRIE`), and its landmark is a type that is deliberately never
+  asked to name a place. *Recommendation:* accept regions for those three, and require each to name one
+  specific, cited, existing structure as its recognisability anchor — and accept, as level 7 did, that a
+  region's anchor may identify the *type* and not the place. A region with no specific reference is where an
+  invented landmark comes from.
 - **`OQ-SPINE-7` — what happens to this file when each level gets its own story?** **Being answered in
-  practice, and the recommendation held:** the row stays and the detail moves. Levels 1, 3 and 5 now have
-  files carrying their own copy, and this table keeps their subject, place, locomotion, landmark, NPC and
-  blockers. Each level story owns its own copy, its own art notes and its own scenarios; this file keeps the
-  table, the blockers and the two contracts, so there is still one page that answers "what are the ten levels
-  and which of them may be built". A spine that is deleted after the first level is written is a spine that
-  has to be rediscovered for the second.
+  practice, and the recommendation held:** the row stays and the detail moves. Levels 1, 3, 5, 6 and 7 now
+  have files carrying their own copy, and this table keeps their subject, place, locomotion, landmark, NPC
+  and blockers. Each level story owns its own copy, its own art notes and its own scenarios; this file keeps
+  the table, the blockers and the two contracts, so there is still one page that answers "what are the ten
+  levels and which of them may be built". A spine that is deleted after the first level is written is a spine
+  that has to be rediscovered for the second.

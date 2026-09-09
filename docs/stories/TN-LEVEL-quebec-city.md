@@ -4,15 +4,24 @@
 it fails and when it is finished — in both languages, with no place named that the level does not draw.
 
 **This is not the whole Québec City level story.** `TN-LEVELS-2-to-10-spine.md` fixes what this level is; the
-full story — the toboggan, the terrace, the archivist, the Château Frontenac card, the quest — is written in
-the slice that builds them, in the shape of `TN-LEVEL-ottawa.md`. What is here is the copy the level draws
+full story — the toboggan, the terrace, the guide, the Château Frontenac card, the quest — is written in the
+slice that builds them, in the shape of `TN-LEVEL-ottawa.md`. What is here is the copy the level draws
 **today**, because `content/levels/quebec-city.json` shipped and the game can open it.
 
 **Amended 2026-09-08 — two more rows, and this level is again the one that proves the rule.** A level can now
 be finished, which draws a stamp sentence and offers the next level
 (`TN-DONE-finishing-a-level.md`). Both new rows are written out per level, and both are wrong here under any
 template: the French takes « de la Ville de Québec » where three other levels take « de » or « d' », and
-« dans la » where they take « à ».
+« dans la » where four take « à ».
+
+**Amended again 2026-09-09 — this level has a quest, its giver is the guide, and the quest names the
+building.** `content/quests/quebec-city-chateau-frontenac.json` ships, the level document places
+`characterId: "guide"`, and there was no `npc.guide.name`, so the offer was refused; the name is now written
+in `TN-GUIDE-the-guide.md`. The quest also **says "Château Frontenac"** — in its summary, in a line the
+guide speaks, and in a step prompt the HUD's tracker draws — which `TN-DIALOGUE-what-a-quest-giver-says.md`
+rules is allowed and `TN-NAMES-01` now says so. **One scenario in this file changed because of it**: the
+point-of-interest card is no longer the *only* screen in this level that names the hotel, and pretending
+otherwise would have made a passing scenario into a false one.
 
 Read `README.md` in this directory first. The rows this file does not own:
 
@@ -22,7 +31,9 @@ Read `README.md` in this directory first. The rows this file does not own:
 | The mode labels the HUD draws | `locomotion.toboggan.label` — "Sledding" / « Glissade »; `locomotion.walk.label` | `TN-MOVE-locomotion-labels.md` |
 | The error card's body and its two buttons | `level.error.body`, `level.error.retry`, `level.error.back` | `TN-WAIT-a-level-opens-or-it-does-not.md` |
 | The completion card that draws this file's two new rows | `level.complete.*`, `quest.done.title`, `map.open`, `common.keepPlaying` | `TN-DONE-finishing-a-level.md` |
-| What the HUD says when something is in reach | `hud.interact.*` | `TN-REACH-what-is-in-reach.md` |
+| The guide's name and its prompt | `npc.guide.name`, `hud.interact.guide` | `TN-GUIDE-the-guide.md` |
+| What the guide says in this level's quest | authored `dialogue[].text`, `summary`, `steps[].prompt` | `content/quests/quebec-city-chateau-frontenac.json`, under `TN-DIALOGUE-what-a-quest-giver-says.md` |
+| What the HUD says when something else is in reach | `hud.interact.*` | `TN-REACH-what-is-in-reach.md` |
 | The landmark name and blurb | inline `localizedText` | `content/levels/quebec-city.json`, under `TN-NAMES-naming-real-places.md` |
 | The territorial statement | inline `localizedText` | `content/levels/quebec-city.json`, drawn by `about-this-place` |
 
@@ -41,10 +52,11 @@ terrace and the river. Snow is not a guess: a toboggan is a thing you ride on sn
 that mode and draws no snow has a different problem than a wrong sentence.
 
 **It does not name the Château Frontenac**, and it may not: the building is on `TN-NAMES`'s list, and
-`TN-NAMES-01` puts a name from that list in a point-of-interest card's body and nowhere else — naming a
-loading message as one of the places it may not appear. The hotel's name on a waiting screen, with no source
-and no sentence around it, is the advertisement that file was written to prevent. **The same holds for the
-stamp sentence**: a stamp is named after a place, not after a hotel (`TN-PASSPORT-02`).
+`TN-NAMES-01` puts a name from that list in a point-of-interest card's body or in a quest's own words about
+going there — and nowhere else, naming a loading message as one of the places it may not appear. The hotel's
+name on a waiting screen, with no source and no sentence around it, is the advertisement that file was
+written to prevent. **The same holds for the stamp sentence**: a stamp is named after a place, not after a
+hotel (`TN-PASSPORT-02`).
 
 **It does not name Dufferin Terrace or Old Québec either**, for a smaller reason: the sentence describes the
 ground under the player, in common nouns, and the level's place name is already on the screen the player came
@@ -55,13 +67,14 @@ the place name straight in — "We could not load Québec City." — and French 
 does not carry: the level's title is « Ville de Québec », and the sentence is « … charger **la** Ville de
 Québec. » A template built on the title would draw « charger Ville de Québec », which is not French. This is
 the same defect `TN-COPY`'s worked example records — safe in English, wrong in French, and reading the
-English tells you nothing. `TN-WAIT` states the rule; this row is the evidence for it.
+English tells you nothing. `TN-WAIT` states the rule; this row is the evidence for it, and the Prairies is
+now the row that shows the English breaking too.
 
 **`stamp.quebec-city.earned` and `level.quebec-city.play` are the second and third pieces of evidence.**
-"You earned the {{level}} stamp." would draw « le tampon Ville de Québec » where the other three levels draw
-« le tampon d'Ottawa », « d'Halifax » and « de Toronto »; "Play {{level}}" would draw « Jouer à Ville de
-Québec » where the other three take « à » and no article. Three rows, three different French shapes, one
-English shape — which is why all four levels are written out and none is composed.
+"You earned the {{level}} stamp." would draw « le tampon Ville de Québec » where the other levels draw
+« le tampon d'Ottawa », « d'Halifax », « de Toronto », « de Winnipeg » and « des Prairies »; "Play {{level}}"
+would draw « Jouer à Ville de Québec » where four take « à » and no article. Six rows, four French shapes,
+two English shapes — which is why every level is written out and none is composed.
 
 **« Ville de Québec » and not « Québec ».** On its own, « Québec » is the province as often as the city.
 `TN-LEVELS` already chose the disambiguating form for the title, and the error sentence, the stamp sentence
@@ -72,11 +85,11 @@ French reviewer may prefer the shorter « Jouer à Québec » on a button.
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-QUEBEC-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06` |
-| Single switch | `TN-QUEBEC-03`; `TN-WAIT-04`; `TN-DONE-06` |
-| Screen reader | `TN-QUEBEC-03`; `TN-DONE-07` |
+| Keyboard only | `TN-QUEBEC-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06`; the quest's dialogue is `TN-GUIDE-04` |
+| Single switch | `TN-QUEBEC-03`; `TN-WAIT-04`; `TN-DONE-06`; `TN-GUIDE-04` |
+| Screen reader | `TN-QUEBEC-03`; `TN-DONE-07`; `TN-GUIDE-05` |
 | Reduced motion | `TN-QUEBEC-03`; `TN-DONE-07` |
-| 200 % text | `TN-QUEBEC-03` — the longest of the four French sentences is this one, and `TN-QUEBEC-05` for the longest label |
+| 200 % text | `TN-QUEBEC-03` — the longest of this file's French sentences is its error title, and `TN-QUEBEC-05` for the longest label |
 | Bilingual | `TN-QUEBEC-04`, and `TN-QUEBEC-05` for the two completion rows |
 | Failure path | `TN-QUEBEC-02`; the missing-row gate is `TN-WAIT-03` for two of these rows and `TN-DONE-05` for the other two |
 
@@ -100,6 +113,13 @@ Feature: Québec City says what it is getting ready
     And the element "hud-mode-label" reads "Sledding"
     And it is not empty
 
+  Scenario: This level's quest can be given
+    Given the Québec City level is playable
+    When I engage the guide
+    Then the element "dialogue-speaker" reads "The guide", the row TN-GUIDE owns
+    And the event "quest/offered" is emitted for "quebec-city-chateau-frontenac"
+    And no offer is refused for want of a speaker's name
+
   Scenario: The waiting sentence claims no progress and names no building
     Given "level-loading" is visible
     Then its text contains no percentage, no fraction and no step count
@@ -107,11 +127,13 @@ Feature: Québec City says what it is getting ready
     And it does not contain "Château Frontenac"
     And it does not contain "Dufferin"
 
-  Scenario: The building is named where a name teaches something
+  Scenario: The building is named where a name teaches something, and where the guide sends me
     Given the Québec City level is playable
     When I engage the landmark
     Then "poi-card" shows "Château Frontenac" as text, inside a sentence that says what it is
-    And that is the only screen in this level that names it
+    And the only other place it appears is this level's quest — its summary, the guide's own lines
+      and the step prompt the tracker draws — as TN-NAMES-01 and TN-DIALOGUE-06 allow
+    And no copy table row in either language contains it
 ```
 
 ## TN-QUEBEC-02 — Québec City fails in its own name (failure path)
@@ -124,7 +146,7 @@ Feature: The error card names this level
     Then the event "level/failed" is emitted for "quebec-city"
     And the element "level-error" is visible
     And it says "We could not load Québec City." and "Check your connection and try again."
-    And it does not name Ottawa, Halifax or Toronto
+    And it does not name Ottawa, Halifax, Toronto, Winnipeg or the Prairies
     And a button "Try again" is offered
     And a button "Go back" is offered
 
@@ -166,7 +188,7 @@ Feature: The level's own words reach every player
     Then "level-loading" reads "Getting the snowy slope ready."
     And nothing on it spins, pulses, slides or flashes
 
-  Scenario: The longest French sentence in the set still fits at 200 %
+  Scenario: The longest French sentences in this file still fit at 200 %
     Given text scaling is 200 %
     And the viewport is 390 x 844
     And the language is French
@@ -220,7 +242,7 @@ Feature: This level's two sentences on the completion card
     When I finish it, by its task or by reaching the end
     Then the element "quest-complete-stamp" reads "You earned the Québec City stamp."
     And it does not contain "Château Frontenac"
-    And it does not name Ottawa, Halifax or Toronto
+    And it does not name any other level
     And the accent on "Québec" is present
 
   Scenario: The French stamp sentence carries the article the others do not
@@ -231,7 +253,7 @@ Feature: This level's two sentences on the completion card
     And it does not read "Vous avez obtenu le tampon de Québec."
     And it does not contain "timbre"
 
-  Scenario: The control that opens this level takes "dans la" where the others take "à"
+  Scenario: The control that opens this level takes "dans la" where four others take "à"
     Given finishing another level opened Québec City
     Then "quest-complete-next" reads "Play Québec City"
     And in French it reads "Jouer dans la Ville de Québec"
@@ -257,12 +279,13 @@ Feature: This level's two sentences on the completion card
 
 ## Open questions
 
-- **`OQ-QUEBEC-2` — the arrival announcement and the interact prompts are not written here.** Same reason as
-  `OQ-HALIFAX-1`: they belong with the archivist, the terrace and the quest, in the full level story, and
-  writing them now would be copy for behaviour nothing performs. `OQ-SPINE-4` still has to settle whether
-  « l'archiviste » is plain enough to be this level's NPC before that story is written. **The landmark's
-  prompt is a special case and is already settled**: the Château Frontenac is on `TN-NAMES`'s list, so this
-  level may not write a per-target row naming it and draws `TN-REACH`'s generic « Regarder ce lieu ».
+- **`OQ-QUEBEC-2` — the arrival announcement is not written here, and the NPC question answered itself.**
+  The announcement belongs with the terrace and the quest, in the full level story, for the reason
+  `OQ-HALIFAX-1` gives. **The archivist is gone**: this level places the guide, like levels 1 and 5, so
+  `OQ-SPINE-4`'s worry that « archiviste » is not a grade-6 word is moot and `TN-LEVELS`'s NPC table is
+  corrected. **The landmark's prompt is settled and unchanged**: the Château Frontenac is on `TN-NAMES`'s
+  list, so this level may not write a per-target row naming it and draws `TN-REACH`'s generic « Regarder ce
+  lieu » — the quest may name the hotel, the HUD's own chrome may not.
 - **`OQ-QUEBEC-3` — "Sledding" is the HUD's word and "snowy slope" is the loading screen's, and neither is
   "toboggan".** The mode's id is `toboggan` and the two strings a player reads avoid the word, because the
   bar is CLB 4 / grade 6 (`OQ-MOVE-1`). If a reviewer decides a newcomer should meet the Canadian word,
@@ -270,6 +293,13 @@ Feature: This level's two sentences on the completion card
   answering different questions.
 - **`OQ-QUEBEC-4` — nothing in this file depends on `OQ-SPINE-1` any more.** The toboggan is a locomotion
   mode now: ADR-0023 moved the legal set into `content/game.config.json#/locomotionModes`, which lists it,
-  and `content/levels/quebec-city.json` declares it. `TN-LEVELS`'s "Blocked on `OQ-SPINE-1`" row is stale and
-  is corrected there. Recorded here because a reader who arrives from the spine will otherwise think this
-  level cannot be opened.
+  and `content/levels/quebec-city.json` declares it. Recorded here because a reader who arrives from the
+  spine will otherwise think this level cannot be opened. The outstanding half of that ADR — the adapter's
+  hard-coded list of modes — is the engine's, and `prairie-rail`'s `train` is now the mode that would fail
+  first.
+- **`OQ-QUEBEC-5` — this level's bank is filled, and its quest can now be finished.**
+  `content/questions/history/` holds 96 verified questions, which clears `CLAUDE.md`'s thirty for
+  `subject: "history"`, so the answer step in `quebec-city-chateau-frontenac.json` has a bank to draw from.
+  Recorded because this file previously carried the opposite worry. What is *not* settled is whether
+  ninety-six questions on one subject is a draw a player meets fairly, which is `TN-CARD`'s and the
+  scheduler's question rather than this file's.

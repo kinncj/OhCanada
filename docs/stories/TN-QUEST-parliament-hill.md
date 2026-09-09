@@ -33,7 +33,7 @@ in this directory that changed with it. `stamp.ottawa.earned` is one of them. Th
 level earns its stamp and draws the same card, which is `TN-DONE-finishing-a-level.md`. Two consequences for
 this file, and neither changes a word of its copy:
 
-- **`stamp.ottawa.earned` is now one of four rows**, one per built level, each written in that level's own
+- **`stamp.ottawa.earned` is now one of six rows**, one per built level, each written in that level's own
   story file. Ottawa's stays here, because the quest is what earns it here. `TN-DONE` carries the directory
   and the gate that fails the build for a built level with no row.
 - **The card has lines this file does not own**: what the player answered in this level
@@ -41,9 +41,29 @@ this file, and neither changes a word of its copy:
   (`level.<id>.play`). `TN-DONE` owns those, and it owns the heading on the path where no task was accepted.
   This file keeps the quest path, unchanged.
 
-`OQ-DONE-5` records the one place the two files do not yet agree — this file's completion card offers
-"See my passport" and `TN-DONE`'s offers the map and the next level — and it is a question, not a decision:
-neither file changes until it is answered.
+**Amended a third time, 2026-09-09 — this is no longer the only quest, and the officer is no longer the only
+speaker.** `content/quests/` holds four documents: this one, and Halifax's, Québec City's and Toronto's,
+all three given by **the guide**, whose name is `npc.guide.name` and is written in `TN-GUIDE-the-guide.md`.
+Three things follow, and again none of them changes a word this file writes:
+
+- **`officer.declined`, `officer.reminder` and `officer.afterStamp` are ruled to become quest content.**
+  `TN-DIALOGUE-what-a-quest-giver-says.md` decides that what a giver says when the player declines, comes
+  back mid-quest, or comes back after the stamp belongs on the quest document as `declinedLine`,
+  `reminderLine` and `afterLine` — because one giver now gives three quests, so a key named after the
+  character cannot be right for all of them. **The wording below does not change and the rows stay here
+  until the schema field exists** (`OQ-DIALOGUE-1`): deleting a string a shipped screen draws would trade a
+  gap for a regression.
+- **`quest.done.body` is ruled the same way**, and for a sharper reason: it is an unqualified key whose value
+  names this quest's landmark, its locomotion mode and its count. Drawn by four quests it is `level.loading`
+  again. It becomes `doneLine` on the quest document, in the past tense, when the field lands.
+- **`quest.accept`, `quest.decline`, `hud.task`, `quest.done.title`, `common.keepPlaying` and
+  `quest.noQuestions` stay copy rows**, because none of them is about a particular quest. That line — a
+  character's name and the chrome of a dialogue are copy; what a character says in a quest is content — is
+  `TN-DIALOGUE`'s, and this file is the first place it is applied.
+
+`OQ-DONE-5` records the one place this file and `TN-DONE` do not yet agree — this file's completion card
+offers "See my passport" and `TN-DONE`'s offers the map and the next level — and it is a question, not a
+decision: neither file changes until it is answered.
 
 ## Accessibility and bilingual coverage map
 
@@ -80,18 +100,30 @@ neither file changes until it is answered.
 
 `officer.greet` states a fact about Canada and is verified like a question (`OQ-LEVEL-4`).
 
+**Five of these rows are on their way out of this table and none of their words changes.**
+`officer.declined`, `officer.reminder`, `officer.afterStamp` and `quest.done.body` are quest content under
+`TN-DIALOGUE-what-a-quest-giver-says.md` and move to `content/quests/ottawa-parliament-hill.json` when it can
+carry them; `quest.step.talk`, `quest.step.visit` and `quest.step.answer` are already quest content in every
+other quest, because a step's `prompt` is a field the schema has had since task 1.2. They are written here
+because the shipped screen draws them from the copy table today, and a story that describes what the game
+does is worth more than one that describes where the strings ought to live.
+
 **`quest.done.title` is the heading on the quest path only.** A player who reaches the end of a level having
 accepted no task reads `level.complete.title` — "Level finished!" / « Niveau terminé! » — because "Task
 done!" would be a claim about something they never did. `TN-DONE` owns that row and the rule that picks
-between them; this one is unchanged.
+between them; this one is unchanged. **Two built levels declare no quest at all**, so on those levels this
+heading is never correct.
 
-**`stamp.ottawa.earned` is per level, not per game.** Halifax, Québec City and Toronto have their own rows in
-their own story files, and the French takes a different form after « tampon » in three of the four
-(`TN-DONE`). This row is Ottawa's and stays here because the quest is what earns it here.
+**`stamp.ottawa.earned` is per level, not per game.** Halifax, Québec City, Toronto, Winnipeg and the
+Prairies have their own rows in their own story files, and the French takes four different forms after
+« tampon » across the six (`TN-DONE`). This row is Ottawa's and stays here because the quest is what earns
+it here.
 
 **The dialogue's speaker label is `npc.officer.name`** — "The officer" / « L'agent » — defined in
 `TN-LEVEL-ottawa.md` with the rest of that character. It is not repeated here, because a name written down
-twice is a name that can differ in two places. `TN-QUEST-08` asserts it is what the dialog is called.
+twice is a name that can differ in two places. `TN-QUEST-08` asserts it is what the dialog is called. **The
+other three quests' giver is the guide**, whose label is `npc.guide.name` in `TN-GUIDE-the-guide.md`, and the
+rule is the same one: a quest's giver has a name before it has lines, or the dialogue cannot open at all.
 
 **`passport.open`** — "See my passport" / « Voir mon passeport » — is defined in
 `TN-PASSPORT-my-passport.md`. The completion card draws it and does not own it.
@@ -187,6 +219,8 @@ Feature: Accepting and tracking the quest
     Then the dialogue shows "Parliament Hill is that way. Keep going."
     And no second "quest/offered" event is emitted
     And the quest step does not change
+    And it does not matter to this scenario whether that sentence came from a copy row or from this
+      quest's own document, as TN-DIALOGUE-01 describes
 ```
 
 ## TN-QUEST-03 — Declining, and changing my mind (failure path)
@@ -220,6 +254,11 @@ Feature: Saying no
     Then the event "dialogue/closed" is emitted
     And no "quest/accepted" and no "quest/declined" event is emitted
     And engaging the officer again shows the offer from the start
+
+  Scenario: Declining is never made to feel like a mistake
+    Then no sentence shown after a decline scolds, warns or repeats the offer
+    And nothing on screen counts down
+    And the same is true of every other quest in this game, as TN-DIALOGUE requires
 ```
 
 ## TN-QUEST-04 — Finishing the task and earning the stamp
@@ -384,6 +423,12 @@ Feature: The quest with a screen reader
     And the name is not "Speaker", "NPC", "Dialogue" or empty
     And the rest of the page is inert while it is open
 
+  Scenario: Every quest's giver is named the same way
+    Given any quest in this game is offered
+    Then the dialog's accessible name is the value of "npc.<giver>.name"
+    And a quest whose giver has no such row cannot be offered at all
+    And that is a build failure, as TN-GUIDE-02 describes
+
   Scenario: Each step change is announced once
     When I accept the quest
     Then "#tn-live-region" reads "Task: Find the Peace Tower"
@@ -494,30 +539,33 @@ Feature: The quest in French
 
 ## Open questions
 
-- **`OQ-QUEST-1` — how does an `answer` step name its questions?** `QuestStepDocument` declares
-  `questionIds`, but the three questions are meant to be *chosen* by the scheduler, so a fixed list and a
-  scheduler cannot both be in charge. *Recommendation:* task 1.2 gives the `answer` step a `subject` and a
-  `count`, and the scheduler picks; `questionIds` becomes an optional authored pool the scheduler picks
-  *from*. Until this is settled, `TN-CARD-02` cannot be implemented as written.
+- **`OQ-QUEST-1` — how does an `answer` step name its questions?** **Answered by the schema, and by the four
+  shipped quests.** `questStep` now carries `subject` and `count` on `answer` steps — required there and
+  forbidden elsewhere — with an optional `questionPool` the scheduler draws *from*; the quest says how many
+  and from where, and the domain says which. `content/quests/halifax-clock-and-pier.json` has two answer
+  steps of two and three questions, which is what that shape was for. Recorded as answered rather than
+  deleted, because `TN-CARD-02` was blocked on it.
 - **`OQ-QUEST-2` — where does a stamp live in the save?** **Answered.**
   `content/schemas/progress.schema.json` records `stampEarnedAt` per level, nullable while the stamp has not
   been earned, with the reason written beside it: `unlockRules.stampsToUnlockNext` counts these, so a stamp
   is recorded rather than derived from a rule that could change under a saved game.
   `TN-PASSPORT-my-passport.md` is the screen that reads it.
 - **`OQ-QUEST-3` — can a player abandon an accepted quest?** These scenarios say no: the quest simply waits.
-  *Recommendation:* keep it that way in slice 1; there is one quest and nothing to abandon it for. An exam
-  can be abandoned, and `TN-ATTEMPT` says why that is a different thing.
+  *Recommendation:* keep it that way in slice 1; there is one quest with a story and nothing to abandon it
+  for. An exam can be abandoned, and `TN-ATTEMPT` says why that is a different thing.
 - **`OQ-QUEST-4` — is the passport a screen or a panel?** **Answered — a full screen**, specified in
   `TN-PASSPORT-my-passport.md`, reached from the level's menu, from the level select and from the completion
   card. `TN-QUEST-04` still only requires that `stamp-ottawa` becomes visible inside `passport`.
 - **`OQ-QUEST-5` — does the player have to skate back to the officer?** These scenarios say no; the quest
   ends at the Hill. It costs the slice a return trip and gains it nothing. If the design wants the return
   trip for the feel of turning around on ice, it is a fourth step and this file changes.
-- **`OQ-QUEST-6` — does a dialogue ever have a speaker who is not a character?** Every line in slice 1 comes
-  from the officer, so `npc.officer.name` is the only speaker label there is. *Recommendation:* keep the
-  speaker name a required input to the dialogue rather than a default — a dialogue that can open without one
-  is a dialogue that will one day open with an empty accessible name, which is the defect `TN-QUEST-08`
-  exists to catch.
+- ~~**`OQ-QUEST-6` — does a dialogue ever have a speaker who is not a character?**~~ **Overtaken by events,
+  and the recommendation held.** Every line in slice 1 came from the officer, so `npc.officer.name` was the
+  only speaker label there was; three more quests then shipped with a second giver, and the *absence* of
+  `npc.guide.name` refused all three offers. The recommendation — keep the speaker name a **required** input
+  to the dialogue rather than a default — is what made the failure loud instead of silent: a dialogue that
+  could open without a name would have opened with an empty accessible name and nobody would have noticed.
+  `TN-GUIDE-02` is the gate that turns it into a build failure instead of a refused offer.
 - **`OQ-QUEST-7` — does the answer step keep a per-step record of what it asked?** No, and that is a
   decision rather than an omission: `TN-RESUME` rejected it, and `TN-SAVE-03` has a scenario that fails if
   such a list appears in the saved document. **An exam does need one**, and it has one — in its own
@@ -530,3 +578,10 @@ Feature: The quest in French
   reachable from a second direction. *Recommendation:* keep both routes and let the completion card be the
   place that tells a player what they skipped (`TN-DONE-02`); the alternative, gating the level's end on its
   quest, turns a learning tool into a lock and would be a design decision, not a copy one.
+- **`OQ-QUEST-9` — this file is named after one quest and four now exist.** Its scenarios are Ottawa's and
+  are correct; its *rules* — a wrong answer still completes a step, a decline is never punished, a giver is
+  named before it speaks, the tracker shows the current step — are every quest's. *Recommendation:* leave
+  the file where it is until a second quest gets a full story, then lift the shared rules into a
+  `TN-QUESTS` file and leave Ottawa's worked example here, the way `TN-LEVELS` and `TN-LEVEL-ottawa.md`
+  already stand to each other. Splitting it now would produce a rules file with one implementation and a
+  worked example with nothing to compare against.

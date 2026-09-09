@@ -14,6 +14,14 @@ Reaching the end of a level earns its stamp and offers the next one (`TN-DONE-fi
 player ever sees was the one with no stamp line at all**. Two rows are added below, both written out per
 level for the reason the error title is: French takes a different preposition and article per place.
 
+**Amended again 2026-09-09 — this level's quest could not be offered at all.**
+`content/quests/halifax-clock-and-pier.json` ships, this level's document places `characterId: "guide"` with
+that quest beside it, and there was no `npc.guide.name`: `app/ui/dialogue.ts` requires a speaker's name
+(`TN-QUEST-08`), so **the first quest a player of this game can meet was refused**. The name is written in
+`TN-GUIDE-the-guide.md` — "The guide" / « Le guide », a role and not a proper name — with the interact
+prompt that stops the HUD calling a beaver a person. **None of this file's four rows changes**; what changes
+is that two of its open questions are smaller than they were, and one of them is closed.
+
 Read `README.md` in this directory first. The rows this file does not own:
 
 | What | Key | Owned by |
@@ -23,7 +31,9 @@ Read `README.md` in this directory first. The rows this file does not own:
 | The error card's body and its two buttons | `level.error.body`, `level.error.retry`, `level.error.back` | `TN-WAIT-a-level-opens-or-it-does-not.md` |
 | The waiting rule these strings obey | — | `TN-COPY-strings-and-counts.md` §Waiting copy |
 | The completion card that draws this file's two new rows | `level.complete.*`, `quest.done.title`, `map.open`, `common.keepPlaying` | `TN-DONE-finishing-a-level.md` |
-| What the HUD says when something is in reach | `hud.interact.*` | `TN-REACH-what-is-in-reach.md` |
+| The guide's name and its prompt | `npc.guide.name`, `hud.interact.guide` | `TN-GUIDE-the-guide.md` |
+| What the guide says in this level's quest | authored `dialogue[].text`, `summary`, `steps[].prompt` | `content/quests/halifax-clock-and-pier.json`, under `TN-DIALOGUE-what-a-quest-giver-says.md` |
+| What the HUD says when something else is in reach | `hud.interact.*` | `TN-REACH-what-is-in-reach.md` |
 | The landmark names and blurbs | inline `localizedText` | `content/levels/halifax.json`, under `TN-NAMES-naming-real-places.md` |
 | The territorial statement | inline `localizedText` | `content/levels/halifax.json`, drawn by `about-this-place` (`docs/content-review.md` §10.2) |
 
@@ -42,9 +52,10 @@ document's parallax layers are the sky, the citadel above the town, the uptown s
 ground and the water, in common nouns, exactly as Ottawa's names the canal.
 
 **It does not name Pier 21**, and that is a rule rather than a preference: under `TN-NAMES-01` a name on that
-file's list appears in a point-of-interest card's body and nowhere else, and a loading message is named there
-as one of the places it may not appear. Pier 21 is named on the card the player reaches by walking to it,
-with its source, which is where a name teaches something.
+file's list appears in a point-of-interest card's body — and, since `TN-DIALOGUE`, in this level's own quest,
+where the guide sends the player down to it — and nowhere else, with a loading message named there as one of
+the places it may not appear. Pier 21 is named on the card the player reaches by walking to it, with its
+source, which is where a name teaches something.
 
 **It does not mention Mi'kma'ki, the Mi'kmaq, or the Peace and Friendship Treaties.** The level document
 carries a sourced territorial statement and `docs/content-review.md` §10.2 fixes where a player reads it —
@@ -58,32 +69,35 @@ shape, and `TN-DONE` restates it for the card.
 
 **`level.halifax.error.title` is written out rather than composed from the level's title.** `TN-WAIT` gives
 the general reason — French does not use one article for all ten places — and Halifax is the easy case that
-proves nothing on its own: « charger Halifax » takes no article, « charger la Ville de Québec » takes one.
-Written out, both are right; templated, one of them is wrong.
+proves nothing on its own: « charger Halifax » takes no article, « charger la Ville de Québec » takes one and
+« charger les Prairies » takes a plural one. Written out, all three are right; templated, two of them are
+wrong.
 
 **`stamp.halifax.earned` is the sentence the completion card draws when this level is finished**, whether
 the player finished its task or walked to the end. It names the **place**, never the landmark: a stamp may
 not be named after Pier 21 (`TN-NAMES-01`, `TN-PASSPORT-02`), and it states no territorial fact. « Tampon »
 is `TN-PASSPORT`'s settled word — a « timbre » is a postage stamp — and the elision in « d'Halifax » is what
 Canadian French does with this name (« le port d'Halifax »), which is exactly why the sentence is written
-here and not built from « le tampon de » plus a title.
+here and not built from « le tampon de » plus a title. Winnipeg's row is the proof from the other side:
+« le tampon de Winnipeg », with no elision, in the same table.
 
 **`level.halifax.play` is the label on the control that opens this level from the card of the level before
-it.** English drops the place name straight in; French takes « à » with no article here and « dans la » for
-the Ville de Québec, so the row is written out per level like the error title. The button draws the level's
-title alone today, which is terse rather than wrong — this row is an improvement, and `TN-DONE` says so.
+it.** English drops the place name straight in; French takes « à » with no article here, « dans la » for the
+Ville de Québec and « dans les » for the Prairies, so the row is written out per level like the error title.
+The button draws the level's title alone today, which is terse rather than wrong — this row is an
+improvement, and `TN-DONE` says so.
 
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-HALIFAX-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06` |
-| Single switch | `TN-HALIFAX-03`; `TN-WAIT-04`; `TN-DONE-06` |
-| Screen reader | `TN-HALIFAX-03`; `TN-DONE-07` |
+| Keyboard only | `TN-HALIFAX-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06`; the quest's dialogue is `TN-GUIDE-04` |
+| Single switch | `TN-HALIFAX-03`; `TN-WAIT-04`; `TN-DONE-06`; `TN-GUIDE-04` |
+| Screen reader | `TN-HALIFAX-03`; `TN-DONE-07`; `TN-GUIDE-05` |
 | Reduced motion | `TN-HALIFAX-03`; `TN-DONE-07` |
 | 200 % text | `TN-HALIFAX-03`; `TN-DONE-07` |
 | Bilingual | `TN-HALIFAX-04`, and `TN-HALIFAX-05` for the two completion rows |
-| Failure path | `TN-HALIFAX-02`; the missing-row gate is `TN-WAIT-03` for two of these rows and `TN-DONE-05` for the other two |
+| Failure path | `TN-HALIFAX-02`; the missing-row gate is `TN-WAIT-03` for two of these rows, `TN-DONE-05` for the other two and `TN-GUIDE-02` for the speaker's name |
 
 ---
 
@@ -109,6 +123,13 @@ Feature: Halifax says what it is getting ready
     And "scene-state" reports "data-mode" equal to "walk"
     And the element "hud-mode-label" reads "Walking"
     And it is not empty
+
+  Scenario: The first quest a player can meet can be given
+    Given the Halifax level is playable
+    When I engage the guide
+    Then the element "dialogue-speaker" reads "The guide", the row TN-GUIDE owns
+    And the event "quest/offered" is emitted for "halifax-clock-and-pier"
+    And no offer is refused for want of a speaker's name
 
   Scenario: The waiting sentence claims no progress
     Given "level-loading" is visible
@@ -267,26 +288,31 @@ Feature: This level's two sentences on the completion card
 
 ## Open questions
 
-- **`OQ-HALIFAX-1` — the arrival announcement is not written here, on purpose.** `TN-LEVEL-08` gives Ottawa
-  `announce.arrived.ottawa` ("You are on the Rideau Canal in Ottawa. Skating."); Halifax has no such row, and
-  `app/bootstrap` announces the level document's own title instead — a real string, in the player's language,
-  thinner than the story asks for. *Recommendation:* write it in Halifax's full level story, next to the
-  interact prompts and the guide's name, so one sentence is not authored months before the level it
-  describes. Writing it today would be copy for behaviour nothing performs (ADR-0008).
+- **`OQ-HALIFAX-1` — the arrival announcement is still not written here, and it is now the only thing this
+  level defers.** `TN-LEVEL-08` gives Ottawa `announce.arrived.ottawa` ("You are on the Rideau Canal in
+  Ottawa. Skating."); Halifax has no such row, and `app/bootstrap` announces the level document's own title
+  instead — a real string, in the player's language, thinner than the story asks for. **The guide's name is
+  no longer waiting on this file** (`TN-GUIDE`), because a quest that could not be offered was not a copy
+  improvement but a broken feature. *Recommendation:* write the announcement in this level's full story,
+  next to the per-target prompts, so one sentence is not authored months before the level it describes.
 - **`OQ-HALIFAX-2` — this level's landmark may move, and the loading sentence does not depend on it.**
   `TN-LEVELS` records that Pier 21 is a weak blind-identification subject and that the anchor may move to the
   Town Clock. Both are on the waterfront, so "Getting the harbour ready." survives either outcome —
   deliberately, because a loading sentence pinned to one landmark would have to be rewritten by an art
   decision. The stamp sentence and the play label survive it for the same reason: both name the place.
   Recorded so the next reader knows it was a choice.
-- **`OQ-HALIFAX-3` — is level 1's subject bank ready?** `CLAUDE.md` requires ≥ 30 verified questions for
-  `rights` before this level ships, and every shipped question today carries `subject: "government"`. Nothing
-  in this file depends on it; it is recorded because the game now *opens* on this level, which makes the gap
-  the first one a player would meet. **It is worse than recorded, now that the level can be finished**: a
-  player who engages both landmarks in a level with no bank still reads `level.complete.none`, which is true
-  and reads as though they walked past everything. Routed to content, with `OQ-SPINE-3`.
-- **`OQ-HALIFAX-4` — this level has no per-target interact prompts.** `TN-REACH` gives it the generic rows —
-  "Look at this place" / « Regarder ce lieu » — where Ottawa names the officer and Parliament Hill. Neither
-  of this level's landmarks is on `TN-NAMES`'s list, so a per-target row is allowed and would read better.
-  *Recommendation:* write both in Halifax's full level story, with the guide's name and the arrival
-  announcement, rather than one at a time. Until then the generic row is correct, not a placeholder.
+- ~~**`OQ-HALIFAX-3` — is level 1's subject bank ready?**~~ **Answered 2026-09-09, by content rather than by
+  argument.** When this file was written, every shipped question carried `subject: "government"` and this
+  level had no bank at all, which made `CLAUDE.md`'s floor of thirty the first thing a player would hit.
+  `content/questions/rights/` now holds **38 questions, 37 of them verified**, so the level the game opens on
+  clears the floor and its quest's two answer steps — two questions, then three, both drawing `rights` — have
+  a bank to draw from. Nothing in this file's four rows ever depended on it. What is *not* answered is
+  whether those questions are the right thirty-eight for this level, which is a content review and not a
+  copy question.
+- **`OQ-HALIFAX-4` — this level has one per-target interact prompt and could have three.** The guide's row
+  is written (`hud.interact.guide`, in `TN-GUIDE`), because it is shared with two other levels. The two
+  landmarks draw `TN-REACH`'s generic "Look at this place" / « Regarder ce lieu ». **Pier 21 is on
+  `TN-NAMES`'s list, so this level may not write a row naming it**; the Town Clock is not, so a row for that
+  one is allowed and would read better. *Recommendation:* write it in Halifax's full level story with the
+  arrival announcement, rather than one string at a time. Until then the generic row is correct, not a
+  placeholder.

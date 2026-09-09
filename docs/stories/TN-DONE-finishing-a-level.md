@@ -11,6 +11,13 @@ invented: the per-level stamp sentence for every level but Ottawa, a sentence fo
 nothing, and a label for the control that opens the next level. **The game starts on Halifax**, so the first
 completion card any player ever sees is the one with the most missing rows.
 
+**Amended 2026-09-09 — six levels are built, so the two per-level tables have six rows each.**
+`content/levels/winnipeg.json` and `content/levels/prairie-rail.json` shipped and are listed in
+`content/game.config.json`'s `unlockRules.order`, which means finishing Toronto now offers Winnipeg and
+finishing Winnipeg now offers the Prairies. Their rows are written in `TN-LEVEL-winnipeg.md` and
+`TN-LEVEL-prairie-rail.md`, and the Prairies is the level that adds a **fourth** French form after
+« tampon » and a **second** English shape to the play label.
+
 Read `README.md` in this directory first. This file owns the **completion card**: when it appears, what it
 may say, and the two rows that are the same on every level. It owns none of the following and points at all
 of them:
@@ -18,6 +25,7 @@ of them:
 | What | Owned by |
 |---|---|
 | The Ottawa quest, its steps and its completion card on the quest path | `TN-QUEST-parliament-hill.md` |
+| What a quest's giver says once it is finished | `TN-DIALOGUE-what-a-quest-giver-says.md` |
 | The stamp once it is in the passport, and the three stamp states | `TN-PASSPORT-my-passport.md` |
 | The map, the three level states and the sentence describing a card | `TN-MAP-level-select.md` |
 | The route out of a level, and what "back" means | `TN-FLOW-first-run-and-return.md` |
@@ -35,7 +43,10 @@ Two things finish a level, and the card is drawn for both:
 
 The second path is the one this file was written for. **A player can walk from the spawn to the exit without
 stopping at a single landmark**, and the stamp is still earned, because reaching the end is what earns it.
-Everything the card says has to be true of that player as well as of the one who did everything.
+Everything the card says has to be true of that player as well as of the one who did everything. **Two of
+the six built levels declare no quest at all** — Winnipeg and the Prairies place no character and carry an
+empty `quests` array — so on those levels the second path is the *only* path, and the card's heading has to
+be right on it.
 
 ## The heading has to be true on both paths
 
@@ -72,7 +83,7 @@ Three things the wording has to be at once, and they pull against each other:
   done. It is a statement, not an instruction: **no imperative, no "you should", no "go back and…"**, because
   the way back is already on the card as `common.keepPlaying`, focusable and one press away.
 
-It carries **no level name and no number**, which is why it is one row rather than four. It names no place,
+It carries **no level name and no number**, which is why it is one row rather than six. It names no place,
 so it cannot leak a name `TN-NAMES` keeps in a point-of-interest card body; it counts nothing, so
 `TN-COPY`'s plural rules have nothing to bind.
 
@@ -141,7 +152,7 @@ Keys this card draws and does not own:
 
 | Key | Owned by |
 |---|---|
-| `quest.done.title`, `quest.done.body`, `common.keepPlaying` | `TN-QUEST-parliament-hill.md` |
+| `quest.done.title`, `quest.done.body`, `common.keepPlaying` | `TN-QUEST-parliament-hill.md`; `quest.done.body` is ruled to become quest content by `TN-DIALOGUE` |
 | `stamp.<id>.earned` | that level's own story file — see the table below |
 | `level.<id>.play` | that level's own story file — see the table below |
 | `map.open`, `map.state.open`, `map.open.help`, `level.<id>.title` | `TN-MAP-level-select.md` and the level story that owns the name |
@@ -152,9 +163,10 @@ Keys this card draws and does not own:
 
 Both are **written out per level and never assembled from a template**, for the reason `TN-WAIT` gives about
 `level.<id>.error.title` and `README.md` gives about `title.lastPlayed`: **French does not use one
-preposition, or one article, for all ten places.** A template is correct in English and quietly wrong in
-French, which `TN-COPY`'s worked example records as this project's most repeated copy defect. These two
-tables are a directory; **the level's story file is where an implementer transcribes from.**
+preposition, or one article, for all ten places — and since the Prairies shipped, the English does not
+either.** A template is correct in English for five levels and quietly wrong in French for two of them,
+which `TN-COPY`'s worked example records as this project's most repeated copy defect. These two tables are a
+directory; **the level's story file is where an implementer transcribes from.**
 
 | Level | `stamp.<id>.earned` EN | `stamp.<id>.earned` FR | Story file |
 |---|---|---|---|
@@ -162,11 +174,14 @@ tables are a directory; **the level's story file is where an implementer transcr
 | `quebec-city` | You earned the Québec City stamp. | Vous avez obtenu le tampon de la Ville de Québec. | `TN-LEVEL-quebec-city.md` |
 | `ottawa` | You earned the Ottawa stamp. | Vous avez obtenu le tampon d'Ottawa. | `TN-QUEST-parliament-hill.md` |
 | `toronto` | You earned the Toronto stamp. | Vous avez obtenu le tampon de Toronto. | `TN-LEVEL-toronto.md` |
+| `winnipeg` | You earned the Winnipeg stamp. | Vous avez obtenu le tampon de Winnipeg. | `TN-LEVEL-winnipeg.md` |
+| `prairie-rail` | You earned the Prairies stamp. | Vous avez obtenu le tampon des Prairies. | `TN-LEVEL-prairie-rail.md` |
 
-Four levels, and the French takes **three different forms after « tampon »** — « d'Halifax », « de la Ville
-de Québec », « de Toronto ». "You earned the {{level}} stamp." would have produced « le tampon Ville de
-Québec », which is not French. Ottawa's row stays in `TN-QUEST` because the quest is what earns it there;
-the wording is unchanged and « tampon » is `TN-PASSPORT`'s settled word.
+Six levels, and the French takes **four different forms after « tampon »** — « d'Halifax », « de la Ville
+de Québec », « de Toronto », « des Prairies ». "You earned the {{level}} stamp." would have produced « le
+tampon Ville de Québec », which is not French, and the English would have produced "the The Prairies stamp".
+Ottawa's row stays in `TN-QUEST` because the quest is what earns it there; the wording is unchanged and
+« tampon » is `TN-PASSPORT`'s settled word.
 
 | Level | `level.<id>.play` EN | `level.<id>.play` FR | Story file |
 |---|---|---|---|
@@ -174,13 +189,15 @@ the wording is unchanged and « tampon » is `TN-PASSPORT`'s settled word.
 | `quebec-city` | Play Québec City | Jouer dans la Ville de Québec | `TN-LEVEL-quebec-city.md` |
 | `ottawa` | Play Ottawa | Jouer à Ottawa | `TN-LEVEL-ottawa.md` |
 | `toronto` | Play Toronto | Jouer à Toronto | `TN-LEVEL-toronto.md` |
+| `winnipeg` | Play Winnipeg | Jouer à Winnipeg | `TN-LEVEL-winnipeg.md` |
+| `prairie-rail` | Play the Prairies | Jouer dans les Prairies | `TN-LEVEL-prairie-rail.md` |
 
-Same fact from the other end: three of the four take « à » and no article, and the fourth takes « dans la ».
-The levels still to come are worse — « Jouer dans le Nord », « Jouer dans les Prairies ». **This is an
-improvement, not a fix**: the button draws the level's title alone today, which is terse but not misleading,
-so nothing on screen is currently wrong. A label that says what pressing does is better than one that says
-where you would end up, and it is the same argument `TN-REACH-what-is-in-reach.md` makes about the interact
-prompt.
+Same fact from the other end: four of the six take « à » and no article, one takes « dans la » and one takes
+« dans les ». The levels still to come are the same shape — « Jouer dans le Nord », « Jouer dans les
+contreforts de l'Alberta ». **This is an improvement, not a fix**: the button draws the level's title alone
+today, which is terse but not misleading, so nothing on screen is currently wrong. A label that says what
+pressing does is better than one that says where you would end up, and it is the same argument
+`TN-REACH-what-is-in-reach.md` makes about the interact prompt.
 
 **A row per built level, and the build says so when one is missing.** `TN-DONE-05` carries the gate, in the
 shape `TN-WAIT-03` already uses: a level with a document and no `stamp.<id>.earned` or no `level.<id>.play`
@@ -191,13 +208,15 @@ sentence.
 ## What may not appear on this card
 
 1. **No landmark, hotel or business name.** `TN-NAMES-01` puts a name from its list in a point-of-interest
-   card's body and nowhere else, and a completion card is not a card body. A stamp is named after a **place**
-   (`TN-PASSPORT-02`), and so is the play button.
-2. **No territorial statement and no paraphrase of one.** Halifax is in Mi'kma'ki and Toronto is on Treaty 13
-   land; both level documents carry sourced statements and `docs/content-review.md` §10.2 fixes where a
-   player reads them — the "About this place" panel. A stamp line is a congratulation the player taps past,
-   which is the shape §10.2 rules out, and a compressed paraphrase of a cited statement is an unsourced claim
-   about a nation.
+   card's body — and, since `TN-DIALOGUE`, in a quest giver's own words about going there — and nowhere
+   else. A completion card is neither. A stamp is named after a **place** (`TN-PASSPORT-02`), and so is the
+   play button.
+2. **No territorial statement and no paraphrase of one.** Halifax is in Mi'kma'ki, Toronto is on Treaty 13
+   land, Winnipeg's level is at The Forks on Treaty No. 1 territory and in the homeland of the Red River
+   Métis, and the Prairies level is on Treaty No. 4 land; every one of those level documents carries a
+   sourced statement and `docs/content-review.md` §10.2 fixes where a player reads them — the "About this
+   place" panel. A stamp line is a congratulation the player taps past, which is the shape §10.2 rules out,
+   and a compressed paraphrase of a cited statement is an unsourced claim about a nation.
 3. **No score, grade, star, percentage or streak**, and nothing that counts down. The card is the end of a
    level, not a result screen; `TN-RESULT` owns the one screen in this game that reports a result.
 4. **No claim that anything was saved.** When storage is blocked the stamp is still earned and
@@ -244,9 +263,14 @@ Feature: The completion card
     Given I finished this level by completing its task
     Then it shows "Task done!", as TN-QUEST-04 requires
 
+  Scenario: A level with no task always uses the level's heading
+    Given the level I finished declares no quest
+    Then "quest-complete-card" shows "Level finished!"
+    And it never shows "Task done!" on that level, whatever route I took
+
   Scenario: The stamp line is this level's own sentence
     Then the element "quest-complete-stamp" reads "You earned the Halifax stamp."
-    And it does not name Ottawa, Québec City or Toronto
+    And it does not name Ottawa, Québec City, Toronto, Winnipeg or the Prairies
     And it names no landmark, hotel or business
     And it states no territorial fact and paraphrases none
 
@@ -333,11 +357,13 @@ Feature: The stamp line names the level that was finished
     And it names no other level
 
     Examples:
-      | level       | sentence                          |
-      | Halifax     | You earned the Halifax stamp.     |
-      | Québec City | You earned the Québec City stamp. |
-      | Ottawa      | You earned the Ottawa stamp.      |
-      | Toronto     | You earned the Toronto stamp.     |
+      | level        | sentence                          |
+      | Halifax      | You earned the Halifax stamp.     |
+      | Québec City  | You earned the Québec City stamp. |
+      | Ottawa       | You earned the Ottawa stamp.      |
+      | Toronto      | You earned the Toronto stamp.     |
+      | Winnipeg     | You earned the Winnipeg stamp.    |
+      | The Prairies | You earned the Prairies stamp.    |
 
   Scenario Outline: Each built level's own row, in French
     Given the language is French
@@ -346,16 +372,24 @@ Feature: The stamp line names the level that was finished
     And it does not contain "timbre"
 
     Examples:
-      | level       | sentence                                          |
-      | Halifax     | Vous avez obtenu le tampon d'Halifax.             |
-      | Québec City | Vous avez obtenu le tampon de la Ville de Québec. |
-      | Ottawa      | Vous avez obtenu le tampon d'Ottawa.              |
-      | Toronto     | Vous avez obtenu le tampon de Toronto.            |
+      | level        | sentence                                          |
+      | Halifax      | Vous avez obtenu le tampon d'Halifax.             |
+      | Québec City  | Vous avez obtenu le tampon de la Ville de Québec. |
+      | Ottawa       | Vous avez obtenu le tampon d'Ottawa.              |
+      | Toronto      | Vous avez obtenu le tampon de Toronto.            |
+      | Winnipeg     | Vous avez obtenu le tampon de Winnipeg.           |
+      | The Prairies | Vous avez obtenu le tampon des Prairies.          |
 
   Scenario: The French is not a template with the place dropped in
     Then no French stamp sentence is assembled from "le tampon" and a level title
-    And the three forms "d'Halifax", "de la Ville de Québec" and "de Toronto" are each a written row
+    And the four forms "d'Halifax", "de la Ville de Québec", "de Toronto" and "des Prairies"
+      are each a written row
     And a build that produces "le tampon Ville de Québec" fails this scenario
+    And a build that produces "le tampon de les Prairies" fails it too
+
+  Scenario: The English is not a template either
+    Then no English stamp sentence drops a level's title into "You earned the {{level}} stamp."
+    And a build that produces "You earned the The Prairies stamp." fails this scenario
 
   Scenario: The stamp is named after a place, never after a building
     Then no stamp sentence in either language contains a name from TN-NAMES-naming-real-places.md's list
@@ -378,16 +412,19 @@ Feature: Going straight into the level that just opened
     And it is not the level's title alone
 
     Examples:
-      | level       | label            | french                        |
-      | Halifax     | Play Halifax     | Jouer à Halifax               |
-      | Québec City | Play Québec City | Jouer dans la Ville de Québec |
-      | Ottawa      | Play Ottawa      | Jouer à Ottawa                |
-      | Toronto     | Play Toronto     | Jouer à Toronto               |
+      | level        | label             | french                        |
+      | Halifax      | Play Halifax      | Jouer à Halifax               |
+      | Québec City  | Play Québec City  | Jouer dans la Ville de Québec |
+      | Ottawa       | Play Ottawa       | Jouer à Ottawa                |
+      | Toronto      | Play Toronto      | Jouer à Toronto               |
+      | Winnipeg     | Play Winnipeg     | Jouer à Winnipeg              |
+      | The Prairies | Play the Prairies | Jouer dans les Prairies       |
 
   Scenario: The French is written per level and never templated
     Then no French label is assembled from "Jouer" and a level title
-    And three of the four take "à" with no article and one takes "dans la"
+    And four of the six take "à" with no article, one takes "dans la" and one takes "dans les"
     And a build that draws "Jouer à Ville de Québec" fails this scenario
+    And a build that draws "Jouer à les Prairies" fails it too
 
   Scenario: Taking it opens that level and leaves this one
     Given "quest-complete-next" reads "Play Québec City"
@@ -417,6 +454,11 @@ Feature: The card is honest about what this build actually has
     When the content check runs
     Then the build fails, naming the level and the missing key
     And the same check fails for a missing "level.<id>.play"
+
+  Scenario: The check counts levels, not rows
+    Given the number of documents under "content/levels" is six
+    Then six "stamp.<id>.earned" rows and six "level.<id>.play" rows exist in each language
+    And a seventh level document with no rows fails the check on the day it is added
 
   Scenario: An unqualified key is refused
     Given a copy table declares "stamp.earned" or "level.play" with no level in the key
@@ -558,6 +600,7 @@ Feature: The card announces once and fits
     Then the whole of "Vous n'avez répondu à aucune question ici. Chaque lieu de ce niveau a quelque chose à vous apprendre." is visible
     And the whole of "Vous avez obtenu le tampon de la Ville de Québec." is visible
     And the whole of "Jouer dans la Ville de Québec" is visible on its control
+    And the whole of "Jouer dans les Prairies" is visible on its control
 
   Scenario: axe-core is clean on this screen
     When axe-core runs against the whole page with the card open
@@ -616,11 +659,12 @@ Feature: Finishing a level in French
 - **`OQ-DONE-1` — the heading was not asked for, and it is wrong on the path this file exists for.** The card
   draws `quest.done.title` — "Task done!" — for a player who reached the end of a level having accepted no
   task. `level.complete.title` is written above as the second row for a state that has no true string today,
-  and `TN-QUEST`'s row is untouched. *Recommendation:* ship both and pick by what finished. If the project
-  owner would rather have one heading for both paths, the honest one is the level's — a quest completing also
-  finishes the level — and `TN-QUEST-04` would be the file amended, not this one. What must not happen is the
-  walk-through path keeping a heading about a task, because "a screen never describes a state it is not in"
-  is the rule this directory has restated four times.
+  and `TN-QUEST`'s row is untouched. **Two of the six built levels declare no quest at all**, so on Winnipeg
+  and the Prairies the wrong heading is the *only* heading a player can reach. *Recommendation:* ship both
+  and pick by what finished. If the project owner would rather have one heading for both paths, the honest
+  one is the level's — a quest completing also finishes the level — and `TN-QUEST-04` would be the file
+  amended, not this one. What must not happen is the walk-through path keeping a heading about a task,
+  because "a screen never describes a state it is not in" is the rule this directory has restated four times.
 - **`OQ-DONE-2` — `level.complete.score` could still be `study.summary.score`.** The four reasons for
   splitting are above, and the alternative is one line: the card names Study's key and this row is deleted.
   *Recommendation:* keep the split and put both in front of the first French reviewer, together with

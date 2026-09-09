@@ -1,4 +1,4 @@
-# Stories — slice 1 (vertical proof), the front door, the four built levels, the spine, and Exam mode
+# Stories — slice 1 (vertical proof), the front door, the six built levels, the spine, and Exam mode
 
 These files are the acceptance criteria for slice 1 and for slice F1. Every other task in
 `docs/plan/slice-1.md` builds against them. If a scenario here and an implementation disagree, the scenario
@@ -30,8 +30,8 @@ strings on that first screen were Ottawa's: the HUD's mode label was empty becau
 Halifax load, and the error card read "We could not load Ottawa." whichever level had failed. One story file
 holding the only level copy in the directory is how that happens. So:
 
-- **`TN-MOVE-locomotion-labels.md`** owns every mode label, because a label belongs to a *mode* and three of
-  the four built levels declare `walk`. `locomotion.skate.label` moved there from `TN-LEVEL`, unchanged.
+- **`TN-MOVE-locomotion-labels.md`** owns every mode label, because a label belongs to a *mode* and four of
+  the six built levels declare `walk`. `locomotion.skate.label` moved there from `TN-LEVEL`, unchanged.
 - **`TN-WAIT-a-level-opens-or-it-does-not.md`** owns the shared error-card chrome and the key shape: there is
   no `level.loading` and no `level.error.title` any more, only `level.<id>.loading` and
   `level.<id>.error.title`, one pair per built level, and a gate that fails the build for a level with
@@ -61,6 +61,35 @@ prompt has been drawing a landmark's **name** in the HUD in its place. So:
   because it settles a rule `TN-HUD` cannot: the prompt is never a name, which is what stops "CN Tower"
   being drawn in the HUD (`TN-NAMES-04`).
 
+**Amended a fifth time, 2026-09-09: two more levels landed, and the character who gives three of the four
+quests had no name.** `content/levels/winnipeg.json` and `content/levels/prairie-rail.json` shipped, drawn
+and documented, and `content/game.config.json` lists both — so the directory's per-level tables were short by
+two rows each and three copy gates were failing by name. Worse, `content/quests/halifax-clock-and-pier.json`,
+`quebec-city-chateau-frontenac.json` and `toronto-cn-tower.json` all declare `"giver": "guide"`, and there
+was no `npc.guide.name`: `app/ui/dialogue.ts` requires a speaker's name (`TN-QUEST-08`), **so all three
+offers were refused, including on the level the game opens on.** Four files answer it:
+
+- **`TN-GUIDE-the-guide.md`** owns the companion's name — "The guide" / « Le guide », a **role and not a
+  proper name**, for the five reasons written there — and its interact prompt, because the guide is on three
+  levels and a name belongs to the character rather than to any one of them. It is also where the beaver's
+  depiction rules are stated for copy: it carries no cultural item of any kind, `indigenous` is `false` and
+  that is the only honest value, and a role noun cannot borrow a nation's language the way a "truly
+  Canadian" proper name might have.
+- **`TN-LEVEL-winnipeg.md`** and **`TN-LEVEL-prairie-rail.md`** own their own four rows each, in the shape
+  the three partial level files already use. The Prairies is the level that proves the rule this directory
+  had only ever defended in French: **a template breaks the English too** — "We could not load The
+  Prairies." and "the The Prairies stamp" — and it adds a fourth French form after « tampon » (« des »).
+  `locomotion.train.label` went to `TN-MOVE` and nowhere else, because `prairie-rail.json` really does
+  declare `train`.
+- **`TN-DIALOGUE-what-a-quest-giver-says.md`** rules on a schema gap the UI agent found and did the right
+  thing with: `quest.schema.json` puts dialogue on a **step**, so a quest has no field for what its giver
+  says when the player declines, comes back mid-quest, or comes back after the stamp. The ruling is the
+  agent's recommendation — `declinedLine`, `reminderLine`, `afterLine` on the quest document, plus
+  `doneLine` for the summary `quest.done.body` should never have been global — with the principle stated
+  once: **a character's *name* is a copy row; what a character *says in a quest* is quest content.** No line
+  is written until the field exists. That file also amends `TN-NAMES-01`, because three shipped quests
+  already name their destination in speech and in the tracker.
+
 | File | Area | Covers |
 |---|---|---|
 | `TN-TITLE-title-screen.md` | `TN-TITLE` | The first screen on a cold load: Play, Continue, Study, Settings |
@@ -71,6 +100,9 @@ prompt has been drawing a landmark's **name** in the HUD in its place. So:
 | `TN-LEVEL-halifax.md` | `TN-HALIFAX` | Level 1's own copy: what it says while it opens, in the HUD, when it fails and when it is finished |
 | `TN-LEVEL-quebec-city.md` | `TN-QUEBEC` | Level 3's own copy, and the rows that prove a French sentence cannot be templated |
 | `TN-LEVEL-toronto.md` | `TN-TORONTO` | Level 5's own copy, and the tower it may not name on a loading screen, a stamp or a prompt |
+| `TN-LEVEL-winnipeg.md` | `TN-WINNIPEG` | Level 6's own copy, and the museum and the treaty statement it may not draw into it |
+| `TN-LEVEL-prairie-rail.md` | `TN-PRAIRIE` | Level 7's own copy, and the four places a region stops behaving like a city |
+| `TN-GUIDE-the-guide.md` | `TN-GUIDE` | The companion's name, its prompt, and why it is a role rather than a proper name |
 | `TN-MOVE-locomotion-labels.md` | `TN-MOVE` | What the HUD calls each way of moving, once per mode |
 | `TN-WAIT-a-level-opens-or-it-does-not.md` | `TN-WAIT` | Which waiting sentence and which error title each level draws, and the shared chrome |
 | `TN-REACH-what-is-in-reach.md` | `TN-REACH` | What the prompt says when a place, a person or a finished target is in reach, and the one-time hint |
@@ -78,6 +110,7 @@ prompt has been drawing a landmark's **name** in the HUD in its place. So:
 | `TN-LEVELS-2-to-10-spine.md` | `TN-LEVELS` | The nine levels after Ottawa: subject, place, locomotion, landmark, NPC, blockers |
 | `TN-HUD-hud-and-menu.md` | `TN-HUD` | The lower-third HUD, the menu, the storage warning, the page's landmarks |
 | `TN-QUEST-parliament-hill.md` | `TN-QUEST` | Offer, accept, decline, track, complete, stamp |
+| `TN-DIALOGUE-what-a-quest-giver-says.md` | `TN-DIALOGUE` | Declining, coming back mid-quest, coming back after the stamp — and where those words live |
 | `TN-CARD-question-card.md` | `TN-CARD` | The question card: arrival, right, wrong, leaving |
 | `TN-STUDY-study-mode.md` | `TN-STUDY` | The Study drill and its summary |
 | `TN-EXAM-starting-and-answering.md` | `TN-EXAM` | Starting an exam, what it draws, answering twenty questions, finishing |
@@ -92,9 +125,10 @@ prompt has been drawing a landmark's **name** in the HUD in its place. So:
 | `TN-COPY-strings-and-counts.md` | `TN-COPY` | The rules every copy table obeys: plurals, state words, waiting copy, missing strings |
 
 **A level story's file name carries its level and its scenario ids carry its area.** `TN-LEVEL-ottawa.md`
-numbers its scenarios `TN-LEVEL-01`… because it was written when Ottawa was the only level; its three new
-neighbours use `TN-HALIFAX-nn`, `TN-QUEBEC-nn` and `TN-TORONTO-nn` so that no id means two things. When the
-remaining levels get stories, they take their own area rather than extending `TN-LEVEL`.
+numbers its scenarios `TN-LEVEL-01`… because it was written when Ottawa was the only level; its four
+neighbours use `TN-HALIFAX-nn`, `TN-QUEBEC-nn`, `TN-TORONTO-nn`, `TN-WINNIPEG-nn` and `TN-PRAIRIE-nn` so
+that no id means two things. When the remaining levels get stories, they take their own area rather than
+extending `TN-LEVEL`.
 
 `TN-SET` is not in the task-1.1 list. It is here because every other story states an accessibility
 precondition ("Given single-switch mode is on"), and a precondition nobody can set is not testable. It is
@@ -121,6 +155,12 @@ that varies by level needs one row per built level and a gate that fails the bui
 which is `TN-COPY-06`'s "a table with one row where the game needs one per level is a gap, not a table",
 applied for the second time.
 
+**`npc.guide.name` is the fourth instance, and the only one that stopped a feature working.** A missing
+level string draws the wrong words; a missing speaker's name means the dialogue cannot open at all, so three
+of the four authored quests could not be given and the first one a player meets is on the level the game
+starts on. `TN-GUIDE` writes the row and states the rule that would have caught it earlier: **a quest's
+giver is a character, and a character has a name before it has lines.**
+
 `TN-RESUME` was added on 2026-09-08 for the sharpest version of that problem: not a rule nobody owned, but a
 moment **two stories owned and answered differently**. `TN-SAVE-01` said a question already answered is never
 asked again after a reload; `TN-CARD-02` and `TN-CARD-04` promise the player, in printed copy, that a
@@ -144,6 +184,13 @@ survives a closed tab, a drill does not, and the reason is that a drill loses no
 an exam loses the whole result. Both files point at the decision, `TN-SAVE`'s survives table gained rows 10
 and 11, and `OQ-ATTEMPT-1` records what would change if the project owner prefers the simpler rule.
 
+`TN-DIALOGUE` is the fourth, and it is the first that decides **where a string lives rather than what it
+says**. Three moments in a quest had no words, and the choice was a global copy table keyed per quest or four
+fields on the quest document. It rules for the document, because one giver — the guide — now gives three
+quests, so a key named after the character is already wrong, and a key named after the quest is content in a
+table. It also amends `TN-NAMES-01` in the same pass, with the cost written down, because a rule that says
+"nowhere else" while three shipped quests say the name is a rule readers stop trusting.
+
 Two words were settled in the same pass, in the files that own them rather than in the files that noticed
 them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp and the mark in a passport is a
 « tampon » — settled by `TN-PASSPORT` and applied to `TN-QUEST` and `TN-MAP` in the same change
@@ -164,8 +211,13 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
   level names, `TN-TITLE` for four and `TN-PASSPORT` for eleven). Two tables carrying the same words is how
   they stop being the same words. **And the table's home follows what the string belongs to**, not which
   screen draws it: a waiting sentence belongs to a level, a mode label belongs to a mode, a stamp sentence
-  belongs to the level it names, an interact prompt belongs to what is in reach, and a button that says "Go
-  back" belongs to none of them (`TN-WAIT`, `TN-MOVE`, `TN-DONE`, `TN-REACH`).
+  belongs to the level it names, an interact prompt belongs to what is in reach, a character's name belongs
+  to the character, and a button that says "Go back" belongs to none of them (`TN-WAIT`, `TN-MOVE`,
+  `TN-DONE`, `TN-REACH`, `TN-GUIDE`).
+- **A string that varies per thing belongs to the thing, and sometimes the thing is not a copy table.**
+  `TN-DIALOGUE` is where that rule reaches content: a line one quest's giver speaks lives on that quest's
+  document, because a per-quest key in a global table is the quest documents with extra steps — and because
+  a line that states a fact about Canada needs a source, which a copy row has nowhere to put.
 - **Sharing a key and owning one are both decisions, and each needs its reason.** `map.stamps` is shared by
   the map and the passport because it is the same fact about the same thing and they must never disagree;
   `level.complete.score` is *not* `study.summary.score` because the two screens are answering different
@@ -174,8 +226,9 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
   the other links. `TN-RESUME` owns what happens to the questions when a step is resumed; `TN-FLOW` owns
   where a cold load lands and what "back" means; `TN-MAP` owns the three level states and `TN-PASSPORT`
   reuses them rather than inventing a second vocabulary; `TN-COPY-07` owns the waiting rule and `TN-WAIT`
-  owns which level draws which sentence; `TN-DONE` owns what a finished level may claim; `TN-SAVE`,
-  `TN-CARD`, `TN-CREATOR` and `TN-HUD` name them and do not restate them.
+  owns which level draws which sentence; `TN-DONE` owns what a finished level may claim; `TN-DIALOGUE` owns
+  what a giver says at the three moments a step cannot cover; `TN-SAVE`, `TN-CARD`, `TN-CREATOR` and
+  `TN-HUD` name them and do not restate them.
 - **Counts and state words follow `TN-COPY-strings-and-counts.md`**, not each screen's judgement. It has one
   rule for plurals in both languages, and it exists because "1 questions" is not a Study bug, it is a bug in
   every string with a number in it. Its rule 9 — one counted noun per template — came out of Exam mode, where
@@ -189,13 +242,15 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
   Canal ready, and a completion card that says "Task done!" to a player who accepted no task. `TN-MAP-04` is
   the current form of the rule — a level nobody has built yet is described as unbuilt, not as locked and not
   as an error — `TN-PASSPORT-04` applies it to a stamp for a level that does not exist, `TN-WAIT-01` applies
-  it to the words a level waits in, and `TN-DONE-01` applies it to the heading of a finished level.
+  it to the words a level waits in, and `TN-DONE-01` applies it to the heading of a finished level. **Two of
+  the six built levels declare no quest**, so that heading is now wrong on the only route those levels have.
 - **Plain language**, roughly CLB 4 / grade 6. Short sentences. No jargon the player did not bring with them:
   the words *spaced repetition*, *FSRS*, *scheduler*, *due*, *card state* never appear on screen.
 - **A game that teaches never marks the player down.** A wrong answer costs nothing (`TN-CARD`), a quest
-  completes on a wrong answer (`TN-QUEST-04`), and a player who reaches the end of a level having answered
-  nothing is told so plainly and invited back rather than scored (`TN-DONE-02`). No screen outside
-  `TN-RESULT` reports a result, and none of them uses a grade, a star, a streak or a percentage.
+  completes on a wrong answer (`TN-QUEST-04`), a player who reaches the end of a level having answered
+  nothing is told so plainly and invited back rather than scored (`TN-DONE-02`), and declining a quest is
+  never made to feel like a mistake (`TN-DIALOGUE`). No screen outside `TN-RESULT` reports a result, and none
+  of them uses a grade, a star, a streak or a percentage.
 - **One thumb, portrait.** Hold to move, tap to jump, tap an NPC or POI to engage. No scenario may need two
   hands, a pinch, a swipe, a drag or a double tap. This binds the map too: ten places east to west is a
   horizontal shape in a vertical window, and `TN-MAP` resolves it as a vertical list rather than a panned map
@@ -207,10 +262,12 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
   player turned it on for that attempt, pauses whenever they are not answering, and can be turned off
   mid-exam. `CLAUDE.md` allows exactly that one and `TN-TIMER` is where it is bounded; `TN-TIMER-07` is the
   check that stops it becoming a second one. Load timeouts are not player timers and are allowed to appear as
-  an escape route from a stall.
+  an escape route from a stall. **A locomotion mode that drives itself is not a timer either**, and the
+  Prairies is the first level with one (`OQ-PRAIRIE-5`).
 - **A scenario must be able to fail.** If a step could be written today against an empty page and still pass,
   it is wrong. Waiting for a marker before asserting anything is the pattern (`tests/a11y/screens.spec.ts`
-  already does this).
+  already does this). **A scenario written for a field that does not exist yet is marked as pending and is
+  not counted as coverage** — `TN-DIALOGUE-03` is the one instance, and it says so above its own fence.
 - **A check that passes is not the same as a check that ran.** A lint rule that never executed, a scan rule
   that self-passed and a test that was skipped all report exactly what a clean run reports. Where a story
   leans on a tool's green tick, it also says how that tick can be made to go red — `TN-HUD-10` is the worked
@@ -223,7 +280,8 @@ contain. A story that puts a person or a place on screen carries these as scenar
 the same footing as its accessibility and bilingual ones:
 
 - **A "what is depicted" section, before the scenarios**, naming what the art agent is being asked to draw
-  and — explicitly — what is *not* depicted. `TN-LEVEL-ottawa.md` already does this for the officer.
+  and — explicitly — what is *not* depicted. `TN-LEVEL-ottawa.md` does this for the officer and
+  `TN-GUIDE-the-guide.md` does it for the beaver.
 - **No option is coupled to another.** Where the player picks how somebody looks, a scenario asserts that
   choosing any option in one group leaves every other group's option count unchanged
   (`docs/content-review.md` §8.2). This is the mechanically checkable half of "no caricature".
@@ -232,25 +290,33 @@ the same footing as its accessibility and bilingual ones:
 - **No French copy about the player requires gender agreement** (§8.6). FR scenarios assert the wording, and
   the wording never contains `(e)`, `·e` or a bracketed ending. This binds copy about *characters* too where
   a story fixes their name: see `OQ-LEVEL-8`, and `TN-LEVELS`'s NPC table, which chooses epicene French role
-  nouns so that seven of eight levels never have to answer the question.
+  nouns so that most levels never have to answer the question. **The guide is the one character
+  for which the question cannot arise at all** — « guide » is epicene and the referent is an animal — and
+  `TN-GUIDE` says so rather than leaving it to be re-derived.
+- **A companion animal is a depiction like any other.** `TN-GUIDE` states that the beaver carries no
+  clothing, regalia, pattern or cultural item of any kind, that `indigenous` is `false` for it and is
+  required rather than inferred, and that its name is a role — because "truly Canadian" is exactly the brief
+  under which a borrowed name would be reached for.
 - **A nation's own name is identical in EN and FR** (§9.3). Where a story writes one, both columns match.
 - **Territory is stated, not performed.** Any level story includes the "About this place" panel: reachable
   from pause and from credits, never modal, never dismissed to reach gameplay, EN and FR, keyboard and
-  single switch (§10.2). **And it is the only place a territorial statement is drawn** — `TN-WAIT`, the three
-  new level files and `TN-DONE` keep it out of loading copy and off the completion card, because a screen the
-  player waits past or taps through is the shape §10.2 names as the wrong one, and a compressed paraphrase of
-  a cited statement is an unsourced claim.
+  single switch (§10.2). **And it is the only place a territorial statement is drawn** — `TN-WAIT`, the five
+  partial level files and `TN-DONE` keep it out of loading copy and off the completion card, because a screen
+  the player waits past or taps through is the shape §10.2 names as the wrong one, and a compressed
+  paraphrase of a cited statement is an unsourced claim. Winnipeg and the Prairies each carry a treaty
+  statement, and neither reaches a loading screen or a stamp.
 - **A blocked level is not scoped.** `TN-LEVELS` leaves level 2 and level 10 without a place, a landmark, an
   NPC or an id, because §1's shipping rule blocks both and `OQ-REVIEW-2` is unanswered. Filling those cells
   in would make a blocked level look schedulable, and a plan that reads as schedulable gets scheduled. The
-  same rule keeps `canoe` and `dogsled` out of `TN-MOVE`'s table.
+  same rule keeps `canoe` and `dogsled` out of `TN-MOVE`'s table. **Level 2 now has a full question bank and
+  is still blocked**, because a bank is not a licence to depict.
 - **A real building may be named; a business may not be advertised.** `TN-NAMES` is the rule and it is
   checkable: the name is text and never lettering in the art, it appears in the point-of-interest card's body
-  and nowhere else, it carries no mark, and no sentence implies the place has anything to do with this game.
-  `TN-NAMES-01` names a loading message among the screens a name may not appear on, which is why no level's
-  waiting sentence names Pier 21, the CN Tower or the Château Frontenac — and `TN-REACH` is why the HUD's
-  prompt does not either, which was the one surface where a name was reaching the player through content
-  rather than through a copy table.
+  **and in a quest's own words about going there**, it carries no mark, and no sentence implies the place has
+  anything to do with this game. `TN-NAMES-01` names a loading message among the screens a name may not
+  appear on, which is why no level's waiting sentence names Pier 21, the CN Tower, the Château Frontenac or
+  the Canadian Museum for Human Rights — and `TN-REACH` is why the HUD's *prompt* does not either, which was
+  the one surface where a name was reaching the player through content rather than through a copy table.
 
 What a story must **not** do: assert that a depiction is approved. No scenario may encode a cultural
 sign-off, because no agent may grant one (`docs/content-review.md` §1). A story states what is on screen;
@@ -266,15 +332,19 @@ whether it may be on screen at all is that document's shipping rule, not a test.
   is a sentence in English and a label in French, and `TN-STUDY` says why. `title.lastPlayed` is a label in
   both, because a sentence would need a preposition in front of a place name and French does not use one
   preposition for all ten places — and `TN-WAIT` applies the same fact to the error title, which is written
-  out per level rather than templated because « charger Halifax » takes no article and « charger la Ville de
-  Québec » takes one. **`TN-DONE` applies it twice more**: « le tampon d'Halifax », « le tampon de la Ville
-  de Québec », « le tampon de Toronto », and « Jouer à Halifax » against « Jouer dans la Ville de Québec ».
-  Three rows, three French shapes, one English shape, and a template would have been right in English every
-  time.
+  out per level rather than templated because « charger Halifax » takes no article, « charger la Ville de
+  Québec » takes one and « charger les Prairies » takes a plural one. **`TN-DONE` applies it twice more**:
+  « le tampon d'Halifax », « le tampon de la Ville de Québec », « le tampon de Toronto », « le tampon de
+  Winnipeg », « le tampon des Prairies »; and « Jouer à Halifax » against « Jouer dans la Ville de Québec »
+  and « Jouer dans les Prairies ». Six rows, four French shapes — and, since the Prairies, **two English
+  shapes as well**, which is the evidence that this was never a French problem but a template one.
 - Numbers are formatted for the locale, never concatenated: « 0,6 », « 150 % » with a space.
   `TN-COPY-strings-and-counts.md` says why this is a rule and not a preference.
 - A passport stamp is **« un tampon »**, never « un timbre ». `TN-PASSPORT` settles it and lists the four
   strings that changed.
+- **A row whose two languages are the same word is written twice, not shared.** `locomotion.train.label` is
+  "Train" and « Train »; `TN-MOVE-06` asserts both values exist, so a missing French value fails even though
+  the screen would read correctly.
 
 ## Shared test vocabulary
 
@@ -289,7 +359,7 @@ provides it.
 | **ready to come back** | The scheduler would offer this question now. Never said on screen — the player sees only "New" or "Seen before". |
 | **open / locked / not made yet** | The three states a level can be in on the map. `TN-MAP` owns the rule that decides which, and the rule that "not made yet" wins over both other states. |
 | **earned / not earned yet / not made yet** | The three states a stamp can be in on the passport. `TN-PASSPORT` owns them, reuses `TN-MAP`'s third word and its key, and states the one place the precedence differs: an earned stamp stays earned even when the level is gone. |
-| **a built level** | A level with a document under `content/levels/`. Four today — `halifax`, `quebec-city`, `ottawa`, `toronto` — and each one owns a waiting sentence, an error title, a stamp sentence and a play label (`TN-WAIT`, `TN-DONE`). |
+| **a built level** | A level with a document under `content/levels/`. Six today — `halifax`, `quebec-city`, `ottawa`, `toronto`, `winnipeg`, `prairie-rail` — and each one owns a waiting sentence, an error title, a stamp sentence and a play label (`TN-WAIT`, `TN-DONE`). Four of the six have a quest; two do not. |
 | **finishing a level** | Either completing its task or reaching the end of it. Both earn the stamp and both draw the completion card, and every sentence on that card has to be true of the second (`TN-DONE`). |
 | **an attempt** | One run at the exam: the twenty questions it drew, the answers given, whether it was timed, and — once it has finished — whether it passed. At most one attempt is unfinished at a time (`TN-ATTEMPT-04`). |
 
@@ -302,13 +372,13 @@ provides it.
 | `scene-state` | The E2E scene probe — see below. |
 | `title-screen`, `title-play`, `title-continue`, `title-choose-level`, `title-study`, `title-exam`, `title-settings` | The title screen (`TN-TITLE`). `title-play` and `title-continue` are never both present. `title-exam` is the exam's way in and changes its label when an exam is unfinished (`TN-ATTEMPT-03`). |
 | `level-select`, `level-card-<id>` | The level select (`TN-MAP`). Each card reports `data-state` as `open`, `locked` or `not-built`. |
-| `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). `hud` is a region named by `hud.label`; `hud-mode-label` carries the mode label `TN-MOVE` owns and is never empty. |
+| `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). `hud` is a region named by `hud.label`; `hud-mode-label` carries the mode label `TN-MOVE` owns and is never empty; `hud-quest-tracker` carries the current step's own prompt, which is the one HUD string allowed to name a real place (`TN-NAMES-01`). |
 | `menu` | The menu opened from `menu-button` (`TN-HUD-02`). It carries Settings, Study, the passport and "Leave the level". |
 | `move-left`, `move-right`, `turn-around` | The hold-to-move controls (see `OQ-INPUT-1`). |
 | `interact-prompt`, `interact-hint` | What is in reach and what pressing it will do (`TN-REACH`). The prompt is a verb phrase and never a landmark's name; `interact-hint` is the one-time explanation of the marks, is never in the tab order or the switch ring, and blocks nothing. |
 | `character-creator`, `character-preview`, `slot-skin`, `slot-hair`, `slot-coat`, `randomise-character`, `start-playing`, `creator-settings`, `creator-save-error`, `creator-retry`, `creator-continue` | Character creator. |
-| `dialogue`, `dialogue-speaker`, `dialogue-text`, `dialogue-accept`, `dialogue-decline`, `dialogue-next` | NPC dialogue. `dialogue-speaker` carries the speaker's name and is the dialog's accessible name (`TN-QUEST-08`). |
-| `poi-card`, `poi-card-close` | Landmark information card. The one screen where a name on `TN-NAMES`'s list may appear. |
+| `dialogue`, `dialogue-speaker`, `dialogue-text`, `dialogue-accept`, `dialogue-decline`, `dialogue-next` | NPC dialogue. `dialogue-speaker` carries the speaker's name — `npc.officer.name` or `npc.guide.name` — and is the dialog's accessible name (`TN-QUEST-08`, `TN-GUIDE-05`). |
+| `poi-card`, `poi-card-close` | Landmark information card. One of the two places a name on `TN-NAMES`'s list may appear. |
 | `about-this-place`, `about-this-place-open`, `about-this-place-close` | The territorial statement panel (`docs/content-review.md` §10.2). |
 | `question-card`, `question-kind`, `question-progress`, `question-prompt`, `option-0`…`option-3`, `question-feedback`, `question-explanation`, `question-next`, `question-close`, `question-closed-notice` | The question card. In an exam, `question-kind`, `question-feedback` and `question-explanation` are absent (`TN-EXAM-03`). |
 | `quest-complete-card`, `quest-complete-stamp`, `quest-complete-progress`, `quest-complete-next`, `quest-complete-next-level`, `quest-complete-map`, `quest-complete-keep-playing` | Finishing a level (`TN-QUEST-04`, `TN-DONE`). `quest-complete-progress` carries whichever of `level.complete.score` and `level.complete.none` applies and is never both; `quest-complete-next` exists only while there is a level to open. |
@@ -469,28 +539,35 @@ answer nobody has given. Cross-cutting ones live here.
   true now that the game contains a clock.
 - **`OQ-EVENT-1` — do these event names match what task 1.5 emits?** They are the PO's proposal. If the use
   cases pick other names, the stories are updated, not the tests quietly.
+- **`OQ-SCHEMA-1` — two schema changes are queued against `content/`, and they are cheaper opened
+  together.** `OQ-WAIT-2` wants a level document to carry its own waiting sentence and error title;
+  `TN-DIALOGUE` wants a quest document to carry `declinedLine`, `reminderLine`, `afterLine` and `doneLine`.
+  Both move a string from a global table to the document it belongs to, both keep the gate that fails a build
+  for a missing one, and both are blocked on nothing but an owner. *Recommendation:* route them as one
+  change to the architect, with `TN-WAIT-03` and `TN-DIALOGUE-03` as their acceptance. Neither directory file
+  writes a row until the field exists.
 - **`OQ-SUBJECTS-1` — nothing declares the ten subjects, and three screens need them.**
   `exam.subjectsReady` counts "1 of 10" (`TN-EXAM-01`), the result names a subject with the level's own
   subject line (`TN-RESULT-03`), and the passport counts ten stamps (`TN-PASSPORT-01`) — and the only list of
   ten in `content/` is `unlockRules.order`, which is a list of **level** ids. **Partly answered
   2026-09-08:** `content/game.config.json` now carries a ten-slot `journey` whose nulls are levels 2 and 10,
-  four ids in `levels` and four in `unlockRules.order`, which matches `TN-LEVELS`. What is still missing is
-  the list of *subjects* — the four built level documents declare `rights`, `history`, `government` and
-  `elections`, and no document declares the other six or binds a subject to a level.
+  six ids in `levels` and six in `unlockRules.order`, which matches `TN-LEVELS`. What is still missing is a
+  document that *declares* the subjects and binds each to a level: seven of them exist only as directory
+  names under `content/questions/` and as a `subject` field on each level document, and `economy`, `symbols`
+  and `regions` do not exist at all.
   *Recommendation:* declare the ten subjects once in `game.config.json`, each with its id and the level it
   belongs to. Routed to the architect and the plan owner; `content/` is not this directory's to edit.
   Recorded per screen as `OQ-EXAM-5`, `OQ-RESULT-2` and `OQ-PASSPORT-2`, because three screens finding the
   same gap is usually one gap.
-- ~~**`OQ-SUBJECT-1` — Level 4's subject is not written down anywhere.**~~ **Answered.**
-  `docs/plan/slice-1.md` records it — "How Canadians Govern Themselves" / « Comment les Canadiens se
-  gouvernent » — and all 57 shipped questions carry `subject: "government"`. The remaining subject question
-  is the *opposite* one and it is new: level 5's subject is Federal Elections and roughly a dozen of those 57
-  questions are about ballots and voting, so two levels currently draw from one bank. `OQ-SPINE-3` in
-  `TN-LEVELS-2-to-10-spine.md`. **Exam mode makes this urgent rather than tidy**: a representative draw
-  spreads across subjects, and two subjects sharing one bank is a draw that is not representative of either.
-  It is more urgent again now that levels 1, 3 and 5 are openable and none of them has a bank — and now that
-  a level with no bank can be finished, which draws `level.complete.none` at a player who did everything the
-  level offered (`OQ-HALIFAX-3`).
+- ~~**`OQ-SUBJECT-1` — Level 4's subject is not written down anywhere, and two levels share one bank.**~~
+  **Answered, in both halves.** `docs/plan/slice-1.md` records level 4's subject — "How Canadians Govern
+  Themselves" / « Comment les Canadiens se gouvernent » — and the bank that was one directory of 57
+  `government` questions has been split: `content/questions/` now holds `rights` (37 verified), `who-we-are`
+  (46), `history` (96), `government` (38), `elections` (36), `justice` (31) and `modern-canada` (39). **Every
+  built level's bank clears `CLAUDE.md`'s thirty and no two levels draw from one**, which is what
+  `OQ-SPINE-3` asked for and what `TN-LEVELS-03`'s last row now keeps true. Three subjects have no bank —
+  `economy`, `symbols`, `regions` — so levels 8, 9 and 10 cannot ship; level 2 has a full bank and is
+  blocked for a reason a bank cannot answer.
 - ~~**`OQ-REVIEW-1` — `docs/content-review.md` does not exist.**~~ **Answered 2026-09-08** — it exists now,
   and the questions it could not answer moved into it as `OQ-REVIEW-2` … `OQ-REVIEW-11`. Three of those now
   reach back into these stories: `OQ-REVIEW-6` recommends the skin-tone option names that `OQ-CREATOR-5`
@@ -509,10 +586,11 @@ answer nobody has given. Cross-cutting ones live here.
   in its open-questions section. That file is not this agent's to edit — flagged for its owner.
 - ~~**`OQ-ENTRY-1` — the game's data says there is no game.**~~ **Answered 2026-09-08.**
   `content/game.config.json` carried `"levels": []` and empty unlock rules, so every level was locked
-  including the only one that existed. It now carries four built levels, a ten-slot journey and
+  including the only one that existed. It now carries six built levels, a ten-slot journey and
   `initialLevels: ["halifax"]`, so the map has a data source, `TN-MAP-06`'s first scenario can pass, and the
   game opens on level 1 rather than on level 4. `TN-MAP-06`'s first scenario stays as the guard that fails if
   the config ever goes back to opening nothing. **The entrance moving is what exposed the copy defect
   `TN-WAIT` was written for**: three strings had been Ottawa's and were drawn by every level, and nothing
   noticed while Ottawa was the only door. **It exposed a fourth the same way**: the stamp sentence was
-  Ottawa's too, and the level the game now opens on had none (`TN-DONE`).
+  Ottawa's too, and the level the game now opens on had none (`TN-DONE`). **And a fifth, on 2026-09-09**:
+  the quest on that same level could not be given at all, because its giver had no name (`TN-GUIDE`).
