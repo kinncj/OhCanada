@@ -43,9 +43,10 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import sharp from 'sharp';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
 /**
@@ -106,13 +107,36 @@ const run = (args: readonly string[]): Run => {
 const LIB = new URL('../../../scripts/lib/art-handoff.mjs', import.meta.url).href;
 const SCORE_LIB = new URL('../../../scripts/lib/art-score.mjs', import.meta.url).href;
 
+/*
+ * THE ARGUMENTS GO OVER STDIN, NOT ARGV, AND THAT IS NOT A STYLE PREFERENCE.
+ *
+ * They used to be baked into the `-e` program. Linux caps a SINGLE argv entry
+ * at MAX_ARG_STRLEN, 128 KiB, and `assets/refs/references.json` crossed it the
+ * day two levels' worth of art landed: the contract serialises to about 159 KB,
+ * `spawnSync` returned E2BIG, and every field of the result came back
+ * `undefined`. The case then failed on `expect(result.stderr).toBe('')` with
+ * "expected undefined to be ''", which says nothing whatever about the real
+ * fault and points at the leak scanner rather than at the spawn.
+ *
+ * So: the payload goes on stdin, where there is no such limit, and `result.error`
+ * is asserted FIRST. A helper that cannot run the thing it is testing must say
+ * that in as many words -- a growing contract must not be able to turn a leak
+ * check into a confusing red, because the next person's cheapest way out of a
+ * confusing red is to stop believing the check.
+ */
 const callLib = <T>(fn: string, args: unknown[]): T => {
   const code =
     `import * as lib from ${JSON.stringify(LIB)};` +
-    `process.stdout.write(JSON.stringify(lib[${JSON.stringify(fn)}](...${JSON.stringify(args)})));`;
+    `const chunks = [];` +
+    `for await (const chunk of process.stdin) chunks.push(chunk);` +
+    `const args = JSON.parse(Buffer.concat(chunks).toString('utf8'));` +
+    `process.stdout.write(JSON.stringify(lib[${JSON.stringify(fn)}](...args)));`;
   const result = spawnSync(process.execPath, ['--input-type=module', '-e', code], {
     encoding: 'utf8',
+    input: JSON.stringify(args),
+    maxBuffer: 64 * 1024 * 1024,
   });
+  expect(result.error, `${fn} could not be run: ${result.error?.message ?? ''}`).toBeUndefined();
   expect(result.stderr, `${fn} wrote to stderr`).toBe('');
   return JSON.parse(result.stdout ?? 'null') as T;
 };
@@ -199,6 +223,10 @@ const fixture = (name: string, options: FixtureOptions = {}): string => {
     'src/svg/ottawa/landmark-parliament-hill.svg': svg(400, 300, '#c8a05a'),
   };
   for (const [rel, body] of Object.entries(sources)) {
+    // The directory is made from the path rather than listed above: a fixture
+    // for a level other than the first one is otherwise an ENOENT in the helper
+    // rather than a case.
+    mkdirSync(dirname(join(root, 'assets', rel)), { recursive: true });
     writeFileSync(join(root, 'assets', rel), body);
   }
   writeFileSync(
@@ -602,8 +630,14 @@ describe('the gate over the repository as it stands', () => {
     const slot = 'headCovering';
     const artboards = rig.artboards.filter((board) => board.playerSelectableSlots.includes(slot));
     expect(artboards.length, `no artboard offers "${slot}"`).toBeGreaterThan(0);
-    const bare = rig.slots[slot]?.fallback;
-    expect(bare).toBe('none');
+    // The bare-headed option is `none` BY NAME, not "whatever the fallback is".
+    // headCovering's fallback is now `toque`: a fallback is what the game spawns
+    // before the creator is wired, and a bare head in a January level was the
+    // defect. This clause is about the costume being CHECKED without a covering,
+    // which is a different question from what it defaults to -- so name the
+    // option and assert the slot still offers it.
+    const bare = 'none';
+    expect(rig.slots[slot]?.options).toContain(bare);
 
     const figuresOf = (extra: readonly string[]): KeymapEntry[] =>
       (readKeymap(handoff(REPO, extra, null).keymapPath) as { entries: KeymapEntry[] }).entries
@@ -1201,6 +1235,145 @@ describe('a leak must fail', () => {
 });
 
 /* ================================================================== *
+ * 2b. A parallax composite is the LEVEL's geometry, and the offset is signed
+ * ================================================================== */
+
+/**
+ * `nearTop` IS `nearTile.offset.y - farTile.offset.y` OUT OF THE LEVEL, AND
+ * NOTHING MAKES THAT POSITIVE.
+ *
+ * Every composite in the contract had a positive one until a level arrived
+ * whose foreground tile spends its top rows on telegraph poles standing UP into
+ * the sky: the nearer layer's top edge is 210 px ABOVE the further one's, so the
+ * offset is -210. "Nearer means lower" is the reflex reading and it is wrong.
+ *
+ * The builder shifts rather than clamps: whichever tile is higher goes to
+ * composite y 0 and the other is pushed down by the difference, so the SEPARATION
+ * between the two tops is `nearTop` whichever way it points.
+ *
+ * AND THE FAILURE IT RULES OUT IS SILENT, WHICH IS WHY THIS READS PIXELS. The
+ * comfortable assumption is that a negative `top` throws and a wrong sign can
+ * only cost a red build. It does not: sharp accepts a negative `top`, CROPS the
+ * part of the input above the canvas, and draws the rest from y 0. A builder
+ * that passes the raw offset therefore deletes the near tile's top rows -- the
+ * poles, which are the entire reason the offset is negative -- and lays what is
+ * left flush against the far tile, without a word. The arithmetic in the second
+ * case below cannot see that on its own for a POSITIVE offset, which is every
+ * other composite in the contract, so the first case checks the colours.
+ */
+describe('a parallax composite places both tiles by the level\'s own offsets', () => {
+  const FAR = 'src/svg/prairie-rail/layer-30-fields.svg';
+  const NEAR = 'src/svg/prairie-rail/layer-40-railbed.svg';
+  const FAR_FILL = { r: 200, g: 160, b: 90 };
+  const NEAR_FILL = { r: 42, g: 110, b: 187 };
+  const MATTE = { r: 204, g: 204, b: 204 };
+
+  /** A solid block. No circle and no title: this case reads colours. */
+  const solid = (w: number, h: number, fill: string): string =>
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
+    `<rect x="0" y="0" width="${w}" height="${h}" fill="${fill}"/></svg>`;
+
+  /** A tile whose top `clear` rows are transparent, like a tile of poles and wire. */
+  const openTopped = (w: number, h: number, clear: number, fill: string): string =>
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
+    `<rect x="0" y="${clear}" width="${w}" height="${h - clear}" fill="${fill}"/></svg>`;
+
+  const SUBJECT = {
+    id: 'prairie-rail-line',
+    subject: 'A rail line',
+    renders: [FAR, NEAR],
+    renderRecipe: 'Composite the two, the near tile 210 px ABOVE the far one.',
+    expectedBlindAnswer: ['a railway'],
+    mustBeRight: [{ feature: 'two rails' }],
+    neverAdd: [],
+  };
+
+  it('pushes the FAR tile down when the near tile is the higher of the two', async () => {
+    const root = fixture('negative-offset', {
+      subjects: [SUBJECT, UNRENDERED],
+      sources: {
+        // The far tile is TALLER than the shift, on purpose. Make it shorter
+        // and the naive builder happens to fail loudly -- its canvas comes out
+        // shorter than the near tile and sharp refuses an oversized input --
+        // which would leave this case proving that a wrong sign is caught by
+        // luck. At these sizes the naive build composites cleanly and wrongly,
+        // which is the state the colours below are here to catch.
+        [FAR]: solid(400, 500, '#c8a05a'),
+        [NEAR]: openTopped(400, 400, 250, '#2a6ebb'),
+      },
+    });
+    const built = handoff(root, [...CHEAP]);
+    expect(built.result.status, built.result.output).toBe(0);
+
+    const keymap = readKeymap(built.keymapPath) as { entries: KeymapEntry[] };
+    const entry = keymap.entries.find((e) => e.gating);
+    expect(entry, 'no gating render was handed over').toBeDefined();
+
+    // The arithmetic. `farAt`/`nearAt` are where the run actually put the tiles;
+    // `nearTop` is the level's number and is what a verdict is read against.
+    expect(entry!.slots.nearTop).toBe(-210);
+    expect(entry!.slots.farAt).toBe(210);
+    expect(entry!.slots.nearAt).toBe(0);
+
+    // And the picture, which is the half a clamp would pass. Column x = 200:
+    //   y  50  neither tile: the near one is transparent this high and the far
+    //          one has not started. A build that passes the raw negative offset
+    //          to sharp has CROPPED the near tile's transparent top away and
+    //          drawn its solid part here; a build that clamps the far tile to 0
+    //          reads as farmland. Matte is the only right answer.
+    //   y 230  the far tile alone, in the 40 px where the near tile is still
+    //          transparent below the far tile's new top edge.
+    //   y 300  the near tile drawn OVER the far one.
+    //   y 450  the far tile below where the near tile ends.
+    //   y 700  the far tile's last rows, which exist only because the composite
+    //          grew by the shift. A naive build is 500 rows tall and has no
+    //          such row at all.
+    const png = readFileSync(join(built.handoffDir, entry!.render));
+    const { data, info } = await sharp(png)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    expect(info.height).toBe(710);
+    const at = (y: number) => {
+      const i = (y * info.width + 200) * 4;
+      return { r: data[i], g: data[i + 1], b: data[i + 2] };
+    };
+    expect(at(50), 'the far tile was clamped to the top instead of shifted down').toEqual(MATTE);
+    expect(at(230)).toEqual(FAR_FILL);
+    expect(at(300)).toEqual(NEAR_FILL);
+    expect(at(450)).toEqual(FAR_FILL);
+    expect(at(700)).toEqual(FAR_FILL);
+  });
+
+  it('separates the two tiles by exactly `nearTop`, whichever way it points', () => {
+    // OVER THE REAL CONTRACT AND DERIVED FROM IT, so a level that lands next
+    // month is covered on the day it lands. The invariant is the whole of
+    // "shift, do not clamp", and it holds for both signs:
+    //   - one of the two tiles is at composite y 0, so nothing is padded for no
+    //     reason and the composite is no taller than the geometry needs;
+    //   - the SIGNED difference between the two placements is `nearTop`, so a
+    //     clamp -- which would make it 0 for a negative offset -- fails here.
+    const built = handoff(REPO, [...CHEAP], null);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath) as { entries: KeymapEntry[] };
+
+    const composites = keymap.entries.filter((e) => e.slots?.nearTop !== undefined);
+    expect(
+      composites.length,
+      'no composite in the contract: this case has nothing to check',
+    ).toBeGreaterThan(0);
+
+    for (const entry of composites) {
+      const nearTop = entry.slots.nearTop as number;
+      const farAt = entry.slots.farAt as number;
+      const nearAt = entry.slots.nearAt as number;
+      expect(Math.min(farAt, nearAt), `${entry.render}: neither tile is at y 0`).toBe(0);
+      expect(nearAt - farAt, `${entry.render}: the tops are not ${nearTop} px apart`).toBe(nearTop);
+    }
+  });
+});
+
+/* ================================================================== *
  * 3b. The operator-facing text is part of the leak surface
  * ================================================================== */
 
@@ -1354,6 +1527,40 @@ describe('the anti-vacuum floor', () => {
     ]);
     expect(result.status, result.output).toBe(1);
     expect(result.stderr).toContain('this harness has no builder for it');
+  });
+
+  it('fails a one-source builder wired onto a subject that grew a second source', () => {
+    // THE SAME VACUUM AS A MISSING BUILDER, IN THE QUIET DIRECTION. A missing
+    // builder is refused loudly. A builder that is PRESENT and covers half the
+    // subject is not: `singleSource()` rasterises `renders[0]`, so the second
+    // file is handed over as nothing, recorded in `sources[]` as nothing, and
+    // therefore re-derived by the staleness check as nothing. The identifier is
+    // shown half a picture and the record is wrong about what it was a picture
+    // OF, and both render perfectly.
+    //
+    // It is a real shape and not a hypothetical: every landmark in the contract
+    // is one file today, and a landmark that gains a foreground tile is one
+    // line in `references.json`.
+    const grew = {
+      ...PEACE_TOWER,
+      renders: [
+        'src/svg/ottawa/landmark-parliament-hill.svg',
+        'src/svg/ottawa/layer-60-ice.svg',
+      ],
+    };
+    const result = run([
+      '--root',
+      fixture('outgrew-its-builder', {
+        subjects: [grew, UNRENDERED],
+        sources: {
+          'src/svg/ottawa/landmark-parliament-hill.svg': svg(400, 300, '#c8a05a'),
+          'src/svg/ottawa/layer-60-ice.svg': svg(300, 120, '#8fb8d8'),
+        },
+      }),
+    ]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('`singleSource()` and the contract gives it 2 render source(s)');
+    expect(result.stderr).toContain('It needs a composite builder');
   });
 
   it('fails a subject with no expectedBlindAnswer or no mustBeRight', () => {
@@ -1616,9 +1823,18 @@ describe('scoring a verdict', () => {
     );
 
     const after = score();
-    expect(after.stdout).toContain('STALE - cn-tower');
+    expect(after.stdout).toContain('NEVER CHECKED - cn-tower');
     expect(after.stdout).toContain('covers it with NONE');
     expect(after.stdout).toContain('1 in the contract and not in this record');
+    // ITS OWN HEADING, NOT `STALE`. The two shared a channel while both kinds
+    // happened to be the same kind, and the caller counts a channel and then
+    // says in words what the count means: the gate printed "could not be
+    // checked by the hand-off it was made from" over subjects that POSTDATE the
+    // record and that no hand-off ever held. A reader must be able to tell
+    // "looked at, and the picture has since moved" from "never looked at", and
+    // the words have to carry it, because the exit code is the same.
+    expect(after.stdout).toContain('these have never been looked at through this harness');
+    expect(after.stdout).not.toContain('STALE - cn-tower');
     // Not a failure on its own: nobody has looked, and the record does not
     // pretend otherwise.
     expect(after.status, after.output).toBe(0);
@@ -1627,6 +1843,11 @@ describe('scoring a verdict', () => {
     const strict = score(['--require-identification']);
     expect(strict.status, strict.output).toBe(1);
     expect(strict.stderr).toContain('NOT ESTABLISHED');
+    // The strict message names BOTH quantities, because the fix differs: an
+    // entry the hand-off could not show needs the same subject re-run; a
+    // subject nobody covered needs a run that includes one nobody has handed
+    // over. One number for both cannot say which.
+    expect(strict.stderr).toContain('1 subject(s) the record never covered at all');
   });
 
   it('fails an audit naming a feature the contract does not carry', () => {
@@ -2060,6 +2281,49 @@ describe('a verdict is about a picture, and the picture moves', () => {
     // that does not depend on reading the sentence.
     expect(plain.stderr).toContain('STALE ART');
     expect(plain.stdout).not.toContain('STALE ART');
+  });
+
+  it('says "never looked at" and "looked at, and the picture moved" in one run', () => {
+    // THE TWO UNVERIFIED STATES SIDE BY SIDE, which is the state this repository
+    // is actually in and the state the reporting has to survive. The record
+    // covers one subject whose art was then redrawn, and the contract also
+    // carries a subject the record never held at all. Both are "not verified"
+    // and they need different work: one needs the SAME subject re-run, the other
+    // needs a run that includes a subject nobody has ever handed over.
+    //
+    // They shared a channel until the count made the sharing visible. The gate
+    // counted the channel and said "could not be checked by the hand-off it was
+    // made from", which described the first and was simply untrue of the second
+    // -- four of those subjects postdate the record entirely, and no hand-off
+    // ever existed that could have held them.
+    const root = tree('both-kinds');
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root)]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    };
+    redraw(root, SOURCE);
+    const result = score(root, handoffRun);
+
+    // Fatal, on stderr, and about the subject that WAS looked at.
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('STALE ART - peace-tower');
+    expect(result.stderr).toContain('REDRAWN since the verdict was recorded');
+
+    // Advisory, on stdout, and about the subject nobody has looked at. The
+    // separation is by stream as well as by word, so a reader piping one of them
+    // still gets the distinction.
+    expect(result.stdout).toContain('NEVER CHECKED - rideau-canal-skateway');
+    expect(result.stdout).toContain('these have never been looked at through this harness');
+    expect(result.stdout).toContain('1 in the contract and not in this record at all');
+
+    // And neither state may borrow the other's words. A redrawn subject was
+    // looked at once; an uncovered one has no verdict to go stale.
+    expect(result.stdout).not.toContain('NEVER CHECKED - peace-tower');
+    expect(result.output).not.toContain('STALE ART - rideau-canal-skateway');
+    // The unrendered-by-decision subject is neither, and is not swept into
+    // either count: there was never anything to hand over.
+    expect(result.output).not.toContain('NEVER CHECKED - parliament-hill-skyline');
   });
 
   /* ---- the three ways art stops being checkable ---- */

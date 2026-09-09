@@ -371,12 +371,38 @@ function printScore(result) {
  *   stale     -> 0, unless --require-identification. The art is unchanged and
  *                the record is true about it, merely incomplete against a
  *                contract that has since asked for more.
+ *   uncovered -> 0, unless --require-identification. Same rule and same reason:
+ *                a record that never covered a subject makes no claim about it.
+ *                Reported SEPARATELY from `stale`, because the two need
+ *                different sentences and this function used to print one
+ *                sentence over both -- see the note on the channel in
+ *                lib/art-score.mjs.
  */
 function reportScore(result, { strict }) {
   // stderr, because it is fatal, and before the failure list because it is why
   // several of those failures are not the reader's real problem.
   for (const line of result.staleArt) console.error(`verify-art: STALE ART - ${line}`);
   for (const line of result.stale) console.log(`verify-art: STALE - ${line}`);
+  if (result.uncovered.length > 0) {
+    // The subject ids are suppressed under --quiet for the reason printScore
+    // gives below: the flag is asked for by an identifier who may still be
+    // mid-run, and a list of the subjects nobody has checked is a list of
+    // subjects. The COUNT is the part an operator needs and it names nothing.
+    for (const line of quiet ? [] : result.uncovered) {
+      console.log(`verify-art: NEVER CHECKED - ${line}`);
+    }
+    console.log(
+      `verify-art: ${result.uncovered.length} subject(s) NEVER CHECKED - the contract renders ` +
+        `them and this record covers them with nothing at all. NOT the same as a record whose ` +
+        `art has since moved, and the difference is the whole reason both are printed: that ` +
+        `record WAS looked at and its picture has since changed, and these have never been ` +
+        `looked at through this harness by anybody. ` +
+        `Neither is a pass. A record is scored out of its own manifest, so it cannot ` +
+        `report this on its own; it is counted beside the scored total because the DIFFERENCE ` +
+        `is the finding. Re-run the hand-off and record a verdict that covers them.` +
+        (quiet ? ' (--quiet: the subjects are not named.)' : ''),
+    );
+  }
   printScore(result);
 
   if (result.failures.length > 0) {
@@ -394,8 +420,16 @@ function reportScore(result, { strict }) {
     );
   }
   if (result.fatal) process.exit(1);
-  if (result.stale.length > 0 && strict) {
-    die('--require-identification: entries the record could not answer are NOT ESTABLISHED.');
+  // TWO QUANTITIES IN THE MESSAGE, because "not established" has two causes here
+  // and the fix differs: an entry the record's hand-off could not show needs the
+  // SAME subject re-run against a current hand-off; a subject the record never
+  // covered needs a run that includes a subject nobody has ever handed over.
+  if (result.stale.length + result.uncovered.length > 0 && strict) {
+    die(
+      `--require-identification: NOT ESTABLISHED - ${result.stale.length} entr(y/ies) the ` +
+        `record's own hand-off could not answer, and ${result.uncovered.length} subject(s) the ` +
+        `record never covered at all.`,
+    );
   }
 }
 
@@ -621,6 +655,12 @@ if (!existsSync(recordPath)) {
       // Scored clean on everything the record COULD answer, and the contract has
       // since asked for something its hand-off did not contain. Neither a pass
       // nor a failure, and reported as loudly as either.
+      //
+      // COUNTS `stale` ONLY. It used to count the subjects the record never
+      // covered as well, because they shared a channel, and then said of them
+      // that they "could not be checked by the hand-off it was made from" -- of
+      // four subjects that postdate the record entirely and that no hand-off
+      // ever held. reportScore prints those under their own heading.
       console.log(
         `verify-art: ${recordPath} is STALE: ${result.stale.length} entr(y/ies) could not be ` +
           `checked by the hand-off it was made from; identification is NOT ESTABLISHED for those.`,

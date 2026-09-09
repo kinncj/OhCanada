@@ -452,8 +452,36 @@ async function tileTo(buf, width) {
  * genuinely per subject.
  */
 
-/** A single source, rasterised on its own at 1x, flattened onto the matte. */
+/**
+ * A single source, rasterised on its own at 1x, flattened onto the matte.
+ *
+ * TAKES NO PARAMETERS, AND THE SOURCE IS NOT ONE OF THEM. The render is
+ * `subject.renders[0]`, out of the contract, because `renders[]` is the art
+ * agent's statement of which files the subject IS and a path repeated in this
+ * table would be a second copy of that statement, free to drift from it. A
+ * proposal to write `singleSource('src/svg/.../landmark-x@1x.svg')` arrives
+ * roughly once per level; the argument would be accepted and silently ignored,
+ * which is why the shape is worth saying out loud here rather than only in a
+ * review comment.
+ *
+ * WHICH IS ALSO WHY THE COUNT IS CHECKED. `renders[0]` on a subject that lists
+ * two sources hands over half of it: one file rasterised, one file in the
+ * keymap's `sources[]`, and therefore one file whose digest staleness is ever
+ * re-derived. The picture would be wrong and the record would be wrong about
+ * what it was a picture of, and both would render perfectly. A subject that
+ * grows a second source needs a composite builder, and this says so on the day
+ * it grows one instead of on the day somebody looks.
+ */
 const singleSource = () => async ({ assets, subject, failures }) => {
+  if (subject.renders.length !== 1) {
+    failures.push(
+      `${subject.id}: built by \`singleSource()\` and the contract gives it ` +
+        `${subject.renders.length} render source(s). This builder rasterises exactly one, so ` +
+        `the rest would be handed over as nothing and re-checked as nothing. It needs a ` +
+        `composite builder.`,
+    );
+    return null;
+  }
   const rel = subject.renders[0];
   const buf = await rasterise(assets, rel, failures);
   if (!buf) return null;
@@ -470,6 +498,40 @@ const singleSource = () => async ({ assets, subject, failures }) => {
  * `farMatch` / `nearMatch` are substrings of the render paths, so `renders[]`
  * can be listed in any order and a missing half is a named failure rather than
  * an undefined composite.
+ *
+ * `nearTop` IS SIGNED, AND A NEGATIVE ONE IS NOT A TYPO.
+ *
+ * It is `nearTile.offset.y - farTile.offset.y` out of the level document, and
+ * nothing in a parallax stack makes that positive. A NEARER layer is drawn in
+ * FRONT of a further one; it is not thereby drawn LOWER. `prairie-rail` is the
+ * case that proved it: the railbed (depth 40, scroll 1) sits at world y 800 and
+ * the fields (depth 30) at 1010, because the foreground tile spends its top 428
+ * rows on telegraph poles and wire that stand UP into the sky, and the fields
+ * are seen between them. The offset is -210 and the composite is right.
+ *
+ * AND THE OLD CODE DID NOT REFUSE THE SIGN. IT WOULD HAVE DRAWN THE WRONG
+ * PICTURE AND SAID NOTHING. This took `top: 0` for the far tile and
+ * `top: nearTop` for the near one, and the reflex assumption -- "a negative
+ * `top` will throw, so at worst the build fails loudly" -- IS FALSE. Measured
+ * against sharp 0.35: a negative `top` is accepted, the part of the input above
+ * the canvas is CROPPED AWAY, and the remainder is drawn from y 0. So the naive
+ * builder deletes the near tile's top `-nearTop` rows -- here, the telegraph
+ * poles, which are the whole reason the offset is negative -- and lays what is
+ * left flush against the far tile. It renders. The anonymisation holds. The
+ * summary reads the same. The identifier is asked to name a picture the level
+ * never shows.
+ *
+ * On TODAY'S prairie tiles it happens to throw instead, and for an unrelated
+ * reason: `Math.max(fm.height, nearTop + nm.height)` gives 310, the near tile is
+ * 520 tall, and sharp refuses an input taller than the canvas. That is luck, not
+ * a guard. Give the far tile 100 more rows and the same code composites cleanly
+ * and wrongly. Verified both ways rather than assumed, because "it would have
+ * failed loudly" is precisely the comfortable belief this file exists to check.
+ *
+ * So it is written as a SHIFT: whichever tile is higher goes to composite y 0
+ * and the other is pushed down by the difference. The SEPARATION between the two
+ * tops is `nearTop` in both directions, nothing is cropped, and the composite is
+ * the level's geometry translated rather than clipped.
  */
 const twoParallaxTiles = ({ farMatch, nearMatch, nearTop, what }) =>
   async ({ assets, subject, failures }) => {
@@ -486,15 +548,24 @@ const twoParallaxTiles = ({ farMatch, nearMatch, nearTop, what }) =>
     const fm = await sharp(far).metadata();
     const nm = await sharp(near).metadata();
     const width = Math.max(fm.width, nm.width);
-    const height = Math.max(fm.height, nearTop + nm.height);
+    // Whichever top is higher lands on composite y 0. For a positive `nearTop`
+    // this is `far: 0, near: nearTop`, which is what it always was, so every
+    // composite built before the sign existed is byte-identical.
+    const farAt = Math.max(0, -nearTop);
+    const nearAt = Math.max(0, nearTop);
+    const height = Math.max(farAt + fm.height, nearAt + nm.height);
 
     const png = await flatten(
       canvas(width, height).composite([
-        { input: await tileTo(far, width), left: 0, top: 0 },
-        { input: await tileTo(near, width), left: 0, top: nearTop },
+        { input: await tileTo(far, width), left: 0, top: farAt },
+        { input: await tileTo(near, width), left: 0, top: nearAt },
       ]),
     );
-    return { png, sources: [farRel, nearRel], slots: { nearTop } };
+    // `nearTop` is the level's number and is what a verdict is read against;
+    // `farAt`/`nearAt` are where this run actually put them, which differ from it
+    // whenever the near tile is the higher of the two. Recording only the first
+    // would leave a reader of the keymap unable to place anything in the picture.
+    return { png, sources: [farRel, nearRel], slots: { nearTop, farAt, nearAt } };
   };
 
 /* ------------------------------------------------------------------ *
@@ -974,6 +1045,71 @@ const RECIPES = {
     what: 'a skyline tile and a boulevard tile',
   }),
 
+  /** A single source, rasterised on its own at 1x. Its level's ONLY anchor that
+   * may be named: the two tiles beside it repeat, so `winnipeg-riverwalk` is
+   * asked for a promenade and never for a city, and the city rests here. */
+  'human-rights-museum': singleSource(),
+
+  /**
+   * "The promenade placed 180 px below the skyline tile's top edge (world y 800
+   * against 620)." Confirmed against content/levels/winnipeg.json: layer-20
+   * offset.y 620, layer-40 offset.y 800.
+   *
+   * THE SAME SHAPE AS `toronto-trail`, INCLUDING THE HOLE, and the hole is the
+   * part worth reading. The tiles overlap by 80 px, so the promenade's parapet
+   * posts, lamp standards and trees cross in front of the skyline's base band;
+   * below that the composite shows matte from composite y 260 down to y 530,
+   * where the paving becomes solid. That gap is not a defect and it is not sky
+   * either -- in the shipped level the riverbank tile stands in it, and the
+   * contract's own recipe puts that tile explicitly out of this subject "so the
+   * parapet reads as a parapet and not as a riverbank". Composing it in to
+   * close the gap would be this harness deciding what the verdict is about.
+   */
+  'winnipeg-riverwalk': twoParallaxTiles({
+    farMatch: 'skyline',
+    nearMatch: 'plaza',
+    nearTop: 180,
+    what: 'a skyline tile and a promenade tile',
+  }),
+
+  /** A single source, rasterised on its own at 1x. Its level's only
+   * non-repeating anchor, for the same reason as the museum above. */
+  'grain-elevator': singleSource(),
+
+  /**
+   * THE ONE NEGATIVE OFFSET IN THE TABLE, AND IT IS NOT A TYPO.
+   *
+   * "In world coordinates the railbed tile's top edge is 210 px ABOVE the
+   * fields tile's top edge (world y 800 against 1010), so the offset is
+   * NEGATIVE." Confirmed against content/levels/prairie-rail.json: layer-30
+   * offset.y 1010, layer-40 offset.y 800. 800 - 1010 = -210.
+   *
+   * The reflex reading -- nearer means lower, so the sign must be wrong -- is
+   * what makes this the entry to check rather than copy. It is wrong here, and
+   * the picture says why: the railbed tile is 520 px tall and spends its top 428
+   * rows on telegraph poles, wire and rail furniture that stand UP into the sky,
+   * at 3-25% column coverage. Only from its row 428 is it solid ballast. So the
+   * foreground layer BEGINS higher than the middle-distance farmland and is
+   * nearly all air where it does. Measured on the composite this builds:
+   *
+   *     y   0-210   railbed alone -- poles and wire against the matte
+   *     y 210-320   the fields tile's fading horizon behind them
+   *     y 320-428   solid farmland, seen between the poles
+   *     y 428-470   ballast, covering the fields tile's last 42 rows
+   *     y 470-520   ballast alone
+   *
+   * A positive 210 would have put the ballast below the farmland's bottom edge
+   * and the poles growing out of a field that ends above them, which is a
+   * picture of nothing. `twoParallaxTiles` shifts rather than clamps, so both
+   * signs mean the same thing: the separation between the two tops is 210 px.
+   */
+  'prairie-rail-line': twoParallaxTiles({
+    farMatch: 'fields',
+    nearMatch: 'railbed',
+    nearTop: -210,
+    what: 'a fields tile and a railbed tile',
+  }),
+
   /**
    * THE THREE CHARACTER ARTBOARDS, one builder, three plans.
    *
@@ -1375,6 +1511,48 @@ export function leakTokens({ references }) {
   // FILENAME is also a word of some `expectedBlindAnswer` -- parliament, hill,
   // ottawa, canal -- so narrowing to the answers costs nothing real, while
   // "hand" (from `hand-serge.svg`) stops being a forbidden word.
+  //
+  /*
+   * AND THERE IS STILL NO STOP-WORD LIST. ASKED AND ANSWERED, so that the next
+   * reader does not have to re-derive it.
+   *
+   * The narrowing above did not end the collisions. An accepted answer reading
+   * "a paved path with a stone wall" made "with" a token, "with" is in the
+   * briefing, and the gate went red on a hand-off that leaked nothing. The
+   * obvious fix is to stop looking for the twenty commonest English words.
+   * It is refused, on four grounds:
+   *
+   *   1. THE WORDS ARE NOT SEPARABLE. Today's tokens include "city", "north",
+   *      "park", "path", "line", "stone", "walk", "public" and "single". Every
+   *      one is ordinary English and every one is also a word that would narrow
+   *      a candidate set if it appeared in a briefing. There is no list that
+   *      drops "with" and keeps "city", except a list someone maintains by
+   *      hand, forever, against a contract that grows a level at a time.
+   *   2. THE ALLOWANCE WOULD BE PERMANENT AND UNREVIEWED. Every other
+   *      exception in this file is proved at the point of use -- the hex skip
+   *      applies ONLY where `OPAQUE_NAME` has just proved the name carries no
+   *      semantic content at all, and searches the token everywhere else. A
+   *      stop-word list proves nothing at the point of use; it is a standing
+   *      promise that a class of words can never be a leak, which is exactly
+   *      the shape of promise this file exists to distrust.
+   *   3. AND THE SELF-REFERENTIAL VERSION IS WORSE THAN THE HAND-WRITTEN ONE.
+   *      "Exempt the words the briefing already contains" is the tempting
+   *      automatic version, and it makes the check vacuous: paste a subject
+   *      name into the briefing and its words become exempt BECAUSE they were
+   *      pasted in. The scan would go green on the leak it exists to catch.
+   *   4. THE MEASURED RATE DOES NOT JUSTIFY IT. One collision, across five
+   *      levels of content, fixed by the author in one edit and costing the
+   *      contract nothing -- the matcher tolerates two inserted words, so
+   *      splitting a candidate in two loses no vocabulary. Compare the hex
+   *      skip, which was taken because sha256 spells "cafe" about once in
+   *      2400 names, NOBODY CAN AUTHOR AROUND IT, and the false positive was
+   *      provably uninformative. None of those three holds here.
+   *
+   * So the answer is: leave it, and let authors phrase around it. What was
+   * changed instead is the FAILURE MESSAGE, which used to read as "the briefing
+   * leaks" and invited the wrong repair -- editing the briefing, which is the
+   * constant, rather than the answer, which is the thing that moved.
+   */
   const word = (value) => {
     for (const part of normalise(value).split(' ')) {
       if (part.length >= 4) words.add(part);
@@ -1543,7 +1721,15 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
     const text = buf.toString('utf8').toLowerCase();
     for (const token of lowered) {
       if (text.includes(token)) {
-        failures.push(`${relative(dir, path)}: contains the leaking token "${token}"`);
+        failures.push(
+          `${relative(dir, path)}: contains the leaking token "${token}". TWO CAUSES AND ` +
+            `DIFFERENT FIXES: either this text was written from the contract, which is the ` +
+            `leak and the fix is here; or the contract has since accepted an answer built ` +
+            `from an ordinary English word that this text has always contained, which is not ` +
+            `a leak and the fix is to reword the answer. Text that PREDATES the answer cannot ` +
+            `have come from it. This does not decide between them, on purpose -- see ` +
+            `\`leakTokens\` for why there is no list of words it declines to look for.`,
+        );
       }
     }
   }

@@ -64,7 +64,7 @@
  * moved -- redrawn, deleted, or never digested in the first place -- is STALE
  * ART: it is not scored, it cannot pass, and it does not quietly vanish.
  *
- * TWO KINDS OF STALE, AND THEY EXIT DIFFERENTLY, WHICH IS THE POINT
+ * THREE WAYS A RECORD STOPS BEING AN ANSWER, AND THEY EXIT DIFFERENTLY
  *
  *   `stale`     THE CONTRACT MOVED. The art is unchanged and the record is a
  *               true statement about it, just an incomplete one: a feature
@@ -76,6 +76,15 @@
  *               is to print this and exit 0, because the only thing exit 0 can
  *               mean here is "the verdicts on file hold", and they do not hold;
  *               nobody has looked.
+ *
+ *   `uncovered` THE CONTRACT GREW. A subject the contract renders is in this
+ *               record nowhere at all -- not passing, not failing, not stale:
+ *               NEVER LOOKED AT. Advisory by default, fatal under
+ *               `--require-identification`, on the same rule as `stale`.
+ *
+ * Three channels and not one list with three adjectives in it, because every
+ * caller COUNTS a channel and then says in words what the count means. One list
+ * forces one sentence, and the sentence is then wrong about two thirds of it.
  *
  * The line between "a missing record is tolerated" and "a stale record is not"
  * is worth stating, because it looks inconsistent and is not: A MISSING RECORD
@@ -303,6 +312,30 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
    * from "this was never checked again", and one list cannot say both.
    */
   const staleArt = [];
+  /**
+   * NEVER CHECKED, which is neither of the two above and had to stop sharing a
+   * channel with `stale`.
+   *
+   * It lived in `stale` when it was first written, when the contract had grown
+   * TWO subjects past the record and both `stale` lines happened to be of this
+   * kind. That collapsed the moment there were also entries the record's own
+   * hand-off could not answer, because the caller counts the channel and says
+   * what the count means: `verify-art` printed "N entr(y/ies) could not be
+   * checked by the hand-off it was made from", which is a true sentence about
+   * one kind and a false one about the other. Four subjects landed that
+   * POSTDATE the record entirely -- no hand-off was ever made that could have
+   * held them -- and the gate described them as a deficiency of a hand-off.
+   *
+   * A reader has to be able to separate three states, and one list cannot say
+   * three things:
+   *   staleArt   looked at, and the picture has since changed. FATAL.
+   *   stale      looked at, and the contract has since asked for more than that
+   *              hand-off could show. Advisory; fatal under strict.
+   *   uncovered  NEVER LOOKED AT. Advisory; fatal under strict, same rule as
+   *              `stale` and for the same reason -- a missing record makes no
+   *              claim, and where a claim is required its absence is a failure.
+   */
+  const uncovered = [];
   const subjects = new Map((references.subjects ?? []).map((s) => [s.id, s]));
   const unrendered = new Set((keymap.unrendered ?? []).map((u) => u.subjectId));
 
@@ -669,24 +702,29 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
    * "skipping an unknown subject would verify four fifths of the set and print
    * the same OK" -- moved up to where the set is counted, and it matters most
    * in the mode that is meant to be gating: under `--require-identification` a
-   * record covering ten of twelve would otherwise be a pass.
+   * record covering ten of sixteen would otherwise be a pass.
    *
-   * `stale` AND NOT `failures`, deliberately, and the line between them is the
-   * one this file already draws: A MISSING RECORD MAKES NO CLAIM. Nobody has
-   * looked at these subjects and the record does not pretend otherwise, so it
-   * is advisory by default and fatal exactly where a claim is required. A
-   * subject `renders: []` is skipped, because it is unrendered by decision and
-   * there was never anything to hand over.
+   * ADVISORY AND NOT `failures`, deliberately, and the line is the one this file
+   * already draws: A MISSING RECORD MAKES NO CLAIM. Nobody has looked at these
+   * subjects and the record does not pretend otherwise, so it is advisory by
+   * default and fatal exactly where a claim is required. A subject with
+   * `renders: []` is skipped, because it is unrendered by decision and there was
+   * never anything to hand over.
+   *
+   * ONE FACT PER SUBJECT AND THE EXPLANATION ONCE, which is a decision the count
+   * forced. Each line carried a fifty-word paragraph when there were two of
+   * these; at six the same paragraph is printed six times and a reader skims the
+   * block -- the same argument `staleArtMessage` makes for one line per subject
+   * rather than one per render. The line states what is true of THIS subject and
+   * the caller prints the consequence once for the group.
    */
   const covered = new Set(wanted);
   for (const subject of references.subjects ?? []) {
     if (!Array.isArray(subject.renders) || subject.renders.length === 0) continue;
     if (covered.has(subject.id)) continue;
-    stale.push(
-      `${subject.id}: the contract gives it ${subject.renders.length} render source(s) and ` +
-        `this record covers it with NONE. Not a pass and not a failure — nobody has ever ` +
-        `looked at it through this harness, and a record scored out of its own manifest ` +
-        `cannot say so on its own. Re-run the hand-off and record a verdict that covers it.`,
+    uncovered.push(
+      `${subject.id}: ${subject.renders.length} render source(s) in the contract, and this ` +
+        `record covers it with NONE.`,
     );
   }
 
@@ -694,6 +732,7 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
     failures,
     stale,
     staleArt,
+    uncovered,
     /**
      * The single question a caller should ask about the exit code, so that no
      * caller has to remember that one of the two stale channels is fatal and the
