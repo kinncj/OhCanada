@@ -1,0 +1,258 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "prairie-rail",
+  "subject": "modern-canada",
+  "order": 7,
+  "title": {
+    "en": "The Prairies",
+    "fr": "Les Prairies"
+  },
+  "size": {
+    "x": 9600,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 480,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#a5d6ee",
+    "ground": "#965630",
+    "horizon": "#fbfdfe",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Cree",
+      "Saulteaux"
+    ],
+    "statement": {
+      "en": "This level is set on the plains of southern Saskatchewan. These are the lands of Treaty No. 4. The Crown met the Cree and the Saulteaux at Fort Qu'Appelle in September 1874, and the treaty covers most of southern Saskatchewan, the southeast corner of Alberta and part of western Manitoba.",
+      "fr": "Ce niveau se déroule dans les plaines du sud de la Saskatchewan. Ces terres sont visées par le Traité no 4. La Couronne a rencontré les Cris et les Saulteaux à Fort Qu'Appelle en septembre 1874, et le traité couvre la majeure partie du sud de la Saskatchewan, le sud-est de l'Alberta et une partie de l'ouest du Manitoba."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "usask-indigenous-sk-treaty-4",
+        "chapter": "Treaty 4",
+        "url": "https://teaching.usask.ca/indigenoussk/import/treaty_4.php",
+        "sourceHash": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "File Hills Qu'Appelle Tribal Council (eleven Treaty Four First Nations, among them Peepeekisis Cree Nation, Star Blanket Cree Nation and Muscowpetung Saulteaux Nation)",
+      "url": "https://www.fhqtc.com/member-first-nations",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.1,
+    "deadZone": {
+      "x": 80,
+      "y": 120
+    },
+    "offset": {
+      "x": 200,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1920,
+      "y": 1280
+    },
+    {
+      "x": 3840,
+      "y": 1280
+    },
+    {
+      "x": 5760,
+      "y": 1280
+    },
+    {
+      "x": 7680,
+      "y": 1280
+    },
+    {
+      "x": 9600,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "prairie-rail-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.03,
+        "y": 0.015
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "prairie-rail-layer-20-horizon",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.1,
+        "y": 0.04
+      },
+      "offset": {
+        "x": 0,
+        "y": 920
+      },
+      "repeatX": true
+    },
+    {
+      "key": "prairie-rail-layer-30-fields",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.3,
+        "y": 0.13
+      },
+      "offset": {
+        "x": 0,
+        "y": 1010
+      },
+      "repeatX": true
+    },
+    {
+      "key": "prairie-rail-layer-40-railbed",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 800
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "train",
+      "maxSpeed": 760,
+      "acceleration": 900,
+      "deceleration": 700,
+      "turnAcceleration": 820,
+      "glide": 0.85,
+      "maxSpeedMultiplierDownhill": 1.05,
+      "drive": "auto",
+      "jump": null,
+      "interaction": {
+        "reachPx": 320,
+        "requiresStop": true,
+        "whileMoving": false,
+        "approachSpeed": 0
+      },
+      "animation": {
+        "speedInput": "speed",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.train.label"
+    },
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "grain-elevator",
+      "name": {
+        "en": "Prairie grain elevator",
+        "fr": "Élévateur à grain des Prairies"
+      },
+      "blurb": {
+        "en": "After the Second World War Canada's economy grew quickly. Today Canadians have one of the highest standards of living in the world, built on hard work and on trade with other countries.",
+        "fr": "Après la Seconde Guerre mondiale, l'économie du Canada a connu une forte croissance. Aujourd'hui, les Canadiens ont l'un des meilleurs niveaux de vie au monde, grâce au travail et au commerce avec d'autres pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Today, Canadians enjoy one of the world's highest standards of living— maintained by the hard work of Canadians and by trade with other nations, in particular the United States."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 4800,
+        "y": 1280
+      },
+      "artKey": "prairie-rail-landmark-grain-elevator",
+      "radiusPx": 300
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 37748736
+}

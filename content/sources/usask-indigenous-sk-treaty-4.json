@@ -1,0 +1,43 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "usask-indigenous-sk-treaty-4",
+  "title": "Treaty 4 - Indigenous Saskatchewan Encyclopedia",
+  "publisher": "University of Saskatchewan (Indigenous Saskatchewan Encyclopedia, from the Encyclopedia of Saskatchewan)",
+  "edition": "Encyclopedia entry, fetched 9 September 2026",
+  "url": "https://teaching.usask.ca/indigenoussk/import/treaty_4.php",
+  "file": "usask-indigenous-sk-treaty-4.html",
+  "extractedText": "usask-indigenous-sk-treaty-4.txt",
+  "sha256": "93c17d772de7d39a5511c79a7f6ba1b67271e77073607f09ef780ce86a1e8873",
+  "extractedTextSha256": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
+  "bytes": 198728,
+  "retrievedAt": "2026-09-09",
+  "licence": "Copyright University of Saskatchewan. Cited and paraphrased; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Treaty 4",
+      "level": 7
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "A scholarly account, not a nation's own",
+      "problem": "This entry is a university encyclopedia article. It is a citable source for WHEN and WHERE Treaty 4 was made and for the extent of the land it covers, and it is not a nation speaking for itself. It writes the two treaty parties as `Cree and Saulteaux`, which is the wording content/levels/prairie-rail.json carries into `nations`; the level's nationSource is the File Hills Qu'Appelle Tribal Council, eleven Treaty Four First Nations whose own names include Peepeekisis Cree Nation, Star Blanket Cree Nation and Muscowpetung Saulteaux Nation, which is what makes those two spellings names those nations use rather than an author's choice.",
+      "affects": [
+        "Treaty 4"
+      ],
+      "grain": "chapter",
+      "action": "prefer a Treaty Four institution's own account if one becomes reachable; this entry was cached because the Parks Canada prairie sites carry no territorial statement and treaty4.ca did not resolve on 9 September 2026"
+    },
+    {
+      "topic": "Nineteenth-century terms quoted inside the article",
+      "problem": "The article quotes 1874 correspondence that uses `Indians` and `tribes`, and it reproduces the Crown's framing of the treaty as a cession. Nothing quoted into a level document may carry that language to a player.",
+      "affects": [
+        "Treaty 4"
+      ],
+      "grain": "chapter",
+      "action": "quote only the article's own sentences, never the correspondence it reproduces, and paraphrase into plain language before it reaches a screen"
+    }
+  ],
+  "grainNote": "One article, one heading. Both flags are at chapter grain because there is nothing finer to point at, and both are about the SOURCE rather than about drift: neither clears by re-fetching."
+}

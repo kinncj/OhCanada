@@ -231,7 +231,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "quebec-city-chateau-frontenac"
+  ],
   "pois": [
     {
       "id": "chateau-frontenac",
@@ -268,10 +270,21 @@
         "y": 1280
       },
       "artKey": "quebec-city-landmark-chateau-frontenac",
-      "radiusPx": 240
+      "radiusPx": 240,
+      "questId": "quebec-city-chateau-frontenac"
     }
   ],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "guide",
+      "position": {
+        "x": 1250,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "quebec-city-chateau-frontenac"
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 41943040
 }

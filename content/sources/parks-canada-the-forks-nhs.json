@@ -1,0 +1,43 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "parks-canada-the-forks-nhs",
+  "title": "The Forks National Historic Site",
+  "publisher": "Parks Canada",
+  "edition": "Site landing page, fetched 9 September 2026",
+  "url": "https://parks.canada.ca/lhn-nhs/mb/forks",
+  "file": "parks-canada-the-forks-nhs.html",
+  "extractedText": "parks-canada-the-forks-nhs.txt",
+  "sha256": "5eec3f84b9b7d7aecc1f99276a1272454bb858913d8fa7188d67de4e445ee332",
+  "extractedTextSha256": "f1e1749ea9bef82ec40b12391715afcbfc90799c252814acead0a8ff9b112ba2",
+  "bytes": 50932,
+  "retrievedAt": "2026-09-09",
+  "licence": "Crown copyright, Government of Canada. Cited and paraphrased; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "The Forks National Historic Site",
+      "level": 6
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "A territorial statement written by Parks Canada, not by any of the nations it names",
+      "problem": "The sentence this level's territory statement is drawn from - `The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Metis.` - is the federal site operator's wording. It is a citable statement of fact and it is NOT a nation speaking for itself. docs/content-review.md 3.2 asks for the nation's own published material for the NAMES, and level.schema.json gives a level exactly ONE nationSource field, which cannot carry seven nations. content/levels/winnipeg.json therefore names Treaty One Nation as its nationSource, which covers the seven First Nations who signed Treaty No. 1 and does not cover Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline or the Red River Metis as spelled here.",
+      "affects": [
+        "The Forks National Historic Site"
+      ],
+      "grain": "chapter",
+      "action": "before this statement is verified, either find each name on that nation's own material and record the gap, or narrow the statement to what one nationSource can carry. Do not widen the sentence beyond this page: everything it says about who the territory belongs to is in the one quoted sentence and nothing else on the page adds to it."
+    },
+    {
+      "topic": "A live promotional page, revised without notice and carrying no date",
+      "problem": "This is a visitor-information landing page. Hours, fees and events on it change through the season and the territorial sentence sits in the same template as they do, so the hash will move for reasons that have nothing to do with the claim.",
+      "affects": [
+        "The Forks National Historic Site"
+      ],
+      "grain": "chapter",
+      "action": "when the hash stops matching, re-read the territorial sentence before assuming the claim moved; a changed opening-hours table is not a changed fact"
+    }
+  ],
+  "grainNote": "One web page and one heading, so both flags are at chapter grain because the page has no other grain to offer. The first flag is about who is entitled to say the sentence and the second is about how often the bytes move; they are separate because a re-fetch answers the second and can never answer the first."
+}

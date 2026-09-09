@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1040" viewBox="0 0 1000 1040" shape-rendering="geometricPrecision">
+  <title>The Canadian Museum for Human Rights, Winnipeg, simplified to three parts and drawn to measured proportions: a mountain of Tyndall limestone built as six CANTED wedges with sloped tops, one curved glazed shell wrapping its left and front, and a tapering glass spire with an open steel lattice above it, rising from the highest stone fin. MEASURED on assets/refs/winnipeg/cmhr-elevation-from-the-river.jpg, a near-orthographic river elevation with the whole building in frame; every figure is a fraction of the BUILDING'S WIDTH, the one unambiguous quantity in that photograph (x 65..1140 at the foot, so B = 1075 px there). Height : width 0.953. Spire 0.393 of the width above the stone peak - glazed for the lower 0.253 and open steel for the upper 0.140 - 0.135 wide at its foot, 0.050 at the lattice, axis at 0.402 of the width from the left. Stone peak 0.567 of the width above the foot; the right-hand steps at 0.366 and 0.140. The shell is 0.321 of the width across and crests 0.465 up, which is about a tenth of the width BELOW the stone peak: that relationship is what stops the shell reading as the top of the building. A SECOND shell was drawn behind the first and removed: the building has two, and at ship size the second read as a blue blob competing with the first for the eye - the identifying trio is stone mountain, glass wing and spire, and a fourth shape costs more than it buys. The shell's ribs are DIAGONAL and converge toward its crest, with two horizontal rings across them, because vertical mullions turned it into an egg - that was the first two attempts. The wedges are canted rather than stacked because a stack of rectangles in pale stone reads as an office block, and each wedge carries its shade on its RIGHT edge because the key light is upper left. The arris is baked ao-shadow at 0.18 rather than the ramp's own shade tone: limestone-shade at full strength read as a rusted steel column standing in the middle of a stone wall. Tyndall limestone is its own palette ramp and deliberately NOT `stone`, which is Nepean sandstone and belongs to Parliament Hill. No lettering, no banner, no wordmark and no flag anywhere.</title>
+  <rect x="0" y="987" width="1000" height="53" fill="#8a6256"/>
+  <rect x="0" y="987" width="1000" height="6" fill="#a99789"/>
+  <ellipse cx="500" cy="992" rx="440" ry="15" fill="#16203a" opacity="0.28"/>
+  <rect x="40" y="965" width="920" height="22" fill="#a99789"/>
+  <rect x="40" y="965" width="920" height="7" fill="#c8c1b6"/>
+  <rect x="0" y="965" width="60" height="22" fill="#56993a"/>
+  <rect x="940" y="965" width="60" height="22" fill="#56993a"/>
+  <polygon points="124,900.4 312,580.8 312,985 124,985" fill="#a99789"/>
+  <polygon points="281.92,631.94 312,580.8 312,985 281.92,985" fill="#16203a" opacity="0.18"/>
+  <polygon points="302.6,543.2 479.32,452.02 479.32,985 302.6,985" fill="#c8c1b6"/>
+  <polygon points="451.04,466.61 479.32,452.02 479.32,985 451.04,985" fill="#16203a" opacity="0.18"/>
+  <polygon points="479.32,452.02 605.28,550.72 605.28,985 479.32,985" fill="#a99789"/>
+  <polygon points="585.13,534.93 605.28,550.72 605.28,985 585.13,985" fill="#16203a" opacity="0.18"/>
+  <polygon points="605.28,522.52 772.6,640.96 772.6,985 605.28,985" fill="#c8c1b6"/>
+  <polygon points="745.83,622.01 772.6,640.96 772.6,985 745.83,985" fill="#16203a" opacity="0.18"/>
+  <polygon points="772.6,640.96 880.7,682.32 880.7,985 772.6,985" fill="#a99789"/>
+  <polygon points="863.4,675.7 880.7,682.32 880.7,985 863.4,985" fill="#16203a" opacity="0.18"/>
+  <polygon points="880.7,827.08 970,853.4 970,985 880.7,985" fill="#c8c1b6"/>
+  <polygon points="955.71,849.19 970,853.4 970,985 955.71,985" fill="#16203a" opacity="0.18"/>
+  <polygon points="500,635.32 599.64,703 599.64,744.36 500,676.68" fill="#1a487a"/>
+  <polygon points="641,725.56 765.08,780.08 765.08,817.68 641,763.16" fill="#1a487a"/>
+  <rect x="610.92" y="894.76" width="156.04" height="90.24" fill="#1a487a"/>
+  <rect x="610.92" y="894.76" width="156.04" height="7" fill="#6799d6"/>
+  <rect x="124" y="971" width="846" height="14" fill="#16203a" opacity="0.18"/>
+  <polygon points="344.9,452.02 471.8,452.02 446.42,214.2 404.12,214.2" fill="#a9d0e5"/>
+  <polygon points="344.9,452.02 390.58,452.02 419.35,214.2 404.12,214.2" fill="#e4f2f6"/>
+  <polygon points="441.34,452.02 471.8,452.02 446.42,214.2 436.27,214.2" fill="#1a487a"/>
+  <polygon points="387.08,452.02 394.08,452.02 422.85,214.2 415.85,214.2" fill="#6799d6"/>
+  <polygon points="437.84,452.02 444.84,452.02 439.77,214.2 432.77,214.2" fill="#6799d6"/>
+  <rect x="397.24" y="205.2" width="57" height="11" fill="#30384f"/>
+  <rect x="402.24" y="82.6" width="8" height="131.6" fill="#57647a"/>
+  <rect x="441.24" y="82.6" width="8" height="131.6" fill="#57647a"/>
+  <rect x="421.74" y="82.6" width="8" height="131.6" fill="#7d8fa0"/>
+  <rect x="402.24" y="98.6" width="47" height="5" fill="#57647a"/>
+  <polygon points="402.24,103.6 410.24,103.6 449.24,127.6 441.24,127.6" fill="#30384f"/>
+  <rect x="402.24" y="132.6" width="47" height="5" fill="#57647a"/>
+  <polygon points="402.24,137.6 410.24,137.6 449.24,161.6 441.24,161.6" fill="#30384f"/>
+  <rect x="402.24" y="166.6" width="47" height="5" fill="#57647a"/>
+  <polygon points="402.24,171.6 410.24,171.6 449.24,195.6 441.24,195.6" fill="#30384f"/>
+  <rect x="402.24" y="200.6" width="47" height="5" fill="#57647a"/>
+  <polygon points="402.24,205.6 410.24,205.6 449.24,229.6 441.24,229.6" fill="#30384f"/>
+  <rect x="395.24" y="69.6" width="61" height="15" fill="#57647a"/>
+  <rect x="395.24" y="69.6" width="61" height="5" fill="#7d8fa0"/>
+  <path d="M 30,985 C 30,712.4 54.44,580.8 127.76,549.78 C 208.6,517.82 265,605.24 302.6,748.12 L 331.74,911.68 L 331.74,985 Z" fill="#a9d0e5"/>
+  <path d="M 30,985 C 30,712.4 54.44,580.8 127.76,549.78 C 123.06,635.32 107.08,776.32 112.72,985 Z" fill="#e4f2f6"/>
+  <path d="M 195.44,527.22 C 244.32,539.44 278.16,624.04 302.6,748.12 L 331.74,911.68 L 331.74,985 L 259.36,985 Z" fill="#6799d6"/>
+  <polygon points="59.4,985 66.4,985 114.18,545.55 107.18,545.55" fill="#cbd2da" opacity="0.72"/>
+  <polygon points="106.4,985 113.4,985 143.95,564.35 136.95,564.35" fill="#cbd2da" opacity="0.72"/>
+  <polygon points="153.4,985 160.4,985 173.72,601.95 166.72,601.95" fill="#cbd2da" opacity="0.72"/>
+  <polygon points="200.4,985 207.4,985 203.48,658.35 196.48,658.35" fill="#cbd2da" opacity="0.72"/>
+  <polygon points="247.4,985 254.4,985 233.25,733.55 226.25,733.55" fill="#cbd2da" opacity="0.72"/>
+  <polygon points="294.4,985 301.4,985 263.02,827.55 256.02,827.55" fill="#cbd2da" opacity="0.72"/>
+  <polygon points="35.64,844 324.22,844 324.22,838 35.64,838" fill="#cbd2da" opacity="0.6"/>
+  <polygon points="35.64,703 300.72,703 300.72,697 35.64,697" fill="#cbd2da" opacity="0.6"/>
+  <path d="M 30,985 C 30,712.4 54.44,580.8 127.76,549.78 L 127.76,575.16 C 65.72,597.72 44.1,718.04 44.1,985 Z" fill="#ffffff"/>
+  <polygon points="331.74,911.68 379.68,926.72 379.68,985 331.74,985" fill="#16203a" opacity="0.18"/>
+</svg>

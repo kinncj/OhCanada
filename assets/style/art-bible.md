@@ -53,6 +53,16 @@ invisible in the SVG and obvious in the render at 160 px: a scarf that read as a
 that read as shoulder pads, and a toque band that covered the brows and cost the expression system a third of
 its vocabulary. `references.json` carries a `renderRecipe` for each character subject for this reason.
 
+**The toque band came back, and the way it came back is the lesson.** Its own `<title>` said "the band stops
+ABOVE the brows" for a month while the band was cutting the eyes in half in every render, because the claim
+was written and never measured. It is measured now, in the file and in §7.3: the highest brow ink in the four
+expressions is **y 53.2** (`face-surprised`), and the band's lowest ink over the face — x 118 to 156 — is
+**y 47**. A prose claim about occlusion in a part's title is worth nothing; the number and the render are the
+claim. **`hat-serge` still fails this**: its brim's lower arc dips to y ≈ 64 across the face and hides the
+officer's brows in all four expressions, so that character plays three cues where everyone else plays five.
+Fixing it needs the brim reshaped rather than raised — the crown's ink is already at y 2 and nothing in this
+rig may sit above y = 0 — which is a measured job against a 0.92 identification and is not done here.
+
 ---
 
 ## 2. The three tones
@@ -303,24 +313,19 @@ What carries the turn, and what a redraw must not quietly drop:
 
 | cue | where | carries it at 390 px? |
 |---|---|---|
-| an ASYMMETRIC head outline: cranium behind, brow, nose, lip and chin in front, the nose projecting 16 px | `head-skin-*`, `head-shell-beaver` | **yes — this is the one that does the work** |
-| the hair mass at the BACK, lower behind than in front, fringe sweeping forward to the brow | every `hair-*` | yes: at this size hair is a large flat colour block, and a symmetric cap says "front view" louder than any drawn cue says otherwise |
+| an ASYMMETRIC head outline: cranium behind, brow, nose, lip and chin in front, the nose projecting 16 px | `head-skin-*`, `head-shell-beaver` | **only if nothing else reaches further forward — see §7.4, which is the trap this line fell into** |
+| the hair mass at the BACK, its fringe stopping at a tip INSIDE the forehead so the face profile is the leading edge | every `hair-*` | yes: at this size hair is a large flat colour block, and a fringe that overhangs the brow deletes the profile behind it |
 | chest plane and its fastening on the LEADING edge, back on the trailing edge | every torso | yes |
 | both feet pointing the way the character travels, far foot shorter | `foot-r-*`, `foot-l-*` | yes |
 | the hat brim swung forward, the toque band following the brow line downhill to the back | `hat-serge`, `head-covering-toque` | yes |
 | eyes crowded into the front third, 15 px apart, far eye foreshortened 6 px off the cheek edge | `face-*` | at 1× and 0.5× |
 | ONE ear, set well back on the near side | `head-skin-*`, `head-shell-beaver` | no, and that is fine — it is a supporting cue, not a load-bearing one |
+| a NECK: a lit column between the jaw and a darker collar, its base closed over by the coat | `neck-{skin}`, and the neckline cut into every `torso-*` | yes, and it is what stops the whole head-and-shoulder mass reading as one lump |
 
 **The near side is the wearer's RIGHT.** A person facing east, seen from the south, shows you their right
 side; their right shoulder lands *west* of their spine on your screen. So `-r` parts draw IN FRONT (z 9–11
 and 20–22) and `-l` parts behind, and the near shoulder sits at x = 103 while the far one — the leading,
 chest-side shoulder — sits at x = 137.
-
-**How to judge it: render the three figures side by side at 390 px and ask whether a stranger would say they
-are walking or standing.** Not at 1×, where everything reads and nothing is decided; at the width the game
-actually ships on. Three of this character's defects — a scarf reading as the officer's sash, a hood ruff
-reading as shoulder pads, a toque covering the brows — were invisible in the SVG and obvious in a render,
-and the fourth, a front-facing head on a turned body, was invisible in a 1× render and obvious at 390 px.
 
 ### 7.2 The measurements, and where the widths come from
 
@@ -332,6 +337,8 @@ and the fourth, a front-facing head on a turned body, was invisible in a 1× ren
 | **shoulder joint span**, near pivot to far pivot, as projected in this view | 0.49 | **34 px** (x = 103 and 137) |
 | **shoulder width**, across the bare figure at the shoulder line | 1.37 | **96 px** |
 | **maximum dressed silhouette AT REST**, wherever it falls on the figure | ≤ 1.66 | **≤ 116 px** |
+| **visible neck**, jaw ink to collar ink | 0.149 of head height | **12–13 px** |
+| **neck width**, skin between the ink edges | 0.26 of shoulder width | **22 px** (ink outer 34 px) |
 | hip width | 1.30 | 91 px |
 | hip to sole | 2.80 | 196 px |
 | hand width | 0.55 | 38 px |
@@ -387,12 +394,150 @@ explicit that comparison only works if everyone is compared. The one row of the 
 apply to it — every skin fill is a `skin-1`…`skin-6` entry — is named as an exemption in its own sheet, for
 one non-human artboard, and for no human character ever.
 
+### 7.3 The neck, and where its length comes from
+
+The figure had no neck. The repository owner said so from the live site — *"the head is on the torso"* — and
+the render agreed: the head's ink bottom and the coat's collar ink overlapped by about 6 px, and the thing
+called a neck was a 9 px stub of **skin-shade** drawn INSIDE `head-{skin}`, on top of the collar, in a tone
+two steps from the outline ink. At 390 px it was three dark pixels between two dark pixels. It read as a
+notch, and with no break in it the shoulder line ran straight into the jaw, which is most of why the
+shoulders still looked wrong after their width was corrected.
+
+**Measured, on `assets/refs/officer/red-serge-full-figure.jpg`**, which is the only reference in the set
+that shows a whole figure with a neck in it. The skateway photograph that the shoulder rows came from cannot
+answer this question — every adult in it is hooded — so the scale of this photograph was checked against it
+rather than assumed. By colour segmentation of the skin region, at full resolution:
+
+> Eye line **y 211**, chin **y 316**, so head height **208 px** (the eye line is half a head from the crown,
+> which is the row above and is how the crown gets measured under a hat). Face width at the cheekbones
+> **145 px**, head width including the cranium **≈ 175 px**. Neck width at the throat, row y 318:
+> **85 px**. Collar top at the throat: **y 347**. Shoulder line, top of the trapezius at the strap:
+> **y 375**. Shoulder-to-shoulder across the tunic **≈ 330 px**.
+>
+> **visible neck 31 px = 0.149 head heights. neck 85 px = 0.258 of shoulder width. chin to shoulder line
+> 59 px = 0.284 head heights.**
+
+Two of those three convert cleanly and one does not, and the one that does not is recorded rather than
+smoothed over:
+
+- **Visible length.** 0.149 of a head. The rig's head UNIT is 70 px, which gives 10.4 px; the head as DRAWN
+  is 85.5 px of ink, which gives 12.7 px. The drawn head is what an eye normalises against, so the shipped
+  figure carries **12–13 px** — the head ink bottom sits at y ≈ 121 and the collar ink top at y ≈ 134 on
+  every costume. **3.6 px of the neck's own light skin at 390 px**, which is exactly what the reference
+  photograph shows when it is scaled to the same 152 px figure height, and it reads there. No legibility
+  exaggeration was applied and none was needed.
+- **Width.** Normalised by SHOULDER width, not by head height. 0.258 × 96 px of bare shoulder = 24.8 px, and
+  the shipped column shows **22 px of skin inside a 34 px ink outer**. Normalising by head height instead
+  would have given 35 px, and it is wrong for the obvious reason: this head is a cartoon head, 93 px wide
+  over a 96 px shoulder, so anything measured off it inherits the exaggeration. A neck belongs to the body.
+- **Chin to shoulder line.** The photograph says 0.284 of a head; the rig has **14.5 px against the 19.9 px
+  that implies**, because the drawn head is 22 % taller than the head unit and its jaw cannot be trimmed —
+  `face-surprised`'s mouth already ends 5 px above the chin, and cutting the jaw would put the mouth through
+  it. **This row is not met and is not going to be met without re-proportioning the head**, which is a
+  different job with a different risk. It is written down here so that the next person measures it rather
+  than rediscovering it.
+
+**What actually makes a 3.6 px neck read is not its length: it is the tonal sandwich.** In the reference
+scaled to ship size the neck is about three pixels and it is perfectly legible, because there is a DARK
+collar directly under a LIT column. The old stub had it inverted — a shade-toned neck over a white fur ruff
+— and vanished. So every costume now closes a darker collar over the base of the neck, and the neck itself
+is base skin with the ramp's light on the trailing edge and its shade on the leading one:
+
+| costume | what closes over the neck | measured at 390 px |
+|---|---|---|
+| `parka` | fur ruff, its top edge cut into a neck opening at y 137, and the coat's own opening cut lower still so a band of white fur shows between them | reads |
+| `serge` | the standing collar, dropped to the base of the neck with its top edge scooped; navy under skin is the strongest contrast of the three | reads |
+| `beaver` | nothing — a beaver has no collar. See below. |  reads |
+
+**The guide is NOT an exception.** A beaver is very nearly neckless in life, and
+`assets/refs/beaver/beaver-upright-winter-gnawing.jpg` shows exactly that: the head runs into the shoulder
+mass with only a tonal break where the pale cheek fur meets the darker pelt. The guide still gets the same
+`neck` part, at the same pivot, with the same keyframes and the same 12–13 px of visible column, because
+`docs/content-review.md` §6.2 only lets you compare characters if everyone is compared and a second neck
+canon is a second canon. What is exempt is the SURFACE, on the one non-human artboard and on no human one
+ever: the guide's column is pelt, not skin — `head-shell-beaver` covers the shared `neck-{skin}` exactly as
+it already covers the shared head and the shared short crop — and it is `leather-shade` where the body is
+`leather-base`, so it reads as the animal's heavy neck ruff rather than as a person's column. That is the
+same exemption `guide.md` already holds for the skin ramp, extended one part, and it is the only one.
+
+**Judge it at 390 px on the three-figure comparison.** Everything in this section was invisible in the SVG
+and obvious in a render, which is now the fifth time: the scarf reading as the Sam Browne, the ruff as
+shoulder pads, the toque band over the brows, head cues that were all sub-pixel, and a neck that was in the
+markup the whole time.
+
 **Per-costume design sheets.** `assets/style/officer.md` (serge), `assets/style/player.md` (parka) and
 `assets/style/guide.md` (beaver). Read the one for the costume you are touching: each records the decisions
 that look like mistakes from the markup, and the player sheet in particular records why the coat is blue and
 why the scarf hangs straight down.
 
 ---
+
+### 7.4 A cue is only a cue if it is the OUTERMOST thing
+
+The turn was put in the outline, the outline was checked, and the character still shipped reading as
+front-facing. The reason is worth more than the fix:
+
+> Measured on the shipped default — long hair, bare head — the HAIR was the leading edge from y = 40 to
+> y = 68, a **28-row vertical wall at x = 152–158**, and the nose exceeded it by **11 px over 24 rows**. On
+> a phone that is a 4 × 9 px bump on a straight edge. **A vertical leading edge is the silhouette of a
+> front-facing head**, whatever is drawn inside it.
+
+The old test — "the nose breaks the outline" — was **true of the part and false of the picture**, which is
+exactly why it passed while the art was wrong. Measuring a feature in isolation says nothing; a feature
+behind a neighbour that projects further is not on the silhouette at all.
+
+**The rule.** From the crown down to the nose, the outermost pixel must move **forward, monotonically**, with
+no vertical run longer than about 8 rows. That is one convex sweep — forehead, brow, nose, lip, chin — and it
+is what a turned head looks like from outside. It is measured, not eyeballed: the art scratch harness walks
+the head parts row by row and reports which part owns the leading edge at each one. **THIS MEASUREMENT NO LONGER DESCRIBES THE TREE. 2026-09-09.** It was taken against a redraw of the twenty
+`hair-*` parts that was reverted; the shipped hair is the pre-redraw art and the vertical leading-edge wall
+the paragraph above measures **is still there**. The rule stands and the fix does not: whoever picks this up
+re-draws the hair and re-measures. The `head-covering` fallback is now `toque`, which covers the default
+case but not `headCovering: none`, and `none` is the case this section is about.
+
+The corollary binds every part, not just hair: **a fringe, a collar, a hood ruff or a hat brim that reaches
+further forward than the face deletes the face's profile.** Give volume to a hairstyle upward and backward,
+never forward past the brow.
+
+### 7.5 A hidden part must END near the pivot it shares
+
+The rig is flat (`rig-contract.md` §5): the shin rotates by hip + knee and the boot by hip + knee + **ankle**,
+so the two differ by the ankle angle — up to 24° across the eight states. Anything of the shin far from the
+ankle pivot swings out from under the boot.
+
+The shin used to run to y = 456, four pixels off the sole line and as wide at the ankle as at the knee. On a
+phone that read as a **peg leg**: a bare slate cylinder with a rounded cap hanging below the boot, in 11 of
+23 animation frames. A point 6 px from the pivot moves 2.5 px at 24° and stays inside the boot; a point 20 px
+away moved 8 px and did not.
+
+> **A part that must stay hidden inside the part drawn after it has to end near their shared pivot, and
+> taper into it.** Length past the pivot is what leaks.
+
+**Applied 2026-09-09**, after the first attempt at it was reverted with the rest of that pass: all three
+`leg-lower-*` now end at y 443 — **7 px past the ankle pivot, not 20** — and taper 35 px at the knee to
+26 px at the ankle. Measured by difference over 24 phases of all eight states, all three costumes: **no
+shin pixel is visible anywhere below the ankle pivot in any frame**, against 10.75 px below it before.
+
+It is gated the same way — by difference, over every frame of every state and every costume, so it catches a
+part leaking sideways as well as downward, and cannot be "fixed" in the one frame somebody noticed.
+
+### 7.6 How to judge it, and every way that has been got wrong
+
+**Render the DEFAULT appearance, mid-walk, at the camera's own scale, over a real level.** Every clause is
+there because leaving it out has already shipped a defect:
+
+| clause | what leaving it out cost |
+|---|---|
+| the **default** appearance | judged a chosen variant. The shipped default is long dark hair and a bare head, which is the worst case for the head silhouette, and it is the one a player meets |
+| **mid-walk**, every frame | judged the rest pose. The peg leg is invisible at rest and present in 11 frames of 23 |
+| the **device's** pixel ratio | judged at 1 device pixel per CSS pixel. A phone is at 3. **This is not the camera.** Screenshotted from the running build, same commit, same level, same frame, only `deviceScaleFactor` changed: the level art is pixel-identical and the CHARACTER grows from **113 × 59 CSS px to 166 × 72** — the parallax does not move, so no camera zoom can explain it. At `devicePixelRatio >= 2` the game loads the `@2x` shared atlas and `sprite-character-renderer.ts` sizes each part from the texture it got while positioning it in character space, so parts are drawn ~2× and placed at 1× and the figure comes apart: giant head, mitt off the sleeve, shin below the boot. **Nothing under `assets/` can fix that**; it is one `setDisplaySize(window.w, window.h)` in the renderer. Judge at DPR 1 *and* 3 until it is fixed |
+| over a **real level** | judged a white strip. The game puts the figure against a parallax city with snow over it |
+
+Three of this character's defects — a scarf reading as the officer's sash, a hood ruff reading as shoulder
+pads, a toque covering the brows — were invisible in the SVG and obvious in a render. The fourth, a
+front-facing head on a turned body, was invisible in a 1× render and obvious at phone width. The fifth and
+sixth, the peg leg and the hair swallowing the profile, were invisible in **every** render made here and
+obvious in a photograph of a phone. Each time the answer was to make the test more like the game.
 
 ## 8. Skin and hair
 

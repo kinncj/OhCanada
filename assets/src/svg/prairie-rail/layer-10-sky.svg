@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1000" viewBox="0 0 1080 1000" shape-rendering="geometricPrecision">
+  <title>The prairie sky, and it is most of the picture: ONE FLAT sky-light field with six flat-bottomed cumulus banks, the largest clouds in the game. Flat rather than banded, for the reason Halifax's sky is: at the LOW preset this level keeps only the sky and the railbed, and the railbed is transparent everywhere above the rail head, so there is nowhere to hide a band step. One field has no step to hide and it IS the level document's theme.sky. Pale on purpose - measured at hsl(213,50%,61%) on assets/refs/prairie-rail/grain-elevator-chamberlain.jpg, and taken at sky-light so the horizon band can go to cloud-light without a visible step. FLAT BASES, which is what makes prairie cumulus prairie cumulus rather than the round cotton of the other five levels. World y 0..1000; clouds are kept inside x 100..980 so the extreme columns stay flat band colour for the desktop side panel.</title>
+  <rect x="0" y="0" width="1080" height="1000" fill="#a5d6ee"/>
+  <rect x="147.4" y="222.2" width="276" height="11.5" fill="#b9cfe2"/>
+  <ellipse cx="290" cy="222.2" rx="230" ry="43.7" fill="#dce9f3"/>
+  <ellipse cx="211.8" cy="190" rx="138" ry="46" fill="#fbfdfe"/>
+  <ellipse cx="359" cy="196.9" rx="115" ry="34.5" fill="#fbfdfe"/>
+  <ellipse cx="290" cy="164.7" rx="156.4" ry="50.6" fill="#fbfdfe"/>
+  <rect x="648.4" y="175.2" width="216" height="9" fill="#b9cfe2"/>
+  <ellipse cx="760" cy="175.2" rx="180" ry="34.2" fill="#dce9f3"/>
+  <ellipse cx="698.8" cy="150" rx="108" ry="36" fill="#fbfdfe"/>
+  <ellipse cx="814" cy="155.4" rx="90" ry="27" fill="#fbfdfe"/>
+  <ellipse cx="760" cy="130.2" rx="122.4" ry="39.6" fill="#fbfdfe"/>
+  <rect x="358.8" y="456.4" width="312" height="13" fill="#b9cfe2"/>
+  <ellipse cx="520" cy="456.4" rx="260" ry="49.4" fill="#dce9f3"/>
+  <ellipse cx="431.6" cy="420" rx="156" ry="52" fill="#fbfdfe"/>
+  <ellipse cx="598" cy="427.8" rx="130" ry="39" fill="#fbfdfe"/>
+  <ellipse cx="520" cy="391.4" rx="176.8" ry="57.2" fill="#fbfdfe"/>
+  <rect x="766" y="548" width="240" height="10" fill="#b9cfe2"/>
+  <ellipse cx="890" cy="548" rx="200" ry="38" fill="#dce9f3"/>
+  <ellipse cx="822" cy="520" rx="120" ry="40" fill="#fbfdfe"/>
+  <ellipse cx="950" cy="526" rx="100" ry="30" fill="#fbfdfe"/>
+  <ellipse cx="890" cy="498" rx="136" ry="44" fill="#fbfdfe"/>
+  <rect x="61.2" y="673.6" width="288" height="12" fill="#b9cfe2"/>
+  <ellipse cx="210" cy="673.6" rx="240" ry="45.6" fill="#dce9f3"/>
+  <ellipse cx="128.4" cy="640" rx="144" ry="48" fill="#fbfdfe"/>
+  <ellipse cx="282" cy="647.2" rx="120" ry="36" fill="#fbfdfe"/>
+  <ellipse cx="210" cy="613.6" rx="163.2" ry="52.8" fill="#fbfdfe"/>
+  <rect x="506.7" y="830.1" width="258" height="10.75" fill="#b9cfe2"/>
+  <ellipse cx="640" cy="830.1" rx="215" ry="40.85" fill="#dce9f3"/>
+  <ellipse cx="566.9" cy="800" rx="129" ry="43" fill="#fbfdfe"/>
+  <ellipse cx="704.5" cy="806.45" rx="107.5" ry="32.25" fill="#fbfdfe"/>
+  <ellipse cx="640" cy="776.35" rx="146.2" ry="47.3" fill="#fbfdfe"/>
+</svg>

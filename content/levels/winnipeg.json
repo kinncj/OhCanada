@@ -1,0 +1,237 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "winnipeg",
+  "subject": "justice",
+  "order": 6,
+  "title": {
+    "en": "Winnipeg",
+    "fr": "Winnipeg"
+  },
+  "size": {
+    "x": 7680,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 400,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#1f5fa8",
+    "ground": "#8a6256",
+    "horizon": "#dce9f3",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Anishinaabeg",
+      "Nehiyawak",
+      "Ininiwak",
+      "Anisininewuk",
+      "Dakota Oyate",
+      "Denesuline",
+      "Red River Métis"
+    ],
+    "statement": {
+      "en": "This level is set at The Forks, in Winnipeg. The Forks is on Treaty No. 1 territory. It is the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate and Denesuline, and the homeland of the Red River Métis.",
+      "fr": "Ce niveau se déroule à La Fourche, à Winnipeg. La Fourche se trouve sur le territoire visé par le Traité no 1. C'est le territoire traditionnel des Anishinaabeg, des Nehiyawak, des Ininiwak, des Anisininewuk, du Dakota Oyate et des Denesuline, et la patrie des Métis de la rivière Rouge."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "parks-canada-the-forks-nhs",
+        "chapter": "The Forks National Historic Site",
+        "url": "https://parks.canada.ca/lhn-nhs/mb/forks",
+        "sourceHash": "f1e1749ea9bef82ec40b12391715afcbfc90799c252814acead0a8ff9b112ba2",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": true,
+        "quote": "The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Treaty One Nation (the seven First Nations who are signatories to Treaty No. 1)",
+      "url": "https://treaty1.ca/",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.12,
+    "deadZone": {
+      "x": 60,
+      "y": 120
+    },
+    "offset": {
+      "x": 140,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1920,
+      "y": 1280
+    },
+    {
+      "x": 3840,
+      "y": 1280
+    },
+    {
+      "x": 5760,
+      "y": 1280
+    },
+    {
+      "x": 7680,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "winnipeg-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "winnipeg-layer-20-skyline",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.16,
+        "y": 0.07
+      },
+      "offset": {
+        "x": 0,
+        "y": 620
+      },
+      "repeatX": true
+    },
+    {
+      "key": "winnipeg-layer-30-riverbank",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.36,
+        "y": 0.16
+      },
+      "offset": {
+        "x": 0,
+        "y": 850
+      },
+      "repeatX": true
+    },
+    {
+      "key": "winnipeg-layer-40-plaza",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 800
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "human-rights-museum",
+      "name": {
+        "en": "Canadian Museum for Human Rights",
+        "fr": "Musée canadien pour les droits de la personne"
+      },
+      "blurb": {
+        "en": "In Canada the law applies to everyone. Judges, politicians and the police must follow the same law as you.",
+        "fr": "Au Canada, la loi s'applique à tout le monde. Les juges, les politiciens et les policiers doivent respecter la même loi que vous."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The law in Canada applies to everyone, including judges, politicians and the police."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3840,
+        "y": 1280
+      },
+      "artKey": "winnipeg-landmark-human-rights-museum",
+      "radiusPx": 300
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 37748736
+}

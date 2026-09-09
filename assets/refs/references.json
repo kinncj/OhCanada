@@ -31,7 +31,8 @@
     "AND THE MEASURING LESSON REPEATS, in a new form. ADR-0014 records that averaging three individually-correct brackets produced a Chateau nobody photographed. Here the first build of the Town Clock took its stage heights and widths from a read of a gridded crop, by eye, and had the colonnade 29 per cent too narrow and the dial 16 per cent too small - errors that only appeared when every figure was re-expressed as a fraction of ONE measured quantity, the base building's width. A ratio is only a measurement if its denominator was measured too.",
     "AMENDED 2026-09-08 while redrawing the player costume and adding the beaver guide. Two subjects added, and BOTH ARE CHARACTERS, which is why each carries a renderRecipe that builds a composite and demands a second figure in the frame: a character cannot be judged from one file and identical proportions cannot be judged from one figure. `player` ships with an EMPTY referenceFiles list and that is correct - it is a costume, not a landmark, and there is no photograph it is a simplification of; its accuracy bar is the palette, the proportion canon and the two-size test. `guide` ships with six, licence-checked before download, and with one labelled departure from them - white incisors where the animal's are orange - written down as an exaggeration rather than left looking like accuracy.",
     "AMENDED 2026-09-09 after the repository owner reported, from the live site, that the player \"looks extremely odd... it is looking at the user... shoulders are not proportional\". Both were true and both are fixed: every character is drawn THREE-QUARTER facing its direction of travel, and the shoulder canon is measured against a photograph instead of chosen. TWO CHANGES HERE ARE ABOUT THIS FILE RATHER THAN ABOUT THE ART. First, every character subject gains a \"turned toward the direction it travels\" entry, because a side-scroller character that faced the camera was a defect nothing in this file asked about. Second, the identical-proportions entry is TIGHTENED, and that is the more useful finding: IT PASSED on the art the owner was looking at. It passed because it asked whether two figures matched and they did - they were equally wrong. A comparison that cannot see the widest part of a figure is not measuring proportions. It now names the measurement, gives the number and its photographic source, and separates the garment (may differ, capped at 116 px) from the figure (identical, and the list of landmarks is written out). Two maskRegion probes are switched on at the same time - the officer hat and the guide tail - because the mechanism has been implemented and dormant since it was written, and both sheets make a claim about what carries the identification that nobody has tested.",
-    "AMENDED AGAIN 2026-09-09, the same day, after the first correction was rendered at 390 px beside the other two figures. The body turn had landed and THE HEAD TURN HAD NOT: the guide read as travelling and both humans read as standing still, facing the viewer, which is the defect the amendment above was written for. The heads now turn further than the bodies - about 25 degrees off profile against 40 - and are built as an ASYMMETRIC OUTLINE rather than as a symmetric egg with cues drawn on it. THE LESSON IS ABOUT THIS FILE AS MUCH AS ABOUT THE ART: the first correction satisfied every word of the entry as it was then written, because the entry listed cues and the cues were all present and all sub-pixel. An entry listing features a verifier can tick off at 1x does not test what a player sees. It now says WHICH cue carries the read at phone size, and it says to judge at 390 px."
+    "AMENDED AGAIN 2026-09-09, the same day, after the first correction was rendered at 390 px beside the other two figures. The body turn had landed and THE HEAD TURN HAD NOT: the guide read as travelling and both humans read as standing still, facing the viewer, which is the defect the amendment above was written for. The heads now turn further than the bodies - about 25 degrees off profile against 40 - and are built as an ASYMMETRIC OUTLINE rather than as a symmetric egg with cues drawn on it. THE LESSON IS ABOUT THIS FILE AS MUCH AS ABOUT THE ART: the first correction satisfied every word of the entry as it was then written, because the entry listed cues and the cues were all present and all sub-pixel. An entry listing features a verifier can tick off at 1x does not test what a player sees. It now says WHICH cue carries the read at phone size, and it says to judge at 390 px.",
+    "AMENDED 2026-09-09 while drawing Winnipeg (level 6) and The Prairies (level 7). Four subjects added, and the PAIR of them is the point again. `human-rights-museum` IS allowed to demand a place name and `grain-elevator` IS NOT, on the same test that separated town-clock from pier-21: the museum is one specific building whose stack - a stepped Tyndall limestone mountain, a curved blue-green glass shell and a glazed spire with an open steel lattice - nothing else in this game will ever share, and the elevator is a TYPE. Every prairie elevator carries its company's name and its town's name painted across the crib, this project draws no lettering anywhere, and what is left without them is the standard plan that stood in a thousand prairie towns. Its list asks for a grain elevator and never for Saskatchewan. The consequence is stated rather than left to be discovered: The Prairies as a PLACE rests on nothing in this level's art, by design, because the level is a region rather than a town and its identity is the type and not a landmark."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -380,13 +381,13 @@
         {
           "feature": "the figure is TURNED TOWARD THE DIRECTION IT TRAVELS",
           "why": "This is a portrait 2D side-scroller and every character in it walks, skates, toboggans or bikes ALONG the screen. A character drawn front-on, facing the viewer, is wrong by construction - it reads as a menu portrait somebody slid sideways - and that is what the repository owner reported from the live site: that it is looking at the user. A verifier who describes the figure as facing the camera, or who cannot say which way it is going, FAILS this entry. Nothing in this file asked about it before 2026-09-09, which is why a front-on side-scroller character shipped. JUDGE IT AT 390 px, NOT AT 1x. The first correction turned the body and left the head at the body angle; it passed every 1x render it was shown in, and at phone width the guide read as travelling while both humans read as standing still looking at the player. A cue that is 2 px on a phone is not a cue.",
-          "detail": "Three-quarter, canonical facing RIGHT. The BODY sits about 40 degrees off strict profile and the HEAD turns further, to about 25 degrees, which is what a walking head does and which is what lets the officer keep the chest plane its cross-strap needs. WHAT CARRIES IT AT PHONE SIZE IS THE HEAD OUTLINE: an asymmetric silhouette with a big smooth cranium behind and a brow, nose, lip and chin in front, the nose projecting about 16 px. Supporting cues, in the order they survive being made small: the hair mass at the BACK with the fringe sweeping forward; the chest plane and its fastening on the leading edge; BOTH feet pointing the way the character travels; the hat brim swung forward, or the toque band running downhill to the back; the eyes crowded into the front third with the far one foreshortened; and ONE ear, well back. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
+          "detail": "Three-quarter, canonical facing RIGHT. The BODY sits about 40 degrees off strict profile and the HEAD turns further, to about 25 degrees, which is what a walking head does and which is what lets the officer keep the chest plane its cross-strap needs. WHAT CARRIES IT AT PHONE SIZE IS THE HEAD OUTLINE: an asymmetric silhouette with a big smooth cranium behind and a brow, nose, lip and chin in front, the nose projecting about 16 px. Supporting cues, in the order they survive being made small: the hair mass at the BACK with the fringe sweeping forward; the chest plane and its fastening on the leading edge; BOTH feet pointing the way the character travels; the neck, a lit column between jaw and a darker collar, without which the head-and-shoulder mass reads as one lump; the hat brim swung forward, or the toque band running STEEPLY downhill to the back - level over the face, because it must clear the brows, and dropping behind it; the eyes crowded into the front third with the far one foreshortened; and ONE ear, well back. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
           "requiresComparisonFigure": false
         },
         {
           "feature": "cartoon proportions identical to every other character",
           "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
-          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. On the shipped art that is 104 px of tunic on a 445 px figure, which is 0.234 of its own height; the hat brim is 106 px and is headgear above the crown, measured beside the body and not as part of it, exactly as the player toque is. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
+          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. AND CHECK THE NECK: every figure must show a column of its own surface between the jaw and the collar, 12 to 13 px at design resolution, about 4 px at 390 px, with the collar DARKER than the column beneath it. A figure whose head sits straight on the shoulders FAILS this entry however well its width measures - that was reported from the live site as \"the head is on the torso\" and it is most of why the shoulders still looked wrong after their width was corrected. It is derived, not chosen: 0.149 of head height, measured on officer/red-serge-full-figure.jpg, see art-bible.md 7.3. The guide is held to the same column in pelt rather than skin, which is a surface exemption for one non-human artboard and not a licence to draw it neckless. On the shipped art that is 104 px of tunic on a 445 px figure, which is 0.234 of its own height; the hat brim is 106 px and is headgear above the crown, measured beside the body and not as part of it, exactly as the player toque is. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
           "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the serge 104, the parka 108 and the beaver 113 px. A verifier should NOT fail the pair over a few pixels of coat.",
           "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the officer and the player and the guide, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
@@ -440,7 +441,7 @@
         "src/svg/shared/character/hair-crop-brown.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
-      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail and the guide gets no toque. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=parka. The skin, hair and head-covering choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of - and at least one run must set headCovering=none, because the toque carries a large share of the identification and a costume that only reads with a hat on has not been checked. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the player (costume=parka) and the officer (costume=serge), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry.",
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail. The guide gets no toque a different way and the difference matters when you build the recipe: `head-covering-toque` IS in `frames`, and since `headCovering` falls back to `toque` the officer and the guide pin `headCovering: none` in their artboard `skins`. Resolve slots artboard-skins-first, then fallback, or you will hand the identifier a Mountie in a bobble hat. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=parka. The skin, hair and head-covering choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of - and at least one run must set headCovering=none, because the toque carries a large share of the identification and a costume that only reads with a hat on has not been checked. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the player (costume=parka) and the officer (costume=serge), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry.",
       "subject": "A person dressed for a Canadian winter - parka, toque, scarf, mitts and snow boots",
       "expectedBlindAnswer": [
         "a person in winter clothing",
@@ -489,13 +490,13 @@
         {
           "feature": "the figure is TURNED TOWARD THE DIRECTION IT TRAVELS",
           "why": "This is a portrait 2D side-scroller and every character in it walks, skates, toboggans or bikes ALONG the screen. A character drawn front-on, facing the viewer, is wrong by construction - it reads as a menu portrait somebody slid sideways - and that is what the repository owner reported from the live site: that it is looking at the user. A verifier who describes the figure as facing the camera, or who cannot say which way it is going, FAILS this entry. Nothing in this file asked about it before 2026-09-09, which is why a front-on side-scroller character shipped. JUDGE IT AT 390 px, NOT AT 1x. The first correction turned the body and left the head at the body angle; it passed every 1x render it was shown in, and at phone width the guide read as travelling while both humans read as standing still looking at the player. A cue that is 2 px on a phone is not a cue.",
-          "detail": "Three-quarter, canonical facing RIGHT. The BODY sits about 40 degrees off strict profile and the HEAD turns further, to about 25 degrees, which is what a walking head does and which is what lets the officer keep the chest plane its cross-strap needs. WHAT CARRIES IT AT PHONE SIZE IS THE HEAD OUTLINE: an asymmetric silhouette with a big smooth cranium behind and a brow, nose, lip and chin in front, the nose projecting about 16 px. Supporting cues, in the order they survive being made small: the hair mass at the BACK with the fringe sweeping forward; the chest plane and its fastening on the leading edge; BOTH feet pointing the way the character travels; the hat brim swung forward, or the toque band running downhill to the back; the eyes crowded into the front third with the far one foreshortened; and ONE ear, well back. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
+          "detail": "Three-quarter, canonical facing RIGHT. The BODY sits about 40 degrees off strict profile and the HEAD turns further, to about 25 degrees, which is what a walking head does and which is what lets the officer keep the chest plane its cross-strap needs. WHAT CARRIES IT AT PHONE SIZE IS THE HEAD OUTLINE: an asymmetric silhouette with a big smooth cranium behind and a brow, nose, lip and chin in front, the nose projecting about 16 px. Supporting cues, in the order they survive being made small: the hair mass at the BACK with the fringe sweeping forward; the chest plane and its fastening on the leading edge; BOTH feet pointing the way the character travels; the neck, a lit column between jaw and a darker collar, without which the head-and-shoulder mass reads as one lump; the hat brim swung forward, or the toque band running STEEPLY downhill to the back - level over the face, because it must clear the brows, and dropping behind it; the eyes crowded into the front third with the far one foreshortened; and ONE ear, well back. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
           "requiresComparisonFigure": false
         },
         {
           "feature": "cartoon proportions identical to every other character",
           "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
-          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. On the shipped art that is 108 px on a 445 px figure, which is 0.243 of its own height. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
+          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. AND CHECK THE NECK: every figure must show a column of its own surface between the jaw and the collar, 12 to 13 px at design resolution, about 4 px at 390 px, with the collar DARKER than the column beneath it. A figure whose head sits straight on the shoulders FAILS this entry however well its width measures - that was reported from the live site as \"the head is on the torso\" and it is most of why the shoulders still looked wrong after their width was corrected. It is derived, not chosen: 0.149 of head height, measured on officer/red-serge-full-figure.jpg, see art-bible.md 7.3. The guide is held to the same column in pelt rather than skin, which is a surface exemption for one non-human artboard and not a licence to draw it neckless. On the shipped art that is 108 px on a 445 px figure, which is 0.243 of its own height. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
           "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the parka 108, the serge 104 and the beaver 113 px. A verifier should NOT fail the pair over a few pixels of coat.",
           "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the player and the officer and the guide, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
@@ -1308,7 +1309,7 @@
         "src/svg/shared/character/hair-crop-brown.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
-      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail and the guide gets no toque. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=beaver and leave every other slot at its fallback: head-skin and hair-crop ARE drawn and are then covered entirely by head-shell-beaver, which is why no pelt tone was added to the skin slot, and a composite that omits them is not what ships. Vary the expression between runs. THE HAND-OFF MUST CONTAIN THE PLAYER BESIDE THE GUIDE on one canvas, for the same reason the officer's does: identical proportions cannot be judged from one figure.",
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail. The guide gets no toque a different way and the difference matters when you build the recipe: `head-covering-toque` IS in `frames`, and since `headCovering` falls back to `toque` the officer and the guide pin `headCovering: none` in their artboard `skins`. Resolve slots artboard-skins-first, then fallback, or you will hand the identifier a Mountie in a bobble hat. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=beaver and leave every other slot at its fallback: head-skin and hair-crop ARE drawn and are then covered entirely by head-shell-beaver, which is why no pelt tone was added to the skin slot, and a composite that omits them is not what ships. Vary the expression between runs. THE HAND-OFF MUST CONTAIN THE PLAYER BESIDE THE GUIDE on one canvas, for the same reason the officer's does: identical proportions cannot be judged from one figure.",
       "subject": "A cartoon North American beaver, standing upright, as a companion guide",
       "expectedBlindAnswer": [
         "beaver",
@@ -1379,13 +1380,13 @@
         {
           "feature": "the figure is TURNED TOWARD THE DIRECTION IT TRAVELS",
           "why": "This is a portrait 2D side-scroller and every character in it walks, skates, toboggans or bikes ALONG the screen. A character drawn front-on, facing the viewer, is wrong by construction - it reads as a menu portrait somebody slid sideways - and that is what the repository owner reported from the live site: that it is looking at the user. A verifier who describes the figure as facing the camera, or who cannot say which way it is going, FAILS this entry. Nothing in this file asked about it before 2026-09-09, which is why a front-on side-scroller character shipped. JUDGE IT AT 390 px, NOT AT 1x. The first correction turned the body and left the head at the body angle; it passed every 1x render it was shown in, and at phone width the guide read as travelling while both humans read as standing still looking at the player. A cue that is 2 px on a phone is not a cue.",
-          "detail": "Three-quarter, canonical facing RIGHT. The BODY sits about 40 degrees off strict profile and the HEAD turns further, to about 25 degrees, which is what a walking head does and which is what lets the officer keep the chest plane its cross-strap needs. WHAT CARRIES IT AT PHONE SIZE IS THE HEAD OUTLINE: an asymmetric silhouette with a big smooth cranium behind and a brow, nose, lip and chin in front, the nose projecting about 16 px. Supporting cues, in the order they survive being made small: the hair mass at the BACK with the fringe sweeping forward; the chest plane and its fastening on the leading edge; BOTH feet pointing the way the character travels; the hat brim swung forward, or the toque band running downhill to the back; the eyes crowded into the front third with the far one foreshortened; and ONE ear, well back. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
+          "detail": "Three-quarter, canonical facing RIGHT. The BODY sits about 40 degrees off strict profile and the HEAD turns further, to about 25 degrees, which is what a walking head does and which is what lets the officer keep the chest plane its cross-strap needs. WHAT CARRIES IT AT PHONE SIZE IS THE HEAD OUTLINE: an asymmetric silhouette with a big smooth cranium behind and a brow, nose, lip and chin in front, the nose projecting about 16 px. Supporting cues, in the order they survive being made small: the hair mass at the BACK with the fringe sweeping forward; the chest plane and its fastening on the leading edge; BOTH feet pointing the way the character travels; the neck, a lit column between jaw and a darker collar, without which the head-and-shoulder mass reads as one lump; the hat brim swung forward, or the toque band running STEEPLY downhill to the back - level over the face, because it must clear the brows, and dropping behind it; the eyes crowded into the front third with the far one foreshortened; and ONE ear, well back. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
           "requiresComparisonFigure": false
         },
         {
           "feature": "cartoon proportions identical to every other character",
           "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
-          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. On the shipped art that is 113 px at the waist on a 442 px figure, which is 0.256 of its own height, with the paddle tail excluded because it is held out to one side and is not part of the body. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
+          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. AND CHECK THE NECK: every figure must show a column of its own surface between the jaw and the collar, 12 to 13 px at design resolution, about 4 px at 390 px, with the collar DARKER than the column beneath it. A figure whose head sits straight on the shoulders FAILS this entry however well its width measures - that was reported from the live site as \"the head is on the torso\" and it is most of why the shoulders still looked wrong after their width was corrected. It is derived, not chosen: 0.149 of head height, measured on officer/red-serge-full-figure.jpg, see art-bible.md 7.3. The guide is held to the same column in pelt rather than skin, which is a surface exemption for one non-human artboard and not a licence to draw it neckless. On the shipped art that is 113 px at the waist on a 442 px figure, which is 0.256 of its own height, with the paddle tail excluded because it is held out to one side and is not part of the body. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
           "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the beaver 113, the parka 108 and the serge 104 px. A verifier should NOT fail the pair over a few pixels of coat.",
           "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the guide and the player and the officer, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
@@ -1413,6 +1414,406 @@
         "beaver-head-and-forepaws.jpg is backlit through grass and carries a cool cast: it is a GEOMETRY reference for the ear, muzzle and forepaw, and the fur colour was not taken from it alone.",
         "beaver-upright-winter-gnawing.jpg is a dusk exposure and is a colour trap: its fur medians at L 18 and S 6. It was excluded from the pelt measurement and used for pose only.",
         "The incisors are drawn WHITE and real beaver incisors are orange. That is a labelled legibility exaggeration recorded in assets/style/guide.md 3, not an oversight: at ship size a tooth is about 4 px wide and orange enamel on a felt snout pad is two warm tans touching."
+      ]
+    },
+    {
+      "id": "human-rights-museum",
+      "subject": "The Canadian Museum for Human Rights, Winnipeg",
+      "renders": [
+        "src/svg/winnipeg/landmark-human-rights-museum@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. scripts/lib/art-handoff.mjs builds it with `singleSource()`, the same builder as peace-tower, chateau-frontenac, town-clock and cn-tower.",
+      "expectedBlindAnswer": [
+        "Canadian Museum for Human Rights",
+        "Museum for Human Rights",
+        "Human Rights Museum",
+        "Winnipeg",
+        "Musee canadien pour les droits de la personne"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS ALLOWED TO DEMAND A PLACE NAME, and it is the only render in this level that may.",
+        "It is a single non-repeating POI hero drawing one specific building whose stack - a stepped mountain of",
+        "pale limestone, a curved blue-green glass shell wrapping its left flank, and a tapering glazed spire",
+        "with an open steel lattice above it - is shared by no other building this game will draw. A verifier",
+        "who cannot name it is reporting a defect in the drawing.",
+        "IT IS ALSO THE LEVEL'S ONLY ANCHOR THAT CAN. `winnipeg-riverwalk` is two repeating parallax tiles and",
+        "is asked for a promenade and never for a city. So Winnipeg as a place rests on this render alone. If",
+        "this landmark stops identifying, the level stops being identifiable, and no work on the tiles buys it back."
+      ],
+      "referenceFiles": [
+        "winnipeg/cmhr-elevation-from-the-river.jpg",
+        "winnipeg/cmhr-at-the-forks.jpg",
+        "winnipeg/cmhr-from-the-forks-tower.jpg",
+        "winnipeg/cmhr-from-esplanade-riel.jpg",
+        "winnipeg/cmhr-glass-cloud-detail.jpg",
+        "winnipeg/cmhr-glass-cloud-winter.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a tall tapering spire rising from the highest point of the stone, glazed below and an OPEN steel lattice above",
+          "why": "It is the top of the silhouette and the first thing a person uses to find the building on a skyline. A solid spire, or one that is glass all the way up, is a different building.",
+          "detail": "MEASURED on winnipeg/cmhr-elevation-from-the-river.jpg against the building's width B (x 65..1140 at the foot, so B = 1075 px): the spire rises 0.393 B above the stone peak, is glazed for the lower 0.253 and open steel for the upper 0.140, is 0.135 B wide at its foot and 0.050 B at the lattice, and its axis is 0.402 B from the left edge. The lattice is drawn as three legs and cross bracing - a rhythm, not a mesh - because a true lattice at ship size is noise.",
+          "palette": "ice, water, slate"
+        },
+        {
+          "feature": "a large curved glazed shell wrapping the LEFT flank and front, cresting BELOW the stone peak",
+          "why": "It is the museum's second signature and the relationship that goes wrong first. A shell that crests above the stone reads as the top of the building and the whole massing inverts.",
+          "detail": "MEASURED: the shell is 0.321 B across and crests 0.465 B above the foot, which is about a tenth of B BELOW the stone peak at 0.567 B. Its ribs are DIAGONAL and converge toward the crest, with two horizontal rings across them: vertical mullions turned it into an egg twice before the diagonals went in. Blue-green glass, the `ice` ramp, measured at hsl(203,41%,80%) sunlit against ice-base's hsl(202,52%,78%).",
+          "palette": "ice, water, white"
+        },
+        {
+          "feature": "a mass of pale buff limestone built as CANTED wedges with sloped tops, stepping down to the right",
+          "why": "The stone is most of the building's area, and it is what stops the museum reading as a glass box with a mast on it. Stacked rectangles in pale stone read as an office block; the wedges lean.",
+          "detail": "MEASURED: peak 0.567 B above the foot, right-hand steps at 0.366 B and 0.140 B, overall height : width 0.953. Six wedges, each with its shade on its RIGHT edge because the key light is upper left.",
+          "palette": "limestone"
+        },
+        {
+          "feature": "TYNDALL LIMESTONE, and not the sandstone of Parliament Hill",
+          "why": "This game now has two landmarks faced in pale stone. Drawn in one ramp they become the same material and two levels lose their difference - the same argument that keeps brick off Parliament Hill and stone off the Chateau.",
+          "detail": "`limestone` is its own ramp, base #a99789 = hsl(26,16%,60%), authored from the median of 240x400 px of sunlit wall at (620,700) on winnipeg/cmhr-elevation-from-the-river.jpg. Nepean sandstone's base is hsl(33,41%,58%): the same lightness at two and a half times the saturation.",
+          "palette": "limestone"
+        },
+        {
+          "feature": "no windows in rows, anywhere",
+          "why": "It is a museum with almost no punched openings, and a grid of windows is the single fastest way to turn this drawing into a generic civic building.",
+          "detail": "Two canted glazing slots cut across the stone and one dark glazed band at the foot for the entrance. Nothing else. No storey banding, no sills, no mullioned grid."
+        },
+        {
+          "feature": "it stands on a low terrace, not on a plaza and not on a hill",
+          "detail": "A limestone plinth wall with a thin grass verge either side, matching the level's own theme.ground so the landmark and the promenade are the same ground. winnipeg/cmhr-at-the-forks.jpg and winnipeg/cmhr-from-the-forks-tower.jpg both show the terrace."
+        }
+      ],
+      "simplifyAway": [
+        "the Tyndall stone's mottling and fossil figure: it is a surface pattern and art-bible section 1 forbids drawing one",
+        "the shell's individual glazing panels: six diagonal ribs and two rings replace several hundred triangles",
+        "the ramps, stairs and the reflecting pool at the entrance",
+        "the second glazed shell behind the first: the building has two and the second read as a blue blob competing with the first at ship size",
+        "the roof plant, the aerials and the window-cleaning davits",
+        "the banner hung on the stone in two of the references: it is really there, it changes with the exhibition, and it is lettering"
+      ],
+      "neverAdd": [
+        "any lettering, wordmark, banner or signage, in either language",
+        "a flag or a flagpole on the building",
+        "a dome, a portico, a pediment or a colonnade: it is not a civic hall and every one of those is the wrong century",
+        "punched windows in storey rows on the stone",
+        "a cross, a spire finial or any religious emblem on the tower: the spire is a glazed lift and stair shaft and reads as a steeple the moment anything is put on top of it",
+        "the Golden Boy, the Manitoba Legislative Building or any other Winnipeg landmark in the same frame",
+        "any depiction of a person, a pattern or an object belonging to any nation named in this level's territory statement: the level names seven and depicts none (docs/content-review.md 1)"
+      ],
+      "notes": [
+        "winnipeg/cmhr-elevation-from-the-river.jpg is the PRIMARY reference and the only one measured. It is a",
+        "near-orthographic river elevation with the whole building in frame under clear sun. It dates from before",
+        "the opening and carries construction scaffolding on the stone; the FORM is complete and the scaffolding",
+        "is ignored, which is recorded here rather than left to be spotted.",
+        "winnipeg/cmhr-at-the-forks.jpg is a winter aerial and is the reference for the stepped plan and the",
+        "terrace. NEVER for colour: its stone reads hsl(38,12%,58%) through winter haze against the primary's",
+        "hsl(26,16%,60%), and averaging two views is the mistake ADR-0014 records.",
+        "winnipeg/cmhr-glass-cloud-detail.jpg is the reference for the glazing rib rhythm and for the glass",
+        "colour; winnipeg/cmhr-from-esplanade-riel.jpg puts the building against the downtown skyline, which is",
+        "the level's own composition.",
+        "PLACEMENT FLOOR: do not draw this landmark below 300 px wide anywhere the player is meant to recognise",
+        "it. That is the verifier's floor from Ottawa, adopted rather than re-derived, because no blind pass has",
+        "been run on this subject and the artist does not set the threshold for their own work. As a DRAWING",
+        "OBSERVATION and explicitly not an identification: at 280 px the spire, the shell and the stepped stone",
+        "are all still separable, and at 250 px the two canted glazing slots are the first thing to go.",
+        "The two-size test in art-bible section 5 was run at the shipping size of 1000 x 1040 and passed at both",
+        "probes, which is what ADR-0013 as amended requires before a landmark ships at 1x rather than the 2x",
+        "default. The measured saving is 15.87 MiB -> 3.97 MiB of decoded texture."
+      ]
+    },
+    {
+      "id": "winnipeg-riverwalk",
+      "subject": "A paved riverside promenade with a low stone parapet, under a city skyline",
+      "renders": [
+        "src/svg/winnipeg/layer-20-skyline.svg",
+        "src/svg/winnipeg/layer-40-plaza.svg"
+      ],
+      "renderRecipe": "Composite the two, the skyline above the promenade, the promenade placed 180 px below the skyline tile's top edge (world y 800 against 620). Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1800 and 1920) rather than laying them side by side, and draw the promenade over the skyline where they overlap, which is the order the level uses. Neither file answers the subject alone: a skyline with no ground is a skyline, and a pavement with nothing behind it is a pavement. `twoParallaxTiles({ farMatch: 'skyline', nearMatch: 'plaza', nearTop: 180 })`. THE RIVER IS NOT IN THIS COMPOSITE: it lives on layer-30-riverbank, which is the third tile and is not part of this subject, so the parapet reads as a parapet and not as a riverbank.",
+      "expectedBlindAnswer": [
+        "a promenade",
+        "a paved promenade",
+        "a city promenade",
+        "a riverside promenade",
+        "a waterfront promenade",
+        "a paved walkway",
+        "a public walkway",
+        "a park promenade",
+        "an esplanade",
+        "a city park path",
+        "a stone-paved promenade"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, and this one has teeth: the skyline tile repeats every 1800 px and the promenade",
+        "every 1920, so neither may carry a recognisable building. Every tower on the skyline is a plain mass",
+        "and every object on the promenade is a type. A verifier who names Winnipeg from these two tiles would",
+        "be reporting a defect, not a pass.",
+        "THE LIST IS WIDE ON THE PLAIN WORDS AND NARROW ON EVERYTHING ELSE, which is the amendment",
+        "`toronto-trail` and `rideau-canal-skateway` both needed and which is stated once here rather than",
+        "  `a road`, `a street`, `a boardwalk` and `a quay` do not. `a boardwalk` is refused deliberately -",
+        "picture shows. `a road`, `a street`, `a boardwalk` and `a quay` do not. `a boardwalk` is refused",
+        "deliberately - Halifax's tile IS a timber boardwalk, this one is stone slabs, and a list that accepted",
+        "both would stop being able to tell them apart.",
+        "WHERE WINNIPEG ACTUALLY COMES FROM: `human-rights-museum`, a separate non-repeating POI hero. The",
+        "promenade is where the player walks; the museum is what says which city."
+      ],
+      "referenceFiles": [
+        "winnipeg/winnipeg-skyline-and-cmhr.jpg",
+        "winnipeg/cmhr-from-esplanade-riel.jpg",
+        "winnipeg/cmhr-from-the-forks-tower.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a pavement of large stone SLABS in courses, not planks and not asphalt",
+          "why": "It is what makes this a promenade rather than a road or a boardwalk, and it is the one thing Halifax's equivalent tile got wrong: `grey weathered planking` is an equally true description of a concrete pavement, and the drawing obeyed it exactly.",
+          "detail": "Two shallow courses of small setts on a 34 px module at the parapet foot, then four courses of large slabs on a 160 px module staggered half a slab per course, graded so the near courses are much taller. Joints are quiet - path-base at 0.7 - because at the weight of the course lines they turn the pavement into brickwork, which is what the first attempt looked like."
+        },
+        {
+          "feature": "a low stone parapet with piers along the far side",
+          "why": "It is the edge that says the promenade stands above something, and it is the reason the walkway is a promenade and not a footpath in a field.",
+          "detail": "A limestone wall with a sunlit coping and a pier every 240 px, eight to the tile."
+        },
+        {
+          "feature": "street trees in EARLY AUTUMN, gold and green together",
+          "why": "The season separates this level from the two winter levels and the two summer ones, and a level whose trees are uniformly green is summer.",
+          "detail": "Three trees per tile, two in gold and one still green, drawn as three-tone rounded canopies. Never a leaf texture."
+        },
+        {
+          "feature": "people to the same cartoon proportions as every other character",
+          "why": "CLAUDE.md requires identical cartoon proportions for every character, and background figures in a parallax tile are where that rule is quietly broken first.",
+          "detail": "Six heads tall, the same proportion canon as the player, drawn at about 165 px rather than the player's 420 because they stand at the parapet across the promenade. No outline - outlines are for characters. NO CULTURAL MARKER OF ANY KIND: docs/content-review.md 3.3, outcome 2."
+        },
+        {
+          "feature": "a city skyline of plain masses behind, in concrete and glass",
+          "detail": "Twenty-one rectangular masses with flat tops, arrises, storey banding and plant enclosures, standing out of an opaque haze band. Rhythm and massing only, never a grid of window panes."
+        }
+      ],
+      "simplifyAway": [
+        "individual windows on the towers: a horizontal band rhythm, never a grid of panes",
+        "the individual leaves, and any bark texture on the trunks",
+        "traffic, cycle traffic and street signs",
+        "drainage, tactile paving and kerb ramps",
+        "the joint pattern of the parapet coping below 6 px"
+      ],
+      "neverAdd": [
+        "any named or recognisable building drawn into either of these two REPEATING tiles, and the Canadian Museum for Human Rights above all: it is required on the `human-rights-museum` subject and forbidden here, and the reason is the tiling, not the building",
+        "the Golden Boy or the Manitoba Legislative Building, in any form, including on the skyline",
+        "any lettering, signage or wordmark, in either language",
+        "a bridge with a single inclined pylon: the Esplanade Riel is a real and recognisable structure and a repeating tile may not carry one",
+        "snow, or bare winter trees: this level is early autumn",
+        "mountains on the horizon: this city is on a river plain",
+        "any depiction of a person, a pattern or an object belonging to any nation named in this level's territory statement"
+      ],
+      "notes": [
+        "winnipeg/winnipeg-skyline-and-cmhr.jpg is the massing reference for the tower rhythm: a mid-rise",
+        "downtown with a few taller towers and one blue-green glass slab, which is what the tile draws as",
+        "twenty-one anonymous masses.",
+        "winnipeg/cmhr-from-esplanade-riel.jpg and winnipeg/cmhr-from-the-forks-tower.jpg are the references",
+        "for the riverbank planting and the promenade furniture.",
+        "THE RIVER LIVES ON A THIRD TILE. layer-30-riverbank.svg carries the far bank and the open water and is",
+        "NOT part of this subject or of any other: it is a repeating background band that the low preset drops,",
+        "and it has no feature that could identify anything. It is drawn, credited and shipped; it is simply",
+        "not asked a question."
+      ]
+    },
+    {
+      "id": "grain-elevator",
+      "subject": "A wooden prairie grain elevator beside a railway track",
+      "renders": [
+        "src/svg/prairie-rail/landmark-grain-elevator@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. scripts/lib/art-handoff.mjs builds it with `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a grain elevator",
+        "a prairie grain elevator",
+        "a wooden grain elevator",
+        "a country grain elevator",
+        "a prairie elevator",
+        "a trackside grain elevator"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT MAY NOT DEMAND A PLACE NAME, and the reason is the same one that governs `pier-21`.",
+        "Every wooden prairie elevator carries its company's name and its town's name painted across the crib -",
+        "PIONEER and CHAMBERLAIN on the reference this one is drawn from, SASKATCHEWAN and SINTALUTA on the",
+        "second - and `make verify-art` refuses any render source containing a <text> element, because a name",
+        "drawn into the picture defeats every byte-level leak check in the hand-off. So the elevator ships",
+        "blank, and what is left is the STANDARD PLAN that stood in a thousand prairie towns: a type.",
+        "`Saskatchewan`, `the Prairies` and any town name are therefore NOT in the accepted list and the gate",
+        "MUST NOT reward them. A verifier who names a province from this render has inferred it; a verifier who",
+        "says `a grain elevator` has seen what is drawn.",
+        "THE CONSEQUENCE IS STRUCTURAL AND IS STATED RATHER THAN LEFT TO BE DISCOVERED. Level 7 is a REGION,",
+        "not a town, and nothing in its art is asked to name a place - not this hero and not",
+        "`prairie-rail-line`. That is a deliberate choice and not an omission: the level's subject is Modern",
+        "Canada and its setting is the plains, and the only honest anchor a plains level has is the type."
+      ],
+      "referenceFiles": [
+        "prairie-rail/grain-elevator-chamberlain.jpg",
+        "prairie-rail/grain-elevator-sintaluta-elevation.jpg",
+        "prairie-rail/grain-elevator-govan-and-track.jpg",
+        "prairie-rail/grain-elevators-mossleigh-elevation.jpg",
+        "prairie-rail/prairie-elevator-from-the-train.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a tall gable-roofed CRIB, well over twice as tall as it is wide",
+          "why": "It is the whole silhouette. Below about 1 : 2 the building stops being an elevator and becomes a barn.",
+          "detail": "MEASURED TWICE AND THE TWO AGREE. On prairie-rail/grain-elevator-chamberlain.jpg the crib is 380 px wide and 870 px from the ground to the gable apex; on prairie-rail/grain-elevator-sintaluta-elevation.jpg the same figures are 270 and 615. HEIGHT : WIDTH = 2.29 and 2.28. The shipped art is 280 x 638 = 2.28. Gable rise 0.30 of the crib width, which is the MEAN of the two references' 0.25 and 0.35 and is recorded as a mean rather than left looking like a measurement.",
+          "palette": "oxide, slate"
+        },
+        {
+          "feature": "a CUPOLA straddling the ridge, narrower than the crib and rising well above it",
+          "why": "It is the head house that carries the leg, it is the second thing a person recognises, and a gabled box with no cupola is a shed.",
+          "detail": "MEASURED on the Sintaluta elevation, which is the near-orthographic one: the cupola is 0.30 of the crib width across and rises 0.44 of the crib width above the gable apex. It has its own small gable roof and a vent above it."
+        },
+        {
+          "feature": "a LOW driveway annex along one side, with a shed roof falling away from the crib and an opening a truck drives into",
+          "why": "The tall-box-and-long-low-shed pair is the elevator's whole asymmetry. A crib standing alone reads as a tower.",
+          "detail": "1.45 crib widths long, 1.00 crib widths tall where it meets the crib and 0.52 at the far end. Chamberlain's apparent length is 1.68 crib widths and is NOT used: that photograph is taken close and low and the annex recedes hard away from the camera, so its apparent length is a projection."
+        },
+        {
+          "feature": "painted timber in a strong red oxide, with contrasting ochre trim on the gable edge and the eaves",
+          "why": "It is what says painted wooden building rather than concrete terminal, and the trim band is the elevator's one piece of colour.",
+          "detail": "`oxide` is its own palette ramp, base #91301c = hsl(11,68%,34%), authored as the HSL midpoint of the two large measured faces on the Chamberlain reference: the sunlit annex at hsl(8,73%,36%) and the shaded crib gable at hsl(13,63%,32%). NOT `brick`, whose base is hsl(17,52%,44%) - eight degrees more orange, sixteen points less saturated and ten points lighter, which turns a painted elevator into a masonry wall. Trim is `brass`.",
+          "palette": "oxide, brass"
+        },
+        {
+          "feature": "a loading spout reaching out from the cupola toward the track side",
+          "detail": "A slanted steel tube from the head house down to a spout head, over a low track-side annex. It is what the building is FOR, and without it the crib is a grain bin with a hat."
+        },
+        {
+          "feature": "it stands in gravel beside a rail, not on grass and not on a street",
+          "detail": "A ballast apron with a siding rail across the foot of the file, and weeds at its back edge. prairie-rail/grain-elevator-govan-and-track.jpg shows exactly this relationship from beside the line."
+        }
+      ],
+      "simplifyAway": [
+        "the board-and-batten boarding: it is a surface pattern, and art-bible section 1 forbids drawing one",
+        "the man-lift, the ladders, the catwalks and the guy wires",
+        "the external cyclone and dust pipe on the Chamberlain reference: it is unusual to that building and reads as a chimney",
+        "the individual sash bars of the crib windows: one dark pane with an ochre head",
+        "the steel bins, the driveway scale and the seed-cleaning plant that stand beside most surviving elevators",
+        "the company name and the town name painted across the crib, and the star or shield device beside them: they are the two most identifying things on the real building and this project draws no lettering"
+      ],
+      "neverAdd": [
+        "any lettering, wordmark, company name, town name or number, in either language",
+        "an invented company name or an invented device in place of the real one: art-bible's `drop, never substitute`, and an approximated livery mark is worse than none",
+        "a concrete terminal, a slip-form silo or a row of steel bins as the main mass: those are the modern replacement and are a different building",
+        "a barn: no hip roof, no cupola with louvres on a wide low mass, no hayloft door",
+        "mountains or foothills on the horizon behind it: that is level 8's picture, not this one",
+        "any depiction of a person, a pattern or an object belonging to any nation named in this level's territory statement"
+      ],
+      "notes": [
+        "prairie-rail/grain-elevator-chamberlain.jpg is CC0 and is the building this is drawn from: the",
+        "surviving Pioneer elevator at Chamberlain, Saskatchewan. It is the reference for the livery, the trim,",
+        "the driveway and the arrangement, and for the crib's height : width. It is taken close and from below,",
+        "so it is NOT the reference for the annex's length.",
+        "prairie-rail/grain-elevator-sintaluta-elevation.jpg is the near-orthographic one and is the reference",
+        "for the cupola's proportions and for the second, agreeing, height : width measurement.",
+        "prairie-rail/grain-elevator-govan-and-track.jpg shows a surviving elevator beside the main line with",
+        "the prairie running to the horizon behind it, and is the reference for the SETTING and for the fact",
+        "that the gable end and the annex flank really are both visible from beside the track.",
+        "prairie-rail/grain-elevators-mossleigh-elevation.jpg and prairie-rail/prairie-elevator-from-the-train.jpg",
+        "are the cross-checks: three elevators in a row and one seen from a moving train, both near-orthographic.",
+        "PLACEMENT FLOOR: do not draw this landmark below 300 px wide anywhere the player is meant to recognise",
+        "it. The verifier's floor from Ottawa, adopted rather than re-derived. As a DRAWING OBSERVATION and",
+        "explicitly not an identification: at 250 px the crib, the cupola, the annex and the spout are all still",
+        "separable and the trim still reads as trim.",
+        "The two-size test in art-bible section 5 was run at the shipping size of 900 x 1000 and passed at both",
+        "probes. The measured saving from pinning it to 1x is 13.73 MiB -> 3.43 MiB of decoded texture."
+      ]
+    },
+    {
+      "id": "prairie-rail-line",
+      "subject": "A single-track railway line running across open prairie",
+      "renders": [
+        "src/svg/prairie-rail/layer-30-fields.svg",
+        "src/svg/prairie-rail/layer-40-railbed.svg"
+      ],
+      "renderRecipe": "Composite the two, the fields ABOVE the railbed and the railbed drawn over them where they overlap, which is the order the level uses. In world coordinates the railbed tile's top edge is 210 px ABOVE the fields tile's top edge (world y 800 against 1010), so the offset is NEGATIVE: `twoParallaxTiles({ farMatch: 'fields', nearMatch: 'railbed', nearTop: -210 })`. Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1800 and 1920) rather than laying them side by side. Neither file answers the subject alone: a track with nothing behind it is a track anywhere, and a field with no track is a field.",
+      "expectedBlindAnswer": [
+        "a railway",
+        "a railway line",
+        "a railway track",
+        "a railroad",
+        "a railroad track",
+        "a rail line",
+        "a train track",
+        "a single-track railway",
+        "a prairie railway",
+        "a rural railway line"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. Both tiles repeat - 1800 and 1920 - so neither may carry anything that identifies a",
+        "place, and in particular neither carries a grain elevator: that is the level's only non-repeating",
+        "anchor and it lives on `grain-elevator`. A verifier who names a province from these two tiles would be",
+        "reporting a defect.",
+        "`railroad` and `railroad track` are accepted alongside `railway`, and this is the amendment",
+        "`toronto-trail` needed after a blind pass failed on `bicycle` when only `bike` and `cycle` were listed.",
+        "The rule stated once: an expectedBlindAnswer list is a VOCABULARY for one picture, and a list that",
+        "omits a plain word for the thing drawn measures the verifier's diction rather than the art. `a road`,",
+        "`a path`, `a tram line` and `a level crossing` alone do not pass: the last one names the furniture and",
+        "not the line.",
+        "THE PRAIRIE IS NOT ASKED FOR. `across the prairie` is in the list because a verifier who says it is not",
+        "wrong, and it is NOT required: flat farmland under a big sky is flat farmland under a big sky, and the",
+        "art may not be scored on an inference."
+      ],
+      "referenceFiles": [
+        "prairie-rail/grain-elevator-govan-and-track.jpg",
+        "prairie-rail/prairie-harvest-and-shelterbelt.jpg",
+        "prairie-rail/prairie-freight-train-at-dawn.jpg",
+        "prairie-rail/prairie-elevator-from-the-train.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "two rails on timber ties over a ballast shoulder, running the full width",
+          "why": "It is the subject. One rail is a fence, and rails without ties are a pipeline.",
+          "detail": "Forty ties on a 48 px period - 1920 / 48 = 40 exactly, so the rhythm survives the tile seam - two rails, and a ballast shoulder drawn as scattered chips rather than a texture fill. The near rail head is the level's ground line."
+        },
+        {
+          "feature": "a red-edged white CROSSBUCK and a two-lens flashing-light mast at a gravel crossing",
+          "why": "It is the one object in this level that says RAILWAY without a word on it, which is exactly what a project that draws no lettering needs, and it is what stops the track reading as a tramway or a mine road.",
+          "detail": "Two white boards crossed at about 26 degrees with a red border, on a white mast, under a black backing board carrying two red lenses. NO LETTERING: a real Canadian crossbuck carries words and this one carries none, which is a deliberate omission and not an oversight. A gravel section road crosses behind it and the crossing deck runs over the ties."
+        },
+        {
+          "feature": "timber telegraph poles with crossarms and drooping wires, on a strict repeating period",
+          "why": "The level's locomotion is `train` and the camera does all the work: the pole rhythm is what makes movement legible, and it is the oldest visual shorthand there is for a railway on a plain.",
+          "detail": "Four poles on a 480 px period - 1920 / 480 = 4 exactly - each with a crossarm, four glass insulators and three drooping catenary wires into the next bay."
+        },
+        {
+          "feature": "harvested field in SWATHS, laid at a slight angle to the track",
+          "why": "Parallel bands alone read as a striped rug. A cut crop lying in rows at an angle is what a prairie field looks like from a train, and it is what makes this farmland rather than grassland.",
+          "detail": "Fourteen long cut rows across the fields tile, each with its own shadow line, over bands of standing swath, cut stubble and a grass headland. Straw is the `felt` ramp, measured at hsl(38,63%,33%) on prairie-rail/prairie-harvest-and-shelterbelt.jpg."
+        },
+        {
+          "feature": "a poplar shelterbelt in broken clumps with real gaps, not a continuous hedge",
+          "detail": "Four clumps to the tile with gaps between them. A continuous row reads as a hedge and closes the horizon, which is the one thing a prairie level cannot afford."
+        }
+      ],
+      "simplifyAway": [
+        "the rail's web and foot profile: two flat bars with a lit top arris",
+        "tie plates, spikes, joint bars and ballast between the ties",
+        "the insulators' individual caps below 8 px",
+        "the fence's staples and the wire's sag between posts",
+        "the crossing signal's bell, its gate arm and its cabinet"
+      ],
+      "neverAdd": [
+        "a grain elevator ON EITHER OF THESE TWO REPEATING TILES: it is required on the `grain-elevator` subject and forbidden here, and the reason is the tiling, not the building",
+        "any lettering, number plate, whistle post, mile board or signage, in either language",
+        "a locomotive or rolling stock: the player IS the train in this level, and a drawn train in the frame makes the player a passenger of something that is already on screen",
+        "overhead electrification, a catenary mast or a third rail: this is a diesel-worked prairie branch",
+        "mountains or foothills on the horizon: that is level 8's picture",
+        "a second track, a turnout or a signal gantry: it is a single-track line",
+        "any depiction of a person, a pattern or an object belonging to any nation named in this level's territory statement"
+      ],
+      "notes": [
+        "prairie-rail/grain-elevator-govan-and-track.jpg is the primary reference: single track, ballast",
+        "shoulder, a siding, a wire fence and the prairie running flat to the horizon, all in one frame.",
+        "prairie-rail/prairie-harvest-and-shelterbelt.jpg is the reference for the swaths, the stubble bands",
+        "and the shelterbelt line; prairie-rail/prairie-elevator-from-the-train.jpg is the reference for what",
+        "the level's own viewpoint actually looks like, because it was taken from one.",
+        "prairie-rail/prairie-freight-train-at-dawn.jpg shows a freight beside an elevator and is the reference",
+        "for the track's relationship to the buildings. It is NOT a colour reference: it is a winter dawn.",
+        "THE SKY AND THE FAR HORIZON ARE NOT PART OF THIS SUBJECT. layer-10-sky.svg and layer-20-horizon.svg are",
+        "drawn, credited and shipped and are asked no question: one is a flat field with clouds and the other is",
+        "a distant shelterbelt and two farmsteads, and neither has a feature that could identify anything."
       ]
     }
   ],

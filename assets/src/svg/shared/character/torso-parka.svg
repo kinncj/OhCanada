@@ -1,28 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="111" height="200" viewBox="65 113 111 200" shape-rendering="geometricPrecision">
-  <title>Winter parka, three-quarter view facing right: the chest and its zip line are on the leading edge, the back on the trailing edge, and the fur-trimmed hood ruff wraps the neck rather than lying flat across a front-on shoulder line. A drawcord waist and an A-line hem with a snow-white knit band keep it from reading as a rectangle at phone size. The red scarf hangs VERTICALLY down the front and never crosses shoulder to hip: a diagonal band across a chest is the officer’s cross-strap, and the two characters must not converge at small size.</title>
-  <path d="M 77,162 A 10,10 0 0 1 80,142 A 10,10 0 0 1 91,128 A 10,10 0 0 1 105,121 A 10,10 0 0 1 121,120 A 10,10 0 0 1 137,124 A 10,10 0 0 1 150,134 A 10,10 0 0 1 158,150 L 154,166 C 139,178 91,178 78,169 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="ruff"><path d="M 77,162 A 10,10 0 0 1 80,142 A 10,10 0 0 1 91,128 A 10,10 0 0 1 105,121 A 10,10 0 0 1 121,120 A 10,10 0 0 1 137,124 A 10,10 0 0 1 150,134 A 10,10 0 0 1 158,150 L 154,166 C 139,178 91,178 78,169 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="109" height="194" viewBox="68 120 109 194" shape-rendering="geometricPrecision">
+  <title>Winter parka, three-quarter view facing right: the chest and its zip line are on the leading edge, the back on the trailing edge, and the fur-trimmed hood ruff CLOSES ROUND THE NECK: its top edge is a neck opening at y 137 and the coat’s own opening is cut lower still, so a band of fur shows between the two and the head sits on a neck instead of on the shoulders. A drawcord waist and an A-line hem with a snow-white knit band keep it from reading as a rectangle at phone size. The red scarf hangs VERTICALLY down the front and never crosses shoulder to hip: a diagonal band across a chest is the officer’s cross-strap, and the two characters must not converge at small size.</title>
+  <path d="M 77,162 C 76,150 78,140 84,133 C 90,126 96,123 101,124 C 106,129 112,135 120,137 C 128,138 134,134 139,126 C 146,125 152,131 155,138 C 158,144 159,147 158,150 L 154,166 C 139,178 91,178 78,169 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="ruff"><path d="M 77,162 C 76,150 78,140 84,133 C 90,126 96,123 101,124 C 106,129 112,135 120,137 C 128,138 134,134 139,126 C 146,125 152,131 155,138 C 158,144 159,147 158,150 L 154,166 C 139,178 91,178 78,169 Z"/></clipPath></defs>
   <g clip-path="url(#ruff)">
-    <ellipse cx="89" cy="134" rx="24" ry="15" fill="#ffffff"/>
-    <ellipse cx="154" cy="158" rx="22" ry="14" fill="#c2d6e8"/>
+    <ellipse cx="90" cy="144" rx="24" ry="15" fill="#ffffff"/>
+    <ellipse cx="152" cy="160" rx="24" ry="15" fill="#c2d6e8"/>
   </g>
-  <path d="M 122,128 C 138,128 150,132 158,140 C 166,148 170,156 170,168 C 170,188 160,208 157,228 C 154,250 166,274 172,294 C 175,304 168,310 156,310 L 88,310 C 76,310 69,304 72,294 C 78,274 90,250 87,228 C 84,208 74,188 74,168 C 74,156 78,148 86,140 C 94,132 106,128 122,128 Z" fill="#153f86" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="parka"><path d="M 122,128 C 138,128 150,132 158,140 C 166,148 170,156 170,168 C 170,188 160,208 157,228 C 154,250 166,274 172,294 C 175,304 168,310 156,310 L 88,310 C 76,310 69,304 72,294 C 78,274 90,250 87,228 C 84,208 74,188 74,168 C 74,156 78,148 86,140 C 94,132 106,128 122,128 Z"/></clipPath></defs>
+  <path d="M 132,150 C 143,147 152,140 158,140 C 166,148 170,156 170,168 C 170,188 160,208 157,228 C 154,250 166,274 172,294 C 175,304 168,310 156,310 L 88,310 C 76,310 69,304 72,294 C 78,274 90,250 87,228 C 84,208 74,188 74,168 C 74,156 78,148 86,140 C 92,138 100,146 108,152 C 116,157 126,156 132,150 Z" fill="#153f86" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="parka"><path d="M 132,150 C 143,147 152,140 158,140 C 166,148 170,156 170,168 C 170,188 160,208 157,228 C 154,250 166,274 172,294 C 175,304 168,310 156,310 L 88,310 C 76,310 69,304 72,294 C 78,274 90,250 87,228 C 84,208 74,188 74,168 C 74,156 78,148 86,140 C 92,138 100,146 108,152 C 116,157 126,156 132,150 Z"/></clipPath></defs>
   <g clip-path="url(#parka)">
     <path d="M 84,140 C 96,134 102,140 100,152 C 96,176 100,206 96,232 C 92,258 84,278 80,296 L 60,296 L 60,140 Z" fill="#2275c6"/>
     <path d="M 158,144 C 148,140 143,146 145,158 C 148,180 143,206 146,232 C 149,258 156,278 160,298 L 182,298 L 182,144 Z" fill="#091740"/>
     <path d="M 60,282 C 92,276 152,276 182,282 L 182,316 L 60,316 Z" fill="#e6eff7"/>
     <path d="M 60,299 C 92,295 152,295 182,299 L 182,316 L 60,316 Z" fill="#c2d6e8"/>
-    <ellipse cx="120" cy="140" rx="52" ry="20" fill="#16203a" opacity="0.18"/>
+    <ellipse cx="120" cy="152" rx="52" ry="20" fill="#16203a" opacity="0.18"/>
     <ellipse cx="120" cy="286" rx="56" ry="13" fill="#16203a" opacity="0.18"/>
     <path d="M 150,142 C 154,176 150,214 152,250" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M 80,228 C 100,240 146,240 164,228" fill="none" stroke="#3a2018" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
     <ellipse cx="96" cy="238" rx="6.5" ry="6.5" fill="#e6eff7" stroke="#3a2018" stroke-width="3"/>
     <ellipse cx="150" cy="238" rx="6.5" ry="6.5" fill="#e6eff7" stroke="#3a2018" stroke-width="3"/>
   </g>
-  <path d="M 139,158 C 134,168 134,184 136,200 C 138,218 135,230 138,240 C 141,248 152,248 155,240 C 158,226 152,210 153,194 C 154,178 151,164 147,156 Z" fill="#d8262c" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 137,166 C 133,176 133,188 135,202 C 138,218 135,230 138,240 C 141,248 152,248 155,240 C 158,226 152,210 153,194 C 152,180 149,172 145,164 Z" fill="#d8262c" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M 136,222 C 141,227 151,227 155,222 C 156,230 155,236 155,240 C 152,248 141,248 138,240 C 136,235 136,228 136,222 Z" fill="#941835"/>
-  <path d="M 110,136 L 150,136 C 161,136 163,168 152,170 L 110,170 C 99,170 99,136 110,136 Z" fill="#d8262c" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 112,140 L 134,140 C 140,140 140,152 134,152 L 112,152 C 106,152 106,140 112,140 Z" fill="#e27468"/>
-  <path d="M 124,158 L 150,158 C 156,158 156,167 150,167 L 124,167 C 118,167 118,158 124,158 Z" fill="#941835"/>
+  <path d="M 112,144 L 148,144 C 158,144 160,172 150,174 L 112,174 C 101,174 101,144 112,144 Z" fill="#d8262c" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 114,148 L 134,148 C 140,148 140,158 134,158 L 114,158 C 108,158 108,148 114,148 Z" fill="#e27468"/>
+  <path d="M 124,163 L 148,163 C 154,163 154,171 148,171 L 124,171 C 118,171 118,163 124,163 Z" fill="#941835"/>
 </svg>

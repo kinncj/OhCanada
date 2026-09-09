@@ -677,6 +677,60 @@
       "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
+      "path": "src/svg/shared/character/neck-skin-1.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"neck-skin-1\" — Neck in skin ramp 1: a cylinder set forward of the shoulder line, drawn as its own part so a collar can close over its base…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/neck-skin-2.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"neck-skin-2\" — Neck in skin ramp 2: a cylinder set forward of the shoulder line, drawn as its own part so a collar can close over its base…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/neck-skin-3.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"neck-skin-3\" — Neck in skin ramp 3: a cylinder set forward of the shoulder line, drawn as its own part so a collar can close over its base…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/neck-skin-4.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"neck-skin-4\" — Neck in skin ramp 4: a cylinder set forward of the shoulder line, drawn as its own part so a collar can close over its base…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/neck-skin-5.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"neck-skin-5\" — Neck in skin ramp 5: a cylinder set forward of the shoulder line, drawn as its own part so a collar can close over its base…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/neck-skin-6.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"neck-skin-6\" — Neck in skin ramp 6: a cylinder set forward of the shoulder line, drawn as its own part so a collar can close over its base…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
       "path": "src/svg/shared/character/torso-parka.svg",
       "kind": "shipped",
       "title": "TrueNorth character rig part \"torso-parka\" — Winter parka: hooded-collar band, centre closure and a snow-white hem trim. Warm, dry and the right coat for a January…",
@@ -1259,6 +1313,222 @@
       "author": "GrandTetonNPS",
       "licence": "public-domain",
       "source": "https://commons.wikimedia.org/wiki/File:Beaver_(48877206226).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "src/svg/winnipeg/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Winnipeg deep autumn sky - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/winnipeg/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/winnipeg-level.md; never traced."
+    },
+    {
+      "path": "src/svg/winnipeg/layer-20-skyline.svg",
+      "kind": "shipped",
+      "title": "Winnipeg generic downtown skyline - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/layer-20-skyline.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/winnipeg/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/winnipeg-level.md; never traced."
+    },
+    {
+      "path": "src/svg/winnipeg/layer-30-riverbank.svg",
+      "kind": "shipped",
+      "title": "Winnipeg far riverbank and open water - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/layer-30-riverbank.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/winnipeg/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/winnipeg-level.md; never traced."
+    },
+    {
+      "path": "src/svg/winnipeg/layer-40-plaza.svg",
+      "kind": "shipped",
+      "title": "Winnipeg riverside promenade - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/layer-40-plaza.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/winnipeg/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/winnipeg-level.md; never traced."
+    },
+    {
+      "path": "src/svg/winnipeg/landmark-human-rights-museum@1x.svg",
+      "kind": "shipped",
+      "title": "Canadian Museum for Human Rights - point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/landmark-human-rights-museum@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/winnipeg/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/winnipeg-level.md; never traced."
+    },
+    {
+      "path": "src/svg/prairie-rail/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Prairie sky with flat-bottomed cumulus - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/prairie-rail/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/prairie-rail-level.md; never traced."
+    },
+    {
+      "path": "src/svg/prairie-rail/layer-20-horizon.svg",
+      "kind": "shipped",
+      "title": "Prairie far horizon, shelterbelt and farmsteads - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/layer-20-horizon.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/prairie-rail/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/prairie-rail-level.md; never traced."
+    },
+    {
+      "path": "src/svg/prairie-rail/layer-30-fields.svg",
+      "kind": "shipped",
+      "title": "Prairie harvested fields and shelterbelt - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/layer-30-fields.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/prairie-rail/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/prairie-rail-level.md; never traced."
+    },
+    {
+      "path": "src/svg/prairie-rail/layer-40-railbed.svg",
+      "kind": "shipped",
+      "title": "Prairie railbed, crossing and telegraph poles - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/layer-40-railbed.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/prairie-rail/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/prairie-rail-level.md; never traced."
+    },
+    {
+      "path": "src/svg/prairie-rail/landmark-grain-elevator@1x.svg",
+      "kind": "shipped",
+      "title": "Wooden prairie grain elevator - point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/landmark-grain-elevator@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/prairie-rail/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/prairie-rail-level.md; never traced."
+    },
+    {
+      "path": "refs/winnipeg/cmhr-from-the-forks-tower.jpg",
+      "kind": "reference",
+      "title": "Canadian Museum for Human Rights from The Forks Tower",
+      "author": "Ccyyrree",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:The_Canadian_Museum_for_Human_Rights_as_seen_from_The_Forks_Tower_01.JPG",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/winnipeg/cmhr-elevation-from-the-river.jpg",
+      "kind": "reference",
+      "title": "Canadian Museum for Human Rights - near-orthographic elevation from the river",
+      "author": "Tony Hisgett from Birmingham, UK",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canadian_Museum_for_Human_Rights_Winnipeg_3_(8032872264).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/winnipeg/cmhr-glass-cloud-detail.jpg",
+      "kind": "reference",
+      "title": "Canadian Museum for Human Rights - glass cloud glazing detail",
+      "author": "Robert Linsdell from St. Andrews, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canadian_Museum_for_Human_Rights,_The_Forks,_Winnipeg_(501347)_(14873259228).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/winnipeg/cmhr-from-esplanade-riel.jpg",
+      "kind": "reference",
+      "title": "Canadian Museum for Human Rights from the Esplanade Riel footbridge",
+      "author": "Samsmachado",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Human_Rights_Museum_from_the_Esplanade_Riel.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/winnipeg/winnipeg-skyline-and-cmhr.jpg",
+      "kind": "reference",
+      "title": "Winnipeg skyline with the Canadian Museum for Human Rights at The Forks",
+      "author": "Quintin Soloviev",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Winnipeg_skyline_%26_CMHR.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/winnipeg/cmhr-at-the-forks.jpg",
+      "kind": "reference",
+      "title": "Canadian Museum for Human Rights at The Forks, from above",
+      "author": "Robert Linsdell from St. Andrews, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canadian_Museum_for_Human_Rights,_The_Forks,_Winnipeg_(500013)_(12024148485).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/winnipeg/cmhr-glass-cloud-winter.jpg",
+      "kind": "reference",
+      "title": "Canadian Museum for Human Rights - the glass cloud in winter",
+      "author": "Robert Linsdell from St. Andrews, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canadian_Museum_for_Human_Rights,_The_Forks,_Winnipeg_(502197)_(16522095481).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/prairie-rail/grain-elevator-chamberlain.jpg",
+      "kind": "reference",
+      "title": "Pioneer grain elevator, Chamberlain, Saskatchewan",
+      "author": "Daylen",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Pioneer_grain_elevator_Chamberlain.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/prairie-rail/grain-elevator-sintaluta-elevation.jpg",
+      "kind": "reference",
+      "title": "Grain elevator at Sintaluta, Saskatchewan - near-orthographic elevation",
+      "author": "Janusz Sobolewski from Mississauga, Ontario, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sintaluta,_Saskatchewan_(29059598504).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/prairie-rail/grain-elevator-govan-and-track.jpg",
+      "kind": "reference",
+      "title": "Former Saskatchewan Wheat Pool elevator beside the track, Govan, Saskatchewan",
+      "author": "Quintin Soloviev",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Govan,_SK_grain_elevator.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/prairie-rail/grain-elevators-mossleigh-elevation.jpg",
+      "kind": "reference",
+      "title": "Grain elevators at Mossleigh, Alberta - near-orthographic elevation",
+      "author": "Bernard Spragg. NZ from Christchurch, New Zealand",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Grain_Elevators_Mossleigh_Alberta._(11790951125).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/prairie-rail/prairie-elevator-from-the-train.jpg",
+      "kind": "reference",
+      "title": "A prairie grain elevator seen from the train",
+      "author": "Tony Hisgett from Birmingham, UK",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:View_from_the_Train_3a_(8032923269).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/prairie-rail/prairie-harvest-and-shelterbelt.jpg",
+      "kind": "reference",
+      "title": "Prairie harvest, swaths and shelterbelt",
+      "author": "Tony Hisgett from Birmingham, UK",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Harvesting_(8032910848).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/prairie-rail/prairie-freight-train-at-dawn.jpg",
+      "kind": "reference",
+      "title": "Grain elevator and freight train at dawn, Sintaluta, Saskatchewan",
+      "author": "Janusz Sobolewski from Mississauga, Ontario, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sintaluta_Sunrise_(53587373927).jpg",
       "modifications": "Downscaled to 1600 px long edge; metadata stripped."
     }
   ]

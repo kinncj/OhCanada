@@ -175,7 +175,9 @@
       "labelKey": "locomotion.bike.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "toronto-cn-tower"
+  ],
   "pois": [
     {
       "id": "cn-tower",
@@ -212,10 +214,21 @@
         "y": 1280
       },
       "artKey": "toronto-landmark-cn-tower",
-      "radiusPx": 240
+      "radiusPx": 240,
+      "questId": "toronto-cn-tower"
     }
   ],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "guide",
+      "position": {
+        "x": 900,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "toronto-cn-tower"
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 35651584
 }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="35" viewBox="103 104 34 35" shape-rendering="geometricPrecision">
+  <title>Neck, skin ramp 3, three-quarter view facing right. A CYLINDER, not a rectangle: the base and the leading edge carry the ramp's shade and the trailing edge its light, so the column turns even at phone size. It is its OWN PART, drawn below the torso and above nothing, so the coat collar closes over its base and the head closes over its top - which is what makes the head read as turning on a neck instead of sitting on the shoulders. Length is measured, not chosen: art-bible.md 7.3.</title>
+  <path d="M 106,114 C 106,104 134,104 134,114 L 134,128 C 134,138 106,138 106,128 Z" fill="#c68550" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="nk3"><path d="M 106,114 C 106,104 134,104 134,114 L 134,128 C 134,138 106,138 106,128 Z"/></clipPath></defs>
+  <g clip-path="url(#nk3)">
+    <path d="M 100,102 L 113,102 C 110,118 109,132 110,152 L 100,152 Z" fill="#d1b692"/>
+    <path d="M 128,102 L 140,102 L 140,152 L 129,152 C 131,132 130,118 128,102 Z" fill="#894f3b"/>
+    <ellipse cx="120" cy="110" rx="20" ry="9" fill="#16203a" opacity="0.18"/>
+  </g>
+</svg>

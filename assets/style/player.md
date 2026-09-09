@@ -3,7 +3,7 @@
 The design sheet for `costume: parka` — the artboard `player`. Read with `art-bible.md`, `rig-contract.md`
 and `palette.json` open.
 
-## 1. The two defects this redraw fixed
+## 1. The defects this redraw fixed
 
 The player shipped **front-on and too wide**. Both were reported by the repository owner from the live site,
 in one sentence: *"the main character looks extremely odd… it's looking at the user… shoulders are not
@@ -19,15 +19,21 @@ The renderer already mirrored on direction (`setFacing`, and `sprite-character-r
 whole composite about `centreX`), so the turn needed no engine change at all. A front-on figure could never
 have used that mirror for anything.
 
-**This took two passes, and the second one is the instructive half.** The first turned the body and left the
+**This took three passes, and each one was corrected by a picture of the game rather than by a render.** The first turned the body and left the
 head at the torso's angle. Rendered at 390 px beside the beaver, the animal read as travelling and the
 player read as standing still looking at the player — the original defect, surviving in the only part of the
 figure anybody looks at. The head now turns to about 25° off strict profile against the torso's 40°, and the
 turn is carried by an **asymmetric head outline** — cranium behind, brow, nose, lip and chin in front, the
 nose projecting 16 px — rather than by cues drawn on a symmetric egg. Every cue in the first pass was
-defensible in the markup and 2 px on a phone. The hair moved with it: the mass sits at the back and the
-fringe sweeps forward, because at this size hair is a large flat colour block and a symmetric cap says
-"front view" louder than a drawn cue says otherwise.
+defensible in the markup and 2 px on a phone.
+
+The third pass came from a photograph of the shipped game on a phone, and it found the same defect one level
+down. The outline had been corrected and then **hidden behind its own hair**: measured row by row on the
+shipped default, the fringe was the leading edge for 28 rows in a vertical wall and the nose exceeded it by
+11 px. `art-bible.md` §7.4 has the rule that came out of it — *a cue is only a cue if it is the outermost
+thing* — and the fringe now stops at a tip inside the forehead, so the leading edge from crown to nose is one
+continuous forward sweep. It also gives the face back its size: the old fringe squeezed it into a small pale
+oval in the middle of a dark mass, which is what made the head read as an ape.
 
 ### 1.2 The shoulders
 
@@ -40,6 +46,56 @@ it — has been pulled in to a collar that wraps the neck rather than a bar lyin
 The proportion rule is an inclusion rule, so **the officer and the guide moved with it**: 104 px and 112 px
 at their widest, all three inside one declared 116 px cap, with identical crown, sole, eye line, pivots,
 hand and foot frames and stroke weights. A garment may add bulk. A body may not.
+
+### 1.3 There was no neck
+
+Reported the same way and from the same place: *"the head is on the torso."* It was. The head's ink bottom
+and the ruff's ink top overlapped by about 6 px, and the only thing called a neck was a stub of skin-SHADE
+inside `head-{skin}`, drawn on top of the collar, in a tone two steps from the outline — three dark pixels
+between two dark pixels at 390 px. That is also part of why §1.2 did not finish the job: with no break in
+the silhouette the shoulder line runs unbroken into the jaw, and the eye reads one mass however wide it is.
+
+`neck` is now a **part** with its own pivot and z, between the torso and the head, so the collar closes over
+its base and the jaw over its top. Its length is measured — `art-bible.md` §7.3, on
+`assets/refs/officer/red-serge-full-figure.jpg`, 0.149 of a head height — and what it cost this costume is
+two cuts and one move:
+
+- **The fur ruff's top edge is a neck opening**, not an apex: it closes round the neck at y 137 (ink 134)
+  and rises to the shoulder at both ends. This is what §1.2 already asked for in words — "a collar that
+  wraps the neck rather than a bar lying across the shoulder line" — and it is now geometry rather than a
+  description. It is a RING at the throat, not a bar across the shoulders, and the outline shows it curving
+  up round the column, which is what keeps it out of shoulder-pad territory.
+- **The coat's own opening is cut lower than the ruff's**, so a band of white fur shows between the two
+  edges. Draw them at the same height and the ruff disappears under the coat and the parka loses its fur.
+- **The scarf loop moved down 8 px**, to the base of the throat where the ruff ends. It sat on the collar
+  edge and hid the fur; it now reads as a scarf knotted under the collar with the tail hanging down the
+  leading edge, and it still never crosses shoulder to hip.
+
+### 1.4 The player ships in a toque, and the band is measured
+
+`headCovering`'s fallback is now `toque`, not `none`. A slot fallback is not only save recovery: it is what
+every figure the game spawns wears until the character creator is wired, so `none` was putting a bare head
+into a January level. The creator is unchanged — it randomises, `none` is still an option, and the officer
+and the guide pin `headCovering: none` in their artboard `skins` so nobody else grew a hat.
+
+**The band that covered the brows was still covering them.** The part's own title claimed it stopped above
+them; it was cutting the eyes in half in every render, on every skin ramp, in all four expressions. It is
+measured now and the numbers are in `head-covering-toque.svg`: highest brow ink **y 53.2**, band's lowest
+ink over the face **y 47**. The band could only be raised that far by running it **steeply downhill to the
+back** — level at y 18–34 over the face and dropping to y 48–68 behind it — which is the three-quarter cue
+`art-bible.md` §7.1 already asked of it, so the fix and the turn are the same move. Every hair shape and
+every skin ramp was re-rendered under it; `crop` and `coil` are almost entirely covered, which is what a
+short cut under a hat looks like, and `bob` and `long` show at the sides and back.
+
+### 1.5 The peg leg is not in this art
+
+Reported from a photograph of the live game: a grey cylinder hanging below the boot, boot-width, with a hard
+edge. It is **not** a misplaced `foot-*`, a `leg-lower` drawn past the foot, a bad pivot or a part window
+overrunning its art — all four were checked, at every keyframe and at 41 interpolated phases of every state,
+and `leg-lower-parka`'s ink ends at y 459 inside a boot whose ink ends at 463. It reproduces only at
+`devicePixelRatio >= 2`, where the game loads the `@2x` atlas: the parts are then drawn at the texture's size
+and positioned in character space, so they scale apart. `art-bible.md` §7.1 has the measurement. Nothing in
+this sheet fixes it; it is `app/adapters/phaser/sprite-character-renderer.ts`.
 
 ## 2. What keeps the coat from being a rectangle
 
@@ -64,6 +120,9 @@ them by accident.
 6. **A hood ruff that is a collar.** Lobed snow-white fur wrapping the neck, higher at the back than at the
    front. Drawn as a straight bar across the shoulder line it reads as shoulder pads; that is what it did,
    twice.
+7. **Boots with a shaft.** Not decoration: the shin ends 6 px below the ankle pivot and 24 px inside a
+   42 px collar, because a shin drawn to the sole line hung below the boot as a bare cylinder in 11 of 23
+   animation frames and was photographed on a phone as a peg leg. `art-bible.md` §7.5 has the rule.
 
 ## 3. Palette
 
@@ -102,10 +161,12 @@ the wearer's right. Recorded because it looks like a mistake either way and it i
 
 ## 6. The two-size test, and what it is for
 
-**Render at 390 px, three figures side by side, and ask whether a stranger would say they are walking or
-standing.** That is the test, and 1× is not it: the front-facing head passed every 1× render it was ever
-shown in and failed the first phone-width one. `phone-390.png`-style mock-ups over a real level, and a
-magnified ship-pixel strip, are what the two passes of this redraw were judged from.
+**Render the DEFAULT appearance, mid-walk, at the camera's own scale, over a real level**, and ask whether a
+stranger would say the figure is walking or standing. `art-bible.md` §7.6 has the four clauses and what
+leaving each one out has already cost. The short version for this character: the shipped default is long
+dark hair and a bare head, which is the worst case for its head silhouette; the peg leg is invisible at rest;
+and the camera draws 1.553 device px per design px, so the figure is 1.43× larger than a render that assumes
+the design fills the viewport.
 
 Rendered walking, at the direction it walks, at 1×, 0.5×, 0.36× and 0.25×. At 0.25× the parka survives as:
 blue mass, red mark at the neck, two red marks at hip height, white band at the hem, white band at each

@@ -185,7 +185,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "halifax-clock-and-pier"
+  ],
   "pois": [
     {
       "id": "town-clock",
@@ -222,7 +224,8 @@
         "y": 1280
       },
       "artKey": "halifax-landmark-town-clock",
-      "radiusPx": 260
+      "radiusPx": 260,
+      "questId": "halifax-clock-and-pier"
     },
     {
       "id": "pier-21",
@@ -259,10 +262,21 @@
         "y": 1280
       },
       "artKey": "halifax-landmark-pier-21",
-      "radiusPx": 240
+      "radiusPx": 240,
+      "questId": "halifax-clock-and-pier"
     }
   ],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "guide",
+      "position": {
+        "x": 900,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "halifax-clock-and-pier"
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 35651584
 }

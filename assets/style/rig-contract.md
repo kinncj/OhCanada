@@ -135,7 +135,7 @@ the other.
 | `skin` | `skin-1` … `skin-6` | `skin-3` | yes |
 | `hairShape` | `crop`, `coil`, `bob`, `long` | `crop` | yes |
 | `hairColour` | `black`, `brown`, `blond`, `red`, `grey` | `brown` | yes |
-| `headCovering` | `none`, `toque` | `none` | yes |
+| `headCovering` | `none`, `toque` | **`toque`** | yes |
 | `feature` | `none`, `glasses` | `none` | yes |
 | `costume` | `parka`, `serge`, `beaver` | `parka` | no |
 | `presentation` | — **reserved, no options** | — | — |
@@ -150,6 +150,15 @@ The schema field is `fallback`, renamed from `default` by the architect after `a
 The creator randomises uniformly over every option on open and **never renders `fallback` as a
 pre-selection**. `skin`'s fallback is the middle of the ordinal ramp because something had to be written
 there; that arbitrariness is the point, and it is recorded rather than dressed up as a choice.
+
+**`headCovering` is the one fallback that IS a decision, and it is a different decision.** It is `toque`,
+not `none`, because a fallback is also what every figure the game spawns wears until the creator is wired:
+`level-scene.ts` resolves an unchosen slot to the artboard's `skins` and then to the slot's `fallback`, so
+`none` was shipping a bare head into a winter level. `toque` is not a pre-selection in the creator — the
+creator still randomises, `none` is still an option, and the officer and the guide pin `headCovering: none`
+in their artboard `skins` so the change reaches the player and nobody else. This is a costume decision about
+what a Canadian winter looks like, not a claim that some head is the default head, which is what §8.1
+forbids and what the `skin` sentence above is about.
 
 ### The eleven ramps ship unnamed
 
@@ -174,9 +183,10 @@ change nobody would notice. Two independent slots make the product structural: 4
 
 The check is arithmetic and a test can run it: **the number of reachable part frames must equal what the
 slot product implies, and every declared frame must be reachable.** As shipped: 6 × 4 × 5 × 2 × 2 × 2 × 4 =
-**5 760 combinations, 60 frames declared, 60 reachable, 0 unreachable** — 24 costume frames (8 templates ×
-3 costumes), 30 head frames (6 skin + 4 expression + 4 × 5 hair), 5 optional singletons (`toque`, `glasses`,
-`hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground shadow.
+**5 760 combinations, 66 frames declared, 66 reachable, 0 unreachable** — 24 costume frames (8 templates ×
+3 costumes), 36 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + 4 expression + 4 × 5 hair),
+5 optional singletons (`toque`, `glasses`, `hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground
+shadow.
 
 The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 = **480 appearances**, and `costume` is not
 in it: `costume` says which character an artboard is, not how somebody customised one. Adding the guide
@@ -197,7 +207,7 @@ artboard, never a second rig, never a different height.
 
 ## 4. Parts, draw order and mirroring
 
-Twenty-two parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
+Twenty-three parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
 names, and a **pivot** — the joint it rotates about, in character space.
 
 | z | part | frame template | pivot | mirrored |
@@ -213,17 +223,45 @@ names, and a **pivot** — the joint it rotates about, in character space.
 | 9 | `leg-upper-r` | `leg-upper-{costume}` | 108, 264 | ✔ |
 | 10 | `leg-lower-r` | `leg-lower-{costume}` | 108, 362 | ✔ |
 | 11 | `foot-r` | `foot-r-{costume}` | 108, 436 | |
-| 12 | `torso` | `torso-{costume}` | 120, 264 | |
-| 13 | `head` | `head-{skin}` | 120, 112 | |
-| 14 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
-| 15 | `head-shell` | `head-shell-{costume}` | 120, 112 | |
-| 16 | `face` | `face-{expression}` | 120, 112 | |
-| 17 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
-| 18 | `hat` | `hat-{costume}` | 120, 112 | |
-| 19 | `feature` | `feature-{feature}` | 120, 112 | |
-| 20 | `arm-upper-r` | `arm-upper-{costume}` | 103, 146 | ✔ |
-| 21 | `arm-lower-r` | `arm-lower-{costume}` | 103, 214 | ✔ |
-| 22 | `hand-r` | `hand-{costume}` | 103, 282 | ✔ |
+| 12 | `neck` | `neck-{skin}` | 120, 148 | |
+| 13 | `torso` | `torso-{costume}` | 120, 264 | |
+| 14 | `head` | `head-{skin}` | 120, 112 | |
+| 15 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
+| 16 | `head-shell` | `head-shell-{costume}` | 120, 112 | |
+| 17 | `face` | `face-{expression}` | 120, 112 | |
+| 18 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
+| 19 | `hat` | `hat-{costume}` | 120, 112 | |
+| 20 | `feature` | `feature-{feature}` | 120, 112 | |
+| 21 | `arm-upper-r` | `arm-upper-{costume}` | 103, 146 | ✔ |
+| 22 | `arm-lower-r` | `arm-lower-{costume}` | 103, 214 | ✔ |
+| 23 | `hand-r` | `hand-{costume}` | 103, 282 | ✔ |
+
+**`neck` is a part, and the z it sits at is the whole reason it is one.** It has to be occluded from BOTH
+ends — the coat collar closes over its base, the jaw closes over its top — and only a part between the torso
+and the head can be. A stub grown off the torso cannot be covered by the jaw; a stub grown off the head
+cannot be covered by the collar, and the head sat on the shoulders for exactly that reason: the neck WAS
+drawn, inside `head-{skin}`, above the collar, and it read as a dark notch. Its pivot is the neck ROOT
+rather than the shared head pivot, and its keyframe transform is the CHEST's and the HEAD's averaged, per
+component, in every key of every state — so the head keeps turning further than the body and the neck is
+what makes that turn legible. Its 34 x 35 window at (103, 104) is covered everywhere outside y 121–134: **11 px under the jaw, 4.5 px under
+the collar**, against a worst-case relative motion of 0.8 px up and 1.5 px down. The window's lower bound is the
+collar and its UPPER bound is `head-shell-beaver`, which has to CONTAIN it or `make verify-art` refuses the
+guide's not-applicable claim for `skin` — that gate caught this, and it was right to.
+
+**The same UPPER bound holds over `hair`, and it is a rule about pixels, not about rectangles.**
+`head-shell-beaver`'s window is 115 x 124 at (71, 16), and it contains both the neck's 34 x 35 at (103, 104)
+and `hair-crop-*`'s 70 x 67 at (75, 20) — which is what `make verify-art` checks. What it cannot check is
+that the pelt actually PAINTS that window, and twice now a part under the pelt has moved while the pelt has
+not: the crop's crown ended up 5 px above the pelt's and a tan crescent of human hair showed through the top
+of the beaver's skull in the render, with every rectangle still nested. So the shell is drawn 1.5–2 px
+outside the crop's silhouette all the way round, not merely windowed outside it, and the check to run after
+moving any of `head-{skin}`, `hair-crop-*`, `neck-{skin}` or `head-shell-beaver` is a composite of the four
+at their frame offsets with a hunt for pelt-uncovered pixels — not a look at the numbers in `frames`.
+
+**`neck-parka`, `neck-serge` and `neck-beaver` do not exist.** A neck is skin, so it resolves on `{skin}`
+exactly as the head does, and the guide's pelt covers it exactly as `head-shell-beaver` covers the shared
+head and the shared short crop. Templating it on `{costume}` would have given a `skin-6` player a `skin-3`
+neck, which is a slot coupling and `docs/content-review.md` §8.2 forbids it.
 
 **The `-r` and `-l` groups swapped places at z when the figure turned**, and this is the one change in this
 table that is not a number. In a right-facing three-quarter view the wearer's RIGHT side is the near one, so

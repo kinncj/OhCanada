@@ -1,14 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="100" height="87" viewBox="66 1 100 87" shape-rendering="geometricPrecision">
-  <title>Knitted toque with a folded band and a pom, three-quarter view facing right. The band FOLLOWS THE BROW LINE, which on a turned head runs downhill from the leading edge to the back, and the pom sits well back on the crown - a level band and a centred pom read as a front view and undo the head. The band stops ABOVE the brows: a band drawn over them hides the expression, which is the whole of a character at phone size. Every hair shape reads under it.</title>
-  <path d="M 74,75 C 68,47 84,17 116,17 C 146,17 160,39 160,63 C 160,73 74,85 74,75 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="toque"><path d="M 74,75 C 68,47 84,17 116,17 C 146,17 160,39 160,63 C 160,73 74,85 74,75 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="103" height="71" viewBox="65 1 103 71" shape-rendering="geometricPrecision">
+  <title>Knitted toque with a folded band and a pom, three-quarter view facing right. THE BAND STOPS ABOVE THE BROWS AND IT IS MEASURED, not judged: the highest brow ink in the four expressions is y 53.2 (face-surprised) and the band's lowest ink over the face, x 118 to 156, is y 47. A band drawn over the brows deletes a third of the expression vocabulary - two brows, two pupils and a mouth are all it has - and this drawing did exactly that until it was rendered at 390 px and looked at. The band runs STEEPLY DOWNHILL TO THE BACK, level over the face because it has to clear the brows and dropping to y 68 behind them, which is also the three-quarter cue: a level band and a centred pom read as a front view and undo the head. Every hair shape reads under it, and the fringe now shows below the band instead of being swallowed by it. Nothing here sits above y = 0.</title>
+  <path d="M 76,50 C 68,22 88,4 118,4 C 148,4 162,20 160,34 C 158,40 100,44 76,50 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="toque"><path d="M 76,50 C 68,22 88,4 118,4 C 148,4 162,20 160,34 C 158,40 100,44 76,50 Z"/></clipPath></defs>
   <g clip-path="url(#toque)">
-    <path d="M 80,71 C 76,49 88,23 108,21 C 114,21 116,27 112,35 C 102,49 92,61 90,77 Z" fill="#e27468"/>
-    <path d="M 146,31 C 157,43 160,53 160,65 L 138,69 C 141,53 142,39 146,31 Z" fill="#941835"/>
-    <ellipse cx="116" cy="71" rx="37" ry="8" fill="#16203a" opacity="0.18"/>
+    <path d="M 82,50 C 78,26 90,9 108,8 C 114,8 116,14 112,21 C 102,31 92,40 90,54 Z" fill="#e27468"/>
+    <path d="M 146,15 C 156,23 161,29 160,37 L 136,41 C 140,29 142,21 146,15 Z" fill="#941835"/>
+    <ellipse cx="114" cy="44" rx="38" ry="8" fill="#16203a" opacity="0.18" transform="rotate(-8 114 44)"/>
   </g>
-  <path d="M 76,63 L 156,51 C 164,49 167,71 159,73 L 78,85 C 70,87 68,65 76,63 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 79,75 L 157,62 C 161,61 163,71 159,73 L 81,85 C 77,86 75,76 79,75 Z" fill="#c2d6e8"/>
-  <ellipse cx="84" cy="17" rx="16" ry="14" fill="#e6eff7" stroke="#3a2018" stroke-width="4"/>
-  <ellipse cx="78" cy="13" rx="8" ry="7" fill="#ffffff"/>
+  <path d="M 74,48 C 90,38 112,28 156,18 C 164,16 168,32 161,34 C 132,40 106,48 80,68 C 72,73 68,53 74,48 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 78,58 C 94,48 116,38 158,28 C 162,27 163,32 160,33 C 132,40 106,48 81,67 C 78,69 76,60 78,58 Z" fill="#c2d6e8"/>
+  <ellipse cx="82" cy="17" rx="15" ry="14" fill="#e6eff7" stroke="#3a2018" stroke-width="4"/>
+  <ellipse cx="77" cy="13" rx="8" ry="7" fill="#ffffff"/>
 </svg>

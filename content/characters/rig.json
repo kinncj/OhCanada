@@ -27,7 +27,7 @@
     "heightPx": 420,
     "headPx": 70,
     "heightHeads": 6,
-    "note": "Part windows are given in THIS space, so a window origin IS the part offset. To place a character at world (x, y) with its feet on the ground, draw each part at (x - 120 + frame.x, y - 460 + frame.y). THE VIEW IS PART OF THIS SPACE: every character is drawn three-quarter with the canonical facing RIGHT, about 40 degrees off strict profile toward the viewer, because this is a side-scroller and a figure that faces the camera cannot read as travelling. Screen x is therefore the FORE-AFT axis, which is what makes the walk cycle swing at full amplitude, and the near side is the wearer RIGHT - so the -r parts draw last. See art-bible.md 7.1 and rig-contract.md 1."
+    "note": "Part windows are given in THIS space, so a window origin IS the part offset. To place a character at world (x, y) with its feet on the ground, draw each part at (x - 120 + frame.x, y - 460 + frame.y). THE VIEW IS PART OF THIS SPACE: every character is drawn three-quarter with the canonical facing RIGHT, the body about 40 degrees off strict profile and the HEAD about 25, because this is a side-scroller and a figure that faces the camera cannot read as travelling. Screen x is therefore the FORE-AFT axis, which is what makes the walk cycle swing at full amplitude, and the near side is the wearer RIGHT - so the -r parts draw last. See art-bible.md 7.1 and rig-contract.md 1."
   },
   "artboards": [
     {
@@ -50,7 +50,8 @@
       "artboard": "officer",
       "stateMachine": "motion",
       "skins": {
-        "costume": "serge"
+        "costume": "serge",
+        "headCovering": "none"
       },
       "playerSelectableSlots": [],
       "note": "Generic constable. Never named as a member of a real force, and the artboard carries no crest, wordmark, collar dog, shoulder flash, chevron or service number."
@@ -60,7 +61,8 @@
       "artboard": "guide",
       "stateMachine": "motion",
       "skins": {
-        "costume": "beaver"
+        "costume": "beaver",
+        "headCovering": "none"
       },
       "playerSelectableSlots": [],
       "note": "The beaver guide: the companion who appears at points of interest and leads the learning moments. It plays the SAME rig, the same state machine and the same four expressions as every person in the game, and it stands to the same 6-head canon - costume distinguishes characters, stature never does (art bible 7). `skin`, `hairShape` and `hairColour` fall back like any NPC document and are inert here: `head-shell-beaver` covers the shared head and the short crop entirely, which is why no pelt tone was added to the skin slot. It is a companion animal, never a stand-in for a person: docs/content-review.md applies to it as it does to everything else."
@@ -231,8 +233,9 @@
         "none",
         "toque"
       ],
-      "fallback": "none",
-      "playerSelectable": true
+      "fallback": "toque",
+      "playerSelectable": true,
+      "note": "The toque is the FALLBACK, which is what an unchosen slot resolves to: an NPC document, a save being repaired, and every figure the game spawns before the character creator is wired (app/adapters/phaser/level-scene.ts falls back artboard skins -> slot fallback). The player therefore meets a figure in a toque rather than a bare-headed one. It stays playerSelectable and `none` stays an option: the creator's range is not reduced, and assets/refs/references.json still requires a bare-headed run in every art hand-off, because a costume that only reads with a hat on has not been checked."
     },
     "feature": {
       "options": [
@@ -380,8 +383,19 @@
       "mirrorX": false
     },
     {
-      "name": "torso",
+      "name": "neck",
       "z": 12,
+      "frame": "neck-{skin}",
+      "pivot": [
+        120,
+        148
+      ],
+      "mirrorX": false,
+      "note": "A part, not a shaped extension of either mass it joins, because it has to be occluded from BOTH ends: the coat collar closes over its base (torso draws after it) and the jaw closes over its top (head draws before it). Neither a torso that grew a stub nor a head that grew one can be covered at the other end, and the head-on-shoulders read is exactly what that costs. Pivot at the neck ROOT, so its rotation is the average of the chest's and the head's - the head still turns further than the body, and the neck is what makes that turn legible instead of a detached head. `neck-parka`, `neck-serge` and `neck-beaver` do not exist: the neck is skin, so it resolves on {skin} like the head, and the guide's pelt covers it exactly as `head-shell-beaver` covers the shared head and the short crop. Its window is 34x35 at (103,104) and every pixel of it outside y 121..134 is covered: 11 px hidden under the jaw, 4.5 px hidden under the collar. That margin is what absorbs the relative motion the keyframes put between chest and head, which is (head.ty - torso.ty)/2 and is at worst 0.8 px upward (`talk` t 0.5) and 1.5 px downward (`land` t 0.55). The lower bound on the window is the collar; the UPPER bound is `head-shell-beaver`, which must CONTAIN this window or make verify-art refuses the guide's not-applicable claim for `skin`."
+    },
+    {
+      "name": "torso",
+      "z": 13,
       "frame": "torso-{costume}",
       "pivot": [
         120,
@@ -391,7 +405,7 @@
     },
     {
       "name": "head",
-      "z": 13,
+      "z": 14,
       "frame": "head-{skin}",
       "pivot": [
         120,
@@ -401,7 +415,7 @@
     },
     {
       "name": "hair",
-      "z": 14,
+      "z": 15,
       "frame": "hair-{hairShape}-{hairColour}",
       "pivot": [
         120,
@@ -411,7 +425,7 @@
     },
     {
       "name": "head-shell",
-      "z": 15,
+      "z": 16,
       "frame": "head-shell-{costume}",
       "pivot": [
         120,
@@ -421,7 +435,7 @@
     },
     {
       "name": "face",
-      "z": 16,
+      "z": 17,
       "frame": "face-{expression}",
       "pivot": [
         120,
@@ -431,7 +445,7 @@
     },
     {
       "name": "head-covering",
-      "z": 17,
+      "z": 18,
       "frame": "head-covering-{headCovering}",
       "pivot": [
         120,
@@ -441,7 +455,7 @@
     },
     {
       "name": "hat",
-      "z": 18,
+      "z": 19,
       "frame": "hat-{costume}",
       "pivot": [
         120,
@@ -451,7 +465,7 @@
     },
     {
       "name": "feature",
-      "z": 19,
+      "z": 20,
       "frame": "feature-{feature}",
       "pivot": [
         120,
@@ -461,7 +475,7 @@
     },
     {
       "name": "arm-upper-r",
-      "z": 20,
+      "z": 21,
       "frame": "arm-upper-{costume}",
       "pivot": [
         103,
@@ -471,7 +485,7 @@
     },
     {
       "name": "arm-lower-r",
-      "z": 21,
+      "z": 22,
       "frame": "arm-lower-{costume}",
       "pivot": [
         103,
@@ -481,7 +495,7 @@
     },
     {
       "name": "hand-r",
-      "z": 22,
+      "z": 23,
       "frame": "hand-{costume}",
       "pivot": [
         103,
@@ -555,6 +569,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "neck": [
               0,
               0,
               0
@@ -674,6 +693,11 @@
               -1.6,
               0
             ],
+            "neck": [
+              0,
+              -1.8,
+              0
+            ],
             "torso": [
               0,
               -1.6,
@@ -785,6 +809,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "neck": [
               0,
               0,
               0
@@ -911,6 +940,11 @@
               -3.27,
               -2
             ],
+            "neck": [
+              0,
+              0,
+              0.75
+            ],
             "torso": [
               0,
               0,
@@ -1025,6 +1059,11 @@
               -2.58,
               -3.05,
               2
+            ],
+            "neck": [
+              0,
+              -3,
+              0.75
             ],
             "torso": [
               0,
@@ -1141,6 +1180,11 @@
               -5.11,
               2
             ],
+            "neck": [
+              0,
+              0,
+              0.75
+            ],
             "torso": [
               0,
               0,
@@ -1256,6 +1300,11 @@
               -11.44,
               31
             ],
+            "neck": [
+              0,
+              -3,
+              0.75
+            ],
             "torso": [
               0,
               -3,
@@ -1370,6 +1419,11 @@
               33.23,
               -3.27,
               -2
+            ],
+            "neck": [
+              0,
+              0,
+              0.75
             ],
             "torso": [
               0,
@@ -1493,6 +1547,11 @@
               -6.84,
               -2.9
             ],
+            "neck": [
+              0,
+              0,
+              1.75
+            ],
             "torso": [
               0,
               0,
@@ -1607,6 +1666,11 @@
               -3.74,
               -4.44,
               2.9
+            ],
+            "neck": [
+              0,
+              -4.35,
+              1.75
             ],
             "torso": [
               0,
@@ -1723,6 +1787,11 @@
               -10.67,
               2.9
             ],
+            "neck": [
+              0,
+              0,
+              1.75
+            ],
             "torso": [
               0,
               0,
@@ -1838,6 +1907,11 @@
               -21.75,
               44.95
             ],
+            "neck": [
+              0,
+              -4.35,
+              1.75
+            ],
             "torso": [
               0,
               -4.35,
@@ -1952,6 +2026,11 @@
               47.83,
               -6.84,
               -2.9
+            ],
+            "neck": [
+              0,
+              0,
+              1.75
             ],
             "torso": [
               0,
@@ -2075,6 +2154,11 @@
               -17.14,
               45
             ],
+            "neck": [
+              0,
+              -4,
+              0.5
+            ],
             "torso": [
               0,
               -4,
@@ -2189,6 +2273,11 @@
               -31.03,
               -29.91,
               58
+            ],
+            "neck": [
+              0,
+              -7,
+              0.5
             ],
             "torso": [
               0,
@@ -2312,6 +2401,11 @@
               -17.6,
               28
             ],
+            "neck": [
+              0,
+              -4,
+              -0.5
+            ],
             "torso": [
               0,
               -4,
@@ -2426,6 +2520,11 @@
               -55.12,
               -12.8,
               20
+            ],
+            "neck": [
+              0,
+              -2,
+              -1
             ],
             "torso": [
               0,
@@ -2549,6 +2648,11 @@
               -1.64,
               15
             ],
+            "neck": [
+              0,
+              0,
+              1
+            ],
             "torso": [
               0,
               0,
@@ -2664,6 +2768,11 @@
               -2.14,
               46
             ],
+            "neck": [
+              0,
+              13.5,
+              4
+            ],
             "torso": [
               0,
               12,
@@ -2775,6 +2884,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "neck": [
               0,
               0,
               0
@@ -2901,6 +3015,11 @@
               0,
               0
             ],
+            "neck": [
+              0,
+              0,
+              -2.5
+            ],
             "torso": [
               0,
               0,
@@ -3016,6 +3135,11 @@
               -1.2,
               0
             ],
+            "neck": [
+              0,
+              -2,
+              2.5
+            ],
             "torso": [
               0,
               -1.2,
@@ -3130,6 +3254,11 @@
               0,
               0,
               0
+            ],
+            "neck": [
+              0,
+              0,
+              -2.5
             ],
             "torso": [
               0,
@@ -3253,6 +3382,11 @@
               0,
               0
             ],
+            "neck": [
+              0,
+              0,
+              0
+            ],
             "torso": [
               0,
               0,
@@ -3367,6 +3501,11 @@
               10.24,
               -1.54,
               2
+            ],
+            "neck": [
+              0,
+              -1,
+              0.5
             ],
             "torso": [
               0,
@@ -3483,6 +3622,11 @@
               -1.95,
               2
             ],
+            "neck": [
+              0,
+              -1,
+              1
+            ],
             "torso": [
               0,
               -1,
@@ -3594,6 +3738,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "neck": [
               0,
               0,
               0
@@ -3956,80 +4105,80 @@
     },
     "character-head-covering-toque": {
       "source": "src/svg/shared/character/head-covering-toque.svg",
-      "x": 66,
+      "x": 65,
       "y": 1,
-      "w": 100,
-      "h": 87
+      "w": 103,
+      "h": 71
     },
     "character-head-shell-beaver": {
       "source": "src/svg/shared/character/head-shell-beaver.svg",
-      "x": 74,
-      "y": 26,
-      "w": 111,
-      "h": 113
+      "x": 71,
+      "y": 16,
+      "w": 115,
+      "h": 124
     },
     "character-head-skin-1": {
       "source": "src/svg/shared/character/head-skin-1.svg",
       "x": 76,
       "y": 35,
       "w": 95,
-      "h": 100
+      "h": 87
     },
     "character-head-skin-2": {
       "source": "src/svg/shared/character/head-skin-2.svg",
       "x": 76,
       "y": 35,
       "w": 95,
-      "h": 100
+      "h": 87
     },
     "character-head-skin-3": {
       "source": "src/svg/shared/character/head-skin-3.svg",
       "x": 76,
       "y": 35,
       "w": 95,
-      "h": 100
+      "h": 87
     },
     "character-head-skin-4": {
       "source": "src/svg/shared/character/head-skin-4.svg",
       "x": 76,
       "y": 35,
       "w": 95,
-      "h": 100
+      "h": 87
     },
     "character-head-skin-5": {
       "source": "src/svg/shared/character/head-skin-5.svg",
       "x": 76,
       "y": 35,
       "w": 95,
-      "h": 100
+      "h": 87
     },
     "character-head-skin-6": {
       "source": "src/svg/shared/character/head-skin-6.svg",
       "x": 76,
       "y": 35,
       "w": 95,
-      "h": 100
+      "h": 87
     },
     "character-leg-lower-beaver": {
       "source": "src/svg/shared/character/leg-lower-beaver.svg",
       "x": 110,
       "y": 349,
       "w": 41,
-      "h": 110
+      "h": 98
     },
     "character-leg-lower-parka": {
       "source": "src/svg/shared/character/leg-lower-parka.svg",
       "x": 110,
       "y": 349,
       "w": 41,
-      "h": 110
+      "h": 98
     },
     "character-leg-lower-serge": {
       "source": "src/svg/shared/character/leg-lower-serge.svg",
       "x": 110,
       "y": 349,
       "w": 41,
-      "h": 110
+      "h": 98
     },
     "character-leg-upper-beaver": {
       "source": "src/svg/shared/character/leg-upper-beaver.svg",
@@ -4052,6 +4201,48 @@
       "w": 46,
       "h": 140
     },
+    "character-neck-skin-1": {
+      "source": "src/svg/shared/character/neck-skin-1.svg",
+      "x": 103,
+      "y": 104,
+      "w": 34,
+      "h": 35
+    },
+    "character-neck-skin-2": {
+      "source": "src/svg/shared/character/neck-skin-2.svg",
+      "x": 103,
+      "y": 104,
+      "w": 34,
+      "h": 35
+    },
+    "character-neck-skin-3": {
+      "source": "src/svg/shared/character/neck-skin-3.svg",
+      "x": 103,
+      "y": 104,
+      "w": 34,
+      "h": 35
+    },
+    "character-neck-skin-4": {
+      "source": "src/svg/shared/character/neck-skin-4.svg",
+      "x": 103,
+      "y": 104,
+      "w": 34,
+      "h": 35
+    },
+    "character-neck-skin-5": {
+      "source": "src/svg/shared/character/neck-skin-5.svg",
+      "x": 103,
+      "y": 104,
+      "w": 34,
+      "h": 35
+    },
+    "character-neck-skin-6": {
+      "source": "src/svg/shared/character/neck-skin-6.svg",
+      "x": 103,
+      "y": 104,
+      "w": 34,
+      "h": 35
+    },
     "character-tail-beaver": {
       "source": "src/svg/shared/character/tail-beaver.svg",
       "x": 22,
@@ -4068,17 +4259,17 @@
     },
     "character-torso-parka": {
       "source": "src/svg/shared/character/torso-parka.svg",
-      "x": 65,
-      "y": 113,
-      "w": 111,
-      "h": 200
+      "x": 68,
+      "y": 120,
+      "w": 109,
+      "h": 194
     },
     "character-torso-serge": {
       "source": "src/svg/shared/character/torso-serge.svg",
       "x": 70,
-      "y": 118,
+      "y": 124,
       "w": 106,
-      "h": 183
+      "h": 178
     }
   }
 }

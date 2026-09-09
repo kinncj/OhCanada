@@ -14,7 +14,9 @@
     "halifax",
     "quebec-city",
     "ottawa",
-    "toronto"
+    "toronto",
+    "winnipeg",
+    "prairie-rail"
   ],
   "locomotionModes": [
     "walk",
@@ -47,7 +49,9 @@
       "halifax",
       "quebec-city",
       "ottawa",
-      "toronto"
+      "toronto",
+      "winnipeg",
+      "prairie-rail"
     ],
     "stampsToUnlockNext": 1
   },

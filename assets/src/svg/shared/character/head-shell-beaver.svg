@@ -1,9 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="111" height="113" viewBox="74 26 111 113" shape-rendering="geometricPrecision">
-  <title>The guide’s head, three-quarter view facing right: cranium inside the human head box, small rounded ears set low and well back at the side of the skull, and the muzzle projecting on the leading edge with two oversized white incisors hanging below the shared mouth line. Drawn above hair and below face, so the guide plays the game’s four expressions rather than a second set. The incisors are white rather than the animal’s orange: at ship size each tooth is about 4 px and an orange tooth on a felt snout pad disappears. That is a legibility exaggeration of a real feature, written down rather than left looking like accuracy.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="115" height="124" viewBox="71 16 115 124" shape-rendering="geometricPrecision">
+  <title>The guide’s head, three-quarter view facing right: the same neck part as every other character - the shared `neck-{skin}` column is drawn and then covered here in pelt, exactly as the shared head and the short crop are - a cranium that ENCLOSES the shared head and the shared short crop as one mass with the outline sitting 3-4 px outside them - the crown reaches y 17 because the crop's does 20 and pelt that stops short of it shows a tan crescent of human hair through the skull, which is what happened - one small rounded ear set low and well back and drawn UNDER the cranium, and the muzzle projecting on the leading edge with two oversized white incisors hanging below the shared mouth line. Drawn above hair and below face, so the guide plays the game’s four expressions rather than a second set. The incisors are white rather than the animal’s orange: at ship size each tooth is about 4 px and an orange tooth on a felt snout pad disappears. That is a legibility exaggeration of a real feature, written down rather than left looking like accuracy.</title>
   <ellipse cx="99" cy="44" rx="11" ry="10" fill="#401812" stroke="#3a2018" stroke-width="4"/>
-  <path d="M 102,100 L 102,128 C 102,138 140,138 140,128 L 140,100 C 140,90 102,90 102,100 Z" fill="#401812" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 78,90 C 76,52 92,30 120,29 C 143,28 158,46 162,70 C 170,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,124 84,110 80,96 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="bsh"><path d="M 78,90 C 76,52 92,30 120,29 C 143,28 158,46 162,70 C 170,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,124 84,110 80,96 Z"/></clipPath></defs>
+  <path d="M 102,104 C 102,94 140,94 140,104 L 140,128 C 140,139 102,139 102,128 Z" fill="#401812" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="bnk"><path d="M 102,104 C 102,94 140,94 140,104 L 140,128 C 140,139 102,139 102,128 Z"/></clipPath></defs>
+  <g clip-path="url(#bnk)">
+    <path d="M 98,92 L 113,92 C 110,110 109,126 110,142 L 98,142 Z" fill="#7c4327"/>
+    <path d="M 132,92 L 144,92 L 144,142 L 133,142 C 135,126 134,110 132,92 Z" fill="#0f121a"/>
+  </g>
+  <path d="M 75,96 C 71,50 86,20 118,20 C 148,20 162,44 165,70 C 172,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,125 81,112 75,96 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="bsh"><path d="M 75,96 C 71,50 86,20 118,20 C 148,20 162,44 165,70 C 172,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,125 81,112 75,96 Z"/></clipPath></defs>
   <g clip-path="url(#bsh)">
     <ellipse cx="96" cy="56" rx="25" ry="22" fill="#b4733b"/>
     <ellipse cx="152" cy="118" rx="24" ry="16" fill="#401812"/>

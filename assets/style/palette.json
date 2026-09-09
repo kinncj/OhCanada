@@ -112,9 +112,15 @@
     "stone-light": "#d2c5a3",
     "stone-base": "#bc9c6d",
     "stone-shade": "#9a623e",
+    "limestone-light": "#c8c1b6",
+    "limestone-base": "#a99789",
+    "limestone-shade": "#8a6256",
     "brick-light": "#cb8f62",
     "brick-base": "#ab5936",
     "brick-shade": "#6f271f",
+    "oxide-light": "#cf5d2b",
+    "oxide-base": "#91301c",
+    "oxide-shade": "#4e0e10",
     "cobalt-light": "#2275c6",
     "cobalt-base": "#153f86",
     "cobalt-shade": "#091740",
@@ -238,12 +244,26 @@
       "derived": true,
       "material": "Nepean sandstone. Parliament Hill walls and the Peace Tower shaft."
     },
+    "limestone": {
+      "light": "limestone-light",
+      "base": "limestone-base",
+      "shade": "limestone-shade",
+      "derived": true,
+      "material": "Tyndall limestone: the Canadian Museum for Human Rights' stone mass. DELIBERATELY NOT `stone`, which is Nepean sandstone and belongs to Parliament Hill. Base authored from assets/refs/winnipeg/cmhr-elevation-from-the-river.jpg, the median of 240x400 px of sunlit wall at (620,700) = #a99789 = hsl(26,16%,60%); the second reference, winnipeg/cmhr-at-the-forks.jpg, reads hsl(38,12%,58%) through winter haze and is NOT averaged in, because averaging two views is the mistake ADR-0014 records. Light and shade are the published formula. Tyndall is a cool cream-grey at 16 per cent saturation; Nepean sandstone is a golden buff at 41. Two buildings in this game are faced in pale stone and a single ramp for both would make Winnipeg's museum and Ottawa's Parliament the same material."
+    },
     "brick": {
       "light": "brick-light",
       "base": "brick-base",
       "shade": "brick-shade",
       "derived": true,
       "material": "Red-brown facing brick. The Chateau Frontenac's walls, and the Old Quebec brick terraces. Base authored 2026-09-08 from assets/refs/quebec-city/chateau-frontenac-street-elevation.jpg, hue-filtered median of 106441 wall pixels = #a27447 hsl(29,42%,46%) under low warm autumn sun; the same wall in assets/refs/quebec-city/chateau-frontenac-portrait.jpg under overcast winter light medians #735749 hsl(20,21%,37%). The base is set between them and more saturated: hsl(18,52%,44%). It exists because `stone` is Nepean sandstone buff - drawing the Chateau in it would make Quebec City's landmark the same colour as Ottawa's, which is the one confusion this palette must not create."
+    },
+    "oxide": {
+      "light": "oxide-light",
+      "base": "oxide-base",
+      "shade": "oxide-shade",
+      "derived": true,
+      "material": "Red-oxide paint on board-and-batten timber: the prairie grain elevator. Base authored from assets/refs/prairie-rail/grain-elevator-chamberlain.jpg as the HSL midpoint of the two large measured faces - the sunlit driveway annex, median of 300x120 at (120,1080) = hsl(8,73%,36%), and the shaded crib gable, median of 320x560 at (740,620) = hsl(13,63%,32%) - giving hsl(11,68%,34%) = #91301c. NOT `brick`, whose base is hsl(17,52%,44%): eight degrees more orange, sixteen points less saturated and ten points lighter, which under this palette's own three-tone rule turns a painted elevator into a masonry wall. Light and shade are the published formula."
     },
     "cobalt": {
       "light": "cobalt-light",
@@ -271,7 +291,7 @@
       "base": "ice-base",
       "shade": "ice-shade",
       "derived": true,
-      "material": "Rideau Canal skateway ice."
+      "material": "Rideau Canal skateway ice. Also architectural curtain-wall glazing: the Canadian Museum for Human Rights' glass cloud, measured at hsl(203,41%,80%) sunlit on winnipeg/cmhr-elevation-from-the-river.jpg against ice-base's hsl(202,52%,78%) - one degree of hue apart, which is why no glass ramp was added."
     },
     "water": {
       "light": "water-light",
@@ -341,7 +361,7 @@
       "base": "felt-base",
       "shade": "felt-shade",
       "derived": true,
-      "material": "Generic tan felt and canvas."
+      "material": "Generic tan felt and canvas. Also prairie straw: standing wheat, swath and stubble on the prairie-rail level, measured at hsl(38,63%,33%) on prairie-rail/prairie-harvest-and-shelterbelt.jpg, which sits inside this ramp's own span."
     },
     "hide": {
       "light": "hide-light",
@@ -478,6 +498,24 @@
         "note": "Design-resolution y at which layer-10-sky.svg changes band. Both edges sit behind a nearer layer at the high tier so the hard step never shows against open sky.",
         "shadeToBase": 880,
         "baseToLight": 1100
+      }
+    },
+    "winnipeg-autumn": {
+      "sky": "sky-shade",
+      "ground": "limestone-shade",
+      "horizon": "cloud-base",
+      "why": "A deep, clear, dry continental blue over a river promenade in early autumn. Measured on assets/refs/winnipeg/cmhr-elevation-from-the-river.jpg: 300x200 px of open sky at (800,100) reads hsl(210,83%,41%) against sky-shade's hsl(212,69%,39%). The ground is limestone-shade so that the band the player walks on continues the promenade's own material into the fill below the ground line, which is the arrangement Halifax uses and the reason its deck stopped reading as a road. No two of the six level triples are equal.",
+      "skyBandStops": {
+        "note": "NONE. winnipeg/layer-10-sky.svg is ONE FLAT sky-shade field and has no band steps at all. A banded sky needs every step to sit behind a nearer opaque layer at every visual tier, and at the LOW preset this level keeps only the sky and the plaza, whose opaque paving does not begin until world 1150 - so there was nowhere above it to hide a step. The flat field IS the level document's theme.sky, so dropping the layer changes nothing above the roofline."
+      }
+    },
+    "prairie-rail-late-summer": {
+      "sky": "sky-light",
+      "ground": "felt-shade",
+      "horizon": "cloud-light",
+      "why": "The palest sky in the game and the largest, because on the prairie the sky is most of the picture. Measured on assets/refs/prairie-rail/grain-elevator-chamberlain.jpg: 300x200 px of open sky at (100,100) reads hsl(213,50%,61%), between sky-base and sky-light, and sky-light is taken so that the horizon band can go to cloud-light without a visible step. Shares its zenith with Toronto and its horizon with Halifax; the ground - dark straw rather than pavement - is what keeps all three apart.",
+      "skyBandStops": {
+        "note": "NONE. prairie-rail/layer-10-sky.svg is ONE FLAT sky-light field. Same reason as Winnipeg's, and harder: at the LOW preset this level keeps the sky and the railbed, and the railbed is transparent everywhere above the rail head, so there is no opaque layer anywhere in the sky's band to hide a step behind."
       }
     }
   },

@@ -33,6 +33,21 @@ measured photograph (`art-bible.md` §7.2), and the barrel came in with it: **11
 the parka's 108 and the tunic's 104, all inside one declared 116 px cap. The waist is still the widest point
 and still wider than the shoulder, because that taper is what makes this silhouette an animal.
 
+**And it grew a neck with them**, which is the interesting one, because a beaver has not got one.
+`assets/refs/beaver/beaver-upright-winter-gnawing.jpg` shows the head running straight into the shoulder
+mass with only a tonal break where the pale cheek fur meets the darker pelt — so "the animal is nearly
+neckless, and that is correct for it" is a true statement about beavers and a **bad** reason to exempt this
+artboard. The rule is an inclusion rule. **The guide is not an exception:** it carries the same `neck` part,
+at the same pivot, with the same keyframes and the same 12–13 px of visible column as the player and the
+officer (`art-bible.md` §7.3).
+
+What is exempt is the SURFACE, and it is the exemption this sheet already holds for the skin ramp, extended
+by one part. The shared `neck-{skin}` column IS drawn on this artboard and is then covered entirely by
+`head-shell-beaver`, exactly as the shared head and the shared short crop already are — which is why no pelt
+tone was added to the `skin` slot and why none was added now. The pelt column is `leather-shade` against a
+`leather-base` body, so what reads at 390 px is the animal's heavy neck ruff rather than a person's column:
+same geometry, animal surface. That is the whole difference, and it is the only one.
+
 **And it turned with them.** Every character is drawn three-quarter facing its direction of travel now
 (`art-bible.md` §7.1), and of the three this is the one the turn helped most: a beaver seen from the front is
 a brown blob with teeth, and a beaver seen three-quarter has a **projecting muzzle** on the leading edge with
@@ -48,8 +63,16 @@ share a rig and a canvas, so any one of them that is right is a free control for
 
 Two things make it work without a proportion break:
 
-- **`head-shell-beaver` is the same head box.** Cranium inside the human cranium's outline, and **one ear
-  only** — small, dark, set high and well BACK on the skull and mostly inside the head silhouette, which is
+- **`head-shell-beaver` is the same head MASS.** It is not the human cranium's outline: it is the shared
+  head *and the shared short crop*, taken as one mass, with the pelt outline 3–4 px outside it — crown at
+  y 17 against the crop's 20, left flank at x 71.3 against 75.5. It has to be, because the pelt is the only
+  thing above `hair` in the z order, and a pelt drawn to the bare skull leaves the crop's crown showing as a
+  **tan crescent across the top of the beaver's head**. That has now happened twice, both times when a part
+  under the pelt moved and the pelt did not: `make verify-art` states the containment as a rule about part
+  windows, and it is a rule about pixels. The mass is still a human head-and-hair mass in pelt — 3 px taller
+  than one, which is the outline — so the 6-head canon is untouched: what makes this a beaver is the muzzle
+  and the teeth, not a bigger skull. And **one ear only** — small, dark, set high and well BACK on the skull
+  and mostly inside the head silhouette, which is
   where `beaver-head-and-forepaws.jpg` and `beaver-alberta-profile.jpg` put it. A second ear is the loudest
   front-view signal there is, and a turned head does not have one. Big ears standing clear of the skull read
   as a bear; that has now been drawn wrong twice — high and round the first time, large and paired the

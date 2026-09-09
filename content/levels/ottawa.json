@@ -271,7 +271,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "ottawa-parliament-hill"
+  ],
   "pois": [
     {
       "id": "parliament-hill",
@@ -308,7 +310,8 @@
         "y": 1242
       },
       "artKey": "ottawa-landmark-parliament-hill",
-      "radiusPx": 220
+      "radiusPx": 220,
+      "questId": "ottawa-parliament-hill"
     }
   ],
   "characters": [
@@ -318,7 +321,8 @@
         "x": 2400,
         "y": 1240
       },
-      "facing": "left"
+      "facing": "left",
+      "questId": "ottawa-parliament-hill"
     }
   ],
   "assets": [],

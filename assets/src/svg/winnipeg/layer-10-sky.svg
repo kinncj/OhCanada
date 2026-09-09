@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="900" viewBox="0 0 1080 900" shape-rendering="geometricPrecision">
+  <title>A dry, clear, deep continental autumn sky over Winnipeg: ONE FLAT sky-shade field with six thin cloud banks. Flat rather than banded, and that is the departure: a banded sky needs every step to sit behind a nearer opaque layer at every visual tier, and at the LOW preset this level keeps only the sky and the plaza - the plaza's opaque paving does not begin until world 1150, so there is nowhere above it to hide a step. One field has no step to hide and it IS the level document's theme.sky, so dropping this layer changes nothing above the roofline. Deeper than every other level's sky on purpose: measured at hsl(210,83%,41%) on assets/refs/winnipeg/cmhr-elevation-from-the-river.jpg, which is a clear dry prairie-city blue and is what separates this level from Toronto's bleached haze. World y 0..900; clouds are kept inside x 110..970 so the extreme columns stay flat band colour for the desktop side panel.</title>
+  <rect x="0" y="0" width="1080" height="900" fill="#1f5fa8"/>
+  <ellipse cx="300" cy="171" rx="150" ry="28.5" fill="#dce9f3"/>
+  <ellipse cx="249" cy="150" rx="90" ry="30" fill="#fbfdfe"/>
+  <ellipse cx="345" cy="154.5" rx="75" ry="22.5" fill="#fbfdfe"/>
+  <ellipse cx="300" cy="133.5" rx="102" ry="33" fill="#fbfdfe"/>
+  <ellipse cx="720" cy="236.8" rx="120" ry="22.8" fill="#dce9f3"/>
+  <ellipse cx="679.2" cy="220" rx="72" ry="24" fill="#fbfdfe"/>
+  <ellipse cx="756" cy="223.6" rx="60" ry="18" fill="#fbfdfe"/>
+  <ellipse cx="720" cy="206.8" rx="81.6" ry="26.4" fill="#fbfdfe"/>
+  <ellipse cx="470" cy="384.5" rx="175" ry="33.25" fill="#dce9f3"/>
+  <ellipse cx="410.5" cy="360" rx="105" ry="35" fill="#fbfdfe"/>
+  <ellipse cx="522.5" cy="365.25" rx="87.5" ry="26.25" fill="#fbfdfe"/>
+  <ellipse cx="470" cy="340.75" rx="119" ry="38.5" fill="#fbfdfe"/>
+  <ellipse cx="830" cy="488.2" rx="130" ry="24.7" fill="#dce9f3"/>
+  <ellipse cx="785.8" cy="470" rx="78" ry="26" fill="#fbfdfe"/>
+  <ellipse cx="869" cy="473.9" rx="65" ry="19.5" fill="#fbfdfe"/>
+  <ellipse cx="830" cy="455.7" rx="88.4" ry="28.6" fill="#fbfdfe"/>
+  <ellipse cx="230" cy="582.4" rx="160" ry="30.4" fill="#dce9f3"/>
+  <ellipse cx="175.6" cy="560" rx="96" ry="32" fill="#fbfdfe"/>
+  <ellipse cx="278" cy="564.8" rx="80" ry="24" fill="#fbfdfe"/>
+  <ellipse cx="230" cy="542.4" rx="108.8" ry="35.2" fill="#fbfdfe"/>
+  <ellipse cx="640" cy="709.6" rx="140" ry="26.6" fill="#dce9f3"/>
+  <ellipse cx="592.4" cy="690" rx="84" ry="28" fill="#fbfdfe"/>
+  <ellipse cx="682" cy="694.2" rx="70" ry="21" fill="#fbfdfe"/>
+  <ellipse cx="640" cy="674.6" rx="95.2" ry="30.8" fill="#fbfdfe"/>
+</svg>
