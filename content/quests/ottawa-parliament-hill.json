@@ -1,0 +1,88 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "ottawa-parliament-hill",
+  "levelId": "ottawa",
+  "giver": "officer",
+  "title": {
+    "en": "Skate to Parliament Hill",
+    "fr": "Patinez jusqu'à la Colline du Parlement"
+  },
+  "summary": {
+    "en": "Skate up the canal to Parliament Hill, find the Peace Tower, and answer three questions.",
+    "fr": "Patinez sur le canal jusqu'à la Colline du Parlement, trouvez la tour de la Paix et répondez à trois questions."
+  },
+  "steps": [
+    {
+      "id": "talk-to-the-officer",
+      "kind": "talk",
+      "targetId": "officer",
+      "prompt": {
+        "en": "Talk to the officer",
+        "fr": "Parlez à l'agent"
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "Hello! Welcome to Ottawa. Ottawa is Canada's capital city.",
+            "fr": "Bonjour! Bienvenue à Ottawa. Ottawa est la capitale du Canada."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 94,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Ottawa, located on the Ottawa River, was chosen as the capital in 1857 by Queen Victoria"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Skate up the canal to Parliament Hill and find the Peace Tower. Then answer three questions.",
+            "fr": "Patinez sur le canal jusqu'à la Colline du Parlement et trouvez la tour de la Paix. Ensuite, répondez à trois questions."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-the-peace-tower",
+      "kind": "visit",
+      "targetId": "parliament-hill",
+      "prompt": {
+        "en": "Find the Peace Tower",
+        "fr": "Trouvez la tour de la Paix"
+      }
+    },
+    {
+      "id": "answer-on-the-hill",
+      "kind": "answer",
+      "targetId": "government",
+      "subject": "government",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions",
+        "fr": "Répondez à 3 questions"
+      }
+    }
+  ]
+}

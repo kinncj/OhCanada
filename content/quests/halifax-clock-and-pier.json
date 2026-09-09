@@ -1,0 +1,149 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "halifax-clock-and-pier",
+  "levelId": "halifax",
+  "giver": "guide",
+  "title": {
+    "en": "The Harbour Walk",
+    "fr": "La promenade du port"
+  },
+  "summary": {
+    "en": "Walk with your guide from the Town Clock down to Pier 21. Along the way, answer questions about rights and responsibilities in Canada.",
+    "fr": "Marchez avec votre guide de la tour de l'horloge jusqu'au quai 21. En chemin, répondez à des questions sur les droits et les responsabilités au Canada."
+  },
+  "steps": [
+    {
+      "id": "meet-the-guide",
+      "kind": "talk",
+      "targetId": "guide",
+      "prompt": {
+        "en": "Talk to your guide",
+        "fr": "Parlez à votre guide"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Hello! I am your guide. Welcome to Halifax.",
+            "fr": "Bonjour! Je suis votre guide. Bienvenue à Halifax."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "In Canada, every right you have comes with something you should do.",
+            "fr": "Au Canada, chaque droit que vous avez s'accompagne d'une chose à faire."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Rights and Responsibilities of Citizenship",
+              "page": 13,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "In Canada, rights come with responsibilities."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Millions of people here give their time to help others. Nobody pays them for it.",
+            "fr": "Des millions de personnes ici donnent de leur temps pour aider les autres. Personne ne les paie pour cela."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Rights and Responsibilities of Citizenship",
+              "page": 14,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Millions of volunteers freely donate their time to help others without pay"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Come with me. We stop at the Town Clock first, then we walk down to Pier 21.",
+            "fr": "Venez avec moi. On s'arrête d'abord à la tour de l'horloge, puis on descend au quai 21."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-the-town-clock",
+      "kind": "visit",
+      "targetId": "town-clock",
+      "prompt": {
+        "en": "Find the Town Clock",
+        "fr": "Trouvez la tour de l'horloge"
+      }
+    },
+    {
+      "id": "answer-at-the-clock",
+      "kind": "answer",
+      "targetId": "rights",
+      "subject": "rights",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions",
+        "fr": "Répondez à 2 questions"
+      }
+    },
+    {
+      "id": "walk-down-to-pier-21",
+      "kind": "visit",
+      "targetId": "pier-21",
+      "prompt": {
+        "en": "Walk down to Pier 21",
+        "fr": "Descendez jusqu'au quai 21"
+      }
+    },
+    {
+      "id": "answer-at-pier-21",
+      "kind": "answer",
+      "targetId": "rights",
+      "subject": "rights",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions",
+        "fr": "Répondez à 3 questions"
+      }
+    }
+  ]
+}
