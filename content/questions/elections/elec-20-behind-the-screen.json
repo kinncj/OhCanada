@@ -40,10 +40,10 @@
     "quote": "Your vote is secret. You will be invited to go behind the screen to mark your ballot. Once marked, fold it and present it to the poll officials."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "verified",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-09T02:25:00Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "Your vote is secret. You will be invited to go behind the screen to mark your ballot. Once marked, fold it and present it to the poll officials."
   }
 }

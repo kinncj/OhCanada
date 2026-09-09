@@ -40,9 +40,9 @@
     "quote": "From the 1800s until the 1980s, the federal government placed many Aboriginal children in residential schools"
   },
   "verification": {
-    "status": "rejected",
+    "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T21:05:00Z",
+    "checkedAt": "2026-09-09T02:25:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "From the 1800s until the 1980s, the federal government placed many Aboriginal children in residential schools to educate and assimilate them into mainstream Canadian culture."
   }
