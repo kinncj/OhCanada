@@ -61,6 +61,8 @@ interface HarnessOptions {
   readonly levels?: 'none' | 'one';
   /** `TN-TITLE-04`: this browser is not saving. */
   readonly storageBlocked?: boolean;
+  /** One level's stamp is in the passport, so the map's "Earned" badge is drawn. */
+  readonly stamped?: string;
 }
 
 const ROOT_TEST_ID: Readonly<Record<ShellView, string>> = {
@@ -83,6 +85,7 @@ async function open(page: Page, options: HarnessOptions = {}): Promise<Locator> 
   if (options.resume === true) params.set('resume', '1');
   if (options.study === true) params.set('study', '1');
   if (options.levels !== undefined) params.set('levels', options.levels);
+  if (options.stamped !== undefined) params.set('stamped', options.stamped);
   if (options.storageBlocked === true) {
     params.set('storage', 'blocked');
     params.set('export', '1');
@@ -637,4 +640,49 @@ test('the built page a visitor loads has no axe violations', async ({ page }) =>
   await expect(
     page.locator('[data-testid="level-select"], [data-testid="character-creator"]').first(),
   ).toBeVisible();
+});
+
+/**
+ * A finished level, on the map.
+ *
+ * `MapEntry.stamped` was only ever counted — the counts line said "Stamps: 1 of
+ * 10" and the card looked exactly like one the player had never opened. It is a
+ * badge now, in words, beside the state word rather than instead of it.
+ */
+test.describe('a level whose stamp is in the passport', () => {
+  test('says Earned, in words, and still says whether it is open', async ({ page }) => {
+    const root = await open(page, { view: 'level-select', stamped: 'ottawa' });
+    const card = root.locator('[data-testid="level-card-ottawa"]');
+
+    await expect(card.locator('[data-testid="level-card-ottawa-stamp"]')).toHaveText('Earned');
+    await expect(card).toContainText('Open');
+    /* The sentence is the card's *description*, in a sibling paragraph — the
+       badge did not replace it. */
+    await expect(root.locator('[data-testid="level-card-ottawa-help"]')).toHaveText(
+      'You can play this now.',
+    );
+  });
+
+  test('has no violations, and the badge is not colour alone', async ({ page }) => {
+    await open(page, { view: 'level-select', stamped: 'ottawa' });
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('is readable at 200 % text without clipping the badge', async ({ page }) => {
+    const root = await open(page, {
+      view: 'level-select',
+      stamped: 'ottawa',
+      textScale: 200,
+      font: 'dyslexia',
+    });
+    expect(await scrollsSideways(page)).toBe(false);
+    await expect(root.locator('[data-testid="level-card-ottawa-stamp"]')).toBeVisible();
+    expect(await undersizedTargets(page)).toEqual([]);
+  });
+
+  test('is French', async ({ page }) => {
+    const root = await open(page, { view: 'level-select', stamped: 'ottawa', locale: 'fr' });
+    await expect(root.locator('[data-testid="level-card-ottawa-stamp"]')).toHaveText('Obtenu');
+  });
 });

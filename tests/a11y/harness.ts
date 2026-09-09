@@ -26,6 +26,7 @@ import { createShell } from '../../app/ui/shell';
 import { createDialogue } from '../../app/ui/dialogue';
 import { createHud } from '../../app/ui/hud';
 import { createLevelAnnouncer, type LevelEvent } from '../../app/ui/level-events';
+import { createLevelComplete } from '../../app/ui/level-complete';
 import { createLevelError, createLevelLoading } from '../../app/ui/level-screens';
 import { mountLiveRegion, announce } from '../../app/ui/live-region';
 import { createPoiCard } from '../../app/ui/poi-card';
@@ -230,13 +231,20 @@ const PLACES: readonly (readonly [number, string | undefined])[] = [
   [10, undefined],
 ];
 
+/**
+ * `?stamped=<id>` puts one level's stamp in the passport, so the "Earned" badge
+ * is a state a scan can actually reach. Without it `MapEntry.stamped` is never
+ * `true` on any harness page and the badge is drawn by nothing.
+ */
+const STAMPED = params.get('stamped');
+
 const mapEntries = (built: readonly string[]): readonly MapEntry[] =>
   PLACES.map(([number, id]) => ({
     number,
     ...(id === undefined ? {} : { id: id as LevelId }),
     built: id !== undefined && built.includes(id),
     unlocked: id === 'ottawa',
-    stamped: false,
+    stamped: id !== undefined && id === STAMPED,
   }));
 
 const level = LEVEL[locale];
@@ -310,6 +318,17 @@ switch (screen) {
       onDismiss: () => undefined,
     });
     card.present(QUESTION);
+    /*
+     * `?answered=<index>` takes an option, which is the state where the card
+     * draws colour at all: a green fill on the right answer and a red one on the
+     * answer taken. Both are judged by axe here rather than trusted — and the
+     * default is a *wrong* answer, because that is the card at its busiest: two
+     * fills, two marks, two state words, the explanation and "Next".
+     */
+    const answered = params.get('answered');
+    if (answered !== null) {
+      ui.querySelector<HTMLElement>(`[data-testid="option-${answered}"]`)?.click();
+    }
     break;
   }
 
@@ -377,6 +396,29 @@ switch (screen) {
       onBack: () => undefined,
       singleSwitch: store.current.singleSwitch,
     }).show();
+    break;
+  }
+
+  /*
+   * The card a player reads when a level's task is finished (`TN-QUEST-04`).
+   *
+   * `?stamp=0` drops the stamp sentence, which is the state a level with no
+   * `stamp.<id>.earned` row is in — every level but Ottawa today — and it is a
+   * different accessibility question from the full card: the dialog has a name
+   * and no description, and it must still read.
+   */
+  case 'complete': {
+    createLevelComplete(ui, {
+      locale,
+      announce,
+      singleSwitch: store.current.singleSwitch,
+      onChooseLevel: () => undefined,
+      onKeepPlaying: () => undefined,
+    }).show(
+      params.get('stamp') === '0'
+        ? {}
+        : { stampMessage: text(locale, 'stamp.ottawa.earned') },
+    );
     break;
   }
 

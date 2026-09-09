@@ -5,7 +5,7 @@ import gameConfigDocument from '@content/game.config.json';
    editing three configs that have to agree (tsconfig, vite, vitest). */
 import { readGameRules } from '../../../app/bootstrap/game-rules';
 import { unlockedLevelIds } from '@domain/entities/level';
-import { text } from '@ui/copy';
+import { hasCopyRow, text } from '@ui/copy';
 import type { LevelId } from '@domain/ids';
 
 /**
@@ -111,6 +111,8 @@ const hoisted = vi.hoisted(() => {
     hudDestroyed: number;
     mainRemoved: number;
     modalHosts: Record<string, unknown>;
+    /** The options each mocked modal was built with, keyed the same way. */
+    modalOptions: Record<string, unknown>;
     shellOptions: Record<string, unknown> | null;
     shellHost: unknown;
     storageWarning: boolean;
@@ -128,6 +130,45 @@ const hoisted = vi.hoisted(() => {
     loadingHidden: number;
     loadingStallAfterMs: number | undefined;
     autoMove: boolean[];
+    /** Every question the card was asked to present, in order. */
+    questionsAsked: unknown[];
+    /** Which host the question card was mounted into. */
+    questionHost: unknown;
+    /** The options the card was built with, so the answer wire can be driven. */
+    questionOptions: Record<string, unknown> | null;
+    /** Every showing of the completion card, with the content it was handed. */
+    completeShown: unknown[];
+    completeOptions: Record<string, unknown> | null;
+    /** What `shell.leaveLevel` was told to land on, per call. */
+    leftTo: unknown[];
+    /**
+     * The renderer's own `onLevelEvent`, captured at construction.
+     *
+     * It is how this suite plays a scene: the composition root hands the
+     * renderer a sink, the renderer publishes on the bus through it, and `app/ui`
+     * subscribes. Driving that sink is driving the real wire rather than calling
+     * a listener the test found.
+     */
+    emit: ((name: string, detail?: string) => void) | null;
+    /** What the fake `StudySession` hands back, and how often it was asked. */
+    drillCalls: number[];
+    availableCalls: number;
+    /** Every answer that reached `answerQuestion`, as [questionId, index]. */
+    recorded: [string, number][];
+    /** Every label the interact prompt was given, `null` for withdrawn. */
+    prompts: (string | null)[];
+    /** Every state the Study screen was shown in. */
+    studyShown: unknown[];
+    /**
+     * Which level the next recorded answer earns the stamp for, or `null`.
+     *
+     * `answerQuestion` earns one only for an answer that completes a quest's
+     * `answer` step, and no level document declares a quest today — so the
+     * signal is unreachable through content and is driven here instead. What is
+     * being asserted is the composition root's half: what it does when the
+     * domain says a stamp was earned.
+     */
+    stampFor: string | null;
   } = {
     calls: [],
     loadCalls: [],
@@ -141,6 +182,7 @@ const hoisted = vi.hoisted(() => {
     hudDestroyed: 0,
     mainRemoved: 0,
     modalHosts: {},
+    modalOptions: {},
     shellOptions: null,
     shellHost: null,
     storageWarning: false,
@@ -156,6 +198,19 @@ const hoisted = vi.hoisted(() => {
     loadingHidden: 0,
     loadingStallAfterMs: undefined,
     autoMove: [],
+    questionsAsked: [],
+    questionHost: null,
+    questionOptions: null,
+    completeShown: [],
+    completeOptions: null,
+    leftTo: [],
+    emit: null,
+    drillCalls: [],
+    availableCalls: 0,
+    recorded: [],
+    prompts: [],
+    studyShown: [],
+    stampFor: null,
   };
   return { state };
 });
@@ -179,6 +234,9 @@ vi.mock('@adapters/phaser', () => ({
   hasLevel: (id: string): boolean => hoisted.state.built.includes(id),
   GameRenderer: class {
     readonly ready = Promise.resolve();
+    constructor(options: { onLevelEvent?: (name: string, detail?: string) => void }) {
+      hoisted.state.emit = options.onLevelEvent ?? null;
+    }
     get palette(): Record<string, string> {
       return { sky: '#8ecae6' };
     }
@@ -226,8 +284,9 @@ vi.mock('@ui/shell', () => ({
       enterLevel: (id: string): void => {
         hoisted.state.calls.push(`shell.enterLevel:${id}`);
       },
-      leaveLevel: (): void => {
+      leaveLevel: (leaving: unknown): void => {
         hoisted.state.calls.push('shell.leaveLevel');
+        hoisted.state.leftTo.push(leaving);
       },
       setEntries: (next: unknown): void => {
         hoisted.state.entries = next;
@@ -271,7 +330,9 @@ vi.mock('@ui/hud', () => ({
       },
       setMode: () => undefined,
       setTask: () => undefined,
-      setPrompt: () => undefined,
+      setPrompt: (label: string | null): void => {
+        hoisted.state.prompts.push(label);
+      },
       setStorageWarning: () => undefined,
       openMenu: () => undefined,
       closeMenu: () => undefined,
@@ -285,8 +346,9 @@ vi.mock('@ui/hud', () => ({
 }));
 
 vi.mock('@ui/poi-card', () => ({
-  createPoiCard: (host: unknown): unknown => {
+  createPoiCard: (host: unknown, options: Record<string, unknown>): unknown => {
     hoisted.state.modalHosts['poi-card'] = host;
+    hoisted.state.modalOptions['poi-card'] = options;
     return {
       element: {},
       visible: false,
@@ -298,6 +360,147 @@ vi.mock('@ui/poi-card', () => ({
     };
   },
 }));
+
+/*
+ * The question card, which is the second half of a landmark.
+ *
+ * Mocked like every other screen here, and it records the *options* as well as
+ * what it was shown: `onAnswer` is the wire this suite drives to prove that an
+ * answer reaches `answerQuestion` and the save, which is a composition decision
+ * and therefore this file's business.
+ */
+vi.mock('@ui/question-card', () => ({
+  createQuestionCard: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.modalHosts['question-card'] = host;
+    hoisted.state.questionHost = host;
+    hoisted.state.questionOptions = options;
+    return {
+      element: {},
+      visible: false,
+      answered: false,
+      present: (question: unknown) => hoisted.state.questionsAsked.push(question),
+      hide: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
+      destroy: () => undefined,
+    };
+  },
+}));
+
+vi.mock('@ui/study-screen', () => ({
+  createStudyScreen: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.modalHosts['study-screen'] = host;
+    hoisted.state.modalOptions['study-screen'] = options;
+    return {
+      element: {},
+      visible: false,
+      state: { kind: 'empty' },
+      show: (state: unknown) => hoisted.state.studyShown.push(state),
+      setState: (state: unknown) => hoisted.state.studyShown.push(state),
+      hide: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
+      showLeftNotice: () => undefined,
+      destroy: () => undefined,
+    };
+  },
+}));
+
+vi.mock('@ui/level-complete', () => ({
+  createLevelComplete: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.modalHosts['quest-complete-card'] = host;
+    hoisted.state.modalOptions['quest-complete-card'] = options;
+    hoisted.state.completeOptions = options;
+    return {
+      element: {},
+      visible: false,
+      show: (content: unknown) => hoisted.state.completeShown.push(content),
+      hide: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
+      destroy: () => undefined,
+    };
+  },
+}));
+
+/*
+ * The question bank, at the seam the composition root uses.
+ *
+ * `createStudySession` is the application-layer use case; mocking it keeps this
+ * suite about **wiring** — that the same session reaches Study on the front door
+ * and a landmark inside a level, that a drill is asked for when a landmark card
+ * closes, and that every answer goes through `answerQuestion` — without
+ * downloading 253 real questions to prove a call happened. The session's own
+ * behaviour has its own suite.
+ */
+vi.mock('@application/use-cases/study-session', () => ({
+  createStudySession: (): unknown => ({
+    drillSize: 5,
+    available: async (): Promise<unknown> => {
+      hoisted.state.availableCalls += 1;
+      return Promise.resolve({ ok: true, value: 12 });
+    },
+    drill: async (count: number): Promise<unknown> => {
+      hoisted.state.drillCalls.push(count);
+      return Promise.resolve({
+        ok: true,
+        value: {
+          questions: Array.from({ length: count }, (_unused, index) => ({
+            familiarity: 'new',
+            question: {
+              id: `q-${String(index)}`,
+              subject: 'rights',
+              prompt: { en: 'Prompt', fr: 'Question' },
+              options: [
+                { en: 'A', fr: 'A' },
+                { en: 'B', fr: 'B' },
+                { en: 'C', fr: 'C' },
+                { en: 'D', fr: 'D' },
+              ],
+              correctIndex: 0,
+              explanation: { en: 'Because.', fr: 'Parce que.' },
+            },
+          })),
+          shortfall: 0,
+        },
+      });
+    },
+  }),
+}));
+
+/*
+ * `answerQuestion`, recorded rather than run.
+ *
+ * What this suite asserts about it is that it is *called*, once per answer, with
+ * the question the card was showing — the composition decision. Whether the
+ * answer is right, what the review record becomes and when a stamp is earned are
+ * the use case's own suite's, under the coverage gate.
+ */
+vi.mock('@application/use-cases/answer-question', async () => {
+  /*
+   * The real `withStamp`, because the *consequence* of a stamp is what this
+   * suite is about: a stamp changes `stampedLevelIds`, which changes
+   * `unlockedLevelIds`, which changes the map — and a fake progress value would
+   * short-circuit exactly the chain being asserted. Only the judgement is faked.
+   */
+  const { withStamp } = await import('@domain/entities/progress');
+  return {
+    answerQuestion: (
+      _deps: unknown,
+      input: { question: { id: string }; chosenIndex: number; progress: never },
+    ): unknown => {
+      hoisted.state.recorded.push([input.question.id, input.chosenIndex]);
+      const earn = hoisted.state.stampFor;
+      return {
+        ok: true,
+        value: {
+          progress: earn === null ? input.progress : withStamp(input.progress, earn as never, 1 as never),
+          stampEarned: earn !== null,
+        },
+      };
+    },
+  };
+});
 
 vi.mock('@ui/level-screens', () => ({
   /*
@@ -515,6 +718,7 @@ beforeEach(() => {
   hoisted.state.hudDestroyed = 0;
   hoisted.state.mainRemoved = 0;
   hoisted.state.modalHosts = {};
+  hoisted.state.modalOptions = {};
   hoisted.state.shellOptions = null;
   hoisted.state.shellHost = null;
   hoisted.state.storageWarning = false;
@@ -530,6 +734,19 @@ beforeEach(() => {
   hoisted.state.loadingHidden = 0;
   hoisted.state.loadingStallAfterMs = undefined;
   hoisted.state.autoMove = [];
+  hoisted.state.questionsAsked = [];
+  hoisted.state.questionHost = null;
+  hoisted.state.questionOptions = null;
+  hoisted.state.completeShown = [];
+  hoisted.state.completeOptions = null;
+  hoisted.state.leftTo = [];
+  hoisted.state.emit = null;
+  hoisted.state.drillCalls = [];
+  hoisted.state.availableCalls = 0;
+  hoisted.state.recorded = [];
+  hoisted.state.prompts = [];
+  hoisted.state.studyShown = [];
+  hoisted.state.stampFor = null;
   doc = mountPage();
   vi.stubGlobal('document', asDocument(doc));
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -557,6 +774,8 @@ const entryFor = (id: string): MapEntryLike | undefined =>
 
 const shellOption = <T>(name: string): T => (hoisted.state.shellOptions?.[name] as T);
 const hudOption = <T>(name: string): T => (hoisted.state.hudOptions?.[name] as T);
+/** The options one mocked modal was built with, so its callbacks can be driven. */
+const modalOption = <T>(name: string): T => (hoisted.state.modalOptions[name] as T);
 
 describe('a cold load opens the front door', () => {
   it('mounts the shell into #ui and starts it on the title screen', async () => {
@@ -903,8 +1122,242 @@ describe('the page has one <main>, and every modal is inside it (TN-HUD-07)', ()
       'level-error',
       'level-loading',
       'poi-card',
+      /* The completion card and the question card are built with the level, not
+         on demand, because a landmark's question must not wait on a screen being
+         constructed after the player has already read the fact. */
+      'quest-complete-card',
+      'question-card',
       'settings',
     ]);
+  });
+});
+
+/* ------------------------------------------------------------ the learning loop */
+
+/** A level document, as the scene hands it back once it has loaded. */
+const LOADED_LEVEL = {
+  title: { en: 'Halifax', fr: 'Halifax' },
+  locomotion: [{ labelKey: 'locomotion.walk.label' }],
+  pois: [
+    {
+      id: 'town-clock',
+      name: { en: 'Halifax Town Clock', fr: "Tour de l'horloge d'Halifax" },
+      blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
+    },
+  ],
+};
+
+const emit = (name: string, detail?: string): void => {
+  const sink = hoisted.state.emit;
+  if (sink === null) throw new Error('the renderer was never handed an event sink');
+  sink(name, detail);
+};
+
+describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
+  const arrive = async (): Promise<void> => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+  };
+
+  it('offers what is in reach, named by the level rather than by a word this build wrote', async () => {
+    await arrive();
+    emit('poi/entered', 'town-clock');
+
+    /*
+     * The offer exists at all, which it did not before: `targets` was never
+     * passed to the announcer, so every `poi/entered` was an offer with no
+     * words and no player was ever told what was in reach.
+     *
+     * The label is the **level document's** name for the landmark. No
+     * `hud.interact.*` row exists, so the alternative was a verb this file would
+     * have had to write, which ADR-0010 forbids.
+     */
+    expect(hoisted.state.prompts).toEqual(['Halifax Town Clock']);
+  });
+
+  it('withdraws the offer when the landmark goes out of reach', async () => {
+    await arrive();
+    emit('poi/entered', 'town-clock');
+    emit('poi/left', 'town-clock');
+    expect(hoisted.state.prompts).toEqual(['Halifax Town Clock', null]);
+  });
+
+  it('offers nothing for a landmark the level does not declare', async () => {
+    await arrive();
+    emit('poi/entered', 'a-landmark-nobody-authored');
+    expect(hoisted.state.prompts).toEqual([]);
+  });
+
+  it('tapping the prompt engages the same landmark tapping the canvas does', async () => {
+    await arrive();
+    emit('poi/entered', 'town-clock');
+    hudOption<() => void>('onInteract')();
+
+    expect(hoisted.state.poiShown).toEqual([
+      { title: 'Halifax Town Clock', body: ['A true, short thing.'] },
+    ]);
+  });
+
+  it('shows the landmark card, then asks one question about it', async () => {
+    await arrive();
+    emit('poi/engaged', 'town-clock');
+
+    expect(hoisted.state.poiShown, 'the landmark taught nothing').toEqual([
+      { title: 'Halifax Town Clock', body: ['A true, short thing.'] },
+    ]);
+    expect(hoisted.state.questionsAsked, 'a question arrived before the card was read').toEqual([]);
+
+    /* Closing the card is what asks. The chain is one hold on the level, so the
+       game never moves between the two dialogs. */
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.drillCalls, 'a landmark asks exactly one question').toEqual([1]);
+    expect(hoisted.state.questionsAsked).toHaveLength(1);
+    expect(hoisted.state.questionsAsked[0]).toMatchObject({
+      index: 0,
+      total: 1,
+      kind: 'new',
+      prompt: 'Prompt',
+      options: ['A', 'B', 'C', 'D'],
+      correctIndex: 0,
+      explanation: 'Because.',
+    });
+  });
+
+  it('records the answer through answerQuestion, and only once', async () => {
+    await arrive();
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    const card = hoisted.state.questionOptions as { onAnswer: (index: number, right: boolean) => void };
+    card.onAnswer(0, true);
+
+    expect(hoisted.state.recorded).toEqual([['q-0', 0]]);
+  });
+
+  it('opens no question when the level never loaded, and does not fail loudly', async () => {
+    hoisted.state.level = null;
+    await boot(`?level=${START_LEVEL}`);
+    emit('poi/engaged', 'town-clock');
+    await flush();
+
+    expect(hoisted.state.poiShown).toEqual([]);
+    expect(hoisted.state.questionsAsked).toEqual([]);
+  });
+
+  it('opens nothing for a landmark the level does not declare', async () => {
+    await arrive();
+    emit('poi/engaged', 'a-landmark-nobody-authored');
+    await flush();
+
+    expect(hoisted.state.poiShown).toEqual([]);
+    expect(hoisted.state.questionsAsked).toEqual([]);
+  });
+});
+
+describe('finishing a level says so, and leads to the next one', () => {
+  /** Play the whole loop once, with the answer earning this level's stamp. */
+  const finishTheLevel = async (): Promise<void> => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    hoisted.state.stampFor = `${START_LEVEL}`;
+
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    const card = hoisted.state.questionOptions as {
+      onAnswer: (index: number, right: boolean) => void;
+      onNext: () => void;
+    };
+    card.onAnswer(0, true);
+    /* The completion card waits for the question to be *done*: it must not open
+       over the explanation the player is still reading. */
+    expect(hoisted.state.completeShown, 'the card opened over the explanation').toEqual([]);
+    card.onNext();
+    await flush();
+  };
+
+  it('shows the completion card once the question is done, not during it', async () => {
+    await finishTheLevel();
+    expect(hoisted.state.completeShown).toHaveLength(1);
+  });
+
+  it('names the stamp only when this build has a row for this level', async () => {
+    await finishTheLevel();
+    const shown = hoisted.state.completeShown[0] as { stampMessage?: string };
+    const key = `stamp.${String(START_LEVEL)}.earned`;
+    if (hasCopyRow(key)) expect(shown.stampMessage).toBe(text('en', key));
+    else
+      expect(
+        shown.stampMessage,
+        `this build has no ${key}, so the card must draw no stamp line rather than ` +
+          'name another place or print a placeholder',
+      ).toBeUndefined();
+  });
+
+  it('lands the player on the level that just opened, not the one they finished', async () => {
+    await finishTheLevel();
+
+    /* The card's primary action is the map. It leaves through the composition
+       root, which recomputes the unlock rule and names the new card. */
+    modalOption<{ onChooseLevel: () => void }>('quest-complete-card').onChooseLevel();
+    await flush();
+
+    expect(hoisted.state.calls).toContain('shell.leaveLevel');
+    expect(hoisted.state.leftTo.at(-1)).toEqual({ focusLevelId: EARNED_LEVEL });
+  });
+
+  it('lands them back where they were when nothing opened', async () => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    expect(
+      hoisted.state.leftTo.at(-1),
+      'a level that opened nothing must not send the player somewhere new',
+    ).toEqual({});
+  });
+
+  it('says the next level is open, even when the player leaves by the menu', async () => {
+    await finishTheLevel();
+    /* Not through the completion card: `Keep playing`, then the menu. The news
+       is a fact about the save, so the route out cannot change it. */
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    expect(hoisted.state.leftTo.at(-1)).toEqual({ focusLevelId: EARNED_LEVEL });
+  });
+});
+
+describe('Study is mounted, on the front door and inside a level', () => {
+  it('offers Study from the title screen, over the one session', async () => {
+    await boot('');
+    expect(
+      shellOption<unknown>('onOpenStudy'),
+      'the shell hides an absent option rather than drawing a dead control, so an ' +
+        'absent onOpenStudy is a game with no Study in it',
+    ).toBeTypeOf('function');
+  });
+
+  it('offers Study from the level menu', async () => {
+    await boot(`?level=${START_LEVEL}`);
+    expect(hudOption<unknown>('onOpenStudy')).toBeTypeOf('function');
+  });
+
+  it('asks the bank when Study opens, not at boot', async () => {
+    await boot('');
+    expect(hoisted.state.availableCalls, 'a cold load downloaded the question bank').toBe(0);
+
+    shellOption<() => void>('onOpenStudy')();
+    await flush();
+    expect(hoisted.state.availableCalls).toBe(1);
   });
 });
 

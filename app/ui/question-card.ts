@@ -118,6 +118,7 @@ export function createQuestionCard(
 
   const nextButton = button(doc, {
     testId: 'question-next',
+    attrs: { 'data-tn-action': 'primary' },
     onClick: () => options.onNext?.(),
   });
   nextButton.hidden = true;
@@ -125,6 +126,7 @@ export function createQuestionCard(
   const closeButton = button(doc, {
     testId: 'question-close',
     text: text(locale, 'card.close'),
+    attrs: { 'data-tn-action': 'quiet' },
     onClick: dismiss,
   });
 
@@ -269,6 +271,20 @@ export function createQuestionCard(
          back after answering. */
       control.setAttribute('aria-disabled', 'true');
       if (!isCorrect && !isChosen) continue;
+
+      /*
+       * The fill, and it is the *third* signal rather than the first.
+       *
+       * The two below it are the mark — a tick or a cross — and the words
+       * "Correct answer" / "Your answer", both of which are added in the same
+       * breath a few lines down. This attribute only tells the stylesheet which
+       * of the two flat fills to use; deleting the rule that reads it removes
+       * colour from the card and nothing else (`TN-CARD`, "right and wrong are a
+       * word and a shape, never a colour"). `app/ui/screen-styles.ts` also
+       * changes the border weight and style with it, so the distinction survives
+       * greyscale and forced colours.
+       */
+      control.setAttribute('data-tn-answer', isCorrect ? 'correct' : 'wrong');
 
       const label = isCorrect ? 'card.correctAnswer' : 'card.yourAnswer';
       replaceChildren(control, [

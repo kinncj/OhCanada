@@ -35,7 +35,7 @@ flowchart TB
     RIVE["app/adapters/rive<br/>ICharacterRenderer"]
     AUDIO["app/adapters/audio<br/>howler"]
     I18N["app/adapters/i18n<br/>i18next"]
-    PERSIST["app/adapters/persistence<br/>localStorage + save codec"]
+    PERSIST["app/adapters/persistence<br/>IndexedDB (localStorage fallback) + save codec"]
   end
 
   BUS(["common/event-bus<br/>typed publish / subscribe"])
@@ -296,8 +296,8 @@ is recorded there.
 | Port | Hides | Notes | State |
 |---|---|---|---|
 | `ContentRepository` | fetch, ajv, caching | Async, `Result`-returning; `unload` serves the texture budget (ADR-0013) | Consumed |
-| `ProgressRepository` | `localStorage`, quota, private mode | `ok(null)` means "no save", not "storage failed" | Consumed |
-| `SaveCodec` | the export/import format | `decode` validates and migrates; never trusts its input. Migration is a mechanism with no steps — ADR-0015 | Consumed |
+| `ProgressRepository` | IndexedDB, `localStorage`, quota, private mode | `ok(null)` means "no save", not "storage failed" — and never means "the store would not answer" (ADR-0024, ADR-0026) | Consumed |
+| `SaveCodec` | the export/import format | `decode` validates and migrates; never trusts its input. Save format version 2; the first real migration (1 -> 2) landed with ADR-0026 and retired ADR-0015's tripwire | Consumed |
 | `Clock` | `Date.now`, `performance.now` | `now()` for scheduling, `elapsed()` monotonic for timers. **No `nowIso()`** — ADR-0015 removed it; `toIsoInstant(clock.now())` is the one conversion | Consumed |
 | `RandomSource` | `Math.random` | Seeded variant makes an exam draw replayable | Consumed |
 | `Locomotion` | how a mode moves | Pure `step`; implementations live in the domain | Consumed |

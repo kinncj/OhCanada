@@ -5,7 +5,7 @@ State lives here, not in conversation history. Update the status column when a s
 | # | Slice | Goal | Status |
 |---|---|---|---|
 | 0 | Foundation | Harness, repo skeleton, Makefile, CI + Pages deploying an empty portrait canvas, ADR-0001..0008 | Done |
-| 1 | Vertical proof (see `slice-1.md`) | Level 4 — How Canadians Govern Themselves (Ottawa, skate). Boot → creator → level → officer → quest → 3 scheduled questions → Study mode → save/reload, live on Pages, art and content verified | In progress |
+| 1 | Vertical proof (see `slice-1.md`) | Level 4 — How Canadians Govern Themselves (Ottawa, skate). Boot → creator → level → officer → quest → 3 scheduled questions → Study mode → save/reload, live on Pages, art and content verified | In progress. Study, the question card and the in-level learning loop are wired and reachable on `dist/` (task 1.23); the officer, the quest and the character creator are not. |
 | 2 | Scale proof | Level 3 — Canada's History (Québec City, toboggan), added by JSON + assets only, no engine changes | Not started |
 | 3 | Level 1 — Rights and Responsibilities (Halifax, Pier 21, walk) | Level + quest + verified questions | Not started |
 | 4 | Level 2 — Who We Are (Mi'kma'ki coast, canoe) | Level + quest + verified questions | Not started |

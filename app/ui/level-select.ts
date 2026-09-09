@@ -139,6 +139,17 @@ export interface LevelSelect {
   readonly focus: () => void;
   /** Focus one card — the level the player just left (`TN-FLOW-03`). */
   readonly focusLevel: (id: LevelId) => boolean;
+  /**
+   * One card, read out: its place, its state and the sentence under it.
+   *
+   * `TN-MAP-03`: "Earning the stamp opens it, with no reload … and it is
+   * announced as open when I reach it." A player arriving on the map straight
+   * from finishing a level is *put* on the card that just opened, so the
+   * announcement has to name that card rather than the screen. Composed from the
+   * rows the card already draws — no sentence is written for it — and `null`
+   * when this build has no such card.
+   */
+  readonly describe: (id: LevelId) => string | null;
   readonly destroy: () => void;
 }
 
@@ -213,6 +224,7 @@ export function createLevelSelect(
             button(doc, {
               testId: 'level-select-back',
               text: text(locale, 'common.back'),
+              attrs: { 'data-tn-action': 'quiet' },
               onClick: options.onBack,
             }),
           ],
@@ -253,6 +265,28 @@ export function createLevelSelect(
       );
     }
 
+    /*
+     * The stamp, said as a word.
+     *
+     * `MapEntry.stamped` has been on this type since the map was written and
+     * has only ever been counted, never drawn — so a player who finished a level
+     * came back to a card that looked exactly like one they had never opened.
+     * `passport.state.earned` is the word the passport uses for the same fact,
+     * reused rather than reworded (`TN-PASSPORT`), and it sits *beside* the
+     * state word rather than replacing it: "Open" says whether the level can be
+     * played and "Earned" says whether its stamp has been won, and a card is
+     * routinely both.
+     */
+    if (entry.stamped === true) {
+      parts.push(
+        element(doc, 'span', {
+          className: 'tn-levels__badge',
+          testId: `${testId}-stamp`,
+          text: text(locale, 'passport.state.earned'),
+        }),
+      );
+    }
+
     /* One state word per card, always, as text. `TN-MAP-01`: no card's state is
        carried by colour, by an icon or by opacity alone. */
     parts.push(
@@ -261,7 +295,11 @@ export function createLevelSelect(
 
     const control = button(doc, {
       testId,
-      attrs: { 'data-state': state, 'data-level-handle': handle },
+      attrs: {
+        'data-state': state,
+        'data-level-handle': handle,
+        'data-stamped': entry.stamped === true ? 'true' : 'false',
+      },
       children: parts,
     });
 
@@ -361,6 +399,17 @@ export function createLevelSelect(
       if (target === null) return false;
       target.focus();
       return true;
+    },
+    describe(id): string | null {
+      const index = entries.findIndex((candidate) => candidate.id === id);
+      const entry = entries[index];
+      if (entry === undefined) return null;
+      const state = levelCardState(entry);
+      const titleKey = titleKeyOf(entry);
+      /* A card with no place name — level 2 — is described by its number, which
+         is the handle its rows are keyed on and the only name it has. */
+      const name = titleKey === null ? text(locale, 'map.number', { n: entry.number }) : text(locale, titleKey);
+      return `${name}. ${stateWord(state)}. ${helpFor(entry, state, index)}`;
     },
     destroy(): void {
       root.remove();

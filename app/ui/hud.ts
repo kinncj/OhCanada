@@ -148,11 +148,41 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   const warningSlot = element(doc, 'div', { className: 'tn-hud__slot' });
   const promptSlot = element(doc, 'div', { className: 'tn-hud__slot' });
 
+  /*
+   * Settings, on the strip, beside Menu.
+   *
+   * It was reachable before this — Menu, then "Settings" — and it was reported
+   * as unreachable, which is the same defect this project keeps finding: a
+   * capability that exists and is not *offered*. `TN-SET-01` asks for settings
+   * "from the game", `TN-HUD-02` keeps the menu's item, and a player who does
+   * not know a menu contains it has to open the menu to find out. Two controls
+   * on the strip is the cheapest way to make the answer visible, and it costs
+   * the menu nothing: the item stays, both routes open the same screen, and
+   * closing it returns focus to whichever control opened it.
+   *
+   * Drawn only when the caller wired one, like every other item here: a Settings
+   * button that opens nothing is worse than no button.
+   */
+  const settingsButton = button(doc, {
+    testId: 'hud-settings-button',
+    className: 'tn-hud__settings-button',
+    text: text(locale, 'common.settings'),
+    ...(options.onOpenSettings === undefined ? {} : { onClick: options.onOpenSettings }),
+  });
+  settingsButton.hidden = options.onOpenSettings === undefined;
+
   const menuButton = button(doc, {
     testId: 'menu-button',
     className: 'tn-hud__menu-button',
     text: text(locale, 'hud.menu'),
     onClick: () => openMenu(),
+  });
+
+  /* One row, wrapping to two when the text is large enough that two words do
+     not share a 390 px line. */
+  const controls = element(doc, 'div', {
+    className: 'tn-hud__controls',
+    children: [settingsButton, menuButton],
   });
 
   /*
@@ -164,7 +194,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     testId: 'hud',
     className: 'tn-hud',
     attrs: { 'aria-label': text(locale, 'hud.label') },
-    children: [status, warningSlot, promptSlot, menuButton],
+    children: [status, warningSlot, promptSlot, controls],
   });
   main.append(region);
 
@@ -316,6 +346,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
          level reloading. */
       region.setAttribute('aria-label', text(next, 'hud.label'));
       menuButton.textContent = text(next, 'hud.menu');
+      settingsButton.textContent = text(next, 'common.settings');
       renderTask();
       warning.setLocale(next);
       menu.setLocale(next);

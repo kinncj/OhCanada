@@ -1,5 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 
+import { PALETTE } from '@ui/palette';
 import { createScreen } from '@ui/screen';
 import { injectScreenStyles } from '@ui/screen-styles';
 
@@ -223,11 +226,25 @@ describe('the screen stylesheet', () => {
 
   it('keeps every promise the screens depend on', () => {
     const page = buildPage();
-    const css = injectScreenStyles(page.document).textContent;
+    const css = injectScreenStyles(page.document).textContent ?? '';
 
-    /* A touch target in `rem`, so text scaling grows it (CLAUDE.md: >= 44 pt,
-       text scaling 100-200%). 2.75rem is 44 px at 100% and 88 px at 200%. */
-    expect(css).toContain('min-block-size: 2.75rem');
+    /*
+     * Every touch target, in `rem`, and never below 44 CSS px.
+     *
+     * The number is read rather than typed: the sheet says 3rem today and the
+     * floor is 2.75rem (44 px at 100 %, 88 px at 200 %), so an assertion on the
+     * literal would fail on a redesign that made the buttons *bigger*. What must
+     * never happen is a value below the floor, or one in `px` — a pixel literal
+     * shrinks relative to the text it holds exactly when the player asked for
+     * bigger text (CLAUDE.md: >= 44 pt, text scaling 100-200 %).
+     */
+    const sizes = [...css.matchAll(/min-(?:block|inline)-size:\s*([\d.]+)(\w+)/g)];
+    expect(sizes.length, 'the sheet declares no minimum control size at all').toBeGreaterThan(0);
+    for (const [, value, unit] of sizes) {
+      expect(unit, `min-size in "${unit ?? '?'}" does not scale with the text`).toBe('rem');
+      expect(Number(value)).toBeGreaterThanOrEqual(2.75);
+    }
+
     /* Reduced motion from the setting, and from the media query on its own. */
     expect(css).toContain('[data-tn-motion="reduced"]');
     expect(css).toContain('@media (prefers-reduced-motion: reduce)');
@@ -235,5 +252,77 @@ describe('the screen stylesheet', () => {
     expect(css).toContain('outline-offset');
     /* Long words wrap rather than pushing the page sideways at 200%. */
     expect(css).toContain('overflow-wrap: anywhere');
+    /* High contrast and the dyslexia font are still switchable. */
+    expect(css).toContain('[data-tn-contrast="high"]');
+    expect(css).toContain('[data-tn-font="dyslexia"]');
+  });
+
+  /**
+   * Flat fills only, and it is an accessibility rule before it is a style one.
+   *
+   * axe cannot compute the contrast of text over a gradient or a translucent
+   * wash: it reports *incomplete*, an unknown, and `tests/a11y` treats an
+   * unknown as a failure. It is also the art bible's rule for every material in
+   * the game, so the screens and the canvas break it or keep it together.
+   */
+  it('paints with flat, opaque colour, so contrast is computable', () => {
+    const page = buildPage();
+    const css = injectScreenStyles(page.document).textContent ?? '';
+
+    for (const banned of ['gradient(', 'rgba(', 'hsla(', 'opacity: 0.', 'backdrop-filter']) {
+      expect(css, `"${banned}" makes a colour axe cannot judge`).not.toContain(banned);
+    }
+  });
+
+  /**
+   * No backtick anywhere in the sheet's source, comments included.
+   *
+   * The whole stylesheet is one template literal, so a backtick in a comment
+   * closes it. TypeScript keeps compiling — the backticks pair up and the file
+   * still parses — and the failure surfaces later and somewhere else: the Vite
+   * dev server returns 500 for the module, which took out the entire a11y
+   * harness and reported as fifteen `waitForSelector` timeouts naming screens
+   * that had nothing wrong with them.
+   *
+   * The source is read off disk because the evidence is gone by the time the
+   * module has been evaluated.
+   */
+  it('has no backtick inside the stylesheet literal, which would close it', () => {
+    const source = readFileSync(
+      fileURLToPath(new URL('../../../app/ui/screen-styles.ts', import.meta.url)),
+      'utf8',
+    );
+    const opens = source.indexOf('const CSS = `');
+    expect(opens, 'the stylesheet is not a template literal any more').toBeGreaterThan(-1);
+    const body = source.slice(opens + 'const CSS = `'.length, source.indexOf('\n`;\n', opens));
+
+    const offending = body
+      .split('\n')
+      .map((line, index) => [index + 1, line] as const)
+      .filter(([, line]) => line.includes('`'))
+      .map(([number, line]) => `${String(number)}: ${line.trim()}`);
+    expect(offending, offending.join(' | ')).toEqual([]);
+  });
+
+  /**
+   * The sheet's colours are the art palette's, resolved through `./palette.ts`.
+   *
+   * `tests/unit/ui/palette.test.ts` holds that module against
+   * `assets/style/palette.json`; this holds the stylesheet against that module,
+   * so a hex typed straight into the CSS cannot slip past both.
+   */
+  it('names no colour the art palette does not define', () => {
+    const page = buildPage();
+    const css = injectScreenStyles(page.document).textContent ?? '';
+    const known = new Set<string>(Object.values(PALETTE));
+    /* The high-contrast theme is black and white by definition: those two are
+       not palette entries and must not be, because they are the absence of hue
+       rather than a colour chosen from a ramp. */
+    known.add('#000000');
+    known.add('#ffffff');
+
+    for (const [hex] of css.matchAll(/#[0-9a-f]{6}/g)) {
+      expect(known.has(hex), `${hex} is not a colour in assets/style/palette.json`).toBe(true);
+    }
   });
 });

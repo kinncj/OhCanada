@@ -133,6 +133,19 @@ const EN = {
 
   /* docs/stories/TN-QUEST-parliament-hill.md */
   'passport.open': 'See my passport',
+  /* The card the player reads when a level's task is finished. Transcribed from
+     `TN-QUEST`'s copy table, which owns all three.
+
+     `stamp.<id>.earned` is keyed on the level for the reason
+     `level.<id>.error.title` is: "You earned the {{level}} stamp." is right in
+     English and wrong in French, where « le tampon d'Ottawa » elides and « le
+     tampon de Halifax » does not. **Only Ottawa's row is written**, because
+     `TN-QUEST` is the only story that writes one; a level whose row is missing
+     shows the card without that line rather than naming the wrong place. The
+     other rows are reported as a gap, not invented here. */
+  'quest.done.title': 'Task done!',
+  'stamp.ottawa.earned': 'You earned the Ottawa stamp.',
+  'common.keepPlaying': 'Keep playing',
 
   /* docs/stories/TN-HUD-hud-and-menu.md */
   /* The accessible name of the `hud` region (`TN-HUD-07`). It names what the
@@ -238,6 +251,13 @@ const EN = {
   'map.moreComing': 'More are coming.',
   'map.state.open': 'Open',
   'map.state.locked': 'Locked',
+  /* docs/stories/TN-PASSPORT-my-passport.md owns this word. The map draws it on
+     a card whose stamp is in the passport, beside — never instead of — the
+     card's state word: "Open" says whether the level can be played and "Earned"
+     says whether its stamp has been won, and a card can be both. One row for
+     both screens, because a stamp the passport calls "Earned" and the map calls
+     something else is two words for one fact. */
+  'passport.state.earned': 'Earned',
   /* "Not made yet", never "Coming soon": "soon" is a promise with a date in it
      and this project has no date (`TN-MAP`, and `TN-MAP-04`'s "it is not drawn
      as an error"). Neither this row nor its help may acquire a date, a version
@@ -404,6 +424,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'study.leaveKept': 'Vos réponses sont enregistrées.',
 
   'passport.open': 'Voir mon passeport',
+  'quest.done.title': 'Mission accomplie!',
+  'stamp.ottawa.earned': "Vous avez obtenu le tampon d'Ottawa.",
+  'common.keepPlaying': 'Continuer à jouer',
 
   'hud.label': 'Commandes du jeu',
   'hud.menu': 'Menu',
@@ -457,6 +480,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'map.moreComing': "D'autres arrivent.",
   'map.state.open': 'Ouvert',
   'map.state.locked': 'Verrouillé',
+  'passport.state.earned': 'Obtenu',
   'map.state.notBuilt': 'Pas encore créé',
   'map.open.help': 'Vous pouvez y jouer maintenant.',
   'map.locked.after': "Terminez d'abord {{level}}.",

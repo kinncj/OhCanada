@@ -138,8 +138,25 @@ export interface LevelAnnouncerOptions {
    * which level is loading can only keep by being told.
    */
   readonly failure: string | (() => string);
-  /** Keyed by the `detail` the engine sends: `npc.officer`, `poi.parliament-hill`. */
-  readonly targets?: Readonly<Record<string, LevelTarget>>;
+  /**
+   * What can be engaged, keyed by the `detail` the engine sends — `officer`,
+   * `parliament-hill`.
+   *
+   * A **thunk is allowed, and is what a composition root wants**, for exactly
+   * the reason {@link LevelAnnouncerOptions.arrival} is one: this subscription
+   * has to exist before the level is asked for, or `poi/entered` is missed, and
+   * what a level's landmarks are called is in the level document, which does not
+   * exist until the load finishes. Read as a map, the option was necessarily
+   * empty, every `poi/entered` was an offer with no words, and no player was
+   * ever told what was in reach. Read at the event, it is the level that has
+   * actually arrived.
+   *
+   * A detail that is not a key offers nothing rather than offering "Interact":
+   * this module never invents a label.
+   */
+  readonly targets?:
+    | Readonly<Record<string, LevelTarget>>
+    | (() => Readonly<Record<string, LevelTarget>>);
   /**
    * Show or withdraw the interact prompt. `null` means "nothing is in reach".
    * The HUD owns the element; this module owns *when*.
@@ -182,7 +199,10 @@ export function createLevelAnnouncer(
 
   const targetFor = (detail: string | undefined): LevelTarget | null => {
     if (detail === undefined) return null;
-    return options.targets?.[detail] ?? null;
+    const targets = options.targets;
+    if (targets === undefined) return null;
+    const map = typeof targets === 'function' ? targets() : targets;
+    return map[detail] ?? null;
   };
 
   const say = (message: string): void => {

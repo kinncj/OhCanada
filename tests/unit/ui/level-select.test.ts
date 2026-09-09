@@ -364,4 +364,92 @@ describe('leaving, focusing and speaking French', () => {
     screen.destroy();
     expect(at('level-select')).toBeNull();
   });
+
+  /**
+   * The stamp, on the card.
+   *
+   * `MapEntry.stamped` has been on this type since the map was written and was
+   * only ever *counted*: a player who finished a level came back to a card that
+   * looked exactly like one they had never opened. It is drawn now, as the same
+   * word the passport uses, beside the state word rather than instead of it —
+   * "Open" says whether the level can be played and "Earned" says whether its
+   * stamp has been won, and a card is routinely both.
+   */
+  describe('a level whose stamp is in the passport', () => {
+    it('says so, in words, beside its state', () => {
+      const { at } = open({
+        entries: [{ number: 1, id: id('halifax'), built: true, unlocked: true, stamped: true }],
+      });
+
+      expect(at('level-card-halifax-stamp')?.textContent).toBe('Earned');
+      expect(at('level-card-halifax')?.textContent).toContain('Open');
+      expect(at('level-card-halifax')?.getAttribute('data-stamped')).toBe('true');
+    });
+
+    it('draws no badge for a level that has not been finished', () => {
+      const { at } = open({
+        entries: [{ number: 1, id: id('halifax'), built: true, unlocked: true }],
+      });
+
+      expect(at('level-card-halifax-stamp')).toBeNull();
+      expect(at('level-card-halifax')?.getAttribute('data-stamped')).toBe('false');
+    });
+
+    it('is French', () => {
+      const { at } = open({
+        locale: 'fr',
+        entries: [{ number: 1, id: id('halifax'), built: true, unlocked: true, stamped: true }],
+      });
+      expect(at('level-card-halifax-stamp')?.textContent).toBe('Obtenu');
+    });
+  });
+
+  /**
+   * `TN-MAP-03`: "it is announced as open when I reach it."
+   *
+   * A player arriving on the map straight from finishing a level is put on the
+   * card that just opened, so the announcement has to be about *that card* and
+   * not about the screen. Composed from rows the card already draws.
+   */
+  describe('describing one card, for the player who was just sent to it', () => {
+    it('names the place, its state and the sentence under it', () => {
+      const { screen: select } = open({
+        entries: [{ number: 1, id: id('halifax'), built: true, unlocked: true }],
+      });
+
+      expect(select.describe(id('halifax'))).toBe(
+        'Halifax. Open. You can play this now.',
+      );
+    });
+
+    it('says why a locked card is locked, rather than only that it is', () => {
+      const { screen: select } = open({
+        entries: [
+          { number: 1, id: id('halifax'), built: true, unlocked: true },
+          { number: 3, id: id('quebec-city'), built: true, unlocked: false, stampsNeeded: 1 },
+        ],
+      });
+
+      expect(select.describe(id('quebec-city'))).toBe(
+        'Québec City. Locked. Earn 1 more stamp to open this.',
+      );
+    });
+
+    it('answers null for a card this build does not have', () => {
+      const { screen: select } = open({
+        entries: [{ number: 1, id: id('halifax'), built: true, unlocked: true }],
+      });
+      expect(select.describe(id('nowhere'))).toBeNull();
+    });
+
+    it('is French', () => {
+      const { screen: select } = open({
+        locale: 'fr',
+        entries: [{ number: 1, id: id('halifax'), built: true, unlocked: true }],
+      });
+      expect(select.describe(id('halifax'))).toBe(
+        'Halifax. Ouvert. Vous pouvez y jouer maintenant.',
+      );
+    });
+  });
 });

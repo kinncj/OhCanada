@@ -362,6 +362,43 @@ describe('a level transition', () => {
     expect(page.doc.activeElement).toBe(at('level-card-ottawa'));
   });
 
+  /**
+   * `TN-FLOW-03` puts the player back on the card they just left, and that is
+   * right for every ordinary exit. It is wrong exactly once: when finishing the
+   * level opened another one, the news is the new card. `TN-MAP-03`: "it is
+   * announced as open when I reach it."
+   */
+  it('lands on the card that just opened, when the caller names one', () => {
+    const { shell, at, page } = mount();
+    shell.start();
+    shell.enterLevel(id('ottawa'));
+    shell.setEntries(entries(['ottawa', 'halifax'], ['ottawa', 'halifax']));
+    shell.leaveLevel({ focusLevelId: id('halifax') });
+
+    expect(page.doc.activeElement).toBe(at('level-card-halifax'));
+  });
+
+  it('announces that card — the place, its state and what to do — not the screen', () => {
+    const { shell, announce } = mount();
+    shell.start();
+    shell.enterLevel(id('ottawa'));
+    shell.setEntries(entries(['ottawa', 'halifax'], ['ottawa', 'halifax']));
+    announce.mockClear();
+    shell.leaveLevel({ focusLevelId: id('halifax') });
+
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce.mock.calls[0]?.[0]).toBe('Halifax. Open. You can play this now.');
+  });
+
+  it('falls back to the ordinary landing when that card is not in this build', () => {
+    const { shell, at, page } = mount();
+    shell.start();
+    shell.enterLevel(id('ottawa'));
+    shell.leaveLevel({ focusLevelId: id('nowhere') });
+
+    expect(page.doc.activeElement).toBe(at('level-card-ottawa'));
+  });
+
   it('closes an open settings screen on the way into a level', () => {
     const { shell, at } = mount();
     shell.start();

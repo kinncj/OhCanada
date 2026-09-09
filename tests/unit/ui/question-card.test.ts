@@ -449,4 +449,50 @@ describe('the card leaving the page', () => {
     expect(card.visible).toBe(false);
     expect(onDismiss).not.toHaveBeenCalled();
   });
+
+  /**
+   * `TN-CARD`: "right and wrong are a word and a shape, never a colour."
+   *
+   * The fill is the third signal, and this suite proves it is only ever the
+   * third: the mark and the words are on the same control, and the attribute the
+   * stylesheet keys on carries no meaning of its own.
+   */
+  describe('an answered option', () => {
+    it('marks the right answer and the one taken, and marks nothing else', () => {
+      const { card, at } = open();
+      at('option-2')?.click();
+
+      expect(at('option-0')?.getAttribute('data-tn-answer')).toBe('correct');
+      expect(at('option-2')?.getAttribute('data-tn-answer')).toBe('wrong');
+      expect(at('option-1')?.getAttribute('data-tn-answer')).toBeNull();
+      expect(at('option-3')?.getAttribute('data-tn-answer')).toBeNull();
+      expect(card.answered).toBe(true);
+    });
+
+    it('carries the same meaning in words beside every fill', () => {
+      const { at } = open();
+      at('option-2')?.click();
+
+      /* Deleting every colour rule leaves both of these on screen. */
+      expect(at('option-0')?.textContent).toContain('Correct answer');
+      expect(at('option-2')?.textContent).toContain('Your answer');
+    });
+
+    it('says nothing about right or wrong before the player has answered', () => {
+      const { at } = open();
+      for (const option of ['option-0', 'option-1', 'option-2', 'option-3']) {
+        expect(at(option)?.getAttribute('data-tn-answer')).toBeNull();
+      }
+    });
+
+    it('clears the marks when the next question arrives', () => {
+      const { card, at } = open();
+      at('option-2')?.click();
+      card.present({ ...QUESTION, index: 1 });
+
+      for (const option of ['option-0', 'option-1', 'option-2', 'option-3']) {
+        expect(at(option)?.getAttribute('data-tn-answer')).toBeNull();
+      }
+    });
+  });
 });

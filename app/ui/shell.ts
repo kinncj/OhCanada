@@ -121,6 +121,24 @@ export interface ShellOptions {
   readonly random?: () => number;
 }
 
+/** What the map should do with the player who has just come out of a level. */
+export interface LeaveLevelOptions {
+  /**
+   * Land on this card instead of the one the level was.
+   *
+   * `TN-FLOW-03` puts the player back on the card they just left, and that is
+   * right for every ordinary exit. It is wrong exactly once: when finishing the
+   * level **opened another one**, the news is the new card, and focusing the old
+   * one leaves the player looking at a level they have already done while the
+   * thing that changed is somewhere below the fold. The caller decides — the
+   * shell is handed a `MapEntry` list and never derives an unlock (`TN-MAP`).
+   *
+   * A card this build does not have falls back to the ordinary behaviour rather
+   * than to the top of the list.
+   */
+  readonly focusLevelId?: LevelId;
+}
+
 export interface Shell {
   /** The page's one `<main>` while the shell is showing. */
   readonly element: HTMLElement;
@@ -135,7 +153,7 @@ export interface Shell {
   /** A level has the page now. Call **before** the HUD is created. */
   readonly enterLevel: (id: LevelId) => void;
   /** The level is gone. Call **after** the HUD is destroyed. */
-  readonly leaveLevel: () => void;
+  readonly leaveLevel: (options?: LeaveLevelOptions) => void;
   /** Progress changed: redraw which levels are open. */
   readonly setEntries: (entries: readonly MapEntry[]) => void;
   /** A save was read, or a level became ready: offer or withdraw Continue. */
@@ -467,12 +485,30 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       main.remove();
     },
 
-    leaveLevel(): void {
+    leaveLevel(leaving): void {
       if (!main.isConnected) host.append(main);
       build('level-select');
       applyWarning();
-      /* Back on the card they just left, not at the top of the list
-         (`TN-FLOW-03`). */
+
+      /*
+       * The card that just opened, when there is one, and the card they just
+       * left otherwise (`TN-FLOW-03`).
+       *
+       * The announcement differs with it, and that is the point rather than a
+       * detail. Landing on the level just played says the screen's name and how
+       * much of the game is ready — the arrival message, which is what a player
+       * returning to the map needs. Landing on a level that has just *opened*
+       * has to say **that card**: its place, that it is open, and that it can be
+       * played now. `TN-MAP-03`: "it is announced as open when I reach it."
+       */
+      const opened = leaving?.focusLevelId;
+      if (opened !== undefined && levelSelect?.focusLevel(opened) === true) {
+        const described = levelSelect.describe(opened);
+        options.announce?.(described ?? levelSelect.arrivalMessage);
+        syncRing();
+        return;
+      }
+
       const landed = lastLevelId !== null && levelSelect?.focusLevel(lastLevelId) === true;
       if (landed) options.announce?.(levelSelect?.arrivalMessage ?? '');
       else land();

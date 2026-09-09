@@ -375,4 +375,40 @@ describe('the HUD in French', () => {
     expect(at('menu-settings')?.textContent).toBe('Réglages');
     expect(at('menu-passport')?.textContent).toBe('Voir mon passeport');
   });
+
+  /**
+   * `TN-SET-01` wants Settings "from the game", and it was reachable only
+   * behind the menu — which was reported as unreachable, because a player who
+   * does not know a menu contains it has to open the menu to find out. Both
+   * routes exist now and both open the same screen.
+   */
+  describe('settings, on the strip', () => {
+    it('draws a Settings control beside Menu, with a visible label', () => {
+      const { at } = mount({ onOpenSettings: () => undefined });
+      const control = at('hud-settings-button');
+      expect(control?.hidden).toBe(false);
+      expect(control?.textContent).toBe('Settings');
+    });
+
+    it('opens settings without going through the menu', () => {
+      const onOpenSettings = vi.fn();
+      const { at } = mount({ onOpenSettings });
+      at('hud-settings-button')?.click();
+      expect(onOpenSettings).toHaveBeenCalledTimes(1);
+    });
+
+    it('draws no control when nothing is wired, rather than a dead one', () => {
+      /* Built directly rather than through `mount`, which wires every handler:
+         the state under test is the one where the caller wired none. */
+      const page = buildPage();
+      createHud(page.host, { locale: 'en' });
+      expect(page.doc.byTestId('hud-settings-button')?.hidden).toBe(true);
+    });
+
+    it('becomes French with the rest of the strip, without a reload', () => {
+      const { hud, at } = mount({ onOpenSettings: () => undefined });
+      hud.setLocale('fr');
+      expect(at('hud-settings-button')?.textContent).toBe('Réglages');
+    });
+  });
 });

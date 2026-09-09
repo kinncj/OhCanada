@@ -51,7 +51,7 @@ const scan = (page: Page, tags: readonly string[] = RULESET) =>
 const violationsOf = (results: { violations: unknown[] }) =>
   JSON.stringify(results.violations, null, 2);
 
-type ScreenName = 'settings' | 'creator' | 'dialogue' | 'card' | 'study';
+type ScreenName = 'settings' | 'creator' | 'dialogue' | 'card' | 'study' | 'complete';
 
 interface HarnessOptions {
   readonly locale?: 'en' | 'fr';
@@ -63,6 +63,10 @@ interface HarnessOptions {
   readonly state?: 'ready' | 'empty' | 'error' | 'summary';
   readonly long?: boolean;
   readonly sound?: boolean;
+  /** Take an option on the question card, so the judged fills are on screen. */
+  readonly answered?: number;
+  /** `false` draws the completion card with no stamp row, which is most levels. */
+  readonly stamp?: boolean;
 }
 
 /** Open one screen and wait for the marker that says it is really there. */
@@ -81,6 +85,8 @@ async function openScreen(
   if (options.state !== undefined) params.set('state', options.state);
   if (options.long === true) params.set('long', '1');
   if (options.sound === true) params.set('sound', '1');
+  if (options.answered !== undefined) params.set('answered', String(options.answered));
+  if (options.stamp === false) params.set('stamp', '0');
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -100,6 +106,7 @@ const TEST_IDS: Readonly<Record<ScreenName, string>> = {
   dialogue: 'dialogue',
   card: 'question-card',
   study: 'study-screen',
+  complete: 'quest-complete-card',
 };
 
 /** What the browser reports as focused, in a form a failure message can name. */
@@ -144,7 +151,16 @@ async function undersizedTargets(page: Page): Promise<string[]> {
 const scrollsSideways = (page: Page): Promise<boolean> =>
   page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
 
-const SCREENS: readonly ScreenName[] = ['settings', 'creator', 'dialogue', 'card', 'study'];
+const SCREENS: readonly ScreenName[] = [
+  'settings',
+  'creator',
+  'dialogue',
+  'card',
+  'study',
+  /* The card a level's task ends on. It is the newest screen in the game and it
+     goes through exactly the same battery as the other five. */
+  'complete',
+];
 
 test.describe('slice 1 DOM screens', () => {
   for (const screen of SCREENS) {
@@ -614,6 +630,86 @@ test.describe('the question card', () => {
     /* Canadian typography: no space before "!" or "?". */
     const text = (await root.textContent()) ?? '';
     expect(/\s[?!]/.test(text)).toBe(false);
+  });
+});
+
+test.describe('the question card, answered', () => {
+  /**
+   * The state where the card draws colour at all.
+   *
+   * `TN-CARD`: "right and wrong are a word and a shape, never a colour." The
+   * fills are the third signal, and both of them have to clear AA over the ink
+   * on top of them — which is a claim about real rendering and belongs here
+   * rather than in an arithmetic test.
+   */
+  for (const answered of [0, 1] as const) {
+    test(`has no violations after taking option ${String(answered)}`, async ({ page }) => {
+      for (const locale of ['en', 'fr'] as const) {
+        await openScreen(page, 'card', { locale, answered });
+        const results = await scan(page).analyze();
+        expect(results.violations, violationsOf(results)).toEqual([]);
+      }
+    });
+  }
+
+  test('says right and wrong in words, so removing every fill loses nothing', async ({ page }) => {
+    const root = await openScreen(page, 'card', { answered: 1 });
+    await expect(root.locator('[data-testid="option-0"]')).toContainText('Correct answer');
+    await expect(root.locator('[data-testid="option-1"]')).toContainText('Your answer');
+    await expect(root.locator('[data-testid="question-feedback"]')).toContainText('Not quite.');
+    await expect(root.locator('[data-testid="question-explanation"]')).toBeVisible();
+  });
+
+  test('keeps every judged option a 44 px target, at 200 % text', async ({ page }) => {
+    await openScreen(page, 'card', { answered: 1, textScale: 200 });
+    expect(await undersizedTargets(page)).toEqual([]);
+    expect(await scrollsSideways(page)).toBe(false);
+  });
+
+  test('the fills are still proven in high contrast', async ({ page }) => {
+    await openScreen(page, 'card', { answered: 1, contrast: 'high' });
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+});
+
+test.describe('the level completion card', () => {
+  test('says the task is done and offers the way on', async ({ page }) => {
+    const root = await openScreen(page, 'complete');
+    await expect(root).toHaveAccessibleName('Task done!');
+    await expect(root.locator('[data-testid="quest-complete-stamp"]')).toContainText(
+      'You earned the Ottawa stamp.',
+    );
+    await expect(root.locator('[data-testid="quest-complete-map"]')).toHaveText('Choose a level');
+    await expect(root.locator('[data-testid="quest-complete-keep-playing"]')).toHaveText(
+      'Keep playing',
+    );
+  });
+
+  test('reads without a stamp line, which is most levels today', async ({ page }) => {
+    const root = await openScreen(page, 'complete', { stamp: false });
+    await expect(root).toHaveAccessibleName('Task done!');
+    await expect(root.locator('[data-testid="quest-complete-stamp"]')).toHaveCount(0);
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('is French, and calls the stamp a tampon', async ({ page }) => {
+    const root = await openScreen(page, 'complete', { locale: 'fr' });
+    await expect(root).toContainText('Mission accomplie!');
+    await expect(root).toContainText("Vous avez obtenu le tampon d'Ottawa.");
+    await expect(root).not.toContainText('timbre');
+    await expect(root.locator('[data-testid="quest-complete-map"]')).toHaveText(
+      'Choisir un niveau',
+    );
+  });
+
+  test('nothing on it counts down', async ({ page }) => {
+    const root = await openScreen(page, 'complete');
+    const before = await root.textContent();
+    await page.waitForTimeout(2_000);
+    expect(await root.textContent()).toBe(before);
   });
 });
 

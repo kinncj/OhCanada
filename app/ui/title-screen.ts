@@ -117,13 +117,42 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
    */
   const heading = element(doc, 'h1', {
     id: 'tn-title-heading',
+    className: 'tn-title__brand',
     text: text(locale, 'title.game'),
   });
   heading.tabIndex = -1;
 
+  /*
+   * Three flat bands under the wordmark, in the flag's proportion.
+   *
+   * Decoration and only decoration: it is `aria-hidden`, it holds no text, no
+   * state and no meaning, and every scenario in `TN-TITLE` reads identically
+   * with it deleted. It is here because the first screen of a game about Canada
+   * should look like one, and because a band of solid colour is something the
+   * palette can express (`assets/style/palette.json`) where a picture would be
+   * an asset on the initial payload.
+   */
+  const flag = element(doc, 'div', {
+    className: 'tn-title__flag',
+    attrs: { 'aria-hidden': 'true' },
+    children: [
+      element(doc, 'span'),
+      element(doc, 'span'),
+      element(doc, 'span'),
+    ],
+  });
+
   const tagline = element(doc, 'p', {
     id: 'tn-title-tagline',
+    className: 'tn-title__tagline',
     text: text(locale, 'title.tagline'),
+  });
+
+  /* The wordmark, the band and the tagline read as one block, above the ways
+     in. Presentation only: the reading order is unchanged. */
+  const hero = element(doc, 'div', {
+    className: 'tn-title__hero',
+    children: [heading, flag, tagline],
   });
 
   /* Drawn from the save, and only when there is one. Not the only way to know
@@ -144,7 +173,7 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
     text: text(locale, 'title.notOfficial'),
   });
 
-  root.append(heading, tagline, lastPlayed, actions, disclaimer);
+  root.append(hero, lastPlayed, actions, disclaimer);
   host.append(root);
 
   render();
@@ -170,6 +199,11 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
         button(doc, {
           testId: 'title-play',
           text: text(locale, 'title.play'),
+          /* The one action that carries the player forward, drawn as such
+             (`app/ui/screen-styles.ts`). Exactly one per screen: on this route
+             it is Play, on the other it is Continue when there is one and
+             "Choose a level" when there is not. */
+          attrs: { 'data-tn-action': 'primary' },
           onClick: routes.onPlay,
         }),
       );
@@ -186,7 +220,10 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
                at the visible line rather than repeating it, so what is read and
                what is on screen cannot drift — and the line is only drawn when
                there is a level, which is the only time this control exists. */
-            attrs: { 'aria-describedby': lastPlayed.id },
+            attrs: {
+              'aria-describedby': lastPlayed.id,
+              'data-tn-action': 'primary',
+            },
             onClick: resume.onContinue,
           }),
         );
@@ -195,6 +232,9 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
         button(doc, {
           testId: 'title-choose-level',
           text: text(locale, 'map.open'),
+          /* Primary only when there is no Continue above it: one screen, one
+             red action. */
+          ...(resume === undefined ? { attrs: { 'data-tn-action': 'primary' } } : {}),
           onClick: routes.onChooseLevel,
         }),
       );
@@ -215,6 +255,7 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
         button(doc, {
           testId: 'title-settings',
           text: text(locale, 'common.settings'),
+          attrs: { 'data-tn-action': 'quiet' },
           onClick: options.onOpenSettings,
         }),
       );
