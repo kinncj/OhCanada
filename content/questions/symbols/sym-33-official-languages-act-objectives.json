@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-33-official-languages-act-objectives",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Which of these is one of the main objectives of the Official Languages Act?",
+    "fr": "Lequel de ces énoncés est un des principaux objectifs de la Loi sur les langues officielles?"
+  },
+  "options": [
+    {
+      "en": "To make every Canadian speak both languages.",
+      "fr": "Faire en sorte que tous les Canadiens parlent les deux langues."
+    },
+    {
+      "en": "To make French the only language of the courts.",
+      "fr": "Faire du français la seule langue des tribunaux."
+    },
+    {
+      "en": "To end provincial control of education.",
+      "fr": "Mettre fin au contrôle des provinces sur l'éducation."
+    },
+    {
+      "en": "To support and grow official-language minority communities.",
+      "fr": "Appuyer et faire croître les communautés de langue officielle en situation minoritaire."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The Act sets out three main objectives. One is to keep official-language minority communities alive and growing. The other two are equality of French and English inside Parliament and the federal government, and equality of the two languages in Canadian society.",
+    "fr": "La Loi énonce trois grands objectifs. L'un est de maintenir et de développer les communautés de langue officielle en situation minoritaire. Les deux autres portent sur l'égalité du français et de l'anglais au Parlement et dans le gouvernement fédéral, et sur l'égalité des deux langues dans la société canadienne."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 83,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Parliament passed the Official Languages Act in 1969. It has three main objectives:"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

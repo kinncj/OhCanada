@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-02-standard-of-living-needs-trade",
+  "subject": "economy",
+  "prompt": {
+    "en": "According to the chapter on Canada's economy, what could Canadians not keep up without trading with other nations?",
+    "fr": "Selon le chapitre sur l'économie du Canada, qu'est-ce que les Canadiens ne pourraient pas maintenir sans faire de commerce avec d'autres pays?"
+  },
+  "options": [
+    {
+      "en": "Their standard of living.",
+      "fr": "Leur niveau de vie."
+    },
+    {
+      "en": "Their two official languages.",
+      "fr": "Leurs deux langues officielles."
+    },
+    {
+      "en": "Their system of government.",
+      "fr": "Leur système de gouvernement."
+    },
+    {
+      "en": "Their national parks.",
+      "fr": "Leurs parcs nationaux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide is direct about it: without trade with other nations, Canadians could not hold on to the standard of living they have.",
+    "fr": "Le guide est clair sur ce point : sans commerce avec d'autres pays, les Canadiens ne pourraient pas conserver le niveau de vie qui est le leur."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 90,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "As Canadians, we could not maintain our standard of living without engaging in trade with other nations."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

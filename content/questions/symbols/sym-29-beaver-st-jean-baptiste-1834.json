@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-29-beaver-st-jean-baptiste-1834",
+  "subject": "symbols",
+  "prompt": {
+    "en": "In 1834 the beaver became the emblem of which association?",
+    "fr": "En 1834, le castor est devenu l'emblème de quelle association?"
+  },
+  "options": [
+    {
+      "en": "The Royal Canadian Legion.",
+      "fr": "La Légion royale canadienne."
+    },
+    {
+      "en": "The Canadian Red Cross.",
+      "fr": "La Croix-Rouge canadienne."
+    },
+    {
+      "en": "The Canadian Olympic Committee.",
+      "fr": "Le Comité olympique canadien."
+    },
+    {
+      "en": "The St. Jean Baptiste Society.",
+      "fr": "La Société Saint-Jean-Baptiste."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "In 1834 a patriotic French-Canadian association, the St. Jean Baptiste Society, took the beaver as its emblem.",
+    "fr": "En 1834, une association patriotique canadienne-française, la Société Saint-Jean-Baptiste, a pris le castor comme emblème."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 82,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "It became an emblem of the St. Jean Baptiste Society, a French-Canadian patriotic association, in 1834, and was also adopted by other groups."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

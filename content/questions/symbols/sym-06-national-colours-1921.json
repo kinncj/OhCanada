@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-06-national-colours-1921",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Since what year have red and white been Canada's national colours?",
+    "fr": "Depuis quelle année le rouge et le blanc sont-ils les couleurs nationales du Canada?"
+  },
+  "options": [
+    {
+      "en": "Since 1867.",
+      "fr": "Depuis 1867."
+    },
+    {
+      "en": "Since 1921.",
+      "fr": "Depuis 1921."
+    },
+    {
+      "en": "Since 1965.",
+      "fr": "Depuis 1965."
+    },
+    {
+      "en": "Since 1876.",
+      "fr": "Depuis 1876."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Red and white became the national colours in 1921, more than forty years before the maple leaf flag. Both colours had belonged to France and to England since the Middle Ages.",
+    "fr": "Le rouge et le blanc sont devenus les couleurs nationales en 1921, plus de quarante ans avant le drapeau à la feuille d'érable. Ces deux couleurs appartenaient à la France et à l'Angleterre depuis le Moyen Âge."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 79,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Red and white had been colours of France and England since the Middle Ages and the national colours of Canada since 1921."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

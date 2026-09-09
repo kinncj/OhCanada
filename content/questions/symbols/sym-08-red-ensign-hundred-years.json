@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-08-red-ensign-hundred-years",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Which flag served as Canada's national flag for about a hundred years?",
+    "fr": "Quel drapeau a servi de drapeau national du Canada pendant une centaine d'années?"
+  },
+  "options": [
+    {
+      "en": "The Union Jack.",
+      "fr": "L'Union Jack."
+    },
+    {
+      "en": "The Canadian Red Ensign.",
+      "fr": "Le Red Ensign canadien."
+    },
+    {
+      "en": "The fleur-de-lys flag.",
+      "fr": "Le drapeau fleurdelisé."
+    },
+    {
+      "en": "The flag of the Hudson's Bay Company.",
+      "fr": "Le drapeau de la Compagnie de la Baie d'Hudson."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The Canadian Red Ensign was the country's flag for roughly a century. Veterans have carried it officially since 2005.",
+    "fr": "Le Red Ensign canadien a été le drapeau du pays pendant une centaine d'années. Les anciens combattants le portent officiellement depuis 2005."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 79,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Canadian Red Ensign served as the national flag for 100 years, and has been carried officially by veterans since 2005"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

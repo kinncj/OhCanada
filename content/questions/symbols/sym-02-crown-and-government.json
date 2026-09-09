@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-02-crown-and-government",
+  "subject": "symbols",
+  "prompt": {
+    "en": "The Crown is a symbol of government in Canada. What does that cover?",
+    "fr": "La Couronne est un symbole du gouvernement au Canada. Qu'est-ce que cela englobe?"
+  },
+  "options": [
+    {
+      "en": "Banks and large private companies.",
+      "fr": "Les banques et les grandes entreprises privées."
+    },
+    {
+      "en": "Parliament, the courts, the legislatures, the police and the Canadian Forces.",
+      "fr": "Le Parlement, les tribunaux, les assemblées législatives, la police et les Forces canadiennes."
+    },
+    {
+      "en": "Only the office of the Prime Minister.",
+      "fr": "Uniquement le bureau du premier ministre."
+    },
+    {
+      "en": "Only the armed forces.",
+      "fr": "Uniquement les forces armées."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "In Canada the Crown stands for the state itself. That reaches across Parliament and the provincial legislatures, the courts, the police and the Canadian Forces.",
+    "fr": "Au Canada, la Couronne représente l'État lui-même. Cela touche le Parlement et les assemblées législatives des provinces, les tribunaux, la police et les Forces canadiennes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 78,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Crown is a symbol of government, including Parliament, the legislatures, the courts, police services and the Canadian Forces."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-07-service-industry-example",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which of these is a service industry, as the guide describes them?",
+    "fr": "Laquelle de ces activités est une industrie de services, selon le guide?"
+  },
+  "options": [
+    {
+      "en": "Mining.",
+      "fr": "L'exploitation minière."
+    },
+    {
+      "en": "Forestry.",
+      "fr": "La foresterie."
+    },
+    {
+      "en": "Making cars.",
+      "fr": "La fabrication d'automobiles."
+    },
+    {
+      "en": "Health care.",
+      "fr": "Les soins de santé."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Health care is one of the service industries. So are transportation, education, construction, banking, communications, shops, tourism and government work.",
+    "fr": "Les soins de santé font partie des industries de services. C'est aussi le cas du transport, de l'éducation, de la construction, des banques, des communications, du commerce de détail, du tourisme et du travail au gouvernement."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 91,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Service industries provide thousands of different jobs in areas like transportation, education, health care, construction, banking, communications, retail services, tourism and government."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

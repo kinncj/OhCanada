@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-10-maple-leaf-french-canadians",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Who first took up maple leaves as a symbol, in the 1700s?",
+    "fr": "Qui a d'abord adopté la feuille d'érable comme symbole, dans les années 1700?"
+  },
+  "options": [
+    {
+      "en": "French-Canadians.",
+      "fr": "Les Canadiens français."
+    },
+    {
+      "en": "The Hudson's Bay Company.",
+      "fr": "La Compagnie de la Baie d'Hudson."
+    },
+    {
+      "en": "The Royal Military College.",
+      "fr": "Le Collège militaire royal."
+    },
+    {
+      "en": "The Parliament of Canada.",
+      "fr": "Le Parlement du Canada."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "French-Canadians adopted maple leaves as a symbol in the 1700s. The leaf is also carved into the headstones of Canada's fallen soldiers.",
+    "fr": "Les Canadiens français ont adopté la feuille d'érable comme symbole dans les années 1700. Cette feuille est aussi gravée sur les pierres tombales des soldats canadiens morts au combat."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 79,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s, and are carved into the headstones of our fallen soldiers buried overseas and in Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-18-peace-arch",
+  "subject": "economy",
+  "prompt": {
+    "en": "The Peace Arch stands at Blaine, in the State of Washington. What does it stand for?",
+    "fr": "L'Arche de la Paix se dresse à Blaine, dans l'État de Washington. Que représente-t-elle?"
+  },
+  "options": [
+    {
+      "en": "The end of the fur trade.",
+      "fr": "La fin de la traite des fourrures."
+    },
+    {
+      "en": "The close ties and shared interests of Canada and the United States.",
+      "fr": "Les liens étroits et les intérêts communs du Canada et des États-Unis."
+    },
+    {
+      "en": "The founding of the Port of Vancouver.",
+      "fr": "La fondation du port de Vancouver."
+    },
+    {
+      "en": "The signing of free trade in 1988.",
+      "fr": "La signature du libre-échange en 1988."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The arch carries the words \"children of a common mother\" and \"brethren dwelling together in unity\". It is a sign of how close the two countries are.",
+    "fr": "L'arche porte les mots « children of a common mother » et « brethren dwelling together in unity ». Elle témoigne de la proximité des deux pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 92,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "At Blaine in the State of Washington, the Peace Arch, inscribed with the words “children of a common mother” and “brethren dwelling together in unity,” symbolizes our close ties and common interests."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

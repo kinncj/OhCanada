@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-09-manufactured-product-example",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which of these does the guide list as a Canadian manufactured product?",
+    "fr": "Lequel de ces produits le guide présente-t-il comme un produit manufacturé canadien?"
+  },
+  "options": [
+    {
+      "en": "Crude oil.",
+      "fr": "Le pétrole brut."
+    },
+    {
+      "en": "Aerospace technology.",
+      "fr": "La technologie aérospatiale."
+    },
+    {
+      "en": "Iron ore.",
+      "fr": "Le minerai de fer."
+    },
+    {
+      "en": "Fresh lobster.",
+      "fr": "Le homard frais."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Aerospace technology is on the guide's list of manufactured products, along with paper, high technology equipment, automobiles, machinery, food and clothing.",
+    "fr": "La technologie aérospatiale figure dans la liste des produits manufacturés du guide, avec le papier, le matériel de haute technologie, les automobiles, la machinerie, les aliments et les vêtements."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 91,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Manufactured products include paper, high technology equipment, aerospace technology, automobiles, machinery, food, clothing and many other goods."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

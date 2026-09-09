@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-08-what-manufacturing-does",
+  "subject": "economy",
+  "prompt": {
+    "en": "What do Canada's manufacturing industries do?",
+    "fr": "Que font les industries manufacturières du Canada?"
+  },
+  "options": [
+    {
+      "en": "They make products to sell in Canada and around the world.",
+      "fr": "Elles fabriquent des produits destinés à la vente au Canada et partout dans le monde."
+    },
+    {
+      "en": "They provide banking and insurance.",
+      "fr": "Elles offrent des services bancaires et d'assurance."
+    },
+    {
+      "en": "They dig up and ship raw ore only.",
+      "fr": "Elles extraient et expédient uniquement du minerai brut."
+    },
+    {
+      "en": "They run the country's schools and hospitals.",
+      "fr": "Elles gèrent les écoles et les hôpitaux du pays."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Manufacturing industries build goods for sale at home and abroad. Paper, machinery, food and clothing are among the things they make.",
+    "fr": "Les industries manufacturières produisent des biens destinés à la vente au pays et à l'étranger. Le papier, la machinerie, les aliments et les vêtements comptent parmi ce qu'elles fabriquent."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 91,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Manufacturing industries make products to sell in Canada and around the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

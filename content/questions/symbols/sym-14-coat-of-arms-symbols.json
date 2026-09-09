@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-14-coat-of-arms-symbols",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Which countries' symbols appear on Canada's coat of arms?",
+    "fr": "Les symboles de quels pays figurent sur les armoiries du Canada?"
+  },
+  "options": [
+    {
+      "en": "England, France, Spain and Portugal.",
+      "fr": "L'Angleterre, la France, l'Espagne et le Portugal."
+    },
+    {
+      "en": "England, Scotland, Norway and Sweden.",
+      "fr": "L'Angleterre, l'Écosse, la Norvège et la Suède."
+    },
+    {
+      "en": "France, Germany, Italy and Ireland.",
+      "fr": "La France, l'Allemagne, l'Italie et l'Irlande."
+    },
+    {
+      "en": "England, France, Scotland and Ireland.",
+      "fr": "L'Angleterre, la France, l'Écosse et l'Irlande."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Symbols of Scotland, Ireland, England and France sit on the arms, together with red maple leaves.",
+    "fr": "On trouve sur les armoiries des symboles de l'Écosse, de l'Irlande, de l'Angleterre et de la France, ainsi que des feuilles d'érable rouges."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 80,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The arms contain symbols of England, France, Scotland and Ireland as well as red maple leaves."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

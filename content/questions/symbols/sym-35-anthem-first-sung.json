@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-35-anthem-first-sung",
+  "subject": "symbols",
+  "prompt": {
+    "en": "In which city was O Canada first sung?",
+    "fr": "Dans quelle ville Ô Canada a-t-il été chanté pour la première fois?"
+  },
+  "options": [
+    {
+      "en": "Ottawa.",
+      "fr": "Ottawa."
+    },
+    {
+      "en": "Québec City.",
+      "fr": "Québec."
+    },
+    {
+      "en": "Montreal.",
+      "fr": "Montréal."
+    },
+    {
+      "en": "Toronto.",
+      "fr": "Toronto."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "O Canada was sung for the first time in Québec City, in 1880. French and English Canadians sing different words to it.",
+    "fr": "Ô Canada a été chanté pour la première fois à Québec, en 1880. Les Canadiens francophones et anglophones en chantent des paroles différentes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 84,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "It was first sung in Québec City in 1880. French and English Canadians sing different words to the national anthem."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

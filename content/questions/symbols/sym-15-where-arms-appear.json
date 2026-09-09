@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-15-where-arms-appear",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Where can Canada's coat of arms be seen today?",
+    "fr": "Où peut-on voir les armoiries du Canada aujourd'hui?"
+  },
+  "options": [
+    {
+      "en": "Only inside the Parliament Buildings.",
+      "fr": "Uniquement à l'intérieur des édifices du Parlement."
+    },
+    {
+      "en": "Only on military uniforms.",
+      "fr": "Uniquement sur les uniformes militaires."
+    },
+    {
+      "en": "On government papers, public buildings and dollar bills.",
+      "fr": "Sur les documents du gouvernement, les édifices publics et les billets de banque."
+    },
+    {
+      "en": "On the flag of every province.",
+      "fr": "Sur le drapeau de chaque province."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The arms are printed on government papers and on dollar bills, and they can be seen on public buildings.",
+    "fr": "Les armoiries sont imprimées sur les documents du gouvernement et sur les billets de banque, et on les voit sur les édifices publics."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 80,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Today the arms can be seen on dollar bills, government documents and public buildings."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

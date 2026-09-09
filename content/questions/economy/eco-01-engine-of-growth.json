@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-01-engine-of-growth",
+  "subject": "economy",
+  "prompt": {
+    "en": "What does the guide call the engine of economic growth in Canada?",
+    "fr": "Qu'est-ce que le guide décrit comme le moteur de la croissance économique au Canada?"
+  },
+  "options": [
+    {
+      "en": "Government spending.",
+      "fr": "Les dépenses du gouvernement."
+    },
+    {
+      "en": "Trade and commerce.",
+      "fr": "Le commerce."
+    },
+    {
+      "en": "Growth of the population.",
+      "fr": "La croissance de la population."
+    },
+    {
+      "en": "Rules for the banks.",
+      "fr": "La réglementation des banques."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Canada has traded with other countries throughout its history, and the guide says commerce is still what drives the economy forward.",
+    "fr": "Le Canada a fait du commerce avec d'autres pays tout au long de son histoire, et le guide affirme que le commerce demeure ce qui fait avancer l'économie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 90,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada has always been a trading nation and commerce remains the engine of economic growth."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

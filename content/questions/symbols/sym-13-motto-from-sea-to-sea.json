@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-13-motto-from-sea-to-sea",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Canada's national motto is A Mari Usque Ad Mare. What does it mean?",
+    "fr": "La devise nationale du Canada est A Mari Usque Ad Mare. Que signifie-t-elle?"
+  },
+  "options": [
+    {
+      "en": "Peace, order and good government.",
+      "fr": "Paix, ordre et bon gouvernement."
+    },
+    {
+      "en": "From sea to sea.",
+      "fr": "D'un océan à l'autre."
+    },
+    {
+      "en": "Strong and free.",
+      "fr": "Fort et libre."
+    },
+    {
+      "en": "One country, two languages.",
+      "fr": "Un pays, deux langues."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The motto is in Latin. It means from sea to sea, and Canada took it as a national motto after the First World War.",
+    "fr": "La devise est en latin. Elle signifie « d'un océan à l'autre », et le Canada l'a adoptée comme devise nationale après la Première Guerre mondiale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 80,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "As an expression of national pride after the First World War, Canada adopted an official coat of arms and a national motto, A Mari Usque Ad Mare, which in Latin means “from sea to sea.”"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

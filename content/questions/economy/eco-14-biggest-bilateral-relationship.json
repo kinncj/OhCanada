@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-14-biggest-bilateral-relationship",
+  "subject": "economy",
+  "prompt": {
+    "en": "How does the guide describe trade between Canada and the United States?",
+    "fr": "Comment le guide décrit-il le commerce entre le Canada et les États-Unis?"
+  },
+  "options": [
+    {
+      "en": "As the biggest trading relationship between any two countries in the world.",
+      "fr": "Comme la plus importante relation commerciale entre deux pays au monde."
+    },
+    {
+      "en": "As a small share of what each country sells.",
+      "fr": "Comme une petite part de ce que chaque pays vend."
+    },
+    {
+      "en": "As a relationship that ended with free trade.",
+      "fr": "Comme une relation qui a pris fin avec le libre-échange."
+    },
+    {
+      "en": "As one limited to farm goods.",
+      "fr": "Comme une relation limitée aux produits agricoles."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "No two countries anywhere trade more with each other than Canada and the United States do.",
+    "fr": "Aucun autre couple de pays au monde n'échange davantage entre eux que le Canada et les États-Unis."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 92,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In fact we have the biggest bilateral trading relationship in the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

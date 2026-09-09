@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-21-national-winter-sport",
+  "subject": "symbols",
+  "prompt": {
+    "en": "What is Canada's national winter sport?",
+    "fr": "Quel est le sport national d'hiver du Canada?"
+  },
+  "options": [
+    {
+      "en": "Curling.",
+      "fr": "Le curling."
+    },
+    {
+      "en": "Skiing.",
+      "fr": "Le ski."
+    },
+    {
+      "en": "Speed skating.",
+      "fr": "Le patinage de vitesse."
+    },
+    {
+      "en": "Hockey.",
+      "fr": "Le hockey."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Hockey is considered the national winter sport, and it is also the sport Canadians watch most.",
+    "fr": "Le hockey est considéré comme le sport national d'hiver, et c'est aussi le sport que les Canadiens regardent le plus."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 81,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Hockey is Canada’s most popular spectator sport and is considered to be the national winter sport."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

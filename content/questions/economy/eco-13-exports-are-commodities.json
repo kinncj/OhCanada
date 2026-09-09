@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-13-exports-are-commodities",
+  "subject": "economy",
+  "prompt": {
+    "en": "What kind of goods make up a large part of what Canada sells abroad?",
+    "fr": "Quel genre de biens compose une grande part de ce que le Canada vend à l'étranger?"
+  },
+  "options": [
+    {
+      "en": "Natural resource commodities.",
+      "fr": "Des produits de base tirés des ressources naturelles."
+    },
+    {
+      "en": "Luxury clothing.",
+      "fr": "Des vêtements de luxe."
+    },
+    {
+      "en": "Banking services.",
+      "fr": "Des services bancaires."
+    },
+    {
+      "en": "Household furniture.",
+      "fr": "Des meubles de maison."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A large share of what Canada exports is made up of commodities that come from natural resources.",
+    "fr": "Une grande part de ce que le Canada exporte se compose de produits de base issus des ressources naturelles."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 91,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "a large percentage of Canada’s exports are natural resources commodities."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

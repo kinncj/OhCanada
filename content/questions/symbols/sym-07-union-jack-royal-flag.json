@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-07-union-jack-royal-flag",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Which flag is Canada's official Royal Flag?",
+    "fr": "Quel drapeau est le drapeau royal officiel du Canada?"
+  },
+  "options": [
+    {
+      "en": "The Canadian Red Ensign.",
+      "fr": "Le Red Ensign canadien."
+    },
+    {
+      "en": "The maple leaf flag.",
+      "fr": "Le drapeau à la feuille d'érable."
+    },
+    {
+      "en": "The flag of the Royal Military College.",
+      "fr": "Le drapeau du Collège militaire royal."
+    },
+    {
+      "en": "The Union Jack.",
+      "fr": "L'Union Jack."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The Union Jack remains Canada's official Royal Flag. It is not the national flag, which has been the maple leaf flag since 1965.",
+    "fr": "L'Union Jack demeure le drapeau royal officiel du Canada. Ce n'est pas le drapeau national, qui est le drapeau à la feuille d'érable depuis 1965."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 79,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Union Jack is our official Royal Flag."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

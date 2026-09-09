@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-18-library-only-original-part",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Which part of the original Parliament Buildings is still standing?",
+    "fr": "Quelle partie des édifices du Parlement d'origine subsiste encore?"
+  },
+  "options": [
+    {
+      "en": "The Library.",
+      "fr": "La Bibliothèque."
+    },
+    {
+      "en": "The Peace Tower.",
+      "fr": "La Tour de la Paix."
+    },
+    {
+      "en": "The Senate Chamber.",
+      "fr": "La salle du Sénat."
+    },
+    {
+      "en": "The main entrance.",
+      "fr": "L'entrée principale."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Library is the only piece of the first building left. The rest of the Centre Block dates from the work done after the 1916 fire.",
+    "fr": "La Bibliothèque est la seule partie du premier édifice qui subsiste. Le reste de l'édifice du Centre date des travaux réalisés après l'incendie de 1916."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 80,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Centre Block was destroyed by an accidental fire in 1916 and rebuilt in 1922. The Library is the only part of the original building remaining."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

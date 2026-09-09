@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-16-parliament-completed-1860s",
+  "subject": "symbols",
+  "prompt": {
+    "en": "When were the Parliament Buildings in Ottawa completed?",
+    "fr": "Quand les édifices du Parlement, à Ottawa, ont-ils été achevés?"
+  },
+  "options": [
+    {
+      "en": "In the 1790s.",
+      "fr": "Dans les années 1790."
+    },
+    {
+      "en": "In the 1860s.",
+      "fr": "Dans les années 1860."
+    },
+    {
+      "en": "In the 1920s.",
+      "fr": "Dans les années 1920."
+    },
+    {
+      "en": "In the 1950s.",
+      "fr": "Dans les années 1950."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The buildings were finished in the 1860s. Their towers, arches, sculptures and stained glass draw on French, English and Aboriginal traditions, in the Gothic Revival style of Queen Victoria's day.",
+    "fr": "Les édifices ont été achevés dans les années 1860. Leurs tours, leurs arches, leurs sculptures et leurs vitraux s'inspirent des traditions françaises, anglaises et autochtones, dans le style néogothique de l'époque de la reine Victoria."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 80,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The towers, arches, sculptures and stained glass of the Parliament Buildings embody the French, English and Aboriginal traditions and the Gothic Revival architecture popular in the time of Queen Victoria. The buildings were completed in the 1860s."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

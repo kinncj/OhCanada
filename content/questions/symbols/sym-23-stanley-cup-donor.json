@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-23-stanley-cup-donor",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Who donated the Stanley Cup, in 1892?",
+    "fr": "Qui a fait don de la Coupe Stanley, en 1892?"
+  },
+  "options": [
+    {
+      "en": "Lord Stanley, the Governor General.",
+      "fr": "Lord Stanley, le gouverneur général."
+    },
+    {
+      "en": "Adrienne Clarkson.",
+      "fr": "Adrienne Clarkson."
+    },
+    {
+      "en": "The National Hockey League.",
+      "fr": "La Ligue nationale de hockey."
+    },
+    {
+      "en": "The Prime Minister of the day.",
+      "fr": "Le premier ministre de l'époque."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Lord Stanley was Governor General when he gave the cup, in 1892. The National Hockey League plays for it as its championship trophy.",
+    "fr": "Lord Stanley était gouverneur général lorsqu'il a offert la coupe, en 1892. La Ligue nationale de hockey joue pour la remporter comme trophée de championnat."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 81,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The National Hockey League plays for the championship Stanley Cup, donated by Lord Stanley, the Governor General, in 1892."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

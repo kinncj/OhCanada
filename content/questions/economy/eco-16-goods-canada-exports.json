@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-16-goods-canada-exports",
+  "subject": "economy",
+  "prompt": {
+    "en": "Canada exports billions of dollars of goods every year. Which of these is on the guide's list?",
+    "fr": "Le Canada exporte pour des milliards de dollars de biens chaque année. Lequel de ces éléments figure dans la liste du guide?"
+  },
+  "options": [
+    {
+      "en": "Imported consumer electronics.",
+      "fr": "Des appareils électroniques importés."
+    },
+    {
+      "en": "Energy products, machinery and equipment.",
+      "fr": "Des produits énergétiques, de la machinerie et de l'équipement."
+    },
+    {
+      "en": "Finished textiles bought from overseas.",
+      "fr": "Des textiles finis achetés outre-mer."
+    },
+    {
+      "en": "Foreign automobiles for resale.",
+      "fr": "Des automobiles étrangères destinées à la revente."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The guide's list of yearly exports takes in energy products, industrial goods, machinery and equipment, automotive goods, farm, fishing and forestry products, and goods people buy.",
+    "fr": "La liste des exportations annuelles du guide comprend les produits énergétiques, les biens industriels, la machinerie et l'équipement, les produits de l'automobile, les produits agricoles, de la pêche et de la foresterie, ainsi que les biens de consommation."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 92,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada exports billions of dollars worth of energy products, industrial goods, machinery, equipment, automotive, agricultural, fishing and forestry products, and consumer goods every year."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

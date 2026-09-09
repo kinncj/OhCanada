@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-03-monarchy-since-1867",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Since when has Canada been a constitutional monarchy in its own right?",
+    "fr": "Depuis quand le Canada est-il une monarchie constitutionnelle à part entière?"
+  },
+  "options": [
+    {
+      "en": "Since 1982.",
+      "fr": "Depuis 1982."
+    },
+    {
+      "en": "Since 1965.",
+      "fr": "Depuis 1965."
+    },
+    {
+      "en": "Since Confederation, in 1867.",
+      "fr": "Depuis la Confédération, en 1867."
+    },
+    {
+      "en": "Since 1931.",
+      "fr": "Depuis 1931."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Canada became a constitutional monarchy of its own at Confederation, in 1867. Queen Victoria was on the throne in that year.",
+    "fr": "Le Canada est devenu une monarchie constitutionnelle qui lui est propre lors de la Confédération, en 1867. La reine Victoria régnait cette année-là."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 78,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada has been a constitutional monarchy in its own right since Confederation in 1867 during Queen Victoria’s reign."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

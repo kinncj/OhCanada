@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-37-order-of-canada-1967",
+  "subject": "symbols",
+  "prompt": {
+    "en": "When did Canada begin its own honours system, with the Order of Canada?",
+    "fr": "Quand le Canada a-t-il lancé son propre système de distinctions honorifiques, avec l'Ordre du Canada?"
+  },
+  "options": [
+    {
+      "en": "In 1867.",
+      "fr": "En 1867."
+    },
+    {
+      "en": "In 1919.",
+      "fr": "En 1919."
+    },
+    {
+      "en": "In 1967.",
+      "fr": "En 1967."
+    },
+    {
+      "en": "In 1982.",
+      "fr": "En 1982."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Canada relied on British honours for many years. It created the Order of Canada in 1967, the hundredth year since Confederation.",
+    "fr": "Le Canada s'est appuyé pendant de nombreuses années sur les distinctions britanniques. Il a créé l'Ordre du Canada en 1967, l'année du centenaire de la Confédération."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 86,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "After using British honours for many years, Canada started its own honours system with the Order of Canada in 1967, the centennial of Confederation."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-30-beaver-five-cent-coin",
+  "subject": "symbols",
+  "prompt": {
+    "en": "On which Canadian coin can the beaver be seen?",
+    "fr": "Sur quelle pièce de monnaie canadienne peut-on voir le castor?"
+  },
+  "options": [
+    {
+      "en": "The one-dollar coin.",
+      "fr": "La pièce d'un dollar."
+    },
+    {
+      "en": "The twenty-five-cent coin.",
+      "fr": "La pièce de vingt-cinq cents."
+    },
+    {
+      "en": "The ten-cent coin.",
+      "fr": "La pièce de dix cents."
+    },
+    {
+      "en": "The five-cent coin.",
+      "fr": "La pièce de cinq cents."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The beaver appears on the five-cent coin. It is also on the arms of Alberta and Saskatchewan, and on those of cities such as Toronto and Montreal.",
+    "fr": "Le castor figure sur la pièce de cinq cents. On le trouve aussi sur les armoiries de l'Alberta et de la Saskatchewan, ainsi que sur celles de villes comme Toronto et Montréal."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 82,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "This industrious rodent can be seen on the five-cent coin, on the coats of arms of Saskatchewan and Alberta, and of cities such as Montreal and Toronto."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-34-anthem-proclaimed-1980",
+  "subject": "symbols",
+  "prompt": {
+    "en": "In what year was O Canada proclaimed the national anthem?",
+    "fr": "En quelle année Ô Canada a-t-il été proclamé hymne national?"
+  },
+  "options": [
+    {
+      "en": "In 1867.",
+      "fr": "En 1867."
+    },
+    {
+      "en": "In 1880.",
+      "fr": "En 1880."
+    },
+    {
+      "en": "In 1965.",
+      "fr": "En 1965."
+    },
+    {
+      "en": "In 1980.",
+      "fr": "En 1980."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "O Canada became the official national anthem in 1980, a hundred years after it was first sung.",
+    "fr": "Ô Canada est devenu l'hymne national officiel en 1980, cent ans après avoir été chanté pour la première fois."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 84,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "O Canada was proclaimed as the national anthem in 1980. It was first sung in Québec City in 1880."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

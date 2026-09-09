@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-15-supply-chains-compete",
+  "subject": "economy",
+  "prompt": {
+    "en": "What does the guide say Canada-U.S. supply chains do, now that they are joined together?",
+    "fr": "Que dit le guide au sujet des chaînes d'approvisionnement canado-américaines, maintenant qu'elles sont intégrées?"
+  },
+  "options": [
+    {
+      "en": "They compete with the rest of the world.",
+      "fr": "Elles font concurrence au reste du monde."
+    },
+    {
+      "en": "They serve only buyers inside North America.",
+      "fr": "Elles servent uniquement les acheteurs d'Amérique du Nord."
+    },
+    {
+      "en": "They are run by a single government office.",
+      "fr": "Elles sont gérées par un seul bureau gouvernemental."
+    },
+    {
+      "en": "They compete against each other across the border.",
+      "fr": "Elles se font concurrence de part et d'autre de la frontière."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadian and American producers work as one chain, and that joined-up chain competes with producers everywhere else.",
+    "fr": "Les producteurs canadiens et américains forment une seule chaîne, et cette chaîne intégrée fait concurrence aux producteurs de partout ailleurs."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 92,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Integrated Canada-U.S.A. supply chains compete with the rest of the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-26-curling-scottish-pioneers",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Which popular Canadian sport was brought here by Scottish pioneers?",
+    "fr": "Quel sport populaire au Canada a été apporté ici par des pionniers écossais?"
+  },
+  "options": [
+    {
+      "en": "Curling.",
+      "fr": "Le curling."
+    },
+    {
+      "en": "Lacrosse.",
+      "fr": "La crosse."
+    },
+    {
+      "en": "Soccer.",
+      "fr": "Le soccer."
+    },
+    {
+      "en": "Basketball.",
+      "fr": "Le basketball."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Curling is a game played on ice that Scottish pioneers introduced, and it is popular in Canada.",
+    "fr": "Le curling est un jeu qui se pratique sur la glace et que des pionniers écossais ont introduit; il est populaire au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 81,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Curling, an ice game introduced by Scottish pioneers, is popular."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-36-royal-anthem-purpose",
+  "subject": "symbols",
+  "prompt": {
+    "en": "When may the Royal Anthem of Canada be played or sung?",
+    "fr": "Quand peut-on jouer ou chanter l'hymne royal du Canada?"
+  },
+  "options": [
+    {
+      "en": "Only on Canada Day.",
+      "fr": "Uniquement le jour de la fête du Canada."
+    },
+    {
+      "en": "Whenever Canadians want to pay honour to the Sovereign.",
+      "fr": "Chaque fois que les Canadiens veulent rendre hommage au souverain."
+    },
+    {
+      "en": "Only at the opening of Parliament.",
+      "fr": "Uniquement à l'ouverture du Parlement."
+    },
+    {
+      "en": "Only at military funerals.",
+      "fr": "Uniquement lors de funérailles militaires."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The Royal Anthem may be played at any time Canadians wish to honour the Sovereign. It is a separate piece from O Canada, which is the national anthem.",
+    "fr": "L'hymne royal peut être joué chaque fois que les Canadiens souhaitent rendre hommage au souverain. C'est une pièce distincte de Ô Canada, qui est l'hymne national."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 85,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Royal Anthem of Canada, “God Save the Queen (or King),” can be played or sung on any occasion when Canadians wish to honour the Sovereign."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

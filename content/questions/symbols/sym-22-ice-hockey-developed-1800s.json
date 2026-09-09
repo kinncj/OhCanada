@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-22-ice-hockey-developed-1800s",
+  "subject": "symbols",
+  "prompt": {
+    "en": "When was ice hockey developed in Canada?",
+    "fr": "Quand le hockey sur glace a-t-il été mis au point au Canada?"
+  },
+  "options": [
+    {
+      "en": "In the 1600s.",
+      "fr": "Dans les années 1600."
+    },
+    {
+      "en": "In the 1800s.",
+      "fr": "Dans les années 1800."
+    },
+    {
+      "en": "In the 1920s.",
+      "fr": "Dans les années 1920."
+    },
+    {
+      "en": "In the 1960s.",
+      "fr": "Dans les années 1960."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The guide places the development of ice hockey in Canada in the 1800s.",
+    "fr": "Le guide situe dans les années 1800 la mise au point du hockey sur glace au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 81,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Ice hockey was developed in Canada in the 1800s."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

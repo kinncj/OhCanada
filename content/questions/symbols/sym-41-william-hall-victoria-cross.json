@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-41-william-hall-victoria-cross",
+  "subject": "symbols",
+  "prompt": {
+    "en": "William Hall of Horton, Nova Scotia, was the first black man to be awarded the Victoria Cross. Where did he earn it?",
+    "fr": "William Hall, de Horton, en Nouvelle-Écosse, a été le premier homme noir à recevoir la Croix de Victoria. Où l'a-t-il méritée?"
+  },
+  "options": [
+    {
+      "en": "At Vimy Ridge.",
+      "fr": "À la crête de Vimy."
+    },
+    {
+      "en": "At the Siege of Lucknow.",
+      "fr": "Au siège de Lucknow."
+    },
+    {
+      "en": "At Balaclava.",
+      "fr": "À Balaklava."
+    },
+    {
+      "en": "At Hill 70.",
+      "fr": "À la cote 70."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "William Hall's parents were American slaves. He was an Able Seaman, and he won the Victoria Cross for his part in the Siege of Lucknow during the Indian Rebellion of 1857.",
+    "fr": "Les parents de William Hall étaient des esclaves américains. Il était matelot de deuxième classe, et il a remporté la Croix de Victoria pour son rôle au siège de Lucknow, pendant la rébellion indienne de 1857."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 87,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Able Seaman William Hall of Horton, Nova Scotia, whose parents were American slaves, was the first black man to be awarded the V.C. for his role in the Siege of Lucknow during the Indian Rebellion of 1857."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

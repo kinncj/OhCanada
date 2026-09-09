@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-11-natural-resource-industries",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which group of industries does the guide count as natural resources industries?",
+    "fr": "Quel groupe d'industries le guide compte-t-il parmi les industries des ressources naturelles?"
+  },
+  "options": [
+    {
+      "en": "Banking, insurance and retail.",
+      "fr": "Les banques, l'assurance et le commerce de détail."
+    },
+    {
+      "en": "Forestry, fishing, agriculture, mining and energy.",
+      "fr": "La foresterie, la pêche, l'agriculture, l'exploitation minière et l'énergie."
+    },
+    {
+      "en": "Aerospace, automobiles and machinery.",
+      "fr": "L'aérospatiale, l'automobile et la machinerie."
+    },
+    {
+      "en": "Tourism, education and health care.",
+      "fr": "Le tourisme, l'éducation et les soins de santé."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The natural resources industries are forestry, fishing, agriculture, mining and energy.",
+    "fr": "Les industries des ressources naturelles sont la foresterie, la pêche, l'agriculture, l'exploitation minière et l'énergie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 91,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Natural resources industries include forestry, fishing, agriculture, mining and energy."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

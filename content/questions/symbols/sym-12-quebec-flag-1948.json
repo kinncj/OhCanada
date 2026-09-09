@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-12-quebec-flag-1948",
+  "subject": "symbols",
+  "prompt": {
+    "en": "In what year did Quebec adopt its own flag?",
+    "fr": "En quelle année le Québec a-t-il adopté son propre drapeau?"
+  },
+  "options": [
+    {
+      "en": "In 1867.",
+      "fr": "En 1867."
+    },
+    {
+      "en": "In 1948.",
+      "fr": "En 1948."
+    },
+    {
+      "en": "In 1965.",
+      "fr": "En 1965."
+    },
+    {
+      "en": "In 1921.",
+      "fr": "En 1921."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Quebec adopted its flag in 1948. Its design rests on the Cross and the fleur-de-lys.",
+    "fr": "Le Québec a adopté son drapeau en 1948. Son motif repose sur la croix et la fleur de lys."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 79,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1948 Quebec adopted its own flag, based on the Cross and the fleur-de-lys"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

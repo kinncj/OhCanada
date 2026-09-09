@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-17-centre-block-fire-1916",
+  "subject": "symbols",
+  "prompt": {
+    "en": "What happened to the Centre Block of the Parliament Buildings in 1916?",
+    "fr": "Qu'est-il arrivé à l'édifice du Centre du Parlement en 1916?"
+  },
+  "options": [
+    {
+      "en": "It was closed for repairs.",
+      "fr": "Il a été fermé pour des réparations."
+    },
+    {
+      "en": "It was moved to a new site.",
+      "fr": "Il a été déplacé sur un nouveau site."
+    },
+    {
+      "en": "An accidental fire destroyed it.",
+      "fr": "Un incendie accidentel l'a détruit."
+    },
+    {
+      "en": "Its size was doubled.",
+      "fr": "Sa taille a doublé."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "A fire that nobody set on purpose destroyed the Centre Block in 1916. The building was put up again by 1922.",
+    "fr": "Un incendie qui n'a été allumé par personne volontairement a détruit l'édifice du Centre en 1916. L'édifice a été reconstruit en 1922."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 80,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Centre Block was destroyed by an accidental fire in 1916 and rebuilt in 1922."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

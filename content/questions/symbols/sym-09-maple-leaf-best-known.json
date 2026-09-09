@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-09-maple-leaf-best-known",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Which symbol does the guide call Canada's best-known one?",
+    "fr": "Quel symbole le guide décrit-il comme le plus connu du Canada?"
+  },
+  "options": [
+    {
+      "en": "The beaver.",
+      "fr": "Le castor."
+    },
+    {
+      "en": "The fleur-de-lys.",
+      "fr": "La fleur de lys."
+    },
+    {
+      "en": "The maple leaf.",
+      "fr": "La feuille d'érable."
+    },
+    {
+      "en": "The Union Jack.",
+      "fr": "L'Union Jack."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The maple leaf is the symbol most people know Canada by. French-Canadians took it up as a symbol in the 1700s.",
+    "fr": "La feuille d'érable est le symbole par lequel on reconnaît le plus le Canada. Les Canadiens français l'ont adoptée comme symbole dans les années 1700."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 79,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The maple leaf is Canada’s best-known symbol."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

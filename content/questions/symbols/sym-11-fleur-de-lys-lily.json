@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-11-fleur-de-lys-lily",
+  "subject": "symbols",
+  "prompt": {
+    "en": "The fleur-de-lys takes its name from which flower?",
+    "fr": "La fleur de lys tire son nom de quelle fleur?"
+  },
+  "options": [
+    {
+      "en": "The rose.",
+      "fr": "La rose."
+    },
+    {
+      "en": "The thistle.",
+      "fr": "Le chardon."
+    },
+    {
+      "en": "The trillium.",
+      "fr": "Le trille."
+    },
+    {
+      "en": "The lily.",
+      "fr": "Le lys."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The name means lily flower. A French king is said to have adopted it in the year 496, and it stood for French royalty for over a thousand years, New France included.",
+    "fr": "Le nom désigne la fleur du lys. On dit qu'un roi de France l'a adoptée en l'an 496, et elle a représenté la royauté française pendant plus de mille ans, y compris la Nouvelle-France."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 79,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "It is said that the lily flower (“fleur-de-lys”) was adopted by the French king in the year 496. It became the symbol of French royalty for more than 1,000 years, including the colony of New France."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

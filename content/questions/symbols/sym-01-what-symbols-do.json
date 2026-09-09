@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-01-what-symbols-do",
+  "subject": "symbols",
+  "prompt": {
+    "en": "According to the guide, what do Canada's symbols do?",
+    "fr": "Selon le guide, à quoi servent les symboles du Canada?"
+  },
+  "options": [
+    {
+      "en": "They show what being Canadian means and express the country's identity.",
+      "fr": "Ils montrent ce que signifie être Canadien et expriment l'identité du pays."
+    },
+    {
+      "en": "They take the place of a written constitution.",
+      "fr": "Ils remplacent une constitution écrite."
+    },
+    {
+      "en": "They are chosen by a public vote every ten years.",
+      "fr": "Ils sont choisis par un vote public tous les dix ans."
+    },
+    {
+      "en": "They may be used only on government buildings.",
+      "fr": "Ils ne peuvent servir que sur les édifices du gouvernement."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada's symbols are objects, events and people that carry a special meaning. Taken together, they show what being Canadian means, and they appear all through the study guide.",
+    "fr": "Les symboles du Canada sont des objets, des événements et des personnes qui ont un sens particulier. Ensemble, ils montrent ce que signifie être Canadien, et on les retrouve partout dans le guide d'étude."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 78,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada has many important symbols — objects, events, and people that have special meaning. Together they help explain what it means to be Canadian and express our national identity."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

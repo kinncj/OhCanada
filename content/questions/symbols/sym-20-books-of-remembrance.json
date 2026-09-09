@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-20-books-of-remembrance",
+  "subject": "symbols",
+  "prompt": {
+    "en": "What is kept in the Memorial Chamber of the Peace Tower?",
+    "fr": "Que garde-t-on dans la Chapelle du Souvenir de la Tour de la Paix?"
+  },
+  "options": [
+    {
+      "en": "The first Canadian flag.",
+      "fr": "Le premier drapeau canadien."
+    },
+    {
+      "en": "The Crown jewels.",
+      "fr": "Les joyaux de la Couronne."
+    },
+    {
+      "en": "The Books of Remembrance.",
+      "fr": "Les Livres du Souvenir."
+    },
+    {
+      "en": "The Constitution of 1867.",
+      "fr": "La Constitution de 1867."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The Memorial Chamber holds the Books of Remembrance. Written in them are the names of the men who died serving Canada in war or while on duty.",
+    "fr": "La Chapelle du Souvenir abrite les Livres du Souvenir. On y inscrit le nom des hommes morts au service du Canada, à la guerre ou en service."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 80,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Memorial Chamber within the Tower contains the Books of Remembrance in which are written the names of soldiers, sailors and airmen who died serving Canada in wars or while on duty."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

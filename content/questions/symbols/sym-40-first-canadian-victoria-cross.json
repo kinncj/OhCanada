@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-40-first-canadian-victoria-cross",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Who was the first Canadian to be awarded the Victoria Cross?",
+    "fr": "Qui a été le premier Canadien à recevoir la Croix de Victoria?"
+  },
+  "options": [
+    {
+      "en": "Alexander Roberts Dunn.",
+      "fr": "Alexander Roberts Dunn."
+    },
+    {
+      "en": "William Hall.",
+      "fr": "William Hall."
+    },
+    {
+      "en": "Billy Bishop.",
+      "fr": "Billy Bishop."
+    },
+    {
+      "en": "Filip Konowal.",
+      "fr": "Filip Konowal."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Alexander Roberts Dunn was born in what is now Toronto. He earned the Victoria Cross at Balaclava in 1854, in the Crimean War, while serving in the British Army.",
+    "fr": "Alexander Roberts Dunn est né dans ce qui est aujourd'hui Toronto. Il a mérité la Croix de Victoria à Balaklava en 1854, pendant la guerre de Crimée, alors qu'il servait dans l'armée britannique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 86,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "served in the British Army in the Charge of the Light Brigade at Balaclava (1854) in the Crimean War, and was the first Canadian to be awarded the Victoria Cross."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

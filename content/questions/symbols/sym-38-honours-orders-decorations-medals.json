@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "sym-38-honours-orders-decorations-medals",
+  "subject": "symbols",
+  "prompt": {
+    "en": "Official awards in Canada are called honours. What do they consist of?",
+    "fr": "Les récompenses officielles au Canada s'appellent des distinctions honorifiques. En quoi consistent-elles?"
+  },
+  "options": [
+    {
+      "en": "Orders, decorations and medals.",
+      "fr": "Des ordres, des décorations et des médailles."
+    },
+    {
+      "en": "Cash prizes and scholarships.",
+      "fr": "Des prix en argent et des bourses d'études."
+    },
+    {
+      "en": "Titles of nobility.",
+      "fr": "Des titres de noblesse."
+    },
+    {
+      "en": "Land grants and pensions.",
+      "fr": "Des concessions de terres et des pensions."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Honours are made up of orders, decorations and medals. Any citizen may put forward the name of someone they think deserves one.",
+    "fr": "Les distinctions honorifiques se composent d'ordres, de décorations et de médailles. Tout citoyen peut proposer le nom d'une personne qu'il juge digne d'en recevoir une."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canadian Symbols",
+    "page": 86,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "All countries have ways to recognize outstanding citizens. Official awards are called honours, consisting of orders, decorations, and medals."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
