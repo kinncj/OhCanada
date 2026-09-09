@@ -181,6 +181,23 @@ test.describe('performance budgets', () => {
     const easing = await probe.getAttribute('data-parallax-easing');
 
     const playing = await sampleFrames(page);
+    /*
+     * The tier must not have moved under the sample.
+     *
+     * Every number below is reported *at a tier* (ADR-0011), and a mean taken
+     * across a demotion belongs to neither. This is also the shape a failing
+     * deploy had: `tier "medium"` beside 64 ms, on a tier whose own definition
+     * allows 16.7 — which is what reading the label after the fact looks like
+     * when the tracker is mid-cycle. Failing here says "the measurement is not
+     * attributable" instead of blaming the level for a number taken across two.
+     */
+    const tierAfter = (await probe.getAttribute('data-tier')) ?? 'unknown';
+    expect(
+      tierAfter,
+      `the tier moved from "${tier}" to "${tierAfter}" while the frames were being sampled, so ` +
+        'the mean belongs to neither. Re-run; if it keeps moving, the tier tracker is ' +
+        'oscillating rather than converging and that is the defect, not the frame time.',
+    ).toBe(tier);
 
     for (const [what, measured] of [
       ['idle', idle],
@@ -199,114 +216,78 @@ test.describe('performance budgets', () => {
       `playing ${playing.meanMs.toFixed(2)} ms over ${String(playing.samples)} frames`;
 
     /*
-     * 1. Cadence — asserted **only when this machine has shown it can hold one**.
+     * ### The absolute cadence budget is NOT asserted here, and that is a decision
      *
-     * ### Why the condition, and why it is not a threshold being raised
+     * CLAUDE.md's 60 fps / 30 fps targets are **device** budgets. This suite runs
+     * Chromium on SwiftShader inside a shared GitHub Actions container, and an
+     * absolute cadence asserted there measures the container. A CPU rasteriser
+     * drawing four full-screen parallax bands, a ground polygon and 400 particles
+     * at 1080x1920 will miss 30 fps however good the code is, so "the level is
+     * slow **on a software rasteriser**" and "the level is slow" are different
+     * claims and only the second is a budget breach.
      *
-     * A cadence budget is a claim about a device. Asserted against a shared,
-     * contended CI runner rendering in software it is a claim about the runner,
-     * and the failing run said so out loud: `idle 52.99 ms over 39 frames,
-     * playing 45.29 ms over 46 frames`. The **empty boot screen was slower than
-     * the level**. Nothing about a scene can make that true; the sampling window
-     * caught the machine. Failing the build on it would report "the level is too
-     * slow" when the measurement contains no information about the level at all.
+     * The evidence, from one build and two machines both idling at ~16.7 ms:
      *
-     * It is also, precisely, a run where the design worked. The tier was `low`
-     * with 0 particles — the floor. ADR-0011's mechanism had already degraded
-     * everything it has, and there is nothing left to demote to. A gate that
-     * fails a build whose degradation logic did exactly its job is measuring the
-     * hardware and calling it the software.
+     *   | | idle | playing | the level adds |
+     *   |---|---|---|---|
+     *   | developer laptop | 16.67 ms | 17.69 ms | **1.02 ms** |
+     *   | CI runner | 16.81 ms | 64.06 ms | **47.25 ms** |
      *
-     * So the condition is **measured, not assumed**: the same page, same
-     * browser, same window, with no level open, must itself hold the cadence
-     * before the level is asked to. If the machine can hold it and the level
-     * cannot, that is entirely the level and this fails, unchanged and at the
-     * same numbers as before — on a healthy machine nothing about this gate has
-     * loosened. If the machine cannot hold it empty, the cadence claim is
-     * unavailable and assertion 1b below carries the weight instead.
+     * An earlier version of this test guarded the cadence assertion on the
+     * machine holding that cadence *idle*, which removed a real ambiguity — a
+     * host that cannot schedule frames at all — and left this one, because an
+     * idle boot screen is a gradient and some snow and barely touches fill rate.
+     * Passing it does not show a machine has fill headroom. The two rows above
+     * are the same guard passing on both machines with a 47x difference in what
+     * the level costs.
      *
-     * What was **not** done, deliberately: the threshold was not raised. It is
-     * the same `thresholdsFor` value, picked by the same tier, and it is the move
-     * ADR-0011 exists to prevent — this gate has already carried that defect once
-     * today, when the cost allowance held every tier to the high tier's number.
+     * So what is asserted from here on is **cost, machine-subtracted**, at the
+     * tier it was measured at. That is the quantity a contended container can
+     * measure honestly.
+     *
+     * ### What this loses, named rather than glossed
+     *
+     * **CI will no longer tell us that the level became slow in absolute terms.**
+     * A change that halves the frame rate on every device will pass here as long
+     * as it costs the same *relative* to an empty scene on the same host. That is
+     * real lost coverage and it is not recovered by anything else in this suite.
+     *
+     * What would recover it, in ascending order of cost: a scheduled job on a
+     * dedicated GPU runner reporting absolute frame time as a trend rather than a
+     * gate; a `make test-perf-device` target run manually before a release and
+     * attached to the slice, the way task 1.18's screenshots are; or a device lab.
+     * The first is the smallest thing that would work, because the value here is a
+     * trend line, not a pass/fail — and a trend needs a stable host, which is
+     * precisely what CI is not.
+     *
+     * **Do not restore the absolute assertion here as a fix.** It was removed
+     * because it was not measurable on this host, not because it was
+     * inconvenient — and the thresholds were never touched.
      */
-    const cadenceBudget =
-      tier === 'high' ? thresholds.highIntervalP50Ms : thresholds.mediumIntervalP50Ms;
-    const machineHoldsCadence = idle.meanMs <= cadenceBudget;
-
-    if (machineHoldsCadence) {
-      expect(
-        playing.meanMs,
-        `mean frame time ${playing.meanMs.toFixed(2)} ms over the ${cadenceBudget.toFixed(2)} ms ` +
-          `cadence the "${tier}" tier requires, on a machine that held that cadence with ` +
-          `nothing to draw (${idle.meanMs.toFixed(2)} ms idle) — so this is the level. ${where}`,
-      ).toBeLessThanOrEqual(cadenceBudget);
-    } else {
-      /*
-       * Said out loud rather than skipped in silence. A test that reports
-       * success for something it did not check is the failure mode this project
-       * keeps removing, so the run states what it could not judge — and 1b
-       * immediately below is checked instead, on every machine.
-       */
-      console.warn(
-        `[perf] CADENCE NOT ASSERTED: this machine did not hold the ${cadenceBudget.toFixed(2)} ` +
-          `ms cadence the "${tier}" tier requires even with no level open ` +
-          `(${idle.meanMs.toFixed(2)} ms idle over ${String(idle.samples)} frames). The number ` +
-          `would describe the runner, not the build. The level's own contribution is asserted ` +
-          `below and in the cost check. ${where}`,
-      );
-    }
-
     /*
-     * 1b. The level's contribution to the cadence, which every machine can be
-     *     asked about because the machine subtracts out.
+     * **The one assertion: what the level costs, over the same machine with
+     * nothing to draw, at the tier it was measured at.**
      *
-     * This is the half of assertion 1 that is a property of the build rather
-     * than of the host, and it is asserted unconditionally: whatever cadence
-     * this machine manages empty, opening a level may not push it out by more
-     * than the level is allowed to cost. On the failing CI run the level made
-     * the cadence *better* than idle, and that reads as the pass it is.
-     */
-    const cadenceCost = playing.meanMs - idle.meanMs;
-    const costBudget =
-      tier === 'high' ? thresholds.highCostP50Ms : thresholds.mediumCostP50Ms;
-    expect(
-      cadenceCost,
-      `opening the level pushed the frame interval out by ${cadenceCost.toFixed(2)} ms, past ` +
-        `the ${costBudget.toFixed(2)} ms the "${tier}" tier allows it — ${where}`,
-    ).toBeLessThanOrEqual(costBudget);
-
-    /*
-     * 2. Cost, relative to the same machine with nothing to draw — **at the
-     *    tier it measured at**, exactly as the cadence assertion above.
+     * The host subtracts out, so this is a property of the build rather than of
+     * the container — which is why it is what survived the reasoning above.
      *
-     * This used `highCostP50Ms` (half a 60 fps frame) at every tier, and that
-     * is the mistake ADR-0011 names in its own consequences: "any future
-     * frame-time gate must report the tier it measured at, or the number means
-     * nothing. A budget met at `low` and a budget met at `high` are different
-     * claims, and a gate that reports one number for both is a gate that
-     * measures nothing." The cadence assertion above already picks its
-     * threshold by tier; this one did not, so a device measured at `low` — a
-     * software rasteriser whose *empty boot screen* costs 20 ms here — was held
-     * to the allowance of a device drawing six layers at 60 fps.
+     * The allowance is the measured tier's own, from `visual-tier.ts`'s
+     * thresholds, imported rather than restated: a `high` device keeps half a
+     * frame for everything else; `medium` and `low` may spend a whole 60 fps
+     * budget on the level. Holding every tier to the `high` number was this
+     * gate's earlier defect and it is exactly what ADR-0011 forbids — "a budget
+     * met at `low` and a budget met at `high` are different claims, and a gate
+     * that reports one number for both is a gate that measures nothing".
      *
-     * How that showed: this assertion passed for as long as the Ottawa level
-     * drew **no art at all**. Nothing ever queued a texture, every parallax band
-     * was a flat colour, and the level added almost nothing to an empty scene
-     * because it was an empty scene. The first build that actually loaded its
-     * six layers failed here by 5 ms. A gate that can only pass while the thing
-     * it measures does not happen is not measuring anything, which is the same
-     * defect as the missing art and was hiding behind it.
-     *
-     * So the allowance is the one the measured tier's own definition uses —
-     * `visual-tier.ts`'s thresholds, imported, not restated: a `high` device
-     * keeps half a frame for everything else, and `medium`/`low` may spend a
-     * whole 60 fps frame budget on the level. It stays non-vacuous at every
-     * tier — a level that added 20 ms would fail wherever it was measured — and
-     * the cadence assertion above is what stops a slow device passing this one
-     * by being slow at everything.
+     * It stays non-vacuous everywhere: a level adding 20 ms fails at any tier.
+     * And it is not satisfiable by drawing nothing — this assertion passed for
+     * as long as Ottawa queued no textures at all, and `tests/e2e/level-art.spec.ts`
+     * is what closed that, because a frame-time gate cannot tell an empty scene
+     * from a cheap one and should not be asked to.
      */
     const added = playing.meanMs - idle.meanMs;
+    const costBudget =
+      tier === 'high' ? thresholds.highCostP50Ms : thresholds.mediumCostP50Ms;
     expect(
       added,
       `the level adds ${added.toFixed(2)} ms a frame over an empty scene, past the ` +
