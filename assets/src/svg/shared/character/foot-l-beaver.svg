@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="69" height="44" viewBox="126 418 69 44" shape-rendering="geometricPrecision">
+  <title>The guide's webbed hind foot, the wearer's left, the near side of the canonical pose. Bare dark hide, a single rounded wedge with three toe notches, a tone lighter than the tail because the sole plane faces the sky and two dark masses of one tone merge at phone size, and the web between them. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.</title>
+  <path d="M 136,424 C 150,420 176,424 184,430 C 190,435 188,443 190,450 C 192,457 182,460 168,460 L 140,460 C 132,460 130,454 130,446 C 130,436 130,428 136,424 Z" fill="#44555f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="fbl"><path d="M 136,424 C 150,420 176,424 184,430 C 190,435 188,443 190,450 C 192,457 182,460 168,460 L 140,460 C 132,460 130,454 130,446 C 130,436 130,428 136,424 Z"/></clipPath></defs>
+  <g clip-path="url(#fbl)">
+    <ellipse cx="140" cy="430" rx="22" ry="12" fill="#44555f"/>
+    <ellipse cx="186" cy="456" rx="24" ry="14" fill="#242b33"/>
+    <path d="M 158,436 L 158,464" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 174,438 L 174,464" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

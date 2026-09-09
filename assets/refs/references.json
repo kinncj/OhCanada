@@ -28,7 +28,8 @@
     "the bracket is recorded AND the one internally consistent view is named, because a drawing built from the",
     "middle of three brackets satisfies none of them: that is a mistake this pass made and undid.",
     "AMENDED 2026-09-08 while drawing Halifax (level 1) and Toronto (level 5). Five subjects added. TWO OF THEM ARE THE POINT OF THIS AMENDMENT. `town-clock` is allowed to demand a place name and `pier-21` IS NOT, and the difference is not a preference: the Town Clock is a specific building with a silhouette nothing else has, and Pier 21 is a brick shed whose one unmistakable feature is the name painted on it, which this project never draws. The PO refused to write an expectedBlindAnswer for it and recorded the Town Clock as a fallback anchor; the answer taken here is BOTH - Pier 21 is drawn, accurately, and asked only for what a shed can carry, and the level's Halifax identification rests on a second non-repeating hero that can carry it. Ottawa's canal passed on the verifier's inference rather than on the art; this is the same mistake refused before it is made rather than after.",
-    "AND THE MEASURING LESSON REPEATS, in a new form. ADR-0014 records that averaging three individually-correct brackets produced a Chateau nobody photographed. Here the first build of the Town Clock took its stage heights and widths from a read of a gridded crop, by eye, and had the colonnade 29 per cent too narrow and the dial 16 per cent too small - errors that only appeared when every figure was re-expressed as a fraction of ONE measured quantity, the base building's width. A ratio is only a measurement if its denominator was measured too."
+    "AND THE MEASURING LESSON REPEATS, in a new form. ADR-0014 records that averaging three individually-correct brackets produced a Chateau nobody photographed. Here the first build of the Town Clock took its stage heights and widths from a read of a gridded crop, by eye, and had the colonnade 29 per cent too narrow and the dial 16 per cent too small - errors that only appeared when every figure was re-expressed as a fraction of ONE measured quantity, the base building's width. A ratio is only a measurement if its denominator was measured too.",
+    "AMENDED 2026-09-08 while redrawing the player costume and adding the beaver guide. Two subjects added, and BOTH ARE CHARACTERS, which is why each carries a renderRecipe that builds a composite and demands a second figure in the frame: a character cannot be judged from one file and identical proportions cannot be judged from one figure. `player` ships with an EMPTY referenceFiles list and that is correct - it is a costume, not a landmark, and there is no photograph it is a simplification of; its accuracy bar is the palette, the proportion canon and the two-size test. `guide` ships with six, licence-checked before download, and with one labelled departure from them - white incisors where the animal's are orange - written down as an exaggeration rather than left looking like accuracy."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -403,6 +404,101 @@
         "red-serge-musical-ride.jpg shows the uniform at distance in daylight: use it to check that the silhouette and the leg stripe still read when the figure is small.",
         "officer-and-peace-tower-portrait.jpg is public domain (Crown copyright expired) and is the composition reference: scarlet review order, full length, standing on Parliament Hill with the Peace Tower behind, in portrait. It shows an identifiable person - rule 4 in assets/refs/README.md applies, it is a reference for uniform, posture and framing and never a portrait to reproduce.",
         "red-serge-and-working-uniform.jpg shows ceremonial scarlet beside the modern working uniform, which is the visual answer to OQ-LEVEL-2 if the PO chooses the winter option."
+      ]
+    },
+    {
+      "id": "player",
+      "renders": [
+        "src/svg/shared/character/torso-parka.svg",
+        "src/svg/shared/character/arm-upper-parka.svg",
+        "src/svg/shared/character/arm-lower-parka.svg",
+        "src/svg/shared/character/hand-parka.svg",
+        "src/svg/shared/character/leg-upper-parka.svg",
+        "src/svg/shared/character/leg-lower-parka.svg",
+        "src/svg/shared/character/foot-r-parka.svg",
+        "src/svg/shared/character/foot-l-parka.svg",
+        "src/svg/shared/character/head-covering-toque.svg",
+        "src/svg/shared/character/head-skin-2.svg",
+        "src/svg/shared/character/face-neutral.svg",
+        "src/svg/shared/character/hair-crop-brown.svg",
+        "src/svg/shared/character/ground-shadow.svg"
+      ],
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail and the guide gets no toque. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=parka. The skin, hair and head-covering choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of - and at least one run must set headCovering=none, because the toque carries a large share of the identification and a costume that only reads with a hat on has not been checked. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the player (costume=parka) and the officer (costume=serge), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry.",
+      "subject": "A person dressed for a Canadian winter - parka, toque, scarf, mitts and snow boots",
+      "expectedBlindAnswer": [
+        "a person in winter clothing",
+        "someone in a parka and toque",
+        "a kid dressed for the snow",
+        "a person in a winter coat, hat, scarf and mittens",
+        "someone bundled up for winter"
+      ],
+      "designSheet": "assets/style/player.md",
+      "referenceFiles": [],
+      "mustBeRight": [
+        {
+          "feature": "a coat with a waist",
+          "why": "This is the entry the redraw exists for. The costume shipped as a slab of one width from shoulder to hem and the reported defect was, in the repository owner's words, that the character is still a rectangle. If a verifier can describe the torso as a box, this fails.",
+          "detail": "Shoulder about 148 px, waist about 112, hem about 152, with a drawcord and two toggles across the narrow point and a snow-white knit band along the hem.",
+          "palette": "cobalt, snow"
+        },
+        {
+          "feature": "a scarf at the neck, hanging VERTICALLY",
+          "why": "The strongest single element at phone size, and the one that must not become a diagonal: a shoulder-to-hip band across a chest is the officer's Sam Browne and the two characters must not converge at 25 percent.",
+          "detail": "Red, wrapped at the neck over the collar, with one tail hanging straight down the front.",
+          "palette": "flag-red"
+        },
+        {
+          "feature": "mitts, not bare hands",
+          "detail": "Knitted, one mass and a thumb on the inner edge, with a white knit cuff. No separated fingers at any size.",
+          "palette": "flag-red, snow"
+        },
+        {
+          "feature": "a toque with a turned fold band and a pom",
+          "why": "Offered with every hair shape, every hair colour and every skin ramp - it is a slot, not part of the costume. Its fold band clears the brow line, because the brow is one third of the expression vocabulary.",
+          "detail": "Red crown, white fold band, white pom.",
+          "palette": "flag-red, snow, white"
+        },
+        {
+          "feature": "winter boots",
+          "detail": "Brown leather uppers, a rounded toe cap, a white knit cuff and a dark moulded sole.",
+          "palette": "leather, snow, hide"
+        },
+        {
+          "feature": "the character creator's whole range renders",
+          "why": "Six skin ramps, four hair shapes, five hair colours, two head coverings and two features are 480 appearances, and slot independence (docs/content-review.md 8.2) says every one of them is reachable. A costume that only works over one hair shape is a coupling.",
+          "detail": "Every hair shape reads correctly under the toque and with headCovering=none, on every skin ramp.",
+          "requiresComparisonFigure": false
+        },
+        {
+          "feature": "cartoon proportions identical to every other character",
+          "why": "CLAUDE.md requires it. A verifier shown ONE figure cannot check this and must not be asked to; the hand-off carries the officer beside the player, same rig, different costume.",
+          "detail": "6 heads tall, 420 px at design resolution, same shoulder width, hands, feet, eye line and detail budget as the officer and the guide.",
+          "requiresComparisonFigure": true
+        }
+      ],
+      "simplifyAway": [
+        "fabric folds and drape",
+        "stitching, seam topstitching and zip teeth",
+        "laces above the boot cuff",
+        "fur strand detail on the hood trim",
+        "separated fingers, at any size"
+      ],
+      "neverAdd": [
+        "a national flag, a maple leaf or any emblem on the costume",
+        "lettering of any kind, in any language, anywhere on the character",
+        "a diagonal band, strap or sash running shoulder to hip - that is the officer's Sam Browne",
+        "a red coat or tunic - the officer is scarlet and the two must not converge at small size",
+        "any insignia, badge, crest or rank marking",
+        "a facial feature that identifies an ethnicity once colour is removed (docs/content-review.md 6.3)"
+      ],
+      "whyTheOmissions": "The Canadian read is carried by the kit - parka, toque, scarf, mitts, snow boots - and not by an emblem. An emblem on the player is also a decoration the player did not choose, on a character whose entire point is that the player chose it.",
+      "openQuestions": [
+        "OQ-ART-08",
+        "OQ-REVIEW-6"
+      ],
+      "notes": [
+        "referenceFiles is empty and that is correct: this is a costume, not a landmark, and there is no photograph it is a simplification OF. The accuracy bar it has to clear is the palette, the proportion canon and the two-size test, all of which are checkable without one.",
+        "The blind answer does not have to contain the word Canadian. Parka, toque, scarf and mitts on a 6-head cartoon figure is the target; a verifier who says 'a person dressed for cold weather' has passed."
       ]
     },
     {
@@ -1168,6 +1264,122 @@
         "kind has to live: credits.schema.json is additionalProperties:false and has no other field for it.",
         "toronto/skyline-overcast.jpg is CC0 and is the massing reference for the tower rhythm."
       ]
+    },
+    {
+      "id": "guide",
+      "renders": [
+        "src/svg/shared/character/tail-beaver.svg",
+        "src/svg/shared/character/head-shell-beaver.svg",
+        "src/svg/shared/character/torso-beaver.svg",
+        "src/svg/shared/character/arm-upper-beaver.svg",
+        "src/svg/shared/character/arm-lower-beaver.svg",
+        "src/svg/shared/character/hand-beaver.svg",
+        "src/svg/shared/character/leg-upper-beaver.svg",
+        "src/svg/shared/character/leg-lower-beaver.svg",
+        "src/svg/shared/character/foot-r-beaver.svg",
+        "src/svg/shared/character/foot-l-beaver.svg",
+        "src/svg/shared/character/head-skin-3.svg",
+        "src/svg/shared/character/face-neutral.svg",
+        "src/svg/shared/character/hair-crop-brown.svg",
+        "src/svg/shared/character/ground-shadow.svg"
+      ],
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail and the guide gets no toque. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=beaver and leave every other slot at its fallback: head-skin and hair-crop ARE drawn and are then covered entirely by head-shell-beaver, which is why no pelt tone was added to the skin slot, and a composite that omits them is not what ships. Vary the expression between runs. THE HAND-OFF MUST CONTAIN THE PLAYER BESIDE THE GUIDE on one canvas, for the same reason the officer's does: identical proportions cannot be judged from one figure.",
+      "subject": "A cartoon North American beaver, standing upright, as a companion guide",
+      "expectedBlindAnswer": [
+        "beaver",
+        "a beaver",
+        "cartoon beaver",
+        "North American beaver",
+        "a beaver mascot",
+        "Canadian beaver"
+      ],
+      "designSheet": "assets/style/guide.md",
+      "referenceFiles": [
+        "beaver/beaver-upright-winter-gnawing.jpg",
+        "beaver/beaver-head-and-forepaws.jpg",
+        "beaver/beaver-paddle-tail.jpg",
+        "beaver/beaver-ontario-full-body.jpg",
+        "beaver/beaver-alberta-profile.jpg",
+        "beaver/beaver-head-close.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the paddle tail, visible and out to one side",
+          "why": "One of the two features that carry the identification, and the one a front-facing character loses by default: anything drawn behind a front-facing torso is not drawn at all. If it disappears first at small size, it is drawn too small or too dark.",
+          "detail": "A broad flat oval leaning down and away from the wearer's right hip, on a stub that leaves the body at the hip and tucks behind the leg, with three cross bands for scale and a large lit upper face. About 100 x 130 px in character space.",
+          "palette": "hide",
+          "maskRegion": {
+            "x": 0,
+            "y": 300,
+            "w": 120,
+            "h": 160
+          },
+          "whyMasked": "MEASURED against the 240x470 composite the renderRecipe builds: this rectangle covers the whole tail, stub and paddle, and leaves the head, body, forelimbs and the near hind leg untouched. It exists so the claim that the tail is load-bearing has a test - mask it and the identification should degrade."
+        },
+        {
+          "feature": "two large incisors below the mouth",
+          "why": "The other load-bearing feature, and the one that reads at the smallest sizes.",
+          "detail": "Two white teeth, together about 36 px wide and 20 tall in character space, hanging below the shared mouth line on a pale snout pad.",
+          "palette": "white, felt",
+          "maskRegion": {
+            "x": 96,
+            "y": 96,
+            "w": 48,
+            "h": 36
+          },
+          "whyMasked": "MEASURED against the same composite: covers both incisors and the lower snout pad and leaves the eyes, brows, ears and body alone."
+        },
+        {
+          "feature": "small round ears set LOW and well back at the side of the skull",
+          "why": "This is the difference between a beaver and a bear, and the first version of this head got it wrong: high, large, rounded ears read as a bear in the render even though the teeth and tail were already right.",
+          "detail": "Round, about 22 px across, sitting just above the eye line at the widest point of the skull, mostly behind the head outline.",
+          "palette": "leather, felt"
+        },
+        {
+          "feature": "a broad blunt muzzle with a wide flat nose",
+          "detail": "A pale snout pad filling the lower half of the face with a wide dark nose across its top.",
+          "palette": "felt, hide"
+        },
+        {
+          "feature": "a pale belly against a darker pelt",
+          "detail": "Ventral fur a full ramp lighter than the flank.",
+          "palette": "felt, leather"
+        },
+        {
+          "feature": "webbed hind feet",
+          "detail": "Bare dark hide, a single rounded wedge with three toe notches, a tone lighter than the tail so the two dark masses do not merge at phone size.",
+          "palette": "hide"
+        },
+        {
+          "feature": "cartoon proportions identical to every other character",
+          "why": "CLAUDE.md requires it and this is the character most likely to tempt an artist into breaking it, because a real beaver's head is proportionally enormous. It is 6 heads tall on the same rig as the player. Without a second figure in the frame this entry is UNCHECKABLE and must be reported as such rather than scored present.",
+          "detail": "6 heads tall, 420 px at design resolution, same crown, sole, eye line, hand and foot sizes and stroke weights as the player and the officer.",
+          "requiresComparisonFigure": true
+        }
+      ],
+      "simplifyAway": [
+        "individual fur strands and the wet-fur parting the photographs show",
+        "whiskers - below the 12 px minimum shape at every shipping size",
+        "claws as separate digits; three ticks at the paw edge stand in for them",
+        "the fine scale grid of the tail, which becomes three cross bands",
+        "nostrils, and any modelling inside the nose pad"
+      ],
+      "neverAdd": [
+        "clothing, a hat, a scarf or an accessory of any kind - the guide is an animal, not a person in a suit",
+        "any Indigenous item, pattern, regalia or motif, on the guide or near it (docs/content-review.md)",
+        "a national flag, a maple leaf, an emblem or lettering",
+        "a felled log, a dam or a construction prop used as a joke about the animal",
+        "buck teeth drawn as a comic overbite past the chin, or any other caricature of the animal",
+        "a second, smaller or larger proportion than every other character"
+      ],
+      "whyTheOmissions": "The guide exists so the game can be literally Canadian at the points of interest without spending the character creator on a mascot. It stays an animal companion: no costume, no cultural item, no props. Skin colour is the one row of the art bible 7 table that cannot apply to it - its fills are leather, felt, hide and white, not a skin ramp - and that is a recorded exemption for one non-human artboard, not a licence to score any human character the same way.",
+      "openQuestions": [],
+      "notes": [
+        "beaver-upright-winter-gnawing.jpg is the pose reference: a beaver sitting up on its hind legs in snow holding a stick in its forepaws. The design is a cartoon of that stance.",
+        "beaver-head-and-forepaws.jpg is backlit through grass and carries a cool cast: it is a GEOMETRY reference for the ear, muzzle and forepaw, and the fur colour was not taken from it alone.",
+        "beaver-upright-winter-gnawing.jpg is a dusk exposure and is a colour trap: its fur medians at L 18 and S 6. It was excluded from the pelt measurement and used for pose only.",
+        "The incisors are drawn WHITE and real beaver incisors are orange. That is a labelled legibility exaggeration recorded in assets/style/guide.md 3, not an oversight: at ship size a tooth is about 4 px wide and orange enamel on a felt snout pad is two warm tans touching."
+      ]
     }
   ],
   "licenceAudit": {
@@ -1176,10 +1388,12 @@
     "acceptedLicences": [
       "public-domain",
       "CC0-1.0",
+      "CC-BY-1.0",
       "CC-BY-2.0",
+      "CC-BY-2.5",
       "CC-BY-3.0",
       "CC-BY-4.0"
     ],
-    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa. Re-run 2026-09-08 for the fifteen Halifax and Toronto references, by the same method and before any of them was downloaded: five CC0, five public domain, three CC BY 2.0, two CC BY 3.0 and one CC BY 4.0. Every one is inside the accepted set above. The Halifax Town Clock's best photographs and every photograph of the Citadel are CC BY-SA and were rejected on licence, not on quality, for the third level running - and for the Town Clock that cost real quality, because the ShareAlike set includes the only high-resolution near-orthographic elevations. The one CC BY 4.0 file that was available carried the day."
+    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa. Re-run 2026-09-08 for the fifteen Halifax and Toronto references, by the same method and before any of them was downloaded: five CC0, five public domain, three CC BY 2.0, two CC BY 3.0 and one CC BY 4.0. Every one is inside the accepted set above. The Halifax Town Clock's best photographs and every photograph of the Citadel are CC BY-SA and were rejected on licence, not on quality, for the third level running - and for the Town Clock that cost real quality, because the ShareAlike set includes the only high-resolution near-orthographic elevations. The one CC BY 4.0 file that was available carried the day. Re-run 2026-09-08 for the six beaver references, by the same method and before any of them was downloaded: three public domain, one CC0, one CC BY 2.0 and one CC BY 2.5. CC-BY-2.5 appears in this list for the first time and it is inside the enum the architect settled - the intersection in assets/refs/README.md already contained it, and the list above had simply never had a member of it."
   }
 }

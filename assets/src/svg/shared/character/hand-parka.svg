@@ -1,7 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="60" height="52" viewBox="162 276 60 52" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. Mitten: one mass and a thumb, no separated fingers at any size.</title>
-  <path d="M 198,298 L 198,308 C 198,314.66 216,314.66 216,308 L 216,298 C 216,291.34 198,291.34 198,298 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 173,289 L 173,315 C 173,329.06 211,329.06 211,315 L 211,289 C 211,274.94 173,274.94 173,289 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 177.5,291 L 177.5,311 C 177.5,315.81 190.5,315.81 190.5,311 L 190.5,291 C 190.5,286.19 177.5,286.19 177.5,291 Z" fill="#c5994d"/>
-  <path d="M 195,293 L 195,313 C 195,317.44 207,317.44 207,313 L 207,293 C 207,288.56 195,288.56 195,293 Z" fill="#5a2d19"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="59" viewBox="159 273 60 59" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. Knitted mitt: one mass and a thumb, no separated fingers at any size. The thumb sits on the INNER edge, so it points toward the body on both hands once the frame is mirrored.</title>
+  <path d="M 179,300 C 169,296 162,302 164,311 C 166,320 178,323 184,316 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 194,288 C 207,288 215,295 215,304 L 215,316 C 215,331 173,331 173,316 L 173,304 C 173,295 181,288 194,288 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="mt"><path d="M 194,288 C 207,288 215,295 215,304 L 215,316 C 215,331 173,331 173,316 L 173,304 C 173,295 181,288 194,288 Z"/></clipPath></defs>
+  <g clip-path="url(#mt)">
+    <path d="M 208,292 C 216,294 216,304 215,314 C 214,324 216,330 216,336 L 202,336 C 202,326 201,312 202,302 C 202,294 203,292 208,292 Z" fill="#e27468"/>
+    <path d="M 176,294 C 182,294 183,304 183,314 C 183,324 182,330 182,336 L 170,336 C 170,326 170,312 170,302 C 170,296 171,294 176,294 Z" fill="#941835"/>
+  </g>
+  <path d="M 181,276 L 207,276 C 215,276 215,294 207,294 L 181,294 C 173,294 173,276 181,276 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 183,286 L 209,286 C 213,286 213,294 209,294 L 183,294 C 179,294 179,286 183,286 Z" fill="#c2d6e8"/>
 </svg>

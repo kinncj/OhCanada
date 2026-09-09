@@ -1,15 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="162" height="184" viewBox="39 120 162 184" shape-rendering="geometricPrecision">
-  <title>Winter parka: hooded-collar band, centre closure and a snow-white hem trim. Warm, dry and the right coat for a January canal - the costume distinguishes the character; the body does not.</title>
-  <path d="M 120,124 C 132.67,124 146.33,124.67 158,128 C 169.67,131.33 183.5,137 190,144 C 196.5,151 199,154 197,170 C 195,186 180.17,219.67 178,240 C 175.83,260.33 193.67,282 184,292 C 174.33,302 141.33,300 120,300 C 98.67,300 65.67,302 56,292 C 46.33,282 64.17,260.33 62,240 C 59.83,219.67 45,186 43,170 C 41,154 43.5,151 50,144 C 56.5,137 70.33,131.33 82,128 C 93.67,124.67 107.33,124 120,124 Z" fill="#2c8055" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="pk"><path d="M 120,124 C 132.67,124 146.33,124.67 158,128 C 169.67,131.33 183.5,137 190,144 C 196.5,151 199,154 197,170 C 195,186 180.17,219.67 178,240 C 175.83,260.33 193.67,282 184,292 C 174.33,302 141.33,300 120,300 C 98.67,300 65.67,302 56,292 C 46.33,282 64.17,260.33 62,240 C 59.83,219.67 45,186 43,170 C 41,154 43.5,151 50,144 C 56.5,137 70.33,131.33 82,128 C 93.67,124.67 107.33,124 120,124 Z"/></clipPath></defs>
-  <g clip-path="url(#pk)">
-    <path d="M 49.02,154.73 L 55.02,244.73 C 55.57,252.85 77.52,251.39 76.98,243.27 L 70.98,153.27 C 70.43,145.15 48.48,146.61 49.02,154.73 Z" fill="#41b76b"/>
-    <path d="M 172.02,159.31 L 166.02,263.31 C 165.51,272.18 189.47,273.56 189.98,264.69 L 195.98,160.69 C 196.49,151.82 172.53,150.44 172.02,159.31 Z" fill="#154536"/>
-    <path d="M 40,282 L 200,282 L 200,306 L 40,306 Z" fill="#154536"/>
-    <path d="M 40,278 L 200,278" fill="none" stroke="#e6eff7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M 120,152 L 120,278" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <ellipse cx="120" cy="130" rx="44" ry="16" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="158" height="186" viewBox="41 122 158 186" shape-rendering="geometricPrecision">
+  <title>Winter parka: a fur-trimmed hood ruff behind the head, sloped shoulders, a drawcord waist and an A-line hem with a snow-white knit band, over a red scarf that wraps the neck and hangs down the front. The ruff, the waist and the scarf are what stop the coat reading as a rectangle at phone size. The scarf hangs VERTICALLY and never crosses shoulder to hip: a diagonal band across a chest is the officer's cross-strap, and the two characters must not converge at small size.</title>
+
+  <!-- hood ruff, lying across the shoulders behind the head. The head part (z 12) draws in front of it, so the lobed edge either side of the neck is what carries the read. -->
+  <path d="M 56,134 A 8,8 0 0 1 72,134 A 8,8 0 0 1 88,134 A 8,8 0 0 1 104,134 A 8,8 0 0 1 120,134 A 8,8 0 0 1 136,134 A 8,8 0 0 1 152,134 A 8,8 0 0 1 168,134 A 8,8 0 0 1 184,134 L 184,146 C 168,164 72,164 56,146 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="ruff"><path d="M 56,134 A 8,8 0 0 1 72,134 A 8,8 0 0 1 88,134 A 8,8 0 0 1 104,134 A 8,8 0 0 1 120,134 A 8,8 0 0 1 136,134 A 8,8 0 0 1 152,134 A 8,8 0 0 1 168,134 A 8,8 0 0 1 184,134 L 184,146 C 168,164 72,164 56,146 Z"/></clipPath></defs>
+  <g clip-path="url(#ruff)">
+    <ellipse cx="70" cy="136" rx="26" ry="16" fill="#ffffff"/>
+    <ellipse cx="176" cy="156" rx="26" ry="16" fill="#c2d6e8"/>
   </g>
-  <path d="M 103,154 L 137,154 C 146.62,154 146.62,128 137,128 L 103,128 C 93.38,128 93.38,154 103,154 Z" fill="#c2d6e8" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 105,144 L 135,144 C 140.18,144 140.18,130 135,130 L 105,130 C 99.82,130 99.82,144 105,144 Z" fill="#ffffff"/>
+
+  <!-- parka body: shoulder 148, waist 112, hem 160. The taper is the silhouette. -->
+  <path d="M 120,128 C 142,128 160,132 174,140 C 188,148 194,154 192,166 C 190,182 180,204 176,228 C 172,252 190,272 194,290 C 196,300 176,304 120,304 C 64,304 44,300 46,290 C 50,272 68,252 64,228 C 60,204 50,182 48,166 C 46,154 52,148 66,140 C 80,132 98,128 120,128 Z" fill="#153f86" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="parka"><path d="M 120,128 C 142,128 160,132 174,140 C 188,148 194,154 192,166 C 190,182 180,204 176,228 C 172,252 190,272 194,290 C 196,300 176,304 120,304 C 64,304 44,300 46,290 C 50,272 68,252 64,228 C 60,204 50,182 48,166 C 46,154 52,148 66,140 C 80,132 98,128 120,128 Z"/></clipPath></defs>
+  <g clip-path="url(#parka)">
+    <path d="M 58,146 C 72,138 80,144 78,158 C 74,182 80,210 76,236 C 72,264 60,282 56,300 L 34,300 L 34,146 Z" fill="#2275c6"/>
+    <path d="M 184,150 C 170,144 164,150 166,164 C 170,188 164,212 168,238 C 172,266 182,284 186,302 L 206,302 L 206,150 Z" fill="#091740"/>
+    <path d="M 34,278 C 70,272 170,272 206,278 L 206,312 L 34,312 Z" fill="#e6eff7"/>
+    <path d="M 34,296 C 70,292 170,292 206,296 L 206,312 L 34,312 Z" fill="#c2d6e8"/>
+    <ellipse cx="120" cy="142" rx="58" ry="22" fill="#16203a" opacity="0.18"/>
+    <ellipse cx="120" cy="284" rx="76" ry="14" fill="#16203a" opacity="0.18"/>
+    <ellipse cx="98" cy="186" rx="20" ry="40" fill="#2275c6"/>
+    <path d="M 56,230 C 82,242 158,242 184,230" fill="none" stroke="#3a2018" stroke-width="5" stroke-linecap="round"/>
+    <ellipse cx="82" cy="242" rx="7" ry="7" fill="#e6eff7" stroke="#3a2018" stroke-width="3"/>
+    <ellipse cx="152" cy="242" rx="7" ry="7" fill="#e6eff7" stroke="#3a2018" stroke-width="3"/>
+  </g>
+
+  <!-- scarf: neck wrap and a tail hanging straight down the front. -->
+  <path d="M 106,150 C 96,158 94,176 96,196 C 98,220 94,238 98,252 C 102,262 122,262 126,252 C 132,236 124,216 126,194 C 128,172 124,156 116,148 Z" fill="#d8262c" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 97,230 C 106,236 118,236 125,230 C 126,240 125,248 126,252 C 122,262 102,262 98,252 C 96,246 96,238 97,230 Z" fill="#941835"/>
+  <path d="M 92,132 L 148,132 C 160,132 160,164 148,164 L 92,164 C 80,164 80,132 92,132 Z" fill="#d8262c" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 94,136 L 130,136 C 136,136 136,148 130,148 L 94,148 C 88,148 88,136 94,136 Z" fill="#e27468"/>
+  <path d="M 116,154 L 150,154 C 156,154 156,162 150,162 L 116,162 C 110,162 110,154 116,154 Z" fill="#941835"/>
 </svg>

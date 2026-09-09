@@ -1,9 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="59" height="38" viewBox="68 424 59 38" shape-rendering="geometricPrecision">
-  <title>Winter boot, the wearer's right, the far side of the canonical pose. A single rounded wedge. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.</title>
-  <path d="M 74,428 C 79.25,427.07 111.28,428.6 117,430 C 122.72,431.4 122.53,436.73 123,440 C 123.47,443.27 126.48,455.9 121,458 C 115.52,460.1 81.72,460.33 76,458 C 70.28,455.67 72.23,441.5 72,438 C 71.77,434.5 68.75,428.93 74,428 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="bt"><path d="M 74,428 C 79.25,427.07 111.28,428.6 117,430 C 122.72,431.4 122.53,436.73 123,440 C 123.47,443.27 126.48,455.9 121,458 C 115.52,460.1 81.72,460.33 76,458 C 70.28,455.67 72.23,441.5 72,438 C 71.77,434.5 68.75,428.93 74,428 Z"/></clipPath></defs>
-  <g clip-path="url(#bt)">
-    <ellipse cx="80" cy="436" rx="14" ry="8" fill="#c5994d"/>
-    <ellipse cx="98" cy="454" rx="26" ry="8" fill="#5a2d19"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="65" height="48" viewBox="66 414 65 48" shape-rendering="geometricPrecision">
+  <title>Winter boot, the wearer's right, the far side of the canonical pose. A single rounded wedge with a knit cuff, a rounded toe cap and a moulded rubber sole. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.</title>
+  <path d="M 78,422 C 92,418 114,422 120,428 C 126,434 124,442 126,448 C 128,456 120,460 108,460 L 80,460 C 72,460 70,454 70,446 C 70,436 70,426 78,422 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="btr"><path d="M 78,422 C 92,418 114,422 120,428 C 126,434 124,442 126,448 C 128,456 120,460 108,460 L 80,460 C 72,460 70,454 70,446 C 70,436 70,426 78,422 Z"/></clipPath></defs>
+  <g clip-path="url(#btr)">
+    <ellipse cx="116" cy="436" rx="20" ry="14" fill="#b4733b"/>
+    <ellipse cx="72" cy="440" rx="18" ry="16" fill="#401812"/>
+    <path d="M 64,446 C 88,442 114,442 134,446 L 134,464 L 64,464 Z" fill="#242b33"/>
+    <path d="M 64,446 C 88,442 114,442 134,446 L 134,452 C 114,448 88,448 64,452 Z" fill="#44555f"/>
   </g>
+  <path d="M 80,414 L 110,414 C 118,414 118,432 110,432 L 80,432 C 72,432 72,414 80,414 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="3" stroke-linejoin="round"/>
 </svg>

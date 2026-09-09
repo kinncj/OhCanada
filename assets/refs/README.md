@@ -95,6 +95,22 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   `assets/credits.json`, because `credits.schema.json` is `additionalProperties: false` and has no other
   field it could go in. Rule 5 below has the same shape of problem and the same answer.
 
+- `beaver/` — the guide: the beaver companion who appears at points of interest. Six files, licence-checked
+  against the Commons API on **2026-09-08** before any was downloaded: three public domain, one CC0, one
+  CC BY 2.0 and one CC BY 2.5. The design sheet is `assets/style/guide.md`.
+
+  **Two of the six are colour traps and are labelled as such in `references.json`.**
+  `beaver-upright-winter-gnawing.jpg` is a dusk exposure of a wet animal — its fur medians at L 18, S 6 —
+  and is the **pose** reference only, which is what it is here for: a beaver sitting up on its hind legs in
+  snow with a stick in its forepaws is the stance the cartoon is a simplification of.
+  `beaver-head-and-forepaws.jpg` is backlit through grass with a cool cast and is a **geometry** reference
+  for the ear, the muzzle and the forepaw. The pelt colour was measured across three references and
+  corrected for the fact that every one of them shows wet fur; the working is in `guide.md` §4.
+
+  **Every photograph of this animal is of a wild animal and none of them shows a person**, so rule 4 below
+  has nothing to bite on here — which is worth saying, because it is the first subject in this directory for
+  which that is true and a reader should not conclude the rule was forgotten.
+
 - `officer/` — the slice-1 NPC: the scarlet review-order uniform, the wide-brimmed felt hat and Sam Browne
   belt hardware. The design sheet is `assets/style/officer.md`, which also records the marks that must
   **never** be drawn and why. The uniform silhouette is drawn; the insignia are not.

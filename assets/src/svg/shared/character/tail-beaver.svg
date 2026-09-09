@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="149" viewBox="2 282 110 149" shape-rendering="geometricPrecision">
+  <title>The guide's paddle tail: a broad flat scaly oval carried out to the wearer's right, leaning down and away on a scaly stub that leaves the body at the hip and tucks behind the leg, so the tail reads as attached rather than as a rock beside the feet. The tail is one of the two features that make a beaver identifiable at phone size, so it is drawn at full weight and never tucked behind the figure where a front-facing character would hide it. Scale is three cross bands - a rhythm, not a texture fill (art bible 1); an inner ring was tried and removed because it made the paddle read as a shell. Drawn from assets/refs/beaver/beaver-paddle-tail.jpg and beaver-ontario-full-body.jpg.</title>
+  <path d="M 90,281 C 87,284 78,292 71,298 C 65,304 56,310 50,316 C 43,322 34,332 31,335 A 30,30 0 0 1 81,369 C 82,366 86,355 90,348 C 94,341 100,334 105,326 C 109,319 116,307 118,303 Z" fill="#242b33" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="56" cy="376" rx="44" ry="54" transform="rotate(-45 56 376)" fill="#242b33" stroke="#3a2018" stroke-width="6"/>
+  <defs><clipPath id="pad"><ellipse cx="56" cy="376" rx="44" ry="54" transform="rotate(-45 56 376)"/></clipPath></defs>
+  <g clip-path="url(#pad)">
+    <path d="M 8,376 C 8,346 30,322 60,322 C 76,322 90,328 100,338 C 78,340 56,352 40,370 C 24,388 14,410 12,430 C 9,414 8,394 8,376 Z" transform="rotate(-45 56 376)" fill="#44555f"/>
+    <g transform="rotate(-45 56 376)">
+      <path d="M 8,350 L 104,350" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 8,376 L 104,376" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 8,402 L 104,402" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

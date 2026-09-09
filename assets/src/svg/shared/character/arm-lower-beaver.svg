@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="45" height="101" viewBox="164 203 45 101" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. The guide's foreleg, lower, in pelt, ending in a tuft where the bare forepaw begins.</title>
+  <path d="M 184,206 C 195,206 201,212 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 167,212 173,206 184,206 Z" fill="#7c4327"/>
+  <defs><clipPath id="alb"><path d="M 184,206 C 195,206 201,212 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 167,212 173,206 184,206 Z"/></clipPath></defs>
+  <g clip-path="url(#alb)">
+    <path d="M 197,214 C 204,216 204,226 205,236 C 206,258 208,282 208,302 L 195,302 C 194,282 193,258 192,236 C 192,226 192,216 197,214 Z" fill="#b4733b"/>
+    <path d="M 172,216 C 177,216 178,226 179,236 C 180,258 182,282 182,302 L 172,302 C 171,282 169,258 168,236 C 167,226 167,218 172,216 Z" fill="#401812"/>
+    <ellipse cx="185" cy="208" rx="24" ry="9" fill="#16203a" opacity="0.18"/>
+  </g>
+  <path d="M 196,207 C 200,210 201,215 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 168,214 171,209 175,207" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

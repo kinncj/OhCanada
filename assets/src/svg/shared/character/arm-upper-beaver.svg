@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="111" viewBox="150 133 56 111" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. The guide's foreleg, upper, in pelt. Same length and same pivot as every other character's upper arm; only the covering differs.</title>
+  <path d="M 175,136 C 188,136 195,142 196,152 C 198,180 200,212 201,230 C 202,240 190,244 182,244 C 173,244 165,239 165,230 C 164,204 155,168 154,152 C 153,141 162,136 175,136 Z" fill="#7c4327"/>
+  <defs><clipPath id="aub"><path d="M 175,136 C 188,136 195,142 196,152 C 198,180 200,212 201,230 C 202,240 190,244 182,244 C 173,244 165,239 165,230 C 164,204 155,168 154,152 C 153,141 162,136 175,136 Z"/></clipPath></defs>
+  <g clip-path="url(#aub)">
+    <path d="M 192,146 C 200,148 200,158 200,168 C 201,196 203,220 204,246 L 190,246 C 189,220 188,196 187,168 C 187,158 186,148 192,146 Z" fill="#b4733b"/>
+    <path d="M 164,148 C 170,148 171,158 172,168 C 174,196 176,222 177,246 L 166,246 C 165,222 163,196 161,168 C 160,158 159,150 164,148 Z" fill="#401812"/>
+    <ellipse cx="176" cy="138" rx="28" ry="10" fill="#16203a" opacity="0.18"/>
+  </g>
+  <path d="M 188,137 C 193,140 195,145 196,152 C 198,180 200,212 201,230 C 202,240 190,244 182,244 C 173,244 165,239 165,230 C 164,204 155,168 154,152 C 154,144 158,140 163,137" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="56" height="64" viewBox="92 48 56 64" shape-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="43" viewBox="98 59 44 43" shape-rendering="geometricPrecision">
   <title>Face pose &quot;neutral&quot; (at rest). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale, high contrast and the plain Canvas tier, which has no Filters. Identical geometry for every character and every skin ramp.</title>
   <ellipse cx="107" cy="75" rx="6.5" ry="7.4" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
   <ellipse cx="107" cy="75" rx="4.2" ry="4.7" fill="#3a2018"/>

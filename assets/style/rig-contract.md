@@ -17,7 +17,18 @@ right and this page is a bug.
 
 ## 1. What a character is
 
-One **artboard** per character, named for its `CharacterId`. Slice 1 ships two: `player` and `officer`.
+One **artboard** per character, named for its `CharacterId`. Three ship: `player`, `officer` and `guide`.
+
+`guide` is the **beaver companion** who appears at points of interest and leads the learning moments. It is
+on this rig, not beside it: same state machine, same nine inputs, same four expressions, same 6-head canon,
+same pivots. Two parts and one costume option carry the whole difference — `tail`, `head-shell` and
+`costume: beaver` — and everything else it does, the engine already knew how to do. Its design sheet is
+`assets/style/guide.md`.
+
+**Why it is not its own rig.** Because a second rig is a second proportion canon, and the moment there are
+two, nothing compares them. `docs/content-review.md` §6.2 is explicit that comparison only works if everyone
+is compared. So the companion measures on the same table as every person in the game and is drawn to it: the
+same crown, the same sole, the same eye line, the same hand and foot sizes, the same three stroke weights.
 
 There is **one artboard per character, never one per skin tone, hair shape, costume or gender
 presentation.** Everything that varies is a *slot* on the one artboard, with the one proportion canon
@@ -105,7 +116,7 @@ the other.
 | `hairColour` | `black`, `brown`, `blond`, `red`, `grey` | `brown` | yes |
 | `headCovering` | `none`, `toque` | `none` | yes |
 | `feature` | `none`, `glasses` | `none` | yes |
-| `costume` | `parka`, `serge` | `parka` | no |
+| `costume` | `parka`, `serge`, `beaver` | `parka` | no |
 | `presentation` | — **reserved, no options** | — | — |
 
 Plus one axis that is not a slot: **`expression`** — `neutral`, `happy`, `thinking`, `surprised` — driven
@@ -142,7 +153,14 @@ change nobody would notice. Two independent slots make the product structural: 4
 
 The check is arithmetic and a test can run it: **the number of reachable part frames must equal what the
 slot product implies, and every declared frame must be reachable.** As shipped: 6 × 4 × 5 × 2 × 2 × 2 × 4 =
-**3 840 combinations, 50 frames declared, 50 reachable, 0 unreachable.**
+**5 760 combinations, 60 frames declared, 60 reachable, 0 unreachable** — 24 costume frames (8 templates ×
+3 costumes), 30 head frames (6 skin + 4 expression + 4 × 5 hair), 5 optional singletons (`toque`, `glasses`,
+`hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground shadow.
+
+The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 = **480 appearances**, and `costume` is not
+in it: `costume` says which character an artboard is, not how somebody customised one. Adding the guide
+therefore added nothing to the creator and took nothing away from it, which was the constraint the beaver
+had to satisfy before it was allowed to exist.
 
 ### `presentation` is reserved and empty, out loud
 
@@ -158,31 +176,44 @@ artboard, never a second rig, never a different height.
 
 ## 4. Parts, draw order and mirroring
 
-Twenty parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
+Twenty-two parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
 names, and a **pivot** — the joint it rotates about, in character space.
 
 | z | part | frame template | pivot | mirrored |
 |---|---|---|---|---|
 | 1 | `ground-shadow` | `ground-shadow` | 120, 457 | |
-| 2 | `arm-upper-r` | `arm-upper-{costume}` | 60, 142 | ✔ |
-| 3 | `arm-lower-r` | `arm-lower-{costume}` | 55, 214 | ✔ |
-| 4 | `hand-r` | `hand-{costume}` | 52, 282 | ✔ |
-| 5 | `leg-upper-r` | `leg-upper-{costume}` | 94, 264 | ✔ |
-| 6 | `leg-lower-r` | `leg-lower-{costume}` | 92, 362 | ✔ |
-| 7 | `foot-r` | `foot-r-{costume}` | 90, 436 | |
-| 8 | `leg-upper-l` | `leg-upper-{costume}` | 146, 264 | |
-| 9 | `leg-lower-l` | `leg-lower-{costume}` | 148, 362 | |
-| 10 | `foot-l` | `foot-l-{costume}` | 150, 436 | |
-| 11 | `torso` | `torso-{costume}` | 120, 264 | |
-| 12 | `head` | `head-{skin}` | 120, 112 | |
-| 13 | `face` | `face-{expression}` | 120, 112 | |
+| 2 | `tail` | `tail-{costume}` | 104, 300 | |
+| 3 | `arm-upper-r` | `arm-upper-{costume}` | 60, 142 | ✔ |
+| 4 | `arm-lower-r` | `arm-lower-{costume}` | 55, 214 | ✔ |
+| 5 | `hand-r` | `hand-{costume}` | 52, 282 | ✔ |
+| 6 | `leg-upper-r` | `leg-upper-{costume}` | 94, 264 | ✔ |
+| 7 | `leg-lower-r` | `leg-lower-{costume}` | 92, 362 | ✔ |
+| 8 | `foot-r` | `foot-r-{costume}` | 90, 436 | |
+| 9 | `leg-upper-l` | `leg-upper-{costume}` | 146, 264 | |
+| 10 | `leg-lower-l` | `leg-lower-{costume}` | 148, 362 | |
+| 11 | `foot-l` | `foot-l-{costume}` | 150, 436 | |
+| 12 | `torso` | `torso-{costume}` | 120, 264 | |
+| 13 | `head` | `head-{skin}` | 120, 112 | |
 | 14 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
-| 15 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
-| 16 | `hat` | `hat-{costume}` | 120, 112 | |
-| 17 | `feature` | `feature-{feature}` | 120, 112 | |
-| 18 | `arm-upper-l` | `arm-upper-{costume}` | 180, 142 | |
-| 19 | `arm-lower-l` | `arm-lower-{costume}` | 185, 214 | |
-| 20 | `hand-l` | `hand-{costume}` | 188, 282 | |
+| 15 | `head-shell` | `head-shell-{costume}` | 120, 112 | |
+| 16 | `face` | `face-{expression}` | 120, 112 | |
+| 17 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
+| 18 | `hat` | `hat-{costume}` | 120, 112 | |
+| 19 | `feature` | `feature-{feature}` | 120, 112 | |
+| 20 | `arm-upper-l` | `arm-upper-{costume}` | 180, 142 | |
+| 21 | `arm-lower-l` | `arm-lower-{costume}` | 185, 214 | |
+| 22 | `hand-l` | `hand-{costume}` | 188, 282 | |
+
+**`hair` sits under `face` and that is deliberate.** It used to be over it. `head-shell` has to be above
+`hair` (it covers the head completely) and below `face` (so the shared expressions play on the guide rather
+than being redrawn for it), and both cannot be true with hair on top. Every hair shape was re-rendered
+against every expression after the move; the fringes read the same, because a hair shape has a face opening
+and the face draws inside it.
+
+**`tail` and `head-shell` resolve to nothing on a human.** `tail-parka`, `tail-serge`, `head-shell-parka`
+and `head-shell-serge` are not in `frames`, so those parts draw nothing on the player and the officer —
+the same rule that makes `headCovering: none` work, with no branch in either backend. The two parts cost
+every human artboard exactly one map lookup that misses.
 
 `r` and `l` are the **wearer's** right and left. The canonical facing is **right**, and in that facing the
 wearer's left limbs are nearer the camera, which is why they are drawn last. `setFacing('left')` mirrors the

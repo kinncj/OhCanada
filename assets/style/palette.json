@@ -157,6 +157,9 @@
     "felt-light": "#d5c18e",
     "felt-base": "#c29455",
     "felt-shade": "#965630",
+    "hide-light": "#44555f",
+    "hide-base": "#242b33",
+    "hide-shade": "#0f121a",
     "skin-1-light": "#f6ecde",
     "skin-1-base": "#efbe99",
     "skin-1-shade": "#d47d62",
@@ -339,6 +342,13 @@
       "shade": "felt-shade",
       "derived": true,
       "material": "Generic tan felt and canvas."
+    },
+    "hide": {
+      "light": "hide-light",
+      "base": "hide-base",
+      "shade": "hide-shade",
+      "derived": true,
+      "material": "Dark bare hide and scale: the beaver's paddle tail, its webbed hind feet and forepaws and its nose, and the moulded rubber sole of a winter boot. Base authored 2026-09-08 from assets/refs/beaver/beaver-paddle-tail.jpg, the only reference in which the paddle is lit, in focus and not in silhouette: the median of 18924 paddle pixels is #293746 = hsl(211,26%,22%). That sample is a WET paddle in low direct sun with sky bounce off wet rock, so it is lighter and bluer than the material; the second reference, beaver-ontario-full-body.jpg, medians the same paddle at #100f13 = hsl(255,12%,7%) and is a colour trap in the other direction - the exposure there is set for snow and the paddle is backlit. The base is authored BETWEEN them at hsl(210,18%,17%), keeping the lit sample's hue and taking a saturation midway between the two, and light and shade are the published formula with no family override (a tail is not skin and its sheen is cool sky, not the red-violet the skin and hair families rotate toward). It exists because nothing in the palette was this: `slate-shade` is hsl(222,24%,25%) and reads as painted bridge steel next to brown fur, `navy-shade` is duty wool, and `hair-black` carries the hair family's 350-degree shade rotation, which would put a red-violet shadow on a wet tail. `leather-shade` was the other candidate and is rejected because a tail drawn in the fur ramp's own shade tone stops being a separate form - and the tail is one of the two features that make a beaver identifiable at phone size."
     },
     "skin-1": {
       "light": "skin-1-light",

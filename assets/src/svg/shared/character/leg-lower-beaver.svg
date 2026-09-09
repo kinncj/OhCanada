@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="46" height="115" viewBox="125 343 46 115" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. The guide's hind leg, lower, in pelt, ending in a tuft where the bare webbed foot begins. The outline is open across the top centre, where the thigh covers it.</title>
+  <path d="M 148,346 C 161,346 167,354 167,364 C 167,394 166,424 165,440 C 165,450 157,455 148,455 C 139,455 131,450 131,440 C 130,420 129,394 129,364 C 129,354 136,346 148,346 Z" fill="#7c4327"/>
+  <defs><clipPath id="llb"><path d="M 148,346 C 161,346 167,354 167,364 C 167,394 166,424 165,440 C 165,450 157,455 148,455 C 139,455 131,450 131,440 C 130,420 129,394 129,364 C 129,354 136,346 148,346 Z"/></clipPath></defs>
+  <g clip-path="url(#llb)">
+    <path d="M 139,354 C 146,354 147,362 146,374 C 144,400 146,428 144,448 L 132,448 C 133,428 132,400 132,374 C 131,362 132,354 139,354 Z" fill="#b4733b"/>
+    <path d="M 161,358 C 167,358 168,368 167,380 C 166,404 167,430 166,450 L 156,450 C 157,430 156,404 156,380 C 155,368 156,358 161,358 Z" fill="#401812"/>
+    <ellipse cx="148" cy="350" rx="24" ry="9" fill="#16203a" opacity="0.18"/>
+  </g>
+  <path d="M 160,347 C 165,350 167,356 167,364 C 167,394 166,424 165,440 C 165,450 157,455 148,455 C 139,455 131,450 131,440 C 130,420 129,394 129,364 C 129,356 132,350 137,347" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

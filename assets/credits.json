@@ -1116,6 +1116,150 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/landmark-cn-tower@1x.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/toronto/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/toronto-level.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key toronto-landmark-cn-tower is unchanged and no level document moves. The art-bible section 5 two-size test was run at the shipping size of 700 x 1020 and passed at both probes, which is what ADR-0013 as amended requires before a landmark departs from the 2x default; at 2x it would cost 10.88 MiB of decoded texture instead of 2.72 MiB."
+    },
+    {
+      "path": "src/svg/shared/character/tail-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"tail-beaver\" — The guide's paddle tail: a broad flat scaly oval carried out to the wearer's right, leaning down and away on a scaly stub that leaves the body at the hip and tucks behind the leg, so the tail reads as attached rather than as a rock beside the feet. The tail is one of the two features that make a beaver identifiable at phone size, so it is drawn at full weight and never tucked behind the figure where a front-facing character would hide it. Scale is three cross bands - a rhythm, not a texture fill (art bible 1); an inner ring was tried and removed because it made the paddle read as a shell. Drawn from assets/refs/beaver/beaver-paddle-tail.jpg and beaver-ontario-full-body.jpg.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/tail-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/head-shell-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"head-shell-beaver\" — The guide's head in fur, drawn over the shared head part so the rig keeps ONE head geometry: same cranium box, same eye line, same width envelope as every human character, in the beaver's pelt. Flat crown, heavy cheeks and small round ears set LOW and well back at the side of the skull - the arrangement in assets/refs/beaver/beaver-head-and-forepaws.jpg. High rounded ears would read as a bear, which is the mistake this shape was redrawn to fix. Cartoon proportions are identical for every character (docs/content-review.md 6), and this part is how an animal companion joins that canon instead of getting its own.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/head-shell-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/torso-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"torso-beaver\" — The guide's body: a barrel of pelt over a pale belly, narrow at the shoulder and full at the waist - the opposite taper to a coat, which is what makes the silhouette read as an animal rather than a person in a suit. Same shoulder and hip envelope as every other character.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/torso-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/arm-upper-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"arm-upper-beaver\" — One frame serves both sides: the rig mirrors it about the character centre line. The guide's foreleg, upper, in pelt. Same length and same pivot as every other character's upper arm; only the covering differs.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/arm-upper-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/arm-lower-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"arm-lower-beaver\" — One frame serves both sides: the rig mirrors it about the character centre line. The guide's foreleg, lower, in pelt, ending in a tuft where the bare forepaw begins.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/arm-lower-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/hand-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"hand-beaver\" — One frame serves both sides: the rig mirrors it about the character centre line. The guide's forepaw: bare dark hide, one mass and a thumb with three claw ticks, mitten-simplified exactly like every other character's hand - no separated fingers at any size (art bible 7). The thumb sits on the INNER edge so it points toward the body on both sides once the frame is mirrored.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/hand-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/leg-upper-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"leg-upper-beaver\" — One frame serves both sides: the rig mirrors it about the character centre line. The guide's hind leg, upper, in pelt. Same length and pivot as every other character's thigh; the body covers the hip end.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/leg-upper-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/leg-lower-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"leg-lower-beaver\" — One frame serves both sides: the rig mirrors it about the character centre line. The guide's hind leg, lower, in pelt, ending in a tuft where the bare webbed foot begins. The outline is open across the top centre, where the thigh covers it.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/leg-lower-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/foot-l-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"foot-l-beaver\" — The guide's webbed hind foot, the wearer's left, the near side of the canonical pose. Bare dark hide, a single rounded wedge with three toe notches and the web between them. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/foot-l-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "src/svg/shared/character/foot-r-beaver.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"foot-r-beaver\" — The guide's webbed hind foot, the wearer's right, the far side of the canonical pose. Bare dark hide, a single rounded wedge with three toe notches and the web between them. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/foot-r-beaver.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
+    },
+    {
+      "path": "refs/beaver/beaver-upright-winter-gnawing.jpg",
+      "kind": "reference",
+      "title": "North American beaver sitting upright on its hind legs in snow, holding a browse stick in its forepaws",
+      "author": "USFWS Mountain Prairie",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Beaver_Chewing_on_Food_Lake_Andes_Wetland_Management_District_South_Dakota_(53735717192).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/beaver/beaver-head-and-forepaws.jpg",
+      "kind": "reference",
+      "title": "North American beaver - head in profile, ear, muzzle and forepaw",
+      "author": "Cszmurlo",
+      "licence": "CC-BY-2.5",
+      "source": "https://commons.wikimedia.org/wiki/File:Beaver-Szmurlo.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/beaver/beaver-paddle-tail.jpg",
+      "kind": "reference",
+      "title": "North American beavers at a lodge - the flat paddle tail and a webbed hind foot, lit",
+      "author": "Tom Smylie",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Beaver_2.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/beaver/beaver-ontario-full-body.jpg",
+      "kind": "reference",
+      "title": "North American beaver on canal ice, Humber River near Kleinburg, Ontario - winter full body with tail",
+      "author": "Vlad Podvorny",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:North_American_Beaver,_Humber_River_near_Kleinburg,_Ontario_(39637607974).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/beaver/beaver-alberta-profile.jpg",
+      "kind": "reference",
+      "title": "North American beaver in Alberta - full body profile under flat light",
+      "author": "Kissmykumbaya",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Alberta_Beaver.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/beaver/beaver-head-close.jpg",
+      "kind": "reference",
+      "title": "North American beaver - head and shoulders close, Grand Teton National Park",
+      "author": "GrandTetonNPS",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Beaver_(48877206226).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
     }
   ]
 }

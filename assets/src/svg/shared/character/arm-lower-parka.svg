@@ -1,6 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="41" height="106" viewBox="166 195 41 106" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, lower.</title>
-  <path d="M 170.01,214.66 L 173.01,282.66 C 173.5,293.75 203.47,292.43 202.99,281.34 L 199.99,213.34 C 199.5,202.25 169.53,203.57 170.01,214.66 Z" fill="#2c8055" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 190.1,217.8 L 193.1,277.8 C 193.25,280.9 201.64,280.48 201.49,277.38 L 198.49,217.38 C 198.33,214.28 189.94,214.7 190.1,217.8 Z" fill="#41b76b"/>
-  <path d="M 172.11,218.59 L 175.11,278.59 C 175.25,281.25 182.44,280.89 182.3,278.23 L 179.3,218.23 C 179.17,215.57 171.98,215.93 172.11,218.59 Z" fill="#154536"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="47" height="101" viewBox="164 203 47 101" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, lower: one quilt seam and a knit storm cuff at the wrist. The outline is open across the top centre, where the upper sleeve covers it.</title>
+  <path d="M 184,206 C 195,206 201,212 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 167,212 173,206 184,206 Z" fill="#153f86"/>
+  <defs><clipPath id="al"><path d="M 184,206 C 195,206 201,212 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 167,212 173,206 184,206 Z"/></clipPath></defs>
+  <g clip-path="url(#al)">
+    <path d="M 197,214 C 204,216 204,226 205,236 C 206,258 208,282 208,302 L 195,302 C 194,282 193,258 192,236 C 192,226 192,216 197,214 Z" fill="#2275c6"/>
+    <path d="M 172,216 C 177,216 178,226 179,236 C 180,258 182,282 182,302 L 172,302 C 171,282 169,258 168,236 C 167,226 167,218 172,216 Z" fill="#091740"/>
+    <path d="M 158,250 L 212,252" fill="none" stroke="#091740" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="185" cy="208" rx="24" ry="9" fill="#16203a" opacity="0.18"/>
+  </g>
+  <path d="M 196,207 C 200,210 201,215 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 168,214 171,209 175,207" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 176,282 L 202,282 C 210,282 210,300 202,300 L 176,300 C 168,300 168,282 176,282 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="3" stroke-linejoin="round"/>
 </svg>

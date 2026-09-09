@@ -46,14 +46,25 @@ it.
 **Silhouette test.** Fill the whole asset with flat black at 25 % scale. If you cannot tell what it is, the
 shapes are wrong. Fixing this with colour or detail is not fixing it.
 
+**And for a character, look at the composite, not the part.** Every character part is unidentifiable alone —
+a sleeve is a blue capsule — so the only honest review is a rasterised composite built from
+`rig-contract.json` at the size the character ships at. Three separate defects in the player costume were
+invisible in the SVG and obvious in the render at 160 px: a scarf that read as a Sam Browne sash, a hood ruff
+that read as shoulder pads, and a toque band that covered the brows and cost the expression system a third of
+its vocabulary. `references.json` carries a `renderRecipe` for each character subject for this reason.
+
 ---
 
 ## 2. The three tones
 
 `palette.json` is the allow-list. **Any fill or stroke not in `colours` is a defect.** Add a colour there,
-with a ramp, before you use it. This sentence used to say "fails the palette lint", and **there is no palette
-lint** — see `OQ-ART-11` in §11. Every level so far has been checked by hand; until the gate exists, check
-yours and say so in the level sheet.
+with a ramp, before you use it.
+
+**The palette lint exists now and runs inside `make assets`** (`OQ-ART-11`, closed). It refuses any fill or
+stroke that is not in `colours`, and it refuses `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`,
+`<image>`, `<style>` and any `url(…)` paint that is not a `clipPath` (ADR-0011). It reports what it checked:
+as of 2026-09-08, `4263 fill/stroke declaration(s) in 90 source(s) against 105 distinct palette colour(s)`.
+Hand-checking a level and writing "checked by hand" in its sheet is over.
 
 Three flat fills per material — `light`, `base`, `shade`. No fourth tone, no gradient, no dithering, no
 soft-light overlays.
@@ -272,6 +283,18 @@ how the project avoids drawing some people as more heroic, more detailed or more
   ethnicity, ever. `docs/content-review.md` §8.2 governs this and now exists; its slot-independence rule is
   the mechanical version of the same instruction.
 
+**The canon covers the animal companion too.** The beaver guide is on the same rig at the same 6 heads, with
+the same crown, sole, eye line, hand and foot sizes and stroke weights as every person in the game
+(`assets/style/guide.md`). A second rig would have been a second canon, and `docs/content-review.md` §6.2 is
+explicit that comparison only works if everyone is compared. The one row of the table above that cannot
+apply to it — every skin fill is a `skin-1`…`skin-6` entry — is named as an exemption in its own sheet, for
+one non-human artboard, and for no human character ever.
+
+**Per-costume design sheets.** `assets/style/officer.md` (serge), `assets/style/player.md` (parka) and
+`assets/style/guide.md` (beaver). Read the one for the costume you are touching: each records the decisions
+that look like mistakes from the markup, and the player sheet in particular records why the coat is blue and
+why the scarf hangs straight down.
+
 ---
 
 ## 8. Skin and hair
@@ -382,7 +405,7 @@ Recorded rather than resolved. Inventing a detail is worse than leaving a questi
 | **OQ-ART-08** | Is the officer's gender presentation fixed, or a player choice? Not an art decision. The art is built so it can be either: gender presentation is a **skin slot** on one artboard with one proportion canon, so either answer is a data change. | PO (`OQ-LEVEL-3`) | the officer rig contract, task 1.11 |
 | **OQ-ART-09** | Is scarlet review order plausible outdoors on canal ice in an Ottawa winter? It is a ceremonial uniform; the working winter answer is a parka. The level may be summer on the Hill and winter on the canal, or the officer may be posted ceremonially. A story and setting call, not an art one. | PO | the officer's placement in the level |
 | **OQ-ART-10** | Does the officer carry a visible sidearm? The reference shows a holstered one; `officer.md` currently drops it under "simplify away", which is an art convenience and not a decision. | PO | the officer artboard |
-| **OQ-ART-11** | **There is no palette lint.** §2 above and `CLAUDE.md` both say "the palette lint fails on anything else", and no such gate exists anywhere in the repository: `scripts/validate-content.mjs` checks the palette's *internal* integrity — every ramp tone and ink resolves to a colour in `colours` — and never opens an SVG, and `scripts/assets.mjs` never reads `palette.json` at all. Every level so far has been checked by hand, which is exactly what `OQ-ART-02` was closed for being. The check is about twenty lines over `assets/src/svg/**`, it should also refuse `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<style>` and any `url(#…)` that is not a `clipPath` (ADR-0011), and it belongs inside `make assets`. Run by hand on 2026-09-08 over all 80 sources, 3 648 shapes: 0 off-palette fills or strokes, 0 forbidden constructs. | infra | the claim in §2 and in `CLAUDE.md` |
+| ~~**OQ-ART-11**~~ | ~~**There is no palette lint.** §2 above and `CLAUDE.md` both say "the palette lint fails on anything else", and no such gate exists anywhere in the repository: `scripts/validate-content.mjs` checks the palette's *internal* integrity — every ramp tone and ink resolves to a colour in `colours` — and never opens an SVG, and `scripts/assets.mjs` never reads `palette.json` at all. Every level so far has been checked by hand, which is exactly what `OQ-ART-02` was closed for being. The check is about twenty lines over `assets/src/svg/**`, it should also refuse `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<style>` and any `url(#…)` that is not a `clipPath` (ADR-0011), and it belongs inside `make assets`. Run by hand on 2026-09-08 over all 80 sources, 3 648 shapes: 0 off-palette fills or strokes, 0 forbidden constructs.~~ **CLOSED 2026-09-08 by infra.** It exists, it is inside `make assets`, it refuses every construct listed above, and it reports its own counts rather than a bare OK. §2 now says what the file does instead of apologising for what it did not. Kept struck through because the hand-checking it replaced should be remembered as having stopped for a reason. | infra | ~~the claim in §2 and in `CLAUDE.md`~~ |
 
 ---
 
