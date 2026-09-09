@@ -233,6 +233,28 @@ describe('the copy table', () => {
     expect(text('fr', 'level.ottawa.error.title')).toBe("Nous n'avons pas pu charger Ottawa.");
     expect(text('en', 'level.toronto.error.title')).toBe('We could not load Toronto.');
     expect(text('fr', 'level.toronto.error.title')).toBe("Nous n'avons pas pu charger Toronto.");
+
+    /* `TN-LEVEL-winnipeg.md` and `TN-LEVEL-prairie-rail.md`, the two levels that
+       shipped after those eight rows. The Prairies is where the **English**
+       stops templating as well: the title is "The Prairies" on the map, and
+       "We could not load {{level}}." would draw "We could not load The
+       Prairies." mid-sentence. */
+    expect(text('en', 'level.winnipeg.loading')).toBe('Getting the riverbank ready.');
+    expect(text('fr', 'level.winnipeg.loading')).toBe('Préparation de la rive.');
+    expect(text('en', 'level.winnipeg.error.title')).toBe('We could not load Winnipeg.');
+    expect(text('fr', 'level.winnipeg.error.title')).toBe(
+      "Nous n'avons pas pu charger Winnipeg.",
+    );
+    expect(text('en', 'level.prairie-rail.loading')).toBe('Getting the railway track ready.');
+    expect(text('fr', 'level.prairie-rail.loading')).toBe('Préparation de la voie ferrée.');
+    expect(text('en', 'level.prairie-rail.error.title')).toBe('We could not load the Prairies.');
+    expect(text('fr', 'level.prairie-rail.error.title')).toBe(
+      "Nous n'avons pas pu charger les Prairies.",
+    );
+    expect(
+      text('en', 'level.prairie-rail.error.title'),
+      'the title was dropped into a template, capital and all',
+    ).not.toContain(text('en', 'level.prairie-rail.title'));
   });
 
   it('refuses a waiting or failure key with no level in it', () => {
@@ -285,6 +307,156 @@ describe('the copy table', () => {
     }
   });
 
+  it('gives every built level its own stamp sentence and its own play label', () => {
+    /*
+     * `TN-DONE-05`, in the shape `TN-WAIT-03` already uses: "a document exists
+     * at content/levels/<id>.json … and no `stamp.<id>.earned` row exists in
+     * English and in French … the build fails, naming the level and the missing
+     * key", and the same for `level.<id>.play`. The set of levels is read from
+     * the directory rather than listed, so a fifth level lands with this test
+     * already failing for it.
+     */
+    for (const id of LEVEL_IDS) {
+      for (const key of [`stamp.${id}.earned`, `level.${id}.play`]) {
+        expect(KEYS, `content/levels/${id}.json ships with no ${key}`).toContain(key);
+        for (const locale of UI_LOCALES) {
+          expect(text(locale, key as Parameters<typeof text>[1]), `${key} (${locale})`).not.toBe(
+            '',
+          );
+        }
+      }
+    }
+  });
+
+  it('refuses a stamp or play key with no level in it', () => {
+    /* The shape that was the defect twice already — one `level.loading` for four
+       levels, one `level.error.title` for four failures. "You earned the
+       {{level}} stamp." would have produced « le tampon Ville de Québec », which
+       is not French. */
+    for (const key of KEYS.map(String)) {
+      expect(key === 'stamp.earned', 'stamp.earned names no level').toBe(false);
+      expect(key === 'level.play', 'level.play names no level').toBe(false);
+    }
+  });
+
+  it('writes the French of the six stamp sentences out, in four different forms', () => {
+    /*
+     * The row that proves the template would have been wrong. Four forms after
+     * « tampon » across six levels — « d'Halifax », « de la Ville de Québec »,
+     * « de Toronto », « des Prairies » — and a build that produced « le tampon
+     * Ville de Québec » would fail here.
+     */
+    expect(text('fr', 'stamp.halifax.earned')).toBe("Vous avez obtenu le tampon d'Halifax.");
+    expect(text('fr', 'stamp.quebec-city.earned')).toBe(
+      'Vous avez obtenu le tampon de la Ville de Québec.',
+    );
+    expect(text('fr', 'stamp.ottawa.earned')).toBe("Vous avez obtenu le tampon d'Ottawa.");
+    expect(text('fr', 'stamp.toronto.earned')).toBe('Vous avez obtenu le tampon de Toronto.');
+    expect(text('fr', 'stamp.winnipeg.earned')).toBe('Vous avez obtenu le tampon de Winnipeg.');
+    /* « des » is *de + les*, the fourth form and the one no template reaches. */
+    expect(text('fr', 'stamp.prairie-rail.earned')).toBe(
+      'Vous avez obtenu le tampon des Prairies.',
+    );
+    expect(text('fr', 'level.quebec-city.play')).toBe('Jouer dans la Ville de Québec');
+    expect(text('fr', 'level.halifax.play')).toBe('Jouer à Halifax');
+    expect(text('fr', 'level.winnipeg.play')).toBe('Jouer à Winnipeg');
+    expect(text('fr', 'level.prairie-rail.play')).toBe('Jouer dans les Prairies');
+    /* And the English of the row that breaks an English template too: the bare
+       plural attributively, never "the The Prairies stamp". */
+    expect(text('en', 'stamp.prairie-rail.earned')).toBe('You earned the Prairies stamp.');
+    expect(text('en', 'level.prairie-rail.play')).toBe('Play the Prairies');
+    expect(text('en', 'stamp.winnipeg.earned')).toBe('You earned the Winnipeg stamp.');
+    expect(text('en', 'level.winnipeg.play')).toBe('Play Winnipeg');
+
+    for (const locale of UI_LOCALES) {
+      for (const key of KEYS.filter((row) => String(row).startsWith('stamp.'))) {
+        expect(text(locale, key).toLowerCase(), `${String(key)} says timbre`).not.toContain(
+          'timbre',
+        );
+      }
+    }
+  });
+
+  it('carries the four generic interact rows, in both languages', () => {
+    /* `TN-REACH-05`: "a copy table is missing hud.interact.poi, .npc, .done or
+       .hint in either language … the build fails, naming the key and the
+       language". */
+    for (const key of ['hud.interact.poi', 'hud.interact.npc', 'hud.interact.done', 'hud.interact.hint']) {
+      expect(KEYS, `no ${key}`).toContain(key);
+      for (const locale of UI_LOCALES) {
+        expect(text(locale, key as Parameters<typeof text>[1]), `${key} (${locale})`).not.toBe('');
+      }
+    }
+  });
+
+  it('never names a place from TN-NAMES’s list in anything the HUD draws', () => {
+    /*
+     * `TN-NAMES-04` and `TN-REACH-05`: "a string drawn inside `hud` contains a
+     * name from TN-NAMES's list … the build fails". Held over every row the HUD
+     * can draw, which since `TN-REACH` is every `hud.*` row — the prompt is
+     * resolved from this table and from nothing else, so this is now a check
+     * that can actually cover the surface it is about.
+     */
+    const onTheList = [
+      'château frontenac',
+      'chateau frontenac',
+      'cn tower',
+      'tour cn',
+      'toronto city hall',
+      'canadian museum for human rights',
+      'canada place',
+      'pier 21',
+      'quai 21',
+    ];
+    const hudRows = KEYS.filter((key) => String(key).startsWith('hud.'));
+    expect(hudRows, 'no hud row found — this rule must not pass vacuously').not.toEqual([]);
+    for (const locale of UI_LOCALES) {
+      for (const key of hudRows) {
+        const value = text(locale, key).toLowerCase();
+        for (const name of onTheList) {
+          expect(value.includes(name), `${String(key)} (${locale}) names ${name}`).toBe(false);
+        }
+      }
+    }
+  });
+
+  it('names no input in the one row that explains a control', () => {
+    /* `TN-REACH-04`: the hint is shown to a touch, keyboard and single-switch
+       player, so a word that is true for one of them is wrong for the rest. */
+    const banned = [
+      'tap',
+      'click',
+      'press',
+      'swipe',
+      'hold',
+      'touchez',
+      'cliquez',
+      'appuyez',
+      'maintenez',
+    ];
+    for (const locale of UI_LOCALES) {
+      const hint = text(locale, 'hud.interact.hint').toLowerCase();
+      for (const word of banned) {
+        expect(hint.includes(word), `the hint (${locale}) names an input: ${word}`).toBe(false);
+      }
+    }
+  });
+
+  it('says nothing that marks a player down when they answered nothing', () => {
+    /*
+     * `TN-DONE-02`: the sentence is plain about what happened and is not a mark.
+     * No number, so "0 out of 0" cannot appear; no imperative, so it is an open
+     * door rather than an instruction.
+     */
+    for (const locale of UI_LOCALES) {
+      const value = text(locale, 'level.complete.none');
+      expect(/\d/u.test(value), `${locale} counts something`).toBe(false);
+      for (const word of ['failed', 'missed', 'skipped', 'incomplete', 'only', 'échoué', 'raté', 'seulement']) {
+        expect(value.toLowerCase().includes(word), `${locale} says "${word}"`).toBe(false);
+      }
+    }
+  });
+
   it('names every locomotion mode a level declares, and no mode none declares', () => {
     /*
      * `TN-MOVE-02`, both halves: "every mode declared by any document under
@@ -326,7 +498,7 @@ describe('the copy table', () => {
         expect(value.includes('.'), `${String(key)} (${locale}) is a sentence`).toBe(false);
       }
     }
-    /* The four labels, literally, from `TN-MOVE-locomotion-labels.md`. */
+    /* The five labels, literally, from `TN-MOVE-locomotion-labels.md`. */
     expect(text('en', 'locomotion.walk.label')).toBe('Walking');
     expect(text('fr', 'locomotion.walk.label')).toBe('Marche');
     expect(text('en', 'locomotion.toboggan.label')).toBe('Sledding');
@@ -335,6 +507,48 @@ describe('the copy table', () => {
     expect(text('fr', 'locomotion.skate.label')).toBe('Patinage');
     expect(text('en', 'locomotion.bike.label')).toBe('Biking');
     expect(text('fr', 'locomotion.bike.label')).toBe('Vélo');
+    /* The fifth, brought by `content/levels/prairie-rail.json`. The same word in
+       both languages, and `TN-MOVE-06` requires it declared twice rather than
+       shared — so a missing French row fails even though the English reads
+       correctly. */
+    expect(text('en', 'locomotion.train.label')).toBe('Train');
+    expect(text('fr', 'locomotion.train.label')).toBe('Train');
+  });
+
+  it('names the guide by its role, and tells a player what talking to it does', () => {
+    /*
+     * `docs/stories/TN-GUIDE-the-guide.md`, both rows, literally — the whole of
+     * what unblocked three of the four authored quests.
+     *
+     * `npc.guide.name` is the speaker's label and the dialog's accessible name
+     * (`TN-QUEST-08`), and its absence refused every offer the guide makes,
+     * Halifax's included. `hud.interact.guide` is the per-target prompt; without
+     * it the HUD drew the kind row, "Talk to this person", about a beaver.
+     *
+     * The name is a **role**: never a proper name, never a species, and never a
+     * word borrowed from a nation's language or imagery — `docs/content-review.md`
+     * §1 lets no agent grant the review a borrowed name would need, and a role
+     * noun cannot borrow anything.
+     */
+    expect(text('en', 'npc.guide.name')).toBe('The guide');
+    expect(text('fr', 'npc.guide.name')).toBe('Le guide');
+    expect(text('en', 'hud.interact.guide')).toBe('Talk to the guide');
+    expect(text('fr', 'hud.interact.guide')).toBe('Parler au guide');
+
+    for (const locale of UI_LOCALES) {
+      const name = text(locale, 'npc.guide.name');
+      /* Not the species, not the id, not a placeholder. */
+      for (const wrong of ['beaver', 'castor', 'guide.name', 'Speaker', 'NPC']) {
+        expect(name.toLowerCase().includes(wrong.toLowerCase()), `${locale}: ${name}`).toBe(false);
+      }
+      /* A name is a label, and a prompt is a verb phrase: never the same string. */
+      expect(text(locale, 'hud.interact.guide')).not.toBe(name);
+      expect(text(locale, 'hud.interact.guide')).not.toBe(text(locale, 'hud.interact.npc'));
+    }
+    /* Epicene, so it needs no bracketed ending and may never acquire one
+       (`docs/content-review.md` §8.6) — checked over the whole table above, and
+       named here because this is the row a reviewer would reach for. */
+    expect(/\(e\)|·e/.test(text('fr', 'npc.guide.name'))).toBe(false);
   });
 
   it('never names a landmark or states a territorial fact on a waiting screen', () => {

@@ -83,6 +83,29 @@ export interface Hud {
   setTask(step: string | null): void;
   /** `interact-prompt`. `null` withdraws the offer (`TN-LEVEL-05`). */
   setPrompt(label: string | null): void;
+  /**
+   * `interact-hint`: the one-time explanation of the marks (`TN-REACH-04`).
+   *
+   * `null` removes it, and removal is permanent in practice because the caller
+   * decides it is shown once per sitting. Drawn **beside** the prompt, never
+   * instead of it, and as a paragraph rather than a control: it blocks nothing,
+   * takes no focus, is not in the Tab order and is not in the switch ring.
+   */
+  setHint(message: string | null): void;
+  /**
+   * `hud-notice`: something the game cannot do right now, said in the strip.
+   *
+   * `TN-QUEST-05` — "the questions are not ready right now" — needs a *visible*
+   * sentence as well as an announcement: every sound has a visual equivalent
+   * (CLAUDE.md), and a live-region message with nothing on screen is audible to
+   * one player and invisible to every other. It is a paragraph and not a dialog,
+   * because the story requires the skater to be able to move away: nothing is
+   * blocked, nothing takes focus and nothing has to be dismissed.
+   *
+   * `null` removes it. Already localised — the caller owns the wording, as it
+   * does for the tracker and the prompt.
+   */
+  setNotice(message: string | null): void;
   setStorageWarning(raised: boolean): void;
   /**
    * Put focus in the level, on arrival from the map (`TN-FLOW-06`).
@@ -111,6 +134,8 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   let mode = '';
   let task: string | null = null;
   let promptLabel: string | null = null;
+  let hint: string | null = null;
+  let notice: string | null = null;
 
   const main = findOrCreateMain(doc, host);
   /*
@@ -146,6 +171,11 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   });
 
   const warningSlot = element(doc, 'div', { className: 'tn-hud__slot' });
+  /* The hint has a slot of its own, above the prompt's, rather than sharing one:
+     an explanation read before the offer is the order they are useful in, and
+     two slots keep that true however either of them arrives. */
+  const hintSlot = element(doc, 'div', { className: 'tn-hud__slot' });
+  const noticeSlot = element(doc, 'div', { className: 'tn-hud__slot' });
   const promptSlot = element(doc, 'div', { className: 'tn-hud__slot' });
 
   /*
@@ -194,7 +224,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     testId: 'hud',
     className: 'tn-hud',
     attrs: { 'aria-label': text(locale, 'hud.label') },
-    children: [status, warningSlot, promptSlot, controls],
+    children: [status, warningSlot, noticeSlot, hintSlot, promptSlot, controls],
   });
   main.append(region);
 
@@ -282,6 +312,59 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     );
   }
 
+  /**
+   * The hint, above the prompt.
+   *
+   * Removed rather than hidden, for the reason the tracker is: `TN-REACH-04`
+   * requires it to be absent from the accessibility tree once the player has
+   * engaged anything, and a hidden element is one stylesheet away from being
+   * visible and one screen reader away from being read.
+   *
+   * It has a slot of its own above the prompt's, so the explanation is read
+   * first and the offer last whichever of the two arrives first.
+   */
+  function renderHint(): void {
+    const existing = hintElement();
+    if (hint === null) {
+      existing?.remove();
+      return;
+    }
+    if (existing !== null) {
+      existing.textContent = hint;
+      return;
+    }
+    hintSlot.append(
+      element(doc, 'p', {
+        testId: 'interact-hint',
+        className: 'tn-hud__hint',
+        text: hint,
+      }),
+    );
+  }
+
+  function hintElement(): HTMLElement | null {
+    return hintSlot.querySelector<HTMLElement>('[data-testid="interact-hint"]');
+  }
+
+  function renderNotice(): void {
+    const existing = noticeSlot.querySelector<HTMLElement>('[data-testid="hud-notice"]');
+    if (notice === null) {
+      existing?.remove();
+      return;
+    }
+    if (existing !== null) {
+      existing.textContent = notice;
+      return;
+    }
+    noticeSlot.append(
+      element(doc, 'p', {
+        testId: 'hud-notice',
+        className: 'tn-hud__notice',
+        text: notice,
+      }),
+    );
+  }
+
   function promptElement(): HTMLElement | null {
     return promptSlot.querySelector<HTMLElement>('[data-testid="interact-prompt"]');
   }
@@ -324,6 +407,24 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
          twice, and neither speaker would know the other had. */
     },
 
+    setHint(message): void {
+      if (message === hint) return;
+      hint = message;
+      renderHint();
+      /* Deliberately silent, like `setPrompt`: `TN-REACH-04` allows the hint to
+         be announced at most once, and the caller is the only thing that knows
+         whether this is that once. */
+    },
+
+    setNotice(message): void {
+      if (message === notice) return;
+      notice = message;
+      renderNotice();
+      /* Deliberately silent: the caller announces it once, at the moment the
+         thing it is about happened, and a second speaker here would say it
+         twice. */
+    },
+
     setStorageWarning(raised): void {
       if (raised) warning.raise();
       else warning.clear();
@@ -348,6 +449,11 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       menuButton.textContent = text(next, 'hud.menu');
       settingsButton.textContent = text(next, 'common.settings');
       renderTask();
+      /* The hint is the caller's string in the caller's language, so it is
+         re-supplied rather than translated here; what this does is keep whatever
+         is on screen consistent when the strip is redrawn. */
+      renderHint();
+      renderNotice();
       warning.setLocale(next);
       menu.setLocale(next);
     },

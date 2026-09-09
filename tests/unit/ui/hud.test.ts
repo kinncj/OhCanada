@@ -152,6 +152,74 @@ describe('the interact prompt', () => {
   });
 });
 
+describe('the one-time hint, and the notice', () => {
+  it('is a paragraph beside the prompt, never a control and never instead of it', () => {
+    /*
+     * `TN-REACH-04`: the hint blocks nothing. It is not a dialog, takes no
+     * focus, is in no tab order and is in no switch ring — which is a property
+     * of what it *is*, a `<p>`, rather than a rule applied to it. And it sits
+     * beside the offer rather than replacing it.
+     */
+    const { hud, at } = mount();
+    hud.setPrompt('Look at this place');
+    hud.setHint('A mark shows something to see. Get close to it, then choose it.');
+
+    const hint = at('interact-hint');
+    expect(hint?.tagName).toBe('P');
+    expect(hint?.getAttribute('aria-modal')).toBeNull();
+    expect(hint?.tabIndex).toBe(-1);
+    expect(at('interact-prompt'), 'the offer was replaced by the explanation').not.toBeNull();
+  });
+
+  it('is removed rather than hidden when it has done its job', () => {
+    /* A hidden element is one stylesheet away from being visible and one screen
+       reader away from being read. `TN-REACH-04` requires it to be absent from
+       the accessibility tree. */
+    const { hud, at } = mount();
+    hud.setHint('A mark shows something to see.');
+    hud.setHint(null);
+    expect(at('interact-hint')).toBeNull();
+  });
+
+  it('says nothing itself: the caller announces it once, or not at all', () => {
+    const { hud, announce } = mount();
+    hud.setHint('A mark shows something to see.');
+    expect(announce).not.toHaveBeenCalled();
+  });
+
+  it('draws a notice for something the game cannot do, without blocking anything', () => {
+    /*
+     * `TN-QUEST-05`: "the questions are not ready right now". A live-region
+     * message with nothing on screen is audible to one player and invisible to
+     * every other, so it is drawn as well as announced — and it is a paragraph,
+     * because the story requires the skater to be able to move away.
+     */
+    const { hud, at } = mount();
+    hud.setNotice('The questions are not ready right now. Try again later.');
+    const notice = at('hud-notice');
+    expect(notice?.tagName).toBe('P');
+    expect(notice?.textContent).toBe('The questions are not ready right now. Try again later.');
+    expect(notice?.getAttribute('aria-modal')).toBeNull();
+
+    hud.setNotice(null);
+    expect(at('hud-notice')).toBeNull();
+  });
+
+  it('keeps neither in the switch ring, because neither is a control', () => {
+    const { hud, page, clock } = mount({ singleSwitch: true, holdMs: 500 });
+    hud.setPrompt('Look at this place');
+    hud.setHint('A mark shows something to see.');
+    hud.setNotice('The questions are not ready right now.');
+    hud.openMenu();
+
+    /* The ring walks the menu's controls; nothing in the strip is one of them,
+       and the two paragraphs above cannot be highlighted as if they were. */
+    pressSwitch(page, clock, 100);
+    expect(page.doc.byTestId('interact-hint')?.getAttribute('data-switch-highlight')).toBeNull();
+    expect(page.doc.byTestId('hud-notice')?.getAttribute('data-switch-highlight')).toBeNull();
+  });
+});
+
 describe('the storage warning', () => {
   it('is absent from the tree when nothing is wrong', () => {
     /* TN-HUD-03: "not merely hidden behind a style rule that something else can

@@ -222,6 +222,17 @@ export interface LevelSelectOptions {
   readonly onChoose: (id: LevelId) => void;
   /** `common.back`: one step up the route, to the title screen (`TN-FLOW-03`). */
   readonly onBack?: () => void;
+  /**
+   * `passport.open` — the passport's home (`TN-PASSPORT-01`, `OQ-PASSPORT-3`).
+   *
+   * It belongs on this screen rather than on the title screen because the stamp
+   * count is already here: "Stamps: 3 of 10" is a fact a player will want to
+   * open, and a control beside it is the shortest honest route. The level's menu
+   * offers the same screen for a player who is already inside a level. Absent
+   * draws no control, like every other option here — a route that opens nothing
+   * is worse than no route.
+   */
+  readonly onOpenPassport?: () => void;
   /** The one live region: a card that cannot be opened says why (`TN-MAP-03`). */
   readonly announce?: (message: string) => void;
 }
@@ -315,19 +326,27 @@ export function createLevelSelect(
     heading.textContent = text(locale, 'map.title');
     counts.textContent = countsLine();
     replaceChildren(list, entries.map(card));
-    replaceChildren(
-      actions,
-      options.onBack === undefined
-        ? []
-        : [
-            button(doc, {
-              testId: 'level-select-back',
-              text: text(locale, 'common.back'),
-              attrs: { 'data-tn-action': 'quiet' },
-              onClick: options.onBack,
-            }),
-          ],
-    );
+    const controls: HTMLElement[] = [];
+    if (options.onOpenPassport !== undefined) {
+      controls.push(
+        button(doc, {
+          testId: 'passport-open',
+          text: text(locale, 'passport.open'),
+          onClick: options.onOpenPassport,
+        }),
+      );
+    }
+    if (options.onBack !== undefined) {
+      controls.push(
+        button(doc, {
+          testId: 'level-select-back',
+          text: text(locale, 'common.back'),
+          attrs: { 'data-tn-action': 'quiet' },
+          onClick: options.onBack,
+        }),
+      );
+    }
+    replaceChildren(actions, controls);
   }
 
   function handleOf(entry: MapEntry): string {

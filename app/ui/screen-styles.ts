@@ -677,6 +677,106 @@ const CSS = `
 }
 
 /* ------------------------------------------------------------------ *
+ * The passport: ten slots, three states, and a stamp that is a shape.
+ *
+ * The slots reuse the level select's geometry deliberately -- a player who has
+ * read the map should recognise the row -- and differ in the two ways the story
+ * asks for: a slot is not a control, and the three states are the passport's
+ * three rather than the map's.
+ *
+ * COLOUR IS NEVER THE SIGNAL. Earned is a solid edge, a brass tick and the word
+ * "Earned"; not earned yet is a dashed edge and its own word; not made yet is a
+ * dotted edge, its word and a sentence. Nothing is dimmed with opacity, which
+ * would trade one signal for a contrast failure, and a slot for a level nobody
+ * has built draws no stamp shape at all -- an empty outline reads as a slot the
+ * player could fill (OQ-PASSPORT-4).
+ * ------------------------------------------------------------------ */
+
+.tn-passport { gap: 0.625rem; }
+
+.tn-passport__slot {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  row-gap: 0.375rem;
+  /* 44 pt is the floor for anything a player interacts with, and a slot is
+     focusable even though it is not activatable: a switch and a keyboard both
+     stop on it, so it is sized like a target rather than like a paragraph. */
+  min-block-size: 3rem;
+  padding: 0.875rem 1rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper-2);
+}
+
+.tn-passport__number {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-weight: 800;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-night);
+  color: var(--tn-on-night);
+}
+
+/* min-inline-size: 0 is what lets the name wrap instead of pushing the slot
+   wider than the sheet at 200 % text. */
+.tn-passport__name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  font-size: 1.1875rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.tn-passport .tn-screen__state {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.875rem;
+  padding: 0.1875rem 0.625rem;
+  border-radius: var(--tn-radius-pill);
+  border: 0.125rem solid var(--tn-ink);
+  background: var(--tn-paper);
+}
+
+/* The sentence under a slot takes a line of its own, so the row above it is not
+   squeezed at 200 % text. */
+.tn-passport .tn-screen__help {
+  flex: 1 1 100%;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.tn-passport [data-state="earned"] {
+  background: var(--tn-paper);
+  border-inline-start-width: 0.625rem;
+  border-inline-start-color: var(--tn-accent-edge);
+}
+
+.tn-passport [data-state="earned"] .tn-screen__state {
+  border-color: var(--tn-accent-edge);
+  background: var(--tn-accent);
+  color: var(--tn-accent-ink);
+}
+
+.tn-passport [data-state="earned"] .tn-screen__mark { color: var(--tn-accent-ink); }
+
+.tn-passport [data-state="not-earned"] { border-style: dashed; background: var(--tn-paper-3); }
+.tn-passport [data-state="not-built"] { border-style: dotted; background: var(--tn-paper-3); }
+
+.tn-passport__empty-slot:empty { display: none; }
+
+@media (forced-colors: active) {
+  .tn-passport__slot { border: 0.125rem solid CanvasText; }
+  .tn-passport [data-state="not-earned"] { border: 0.125rem dashed CanvasText; }
+  .tn-passport [data-state="not-built"] { border: 0.125rem dotted CanvasText; }
+}
+
+/* ------------------------------------------------------------------ *
  * The page under the screens: one <main>, one lower-third HUD.
  *
  * Two things here are acceptance criteria (TN-HUD-01, TN-HUD-08):
@@ -812,6 +912,38 @@ const CSS = `
   border-color: var(--tn-accent-edge);
   box-shadow: 0 var(--tn-lift) 0 var(--tn-accent-edge);
   font-size: 1.0625rem;
+}
+
+/*
+  The one-time explanation of the marks in the world (TN-REACH-04).
+
+  A paragraph, never a control: it blocks nothing, takes no focus, is not in the
+  Tab order and is not in the switch ring, which is a property of what it IS
+  rather than a rule applied to it -- the ring walks controls, and this is a
+  <p>. It sits beside the prompt rather than instead of it, so the offer is
+  never replaced by an explanation of the offer.
+*/
+/*
+  Something the game cannot do right now (TN-QUEST-05). A border and weight
+  rather than a colour, like the storage warning above it: it reads as a notice
+  in greyscale, in forced colours and to a player who cannot tell the hue from
+  the rest of the strip. It is not an error and is not drawn as one.
+*/
+.tn-hud__notice {
+  border: var(--tn-edge-width) solid var(--tn-on-night);
+  border-inline-start-width: 0.625rem;
+  border-radius: var(--tn-radius);
+  padding: 0.5rem 0.75rem;
+  color: var(--tn-on-night);
+  font-weight: 700;
+}
+
+.tn-hud__hint {
+  border: var(--tn-edge-width) solid var(--tn-on-night);
+  border-radius: var(--tn-radius);
+  padding: 0.5rem 0.75rem;
+  color: var(--tn-on-night);
+  font-weight: 600;
 }
 
 /*

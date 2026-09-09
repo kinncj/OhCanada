@@ -115,6 +115,15 @@ export interface ShellOptions {
    * Absent hides the item rather than offering a control that does nothing.
    */
   readonly onOpenStudy?: () => void;
+  /**
+   * The passport, from the level select (`TN-PASSPORT-01`).
+   *
+   * The same seam as {@link ShellOptions.onOpenStudy} and for the same reason:
+   * the composition root owns the screen because it holds the save, mounts it
+   * into {@link Shell.main} and brackets it with {@link Shell.setModalOpen}.
+   * Absent draws no control rather than offering one that opens nothing.
+   */
+  readonly onOpenPassport?: () => void;
   /** `TN-TITLE-04`: storage is blocked, and the warning belongs on this screen. */
   readonly onExportSave?: () => void;
   readonly now?: () => number;
@@ -405,6 +414,9 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       onBack: () => {
         show('title');
       },
+      ...(options.onOpenPassport === undefined
+        ? {}
+        : { onOpenPassport: options.onOpenPassport }),
     });
   }
 

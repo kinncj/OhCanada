@@ -647,7 +647,17 @@ test.describe('a tap means the thing under it, and a jump when there is nothing'
      */
     const target = onGlass(box, npcViewX, (shot.playerX ?? 0) > 0 ? 1180 : 1180);
     await page.touchscreen.tap(target.x, target.y);
-    await waitForSimulated(page, 0.6);
+
+    /*
+     * The officer **answers** now, which is what a character being engaged has
+     * always been supposed to mean (`TN-QUEST-01`): the offer opens as a modal
+     * dialogue and the level pauses behind it. So the wait here is for the
+     * dialogue rather than for simulated time — a paused level simulates none,
+     * and waiting for it was this assertion timing out on the game working.
+     */
+    const dialogue = page.locator('[data-testid="dialogue"]');
+    await expect(dialogue, 'tapping the character opened nothing').toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'true');
 
     const trace = await events(page);
     const names = trace.map((event) => event.name);
@@ -668,6 +678,19 @@ test.describe('a tap means the thing under it, and a jump when there is nothing'
      * hit-testing — it is the interact key with a finger on it, and it would
      * make it impossible to jump anywhere near an NPC.
      */
+    /*
+     * Out of the conversation and back onto the ice before the other half of the
+     * claim. Escape is "leave without choosing", which is not a decline
+     * (`TN-QUEST-03`), and it has to give the level back — the trap the menu
+     * taught this project, asserted here on the artefact.
+     */
+    await page.keyboard.press('Escape');
+    await expect(dialogue).toBeHidden();
+    await expect(
+      page.locator('html'),
+      'the level was left frozen behind a dialogue that has gone',
+    ).toHaveAttribute('data-tn-paused', 'false');
+
     await clearTrace(page);
     const beside = onGlass(box, npcViewX - 150, 1180);
     await page.touchscreen.tap(beside.x, beside.y);

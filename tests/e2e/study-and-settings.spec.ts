@@ -1,5 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
+import { text } from '@ui/copy';
+
 import { START_LEVEL } from './start-level';
 
 /**
@@ -259,20 +261,38 @@ test.describe('reaching a landmark teaches, then asks', () => {
      *    the end of every burst means the check is made from a standstill.
      */
     const prompt = page.locator('[data-testid="interact-prompt"]');
+    /*
+     * A **landmark**, specifically. This level places its quest giver between
+     * the spawn and its first point of interest, and a character is offered a
+     * prompt as soon as the build can name them — which it could not when this
+     * scenario was written, so the first prompt on the walk used to be the
+     * landmark's by accident. Walking past somebody who has something to say is
+     * what a player does when they are heading somewhere, and this scenario is
+     * about arriving.
+     */
+    const aPlace = text('en', 'hud.interact.poi');
     for (let step = 0; step < 30; step += 1) {
       await page.keyboard.down('ArrowRight');
       await page.waitForTimeout(600);
       await page.keyboard.up('ArrowRight');
-      if (await prompt.isVisible()) break;
+      if ((await prompt.isVisible()) && (await prompt.textContent()) === aPlace) break;
     }
     await expect(
       prompt,
       'nothing was ever offered: the player walked past a landmark in silence',
     ).toBeVisible();
+    await expect(prompt, 'the walk stopped at somebody rather than at a landmark').toHaveText(
+      aPlace,
+    );
 
-    /* The label is the landmark's own name from the level document — content, in
-       the player's language — because no `hud.interact.*` copy row exists. */
-    await expect(prompt).toHaveText(/\S/);
+    /*
+     * The label says **what choosing it will do**, from `app/ui/copy.ts`, and it
+     * is never the landmark's own name (`TN-REACH`). It used to be exactly that
+     * name, interpolated from the level document at runtime, which is how a
+     * trade name reached a surface `TN-NAMES-04` fails the build for without
+     * ever passing through a copy table.
+     */
+    await expect(prompt).toHaveText(/^(Look at|Talk to|Done\.)/);
     const box = await prompt.boundingBox();
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
 

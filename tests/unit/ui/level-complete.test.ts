@@ -46,7 +46,10 @@ function open(overrides: Partial<Parameters<typeof createLevelComplete>[1]> = {}
 
 /** The level that opened, as the composition root hands it over. */
 const NEXT = {
-  title: 'Québec City',
+  /* `level.quebec-city.play`, not the place name: the label says what pressing
+     does, and the French takes « dans la » where three of the four built levels
+     take « à » (`TN-DONE-04`). */
+  label: text('en', 'level.quebec-city.play'),
   description: 'Québec City. Open. You can play this now.',
 } as const;
 
@@ -55,7 +58,7 @@ const OTTAWA_STAMP = text('en', 'stamp.ottawa.earned');
 describe('the level completion card', () => {
   it('says the task is done and offers both ways on', () => {
     const { card, at } = open();
-    card.show({ stampMessage: OTTAWA_STAMP });
+    card.show({ reason: 'quest', stampMessage: OTTAWA_STAMP });
 
     const root = at('quest-complete-card');
     expect(root?.hidden).toBe(false);
@@ -67,7 +70,7 @@ describe('the level completion card', () => {
 
   it('draws no stamp line for a level this build has no row for', () => {
     const { card, at } = open();
-    card.show({});
+    card.show({ reason: 'quest' });
 
     expect(at('quest-complete-card')?.textContent).toContain('Task done!');
     expect(
@@ -78,7 +81,7 @@ describe('the level completion card', () => {
 
   it('is a modal dialog named by its heading and described by the stamp line', () => {
     const { card, at, page } = open();
-    card.show({ stampMessage: OTTAWA_STAMP });
+    card.show({ reason: 'quest', stampMessage: OTTAWA_STAMP });
 
     const root = at('quest-complete-card');
     expect(root?.getAttribute('role')).toBe('dialog');
@@ -104,13 +107,48 @@ describe('the level completion card', () => {
     card.show({ stampMessage: OTTAWA_STAMP });
 
     expect(announce).toHaveBeenCalledTimes(1);
-    expect(announce).toHaveBeenCalledWith(`Task done! ${OTTAWA_STAMP}`, 'en');
+    expect(announce).toHaveBeenCalledWith(`Level finished! ${OTTAWA_STAMP}`, 'en');
   });
 
   it('announces the heading alone when there is no stamp row', () => {
     const { card, announce } = open();
-    card.show({});
+    card.show({ reason: 'quest' });
     expect(announce).toHaveBeenCalledWith('Task done!', 'en');
+  });
+
+  it('says a task was done only when one was', () => {
+    /*
+     * `TN-DONE`, and the defect it was written for: the card is drawn on two
+     * paths and drew "Task done!" on both, so the first thing a player who
+     * walked to the exit having accepted no task read was a claim about
+     * something they never did. `OQ-DONE-1`.
+     */
+    const { card, at } = open();
+    card.show({});
+    expect(at('quest-complete-card')?.textContent).toContain('Level finished!');
+    expect(at('quest-complete-card')?.textContent).not.toContain('Task done!');
+
+    card.show({ reason: 'quest' });
+    expect(at('quest-complete-card')?.textContent).toContain('Task done!');
+    expect(at('quest-complete-card')?.textContent).not.toContain('Level finished!');
+  });
+
+  it('offers the passport, where the stamp just landed', () => {
+    /* `TN-QUEST-04` and `TN-PASSPORT-01` both assert it; `OQ-DONE-5` is open on
+       whether it belongs here. Drawn only when a caller wired it, like every
+       other route on this card. */
+    const onOpenPassport = vi.fn();
+    const { card, at } = open({ onOpenPassport });
+    card.show({ stampMessage: OTTAWA_STAMP });
+    expect(at('quest-complete-passport')?.textContent).toBe('See my passport');
+    at('quest-complete-passport')?.click();
+    expect(onOpenPassport).toHaveBeenCalledTimes(1);
+  });
+
+  it('draws no passport control where no caller wired one', () => {
+    const { card, at } = open();
+    card.show({ stampMessage: OTTAWA_STAMP });
+    expect(at('quest-complete-passport')).toBeNull();
   });
 
   it('takes the player to the map when they ask for it', () => {
@@ -154,7 +192,7 @@ describe('the level completion card', () => {
   it('is French end to end', () => {
     const { card, at } = open({ locale: 'fr' });
     card.setLocale('fr');
-    card.show({ stampMessage: text('fr', 'stamp.ottawa.earned') });
+    card.show({ reason: 'quest', stampMessage: text('fr', 'stamp.ottawa.earned') });
 
     const root = at('quest-complete-card');
     expect(root?.textContent).toContain('Mission accomplie!');
@@ -235,7 +273,7 @@ describe('the way on from a finished level', () => {
     card.show({ stampMessage: OTTAWA_STAMP, next: NEXT });
 
     const play = at('quest-complete-next');
-    expect(play?.textContent).toBe('Québec City');
+    expect(play?.textContent).toBe('Play Québec City');
     /* Named by the place, described by what the map says about it — never a
        sentence this screen wrote. */
     expect(at('quest-complete-next-level')?.textContent).toBe(NEXT.description);
@@ -307,11 +345,24 @@ describe('what the card claims about what the player did', () => {
     expect(at('quest-complete-progress')?.textContent).toBe('You got 2 out of 3 right.');
   });
 
-  it('says nothing about answers when there were none', () => {
+  it('draws whichever line the caller gave, and never both', () => {
     const { card, at } = open();
-    /* Reaching the end earns the stamp whether or not anything was answered. A
-       card that scored a level nobody answered anything in would be claiming a
-       subject was learned when nothing was. */
+    /*
+     * `TN-DONE-02`: one slot, two rows. Reaching the end earns the stamp whether
+     * or not anything was answered, and the card must not paper over the second
+     * case — but it must not score it either. The caller picks the row; the card
+     * draws exactly one of them, and it can never render "0 out of 0" because
+     * the total of zero is what the other row *is*.
+     */
+    card.show({ stampMessage: OTTAWA_STAMP, progressMessage: text('en', 'level.complete.none') });
+    const line = at('quest-complete-progress');
+    expect(line?.textContent).toBe(text('en', 'level.complete.none'));
+    expect(line?.textContent).not.toContain('0 out of 0');
+    expect(/\d/u.test(line?.textContent ?? ''), 'the sentence carries no number').toBe(false);
+  });
+
+  it('draws no line at all when the caller has nothing to say', () => {
+    const { card, at } = open();
     card.show({ stampMessage: OTTAWA_STAMP });
     expect(at('quest-complete-progress')).toBeNull();
   });
@@ -343,7 +394,7 @@ describe('what the card claims about what the player did', () => {
     /* The rest is the dialog's description and is read on arrival; saying it
        through the live region as well is the double-speaking every other screen
        here avoids. */
-    expect(announce).toHaveBeenCalledWith(`Task done! ${OTTAWA_STAMP}`, 'en');
+    expect(announce).toHaveBeenCalledWith(`Level finished! ${OTTAWA_STAMP}`, 'en');
   });
 });
 
@@ -352,12 +403,12 @@ describe('the card follows the language, and lets go of the level', () => {
     const { card, at } = open();
     card.show((locale) => ({
       stampMessage: text(locale, 'stamp.ottawa.earned'),
-      next: { title: locale === 'fr' ? 'Ville de Québec' : 'Québec City', description: 'x' },
+      next: { label: text(locale, 'level.quebec-city.play'), description: 'x' },
     }));
 
     card.setLocale('fr');
     expect(at('quest-complete-stamp')?.textContent).toBe(text('fr', 'stamp.ottawa.earned'));
-    expect(at('quest-complete-next')?.textContent).toBe('Ville de Québec');
+    expect(at('quest-complete-next')?.textContent).toBe('Jouer dans la Ville de Québec');
     expect(at('quest-complete-map')?.textContent).toBe('Choisir un niveau');
   });
 

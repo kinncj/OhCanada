@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 import {
   NEXT_LEVEL,
   NEXT_LEVEL_MODE_LABEL,
-  NEXT_LEVEL_TITLE,
+  NEXT_LEVEL_PLAY_LABEL,
   START_LEVEL,
   START_LEVEL_MODE_LABEL,
 } from './start-level';
@@ -44,7 +44,7 @@ import {
  * grows instead of being edited every time the chain changes.
  */
 
-if (NEXT_LEVEL === null || NEXT_LEVEL_TITLE === null) {
+if (NEXT_LEVEL === null || NEXT_LEVEL_PLAY_LABEL === null) {
   throw new Error(
     `finishing "${START_LEVEL}" opens no level this build has a document for, so there is ` +
       'no "send you to a new level" to walk. Either the unlock chain is broken (see ' +
@@ -115,18 +115,29 @@ test.describe('reaching the end of a level sends the player to a new one', () =>
 
     await walkToTheEnd(page);
 
-    /* The card says the task is done, and it does not claim the player learned
-       anything they did not: nothing was answered on this walk. */
-    await expect(card).toHaveAccessibleName('Task done!');
-    await expect(
-      card.getByTestId('quest-complete-progress'),
-      'the player answered nothing on the way, so the card must not score them',
-    ).toHaveCount(0);
+    /*
+     * The heading says what actually finished. No task was offered or accepted
+     * on this walk, so "Task done!" would be a claim about something the player
+     * never did — the defect `TN-DONE` was written for, on the first card the
+     * shipped game draws (`OQ-DONE-1`).
+     */
+    await expect(card).toHaveAccessibleName('Level finished!');
+    /*
+     * And it says plainly that nothing was answered, rather than scoring a level
+     * nobody answered anything in. One slot, two rows, never both and never
+     * empty — and the sentence carries no number, so "0 out of 0" cannot be
+     * drawn (`TN-DONE-02`).
+     */
+    const line = card.getByTestId('quest-complete-progress');
+    await expect(line).toHaveText(
+      'You did not answer any questions here. Every place in this level has something to teach you.',
+    );
+    await expect(line).not.toContainText('0 out of 0');
 
-    /* The level that just opened, named by that level and described in the map's
-       own words. */
+    /* The level that just opened: a label that says what pressing does,
+       described in the map's own words. */
     const play = card.getByTestId('quest-complete-next');
-    await expect(play).toHaveText(NEXT_LEVEL_TITLE ?? '');
+    await expect(play).toHaveText(NEXT_LEVEL_PLAY_LABEL ?? '');
     await expect(card.getByTestId('quest-complete-next-level')).toContainText(
       'You can play this now.',
     );

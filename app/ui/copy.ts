@@ -131,21 +131,107 @@ const EN = {
   'study.leave': 'Leave',
   'study.leaveKept': 'Your answers so far are saved.',
 
-  /* docs/stories/TN-QUEST-parliament-hill.md */
-  'passport.open': 'See my passport',
-  /* The card the player reads when a level's task is finished. Transcribed from
-     `TN-QUEST`'s copy table, which owns all three.
+  /* docs/stories/TN-PASSPORT-my-passport.md */
+  /* The screen owns its heading **and** the label of the control that opens it,
+     which is the rule `TN-SET` states for `settings.title` and
+     `common.settings`; `passport.open` moved here from `TN-QUEST` on 2026-09-08
+     with its wording unchanged.
 
-     `stamp.<id>.earned` is keyed on the level for the reason
-     `level.<id>.error.title` is: "You earned the {{level}} stamp." is right in
-     English and wrong in French, where « le tampon d'Ottawa » elides and « le
-     tampon de Halifax » does not. **Only Ottawa's row is written**, because
-     `TN-QUEST` is the only story that writes one; a level whose row is missing
-     shows the card without that line rather than naming the wrong place. The
-     other rows are reported as a gap, not invented here. */
+     `passport.state.earned` is written with the map's rows below rather than
+     here, because the map draws it on a card whose stamp is in the passport, and
+     one fact said in two words is two things to get wrong. `map.stamps`,
+     `map.levelsReady`, `map.moreComing`, `map.state.notBuilt`,
+     `map.notBuilt.help` and `map.number` are drawn by this screen and owned by
+     `TN-MAP` for the same reason.
+
+     **No `passport.exam.*` row is here yet**, and that is the honest state
+     rather than an omission: this build has no exam, so a "Practice exam" panel
+     would name a feature the game does not have and offer a control that opens
+     nothing. The three rows are written in `TN-PASSPORT`'s table and are
+     transcribed when Exam mode lands, together with `TN-EXAM-05`'s not-ready
+     sentence, which nothing has transcribed either. */
+  'passport.open': 'See my passport',
+  'passport.title': 'My passport',
+  'passport.intro': "You earn a stamp when you finish a level's task.",
+  'passport.state.notEarned': 'Not earned yet',
+  'passport.empty.title': 'No stamps yet',
+  'passport.empty.body': 'Finish a level to earn your first stamp.',
+
+  /* docs/stories/TN-QUEST-parliament-hill.md */
+  /* The two choices the offer puts in front of the player, and the sentence for
+     an `answer` step that cannot start.
+
+     **Every other word the officer says is the quest document's.** The lines,
+     the expressions and each step's prompt are `content/quests/<id>.json` under
+     ADR-0010 and reach `app/ui` as data — which is what lets one dialogue
+     component carry any NPC in any level, and why `officer.greet`,
+     `officer.offer`, `officer.declined`, `officer.reminder`, `officer.afterStamp`
+     and the three `quest.step.*` prompts are **not** rows here. `quest.done.body`
+     is reported rather than transcribed: it names Parliament Hill, so a single
+     row for every quest is the defect `level.loading` was. */
+  'quest.accept': "Yes, let's go",
+  'quest.decline': 'Not now',
+  'quest.noQuestions': 'The questions are not ready right now. Try again later.',
   'quest.done.title': 'Task done!',
-  'stamp.ottawa.earned': 'You earned the Ottawa stamp.',
   'common.keepPlaying': 'Keep playing',
+  /* docs/stories/TN-LEVEL-ottawa.md — the officer's name, which is what the
+     dialogue is called for a screen reader (`TN-QUEST-08`) and what a player
+     reads above his lines. A character with no row cannot be given an unnamed
+     dialog, so the offer is refused and reported instead. */
+  'npc.officer.name': 'The officer',
+  /* docs/stories/TN-GUIDE-the-guide.md — the same string for the other
+     character, and one row for the three levels it stands on. Named by its role
+     exactly as the officer is: never a proper name, never a species, never a
+     word borrowed from a nation's language (`docs/content-review.md` §3.1).
+     Without this row `app/bootstrap/quest.ts` refuses all three offers, Halifax
+     included, and Halifax is the level `content/game.config.json` opens on. */
+  'npc.guide.name': 'The guide',
+
+  /* docs/stories/TN-DONE-finishing-a-level.md */
+  /* The heading follows **what finished**. A quest completing draws
+     `quest.done.title`; reaching the end of a level having accepted no task
+     draws this one, because "Task done!" over a player who was never offered a
+     task is a claim about something they never did. */
+  'level.complete.title': 'Level finished!',
+  /* One slot, two rows, never both and never empty (`TN-DONE-02`): the score
+     when at least one question was answered in this level, and this sentence
+     when none was. It carries no number, so "0 out of 0" cannot be drawn, and no
+     imperative, so it is an open door rather than a mark. */
+  'level.complete.none':
+    'You did not answer any questions here. Every place in this level has something to teach you.',
+  /* The card owns its score row rather than borrowing `study.summary.score`
+     (`TN-DONE`, and `OQ-DONE-2` for the alternative): Study counts a drill the
+     player asked for, this counts whatever a level happened to offer somebody
+     walking through it, and two different questions must be free to be reworded
+     apart. A label in front of the number and a preposition after it —
+     `TN-COPY`'s counting rule 1 — so neither language needs plural rows and
+     neither can draw "1 right answers". */
+  'level.complete.score': 'Right answers in this level: {{correct}} out of {{total}}',
+
+  /* `stamp.<id>.earned` and `level.<id>.play`: one pair per built level, each
+     transcribed from that level's own story, which `TN-DONE`'s two directories
+     name. **Written out and never assembled**, for the reason
+     `level.<id>.error.title` is: the six levels take four different forms
+     after « tampon » — « d'Halifax », « de la Ville de Québec », « de Toronto »,
+     « des Prairies » — and "Play {{level}}" is wrong the same way, « à » against
+     « dans la » against « dans les ». The Prairies is where the **English**
+     stops templating too: "the {{level}} stamp" yields "the The Prairies stamp"
+     against a title that is capitalised on the map, and the row below uses the
+     bare plural attributively instead (`TN-LEVEL-prairie-rail.md`). A built
+     level missing either row fails `tests/unit/ui/copy.test.ts` rather than
+     reaching a player wearing another level's words. */
+  'stamp.halifax.earned': 'You earned the Halifax stamp.',
+  'stamp.quebec-city.earned': 'You earned the Québec City stamp.',
+  'stamp.ottawa.earned': 'You earned the Ottawa stamp.',
+  'stamp.toronto.earned': 'You earned the Toronto stamp.',
+  'stamp.winnipeg.earned': 'You earned the Winnipeg stamp.',
+  'stamp.prairie-rail.earned': 'You earned the Prairies stamp.',
+  'level.halifax.play': 'Play Halifax',
+  'level.quebec-city.play': 'Play Québec City',
+  'level.ottawa.play': 'Play Ottawa',
+  'level.toronto.play': 'Play Toronto',
+  'level.winnipeg.play': 'Play Winnipeg',
+  'level.prairie-rail.play': 'Play the Prairies',
 
   /* docs/stories/TN-HUD-hud-and-menu.md */
   /* The accessible name of the `hud` region (`TN-HUD-07`). It names what the
@@ -157,6 +243,42 @@ const EN = {
   'hud.menu.title': 'Menu',
   /* docs/stories/TN-QUEST-parliament-hill.md — drawn by `hud-quest-tracker`. */
   'hud.task': 'Task',
+
+  /* docs/stories/TN-REACH-what-is-in-reach.md — what `interact-prompt` says,
+     and the one-time explanation of the marks beside it.
+
+     **The prompt says what pressing will do; it is never a name.** It drew the
+     landmark's own name from the level document until these rows existed, which
+     says what is there rather than what choosing it does — and put "CN Tower"
+     inside `hud`, a surface `TN-NAMES-04` fails the build for. A name is not a
+     copy string when it is interpolated at runtime, which is exactly how it got
+     past a check written against copy tables.
+
+     Three generic rows and one per-target row per target a level writes one for,
+     resolved in one order by `app/ui/interact.ts`: **done** beats a level's own
+     row, which beats the kind. A target with no row offers no prompt at all —
+     never "Interact", never a name, never an empty string.
+
+     `hud.interact.hint` **names no input**: not "tap", not a key, not "hold". A
+     hint that names one input is wrong for the other three, and "choose it" is
+     true for a thumb, a keyboard and one switch. */
+  'hud.interact.poi': 'Look at this place',
+  'hud.interact.npc': 'Talk to this person',
+  'hud.interact.done': 'Done. See this one again',
+  'hud.interact.hint': 'A mark shows something to see. Get close to it, then choose it.',
+  /* docs/stories/TN-LEVEL-ottawa.md — that level's own two rows, keyed on the
+     ids its document gives the targets. Ottawa may write them because its
+     character is named and its landmark is not on `TN-NAMES`'s list; a level
+     whose landmark **is** on that list draws the generic row instead. */
+  'hud.interact.officer': 'Talk to the officer',
+  'hud.interact.parliament-hill': 'Look at Parliament Hill',
+  /* docs/stories/TN-GUIDE-the-guide.md — a per-target row whose target is on
+     three levels, so the character's own story writes it once rather than three
+     level stories writing it three times. It is an ordinary rule-2 row: `done`
+     still wins, so a finished guide reads "Done. See this one again". Its
+     absence was a live defect — the kind row calls the guide "this person", and
+     the guide is a beaver. */
+  'hud.interact.guide': 'Talk to the guide',
 
   /* docs/stories/TN-SAVE-save-and-reload.md — the storage warning these screens
      raise, and the way out it has to offer (TN-HUD-03). */
@@ -182,6 +304,13 @@ const EN = {
   'locomotion.toboggan.label': 'Sledding',
   'locomotion.skate.label': 'Skating',
   'locomotion.bike.label': 'Biking',
+  /* The fifth mode, added by the level document that declares it and not
+     before: `content/levels/prairie-rail.json` puts `train` first and `walk`
+     second. It is the vehicle rather than a gerund because English has none to
+     reach for here — "Training" means something else and "Riding" is level 8's
+     word — and it is the same word in both languages, written twice on purpose
+     (`TN-MOVE-06`, `TN-NAMES-03`), never one value shared. */
+  'locomotion.train.label': 'Train',
 
   /* docs/stories/TN-WAIT-a-level-opens-or-it-does-not.md */
   /* The three rows every level's error card shares. They name no place, state
@@ -194,7 +323,8 @@ const EN = {
 
   /* One waiting sentence and one error title per level, keyed on the level's
      id, each transcribed from that level's own story: `TN-LEVEL-halifax.md`,
-     `TN-LEVEL-quebec-city.md`, `TN-LEVEL-ottawa.md`, `TN-LEVEL-toronto.md`.
+     `TN-LEVEL-quebec-city.md`, `TN-LEVEL-ottawa.md`, `TN-LEVEL-toronto.md`,
+     `TN-LEVEL-winnipeg.md`, `TN-LEVEL-prairie-rail.md`.
 
      **`level.loading` and `level.error.title` do not exist, and may not come
      back.** They did, and the unqualified pair *was* the defect: one row each,
@@ -226,6 +356,13 @@ const EN = {
   'level.ottawa.error.title': 'We could not load Ottawa.',
   'level.toronto.loading': 'Getting the city streets ready.',
   'level.toronto.error.title': 'We could not load Toronto.',
+  'level.winnipeg.loading': 'Getting the riverbank ready.',
+  'level.winnipeg.error.title': 'We could not load Winnipeg.',
+  'level.prairie-rail.loading': 'Getting the railway track ready.',
+  /* The row that proves the English needed writing out as well: the title is
+     "The Prairies" on the map, and "We could not load {{level}}." would produce
+     "We could not load The Prairies." mid-sentence. */
+  'level.prairie-rail.error.title': 'We could not load the Prairies.',
   /* docs/stories/TN-TITLE-title-screen.md */
   /* `title.game` is the product's name and is the same string in both
      languages, like the language names in `TN-SET`. It is never translated. */
@@ -424,14 +561,68 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'study.leaveKept': 'Vos réponses sont enregistrées.',
 
   'passport.open': 'Voir mon passeport',
+  'passport.title': 'Mon passeport',
+  'passport.intro': "Vous obtenez un tampon lorsque vous terminez la mission d'un niveau.",
+  'passport.state.notEarned': 'Pas encore obtenu',
+  'passport.empty.title': "Aucun tampon pour l'instant",
+  'passport.empty.body': 'Terminez un niveau pour obtenir votre premier tampon.',
+
+  'quest.accept': 'Oui, allons-y',
+  'quest.decline': 'Pas maintenant',
+  'quest.noQuestions': "Les questions ne sont pas prêtes pour l'instant. Réessayez plus tard.",
   'quest.done.title': 'Mission accomplie!',
-  'stamp.ottawa.earned': "Vous avez obtenu le tampon d'Ottawa.",
   'common.keepPlaying': 'Continuer à jouer',
+  'npc.officer.name': "L'agent",
+  /* « Guide » is epicene — only the article changes — so this row needs no
+     bracketed ending and may never acquire one (`docs/content-review.md` §8.6).
+     The article is masculine because the character is a beaver, « un castor »,
+     and no statement about a person's gender is being made. Never « Le
+     castor »: the label names what the character is for, not what it is. */
+  'npc.guide.name': 'Le guide',
+
+  'level.complete.title': 'Niveau terminé!',
+  'level.complete.none':
+    "Vous n'avez répondu à aucune question ici. Chaque lieu de ce niveau a quelque chose à vous apprendre.",
+  'level.complete.score': 'Bonnes réponses dans ce niveau : {{correct}} sur {{total}}',
+
+  /* Four forms after « tampon » in six rows, and « à », « dans la » and
+     « dans les » in the six below them: the pair of tables that proves a
+     template would have been wrong in French, and — since the Prairies — in
+     English too. */
+  'stamp.halifax.earned': "Vous avez obtenu le tampon d'Halifax.",
+  'stamp.quebec-city.earned': 'Vous avez obtenu le tampon de la Ville de Québec.',
+  'stamp.ottawa.earned': "Vous avez obtenu le tampon d'Ottawa.",
+  'stamp.toronto.earned': 'Vous avez obtenu le tampon de Toronto.',
+  'stamp.winnipeg.earned': 'Vous avez obtenu le tampon de Winnipeg.',
+  /* The fourth form after « tampon », and the one no template reaches:
+     « des » is *de + les*. */
+  'stamp.prairie-rail.earned': 'Vous avez obtenu le tampon des Prairies.',
+  'level.halifax.play': 'Jouer à Halifax',
+  'level.quebec-city.play': 'Jouer dans la Ville de Québec',
+  'level.ottawa.play': 'Jouer à Ottawa',
+  'level.toronto.play': 'Jouer à Toronto',
+  'level.winnipeg.play': 'Jouer à Winnipeg',
+  'level.prairie-rail.play': 'Jouer dans les Prairies',
 
   'hud.label': 'Commandes du jeu',
   'hud.menu': 'Menu',
   'hud.menu.title': 'Menu',
   'hud.task': 'Mission',
+
+  'hud.interact.poi': 'Regarder ce lieu',
+  /* « Cette personne » is feminine whoever it names, so the row is written about
+     the person in reach and never about the player: no agreement, no bracketed
+     ending (`docs/content-review.md` §8.6). */
+  'hud.interact.npc': 'Parler à cette personne',
+  /* Shorter than its English and saying the same two things — the state, then
+     the way on — which is what a translation of meaning is allowed to do. */
+  'hud.interact.done': 'Terminé. Revoir',
+  'hud.interact.hint': 'Un repère indique quelque chose à voir. Approchez-vous, puis choisissez.',
+  'hud.interact.officer': "Parler à l'agent",
+  'hud.interact.parliament-hill': 'Regarder la Colline du Parlement',
+  /* « Au », the contraction of « à le », and it agrees with the « votre guide »
+     the authored quest lines already use. */
+  'hud.interact.guide': 'Parler au guide',
 
   'storage.warning': "Ce navigateur n'enregistre pas votre progression.",
   'storage.warning.help':
@@ -446,6 +637,11 @@ const FR: Readonly<Record<CopyRow, string>> = {
   /* « Vélo », the everyday word, and it needs no article in a label. Not
      « Cyclisme », which is a race. */
   'locomotion.bike.label': 'Vélo',
+  /* The same word as the English, declared here rather than shared with it:
+     `TN-MOVE-06` requires a value in each language even when they are identical,
+     so a missing French row fails the check instead of reading correctly. Not
+     « En train », which is a phrase where every other row is a bare noun. */
+  'locomotion.train.label': 'Train',
 
   'level.error.body': 'Vérifiez votre connexion et réessayez.',
   'level.error.retry': 'Réessayer',
@@ -461,6 +657,13 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.ottawa.error.title': "Nous n'avons pas pu charger Ottawa.",
   'level.toronto.loading': 'Préparation des rues de la ville.',
   'level.toronto.error.title': "Nous n'avons pas pu charger Toronto.",
+  'level.winnipeg.loading': 'Préparation de la rive.',
+  /* No article and no elision — « charger Winnipeg » — where Halifax's row
+     elides and the Prairies' takes a plural article. The easy case, written out
+     beside the hard ones because that is what makes the pair an argument. */
+  'level.winnipeg.error.title': "Nous n'avons pas pu charger Winnipeg.",
+  'level.prairie-rail.loading': 'Préparation de la voie ferrée.',
+  'level.prairie-rail.error.title': "Nous n'avons pas pu charger les Prairies.",
   'title.game': 'TrueNorth',
   'title.tagline': "Préparez-vous à l'examen de citoyenneté canadienne.",
   'title.notOfficial': "Ce jeu n'est pas fait par le gouvernement du Canada.",

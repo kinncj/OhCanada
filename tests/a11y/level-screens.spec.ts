@@ -1,5 +1,10 @@
+import { readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
+
+import { text } from '@ui/copy';
 
 import { HARNESS_URL } from './playwright.config';
 
@@ -56,16 +61,66 @@ interface HarnessOptions {
   readonly prompt?: boolean;
   readonly warning?: boolean;
   readonly stalled?: boolean;
+  /** The one-time explanation of the marks, beside the prompt (`TN-REACH-04`). */
+  readonly hint?: boolean;
+  /** The target in reach has already been engaged (`TN-REACH-03`). */
+  readonly done?: boolean;
+  /** Something the game cannot do right now, said in the strip (`TN-QUEST-05`). */
+  readonly notice?: boolean;
   /** A modal open over the running level. */
-  readonly over?: 'menu' | 'settings' | 'card' | 'poi';
+  readonly over?: 'menu' | 'settings' | 'card' | 'poi' | 'passport';
   /**
    * Which level the two level screens are about. The waiting sentence and the
    * failure title are per level now (`TN-WAIT`), so a scan has to say which one
    * — and the longest strings in French are Québec City's, which is what a
    * 200 % scan has to be pointed at to prove anything about fitting.
    */
-  readonly place?: 'halifax' | 'quebec-city' | 'ottawa' | 'toronto';
+  readonly place?: Place;
+  /**
+   * Which character is in reach. The officer unless this says otherwise, so
+   * every scan written before the guide had a name is unchanged.
+   */
+  readonly who?: 'guide';
 }
+
+/**
+ * Every level this build ships a document for, read from the directory rather
+ * than listed — the same source `tests/e2e/start-level.ts` reads, and for the
+ * same reason: `content/levels/` is what makes a level exist, so a level added
+ * with no rows has to fail a scan rather than quietly go unscanned. Winnipeg and
+ * the Prairies arrived after these scans were written and were covered by none
+ * of them until this stopped being a list.
+ */
+const LEVEL_IDS: readonly string[] = readdirSync(
+  fileURLToPath(new URL('../../content/levels', import.meta.url)),
+)
+  .filter((name) => name.endsWith('.json'))
+  .map((name) => name.slice(0, -'.json'.length))
+  .sort();
+
+/** The ids the harness accepts, kept honest by the scan below. */
+type Place =
+  | 'halifax'
+  | 'quebec-city'
+  | 'ottawa'
+  | 'toronto'
+  | 'winnipeg'
+  | 'prairie-rail';
+
+const PLACES: readonly Place[] = [
+  'halifax',
+  'quebec-city',
+  'ottawa',
+  'toronto',
+  'winnipeg',
+  'prairie-rail',
+];
+
+/** `level.<id>.loading` and `level.<id>.error.title`, in one language. */
+const waitingSentence = (place: Place, locale: 'en' | 'fr' = 'en'): string =>
+  text(locale, `level.${place}.loading` as Parameters<typeof text>[1]);
+const failureTitle = (place: Place, locale: 'en' | 'fr' = 'en'): string =>
+  text(locale, `level.${place}.error.title` as Parameters<typeof text>[1]);
 
 type ScreenName = 'level' | 'level-loading' | 'level-error' | 'poi';
 
@@ -93,8 +148,12 @@ async function open(
   if (options.prompt === true) params.set('prompt', '1');
   if (options.warning === true) params.set('warning', '1');
   if (options.stalled === true) params.set('stalled', '1');
+  if (options.hint === true) params.set('hint', '1');
+  if (options.done === true) params.set('done', '1');
+  if (options.notice === true) params.set('notice', '1');
   if (options.over !== undefined) params.set('over', options.over);
   if (options.place !== undefined) params.set('place', options.place);
+  if (options.who !== undefined) params.set('who', options.who);
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -259,7 +318,7 @@ test.describe('the page the HUD builds', () => {
     ).not.toContain('landmark-one-main');
   });
 
-  for (const over of ['menu', 'settings', 'card', 'poi'] as const) {
+  for (const over of ['menu', 'settings', 'card', 'poi', 'passport'] as const) {
     test(`stays clean with ${over} open over the level`, async ({ page }) => {
       await open(page, 'level', { task: true, prompt: true, warning: true, over });
 
@@ -550,24 +609,33 @@ test.describe('the level is loading, or did not load', () => {
      * Halifax read that the canal was being got ready. Four levels through one
      * screen is the only shape of scan that would have caught it.
      */
-    for (const [place, sentence] of [
-      ['halifax', 'Getting the harbour ready.'],
-      ['quebec-city', 'Getting the snowy slope ready.'],
-      ['ottawa', 'Getting the canal ready.'],
-      ['toronto', 'Getting the city streets ready.'],
-    ] as const) {
+    for (const place of PLACES) {
+      const sentence = waitingSentence(place);
       const root = await open(page, 'level-loading', { place });
       await expect(root).toContainText(sentence);
       const drawn = (await root.textContent()) ?? '';
-      for (const other of [
-        'the harbour',
-        'the snowy slope',
-        'the canal',
-        'the city streets',
-      ]) {
-        if (sentence.includes(other)) continue;
-        expect(drawn, `${place} drew "${other}"`).not.toContain(other);
+      for (const other of PLACES) {
+        if (other === place) continue;
+        const theirs = waitingSentence(other);
+        if (theirs === sentence) continue;
+        expect(drawn, `${place} drew ${other}'s sentence`).not.toContain(theirs);
       }
+    }
+  });
+
+  test('every level with a document has a waiting sentence to scan', async ({ page }) => {
+    /*
+     * The half of `TN-WAIT-03` a scan can answer: the levels this suite walks
+     * are the levels `content/levels/` holds, so a level document that ships
+     * without rows — or with rows this harness cannot be pointed at — fails here
+     * rather than going unscanned. Winnipeg and the Prairies were both.
+     */
+    expect([...PLACES].sort(), 'a level document has no scan').toEqual([...LEVEL_IDS]);
+    /* And each one really renders, rather than falling back to Ottawa's row —
+       the harness's own guard, read from the page. */
+    for (const place of PLACES) {
+      const root = await open(page, 'level-loading', { place });
+      await expect(root).toContainText(waitingSentence(place));
     }
   });
 
@@ -579,7 +647,7 @@ test.describe('the level is loading, or did not load', () => {
      * card a player waits past. Scanned on the rendered page, in both languages,
      * because that is where a name would actually reach a player.
      */
-    for (const place of ['halifax', 'quebec-city', 'ottawa', 'toronto'] as const) {
+    for (const place of PLACES) {
       for (const locale of ['en', 'fr'] as const) {
         const root = await open(page, 'level-loading', { place, locale });
         const drawn = ((await root.textContent()) ?? '').toLowerCase();
@@ -644,21 +712,48 @@ test.describe('the level is loading, or did not load', () => {
      * not load Ottawa." whichever level had failed, which is a screen naming a
      * place the player was not going to.
      */
-    for (const [place, title] of [
-      ['halifax', 'We could not load Halifax.'],
-      ['quebec-city', 'We could not load Québec City.'],
-      ['ottawa', 'We could not load Ottawa.'],
-      ['toronto', 'We could not load Toronto.'],
-    ] as const) {
+    for (const place of PLACES) {
+      const title = failureTitle(place);
       const root = await open(page, 'level-error', { place });
       /* The title is the dialog's accessible name, not merely text on it. */
       await expect(root).toHaveAccessibleName(title);
       const drawn = (await root.textContent()) ?? '';
-      for (const other of ['Halifax', 'Québec', 'Ottawa', 'Toronto']) {
+      for (const other of ['Halifax', 'Québec', 'Ottawa', 'Toronto', 'Winnipeg', 'Prairies']) {
         if (title.includes(other)) continue;
         expect(drawn, `the ${place} card named ${other}`).not.toContain(other);
       }
     }
+  });
+
+  test('the Prairies fail in their own name, in both languages', async ({ page }) => {
+    /*
+     * `TN-PRAIRIE-02`, and the row that proves an English template would have
+     * been wrong as well as a French one. The map calls the level "The
+     * Prairies"; "We could not load {{level}}." would draw "We could not load
+     * The Prairies." mid-sentence, so the row is written out with a lower-case
+     * article. The French takes the plural article where Halifax takes none.
+     */
+    const english = await open(page, 'level-error', { place: 'prairie-rail' });
+    await expect(english).toHaveAccessibleName('We could not load the Prairies.');
+    await expect(english, 'the title was dropped into a template').not.toContainText(
+      'load The Prairies',
+    );
+
+    const french = await open(page, 'level-error', { place: 'prairie-rail', locale: 'fr' });
+    await expect(french).toHaveAccessibleName("Nous n'avons pas pu charger les Prairies.");
+
+    /* And it still fits, and still scans clean, at 200 % in French. */
+    const big = await open(page, 'level-error', {
+      place: 'prairie-rail',
+      locale: 'fr',
+      textScale: 200,
+    });
+    await expect(big).toContainText("Nous n'avons pas pu charger les Prairies.");
+    expect(await scrollsSideways(page)).toBe(false);
+    expect(await undersizedTargets(page)).toEqual([]);
+
+    const results = await componentScan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
   });
 
   test('the French failure title is written out, not composed', async ({ page }) => {
@@ -724,5 +819,137 @@ test.describe('one switch', () => {
     await page.waitForTimeout(800);
     await page.mouse.up();
     await expect(page.locator('[data-testid="menu"]')).toBeHidden();
+  });
+});
+
+test.describe('what is in reach', () => {
+  test('says what choosing it will do, and never what the landmark is called', async ({ page }) => {
+    /*
+     * `TN-REACH-01`, `TN-REACH-02`, and the runtime half of `TN-REACH-05`'s
+     * check: "the check reads what the HUD draws at runtime, not only what a
+     * copy table declares". This is that reading. The prompt used to carry the
+     * level document's own landmark name — "CN Tower" in the shipped game — and
+     * a check written against copy tables could not see it, because the name was
+     * never a copy string.
+     */
+    await open(page, 'level', { prompt: true });
+    const prompt = page.locator('[data-testid="interact-prompt"]');
+    await expect(prompt).toHaveText('Talk to the officer');
+
+    const hudText = ((await page.locator('[data-testid="hud"]').textContent()) ?? '')
+      .toLowerCase();
+    for (const name of [
+      'cn tower',
+      'tour cn',
+      'château frontenac',
+      'chateau frontenac',
+      'pier 21',
+      'canada place',
+      'toronto city hall',
+    ]) {
+      expect(hudText.includes(name), `the HUD draws "${name}", which TN-NAMES-04 fails`).toBe(
+        false,
+      );
+    }
+  });
+
+  test('says a target is done rather than inviting it again', async ({ page }) => {
+    await open(page, 'level', { prompt: true, done: true });
+    await expect(page.locator('[data-testid="interact-prompt"]')).toHaveText(
+      'Done. See this one again',
+    );
+  });
+
+  test('does not call the guide a person, and still fits in French at 200 %', async ({
+    page,
+  }) => {
+    /*
+     * `TN-GUIDE-03` and `TN-GUIDE-04`. The generic row for a character is "Talk
+     * to this person" / « Parler à cette personne », and that is what the HUD
+     * drew whenever the beaver was in reach — on Halifax, which is the level
+     * `content/game.config.json` opens on. The per-target row fixes it through
+     * the precedence `app/ui/interact.ts` already had, so this is a scan of a
+     * row and not of a special case.
+     */
+    const prompt = page.locator('[data-testid="interact-prompt"]');
+
+    await open(page, 'level', { prompt: true, who: 'guide' });
+    await expect(prompt).toHaveText('Talk to the guide');
+    await expect(prompt, 'the HUD called a beaver a person').not.toHaveText(
+      'Talk to this person',
+    );
+    /* A prompt is a verb phrase, never the speaker's label on its own. */
+    await expect(prompt).not.toHaveText('The guide');
+
+    await open(page, 'level', { prompt: true, who: 'guide', locale: 'fr', textScale: 200 });
+    await expect(prompt).toHaveText('Parler au guide');
+    expect(await scrollsSideways(page)).toBe(false);
+    /* Still a target a thumb can hit, at twice the text size. */
+    expect(await undersizedTargets(page)).toEqual([]);
+
+    const results = await pageScan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('still says the state first for a guide the player has finished with', async ({ page }) => {
+    /* `TN-GUIDE-03`: "a finished character still says the state first", and this
+       file's row is not drawn instead of it. */
+    await open(page, 'level', { prompt: true, who: 'guide', done: true });
+    await expect(page.locator('[data-testid="interact-prompt"]')).toHaveText(
+      'Done. See this one again',
+    );
+  });
+
+  test('explains the marks once, beside the offer and never instead of it', async ({ page }) => {
+    const root = await open(page, 'level', { prompt: true, hint: true });
+    const hint = root.locator('[data-testid="interact-hint"]');
+    await expect(hint).toHaveText('A mark shows something to see. Get close to it, then choose it.');
+    /* It blocks nothing: not a dialog, no modal attribute, and the offer it sits
+       beside is still there. */
+    await expect(hint).not.toHaveAttribute('aria-modal', 'true');
+    await expect(root.locator('[data-testid="interact-prompt"]')).toBeVisible();
+
+    /* And it takes no focus: Tab reaches the controls, never the paragraph. */
+    for (let index = 0; index < 6; index += 1) {
+      await page.keyboard.press('Tab');
+      expect(await focusedTestId(page)).not.toBe('interact-hint');
+    }
+  });
+
+  test('draws a notice for something the game cannot do, without blocking play', async ({
+    page,
+  }) => {
+    /* `TN-QUEST-05`: the message is on screen as well as announced — every
+       sound has a visual equivalent — and the skater can move away. */
+    const root = await open(page, 'level', { prompt: true, notice: true });
+    await expect(root.locator('[data-testid="hud-notice"]')).toHaveText(
+      'The questions are not ready right now. Try again later.',
+    );
+    await expect(root.locator('[data-testid="hud-notice"]')).not.toHaveAttribute(
+      'aria-modal',
+      'true',
+    );
+    await expect(page.locator('[aria-modal="true"]:not([hidden])')).toHaveCount(0);
+  });
+
+  test('keeps the strip clean with the hint and the notice on it', async ({ page }) => {
+    await open(page, 'level', { prompt: true, hint: true, notice: true, warning: true });
+    const results = await pageScan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('is French, and fits at 200 % text', async ({ page }) => {
+    await open(page, 'level', {
+      locale: 'fr',
+      prompt: true,
+      hint: true,
+      textScale: 200,
+      font: 'dyslexia',
+    });
+    await expect(page.locator('[data-testid="interact-prompt"]')).toHaveText("Parler à l'agent");
+    await expect(page.locator('[data-testid="interact-hint"]')).toHaveText(
+      'Un repère indique quelque chose à voir. Approchez-vous, puis choisissez.',
+    );
+    expect(await scrollsSideways(page)).toBe(false);
   });
 });

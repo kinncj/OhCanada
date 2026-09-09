@@ -134,15 +134,24 @@ const nextFound = CONFIG.journey.find(
 /** The id of that level, or `null` when finishing the start level opens nothing. */
 export const NEXT_LEVEL: string | null = nextFound ?? null;
 
-/** What the completion card's route into it is labelled: that level's own name. */
-export const NEXT_LEVEL_TITLE: string | null = ((): string | null => {
+/**
+ * What the completion card's route into it is labelled.
+ *
+ * `level.<id>.play` — "Play Québec City" — and not that level's place name. A
+ * label that says what pressing does beats one that says where you would end up,
+ * and the row is written out per level because French takes « à » for three of
+ * the four built levels and « dans la » for the fourth, so no template is right
+ * in both languages (`TN-DONE-04`).
+ */
+export const NEXT_LEVEL_PLAY_LABEL: string | null = ((): string | null => {
   if (NEXT_LEVEL === null) return null;
-  const key = `level.${NEXT_LEVEL}.title`;
+  const key = `level.${NEXT_LEVEL}.play`;
   if (!hasCopyRow(key)) {
     throw new Error(
       `content/game.config.json opens "${NEXT_LEVEL}" after "${START_LEVEL}" and ` +
         `app/ui/copy.ts has no ${key}, so the completion card can offer no route into it ` +
-        'and a player who finishes a level is left one tap short of the next one.',
+        'and a player who finishes a level is left one tap short of the next one. ' +
+        'Transcribe the row from that level\'s story file (TN-DONE-05 carries the gate).',
     );
   }
   return text('en', key);

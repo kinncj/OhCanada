@@ -51,7 +51,14 @@ const scan = (page: Page, tags: readonly string[] = RULESET) =>
 const violationsOf = (results: { violations: unknown[] }) =>
   JSON.stringify(results.violations, null, 2);
 
-type ScreenName = 'settings' | 'creator' | 'dialogue' | 'card' | 'study' | 'complete';
+type ScreenName =
+  | 'settings'
+  | 'creator'
+  | 'dialogue'
+  | 'card'
+  | 'study'
+  | 'complete'
+  | 'passport';
 
 interface HarnessOptions {
   readonly locale?: 'en' | 'fr';
@@ -72,6 +79,10 @@ interface HarnessOptions {
    * level in the chain, and a level replayed for a stamp it already had.
    */
   readonly next?: boolean;
+  /** The passport: `none` is the empty passport a new player meets first. */
+  readonly stamps?: 'none' | 'one';
+  /** `quest` is the path where a task really was done; the default is a level. */
+  readonly reason?: 'quest' | 'level';
 }
 
 /** Open one screen and wait for the marker that says it is really there. */
@@ -93,6 +104,8 @@ async function openScreen(
   if (options.answered !== undefined) params.set('answered', String(options.answered));
   if (options.stamp === false) params.set('stamp', '0');
   if (options.next === false) params.set('next', '0');
+  if (options.stamps !== undefined) params.set('stamps', options.stamps);
+  if (options.reason !== undefined) params.set('reason', options.reason);
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -113,6 +126,7 @@ const TEST_IDS: Readonly<Record<ScreenName, string>> = {
   card: 'question-card',
   study: 'study-screen',
   complete: 'quest-complete-card',
+  passport: 'passport',
 };
 
 /** What the browser reports as focused, in a form a failure message can name. */
@@ -166,6 +180,11 @@ const SCREENS: readonly ScreenName[] = [
   /* The card a level's task ends on. It is the newest screen in the game and it
      goes through exactly the same battery as the other five. */
   'complete',
+  /* The passport: ten slots, three states, and the reward surface of the whole
+     game. Same battery, no exceptions — it is the screen a player opens to feel
+     good about what they have done, which is no reason for it to be the one
+     screen a switch user cannot read. */
+  'passport',
 ];
 
 test.describe('slice 1 DOM screens', () => {
@@ -246,8 +265,21 @@ test.describe('slice 1 DOM screens', () => {
 
       test('contains focus: Tab cannot leave it', async ({ page }) => {
         const root = await openScreen(page, screen);
+        /*
+         * Focus lands *inside* the screen, which is the requirement — never on
+         * `<body>`. Where exactly is the screen's own call: most land on the
+         * dialog itself, and the passport lands on its heading, so that the
+         * first Tab reaches the first slot rather than re-entering from the top.
+         */
         await expect
-          .poll(() => page.evaluate(() => document.activeElement?.getAttribute('data-testid')))
+          .poll(() =>
+            page.evaluate(() => {
+              const active = document.activeElement;
+              return active === null
+                ? false
+                : (active.closest('[aria-modal="true"]')?.getAttribute('data-testid') ?? null);
+            }),
+          )
           .toBe(TEST_IDS[screen]);
 
         for (let index = 0; index < 12; index += 1) {
@@ -681,7 +713,7 @@ test.describe('the question card, answered', () => {
 
 test.describe('the level completion card', () => {
   test('says the task is done and offers the way on', async ({ page }) => {
-    const root = await openScreen(page, 'complete');
+    const root = await openScreen(page, 'complete', { reason: 'quest' });
     await expect(root).toHaveAccessibleName('Task done!');
     await expect(root.locator('[data-testid="quest-complete-stamp"]')).toContainText(
       'You earned the Ottawa stamp.',
@@ -692,9 +724,24 @@ test.describe('the level completion card', () => {
     );
   });
 
-  test('reads without a stamp line, which is most levels today', async ({ page }) => {
+  test('says what actually finished, and never a task nobody accepted', async ({ page }) => {
+    /*
+     * `TN-DONE`, and the defect it was written for: this card is drawn on two
+     * paths and drew "Task done!" on both, so the first thing a player who
+     * walked to the exit having accepted no task read was a claim about
+     * something they never did (`OQ-DONE-1`).
+     */
+    const walked = await openScreen(page, 'complete');
+    await expect(walked).toHaveAccessibleName('Level finished!');
+    await expect(walked).not.toContainText('Task done!');
+
+    const questPath = await openScreen(page, 'complete', { reason: 'quest' });
+    await expect(questPath).toHaveAccessibleName('Task done!');
+  });
+
+  test('reads without a stamp line, which is a level with no row', async ({ page }) => {
     const root = await openScreen(page, 'complete', { stamp: false });
-    await expect(root).toHaveAccessibleName('Task done!');
+    await expect(root).toHaveAccessibleName('Level finished!');
     await expect(root.locator('[data-testid="quest-complete-stamp"]')).toHaveCount(0);
 
     const results = await scan(page).analyze();
@@ -702,7 +749,7 @@ test.describe('the level completion card', () => {
   });
 
   test('is French, and calls the stamp a tampon', async ({ page }) => {
-    const root = await openScreen(page, 'complete', { locale: 'fr' });
+    const root = await openScreen(page, 'complete', { locale: 'fr', reason: 'quest' });
     await expect(root).toContainText('Mission accomplie!');
     await expect(root).toContainText("Vous avez obtenu le tampon d'Ottawa.");
     await expect(root).not.toContainText('timbre');
@@ -729,7 +776,10 @@ test.describe('the level completion card', () => {
   test('offers the level that just opened, named and described', async ({ page }) => {
     const root = await openScreen(page, 'complete');
     const play = root.locator('[data-testid="quest-complete-next"]');
-    await expect(play).toHaveText('Québec City');
+    /* The label says what pressing does — `level.<id>.play`, written out per
+       level because French takes « dans la » here and « à » for the other
+       three (`TN-DONE-04`). */
+    await expect(play).toHaveText('Play Québec City');
     /* Named by the place, described by what the map says about it: the reason is
        read after the name, never as part of it (`TN-MAP-09`). */
     await expect(play).toHaveAccessibleDescription('Québec City. Open. You can play this now.');
@@ -743,7 +793,7 @@ test.describe('the level completion card', () => {
   }) => {
     const played = await openScreen(page, 'complete');
     await expect(played.locator('[data-testid="quest-complete-progress"]')).toHaveText(
-      'You got 2 out of 3 right.',
+      'Right answers in this level: 2 out of 3',
     );
 
     /*
@@ -753,8 +803,15 @@ test.describe('the level completion card', () => {
      * the subject was learned.
      */
     const walked = await openScreen(page, 'complete', { answered: 0 });
-    await expect(walked.locator('[data-testid="quest-complete-progress"]')).toHaveCount(0);
-    await expect(walked).toHaveAccessibleName('Task done!');
+    const line = walked.locator('[data-testid="quest-complete-progress"]');
+    /* One slot, two rows, never both and never empty. Silence was the honest
+       answer while nothing was written; saying so plainly is better, and the
+       sentence carries no number, so "0 out of 0" cannot be drawn. */
+    await expect(line).toHaveText(
+      'You did not answer any questions here. Every place in this level has something to teach you.',
+    );
+    await expect(line).not.toContainText('0 out of 0');
+    await expect(walked).toHaveAccessibleName('Level finished!');
 
     const results = await scan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);
@@ -781,17 +838,25 @@ test.describe('the level completion card', () => {
     expect(await scrollsSideways(page)).toBe(false);
   });
 
-  test('is reachable with the keyboard alone, three ways on and no trap', async ({ page }) => {
+  test('is reachable with the keyboard alone, every way on and no trap', async ({ page }) => {
     const root = await openScreen(page, 'complete');
     await page.keyboard.press('Tab');
     const reached = new Set<string>();
-    for (let step = 0; step < 6; step += 1) {
+    for (let step = 0; step < 8; step += 1) {
       reached.add(await focusedTestId(page));
       await page.keyboard.press('Tab');
     }
 
     expect([...reached].sort()).toEqual(
-      ['quest-complete-keep-playing', 'quest-complete-map', 'quest-complete-next'].sort(),
+      [
+        'quest-complete-keep-playing',
+        'quest-complete-map',
+        'quest-complete-next',
+        /* The stamp just landed somewhere, and this is the way to look at it
+           (`TN-QUEST-04`, `TN-PASSPORT-01`; `OQ-DONE-5` is open on whether it
+           belongs here at all). */
+        'quest-complete-passport',
+      ].sort(),
     );
     await expect(root).toBeVisible();
   });
@@ -799,7 +864,7 @@ test.describe('the level completion card', () => {
   test('reads in French, with the new level in French too', async ({ page }) => {
     const root = await openScreen(page, 'complete', { locale: 'fr' });
     await expect(root.locator('[data-testid="quest-complete-next"]')).toHaveText(
-      'Ville de Québec',
+      'Jouer dans la Ville de Québec',
     );
     await expect(root.locator('[data-testid="quest-complete-next-level"]')).toContainText(
       'Vous pouvez y jouer maintenant.',
@@ -880,5 +945,178 @@ test.describe('dialogue', () => {
     await page.keyboard.press('Tab');
     expect(await focusedTestId(page)).toBe('dialogue-decline');
     await expect(root).toBeVisible();
+  });
+});
+
+test.describe('the passport', () => {
+  test('draws ten slots, in journey order, as a list', async ({ page }) => {
+    const root = await openScreen(page, 'passport');
+    const slots = root.locator('[data-testid="passport-slots"] > li');
+    await expect(slots).toHaveCount(10);
+
+    /* Reading order is the journey's order, and the focus order is the same as
+       the reading order (`TN-PASSPORT-01`). */
+    const handles = await slots.evaluateAll((items) =>
+      items.map((item) => item.getAttribute('data-level-handle')),
+    );
+    expect(handles).toEqual([
+      'halifax',
+      '2',
+      'quebec-city',
+      'ottawa',
+      'toronto',
+      'winnipeg',
+      'prairie-rail',
+      'alberta-foothills',
+      'vancouver',
+      '10',
+    ]);
+  });
+
+  test('tells the three states apart without colour', async ({ page }) => {
+    /*
+     * The whole accessibility question on this screen. Each state carries its
+     * own **word**, its own `data-state`, and its own border *style* — solid,
+     * dashed, dotted — so a player who cannot tell the hues apart, and a player
+     * in forced colours, still reads three different things.
+     */
+    const root = await openScreen(page, 'passport');
+    const states: Record<string, { word: string; border: string }> = {};
+    for (const handle of ['ottawa', 'halifax', 'winnipeg']) {
+      const slot = root.locator(`[data-level-handle="${handle}"]`);
+      states[handle] = await slot.evaluate((element) => ({
+        word: element.querySelector('.tn-screen__state')?.textContent ?? '',
+        border: getComputedStyle(element).borderTopStyle,
+      }));
+    }
+
+    expect(states['ottawa']?.word).toBe('Earned');
+    expect(states['halifax']?.word).toBe('Not earned yet');
+    expect(states['winnipeg']?.word).toBe('Not made yet');
+    expect(
+      new Set(Object.values(states).map((state) => state.border)).size,
+      'the three states share one border style, so shape is not a signal',
+    ).toBe(3);
+  });
+
+  test('names each slot with its number, its place and its state', async ({ page }) => {
+    const root = await openScreen(page, 'passport');
+    await expect(root.locator('[data-testid="stamp-ottawa"]')).toHaveAccessibleName(
+      /Level 4.*Ottawa.*Earned/,
+    );
+    await expect(root.locator('[data-level-handle="winnipeg"]')).toHaveAccessibleName(
+      /Not made yet/,
+    );
+    /* And no stamp is announced as "image", "graphic" or an empty string: the
+       mark is decoration beside the word that carries the same meaning. */
+    const marks = root.locator('[data-testid="stamp-ottawa"] .tn-screen__mark');
+    await expect(marks).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('[data-testid="passport"] img')).toHaveCount(0);
+  });
+
+  test('lets a keyboard read all ten, and activates none of them', async ({ page }) => {
+    /* `TN-PASSPORT-07`: focus reaches all ten in level order, including the ones
+       that are not earned and the ones nobody has built — and a slot is
+       readable, not activatable. */
+    const root = await openScreen(page, 'passport');
+    const visited: string[] = [];
+    for (let index = 0; index < 11; index += 1) {
+      await page.keyboard.press('Tab');
+      const handle = await page.evaluate(() =>
+        document.activeElement?.getAttribute('data-level-handle'),
+      );
+      if (handle !== null && handle !== undefined) visited.push(handle);
+    }
+    expect(visited).toEqual([
+      'halifax',
+      '2',
+      'quebec-city',
+      'ottawa',
+      'toronto',
+      'winnipeg',
+      'prairie-rail',
+      'alberta-foothills',
+      'vancouver',
+      '10',
+    ]);
+
+    /* Enter on a slot does nothing and announces nothing false. */
+    await page.keyboard.press('Enter');
+    await expect(root).toBeVisible();
+    expect(await page.locator('#tn-live-region').textContent()).not.toContain('Level');
+  });
+
+  test('is a beginning, not an error, when nothing has been earned', async ({ page }) => {
+    const root = await openScreen(page, 'passport', { stamps: 'none' });
+    await expect(root.locator('[data-testid="passport-empty"]')).toContainText('No stamps yet');
+    await expect(root.locator('[data-testid="passport-empty"]')).toContainText(
+      'Finish a level to earn your first stamp.',
+    );
+    await expect(root.locator('[data-testid="passport-counts"]')).toContainText('Stamps: 0 of 10');
+    await expect(root.locator('[data-testid="passport-slots"] > li')).toHaveCount(10);
+
+    const wording = ((await root.textContent()) ?? '').toLowerCase();
+    for (const word of ['error', 'failed', 'missing', 'unavailable', 'tbd', '???']) {
+      expect(wording.includes(word), `the empty passport says "${word}"`).toBe(false);
+    }
+  });
+
+  test('is French, and says tampon rather than timbre', async ({ page }) => {
+    const root = await openScreen(page, 'passport', { locale: 'fr' });
+    await expect(root.locator('h1')).toHaveText('Mon passeport');
+    await expect(root).toContainText('Tampons : 1 sur 10');
+    await expect(root).toContainText('Niveaux prêts : 4 sur 10');
+    await expect(root).toContainText('Obtenu');
+    await expect(root).toContainText('Pas encore obtenu');
+    await expect(root).toContainText('Pas encore créé');
+
+    const wording = (await root.textContent()) ?? '';
+    expect(wording, 'a passport stamp is a tampon; a timbre is a postage stamp').not.toContain(
+      'timbre',
+    );
+  });
+
+  test('is readable and leavable with one switch, and nothing scans', async ({ page }) => {
+    /*
+     * `TN-PASSPORT-08`. The highlight walks the **controls** — a slot is
+     * readable rather than activatable, so it is not one — and nothing moves on
+     * its own: no scanning, no countdown, nothing chosen for the player.
+     */
+    const root = await openScreen(page, 'passport', { singleSwitch: true });
+
+    /* Tap anywhere: the middle of the screen, not a control. */
+    await page.mouse.move(195, 700);
+    await page.mouse.down();
+    await page.mouse.up();
+    await expect(root.locator('[data-testid="passport-back"]')).toHaveAttribute(
+      'data-switch-highlight',
+      'true',
+    );
+
+    /* A slot is never highlighted as if it were something to take. */
+    await expect(root.locator('li[data-switch-highlight="true"]')).toHaveCount(0);
+
+    await page.waitForTimeout(1_000);
+    await expect(
+      root.locator('[data-testid="passport-back"]'),
+      'the highlight moved on its own, which is a screen that scans',
+    ).toHaveAttribute('data-switch-highlight', 'true');
+  });
+
+  test('fits the longest French sentence at 200 % text', async ({ page }) => {
+    const root = await openScreen(page, 'passport', {
+      locale: 'fr',
+      textScale: 200,
+      font: 'dyslexia',
+    });
+    await expect(root).toContainText(
+      "Vous obtenez un tampon lorsque vous terminez la mission d'un niveau.",
+    );
+    await expect(root).toContainText('Ce niveau est encore en préparation.');
+    expect(await scrollsSideways(page)).toBe(false);
+
+    /* Every slot is still reachable by scrolling down, and every state word is
+       fully visible rather than truncated. */
+    await expect(root.locator('[data-testid="passport-slots"] > li')).toHaveCount(10);
   });
 });

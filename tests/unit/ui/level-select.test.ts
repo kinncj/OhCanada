@@ -289,6 +289,29 @@ describe('a level that is not built yet', () => {
 });
 
 describe('leaving, focusing and speaking French', () => {
+  it('offers the passport where the stamp count already is', () => {
+    /*
+     * `TN-PASSPORT-01`, and `OQ-PASSPORT-3`'s recommendation: the map is the
+     * passport's home because the count — "Stamps: 1 of 10" — is already drawn
+     * on this screen, and a fact a player wants to open should have the control
+     * beside it. The title screen deliberately does not offer one.
+     */
+    const onOpenPassport = vi.fn();
+    const withPassport = open({ onOpenPassport });
+    expect(withPassport.at('passport-open')?.textContent).toBe('See my passport');
+    withPassport.at('passport-open')?.click();
+    expect(onOpenPassport).toHaveBeenCalledTimes(1);
+
+    /* Drawn only when a caller wired one: a route that opens nothing is worse
+       than no route. */
+    expect(open().at('passport-open')).toBeNull();
+  });
+
+  it('says the passport in French too', () => {
+    const { at } = open({ locale: 'fr', onOpenPassport: vi.fn() });
+    expect(at('passport-open')?.textContent).toBe('Voir mon passeport');
+  });
+
   it('offers Back only when there is somewhere to go back to', () => {
     const onBack = vi.fn();
     const withBack = open({ onBack });

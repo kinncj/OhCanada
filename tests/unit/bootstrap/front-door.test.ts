@@ -177,6 +177,12 @@ const hoisted = vi.hoisted(() => {
     recorded: [string, number][];
     /** Every label the interact prompt was given, `null` for withdrawn. */
     prompts: (string | null)[];
+    /** Every value the one-time interact hint was given, `null` for removed. */
+    hints: (string | null)[];
+    /** Every value the HUD notice was given, `null` for cleared. */
+    notices: (string | null)[];
+    /** Every value the quest tracker was given, `null` for "no task". */
+    tasks: (string | null)[];
     /** Every state the Study screen was shown in. */
     studyShown: unknown[];
     /**
@@ -191,6 +197,17 @@ const hoisted = vi.hoisted(() => {
     stampFor: string | null;
     /** What the faked `answerQuestion` judges the next answers to be. */
     answersAreCorrect: boolean;
+    /** Does the next recorded answer finish a quest? */
+    questCompletes: boolean;
+    /** The quest id handed to `answerQuestion` on each answer, or `null`. */
+    answeredWithQuest: (string | null)[];
+    /** Every passport that was mounted, as [host, options]. */
+    passports: { host: unknown; options: Record<string, unknown> }[];
+    passportsShown: number;
+    passportsDestroyed: number;
+    /** Every dialogue that was shown, as the content it was given. */
+    dialoguesShown: Record<string, unknown>[];
+    dialogueOptions: Record<string, unknown> | null;
   } = {
     calls: [],
     loadCalls: [],
@@ -235,9 +252,19 @@ const hoisted = vi.hoisted(() => {
     availableCalls: 0,
     recorded: [],
     prompts: [],
+    hints: [],
+    notices: [],
+    tasks: [],
     studyShown: [],
     stampFor: null,
     answersAreCorrect: true,
+    questCompletes: false,
+    answeredWithQuest: [],
+    passports: [],
+    passportsShown: 0,
+    passportsDestroyed: 0,
+    dialoguesShown: [],
+    dialogueOptions: null,
   };
   return { state };
 });
@@ -326,7 +353,10 @@ vi.mock('@ui/shell', () => ({
     hoisted.state.entries = options['entries'];
     return {
       element: {},
-      main: {},
+      /* Named, because a modal the composition root mounts has to go *into* the
+         shell's own `<main>`: a `dialog` is not a landmark, so one mounted
+         beside it leaves its content outside every landmark. */
+      main: { id: 'tn-shell' },
       view: null,
       start: (): void => {
         hoisted.state.calls.push('shell.start');
@@ -347,7 +377,9 @@ vi.mock('@ui/shell', () => ({
       setStorageWarning: (raised: boolean): void => {
         hoisted.state.storageWarning = raised;
       },
-      setModalOpen: (): void => undefined,
+      setModalOpen: (open: boolean): void => {
+        hoisted.state.calls.push(`shell.setModalOpen:${String(open)}`);
+      },
       destroy: (): void => undefined,
     };
   },
@@ -380,9 +412,17 @@ vi.mock('@ui/hud', () => ({
         hoisted.state.calls.push('hud.focus');
       },
       setMode: () => undefined,
-      setTask: () => undefined,
+      setTask: (step: string | null): void => {
+        hoisted.state.tasks.push(step);
+      },
       setPrompt: (label: string | null): void => {
         hoisted.state.prompts.push(label);
+      },
+      setHint: (message: string | null): void => {
+        hoisted.state.hints.push(message);
+      },
+      setNotice: (message: string | null): void => {
+        hoisted.state.notices.push(message);
       },
       setStorageWarning: () => undefined,
       openMenu: () => undefined,
@@ -541,12 +581,18 @@ vi.mock('@application/use-cases/answer-question', async () => {
       input: { question: { id: string }; chosenIndex: number; progress: never },
     ): unknown => {
       hoisted.state.recorded.push([input.question.id, input.chosenIndex]);
+      hoisted.state.answeredWithQuest.push(
+        (input as { quest?: { id: string } }).quest?.id ?? null,
+      );
       const earn = hoisted.state.stampFor;
       return {
         ok: true,
         value: {
           progress: earn === null ? input.progress : withStamp(input.progress, earn as never, 1 as never),
           stampEarned: earn !== null,
+          /* Whether a **quest** finished, which is a different question from
+             whether a stamp was earned: the card's heading follows this one. */
+          questCompleted: hoisted.state.questCompletes,
           /*
            * The judgement, because the completion card counts on it: reaching
            * the end of a level earns the stamp whether or not anything was
@@ -607,6 +653,54 @@ vi.mock('@ui/level-screens', () => ({
       setLocale: (_locale: unknown, words: { title: string; message: string }) => {
         hoisted.state.loadingText.push(words);
       },
+      destroy: () => undefined,
+    };
+  },
+}));
+
+/*
+ * The passport, at the seam this suite is about: **where** it is mounted, and
+ * what the level does to the pause while it is open. What it draws is
+ * `tests/unit/ui/passport.test.ts`'s.
+ */
+vi.mock('@ui/passport', () => ({
+  createPassport: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.modalHosts['passport'] = host;
+    hoisted.state.modalOptions['passport'] = options;
+    hoisted.state.passports.push({ host, options });
+    return {
+      element: {},
+      visible: false,
+      arrivalMessage: '',
+      show: () => {
+        hoisted.state.passportsShown += 1;
+      },
+      hide: () => undefined,
+      setEntries: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
+      destroy: () => {
+        hoisted.state.passportsDestroyed += 1;
+      },
+    };
+  },
+}));
+
+/* NPC dialogue: the quest's whole surface. Recorded rather than rendered, so
+   this suite stays about the composition — which quest was offered, what the
+   choices did, and whether the level was given back. */
+vi.mock('@ui/dialogue', () => ({
+  createDialogue: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.modalHosts['dialogue'] = host;
+    hoisted.state.dialogueOptions = options;
+    return {
+      element: {},
+      visible: false,
+      show: (content: Record<string, unknown>) => hoisted.state.dialoguesShown.push(content),
+      hide: () => undefined,
+      setSpeaker: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
       destroy: () => undefined,
     };
   },
@@ -805,9 +899,19 @@ beforeEach(() => {
   hoisted.state.availableCalls = 0;
   hoisted.state.recorded = [];
   hoisted.state.prompts = [];
+  hoisted.state.hints = [];
+  hoisted.state.notices = [];
+  hoisted.state.tasks = [];
   hoisted.state.studyShown = [];
   hoisted.state.stampFor = null;
   hoisted.state.answersAreCorrect = true;
+  hoisted.state.questCompletes = false;
+  hoisted.state.answeredWithQuest = [];
+  hoisted.state.passports = [];
+  hoisted.state.passportsShown = 0;
+  hoisted.state.passportsDestroyed = 0;
+  hoisted.state.dialoguesShown = [];
+  hoisted.state.dialogueOptions = null;
   hoisted.state.milestone = null;
   hoisted.state.markedComplete = 0;
   hoisted.state.playable = null;
@@ -1210,6 +1314,9 @@ const LOADED_LEVEL = {
       blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
     },
   ],
+  /* Every level document has one, empty or not, and the prompt is built from
+     both lists: a character is a person and a point of interest is a place. */
+  characters: [],
 };
 
 const emit = (name: string, detail?: string): void => {
@@ -1238,27 +1345,85 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
     emit('level/ready');
   };
 
-  it('offers what is in reach, named by the level rather than by a word this build wrote', async () => {
+  it('says what choosing it will do, and never what the landmark is called', async () => {
     await arrive();
     emit('poi/entered', 'town-clock');
 
     /*
-     * The offer exists at all, which it did not before: `targets` was never
-     * passed to the announcer, so every `poi/entered` was an offer with no
-     * words and no player was ever told what was in reach.
+     * `TN-REACH-01` and `TN-REACH-02`, and the defect they were written for.
      *
-     * The label is the **level document's** name for the landmark. No
-     * `hud.interact.*` row exists, so the alternative was a verb this file would
-     * have had to write, which ADR-0010 forbids.
+     * This used to draw the **level document's** name for the landmark — the
+     * fixture's "Halifax Town Clock", and in the shipped game "CN Tower" — which
+     * is wrong twice over: a noun says what is *there* rather than what choosing
+     * it does, and `TN-NAMES-04` fails the build for a name from its list drawn
+     * by the HUD. It got past that check because the name was never a copy
+     * string; it was content interpolated at runtime, right here.
+     *
+     * Halifax writes no row of its own for this landmark, so the generic row is
+     * the answer — which is the rule working, not a shortfall.
      */
-    expect(hoisted.state.prompts).toEqual(['Halifax Town Clock']);
+    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.poi')]);
+    expect(hoisted.state.prompts.join(' ')).not.toContain('Halifax Town Clock');
+  });
+
+  it('draws the level’s own row where the level wrote one', async () => {
+    /* `TN-REACH`'s second rule: a level with something better to say says it.
+       Ottawa writes "Look at Parliament Hill" because that landmark is not on
+       `TN-NAMES`'s list and the row is in that level's story. */
+    hoisted.state.level = {
+      ...LOADED_LEVEL,
+      pois: [
+        {
+          id: 'parliament-hill',
+          name: { en: 'Parliament Hill', fr: 'La Colline du Parlement' },
+          blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
+        },
+      ],
+    };
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    emit('poi/entered', 'parliament-hill');
+
+    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.parliament-hill')]);
+  });
+
+  it('says a landmark has been done once it has, rather than inviting it again', async () => {
+    /* `TN-REACH-03`: done beats the level's own row and beats the kind. The
+       state is the news; the invitation is not. */
+    await arrive();
+    emit('poi/engaged', 'town-clock');
+    emit('poi/entered', 'town-clock');
+
+    expect(hoisted.state.prompts.at(-1)).toBe(text('en', 'hud.interact.done'));
+  });
+
+  it('shows the one-time hint the first time something is in reach, and only once', async () => {
+    /*
+     * `TN-REACH-04`. The marks in the world are the one affordance a player
+     * cannot be told about anywhere else, and the hint names no input — not
+     * "tap", not a key, not "hold" — because the game is played with a thumb, a
+     * keyboard and one switch.
+     */
+    await arrive();
+    emit('poi/entered', 'town-clock');
+    expect(hoisted.state.hints).toEqual([text('en', 'hud.interact.hint')]);
+
+    emit('poi/left', 'town-clock');
+    emit('poi/entered', 'town-clock');
+    expect(hoisted.state.hints, 'the hint became a nag').toEqual([
+      text('en', 'hud.interact.hint'),
+    ]);
+
+    /* It goes as soon as anything is engaged, and does not come back. */
+    emit('poi/engaged', 'town-clock');
+    expect(hoisted.state.hints.at(-1)).toBeNull();
   });
 
   it('withdraws the offer when the landmark goes out of reach', async () => {
     await arrive();
     emit('poi/entered', 'town-clock');
     emit('poi/left', 'town-clock');
-    expect(hoisted.state.prompts).toEqual(['Halifax Town Clock', null]);
+    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.poi'), null]);
   });
 
   it('offers nothing for a landmark the level does not declare', async () => {
@@ -1367,15 +1532,26 @@ describe('finishing a level says so, and leads to the next one', () => {
 
   it('names the stamp only when this build has a row for this level', async () => {
     await finishTheLevel();
-    const shown = hoisted.state.completeShown[0] as { stampMessage?: string };
+    /* The card is shown a **resolver**, so the player can change language with it
+       open and every sentence is looked up again. */
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
+      stampMessage?: string;
+    };
     const key = `stamp.${String(START_LEVEL)}.earned`;
-    if (hasCopyRow(key)) expect(shown.stampMessage).toBe(text('en', key));
-    else
+    if (hasCopyRow(key)) {
+      expect(resolve('en').stampMessage).toBe(text('en', key));
+      /* Every built level has its own row now (`TN-DONE-03`), and the French
+         takes three different forms after « tampon » across the four — which is
+         the whole reason they are four rows and not one template. */
+      expect(resolve('fr').stampMessage).toBe(text('fr', key));
+      expect(resolve('fr').stampMessage).not.toContain('timbre');
+    } else {
       expect(
-        shown.stampMessage,
+        resolve('en').stampMessage,
         `this build has no ${key}, so the card must draw no stamp line rather than ` +
           'name another place or print a placeholder',
       ).toBeUndefined();
+    }
   });
 
   it('lands the player on the level that just opened, not the one they finished', async () => {
@@ -1522,16 +1698,27 @@ describe('reaching the end of a level finishes it and offers the next one', () =
     expect(hoisted.state.completeShown).toHaveLength(1);
   });
 
-  it('says nothing about answers when the player answered none', async () => {
+  it('says plainly that nothing was answered, and never scores it', async () => {
     await walkToTheEnd();
     const resolve = hoisted.state.completeShown[0] as (locale: string) => {
       progressMessage?: string;
+      reason?: string;
     };
-    expect(
-      resolve('en').progressMessage,
-      'a card that scored a level nobody answered anything in would be claiming a ' +
-        'subject was learned when nothing was',
-    ).toBeUndefined();
+
+    /*
+     * `TN-DONE-02`. Silence was the honest answer while nothing was written; it
+     * is not the same as saying so, and a player who walked past every landmark
+     * should be told plainly that they did while there is still a way back. The
+     * sentence carries no number — a total of zero is what it *is* — so the card
+     * can never read "0 out of 0", and no word in it marks the player down.
+     */
+    expect(resolve('en').progressMessage).toBe(text('en', 'level.complete.none'));
+    expect(resolve('fr').progressMessage).toBe(text('fr', 'level.complete.none'));
+    expect(/\d/u.test(resolve('en').progressMessage ?? '')).toBe(false);
+
+    /* And the heading is the level's, not the quest's: no task was accepted, so
+       "Task done!" would be a claim about something that never happened. */
+    expect(resolve('en').reason).toBe('level');
   });
 
   it('scores the questions the player did answer, at this level’s landmarks', async () => {
@@ -1559,26 +1746,34 @@ describe('reaching the end of a level finishes it and offers the next one', () =
     const resolve = hoisted.state.completeShown[0] as (locale: string) => {
       progressMessage?: string;
     };
+    /* The card owns its own score row rather than borrowing Study's
+       (`TN-DONE`, `OQ-DONE-2`): the two screens count different sets and must be
+       free to be reworded apart. */
     expect(resolve('en').progressMessage).toBe(
-      text('en', 'study.summary.score', { correct: 0, total: 1 }),
+      text('en', 'level.complete.score', { correct: 0, total: 1 }),
     );
     expect(resolve('fr').progressMessage).toBe(
-      text('fr', 'study.summary.score', { correct: 0, total: 1 }),
+      text('fr', 'level.complete.score', { correct: 0, total: 1 }),
     );
   });
 
   it('names the level that just opened in the map’s own words, in either language', async () => {
     await walkToTheEnd();
     const resolve = hoisted.state.completeShown[0] as (locale: string) => {
-      next?: { title: string; description: string };
+      next?: { label: string; description: string };
     };
 
     const next = resolve('en').next;
     expect(
-      next?.title,
-      `the route into ${String(EARNED_LEVEL)} is labelled with that level's own name, ` +
-        'because "Play {{level}}" is a sentence nobody has written',
-    ).toBe(text('en', `level.${String(EARNED_LEVEL)}.title` as never));
+      next?.label,
+      `the route into ${String(EARNED_LEVEL)} is labelled with that level's own ` +
+        'level.<id>.play row: a label that says what pressing does, written out per ' +
+        'level because French takes « à » for three of the four and « dans la » for ' +
+        'the fourth',
+    ).toBe(text('en', `level.${String(EARNED_LEVEL)}.play` as never));
+    expect(resolve('fr').next?.label).toBe(
+      text('fr', `level.${String(EARNED_LEVEL)}.play` as never),
+    );
     /* Three rows the map already draws, joined — never a fourth sentence. */
     expect(next?.description).toContain(text('en', 'map.state.open'));
     expect(next?.description).toContain(text('en', 'map.open.help'));
@@ -1750,5 +1945,344 @@ describe('leaving a level', () => {
     await flush();
 
     expect(entries(), 'the map was not redrawn on the way out').toHaveLength(10);
+  });
+});
+
+/* ------------------------------------------------------------------ the passport */
+
+/**
+ * `docs/stories/TN-PASSPORT-01`: where the passport lives, and how a player
+ * reaches it.
+ *
+ * Two routes, and one deliberate absence. The map is its home, because the stamp
+ * count is already drawn there; the level's menu is the other, for a player who
+ * is inside a level. The title screen offers none — `OQ-TITLE-2` keeps progress
+ * off the first screen and `TN-PASSPORT` agrees.
+ */
+describe('the passport is reachable, and gives the level back', () => {
+  it('is offered on the map, mounted inside the shell’s own main', async () => {
+    await boot('');
+    shellOption<() => void>('onOpenPassport')();
+
+    expect(hoisted.state.passportsShown).toBe(1);
+    /* A `dialog` is not a landmark: a modal mounted beside `<main>` puts its
+       content outside every landmark and axe's `region` rule is right to say
+       so. */
+    expect((hoisted.state.modalHosts['passport'] as { id?: string }).id).toBe('tn-shell');
+  });
+
+  it('stands the shell’s switch ring down while it is open, and back up after', async () => {
+    await boot('');
+    shellOption<() => void>('onOpenPassport')();
+    expect(hoisted.state.calls).toContain('shell.setModalOpen:true');
+
+    modalOption<{ onBack: () => void }>('passport').onBack();
+    expect(hoisted.state.calls).toContain('shell.setModalOpen:false');
+  });
+
+  it('is offered in the level’s menu, mounted inside the level’s main', async () => {
+    await boot(`?level=${START_LEVEL}`);
+    hudOption<() => void>('onOpenPassport')();
+
+    expect(hoisted.state.passportsShown).toBe(1);
+    expect((hoisted.state.modalHosts['passport'] as { id?: string }).id).toBe('tn-main');
+  });
+
+  it('pauses the level while it is open and resumes it on the way out', async () => {
+    /*
+     * The trap the menu taught this file, and the one this task was warned
+     * about: whoever takes the level has to give it back on every path out. The
+     * menu hands over without releasing its own hold, so a screen opened from it
+     * takes its own reason and releases that one — otherwise `data-tn-paused`
+     * stays `true` and nothing on screen says why.
+     */
+    await boot(`?level=${START_LEVEL}`);
+    hudOption<() => void>('onPause')();
+    hudOption<() => void>('onOpenPassport')();
+    expect(levelState()).toBeDefined();
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
+
+    modalOption<{ onBack: () => void }>('passport').onBack();
+    expect(
+      doc.documentElement.dataset['tnPaused'],
+      'the level was left frozen behind a passport that has gone',
+    ).toBe('false');
+  });
+
+  it('is offered on the card where the stamp was just earned', async () => {
+    /* `TN-QUEST-04` and `TN-PASSPORT-01` both assert it; `OQ-DONE-5` records the
+       disagreement about whether it belongs there. */
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    reachEnd();
+    await flush();
+
+    modalOption<{ onOpenPassport: () => void }>('quest-complete-card').onOpenPassport();
+    expect(hoisted.state.passportsShown).toBe(1);
+  });
+
+  it('does not travel into a level on a main that has been detached', async () => {
+    /*
+     * The shell's `<main>` is removed when a level takes the page. A modal left
+     * inside it would go with it — still `aria-modal`, still holding the rest of
+     * the page inert — which is a screen that has been left being hidden rather
+     * than removed (`TN-FLOW-08`).
+     */
+    await boot('');
+    shellOption<() => void>('onOpenPassport')();
+    shellOption<(id: LevelId) => void>('onPlayLevel')(START_LEVEL);
+    await flush();
+
+    expect(hoisted.state.passportsDestroyed).toBeGreaterThan(0);
+  });
+
+  it('draws it again from the save, so a stamp earned since is in it', async () => {
+    await boot('');
+    shellOption<() => void>('onOpenPassport')();
+    modalOption<{ onBack: () => void }>('passport').onBack();
+    shellOption<() => void>('onOpenPassport')();
+
+    expect(hoisted.state.passports).toHaveLength(2);
+    expect(hoisted.state.passports[1]?.options['entries']).toHaveLength(10);
+  });
+});
+
+/* --------------------------------------------------------------------- the quest */
+
+/**
+ * `docs/stories/TN-QUEST-parliament-hill.md`, from the offer to the stamp.
+ *
+ * The quest documents are the real ones: `content/quests/*.json`, read through
+ * the same glob the deploy uses. What is faked is the dialogue, so the
+ * assertions are about the **composition** — which quest was offered, what the
+ * two choices did to the save, and whether the level was given back.
+ */
+describe('a quest is offered, accepted and tracked', () => {
+  const OTTAWA_LEVEL = {
+    title: { en: 'Ottawa', fr: 'Ottawa' },
+    locomotion: [{ labelKey: 'locomotion.skate.label' }],
+    pois: [
+      {
+        id: 'parliament-hill',
+        name: { en: 'Parliament Hill', fr: 'La Colline du Parlement' },
+        blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
+      },
+    ],
+    characters: [{ characterId: 'officer' }],
+  };
+
+  const arriveInOttawa = async (): Promise<void> => {
+    hoisted.state.level = OTTAWA_LEVEL;
+    await boot('?level=ottawa');
+    emit('level/ready');
+  };
+
+  it('offers the quest when the player engages its giver', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+
+    expect(hoisted.state.dialoguesShown, 'the officer said nothing').toHaveLength(1);
+    const offer = hoisted.state.dialoguesShown[0] as {
+      lines: string[];
+      accept?: { label: string };
+      decline?: { label: string };
+    };
+    /* The lines are the quest document's — content, under ADR-0010 — and the two
+       choices are copy rows, because they are the same in every quest. */
+    expect(offer.lines.length).toBeGreaterThan(0);
+    expect(offer.accept?.label).toBe(text('en', 'quest.accept'));
+    expect(offer.decline?.label).toBe(text('en', 'quest.decline'));
+  });
+
+  it('names the dialog after the character, never "Speaker" or nothing', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    expect(hoisted.state.dialogueOptions?.['speakerName']).toBe(text('en', 'npc.officer.name'));
+  });
+
+  it('holds the level while the officer is talking and gives it back on accept', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
+
+    const offer = hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } };
+    offer.accept.onSelect();
+    expect(
+      doc.documentElement.dataset['tnPaused'],
+      'the level was left frozen behind a dialogue that has gone',
+    ).toBe('false');
+  });
+
+  it('gives it back when the player declines, and when they just leave', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { decline: { onSelect: () => void } }).decline.onSelect();
+    expect(doc.documentElement.dataset['tnPaused']).toBe('false');
+
+    /* Leaving without choosing is not a decline (`TN-QUEST-03`) — and it is the
+       path most likely to be forgotten, because nobody pressed anything. */
+    emit('npc/engaged', 'officer');
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
+    (hoisted.state.dialogueOptions?.['onClose'] as () => void)();
+    expect(doc.documentElement.dataset['tnPaused']).toBe('false');
+  });
+
+  it('shows the task once it is accepted, and shows none before', async () => {
+    await arriveInOttawa();
+    expect(hoisted.state.tasks, 'a tracker was drawn for a task nobody accepted').toEqual([]);
+
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+
+    /* Accepting finishes the leading `talk` step in the same move, so the
+       tracker shows step 2 rather than "talk to the officer" (`TN-QUEST-02`). */
+    const shown = hoisted.state.tasks.filter((task) => task !== null);
+    expect(shown.length).toBeGreaterThan(0);
+    expect(shown.at(-1)).not.toBe('');
+  });
+
+  it('can be accepted later, after it was declined', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { decline: { onSelect: () => void } }).decline.onSelect();
+
+    emit('npc/engaged', 'officer');
+    const second = hoisted.state.dialoguesShown[1] as { accept?: unknown };
+    expect(second.accept, 'a declined quest was never offered again').toBeDefined();
+  });
+
+  it('gives a reminder rather than a second offer once it is being played', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+
+    emit('npc/engaged', 'officer');
+    const again = hoisted.state.dialoguesShown[1] as { accept?: unknown; next?: unknown };
+    expect(again.accept, 'the officer offered the quest twice').toBeUndefined();
+    expect(again.next, 'a dialogue with nothing to decide needs one way onward').toBeDefined();
+  });
+
+  it('advances the visit step when the landmark it names is engaged', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    const afterAccepting = hoisted.state.tasks.at(-1);
+
+    emit('poi/engaged', 'parliament-hill');
+    expect(
+      hoisted.state.tasks.at(-1),
+      'engaging the landmark the step names changed nothing',
+    ).not.toBe(afterAccepting);
+  });
+
+  it('hands the quest to answerQuestion only while an answer step is open', async () => {
+    await arriveInOttawa();
+
+    /* No quest accepted: a question at a landmark counts toward nothing. */
+    emit('poi/engaged', 'parliament-hill');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+    (hoisted.state.questionOptions as { onAnswer: (i: number, right: boolean) => void }).onAnswer(
+      0,
+      true,
+    );
+    expect(hoisted.state.answeredWithQuest).toEqual([null]);
+  });
+
+  it('says the task is done rather than the level, when a task is what finished', async () => {
+    await arriveInOttawa();
+    hoisted.state.stampFor = 'ottawa';
+    hoisted.state.questCompletes = true;
+
+    emit('poi/engaged', 'parliament-hill');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+    const card = hoisted.state.questionOptions as {
+      onAnswer: (i: number, right: boolean) => void;
+      onNext: () => void;
+    };
+    card.onAnswer(0, true);
+    card.onNext();
+    await flush();
+
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => { reason?: string };
+    expect(resolve('en').reason).toBe('quest');
+  });
+
+  it('offers no prompt for a character with nothing to say', async () => {
+    /*
+     * A character who is not a quest giver — or whose name this build has no row
+     * for — cannot be spoken to, so the HUD offers nothing for them rather than a
+     * control that opens nothing. That is the same rule the prompt already
+     * follows for a target with no copy row, applied to the other reason an
+     * engagement can be impossible.
+     *
+     * The character is `archivist`: a role `TN-LEVELS-2-to-10-spine.md` names,
+     * that no shipped quest is given by. It used to be `guide`, which is exactly
+     * the point — the guide gives three of the four quests and is named now, so
+     * a fixture that kept using it would be asserting the opposite of what it
+     * says. The other reason, a giver this build cannot name, is
+     * `tests/unit/bootstrap/quest-giver-is-named.test.ts`, which can still
+     * produce one.
+     */
+    hoisted.state.level = {
+      ...LOADED_LEVEL,
+      characters: [{ characterId: 'archivist' }],
+    };
+    await boot('?level=halifax');
+    emit('level/ready');
+    emit('poi/entered', 'archivist');
+
+    expect(hoisted.state.prompts, 'a prompt was offered for a character who cannot answer')
+      .toEqual([]);
+  });
+
+  it('gives the guide’s quest on the level the game opens on', async () => {
+    /*
+     * The defect that was live in the shipped build, from the front door: three
+     * of the four authored quests declare `"giver": "guide"`, `app/ui/dialogue.ts`
+     * takes the speaker's name as a **required** option (`TN-QUEST-08`), and no
+     * `npc.guide.name` row existed — so all three offers were refused, Halifax
+     * included, and Halifax is the level `content/game.config.json` opens on.
+     * One copy row unblocked all three, and this is the one that matters most:
+     * it is the first character most players meet.
+     */
+    hoisted.state.level = {
+      ...LOADED_LEVEL,
+      characters: [{ characterId: 'guide' }],
+    };
+    await boot('?level=halifax');
+    emit('level/ready');
+    emit('poi/entered', 'guide');
+
+    /* The HUD says what talking to it will do, and does not call a beaver a
+       person (`TN-GUIDE-03`). */
+    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.guide')]);
+    expect(hoisted.state.prompts).not.toContain(text('en', 'hud.interact.npc'));
+
+    emit('npc/engaged', 'guide');
+
+    expect(hoisted.state.dialoguesShown, 'the guide said nothing').toHaveLength(1);
+    const offer = hoisted.state.dialoguesShown[0] as {
+      lines: string[];
+      accept?: { label: string };
+      decline?: { label: string };
+    };
+    expect(offer.lines.length, 'the offer had no lines to read').toBeGreaterThan(0);
+    expect(offer.accept?.label).toBe(text('en', 'quest.accept'));
+    expect(offer.decline?.label).toBe(text('en', 'quest.decline'));
+    /* Named after the speaker, which is what a screen reader announces. */
+    expect(hoisted.state.dialogueOptions?.['speakerName']).toBe(text('en', 'npc.guide.name'));
+    expect(consoleText(), 'an offer was still refused for want of a name').not.toContain(
+      'npc.<id>.name',
+    );
+
+    /* And accepting gives the level back and puts the task in the HUD. */
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    expect(
+      doc.documentElement.dataset['tnPaused'],
+      'the level was left frozen behind a dialogue that has gone',
+    ).toBe('false');
+    expect(hoisted.state.tasks.filter((task) => task !== null).length).toBeGreaterThan(0);
   });
 });

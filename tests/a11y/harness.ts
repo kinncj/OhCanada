@@ -28,7 +28,9 @@ import { createHud } from '../../app/ui/hud';
 import { createLevelAnnouncer, type LevelEvent } from '../../app/ui/level-events';
 import { createLevelComplete } from '../../app/ui/level-complete';
 import { createLevelError, createLevelLoading } from '../../app/ui/level-screens';
+import { interactHint, interactPrompt } from '../../app/ui/interact';
 import { mountLiveRegion, announce } from '../../app/ui/live-region';
+import { createPassport } from '../../app/ui/passport';
 import { createPoiCard } from '../../app/ui/poi-card';
 import { createQuestionCard, type QuestionView } from '../../app/ui/question-card';
 import { createSettingsScreen } from '../../app/ui/settings-screen';
@@ -296,14 +298,12 @@ switch (screen) {
               "Hello! Welcome to Ottawa. Ottawa is Canada's capital city.",
               'Skate up the canal to Parliament Hill and find the Peace Tower. Then answer three questions.',
             ],
-      accept: {
-        label: locale === 'fr' ? 'Oui, allons-y' : "Yes, let's go",
-        onSelect: () => undefined,
-      },
-      decline: {
-        label: locale === 'fr' ? 'Pas maintenant' : 'Not now',
-        onSelect: () => undefined,
-      },
+      /* The two choices are copy rows now (`TN-QUEST`), so the scan measures the
+         strings the game draws rather than a fixture's copy of them. The lines
+         above stay fixtures: they are the quest document's, and
+         `content/quests/` is the content author's. */
+      accept: { label: text(locale, 'quest.accept'), onSelect: () => undefined },
+      decline: { label: text(locale, 'quest.decline'), onSelect: () => undefined },
     });
     break;
   }
@@ -419,30 +419,38 @@ switch (screen) {
      */
     const walkedPast = params.get('answered') === '0';
     const nothingOpened = params.get('next') === '0';
+    /* `?reason=quest` is the quest path — "Task done!" — and the default is the
+       path this card is drawn on most: the player reached the end of the level.
+       They are two headings, and only one of them is true at a time. */
+    const finishedAQuest = params.get('reason') === 'quest';
     createLevelComplete(ui, {
       locale,
       announce,
       singleSwitch: store.current.singleSwitch,
       onChooseLevel: () => undefined,
       onKeepPlaying: () => undefined,
+      onOpenPassport: () => undefined,
       ...(nothingOpened ? {} : { onPlayNext: () => undefined }),
     }).show({
+      reason: finishedAQuest ? 'quest' : 'level',
       ...(params.get('stamp') === '0'
         ? {}
-        : { stampMessage: text(locale, 'stamp.ottawa.earned') }),
-      ...(walkedPast
-        ? {}
-        : {
-            progressMessage: text(locale, 'study.summary.score', { correct: 2, total: 3 }),
-          }),
+        : { stampMessage: text(locale, `stamp.${PLACE}.earned` as Parameters<typeof text>[1]) }),
+      /* One slot, two rows, never both: the score when something was answered
+         here and `level.complete.none` when nothing was. `?answered=0` is the
+         second, which is the card a player gets for walking to the end without
+         stopping — and the longest French sentence on the screen. */
+      progressMessage: walkedPast
+        ? text(locale, 'level.complete.none')
+        : text(locale, 'level.complete.score', { correct: 2, total: 3 }),
       ...(nothingOpened
         ? {}
         : {
             next: {
               /* The level that just opened, exactly as the composition root
-                 hands it over: the level's own place name, and the map's own
-                 description of its card. */
-              title: text(locale, 'level.quebec-city.title'),
+                 hands it over: that level's own `level.<id>.play` row, and the
+                 map's own description of its card. */
+              label: text(locale, 'level.quebec-city.play'),
               description: describeEntry(
                 {
                   locale,
@@ -456,6 +464,34 @@ switch (screen) {
             },
           }),
     });
+    break;
+  }
+
+  /*
+   * The passport (`TN-PASSPORT`): ten slots, three states, and the empty state a
+   * new player meets first.
+   *
+   * `?stamps=` chooses which: `none` is the beginning — no stamps, ten slots,
+   * `passport-empty` — and the default earns one, so a scan sees "Earned" beside
+   * "Not earned yet" and "Not made yet" on one page. That matters more here than
+   * on most screens: the whole accessibility question is whether three states are
+   * told apart without colour.
+   */
+  case 'passport': {
+    const stamps = params.get('stamps') ?? 'one';
+    createPassport(ui, {
+      locale,
+      entries: PLACES.map(([number, id]) => ({
+        number,
+        ...(id === undefined ? {} : { id: id as LevelId }),
+        built: id !== undefined && ['halifax', 'quebec-city', 'ottawa', 'toronto'].includes(id),
+        unlocked: id === 'halifax',
+        stamped: stamps !== 'none' && id === 'ottawa',
+      })),
+      announce,
+      singleSwitch: store.current.singleSwitch,
+      onBack: () => undefined,
+    }).show();
     break;
   }
 
@@ -512,9 +548,46 @@ switch (screen) {
         announce,
         arrival: level.arrival,
         failure: waiting.errorTitle,
+        /*
+         * The prompts are resolved the way the composition root resolves them —
+         * through `app/ui/interact.ts`, from copy rows — rather than from this
+         * fixture. That is the point of `TN-REACH`: the level document's landmark
+         * name must never reach the HUD, so a harness that hand-fed one would
+         * scan a page the game does not draw. `?done=1` is the third state.
+         */
         targets: {
-          'npc.officer': { prompt: level.officer },
-          'poi.parliament-hill': { prompt: level.landmark },
+          'npc.officer': {
+            prompt:
+              interactPrompt(locale, {
+                id: 'officer',
+                kind: 'npc',
+                done: params.get('done') === '1',
+              }) ?? '',
+          },
+          /*
+           * The other named character, and the one three levels place: the
+           * guide. It is here so a scan can read the prompt the HUD draws for
+           * it — `TN-GUIDE-03`'s defect was the *generic* row, "Talk to this
+           * person", drawn about a beaver on the level the game opens on — and
+           * resolved through `interactPrompt` like the officer's, so the
+           * harness cannot hand-feed a string the game would not draw.
+           */
+          'npc.guide': {
+            prompt:
+              interactPrompt(locale, {
+                id: 'guide',
+                kind: 'npc',
+                done: params.get('done') === '1',
+              }) ?? '',
+          },
+          'poi.parliament-hill': {
+            prompt:
+              interactPrompt(locale, {
+                id: 'parliament-hill',
+                kind: 'poi',
+                done: params.get('done') === '1',
+              }) ?? '',
+          },
         },
         onPrompt: (target) => {
           hud.setPrompt(target?.prompt ?? null);
@@ -527,8 +600,20 @@ switch (screen) {
     };
     emit({ name: 'level/ready' });
     if (params.get('prompt') === '1') {
-      emit({ name: 'poi/entered', detail: 'npc.officer' });
+      /* `?who=guide` puts the other character in reach. Anything else is the
+         officer, so every existing scan is unchanged. */
+      emit({
+        name: 'poi/entered',
+        detail: params.get('who') === 'guide' ? 'npc.guide' : 'npc.officer',
+      });
+      /* The one-time hint, beside the prompt and never instead of it
+         (`TN-REACH-04`). It is a paragraph: it takes no focus, is in no tab
+         order and is in no switch ring, which the scans assert. */
+      if (params.get('hint') === '1') hud.setHint(interactHint(locale));
     }
+    /* `TN-QUEST-05`: an answer step that cannot start says so, visibly as well
+       as out loud, and blocks nothing. */
+    if (params.get('notice') === '1') hud.setNotice(text(locale, 'quest.noQuestions'));
 
     /*
      * A modal over the running level. Mounted inside `<main>`: a dialog is not a
@@ -550,6 +635,16 @@ switch (screen) {
           restoreFocusTo: () => hud.prompt,
         }).show(level.poi);
         break;
+      case 'passport': {
+        createPassport(hud.main, {
+          locale,
+          entries: mapEntries(['ottawa', 'halifax']),
+          announce,
+          singleSwitch: store.current.singleSwitch,
+          onBack: () => undefined,
+        }).show();
+        break;
+      }
       case 'card': {
         createQuestionCard(hud.main, {
           locale,
@@ -600,6 +695,10 @@ switch (screen) {
       onPlayLevel: () => undefined,
       ...(params.get('resume') === '1' ? { resumeLevelId: 'ottawa' as LevelId } : {}),
       ...(params.get('study') === '1' ? { onOpenStudy: (): void => undefined } : {}),
+      /* `passport.open` on the level select, which is the passport's home
+         (`TN-PASSPORT-01`, `OQ-PASSPORT-3`): the stamp count is already on this
+         screen, so the control that opens it belongs beside the count. */
+      ...(params.get('passport') === '1' ? { onOpenPassport: (): void => undefined } : {}),
       ...(params.get('export') === '1' ? { onExportSave: (): void => undefined } : {}),
     });
 

@@ -26,15 +26,29 @@
  * played. A line reading "0 out of 0" would look like a defect; a line claiming
  * anything else would be the game lying to a learner.
  *
- * A sentence saying *"you did not answer anything here"* is the one string this
- * card still wants and does not have. Reported as a copy gap with the task; the
- * route back into the level (`common.keepPlaying`) is offered on every showing
- * precisely so a player who skipped the landmarks can go and read them.
+ * That sentence is written now — `level.complete.none`, in `TN-DONE` — and the
+ * caller draws it in the same slot as the score, so `quest-complete-progress` is
+ * never empty, never both and never "0 out of 0". The route back into the level
+ * (`common.keepPlaying`) is offered on every showing precisely so a player who
+ * skipped the landmarks can go and read them.
+ *
+ * ## The heading has to be true on the path the player actually took
+ *
+ * The card is drawn when a **quest** completes and when the player **reaches the
+ * end of the level**, and until `TN-DONE` was written it drew `quest.done.title`
+ * — "Task done!" — on both. A player who walked from the spawn to the exit
+ * having been offered no task read a claim about something they never did, which
+ * is this project's most repeated defect on the first card the shipped game
+ * draws. So {@link LevelCompleteContent.reason} says what finished and the
+ * heading follows it: `quest.done.title` for a quest, `level.complete.title` —
+ * "Level finished!" — for a level. Neither row is a default: the caller says
+ * which happened, and "the level finished" is the honest answer when it does not
+ * know, because reaching the end is what draws this card at all.
  *
  * ## Four strings this card takes as data, and one it does not
  *
- *  - `quest.done.title` — "Task done!" — is a row here, because it is the same
- *    sentence for every level.
+ *  - The heading is a row here, because both headings are the same sentence for
+ *    every level.
  *  - The stamp sentence is **`stamp.<id>.earned`, per level**, for the reason
  *    `level.<id>.error.title` is per level: "You earned the {{level}} stamp." is
  *    right in English and wrong in French, where the article and the elision
@@ -45,7 +59,7 @@
  *  - What the player answered here is the caller's arithmetic and the caller's
  *    row: this module cannot count answers and does not choose the wording.
  *  - The level that just opened arrives as {@link LevelCompleteNext}: its own
- *    place name, and the map's own description of the card
+ *    `level.<id>.play` label, and the map's own description of the card
  *    (`app/ui/level-select.ts`'s `describeEntry` — "Halifax. Open. You can play
  *    this now."). **No sentence naming the newly opened level is written here.**
  *    No story writes one, and inventing it would be this module authoring
@@ -90,6 +104,18 @@ export interface LevelCompleteOptions {
   /** `common.keepPlaying`: stay in this level. Closing and Escape do the same. */
   readonly onKeepPlaying?: () => void;
   /**
+   * `passport.open`: the screen the stamp just landed in (`TN-QUEST-04`,
+   * `TN-PASSPORT-01`).
+   *
+   * A quiet control, and the one control on this card that is about what was
+   * *earned* rather than about where to go next. `OQ-DONE-5` is open on whether
+   * it belongs here at all — `TN-DONE` would rather leave the passport to the
+   * menu and the map, `TN-QUEST-04` and `TN-PASSPORT-01` both assert the button
+   * — and it is an option so that either answer is one line at the call site
+   * rather than a change to this file.
+   */
+  readonly onOpenPassport?: () => void;
+  /**
    * Where focus goes when the card closes back into the level.
    *
    * The trap restores focus to whatever opened the card, which is right when a
@@ -106,8 +132,17 @@ export interface LevelCompleteOptions {
 
 /** The level that opened while this one was being played. */
 export interface LevelCompleteNext {
-  /** `level.<id>.title` — that level's own place name, already localised. */
-  readonly title: string;
+  /**
+   * `level.<id>.play` — "Play Québec City" / « Jouer dans la Ville de Québec »,
+   * already localised.
+   *
+   * The level's own row, never a template: three of the four built levels take
+   * « à » and no article and the fourth takes « dans la », so "Play {{level}}"
+   * is right in English and wrong in French (`TN-DONE-04`). A label that says
+   * what pressing does beats one that says where you would end up, which is the
+   * same argument `TN-REACH` makes about the interact prompt.
+   */
+  readonly label: string;
   /**
    * The map's own description of that card, already localised: "Halifax. Open.
    * You can play this now." It is the button's accessible description and the
@@ -119,6 +154,15 @@ export interface LevelCompleteNext {
 /** What this showing of the card says, in the language in force when it opens. */
 export interface LevelCompleteContent {
   /**
+   * What finished, which is what the heading is about.
+   *
+   * `'quest'` draws `quest.done.title`; anything else draws
+   * `level.complete.title`. Absent means the level finished — the state reaching
+   * the end of the world is in, and the only one of the two that is true whether
+   * or not a task was ever offered.
+   */
+  readonly reason?: 'quest' | 'level';
+  /**
    * `stamp.<id>.earned` for the level that was finished, already localised.
    * Absent when this build has no row for that level — the card then says the
    * task is done and offers the same ways on, which is every fact it has.
@@ -127,9 +171,12 @@ export interface LevelCompleteContent {
   /**
    * What the player answered in this level, already localised.
    *
-   * **Absent when they answered nothing**, which is a state reaching the end of
-   * the world makes reachable and which the card must not paper over. See the
-   * note at the top of this file.
+   * One slot, two rows, and the caller picks: `level.complete.score` when at
+   * least one question was answered here, `level.complete.none` when none was.
+   * `TN-DONE-02` requires it to be neither empty nor absent and never to read
+   * "0 out of 0" — a total of zero is what the second row *is*, not a value the
+   * first one renders. Still optional in the type, because a caller that cannot
+   * count is better off drawing nothing than drawing a number it made up.
    */
   readonly progressMessage?: string;
   /** The level that just opened, when one did. */
@@ -237,8 +284,15 @@ export function createLevelComplete(
     return said;
   }
 
+  /** The heading, chosen by what actually finished. Never a default. */
+  function headingText(forLocale: UiLocale): string {
+    return content.reason === 'quest'
+      ? text(forLocale, 'quest.done.title')
+      : text(forLocale, 'level.complete.title');
+  }
+
   function render(): void {
-    title.textContent = text(locale, 'quest.done.title');
+    title.textContent = headingText(locale);
 
     const said = lines();
     replaceChildren(body, said);
@@ -254,16 +308,16 @@ export function createLevelComplete(
        with no destination is the dead control this project keeps finding, and a
        control labelled with nothing is worse. */
     const offersNext =
-      next !== undefined && next.title !== '' && options.onPlayNext !== undefined;
+      next !== undefined && next.label !== '' && options.onPlayNext !== undefined;
 
     const controls: HTMLElement[] = [];
     if (offersNext && next !== undefined) {
       const play = button(doc, {
         testId: 'quest-complete-next',
-        /* The level's own name. "Play {{level}}" is a sentence nobody has
-           written and French would need it per level anyway (« Jouer à
-           Halifax », « Jouer dans le Nord »). */
-        text: next.title,
+        /* The level's own `level.<id>.play` row, written out per level: French
+           takes « à » for three of the four built levels and « dans la » for the
+           fourth, so a template is right in English and wrong in French. */
+        text: next.label,
         attrs: { 'data-tn-action': 'primary' },
         ...(options.onPlayNext === undefined ? {} : { onClick: options.onPlayNext }),
       });
@@ -297,6 +351,21 @@ export function createLevelComplete(
       }),
     );
 
+    /* Last, and quiet: the three controls above are where to go *next*, and this
+       one is what was just *earned*. Drawn only when a caller wired it, like
+       every other route on this card. */
+    const openPassport = options.onOpenPassport;
+    if (openPassport !== undefined) {
+      controls.push(
+        button(doc, {
+          testId: 'quest-complete-passport',
+          text: text(locale, 'passport.open'),
+          attrs: { 'data-tn-action': 'quiet' },
+          onClick: openPassport,
+        }),
+      );
+    }
+
     replaceChildren(actions, controls);
   }
 
@@ -325,10 +394,9 @@ export function createLevelComplete(
        * live region is the double-speaking every other screen here avoids.
        */
       const stamp = content.stampMessage;
+      const heading = headingText(locale);
       options.announce?.(
-        stamp === undefined || stamp === ''
-          ? text(locale, 'quest.done.title')
-          : `${text(locale, 'quest.done.title')} ${stamp}`,
+        stamp === undefined || stamp === '' ? heading : `${heading} ${stamp}`,
         locale,
       );
     },
