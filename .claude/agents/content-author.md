@@ -13,16 +13,23 @@ Every question needs, using exactly these names — they are the ones
 `content/schemas/question.schema.json` will validate:
 
 - `$schema`, `id`, `subject`
-- `promptKey` — the question wording
-- `optionKeys` — exactly four options, one correct and three plausible distractors
-- `correctIndex` — 0-3, which entry of `optionKeys` is right
-- `explanationKey`
+- `prompt` — the question wording
+- `options` — exactly four options, one correct and three plausible distractors
+- `correctIndex` — 0-3, which entry of `options` is right
+- `explanation`
 - `source`: `chapter` (the Discover Canada chapter and section), `url`, `sourceHash`, `asOf`, `volatile`
+- `verification` — the verifier's, never yours
 
-Both EN and FR are mandatory for every one of the four `optionKeys`, the `promptKey` and the
-`explanationKey`. Do not invent a field, and do not use `text`, `answer`, `distractors` or `explanation` —
-those were this file's old names for the first four above, and a question written with them validates
-against nothing.
+`prompt`, `explanation` and each of the four `options` carry EN and FR inline, as a `localizedText`
+object with `en` and `fr` keys — not as a key pointing at a locale bundle. ADR-0010 chose that shape so
+the verifier reads the claim, its source, its evidence and both languages in one file. Do not invent a
+field, and do not use `text`, `answer` or `distractors`; a question written with those validates against
+nothing.
+
+This list said `promptKey`, `optionKeys` and `explanationKey` until 2026-09-08, and told you not to use
+`explanation` — the opposite of what the schema requires. Three separate authoring runs hit it, each
+correctly followed the schema under the rule below, and each reported it. Corrected here rather than
+left for a fourth.
 
 `content/schemas/question.schema.json` is the authority (ADR-0007) and is written in slice 1 task 1.2,
 before the first question. If it disagrees with the list above, it wins and this file is wrong: say so
