@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-04-whom-an-mp-represents",
+  "subject": "elections",
+  "prompt": {
+    "en": "Whom does a member of Parliament represent?",
+    "fr": "Qui un député représente-t-il?"
+  },
+  "options": [
+    {
+      "en": "Only the people who voted for that member.",
+      "fr": "Seulement les personnes qui ont voté pour lui."
+    },
+    {
+      "en": "Only the members of that member's party.",
+      "fr": "Seulement les membres de son parti."
+    },
+    {
+      "en": "The people of that member's district, and all Canadians.",
+      "fr": "Les gens de sa circonscription, et tous les Canadiens."
+    },
+    {
+      "en": "Only the province the district sits in.",
+      "fr": "Seulement la province où se trouve la circonscription."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "One district elects one member. That member sits in the House of Commons for the people who live in the district and for the country as a whole.",
+    "fr": "Une circonscription élit un seul député. Ce député siège à la Chambre des communes au nom des gens de sa circonscription et au nom du pays tout entier."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

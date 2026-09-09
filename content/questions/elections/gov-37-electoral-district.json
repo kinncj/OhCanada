@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/question.schema.json",
   "id": "gov-37-electoral-district",
-  "subject": "government",
+  "subject": "elections",
   "prompt": {
     "en": "What is an electoral district?",
     "fr": "Qu'est-ce qu'une circonscription électorale?"
@@ -40,10 +40,10 @@
     "quote": "An electoral district is a geographical area represented by a member of Parliament (MP). The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
   },
   "verification": {
-    "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
-    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Canada is divided into 308 electoral districts, also known as ridings or constituencies. An electoral district is a geographical area represented by a member of Parliament (MP). The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
   }
 }

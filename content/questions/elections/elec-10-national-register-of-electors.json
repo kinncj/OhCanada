@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-10-national-register-of-electors",
+  "subject": "elections",
+  "prompt": {
+    "en": "What is the National Register of Electors?",
+    "fr": "Qu'est-ce que le Registre national des électeurs?"
+  },
+  "options": [
+    {
+      "en": "A list of everyone living in Canada.",
+      "fr": "Une liste de toutes les personnes qui vivent au Canada."
+    },
+    {
+      "en": "A standing list of the citizens who may vote federally.",
+      "fr": "Une liste permanente des citoyens qui peuvent voter au fédéral."
+    },
+    {
+      "en": "A record of how each person voted.",
+      "fr": "Un registre indiquant comment chaque personne a voté."
+    },
+    {
+      "en": "A list of the members of each political party.",
+      "fr": "Une liste des membres de chaque parti politique."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "It is a permanent database, and the voters' lists for federal elections and referendums are drawn from it. It holds citizens aged 18 and over who qualify to vote.",
+    "fr": "C'est une base de données permanente, et les listes électorales des élections et des référendums fédéraux en sont tirées. Elle contient les citoyens de 18 ans et plus qui ont le droit de voter."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 61,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "This is a permanent database of Canadian citizens 18 years of age or older who are qualified to vote in federal elections and referendums."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

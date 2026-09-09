@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-11-which-polling-station",
+  "subject": "elections",
+  "prompt": {
+    "en": "How do you find out which polling station is yours?",
+    "fr": "Comment savoir quel est votre bureau de scrutin?"
+  },
+  "options": [
+    {
+      "en": "It is listed on your voter information card.",
+      "fr": "Il est indiqué sur votre carte d'information de l'électeur."
+    },
+    {
+      "en": "You may vote at any polling station in Canada.",
+      "fr": "Vous pouvez voter à n'importe quel bureau de scrutin au Canada."
+    },
+    {
+      "en": "Your employer is told and passes it on.",
+      "fr": "Votre employeur en est informé et vous le communique."
+    },
+    {
+      "en": "It is printed in the newspaper on election day.",
+      "fr": "Il est publié dans le journal le jour du scrutin."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The card names the place to go, both on election day and for advance voting. Take it with you when you go to vote.",
+    "fr": "La carte indique où aller, tant le jour du scrutin que pour le vote par anticipation. Apportez-la avec vous lorsque vous allez voter."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 61,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "To vote either on election day or at advance polls, go to the polling station listed on your voter information card."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

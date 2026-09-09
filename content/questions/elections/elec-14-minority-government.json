@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-14-minority-government",
+  "subject": "elections",
+  "prompt": {
+    "en": "When is a government called a minority government?",
+    "fr": "Quand parle-t-on d'un gouvernement minoritaire?"
+  },
+  "options": [
+    {
+      "en": "When the party in power holds fewer than half the seats in the House of Commons.",
+      "fr": "Quand le parti au pouvoir détient moins de la moitié des sièges à la Chambre des communes."
+    },
+    {
+      "en": "When it wins fewer than half the votes cast.",
+      "fr": "Quand il obtient moins de la moitié des votes exprimés."
+    },
+    {
+      "en": "When it has no support in the Senate.",
+      "fr": "Quand il n'a aucun appui au Sénat."
+    },
+    {
+      "en": "When it holds fewer than a third of the seats.",
+      "fr": "Quand il détient moins du tiers des sièges."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Seats decide the label, not the share of votes. Below half the seats, a government has to win support from other parties to get anything passed.",
+    "fr": "Ce sont les sièges qui déterminent l'appellation, et non la part des votes. Sous la barre de la moitié des sièges, un gouvernement doit obtenir l'appui d'autres partis pour faire adopter quoi que ce soit."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 62,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "If the party in power holds less than half of the seats in the House of Commons, this is called a minority government."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

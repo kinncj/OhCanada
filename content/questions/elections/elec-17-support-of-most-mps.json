@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-17-support-of-most-mps",
+  "subject": "elections",
+  "prompt": {
+    "en": "How long do the Prime Minister and the party in power stay in office?",
+    "fr": "Combien de temps le premier ministre et le parti au pouvoir restent-ils en poste?"
+  },
+  "options": [
+    {
+      "en": "For a full four years, whatever happens.",
+      "fr": "Pendant quatre années complètes, quoi qu'il arrive."
+    },
+    {
+      "en": "Until the Senate withdraws its support.",
+      "fr": "Jusqu'à ce que le Sénat leur retire son appui."
+    },
+    {
+      "en": "As long as most members of the House of Commons support them.",
+      "fr": "Tant que la majorité des députés de la Chambre des communes les appuient."
+    },
+    {
+      "en": "Until the Governor General's own term ends.",
+      "fr": "Jusqu'à la fin du mandat du gouverneur général."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Support in the House is what keeps a government going. That support is called confidence, and it can be withdrawn at any time.",
+    "fr": "C'est l'appui de la Chambre qui maintient un gouvernement en place. Cet appui s'appelle la confiance, et il peut être retiré à tout moment."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 62,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Prime Minister and the party in power run the government as long as they have the support or confidence of the majority of the MPs."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

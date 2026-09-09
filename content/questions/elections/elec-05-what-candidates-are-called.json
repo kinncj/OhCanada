@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-05-what-candidates-are-called",
+  "subject": "elections",
+  "prompt": {
+    "en": "What do we call someone who runs for office in a federal election?",
+    "fr": "Comment appelle-t-on une personne qui se présente à une élection fédérale?"
+  },
+  "options": [
+    {
+      "en": "An elector.",
+      "fr": "Un électeur."
+    },
+    {
+      "en": "A delegate.",
+      "fr": "Un délégué."
+    },
+    {
+      "en": "A candidate.",
+      "fr": "Un candidat."
+    },
+    {
+      "en": "A returning officer.",
+      "fr": "Un directeur du scrutin."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Anyone who stands for election is a candidate, and one electoral district can have several of them.",
+    "fr": "Toute personne qui se présente à une élection est un candidat, et une même circonscription électorale peut en compter plusieurs."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The people who run for office are called candidates."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/question.schema.json",
   "id": "gov-60-other-election-rules",
-  "subject": "government",
+  "subject": "elections",
   "prompt": {
     "en": "Do provincial, territorial and municipal elections follow the same rules as federal elections?",
     "fr": "Les élections provinciales, territoriales et municipales suivent-elles les mêmes règles que les élections fédérales?"
@@ -40,10 +40,10 @@
     "quote": "Provincial, territorial and municipal elections are held by secret ballot, but the rules are not the same as those for federal elections."
   },
   "verification": {
-    "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
-    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Provincial, territorial and municipal elections are held by secret ballot, but the rules are not the same as those for federal elections. It is important to find out the rules for voting in provincial, territorial and local elections so that you can exercise your right to vote."
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
   }
 }

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-20-behind-the-screen",
+  "subject": "elections",
+  "prompt": {
+    "en": "Where do you mark your ballot at the polling station?",
+    "fr": "Où remplissez-vous votre bulletin de vote au bureau de scrutin?"
+  },
+  "options": [
+    {
+      "en": "At the table, in front of the poll officials.",
+      "fr": "À la table, devant les responsables du scrutin."
+    },
+    {
+      "en": "Anywhere in the room you like.",
+      "fr": "N'importe où dans la salle, à votre guise."
+    },
+    {
+      "en": "Behind a screen, out of everyone's sight.",
+      "fr": "Derrière un isoloir, à l'abri des regards."
+    },
+    {
+      "en": "At home, before you arrive.",
+      "fr": "À la maison, avant votre arrivée."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Your vote is private. You are shown to a screen to mark the ballot, then you fold it and hand it to the poll officials.",
+    "fr": "Votre vote est privé. On vous conduit à un isoloir pour remplir le bulletin, puis vous le pliez et le remettez aux responsables du scrutin."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 65,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Your vote is secret. You will be invited to go behind the screen to mark your ballot. Once marked, fold it and present it to the poll officials."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

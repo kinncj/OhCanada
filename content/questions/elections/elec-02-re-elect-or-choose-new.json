@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-02-re-elect-or-choose-new",
+  "subject": "elections",
+  "prompt": {
+    "en": "At the next federal election, may voters return the same member of the House of Commons?",
+    "fr": "À la prochaine élection fédérale, les électeurs peuvent-ils réélire le même député?"
+  },
+  "options": [
+    {
+      "en": "No. A member may serve only one term.",
+      "fr": "Non. Un député ne peut siéger que pour un seul mandat."
+    },
+    {
+      "en": "Yes. Voters may re-elect the same members or pick new ones.",
+      "fr": "Oui. Les électeurs peuvent réélire les mêmes députés ou en choisir de nouveaux."
+    },
+    {
+      "en": "Only if the member has changed party.",
+      "fr": "Seulement si le député a changé de parti."
+    },
+    {
+      "en": "No. Members are appointed after their first term.",
+      "fr": "Non. Les députés sont nommés après leur premier mandat."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Every seat is open at every general election. A sitting member can be sent back, or the voters can put someone else in that seat.",
+    "fr": "Chaque siège est en jeu à chaque élection générale. Un député en poste peut être renvoyé à la Chambre, ou les électeurs peuvent confier ce siège à quelqu'un d'autre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "In each election, voters may re-elect the same members of the House of Commons or choose new ones."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/question.schema.json",
   "id": "gov-41-elections-canada",
-  "subject": "government",
+  "subject": "elections",
   "prompt": {
     "en": "Who keeps the voters' lists used in federal elections?",
     "fr": "Qui tient les listes électorales utilisées lors des élections fédérales?"
@@ -40,10 +40,10 @@
     "quote": "The voters’ lists used during federal elections and referendums are produced from the National Register of Electors by a neutral agency of Parliament called Elections Canada."
   },
   "verification": {
-    "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
-    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "The voters’ lists used during federal elections and referendums are produced from the National Register of Electors by a neutral agency of Parliament called Elections Canada. This is a permanent database of Canadian citizens 18 years of age or older who are qualified to vote in federal elections and referendums."
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
   }
 }

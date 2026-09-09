@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-18-no-card-received",
+  "subject": "elections",
+  "prompt": {
+    "en": "An election has been called and no voter information card has reached you. What should you do?",
+    "fr": "Une élection est déclenchée et vous n'avez reçu aucune carte d'information de l'électeur. Que devriez-vous faire?"
+  },
+  "options": [
+    {
+      "en": "Call your local elections office to make sure your name is on the list.",
+      "fr": "Appeler votre bureau d'élection local pour vous assurer que votre nom figure sur la liste."
+    },
+    {
+      "en": "Assume you cannot vote this time.",
+      "fr": "Supposer que vous ne pouvez pas voter cette fois-ci."
+    },
+    {
+      "en": "Go to any polling station without checking.",
+      "fr": "Vous rendre à n'importe quel bureau de scrutin sans rien vérifier."
+    },
+    {
+      "en": "Ask a neighbour to vote for you.",
+      "fr": "Demander à un voisin de voter à votre place."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A missing card does not mean you cannot vote. The local office can tell you whether your name is there, and Elections Canada in Ottawa can give you its number.",
+    "fr": "L'absence de carte ne veut pas dire que vous ne pouvez pas voter. Le bureau local peut vous dire si votre nom s'y trouve, et Élections Canada, à Ottawa, peut vous donner son numéro."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 64,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "If you do not receive a voter information card, call your local elections office to ensure that you are on the voters’ list."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

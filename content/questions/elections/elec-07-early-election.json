@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-07-early-election",
+  "subject": "elections",
+  "prompt": {
+    "en": "Who can ask for a federal election to be called before the fixed date?",
+    "fr": "Qui peut demander le déclenchement d'une élection fédérale avant la date fixe?"
+  },
+  "options": [
+    {
+      "en": "The Prime Minister, who asks the Governor General.",
+      "fr": "Le premier ministre, qui en fait la demande au gouverneur général."
+    },
+    {
+      "en": "The Speaker of the House of Commons.",
+      "fr": "Le président de la Chambre des communes."
+    },
+    {
+      "en": "The Chief Justice of Canada.",
+      "fr": "Le juge en chef du Canada."
+    },
+    {
+      "en": "Nobody; the date can never move.",
+      "fr": "Personne; la date ne peut jamais changer."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A law sets a regular date for federal elections, but one can also come sooner: the Prime Minister can ask the Governor General for it.",
+    "fr": "Une loi fixe une date régulière pour les élections fédérales, mais une élection peut aussi arriver plus tôt : le premier ministre peut la demander au gouverneur général."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The Prime Minister may ask the Governor General to call an earlier election."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

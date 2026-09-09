@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-13-counting-the-ballots",
+  "subject": "elections",
+  "prompt": {
+    "en": "What happens as soon as the polling stations close?",
+    "fr": "Que se passe-t-il dès la fermeture des bureaux de scrutin?"
+  },
+  "options": [
+    {
+      "en": "The ballots are sealed and opened a week later.",
+      "fr": "Les bulletins sont scellés et ouverts une semaine plus tard."
+    },
+    {
+      "en": "Election officers begin counting the ballots, and the results are made public.",
+      "fr": "Les responsables du scrutin commencent le dépouillement, et les résultats sont rendus publics."
+    },
+    {
+      "en": "The Senate reviews the ballots before any count.",
+      "fr": "Le Sénat examine les bulletins avant tout dépouillement."
+    },
+    {
+      "en": "Each party counts its own ballots.",
+      "fr": "Chaque parti compte ses propres bulletins."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The count starts right away. Results reach the public through radio, television and the newspapers.",
+    "fr": "Le dépouillement commence tout de suite. Les résultats parviennent au public par la radio, la télévision et les journaux."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 62,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Immediately after the polling stations close, election officers count the ballots and the results are announced on radio and television, and in the newspapers."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

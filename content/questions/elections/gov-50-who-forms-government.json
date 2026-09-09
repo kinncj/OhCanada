@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/question.schema.json",
   "id": "gov-50-who-forms-government",
-  "subject": "government",
+  "subject": "elections",
   "prompt": {
     "en": "After an election, who is normally invited to form the government?",
     "fr": "Après une élection, qui est normalement invité à former le gouvernement?"
@@ -40,10 +40,10 @@
     "quote": "Ordinarily, after an election, the leader of the political party with the most seats in the House of Commons is invited by the Governor General to form the government. After being appointed by the Governor General, the leader of this party becomes the Prime Minister."
   },
   "verification": {
-    "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
-    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Ordinarily, after an election, the leader of the political party with the most seats in the House of Commons is invited by the Governor General to form the government."
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
   }
 }

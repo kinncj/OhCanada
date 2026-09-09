@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-03-another-name-for-a-riding",
+  "subject": "elections",
+  "prompt": {
+    "en": "Which of these is another name for an electoral district?",
+    "fr": "Lequel de ces mots désigne aussi une circonscription électorale?"
+  },
+  "options": [
+    {
+      "en": "A ward.",
+      "fr": "Un quartier."
+    },
+    {
+      "en": "A riding.",
+      "fr": "Un comté."
+    },
+    {
+      "en": "A polling station.",
+      "fr": "Un bureau de scrutin."
+    },
+    {
+      "en": "A province.",
+      "fr": "Une province."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Electoral district, riding and constituency all name the same area of the country. Each one sends a single member to the House of Commons.",
+    "fr": "« Circonscription électorale », « comté » et « circonscription » désignent tous la même région du pays. Chacune envoie un seul député à la Chambre des communes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "electoral districts, also known as ridings or constituencies."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

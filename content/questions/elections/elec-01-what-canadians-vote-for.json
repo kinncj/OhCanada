@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-01-what-canadians-vote-for",
+  "subject": "elections",
+  "prompt": {
+    "en": "In a federal election, what are Canadians choosing?",
+    "fr": "À une élection fédérale, que choisissent les Canadiens?"
+  },
+  "options": [
+    {
+      "en": "The people who will speak for them in the House of Commons.",
+      "fr": "Les personnes qui parleront en leur nom à la Chambre des communes."
+    },
+    {
+      "en": "The Prime Minister, directly by name.",
+      "fr": "Le premier ministre, directement par son nom."
+    },
+    {
+      "en": "The senators for their province.",
+      "fr": "Les sénateurs de leur province."
+    },
+    {
+      "en": "The Governor General.",
+      "fr": "Le gouverneur général."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A federal election fills the seats in the House of Commons. Voters choose the members who will speak for them there.",
+    "fr": "Une élection fédérale sert à pourvoir les sièges de la Chambre des communes. Les électeurs choisissent les députés qui parleront en leur nom."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "Canadians vote in elections for the people they want to represent them in the House of Commons."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

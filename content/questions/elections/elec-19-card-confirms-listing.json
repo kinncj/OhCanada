@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-19-card-confirms-listing",
+  "subject": "elections",
+  "prompt": {
+    "en": "What does receiving a voter information card confirm?",
+    "fr": "Que confirme la réception d'une carte d'information de l'électeur?"
+  },
+  "options": [
+    {
+      "en": "That you have already voted.",
+      "fr": "Que vous avez déjà voté."
+    },
+    {
+      "en": "That your name is already on the voters' list.",
+      "fr": "Que votre nom figure déjà sur la liste électorale."
+    },
+    {
+      "en": "That you belong to a political party.",
+      "fr": "Que vous êtes membre d'un parti politique."
+    },
+    {
+      "en": "That you have been chosen as a candidate.",
+      "fr": "Que vous avez été choisi comme candidat."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Electors whose details are in the national register receive the card. It also tells you the time and place of your vote.",
+    "fr": "Les électeurs dont les renseignements figurent au registre national reçoivent la carte. Elle vous indique aussi l'heure et le lieu de votre vote."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 64,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Electors whose information is in the National Register of Electors will receive a voter information card. This confirms that your name is on the voters’ list and states when and where you vote."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

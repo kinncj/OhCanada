@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-09-federal-referendum",
+  "subject": "elections",
+  "prompt": {
+    "en": "Besides a federal election, what else can an eligible voter cast a ballot in?",
+    "fr": "En plus d'une élection fédérale, à quoi un électeur admissible peut-il participer par bulletin de vote?"
+  },
+  "options": [
+    {
+      "en": "A federal referendum.",
+      "fr": "Un référendum fédéral."
+    },
+    {
+      "en": "A Senate appointment.",
+      "fr": "Une nomination au Sénat."
+    },
+    {
+      "en": "A Cabinet shuffle.",
+      "fr": "Un remaniement ministériel."
+    },
+    {
+      "en": "A royal assent.",
+      "fr": "Une sanction royale."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The same three conditions cover both: you must be a Canadian citizen, be 18 or older on the day of the vote, and appear on the voters' list.",
+    "fr": "Les trois mêmes conditions s'appliquent aux deux : être citoyen canadien, avoir 18 ans ou plus le jour du vote et figurer sur la liste électorale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 61,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "You are eligible to vote in a federal election or cast a ballot in a federal referendum if you are:"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

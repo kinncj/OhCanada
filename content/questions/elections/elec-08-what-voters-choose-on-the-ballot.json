@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-08-what-voters-choose-on-the-ballot",
+  "subject": "elections",
+  "prompt": {
+    "en": "In a federal election, what does a voter choose in their own district?",
+    "fr": "À une élection fédérale, que choisit un électeur dans sa propre circonscription?"
+  },
+  "options": [
+    {
+      "en": "A candidate and a political party.",
+      "fr": "Un candidat et un parti politique."
+    },
+    {
+      "en": "A Prime Minister and a Cabinet.",
+      "fr": "Un premier ministre et un cabinet."
+    },
+    {
+      "en": "A senator for their province.",
+      "fr": "Un sénateur pour leur province."
+    },
+    {
+      "en": "A premier and a mayor.",
+      "fr": "Un premier ministre provincial et un maire."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The ballot is about your own district. You make one choice there, and the candidate with the most votes in the district takes the seat.",
+    "fr": "Le bulletin porte sur votre propre circonscription. Vous y faites un seul choix, et le candidat qui recueille le plus de voix dans la circonscription obtient le siège."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "The people in each electoral district vote for the candidate and political party of their choice."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

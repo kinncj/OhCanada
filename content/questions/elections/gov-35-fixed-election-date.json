@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/question.schema.json",
   "id": "gov-35-fixed-election-date",
-  "subject": "government",
+  "subject": "elections",
   "prompt": {
     "en": "When is a federal election normally held?",
     "fr": "Quand une élection fédérale a-t-elle normalement lieu?"
@@ -40,10 +40,10 @@
     "quote": "Under legislation passed by Parliament, federal elections must be held on the third Monday in October every four years following the most recent general election."
   },
   "verification": {
-    "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
-    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Under legislation passed by Parliament, federal elections must be held on the third Monday in October every four years following the most recent general election. The Prime Minister may ask the Governor General to call an earlier election."
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
   }
 }

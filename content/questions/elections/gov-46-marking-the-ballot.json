@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/question.schema.json",
   "id": "gov-46-marking-the-ballot",
-  "subject": "government",
+  "subject": "elections",
   "prompt": {
     "en": "How do you mark a ballot in a federal election?",
     "fr": "Comment remplit-on un bulletin de vote à une élection fédérale?"
@@ -40,10 +40,10 @@
     "quote": "Mark an “X” in the circle next to the name of the candidate of your choice."
   },
   "verification": {
-    "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
-    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "5. Marking the ballot Mark an “X” in the circle next to the name of the candidate of your choice."
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
   }
 }

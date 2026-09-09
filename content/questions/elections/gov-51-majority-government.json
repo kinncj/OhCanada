@@ -1,7 +1,7 @@
 {
   "$schema": "../../schemas/question.schema.json",
   "id": "gov-51-majority-government",
-  "subject": "government",
+  "subject": "elections",
   "prompt": {
     "en": "When is a government called a majority government?",
     "fr": "Quand parle-t-on d'un gouvernement majoritaire?"
@@ -40,10 +40,10 @@
     "quote": "If the party in power holds at least half of the seats in the House of Commons, this is called a majority government. If the party in power holds less than half of the seats in the House of Commons, this is called a minority government."
   },
   "verification": {
-    "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
-    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "If the party in power holds at least half of the seats in the House of Commons, this is called a majority government."
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
   }
 }

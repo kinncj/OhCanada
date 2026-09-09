@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-16-defeated-on-confidence",
+  "subject": "elections",
+  "prompt": {
+    "en": "What usually follows when the party in power loses a vote on a major decision?",
+    "fr": "Que se passe-t-il habituellement lorsque le parti au pouvoir perd un vote sur une décision importante?"
+  },
+  "options": [
+    {
+      "en": "The Senate takes over the government.",
+      "fr": "Le Sénat prend en charge le gouvernement."
+    },
+    {
+      "en": "Nothing changes until the next fixed date.",
+      "fr": "Rien ne change jusqu'à la prochaine date fixe."
+    },
+    {
+      "en": "The Prime Minister usually asks the Governor General to call an election.",
+      "fr": "Le premier ministre demande habituellement au gouverneur général de déclencher une élection."
+    },
+    {
+      "en": "The Official Opposition forms a government at once.",
+      "fr": "L'opposition officielle forme aussitôt un gouvernement."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "A vote on a major issue such as the budget is a test of confidence. Losing it defeats the party in power, and an election usually follows.",
+    "fr": "Un vote sur une question importante comme le budget est un test de confiance. Le perdre entraîne la défaite du parti au pouvoir, et une élection suit habituellement."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 62,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "If a majority of the members of the House of Commons vote against a major government decision, the party in power is defeated, which usually results in the Prime Minister asking the Governor General, on behalf of the Sovereign, to call an election."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

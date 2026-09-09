@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-06-many-candidates-in-a-district",
+  "subject": "elections",
+  "prompt": {
+    "en": "How many candidates can there be in one electoral district?",
+    "fr": "Combien de candidats peut-il y avoir dans une même circonscription électorale?"
+  },
+  "options": [
+    {
+      "en": "Only one, agreed on by the parties together.",
+      "fr": "Un seul, choisi conjointement par les partis."
+    },
+    {
+      "en": "Exactly two.",
+      "fr": "Exactement deux."
+    },
+    {
+      "en": "There can be many.",
+      "fr": "Il peut y en avoir plusieurs."
+    },
+    {
+      "en": "One for each province.",
+      "fr": "Un par province."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "A district can draw several candidates, and voters pick one of them. The winner takes the single seat that district holds.",
+    "fr": "Une circonscription peut attirer plusieurs candidats, et les électeurs en choisissent un. Le gagnant obtient l'unique siège de cette circonscription."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 60,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "There can be many candidates in an electoral district."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
