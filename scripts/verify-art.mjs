@@ -10,6 +10,13 @@
  *   one of `expectedBlindAnswer`, every `mustBeRight` feature must have been
  *   audited and found present, and nothing from `neverAdd` may be present.
  *
+ *   And that the verdict is STILL ABOUT THE ART IN THE TREE. Every keymap entry
+ *   records the digest of the SVG bytes it was drawn from; scoring re-derives
+ *   them. A verdict whose art has been redrawn under it is STALE, is not scored,
+ *   and FAILS -- because a record that stayed green while the art moved is a
+ *   verification of a picture nobody can see any more, and it reads in the
+ *   output exactly like a verification of the picture on disk.
+ *
  *   And, on every run whether or not anyone is identifying anything: that an
  *   anonymised hand-off can still be BUILT from today's tree. Every subject
  *   rasterises, every composite assembles, no render source draws text, no
@@ -89,6 +96,7 @@ import {
   loadContract,
   readKeymap,
   sha256Of,
+  sourceDigestReader,
 } from './lib/art-handoff.mjs';
 import { scoreRun } from './lib/art-score.mjs';
 
@@ -121,8 +129,11 @@ Options:
   --help, -h                this text
 
 Exit 0 only when the hand-off builds, nothing leaks into it, the contract is
-coherent, at least one subject is renderable, and every verdict that was
-supplied matches the contract.
+coherent, at least one subject is renderable, every verdict that was supplied
+matches the contract, AND every verdict is still about the art that is in the
+tree today. A verdict whose art has been redrawn under it exits 1 with or
+without --require-identification: nobody has looked at the new picture, so
+there is nothing for exit 0 to mean.
 `;
 
 const argv = process.argv.slice(2);
@@ -230,18 +241,43 @@ function printHandoffSummary(keymap, { where = null } = {}) {
 function printScore(result) {
   const t = result.totals;
   console.log(
-    `verify-art: scored ${t.subjectsPassed}/${t.subjectsScored} subject(s), ` +
-      `${t.gatingRenders} gating and ${t.diagnosticRenders} diagnostic render(s), ` +
+    `verify-art: scored ${t.subjectsPassed}/${t.subjectsScored} subject(s) over ` +
+      `${t.rendersScored}/${t.renders} render(s) whose art is unchanged since the verdict, ` +
+      `${t.gatingRenders} gating and ${t.diagnosticRenders} diagnostic, ` +
       `${t.featuresChecked} mustBeRight feature(s) confirmed present, ` +
       `${t.featuresUncheckable} uncheckable, ` +
+      `${t.rendersStaleArt} NOT re-checked because the art moved, ` +
       `${t.subjectsUnrendered} unrendered by decision.`,
   );
   // Scoring happens after the reveal, so naming subjects here is not a leak --
   // but `--quiet` is asked for by an identifier who may still be mid-run, so it
   // is honoured everywhere rather than only where it is strictly needed.
   for (const row of quiet ? [] : result.scored) {
+    // THREE LABELS, NOT TWO. `PASS`/`FAIL` alone cannot say "nobody looked", and
+    // a subject printed FAIL reads as a judgement that was made. STALE says a
+    // judgement was NOT made -- and where the last one that WAS made was a
+    // failure, the row says so, because a redraw must never be a way to stop a
+    // defect printing.
+    if (row.state === 'stale') {
+      // A STALE ROW REPORTS THE CLAIM, NOT A RESULT, and every number on it is
+      // phrased as something the record SAID. Printing "7/7 features present"
+      // beside the word STALE is a green number about art nobody has looked at,
+      // and a reader skimming a column of ratios would take it for a pass.
+      console.log(
+        `verify-art:   STALE ${row.subjectId} - NOT re-checked: ${row.staleRenders} of its ` +
+          `render(s) are of art that has moved. On record it CLAIMED ` +
+          `${row.claimedGatingMatched}/${row.claimedGatingRenders} gating render(s) identified and ` +
+          `${row.featuresPresent}/${row.featuresRequired} features present; none of that was ` +
+          `re-checked, so none of it counts` +
+          (row.recordedFindings > 0
+            ? `. AND THE LAST VERDICT ON IT FAILED (${row.recordedFindings} finding(s), listed above), ` +
+              `which going stale does not resolve.`
+            : '.'),
+      );
+      continue;
+    }
     console.log(
-      `verify-art:   ${row.pass ? 'PASS' : 'FAIL'} ${row.subjectId} - ` +
+      `verify-art:   ${row.state === 'pass' ? 'PASS' : 'FAIL'} ${row.subjectId} - ` +
         `identified on ${row.gatingRenders} gating render(s), ` +
         `${row.featuresPresent}/${row.featuresRequired} features present, ` +
         `${row.featuresUncheckable} uncheckable, ` +
@@ -252,6 +288,56 @@ function printScore(result) {
     'verify-art: this scores a STATED verdict against the contract. It does not ' +
       'establish that the verdict was made blind; only the hand-off gives that.',
   );
+}
+
+/**
+ * Print a score, then decide the exit code from it.
+ *
+ * ORDER MATTERS AND IS THE REASON THIS IS A FUNCTION. `report()` exits where it
+ * prints, so a failure list printed first meant the reader never saw the score
+ * table or the staleness that explains it -- they saw "no feature audit came
+ * back" against a subject whose art had been redrawn under the record anyway,
+ * with no way to tell which of the two was their problem. Everything is
+ * printed, and only then is the process ended.
+ *
+ * THE EXIT RULE, in one place so no caller re-derives it:
+ *
+ *   failures  -> 1, always.
+ *   staleArt  -> 1, always. The record claims something about art that is no
+ *                longer in the tree. Exit 0 would mean "the verdicts on file
+ *                hold"; they do not hold, because nobody has looked at the new
+ *                picture. `--require-identification` does not enter into it:
+ *                that flag is about whether a claim is REQUIRED, and this is
+ *                about a claim that is WRONG.
+ *   stale     -> 0, unless --require-identification. The art is unchanged and
+ *                the record is true about it, merely incomplete against a
+ *                contract that has since asked for more.
+ */
+function reportScore(result, { strict }) {
+  // stderr, because it is fatal, and before the failure list because it is why
+  // several of those failures are not the reader's real problem.
+  for (const line of result.staleArt) console.error(`verify-art: STALE ART - ${line}`);
+  for (const line of result.stale) console.log(`verify-art: STALE - ${line}`);
+  printScore(result);
+
+  if (result.failures.length > 0) {
+    console.error('verify-art: FAILED');
+    for (const failure of result.failures) console.error(`  - ${failure}`);
+    console.error(`verify-art: ${result.failures.length} failure(s).`);
+  }
+  if (result.staleArt.length > 0) {
+    console.error(
+      `verify-art: FAILED - ${result.staleArt.length} subject(s) STALE. Their art was redrawn, ` +
+        `deleted or never digested after the verdict was recorded, so those verdicts have NOT ` +
+        `been re-checked and cannot pass. This is a failure and not a caveat: a record that ` +
+        `stayed green while the art moved under it is the exact silent pass this harness ` +
+        `exists to refuse. Re-run the hand-off and record a fresh verdict.`,
+    );
+  }
+  if (result.fatal) process.exit(1);
+  if (result.stale.length > 0 && strict) {
+    die('--require-identification: entries the record could not answer are NOT ESTABLISHED.');
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -332,7 +418,7 @@ if (command === 'reveal') {
 }
 
 if (command === 'score') {
-  const { references } = loadContract({ root });
+  const { assets, references } = loadContract({ root });
   let keymap;
   let answers;
   let audit;
@@ -380,11 +466,18 @@ if (command === 'score') {
     }
   }
 
-  const result = scoreRun({ references, keymap, answers, audit });
-  report(result.failures);
-  for (const entry of result.stale) console.log(`verify-art: STALE - ${entry}`);
-  printScore(result);
-  process.exit(result.stale.length > 0 && flag('--require-identification') ? 1 : 0);
+  const result = scoreRun({
+    references,
+    keymap,
+    answers,
+    audit,
+    // Read through the SAME reader the hand-off wrote the digests with. Two
+    // copies of "hash the source" would eventually disagree, and the disagreement
+    // would look exactly like a redraw.
+    currentDigest: sourceDigestReader({ assets }),
+  });
+  reportScore(result, { strict: flag('--require-identification') });
+  process.exit(0);
 }
 
 if (command !== 'gate') die(`unknown command "${command}". Try --help.`);
@@ -456,27 +549,25 @@ if (!existsSync(recordPath)) {
     if (strict) die(message);
     console.log(`verify-art: ${message}`);
   } else {
-    const { references } = loadContract({ root });
+    const { assets, references } = loadContract({ root });
     const run = record.handoffRun;
     const result = scoreRun({
       references,
       keymap: run.keymap,
       answers: run.answers,
       audit: run.audit,
+      currentDigest: sourceDigestReader({ assets }),
     });
-    report(result.failures);
-    if (result.stale.length > 0) {
+    if (result.stale.length > 0 && !strict) {
       // Scored clean on everything the record COULD answer, and the contract has
       // since asked for something its hand-off did not contain. Neither a pass
       // nor a failure, and reported as loudly as either.
-      for (const entry of result.stale) console.log(`verify-art: STALE - ${entry}`);
-      const message =
-        `${recordPath} is STALE: ${result.stale.length} entr(y/ies) could not be checked ` +
-        `by the hand-off it was made from; identification is NOT ESTABLISHED for those.`;
-      if (strict) die(message);
-      console.log(`verify-art: ${message}`);
+      console.log(
+        `verify-art: ${recordPath} is STALE: ${result.stale.length} entr(y/ies) could not be ` +
+          `checked by the hand-off it was made from; identification is NOT ESTABLISHED for those.`,
+      );
     }
-    printScore(result);
+    reportScore(result, { strict });
   }
 }
 

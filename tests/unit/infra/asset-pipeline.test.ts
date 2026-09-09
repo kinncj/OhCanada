@@ -73,11 +73,31 @@ interface Built {
   manifest(): Manifest;
 }
 
+/**
+ * The scratch tree's own palette, because `make assets` now LINTS every source
+ * against `assets/style/palette.json` (OQ-ART-11) and a fixture with no palette
+ * is a fixture the lint cannot run over.
+ *
+ * Written out here rather than copied from the real palette on purpose: the
+ * cases below are about the pipeline, and pinning them to art's colour list
+ * would make every future palette edit a pipeline-test failure. What they need
+ * is A palette that declares the colours they draw with; this is it. The palette
+ * lint's own behaviour is asserted in tests/unit/infra/palette-lint.test.ts.
+ */
+const FIXTURE_COLOURS = {
+  'snow-light': '#ffffff',
+  'snow-base': '#e6eff7',
+  'sky-light': '#a5d6ee',
+  'sky-base': '#3d8ccb',
+  'ice-light': '#c8d8e8',
+  'pine-shade': '#12352a',
+} as const;
+
 /** A flat SVG of exactly `w` x `h` design-resolution units. */
 const svg = (w: number, h: number, fill: string): string =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
   `<rect width="${w}" height="${h}" fill="${fill}"/>` +
-  `<circle cx="${Math.round(w / 2)}" cy="${Math.round(h / 2)}" r="${Math.round(Math.min(w, h) / 4)}" fill="#12352a"/></svg>`;
+  `<circle cx="${Math.round(w / 2)}" cy="${Math.round(h / 2)}" r="${Math.round(Math.min(w, h) / 4)}" fill="${FIXTURE_COLOURS['pine-shade']}"/></svg>`;
 
 let caseId = 0;
 
@@ -95,6 +115,12 @@ function build(options: {
   const dist = join(root, 'assets', 'dist');
   mkdirSync(dist, { recursive: true });
   mkdirSync(join(root, 'content', 'levels'), { recursive: true });
+  mkdirSync(join(root, 'assets', 'style'), { recursive: true });
+  writeFileSync(
+    join(root, 'assets', 'style', 'palette.json'),
+    JSON.stringify({ id: 'scratch-palette', colours: FIXTURE_COLOURS }),
+    'utf8',
+  );
 
   writeFileSync(
     join(root, 'content', 'game.config.json'),
@@ -506,7 +532,7 @@ describe('a failed build leaves the last good output where it was', () => {
       levelDocs: { ottawa: levelDoc('ottawa', ['ottawa-skyline']) },
     });
     expect(built.status, built.output).toBe(0);
-    rerun(built.root, { 'svg/nowhere/stray.svg': svg(10, 10, '#000000') });
+    rerun(built.root, { 'svg/nowhere/stray.svg': svg(10, 10, FIXTURE_COLOURS['snow-light']) });
 
     for (const dir of [built.dist, join(built.root, 'assets'), built.root]) {
       expect(readdirSync(dir).filter((n) => n.startsWith('.dist') || n.includes('staging'))).toEqual([]);
@@ -573,10 +599,20 @@ describe('make assets refuses to finish', () => {
   });
 
   it('when there are no sources at all, rather than writing an empty manifest and passing', () => {
+    // TWO floors cover this condition and the earlier one now answers it: the
+    // palette lint runs over the SOURCE TREE during input validation, before a
+    // byte is staged, so an empty tree is refused there rather than by the
+    // payload gate over an empty manifest. Both are correct and the payload
+    // gate's own wording is asserted directly, over a manifest, in
+    // level-payload-gate.test.ts and texture-memory-gate.test.ts. What this case
+    // is for is the pipeline's behaviour: an empty tree fails, and nothing
+    // downstream reports a pass over it.
     const built = build({ sources: {}, levelDocs: { ottawa: levelDoc('ottawa', ['ottawa-skyline']) } });
     expect(built.status).toBe(1);
-    expect(built.output).toContain('maps files to 0 level(s)');
+    expect(built.output).toContain('ANTI-VACUUM FLOOR');
+    expect(built.output).toContain('no SVG sources under assets/src/svg');
     expect(built.stdout).not.toContain('level-payload: OK');
+    expect(built.stdout).not.toContain('palette: OK');
   });
 
   it('when a source sits in a directory that is neither a level id nor shared', () => {

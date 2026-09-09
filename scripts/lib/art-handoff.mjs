@@ -97,6 +97,15 @@ import { basename, join, relative, resolve, sep } from 'node:path';
 import sharp from 'sharp';
 
 export const KEYMAP_ID = 'truenorth-art-handoff-keymap';
+/**
+ * NOT BUMPED when entries gained `sourceSha256`, deliberately. A version wall
+ * would refuse a v1 keymap with "keymap version 1, expected 2", and the useful
+ * thing to say about a keymap that carries no source digests is the thing
+ * `scoreRun` already says: the record cannot be shown to describe today's art,
+ * so it is STALE and must be re-made. The field is additive and its ABSENCE has
+ * a defined, safe meaning, which is what makes the wall unnecessary. Bump this
+ * when an old keymap would be MISREAD, not when it is merely older.
+ */
 export const KEYMAP_VERSION = 1;
 
 /**
@@ -253,6 +262,66 @@ export function resolveSource(assets, rel) {
     return { path: join(assets, pinned), rel: pinned };
   }
   return null;
+}
+
+/**
+ * THE DIGEST OF THE ART A RENDER WAS DRAWN FROM.
+ *
+ * WHY NOT THE RENDER ITSELF. The obvious staleness check is "re-render the
+ * entry and compare `entry.sha256`", and it cannot be written: that hash is of
+ * the PADDED png, and the pad length comes from `rng()` seeded by the run salt,
+ * which is `randomBytes(16)` on every real run and is deliberately recorded
+ * NOWHERE -- it is the secret that makes the opaque names unlinkable. The
+ * uniform canvas is run-global too. So `entry.sha256` is reproducible only by
+ * the run that made it, which is exactly what a hand-off wants and exactly what
+ * a staleness check cannot use.
+ *
+ * WHAT IS REPRODUCIBLE is the input: the SVG bytes the recipe read. Hash those,
+ * record the hashes in the keymap beside `sources[]`, and a later run can ask
+ * the only question that matters -- IS THIS STILL THE ART THAT VERDICT WAS
+ * ABOUT? It costs a file read per source and no rasterising at all.
+ *
+ * WHAT THIS DOES NOT COVER, said out loud so it is not read as bigger than it
+ * is:
+ *
+ *   - A CHANGE TO THE RECIPE. Re-composite the same SVGs differently -- a new
+ *     `nearTop`, a different variant slot -- and the picture changes while every
+ *     source digest holds. Covering it would mean voiding every record on every
+ *     edit to this file, including the edit that added the check, which is a
+ *     tripwire nobody would keep.
+ *   - A NO-OP EDIT. Reindent an SVG and the digest moves though the picture does
+ *     not. That is a false STALE, and it errs towards "go and look again", which
+ *     is the safe direction for a verification record.
+ *
+ * ONE FUNCTION, TWO CALLERS. `buildHandoff` writes these and `scoreRun` reads
+ * them back through the same reader, because a check whose two halves compute
+ * the digest separately proves that the copy agrees with the copy.
+ */
+export function sourceDigestReader({ assets }) {
+  const cache = new Map();
+  return (rel) => {
+    if (cache.has(rel)) return cache.get(rel);
+    const found = resolveSource(assets, rel);
+    // `null`, not a throw: a source that has been deleted or renamed since the
+    // verdict is a REAL and interesting state, and the scorer has a word for it.
+    const digest = found
+      ? createHash('sha256').update(readFileSync(found.path)).digest('hex')
+      : null;
+    cache.set(rel, digest);
+    return digest;
+  };
+}
+
+/**
+ * `{ rel: sha256 }` over a render's sources. Keyed by path and de-duplicated,
+ * because a digest is a property of a file: the officer's recipe lists
+ * `arm-upper-serge.svg` twice (two arms) and it is one file either way.
+ */
+export function digestSources({ assets, sources, read = null }) {
+  const digest = read ?? sourceDigestReader({ assets });
+  const out = {};
+  for (const rel of new Set(sources ?? [])) out[rel] = digest(rel);
+  return out;
 }
 
 async function rasterise(assets, rel, failures) {
@@ -453,6 +522,63 @@ const RECIPES = {
     nearMatch: 'slope',
     nearTop: 580,
     what: 'a terrace promenade and a toboggan slope',
+  }),
+
+  /** A single source, rasterised on its own at 1x. One of two POI heroes on its
+   * level, which is the first level to carry two: the shape of the builder does
+   * not change, only the count of entries. */
+  'town-clock': singleSource(),
+
+  /** The level's second POI hero, and the same builder. */
+  'pier-21': singleSource(),
+
+  /**
+   * "The quayside placed 160 px below the town tile's top edge (world y 860
+   * against 700)."
+   *
+   * A DIFFERENT OFFSET FROM THE OTHER TWO COMPOSITES, AND THE ONE THING WORTH
+   * CHECKING RATHER THAN COPYING. The canal and the toboggan run both sit at
+   * 580 because both far tiles are 700 px of world above a near tile at 1280.
+   * These do not: the town tile is 260 px tall, and 160 puts the quayside's
+   * first FULLY OPAQUE row (its row 100) at composite y 260 -- exactly the town
+   * tile's bottom edge. The seam closes to the pixel, with the boardwalk's lamp
+   * standards, gables and gulls, which occupy the tile's transparent top 100
+   * rows, standing in front of the town rather than above it. Measured, not
+   * assumed: at 580 the two tiles would not touch at all and the subject would
+   * be a boardwalk floating under a strip of unrelated houses.
+   */
+  'halifax-quayside': twoParallaxTiles({
+    farMatch: 'uptown',
+    nearMatch: 'quayside',
+    nearTop: 160,
+    what: 'a town tile and a quayside tile',
+  }),
+
+  /** A single source, rasterised on its own at 1x. */
+  'cn-tower': singleSource(),
+
+  /**
+   * "The boulevard placed 340 px below the skyline tile's top edge (world y 900
+   * against 560)."
+   *
+   * THE SEAM HERE IS NOT MEANT TO CLOSE, and that is the difference from the
+   * quayside above. The two tiles overlap by 80 px, so the boulevard's tree
+   * canopies, lamp arms and sign panels cross in front of the skyline's haze
+   * band; below that the composite shows matte between the haze band and the
+   * planted verge. That gap is SKY, and it is sky in the shipped level too --
+   * the street wall that stands in it is a third tile this subject does not
+   * list, because `renders[]` is the art agent's statement of which files the
+   * subject IS. Adding a tile to close a hole would be this harness deciding
+   * what the verdict is about. Checked against the picture: every `mustBeRight`
+   * entry (the green and blue lines, the bicycle marks and arrows, the verge and
+   * kerb, the young trees, the riders, the towers behind) is legible in the
+   * composite as built.
+   */
+  'toronto-trail': twoParallaxTiles({
+    farMatch: 'skyline',
+    nearMatch: 'boulevard',
+    nearTop: 340,
+    what: 'a skyline tile and a boulevard tile',
   }),
 
   /**
@@ -1233,6 +1359,7 @@ export async function buildHandoff({
 
   const entries = [];
   const seen = new Set();
+  const readDigest = sourceDigestReader({ assets });
   for (const [index, item] of ordered.entries()) {
     const uniform = await flatten(
       canvas(canvasWidth, canvasHeight).composite([
@@ -1279,6 +1406,11 @@ export async function buildHandoff({
       bytes: png.length,
       matte: MATTE,
       sources: item.sources,
+      // The digest of the SVG bytes this render was drawn from, so a later run
+      // can tell a verdict that still describes today's art from one whose art
+      // has been redrawn underneath it. See `sourceDigestReader` for why this is
+      // the input's hash and not the render's.
+      sourceSha256: digestSources({ assets, sources: item.sources, read: readDigest }),
       slots: item.slots,
       sha256: createHash('sha256').update(png).digest('hex'),
     });

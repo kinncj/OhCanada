@@ -129,6 +129,7 @@ import { packAsync } from 'free-tex-packer-core';
 import sharp from 'sharp';
 
 import { MANIFEST_NAME, MANIFEST_VERSION, checkLevelPayload, mib } from './lib/level-payload.mjs';
+import { lintPalette } from './lib/palette-lint.mjs';
 import { BYTES_PER_PIXEL, checkTextureMemory, decodedByDeviceScale } from './lib/texture-memory.mjs';
 import { resolveByDeviceScale, worstDeviceScale } from './lib/variant-scales.mjs';
 
@@ -426,6 +427,31 @@ for (const source of [...sources, ...riveSources]) {
   }
   seen.set(source.key, source.file);
 }
+
+/**
+ * THE PALETTE LINT, over the SOURCE TREE and not over the sources this build
+ * could charge to a level.
+ *
+ * `assets/style/palette.json` is the allow-list for every fill and stroke, said
+ * so in the art bible and in CLAUDE.md, and had no gate: this script rasterised
+ * all 80 sources without ever opening the palette (OQ-ART-11). It runs here,
+ * with the other input validation, because an off-palette fill is a defect in
+ * the SOURCE and nothing downstream of rasterising can see it.
+ *
+ * It walks `assets/src/svg` itself rather than iterating `sources`, and the
+ * difference is the point: `sources` has already dropped every file whose
+ * owning level could not be worked out. Linting that list would leave art
+ * staged ahead of its level document -- the exact state this repository is in
+ * whenever a level lands -- unlinted, while printing the same summary.
+ */
+const palette = lintPalette({ root: ROOT });
+for (const failure of palette.failures) fatal(failure);
+// Reported BEFORE the input-validation exit below, because the palette verdict
+// does not depend on whether every source could be charged to a level. Art
+// staged ahead of its level document fails that check and is still linted, and
+// saying so is the difference between "the palette held" and "the palette was
+// not reached". `report()` on the next lines would otherwise swallow it.
+if (palette.failures.length === 0) console.log(`palette: OK - ${palette.summary}.`);
 
 // Input validation, before anything is staged and long before anything in
 // assets/dist is touched. This is the line the ordering defect was on.

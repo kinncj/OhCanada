@@ -30,6 +30,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import {
   copyFileSync,
   existsSync,
@@ -102,6 +103,7 @@ const run = (args: readonly string[]): Run => {
  * matters is what Node makes of them - not what a bundler makes of them here.
  */
 const LIB = new URL('../../../scripts/lib/art-handoff.mjs', import.meta.url).href;
+const SCORE_LIB = new URL('../../../scripts/lib/art-score.mjs', import.meta.url).href;
 
 const callLib = <T>(fn: string, args: unknown[]): T => {
   const code =
@@ -207,6 +209,44 @@ const fixture = (name: string, options: FixtureOptions = {}): string => {
 };
 
 const readKeymap = (path: string) => JSON.parse(readFileSync(path, 'utf8'));
+
+/** The digest of a source AS IT STANDS in a fixture, computed the way the harness does. */
+const digestOf = (root: string, rel: string): string =>
+  createHash('sha256').update(readFileSync(join(root, 'assets', rel))).digest('hex');
+
+/** A hand-written keymap entry, told what its sources hashed to when it was written. */
+interface BareEntry {
+  readonly render: string;
+  readonly subjectId: string;
+  readonly probe: string;
+  readonly gating: boolean;
+  readonly sources: readonly string[];
+}
+const withArtDigest = (root: string, entry: BareEntry) => ({
+  ...entry,
+  sourceSha256: Object.fromEntries(entry.sources.map((rel) => [rel, digestOf(root, rel)])),
+});
+
+/**
+ * `{ sources, sourceSha256 }` for a subject's art AS IT STANDS in a tree,
+ * resolving the `@1x` pin the way the harness does.
+ *
+ * Hand-written records that are about something else -- the answer matcher, the
+ * comparison-figure staleness -- go through this so that the art half of the
+ * record is honest and stays out of their way. A case that meant to test the
+ * matcher and instead tests the staleness check proves neither.
+ */
+const artOf = (root: string, rels: readonly string[]) => {
+  const sourceSha256: Record<string, string> = {};
+  for (const rel of rels) {
+    const literal = join(root, 'assets', rel);
+    const path = existsSync(literal)
+      ? literal
+      : join(root, 'assets', rel.replace(/(\.[a-z0-9]+)$/i, '@1x$1'));
+    sourceSha256[rel] = createHash('sha256').update(readFileSync(path)).digest('hex');
+  }
+  return { sources: [...rels], sourceSha256 };
+};
 
 /** Build a hand-off from a fixture and return every path a case needs. */
 /**
@@ -320,6 +360,58 @@ describe('the gate over the repository as it stands', () => {
     }
   });
 
+  it('hands over EVERY subject the contract says has renders, and all of its sources', () => {
+    // THE CASE THE HALIFAX AND TORONTO ART LANDING WOULD HAVE NEEDED, and the
+    // one shape of silent pass this harness has left. `checkContract` refuses a
+    // subject it has no builder for, loudly, and that refusal is asserted below
+    // over a fixture. What it cannot refuse is a builder that is present and
+    // WRONG in the quiet direction: wire `singleSource()` onto a two-tile
+    // composite and the gate builds, the anonymisation holds, the summary reads
+    // exactly the same, and the identifier is handed half a subject.
+    //
+    // So both halves are asserted, derived from the contract and never listed:
+    //   - every subject with a non-empty `renders` reaches the identifier with
+    //     at least one GATING render. Diagnostic probes decide nothing.
+    //   - every file that subject declares in `renders` was actually composited
+    //     into it.
+    //
+    // The second half is skipped for a subject built from SLOT CHOICES, and
+    // that exception is detected the way the shipped summary detects it
+    // (`slots.skin`) rather than by naming a subject: the character subject
+    // lists one costume's worth of parts and the builder deliberately draws a
+    // different skin and hair every run, so the declared set is a sample of what
+    // it may use and not a checklist.
+    const built = handoff(REPO, [...CHEAP], null);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath) as {
+      entries: { subjectId: string; gating: boolean; sources: string[]; slots: Record<string, unknown> }[];
+    };
+
+    const rendered = subjectsOf(REPO).filter((s) => s.renders.length > 0);
+    expect(rendered.length, 'no subject has renders; this case has nothing to check').toBeGreaterThan(0);
+
+    for (const subject of rendered) {
+      const mine = keymap.entries.filter((e) => e.subjectId === subject.id);
+      const gating = mine.filter((e) => e.gating);
+      expect(
+        gating.length,
+        `${subject.id} declares ${subject.renders.length} render source(s) and no gating render ` +
+          `was handed over for it`,
+      ).toBeGreaterThan(0);
+
+      if (mine.some((e) => e.slots?.skin !== undefined)) continue;
+      const used = new Set(mine.flatMap((e) => e.sources));
+      for (const rel of subject.renders) {
+        expect(
+          used.has(rel),
+          `${subject.id} declares "${rel}" in renders[] and no render handed over used it. ` +
+            `A builder that drops a source shows the identifier a different picture from ` +
+            `the one the contract is about.`,
+        ).toBe(true);
+      }
+    }
+  });
+
   it('varies the officer between runs, because a character is never judged from one file', () => {
     // references.json: "The skin and hair choice must be VARIED between runs - a
     // subject that only ever renders with one tone is a subject nobody checked
@@ -368,7 +460,7 @@ describe('the answer matcher accepts a correct answer worded differently', () =>
   const scoreAnswer = (subjectId: string, answer: string): { status: number; output: string } => {
     const references = JSON.parse(
       readFileSync(join(REPO, 'assets', 'refs', 'references.json'), 'utf8'),
-    ) as { subjects: { id: string; mustBeRight: { feature: string }[] }[] };
+    ) as { subjects: { id: string; renders: string[]; mustBeRight: { feature: string }[] }[] };
     const subject = references.subjects.find((s) => s.id === subjectId);
     const record = {
       runIntegrity: { blindnessHeld: true },
@@ -388,6 +480,7 @@ describe('the answer matcher accepts a correct answer worded differently', () =>
               height: 100,
               naturalWidth: 100,
               naturalHeight: 100,
+              ...artOf(REPO, subject?.renders ?? []),
             },
           ],
           unrendered: [],
@@ -1228,13 +1321,20 @@ describe('a bundled verdict record', () => {
     unrendered,
   });
 
-  const ENTRY = {
+  /**
+   * A hand-written keymap entry has to carry `sourceSha256` for the same reason
+   * a real one does: without it the scorer cannot tell that the verdict is about
+   * the art in this fixture, and refuses to score it. That refusal is the
+   * subject of section 5c; here it would only be noise, so these entries are
+   * honest about what they were drawn from.
+   */
+  const ENTRY = withArtDigest(root, {
     render: '0011223344556677.png',
     subjectId: 'peace-tower',
     probe: 'full',
     gating: true,
     sources: ['src/svg/ottawa/landmark-parliament-hill.svg'],
-  };
+  });
 
   const ANSWERS = {
     runId: 'abcdef0123456789',
@@ -1280,6 +1380,12 @@ describe('a bundled verdict record', () => {
     ],
   };
   const comparableRoot = fixture('comparable', { subjects: [COMPARABLE, UNRENDERED] });
+  // ENTRY's digests are taken from `root`, and reused here. Asserted rather than
+  // assumed: the day someone gives `comparable` its own art, this line says so
+  // instead of the cases below failing as STALE for a reason that is not theirs.
+  expect(digestOf(comparableRoot, 'src/svg/ottawa/landmark-parliament-hill.svg')).toBe(
+    digestOf(root, 'src/svg/ottawa/landmark-parliament-hill.svg'),
+  );
   const COMPARISON_ENTRY = { ...ENTRY, render: '8899aabbccddeeff.png', probe: 'comparison', gating: false };
 
   it('will not score a feature present when the hand-off could not answer it', () => {
@@ -1422,6 +1528,477 @@ describe('a bundled verdict record', () => {
     ]);
     expect(result.status, result.output).toBe(1);
     expect(result.stderr).toContain('cannot score another');
+  });
+});
+
+/* ================================================================== *
+ * 5c. A verdict is about a picture, and the picture moves
+ * ================================================================== */
+
+/**
+ * THE FAILURE MODE: A RECORD THAT PASSED STAYS PASSING AFTER THE ART IT
+ * DESCRIBES IS REDRAWN.
+ *
+ * Nothing in a verdict record changes when the SVG under it does, so the green
+ * tick survives the picture it was about and is indistinguishable in the output
+ * from a green tick about the art on disk. That is the same shape as every
+ * other thing this harness refuses -- SILENT GREENNESS -- and it was the last
+ * one left: the scorer joined a verdict to a keymap and never asked whether
+ * either still described the tree.
+ *
+ * THE CASES BELOW MOSTLY COME IN PAIRS, and the pairing is the point. A check
+ * that only ever sees changed art proves it can say STALE; it does not prove it
+ * says STALE *because* the art changed. So each redraw case scores the SAME
+ * RECORD, byte for byte, before and after -- pass, then refusal.
+ *
+ * TWO THINGS THAT WOULD MAKE THIS CHANGE WORSE THAN NOTHING, both asserted:
+ *
+ *   1. STALE READING AS A PASS. It exits 1, with or without
+ *      `--require-identification`, and its row in the table is neither PASS nor
+ *      FAIL.
+ *   2. STALE LAUNDERING A FINDING. The one recorded verdict this repository has
+ *      FAILED on a real art defect, and its art has since been redrawn. If
+ *      "redrawn" quietly replaced "failed", the fix for the first silent pass
+ *      would have introduced a second, quieter one. The findings travel with the
+ *      stale entry and the report says which of the two it is looking at.
+ */
+describe('a verdict is about a picture, and the picture moves', () => {
+  const SOURCE = 'src/svg/ottawa/landmark-parliament-hill.svg';
+  const SECOND = 'src/svg/ottawa/layer-60-ice.svg';
+  const RUN_ID = 'abcdef0123456789';
+
+  /**
+   * A SECOND SUBJECT with its own source, so that a case can leave part of the
+   * run live. Without one, every stale case here also empties the live set and
+   * trips the anti-vacuum floor -- and a floor firing would MASK a regression in
+   * whether staleness itself is fatal. Found by mutation: making `staleArt`
+   * non-fatal broke no case in this section until this subject existed.
+   */
+  const SECOND_SUBJECT = {
+    id: 'rideau-canal-skateway',
+    subject: 'A skating rink on a frozen canal',
+    renders: [SECOND],
+    renderRecipe: 'Rasterise the file on its own at 1x.',
+    expectedBlindAnswer: ['a skating rink on a frozen canal'],
+    mustBeRight: [{ feature: 'scored skate marks in the ice' }],
+    neverAdd: [],
+  };
+
+  /** A tree of its OWN per case: these cases redraw the art in it. */
+  const tree = (name: string): string =>
+    fixture(name, {
+      subjects: [PEACE_TOWER, SECOND_SUBJECT, UNRENDERED],
+      sources: { [SOURCE]: svg(400, 300, '#c8a05a'), [SECOND]: svg(300, 120, '#8fb8d8') },
+    });
+
+  /** The same edit an art agent makes: same file, different picture. */
+  const redraw = (root: string, rel: string): void =>
+    writeFileSync(join(root, 'assets', rel), svg(400, 300, '#2a6ebb'));
+
+  const keymap = (entries: unknown[]) => ({
+    id: 'truenorth-art-handoff-keymap',
+    version: 1,
+    runId: RUN_ID,
+    entries,
+    unrendered: [],
+  });
+
+  const GATING = { render: '0011223344556677.png', subjectId: 'peace-tower', probe: 'full', gating: true };
+  const DIAGNOSTIC = { render: 'aabbccddeeff0011.png', subjectId: 'peace-tower', probe: 'w140', gating: false };
+
+  const gatingEntry = (root: string) => withArtDigest(root, { ...GATING, sources: [SOURCE] });
+  const diagnosticEntry = (root: string) => withArtDigest(root, { ...DIAGNOSTIC, sources: [SECOND] });
+
+  const answersFor = (renders: readonly string[]) => ({
+    runId: RUN_ID,
+    identifications: renders.map((render) => ({
+      render,
+      answer: 'The Peace Tower on Parliament Hill, Ottawa',
+    })),
+  });
+
+  const CLEAN_AUDIT = {
+    runId: RUN_ID,
+    audits: [
+      {
+        subjectId: 'peace-tower',
+        featuresPresent: ['green copper spire', 'clock face'],
+        featuresAbsent: [],
+        forbiddenPresent: [],
+      },
+    ],
+  };
+
+  /**
+   * A verdict that FOUND SOMETHING. Modelled on the one this repository actually
+   * has: a missing `mustBeRight` feature and a `neverAdd` violation, recorded by
+   * the verifier against art that has since been redrawn.
+   */
+  const DEFECT_AUDIT = {
+    runId: RUN_ID,
+    audits: [
+      {
+        subjectId: 'peace-tower',
+        featuresPresent: ['green copper spire'],
+        featuresAbsent: ['clock face'],
+        forbiddenPresent: ['a dome'],
+      },
+    ],
+  };
+
+  const score = (root: string, handoffRun: unknown, extra: readonly string[] = []): Run => {
+    const path = join(scratch('moves'), 'art-verification.json');
+    writeFileSync(path, JSON.stringify({ handoffRun }, null, 2));
+    return run(['score', '--root', root, '--record', path, ...extra]);
+  };
+
+  /* ---- the pair that names the whole problem ---- */
+
+  it('scores a record whose art is still the art it was made from', () => {
+    const root = tree('unchanged');
+    const result = score(root, {
+      keymap: keymap([gatingEntry(root)]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    });
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain('PASS peace-tower');
+    expect(result.output).not.toContain('STALE ART');
+  });
+
+  it('refuses THE SAME RECORD once the art has been redrawn under it', () => {
+    const root = tree('redrawn');
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root)]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    };
+
+    // Identical bytes, twice, either side of one edit to one SVG. Nothing about
+    // the record is different; everything about the verdict's standing is.
+    expect(score(root, handoffRun).status).toBe(0);
+    redraw(root, SOURCE);
+    const after = score(root, handoffRun);
+
+    expect(after.status, after.output).toBe(1);
+    expect(after.stderr).toContain('STALE ART');
+    expect(after.stderr).toContain('REDRAWN since the verdict was recorded');
+    expect(after.stderr).toContain(SOURCE);
+    // Neither a pass nor a judgement: a THIRD word, because `pass: false` alone
+    // would file "nobody looked" under "we looked and it was wrong".
+    expect(after.stdout).toContain('STALE peace-tower');
+    expect(after.stdout).not.toContain('PASS peace-tower');
+    expect(after.stdout).not.toContain('FAIL peace-tower');
+    expect(after.stdout).toContain('none of that was re-checked');
+  });
+
+  it('fails on redrawn art WITHOUT --require-identification, unlike the other stale', () => {
+    // The two kinds of stale exit differently and that is deliberate. A CONTRACT
+    // that moved leaves a record true but incomplete, and is advisory (asserted
+    // in 5b: exit 0, and 1 under the flag). ART that moved leaves the record not
+    // about today's tree at all, and there is no run in which printing that and
+    // exiting 0 is honest.
+    const root = tree('no-flag');
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root)]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    };
+    redraw(root, SOURCE);
+
+    const plain = score(root, handoffRun);
+    const strict = score(root, handoffRun, ['--require-identification']);
+    expect(plain.status, plain.output).toBe(1);
+    expect(strict.status, strict.output).toBe(1);
+    // Fatal goes to stderr, advisory to stdout. One more way to tell them apart
+    // that does not depend on reading the sentence.
+    expect(plain.stderr).toContain('STALE ART');
+    expect(plain.stdout).not.toContain('STALE ART');
+  });
+
+  /* ---- the three ways art stops being checkable ---- */
+
+  it('refuses a record that never wrote down what it was looking at', () => {
+    // A record from before this check. The tempting reading is "no digest, so
+    // nothing to compare, so nothing is wrong" -- which is the vacuum: it makes
+    // every pre-existing record permanently, silently green.
+    const root = tree('no-digest');
+    const result = score(root, {
+      keymap: keymap([{ ...GATING, sources: [SOURCE] }]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    });
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('carries no `sourceSha256`');
+    // And it must not INVENT a change it cannot know about: the art here is
+    // untouched. "Never known" is a different sentence from "changed".
+    expect(result.stderr).not.toContain('REDRAWN');
+    expect(result.stderr).toContain('cannot be tied to what it looked at');
+  });
+
+  it('refuses a record whose source has left the tree', () => {
+    const root = tree('deleted');
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root)]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    };
+    expect(score(root, handoffRun).status).toBe(0);
+    rmSync(join(root, 'assets', SOURCE));
+    const after = score(root, handoffRun);
+    expect(after.status, after.output).toBe(1);
+    expect(after.stderr).toContain('GONE from the tree');
+    expect(after.stderr).toContain(SOURCE);
+  });
+
+  it('refuses an entry that names no source at all', () => {
+    const root = tree('no-source');
+    const result = score(root, {
+      keymap: keymap([{ ...GATING, sources: [] }]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    });
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('names no source files');
+  });
+
+  /* ---- the trap: staleness must not launder a finding ---- */
+
+  it('carries a recorded FAILURE into the stale entry instead of dropping it', () => {
+    // THE SECOND SILENT PASS, and it would have been hidden inside the fix for
+    // the first. The live record's Quebec City verdict failed on a missing
+    // mustBeRight feature and a neverAdd violation; that art has since been
+    // redrawn. If the entry simply became STALE, the output would go from
+    // "FAILED: forbidden feature present" to "not checked" -- which READS as an
+    // improvement, and is not one. Nobody has looked at the new art.
+    const root = tree('finding');
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root)]),
+      answers: answersFor([GATING.render]),
+      audit: DEFECT_AUDIT,
+    };
+
+    const before = score(root, handoffRun);
+    expect(before.status, before.output).toBe(1);
+    expect(before.stderr).toContain('forbidden feature present');
+
+    redraw(root, SOURCE);
+    const after = score(root, handoffRun);
+    expect(after.status, after.output).toBe(1);
+
+    // Every word of the finding survives the redraw.
+    expect(after.stderr).toContain('forbidden feature present — "a dome" (neverAdd)');
+    expect(after.stderr).toContain('required feature "clock face" is missing');
+    // And it is framed as unresolved rather than as history.
+    expect(after.stderr).toContain('WAS A FAILURE, WHICH GOING STALE DOES NOT RESOLVE');
+    expect(after.stderr).toContain('was failing, and is now unverified');
+    expect(after.stdout).toContain('THE LAST VERDICT ON IT FAILED');
+    expect(after.stdout).not.toContain('PASS peace-tower');
+  });
+
+  it('says "the last verdict FAILED" only when it did, or the phrase means nothing', () => {
+    // The other half of the case above. A banner that appears on every stale row
+    // is decoration; a reader learns nothing from a warning that is always on.
+    const root = tree('clean-stale');
+    redraw(root, SOURCE);
+    const result = score(root, {
+      keymap: keymap([withArtDigest(tree('clean-stale-src'), { ...GATING, sources: [SOURCE] })]),
+      answers: answersFor([GATING.render]),
+      audit: CLEAN_AUDIT,
+    });
+    expect(result.status, result.output).toBe(1);
+    expect(result.stdout).toContain('STALE peace-tower');
+    expect(result.stdout).not.toContain('THE LAST VERDICT ON IT FAILED');
+    expect(result.stderr).not.toContain('WHICH GOING STALE DOES NOT RESOLVE');
+  });
+
+  it('fails on ONE stale subject while the rest of the run is live and passing', () => {
+    // THE CASE THAT ISOLATES FATALITY. Every other stale case here empties the
+    // live set too, so the anti-vacuum floor also fires and the run would exit 1
+    // even if staleness were merely advisory -- the floor MASKS the property
+    // under test. Here half the run is current and passing, no floor can fire,
+    // and the only thing that can produce a non-zero exit is the stale subject.
+    //
+    // This is what the check is for in practice: one tile gets redrawn, the rest
+    // of the level's verdicts are untouched, and the run must not go green on
+    // the strength of the parts nobody changed.
+    const root = tree('one-stale');
+    const other = withArtDigest(root, {
+      render: '9988776655443322.png',
+      subjectId: SECOND_SUBJECT.id,
+      probe: 'full',
+      gating: true,
+      sources: [SECOND],
+    });
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root), other]),
+      answers: {
+        runId: RUN_ID,
+        identifications: [
+          { render: GATING.render, answer: 'The Peace Tower on Parliament Hill, Ottawa' },
+          { render: other.render, answer: 'a skating rink on a frozen canal' },
+        ],
+      },
+      audit: {
+        runId: RUN_ID,
+        audits: [
+          ...CLEAN_AUDIT.audits,
+          {
+            subjectId: SECOND_SUBJECT.id,
+            featuresPresent: ['scored skate marks in the ice'],
+            featuresAbsent: [],
+            forbiddenPresent: [],
+          },
+        ],
+      },
+    };
+    expect(score(root, handoffRun).status).toBe(0);
+
+    redraw(root, SECOND);
+    const after = score(root, handoffRun);
+
+    expect(after.status, after.output).toBe(1);
+    // No floor fired: something IS still checkable, and it still passes.
+    expect(after.stderr, 'a floor fired and would mask the property under test').not.toContain(
+      'ANTI-VACUUM FLOOR',
+    );
+    expect(after.stdout).toContain('PASS peace-tower');
+    expect(after.stdout).toContain(`STALE ${SECOND_SUBJECT.id}`);
+    expect(after.stderr).toContain(`STALE ART - ${SECOND_SUBJECT.id}`);
+    // 1 of 2, not 2 of 2: a live subject next to a stale one, told apart.
+    expect(after.stdout).toContain('scored 1/2 subject(s)');
+  });
+
+  /* ---- ADR-0024: the floors, and proof that each of them fires ---- */
+
+  it('fails a keymap whose every entry went stale, which is a full manifest of nothing', () => {
+    // ADR-0024 over the LIVE set rather than over `entries`. A keymap of twenty
+    // renders whose art has all moved scores exactly as much as a keymap of
+    // none -- it just has a fuller-looking manifest to hide in, which makes it
+    // the more dangerous of the two.
+    const root = tree('all-stale');
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root), diagnosticEntry(root)]),
+      answers: answersFor([GATING.render, DIAGNOSTIC.render]),
+      audit: CLEAN_AUDIT,
+    };
+    expect(score(root, handoffRun).status).toBe(0);
+
+    redraw(root, SOURCE);
+    redraw(root, SECOND);
+    const after = score(root, handoffRun);
+    expect(after.status, after.output).toBe(1);
+    expect(after.stderr).toContain('ANTI-VACUUM FLOOR');
+    expect(after.stderr).toContain('not one of the 2 render(s) in this keymap');
+  });
+
+  it('fails a keymap whose every GATING entry went stale, even with a live diagnostic', () => {
+    // The floor that the first one cannot reach: something IS still checkable,
+    // so `live.length === 0` does not fire -- and what is left is a size-ladder
+    // rung, which is diagnostic by design and decides nothing.
+    const root = tree('gating-stale');
+    const handoffRun = {
+      keymap: keymap([gatingEntry(root), diagnosticEntry(root)]),
+      answers: answersFor([GATING.render, DIAGNOSTIC.render]),
+      audit: CLEAN_AUDIT,
+    };
+    redraw(root, SOURCE);
+    const after = score(root, handoffRun);
+    expect(after.status, after.output).toBe(1);
+    expect(after.stderr).toContain('every gating render in this keymap describes art that has since changed');
+    expect(after.stdout).not.toContain('PASS peace-tower');
+  });
+
+  it('fails a keymap where NOTHING carries a digest, which is the same vacuum', () => {
+    const root = tree('none-digested');
+    const result = score(root, {
+      keymap: keymap([
+        { ...GATING, sources: [SOURCE] },
+        { ...DIAGNOSTIC, sources: [SECOND] },
+      ]),
+      answers: answersFor([GATING.render, DIAGNOSTIC.render]),
+      audit: CLEAN_AUDIT,
+    });
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('not one of the 2 render(s) in this keymap');
+    expect(result.stderr).toContain('A record that scores nothing is not a record that passed');
+  });
+
+  it('reports everything stale when the scorer is given no way to read the art', () => {
+    // FAIL-SAFE, and the only branch no argv can reach: the CLI always supplies
+    // a reader. A `scoreRun` wired up without one must report a keymap of
+    // nothing-checkable, not a keymap of nothing-wrong. Asked of the shipped
+    // module in its own process, like the other two library-level cases.
+    const root = tree('no-reader');
+    const code =
+      `import { scoreRun } from ${JSON.stringify(SCORE_LIB)};` +
+      `const r = scoreRun(${JSON.stringify({
+        references: { subjects: [PEACE_TOWER] },
+        keymap: { runId: RUN_ID, entries: [{ ...GATING, sources: [SOURCE] }], unrendered: [] },
+        answers: answersFor([GATING.render]),
+        audit: CLEAN_AUDIT,
+      })});` +
+      `process.stdout.write(JSON.stringify({ fatal: r.fatal, staleArt: r.staleArt, totals: r.totals }));`;
+    const result = spawnSync(process.execPath, ['--input-type=module', '-e', code], {
+      encoding: 'utf8',
+      cwd: root,
+    });
+    expect(result.stderr, result.stderr).toBe('');
+    const parsed = JSON.parse(result.stdout) as {
+      fatal: boolean;
+      staleArt: string[];
+      totals: { rendersScored: number; rendersStaleArt: number };
+    };
+    expect(parsed.fatal).toBe(true);
+    expect(parsed.totals.rendersScored).toBe(0);
+    expect(parsed.totals.rendersStaleArt).toBe(1);
+    expect(parsed.staleArt.join('\n')).toContain('no reader for the art on disk');
+  });
+
+  /* ---- and over the record this repository actually ships ---- */
+
+  it('never prints PASS for a subject in the LIVE record whose art it cannot vouch for', () => {
+    // Deliberately an INVARIANT rather than an expected verdict. A full blind
+    // re-run of docs/art-verification.json is being commissioned separately, so
+    // pinning this to "stale" would fail the day the fresh record lands and
+    // pinning it to "pass" would fail today. What must hold either way is the
+    // property this whole section exists for, so that is what is asserted -- and
+    // BOTH branches assert something, so a fully-current record does not reduce
+    // this case to checking nothing.
+    const record = JSON.parse(
+      readFileSync(join(REPO, 'docs', 'art-verification.json'), 'utf8'),
+    ) as { handoffRun?: { keymap: { entries: BareEntry[] } } };
+    const entries = record.handoffRun?.keymap.entries;
+    expect(entries, 'the live record carries no handoffRun block').toBeDefined();
+    expect(entries?.length, 'the live record holds zero renders').toBeGreaterThan(0);
+
+    const unvouchable = new Set<string>();
+    for (const entry of entries ?? []) {
+      const recorded = (entry as { sourceSha256?: Record<string, string> }).sourceSha256;
+      const sources = entry.sources ?? [];
+      let moved = recorded === undefined || sources.length === 0;
+      for (const rel of sources) {
+        try {
+          if (recorded?.[rel] !== artOf(REPO, [rel]).sourceSha256[rel]) moved = true;
+        } catch {
+          moved = true; // the file is gone, which is the sharpest kind of moved
+        }
+      }
+      if (moved) unvouchable.add(entry.subjectId);
+    }
+
+    const gate = run(['--root', REPO, ...CHEAP]);
+    if (unvouchable.size === 0) {
+      expect(gate.output, 'every entry is current, so nothing may be reported stale').not.toContain(
+        'STALE ART',
+      );
+      return;
+    }
+    for (const id of unvouchable) {
+      expect(gate.stdout, `${id} is unvouchable and was printed as a pass`).not.toContain(`PASS ${id}`);
+      expect(gate.output, `${id} is unvouchable and was not reported`).toContain(`STALE ART - ${id}`);
+    }
+    expect(gate.status, gate.output).toBe(1);
   });
 });
 
@@ -1651,6 +2228,7 @@ describe('--require-identification', () => {
     ) as {
       subjects: {
         id: string;
+        renders: string[];
         expectedBlindAnswer: string[];
         mustBeRight: { feature: string; requiresComparisonFigure?: boolean }[];
       }[];
@@ -1682,6 +2260,10 @@ describe('--require-identification', () => {
               height: 100,
               naturalWidth: 100,
               naturalHeight: 100,
+              // Current art, so the ONLY staleness this case can produce is the
+              // advisory one it is about: the contract asked for a comparison
+              // figure this hand-off predates.
+              ...artOf(REPO, subject?.renders ?? []),
             },
           ],
           unrendered: [],
