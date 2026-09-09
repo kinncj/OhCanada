@@ -29,6 +29,14 @@ import {
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
+import {
+  createTouchControls,
+  hitTest,
+  minTouchTargetPx,
+  type TargetRect,
+  type TouchControls,
+  type ViewPoint,
+} from './touch-controls';
 import { applyEffect } from './visual-effects';
 import type { PlayableMarker } from './playable-marker';
 import type { SceneProbe } from './scene-probe';
@@ -81,6 +89,17 @@ import type { RenderProfile } from './visual-tier';
 
 /** Horizontal bands used to fake the sky gradient, as in `boot-scene.ts`. */
 const GRADIENT_BANDS = 64;
+
+/**
+ * Keep a summed intent inside -1 … 1.
+ *
+ * The keyboard and the finger are added rather than switched between, so a
+ * player holding a key and the glass at the same time asks for 2 and gets 1.
+ * Adding is deliberate: it is what makes holding left on the keyboard and right
+ * with a thumb cancel to a stop, which is the answer a player expects from two
+ * opposing inputs and is the same one two opposing keys already give.
+ */
+const clampAxis = (value: number): number => Math.max(-1, Math.min(1, value));
 
 /** Depth slots. Layers sit between the sky and the ground; actors above both. */
 const DEPTH_SKY = 0;
@@ -205,9 +224,20 @@ export class LevelScene extends Phaser.Scene {
 
   readonly #options: LevelSceneOptions;
   readonly #effects: LevelEffects;
-  readonly #locomotion: ReturnType<typeof createLocomotion>;
+  /**
+   * Not `readonly`: `setAutoMove` rebuilds it.
+   *
+   * The accessibility option is `drive: 'auto'` on the tuning and nothing else,
+   * so turning it on is one new strategy over the same level data rather than a
+   * branch in `#sampleIntent`. The tuning the document authored stays in
+   * `#tuning`, which is what reach, jump and the animation binding still read.
+   */
+  #locomotion: ReturnType<typeof createLocomotion>;
   readonly #tuning: LocomotionTuning;
   readonly #bounds: LevelBounds;
+  /** Fingers on the glass, and what they mean. Pure; see `touch-controls.ts`. */
+  readonly #touch: TouchControls = createTouchControls();
+  #autoMove = false;
 
   #state: LocomotionState;
   #camera: Vec2 = { x: 0, y: 0 };
@@ -220,10 +250,28 @@ export class LevelScene extends Phaser.Scene {
   #flakes: Flake[] = [];
   #snowQuantity = 0;
   #inReach = new Set<string>();
-  #reachTargets: readonly { readonly id: string; readonly position: Vec2; readonly npc: boolean }[] =
-    [];
+  /**
+   * Everything engageable, with the rectangle it was actually drawn at.
+   *
+   * `position` is what reach is measured from and `rect` is what a finger has to
+   * land on. They are different questions and were one field: reach is a
+   * horizontal distance from the player, a hit area is a box on the glass that
+   * `touch-controls.ts` grows to 44 pt before testing it.
+   */
+  #reachTargets: readonly {
+    readonly id: string;
+    readonly position: Vec2;
+    readonly npc: boolean;
+    readonly rect: TargetRect;
+  }[] = [];
+  /** Where each engageable thing was drawn, filled in by the paint passes. */
+  readonly #drawnRects = new Map<string, TargetRect>();
   #jumpQueued = false;
   #interactQueued = false;
+  /** The target a tap landed on, waiting for the next `#sampleIntent`. */
+  #tapTarget: string | null = null;
+  /** That same target, handed to the frame that is running. */
+  #pendingEngage: string | null = null;
   #ready = false;
 
   constructor(options: LevelSceneOptions) {
@@ -351,6 +399,12 @@ export class LevelScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.#options.marker?.hide();
       this.#ready = false;
+      /* Fingers do not survive a level change, and neither does the listener
+         that would keep answering for the game after this scene is gone. */
+      this.#touch.cancelAll();
+      this.game.events.off(Phaser.Core.Events.BLUR, this.#releaseEveryPointer);
+      this.events.off(Phaser.Scenes.Events.PAUSE, this.#releaseEveryPointer);
+      this.events.off(Phaser.Scenes.Events.SLEEP, this.#releaseEveryPointer);
       /* Every character releases its parts before the level goes; the atlas is
          the texture manager's and is dropped by the unload path, not here. */
       for (const character of this.#characters) character.dispose();
@@ -495,17 +549,119 @@ export class LevelScene extends Phaser.Scene {
 
   /* ---------------------------------------------------------------- input --- */
 
+  /**
+   * Keyboard and pointer, bound once.
+   *
+   * The keyboard half is untouched by the touch work and must stay that way:
+   * keyboard-only play is a requirement, not a fallback (CLAUDE.md,
+   * Accessibility), so every branch below adds to what a key already does and
+   * none of them replaces it. The two are summed in `#sampleIntent`, which means
+   * a player using both at once gets the sum rather than a mode switch.
+   *
+   * The pointer half handles *every* pointer, not only touch ones. A mouse click
+   * on a desktop is a press that ends quickly and without travel, which is a tap,
+   * which is a jump — exactly what the single `POINTER_DOWN` handler that used to
+   * live here did. Nothing on the desktop got worse.
+   *
+   * `POINTER_UP_OUTSIDE` is bound alongside `POINTER_UP` because a finger that
+   * slides off the canvas before lifting reports only the outside one, and a
+   * release nobody hears is a walk that never stops.
+   *
+   * Times come from `this.time.now`, the scene's own clock, not from
+   * `performance.now()`. It advances once per frame, so a press and a release
+   * inside one frame are zero milliseconds apart and a press is measured from
+   * the frame that saw it — the same clock the level is simulated in, and the
+   * one every assertion about this feature is phrased in. The cost is that a
+   * tap's measured duration is rounded up by at most one frame: 17 ms at the
+   * frame budget, 33 ms on the 30 fps Android target, against a 160 ms window.
+   * A tap has to be half again as long as any real one before that rounding
+   * could change the answer.
+   */
   #bindInput(): void {
     const keyboard = this.input.keyboard;
     keyboard?.addCapture(['LEFT', 'RIGHT', 'UP', 'DOWN', 'SPACE']);
 
-    /* A tap on the play area is a jump — one-thumb traversal, and the story is
-       explicit that a tap away from an NPC or a POI hops rather than doing
-       nothing. Queued rather than acted on, so input is read once per frame and
-       a fast double tap cannot inject two steps into one frame. */
-    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.#jumpQueued = true;
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: Phaser.Input.Pointer) => {
+      this.#touch.press(pointer.id, this.#viewPointOf(pointer), this.time.now);
     });
+    this.input.on(Phaser.Input.Events.POINTER_MOVE, (pointer: Phaser.Input.Pointer) => {
+      /* A desktop mouse emits this continuously with nothing pressed, and the
+         answer for every one of those is "no pointer is down, there is nothing
+         to drag". Checked here rather than inside the gesture module so the
+         common case costs a field read instead of a call and an allocation —
+         per-frame pointer work is measured by `tests/perf/budgets.spec.ts`. */
+      if (this.#touch.active === 0) return;
+      this.#touch.drag(pointer.id, this.#viewPointOf(pointer), this.time.now);
+    });
+
+    const up = (pointer: Phaser.Input.Pointer): void => {
+      /*
+       * A pointer the browser took away is not a release.
+       *
+       * `touchcancel` — a notification shade, an incoming call, a system edge
+       * gesture — reaches Phaser as a `POINTER_UP` with `wasCanceled` set, and
+       * treating it as an ordinary release would fire a jump for an interaction
+       * the player never finished. Dropping it also un-latches the walk, which is
+       * the bug this arm exists for: without it the player keeps walking while
+       * they read a notification, and there is no finger left to stop them.
+       */
+      if (pointer.wasCanceled) {
+        this.#touch.cancel(pointer.id);
+        return;
+      }
+      const tap = this.#touch.release(pointer.id, this.time.now);
+      if (tap === null) return;
+      this.#resolveTap(tap);
+    };
+    this.input.on(Phaser.Input.Events.POINTER_UP, up);
+    this.input.on(Phaser.Input.Events.POINTER_UP_OUTSIDE, up);
+
+    /* A backgrounded tab, a phone call answered, an app switch. The pointers
+       that were down are gone and no `touchend` is coming for them. */
+    this.game.events.on(Phaser.Core.Events.BLUR, this.#releaseEveryPointer);
+    this.events.on(Phaser.Scenes.Events.PAUSE, this.#releaseEveryPointer);
+    this.events.on(Phaser.Scenes.Events.SLEEP, this.#releaseEveryPointer);
+  }
+
+  /** Bound once so `off` can find it again; see `#bindInput` and SHUTDOWN. */
+  readonly #releaseEveryPointer = (): void => {
+    this.#touch.cancelAll();
+  };
+
+  /**
+   * What a tap meant: engage the thing under it, or jump.
+   *
+   * Hit-testing runs first and unconditionally, because "tap an NPC or a POI to
+   * engage it" has to beat "tap to jump" when the finger lands on one — a player
+   * who taps the officer and watches their skater hop has been told the game
+   * ignored them.
+   *
+   * Only targets the level's own `InteractionAffordance` says are engageable are
+   * offered to the hit test, which is why a tap on something across the canal
+   * jumps: at that distance it is not an NPC, it is scenery, and tapping scenery
+   * is tapping the world.
+   *
+   * The engagement is *queued*, not performed. It is fed back in as
+   * `LocomotionIntent.interactPressed` on the next frame so it goes through the
+   * strategy exactly as the interact key does — which is what makes a mode with
+   * `interaction: null` (a canoe mid-river) refuse a tap without this file
+   * knowing that such modes exist.
+   */
+  #resolveTap(tap: ViewPoint): void {
+    const target = hitTest(this.#engageableTargets(), this.#viewToWorld(tap), this.#minTouchWorldPx());
+    if (target === null) {
+      this.#jumpQueued = true;
+      return;
+    }
+    this.#tapTarget = target.id;
+  }
+
+  /** Targets within the mode's reach right now, with the hit area they were drawn at. */
+  #engageableTargets(): readonly { readonly id: string; readonly npc: boolean; readonly rect: TargetRect }[] {
+    const reach = this.#reachPx();
+    return this.#reachTargets.filter(
+      (target) => Math.abs(target.position.x - this.#state.x) <= reach,
+    );
   }
 
   #sampleIntent(): LocomotionIntent {
@@ -514,11 +670,23 @@ export class LevelScene extends Phaser.Scene {
        screen above the canvas is never starved of a keystroke. */
     const down = (key: string): boolean => keyboard?.addKey(key, false).isDown ?? false;
 
-    /* Two bindings per action, arrows and the WASD block, so the level is
-       playable with either hand. These are Phaser key names and therefore
-       `keyCode`-based; `InputPort` binds by `KeyboardEvent.code` — physical
-       position — and replacing this reader with it (task 1.15) is what makes
-       TN-LEVEL-06's AZERTY scenario true rather than nearly true. */
+    /*
+     * Two bindings per action, arrows and the WASD block, so the level is
+     * playable with either hand. These are Phaser key names and therefore
+     * `keyCode`-based; `InputPort` binds by `KeyboardEvent.code` — physical
+     * position — and replacing this reader with it is what would make
+     * TN-LEVEL-06's AZERTY scenario true rather than nearly true.
+     *
+     * The touch work did **not** do that, deliberately. `InputPort` describes a
+     * device: a set of held/pressed `GameAction`s and a `moveAxis`. Neither half
+     * of the design here can be decided from that. "Which side of the player is
+     * the finger" needs the player's position on screen, and "what did this tap
+     * mean" needs a hit test against the world — both are gameplay facts the
+     * port has no way to carry, and pushing either into an input adapter would
+     * put the camera and the level's targets behind a port that exists to know
+     * about neither. So the port is still `PROVISIONAL` and unconsumed, and what
+     * crosses the boundary from `touch-controls.ts` is intent, not events.
+     */
     const left = down('LEFT') || down('A');
     const right = down('RIGHT') || down('D');
     const jumpHeld = down('SPACE') || down('UP') || down('W');
@@ -528,11 +696,33 @@ export class LevelScene extends Phaser.Scene {
     this.#lastJumpHeld = jumpHeld;
     this.#jumpQueued = false;
 
-    const interactPressed = this.#interactQueued || (interact && !this.#lastInteract);
+    /*
+     * The tap's target, handed to this frame and to no other.
+     *
+     * Assigned every frame rather than cleared conditionally, so a tap the
+     * strategy declines — out of reach by the time the frame ran, or a mode that
+     * cannot engage at all — cannot sit in the field and fire later.
+     */
+    this.#pendingEngage = this.#tapTarget;
+    this.#tapTarget = null;
+
+    const interactPressed =
+      this.#interactQueued || this.#pendingEngage !== null || (interact && !this.#lastInteract);
     this.#lastInteract = interact;
     this.#interactQueued = false;
 
-    const move = (left ? -1 : 0) + (right ? 1 : 0);
+    /*
+     * Keyboard and finger, summed.
+     *
+     * `#touch.axis` is asked once a frame and takes the player's position on
+     * screen, because the direction is "which side of the player is the finger",
+     * never "which half of the screen was touched" — the camera carries a lead
+     * offset and clamps at the world's edges, so the player's screen position
+     * moves and a screen-half rule would invert under a stationary thumb.
+     */
+    const touch = this.#touch.axis(this.#playerViewX(), this.time.now);
+    const move = clampAxis((left ? -1 : 0) + (right ? 1 : 0) + touch);
+
     return {
       move,
       jumpPressed,
@@ -541,6 +731,71 @@ export class LevelScene extends Phaser.Scene {
       slope: slopeAt(this.#options.level.ground, this.#state.x),
       groundY: groundYAt(this.#options.level.ground, this.#state.x),
     };
+  }
+
+  /* ------------------------------------------------ pointer <-> the world --- */
+
+  /**
+   * A Phaser pointer in design-space view pixels.
+   *
+   * `pointer.x` is in *canvas* pixels, and the canvas is `designWidth * scale`
+   * wide because the visual tier shrinks the drawing buffer (`design-viewport.ts`).
+   * Every threshold in `touch-controls.ts` is in design pixels, so the division
+   * has to happen here or a demoted tier would silently halve the dead zone.
+   */
+  #viewPointOf(pointer: { readonly x: number; readonly y: number }): ViewPoint {
+    const scale = this.#backingScale();
+    return { x: pointer.x / scale, y: pointer.y / scale };
+  }
+
+  /** Where the player is on the glass, in design pixels from the canvas's left edge. */
+  #playerViewX(): number {
+    return (this.#state.x - this.#camera.x) * this.#options.level.camera.zoom;
+  }
+
+  #viewToWorld(point: ViewPoint): ViewPoint {
+    const zoom = this.#options.level.camera.zoom;
+    return { x: this.#camera.x + point.x / zoom, y: this.#camera.y + point.y / zoom };
+  }
+
+  /**
+   * CLAUDE.md's 44 pt minimum, in world units.
+   *
+   * Measured from the canvas the player is touching rather than assumed: the
+   * same 44 pt is about 122 design pixels on a 390 px phone and about 95 on a
+   * centred desktop portrait canvas. An NPC drawn smaller than this is still
+   * drawn smaller than this — what grows is the glass that counts as them.
+   */
+  #minTouchWorldPx(): number {
+    const css = this.scale.displaySize.width;
+    return minTouchTargetPx(this.#options.designWidth, css) / this.#options.level.camera.zoom;
+  }
+
+  /**
+   * Auto-move, the accessibility option (CLAUDE.md, Traversal).
+   *
+   * Implemented by handing the strategy `drive: 'auto'` rather than by
+   * synthesising a direction in this file. `locomotion.ts` already turns that
+   * into "keep going the way you are facing" for every mode, so the option costs
+   * one field on a tuning object and no scene code at all — and a player with
+   * auto-move on still steers and brakes with a held finger or a held key,
+   * because a non-zero intent always wins over the drive.
+   *
+   * NOT WIRED TO THE SETTINGS SCREEN YET. `app/ui/settings-screen.ts` offers the
+   * toggle and `app/bootstrap` owns the wire between it and this method; both
+   * were being edited by another agent when this landed, so the requirement is
+   * reported rather than half-applied.
+   */
+  setAutoMove(enabled: boolean): void {
+    if (this.#autoMove === enabled) return;
+    this.#autoMove = enabled;
+    this.#locomotion = createLocomotion(
+      enabled ? { ...this.#tuning, drive: 'auto' } : this.#tuning,
+    );
+  }
+
+  get autoMove(): boolean {
+    return this.#autoMove;
   }
 
   #lastJumpHeld = false;
@@ -706,12 +961,35 @@ export class LevelScene extends Phaser.Scene {
    */
   #buildTargets(): void {
     const { level } = this.#options;
+    /*
+     * The hit area is the rectangle the paint pass actually drew, not a box
+     * guessed from the position. A landmark that fell back to its silhouette is
+     * 180 x 620; the same landmark with its art is whatever the texture is; a
+     * character composed from the rig is `characterSpace`. Reading the drawn
+     * rectangle means a tap lands on what the player can see rather than on
+     * where the level document says the thing is.
+     */
+    const fallback = (position: Vec2): TargetRect => ({
+      x: position.x - ACTOR_WIDTH / 2,
+      y: position.y - ACTOR_HEIGHT,
+      width: ACTOR_WIDTH,
+      height: ACTOR_HEIGHT,
+    });
+    const rectFor = (id: string, position: Vec2): TargetRect =>
+      this.#drawnRects.get(id) ?? fallback(position);
+
     this.#reachTargets = [
-      ...level.pois.map((poi) => ({ id: poi.id as string, position: poi.position, npc: false })),
+      ...level.pois.map((poi) => ({
+        id: poi.id as string,
+        position: poi.position,
+        npc: false,
+        rect: rectFor(poi.id as string, poi.position),
+      })),
       ...level.characters.map((character) => ({
         id: character.characterId as string,
         position: character.position,
         npc: true,
+        rect: rectFor(character.characterId as string, character.position),
       })),
     ];
   }
@@ -735,12 +1013,29 @@ export class LevelScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Engage the thing the player asked for, or the nearest thing if they did not
+   * name one.
+   *
+   * A finger names one — it landed on it — and a key does not, so the tapped
+   * target wins when there is one. Both still go through the same reach check,
+   * so a tap cannot engage something the interact key could not: the strategy
+   * has already had its say about `whileMoving` and `requiresStop` by the time
+   * this runs, and this is the last gate rather than a second rulebook.
+   */
   #engageNearest(): void {
     const reach = this.#reachPx();
+    const asked = this.#pendingEngage;
+    this.#pendingEngage = null;
+
     let best: { id: string; npc: boolean; distance: number } | null = null;
     for (const target of this.#reachTargets) {
       const distance = Math.abs(target.position.x - this.#state.x);
       if (distance > reach) continue;
+      if (target.id === asked) {
+        best = { id: target.id, npc: target.npc, distance };
+        break;
+      }
       if (best === null || distance < best.distance) {
         best = { id: target.id, npc: target.npc, distance };
       }
@@ -946,15 +1241,14 @@ export class LevelScene extends Phaser.Scene {
           .setOrigin(0.5, 1)
           .setDepth(DEPTH_ACTORS - 1);
         this.#actorsDrawn += 1;
-        this.#artBounds.push({
-          kind: 'actor',
-          rect: {
-            x: poi.position.x - image.width / 2,
-            y: y - image.height,
-            width: image.width,
-            height: image.height,
-          },
-        });
+        const rect = {
+          x: poi.position.x - image.width / 2,
+          y: y - image.height,
+          width: image.width,
+          height: image.height,
+        };
+        this.#drawnRects.set(poi.id as string, rect);
+        this.#artBounds.push({ kind: 'actor', rect });
         continue;
       }
       /* A tower silhouette: tall enough to be framed by TN-LEVEL-04's "fully
@@ -963,6 +1257,14 @@ export class LevelScene extends Phaser.Scene {
       mark.fillStyle(blendColors(toPhaserColor(level.palette.horizon), 0x000000, 0.35), 1);
       mark.fillRect(poi.position.x - 90, y - 620, 180, 620);
       mark.fillTriangle(poi.position.x - 110, y - 620, poi.position.x + 110, y - 620, poi.position.x, y - 780);
+      /* The placeholder is tappable too. A level whose art has not been packed
+         is still a level somebody has to be able to play with a finger. */
+      this.#drawnRects.set(poi.id as string, {
+        x: poi.position.x - 110,
+        y: y - 780,
+        width: 220,
+        height: 780,
+      });
     }
   }
 
@@ -997,15 +1299,14 @@ export class LevelScene extends Phaser.Scene {
         this.#actorsDrawn += 1;
         const space = this.#options.rig?.characterSpace;
         if (space !== undefined) {
-          this.#artBounds.push({
-            kind: 'actor',
-            rect: {
-              x: character.position.x - space.centreX,
-              y: y - space.soleY,
-              width: space.width,
-              height: space.height,
-            },
-          });
+          const rect = {
+            x: character.position.x - space.centreX,
+            y: y - space.soleY,
+            width: space.width,
+            height: space.height,
+          };
+          this.#drawnRects.set(String(character.characterId), rect);
+          this.#artBounds.push({ kind: 'actor', rect });
         }
         continue;
       }
@@ -1019,6 +1320,12 @@ export class LevelScene extends Phaser.Scene {
         ACTOR_HEIGHT,
         18,
       );
+      this.#drawnRects.set(String(character.characterId), {
+        x: character.position.x - ACTOR_WIDTH / 2,
+        y: y - ACTOR_HEIGHT,
+        width: ACTOR_WIDTH,
+        height: ACTOR_HEIGHT,
+      });
     }
   }
 

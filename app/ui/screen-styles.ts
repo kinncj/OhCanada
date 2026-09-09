@@ -342,6 +342,15 @@ const CSS = `
   pointer-events: none;
 }
 
+/*
+  The <main> takes focus when a level opens (Hud.focus), so the screen reader
+  reads the new page rather than the body. It is a landmark, not a control, and a
+  ring drawn round the whole viewport would say "this is selected" about the
+  page. The controls inside it keep their own focus ring, which is a change of
+  geometry and not a colour (see .tn-screen :focus-visible above).
+*/
+.tn-main:focus { outline: none; }
+
 .tn-hud {
   position: absolute;
   inset-inline: 0;

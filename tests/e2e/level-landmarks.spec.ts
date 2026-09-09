@@ -113,7 +113,11 @@ test.describe('the page a level is played on', () => {
       'no modal was found inside <main>, so this assertion checked nothing',
     ).toEqual(['level-error', 'poi-card']);
     expect(
-      outside,
+      /* Sorted: which elements sit outside the landmark is the assertion, and
+         the order they are mounted in is a composition detail that moved when
+         the front door landed (the rotate overlay is built before any level's
+         HUD now, because it belongs to the page and the HUD belongs to a level). */
+      outside.sort(),
       `${outside.join(', ')} are mounted outside <main>, so their content sits in no ` +
         'landmark. Only the HUD menu may be there, and only because its focus trap has ' +
         'to inert <main> itself (app/ui/hud.ts, TN-HUD-04).',

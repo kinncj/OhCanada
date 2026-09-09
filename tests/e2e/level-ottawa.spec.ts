@@ -323,13 +323,14 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
     await expect(page.locator('[data-testid="playable"]')).toHaveCount(0);
   });
 
-  test('a normal load opens no level at all, so the boot screen is unchanged', async ({ page }) => {
+  test('a normal load opens the front door, not a level', async ({ page }) => {
     await page.goto('./');
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
     await expect(page.locator('[data-testid="playable"]')).toHaveCount(0);
-    /* And it still explains itself: the foundation caption is true of this page
-       and belongs on it. */
-    await expect(page.locator('#tn-build-status')).toBeVisible();
+    /* And it explains itself. This used to be the foundation caption, which was
+       true of a page with nothing to press; task 1.20 replaced it with the title
+       screen, which is a way in rather than an apology for not having one. */
+    await expect(page.locator('[data-testid="title-screen"]')).toBeVisible();
     await expect(page.locator('html')).not.toHaveAttribute('data-tn-level', /.*/);
   });
 
@@ -345,6 +346,13 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
       'the foundation-build caption is on screen over a level that is playing',
     ).toHaveCount(0);
     await expect(page.locator('html')).toHaveAttribute('data-tn-level', 'ready');
+
+    /* And the front door is detached, not hidden behind a style rule: the shell's
+       root is a `<main>` while it is showing, and two of them on one page is an
+       axe `landmark-one-main` violation and a real ambiguity for a screen reader
+       (`TN-FLOW-08`). */
+    await expect(page.locator('#tn-shell')).toHaveCount(0);
+    await expect(page.locator('main')).toHaveCount(1);
 
     /* The desktop side panels are the *level's* sky and ground (ADR-0002), not
        the boot screen's hills: those stops are collapsed while a level is open,

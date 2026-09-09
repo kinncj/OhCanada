@@ -112,8 +112,18 @@ export interface LevelAnnouncerOptions {
    * "You are on the Rideau Canal in Ottawa. Skating." — `announce.arrived.ottawa`,
    * already localised. Required: a level that arrives silently is `TN-LEVEL-08`'s
    * failure, and a default would be this module authoring copy.
+   *
+   * A function is read when the level arrives, not when the announcer is built,
+   * and that difference is a bug this option was found causing. The composition
+   * root has to subscribe *before* it asks the engine to load a level, or it
+   * misses `level/ready`; but the sentence it wants to say is the level
+   * document's own localised title, which does not exist until that load has
+   * finished. Passed as a string it was therefore read while it was still empty,
+   * and every level in the shipped build arrived in silence — `TN-LEVEL-08`'s
+   * failure, produced by the one option written to prevent it. A thunk is
+   * evaluated at `level/ready`, by which time the document is parsed.
    */
-  readonly arrival: string;
+  readonly arrival: string | (() => string);
   /** Keyed by the `detail` the engine sends: `npc.officer`, `poi.parliament-hill`. */
   readonly targets?: Readonly<Record<string, LevelTarget>>;
   /**
@@ -158,7 +168,7 @@ export function createLevelAnnouncer(
 
     switch (event.name) {
       case 'level/ready':
-        say(options.arrival);
+        say(typeof options.arrival === 'function' ? options.arrival() : options.arrival);
         return;
 
       case 'level/failed':

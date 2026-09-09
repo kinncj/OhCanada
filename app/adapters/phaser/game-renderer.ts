@@ -152,6 +152,8 @@ export class GameRenderer {
    * game behind a "please rotate" dialog.
    */
   #paused = false;
+  /** The accessibility auto-move option, remembered across level changes. */
+  #autoMove = false;
 
   constructor(options: GameRendererOptions) {
     this.#options = options;
@@ -181,6 +183,21 @@ export class GameRenderer {
       /** Slice 0 has no audio; leaving it off avoids an unused AudioContext. */
       audio: { noAudio: true },
       dom: { createContainer: false },
+      /**
+       * Three touch pointers, not Phaser's default of one.
+       *
+       * The default silently discards every finger after the first: Phaser
+       * allocates `activePointers + 1` `Pointer` objects and a touch with no
+       * pointer to land on emits no event at all. That made "two fingers never
+       * ask for two directions" true by accident rather than by rule, which is
+       * the worst way for a rule to be true — nothing exercised the ordering in
+       * `touch-controls.ts` and nothing would have noticed when it broke.
+       *
+       * Three is a thumb, a second thumb and a resting palm. Traversal is
+       * one-thumb by design (CLAUDE.md) so nothing needs more, and the count is
+       * an allocation of three objects at boot rather than a per-frame cost.
+       */
+      input: { activePointers: 3 },
       scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -348,6 +365,9 @@ export class GameRenderer {
         : { onEvent: this.#options.onLevelEvent }),
     });
     this.#level = scene;
+    /* Before `scene.add`, so the option is in force on the level's first frame
+       rather than one frame after it. */
+    scene.setAutoMove(this.#autoMove);
     this.#levelDocument = document.value;
 
     try {
@@ -472,6 +492,29 @@ export class GameRenderer {
       '--tn-land-skirt': band === null ? '100%' : percent(band.skirt),
       '--tn-land-end': band === null ? '100%' : percent(band.end),
     };
+  }
+
+  /**
+   * Auto-move: the player never has to hold a direction (CLAUDE.md, Traversal).
+   *
+   * Remembered here as well as pushed at the scene, because a player who turns
+   * the option on and then changes level would otherwise lose it — the setting
+   * belongs to the session and the scene is per level.
+   *
+   * **This has no caller yet, and that is the one thing about it worth
+   * reporting rather than leaving to be discovered.** `app/ui/settings-screen.ts`
+   * already offers the toggle and `app/ui/settings.ts` already persists it as
+   * `SettingsDocument.autoMove`; what is missing is the line in the composition
+   * root that joins the two, and `app/bootstrap` was being edited by another
+   * agent when this landed. The capability is here so that wire is one line.
+   */
+  setAutoMove(enabled: boolean): void {
+    this.#autoMove = enabled;
+    this.#level?.setAutoMove(enabled);
+  }
+
+  get autoMove(): boolean {
+    return this.#autoMove;
   }
 
   /** Landscape on a phone pauses the game behind the rotate overlay (ADR-0002). */

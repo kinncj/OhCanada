@@ -299,13 +299,14 @@ the player cannot make.
 also assembles them into one page and scans that. A hundred and twenty-two passing checks mean **the
 components are accessible in isolation, and the harness's assembled page is accessible with no rule turned
 off**. They do not mean the shipped page is accessible, and nobody should read them that way, because the
-screens are still not routed through `app/bootstrap`: nothing in that suite exercises the production build or
-the composition root. A component that passes a harness can still be mounted twice, mounted inside an
-`aria-hidden` subtree, or never mounted at all.
+screens are only partly routed through `app/bootstrap`: the title screen and the map are on the shipped page
+and scanned there, and every other screen is still a component in a harness. A component that passes a
+harness can still be mounted twice, mounted inside an `aria-hidden` subtree, or never mounted at all.
 
 The claim is honest and it is narrow, so it is written down rather than left to be inferred from a green
-tick. Closing the gap is `OQ-TEST-2`, which the whole-page scan **does not close**: that scan runs against
-the harness's page, not `dist/`. `TN-FLOW-08` is where that closure becomes acceptance: it requires the scan
+tick. Task 1.20 closed the first half of the gap — `app/bootstrap` routes the title screen and the map, and
+`tests/a11y/shell.spec.ts` scans `dist/` through them — and left the second half open: the level, the modals
+over it, and Exam mode are still only scanned through the harness. See `OQ-TEST-2`. `TN-FLOW-08` is where that closure becomes acceptance: it requires the scan
 to run at each screen of the route **against the built output**. Exam mode adds four screens to scan
 (`TN-EXAM-08`, `TN-RESULT-10`) and the passport one (`TN-PASSPORT-09`); none of them is covered by anything
 that exists today.
@@ -346,15 +347,18 @@ answer nobody has given. Cross-cutting ones live here.
 - **`OQ-TEST-1` — is the scene probe acceptable?** Camera and momentum cannot otherwise be asserted from
   Playwright. *Recommendation:* yes, gated behind `?e2e=1` and stripped from production builds; the
   alternative is screenshot diffing, which fails for the wrong reasons.
-- **`OQ-TEST-2` — when is the *page* scanned, rather than the components?** **Still open.** The whole-page
-  scan added with `TN-HUD` runs against the harness's assembled page, because `app/bootstrap` does not yet
-  mount these screens; it is a real page with real landmarks and it is not the shipped one.
-  *Recommendation:* when the screens are routed, add the same scan against the built output — the title
-  screen, the creator, the level select, then the level with its HUD, then one modal open over it, then the
-  exam's start screen, a question, the result and the passport — and keep the per-component and harness-page
-  scans as well. Three scans answer three different questions and none replaces another. `TN-FLOW-08` states
-  it as acceptance. Until the built output is scanned, no report may describe the a11y suite as proving the
-  shipped page.
+- **`OQ-TEST-2` — when is the *page* scanned, rather than the components?** **Answered 2026-09-08, in
+  part.** Task 1.20 routed the screens: `app/bootstrap/main.ts` calls `createShell`, and the last test in
+  `tests/a11y/shell.spec.ts` scans `dist/` — the artefact GitHub Pages serves — through the door a visitor
+  opens, with `region` and `landmark-one-main` on and nothing disabled. It asserts the premise first, so it
+  cannot pass against an empty page. The three scans now answer three different questions and none replaces
+  another: per-component, the harness's assembled page in states the shipped config cannot reach, and the
+  built output as loaded.
+  **What is still open is the rest of the route.** The built-output scan covers the title screen and the map;
+  the level with its HUD, a modal open over it, and every screen of Exam mode and the passport are still
+  scanned only through the harness. `TN-FLOW-08` states the whole route as acceptance, and it is not
+  discharged until each of those is scanned against `dist/` too. Reports may now say the a11y suite proves
+  the shipped **front door**; they may not yet say it proves the shipped game.
 - **`OQ-TEST-3` — can a test move the clock?** Several scenarios in `TN-RESUME` say "an hour has passed",
   because what the scheduler offers depends on time and nothing else can express that, and every scenario in
   `TN-TIMER-03` and `TN-TIMER-05` says "five minutes pass" for the same reason. If the time those two read is

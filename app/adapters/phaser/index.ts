@@ -213,6 +213,37 @@ export {
   type MovementBounds,
 } from './locomotion';
 
+/*
+  Touch, with no virtual controller anywhere in it.
+
+  Exported because the gesture rules are arithmetic — is this press a tap or a
+  hold, which side of the *player* is the finger, how big does a hit area have to
+  be to clear 44 pt on this canvas — and arithmetic is asserted without a browser.
+  `level-scene.ts` is where real pointer events are read; nothing here knows what
+  a pointer event is.
+
+  The thresholds are exported alongside the behaviour on purpose: the e2e suite
+  has to hold a finger down for longer than `TAP_MAX_MS` to prove a walk starts,
+  and a test that restated 160 would keep passing after somebody tuned it.
+*/
+export {
+  FALLBACK_CANVAS_CSS_WIDTH,
+  MIN_TOUCH_TARGET_PT,
+  TAP_MAX_MS,
+  TAP_MAX_TRAVEL_PX,
+  WALK_DEADZONE_PX,
+  createTouchControls,
+  grownRect,
+  hitTest,
+  minTouchTargetPx,
+  type TargetRect,
+  type TouchControls,
+  type TouchControlsOptions,
+  type TouchTarget,
+  type ViewPoint,
+  type WalkAxis,
+} from './touch-controls';
+
 export {
   PLAYABLE_ATTRIBUTES,
   PLAYABLE_TEST_ID,

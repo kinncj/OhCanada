@@ -19,12 +19,14 @@ import { HARNESS_URL } from './playwright.config';
  * real content in it — so both rules run here, and a test below proves they ran
  * rather than merely failing to complain.
  *
- * **What this still does not prove.** The page below is the harness's page, not
- * `dist/`. `app/bootstrap` is another agent's file and does not mount the shell
- * yet, so a scan of the production artefact is still a scan of the foundation
- * shell. `OQ-TEST-2` stays open until the composition root calls `createShell`;
- * the last test in this file is that scan, written out and `fixme`, so that
- * turning it on is a one-word change and not a new piece of work.
+ * **What the harness proves and what `dist/` proves.** Every scan but the last
+ * runs against the harness page, which mounts `createShell` directly with fixed
+ * fixtures — ten map entries in three states, a resumable level, a blocked
+ * browser — because those are states the shipped config does not have and a scan
+ * that could not reach them would prove nothing about them. The **last** test in
+ * this file scans `dist/`, the artefact GitHub Pages serves, through the door a
+ * visitor actually opens. It was `fixme` until `app/bootstrap/main.ts` called
+ * `createShell`; task 1.20 landed that call and closed `OQ-TEST-2`.
  */
 
 const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
@@ -601,16 +603,16 @@ test.describe('settings, from the first screen', () => {
 });
 
 /**
- * `OQ-TEST-2`: one whole-page scan against `dist/`, not a harness.
+ * `OQ-TEST-2`, closed: one whole-page scan against `dist/`, not a harness.
  *
- * The body below is written out and asserts the premise *first*, so removing
- * `.fixme` cannot turn it green by accident: it fails on the wait if the built
- * page has no title screen. It is `fixme` today for one reason only — the
- * composition root does not call `createShell` yet, and `app/bootstrap` is not
- * this agent's file. The moment it does, this is the test that makes "123 axe
- * checks" a statement about the shipped artefact instead of about a dev server.
+ * The body asserts the premise *first*, so it cannot go green by accident: it
+ * fails on the wait if the built page has no title screen. This is the test that
+ * makes the axe count a statement about the shipped artefact rather than about a
+ * dev server, and it is the one that would have caught the defect task 1.20
+ * exists for — a visitor reaching the deployed page and finding nothing to
+ * press.
  */
-test.fixme('the built page a visitor loads has no axe violations', async ({ page }) => {
+test('the built page a visitor loads has no axe violations', async ({ page }) => {
   /* `baseURL` is `vite preview` over `dist/` — the artefact GitHub Pages serves. */
   const response = await page.goto('./');
   expect(response, 'no response from vite preview').not.toBeNull();

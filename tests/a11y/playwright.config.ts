@@ -28,17 +28,20 @@ const PORT = 4175;
  * screens survive a production build; that becomes true, and this server goes
  * away, when task 1.20 wires them into `app/bootstrap`.
  *
- * **Half of that is now done, and this note says which half.** `app/ui/shell.ts`
- * exists: one entry point that mounts the title screen, the creator and the
- * level select, and `tests/a11y/shell.spec.ts` scans the whole page it builds
- * with `region` and `landmark-one-main` enabled and nothing disabled. What is
- * still missing is the *call*: `app/bootstrap/main.ts` does not construct the
- * shell yet, so `dist/` is still the foundation shell and the `vite preview`
- * server below still serves a page with no screens on it. `OQ-TEST-2`'s
- * whole-page scan against `dist/` is written out at the bottom of
- * `shell.spec.ts` and is `test.fixme` for exactly that reason: when the
- * composition root calls `createShell`, deleting `.fixme` is the whole change,
- * and until then no report may describe this suite as proving the shipped page.
+ * **Task 1.20 closed the half that was missing.** `app/bootstrap/main.ts` now
+ * calls `createShell`, so `dist/` is a game with a front door and the last test
+ * in `shell.spec.ts` scans it through the `vite preview` server below — the
+ * artefact GitHub Pages serves, base path included. That is `OQ-TEST-2`, and it
+ * is no longer `fixme`.
+ *
+ * The harness server stays, and its job is narrower now: it reaches the screen
+ * *states* the shipped config does not have. A first-run character creator, a
+ * blocked browser, a resumable save, a map with every one of its three card
+ * states on screen at once — none of those exist on a cold load of `dist/`, and
+ * a scan that could only reach the states the default config produces would
+ * prove nothing about the rest. Two servers, two different claims: the harness
+ * says the components are correct in every state, and `dist/` says the page a
+ * visitor opens is correct in the state they open it in.
  */
 const HARNESS_PORT = 4176;
 const BASE_PATH = '/OhCanada/';

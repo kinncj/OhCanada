@@ -22,12 +22,16 @@ const hoisted = vi.hoisted(() => {
     /** id of the element the live region was attached to, `null` if absent. */
     regionHostAtParse: string | null;
     regionHostAtRendererBuild: string | null;
+    regionHostAtShellBuild: string | null;
+    shellHostId: string | null;
     parseCalls: number;
   }
 
   const observed: Observation = {
     regionHostAtParse: null,
     regionHostAtRendererBuild: null,
+    regionHostAtShellBuild: null,
+    shellHostId: null,
     parseCalls: 0,
   };
 
@@ -50,16 +54,55 @@ vi.mock('@adapters/phaser', () => ({
     hoisted.observed.regionHostAtParse = hoisted.regionHost();
     return hoisted.parseResult.current;
   },
+  /* The level catalogue's answer to "does this build have that level". Nothing
+     here opens one; the map's ten entries are `journey.test.ts`'s subject. */
+  hasLevel: (): boolean => false,
   GameRenderer: class {
     readonly ready = Promise.resolve();
     constructor() {
       hoisted.observed.regionHostAtRendererBuild = hoisted.regionHost();
     }
+    get level(): unknown {
+      return null;
+    }
+    get palette(): Record<string, string> {
+      return { sky: '#8ecae6' };
+    }
     cssVariables(): Record<string, string> {
       return {};
     }
+    setAutoMove(): void {}
     pause(): void {}
     resume(): void {}
+  },
+}));
+
+/*
+ * The shell — the DOM layer the live region has to exist before.
+ *
+ * Mocked for the same reason the renderer is: this suite asks about *ordering*,
+ * and the real shell needs a browser DOM. What matters here is only that it is
+ * built after the region and mounted into the same `#ui`.
+ */
+vi.mock('@ui/shell', () => ({
+  createShell: (host: { id?: string }): unknown => {
+    hoisted.observed.regionHostAtShellBuild = hoisted.regionHost();
+    hoisted.observed.shellHostId = host.id ?? null;
+    return {
+      element: {},
+      main: {},
+      view: null,
+      start: (): void => undefined,
+      show: (): void => undefined,
+      enterLevel: (): void => undefined,
+      leaveLevel: (): void => undefined,
+      setEntries: (): void => undefined,
+      setResumeLevelId: (): void => undefined,
+      setCharacterRequired: (): void => undefined,
+      setStorageWarning: (): void => undefined,
+      setModalOpen: (): void => undefined,
+      destroy: (): void => undefined,
+    };
   },
 }));
 
@@ -179,11 +222,24 @@ const FAILED_CONFIG = {
 let doc: FakeDocument;
 let errors: string[];
 
+/**
+ * Let the boot path's promise chain settle.
+ *
+ * The composition root reads the save before it draws anything, so the title
+ * screen is not re-drawn under a player who has already been given focus. The
+ * read is synchronous storage behind an async port, so what it costs is a
+ * handful of microtasks and no frame.
+ */
+async function flush(): Promise<void> {
+  for (let tick = 0; tick < 12; tick += 1) await Promise.resolve();
+}
+
 /** Import the composition root fresh; `main()` runs at module scope. */
 async function boot(parseResult: unknown): Promise<void> {
   hoisted.parseResult.current = parseResult;
   vi.resetModules();
   await import('../../../app/bootstrap/main');
+  await flush();
 }
 
 beforeEach(() => {
@@ -191,6 +247,8 @@ beforeEach(() => {
   errors = [];
   hoisted.observed.regionHostAtParse = null;
   hoisted.observed.regionHostAtRendererBuild = null;
+  hoisted.observed.regionHostAtShellBuild = null;
+  hoisted.observed.shellHostId = null;
   hoisted.observed.parseCalls = 0;
   doc = mountPage();
   vi.stubGlobal('document', asDocument(doc));
@@ -251,18 +309,40 @@ describe('bootstrap live-region ordering', () => {
     expect(alerts).toHaveLength(1);
   });
 
-  it('mounts the live region before the renderer on the happy path too', async () => {
+  it('mounts the live region before the renderer and before the shell', async () => {
     await boot(OK_CONFIG);
+    await flush();
 
     expect(hoisted.observed.regionHostAtRendererBuild).toBe('ui');
+    /*
+     * And before the DOM layer that speaks through it. The shell announces the
+     * screen a player lands on (`TN-TITLE-07`), so a shell built before the
+     * region would auto-mount a second one onto `document.body` and the first
+     * thing a screen-reader user heard would come from outside `#ui`.
+     */
+    expect(hoisted.observed.regionHostAtShellBuild).toBe('ui');
+    expect(hoisted.observed.shellHostId, 'the shell belongs in the #ui layer').toBe('ui');
     expect(liveRegions()).toHaveLength(1);
 
-    // The mocked renderer is ready immediately, so the readiness announcement
-    // has to land in the same region the failure branch would have used.
-    await Promise.resolve();
     vi.runAllTimers();
     expect(doc.documentElement.dataset['tnBoot']).toBe('ready');
-    expect(liveRegions()[0]?.textContent).toContain('TrueNorth ready');
+  });
+
+  it('says nothing in a language nobody chose once the shell can speak', async () => {
+    await boot(OK_CONFIG);
+    await flush();
+    vi.runAllTimers();
+
+    /*
+     * `TrueNorth ready.` used to be announced here. It was written in slice 0,
+     * when the caption over an empty canvas was the only thing on the page, and
+     * it was **English whatever the player had chosen** — a developer sentence
+     * on the one channel a screen-reader user has, which ADR-0010 does not allow
+     * and `content/locales` has no row for. The title screen now names the game
+     * and the screen from the copy table, in the player's language, so the
+     * sentence is gone rather than translated.
+     */
+    expect(liveRegions()[0]?.textContent ?? '').not.toContain('ready');
   });
 
   it('cannot mount the region when the page has no #ui, and fails loudly instead', async () => {

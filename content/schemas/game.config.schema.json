@@ -57,6 +57,17 @@
       "minItems": 1,
       "uniqueItems": true
     },
+    "journey": {
+      "description": "The ten places, in map order (TN-MAP-01, TN-LEVELS). This is the game's SHAPE and not its progression: the map numbers a card by its position here, and a level document's `order` is the same number. `null` is a place whose id is not fixed - levels 2 and 10, which docs/content-review.md \u00a71 blocks and TN-LEVELS deliberately leaves unnamed - and TN-MAP-04 forbids a placeholder standing in for one, so the slot's number is its handle until a person names it. Kept apart from `unlockRules.order` because that list is the sequence a player unlocks levels in and has to begin where the player begins; one list tried to be both and the chain died of it.",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId" },
+          { "type": "null" }
+        ]
+      },
+      "maxItems": 10
+    },
     "unlockRules": { "$ref": "#/$defs/unlockRules" },
     "exam": { "$ref": "#/$defs/exam" },
     "scheduler": { "$ref": "#/$defs/scheduler" },
@@ -77,6 +88,7 @@
     "designWidth",
     "designHeight",
     "levels",
+    "journey",
     "locomotionModes",
     "unlockRules",
     "exam",
@@ -102,8 +114,8 @@
           },
           "uniqueItems": true
         },
-        "order": {
-          "description": "Progression order used when a level is unlocked by the previous one.",
+          "order": {
+          "description": "The unlock sequence: the levels this build can chain, in the sequence a player walks them. NOT the map's numbering - that is `journey`, and this list holds only ids `journey` also names. It must begin with a level `initialLevels` already opens, because the walk in app/domain/entities/level.ts stops at the first level it cannot open; a first entry that is not initially open ends the walk at index 0 and no stamp ever unlocks anything. A level is added here when it is BUILT, not when it is planned.",
           "type": "array",
           "items": {
             "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId"

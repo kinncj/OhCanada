@@ -6,14 +6,17 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  journeyLevelIds,
   levelOffersQuest,
   poiById,
   questAtPoi,
   questGivenBy,
   spawnPoint,
   unlockedLevelIds,
+  unmappedLevelIds,
+  unreachableLevelIds,
 } from '@domain/entities/level';
-import type { Level, UnlockRules } from '@domain/entities/level';
+import type { Journey, Level, UnlockRules } from '@domain/entities/level';
 
 import { characterId, levelId, makeLevel, poiId, questId } from '../../support/fixtures';
 
@@ -77,5 +80,92 @@ describe('unlocking (game.config unlockRules)', () => {
     const free: UnlockRules = { ...rules, stampsToUnlockNext: 0 };
     expect(unlockedLevelIds(free, [])).toEqual(['ottawa']);
     expect(unlockedLevelIds(free, [levelId('ottawa')])).toEqual(['ottawa', 'halifax']);
+  });
+});
+
+describe('a chain that can never be walked (OQ-MAP-2)', () => {
+  /*
+   * The defect this block is written against shipped: `order` began at
+   * `halifax`, `initialLevels` named only `ottawa`, and the walk breaks at the
+   * first level it cannot open — so it broke at index 0 and no stamp ever
+   * unlocked anything. The map looked fine. Every test passed. Québec City had
+   * art, a level document and no route to it.
+   */
+  const dead: UnlockRules = {
+    initialLevels: [levelId('ottawa')],
+    order: [levelId('halifax'), levelId('quebec-city'), levelId('ottawa')],
+    stampsToUnlockNext: 1,
+  };
+
+  it('names every level the chain can never open, however the player plays', () => {
+    expect(unreachableLevelIds(dead)).toEqual(['halifax', 'quebec-city']);
+  });
+
+  it('is empty for a chain that starts where the player starts', () => {
+    const live: UnlockRules = {
+      initialLevels: [levelId('ottawa')],
+      order: [levelId('ottawa'), levelId('quebec-city')],
+      stampsToUnlockNext: 1,
+    };
+    expect(unreachableLevelIds(live)).toEqual([]);
+  });
+
+  it('counts a level that costs more stamps than the chain can ever pay', () => {
+    const steep: UnlockRules = {
+      initialLevels: [levelId('ottawa')],
+      order: [levelId('ottawa'), levelId('quebec-city'), levelId('halifax')],
+      stampsToUnlockNext: 2,
+    };
+    /* Two stamps to open the second level, and only one level can be stamped
+       before it. Nothing after `ottawa` is ever reachable. */
+    expect(unreachableLevelIds(steep)).toEqual(['quebec-city', 'halifax']);
+  });
+
+  it('is empty for a chain nobody has written yet', () => {
+    expect(
+      unreachableLevelIds({ initialLevels: [], order: [], stampsToUnlockNext: 1 }),
+    ).toEqual([]);
+  });
+});
+
+describe('the chain and the map are the same ten places (TN-MAP-01)', () => {
+  const journey: Journey = [
+    levelId('halifax'),
+    null,
+    levelId('quebec-city'),
+    levelId('ottawa'),
+  ];
+
+  it('names a level the rules can open that no slot on the map shows', () => {
+    const rules: UnlockRules = {
+      initialLevels: [levelId('ottawa')],
+      order: [levelId('ottawa'), levelId('yellowknife')],
+      stampsToUnlockNext: 1,
+    };
+    expect(unmappedLevelIds(rules, journey)).toEqual(['yellowknife']);
+  });
+
+  it('checks the levels that are open from the first frame too', () => {
+    const rules: UnlockRules = {
+      initialLevels: [levelId('atlantis')],
+      order: [levelId('ottawa')],
+      stampsToUnlockNext: 1,
+    };
+    expect(unmappedLevelIds(rules, journey)).toEqual(['atlantis']);
+  });
+
+  it('is empty when every id the rules name has a place on the map', () => {
+    const rules: UnlockRules = {
+      initialLevels: [levelId('ottawa')],
+      order: [levelId('ottawa'), levelId('quebec-city')],
+      stampsToUnlockNext: 1,
+    };
+    expect(unmappedLevelIds(rules, journey)).toEqual([]);
+  });
+
+  it('reads the ids off the map, skipping the slots whose id is not fixed', () => {
+    /* Levels 2 and 10 have no id (`TN-LEVELS`, `docs/content-review.md` §1).
+       A slot with no id is a place, not a level, and names nothing. */
+    expect(journeyLevelIds(journey)).toEqual(['halifax', 'quebec-city', 'ottawa']);
   });
 });

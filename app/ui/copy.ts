@@ -378,7 +378,12 @@ const FR: Readonly<Record<CopyRow, string>> = {
 
   'map.open': 'Choisir un niveau',
   'map.title': 'Choisir un niveau',
-  'map.stamps': 'Timbres : {{earned}} sur {{total}}',
+  /* « tampon », never « timbre »: a timbre is a postage stamp and the mark in a
+     passport is a tampon. `OQ-MAP-5` asked it, `TN-PASSPORT-my-passport.md`
+     answered it on 2026-09-08, and it moves `map.stamps` and both
+     `map.locked.stamps` rows together. « Cachet » is recorded as `OQ-PASSPORT-5`
+     for the first French reviewer. */
+  'map.stamps': 'Tampons : {{earned}} sur {{total}}',
   'map.levelsReady': 'Niveaux prêts : {{ready}} sur {{total}}',
   'map.moreComing': "D'autres arrivent.",
   'map.state.open': 'Ouvert',
@@ -386,8 +391,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'map.state.notBuilt': 'Pas encore créé',
   'map.open.help': 'Vous pouvez y jouer maintenant.',
   'map.locked.after': "Terminez d'abord {{level}}.",
-  'map.locked.stamps.one': 'Gagnez encore {{n}} timbre pour ouvrir ce niveau.',
-  'map.locked.stamps.other': 'Gagnez encore {{n}} timbres pour ouvrir ce niveau.',
+  'map.locked.stamps.one': 'Gagnez encore {{n}} tampon pour ouvrir ce niveau.',
+  'map.locked.stamps.other': 'Gagnez encore {{n}} tampons pour ouvrir ce niveau.',
   'map.notBuilt.help': 'Ce niveau est encore en préparation.',
   'map.number': 'Niveau {{n}}',
 

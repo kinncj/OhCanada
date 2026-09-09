@@ -216,7 +216,12 @@ export interface FactClaim {
 export interface UnlockRules {
   /** Levels playable before any stamp is earned. */
   readonly initialLevels: readonly LevelId[];
-  /** Progression order used when a level is unlocked by the previous one. */
+  /**
+   * The unlock sequence: the levels this build can chain, in the sequence a
+   * player walks them. **Not the map's numbering** — that is
+   * `GameConfigDocument.journey`. It has to begin at a level `initialLevels`
+   * already opens, because the walk stops at the first level it cannot open.
+   */
   readonly order: readonly LevelId[];
   readonly stampsToUnlockNext: number;
 }
@@ -334,6 +339,16 @@ export interface GameConfigDocument {
   readonly designHeight: number;
   /** Level ids in authoring order. */
   readonly levels: readonly LevelId[];
+  /**
+   * The ten places, in map order (`TN-MAP-01`, `TN-LEVELS`) — the game's shape,
+   * not its progression.
+   *
+   * `null` is a place whose id is not fixed: `docs/content-review.md` §1 blocks
+   * levels 2 and 10 and `TN-MAP-04` forbids a placeholder standing in for a
+   * name, so the slot keeps its position and carries no id. A level document's
+   * own `order` is its position in this list.
+   */
+  readonly journey: readonly (LevelId | null)[];
   /**
    * Every way a level may declare that the player moves — the legal set, as data
    * (ADR-0023). A new mode is a name here, a `LocomotionTuning` in the level

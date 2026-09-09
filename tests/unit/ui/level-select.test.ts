@@ -192,7 +192,7 @@ describe('a level that is locked and can be earned', () => {
     );
     expect(
       open({ locale: 'fr', entries: withCount(0) }).at('level-card-toronto-help')?.textContent,
-    ).toBe('Gagnez encore 0 timbre pour ouvrir ce niveau.');
+    ).toBe('Gagnez encore 0 tampon pour ouvrir ce niveau.');
   });
 
   it('explains instead of doing nothing, and does not emit a choice', () => {
@@ -328,7 +328,7 @@ describe('leaving, focusing and speaking French', () => {
     expect(at('level-select')?.querySelector('h1')?.textContent).toBe('Choisir un niveau');
     expect(at('level-select-back')?.textContent).toBe('Retour');
     expect(at('level-select-counts')?.textContent).toContain('Niveaux prêts : 2 sur 10');
-    expect(at('level-select-counts')?.textContent).toContain('Timbres : 0 sur 10');
+    expect(at('level-select-counts')?.textContent).toContain('Tampons : 0 sur 10');
     expect(at('level-select-counts')?.textContent).toContain("D'autres arrivent.");
     expect(at('level-card-halifax')?.textContent).toContain('Verrouillé');
     expect(at('level-card-vancouver')?.textContent).toContain('Pas encore créé');

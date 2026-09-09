@@ -31,7 +31,8 @@ reference-critical (red serge, Stetson, Sam Browne belt, no RCMP crest or name).
 | 1.17 | `make verify-content` implemented (author/verifier separation enforced) | content-verifier + infra | Quarantined items excluded from the build; a question with status `verified` and an empty evidence quote fails the gate (ADR-0003 CI clause) | Done, with one stated gap — 46 fixtures; ADR-0003 CI clause + ADR-0016 §2 table enforced; separation of duties enforced as *no single commit both authors a claim and grants its verification*, because **commit authorship is not establishable in this repository** (one identity, no signatures, trailers forbidden). `scripts/verify-content.mjs`'s header specifies the three things that would make it establishable; a `scripts/content-roles.json` map is already wired and absent. |
 | 1.18 | Screenshots on iPhone, iPad and desktop via Playwright MCP | orchestrator | Attached to the slice; portrait canvas correct on all three | Done (iPhone 13, iPad Mini, desktop, against the live site) |
 | 1.19 | Renderer capability probe + visual tiers (WebGL / software-WebGL / Canvas) | engine | Tier chosen from a measured frame cost, not a feature flag; every effect has a no-Filter path | Done (ADR-0011) |
-| 1.20 | Compose the DOM layer in `app/bootstrap`: creator, HUD, menu, dialogue, question card, study, settings, POI card, level screens | engine + ui-a11y | Every slice-1 screen reachable in the built artefact; the a11y suite scans `dist/`, not a harness; the two character renderers are constructed | **Not started** |
+| 1.20 | Compose the DOM layer in `app/bootstrap`: creator, HUD, menu, dialogue, question card, study, settings, POI card, level screens | engine + ui-a11y | Every slice-1 screen reachable in the built artefact; the a11y suite scans `dist/`, not a harness; the two character renderers are constructed | **Partly done.** The front door is wired and shipped: title -> map -> Ottawa -> map, through `createShell`, with the HUD, the POI card, the level error card, settings and the save behind it, and `tests/a11y/shell.spec.ts` now scans `dist/` (`OQ-TEST-2`, half closed). **Still unreachable: the character creator, Study, the question card and dialogue** — each blocked on data rather than on wiring, and each named under Risks below. Neither character renderer is constructed. |
+| 1.21 | Touch controls: hold anywhere to walk, tap to jump, tap an NPC or POI to engage — **no virtual controller** | engine | Direction is taken from the player's screen position, never from a screen half; a cancelled pointer stops the walk; multi-touch cannot ask for two directions; proven through real `touchstart`/`touchmove`/`touchend`/`touchcancel` events | **Done, with one wire outstanding.** `app/adapters/phaser/touch-controls.ts` (pure, 100% covered) plus the pointer binding in `level-scene.ts`; twelve scenarios in `tests/e2e/touch-controls.spec.ts` drive Chromium's own touch events into real Phaser. `InputPort` was **not** changed and is still `PROVISIONAL`: it describes a device in terms of `GameAction`s and a `moveAxis`, and neither the walk direction (which needs the player's position on screen) nor the meaning of a tap (which needs a world hit test) can be decided without gameplay state the port deliberately does not carry. A proposal is in the task report; changing it needs an owner for `app/application`. Auto-move is exposed as `GameRenderer.setAutoMove` and has **no caller**: `app/bootstrap` has to join it to `SettingsDocument.autoMove`, which the settings screen already offers. |
 
 ## Level 4 — subject and setting
 
@@ -132,15 +133,37 @@ A staff review of the committed slice (`208d8f3..3c5a6e4`) found the table asser
 shipped artefact does not contain. The tasks were built; the game was not assembled. Recorded here because a
 plan that overstates is worse than one that is behind — the next reader trusts it.
 
-- **Nothing composes the DOM layer.** `app/bootstrap/main.ts` mounts four things: the live region, the rotate
-  overlay, the build-status caption and the renderer. The character creator, HUD, menu, dialogue, question
-  card, study screen, settings, POI card and level screens have **zero consumers under `app/`** — roughly
-  4,000 lines reachable only from tests, along with both character renderers, the persistence adapter, the
-  four use cases and the scheduler. No task in the table owned the wiring, which is why nothing did it. That
-  is task 1.20 now.
-- **The accessibility claim is narrower than it sounds.** 123 axe checks pass against a dev-server harness
-  that mounts components directly. `tests/a11y/playwright.config.ts` says so in its own header. They prove
-  the components; they say nothing about the shipped page, and there is no shipped page for them to be about.
+- **Nothing composed the DOM layer.** `app/bootstrap/main.ts` mounted four things: the live region, the
+  rotate overlay, the build-status caption and the renderer. The character creator, HUD, menu, dialogue,
+  question card, study screen, settings, POI card and level screens had **zero consumers under `app/`** —
+  roughly 4,000 lines reachable only from tests, along with both character renderers, the persistence
+  adapter, the four use cases and the scheduler. No task in the table owned the wiring, which is why nothing
+  did it.
+  **Task 1.20 wired what has data.** The shell, the level select, the HUD and its menu, the POI card, the
+  level error card, the settings screen, the storage warning, the `localStorage` repository, the JSON save
+  codec and `saveProgress`/`loadProgress`/`exportProgress` are all composed and reachable from a cold load.
+  What is still unreachable is unreachable for a stated reason, not for want of a line:
+  - **the character creator** needs a character document with slot *options and labels*. `content/characters/rig.json`
+    lists five player-selectable slot names and their option ids and says the names are the localiser's;
+    `app/ui/copy.ts` has labels for three slots that do not match those five and no option names at all,
+    because naming the six skin ramps is `docs/content-review.md` §8.1 / `OQ-REVIEW-6` and is open. Mounting
+    it means inventing player-facing content, which ADR-0010 forbids.
+  - **Study, the question card and dialogue** need a `ContentRepository`. `content/questions/` holds a
+    verified bank and **nothing implements the port**, so the scheduler has no source and Study could only be
+    mounted showing its *empty* state over thirty verified questions. That is a content adapter, not a UI
+    screen, and it is not in any task's scope today.
+  - **both character renderers** are still constructed by nothing; `level-scene.ts` owns character drawing.
+- **The build-status caption is now dead code.** Nothing under `app/` imports `app/ui/build-status.ts`: the
+  title screen replaced the sentence it existed to say. Under ADR-0015 it should be pruned — the module, its
+  unit suite, and the two comments in `app/adapters/phaser/boot-scene.ts` that point at it. Left in place
+  deliberately, because `boot-scene.ts` belongs to the engine agent and three agents were writing to this
+  tree at once.
+- **The accessibility claim is narrower than it sounds — and is now half as narrow.** The axe checks used to
+  run only against a dev-server harness that mounts components directly. Task 1.20 added the scan of `dist/`:
+  the shipped page, through the door a visitor opens, with `region` and `landmark-one-main` on. That covers
+  the title screen and the map. The level and its modals, and every screen of Exam mode, are still harness
+  only, so no report may yet describe the suite as proving the shipped *game* — only its front door
+  (`OQ-TEST-2`).
 - **The officer is a rounded rectangle and the Peace Tower is not drawn.** `level-scene.ts` paints every
   character with `fillRoundedRect` unconditionally. The reference-critical red serge — the stated reason
   Ottawa was chosen first — is not in the running game.

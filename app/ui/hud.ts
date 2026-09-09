@@ -84,6 +84,16 @@ export interface Hud {
   /** `interact-prompt`. `null` withdraws the offer (`TN-LEVEL-05`). */
   setPrompt(label: string | null): void;
   setStorageWarning(raised: boolean): void;
+  /**
+   * Put focus in the level, on arrival from the map (`TN-FLOW-06`).
+   *
+   * A view swap is this game's page navigation, and focus left on a control that
+   * has just been detached falls to the body — which is where a keyboard user
+   * loses their place and a screen reader goes quiet. The target is the one
+   * `<main>`, not the menu button: the player arrived to *play*, and landing
+   * them on the way out would make the first Tab press an exit.
+   */
+  focus(): void;
   openMenu(): void;
   closeMenu(): void;
   setLocale(locale: UiLocale): void;
@@ -278,6 +288,10 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       else warning.clear();
     },
 
+    focus(): void {
+      main.focus();
+    },
+
     openMenu,
 
     closeMenu(): void {
@@ -318,6 +332,10 @@ function findOrCreateMain(doc: Document, host: HTMLElement): HTMLElement {
   if (existing !== null) return existing;
 
   const main = element(doc, 'main', { id: MAIN_ID, className: 'tn-main' });
+  /* Focusable programmatically, never in the Tab order: `Hud.focus` moves focus
+     here when a level takes the page, and a landmark that answered Tab would put
+     a stop before every control on the way to the first one. */
+  main.tabIndex = -1;
   host.append(main);
   return main;
 }

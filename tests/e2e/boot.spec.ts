@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import sharp from 'sharp';
 
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 /**
  * Slice 0's acceptance test: the empty portrait canvas, served from the
@@ -63,6 +63,34 @@ function expectNear(actual: Rgb, expected: Rgb, label: string): void {
   }
 }
 
+/**
+ * Take the title screen off the page before sampling pixels.
+ *
+ * `app/ui/screen-styles.ts` gives every screen an opaque, full-viewport
+ * background, so since task 1.20 mounted the front door a cold load shows the
+ * title screen and not the boot scene behind it. The two assertions that need
+ * this are about the **renderer** and the page chrome — the sky-to-ground
+ * gradient, the land that continues into the desktop side panels — and sampling
+ * the shell's background colour instead and calling it a horizon would be a test
+ * that passes on the wrong thing.
+ *
+ * Whether the front door should let the game's own sky through is a design
+ * question, not a test's to answer: it is `OQ-TITLE-5` ("what art is behind the
+ * title?"), and letting the canvas through means the card carries the opaque
+ * background instead of the screen, or axe cannot compute contrast at all.
+ */
+async function removeFrontDoor(page: Page): Promise<void> {
+  await expect(page.locator('#tn-shell')).toBeAttached();
+  await page.evaluate(() => {
+    document.getElementById('tn-shell')?.remove();
+  });
+  /* One frame, so what is sampled is what the compositor has actually painted
+     rather than the page one repaint behind. */
+  await page.evaluate(
+    () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())),
+  );
+}
+
 test.describe('boot', () => {
   test('the production build responds at the base path', async ({ page }) => {
     const response = await page.goto('./');
@@ -106,6 +134,7 @@ test.describe('boot', () => {
       been composited returns transparent black. The screenshot is also the
       stronger assertion - it is what the player actually sees.
     */
+    await removeFrontDoor(page);
     const shot = await page.locator('#game canvas').screenshot();
     const { data, info } = await sharp(shot).raw().toBuffer({ resolveWithObject: true });
 
@@ -168,35 +197,94 @@ test.describe('boot', () => {
     expect(mean).toBeLessThan(0.7);
   });
 
-  test('tells the visitor what this build is, in the DOM rather than on the canvas', async ({
-    page,
-  }) => {
+  test('opens on the front door, with something to press, in the DOM', async ({ page }) => {
     await page.goto('./');
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
 
     /*
       A working build that says nothing is indistinguishable from a broken one:
-      slice 0 was reported as a hung loader twice, from two devices. The sentence
-      has to be DOM, because the canvas is `aria-hidden` and a screen-reader user
-      would otherwise get "TrueNorth ready" and nothing else.
-    */
-    const status = page.locator('#tn-build-status');
-    await expect(status).toBeVisible();
-    await expect(status).toHaveText(/\S/);
-    await expect(status).toHaveAttribute('lang', /^(en|fr)$/);
-    await expect(status).not.toHaveAttribute('aria-hidden', /.*/);
+      slice 0 was reported as a hung loader twice, from two devices, and its
+      answer was a caption reading "Foundation build. There is no level to play
+      yet". That caption was then reported a third time — for saying there was
+      nothing to play over a build with two levels in it. Task 1.20 replaced it
+      with the thing it was standing in for: a title screen with a way in.
 
-    // It is a caption, not the announcer: one live region, and this is not it.
-    await expect(status).not.toHaveAttribute('aria-live', /.*/);
+      It has to be DOM, because the canvas is `aria-hidden` and a screen-reader
+      user would otherwise perceive nothing at all.
+    */
+    const title = page.locator('[data-testid="title-screen"]');
+    await expect(title).toBeVisible();
+    await expect(title).toContainText(/\S/);
+    await expect(page.locator('#tn-shell')).toHaveAttribute('lang', /^(en|fr)$/);
+
+    // One landmark, and one announcer that the screen is not.
+    await expect(page.locator('main')).toHaveCount(1);
     await expect(page.locator('[aria-live]')).toHaveCount(1);
+    await expect(title).not.toHaveAttribute('aria-live', /.*/);
 
     // Nothing on the page may promise progress that is not happening.
-    const wording = ((await status.textContent()) ?? '').toLowerCase();
-    for (const forbidden of ['load', 'chargement', 'wait', 'veuillez', '%']) {
+    const wording = ((await title.textContent()) ?? '').toLowerCase();
+    for (const forbidden of ['loading', 'chargement', 'please wait', 'veuillez', '%']) {
       expect(wording, `"${forbidden}" re-creates the impression this fixes`).not.toContain(
         forbidden,
       );
     }
+
+    /* And a way in that is real: one of the three, never Play beside Continue
+       (`TN-TITLE-03`), and pressing it moves. Last, because taking it destroys
+       the screen everything above is about. */
+    const wayIn = page.locator(
+      '[data-testid="title-play"], [data-testid="title-continue"], ' +
+        '[data-testid="title-choose-level"]',
+    );
+    await expect(wayIn).toHaveCount(1);
+    await wayIn.click();
+    await expect(
+      page.locator('[data-testid="level-select"], [data-testid="character-creator"]').first(),
+    ).toBeVisible();
+  });
+
+  test('the front door reaches a playable level, and the way out comes back', async ({
+    page,
+  }) => {
+    /*
+     * The whole route, on the artefact GitHub Pages serves and with no URL
+     * parameter: title -> map -> Ottawa -> map. This is the acceptance criterion
+     * task 1.20 exists for, and the one thing every other test in this file
+     * assumes. Before it, the only way into a level was `?level=`, and a visitor
+     * who typed the address read that there was nothing to play.
+     */
+    await page.goto('./');
+    await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
+
+    await page
+      .locator('[data-testid="title-play"], [data-testid="title-choose-level"]')
+      .first()
+      .click();
+    await expect(page.locator('[data-testid="level-select"]')).toBeVisible();
+
+    const ottawa = page.locator('[data-testid="level-card-ottawa"]');
+    await expect(ottawa, 'Ottawa is built and unlocked, so its card opens').toHaveAttribute(
+      'data-state',
+      'open',
+    );
+    await ottawa.click();
+
+    await expect(page.locator('html')).toHaveAttribute('data-tn-level', 'ready');
+    await expect(page.locator('[data-testid="hud-mode-label"]')).toBeVisible();
+    /* One landmark: the shell's `<main>` is detached while the level's holds
+       the page (`TN-FLOW-08`, axe `landmark-one-main`). */
+    await expect(page.locator('main')).toHaveCount(1);
+
+    /* And back out through the menu, which is the route `TN-FLOW-03` names. */
+    await page.locator('[data-testid="menu-button"]').click();
+    await page.locator('[data-testid="menu-leave"]').click();
+
+    await expect(page.locator('[data-testid="level-select"]')).toBeVisible();
+    await expect(page.locator('html')).not.toHaveAttribute('data-tn-level', /.*/);
+    await expect(page.locator('main')).toHaveCount(1);
+    /* Back on the card they just left, not at the top of the list. */
+    await expect(ottawa).toBeFocused();
   });
 
   test('hides the canvas from assistive technology and exposes a live region', async ({
@@ -213,7 +301,15 @@ test.describe('boot', () => {
     await expect(live).toHaveCount(1);
     await expect(live).toHaveAttribute('role', 'status');
     await expect(live).toHaveAttribute('aria-live', 'polite');
-    await expect(live).toHaveText(/TrueNorth ready/);
+    /*
+      It used to read "TrueNorth ready" — a sentence this file's composition root
+      wrote itself, in English whatever language the player had chosen, on the
+      one channel a screen-reader user has. `app/ui/copy.ts` has no row for it
+      and ADR-0010 does not allow one to be invented here, so it is gone. What
+      speaks now is the screen: the title screen names the game and says what it
+      is for, from the copy table, in the player's language (`TN-TITLE-07`).
+    */
+    await expect(live).toHaveText(/TrueNorth/);
   });
 
   test('stays portrait: no landscape layout, and the game pauses behind the overlay', async ({
@@ -290,6 +386,7 @@ test.describe('boot', () => {
     expect(asFraction(panel.end)).toBeLessThan(1);
 
     // Measured, not assumed: the side panel really is land at that height.
+    await removeFrontDoor(page);
     const panelPixel = await page.screenshot({
       clip: { x: 20, y: 900 * 0.8, width: 8, height: 8 },
     });
