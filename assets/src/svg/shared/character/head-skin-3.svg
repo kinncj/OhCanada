@@ -1,12 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="87" height="96" viewBox="76 37 87 96" shape-rendering="geometricPrecision">
-  <title>Head, neck and the one visible ear in skin ramp 3. Three-quarter view, facing right: cranium behind the face plane, brow and nose on the leading edge, and a single ear set low and well back on the near side. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default tone.</title>
-  <path d="M 104,98 L 104,122 C 104,132 130,132 130,122 L 130,98 C 130,88 104,88 104,98 Z" fill="#894f3b" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <ellipse cx="85" cy="88" rx="7" ry="9.5" fill="#c68550" stroke="#3a2018" stroke-width="3"/>
-  <path d="M 86,76 C 86,52 99,40 120,40 C 141,40 153,52 154,70 L 155,75 C 161,77 162,83 156,86 C 154,90 153,93 152,97 C 152,106 145,113 135,114 C 121,116 107,113 99,106 C 91,99 86,90 86,80 Z" fill="#c68550" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="hd3"><path d="M 86,76 C 86,52 99,40 120,40 C 141,40 153,52 154,70 L 155,75 C 161,77 162,83 156,86 C 154,90 153,93 152,97 C 152,106 145,113 135,114 C 121,116 107,113 99,106 C 91,99 86,90 86,80 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="95" height="100" viewBox="76 35 95 100" shape-rendering="geometricPrecision">
+  <title>Head, neck and the one visible ear in skin ramp 3. Three-quarter view turned about 25 degrees off strict profile, facing right - further than the torso, because a walking head leads the body. The turn is carried by the OUTLINE: a big smooth cranium behind, and a brow, nose, lip and chin profile on the leading edge. One ear, set well back. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default tone.</title>
+  <path d="M 98,96 L 98,124 C 98,134 124,134 124,124 L 124,96 C 124,86 98,86 98,96 Z" fill="#894f3b" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="88" cy="85" rx="10" ry="13" fill="#c68550" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="89" cy="86" rx="3.5" ry="5" fill="#894f3b"/>
+  <path d="M 80,78 C 80,54 92,38 114,38 C 136,38 151,50 154,68 L 155,74 C 162,75 168,80 167,86 C 166,90 161,92 156,93 C 155,97 154,100 153,103 C 152,110 146,115 138,117 C 126,120 110,117 101,111 C 89,103 80,93 80,82 Z" fill="#c68550" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="hd3"><path d="M 80,78 C 80,54 92,38 114,38 C 136,38 151,50 154,68 L 155,74 C 162,75 168,80 167,86 C 166,90 161,92 156,93 C 155,97 154,100 153,103 C 152,110 146,115 138,117 C 126,120 110,117 101,111 C 89,103 80,93 80,82 Z"/></clipPath></defs>
   <g clip-path="url(#hd3)">
-    <ellipse cx="100" cy="60" rx="24" ry="24" fill="#d1b692"/>
-    <ellipse cx="156" cy="122" rx="24" ry="20" fill="#894f3b"/>
-    <ellipse cx="124" cy="120" rx="22" ry="10" fill="#16203a" opacity="0.18"/>
+    <ellipse cx="98" cy="54" rx="26" ry="22" fill="#d1b692"/>
+    <ellipse cx="152" cy="126" rx="26" ry="20" fill="#894f3b"/>
+    <ellipse cx="120" cy="118" rx="24" ry="10" fill="#16203a" opacity="0.18"/>
   </g>
 </svg>

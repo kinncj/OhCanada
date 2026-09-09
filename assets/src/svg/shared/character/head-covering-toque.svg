@@ -1,14 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="90" height="76" viewBox="78 -6 90 76" shape-rendering="geometricPrecision">
-  <title>Knitted toque with a folded band and a pom, three-quarter view facing right. The band follows the brow line at an angle and stops ABOVE the brows - a band drawn over them hides the expression, which is the whole of a character at phone size. Every hair shape reads under it.</title>
-  <path d="M 84,62 C 80,34 96,12 120,12 C 146,12 160,32 160,58 C 160,66 84,70 84,62 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="toque"><path d="M 84,62 C 80,34 96,12 120,12 C 146,12 160,32 160,58 C 160,66 84,70 84,62 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="87" viewBox="66 1 100 87" shape-rendering="geometricPrecision">
+  <title>Knitted toque with a folded band and a pom, three-quarter view facing right. The band FOLLOWS THE BROW LINE, which on a turned head runs downhill from the leading edge to the back, and the pom sits well back on the crown - a level band and a centred pom read as a front view and undo the head. The band stops ABOVE the brows: a band drawn over them hides the expression, which is the whole of a character at phone size. Every hair shape reads under it.</title>
+  <path d="M 74,75 C 68,47 84,17 116,17 C 146,17 160,39 160,63 C 160,73 74,85 74,75 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="toque"><path d="M 74,75 C 68,47 84,17 116,17 C 146,17 160,39 160,63 C 160,73 74,85 74,75 Z"/></clipPath></defs>
   <g clip-path="url(#toque)">
-    <path d="M 88,60 C 86,38 98,18 116,16 C 122,16 124,22 120,30 C 112,42 104,52 100,64 Z" fill="#e27468"/>
-    <path d="M 148,26 C 158,36 160,48 160,60 L 140,62 C 142,48 144,34 148,26 Z" fill="#941835"/>
-    <ellipse cx="120" cy="60" rx="36" ry="8" fill="#16203a" opacity="0.18"/>
+    <path d="M 80,71 C 76,49 88,23 108,21 C 114,21 116,27 112,35 C 102,49 92,61 90,77 Z" fill="#e27468"/>
+    <path d="M 146,31 C 157,43 160,53 160,65 L 138,69 C 141,53 142,39 146,31 Z" fill="#941835"/>
+    <ellipse cx="116" cy="71" rx="37" ry="8" fill="#16203a" opacity="0.18"/>
   </g>
-  <path d="M 86,44 L 158,42 C 166,42 168,66 160,66 L 86,68 C 78,68 78,44 86,44 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 90,56 L 160,54 C 164,54 165,66 161,66 L 90,68 C 86,68 86,56 90,56 Z" fill="#c2d6e8"/>
-  <ellipse cx="104" cy="10" rx="16" ry="14" fill="#e6eff7" stroke="#3a2018" stroke-width="4"/>
-  <ellipse cx="98" cy="6" rx="8" ry="7" fill="#ffffff"/>
+  <path d="M 76,63 L 156,51 C 164,49 167,71 159,73 L 78,85 C 70,87 68,65 76,63 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 79,75 L 157,62 C 161,61 163,71 159,73 L 81,85 C 77,86 75,76 79,75 Z" fill="#c2d6e8"/>
+  <ellipse cx="84" cy="17" rx="16" ry="14" fill="#e6eff7" stroke="#3a2018" stroke-width="4"/>
+  <ellipse cx="78" cy="13" rx="8" ry="7" fill="#ffffff"/>
 </svg>

@@ -38,6 +38,14 @@ and still wider than the shoulder, because that taper is what makes this silhoue
 a brown blob with teeth, and a beaver seen three-quarter has a **projecting muzzle** on the leading edge with
 the incisors hanging under it in profile. The two load-bearing features in §3 both got stronger for free.
 
+**This head then became the reference for the other two.** When the first pass shipped, the guide read as
+travelling at 390 px and both humans read as standing still looking at the player — same render, same scale,
+so the comparison cost nothing and settled the argument. What the beaver had and they did not was an
+asymmetric OUTLINE: a muzzle projecting 25 px past the cranium, against a symmetric egg with a 6 px nose
+drawn on it. The human heads were rebuilt the way this one already was. A design sheet is not usually the
+place to record that another character copied you, but the mechanism is worth keeping: **the three figures
+share a rig and a canvas, so any one of them that is right is a free control for the other two.**
+
 Two things make it work without a proportion break:
 
 - **`head-shell-beaver` is the same head box.** Cranium inside the human cranium's outline, and **one ear
@@ -136,13 +144,28 @@ hit it again.** The packer fills full-height columns, so what decides is not the
 fits the column that is open. Anyone adding a character part should read the `texture-memory` line before
 and after, and treat a jump in the *page dimensions* as the signal, not the file size on disk.
 
-**The three-quarter redraw ran that cliff backwards.** Turning every character to face its direction of
-travel (`art-bible.md` §7.1) changed no frame count — 60 before, 60 after — but a turned figure is a
-narrower figure, and 60 narrower windows freed a whole column: the shared page went from **1410 × 2044
-(10.99 MiB) to 1168 × 2044 (9.11 MiB)**, and Halifax from **26.10 MiB (77 %) to 24.21 MiB (71 %)** of its
-34 MiB budget. **−1.88 MiB of decoded texture at 2×, on every level, from a drawing decision.** The lesson
-is the same one in the other direction: the page dimensions are the number to watch, and they are decided by
-column packing rather than by total area — the total source area moved only −0.5 %.
+**The three-quarter redraw ran that cliff backwards, and then gave half of it back.** Turning every
+character to face its direction of travel (`art-bible.md` §7.1) changed no frame count — 60 before, 60
+after. The body turn alone made every figure narrower and freed a whole column: **1410 × 2044 (10.99 MiB) →
+1168 × 2044 (9.11 MiB)**, Halifax **77 % → 71 %**. Correcting the head then took some of it back, because
+the head grew a 16 px nose and the hair grew a swept-back mass: source area **+3.2 %**, and the page landed
+at **1271 × 2048 (9.93 MiB)**, Halifax **74 %**. Net against the commit before this work: **−1.06 MiB of
+decoded texture at 2× on every level**, and a character that reads as travelling.
+
+**The last few pixels of three frames were chosen against the packer, not by eye, and that should be said
+rather than hidden.** In the neighbourhood this art lands in, a 2 px change in ONE frame moves the page by
+several hundred pixels and 3–4 MiB, in both directions: shaving `torso-beaver` by 6 px made the page *worse*
+by 5 MiB. Total area predicts almost nothing — occupancy swung between 52 % and 70 % across variants whose
+areas differed by 2 %. So `hair-long` (95 × 138), `hair-bob` (96 wide) and `hair-coil` (93 wide) are at
+dimensions found by packing candidates and measuring, and the numbers are recorded here because they look
+arbitrary and are. **They are not load-bearing on the drawing** — each was already within a few pixels of
+where the art wanted it — and anyone who needs one of them larger should take it and re-measure rather than
+treat this paragraph as a constraint.
+
+Whoever reads this next: **the fast way to do that search is not `make assets`.** The shared atlas is
+exactly the 60 character frames, so a throwaway script that rasterises them at 2× and calls `packAsync` with
+the options in `scripts/assets.mjs` reproduces the page size in seconds instead of a minute, and lets a
+candidate be tested by cropping the PNGs before any SVG is edited.
 
 ## 6. References
 

@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="92" height="58" viewBox="75 21 92 58" shape-rendering="geometricPrecision">
-  <title>Hair, a rounded coil worn close, full at the crown, ramp hair-brown. Three-quarter view: the mass sits behind the face plane and the fringe clears the brow line, because hair draws over the head and under the face. Shape and colour are independent slots: every shape is offered with every colour and with every skin tone.</title>
-  <path d="M 81,76 C 73,48 88,24 120,24 C 152,24 164,48 163,74 C 159,63 154,55 145,51 C 130,44 110,49 99,60 C 91,67 85,70 81,76 Z" fill="#5f3a20" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="hr-coil"><path d="M 81,76 C 73,48 88,24 120,24 C 152,24 164,48 163,74 C 159,63 154,55 145,51 C 130,44 110,49 99,60 C 91,67 85,70 81,76 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="93" height="70" viewBox="70 19 93 70" shape-rendering="geometricPrecision">
+  <title>Hair, a rounded coil worn close, full at the crown and full behind, ramp hair-brown. Three-quarter view: the mass sits BEHIND the face plane and reaches lower at the back than at the front, and the fringe sweeps forward to clear the brow line - hair draws over the head and under the face, and a symmetric cap reads as a front view whatever the head under it is doing. Shape and colour are independent slots: every shape is offered with every colour and with every skin tone.</title>
+  <path d="M 76,86 C 67,54 85,22 116,22 C 146,22 161,46 160,72 C 156,60 151,51 142,47 C 127,40 106,47 94,60 C 86,70 80,78 76,86 Z" fill="#5f3a20" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="hr-coil"><path d="M 76,86 C 67,54 85,22 116,22 C 146,22 161,46 160,72 C 156,60 151,51 142,47 C 127,40 106,47 94,60 C 86,70 80,78 76,86 Z"/></clipPath></defs>
   <g clip-path="url(#hr-coil)">
-    <ellipse cx="92" cy="36" rx="26" ry="22" fill="#936a38"/>
-    <ellipse cx="162" cy="76" rx="12" ry="18" fill="#21110c"/>
+    <ellipse cx="94" cy="36" rx="25" ry="21" fill="#936a38"/>
+    <ellipse cx="79" cy="78" rx="13" ry="15" fill="#21110c"/>
   </g>
 </svg>

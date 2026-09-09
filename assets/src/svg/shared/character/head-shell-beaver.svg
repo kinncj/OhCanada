@@ -1,22 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="105" height="110" viewBox="76 29 105 110" shape-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" width="111" height="113" viewBox="74 26 111 113" shape-rendering="geometricPrecision">
   <title>The guide’s head, three-quarter view facing right: cranium inside the human head box, small rounded ears set low and well back at the side of the skull, and the muzzle projecting on the leading edge with two oversized white incisors hanging below the shared mouth line. Drawn above hair and below face, so the guide plays the game’s four expressions rather than a second set. The incisors are white rather than the animal’s orange: at ship size each tooth is about 4 px and an orange tooth on a felt snout pad disappears. That is a legibility exaggeration of a real feature, written down rather than left looking like accuracy.</title>
   <ellipse cx="99" cy="44" rx="11" ry="10" fill="#401812" stroke="#3a2018" stroke-width="4"/>
   <path d="M 102,100 L 102,128 C 102,138 140,138 140,128 L 140,100 C 140,90 102,90 102,100 Z" fill="#401812" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 80,88 C 78,56 92,33 120,32 C 142,31 157,47 161,70 C 169,72 176,79 176,90 C 176,101 166,107 154,108 C 150,118 138,124 124,124 C 104,124 84,110 80,96 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="bsh"><path d="M 80,88 C 78,56 92,33 120,32 C 142,31 157,47 161,70 C 169,72 176,79 176,90 C 176,101 166,107 154,108 C 150,118 138,124 124,124 C 104,124 84,110 80,96 Z"/></clipPath></defs>
+  <path d="M 78,90 C 76,52 92,30 120,29 C 143,28 158,46 162,70 C 170,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,124 84,110 80,96 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="bsh"><path d="M 78,90 C 76,52 92,30 120,29 C 143,28 158,46 162,70 C 170,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,124 84,110 80,96 Z"/></clipPath></defs>
   <g clip-path="url(#bsh)">
-    <ellipse cx="96" cy="58" rx="24" ry="20" fill="#b4733b"/>
+    <ellipse cx="96" cy="56" rx="25" ry="22" fill="#b4733b"/>
     <ellipse cx="152" cy="118" rx="24" ry="16" fill="#401812"/>
     <ellipse cx="122" cy="108" rx="30" ry="16" fill="#c29455"/>
     <ellipse cx="124" cy="122" rx="26" ry="10" fill="#16203a" opacity="0.18"/>
   </g>
-  <path d="M 148,80 C 162,80 176,86 176,95 C 176,106 160,111 146,111 C 133,111 127,105 127,95 C 127,85 136,80 148,80 Z" fill="#c29455" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="bmz"><path d="M 148,80 C 162,80 176,86 176,95 C 176,106 160,111 146,111 C 133,111 127,105 127,95 C 127,85 136,80 148,80 Z"/></clipPath></defs>
+  <path d="M 152,83 C 166,83 180,89 180,99 C 180,110 164,115 150,115 C 137,115 131,109 131,99 C 131,89 140,83 152,83 Z" fill="#c29455" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="bmz"><path d="M 152,83 C 166,83 180,89 180,99 C 180,110 164,115 150,115 C 137,115 131,109 131,99 C 131,89 140,83 152,83 Z"/></clipPath></defs>
   <g clip-path="url(#bmz)">
-    <ellipse cx="142" cy="86" rx="17" ry="8" fill="#d5c18e"/>
-    <ellipse cx="164" cy="109" rx="14" ry="8" fill="#965630"/>
+    <ellipse cx="146" cy="90" rx="17" ry="8" fill="#d5c18e"/>
+    <ellipse cx="168" cy="113" rx="14" ry="8" fill="#965630"/>
   </g>
-  <ellipse cx="171" cy="88" rx="8" ry="6.5" fill="#242b33" stroke="#3a2018" stroke-width="3"/>
-  <path d="M 140,106 L 149,106 L 149,120 C 149,124 140,124 140,120 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 151,106 L 160,106 L 160,119 C 160,123 151,123 151,119 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="175" cy="92" rx="8" ry="6.5" fill="#242b33" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 143,110 L 152,110 L 152,125 C 152,129 143,129 143,125 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 154,110 L 163,110 L 163,124 C 163,128 154,128 154,124 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

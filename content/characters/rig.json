@@ -3704,37 +3704,37 @@
     },
     "character-face-happy": {
       "source": "src/svg/shared/character/face-happy.svg",
-      "x": 117,
+      "x": 120,
       "y": 57,
-      "w": 35,
-      "h": 46
+      "w": 41,
+      "h": 53
     },
     "character-face-neutral": {
       "source": "src/svg/shared/character/face-neutral.svg",
-      "x": 117,
+      "x": 120,
       "y": 60,
-      "w": 35,
-      "h": 41
+      "w": 41,
+      "h": 49
     },
     "character-face-surprised": {
       "source": "src/svg/shared/character/face-surprised.svg",
-      "x": 116,
+      "x": 119,
       "y": 53,
-      "w": 37,
-      "h": 55
+      "w": 42,
+      "h": 63
     },
     "character-face-thinking": {
       "source": "src/svg/shared/character/face-thinking.svg",
-      "x": 117,
+      "x": 120,
       "y": 56,
-      "w": 35,
-      "h": 43
+      "w": 41,
+      "h": 52
     },
     "character-feature-glasses": {
       "source": "src/svg/shared/character/feature-glasses.svg",
-      "x": 98,
+      "x": 90,
       "y": 64,
-      "w": 56,
+      "w": 66,
       "h": 23
     },
     "character-foot-l-beaver": {
@@ -3788,143 +3788,143 @@
     },
     "character-hair-bob-black": {
       "source": "src/svg/shared/character/hair-bob-black.svg",
-      "x": 70,
-      "y": 25,
+      "x": 67,
+      "y": 23,
       "w": 95,
-      "h": 98
+      "h": 97
     },
     "character-hair-bob-blond": {
       "source": "src/svg/shared/character/hair-bob-blond.svg",
-      "x": 70,
-      "y": 25,
+      "x": 67,
+      "y": 23,
       "w": 95,
-      "h": 98
+      "h": 97
     },
     "character-hair-bob-brown": {
       "source": "src/svg/shared/character/hair-bob-brown.svg",
-      "x": 70,
-      "y": 25,
+      "x": 67,
+      "y": 23,
       "w": 95,
-      "h": 98
+      "h": 97
     },
     "character-hair-bob-grey": {
       "source": "src/svg/shared/character/hair-bob-grey.svg",
-      "x": 70,
-      "y": 25,
+      "x": 67,
+      "y": 23,
       "w": 95,
-      "h": 98
+      "h": 97
     },
     "character-hair-bob-red": {
       "source": "src/svg/shared/character/hair-bob-red.svg",
-      "x": 70,
-      "y": 25,
+      "x": 67,
+      "y": 23,
       "w": 95,
-      "h": 98
+      "h": 97
     },
     "character-hair-coil-black": {
       "source": "src/svg/shared/character/hair-coil-black.svg",
-      "x": 75,
-      "y": 21,
-      "w": 92,
-      "h": 58
+      "x": 70,
+      "y": 19,
+      "w": 93,
+      "h": 70
     },
     "character-hair-coil-blond": {
       "source": "src/svg/shared/character/hair-coil-blond.svg",
-      "x": 75,
-      "y": 21,
-      "w": 92,
-      "h": 58
+      "x": 70,
+      "y": 19,
+      "w": 93,
+      "h": 70
     },
     "character-hair-coil-brown": {
       "source": "src/svg/shared/character/hair-coil-brown.svg",
-      "x": 75,
-      "y": 21,
-      "w": 92,
-      "h": 58
+      "x": 70,
+      "y": 19,
+      "w": 93,
+      "h": 70
     },
     "character-hair-coil-grey": {
       "source": "src/svg/shared/character/hair-coil-grey.svg",
-      "x": 75,
-      "y": 21,
-      "w": 92,
-      "h": 58
+      "x": 70,
+      "y": 19,
+      "w": 93,
+      "h": 70
     },
     "character-hair-coil-red": {
       "source": "src/svg/shared/character/hair-coil-red.svg",
-      "x": 75,
-      "y": 21,
-      "w": 92,
-      "h": 58
+      "x": 70,
+      "y": 19,
+      "w": 93,
+      "h": 70
     },
     "character-hair-crop-black": {
       "source": "src/svg/shared/character/hair-crop-black.svg",
-      "x": 80,
-      "y": 29,
-      "w": 82,
-      "h": 48
+      "x": 75,
+      "y": 27,
+      "w": 86,
+      "h": 60
     },
     "character-hair-crop-blond": {
       "source": "src/svg/shared/character/hair-crop-blond.svg",
-      "x": 80,
-      "y": 29,
-      "w": 82,
-      "h": 48
+      "x": 75,
+      "y": 27,
+      "w": 86,
+      "h": 60
     },
     "character-hair-crop-brown": {
       "source": "src/svg/shared/character/hair-crop-brown.svg",
-      "x": 80,
-      "y": 29,
-      "w": 82,
-      "h": 48
+      "x": 75,
+      "y": 27,
+      "w": 86,
+      "h": 60
     },
     "character-hair-crop-grey": {
       "source": "src/svg/shared/character/hair-crop-grey.svg",
-      "x": 80,
-      "y": 29,
-      "w": 82,
-      "h": 48
+      "x": 75,
+      "y": 27,
+      "w": 86,
+      "h": 60
     },
     "character-hair-crop-red": {
       "source": "src/svg/shared/character/hair-crop-red.svg",
-      "x": 80,
-      "y": 29,
-      "w": 82,
-      "h": 48
+      "x": 75,
+      "y": 27,
+      "w": 86,
+      "h": 60
     },
     "character-hair-long-black": {
       "source": "src/svg/shared/character/hair-long-black.svg",
       "x": 65,
-      "y": 21,
-      "w": 101,
-      "h": 155
+      "y": 19,
+      "w": 95,
+      "h": 138
     },
     "character-hair-long-blond": {
       "source": "src/svg/shared/character/hair-long-blond.svg",
       "x": 65,
-      "y": 21,
-      "w": 101,
-      "h": 155
+      "y": 19,
+      "w": 95,
+      "h": 138
     },
     "character-hair-long-brown": {
       "source": "src/svg/shared/character/hair-long-brown.svg",
       "x": 65,
-      "y": 21,
-      "w": 101,
-      "h": 155
+      "y": 19,
+      "w": 95,
+      "h": 138
     },
     "character-hair-long-grey": {
       "source": "src/svg/shared/character/hair-long-grey.svg",
       "x": 65,
-      "y": 21,
-      "w": 101,
-      "h": 155
+      "y": 19,
+      "w": 95,
+      "h": 138
     },
     "character-hair-long-red": {
       "source": "src/svg/shared/character/hair-long-red.svg",
       "x": 65,
-      "y": 21,
-      "w": 101,
-      "h": 155
+      "y": 19,
+      "w": 95,
+      "h": 138
     },
     "character-hand-beaver": {
       "source": "src/svg/shared/character/hand-beaver.svg",
@@ -3950,65 +3950,65 @@
     "character-hat-serge": {
       "source": "src/svg/shared/character/hat-serge.svg",
       "x": 73,
-      "y": 11,
-      "w": 98,
-      "h": 61
+      "y": 2,
+      "w": 106,
+      "h": 66
     },
     "character-head-covering-toque": {
       "source": "src/svg/shared/character/head-covering-toque.svg",
-      "x": 78,
-      "y": -6,
-      "w": 90,
-      "h": 76
+      "x": 66,
+      "y": 1,
+      "w": 100,
+      "h": 87
     },
     "character-head-shell-beaver": {
       "source": "src/svg/shared/character/head-shell-beaver.svg",
-      "x": 76,
-      "y": 29,
-      "w": 105,
-      "h": 110
+      "x": 74,
+      "y": 26,
+      "w": 111,
+      "h": 113
     },
     "character-head-skin-1": {
       "source": "src/svg/shared/character/head-skin-1.svg",
       "x": 76,
-      "y": 37,
-      "w": 87,
-      "h": 96
+      "y": 35,
+      "w": 95,
+      "h": 100
     },
     "character-head-skin-2": {
       "source": "src/svg/shared/character/head-skin-2.svg",
       "x": 76,
-      "y": 37,
-      "w": 87,
-      "h": 96
+      "y": 35,
+      "w": 95,
+      "h": 100
     },
     "character-head-skin-3": {
       "source": "src/svg/shared/character/head-skin-3.svg",
       "x": 76,
-      "y": 37,
-      "w": 87,
-      "h": 96
+      "y": 35,
+      "w": 95,
+      "h": 100
     },
     "character-head-skin-4": {
       "source": "src/svg/shared/character/head-skin-4.svg",
       "x": 76,
-      "y": 37,
-      "w": 87,
-      "h": 96
+      "y": 35,
+      "w": 95,
+      "h": 100
     },
     "character-head-skin-5": {
       "source": "src/svg/shared/character/head-skin-5.svg",
       "x": 76,
-      "y": 37,
-      "w": 87,
-      "h": 96
+      "y": 35,
+      "w": 95,
+      "h": 100
     },
     "character-head-skin-6": {
       "source": "src/svg/shared/character/head-skin-6.svg",
       "x": 76,
-      "y": 37,
-      "w": 87,
-      "h": 96
+      "y": 35,
+      "w": 95,
+      "h": 100
     },
     "character-leg-lower-beaver": {
       "source": "src/svg/shared/character/leg-lower-beaver.svg",

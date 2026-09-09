@@ -49,11 +49,13 @@ Every part is authored in one 240 × 470 coordinate system at design resolution:
 | sole | y = 460 |
 | height | 420 px = **6 heads of 70 px**, the canon in `art-bible.md` §7 |
 | ground line | world y = 1280 (`ottawa-level.md` §3) |
-| view | **three-quarter, canonical facing RIGHT**, body turned ≈ 40° off strict profile toward the viewer |
+| view | **three-quarter, canonical facing RIGHT** — body ≈ 40° off strict profile, **head ≈ 25°** |
 
 **The view is part of the rig, not a drawing preference.** This is a side-scroller: every character traverses
 along the screen, so the figure is turned toward its direction of travel and `setFacing('left')` mirrors the
-whole composite. `art-bible.md` §7.1 carries the reasoning and the list of cues that carry the turn; what
+whole composite. **The head is turned further than the body**, which is what a walking head does and what
+lets the officer keep the chest plane its cross-strap needs; it is also the half of the turn that decides
+whether the character reads as travelling, and it was the half the first pass missed. `art-bible.md` §7.1 carries the reasoning and the list of cues that carry the turn; what
 this document has to say about it is structural, because in a turned figure **screen x is the fore-aft
 axis**. That is why the walk cycle reads: a limb swinging fore and aft swings horizontally on screen, at
 full amplitude, instead of foreshortening to nothing as it did front-on.
@@ -233,7 +235,14 @@ legs 12 px rather than 26, because a lateral offset in a turned body projects to
 sleeves 34 px apart overlap heavily at rest — which is what a three-quarter figure looks like — and the walk
 cycle separates them by swinging them fore and aft, which in this view is horizontally.
 
-**`hair` sits under `face` and that is deliberate.** It used to be over it. `head-shell` has to be above
+****The head parts share one pivot at (120, 112) and do NOT share an angle with the torso.** Nothing in the
+rig expresses "the head is turned 25° and the body 40°" — that difference is baked into the drawings, in
+`head-{skin}`, `hair-*`, `face-*`, `hat-serge`, `head-covering-toque`, `feature-glasses` and
+`head-shell-beaver`, and the keyframe `rotation` on those parts is a small nod on top of it. So a redraw of
+any ONE of those parts has to hold the same head angle as the other seven or the head comes apart, and that
+is not something a gate can check. It is written here because it is the least obvious coupling in the rig.
+
+`hair` sits under `face` and that is deliberate.** It used to be over it. `head-shell` has to be above
 `hair` (it covers the head completely) and below `face` (so the shared expressions play on the guide rather
 than being redrawn for it), and both cannot be true with hair on top. Every hair shape was re-rendered
 against every expression after the move; the fringes read the same, because a hair shape has a face opening

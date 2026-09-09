@@ -19,6 +19,16 @@ The renderer already mirrored on direction (`setFacing`, and `sprite-character-r
 whole composite about `centreX`), so the turn needed no engine change at all. A front-on figure could never
 have used that mirror for anything.
 
+**This took two passes, and the second one is the instructive half.** The first turned the body and left the
+head at the torso's angle. Rendered at 390 px beside the beaver, the animal read as travelling and the
+player read as standing still looking at the player — the original defect, surviving in the only part of the
+figure anybody looks at. The head now turns to about 25° off strict profile against the torso's 40°, and the
+turn is carried by an **asymmetric head outline** — cranium behind, brow, nose, lip and chin in front, the
+nose projecting 16 px — rather than by cues drawn on a symmetric egg. Every cue in the first pass was
+defensible in the markup and 2 px on a phone. The hair moved with it: the mass sits at the back and the
+fringe sweeps forward, because at this size hair is a large flat colour block and a symmetric cap says
+"front view" louder than a drawn cue says otherwise.
+
 ### 1.2 The shoulders
 
 `art-bible.md` §7.2 has the measurement and the photograph. The short version: the canon said *shoulder
@@ -91,6 +101,11 @@ the wearer's right. Recorded because it looks like a mistake either way and it i
   in it. The hood lies around the neck behind the head, which is where the lobed white trim comes from.
 
 ## 6. The two-size test, and what it is for
+
+**Render at 390 px, three figures side by side, and ask whether a stranger would say they are walking or
+standing.** That is the test, and 1× is not it: the front-facing head passed every 1× render it was ever
+shown in and failed the first phone-width one. `phone-390.png`-style mock-ups over a real level, and a
+magnified ship-pixel strip, are what the two passes of this redraw were judged from.
 
 Rendered walking, at the direction it walks, at 1×, 0.5×, 0.36× and 0.25×. At 0.25× the parka survives as:
 blue mass, red mark at the neck, two red marks at hip height, white band at the hem, white band at each

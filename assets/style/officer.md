@@ -30,9 +30,11 @@ its widest** against the parka's 108 and the guide's 112, all inside one declare
 identifying feature in §2 is untouched, and the officer was re-rendered walking, at four sizes down to 0.25×,
 before this was written: red mass, dark hat brim, dark legs, yellow stripe, all still there.
 
-**And it turned.** Every character is now drawn three-quarter, facing its direction of travel
-(`art-bible.md` §7.1). For this character that is a gain rather than a cost, and it is worth saying why the
-alternative was refused: **a strict profile would have destroyed the Sam Browne.** Its shoulder-to-hip
+**And it turned.** Every character is now drawn three-quarter, facing its direction of travel, with the
+**head turned further than the body** — about 25° off strict profile against the torso's 40°, which is what
+a walking head does (`art-bible.md` §7.1). Splitting the two angles is what lets this character have both: a
+head that plainly reads as travelling at phone size, and a chest plane wide enough to carry the diagonal.
+It is worth saying why the alternative was refused: **a strict profile would have destroyed the Sam Browne.** Its shoulder-to-hip
 diagonal is half of this character's identity and needs a chest to run across. Three-quarter keeps the whole
 chest plane — the button row, both pocket flaps, the lanyard and the diagonal — on the leading edge, and the
 diagonal still runs upper-left to lower-right exactly as it does in
@@ -58,7 +60,7 @@ render with no label must say *Mountie* or *Canadian police officer*.
 | 1 | **Scarlet tunic** | Single-breasted, high standing collar, fitted to the waist then flaring into a short skirt below the belt. Two breast pockets with **pointed (scalloped) flaps**. Two lower pockets, mostly hidden by the belt. | `serge` |
 | 2 | **Dark collar and shoulder straps** | Midnight blue, distinctly darker than the tunic. The colour break at the collar and at the shoulders is what stops the tunic reading as a plain red coat. | `navy` |
 | 3 | **Brass buttons** | A single row down the centre front, plus one on each pocket flap. Read them as a rhythm of round brass dots, not as modelled buttons. | `brass` |
-| 4 | **Wide-brimmed hat** | Tan felt. Flat, wide, level brim. Crown pinched to a point, with a fore-and-aft crease. Brown leather band with a small buckle. The brim silhouette is the single strongest read at small size — draw it **wider than feels right**, about 1.4 head-widths. | `felt`, `leather` |
+| 4 | **Wide-brimmed hat** | Tan felt. Flat, wide, level brim, seen obliquely so it carries **more brim in front of the face than behind** and the crown sits back over the occiput — the asymmetry is doing turn work as well as hat work. Crown pinched to a point, with a fore-and-aft crease. Brown leather band with a small buckle. The brim silhouette is the single strongest read at small size — draw it **wider than feels right**, about 1.4 head-widths. It must clear the brows: the brim was drawn once at a height that cut the eyes, which is the same defect as the player's toque covering the brows. | `felt`, `leather` |
 | 5 | **Brown leather belt with a cross-strap** | Wide waist belt, brass buckle. One diagonal strap from the **wearer's right shoulder** down to the left hip. This is a Sam Browne and the diagonal is half its identity — a plain waist belt loses it. | `leather`, `brass` |
 | 6 | **Dark breeches with a yellow-gold leg stripe** | Midnight blue, cut full at the thigh and close below the knee. One broad stripe down the outer seam, running the full leg. | `navy`, `brass` |
 | 7 | **Brown riding boots** | High, to just below the knee, brown leather, with a strap and buckle at the ankle. Breeches tuck into the boots. | `leather` |

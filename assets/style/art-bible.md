@@ -267,6 +267,28 @@ screen, so a character drawn front-on, looking out at the player, is wrong by co
 menu portrait somebody slid sideways. **The canonical facing is RIGHT, with the body turned about 40° off
 strict profile toward the viewer**, and `setFacing('left')` mirrors the whole composite.
 
+**The head turns FURTHER than the body: about 25° off strict profile against the torso's 40°.** That is not
+a compromise, it is what people do when they walk — the head leads. It also protects the officer's Sam
+Browne, which needs the chest plane the torso keeps.
+
+The first pass got this wrong and it is worth recording how, because the mistake was invisible in every SVG
+and obvious in one render. The body turned and the head was left at the torso's shallower angle. Rendered at
+390 px beside the beaver guide, whose muzzle projects 25 px past its cranium, the animal read as travelling
+and both humans read as standing still looking out at the player — which is the original defect, surviving
+in the one part of the figure a viewer actually looks at.
+
+**What carries a turned head at phone size is the SILHOUETTE, not cues drawn on it.** Every cue in the first
+pass was defensible in the markup and sub-pixel on a phone: a 6 px nose bump is 2 px at 390 px, a far eye
+12 px from the cheek edge is not crowded, and an ear inside the head outline is an ink line on skin. The head
+is now built the way the beaver's always was — an ASYMMETRIC OUTLINE, big smooth cranium behind, brow, nose,
+lip and chin in front — with the drawn cues supporting it rather than carrying it.
+
+**Where the line falls, said out loud because the next redraw will want to cross it: the far eye must keep a
+visible white sclera and a whole ink pupil.** Four expressions differ in the shape of two brows and two
+pupils, so a head turned far enough to occlude the far eye behind the nose deletes half the expression
+vocabulary, and no gain in silhouette buys that back. At 25° the far eye is 4.2 px wide with a 2.8 px pupil,
+6 px clear of the cheek edge. That is the stop.
+
 Three-quarter rather than strict profile, and the reason is not taste:
 
 - **The expression system needs two eyes.** Four expressions differ in the shape of brow, pupil and mouth
@@ -279,18 +301,26 @@ Three-quarter rather than strict profile, and the reason is not taste:
 
 What carries the turn, and what a redraw must not quietly drop:
 
-| cue | where |
-|---|---|
-| chest plane and its fastening on the LEADING edge, back on the trailing edge | every torso |
-| ONE ear, low and well back on the near side | `head-skin-*`, `head-shell-beaver` |
-| a brow-and-nose bump on the leading silhouette edge, 8 px | `head-skin-*` |
-| eyes crowded toward the leading edge, far eye foreshortened and near the cheek edge | `face-*` |
-| both feet pointing the way the character travels, far foot shorter | `foot-r-*`, `foot-l-*` |
+| cue | where | carries it at 390 px? |
+|---|---|---|
+| an ASYMMETRIC head outline: cranium behind, brow, nose, lip and chin in front, the nose projecting 16 px | `head-skin-*`, `head-shell-beaver` | **yes — this is the one that does the work** |
+| the hair mass at the BACK, lower behind than in front, fringe sweeping forward to the brow | every `hair-*` | yes: at this size hair is a large flat colour block, and a symmetric cap says "front view" louder than any drawn cue says otherwise |
+| chest plane and its fastening on the LEADING edge, back on the trailing edge | every torso | yes |
+| both feet pointing the way the character travels, far foot shorter | `foot-r-*`, `foot-l-*` | yes |
+| the hat brim swung forward, the toque band following the brow line downhill to the back | `hat-serge`, `head-covering-toque` | yes |
+| eyes crowded into the front third, 15 px apart, far eye foreshortened 6 px off the cheek edge | `face-*` | at 1× and 0.5× |
+| ONE ear, set well back on the near side | `head-skin-*`, `head-shell-beaver` | no, and that is fine — it is a supporting cue, not a load-bearing one |
 
 **The near side is the wearer's RIGHT.** A person facing east, seen from the south, shows you their right
 side; their right shoulder lands *west* of their spine on your screen. So `-r` parts draw IN FRONT (z 9–11
 and 20–22) and `-l` parts behind, and the near shoulder sits at x = 103 while the far one — the leading,
 chest-side shoulder — sits at x = 137.
+
+**How to judge it: render the three figures side by side at 390 px and ask whether a stranger would say they
+are walking or standing.** Not at 1×, where everything reads and nothing is decided; at the width the game
+actually ships on. Three of this character's defects — a scarf reading as the officer's sash, a hood ruff
+reading as shoulder pads, a toque covering the brows — were invisible in the SVG and obvious in a render,
+and the fourth, a front-facing head on a turned body, was invisible in a 1× render and obvious at 390 px.
 
 ### 7.2 The measurements, and where the widths come from
 
@@ -325,8 +355,10 @@ reads, and 22 % over even in head units. What ships now is 96 px bare (**0.229**
 
 **A garment may add bulk; a body may not.** A parka genuinely broadens the shoulders and a fitted tunic
 barely does, so the costumes are allowed to differ *within one budget*: the widest point of the dressed
-figure at rest is **108 px on the parka, 104 px on the serge and 112 px at the beaver's waist** (its paddle
-tail is a limb held out to one side and is measured separately, at 132 px), all inside the 116 px cap. What
+figure at rest is **108 px on the parka, 104 px on the serge and 113 px at the beaver's waist**. Two things
+are measured beside that rather than inside it, because neither is the body: the officer's **hat brim at
+106 px**, which is headgear above the crown exactly as the toque is, and the guide's **paddle tail at
+132 px**, which is a limb held out to one side. Everything is inside the 116 px cap. What
 is identical is the *figure* — the crown, the sole, the eye line, the shoulder, hip, knee and ankle heights,
 the hand and foot frames, the stroke weights. Anyone tightening this rule should measure those, not the
 outline of the coat, and `assets/refs/references.json` now says so in the words a verifier is given.

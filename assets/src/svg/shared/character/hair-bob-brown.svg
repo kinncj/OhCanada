@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="95" height="98" viewBox="70 25 95 98" shape-rendering="geometricPrecision">
-  <title>Hair, a chin-length bob, the mass swinging behind the ear, ramp hair-brown. Three-quarter view: the mass sits behind the face plane and the fringe clears the brow line, because hair draws over the head and under the face. Shape and colour are independent slots: every shape is offered with every colour and with every skin tone.</title>
-  <path d="M 76,110 C 68,72 82,28 120,28 C 152,28 162,52 161,74 C 157,63 152,56 144,52 C 130,46 111,51 101,62 C 94,70 88,80 87,92 C 86,106 84,116 79,119 C 75,120 75,115 76,110 Z" fill="#5f3a20" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="hr-bob"><path d="M 76,110 C 68,72 82,28 120,28 C 152,28 162,52 161,74 C 157,63 152,56 144,52 C 130,46 111,51 101,62 C 94,70 88,80 87,92 C 86,106 84,116 79,119 C 75,120 75,115 76,110 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="95" height="97" viewBox="67 23 95 97" shape-rendering="geometricPrecision">
+  <title>Hair, a chin-length bob, the mass swinging behind the ear, ramp hair-brown. Three-quarter view: the mass sits BEHIND the face plane and reaches lower at the back than at the front, and the fringe sweeps forward to clear the brow line - hair draws over the head and under the face, and a symmetric cap reads as a front view whatever the head under it is doing. Shape and colour are independent slots: every shape is offered with every colour and with every skin tone.</title>
+  <path d="M 72,110 C 66,72 82,26 116,26 C 147,26 159,48 158,70 C 154,58 149,50 141,47 C 126,41 105,48 94,61 C 86,72 81,86 81,98 C 81,108 78,114 74,116 C 70,117 71,113 72,110 Z" fill="#5f3a20" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="hr-bob"><path d="M 72,110 C 66,72 82,26 116,26 C 147,26 159,48 158,70 C 154,58 149,50 141,47 C 126,41 105,48 94,61 C 86,72 81,86 81,98 C 81,108 78,114 74,116 C 70,117 71,113 72,110 Z"/></clipPath></defs>
   <g clip-path="url(#hr-bob)">
     <ellipse cx="92" cy="40" rx="24" ry="20" fill="#936a38"/>
-    <ellipse cx="158" cy="76" rx="12" ry="16" fill="#21110c"/>
+    <ellipse cx="76" cy="92" rx="14" ry="18" fill="#21110c"/>
   </g>
 </svg>

@@ -1,10 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="56" height="23" viewBox="98 64 56 23" shape-rendering="geometricPrecision">
-  <title>Glasses, three-quarter view facing right: the far lens is foreshortened and the temple arm runs back to the ear on the near side. The lens glint is white and sits clear of the pupil, so it reads on all six skin ramps. A cosmetic feature that works in every locomotion mode the game has.</title>
-  <rect x="115.5" y="65.5" width="21" height="20" rx="7" fill="none" stroke="#3a2018" stroke-width="3"/>
-  <path d="M 118,74 L 122,68" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="137.5" y="65.5" width="15" height="20" rx="6" fill="none" stroke="#3a2018" stroke-width="3"/>
-  <path d="M 150,74 L 147,68" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 137,73 L 137,73" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 136,72 L 138,72" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 116,72 L 100,80" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="66" height="23" viewBox="90 64 66 23" shape-rendering="geometricPrecision">
+  <title>Glasses, three-quarter view facing right: the far lens is foreshortened to about two thirds of the near one and the temple arm runs back across the cheek to the ear, which is a cue for the turn as much as it is a pair of glasses. The lens glint is white and sits clear of the pupil, so it reads on all six skin ramps. A cosmetic feature that works in every locomotion mode the game has.</title>
+  <rect x="119.5" y="65.5" width="21" height="20" rx="7" fill="none" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 122,74 L 126,68" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="141.5" y="65.5" width="13" height="20" rx="5" fill="none" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 152,74 L 149,68" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 140,72 L 142,72" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 120,72 L 92,80" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

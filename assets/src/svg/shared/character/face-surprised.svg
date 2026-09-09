@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="37" height="55" viewBox="116 53 37 55" shape-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" width="42" height="63" viewBox="119 53 42 63" shape-rendering="geometricPrecision">
   <title>Face pose &quot;surprised&quot; (a wrong answer, a discovery), three-quarter. Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale, high contrast and the plain Canvas tier, which has no Filters. Identical geometry for every character and every skin ramp.</title>
-  <ellipse cx="126" cy="74" rx="7.6" ry="8.8" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
-  <ellipse cx="126" cy="74" rx="4.4" ry="4.9" fill="#3a2018"/>
-  <ellipse cx="144" cy="74" rx="5.6" ry="8.8" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
-  <ellipse cx="144" cy="74" rx="3.4" ry="4.9" fill="#3a2018"/>
-  <path d="M 118,58 Q 126,53 134,57" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 138,57 Q 145,55 151,59" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 150,86 L 145,89" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <ellipse cx="138" cy="97" rx="8" ry="9" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="130" cy="74" rx="7.6" ry="8.8" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="130" cy="74" rx="4.4" ry="4.9" fill="#3a2018"/>
+  <ellipse cx="146" cy="74" rx="5" ry="8.8" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="146" cy="74" rx="3" ry="4.9" fill="#3a2018"/>
+  <path d="M 121,58 Q 130,53 139,57" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 142,57 Q 147,55 152,59" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 159,88 L 154,90" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="141" cy="105" rx="8" ry="9" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
 </svg>

@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="35" height="41" viewBox="117 60 35 41" shape-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="49" viewBox="120 60 41 49" shape-rendering="geometricPrecision">
   <title>Face pose &quot;neutral&quot; (at rest), three-quarter. Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale, high contrast and the plain Canvas tier, which has no Filters. Identical geometry for every character and every skin ramp.</title>
-  <ellipse cx="126" cy="75" rx="6.5" ry="7.4" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
-  <ellipse cx="126" cy="75" rx="4.2" ry="4.7" fill="#3a2018"/>
-  <ellipse cx="144" cy="75" rx="4.8" ry="7.4" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
-  <ellipse cx="144" cy="75" rx="3.2" ry="4.7" fill="#3a2018"/>
-  <path d="M 119,64 Q 126,61 133,63" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 138,63 Q 144,62 150,64" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 150,86 L 145,89" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 128,96 Q 138,101 148,95" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="130" cy="75" rx="6.5" ry="7.4" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="130" cy="75" rx="4.2" ry="4.7" fill="#3a2018"/>
+  <ellipse cx="145" cy="75" rx="4.2" ry="7.4" fill="#ffffff" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="145" cy="75" rx="2.8" ry="4.7" fill="#3a2018"/>
+  <path d="M 122,64 Q 130,61 138,63" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 141,63 Q 146,62 151,64" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 159,88 L 154,90" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 131,104 Q 141,110 150,102" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
