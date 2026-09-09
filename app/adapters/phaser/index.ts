@@ -330,3 +330,73 @@ export {
   fitCameraToDesign,
   type DesignCamera,
 } from './design-viewport';
+
+/*
+  The game follows the real world, as far as it can do so locally.
+
+  A level opened at 21:00 reads as evening because the device clock says so — no
+  network, no location, no permission. Exported because the two things that make
+  it safe rather than cute are pure: the ceiling that stops a tint from
+  repainting an authored palette, and the bounded step that turns a timezone
+  change into a drift instead of a cut.
+*/
+/*
+  What a player can see is tappable, and what a tap would engage.
+
+  "We don't know what to click" was a report about a control that worked and was
+  invisible. The policy — which subjects are marked, in what state, at what size
+  and where — is pure and exported so the two rules that keep it honest are
+  tested without a browser: a mark is never smaller than the 44 pt glass that
+  counts as its subject, and a mode that cannot engage anything shows none.
+*/
+export {
+  MARK_GAP_PX,
+  MIN_MARK_PX,
+  PULSE_AMPLITUDE,
+  PULSE_PERIOD_MS,
+  affordanceMarks,
+  markPulse,
+  type AffordanceMark,
+  type AffordanceOptions,
+  type AffordanceState,
+  type AffordanceSubject,
+} from './interaction-affordance';
+
+/*
+  Who is in a level, and what to say when one of them cannot be drawn.
+
+  The player was a rounded rectangle in production because nothing ever asked the
+  renderer to draw them — they are not in `level.characters`, so no counter could
+  see them. Exported because "which artboard is the player's" is a rule read off
+  the rig rather than a name in the engine, and because every gap it reports used
+  to be a silent `return null`.
+*/
+export {
+  CAST_GAPS,
+  DRIVEN_INPUTS,
+  artboardFor,
+  castGapMessage,
+  drivableInputs,
+  playerArtboard,
+  rigAtlasKey,
+  unboundAnimationInputs,
+  type CastGap,
+} from './character-cast';
+
+export {
+  SCENE_MILESTONE_NAMES,
+  type SceneMilestoneListener,
+  type SceneMilestoneName,
+} from './level-events';
+
+export {
+  MAX_NIGHT_BLEND,
+  MAX_PHASE_STEP,
+  PHASE_REFRESH_MS,
+  dayPhase,
+  daylight,
+  easePhase,
+  goldenness,
+  tintPalette,
+  type SkyConditions,
+} from './time-of-day';

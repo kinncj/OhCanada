@@ -458,3 +458,56 @@ describe('a character state is shape, never colour', () => {
     }
   });
 });
+
+/**
+ * An empty puppet is a failure, not a character.
+ *
+ * `dress()` skips a part whose resolved frame is not in the atlas, and that is
+ * right — it is how every "none" option works with no special case. Skipping
+ * *every* part is a different fact: the atlas was not packed, or was packed for
+ * a different rig, and what the scene got back was a renderer that reported
+ * itself built, updated happily sixty times a second and drew nothing at all.
+ *
+ * That is the exact shape of the defect this whole line of work exists to
+ * remove — a fallback nothing can observe — so it is refused at construction and
+ * the caller draws a placeholder it can count.
+ */
+describe('a character with no parts is refused rather than returned empty', () => {
+  it('reports which atlas held nothing, instead of composing a ghost', () => {
+    const { renderer, parts } = harness({}, () => false);
+    expect(renderer.ok).toBe(false);
+    if (renderer.ok) return;
+    expect(renderer.error.code).toBe('character.atlas.noParts');
+    expect(renderer.error.message).toContain(ATLAS);
+    expect(parts, 'a refused character must not leave part objects behind').toEqual([]);
+  });
+
+  it('still builds when only some of the rig is packed, because that is a real skin', () => {
+    /* One part is enough to be a character being dressed; zero is an empty
+       atlas. The line between them is the whole point. */
+    const dressed = harness();
+    const one = live(dressed.parts)[0]?.frame;
+    expect(one, 'the fully packed harness dressed nothing, so this proves nothing').toBeTruthy();
+    const { renderer } = harness({}, (frame) => frame === one);
+    expect(renderer.ok).toBe(true);
+  });
+});
+
+describe('repainting is skipped when nothing moved', () => {
+  it('does not re-place twenty parts for a position it is already at', () => {
+    const { renderer, parts } = harness();
+    const character = unwrap(renderer);
+    character.setPosition(500, 900);
+    const placed = live(parts).map((part) => part.position);
+    for (const part of live(parts)) part.position = null;
+
+    character.setPosition(500, 900);
+    expect(
+      live(parts).map((part) => part.position),
+      'a standing NPC repainted every part every time the scene mentioned its position',
+    ).toEqual(live(parts).map(() => null));
+
+    character.setPosition(501, 900);
+    expect(live(parts).map((part) => part.position)).not.toEqual(placed.map(() => null));
+  });
+});

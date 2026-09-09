@@ -66,3 +66,49 @@ export type SceneEventListener = (name: SceneEventName, detail?: string) => void
 export function isSceneEventName(value: string): value is SceneEventName {
   return (SCENE_EVENT_NAMES as readonly string[]).includes(value);
 }
+
+/**
+ * The moments a level *finishes* something, on a channel of their own.
+ *
+ * ## Why these are not in `SCENE_EVENT_NAMES`
+ *
+ * Because they would not compile there, and the reason they would not is the
+ * reason the split is right. `app/bootstrap/game-events.ts` types
+ * `publishSceneEvent` as `SceneEventName -> EventBus<Record<LevelEventName, …>>`,
+ * so widening the scene's union with a name `app/ui` has never declared is a
+ * type error in the composition root. That check exists to stop the two lists
+ * drifting and it is doing its job: **`app/ui` has no copy for a completed
+ * quest yet**, and inventing the wording here is not this directory's to do
+ * (ADR-0010).
+ *
+ * So the engine publishes what it observes on a second, clearly separate
+ * channel, and the UI binds it in the same one line `onLevelEvent` took once the
+ * copy exists. The alternative — reusing `poi/engaged` to mean "and it is
+ * finished now" — would give one name two meanings and make the announcer say
+ * the wrong thing.
+ *
+ * ## What the scene actually knows
+ *
+ * Nothing about quests. A quest completing and a stamp being earned are domain
+ * facts, so they arrive **inbound** (`LevelScene.markCompleted`,
+ * `markLevelComplete`) and what the scene owns is the *world's* half of the
+ * moment: the subject stops advertising itself as something to do, and the
+ * milestone is published in the order it happened, after the engagement that
+ * caused it. The screen that announces it belongs to `app/ui`.
+ */
+export const SCENE_MILESTONE_NAMES = ['quest/completed', 'level/completed'] as const;
+
+export type SceneMilestoneName = (typeof SCENE_MILESTONE_NAMES)[number];
+
+/**
+ * `detail` is the subject the milestone is about — the point of interest or the
+ * character whose quest finished, and the level id for a finished level. Never
+ * an empty string: see {@link SceneEventListener}.
+ */
+export type SceneMilestoneListener = (name: SceneMilestoneName, detail?: string) => void;
+
+/* No `isSceneMilestoneName` guard here, deliberately. `isSceneEventName` exists
+   because a name arrives as a `string` at the probe's trace boundary; nothing
+   reads a milestone name back out of a string, and ADR-0015 is explicit that a
+   member with no caller is found by review rather than by CI. Add it when
+   something needs it. */

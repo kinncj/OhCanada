@@ -344,6 +344,21 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
   });
 
   test('nothing from the empty shell is left on screen over a running level', async ({ page }) => {
+    /*
+     * Local noon, fixed, and the reason is the assertion at the bottom.
+     *
+     * A level's sky now follows the device clock (`time-of-day.ts`), so
+     * `--tn-sky` is the level's theme **under the current light** rather than the
+     * theme literal. At solar noon the tint is the identity — `daylight(0.5)` is
+     * exactly 1 and `goldenness(0.5)` is exactly 0 — so pinning the clock keeps
+     * this an equality against the level document instead of a tolerance, and
+     * the thing it was written to catch (the panels showing `game.config.json`'s
+     * palette instead of the level's) still fails it.
+     *
+     * `setFixedTime` rather than `install`: installing fake timers would stop
+     * `requestAnimationFrame` and the level would never draw a frame.
+     */
+    await page.clock.setFixedTime(new Date(2026, 0, 15, 12, 0, 0));
     await openLevel(page);
 
     /* The caption reads "Foundation build. There is no level to play yet", which
@@ -378,7 +393,8 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
     expect(land.crest).toBe('100%');
     expect(land.skirt).toBe('100%');
     expect(land.end).toBe('100%');
-    /* And the panels carry the level's own theme, not `game.config.json`'s. */
+    /* And the panels carry the level's own theme, not `game.config.json`'s —
+       at noon, unmodulated. See the clock at the top of this test. */
     expect(land.sky.toLowerCase()).toBe(OTTAWA.theme.sky.toLowerCase());
   });
 });

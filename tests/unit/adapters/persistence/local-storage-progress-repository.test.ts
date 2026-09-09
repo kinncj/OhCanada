@@ -93,7 +93,9 @@ describe('a value that is not a save (TN-SAVE-04)', () => {
 
   it('reports a document that is JSON but not a save', async () => {
     const storage = memoryStorage();
-    storage.entries.set(PROGRESS_STORAGE_KEY, '{"version":1,"levels":[]}');
+    // This build's own version, so the refusal is about the *shape* rather than
+    // about a missing migration — that path has its own test.
+    storage.entries.set(PROGRESS_STORAGE_KEY, `{"version":${codec.version},"levels":[]}`);
     const repository = createLocalStorageProgressRepository({ storage, codec });
     const loaded = await repository.load();
     expect(loaded.ok).toBe(false);

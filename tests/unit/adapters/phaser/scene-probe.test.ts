@@ -116,6 +116,21 @@ describe('snapshotToAttributes', () => {
         'data-actors',
         'data-actors-drawn',
         'data-actors-visible',
+        /* The player was outside every counter above: `data-actors` is
+           `pois + characters` and the player is in neither list, so the one
+           character on screen at the spawn could be a rounded rectangle while
+           `data-actors-drawn` read full marks. `data-placeholders` is the
+           complement that reads 0 on a healthy level rather than needing to be
+           compared with something. */
+        'data-player-drawn',
+        'data-placeholders',
+        /* What the player can see is tappable, and what a tap would engage.
+           Two numbers because they answer two different complaints. */
+        'data-affordances',
+        'data-affordances-ready',
+        /* The level's sky follows the device clock; this is what makes that
+           observable instead of a screenshot taken at the right hour. */
+        'data-day-phase',
         'data-grounded',
         'data-layers',
         'data-layers-textured',

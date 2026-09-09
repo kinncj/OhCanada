@@ -111,7 +111,17 @@ test.describe('the page a level is played on', () => {
     expect(
       inside.sort(),
       'no modal was found inside <main>, so this assertion checked nothing',
-    ).toEqual(['level-error', 'level-loading', 'poi-card']);
+    ).toEqual([
+      'level-error',
+      'level-loading',
+      'poi-card',
+      /* The learning moment: a landmark's card is followed by a question, and
+         finishing a level's task by the card that says so. Both are built with
+         the level rather than on demand, so a landmark never waits on a screen
+         being constructed after the player has read the fact. */
+      'quest-complete-card',
+      'question-card',
+    ]);
     expect(
       /* Sorted: which elements sit outside the landmark is the assertion, and
          the order they are mounted in is a composition detail that moved when

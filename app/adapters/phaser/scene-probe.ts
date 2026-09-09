@@ -158,6 +158,48 @@ export interface SceneSnapshot {
    */
   readonly layersVisible?: number;
   readonly actorsVisible?: number;
+  /**
+   * Did the **player** compose from the rig, or is a rounded rectangle standing
+   * at the spawn?
+   *
+   * Separate from `actorsDrawn` because the player is not an actor by that
+   * counter's definition: `actors` is `pois.length + characters.length` and the
+   * player is in neither list. So the one character on screen at the spawn was
+   * outside every count that existed, and "the character is still a rectangle"
+   * was true for as long as anyone looked while `data-actors-drawn` read full
+   * marks. A counter that cannot see the subject of the complaint is not a
+   * counter.
+   */
+  readonly playerDrawn?: boolean;
+  /**
+   * How many characters — the player included — fell back to a placeholder.
+   *
+   * The complement of the two `*Drawn` counters, and it exists so that a healthy
+   * level has a number that reads **0** rather than a number that has to be
+   * compared to another number. Every increment printed a reason to the console
+   * as it happened (`character-cast.ts`).
+   */
+  readonly placeholders?: number;
+  /**
+   * How many things are marked as tappable right now, and how many of those are
+   * in reach.
+   *
+   * `affordances` is what a player can see is interactive; `affordancesReady` is
+   * what a tap would actually engage. They are published as two numbers because
+   * they answer two different complaints — "nothing tells me what to click" and
+   * "I do not know when I am close enough" — and one number could clear both
+   * while answering neither.
+   */
+  readonly affordances?: number;
+  readonly affordancesReady?: number;
+  /**
+   * Where the level's sky is in the day, 0 at local midnight and 0.5 at noon.
+   *
+   * Published so that "the game follows the real world" is observable rather
+   * than a screenshot somebody took at the right hour: a test can set the
+   * device clock and read this back.
+   */
+  readonly dayPhase?: number;
   readonly tier?: VisualTier;
   readonly motion?: MotionLevel;
   readonly renderer?: string;
@@ -268,6 +310,10 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'actorsDrawn',
   'layersVisible',
   'actorsVisible',
+  'playerDrawn',
+  'placeholders',
+  'affordances',
+  'affordancesReady',
   'tier',
   'motion',
   'renderer',
@@ -305,6 +351,11 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-actors-drawn': num(snapshot.actorsDrawn),
     'data-layers-visible': num(snapshot.layersVisible),
     'data-actors-visible': num(snapshot.actorsVisible),
+    'data-player-drawn': bool(snapshot.playerDrawn),
+    'data-placeholders': num(snapshot.placeholders),
+    'data-affordances': num(snapshot.affordances),
+    'data-affordances-ready': num(snapshot.affordancesReady),
+    'data-day-phase': num(snapshot.dayPhase),
     'data-tier': text(snapshot.tier),
     'data-motion': text(snapshot.motion),
     'data-renderer': text(snapshot.renderer),

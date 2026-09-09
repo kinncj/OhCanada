@@ -14,7 +14,8 @@ import {
 } from './level-assets';
 import { bundledLevelCatalog, type LevelCatalog } from './level-catalog';
 import type { SceneLevel } from './level-document';
-import type { SceneEventListener } from './level-events';
+import type { SceneEventListener, SceneMilestoneListener } from './level-events';
+import { dayPhase, tintPalette } from './time-of-day';
 import { LevelScene } from './level-scene';
 import { createPlayableMarker, type MarkerHost, type PlayableMarker } from './playable-marker';
 import { appErr, ok, type Result } from '@common/result';
@@ -118,6 +119,24 @@ export interface GameRendererOptions {
    */
   readonly onLevelEvent?: SceneEventListener;
   /**
+   * The moments a level *finishes* something: `quest/completed`,
+   * `level/completed`.
+   *
+   * A channel of its own rather than two more `onLevelEvent` names, because the
+   * scene's event union is type-checked against `app/ui`'s in the composition
+   * root and the UI has no copy for a finished quest yet — see
+   * `level-events.ts`. Binding it is one line when the words exist.
+   */
+  readonly onLevelMilestone?: SceneMilestoneListener;
+  /**
+   * The device clock, injectable so a test can put the level at any hour.
+   *
+   * A level's sky follows the real time of day (`time-of-day.ts`). Local only:
+   * this is the whole of "the game follows the real world" and it makes no
+   * request of anything.
+   */
+  readonly now?: () => Date;
+  /**
    * Where `assets/dist/manifest.json` is served from, and how to fetch it.
    *
    * Defaults to `<base>manifest.json` through the page's `fetch`. Injectable so
@@ -154,6 +173,15 @@ export class GameRenderer {
   #paused = false;
   /** The accessibility auto-move option, remembered across level changes. */
   #autoMove = false;
+  /**
+   * The appearance the player chose, remembered across level changes.
+   *
+   * The session owns it and a scene is per level, exactly as `#autoMove` is.
+   * Empty dresses the player in the rig artboard's own skins, which is a
+   * complete character rather than a naked one — so a build that never calls
+   * {@link setPlayerAppearance} still draws a player.
+   */
+  #playerSkins: Readonly<Record<string, string>> = {};
 
   constructor(options: GameRendererOptions) {
     this.#options = options;
@@ -360,9 +388,14 @@ export class GameRenderer {
       profile: this.renderProfile,
       assets,
       rig,
+      playerSkins: this.#playerSkins,
+      ...(this.#options.now === undefined ? {} : { now: this.#options.now }),
       ...(this.#options.onLevelEvent === undefined
         ? {}
         : { onEvent: this.#options.onLevelEvent }),
+      ...(this.#options.onLevelMilestone === undefined
+        ? {}
+        : { onMilestone: this.#options.onLevelMilestone }),
     });
     this.#level = scene;
     /* Before `scene.add`, so the option is in force on the level's first frame
@@ -463,7 +496,19 @@ export class GameRenderer {
   cssVariables(): Readonly<Record<string, string>> {
     const percent = (fraction: number): string => `${(fraction * 100).toFixed(3)}%`;
     const level = this.#levelDocument;
-    const palette = level?.palette ?? this.#config.palette;
+    /*
+     * The panels follow the same sky the scene does.
+     *
+     * `time-of-day.ts` tints the level's palette from the device clock, and the
+     * desktop side panels are that palette as a CSS gradient (see the header).
+     * Tinting one and not the other would put a daylight page around an evening
+     * canvas, which is the framed-picture effect these variables exist to
+     * remove. The boot screen has no level and keeps the config palette.
+     */
+    const palette =
+      level === null
+        ? this.#config.palette
+        : tintPalette(level.palette, { phase: dayPhase(this.#now()) });
 
     /*
      * The land band is the *boot screen's* hills, and only the boot screen's.
@@ -511,6 +556,49 @@ export class GameRenderer {
   setAutoMove(enabled: boolean): void {
     this.#autoMove = enabled;
     this.#level?.setAutoMove(enabled);
+  }
+
+  /** The device clock, or the injected one. */
+  #now(): Date {
+    return this.#options.now?.() ?? new Date();
+  }
+
+  /**
+   * Dress the player, from the character creator.
+   *
+   * **No caller yet, and reported rather than left to be discovered.** The
+   * creator is `app/ui/character-creator.ts` and the join between it and this
+   * belongs in `app/bootstrap`, which another agent owns. Until it exists the
+   * player wears the rig artboard's own skins — a complete character, not a
+   * missing one — so nothing is broken while the wire is missing, which is the
+   * property that lets the wire be one line.
+   *
+   * Takes effect at the next level open. Re-dressing a character mid-level is
+   * `ICharacterRenderer.setSkin`, which rebuilds the part list, and there is no
+   * screen that would ask for it while a level is running.
+   */
+  setPlayerAppearance(skins: Readonly<Record<string, string>>): void {
+    this.#playerSkins = { ...skins };
+  }
+
+  /**
+   * Tell the open level that the domain finished a quest.
+   *
+   * Inbound because an adapter does not know what a quest is (ADR-0005): the
+   * domain earns the stamp, the composition root hears it, and the world is told
+   * so it can stop advertising something the player has already done.
+   *
+   * **No caller yet** — same reason as {@link setAutoMove}: `app/bootstrap` is
+   * owned by another agent. `app/application/use-cases/stamp-opens-the-next-level`
+   * is where the fact is produced.
+   */
+  markQuestComplete(subjectId: string): void {
+    this.#level?.markCompleted(subjectId);
+  }
+
+  /** Tell the open level that its stamp was earned. See {@link markQuestComplete}. */
+  markLevelComplete(): void {
+    this.#level?.markLevelComplete();
   }
 
   get autoMove(): boolean {

@@ -544,6 +544,12 @@ export function createSpriteCharacterRenderer(
 
     setPosition(x, y) {
       if (disposed) return;
+      /* A standing NPC is told where it is every frame and has not moved. Twenty
+         parts re-placed for an unchanged anchor is per-frame work that buys
+         nothing, and per-frame work is the budget the perf suite no longer
+         blocks on (it reports), so it is refused here rather than measured
+         later. */
+      if (x === anchorX && y === anchorY) return;
       anchorX = x;
       anchorY = y;
       paint();
@@ -598,6 +604,26 @@ export function createSpriteCharacterRenderer(
   };
 
   dress();
+  /*
+   * An empty puppet is a failure, not a character.
+   *
+   * Skipping a part whose frame is absent is how every "none" option works and
+   * must stay. Skipping *every* part means the atlas was not packed, or was
+   * packed for a different rig — and what the caller would get back is a
+   * renderer that reports itself built, updates sixty times a second and draws
+   * nothing. That is a fallback nobody can observe, which is the defect class
+   * this whole file's header is about, so it is refused here and the scene draws
+   * a placeholder it can count.
+   */
+  if (parts.length === 0) {
+    return appErr(
+      'not-found',
+      'character.atlas.noParts',
+      `not one of the rig's ${String(rig.parts.length)} parts resolved to a frame in texture ` +
+        `"${options.textureKey}", so this character would be built and draw nothing.`,
+      { character: spec.characterId, textureKey: options.textureKey, parts: rig.parts.length },
+    );
+  }
   paint();
   return ok(renderer);
 }
