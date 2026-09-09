@@ -92,6 +92,20 @@ export interface SpritePartObject {
   /** Fractions of the frame, 0..1. Used to put the rotation origin on the pivot. */
   setOrigin(x: number, y: number): unknown;
   setPosition(x: number, y: number): unknown;
+  /**
+   * Draw the part at its size in CHARACTER SPACE, whatever the texture's own
+   * resolution is.
+   *
+   * Not optional, and the reason is a shipped defect. A part was sized by the
+   * texture it happened to get and positioned from the rig, and those are two
+   * different coordinate systems the moment the atlas is not 1x. At
+   * devicePixelRatio 2 the game loads the @2x atlas, so every part drew twice
+   * the size it was placed at: the head grew off the neck, the mitt left the
+   * sleeve, and the shin hung below the boot as a grey cylinder. It was
+   * invisible to every render anyone made, because they were all at ratio 1,
+   * and obvious on the first phone that opened the game.
+   */
+  setDisplaySize(width: number, height: number): unknown;
   setAngle(degrees: number): unknown;
   setFlipX(flip: boolean): unknown;
   setDepth(depth: number): unknown;
@@ -426,6 +440,8 @@ export function createSpriteCharacterRenderer(
         view.window.w > 0 ? (pivotX - left) / view.window.w : 0.5,
         view.window.h > 0 ? (pivotY - view.window.y) / view.window.h : 0.5,
       );
+      /* Character space, never texture space. See setDisplaySize's note. */
+      view.object.setDisplaySize(view.window.w, view.window.h);
       view.object.setPosition(
         anchorX + (pivotX - centre) + (flipComposite ? -transform.dx : transform.dx),
         anchorY + (pivotY + transform.dy - space.soleY),

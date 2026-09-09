@@ -41,6 +41,8 @@ interface Painted {
   position: [number, number] | null;
   angle: number | null;
   flipped: boolean;
+  displayW: number | null;
+  displayH: number | null;
   depth: number | null;
   destroyed: boolean;
 }
@@ -76,6 +78,8 @@ function harness(
           position: null,
           angle: null,
           flipped: false,
+          displayW: null,
+          displayH: null,
           depth: null,
           destroyed: false,
         };
@@ -86,6 +90,10 @@ function harness(
           setPosition: (x, y) => (painted.position = [x, y]),
           setAngle: (degrees) => (painted.angle = degrees),
           setFlipX: (flip) => (painted.flipped = flip),
+          setDisplaySize: (w, h) => {
+            painted.displayW = w;
+            painted.displayH = h;
+          },
           setDepth: (depth) => (painted.depth = depth),
           setVisible: () => undefined,
           destroy: () => (painted.destroyed = true),
@@ -384,6 +392,35 @@ describe('a character state is shape, never colour', () => {
    * today. A `SpritePartObject` has no colour channel at all, so the mistake
    * cannot be written down.
    */
+  /*
+   * The regression this exists for shipped, and every render made of it looked
+   * correct, because they were all taken at devicePixelRatio 1.
+   *
+   * A part was sized by whatever texture it was handed and positioned from the
+   * rig. Those agree only while the atlas is 1x. At ratio 2 the game loads the
+   * @2x atlas and every part drew at twice the size it was placed at: the head
+   * came off the neck, the mitt left the sleeve, and the shin hung below the
+   * boot as a grey cylinder. A player on a phone saw it immediately.
+   *
+   * So the assertion is not "setDisplaySize was called" -- that passes for any
+   * argument, including the texture's own size, which is the bug. It is that
+   * every part is drawn at its window in CHARACTER space, which is the only
+   * coordinate system the pivots and transforms are expressed in.
+   */
+  it('draws every part at its size in character space, whatever the texture is', () => {
+    const { renderer, parts } = harness();
+    expect(renderer.ok, 'the harness did not build a renderer').toBe(true);
+    expect(parts.length, 'no parts were painted, so nothing was measured').toBeGreaterThan(0);
+
+    for (const part of parts) {
+      expect(
+        [part.displayW, part.displayH],
+        `${part.part.name} was never given a size in character space, so it draws ` +
+          'at whatever resolution its texture happens to be',
+      ).not.toEqual([null, null]);
+    }
+  });
+
   it('can only address a part through texture, transform, mirror and visibility', () => {
     const seen = new Set<string>();
     const parts: SpritePartObject[] = [];
@@ -409,6 +446,7 @@ describe('a character state is shape, never colour', () => {
               setPosition: () => undefined,
               setAngle: () => undefined,
               setFlipX: () => undefined,
+              setDisplaySize: () => undefined,
               setDepth: () => undefined,
               setVisible: () => undefined,
               destroy: () => undefined,
@@ -440,6 +478,7 @@ describe('a character state is shape, never colour', () => {
       'destroy',
       'setAngle',
       'setDepth',
+      'setDisplaySize',
       'setFlipX',
       'setOrigin',
       'setPosition',

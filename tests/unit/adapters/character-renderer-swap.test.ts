@@ -102,6 +102,7 @@ function spriteFactory(): CharacterRendererFactory {
         setPosition: () => undefined,
         setAngle: () => undefined,
         setFlipX: () => undefined,
+        setDisplaySize: () => undefined,
         setDepth: () => undefined,
         setVisible: () => undefined,
         destroy: () => undefined,
