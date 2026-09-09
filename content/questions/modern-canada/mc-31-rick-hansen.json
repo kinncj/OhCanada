@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-31-rick-hansen",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "In 1985, Rick Hansen travelled around the world in a wheelchair. What was he raising funds for?",
+    "fr": "En 1985, Rick Hansen a fait le tour du monde en fauteuil roulant. Pour quelle cause recueillait-il des fonds?"
+  },
+  "options": [
+    {
+      "en": "Spinal cord research.",
+      "fr": "La recherche sur la moelle épinière."
+    },
+    {
+      "en": "Cancer research.",
+      "fr": "La recherche sur le cancer."
+    },
+    {
+      "en": "New sports arenas.",
+      "fr": "De nouveaux arénas sportifs."
+    },
+    {
+      "en": "Space research.",
+      "fr": "La recherche spatiale."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Rick Hansen went around the world in his wheelchair, raising money for research into spinal cord injuries.",
+    "fr": "Rick Hansen a fait le tour du globe en fauteuil roulant pour recueillir des fonds pour la recherche sur la moelle épinière."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 50,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1985, fellow British Columbian Rick Hansen circled the globe in a wheelchair to raise funds for spinal cord research."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

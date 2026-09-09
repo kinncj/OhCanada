@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-38-fessenden-radio",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What was Reginald Fessenden the first in the world to send?",
+    "fr": "Qu'est-ce que Reginald Fessenden a été le premier au monde à transmettre?"
+  },
+  "options": [
+    {
+      "en": "A wireless voice message.",
+      "fr": "Un message vocal sans fil."
+    },
+    {
+      "en": "A telegram across the Atlantic.",
+      "fr": "Un télégramme à travers l'Atlantique."
+    },
+    {
+      "en": "A colour television picture.",
+      "fr": "Une image de télévision en couleur."
+    },
+    {
+      "en": "A signal from a satellite.",
+      "fr": "Un signal provenant d'un satellite."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Fessenden helped invent radio and sent the world's first voice message without wires.",
+    "fr": "Fessenden a contribué à l'invention de la radio et a transmis le premier message vocal sans fil au monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 52,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Reginald Fessenden — contributed to the invention of radio, sending the first wireless voice message in the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

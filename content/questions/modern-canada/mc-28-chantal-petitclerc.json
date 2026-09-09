@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-28-chantal-petitclerc",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What did Chantal Petitclerc become a world champion in?",
+    "fr": "Dans quelle discipline Chantal Petitclerc est-elle devenue championne du monde?"
+  },
+  "options": [
+    {
+      "en": "Wheelchair racing.",
+      "fr": "La course en fauteuil roulant."
+    },
+    {
+      "en": "Speed skating.",
+      "fr": "Le patinage de vitesse."
+    },
+    {
+      "en": "Swimming.",
+      "fr": "La natation."
+    },
+    {
+      "en": "Long-distance running on a track.",
+      "fr": "La course de fond sur piste."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Chantal Petitclerc is a world champion wheelchair racer and a Paralympic gold medallist.",
+    "fr": "Chantal Petitclerc est championne du monde de course en fauteuil roulant et médaillée d'or paralympique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "double Olympic gold medallist Chantal Petitclerc became a world champion wheelchair racer and Paralympic gold medallist."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

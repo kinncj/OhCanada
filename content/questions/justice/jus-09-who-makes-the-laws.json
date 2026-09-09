@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-09-who-makes-the-laws",
+  "subject": "justice",
+  "prompt": {
+    "en": "In Canada's system of laws, who makes the laws?",
+    "fr": "Dans le système de lois du Canada, qui fait les lois?"
+  },
+  "options": [
+    {
+      "en": "Elected representatives.",
+      "fr": "Les représentants élus."
+    },
+    {
+      "en": "The police.",
+      "fr": "Les policiers."
+    },
+    {
+      "en": "The courts.",
+      "fr": "Les tribunaux."
+    },
+    {
+      "en": "Newspaper editors.",
+      "fr": "Les rédacteurs en chef des journaux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The people Canadians elect are the ones who make the laws. Courts settle disputes and police enforce the laws.",
+    "fr": "Ce sont les personnes élues par les Canadiens qui font les lois. Les tribunaux règlent les différends et les policiers font respecter les lois."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "These laws are the written rules intended to guide people in our society. They are made by elected representatives. The courts settle disputes and the police enforce the laws."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

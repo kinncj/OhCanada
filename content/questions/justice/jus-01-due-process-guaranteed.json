@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-01-due-process-guaranteed",
+  "subject": "justice",
+  "prompt": {
+    "en": "What does Canada's justice system promise to every person?",
+    "fr": "Qu'est-ce que le système de justice du Canada promet à chaque personne?"
+  },
+  "options": [
+    {
+      "en": "Due process under the law.",
+      "fr": "L'application régulière de la loi."
+    },
+    {
+      "en": "A trial within one week.",
+      "fr": "Un procès dans un délai d'une semaine."
+    },
+    {
+      "en": "A free lawyer for every case.",
+      "fr": "Un avocat gratuit pour chaque cause."
+    },
+    {
+      "en": "The right to choose the judge.",
+      "fr": "Le droit de choisir le juge."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada's justice system gives each person due process. It does not promise a fast trial, a free lawyer in every case, or a choice of judge.",
+    "fr": "Le système de justice du Canada accorde à chaque personne l'application régulière de la loi. Il ne promet pas un procès rapide, un avocat gratuit dans chaque cause, ni le choix du juge."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Canadian justice system guarantees everyone due process under the law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

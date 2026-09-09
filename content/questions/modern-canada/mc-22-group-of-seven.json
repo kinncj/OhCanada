@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-22-group-of-seven",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "The Group of Seven, founded in 1920, is known for painting what?",
+    "fr": "Le Groupe des Sept, fondé en 1920, est connu pour avoir peint quoi?"
+  },
+  "options": [
+    {
+      "en": "Rugged wilderness landscapes.",
+      "fr": "Des paysages sauvages et accidentés."
+    },
+    {
+      "en": "Portraits of prime ministers.",
+      "fr": "Des portraits de premiers ministres."
+    },
+    {
+      "en": "Scenes of city factories.",
+      "fr": "Des scènes d'usines urbaines."
+    },
+    {
+      "en": "Battles of the First World War.",
+      "fr": "Des batailles de la Première Guerre mondiale."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "These painters built a style for showing the wild landscape of Canada. In the visual arts, Canada is perhaps best known for them.",
+    "fr": "Ces peintres ont créé un style pour représenter les paysages sauvages du Canada. Dans les arts visuels, le Canada est peut-être surtout connu pour eux."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In the visual arts, Canada is historically perhaps best known for the Group of Seven, founded in 1920, who developed a style of painting to capture the rugged wilderness landscapes."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

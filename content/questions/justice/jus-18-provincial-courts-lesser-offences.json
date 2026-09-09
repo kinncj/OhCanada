@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-18-provincial-courts-lesser-offences",
+  "subject": "justice",
+  "prompt": {
+    "en": "What do provincial courts deal with?",
+    "fr": "De quoi s'occupent les cours provinciales?"
+  },
+  "options": [
+    {
+      "en": "Lesser offences.",
+      "fr": "Les infractions mineures."
+    },
+    {
+      "en": "Changes to the Constitution.",
+      "fr": "Les modifications à la Constitution."
+    },
+    {
+      "en": "Appeals from the Supreme Court of Canada.",
+      "fr": "Les appels des décisions de la Cour suprême du Canada."
+    },
+    {
+      "en": "Treaties with other countries.",
+      "fr": "Les traités avec d'autres pays."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Provincial courts hear the less serious offences. Provinces also run courts for family matters, for traffic matters and for small claims.",
+    "fr": "Les cours provinciales entendent les infractions les moins graves. Les provinces ont aussi des tribunaux de la famille, des tribunaux de la circulation et des cours des petites créances."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "There are also provincial courts for lesser offences, family courts, traffic courts and small claims courts for civil cases involving small sums of money."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

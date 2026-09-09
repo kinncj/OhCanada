@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-08-what-laws-are",
+  "subject": "justice",
+  "prompt": {
+    "en": "How does Discover Canada describe laws?",
+    "fr": "Comment le guide Découvrir le Canada décrit-il les lois?"
+  },
+  "options": [
+    {
+      "en": "Written rules that guide people in our society.",
+      "fr": "Des règles écrites qui guident les gens dans notre société."
+    },
+    {
+      "en": "Customs that change from town to town.",
+      "fr": "Des coutumes qui changent d'une ville à l'autre."
+    },
+    {
+      "en": "Orders given by the police.",
+      "fr": "Des ordres donnés par les policiers."
+    },
+    {
+      "en": "Advice that people may follow if they wish.",
+      "fr": "Des conseils que les gens peuvent suivre s'ils le souhaitent."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Laws are put in writing, and they guide how people live together in Canada.",
+    "fr": "Les lois sont mises par écrit et elles guident la façon dont les gens vivent ensemble au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada is governed by an organized system of laws. These laws are the written rules intended to guide people in our society. They are made by elected representatives."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

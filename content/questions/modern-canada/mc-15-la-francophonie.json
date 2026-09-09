@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-15-la-francophonie",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Canada helped found La Francophonie in 1970. What is it?",
+    "fr": "Le Canada a aidé à fonder La Francophonie en 1970. Qu'est-ce que c'est?"
+  },
+  "options": [
+    {
+      "en": "An international association of French-speaking countries.",
+      "fr": "Une association internationale de pays francophones."
+    },
+    {
+      "en": "A military alliance in Europe.",
+      "fr": "Une alliance militaire en Europe."
+    },
+    {
+      "en": "A trade agreement with the United States.",
+      "fr": "Un accord commercial avec les États-Unis."
+    },
+    {
+      "en": "A federal department in Ottawa.",
+      "fr": "Un ministère fédéral à Ottawa."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "La Francophonie brings together countries where French is spoken, and Canada was one of its founders in 1970.",
+    "fr": "La Francophonie réunit des pays où le français est parlé, et le Canada a été l'un de ses fondateurs en 1970."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 47,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1970, Canada helped found La Francophonie, an international association of French-speaking countries."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

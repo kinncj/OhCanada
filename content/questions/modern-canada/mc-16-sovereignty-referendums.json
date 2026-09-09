@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-16-sovereignty-referendums",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Quebec held referendums on sovereignty in 1980 and again in 1995. What was the result both times?",
+    "fr": "Le Québec a tenu des référendums sur la souveraineté en 1980, puis en 1995. Quel a été le résultat les deux fois?"
+  },
+  "options": [
+    {
+      "en": "Sovereignty was defeated.",
+      "fr": "La souveraineté a été rejetée."
+    },
+    {
+      "en": "Sovereignty was approved.",
+      "fr": "La souveraineté a été approuvée."
+    },
+    {
+      "en": "The vote was cancelled before it was held.",
+      "fr": "Le vote a été annulé avant sa tenue."
+    },
+    {
+      "en": "The result was decided by Parliament instead.",
+      "fr": "Le résultat a plutôt été décidé par le Parlement."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Voters in Quebec turned down sovereignty in 1980, and turned it down again in the second referendum in 1995.",
+    "fr": "Les électeurs du Québec ont rejeté la souveraineté en 1980, puis l'ont rejetée de nouveau lors du second référendum en 1995."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 47,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The movement for Quebec sovereignty gained strength but was defeated in a referendum in the province in 1980. After much negotiation, in 1982 the Constitution was amended without the agreement of Quebec. Though sovereignty was again defeated in a second referendum in 1995, the autonomy of Quebec within Canada remains a lively topic"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

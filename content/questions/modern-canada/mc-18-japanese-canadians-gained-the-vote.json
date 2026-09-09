@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-18-japanese-canadians-gained-the-vote",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Most Canadians of Asian descent had once been denied the vote. Which group was the last of them to gain it, in 1948?",
+    "fr": "La plupart des Canadiens d'origine asiatique s'étaient déjà vu refuser le droit de vote. Quel groupe a été le dernier à l'obtenir, en 1948?"
+  },
+  "options": [
+    {
+      "en": "Japanese Canadians.",
+      "fr": "Les Canadiens d'origine japonaise."
+    },
+    {
+      "en": "Chinese Canadians.",
+      "fr": "Les Canadiens d'origine chinoise."
+    },
+    {
+      "en": "Vietnamese Canadians.",
+      "fr": "Les Canadiens d'origine vietnamienne."
+    },
+    {
+      "en": "Hungarian Canadians.",
+      "fr": "Les Canadiens d'origine hongroise."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Japanese Canadians were the last group of Canadians of Asian descent to win back the vote, in 1948.",
+    "fr": "Les Canadiens d'origine japonaise ont été le dernier groupe de Canadiens d'origine asiatique à retrouver le droit de vote, en 1948."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 47,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Most Canadians of Asian descent had in the past been denied the vote in federal and provincial elections. In 1948 the last of these, the Japanese- Canadians, gained the right to vote."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

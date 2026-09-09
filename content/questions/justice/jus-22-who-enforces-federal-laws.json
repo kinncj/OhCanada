@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-22-who-enforces-federal-laws",
+  "subject": "justice",
+  "prompt": {
+    "en": "Which police force enforces federal laws throughout Canada?",
+    "fr": "Quel corps de police fait respecter les lois fédérales partout au Canada?"
+  },
+  "options": [
+    {
+      "en": "The Royal Canadian Mounted Police.",
+      "fr": "La Gendarmerie royale du Canada."
+    },
+    {
+      "en": "Ontario's provincial police force.",
+      "fr": "Le corps de police provincial de l'Ontario."
+    },
+    {
+      "en": "Municipal police departments.",
+      "fr": "Les services de police municipaux."
+    },
+    {
+      "en": "The Canadian Coast Guard.",
+      "fr": "La Garde côtière canadienne."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Federal laws are enforced across the country by the RCMP.",
+    "fr": "Les lois fédérales sont appliquées dans tout le pays par la GRC."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Royal Canadian Mounted Police (RCMP) enforce federal laws throughout Canada, and serve as the provincial police in all provinces and territories except Ontario and Quebec, as well as in some municipalities."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

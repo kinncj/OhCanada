@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-30-terry-fox",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Why did Terry Fox begin his cross-country run, the Marathon of Hope, in 1980?",
+    "fr": "Pourquoi Terry Fox a-t-il entrepris sa course à travers le pays, le Marathon de l'espoir, en 1980?"
+  },
+  "options": [
+    {
+      "en": "To raise money for cancer research.",
+      "fr": "Pour recueillir des fonds pour la recherche sur le cancer."
+    },
+    {
+      "en": "To raise money for spinal cord research.",
+      "fr": "Pour recueillir des fonds pour la recherche sur la moelle épinière."
+    },
+    {
+      "en": "To set a world record for running.",
+      "fr": "Pour établir un record du monde de course."
+    },
+    {
+      "en": "To train for the Olympic Games.",
+      "fr": "Pour s'entraîner en vue des Jeux olympiques."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Terry Fox lost his right leg to cancer at eighteen and ran to raise money for cancer research. He became a hero to Canadians, and events in his name still raise funds today.",
+    "fr": "Terry Fox a perdu sa jambe droite à cause du cancer à dix-huit ans et il a couru pour recueillir des fonds pour la recherche sur le cancer. Il est devenu un héros pour les Canadiens, et des activités portant son nom recueillent encore des fonds aujourd'hui."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 50,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1980, Terry Fox, a British Columbian who lost his right leg to cancer at the age of 18, began a cross-country run, the “Marathon of Hope,” to raise money for cancer research."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

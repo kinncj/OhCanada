@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-09-nato-military-alliance",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What is NATO, which Canada helped to form during the Cold War?",
+    "fr": "Qu'est-ce que l'OTAN, que le Canada a aidé à former pendant la guerre froide?"
+  },
+  "options": [
+    {
+      "en": "A military alliance.",
+      "fr": "Une alliance militaire."
+    },
+    {
+      "en": "A trade treaty.",
+      "fr": "Un traité commercial."
+    },
+    {
+      "en": "A group of French-speaking countries.",
+      "fr": "Un regroupement de pays francophones."
+    },
+    {
+      "en": "A court for international disputes.",
+      "fr": "Un tribunal pour les différends internationaux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada joined other democratic countries of the West in NATO, which is a military alliance.",
+    "fr": "Le Canada s'est joint à d'autres pays démocratiques de l'Ouest au sein de l'OTAN, qui est une alliance militaire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 46,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada joined with other democratic countries of the West to form the North Atlantic Treaty Organization (NATO), a military alliance, and with the United States in the North American Aerospace Defence Command (NORAD)."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-25-what-the-police-are-for",
+  "subject": "justice",
+  "prompt": {
+    "en": "A newcomer is not sure what the police in Canada are for. What does the guide say?",
+    "fr": "Une personne nouvellement arrivée ne sait pas trop à quoi servent les policiers au Canada. Que dit le guide?"
+  },
+  "options": [
+    {
+      "en": "They keep people safe and enforce the law.",
+      "fr": "Ils assurent la sécurité des gens et font respecter la loi."
+    },
+    {
+      "en": "They collect taxes.",
+      "fr": "Ils perçoivent les impôts."
+    },
+    {
+      "en": "They decide the sentence in a trial.",
+      "fr": "Ils décident de la peine lors d'un procès."
+    },
+    {
+      "en": "They give legal advice instead of a lawyer.",
+      "fr": "Ils donnent des conseils juridiques à la place d'un avocat."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide says the police keep people safe, enforce the law, and are there to help you.",
+    "fr": "Le guide indique que les policiers assurent la sécurité des gens, font respecter la loi et sont là pour vous aider."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The police are there to keep people safe and to enforce the law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

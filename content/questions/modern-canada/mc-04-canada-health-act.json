@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-04-canada-health-act",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What does the Canada Health Act do?",
+    "fr": "Que fait la Loi canadienne sur la santé?"
+  },
+  "options": [
+    {
+      "en": "It sets common elements and a basic standard of coverage.",
+      "fr": "Elle établit des éléments communs et une norme de base pour la couverture."
+    },
+    {
+      "en": "It builds every hospital in Canada.",
+      "fr": "Elle construit tous les hôpitaux du Canada."
+    },
+    {
+      "en": "It trains doctors and nurses.",
+      "fr": "Elle forme les médecins et les infirmières."
+    },
+    {
+      "en": "It sets the price of medicine in stores.",
+      "fr": "Elle fixe le prix des médicaments dans les magasins."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Canada Health Act is what gives health coverage across the country shared elements and a basic standard.",
+    "fr": "La Loi canadienne sur la santé donne à la couverture des soins de santé partout au pays des éléments communs et une norme de base."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 45,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Canada Health Act ensures common elements and a basic standard of coverage."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

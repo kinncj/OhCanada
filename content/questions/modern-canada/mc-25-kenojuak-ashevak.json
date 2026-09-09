@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-25-kenojuak-ashevak",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "In which forms did the artist Kenojuak Ashevak work?",
+    "fr": "Dans quelles formes d'art l'artiste Kenojuak Ashevak a-t-elle travaillé?"
+  },
+  "options": [
+    {
+      "en": "Etchings, prints and soapstone sculptures.",
+      "fr": "La gravure, l'estampe et la sculpture sur stéatite."
+    },
+    {
+      "en": "Oil paintings of city life.",
+      "fr": "La peinture à l'huile de la vie urbaine."
+    },
+    {
+      "en": "Photographs of the Rocky Mountains.",
+      "fr": "La photographie des Rocheuses."
+    },
+    {
+      "en": "Stained glass windows.",
+      "fr": "Les vitraux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Discover Canada names Kenojuak Ashevak as a pioneer of modern Inuit art, working in etchings, prints and soapstone sculptures.",
+    "fr": "Le guide Découvrir le Canada indique que Kenojuak Ashevak a ouvert la voie à l'art inuit moderne par la gravure, l'estampe et la sculpture sur stéatite."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Kenojuak Ashevak pioneered modern Inuit art with etchings, prints and soapstone sculptures."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

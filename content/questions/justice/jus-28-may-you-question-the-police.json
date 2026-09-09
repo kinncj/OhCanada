@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-28-may-you-question-the-police",
+  "subject": "justice",
+  "prompt": {
+    "en": "In Canada, are you allowed to question the police about their service or conduct?",
+    "fr": "Au Canada, avez-vous le droit de questionner les policiers sur leur service ou leur conduite?"
+  },
+  "options": [
+    {
+      "en": "Yes.",
+      "fr": "Oui."
+    },
+    {
+      "en": "No, it is against the law.",
+      "fr": "Non, c'est contraire à la loi."
+    },
+    {
+      "en": "Only a lawyer may do so.",
+      "fr": "Seul un avocat peut le faire."
+    },
+    {
+      "en": "Only Canadian citizens may do so.",
+      "fr": "Seuls les citoyens canadiens peuvent le faire."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "You may ask questions about how the police have acted, if you feel you need to.",
+    "fr": "Vous pouvez poser des questions sur la façon dont les policiers ont agi, si vous en ressentez le besoin."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 77,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "You can also question the police about their service or conduct if you feel you need to."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

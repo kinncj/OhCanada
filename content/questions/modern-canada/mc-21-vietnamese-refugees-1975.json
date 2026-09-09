@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-21-vietnamese-refugees-1975",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "After which event did many Vietnamese people seek refuge in Canada?",
+    "fr": "Après quel événement de nombreux Vietnamiens ont-ils cherché refuge au Canada?"
+  },
+  "options": [
+    {
+      "en": "The Communist victory in the Vietnam War in 1975.",
+      "fr": "La victoire communiste dans la guerre du Vietnam en 1975."
+    },
+    {
+      "en": "The end of the Korean War in 1953.",
+      "fr": "La fin de la guerre de Corée en 1953."
+    },
+    {
+      "en": "The uprising in Hungary in 1956.",
+      "fr": "Le soulèvement en Hongrie en 1956."
+    },
+    {
+      "en": "The founding of NATO.",
+      "fr": "La fondation de l'OTAN."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "When the Vietnam War ended in a Communist victory in 1975, many Vietnamese people fled, and over fifty thousand found refuge in Canada.",
+    "fr": "Lorsque la guerre du Vietnam s'est terminée par une victoire communiste en 1975, de nombreux Vietnamiens ont fui, et plus de cinquante mille ont trouvé refuge au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 48,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "With the Communist victory in the Vietnam War in 1975, many Vietnamese fled, including over 50,000 who sought refuge in Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-17-constitution-1982-and-quebec",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "The Constitution was amended in 1982. What does the guide say about Quebec and that change?",
+    "fr": "La Constitution a été modifiée en 1982. Que dit le guide au sujet du Québec et de ce changement?"
+  },
+  "options": [
+    {
+      "en": "It was made without Quebec's agreement.",
+      "fr": "Elle a été faite sans l'accord du Québec."
+    },
+    {
+      "en": "Quebec proposed it.",
+      "fr": "Le Québec l'avait proposée."
+    },
+    {
+      "en": "Quebec agreed to it before the other provinces did.",
+      "fr": "Le Québec y a consenti avant les autres provinces."
+    },
+    {
+      "en": "It was delayed until Quebec agreed.",
+      "fr": "Elle a été reportée jusqu'à ce que le Québec y consente."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "After long negotiations, the 1982 amendment went ahead even though Quebec had not agreed to it.",
+    "fr": "Après de longues négociations, la modification de 1982 a été adoptée même si le Québec n'y avait pas consenti."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 47,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "After much negotiation, in 1982 the Constitution was amended without the agreement of Quebec."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

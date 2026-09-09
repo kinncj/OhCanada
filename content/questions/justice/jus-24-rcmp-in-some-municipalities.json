@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-24-rcmp-in-some-municipalities",
+  "subject": "justice",
+  "prompt": {
+    "en": "Besides federal and provincial policing, what other policing work does the RCMP do?",
+    "fr": "En plus du travail policier fédéral et provincial, quel autre travail policier la GRC accomplit-elle?"
+  },
+  "options": [
+    {
+      "en": "It is the police force in some municipalities.",
+      "fr": "Elle est le corps de police de certaines municipalités."
+    },
+    {
+      "en": "It runs the courts.",
+      "fr": "Elle dirige les tribunaux."
+    },
+    {
+      "en": "It writes provincial laws.",
+      "fr": "Elle rédige les lois provinciales."
+    },
+    {
+      "en": "It issues passports.",
+      "fr": "Elle délivre les passeports."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Some municipalities are policed by the RCMP as well.",
+    "fr": "Certaines municipalités sont aussi desservies par la GRC."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "serve as the provincial police in all provinces and territories except Ontario and Quebec, as well as in some municipalities."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

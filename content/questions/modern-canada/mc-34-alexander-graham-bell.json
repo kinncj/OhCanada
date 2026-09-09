@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-34-alexander-graham-bell",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Which invention did Alexander Graham Bell first think of at his summer house in Canada?",
+    "fr": "Quelle invention Alexander Graham Bell a-t-il imaginée pour la première fois à sa maison d'été au Canada?"
+  },
+  "options": [
+    {
+      "en": "The telephone.",
+      "fr": "Le téléphone."
+    },
+    {
+      "en": "The radio.",
+      "fr": "La radio."
+    },
+    {
+      "en": "The light bulb.",
+      "fr": "L'ampoule électrique."
+    },
+    {
+      "en": "The snowmobile.",
+      "fr": "La motoneige."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The idea for the telephone came to Bell while he was at his summer home in Canada.",
+    "fr": "L'idée du téléphone est venue à Bell alors qu'il se trouvait à sa maison d'été au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 51,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Alexander Graham Bell — hit on the idea of the telephone at his summer house in Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

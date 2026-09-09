@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-11-korean-war",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "In the Korean War, Canada took part in a United Nations operation defending which country?",
+    "fr": "Pendant la guerre de Corée, le Canada a participé à une opération des Nations Unies pour défendre quel pays?"
+  },
+  "options": [
+    {
+      "en": "South Korea.",
+      "fr": "La Corée du Sud."
+    },
+    {
+      "en": "Japan.",
+      "fr": "Le Japon."
+    },
+    {
+      "en": "Vietnam.",
+      "fr": "Le Vietnam."
+    },
+    {
+      "en": "Cyprus.",
+      "fr": "Chypre."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadians served in the United Nations operation that defended South Korea in the early 1950s.",
+    "fr": "Des Canadiens ont servi dans l'opération des Nations Unies qui a défendu la Corée du Sud au début des années 1950."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 46,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "It participated in the UN operation defending South Korea in the Korean War (1950–53), with 500 dead and 1,000 wounded."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

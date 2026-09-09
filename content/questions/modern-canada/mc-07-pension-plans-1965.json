@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-07-pension-plans-1965",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "In which year were the Canada and Quebec Pension Plans created?",
+    "fr": "En quelle année les régimes de pensions du Canada et de rentes du Québec ont-ils été créés?"
+  },
+  "options": [
+    {
+      "en": "1965.",
+      "fr": "En 1965."
+    },
+    {
+      "en": "1927.",
+      "fr": "En 1927."
+    },
+    {
+      "en": "1940.",
+      "fr": "En 1940."
+    },
+    {
+      "en": "1982.",
+      "fr": "En 1982."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The two pension plans date from 1965. Old Age Security is older, and unemployment insurance came in 1940.",
+    "fr": "Les deux régimes de pensions datent de 1965. La Sécurité de la vieillesse est plus ancienne, et l'assurance-chômage est arrivée en 1940."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 45,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Old Age Security was devised as early as 1927, and the Canada and Quebec Pension Plans in 1965."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

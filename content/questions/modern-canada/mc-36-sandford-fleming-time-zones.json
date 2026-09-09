@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-36-sandford-fleming-time-zones",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What did Sir Sandford Fleming invent?",
+    "fr": "Qu'a inventé sir Sandford Fleming?"
+  },
+  "options": [
+    {
+      "en": "The worldwide system of standard time zones.",
+      "fr": "Le système mondial des fuseaux horaires standards."
+    },
+    {
+      "en": "The telephone.",
+      "fr": "Le téléphone."
+    },
+    {
+      "en": "The robotic arm used in space.",
+      "fr": "Le bras robotisé utilisé dans l'espace."
+    },
+    {
+      "en": "The snowmobile.",
+      "fr": "La motoneige."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Fleming worked out the system of standard time zones that the world still uses.",
+    "fr": "Fleming a mis au point le système de fuseaux horaires standards que le monde utilise encore."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 51,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Sir Sandford Fleming — invented the worldwide system of standard time zones."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

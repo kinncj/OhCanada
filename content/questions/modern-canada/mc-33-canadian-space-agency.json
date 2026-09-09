@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-33-canadian-space-agency",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Canadian astronauts have taken part in space exploration since 1989, often using which piece of Canadian equipment?",
+    "fr": "Des astronautes canadiens participent à l'exploration spatiale depuis 1989, souvent à l'aide de quel équipement canadien?"
+  },
+  "options": [
+    {
+      "en": "The Canadarm.",
+      "fr": "Le bras canadien (Canadarm)."
+    },
+    {
+      "en": "The snowmobile.",
+      "fr": "La motoneige."
+    },
+    {
+      "en": "The pacemaker.",
+      "fr": "Le stimulateur cardiaque."
+    },
+    {
+      "en": "The telephone.",
+      "fr": "Le téléphone."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Canadarm is a robotic arm designed and built in Canada, and it is used in space.",
+    "fr": "Le Canadarm est un bras robotisé conçu et construit au Canada, et il est utilisé dans l'espace."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 51,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Since 1989, the Canadian Space Agency and Canadian astronauts have participated in space exploration, often using the Canadian-designed and built Canadarm."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-23-emily-carr",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Which part of Canada did the painter Emily Carr take as her subject?",
+    "fr": "Quelle région du Canada la peintre Emily Carr a-t-elle prise comme sujet?"
+  },
+  "options": [
+    {
+      "en": "The forests of the West Coast.",
+      "fr": "Les forêts de la côte Ouest."
+    },
+    {
+      "en": "The wheat fields of the Prairies.",
+      "fr": "Les champs de blé des Prairies."
+    },
+    {
+      "en": "The fishing villages of Newfoundland.",
+      "fr": "Les villages de pêche de Terre-Neuve."
+    },
+    {
+      "en": "The streets of Montreal.",
+      "fr": "Les rues de Montréal."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Emily Carr is known for her paintings of the West Coast forests.",
+    "fr": "Emily Carr est connue pour ses tableaux des forêts de la côte Ouest."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Emily Carr painted the forests and Aboriginal artifacts of the West Coast."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-15-highest-court",
+  "subject": "justice",
+  "prompt": {
+    "en": "Which is the highest court in Canada?",
+    "fr": "Quel est le tribunal le plus élevé au Canada?"
+  },
+  "options": [
+    {
+      "en": "The Supreme Court of Canada.",
+      "fr": "La Cour suprême du Canada."
+    },
+    {
+      "en": "The Federal Court of Canada.",
+      "fr": "La Cour fédérale du Canada."
+    },
+    {
+      "en": "A provincial trial court.",
+      "fr": "Un tribunal provincial de première instance."
+    },
+    {
+      "en": "A small claims court.",
+      "fr": "Une cour des petites créances."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Supreme Court of Canada sits at the top of the country's court system.",
+    "fr": "La Cour suprême du Canada se trouve au sommet du système judiciaire du pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Supreme Court of Canada is our country’s highest court."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

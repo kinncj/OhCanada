@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-21-municipal-police",
+  "subject": "justice",
+  "prompt": {
+    "en": "Where in Canada are there municipal police departments?",
+    "fr": "Où trouve-t-on des services de police municipaux au Canada?"
+  },
+  "options": [
+    {
+      "en": "In all provinces.",
+      "fr": "Dans toutes les provinces."
+    },
+    {
+      "en": "Only in the three territories.",
+      "fr": "Seulement dans les trois territoires."
+    },
+    {
+      "en": "Only in Ontario and Quebec.",
+      "fr": "Seulement en Ontario et au Québec."
+    },
+    {
+      "en": "Only in cities of more than one million people.",
+      "fr": "Seulement dans les villes de plus d'un million d'habitants."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Every province has municipal police departments, alongside the other kinds of police force.",
+    "fr": "Chaque province a des services de police municipaux, en plus des autres types de corps policiers."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "There are provincial police forces in Ontario and Quebec and municipal police departments in all provinces."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

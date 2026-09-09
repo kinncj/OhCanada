@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-26-denys-arcand",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Denys Arcand is known in Canada as what?",
+    "fr": "Denys Arcand est connu au Canada comme quoi?"
+  },
+  "options": [
+    {
+      "en": "A filmmaker.",
+      "fr": "Un cinéaste."
+    },
+    {
+      "en": "A painter.",
+      "fr": "Un peintre."
+    },
+    {
+      "en": "A hockey player.",
+      "fr": "Un joueur de hockey."
+    },
+    {
+      "en": "A scientist.",
+      "fr": "Un scientifique."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "His films have been popular in Quebec and across the country, and they have won awards abroad.",
+    "fr": "Ses films ont connu du succès au Québec et partout au pays, et ils ont remporté des prix à l'étranger."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The films of Denys Arcand have been popular in Quebec and across the country, and have won international awards."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

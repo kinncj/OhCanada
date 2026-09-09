@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-05-what-due-process-requires",
+  "subject": "justice",
+  "prompt": {
+    "en": "What does due process require the government to do?",
+    "fr": "Qu'est-ce que l'application régulière de la loi oblige le gouvernement à faire?"
+  },
+  "options": [
+    {
+      "en": "Respect the legal rights a person has under the law.",
+      "fr": "Respecter les droits qu'une personne possède en vertu de la loi."
+    },
+    {
+      "en": "Pay for every person's lawyer.",
+      "fr": "Payer l'avocat de chaque personne."
+    },
+    {
+      "en": "Publish every court decision within a day.",
+      "fr": "Publier chaque décision d'un tribunal en une journée."
+    },
+    {
+      "en": "Ask voters before a trial can begin.",
+      "fr": "Consulter les électeurs avant qu'un procès puisse commencer."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Under this principle, a person's legal rights have to be respected by the government.",
+    "fr": "L'application régulière de la loi est le principe selon lequel le gouvernement doit respecter les droits qu'une personne possède en vertu de la loi."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Due process is the principle that the government must respect all of legal rights a person is entitled to under the law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

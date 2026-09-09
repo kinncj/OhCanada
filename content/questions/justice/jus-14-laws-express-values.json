@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-14-laws-express-values",
+  "subject": "justice",
+  "prompt": {
+    "en": "Besides keeping order, what else do Canada's laws do?",
+    "fr": "En plus de maintenir l'ordre, que font aussi les lois du Canada?"
+  },
+  "options": [
+    {
+      "en": "They express the values and beliefs of Canadians.",
+      "fr": "Elles expriment les valeurs et les croyances des Canadiens."
+    },
+    {
+      "en": "They replace the Constitution.",
+      "fr": "Elles remplacent la Constitution."
+    },
+    {
+      "en": "They set the price of food in stores.",
+      "fr": "Elles fixent le prix des aliments dans les magasins."
+    },
+    {
+      "en": "They choose Canada's flag.",
+      "fr": "Elles choisissent le drapeau du Canada."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Laws say something about what people in Canada value and believe, as well as keeping order.",
+    "fr": "Les lois disent aussi quelque chose sur ce que les gens au Canada valorisent et croient, en plus de maintenir l'ordre."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Our laws are intended to provide order in society and a peaceful way to settle disputes, and to express the values and beliefs of Canadians."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

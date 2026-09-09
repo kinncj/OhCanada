@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-01-gatt-became-the-wto",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "The General Agreement on Tariffs and Trade (GATT) helped open up world trade after the Depression. What is it called today?",
+    "fr": "L'Accord général sur les tarifs douaniers et le commerce (GATT) a aidé à ouvrir le commerce mondial après la Crise. Comment s'appelle-t-il aujourd'hui?"
+  },
+  "options": [
+    {
+      "en": "The World Trade Organization.",
+      "fr": "L'Organisation mondiale du commerce."
+    },
+    {
+      "en": "The United Nations.",
+      "fr": "L'Organisation des Nations Unies."
+    },
+    {
+      "en": "The North Atlantic Treaty Organization.",
+      "fr": "L'Organisation du Traité de l'Atlantique Nord."
+    },
+    {
+      "en": "La Francophonie.",
+      "fr": "La Francophonie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "GATT is the trade treaty that became the World Trade Organization.",
+    "fr": "Le GATT est le traité commercial devenu l'Organisation mondiale du commerce."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 45,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The world’s restrictive trading policies in the Depression era were opened up by such treaties as the General Agreement on Tariffs and Trade (GATT), now the World Trade Organization (WTO)."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-32-paul-henderson-1972",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What did Paul Henderson do in 1972 that Canadians still remember?",
+    "fr": "Qu'a fait Paul Henderson en 1972 dont les Canadiens se souviennent encore?"
+  },
+  "options": [
+    {
+      "en": "He scored the winning goal in the Canada-Soviet Summit Series.",
+      "fr": "Il a marqué le but victorieux de la Série du siècle entre le Canada et l'Union soviétique."
+    },
+    {
+      "en": "He won an Olympic gold medal in speed skating.",
+      "fr": "Il a remporté une médaille d'or olympique en patinage de vitesse."
+    },
+    {
+      "en": "He ran across Canada to raise money.",
+      "fr": "Il a traversé le Canada à la course pour recueillir des fonds."
+    },
+    {
+      "en": "He set a world record as a sprinter.",
+      "fr": "Il a établi un record du monde comme sprinteur."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "His goal decided the series against the Soviet Union, and it is often called the goal heard around the world.",
+    "fr": "Son but a décidé de la série contre l'Union soviétique, et on l'appelle souvent le but entendu partout dans le monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 50,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1972, Paul Henderson scored the winning goal for Canada in the Canada-Soviet Summit Series."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-29-wayne-gretzky",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "For which team did Wayne Gretzky play from 1979 to 1988?",
+    "fr": "Pour quelle équipe Wayne Gretzky a-t-il joué de 1979 à 1988?"
+  },
+  "options": [
+    {
+      "en": "The Edmonton Oilers.",
+      "fr": "Les Oilers d'Edmonton."
+    },
+    {
+      "en": "The Montreal Canadiens.",
+      "fr": "Les Canadiens de Montréal."
+    },
+    {
+      "en": "The Toronto Maple Leafs.",
+      "fr": "Les Maple Leafs de Toronto."
+    },
+    {
+      "en": "The Vancouver Canucks.",
+      "fr": "Les Canucks de Vancouver."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Wayne Gretzky, one of the greatest hockey players ever, spent those nine seasons in Edmonton.",
+    "fr": "Wayne Gretzky, l'un des plus grands joueurs de hockey de tous les temps, a passé ces neuf saisons à Edmonton."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "One of the greatest hockey players of all time, Wayne Gretzky, played for the Edmonton Oilers from 1979 to 1988."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

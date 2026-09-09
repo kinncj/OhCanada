@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-20-hungarian-refugees-1956",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "In 1956, Canada welcomed thousands of refugees who escaped Soviet rule in which country?",
+    "fr": "En 1956, le Canada a accueilli des milliers de réfugiés qui fuyaient la domination soviétique dans quel pays?"
+  },
+  "options": [
+    {
+      "en": "Hungary.",
+      "fr": "La Hongrie."
+    },
+    {
+      "en": "Vietnam.",
+      "fr": "Le Vietnam."
+    },
+    {
+      "en": "Cyprus.",
+      "fr": "Chypre."
+    },
+    {
+      "en": "Yugoslavia.",
+      "fr": "La Yougoslavie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Thousands of people fled Hungary in 1956, and Canada took them in.",
+    "fr": "Des milliers de personnes ont fui la Hongrie en 1956, et le Canada les a accueillies."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 48,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada welcomed thousands of refugees from Communist oppression, including about 37,000 who escaped Soviet tyranny in Hungary in 1956."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

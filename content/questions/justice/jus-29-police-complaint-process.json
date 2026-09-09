@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-29-police-complaint-process",
+  "subject": "justice",
+  "prompt": {
+    "en": "How can you bring a concern about the police forward?",
+    "fr": "Comment pouvez-vous faire part d'une préoccupation au sujet de la police?"
+  },
+  "options": [
+    {
+      "en": "Almost every police force has a process for concerns.",
+      "fr": "Presque chaque corps de police a un processus pour recevoir les préoccupations."
+    },
+    {
+      "en": "You must write to the Supreme Court of Canada.",
+      "fr": "Vous devez écrire à la Cour suprême du Canada."
+    },
+    {
+      "en": "You must ask a member of Parliament to do it for you.",
+      "fr": "Vous devez demander à un député de le faire pour vous."
+    },
+    {
+      "en": "There is no way to do this in Canada.",
+      "fr": "Il n'existe aucun moyen de le faire au Canada."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In Canada, nearly every police force has a way for you to raise a concern and ask that something be done.",
+    "fr": "Presque tous les corps de police du Canada ont un processus qui vous permet de soulever une préoccupation et de demander que des mesures soient prises."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 77,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Almost all police forces in Canada have a process by which you can bring your concerns to the police and seek action."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

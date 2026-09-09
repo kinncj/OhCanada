@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-05-employment-insurance",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "The federal government brought in unemployment insurance in 1940. What is that program called now?",
+    "fr": "Le gouvernement fédéral a instauré l'assurance-chômage en 1940. Comment ce programme s'appelle-t-il maintenant?"
+  },
+  "options": [
+    {
+      "en": "Employment insurance.",
+      "fr": "L'assurance-emploi."
+    },
+    {
+      "en": "Old Age Security.",
+      "fr": "La Sécurité de la vieillesse."
+    },
+    {
+      "en": "The Canada Pension Plan.",
+      "fr": "Le Régime de pensions du Canada."
+    },
+    {
+      "en": "The Canada Health Act.",
+      "fr": "La Loi canadienne sur la santé."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The program introduced in 1940 as unemployment insurance is now known as employment insurance.",
+    "fr": "Le programme instauré en 1940 sous le nom d'assurance-chômage porte maintenant le nom d'assurance-emploi."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 45,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Unemployment insurance (now called “employment insurance”) was introduced by the federal government in 1940."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

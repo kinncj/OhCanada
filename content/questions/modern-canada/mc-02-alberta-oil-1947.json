@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-02-alberta-oil-1947",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What began Canada's modern energy industry in 1947?",
+    "fr": "Qu'est-ce qui a lancé l'industrie énergétique moderne du Canada en 1947?"
+  },
+  "options": [
+    {
+      "en": "The discovery of oil in Alberta.",
+      "fr": "La découverte de pétrole en Alberta."
+    },
+    {
+      "en": "The first hydro dam in Quebec.",
+      "fr": "Le premier barrage hydroélectrique au Québec."
+    },
+    {
+      "en": "The opening of a coal mine in Nova Scotia.",
+      "fr": "L'ouverture d'une mine de charbon en Nouvelle-Écosse."
+    },
+    {
+      "en": "The building of a pipeline to Newfoundland.",
+      "fr": "La construction d'un pipeline vers Terre-Neuve."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Oil was found in Alberta in 1947, and that discovery started the country's modern energy industry.",
+    "fr": "Du pétrole a été découvert en Alberta en 1947, et cette découverte a lancé l'industrie énergétique moderne du pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 45,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The discovery of oil in Alberta in 1947 began Canada’s modern energy industry."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

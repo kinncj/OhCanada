@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-27-if-you-see-a-crime",
+  "subject": "justice",
+  "prompt": {
+    "en": "You see a crime taking place. What does Discover Canada say you can do?",
+    "fr": "Vous êtes témoin d'un crime. Que dit le guide Découvrir le Canada que vous pouvez faire?"
+  },
+  "options": [
+    {
+      "en": "Ask the police for help.",
+      "fr": "Demander l'aide de la police."
+    },
+    {
+      "en": "Wait until the next election.",
+      "fr": "Attendre les prochaines élections."
+    },
+    {
+      "en": "Take the person to court yourself.",
+      "fr": "Traduire vous-même la personne devant le tribunal."
+    },
+    {
+      "en": "Do nothing, because only lawyers may report a crime.",
+      "fr": "Ne rien faire, car seuls les avocats peuvent signaler un crime."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Witnessing a crime is one of the situations where you can turn to the police for help.",
+    "fr": "Être témoin d'un crime est l'une des situations où vous pouvez vous adresser à la police pour obtenir de l'aide."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "You can ask the police for help in all kinds of situations—if there’s been an accident, if someone has stolen something from you, if you are a victim of assault, if you see a crime taking place or if someone you know has gone missing."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

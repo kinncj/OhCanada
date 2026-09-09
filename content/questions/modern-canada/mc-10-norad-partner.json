@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-10-norad-partner",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "With which country did Canada join to create NORAD?",
+    "fr": "Avec quel pays le Canada s'est-il uni pour créer le NORAD?"
+  },
+  "options": [
+    {
+      "en": "The United States.",
+      "fr": "Les États-Unis."
+    },
+    {
+      "en": "The United Kingdom.",
+      "fr": "Le Royaume-Uni."
+    },
+    {
+      "en": "France.",
+      "fr": "La France."
+    },
+    {
+      "en": "Australia.",
+      "fr": "L'Australie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "NORAD is the North American Aerospace Defence Command, which Canada and the United States run together.",
+    "fr": "Le NORAD est le Commandement de la défense aérospatiale de l'Amérique du Nord, que le Canada et les États-Unis dirigent ensemble."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 46,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "and with the United States in the North American Aerospace Defence Command (NORAD)."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-27-james-naismith-basketball",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Which sport did the Canadian James Naismith invent in 1891?",
+    "fr": "Quel sport le Canadien James Naismith a-t-il inventé en 1891?"
+  },
+  "options": [
+    {
+      "en": "Basketball.",
+      "fr": "Le basketball."
+    },
+    {
+      "en": "Ice hockey.",
+      "fr": "Le hockey sur glace."
+    },
+    {
+      "en": "Lacrosse.",
+      "fr": "La crosse."
+    },
+    {
+      "en": "Curling.",
+      "fr": "Le curling."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Basketball was invented in 1891 by James Naismith, who was Canadian.",
+    "fr": "Le basketball a été inventé en 1891 par James Naismith, un Canadien."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Basketball was invented by Canadian James Naismith in 1891."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

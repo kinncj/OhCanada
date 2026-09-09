@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-14-royal-commission-1963",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "The Royal Commission on Bilingualism and Biculturalism, set up in 1963, led to which law?",
+    "fr": "La Commission royale d'enquête sur le bilinguisme et le biculturalisme, créée en 1963, a mené à quelle loi?"
+  },
+  "options": [
+    {
+      "en": "The Official Languages Act of 1969.",
+      "fr": "La Loi sur les langues officielles de 1969."
+    },
+    {
+      "en": "The Canada Health Act.",
+      "fr": "La Loi canadienne sur la santé."
+    },
+    {
+      "en": "The Constitution Act, 1867.",
+      "fr": "La Loi constitutionnelle de 1867."
+    },
+    {
+      "en": "The Citizenship Act of 1947.",
+      "fr": "La Loi sur la citoyenneté de 1947."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Parliament set up the commission in 1963, and its work led to the Official Languages Act in 1969.",
+    "fr": "Le Parlement a créé la commission en 1963, et ses travaux ont mené à la Loi sur les langues officielles en 1969."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 46,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1963 Parliament established the Royal Commission on Bilingualism and Biculturalism. This led to the Official Languages Act (1969), which guarantees French and English services in the federal government across Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

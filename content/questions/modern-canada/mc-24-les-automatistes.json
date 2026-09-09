@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-24-les-automatistes",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Les Automatistes of Quebec were pioneers of which kind of art in the 1950s?",
+    "fr": "Les Automatistes du Québec ont été des pionniers de quel type d'art dans les années 1950?"
+  },
+  "options": [
+    {
+      "en": "Modern abstract art.",
+      "fr": "L'art abstrait moderne."
+    },
+    {
+      "en": "Landscape painting.",
+      "fr": "La peinture de paysage."
+    },
+    {
+      "en": "Portrait sculpture.",
+      "fr": "La sculpture de portraits."
+    },
+    {
+      "en": "Documentary film.",
+      "fr": "Le film documentaire."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "This Quebec group opened the way for modern abstract art in Canada, and Jean-Paul Riopelle is its best-known member.",
+    "fr": "Ce groupe québécois a ouvert la voie à l'art abstrait moderne au Canada, et Jean-Paul Riopelle en est le membre le plus connu."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 49,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Les Automatistes of Quebec were pioneers of modern abstract art in the 1950s, most notably Jean-Paul Riopelle."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

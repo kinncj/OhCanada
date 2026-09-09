@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-06-old-age-security-1927",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Which social program was devised as early as 1927?",
+    "fr": "Quel programme social a été conçu dès 1927?"
+  },
+  "options": [
+    {
+      "en": "Old Age Security.",
+      "fr": "La Sécurité de la vieillesse."
+    },
+    {
+      "en": "Employment insurance.",
+      "fr": "L'assurance-emploi."
+    },
+    {
+      "en": "The Quebec Pension Plan.",
+      "fr": "Le Régime de rentes du Québec."
+    },
+    {
+      "en": "Publicly funded university.",
+      "fr": "L'université financée par l'État."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Old Age Security was worked out as early as 1927, well before the pension plans of 1965.",
+    "fr": "La Sécurité de la vieillesse a été conçue dès 1927, bien avant les régimes de pensions de 1965."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 45,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Old Age Security was devised as early as 1927, and the Canada and Quebec Pension Plans in 1965."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

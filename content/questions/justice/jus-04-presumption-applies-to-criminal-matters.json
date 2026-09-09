@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-04-presumption-applies-to-criminal-matters",
+  "subject": "justice",
+  "prompt": {
+    "en": "In which kind of matters does Discover Canada say the presumption of innocence is the foundation of our judicial system?",
+    "fr": "Dans quel type d'affaires le guide Découvrir le Canada dit-il que la présomption d'innocence est le fondement de notre système judiciaire?"
+  },
+  "options": [
+    {
+      "en": "Criminal matters.",
+      "fr": "Les affaires criminelles."
+    },
+    {
+      "en": "Traffic matters only.",
+      "fr": "Les affaires de circulation seulement."
+    },
+    {
+      "en": "Family matters only.",
+      "fr": "Les affaires familiales seulement."
+    },
+    {
+      "en": "Cases about small sums of money.",
+      "fr": "Les causes portant sur de petites sommes d'argent."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide names criminal matters when it explains that our judicial system rests on this principle.",
+    "fr": "Le guide nomme les affaires criminelles lorsqu'il explique que notre système judiciaire repose sur ce principe."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Our judicial system is founded on the presumption of innocence in criminal matters, meaning everyone is innocent until proven guilty."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

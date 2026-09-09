@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-11-what-the-police-do",
+  "subject": "justice",
+  "prompt": {
+    "en": "In Canada's justice system, what is the job of the police?",
+    "fr": "Dans le système de justice du Canada, quel est le rôle des policiers?"
+  },
+  "options": [
+    {
+      "en": "To enforce the laws.",
+      "fr": "Faire respecter les lois."
+    },
+    {
+      "en": "To decide who is guilty.",
+      "fr": "Décider qui est coupable."
+    },
+    {
+      "en": "To write the laws.",
+      "fr": "Rédiger les lois."
+    },
+    {
+      "en": "To choose the judges.",
+      "fr": "Choisir les juges."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The police enforce the laws. Deciding a case is the work of the courts, and writing laws is the work of elected representatives.",
+    "fr": "Les policiers font respecter les lois. Trancher une cause revient aux tribunaux, et rédiger les lois revient aux représentants élus."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The courts settle disputes and the police enforce the laws."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

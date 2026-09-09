@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-31-legal-aid",
+  "subject": "justice",
+  "prompt": {
+    "en": "What can you do if you cannot pay for a lawyer?",
+    "fr": "Que pouvez-vous faire si vous n'avez pas les moyens de payer un avocat?"
+  },
+  "options": [
+    {
+      "en": "Use legal aid, which most communities offer free or at low cost.",
+      "fr": "Recourir à l'aide juridique, offerte gratuitement ou à faible coût dans la plupart des collectivités."
+    },
+    {
+      "en": "Nothing. You must pay the full cost.",
+      "fr": "Rien. Vous devez payer le plein montant."
+    },
+    {
+      "en": "Ask the judge to pay for one.",
+      "fr": "Demander au juge d'en payer un."
+    },
+    {
+      "en": "Ask the police to act for you in court.",
+      "fr": "Demander aux policiers d'agir pour vous devant le tribunal."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Most communities have legal aid services that cost little or nothing.",
+    "fr": "La plupart des collectivités offrent des services d'aide juridique qui coûtent peu ou rien."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 77,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "If you cannot pay for a lawyer, in most communities there are legal aid services available free of charge or at a low cost."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-06-legal-heritage",
+  "subject": "justice",
+  "prompt": {
+    "en": "Canada's legal system grew out of a heritage. Which of these is part of that heritage?",
+    "fr": "Le système juridique du Canada est issu d'un héritage. Lequel de ces éléments en fait partie?"
+  },
+  "options": [
+    {
+      "en": "Freedom under the law.",
+      "fr": "La liberté sous le régime de la loi."
+    },
+    {
+      "en": "Rule by one family.",
+      "fr": "Le pouvoir exercé par une seule famille."
+    },
+    {
+      "en": "Trial by combat.",
+      "fr": "Le jugement par combat."
+    },
+    {
+      "en": "Laws that are never made public.",
+      "fr": "Des lois qui ne sont jamais rendues publiques."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada's legal system rests on a heritage that includes freedom under the law, together with the rule of law, democratic ideas and due process.",
+    "fr": "Le système juridique du Canada repose sur un héritage qui comprend la liberté sous le régime de la loi, ainsi que la primauté du droit, les principes démocratiques et l'application régulière de la loi."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada’s legal system is based on a heritage that includes the rule of law, freedom under the law, democratic principles and due process."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

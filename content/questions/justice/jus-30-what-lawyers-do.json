@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-30-what-lawyers-do",
+  "subject": "justice",
+  "prompt": {
+    "en": "What do lawyers do in Canada?",
+    "fr": "Que font les avocats au Canada?"
+  },
+  "options": [
+    {
+      "en": "They help with legal problems and act for you in court.",
+      "fr": "Ils vous aident avec vos problèmes juridiques et agissent pour vous devant le tribunal."
+    },
+    {
+      "en": "They decide the sentence.",
+      "fr": "Ils décident de la peine."
+    },
+    {
+      "en": "They swear in new citizens.",
+      "fr": "Ils font prêter serment aux nouveaux citoyens."
+    },
+    {
+      "en": "They write provincial laws.",
+      "fr": "Ils rédigent les lois provinciales."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A lawyer can help you with a legal problem and can speak for you in court.",
+    "fr": "Un avocat peut vous aider à régler un problème juridique et parler en votre nom devant le tribunal."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 77,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Lawyers can help you with legal problems and act for you in court."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

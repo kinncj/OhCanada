@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-02-due-process-covers-everyone",
+  "subject": "justice",
+  "prompt": {
+    "en": "Who is covered by due process in Canada?",
+    "fr": "Qui est visé par l'application régulière de la loi au Canada?"
+  },
+  "options": [
+    {
+      "en": "Everyone.",
+      "fr": "Tout le monde."
+    },
+    {
+      "en": "Canadian citizens only.",
+      "fr": "Les citoyens canadiens seulement."
+    },
+    {
+      "en": "Adults only.",
+      "fr": "Les adultes seulement."
+    },
+    {
+      "en": "People born in Canada only.",
+      "fr": "Les personnes nées au Canada seulement."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide says the justice system gives due process to everyone, not only to citizens or to people born here.",
+    "fr": "Le guide indique que le système de justice accorde l'application régulière de la loi à tout le monde, et pas seulement aux citoyens ou aux personnes nées ici."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Canadian justice system guarantees everyone due process under the law."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-12-law-applies-to-judges-and-police",
+  "subject": "justice",
+  "prompt": {
+    "en": "The chapter on the justice system names three groups that the law also applies to. Which are they?",
+    "fr": "Le chapitre sur le système de justice nomme trois groupes auxquels la loi s'applique aussi. Lesquels?"
+  },
+  "options": [
+    {
+      "en": "Judges, politicians and the police.",
+      "fr": "Les juges, les politiciens et les policiers."
+    },
+    {
+      "en": "Judges and politicians, but not the police.",
+      "fr": "Les juges et les politiciens, mais pas les policiers."
+    },
+    {
+      "en": "Police officers only, and only while on duty.",
+      "fr": "Les policiers seulement, et seulement pendant leur service."
+    },
+    {
+      "en": "People who are not yet citizens.",
+      "fr": "Les personnes qui ne sont pas encore citoyennes."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide says the law reaches everyone, and it names judges, politicians and police officers so that nobody reads themselves out of it.",
+    "fr": "Le guide précise que la loi s'applique à tous, et il nomme les juges, les politiciens et les policiers pour que personne ne s'en croie exclu."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The law in Canada applies to everyone, including judges, politicians and the police."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

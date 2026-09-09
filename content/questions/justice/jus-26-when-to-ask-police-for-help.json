@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-26-when-to-ask-police-for-help",
+  "subject": "justice",
+  "prompt": {
+    "en": "Which of these is a situation where the guide says you can ask the police for help?",
+    "fr": "Dans laquelle de ces situations le guide dit-il que vous pouvez demander l'aide de la police?"
+  },
+  "options": [
+    {
+      "en": "Someone you know has gone missing.",
+      "fr": "Une personne que vous connaissez a disparu."
+    },
+    {
+      "en": "You dislike the music your neighbour plays.",
+      "fr": "Vous n'aimez pas la musique que votre voisin fait jouer."
+    },
+    {
+      "en": "You disagree with a new law.",
+      "fr": "Vous êtes en désaccord avec une nouvelle loi."
+    },
+    {
+      "en": "You want advice about buying a house.",
+      "fr": "Vous voulez des conseils pour acheter une maison."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide lists an accident, a theft, an assault, a crime you witness, and a person you know going missing.",
+    "fr": "Le guide mentionne un accident, un vol, une agression, un crime dont vous êtes témoin et la disparition d'une personne que vous connaissez."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "You can ask the police for help in all kinds of situations—if there’s been an accident, if someone has stolen something from you, if you are a victim of assault, if you see a crime taking place or if someone you know has gone missing."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

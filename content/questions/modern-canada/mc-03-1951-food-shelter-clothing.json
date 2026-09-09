@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-03-1951-food-shelter-clothing",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "What happened for the first time in Canada in 1951?",
+    "fr": "Qu'est-ce qui s'est produit pour la première fois au Canada en 1951?"
+  },
+  "options": [
+    {
+      "en": "Most Canadians could afford enough food, housing and clothing.",
+      "fr": "La plupart des Canadiens pouvaient se payer assez de nourriture, un logement et des vêtements."
+    },
+    {
+      "en": "Every Canadian home had a telephone.",
+      "fr": "Chaque foyer canadien avait un téléphone."
+    },
+    {
+      "en": "Canada joined the United Nations.",
+      "fr": "Le Canada est entré aux Nations Unies."
+    },
+    {
+      "en": "Women were allowed to work outside the home.",
+      "fr": "Les femmes ont été autorisées à travailler à l'extérieur du foyer."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "By 1951 a majority of Canadians could pay for enough food, shelter and clothing, which had never been true before.",
+    "fr": "En 1951, la majorité des Canadiens pouvaient payer assez de nourriture, un logement et des vêtements, ce qui n'était jamais arrivé auparavant."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 45,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1951, for the first time, a majority of Canadians were able to afford adequate food, shelter and clothing."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

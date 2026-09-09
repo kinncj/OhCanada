@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-07-lady-justice-blindfold",
+  "subject": "justice",
+  "prompt": {
+    "en": "Statues of Lady Justice wear a blindfold. What does the blindfold stand for?",
+    "fr": "Les statues de la Justice portent un bandeau sur les yeux. Que représente ce bandeau?"
+  },
+  "options": [
+    {
+      "en": "Laws are applied fairly, looking only at the facts.",
+      "fr": "Les lois sont appliquées de façon impartiale, en tenant compte des faits seulement."
+    },
+    {
+      "en": "Judges are not allowed to read the news.",
+      "fr": "Les juges n'ont pas le droit de lire les nouvelles."
+    },
+    {
+      "en": "Court hearings are held in private.",
+      "fr": "Les audiences des tribunaux se tiennent à huis clos."
+    },
+    {
+      "en": "The names of judges are kept secret.",
+      "fr": "Les noms des juges demeurent secrets."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The blindfold is a sign that our laws are applied without favour. Only the facts of the case count.",
+    "fr": "Le bandeau montre que nos lois sont appliquées sans favoritisme. Seuls les faits de la cause comptent."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The blindfolded Lady Justice symbolizes the impartial manner in which our laws are administered: blind to all considerations but the facts"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

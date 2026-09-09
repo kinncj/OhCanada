@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-12-un-peacekeeping-missions",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Canada has taken part in many missions in places such as Egypt, Cyprus and Haiti. What kind of missions were they?",
+    "fr": "Le Canada a participé à de nombreuses missions dans des endroits comme l'Égypte, Chypre et Haïti. De quel genre de missions s'agissait-il?"
+  },
+  "options": [
+    {
+      "en": "United Nations peacekeeping missions.",
+      "fr": "Des missions de maintien de la paix des Nations Unies."
+    },
+    {
+      "en": "Trade missions.",
+      "fr": "Des missions commerciales."
+    },
+    {
+      "en": "Scientific missions in space.",
+      "fr": "Des missions scientifiques dans l'espace."
+    },
+    {
+      "en": "Missions to sign treaties with other countries.",
+      "fr": "Des missions pour signer des traités avec d'autres pays."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canadians have served on many United Nations peacekeeping missions around the world.",
+    "fr": "Des Canadiens ont servi dans de nombreuses missions de maintien de la paix des Nations Unies partout dans le monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 46,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada has taken part in numerous UN peacekeeping missions in places as varied as Egypt, Cyprus and Haiti, as well as in other international security operations such as those in the former Yugoslavia and Afghanistan."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

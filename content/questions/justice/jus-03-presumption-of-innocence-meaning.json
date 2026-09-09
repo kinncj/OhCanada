@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-03-presumption-of-innocence-meaning",
+  "subject": "justice",
+  "prompt": {
+    "en": "In Canada, what does the presumption of innocence mean?",
+    "fr": "Au Canada, que signifie la présomption d'innocence?"
+  },
+  "options": [
+    {
+      "en": "A person is innocent until guilt is proven.",
+      "fr": "Une personne est innocente tant que sa culpabilité n'est pas prouvée."
+    },
+    {
+      "en": "A person must prove that they are innocent.",
+      "fr": "Une personne doit prouver qu'elle est innocente."
+    },
+    {
+      "en": "The police decide who is guilty.",
+      "fr": "Les policiers décident qui est coupable."
+    },
+    {
+      "en": "A person is guilty as soon as they are charged.",
+      "fr": "Une personne est coupable dès qu'elle est accusée."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Our judicial system starts from the presumption of innocence. A person is treated as innocent until guilt has been proven.",
+    "fr": "Notre système judiciaire part de la présomption d'innocence. Une personne est considérée comme innocente tant que sa culpabilité n'a pas été prouvée."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Our judicial system is founded on the presumption of innocence in criminal matters, meaning everyone is innocent until proven guilty."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

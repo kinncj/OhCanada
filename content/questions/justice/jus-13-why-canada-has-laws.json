@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-13-why-canada-has-laws",
+  "subject": "justice",
+  "prompt": {
+    "en": "Why does Canada have laws?",
+    "fr": "Pourquoi le Canada a-t-il des lois?"
+  },
+  "options": [
+    {
+      "en": "To keep order and to settle disputes peacefully.",
+      "fr": "Pour maintenir l'ordre et régler les différends de façon pacifique."
+    },
+    {
+      "en": "To raise money for the government.",
+      "fr": "Pour recueillir de l'argent pour le gouvernement."
+    },
+    {
+      "en": "To keep the courts busy.",
+      "fr": "Pour occuper les tribunaux."
+    },
+    {
+      "en": "To decide which language people speak at home.",
+      "fr": "Pour décider quelle langue les gens parlent à la maison."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Laws give society order, and they give people a peaceful way to settle a disagreement.",
+    "fr": "Les lois donnent de l'ordre à la société et offrent aux gens un moyen pacifique de régler un désaccord."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 75,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Our laws are intended to provide order in society and a peaceful way to settle disputes, and to express the values and beliefs of Canadians."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

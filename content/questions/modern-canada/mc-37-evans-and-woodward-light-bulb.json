@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "mc-37-evans-and-woodward-light-bulb",
+  "subject": "modern-canada",
+  "prompt": {
+    "en": "Matthew Evans and Henry Woodward invented the first electric light bulb. What did they do with the patent?",
+    "fr": "Matthew Evans et Henry Woodward ont inventé la première ampoule électrique. Qu'ont-ils fait du brevet?"
+  },
+  "options": [
+    {
+      "en": "They sold it to Thomas Edison.",
+      "fr": "Ils l'ont vendu à Thomas Edison."
+    },
+    {
+      "en": "They gave it to the Canadian government.",
+      "fr": "Ils l'ont donné au gouvernement canadien."
+    },
+    {
+      "en": "They kept it and built a company.",
+      "fr": "Ils l'ont gardé et ont bâti une entreprise."
+    },
+    {
+      "en": "They let it expire without using it.",
+      "fr": "Ils l'ont laissé expirer sans l'utiliser."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The two Canadians sold the patent to Thomas Edison, who then made the light bulb a commercial success.",
+    "fr": "Les deux Canadiens ont vendu le brevet à Thomas Edison, qui a ensuite fait de l'ampoule un succès commercial."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Modern Canada",
+    "page": 51,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Matthew Evans and Henry Woodward — together invented the first electric light bulb and later sold the patent to Thomas Edison"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
