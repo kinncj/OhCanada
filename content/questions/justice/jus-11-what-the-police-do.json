@@ -40,10 +40,10 @@
     "quote": "The courts settle disputes and the police enforce the laws."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "verified",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-09T04:06:30Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "These laws are the written rules intended to guide people in our society. They are made by elected representatives. The courts settle disputes and the police enforce the laws."
   }
 }

@@ -40,10 +40,10 @@
     "quote": "There are also provincial courts for lesser offences, family courts, traffic courts and small claims courts for civil cases involving small sums of money."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "verified",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-09T04:06:30Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "small claims courts for civil cases involving small sums of money"
   }
 }
