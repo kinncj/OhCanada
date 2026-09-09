@@ -195,6 +195,42 @@
         18,
         21
       ]
+    },
+    {
+      "topic": "The G8 and Russia's membership in Canada's Economy",
+      "problem": "Page 90 lists Russia among the G8. Russia was suspended in March 2014 and the group has met as the G7 ever since. Confirmed against the live page on 2026-09-09, Date modified 2025-04-11: it still names Russia, eleven years on.",
+      "affects": [
+        "Canada's Economy"
+      ],
+      "grain": "pages",
+      "pages": [
+        90
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "G8",
+        "G7",
+        "Russia",
+        "Russie"
+      ],
+      "action": "G7 is banned beside G8 deliberately: an option naming the G7 is right about the world and wrong about the document the exam is drawn from, so no answer may rest on the group's name in either direction. The flag stops at the G8 clause -- the same sentence's ranking claim is volatile's job, and folding it in would over-fire onto a usable proposition and repeat the grain defect this register keeps closing."
+    },
+    {
+      "topic": "The English lyrics of O Canada",
+      "problem": "Page 84 prints \"True patriot love in all thy sons command\". Bill C-210 received royal assent on 2018-02-07 and replaced that line with \"in all of us command\". Confirmed against the live page on 2026-09-09, Date modified 2026-05-14 -- four months old -- still printing the pre-2018 line.",
+      "affects": [
+        "Canadian Symbols"
+      ],
+      "grain": "pages",
+      "pages": [
+        84
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "thy sons",
+        "all of us command"
+      ],
+      "action": "Both the stale line and the current one are banned, for the reason G7 is banned beside G8. The two facts flanking it on the same page -- proclaimed 1980, first sung in Quebec City 1880 -- cannot move and are what the shipped questions grade."
     }
   ],
   "grainNote": "knownStaleness entries carry `pages` where the affected claims are localised, and fall back to `affects` chapters where they are not. Chapter grain alone made 57 of 57 authored questions volatile because two facts in the chapter were, which stopped the flag discriminating: everything is re-verified every run and quarantined at 180 days, so nothing is prioritised. A flag that fires on everything carries the same information as a flag that fires on nothing.",
@@ -254,6 +290,48 @@
       ],
       "finding": "source-unrevised",
       "consequence": "TRANSCRIBED, NOT FETCHED. This finding was made by the content verifier on 2026-09-08 and written as prose into knownStaleness[\"Population shares and religious affiliation in Who We Are\"].action: \"The live page (who-are-canadians.html, Date modified 2025-08-08) still carries every one of them, so the modification date is not evidence of revision and re-fetching resolves nothing.\" ADR-0016 section 1 created this array precisely so that finding could be branched on, and rejected recording it in knownStaleness prose because nothing can read it there; it was recorded there anyway, four flags below an entry of exactly this shape. The architect moved it and re-fetched nothing, so this entry inherits whatever authority the prose had and acquires none. What it buys is the one thing prose could not: the claim now expires. It puts Who We Are on ADR-0016 section 2 row 2, which lifts the volatile demand from the fifteen questions on pages 17, 18 and 21 that carry historical and definitional facts, and starts a 180-day clock on the source that quarantines every question in the chapter on 2027-03-07 unless somebody looks again. A first-hand check by the verifier should replace this entry rather than be appended beside it."
+    },
+    {
+      "checkedAt": "2026-09-09",
+      "checkedBy": "content-verifier",
+      "finding": "source-unrevised",
+      "pages": [
+        {
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/canadas-economy.html",
+          "chapter": "Canada's Economy",
+          "sourceDateModified": "2025-04-11",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the G8 membership list including Russia",
+            "the free trade agreements and Mexico's accession",
+            "trade as the basis of the standard of living",
+            "the three types of industry",
+            "the Peace Arch and its inscriptions"
+          ]
+        }
+      ],
+      "consequence": "Fetched first-hand. The live page still names Russia in the G8 eleven years after the 2014 suspension, so re-fetching cannot correct it and the disposition is does-not-revise. The cached PDF was downloaded the same day and hashes byte-identical to this file's sha256 at 910,364 bytes, so the cache is not drifting from the document canada.ca serves."
+    },
+    {
+      "checkedAt": "2026-09-09",
+      "checkedBy": "content-verifier",
+      "finding": "source-unrevised",
+      "pages": [
+        {
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/canadian-symbols.html",
+          "chapter": "Canadian Symbols",
+          "sourceDateModified": "2026-05-14",
+          "agreesWithCache": false,
+          "claimsCompared": [
+            "the English lyrics of O Canada",
+            "the year O Canada was proclaimed",
+            "where O Canada was first sung",
+            "the Royal Anthem's title and when it is played",
+            "the Victoria Cross recipients"
+          ]
+        }
+      ],
+      "consequence": "Kept as a SEPARATE entry from Canada's Economy precisely because this page disagrees with the cache and that one does not. The disagreement is an EDITION difference, not cache drift: the read-online HTML has been updated for the accession in the Royal Anthem section alone -- it now reads God Save the King and prints God save our gracious King -- while the cached PDF, downloaded the same day and byte-identical to this file's sha256, reads Queen. The Crown section of the same live page still describes Queen Elizabeth II's Diamond Jubilee, so the update is one section deep. The pre-2018 O Canada line is present in BOTH editions and is the drift this check exists to record. Note that finding source-unrevised sits here beside agreesWithCache false: ADR-0016's amendment recorded that dispositionFor reads only the finding and never the page's agreement, and called it probably a real gap. This is its first live instance, with a benign cause."
     }
   ]
 }
