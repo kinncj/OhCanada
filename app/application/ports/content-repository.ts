@@ -29,6 +29,7 @@ import type {
   SubjectId,
 } from '@domain/ids';
 import type { Result } from '@common/result';
+import type { Shippable } from '@domain/entities/question';
 import type { LocomotionTuning } from './locomotion';
 
 /**
@@ -620,6 +621,28 @@ export interface QuestionDocument {
   readonly verification: FactVerification;
 }
 
+/**
+ * A question that has passed ADR-0003's gate and may be shown to a player.
+ *
+ * There is no `ShippableQuestion` in `question.schema.json` and there should not
+ * be: this is not a second document shape, it is `QuestionDocument` plus a
+ * type-level receipt. `Shippable<T>` carries a `unique symbol` private to
+ * `app/domain/entities/question.ts`, and `shippableQuestions` is the only
+ * function in the program that attaches it.
+ *
+ * The consequence is the point. `questions()` below promises *this* type, so an
+ * implementation of `ContentRepository` cannot satisfy the port by handing back
+ * the directory it read. It has to pass the documents through the rule — status
+ * `verified`, verification hash matching the source it cites, evidence quoted,
+ * EN and FR present — because that is the only thing that produces a value of
+ * the declared type. `rejected` and `quarantined` are excluded structurally
+ * rather than by a filter an adapter has to remember to keep.
+ *
+ * It is assignable to `QuestionDocument`, so `answerQuestion`, `scheduleReview`
+ * and the question card take one with no change and no unwrapping.
+ */
+export type ShippableQuestion = Shippable<QuestionDocument>;
+
 /* --------------------------------------------------------------------------
  * content/characters/<id>.json — schema: content/schemas/character.schema.json
  * ----------------------------------------------------------------------- */
@@ -986,8 +1009,34 @@ export interface ContentRepository {
   levelIndex(): Promise<Result<readonly LevelSummary[]>>;
   level(id: LevelId): Promise<Result<LevelDocument>>;
   quests(levelId: LevelId): Promise<Result<readonly QuestDocument[]>>;
-  /** The whole bank for a subject; the scheduler picks from it in the domain. */
-  questions(subject: SubjectId): Promise<Result<readonly QuestionDocument[]>>;
+  /**
+   * Which subjects have a question bank in this build, in a stable order.
+   *
+   * Not derivable from `levelIndex()`, and that is why it exists: a level
+   * declares the subject it teaches, but a subject may have a bank long before
+   * its level is authored — today there are four banks and two level documents.
+   * Study and Exam draw across every bank that exists, so without this every
+   * caller would either hard-code the list or silently ask a two-level game for
+   * two subjects' worth of a four-subject bank.
+   *
+   * Refuses rather than returning `[]`: an empty catalogue is a build failure
+   * that otherwise presents to a player as a finished session (ADR-0024).
+   */
+  subjects(): Promise<Result<readonly SubjectId[]>>;
+  /**
+   * The whole bank for a subject; the scheduler picks from it in the domain.
+   *
+   * `ShippableQuestion`, not `QuestionDocument`: see the type above. Every
+   * document is returned with both languages intact — no locale is chosen here,
+   * so switching language in settings re-renders a card rather than reloading a
+   * bank.
+   *
+   * Fails with `content.questions.bank.empty` when the subject admits nothing.
+   * A drill shorter than `study.drillSize` is normal (TN-STUDY-02); a drill of
+   * zero is not, and it is the one length that reads as success everywhere it is
+   * counted.
+   */
+  questions(subject: SubjectId): Promise<Result<readonly ShippableQuestion[]>>;
   character(id: CharacterId): Promise<Result<CharacterDocument>>;
   /**
    * The shared character rig, `content/characters/rig.json` (ADR-0022).
@@ -1006,3 +1055,18 @@ export interface ContentRepository {
    */
   unload(levelId: LevelId): Promise<Result<void>>;
 }
+
+/**
+ * The question half of `ContentRepository`, for the things that only ask
+ * questions: Study, Exam, and the `answer` step of a quest.
+ *
+ * A `Pick` and not a fresh interface, so there is exactly one declaration of
+ * each signature and any full `ContentRepository` satisfies this by
+ * construction. It exists because the alternative is worse in both directions:
+ * a Study screen holding the whole repository can reach `level()` and
+ * `unload()`, and an adapter that only knows how to read the bank would
+ * otherwise have to stub seven methods it has no business implementing.
+ *
+ * The same derivation as `LevelSummary` above, for the same reason (ADR-0007).
+ */
+export type QuestionBank = Pick<ContentRepository, 'subjects' | 'questions'>;

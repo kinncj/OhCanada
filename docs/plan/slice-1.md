@@ -148,10 +148,15 @@ plan that overstates is worse than one that is behind — the next reader trusts
     `app/ui/copy.ts` has labels for three slots that do not match those five and no option names at all,
     because naming the six skin ramps is `docs/content-review.md` §8.1 / `OQ-REVIEW-6` and is open. Mounting
     it means inventing player-facing content, which ADR-0010 forbids.
-  - **Study, the question card and dialogue** need a `ContentRepository`. `content/questions/` holds a
-    verified bank and **nothing implements the port**, so the scheduler has no source and Study could only be
-    mounted showing its *empty* state over thirty verified questions. That is a content adapter, not a UI
-    screen, and it is not in any task's scope today.
+  - **Study, the question card and dialogue** needed a `ContentRepository`, and now have one for questions.
+    `app/adapters/content/` implements `QuestionBank` (`Pick<ContentRepository, 'subjects' | 'questions'>`)
+    over the bundled `content/questions/` tree, chunked one file per subject, off the initial payload;
+    `app/application/use-cases/study-session.ts` composes it with the FSRS draw and `app/bootstrap/main.ts`
+    wires it. **What is left is the screen**: mounting `app/ui/study-screen.ts` against `StudySession`,
+    bracketing it with `shell.openOverlay`, and routing its answers through `answerQuestion` and the save.
+    `onOpenStudy` stays absent until then, because the shell hides an absent option rather than drawing a
+    dead control. Dialogue and the in-quest card still need `quests()` and `level()`, which no adapter
+    implements yet.
   - **both character renderers** are still constructed by nothing; `level-scene.ts` owns character drawing.
 - **The build-status caption is now dead code.** Nothing under `app/` imports `app/ui/build-status.ts`: the
   title screen replaced the sentence it existed to say. Under ADR-0015 it should be pruned — the module, its

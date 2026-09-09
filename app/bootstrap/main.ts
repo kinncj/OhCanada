@@ -45,7 +45,9 @@
 
 import gameConfigDocument from '@content/game.config.json';
 
+import { bundledQuestionBank } from '@adapters/content';
 import { browserLocalStorage, createLocalStorageProgressRepository } from '@adapters/persistence';
+import { createSeededRandom } from '@adapters/random';
 import {
   GameRenderer,
   hasLevel,
@@ -54,6 +56,7 @@ import {
   type SceneLevel,
 } from '@adapters/phaser';
 import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
+import { createStudySession, type StudySession } from '@application/use-cases/study-session';
 import type { Clock, LocalizedText } from '@application/ports';
 import {
   exportProgress,
@@ -263,6 +266,14 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     now: () => Date.now() as EpochMillis,
     elapsed: () => (typeof performance === 'undefined' ? Date.now() : performance.now()),
   };
+  /*
+   * Seeded from the wall clock so two sittings differ, and printed nowhere yet.
+   * The value of `SeededRandomSource` here is not that this seed is interesting
+   * — it is that a draw is a pure function of one number, so a repetitive drill
+   * reported from a phone is reproducible once the seed travels with the report.
+   * `fork` keeps the study draw's stream clear of any other consumer's.
+   */
+  const random = createSeededRandom(Date.now() >>> 0);
   const codec = createJsonSaveCodec({ maxImportBytes: rules.maxImportBytes });
   const storage = browserLocalStorage();
   const repository = createLocalStorageProgressRepository({ storage, codec });
@@ -289,6 +300,24 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     loaded.ok && loaded.value !== null
       ? loaded.value
       : newProgress(defaultSettings(config.defaultLocale), rules.unlockRules.initialLevels);
+
+  /*
+   * The question bank, wired.
+   *
+   * `progress` is passed as a getter and not as a value: it is reassigned by
+   * every answer and every settings change below, and a drill drawn from a
+   * snapshot taken at boot would schedule against a history that stopped
+   * growing. `random.fork('study')` keeps the draw's stream to itself, so
+   * shuffling a card's options can never shift which questions come up.
+   */
+  const studySource: StudySession = createStudySession({
+    bank: bundledQuestionBank,
+    clock,
+    random: random.fork('study'),
+    progress: () => progress,
+    tuning: rules.scheduler,
+    drillSize: rules.study.drillSize,
+  });
 
   const store = createSettingsStore(toUiSettings(progress.settings));
   const applyToPage = (): void => {
@@ -382,20 +411,47 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       enterLevel(id);
     },
     /*
-     * Study is deliberately absent, and absent is the honest state.
+     * Study is not mounted here yet, and the reason has changed.
      *
-     * `app/ui/study-screen.ts` is finished and `content/questions/` holds a
-     * verified bank, but nothing implements `ContentRepository`: there is no
-     * adapter that reads those files, so no scheduler can be handed a question
-     * and Study could only be mounted showing its *empty* state over a bank of
-     * thirty verified questions. The shell's contract for this option is
-     * "absent hides the item rather than offering a control that does nothing",
-     * and a control that lies about the content is worse than one that is not
-     * there. Reported with the task; it is a content adapter, not a UI screen.
+     * It used to be that nothing could read `content/questions/`. That is fixed:
+     * `studySource` above is wired, holds the bundled bank behind
+     * `QuestionBank`, and answers `available()` and `drill(n)` with real
+     * questions from the real files. What is missing is the *screen* — mounting
+     * `app/ui/study-screen.ts`, bracketing it with `shell.openOverlay`, and
+     * routing its answers through `answerQuestion` and the save. That is UI
+     * work, it is somebody else's task, and the seam it needs is `StudySource`
+     * plus this one option.
+     *
+     * When it lands, the whole change here is:
+     *
+     *   onOpenStudy: () => { … mount over `studySource` … }
+     *
+     * Until then `onOpenStudy` stays absent, because the shell's contract is
+     * "absent hides the item rather than drawing a dead control" and a Study
+     * button that opens nothing is worse than no button.
      */
   });
 
   if (storageBlocked) shell.setStorageWarning(true);
+
+  /*
+   * The one thing that touches the bank on a normal boot: nothing.
+   *
+   * `createStudySource` reads glob *keys*, so no question document is on the
+   * initial payload and a title screen downloads none of the bank. This probe
+   * runs only under `featureFlags.debugOverlay`, which is how the wire can be
+   * observed end to end in a browser — "the build can ask N questions" — without
+   * spending a learner's first six seconds proving it.
+   */
+  if (config.debugOverlay) {
+    void studySource.available().then((count) => {
+      console.warn(
+        count.ok
+          ? `[bootstrap] question bank ready: ${count.value} question(s) can be asked.`
+          : `[bootstrap] question bank unavailable. ${count.error.code}: ${count.error.message}`,
+      );
+    });
+  }
 
   /* One subscription for every screen that has to follow a setting. The shell
      follows the store itself; everything below is this file's to keep in step. */

@@ -18,6 +18,8 @@ const config = (patch: Record<string, unknown> = {}): Record<string, unknown> =>
   journey: ['halifax', null, 'quebec-city', 'ottawa'],
   unlockRules: { initialLevels: ['ottawa'], order: ['ottawa', 'quebec-city'], stampsToUnlockNext: 1 },
   save: { maxImportBytes: 1024 },
+  scheduler: { exclusionWindow: 20, wrongWeight: 3, dailyNewLimit: 10 },
+  study: { drillSize: 5 },
   ...patch,
 });
 
@@ -57,6 +59,42 @@ describe('reading the progression half of the config', () => {
   it('refuses a document that is not an object at all', () => {
     expect(readGameRules('a string').ok).toBe(false);
     expect(readGameRules(null).ok).toBe(false);
+  });
+
+  it('reads the scheduler tuning the draw runs on', () => {
+    const parsed = readGameRules(config());
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(parsed.value.scheduler).toEqual({
+      exclusionWindow: 20,
+      wrongWeight: 3,
+      dailyNewLimit: 10,
+    });
+    expect(parsed.value.study.drillSize).toBe(5);
+  });
+
+  it.each([
+    ['no scheduler block at all', { scheduler: undefined }],
+    ['an exclusion window that is not a number', { scheduler: { exclusionWindow: '20', wrongWeight: 3, dailyNewLimit: 10 } }],
+    ['no wrongWeight', { scheduler: { exclusionWindow: 20, dailyNewLimit: 10 } }],
+    ['no dailyNewLimit', { scheduler: { exclusionWindow: 20, wrongWeight: 3 } }],
+  ])('refuses %s rather than defaulting it', (_name, patch) => {
+    /* A silently defaulted exclusion window repeats questions inside one sitting
+       and says nothing about why, which is the failure this refusal exists for. */
+    const parsed = readGameRules(config(patch as Record<string, unknown>));
+    expect(parsed.ok).toBe(false);
+    if (!parsed.ok) expect(parsed.error.code).toBe('config.scheduler.malformed');
+  });
+
+  it.each([
+    ['no study block', { study: undefined }],
+    ['a drill size of zero', { study: { drillSize: 0 } }],
+    ['a fractional drill size', { study: { drillSize: 2.5 } }],
+    ['a drill size that is a string', { study: { drillSize: '5' } }],
+  ])('refuses %s, because a drill of zero is the empty state told as a session', (_name, patch) => {
+    const parsed = readGameRules(config(patch as Record<string, unknown>));
+    expect(parsed.ok).toBe(false);
+    if (!parsed.ok) expect(parsed.error.code).toBe('config.study.malformed');
   });
 
   it('refuses a config with no unlockRules, naming what it costs the player', () => {

@@ -24,6 +24,7 @@
  */
 
 import { appErr, ok, type Result } from '@common/result';
+import type { SchedulerTuning, StudyRules } from '@application/ports';
 import type { Journey, UnlockRules } from '@domain/entities/level';
 import type { LevelId } from '@domain/ids';
 
@@ -41,6 +42,18 @@ export interface GameRules {
   readonly journey: Journey;
   /** `#/save/maxImportBytes`. Read, never hardcoded (`OQ-SAVE-3`). */
   readonly maxImportBytes: number;
+  /**
+   * `#/scheduler` — the tuning the FSRS-style draw runs on.
+   *
+   * Read here rather than in the renderer's `parseBootConfig` for the same
+   * reason `unlockRules` is: which question comes next is a rule about the
+   * player, not about a canvas. Malformed is a boot failure, not a default: a
+   * silently defaulted `exclusionWindow` would repeat questions inside a sitting
+   * and nothing would say why.
+   */
+  readonly scheduler: SchedulerTuning;
+  /** `#/study` — how many questions one drill asks (`TN-STUDY-02`). */
+  readonly study: StudyRules;
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -121,9 +134,43 @@ export function readGameRules(document: unknown): Result<GameRules> {
     );
   }
 
+  const scheduler = document['scheduler'];
+  if (
+    !isRecord(scheduler) ||
+    typeof scheduler['exclusionWindow'] !== 'number' ||
+    typeof scheduler['wrongWeight'] !== 'number' ||
+    typeof scheduler['dailyNewLimit'] !== 'number'
+  ) {
+    return appErr(
+      'invalid',
+      'config.scheduler.malformed',
+      'scheduler needs `exclusionWindow`, `wrongWeight` and `dailyNewLimit` as numbers. ' +
+        'Defaulting them would change which question a player is asked next and say nothing.',
+      {},
+    );
+  }
+
+  const study = document['study'];
+  const drillSize = isRecord(study) ? study['drillSize'] : undefined;
+  if (typeof drillSize !== 'number' || !Number.isInteger(drillSize) || drillSize < 1) {
+    return appErr(
+      'invalid',
+      'config.study.malformed',
+      'study.drillSize is how many questions one drill asks; it must be a whole number of at ' +
+        'least one. A drill of zero is the empty state told as if it were a session.',
+      {},
+    );
+  }
+
   return ok({
     unlockRules: { initialLevels, order, stampsToUnlockNext: cost },
     journey,
     maxImportBytes,
+    scheduler: {
+      exclusionWindow: scheduler['exclusionWindow'],
+      wrongWeight: scheduler['wrongWeight'],
+      dailyNewLimit: scheduler['dailyNewLimit'],
+    },
+    study: { drillSize },
   });
 }

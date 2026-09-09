@@ -9,6 +9,8 @@ import {
   WALK_DEADZONE_PX,
 } from '@adapters/phaser/touch-controls';
 
+import { START_LEVEL } from './start-level';
+
 /**
  * Touch, through real touch events, into real Phaser.
  *
@@ -736,7 +738,19 @@ test.describe('auto-move, from the switch a player can actually reach', () => {
       .locator('[data-testid="title-play"], [data-testid="title-choose-level"]')
       .first()
       .click();
-    await page.locator(`[data-testid="level-card-${LEVEL.id}"]`).click();
+    /*
+     * The card the map actually opens, not this file's level.
+     *
+     * Everything else here deep-links to `content/levels/ottawa.json` because it
+     * asserts that document's own tuning. This test does not: it goes through
+     * the front door precisely to prove the switch is reachable by a player, and
+     * a player reaches whichever level `unlockRules` opens with an empty
+     * passport — Ottawa when `initialLevels` named it, the level
+     * `./start-level.ts` derives now that a stamp has to be earned for it.
+     * Auto-move is tuning every locomotion mode carries, so the claim below
+     * holds whichever level that is.
+     */
+    await page.locator(`[data-testid="level-card-${START_LEVEL}"]`).click();
     await page.waitForSelector('[data-testid="playable"]');
 
     const startX = (await snapshot(page)).playerX ?? 0;

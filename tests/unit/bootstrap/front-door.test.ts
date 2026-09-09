@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import gameConfigDocument from '@content/game.config.json';
+/* Relative, not aliased: there is no `@bootstrap` alias and adding one means
+   editing three configs that have to agree (tsconfig, vite, vitest). */
+import { readGameRules } from '../../../app/bootstrap/game-rules';
+import { unlockedLevelIds } from '@domain/entities/level';
+import type { LevelId } from '@domain/ids';
+
 /**
  * The front door, and what the page is while a level has it.
  *
@@ -34,6 +41,61 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
  * wiring unproven.
  */
 
+/* ------------------------------------------------ the chain, read not retyped */
+
+/**
+ * Which level a cold load lands on is `content/game.config.json`'s answer and
+ * not this suite's. It was Ottawa; it is Halifax; it will be somewhere else the
+ * week Mi'kma'ki ships. A test that types the name has to be edited every time
+ * the game grows and proves nothing more than one that reads it — so the three
+ * levels this file needs are *roles*, derived from the shipped unlock rules:
+ *
+ *  - {@link START_LEVEL} — open before a single stamp is earned, so it is where
+ *    the player lands and the only level the map will open on a cold load;
+ *  - {@link EARNED_LEVEL} — the first level `order` makes them play for. The
+ *    fixture catalogue below has a document for it and the rules keep it shut,
+ *    which is the built-and-locked pair that proves `built` and `unlocked` come
+ *    from two different sources rather than one;
+ *  - {@link UNBUILT_LEVEL} — named by the rules, with no document in the
+ *    catalogue. The request `onPlayLevel` has to refuse.
+ *
+ * Every assertion below interpolates the name, so a failure still says which
+ * level it was about.
+ */
+const parsedRules = readGameRules(gameConfigDocument);
+if (!parsedRules.ok) {
+  throw new Error(`content/game.config.json did not parse: ${parsedRules.error.message}`);
+}
+const rules = parsedRules.value.unlockRules;
+
+/** What `unlockRules` opens with an empty passport. */
+const openAtBoot = unlockedLevelIds(rules, []);
+
+/** Fail at import with the config change that caused it, rather than at `undefined`. */
+const roleOrThrow = (id: LevelId | undefined, why: string): LevelId => {
+  if (id === undefined) throw new Error(why);
+  return id;
+};
+
+const START_LEVEL = roleOrThrow(
+  openAtBoot[0],
+  'content/game.config.json opens no level with an empty passport, so a cold load ' +
+    'has nothing to play and this suite has no level to open.',
+);
+
+const EARNED_LEVEL = roleOrThrow(
+  rules.order.find((id) => !openAtBoot.includes(id)),
+  'every level in unlockRules.order is already in initialLevels, so no level in this ' +
+    'build is earned by playing. The map would have no locked card to draw and the ' +
+    'unlock chain would be untested by walking it — which is how the dead chain hid.',
+);
+
+const UNBUILT_LEVEL = roleOrThrow(
+  rules.order.find((id) => id !== START_LEVEL && id !== EARNED_LEVEL),
+  'unlockRules.order names fewer than three levels, so there is none left over to ' +
+    'play the level this build has no document for.',
+);
+
 const hoisted = vi.hoisted(() => {
   const state: {
     /** Every composition step, in the order it happened. Order is the assertion. */
@@ -63,7 +125,9 @@ const hoisted = vi.hoisted(() => {
     loadCalls: [],
     loadResult: { ok: true, value: undefined },
     search: '',
-    built: ['ottawa', 'quebec-city'],
+    /* Filled in `beforeEach` from the shipped rules: the level a cold load opens
+       and the first one it makes the player earn. */
+    built: [] as string[],
     hudOptions: null,
     hudHost: null,
     hudDestroyed: 0,
@@ -399,7 +463,7 @@ beforeEach(() => {
   hoisted.state.calls = [];
   hoisted.state.loadCalls = [];
   hoisted.state.loadResult = { ok: true, value: undefined };
-  hoisted.state.built = ['ottawa', 'quebec-city'];
+  hoisted.state.built = [`${START_LEVEL}`, `${EARNED_LEVEL}`];
   hoisted.state.hudOptions = null;
   hoisted.state.hudHost = null;
   hoisted.state.hudDestroyed = 0;
@@ -482,14 +546,29 @@ describe('the map is handed data, and the data is computed here', () => {
   it('asks the catalogue what is built and the domain what is unlocked', async () => {
     await boot('');
 
-    /* Ottawa: a document exists and `unlockRules.initialLevels` opens it. */
-    expect(entryFor('ottawa')).toMatchObject({ built: true, unlocked: true });
-    /* Québec City: a document exists and no stamp has opened it yet. Built and
-       locked is the pair that proves the two sources are read separately —
-       one answer would have made this card agree with Ottawa or with Halifax. */
-    expect(entryFor('quebec-city')).toMatchObject({ built: true, unlocked: false });
-    /* Halifax: `unlockRules.order` names it and no document exists. */
-    expect(entryFor('halifax')).toMatchObject({ built: false, unlocked: false });
+    /* The level a cold load lands on: a document exists and `initialLevels`
+       opens it. */
+    expect(
+      entryFor(`${START_LEVEL}`),
+      `${START_LEVEL} is in unlockRules.initialLevels and the catalogue has it, ` +
+        'so its card is the one a cold load can press',
+    ).toMatchObject({ built: true, unlocked: true });
+    /* The first level the chain charges a stamp for: a document exists and no
+       stamp has opened it yet. Built and locked is the pair that proves the two
+       sources are read separately — one answer would have made this card agree
+       with the level above or with the one below. */
+    expect(
+      entryFor(`${EARNED_LEVEL}`),
+      `${EARNED_LEVEL} is built and unlockRules makes the player earn it, so its ` +
+        'card is built and locked. A card that is open here means "unlocked" was ' +
+        'answered with the catalogue instead of with the unlock rules',
+    ).toMatchObject({ built: true, unlocked: false });
+    /* A level the rules name and this build has no document for. */
+    expect(
+      entryFor(`${UNBUILT_LEVEL}`),
+      `unlockRules.order names ${UNBUILT_LEVEL} and the catalogue has no document ` +
+        'for it, so its card is neither built nor open',
+    ).toMatchObject({ built: false, unlocked: false });
   });
 
   it('follows the catalogue rather than a list written into the code', async () => {
@@ -542,12 +621,15 @@ describe('the settings a level has to obey', () => {
 describe('opening a level', () => {
   it('detaches the shell before the HUD exists, so the page never has two <main>', async () => {
     await boot('');
-    shellOption<(id: string) => void>('onPlayLevel')('ottawa');
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
     await flush();
 
-    const enter = hoisted.state.calls.indexOf('shell.enterLevel:ottawa');
+    const enter = hoisted.state.calls.indexOf(`shell.enterLevel:${START_LEVEL}`);
     const hud = hoisted.state.calls.indexOf('createHud');
-    expect(enter, 'the shell was never told a level had the page').toBeGreaterThanOrEqual(0);
+    expect(
+      enter,
+      `the shell was never told ${START_LEVEL} had the page`,
+    ).toBeGreaterThanOrEqual(0);
     expect(hud, 'no HUD was created').toBeGreaterThanOrEqual(0);
     expect(enter, 'createHud ran before shell.enterLevel: two landmarks on one page').toBeLessThan(
       hud,
@@ -556,7 +638,7 @@ describe('opening a level', () => {
 
   it('puts focus in the level, so it is not left on a control that has gone', async () => {
     await boot('');
-    shellOption<(id: string) => void>('onPlayLevel')('ottawa');
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
     await flush();
 
     expect(hoisted.state.calls).toContain('hud.focus');
@@ -564,31 +646,44 @@ describe('opening a level', () => {
 
   it('refuses a request for a level this build cannot open, and stays on the map', async () => {
     await boot('');
-    shellOption<(id: string) => void>('onPlayLevel')('halifax');
+    shellOption<(id: string) => void>('onPlayLevel')(`${UNBUILT_LEVEL}`);
     await flush();
 
-    expect(hoisted.state.loadCalls, 'a locked, unbuilt level was opened').toEqual([]);
+    expect(
+      hoisted.state.loadCalls,
+      `${UNBUILT_LEVEL} is locked and this build has no document for it, and it was opened`,
+    ).toEqual([]);
     expect(hoisted.state.calls).not.toContain('createHud');
-    expect(consoleText()).toContain('halifax');
+    expect(consoleText()).toContain(`${UNBUILT_LEVEL}`);
   });
 
   it('reaches "ready" when the level loads', async () => {
     await boot('');
-    shellOption<(id: string) => void>('onPlayLevel')('ottawa');
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
     await flush();
 
-    expect(hoisted.state.loadCalls).toEqual(['ottawa']);
+    expect(hoisted.state.loadCalls).toEqual([`${START_LEVEL}`]);
     expect(levelState()).toBe('ready');
   });
 });
 
 describe('the ?level= deep link still works, and now leads back to the map', () => {
   it('goes straight into the level, without the title screen', async () => {
-    await boot('?level=ottawa');
+    /*
+     * Deep-linked to the level the map keeps **shut**, which is the claim
+     * `OQ-FLOW-3` makes: the parameter bypasses the map, so it answers for a
+     * level `onPlayLevel` would refuse. Using the level a cold load already
+     * opens would have proved only that a link to the front door works.
+     */
+    await boot(`?level=${EARNED_LEVEL}`);
 
     expect(hoisted.state.calls).not.toContain('shell.start');
-    expect(hoisted.state.calls).toContain('shell.enterLevel:ottawa');
-    expect(hoisted.state.loadCalls).toEqual(['ottawa']);
+    expect(hoisted.state.calls).toContain(`shell.enterLevel:${EARNED_LEVEL}`);
+    expect(
+      hoisted.state.loadCalls,
+      `?level=${EARNED_LEVEL} is a deep link into a level the map has not opened yet, ` +
+        'and it is meant to open anyway',
+    ).toEqual([`${EARNED_LEVEL}`]);
     expect(levelState()).toBe('ready');
   });
 
@@ -620,7 +715,7 @@ describe('the ?level= deep link still works, and now leads back to the map', () 
 
 describe('the page has one <main>, and every modal is inside it (TN-HUD-07)', () => {
   it('hands the canvas host to the HUD, so <main> holds what the page is for', async () => {
-    await boot('?level=ottawa');
+    await boot(`?level=${START_LEVEL}`);
 
     expect(
       hoisted.state.hudOptions?.['canvasHost'],
@@ -633,7 +728,7 @@ describe('the page has one <main>, and every modal is inside it (TN-HUD-07)', ()
   });
 
   it('mounts every modal opened over a level into hud.main, never beside it', async () => {
-    await boot('?level=ottawa');
+    await boot(`?level=${START_LEVEL}`);
     /* The settings screen is opened from the level's menu, so it is built on
        demand rather than at boot; opening it is what puts it on the page. */
     hudOption<() => void>('onOpenSettings')();
@@ -654,7 +749,7 @@ describe('the page has one <main>, and every modal is inside it (TN-HUD-07)', ()
 
 describe('leaving a level', () => {
   it('takes the HUD’s landmark away and puts the canvas back where it was', async () => {
-    await boot('?level=ottawa');
+    await boot(`?level=${START_LEVEL}`);
     hudOption<() => void>('onLeaveLevel')();
     await flush();
 
@@ -669,7 +764,7 @@ describe('leaving a level', () => {
   });
 
   it('hands the page back to the shell and clears the level state', async () => {
-    await boot('?level=ottawa');
+    await boot(`?level=${START_LEVEL}`);
     hudOption<() => void>('onLeaveLevel')();
     await flush();
 
@@ -678,7 +773,7 @@ describe('leaving a level', () => {
   });
 
   it('re-reads the map, so a stamp earned in the level opens the next card', async () => {
-    await boot('?level=ottawa');
+    await boot(`?level=${START_LEVEL}`);
     hoisted.state.entries = null;
     hudOption<() => void>('onLeaveLevel')();
     await flush();

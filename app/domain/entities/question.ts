@@ -95,10 +95,42 @@ export const isShippable = (question: Question): boolean =>
   isBilingual(question.explanation) &&
   question.options.every(isBilingual);
 
+/**
+ * The brand that says a question went through `isShippable` and came out.
+ *
+ * `shippable` is a module-private `unique symbol`, so `Shippable<T>` is a type
+ * no other module can produce a value of — not by an object literal, not by
+ * `filter`, not by re-declaring the shape. The only function that mints one is
+ * `shippableQuestions` below, and it mints one only for a question that passes
+ * ADR-0003's gate.
+ *
+ * That is the difference between a rule and a filter. A filter is a call
+ * somebody has to remember to make, and `content/questions/` currently holds
+ * seven `rejected` questions that a forgotten call would put in front of a
+ * learner. A brand makes the forgetting a compile error instead: a port, a use
+ * case or an adapter that declares it hands back shippable questions cannot
+ * satisfy that declaration with the unfiltered bank.
+ *
+ * It costs nothing at runtime. `declare const` emits no JavaScript and the
+ * property never exists on a value; `Shippable<T>` is assignable to `T`, so a
+ * caller that only wants a `QuestionDocument` is unaffected.
+ */
+declare const shippable: unique symbol;
+
+/** A `T` that has passed `isShippable`. Only `shippableQuestions` produces one. */
+export type Shippable<T extends Question> = T & { readonly [shippable]: true };
+
+/**
+ * `isShippable` as a narrowing predicate — the one place the brand is attached,
+ * and it is attached by the type checker rather than by a cast.
+ */
+const admits = <T extends Question>(question: T): question is Shippable<T> =>
+  isShippable(question);
+
 /** The questions of a bank that may actually be asked, in the order given. */
 export const shippableQuestions = <T extends Question>(
   questions: readonly T[],
-): readonly T[] => questions.filter(isShippable);
+): readonly Shippable<T>[] => questions.filter(admits);
 
 /** Is this a real option index for this question? */
 export const isOptionIndex = (value: number): value is OptionIndex =>

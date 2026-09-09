@@ -88,7 +88,25 @@ export default defineConfig({
     chunkSizeWarningLimit: 2048,
     rollupOptions: {
       output: {
+        /**
+         * Two groupings, for two different reasons.
+         *
+         * **Vendors**, so Phaser and Rive are cached across deploys instead of
+         * re-downloaded with every application edit.
+         *
+         * **The question bank, by subject.** `app/adapters/content` globs
+         * `content/questions/<subject>/*.json` lazily, and without this line
+         * Rollup emits one chunk per document: 237 files, so opening a history
+         * drill would cost 96 requests for 2.6 kB each. Grouping by directory
+         * makes it one request per subject and keeps the whole bank off the
+         * initial payload, which is what the 8 MB / 6 s budgets are about. The
+         * subject is taken from the path, not from a list, so a new
+         * `content/questions/<subject>/` directory chunks itself with no edit
+         * here — the same "a subject is a directory" rule the adapter runs on.
+         */
         manualChunks(id: string): string | undefined {
+          const bank = /[/\\]content[/\\]questions[/\\]([^/\\]+)[/\\][^/\\]+\.json$/.exec(id);
+          if (bank !== null) return `questions-${bank[1]}`;
           if (!id.includes('node_modules')) return undefined;
           if (id.includes('phaser')) return 'phaser';
           if (id.includes('@rive-app')) return 'rive';
