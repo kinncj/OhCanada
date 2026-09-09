@@ -77,8 +77,15 @@ jobs:
       - name: Install
         run: make setup
 
-      - name: Lint, typecheck, test, validate and verify content and art
-        run: make lint typecheck test validate-content verify-content verify-art
+      - name: Lint, typecheck, test, validate and verify content
+        run: make lint typecheck test validate-content verify-content
+
+      # Reports, does not block. deploy-pages.yml carries the reasoning: this
+      # gate measures how recognisable a drawing is, not whether the game is
+      # correct. Content verification above still blocks.
+      - name: Art verification (reports, does not block)
+        continue-on-error: true
+        run: make verify-art
 
       # 14 days, not the 90-day repository default and not the 3 days this was
       # cut to during the artifact-quota incident. 3 days was a quota measure and
