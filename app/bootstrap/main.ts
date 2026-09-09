@@ -59,7 +59,12 @@ import { answerQuestion } from '@application/use-cases/answer-question';
 import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import { createStudySession, type StudySession } from '@application/use-cases/study-session';
-import type { Clock, LocalizedText, ShippableQuestion } from '@application/ports';
+import type {
+  Clock,
+  LocalizedText,
+  QuestDocument,
+  ShippableQuestion,
+} from '@application/ports';
 import {
   exportProgress,
   loadProgress,
@@ -76,6 +81,12 @@ import {
 import type { EpochMillis, LevelId, LocaleCode } from '@domain/ids';
 import { hasCopyRow, text, type UiLocale } from '@ui/copy';
 import { createHud, type Hud } from '@ui/hud';
+import {
+  bareTargetId,
+  interactHint,
+  interactPrompt,
+  type InteractKind,
+} from '@ui/interact';
 import { createLevelAnnouncer, type LevelTarget } from '@ui/level-events';
 import {
   createLevelComplete,
@@ -84,8 +95,9 @@ import {
   type LevelCompleteNext,
 } from '@ui/level-complete';
 import { createLevelError, createLevelLoading } from '@ui/level-screens';
-import { describeEntry, levelTitle, type MapEntry } from '@ui/level-select';
+import { describeEntry, type MapEntry } from '@ui/level-select';
 import { announce, clearAnnouncements, mountLiveRegion } from '@ui/live-region';
+import { createPassport, type Passport } from '@ui/passport';
 import { createPoiCard } from '@ui/poi-card';
 import { createRotateOverlay } from '@ui/rotate-overlay';
 import {
@@ -110,6 +122,8 @@ import {
   type MilestoneBus,
 } from './game-events';
 import { isPlayable, journeyEntries } from './journey';
+import { createQuestController, type QuestController } from './quest';
+import { readQuests, questsForLevel, type QuestCatalogue } from './quests';
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
 
@@ -423,6 +437,20 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     drillSize: rules.study.drillSize,
   });
 
+  /*
+   * The quests this build ships, read once.
+   *
+   * `content/quests/` may be empty — it is while the first four are being
+   * written — and an empty catalogue is a normal build rather than a failure: no
+   * offer, no tracker, and no empty quest log that looks broken. A document that
+   * will not load is a different thing entirely, so it is named on the console
+   * and the other quests still load.
+   */
+  const questCatalogue: QuestCatalogue = readQuests();
+  for (const refusal of questCatalogue.refused) {
+    console.error(`[bootstrap] a quest document was refused. ${refusal}`);
+  }
+
   const store = createSettingsStore(toUiSettings(progress.settings));
   const applyToPage = (): void => {
     applySettings(document, store.current, prefersReducedMotion(window));
@@ -479,32 +507,39 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * the question card only judges what it was told the right answer was, so this
    * is the single write. Study and a landmark's question both come through here.
    *
-   * **No quest is passed, and that is not an omission this file can close.**
-   * `answerQuestion` earns a stamp only for an answer that completes a quest's
-   * `answer` step, and it needs the `QuestDocument` to know. `SceneLevel` — what
-   * `app/adapters/phaser` hands back for a loaded level — carries `pois` and no
-   * `quests`, and every level document in `content/levels/` declares
-   * `"quests": []` today. So there is nothing to pass, `stampEarned` is
-   * structurally `false`, and the completion card below is wired to a signal
-   * that no content can yet raise. Both halves are real and reported: the moment
-   * a level declares a quest and the scene exposes it, this call takes it and
-   * the rest of the path is already built.
+   * **The quest is passed now**, and it is the level session's answer rather than
+   * this function's: `QuestController.answering` is the quest that is active
+   * *and* on an `answer` step, which is the only state in which an answer may
+   * count toward one. Handing it over unconditionally would be wrong in the
+   * other direction — a Study drill taken from the menu in the middle of a quest
+   * would finish it — and the use case guards that too, so the answer is checked
+   * twice and can be wrong in neither place. With no quest open, or no quest in
+   * the build at all, this is `undefined` and the call behaves exactly as it did.
    *
    * A failure is logged and swallowed. `gradeAnswer` refuses an index outside
    * the four options, which is a defect in this file rather than something a
    * player did, and a drill that stopped dead would punish them for it.
    */
   const recordAnswer = (question: ShippableQuestion, chosenIndex: number): AnswerOutcome => {
-    const result = answerQuestion({ clock }, { question, chosenIndex, progress });
+    const quest = session?.answeringQuest;
+    const result = answerQuestion({ clock }, { question, chosenIndex, progress, quest });
     if (!result.ok) {
       console.error(
         `[bootstrap] an answer was not recorded. ${result.error.code}: ${result.error.message}`,
       );
-      return { stampEarned: false, correct: false };
+      return { stampEarned: false, correct: false, questCompleted: false };
     }
     progress = result.value.progress;
     persist();
-    return { stampEarned: result.value.stampEarned, correct: result.value.judgement.correct };
+    /* The tracker counts answers as they are given — "Answer 3 questions (1 of
+       3)" — and the count is in the save this line has just written, so the
+       session re-reads it rather than being told. */
+    session?.refreshQuest();
+    return {
+      stampEarned: result.value.stampEarned,
+      correct: result.value.judgement.correct,
+      questCompleted: result.value.questCompleted,
+    };
   };
 
   /**
@@ -565,6 +600,40 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
      * say so. Bracketed with `setModalOpen`, which is the shell's stated
      * contract: two enabled switch rings both answer "tap anywhere".
      */
+    /*
+     * The passport, from the map (`TN-PASSPORT-01`, `OQ-PASSPORT-3`).
+     *
+     * The map is its home because the stamp count is already there: "Stamps: 1
+     * of 10" is a fact a player wants to open, and the control sits beside it.
+     * The title screen deliberately does not offer it — `OQ-TITLE-2` keeps
+     * progress off the first screen, and `TN-PASSPORT` agrees — and the level's
+     * menu is the other route, for a player who is already inside a level.
+     *
+     * Mounted into `shell.main`, which is the page's one `<main>` while the shell
+     * is showing: a `dialog` is not a landmark, so a modal mounted beside it puts
+     * its own content outside every landmark and axe's `region` rule is right to
+     * say so. Bracketed with `setModalOpen`, because two enabled switch rings
+     * both answer "tap anywhere".
+     */
+    onOpenPassport: () => {
+      /* Rebuilt rather than kept: the entries are a value, the screen has no
+         state a player would lose, and a stamp earned since the last opening has
+         to be in it. */
+      shellPassport?.destroy();
+      shellPassport = createPassport(shell.main, {
+        locale: store.current.locale,
+        entries: entriesNow(),
+        announce,
+        singleSwitch: store.current.singleSwitch,
+        holdMs: store.current.holdToChooseMs,
+        onBack: () => {
+          shellPassport?.hide();
+          shell.setModalOpen(false);
+        },
+      });
+      shell.setModalOpen(true);
+      shellPassport.show();
+    },
     onOpenStudy: () => {
       shellStudy ??= createStudyController({
         host: shell.main,
@@ -589,6 +658,10 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
      lives in `studySource` and the screen's is only DOM, but rebuilding the
      screen on every open would throw away a summary the player is reading. */
   let shellStudy: StudyController | null = null;
+  /* The passport is the other way round — it holds nothing a player would lose
+     and everything it draws is derived from the save — so it is rebuilt on every
+     opening and destroyed with the shell. */
+  let shellPassport: Passport | null = null;
 
   if (storageBlocked) shell.setStorageWarning(true);
 
@@ -617,9 +690,13 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     applyToPage();
     /* `applySettings` has already written `lang` on `<html>`; what is left is
        every screen this file owns, which follows no store of its own. */
-    if (changed === 'locale') session?.setLocale(next.locale);
+    if (changed === 'locale') {
+      session?.setLocale(next.locale);
+      shellPassport?.setLocale(next.locale);
+    }
     if (changed === 'singleSwitch' || changed === 'holdToChooseMs') {
       session?.setSingleSwitch(next.singleSwitch, next.holdToChooseMs);
+      shellPassport?.setSingleSwitch(next.singleSwitch, next.holdToChooseMs);
     }
     if (changed === 'autoMove') renderer.setAutoMove(next.autoMove);
     progress = withSettings(progress, toDomainSettings(next, progress.settings));
@@ -665,6 +742,12 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
        root is the page's one `<main>` and `createHud` makes another, so the
        first is detached before the second exists. */
     shell.enterLevel(id);
+    /* The shell's `<main>` has just been detached, and a modal mounted inside it
+       would go with it — still `aria-modal`, still holding the page inert. It is
+       destroyed rather than carried, which is `TN-FLOW-08`'s "a screen that has
+       been left is removed". */
+    shellPassport?.destroy();
+    shellPassport = null;
     pause.release('shell');
     root.dataset['tnLevel'] = 'loading';
     session = openLevel({
@@ -679,12 +762,20 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       renderer,
       pause,
       store,
+      clock,
+      progressNow: () => progress,
+      commitProgress: (next) => {
+        progress = next;
+        persist();
+      },
       announce,
       /* `TN-LEVEL-02` and `TN-WAIT-04`: twice the time-to-play budget with no
          level, and a way out appears beside the sentence. The number is
          `budgets.timeToPlayMs` from the config CI measures against, doubled
          here and nowhere else. */
       stallAfterMs: rules.timeToPlayMs * 2,
+      quests: questsForLevel(questCatalogue, id),
+      entries: entriesNow,
       /* One session for the sitting, shared with Study on the front door: see
          `LevelWiring.questions`. */
       questions: studySource,
@@ -730,13 +821,23 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
           entries: entriesNow(),
           stampsToUnlock: rules.unlockRules.stampsToUnlockNext,
         };
-        const entry = map.entries.find((candidate) => candidate.id === next);
-        const title = entry === undefined ? null : levelTitle(forLocale, entry);
         const description = describeEntry(map, next);
-        /* A level with no place name — level 2, on purpose — gets no route of
-           its own rather than a button labelled with a number. */
-        if (title === null || description === null) return null;
-        return { title, description };
+        /*
+         * The control is labelled with that level's own `level.<id>.play` row —
+         * "Play Québec City" / « Jouer dans la Ville de Québec » — because a
+         * label that says what pressing does beats one that says where you would
+         * end up, and because the French takes « à » for three of the four built
+         * levels and « dans la » for the fourth, so no template is right in both
+         * languages (`TN-DONE-04`).
+         *
+         * A level with no row — every level nobody has written a story for, and
+         * level 2, which has no place name on purpose — gets **no route of its
+         * own** rather than a button labelled with a number or with another
+         * level's words (`TN-DONE-05`).
+         */
+        const playKey = `level.${String(next)}.play`;
+        if (!hasCopyRow(playKey) || description === null) return null;
+        return { label: text(forLocale, playKey), description };
       },
       /*
        * What opened while this level was open.
@@ -917,6 +1018,15 @@ interface AnswerOutcome {
   /** True only on the answer that earned the stamp, never on a repeat. */
   readonly stampEarned: boolean;
   /**
+   * Did this answer finish a **quest**?
+   *
+   * Not the same question as `stampEarned`, and the completion card needs both:
+   * the stamp says a level is finished, and this says *how*. "Task done!" over a
+   * player who was never offered a task is a claim about something they never
+   * did, so the heading follows this field (`TN-DONE`, `OQ-DONE-1`).
+   */
+  readonly questCompleted: boolean;
+  /**
    * Was it right?
    *
    * Not for the card — the card judged the answer before this call and is
@@ -931,6 +1041,15 @@ interface AnswerOutcome {
 
 interface LevelSession {
   readonly hud: Hud;
+  /**
+   * The quest an answer would count toward right now, or `undefined`.
+   *
+   * Read by `recordAnswer` and handed to `answerQuestion`, which is the only
+   * thing allowed to advance an `answer` step.
+   */
+  readonly answeringQuest: QuestDocument | undefined;
+  /** An answer was recorded: redraw the tracker from the save. */
+  refreshQuest(): void;
   setLocale(locale: UiLocale): void;
   setSingleSwitch(enabled: boolean, holdMs: number): void;
   close(): void;
@@ -940,6 +1059,18 @@ interface LevelWiring {
   readonly id: LevelId;
   /** This level's own three strings, in whatever language is asked for. */
   readonly words: LevelWordsFor;
+  /**
+   * The quests this level offers. Empty for every level in this build today,
+   * which is a normal state and not a failure: no giver, no tracker, and no
+   * empty quest log drawn where there is nothing to log.
+   */
+  readonly quests: readonly QuestDocument[];
+  /**
+   * The ten map entries as they are **now**, for the passport opened from the
+   * level's menu. A thunk, because a stamp earned a moment ago has to be in it:
+   * the list this level was entered with is precisely the list without it.
+   */
+  readonly entries: () => readonly MapEntry[];
   /** Twice the time-to-play budget: when the waiting screen offers a way out. */
   readonly stallAfterMs: number;
   readonly root: HTMLElement;
@@ -958,6 +1089,17 @@ interface LevelWiring {
   readonly renderer: GameRenderer;
   readonly pause: PauseControl;
   readonly store: SettingsStore;
+  readonly clock: Clock;
+  /**
+   * The live save, and how to replace it.
+   *
+   * A getter and a setter rather than a value, because every answer replaces
+   * `Progress` and a quest holding a snapshot would fold its steps into a save
+   * that stopped growing. `commitProgress` writes and persists; the composition
+   * root owns both, because it owns the repository.
+   */
+  readonly progressNow: () => Progress;
+  readonly commitProgress: (progress: Progress) => void;
   readonly announce: (message: string, lang?: string) => void;
   /**
    * Where a landmark's question comes from, and where Study's drill comes from
@@ -1143,6 +1285,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
     onOpenStudy: () => {
       openStudy();
     },
+    onOpenPassport: () => {
+      openPassport();
+    },
     onLeaveLevel: wiring.onLeave,
     onExportSave: wiring.onExportSave,
     /*
@@ -1161,6 +1306,22 @@ function openLevel(wiring: LevelWiring): LevelSession {
       engage(announcer.inReach ?? undefined);
     },
   });
+
+  /**
+   * What has been engaged in this sitting.
+   *
+   * `TN-REACH-03`: a target already used says "Done. See this one again" rather
+   * than inviting the player to do it again. Per sitting rather than per save,
+   * which is `OQ-REACH-3` answered in the direction that needs no new field in
+   * `progress.schema.json` — a document this task may not edit — and which is
+   * also the honest one: the sentence is about what *this* visit has covered.
+   */
+  const engaged = new Set<string>();
+
+  /** Has the one-time hint been raised in this sitting? It never comes back. */
+  let hintShown = false;
+  /** Is it on screen right now? Only then does a language change redraw it. */
+  let hintOnScreen = false;
 
   /* Focus follows the page. Without this the control the player pressed on the
      map has just been detached and focus falls to the body (`TN-FLOW-06`). */
@@ -1215,6 +1376,40 @@ function openLevel(wiring: LevelWiring): LevelSession {
     takeOverFromMenu();
     pause.hold('settings');
     settings.show();
+  }
+
+  /**
+   * The passport, over a level, from the menu (`TN-PASSPORT-01`).
+   *
+   * Rebuilt on every opening: it holds nothing a player would lose, and
+   * everything it draws comes from the save, so a stamp earned a minute ago has
+   * to be in it. Mounted into `hud.main` with the other modals, so its content is
+   * inside the page's one landmark.
+   *
+   * The pause discipline is the one the menu taught: `takeOverFromMenu` releases
+   * the hold the menu took, this screen takes its **own**, and `onBack` releases
+   * that one. A screen that borrowed the menu's would leave the level frozen the
+   * moment the menu was closed underneath it.
+   */
+  let passport: Passport | null = null;
+  function openPassport(): void {
+    passport?.destroy();
+    passport = createPassport(hud.main, {
+      locale,
+      entries: wiring.entries(),
+      announce: wiring.announce,
+      singleSwitch: store.current.singleSwitch,
+      holdMs: store.current.holdToChooseMs,
+      onBack: () => {
+        passport?.hide();
+        pause.release('passport');
+        /* Focus is the screen's own: its trap restores to the menu button the
+           menu restored to on its way out. Moving it here would take that away. */
+      },
+    });
+    takeOverFromMenu();
+    pause.hold('passport');
+    passport.show();
   }
 
   /* Study, over a level (`TN-STUDY`, `OQ-STUDY-3`: the same control, from the
@@ -1292,7 +1487,11 @@ function openLevel(wiring: LevelWiring): LevelSession {
       /* Remembered rather than acted on: the completion card must not open over
          the explanation the player is still reading. It opens when the question
          is done. */
+      if (outcome.questCompleted) finishedByQuest = true;
       if (outcome.stampEarned) finished = true;
+      /* The tracker counts answers as they are given, and it is behind the card
+         the player is still reading — right by the time they close it. */
+      quests.refresh();
     },
     onFinished: () => {
       backToTheLevel();
@@ -1332,6 +1531,15 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
   /** Has the completion card been drawn in this sitting of this level? */
   let cardShown = false;
+
+  /**
+   * Did a **quest** finish this level, as opposed to the player reaching its end?
+   *
+   * The card's heading is the only thing that reads it, and it is the whole of
+   * `OQ-DONE-1`: two paths draw one card, and only one of them may claim a task
+   * was done.
+   */
+  let finishedByQuest = false;
 
   /**
    * What the player answered **at this level's landmarks**, this sitting.
@@ -1377,6 +1585,21 @@ function openLevel(wiring: LevelWiring): LevelSession {
       pause.release('complete');
     },
     /*
+     * "See my passport", where the stamp just landed (`TN-QUEST-04`,
+     * `TN-PASSPORT-01`). It opens over the card rather than replacing it, so the
+     * way on the player was reading is still there when they come back — and the
+     * card keeps its own pause hold throughout, so the level cannot start moving
+     * under two open screens.
+     *
+     * `OQ-DONE-5` is open on whether this control belongs here at all. Two
+     * stories assert it and one recommends against it; it is here because the
+     * stamp is the reward and this is the moment it was earned, and removing it
+     * is deleting these six lines.
+     */
+    onOpenPassport: () => {
+      openPassport();
+    },
+    /*
      * Where focus goes when the card closes back into the level.
      *
      * The card's trap restores to whatever opened it, and the thing that opens
@@ -1417,15 +1640,22 @@ function openLevel(wiring: LevelWiring): LevelSession {
     const next = openedByThisLevel();
     const described = next === null ? null : wiring.describeNext(next, forLocale);
     return {
+      /* What finished, which is what the heading is about. `finishedByQuest` is
+         set only by an answer that completed a quest; every other route here is
+         the level ending, and "Task done!" over a player who accepted no task is
+         a claim about something they never did (`TN-DONE`). */
+      reason: finishedByQuest ? 'quest' : 'level',
       ...(hasCopyRow(stampKey) ? { stampMessage: text(forLocale, stampKey) } : {}),
-      ...(answeredHere === 0
-        ? {}
-        : {
-            progressMessage: text(forLocale, 'study.summary.score', {
+      /* One slot, two rows, never both and never empty (`TN-DONE-02`). A total
+         of zero is what `level.complete.none` *is*, not a value the score row
+         renders — so the card can never draw "0 out of 0". */
+      progressMessage:
+        answeredHere === 0
+          ? text(forLocale, 'level.complete.none')
+          : text(forLocale, 'level.complete.score', {
               correct: correctHere,
               total: answeredHere,
             }),
-          }),
       ...(described === null ? {} : { next: described }),
     };
   }
@@ -1503,24 +1733,121 @@ function openLevel(wiring: LevelWiring): LevelSession {
   }
 
   /**
-   * Engage a landmark: show what it teaches, then ask about it.
+   * The quest, from the offer to the stamp (`app/bootstrap/quest.ts`).
    *
-   * Both routes in — tapping the landmark on the canvas (`poi/engaged`) and
-   * tapping the interact prompt in the HUD — end here, so they cannot behave
-   * differently. An id the level does not declare opens nothing: the engine and
-   * the document disagreeing is not something to render.
+   * Built with the level whether or not the level has one: with no quests it
+   * offers nothing, tracks nothing and draws nothing, which is the state every
+   * level in this build is in today and is not a state anybody has to special-case
+   * at a call site.
+   *
+   * Its own pause reason. A dialogue over a live level is the trap the menu was —
+   * whoever takes the level has to give it back on every path out — and borrowing
+   * `poi`'s hold would let a landmark chain finishing underneath release a level
+   * that an open dialogue was still holding.
+   */
+  const quests: QuestController = createQuestController({
+    levelId: id,
+    quests: wiring.quests,
+    host: hud.main,
+    store,
+    clock: wiring.clock,
+    announce: wiring.announce,
+    progress: wiring.progressNow,
+    commit: wiring.commitProgress,
+    setTask: (step) => {
+      hud.setTask(step);
+    },
+    onOpen: () => {
+      pause.hold('quest');
+    },
+    onClose: () => {
+      pause.release('quest');
+      refreshPrompt();
+    },
+    onCompleted: () => {
+      /* A **task** is what finished, so the card says so — the other route to
+         this flag is an answer that completed a quest's last step, which
+         `recordAnswer` reports. Reaching the end of the level sets neither. */
+      finishedByQuest = true;
+      /* The card, not here and not now: `showCompleted` is the one place that
+         draws it, once per sitting, whichever way the level was finished. */
+      finished = true;
+      if (!card.visible && !runner.running) showCompleted();
+    },
+    restoreFocusTo: () => hud.prompt ?? hud.main,
+  });
+
+  /**
+   * What the prompt says about what is in reach, in the language in force now.
+   *
+   * Every string it can produce is a copy row (`app/ui/interact.ts`): the level
+   * document's landmark name never reaches the HUD again, which is both halves of
+   * `TN-REACH`'s defect — a button labelled with a noun, and a trade name on a
+   * surface `TN-NAMES-04` fails the build for.
+   */
+  function targetsNow(): Readonly<Record<string, LevelTarget>> {
+    return promptTargets(renderer.level, locale, {
+      done: engaged,
+      canEngage: (targetId) => quests.canEngage(targetId),
+    });
+  }
+
+  /** Redraw the offer for whatever is in reach — its wording, or its state. */
+  function refreshPrompt(): void {
+    const reach = announcer.inReach;
+    hud.setPrompt(reach === null ? null : (targetsNow()[reach]?.prompt ?? null));
+  }
+
+  /**
+   * Engage a landmark or a character: show what it teaches, or let it speak.
+   *
+   * Both routes in — tapping the subject on the canvas (`poi/engaged`,
+   * `npc/engaged`) and tapping the interact prompt in the HUD — end here, so they
+   * cannot behave differently. An id the level does not declare opens nothing:
+   * the engine and the document disagreeing is not something to render.
    */
   function engage(detail: string | undefined): void {
-    if (detail === undefined || card.visible || runner.running) return;
+    if (detail === undefined || card.visible || runner.running || quests.dialogueOpen) return;
+
+    /*
+     * A quest giver is a conversation, not a card. Asked first, because a
+     * character can also be declared as a point of interest and being spoken to
+     * is the more specific answer.
+     */
+    if (quests.engage(detail)) {
+      markEngaged(detail);
+      return;
+    }
+
     const level: SceneLevel | null = renderer.level;
     if (level === null) return;
-    const poi = level.pois.find((candidate) => candidate.id === detail);
+    const poi = level.pois.find((candidate) => candidate.id === bareTargetId(detail));
     if (poi === undefined) return;
-    learning = detail;
+    markEngaged(detail);
+    learning = poi.id;
     /* One hold for the whole chain: the landmark card, and the question after
        it. Released by `askAbout` or by the runner finishing. */
     pause.hold('poi');
+    /* The `visit` step, when this is the step the player is on. Before the card,
+       so the tracker behind it is already right when the card closes. */
+    quests.visited(detail);
     card.show({ title: localised(poi.name, locale), body: [localised(poi.blurb, locale)] });
+  }
+
+  /**
+   * This one has been done.
+   *
+   * Two consequences, and they are the same fact seen from two sides: the prompt
+   * for it becomes "Done. See this one again" (`TN-REACH-03`), and the one-time
+   * hint has served its purpose and goes for good (`TN-REACH-04`: "it goes as
+   * soon as I engage anything, and does not come back in this sitting").
+   */
+  function markEngaged(detail: string): void {
+    engaged.add(bareTargetId(detail));
+    hintShown = true;
+    hintOnScreen = false;
+    hud.setHint(null);
+    refreshPrompt();
   }
 
   /**
@@ -1551,10 +1878,28 @@ function openLevel(wiring: LevelWiring): LevelSession {
             `${drawn.error.code}: ${drawn.error.message}`,
         );
       }
+      /*
+       * `TN-QUEST-05`: an `answer` step that cannot start says so.
+       *
+       * Only when a quest is waiting on one. A landmark with no question to ask
+       * is the level quietly carrying on — the player has just read something
+       * true and interrupting that with a failure they cannot act on would be
+       * worse — but a player counting to three needs to know why the count is not
+       * moving. Said in the strip *and* announced, because every sound has a
+       * visual equivalent, and neither blocks: the skater can move away, the
+       * tracker still reads "(0 of 3)", and nothing is earned.
+       */
+      if (quests.answering !== undefined) {
+        const message = text(locale, 'quest.noQuestions');
+        hud.setNotice(message);
+        wiring.announce(message, locale);
+      }
       backToTheLevel();
       return;
     }
 
+    /* Whatever the notice was about has stopped being true. */
+    hud.setNotice(null);
     runner.start(drawn.value.questions);
   }
 
@@ -1614,9 +1959,23 @@ function openLevel(wiring: LevelWiring): LevelSession {
     /* A thunk, for the reason `arrival` is one: this subscription exists before
        the level is asked for, and what its landmarks are called is in the
        document that has not arrived yet. */
-    targets: () => promptTargets(renderer.level, locale),
+    targets: targetsNow,
     onPrompt: (target) => {
       hud.setPrompt(target?.prompt ?? null);
+      /*
+       * The one-time hint (`TN-REACH-04`), the first time anything is in reach.
+       *
+       * It explains the marks, which are the one affordance a player cannot be
+       * told about anywhere else — the level select does not mention them, the
+       * menu does not, and the mark itself is a shape. Shown beside the prompt,
+       * announced once, and gone for good the moment anything is engaged.
+       */
+      if (target === null || hintShown) return;
+      hintShown = true;
+      hintOnScreen = true;
+      const message = interactHint(locale);
+      hud.setHint(message);
+      wiring.announce(message, locale);
     },
     /* A thunk, not a string: this subscription has to exist before the level is
        asked for, or `level/ready` is missed, and the sentence it wants to say is
@@ -1634,6 +1993,15 @@ function openLevel(wiring: LevelWiring): LevelSession {
   /* The player tapped the landmark on the canvas. The other route in is the
      interact prompt, and both end in `engage`. */
   const offEngaged = bus.on('poi/engaged', ({ detail }) => {
+    engage(detail);
+  });
+
+  /* The other thing a player can tap: a character. `npc/engaged` is declared by
+     `app/ui/level-events.ts` and is what a quest giver arrives on; it ends in the
+     same `engage` call as a landmark, so the two routes cannot behave
+     differently. A build whose scene never publishes it loses nothing — the
+     interact prompt reaches the same function. */
+  const offNpcEngaged = bus.on('npc/engaged', ({ detail }) => {
     engage(detail);
   });
 
@@ -1745,18 +2113,28 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
   return {
     hud,
+    get answeringQuest(): QuestDocument | undefined {
+      return quests.answering;
+    },
+    refreshQuest(): void {
+      quests.refresh();
+    },
     setLocale(next): void {
       locale = next;
       hud.setLocale(next);
       card.setLocale(next);
       runner.setLocale(next);
       completed.setLocale(next);
-      /* The prompt is the landmark's own name, so it is drawn again in the new
-         language rather than left in the old one. `announcer.inReach` is what is
-         actually in reach, so nothing is invented and nothing is offered that is
-         not there. */
-      const reach = announcer.inReach;
-      hud.setPrompt(reach === null ? null : (promptTargets(renderer.level, next)[reach]?.prompt ?? null));
+      quests.setLocale(next);
+      passport?.setLocale(next);
+      /* The prompt is a copy row, so it is drawn again in the new language rather
+         than left in the old one. `announcer.inReach` is what is actually in
+         reach, so nothing is invented and nothing is offered that is not there. */
+      refreshPrompt();
+      /* The hint follows the language too, but only while it is still on screen:
+         `hintOnScreen` is false once anything has been engaged, so a language
+         change cannot bring back a hint that has already gone (`TN-REACH-04`). */
+      if (hintOnScreen) hud.setHint(interactHint(next));
       /* Both level screens are handed their own strings again, in the new
          language. They cannot look a row up: it is keyed on a level neither of
          them knows the id of. */
@@ -1773,10 +2151,13 @@ function openLevel(wiring: LevelWiring): LevelSession {
       card.setSingleSwitch(enabled, holdMs);
       runner.setSingleSwitch(enabled, holdMs);
       completed.setSingleSwitch(enabled, holdMs);
+      quests.setSingleSwitch(enabled, holdMs);
+      passport?.setSingleSwitch(enabled, holdMs);
     },
     close(): void {
       offFailure();
       offEngaged();
+      offNpcEngaged();
       offMilestone();
       offPlayable();
       announcer.destroy();
@@ -1785,6 +2166,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
       learning = null;
       runner.destroy();
       completed.destroy();
+      quests.destroy();
+      passport?.destroy();
+      passport = null;
       study?.destroy();
       study = null;
       card.destroy();
@@ -1802,6 +2186,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
       pause.release('menu');
       pause.release('poi');
       pause.release('complete');
+      pause.release('quest');
+      pause.release('passport');
       pause.release('settings');
       pause.release('study');
     },
@@ -1889,6 +2275,19 @@ type PauseReason =
   | 'poi'
   /** The completion card. Its own reason, never the landmark chain's. */
   | 'complete'
+  /**
+   * A quest dialogue over a live level.
+   *
+   * Its own reason for the same argument, and after the same defect: the menu
+   * once took the level and never gave it back, so a player who opened Settings
+   * from it was left in a level that had stopped and would not start. A dialogue
+   * that borrowed `poi`'s hold would be released by a landmark chain finishing
+   * underneath it — or, worse, would leave the level frozen after the officer had
+   * gone.
+   */
+  | 'quest'
+  /** The passport, opened over a level from the menu. */
+  | 'passport'
   | 'settings'
   | 'study'
   | 'shell';
@@ -1971,30 +2370,80 @@ function toDomainSettings(
 /* -------------------------------------------------------------------- shared */
 
 /**
- * What the interact prompt says about each of a level's landmarks.
+ * What the interact prompt says about everything a level can put in reach.
  *
- * **The landmark's own name, from the level document, in the player's language.**
- * Not a sentence this file wrote: `TN-COPY-06` wants "Talk to the officer" and
- * `app/ui/copy.ts` has no `hud.interact.*` row, so the choice is between content
- * that exists and copy that would have to be invented, and ADR-0010 settles it.
- * The shortfall is real and is reported: a name says what is there, where the
- * story's wording says what pressing does.
+ * **This function is where the defect was.** It used to answer with the
+ * landmark's own localised name from the level document, because
+ * `app/ui/copy.ts` had no `hud.interact.*` row — so a player riding through
+ * Toronto read "CN Tower" in the HUD. Two things were wrong with that: a noun
+ * says what is *there* rather than what choosing it will do, and `TN-NAMES-04`
+ * fails the build for a name from its list drawn by the HUD. It got past that
+ * check because the name was never a copy string; it was content, interpolated
+ * here, at runtime.
  *
- * Keyed on the id the scene sends with `poi/entered` — `town-clock`,
- * `parliament-hill` — which is the level document's own `pois[].id`, so the two
- * ends cannot drift without the level failing to parse first.
+ * Every string it can now produce comes from the copy table, through
+ * `app/ui/interact.ts`, which holds the whole precedence: **done** beats a
+ * level's own per-target row, which beats the kind. A target with no row at all
+ * offers `null`, and the announcer draws no prompt for it — never "Interact",
+ * never a name, never an empty string (`TN-REACH-05`).
  *
- * A level that has not loaded has no landmarks and therefore no offers, which is
- * the correct answer rather than a special case.
+ * ## Both spellings of an id, on purpose
+ *
+ * The stories write a subject two ways — `poi/entered` for `npc.officer`, and a
+ * level document that calls the same character `officer` — and a copy row is
+ * keyed on the document's id. Both are registered, so whichever spelling the
+ * scene sends finds the same target rather than silently offering nothing.
+ *
+ * A level that has not loaded has nothing in reach, which is the correct answer
+ * rather than a special case.
  */
 function promptTargets(
   level: SceneLevel | null,
   locale: UiLocale,
+  state: {
+    /** Bare ids engaged in this sitting. */
+    readonly done: ReadonlySet<string>;
+    /**
+     * Would choosing this target open a dialogue?
+     *
+     * Two things at once, and both matter: it says a character is a person to
+     * *talk to* rather than a place to look at, and it says whether talking to
+     * them can happen at all. A character who is not a quest giver, or whose
+     * name this build has no row for, cannot be spoken to — and a prompt that
+     * opens nothing is the dead control this project keeps finding.
+     */
+    readonly canEngage: (targetId: string) => boolean;
+  },
 ): Readonly<Record<string, LevelTarget>> {
   if (level === null) return {};
-  return Object.fromEntries(
-    level.pois.map((poi) => [poi.id, { prompt: localised(poi.name, locale) }]),
-  );
+
+  const targets: Record<string, LevelTarget> = {};
+
+  const offer = (rawId: string, kind: InteractKind): void => {
+    const bare = bareTargetId(rawId);
+    const prompt = interactPrompt(locale, { id: bare, kind, done: state.done.has(bare) });
+    /* No row, no offer. The alternative is a button whose label this file would
+       have had to make up, which is the whole of `TN-REACH`'s defect. */
+    if (prompt === null) return;
+    const target: LevelTarget = { prompt };
+    targets[bare] = target;
+    targets[`${kind}.${bare}`] = target;
+  };
+
+  /*
+   * A character is offered only while there is something for them to say, and a
+   * point of interest is always offered because it always has a card. A
+   * character who stands on a point of interest is a person: being spoken to is
+   * the more specific thing choosing them does.
+   */
+  for (const character of level.characters) {
+    if (state.canEngage(`${character.characterId}`)) offer(`${character.characterId}`, 'npc');
+  }
+  for (const poi of level.pois) {
+    offer(poi.id, state.canEngage(poi.id) ? 'npc' : 'poi');
+  }
+
+  return targets;
 }
 
 /** A `LocalizedText` in the player's language, falling back to English. */
