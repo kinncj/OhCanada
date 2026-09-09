@@ -5,6 +5,7 @@ import gameConfigDocument from '@content/game.config.json';
    editing three configs that have to agree (tsconfig, vite, vitest). */
 import { readGameRules } from '../../../app/bootstrap/game-rules';
 import { unlockedLevelIds } from '@domain/entities/level';
+import { text } from '@ui/copy';
 import type { LevelId } from '@domain/ids';
 
 /**
@@ -119,6 +120,13 @@ const hoisted = vi.hoisted(() => {
     resumed: number;
     poiShown: unknown[];
     errorShown: number;
+    /** Every option the error card was built or re-localised with. */
+    errorTitles: string[];
+    /** How many times the waiting screen was shown, and with what. */
+    loadingShown: number;
+    loadingText: { title: string; message: string }[];
+    loadingHidden: number;
+    loadingStallAfterMs: number | undefined;
     autoMove: boolean[];
   } = {
     calls: [],
@@ -142,6 +150,11 @@ const hoisted = vi.hoisted(() => {
     resumed: 0,
     poiShown: [],
     errorShown: 0,
+    errorTitles: [],
+    loadingShown: 0,
+    loadingText: [],
+    loadingHidden: 0,
+    loadingStallAfterMs: undefined,
     autoMove: [],
   };
   return { state };
@@ -287,8 +300,16 @@ vi.mock('@ui/poi-card', () => ({
 }));
 
 vi.mock('@ui/level-screens', () => ({
-  createLevelError: (host: unknown): unknown => {
+  /*
+   * Both screens record the **strings they were handed**, because that is the
+   * decision this suite is about: which level's words the composition root
+   * looked up. Neither screen may read a copy row itself — one row for four
+   * levels is the defect `TN-WAIT-a-level-opens-or-it-does-not.md` was written
+   * against — so what bootstrap passes is the whole of the fix.
+   */
+  createLevelError: (host: unknown, options: Record<string, unknown>): unknown => {
     hoisted.state.modalHosts['level-error'] = host;
+    hoisted.state.errorTitles.push(String(options['title']));
     return {
       element: {},
       visible: false,
@@ -296,8 +317,33 @@ vi.mock('@ui/level-screens', () => ({
         hoisted.state.errorShown += 1;
       },
       hide: () => undefined,
-      setLocale: () => undefined,
+      setLocale: (_locale: unknown, title: string) => {
+        hoisted.state.errorTitles.push(title);
+      },
       setSingleSwitch: () => undefined,
+      destroy: () => undefined,
+    };
+  },
+  createLevelLoading: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.modalHosts['level-loading'] = host;
+    hoisted.state.loadingStallAfterMs = options['stallAfterMs'] as number | undefined;
+    hoisted.state.loadingText.push({
+      title: String(options['title']),
+      message: String(options['message']),
+    });
+    return {
+      element: {},
+      visible: false,
+      show: () => {
+        hoisted.state.loadingShown += 1;
+      },
+      hide: () => {
+        hoisted.state.loadingHidden += 1;
+      },
+      offerEscape: () => undefined,
+      setLocale: (_locale: unknown, words: { title: string; message: string }) => {
+        hoisted.state.loadingText.push(words);
+      },
       destroy: () => undefined,
     };
   },
@@ -478,6 +524,11 @@ beforeEach(() => {
   hoisted.state.resumed = 0;
   hoisted.state.poiShown = [];
   hoisted.state.errorShown = 0;
+  hoisted.state.errorTitles = [];
+  hoisted.state.loadingShown = 0;
+  hoisted.state.loadingText = [];
+  hoisted.state.loadingHidden = 0;
+  hoisted.state.loadingStallAfterMs = undefined;
   hoisted.state.autoMove = [];
   doc = mountPage();
   vi.stubGlobal('document', asDocument(doc));
@@ -665,6 +716,82 @@ describe('opening a level', () => {
     expect(hoisted.state.loadCalls).toEqual([`${START_LEVEL}`]);
     expect(levelState()).toBe('ready');
   });
+
+  it('shows the waiting screen, in this level\u2019s words, and takes it away when the level opens', async () => {
+    /*
+     * `OQ-WAIT-1`: `createLevelLoading` had **no caller under `app/`**. It was
+     * built, scanned by axe and covered by its own suite, and no player had ever
+     * seen a waiting sentence — a level opened straight into a canvas or into
+     * the error card, which left `TN-LEVEL-01`'s "text, not only a spinner"
+     * unmet on the shipped page while passing in the harness.
+     *
+     * So this asserts the wire, and the words: the sentence is
+     * `level.<id>.loading` for the level being opened, not one row four levels
+     * shared, and the screen is gone once the level is playable rather than left
+     * on the page behind it.
+     */
+    await boot('');
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
+    await flush();
+
+    expect(hoisted.state.loadingShown, 'no waiting screen was ever shown').toBe(1);
+    expect(hoisted.state.loadingText[0]).toEqual({
+      title: text('en', `level.${START_LEVEL}.title` as Parameters<typeof text>[1]),
+      message: text('en', `level.${START_LEVEL}.loading` as Parameters<typeof text>[1]),
+    });
+    expect(hoisted.state.loadingHidden, 'the waiting screen outlived the load').toBe(1);
+  });
+
+  it('reads the waiting sentence into the live region, once', async () => {
+    /*
+     * `TN-WAIT-05` and `TN-HALIFAX-03`: "when a level starts loading,
+     * #tn-live-region reads that level's waiting sentence", and it is not
+     * repeated while the load continues. The canvas is `aria-hidden`, so a
+     * screen swapped in silently is a screen a screen-reader user never learns
+     * about — mounting the waiting screen without this would have made it
+     * visible to everybody except the players it matters most to.
+     */
+    await boot('');
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
+    await flush();
+    /* The region clears first and writes on a later task, so a screen reader
+       hears a change rather than an insertion (`app/ui/live-region.ts`). */
+    await vi.advanceTimersByTimeAsync(1_000);
+
+    expect(doc.getElementById('tn-live-region')?.textContent).toContain(
+      text('en', `level.${START_LEVEL}.loading` as Parameters<typeof text>[1]),
+    );
+  });
+
+  it('times the way out from the config\u2019s time-to-play budget, doubled', async () => {
+    /* `TN-LEVEL-02` and `TN-WAIT-04`: the escape appears after twice the budget
+       CI measures against, so the two numbers cannot drift apart. */
+    await boot('');
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
+    await flush();
+
+    expect(hoisted.state.loadingStallAfterMs).toBe(parsedRules.value.timeToPlayMs * 2);
+  });
+
+  it('hands both level screens the new language\u2019s strings for the same level', async () => {
+    /* `TN-WAIT-06` and `TN-HALIFAX-04`: changing language without leaving the
+       level. Neither screen can look its row up — the row is keyed on a level id
+       neither of them knows — so the composition root re-resolves both. */
+    await boot('');
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
+    await flush();
+
+    const store = shellOption<{ set: (key: string, value: unknown) => void }>('store');
+    store.set('locale', 'fr');
+
+    expect(hoisted.state.loadingText.at(-1)).toEqual({
+      title: text('fr', `level.${START_LEVEL}.title` as Parameters<typeof text>[1]),
+      message: text('fr', `level.${START_LEVEL}.loading` as Parameters<typeof text>[1]),
+    });
+    expect(hoisted.state.errorTitles.at(-1)).toBe(
+      text('fr', `level.${START_LEVEL}.error.title` as Parameters<typeof text>[1]),
+    );
+  });
 });
 
 describe('the ?level= deep link still works, and now leads back to the map', () => {
@@ -699,16 +826,49 @@ describe('the ?level= deep link still works, and now leads back to the map', () 
       ok: false,
       error: { kind: 'not-found', code: 'content.level.missing', message: 'no such level.' },
     };
-    await boot('?level=atlantis');
+    await boot(`?level=${START_LEVEL}`);
 
     expect(levelState()).toBe('failed');
     expect(hoisted.state.errorShown, 'no error card was shown').toBe(1);
+    /* The waiting screen went before the card arrived: two dialogs over one
+       level is a state no story describes (`TN-WAIT-02`, "level-loading is
+       gone"). */
+    expect(hoisted.state.loadingHidden).toBeGreaterThanOrEqual(1);
     /*
      * The id is on the console and NOT in the announcement. A level id is
      * developer vocabulary and this file may not author player-facing copy
      * (ADR-0010), so the failure goes on the bus and `app/ui` says what a player
-     * hears — `level.error.title`, from the copy table, in their language.
+     * hears — `level.<id>.error.title`, from the copy table, in their language.
      */
+    expect(consoleText()).toContain(`${START_LEVEL}`);
+    expect(
+      hoisted.state.errorTitles[0],
+      'the error card was built with a title that is not this level\u2019s',
+    ).toBe(text('en', `level.${START_LEVEL}.error.title` as Parameters<typeof text>[1]));
+  });
+
+  it('takes a deep link to a level this build has no words for to the map', async () => {
+    /*
+     * `TN-FLOW-05`: "a deep link to a level that does not exist … no Try again is
+     * offered for something that cannot succeed … the player is taken to, or
+     * offered, the level select … nothing on the screen blames the player".
+     *
+     * This route used to open the level anyway and show the error card, whose
+     * title was one row called `level.error.title` reading "We could not load
+     * Ottawa." — so a mistyped address was answered by naming a place chosen by
+     * which level had a story first. There is no title to draw for a level no
+     * document declares, and inventing one would be `app/bootstrap` authoring
+     * copy (ADR-0010). So the player is taken to a screen they can act on, and
+     * the id goes where developer vocabulary goes.
+     */
+    await boot('?level=atlantis');
+
+    expect(hoisted.state.loadCalls, 'a level with no document was opened').toEqual([]);
+    expect(hoisted.state.calls).not.toContain('createHud');
+    expect(hoisted.state.errorShown, 'a Try again was offered for something that cannot succeed').toBe(
+      0,
+    );
+    expect(levelState(), 'the page claims a level is open').toBeUndefined();
     expect(consoleText()).toContain('atlantis');
   });
 });
@@ -741,6 +901,7 @@ describe('the page has one <main>, and every modal is inside it (TN-HUD-07)', ()
     }
     expect(Object.keys(hoisted.state.modalHosts).sort()).toEqual([
       'level-error',
+      'level-loading',
       'poi-card',
       'settings',
     ]);

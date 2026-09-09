@@ -10,10 +10,15 @@
  *
  * The wording is not this module's to choose. Every key below is transcribed
  * from a "Player-facing copy" table in `docs/stories/`; the story file is named
- * above each block. There are no exceptions left: {@link COPY_GAPS} is empty,
- * and the two strings that used to be missing — `hud.label` and `level.loading`
- * — are now rows here, transcribed from `TN-HUD` and `TN-LEVEL` like the rest.
+ * above each block. There are no exceptions left: {@link COPY_GAPS} is empty.
  * See that constant for what stays a caller's option and why.
+ *
+ * **A key that names a level carries the level's id.** `level.loading` and
+ * `level.error.title` — one row each, for whichever level happened to have a
+ * story — are how Halifax came to tell a player it was getting the canal ready
+ * and to name Ottawa when it failed. The rows are `level.<id>.loading` and
+ * `level.<id>.error.title` now, and the unqualified spellings are refused by
+ * `tests/unit/ui/copy.test.ts` rather than merely absent.
  *
  * Counted strings (`study.count`, `settings.holdTime.seconds`) are two rows and
  * are reached through {@link count}, never {@link text}: the type makes that a
@@ -147,20 +152,67 @@ const EN = {
     'You can keep playing, but everything will be gone when you close the tab.',
   'save.export': 'Save to a file',
 
-  /* docs/stories/TN-LEVEL-ottawa.md */
-  /* The waiting sentence `TN-LEVEL-01` asks for instead of a bare spinner,
-     under `TN-COPY-07`'s waiting rule: it names the work and claims no progress
-     the game cannot measure — no percentage, no fraction, no "2 of 4", no
-     ellipsis, no bar with a value — and it does not change while the load runs.
-     It names the canal, so it is Ottawa's; `OQ-LEVEL-9` keeps the key and lets
-     each level own the wording, which is why `createLevelLoading` still takes
-     the sentence as data. */
-  'level.loading': 'Getting the canal ready.',
+  /* docs/stories/TN-MOVE-locomotion-labels.md */
+  /* A mode label belongs to the **mode**, not to the level that uses it: `walk`
+     is three of the four built levels' word, and written per level it would be
+     written three times. One row per mode a level document declares, and not
+     one more — the five modes `game.config.json` allows but no level uses have
+     no row, because copy for an unscoped level reads as a scheduled level.
+
+     Every value is the name of the activity, one word, in both languages: never
+     an instruction ("Press and hold to move" is the control's business), never
+     the level's name, and never a bare noun that needs gender agreement. A mode
+     a level declares with no row here is a build failure (`TN-MOVE-02`); an
+     empty strip is silent to a screen reader and invisible to everyone else,
+     which is the worst way for a missing string to present. */
+  'locomotion.walk.label': 'Walking',
+  'locomotion.toboggan.label': 'Sledding',
   'locomotion.skate.label': 'Skating',
-  'level.error.title': 'We could not load Ottawa.',
+  'locomotion.bike.label': 'Biking',
+
+  /* docs/stories/TN-WAIT-a-level-opens-or-it-does-not.md */
+  /* The three rows every level's error card shares. They name no place, state
+     no fact and do not change between levels, so they are written once for all
+     ten. `level.error.back` is drawn by the loading screen too, for the escape
+     route a stalled load offers — one string, one meaning, both screens. */
   'level.error.body': 'Check your connection and try again.',
   'level.error.retry': 'Try again',
   'level.error.back': 'Go back',
+
+  /* One waiting sentence and one error title per level, keyed on the level's
+     id, each transcribed from that level's own story: `TN-LEVEL-halifax.md`,
+     `TN-LEVEL-quebec-city.md`, `TN-LEVEL-ottawa.md`, `TN-LEVEL-toronto.md`.
+
+     **`level.loading` and `level.error.title` do not exist, and may not come
+     back.** They did, and the unqualified pair *was* the defect: one row each,
+     written when Ottawa was the only level with a story, inherited in silence by
+     the three levels that shipped after it — so a player opening Halifax read
+     "Getting the canal ready." and was told a failure there was Ottawa's. A key
+     with no level in it is a key two levels eventually disagree about.
+
+     The waiting sentence names **the work**, in common nouns — the harbour, the
+     slope, the canal, the streets — under `TN-COPY-07`: no percentage, no
+     fraction, no step count, no ellipsis, and the same sentence for the whole
+     wait. It may not name a landmark (`TN-NAMES-01` lists a loading message
+     among the screens a real name may not appear on) and it may not state a
+     territorial fact or paraphrase one: `docs/content-review.md` §10.2 fixes
+     where a player reads those — the sourced "About this place" panel, which
+     §10.2 contrasts with exactly the splash card a loading screen is.
+
+     The error title is **written out per level, never assembled from a
+     template**. "We could not load {{level}}." is correct in English and quietly
+     wrong in French: « charger Halifax » takes no article, « charger la Ville de
+     Québec » takes one, and the levels still to come are worse — « le Nord »,
+     « les Prairies », « les contreforts de l'Alberta ». Eight rows and no
+     interpolation is what makes both languages right. */
+  'level.halifax.loading': 'Getting the harbour ready.',
+  'level.halifax.error.title': 'We could not load Halifax.',
+  'level.quebec-city.loading': 'Getting the snowy slope ready.',
+  'level.quebec-city.error.title': 'We could not load Québec City.',
+  'level.ottawa.loading': 'Getting the canal ready.',
+  'level.ottawa.error.title': 'We could not load Ottawa.',
+  'level.toronto.loading': 'Getting the city streets ready.',
+  'level.toronto.error.title': 'We could not load Toronto.',
   /* docs/stories/TN-TITLE-title-screen.md */
   /* `title.game` is the product's name and is the same string in both
      languages, like the language names in `TN-SET`. It is never translated. */
@@ -363,12 +415,29 @@ const FR: Readonly<Record<CopyRow, string>> = {
     "Vous pouvez continuer à jouer, mais tout sera perdu à la fermeture de l'onglet.",
   'save.export': 'Enregistrer dans un fichier',
 
-  'level.loading': 'Préparation du canal.',
+  'locomotion.walk.label': 'Marche',
+  /* « Glissade » is the activity — « faire de la glissade » — and « Toboggan »
+     is the object you sit on. The label names what you are doing (`OQ-MOVE-1`). */
+  'locomotion.toboggan.label': 'Glissade',
   'locomotion.skate.label': 'Patinage',
-  'level.error.title': "Nous n'avons pas pu charger Ottawa.",
+  /* « Vélo », the everyday word, and it needs no article in a label. Not
+     « Cyclisme », which is a race. */
+  'locomotion.bike.label': 'Vélo',
+
   'level.error.body': 'Vérifiez votre connexion et réessayez.',
   'level.error.retry': 'Réessayer',
   'level.error.back': 'Retour',
+
+  'level.halifax.loading': 'Préparation du port.',
+  'level.halifax.error.title': "Nous n'avons pas pu charger Halifax.",
+  'level.quebec-city.loading': 'Préparation de la pente enneigée.',
+  /* The row that proves the template would have been wrong: the article is
+     here and it is absent from the other three. */
+  'level.quebec-city.error.title': "Nous n'avons pas pu charger la Ville de Québec.",
+  'level.ottawa.loading': 'Préparation du canal.',
+  'level.ottawa.error.title': "Nous n'avons pas pu charger Ottawa.",
+  'level.toronto.loading': 'Préparation des rues de la ville.',
+  'level.toronto.error.title': "Nous n'avons pas pu charger Toronto.",
   'title.game': 'TrueNorth',
   'title.tagline': "Préparez-vous à l'examen de citoyenneté canadienne.",
   'title.notOfficial': "Ce jeu n'est pas fait par le gouvernement du Canada.",
@@ -424,13 +493,14 @@ const FR: Readonly<Record<CopyRow, string>> = {
  * Strings this module had to write because no story table carries them.
  *
  * Empty, and it is meant to stay empty. `settings.state.on` / `.off`,
- * `hud.label` and `level.loading` were each reported as a gap and are each
- * written down now — in `TN-COPY-strings-and-counts.md`, `TN-HUD` and
- * `TN-LEVEL` — so nothing in this table is invented: every row above is
- * transcribed from a "Player-facing copy" table and names the story file it
- * came from.
+ * `hud.label`, the four mode labels and the eight per-level waiting and failure
+ * rows were each reported as a gap and are each written down now — in
+ * `TN-COPY-strings-and-counts.md`, `TN-HUD`, `TN-MOVE-locomotion-labels.md`,
+ * `TN-WAIT-a-level-opens-or-it-does-not.md` and the four level stories — so
+ * nothing in this table is invented: every row above is transcribed from a
+ * "Player-facing copy" table and names the story file it came from.
  *
- * The two closed gaps landed differently, on purpose:
+ * The closed gaps landed differently, on purpose:
  *
  *  - `hud.label` is drawn here by the HUD itself, like `hud.menu`. It is one
  *    name for the whole game, `TN-HUD-09` requires it to become French when the
@@ -439,12 +509,18 @@ const FR: Readonly<Record<CopyRow, string>> = {
  *    caller-supplied `string` can be stopped from being. A row the region reads
  *    itself is stronger than a required option: the name cannot be omitted *or*
  *    replaced with a wrong one.
- *  - `level.loading` stays a **required option** on `createLevelLoading`. The
- *    sentence names the canal, `OQ-LEVEL-9` keeps the wording with the level
- *    that waits, and under ADR-0010 a level file carries its own text — so the
- *    screen takes it as data and Ottawa's caller passes this row. Required, not
- *    defaulted: a screen that waits without saying what for is `TN-LEVEL-01`'s
- *    named defect, and a required option cannot be forgotten.
+ *  - `level.<id>.loading` and `level.<id>.error.title` are **required options**
+ *    on `createLevelLoading` and `createLevelError`. Each names one level, the
+ *    level is chosen by the composition root, and under ADR-0010 a level's own
+ *    text will move onto the level document — so both screens take theirs as
+ *    data and `app/bootstrap` looks the row up by id. Required, not defaulted: a
+ *    screen that waits without saying what for, or fails without naming what
+ *    failed, is the defect `TN-LEVEL-01` and `TN-WAIT-02` are written against,
+ *    and a required option cannot be forgotten.
+ *  - A mode label is read straight from this table by the composition root,
+ *    under the key the *level document* carries (`LocomotionTuning.labelKey`).
+ *    The level says which key; this table says what the key means; neither says
+ *    the other's half.
  *
  * The unit suite asserts this list is empty *and* that the marker this module
  * used to carry beside an invented string survives nowhere in the source, so a
@@ -471,6 +547,30 @@ export function isUiLocale(value: unknown): value is UiLocale {
  * replaced with an empty string: "Question {{n}} of 3" on screen is a visible
  * bug, "Question  of 3" is a plausible-looking one.
  */
+/**
+ * Is there a row under this key, and is it one {@link text} may draw?
+ *
+ * Two screens build a key from data rather than writing it: the map, whose cards
+ * are ten level ids, and the composition root, which looks up a level's waiting
+ * sentence and the `labelKey` a level document declares for its locomotion mode.
+ * Both can therefore ask for a row nobody wrote — level 2 has a subject line and
+ * deliberately no place name, and a level id can arrive from a `?level=` address
+ * a player typed. Asked rather than assumed, because the alternative reaches a
+ * player as the word "undefined" or as a dialog with no name.
+ *
+ * A plural form is not a {@link CopyKey}: `study.count.one` is a row, and it is
+ * reachable only through {@link count}, so the predicate refuses it rather than
+ * narrowing a caller into drawing "{{n}} question" with the placeholder still in
+ * it.
+ */
+export function hasCopyRow(key: string): key is CopyKey {
+  return (
+    Object.hasOwn(EN, key) &&
+    !key.endsWith('.one') &&
+    !key.endsWith('.other')
+  );
+}
+
 export function text(locale: UiLocale, key: CopyKey, params?: CopyParams): string {
   const template = TABLES[locale][key];
   return params === undefined ? template : interpolate(template, params);

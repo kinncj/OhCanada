@@ -8,7 +8,7 @@
  * **Copy.** Everything drawn here is defined in a story table and referenced,
  * never copied: `hud.label`, `hud.menu`, `hud.task`, `common.settings`,
  * `study.open`, `passport.open`, `common.close`, `storage.warning`. The two
- * strings that vary per level — the mode label (`locomotion.skate.label`) and
+ * strings that vary per level — the mode label (`locomotion.<mode>.label`) and
  * the quest step (`quest.step.*`) — arrive as data, because the level and the
  * quest own them.
  *
@@ -127,6 +127,16 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     testId: 'hud-mode-label',
     className: 'tn-hud__mode',
   });
+  /*
+   * `TN-MOVE-02`: the strip is "either absent from the accessibility tree or has
+   * non-empty text", and "never present with an empty string". Until a level
+   * says how the player moves there is nothing to say, and an empty paragraph is
+   * the worst way to say it: no box for a sighted player, nothing at all for a
+   * screen reader, and a `toBeVisible` assertion that fails on a missing word
+   * rather than on a missing element. Hidden until {@link Hud.setMode}, never
+   * filled with the mode's id, "Mode" or a dash.
+   */
+  modeLabel.hidden = true;
 
   /* The status rows: text only, no `aria-live` of their own (`TN-HUD-07`). A
      change to either is announced once, through the one live region. */
@@ -264,6 +274,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       const first = mode === '';
       mode = label;
       modeLabel.textContent = label;
+      modeLabel.hidden = label === '';
       if (!first) say(label);
     },
 

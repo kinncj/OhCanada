@@ -54,6 +54,21 @@ export interface GameRules {
   readonly scheduler: SchedulerTuning;
   /** `#/study` — how many questions one drill asks (`TN-STUDY-02`). */
   readonly study: StudyRules;
+  /**
+   * `#/budgets/timeToPlayMs` — how long a level is allowed to take to open.
+   *
+   * Read here rather than in `parseBootConfig`, which deliberately carries only
+   * `frameTimeMs`: this is not a number a canvas needs, it is the number
+   * `TN-LEVEL-02` measures a *stalled* load against — "after twice the
+   * time-to-play budget with no level, a way out". The escape route on the
+   * waiting screen is timed from it, so the budget CI enforces and the budget a
+   * player waits out are the same number and cannot drift into two.
+   *
+   * Not a player timer (CLAUDE.md: no timers outside Exam mode): nothing counts
+   * down on screen, nothing expires, and ignoring it costs the player nothing —
+   * it only adds a button.
+   */
+  readonly timeToPlayMs: number;
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -162,8 +177,22 @@ export function readGameRules(document: unknown): Result<GameRules> {
     );
   }
 
+  const budgets = document['budgets'];
+  const timeToPlayMs = isRecord(budgets) ? budgets['timeToPlayMs'] : undefined;
+  if (typeof timeToPlayMs !== 'number' || timeToPlayMs <= 0) {
+    return appErr(
+      'invalid',
+      'config.budgets.malformed',
+      'budgets.timeToPlayMs is how long a level may take to open; it must be a positive ' +
+        'number of milliseconds. A stalled load is measured against it, and a default ' +
+        'here would decide how long a player stares at a waiting screen with no way out.',
+      {},
+    );
+  }
+
   return ok({
     unlockRules: { initialLevels, order, stampsToUnlockNext: cost },
+    timeToPlayMs,
     journey,
     maxImportBytes,
     scheduler: {

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { text, type UiLocale } from '@ui/copy';
 import { createLevelAnnouncer, SPEAKS, type LevelEvent, type LevelEventName } from '@ui/level-events';
 
 /**
@@ -20,6 +21,14 @@ function wire(overrides: Partial<Parameters<typeof createLevelAnnouncer>[1]> = {
   const listeners: ((event: LevelEvent) => void)[] = [];
   const announce = vi.fn();
   const onPrompt = vi.fn();
+  /*
+   * The failing level's own title, read at the moment of the failure and in the
+   * language in force then — the composition root passes exactly this shape.
+   * Halifax, because the announcer used to read one row called
+   * `level.error.title` and tell every player that Ottawa had not loaded.
+   */
+  let locale: UiLocale = 'en';
+  const failure = (): string => text(locale, 'level.halifax.error.title');
 
   const announcer = createLevelAnnouncer(
     (listener) => {
@@ -33,11 +42,17 @@ function wire(overrides: Partial<Parameters<typeof createLevelAnnouncer>[1]> = {
       locale: 'en',
       announce,
       arrival: 'You are on the Rideau Canal in Ottawa. Skating.',
+      failure,
       targets: TARGETS,
       onPrompt,
       ...overrides,
     },
   );
+
+  const setLocale = (next: UiLocale): void => {
+    locale = next;
+    announcer.setLocale(next);
+  };
 
   const emit = (name: LevelEventName, detail?: string): void => {
     for (const listener of [...listeners]) {
@@ -45,7 +60,7 @@ function wire(overrides: Partial<Parameters<typeof createLevelAnnouncer>[1]> = {
     }
   };
 
-  return { announcer, announce, onPrompt, emit, listeners };
+  return { announcer, announce, onPrompt, emit, listeners, setLocale };
 }
 
 describe('what the level says out loud', () => {
@@ -58,10 +73,35 @@ describe('what the level says out loud', () => {
     );
   });
 
-  it('announces a failed load with the words the error card shows', () => {
+  it('announces a failed load with the words the error card shows, for that level', () => {
+    /* `TN-WAIT-02`: "a failure never names another level". The title is data
+       from the caller, because this module cannot know which level is loading. */
     const { announce, emit } = wire();
     emit('level/failed');
-    expect(announce).toHaveBeenCalledWith('We could not load Ottawa.', 'en');
+    expect(announce).toHaveBeenCalledWith('We could not load Halifax.', 'en');
+    expect(announce).not.toHaveBeenCalledWith('We could not load Ottawa.', 'en');
+  });
+
+  it('does not say the failure again when Try again fails the same way', () => {
+    /*
+     * `TN-WAIT-05`: "it is not repeated when Try again is pressed and fails
+     * again". The waiting screen comes back and takes focus between the two, so
+     * the player is not left in silence — a live region repeating a sentence a
+     * dialog has just read is the double-speaking this module avoids elsewhere.
+     */
+    const { announce, emit } = wire();
+    emit('level/failed');
+    emit('level/failed');
+    expect(announce).toHaveBeenCalledTimes(1);
+  });
+
+  it('says it again after a level has arrived in between', () => {
+    /* A level that opened and later failed is news, not a repeat. */
+    const { announce, emit } = wire();
+    emit('level/failed');
+    emit('level/ready');
+    emit('level/failed');
+    expect(announce.mock.calls.filter((call) => call[0] === 'We could not load Halifax.')).toHaveLength(2);
   });
 
   it('names the thing in reach and what to do about it', () => {
@@ -124,10 +164,10 @@ describe('what the level says out loud', () => {
   });
 
   it('follows a language change without being rebuilt', () => {
-    const { announcer, announce, emit } = wire();
-    announcer.setLocale('fr');
+    const { announce, emit, setLocale } = wire();
+    setLocale('fr');
     emit('level/failed');
-    expect(announce).toHaveBeenCalledWith("Nous n'avons pas pu charger Ottawa.", 'fr');
+    expect(announce).toHaveBeenCalledWith("Nous n'avons pas pu charger Halifax.", 'fr');
   });
 
   it('stops listening when it is destroyed', () => {

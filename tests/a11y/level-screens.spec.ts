@@ -58,6 +58,13 @@ interface HarnessOptions {
   readonly stalled?: boolean;
   /** A modal open over the running level. */
   readonly over?: 'menu' | 'settings' | 'card' | 'poi';
+  /**
+   * Which level the two level screens are about. The waiting sentence and the
+   * failure title are per level now (`TN-WAIT`), so a scan has to say which one
+   * — and the longest strings in French are Québec City's, which is what a
+   * 200 % scan has to be pointed at to prove anything about fitting.
+   */
+  readonly place?: 'halifax' | 'quebec-city' | 'ottawa' | 'toronto';
 }
 
 type ScreenName = 'level' | 'level-loading' | 'level-error' | 'poi';
@@ -87,6 +94,7 @@ async function open(
   if (options.warning === true) params.set('warning', '1');
   if (options.stalled === true) params.set('stalled', '1');
   if (options.over !== undefined) params.set('over', options.over);
+  if (options.place !== undefined) params.set('place', options.place);
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -533,6 +541,82 @@ test.describe('the level is loading, or did not load', () => {
     expect(results.violations, violationsOf(results)).toEqual([]);
   });
 
+  test('each level waits in its own words, and never in another level\u2019s', async ({
+    page,
+  }) => {
+    /*
+     * `TN-WAIT-01`. There was one `level.loading` row in the game, written for
+     * Ottawa, and the level the game opens on drew it — so a player landing in
+     * Halifax read that the canal was being got ready. Four levels through one
+     * screen is the only shape of scan that would have caught it.
+     */
+    for (const [place, sentence] of [
+      ['halifax', 'Getting the harbour ready.'],
+      ['quebec-city', 'Getting the snowy slope ready.'],
+      ['ottawa', 'Getting the canal ready.'],
+      ['toronto', 'Getting the city streets ready.'],
+    ] as const) {
+      const root = await open(page, 'level-loading', { place });
+      await expect(root).toContainText(sentence);
+      const drawn = (await root.textContent()) ?? '';
+      for (const other of [
+        'the harbour',
+        'the snowy slope',
+        'the canal',
+        'the city streets',
+      ]) {
+        if (sentence.includes(other)) continue;
+        expect(drawn, `${place} drew "${other}"`).not.toContain(other);
+      }
+    }
+  });
+
+  test('no waiting screen names a landmark or states a territorial fact', async ({ page }) => {
+    /*
+     * `TN-NAMES-01` names a loading message among the screens a real name may
+     * not appear on, and `docs/content-review.md` §10.2 puts the territorial
+     * statement in the sourced "About this place" panel — never on the splash
+     * card a player waits past. Scanned on the rendered page, in both languages,
+     * because that is where a name would actually reach a player.
+     */
+    for (const place of ['halifax', 'quebec-city', 'ottawa', 'toronto'] as const) {
+      for (const locale of ['en', 'fr'] as const) {
+        const root = await open(page, 'level-loading', { place, locale });
+        const drawn = ((await root.textContent()) ?? '').toLowerCase();
+        for (const forbidden of [
+          'pier 21',
+          'cn tower',
+          'frontenac',
+          'rideau',
+          'parliament',
+          'parlement',
+          "mi'kma",
+          'treaty',
+          'traité',
+          'territ',
+        ]) {
+          expect(drawn, `${place} (${locale}) says "${forbidden}"`).not.toContain(forbidden);
+        }
+      }
+    }
+  });
+
+  test('the longest French waiting sentence fits at 200 %', async ({ page }) => {
+    /* `TN-WAIT-04`: "the whole of its sentence is visible, not cut off" and "the
+       page does not scroll sideways", at 390x844 with text at 200 %. Québec
+       City's is the longest sentence in either language. */
+    const root = await open(page, 'level-loading', {
+      place: 'quebec-city',
+      locale: 'fr',
+      textScale: 200,
+    });
+    await expect(root).toContainText('Préparation de la pente enneigée.');
+    expect(await scrollsSideways(page)).toBe(false);
+
+    const results = await componentScan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
   test('a stalled load offers a focusable way out', async ({ page }) => {
     await open(page, 'level-loading', { stalled: true });
     const back = page.locator('[data-testid="level-loading-back"]');
@@ -551,6 +635,44 @@ test.describe('the level is loading, or did not load', () => {
 
     const results = await componentScan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('the error card names the level that failed, never another one', async ({ page }) => {
+    /*
+     * `TN-WAIT-02`: "each built level names itself", and "a failure never names
+     * another level". One row called `level.error.title` used to say "We could
+     * not load Ottawa." whichever level had failed, which is a screen naming a
+     * place the player was not going to.
+     */
+    for (const [place, title] of [
+      ['halifax', 'We could not load Halifax.'],
+      ['quebec-city', 'We could not load Québec City.'],
+      ['ottawa', 'We could not load Ottawa.'],
+      ['toronto', 'We could not load Toronto.'],
+    ] as const) {
+      const root = await open(page, 'level-error', { place });
+      /* The title is the dialog's accessible name, not merely text on it. */
+      await expect(root).toHaveAccessibleName(title);
+      const drawn = (await root.textContent()) ?? '';
+      for (const other of ['Halifax', 'Québec', 'Ottawa', 'Toronto']) {
+        if (title.includes(other)) continue;
+        expect(drawn, `the ${place} card named ${other}`).not.toContain(other);
+      }
+    }
+  });
+
+  test('the French failure title is written out, not composed', async ({ page }) => {
+    /* `TN-WAIT-06`: « charger Halifax » takes no article and « charger la Ville
+       de Québec » takes one, which is the whole reason the eight rows are
+       written out. Both are checked on the page, in one test, because a template
+       passes either one alone. */
+    const halifax = await open(page, 'level-error', { place: 'halifax', locale: 'fr' });
+    await expect(halifax).toHaveAccessibleName("Nous n'avons pas pu charger Halifax.");
+
+    const quebec = await open(page, 'level-error', { place: 'quebec-city', locale: 'fr' });
+    await expect(quebec).toHaveAccessibleName(
+      "Nous n'avons pas pu charger la Ville de Québec.",
+    );
   });
 
   test('the error screen is French, and readable at 200 %', async ({ page }) => {

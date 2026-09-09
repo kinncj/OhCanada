@@ -39,7 +39,7 @@ import {
   prefersReducedMotion,
   type Settings,
 } from '../../app/ui/settings';
-import { isUiLocale, text, type UiLocale } from '../../app/ui/copy';
+import { hasCopyRow, isUiLocale, text, type UiLocale } from '../../app/ui/copy';
 
 const params = new URLSearchParams(window.location.search);
 const ui = document.getElementById('ui');
@@ -141,11 +141,11 @@ const QUESTION: QuestionView = {
  * components take it as a required option rather than owning it.
  *
  * The two strings that used to be placeholders here — the region's name and the
- * loading sentence — are gone: `TN-HUD` and `TN-LEVEL` write them down, so
- * `hud.label` and `level.loading` are rows in `app/ui/copy.ts`. The HUD names
- * itself from the table, and the loading sentence is read from the table below
- * rather than retyped, so a wording change reaches the scan without this fixture
- * being edited.
+ * loading sentence — are gone: `TN-HUD` and `TN-WAIT` write them down, so
+ * `hud.label` and `level.<id>.loading` are rows in `app/ui/copy.ts`. The HUD
+ * names itself from the table, and the level screens read {@link waiting} from
+ * the table rather than retyping it, so a wording change reaches the scan
+ * without this fixture being edited.
  */
 const LEVEL = {
   en: {
@@ -177,6 +177,31 @@ const LEVEL = {
     },
   },
 } as const;
+
+/**
+ * Which level's waiting sentence and failure title the two level screens draw.
+ *
+ * `?place=<id>`, defaulting to the level the rest of this fixture is about. It
+ * is a parameter rather than a constant because the strings are **per level**
+ * now — one `level.loading` row for four levels is the defect
+ * `TN-WAIT-a-level-opens-or-it-does-not.md` exists to make impossible — and
+ * because the longest sentence and the longest title in French belong to Québec
+ * City, which is what a 200 % scan has to be pointed at to prove anything.
+ *
+ * Checked against the table rather than trusted: a `?place=` nobody wrote rows
+ * for falls back, because a harness that renders `undefined` would scan a defect
+ * of its own making.
+ */
+const PLACE = ((): string => {
+  const asked = params.get('place') ?? 'ottawa';
+  return hasCopyRow(`level.${asked}.loading`) ? asked : 'ottawa';
+})();
+
+const waiting = {
+  title: text(locale, `level.${PLACE}.title` as Parameters<typeof text>[1]),
+  loading: text(locale, `level.${PLACE}.loading` as Parameters<typeof text>[1]),
+  errorTitle: text(locale, `level.${PLACE}.error.title` as Parameters<typeof text>[1]),
+};
 
 /**
  * The shell's map entries.
@@ -329,10 +354,11 @@ switch (screen) {
   case 'level-loading': {
     const loading = createLevelLoading(ui, {
       locale,
-      title: level.title,
-      /* Ottawa's own sentence, from the table `TN-LEVEL` owns. The screen takes
-         it as data because the level owns the wording (`OQ-LEVEL-9`). */
-      message: text(locale, 'level.loading'),
+      title: waiting.title,
+      /* This level's own sentence, from the table `TN-WAIT` owns. The screen
+         takes it as data because the level owns the wording (`OQ-LEVEL-9`), and
+         because one row for four levels is the defect (`TN-WAIT`). */
+      message: waiting.loading,
       onBack: () => undefined,
       singleSwitch: store.current.singleSwitch,
     });
@@ -346,6 +372,7 @@ switch (screen) {
   case 'level-error': {
     createLevelError(ui, {
       locale,
+      title: waiting.errorTitle,
       onRetry: () => undefined,
       onBack: () => undefined,
       singleSwitch: store.current.singleSwitch,
@@ -405,6 +432,7 @@ switch (screen) {
         locale,
         announce,
         arrival: level.arrival,
+        failure: waiting.errorTitle,
         targets: {
           'npc.officer': { prompt: level.officer },
           'poi.parliament-hill': { prompt: level.landmark },

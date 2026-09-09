@@ -31,6 +31,7 @@ import { describe, expect, it, vi } from 'vitest';
    scope and cannot load under `environment: 'node'`. `game-events.ts` reaches
    the barrel with an `import type`, which is erased, so production is unaffected. */
 import { SCENE_EVENT_NAMES, isSceneEventName } from '@adapters/phaser/level-events';
+import { text } from '@ui/copy';
 import { SPEAKS, createLevelAnnouncer, type LevelEventName } from '@ui/level-events';
 
 import {
@@ -133,6 +134,9 @@ describe('the wiring end to end: bus -> announcer -> live region', () => {
       locale: 'en',
       announce: (message) => said.push(message),
       arrival: 'You are in Ottawa.',
+      /* The failing level's own title, from the copy table, exactly as
+         `app/bootstrap/main.ts` resolves it: `level.<id>.error.title`. */
+      failure: text('en', 'level.halifax.error.title'),
     });
     return { said, announcer };
   };
@@ -155,6 +159,9 @@ describe('the wiring end to end: bus -> announcer -> live region', () => {
     expect(said).toHaveLength(1);
     expect(said[0]).toContain('could not load');
     expect(said[0], 'a level id reached a player').not.toContain('atlantis');
+    /* And it names the level that failed rather than the one whose story was
+       written first (`TN-WAIT-02`). */
+    expect(said[0]).toBe('We could not load Halifax.');
   });
 
   it('produces zero announcements from four hundred movement events', () => {

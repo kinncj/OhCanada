@@ -317,10 +317,19 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
   });
 
   test('a level nobody authored never becomes playable', async ({ page }) => {
+    /*
+     * It never opens at all now, which is `TN-FLOW-05`: a level id no document
+     * declares has no words either — no waiting sentence, no failure title — and
+     * `app/bootstrap` may not invent them, so the player is taken to the level
+     * select instead of to an error card that names whichever level had a story
+     * first. `tests/e2e/level-landmarks.spec.ts` covers the failure card by
+     * failing a level this build really has.
+     */
     await page.goto('./?e2e=1&level=atlantis');
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
-    await expect(page.locator('html')).toHaveAttribute('data-tn-level', 'failed');
+    await expect(page.locator('html')).not.toHaveAttribute('data-tn-level', /.*/);
     await expect(page.locator('[data-testid="playable"]')).toHaveCount(0);
+    await expect(page.getByTestId('level-select')).toBeVisible();
   });
 
   test('a normal load opens the front door, not a level', async ({ page }) => {

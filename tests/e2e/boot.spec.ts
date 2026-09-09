@@ -5,7 +5,7 @@ import sharp from 'sharp';
 
 import { expect, test, type Page } from '@playwright/test';
 
-import { START_LEVEL } from './start-level';
+import { START_LEVEL, START_LEVEL_MODE_LABEL } from './start-level';
 
 /**
  * Slice 0's acceptance test: the empty portrait canvas, served from the
@@ -283,29 +283,26 @@ test.describe('boot', () => {
     await expect(page.locator('[data-testid="hud"]')).toBeVisible();
 
     /*
-     * The mode label is asserted **attached, not visible**, and that is a
-     * reported gap rather than a softened assertion.
+     * The mode label, **visible and with its word in it**.
      *
-     * `app/bootstrap/main.ts` labels the HUD by looking up
-     * `locomotion.<mode>.label` in `app/ui/copy.ts`, and the table has one row:
-     * `locomotion.skate.label`, transcribed from `docs/stories/TN-LEVEL-ottawa.md`.
-     * The level this build now starts on walks, there is no story for it yet, and
-     * `app/ui/copy.ts` may not invent wording ("the wording is not this module's
-     * to choose"). So the paragraph renders empty, an empty paragraph has no box,
-     * and `toBeVisible` fails on a copy row nobody has written rather than on
-     * anything this route does wrong.
+     * This assertion was `toBeAttached` and the comment here explained why: the
+     * copy table had one row, `locomotion.skate.label`, so the level the game
+     * opens on — which walks — drew an empty paragraph, an empty paragraph has
+     * no box, and `toBeVisible` failed on a missing string rather than on
+     * anything this route did wrong. `TN-MOVE-locomotion-labels.md` writes all
+     * four modes down now, so the gap is closed and the assertion goes back.
      *
-     * When `locomotion.walk.label` lands with a Halifax copy table, put
-     * `toBeVisible` back and assert the text. The label reaching the HUD is still
-     * covered for skate by `tests/unit/ui/hud.test.ts` and
-     * `tests/a11y/level-screens.spec.ts`; what is uncovered until then is the
-     * start level saying how the player moves, which is a real hole in the HUD
-     * and not a hole in this test.
+     * The expected word is derived, not typed: `START_LEVEL_MODE_LABEL` reads
+     * the start level's own `labelKey` and resolves it in `app/ui/copy.ts`,
+     * exactly as `app/bootstrap` does, so this still passes when the start level
+     * moves and fails when a level declares a mode nobody has a word for.
      */
+    const modeLabel = page.locator('[data-testid="hud-mode-label"]');
     await expect(
-      page.locator('[data-testid="hud-mode-label"]'),
-      'the HUD drew no mode label at all, which is more than the missing copy row',
-    ).toBeAttached();
+      modeLabel,
+      `the HUD drew no mode label for ${START_LEVEL}, so nobody is told how they move`,
+    ).toBeVisible();
+    await expect(modeLabel).toHaveText(START_LEVEL_MODE_LABEL);
     /* One landmark: the shell's `<main>` is detached while the level's holds
        the page (`TN-FLOW-08`, axe `landmark-one-main`). */
     await expect(page.locator('main')).toHaveCount(1);

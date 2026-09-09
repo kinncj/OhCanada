@@ -29,8 +29,11 @@
  * unlock rule is run over `unlockRules.order`, which is its progression. The
  * two agree about *which places exist* — `unmappedLevelIds` is that check, and
  * `tests/unit/contracts/unlock-chain-is-reachable.test.ts` runs it against the
- * shipped config — and they are allowed to disagree about order, because today
- * the only two built levels are numbers 4 and 3 and the player starts at 4.
+ * shipped config — and they are allowed to disagree about order. Four levels are
+ * built today — map numbers 1, 3, 4 and 5 — and the player starts at 1, which is
+ * also where `unlockRules.initialLevels` starts; that agreement is a fact about
+ * this week's config and not a rule, which is why neither list is derived from
+ * the other.
  */
 
 import { unlockedLevelIds, type Journey, type UnlockRules } from '@domain/entities/level';

@@ -33,6 +33,21 @@ import {
 
 const UI_DIR = fileURLToPath(new URL('../../../app/ui/', import.meta.url));
 
+/**
+ * Every level this build ships a document for, read from the directory.
+ *
+ * Never a list anybody maintains: `content/levels/` is what makes a level exist
+ * (`app/adapters/phaser/level-catalog.ts` globs the same directory), so a level
+ * added with no copy rows has to fail here rather than reach a player wearing
+ * another level's words.
+ */
+const LEVEL_IDS: readonly string[] = readdirSync(
+  fileURLToPath(new URL('../../../content/levels', import.meta.url)),
+)
+  .filter((name) => name.endsWith('.json'))
+  .map((name) => name.slice(0, -'.json'.length))
+  .sort();
+
 const everyString = (locale: 'en' | 'fr'): string[] => {
   const source = readFileSync(new URL('../../../app/ui/copy.ts', import.meta.url), 'utf8');
   const table = source.split(locale === 'en' ? 'const EN = {' : 'const FR: Readonly')[1] ?? '';
@@ -123,11 +138,13 @@ describe('the copy table', () => {
      * defect — and could not turn French on the language change `TN-HUD-09`
      * requires without a reload. There is no `label` option left to forget.
      *
-     * `level.loading` names the canal, so `OQ-LEVEL-9` keeps the wording with
-     * the level that waits and the screen still takes it as a **required**
-     * option. Required, never defaulted: a screen that waits without saying what
-     * for is `TN-LEVEL-01`'s defect. Read from the source, so deleting the word
-     * `readonly message: string` fails here rather than at review.
+     * `level.<id>.loading` names one level's work, so `OQ-LEVEL-9` keeps the
+     * wording with the level that waits and the screen still takes it as a
+     * **required** option — as does the error card's title, for the same reason
+     * and after the same defect. Required, never defaulted: a screen that waits
+     * without saying what for is `TN-LEVEL-01`'s defect, and a card that fails
+     * without naming the level is `TN-WAIT-02`'s. Read from the source, so
+     * deleting either word fails here rather than at review.
      */
     const hud = readFileSync(new URL('../../../app/ui/hud.ts', import.meta.url), 'utf8');
     const level = readFileSync(new URL('../../../app/ui/level-screens.ts', import.meta.url), 'utf8');
@@ -136,6 +153,10 @@ describe('the copy table', () => {
     expect(hud, 'the region name came back as a caller option').not.toMatch(/readonly label:/);
     expect(level).toMatch(/readonly message: string;/);
     expect(level).not.toMatch(/options\.message \?\?/);
+    expect(level).toMatch(/readonly title: string;/);
+    expect(level, 'the error card went back to reading a row keyed on no level').not.toMatch(
+      /'level\.error\.title'/,
+    );
   });
 
   it('names the hud region for what it holds, not for what it is', () => {
@@ -160,9 +181,9 @@ describe('the copy table', () => {
     /*
      * `TN-COPY-07`, the waiting rule, held over the table rather than over one
      * screen: it names the work, and it carries no percentage, no fraction, no
-     * step count such as "2 of 4", and no ellipsis. `level.loading` is the only
-     * waiting row today; the pattern is what makes the next one inherit the rule
-     * instead of being reviewed for it.
+     * step count such as "2 of 4", and no ellipsis. Held over *every* row whose
+     * key ends in `.loading`, so the next level inherits the rule instead of
+     * being reviewed for it.
      */
     const waiting = KEYS.filter((key) => String(key).endsWith('.loading'));
     expect(waiting, 'no waiting row found — this rule must not pass vacuously').not.toEqual([]);
@@ -181,8 +202,176 @@ describe('the copy table', () => {
         ).toBe(false);
       }
     }
-    expect(text('en', 'level.loading')).toBe('Getting the canal ready.');
-    expect(text('fr', 'level.loading')).toBe('Préparation du canal.');
+  });
+
+  it('gives every built level its own waiting sentence and its own failure', () => {
+    /*
+     * `TN-WAIT-01` and `TN-WAIT-02`, transcribed from the four level stories.
+     * Literal on both sides: reading the row to assert the row proves nothing,
+     * and these eight strings are the whole of the defect this suite is about —
+     * one `level.loading` and one `level.error.title`, written for Ottawa,
+     * drawn by Halifax.
+     */
+    expect(text('en', 'level.halifax.loading')).toBe('Getting the harbour ready.');
+    expect(text('fr', 'level.halifax.loading')).toBe('Préparation du port.');
+    expect(text('en', 'level.quebec-city.loading')).toBe('Getting the snowy slope ready.');
+    expect(text('fr', 'level.quebec-city.loading')).toBe('Préparation de la pente enneigée.');
+    expect(text('en', 'level.ottawa.loading')).toBe('Getting the canal ready.');
+    expect(text('fr', 'level.ottawa.loading')).toBe('Préparation du canal.');
+    expect(text('en', 'level.toronto.loading')).toBe('Getting the city streets ready.');
+    expect(text('fr', 'level.toronto.loading')).toBe('Préparation des rues de la ville.');
+
+    expect(text('en', 'level.halifax.error.title')).toBe('We could not load Halifax.');
+    expect(text('fr', 'level.halifax.error.title')).toBe(
+      "Nous n'avons pas pu charger Halifax.",
+    );
+    expect(text('en', 'level.quebec-city.error.title')).toBe('We could not load Québec City.');
+    expect(text('fr', 'level.quebec-city.error.title')).toBe(
+      "Nous n'avons pas pu charger la Ville de Québec.",
+    );
+    expect(text('en', 'level.ottawa.error.title')).toBe('We could not load Ottawa.');
+    expect(text('fr', 'level.ottawa.error.title')).toBe("Nous n'avons pas pu charger Ottawa.");
+    expect(text('en', 'level.toronto.error.title')).toBe('We could not load Toronto.');
+    expect(text('fr', 'level.toronto.error.title')).toBe("Nous n'avons pas pu charger Toronto.");
+  });
+
+  it('refuses a waiting or failure key with no level in it', () => {
+    /*
+     * `TN-WAIT-03`: "a copy table declares `level.loading` or
+     * `level.error.title` with no level in the key … the build fails". This is
+     * the row that was the defect, and its absence is the fix — so it is
+     * asserted rather than assumed, because the shape that came back once can
+     * come back again.
+     */
+    expect(KEYS, 'level.loading is back: one sentence for four levels').not.toContain(
+      'level.loading',
+    );
+    expect(KEYS, 'level.error.title is back: one title for four levels').not.toContain(
+      'level.error.title',
+    );
+    /*
+     * Read from the source as text rather than through the type, because the
+     * type is what a future edit changes: `CopyKey` no longer *has* those two
+     * members, so a comparison against them does not even compile — which is a
+     * stronger guarantee and a worse test, since it would stop compiling for the
+     * wrong reason if a row came back.
+     */
+    for (const key of KEYS.map(String)) {
+      const unqualified = key === 'level.loading' || key === 'level.error.title';
+      expect(unqualified, `${key} names no level`).toBe(false);
+    }
+  });
+
+  it('carries both rows, in both languages, for every level with a document', () => {
+    /*
+     * `TN-WAIT-03`: "a document exists at content/levels/<id>.json … and no
+     * `level.<id>.loading` row exists in English and in French … the build
+     * fails, naming the level and the missing key". The set of levels is read
+     * from the directory rather than listed, so a fifth level document lands
+     * with this test already failing for it — which is the only way a level can
+     * be stopped from inheriting another level's words the way Halifax did.
+     */
+    for (const id of LEVEL_IDS) {
+      for (const suffix of ['loading', 'error.title']) {
+        const key = `level.${id}.${suffix}`;
+        expect(KEYS, `content/levels/${id}.json ships with no ${key}`).toContain(key);
+        for (const locale of UI_LOCALES) {
+          expect(text(locale, key as Parameters<typeof text>[1]), `${key} (${locale})`).not.toBe(
+            '',
+          );
+        }
+      }
+      expect(KEYS, `no place name for ${id}`).toContain(`level.${id}.title`);
+    }
+  });
+
+  it('names every locomotion mode a level declares, and no mode none declares', () => {
+    /*
+     * `TN-MOVE-02`, both halves: "every mode declared by any document under
+     * content/levels has a row in both languages", and "a row in this table for
+     * a mode no level declares is reported, so the table cannot silently grow".
+     *
+     * The second half is why this is an equality and not a subset check. The
+     * five modes `game.config.json` allows and no level uses have no label on
+     * purpose: two of them belong to levels `docs/content-review.md` §1 blocks,
+     * and a blocked level with its HUD copy already written reads as
+     * schedulable.
+     *
+     * The keys are read from the level documents' own `labelKey`, not built from
+     * the mode's id, because `labelKey` is what `app/bootstrap` looks up.
+     */
+    const declared = new Set<string>();
+    for (const id of LEVEL_IDS) {
+      const document = JSON.parse(
+        readFileSync(new URL(`../../../content/levels/${id}.json`, import.meta.url), 'utf8'),
+      ) as { locomotion?: { mode: string; labelKey: string }[] };
+      for (const mode of document.locomotion ?? []) {
+        expect(
+          mode.labelKey,
+          `${id} declares "${mode.mode}" under a key that is not this table's shape`,
+        ).toBe(`locomotion.${mode.mode}.label`);
+        declared.add(mode.labelKey);
+      }
+    }
+
+    const written = KEYS.filter((key) => String(key).startsWith('locomotion.'));
+    expect([...declared].sort(), 'a level moves in a way nothing has a word for').toEqual(
+      written.map(String).sort(),
+    );
+    for (const key of written) {
+      for (const locale of UI_LOCALES) {
+        const value = text(locale, key);
+        expect(value, `${String(key)} (${locale}) is empty`).not.toBe('');
+        expect(value.split(' ').length, `${String(key)} (${locale}) is not one word`).toBe(1);
+        expect(value.includes('.'), `${String(key)} (${locale}) is a sentence`).toBe(false);
+      }
+    }
+    /* The four labels, literally, from `TN-MOVE-locomotion-labels.md`. */
+    expect(text('en', 'locomotion.walk.label')).toBe('Walking');
+    expect(text('fr', 'locomotion.walk.label')).toBe('Marche');
+    expect(text('en', 'locomotion.toboggan.label')).toBe('Sledding');
+    expect(text('fr', 'locomotion.toboggan.label')).toBe('Glissade');
+    expect(text('en', 'locomotion.skate.label')).toBe('Skating');
+    expect(text('fr', 'locomotion.skate.label')).toBe('Patinage');
+    expect(text('en', 'locomotion.bike.label')).toBe('Biking');
+    expect(text('fr', 'locomotion.bike.label')).toBe('Vélo');
+  });
+
+  it('never names a landmark or states a territorial fact on a waiting screen', () => {
+    /*
+     * `TN-WAIT-06`'s last scenario, and the boundary `TN-NAMES-01` draws: "no
+     * name on this file's list appears on … a loading message", and a loading
+     * screen may not state a territorial fact or paraphrase one — the sourced
+     * "About this place" panel is where a player reads those
+     * (`docs/content-review.md` §10.2). A forty-character paraphrase of a cited
+     * statement about a nation is an unsourced claim about that nation.
+     */
+    const banned = [
+      'pier 21',
+      'cn tower',
+      'château frontenac',
+      'chateau frontenac',
+      'rideau',
+      'parliament',
+      'parlement',
+      "mi'kma",
+      'mikma',
+      'treaty',
+      'traité',
+      'territ',
+      'first nation',
+      'première nation',
+      'métis',
+      'inuit',
+    ];
+    for (const key of KEYS.filter((row) => String(row).endsWith('.loading'))) {
+      for (const locale of UI_LOCALES) {
+        const value = text(locale, key).toLowerCase();
+        for (const word of banned) {
+          expect(value.includes(word), `${String(key)} (${locale}) says "${word}"`).toBe(false);
+        }
+      }
+    }
   });
 
   it('counts through Intl.PluralRules, in English', () => {

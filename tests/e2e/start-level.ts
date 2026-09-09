@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { unlockedLevelIds, type UnlockRules } from '@domain/entities/level';
+import { hasCopyRow, text } from '@ui/copy';
 
 /**
  * The level a cold load can open **from the map**, asked of the same two sources
@@ -53,3 +54,40 @@ if (found === undefined) {
 
 /** The id of that level, for a `level-card-<id>` selector or a `?level=` link. */
 export const START_LEVEL: string = `${found}`;
+
+/**
+ * What the HUD must call the way the player moves in that level, in English.
+ *
+ * Asked of the same two sources the game asks, for the same reason `START_LEVEL`
+ * is: the level document declares `locomotion[0].labelKey` — a *key*, because
+ * ADR-0010 keeps the wording out of the engine — and `app/ui/copy.ts` says what
+ * the key means. A spec that typed "Walking" would have to be edited when the
+ * start level moves, and would still pass on the defect this constant exists
+ * for: the table had one row, `locomotion.skate.label`, so the level the game
+ * opens on drew an **empty** paragraph. An empty paragraph has no box, which is
+ * why `boot.spec.ts` could only assert it was attached.
+ */
+export const START_LEVEL_MODE_LABEL: string = ((): string => {
+  const document = JSON.parse(
+    readFileSync(
+      fileURLToPath(new URL(`../../content/levels/${START_LEVEL}.json`, import.meta.url)),
+      'utf8',
+    ),
+  ) as { readonly locomotion?: readonly { readonly labelKey: string }[] };
+  const key = document.locomotion?.[0]?.labelKey;
+  if (key === undefined) {
+    throw new Error(
+      `content/levels/${START_LEVEL}.json declares no locomotion, so the HUD has no mode ` +
+        'to name and the level cannot say how the player moves.',
+    );
+  }
+  if (!hasCopyRow(key)) {
+    throw new Error(
+      `content/levels/${START_LEVEL}.json declares "${key}" and app/ui/copy.ts has no row ` +
+        'for it, so the HUD would draw an empty mode strip — silent to a screen reader ' +
+        'and invisible to everyone else (TN-MOVE-02). Add the row to ' +
+        'docs/stories/TN-MOVE-locomotion-labels.md and transcribe it.',
+    );
+  }
+  return text('en', key);
+})();

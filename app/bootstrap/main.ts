@@ -67,10 +67,10 @@ import {
 import { defaultSettings, withSettings } from '@domain/entities/player';
 import { newProgress, stampedLevelIds, type Progress } from '@domain/entities/progress';
 import type { EpochMillis, LevelId, LocaleCode } from '@domain/ids';
-import { text, type CopyKey, type UiLocale } from '@ui/copy';
+import { hasCopyRow, text, type UiLocale } from '@ui/copy';
 import { createHud, type Hud } from '@ui/hud';
 import { createLevelAnnouncer } from '@ui/level-events';
-import { createLevelError } from '@ui/level-screens';
+import { createLevelError, createLevelLoading } from '@ui/level-screens';
 import type { MapEntry } from '@ui/level-select';
 import { announce, clearAnnouncements, mountLiveRegion } from '@ui/live-region';
 import { createPoiCard } from '@ui/poi-card';
@@ -473,6 +473,36 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
   function enterLevel(id: LevelId): void {
     if (session !== null) return;
 
+    /*
+     * A level this build has no words for is a level this build cannot open.
+     *
+     * `levelWords` asks the copy table for the three rows both level screens
+     * need — the place, the waiting sentence, the failure title — and answers
+     * `null` when any is missing. That happens for exactly one kind of id: one
+     * no level document declares, arriving from a `?level=` address somebody
+     * typed. `TN-WAIT-03` fails the build for a *shipped* level with no rows, so
+     * the other case is a build failure caught before a player sees it.
+     *
+     * `TN-FLOW-05` decides what happens next, and it is not the error card:
+     * "no Try again is offered for something that cannot succeed", "the player
+     * is taken to, or offered, the level select", "nothing on the screen blames
+     * the player". Retrying a level id that does not exist retries nothing, and
+     * an error card naming no level — or naming the last level somebody wrote a
+     * story for, which is what it used to do — is the defect `TN-WAIT` exists to
+     * make impossible. So the player is taken to the map, which is a screen they
+     * can act on, and the id goes on the console where developer vocabulary
+     * belongs.
+     */
+    const words = levelWords(id);
+    if (words === null) {
+      console.error(
+        `[bootstrap] refused to open "${String(id)}": this build has no level document ` +
+          'and no copy rows for it. Taking the player to the level select (TN-FLOW-05).',
+      );
+      shell.show('level-select');
+      return;
+    }
+
     /* Before `createHud`, and this order is the shell's contract: the shell's
        root is the page's one `<main>` and `createHud` makes another, so the
        first is detached before the second exists. */
@@ -481,6 +511,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     root.dataset['tnLevel'] = 'loading';
     session = openLevel({
       id,
+      words,
       root,
       uiHost,
       gameHost,
@@ -489,6 +520,11 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       pause,
       store,
       announce,
+      /* `TN-LEVEL-02` and `TN-WAIT-04`: twice the time-to-play budget with no
+         level, and a way out appears beside the sentence. The number is
+         `budgets.timeToPlayMs` from the config CI measures against, doubled
+         here and nowhere else. */
+      stallAfterMs: rules.timeToPlayMs * 2,
       onExportSave: exportSave,
       onLeave: leaveLevel,
     });
@@ -564,6 +600,10 @@ interface LevelSession {
 
 interface LevelWiring {
   readonly id: LevelId;
+  /** This level's own three strings, in whatever language is asked for. */
+  readonly words: LevelWordsFor;
+  /** Twice the time-to-play budget: when the waiting screen offers a way out. */
+  readonly stallAfterMs: number;
   readonly root: HTMLElement;
   readonly uiHost: HTMLElement;
   readonly gameHost: HTMLElement;
@@ -600,9 +640,26 @@ interface LevelWiring {
  * offer it has no words for and show no prompt. That is its documented
  * behaviour and it is the honest one: a prompt reading "Interact" would be this
  * file inventing player-facing copy, which ADR-0010 forbids.
+ *
+ * ## The waiting screen, which had no caller
+ *
+ * `createLevelLoading` was built in slice 1, scanned by axe, covered by its own
+ * suite — and constructed by nothing under `app/`. A level opened straight into
+ * a canvas or into the error card, so no player had ever seen a waiting
+ * sentence, and `TN-LEVEL-01`'s "the loading screen shows text, not only a
+ * spinner" was unmet on the shipped page while passing in the harness. A screen
+ * that is accessible and unreachable is not a screen. It is mounted here now,
+ * into `hud.main` with the other modals, shown for the whole of `load()` and
+ * hidden by whichever of the two outcomes arrives — so it is never on screen
+ * behind a level that has already opened, which is the caption defect again.
+ *
+ * The three strings it and the error card draw are **this level's**, resolved
+ * from `level.<id>.*` by {@link levelWords} and passed as data. Neither screen
+ * reads the copy table itself, because a screen that reads a row keyed on no
+ * level is a screen that names the wrong one — which is exactly what both did.
  */
 function openLevel(wiring: LevelWiring): LevelSession {
-  const { id, root, uiHost, gameHost, bus, renderer, pause, store } = wiring;
+  const { id, root, uiHost, gameHost, bus, renderer, pause, store, words } = wiring;
   let locale = store.current.locale;
 
   const hud = createHud(uiHost, {
@@ -653,8 +710,17 @@ function openLevel(wiring: LevelWiring): LevelSession {
      map has just been detached and focus falls to the body (`TN-FLOW-06`). */
   hud.focus();
 
-  const mode = modeLabel(renderer, locale);
-  if (mode !== null) hud.setMode(mode);
+  /*
+   * The strip stays empty until *this* level says how the player moves.
+   *
+   * `renderer.level` is still the level just left at this point — leaving one
+   * level and opening another used to draw the previous level's word for a
+   * moment, and `Hud.setMode` treats the first value as the state the player
+   * arrived in and the second as a change worth announcing, so a screen-reader
+   * user was told they had changed mode when they had only changed level. The
+   * label is set once, in `load`, when the document being named is the one that
+   * has just arrived. `TN-MOVE-02`: the strip is absent rather than wrong.
+   */
 
   let settings: SettingsScreen | null = null;
   function openSettings(): void {
@@ -683,8 +749,45 @@ function openLevel(wiring: LevelWiring): LevelSession {
     restoreFocusTo: () => hud.prompt,
   });
 
+  /*
+   * The waiting screen (`TN-LEVEL-01`, `TN-WAIT-01`), in `hud.main` like every
+   * other modal so its content sits inside the one landmark.
+   *
+   * Its two strings are this level's and are required options: the sentence
+   * names the work *this* level is doing, and a screen that waits without saying
+   * what for is the defect the story was written against. "Go back" is the same
+   * route the error card's is — the map, not a reload — and it appears beside
+   * the sentence after `stallAfterMs` rather than in place of it.
+   */
+  const loading = createLevelLoading(hud.main, {
+    locale,
+    title: words(locale).title,
+    message: words(locale).loading,
+    onBack: wiring.onLeave,
+    stallAfterMs: wiring.stallAfterMs,
+    singleSwitch: store.current.singleSwitch,
+    holdMs: store.current.holdToChooseMs,
+  });
+
+  /*
+   * `TN-WAIT-05`: the waiting sentence is read by the live region once, when the
+   * level starts loading, and is not repeated while the load continues. A retry
+   * does not say it again either — the dialog takes focus when it comes back, so
+   * a screen reader reads it on arrival, and a live region that repeats what a
+   * dialog has just said is the double-speaking this file avoids elsewhere.
+   */
+  let waitAnnounced = false;
+  const announceWait = (): void => {
+    if (waitAnnounced) return;
+    waitAnnounced = true;
+    wiring.announce(words(locale).loading, locale);
+  };
+
   const failure = createLevelError(hud.main, {
     locale,
+    /* This level's title, never a row keyed on no level: "A failure never names
+       another level" (`TN-WAIT-02`). */
+    title: words(locale).errorTitle,
     singleSwitch: store.current.singleSwitch,
     /* Both ways out stay inside the page now. "Go back" is the map, not a
        reload of a URL with the level stripped off it, and "Try again" re-opens
@@ -704,6 +807,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
        the level document's title, which does not exist until the load finishes.
        See `LevelAnnouncerOptions.arrival`. */
     arrival: () => localised(renderer.level?.title, locale),
+    /* Read when the failure happens, in the language in force then. */
+    failure: () => words(locale).errorTitle,
   });
 
   const offFailure = bus.on('level/failed', () => {
@@ -729,9 +834,16 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
   async function load(): Promise<void> {
     root.dataset['tnLevel'] = 'loading';
+    loading.show();
+    announceWait();
     await renderer.ready;
     const result = await renderer.loadLevel(`${id}`);
     if (!result.ok) {
+      /* Gone before the error card arrives (`TN-WAIT-02`: "the element
+         level-loading is gone"). Two dialogs over one level is a state neither
+         story describes, and the one underneath would keep saying the level was
+         opening. */
+      loading.hide();
       root.dataset['tnLevel'] = 'failed';
       /* The level id belongs here and not in the announcement: it is developer
          vocabulary, and a player hears `app/ui`'s copy instead. */
@@ -744,6 +856,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
       publishLevelFailed(bus, `${id}`);
       return;
     }
+    /* `TN-WAIT-01`: the waiting screen goes when the level is playable, and it
+       goes out of the accessibility tree rather than behind a style rule. */
+    loading.hide();
     root.dataset['tnLevel'] = 'ready';
     /* The side panels are this level's sky and ground now, not the boot
        screen's. Re-applied so a wide window does not frame a level in the
@@ -761,7 +876,11 @@ function openLevel(wiring: LevelWiring): LevelSession {
       locale = next;
       hud.setLocale(next);
       card.setLocale(next);
-      failure.setLocale(next);
+      /* Both level screens are handed their own strings again, in the new
+         language. They cannot look a row up: it is keyed on a level neither of
+         them knows the id of. */
+      loading.setLocale(next, { title: words(next).title, message: words(next).loading });
+      failure.setLocale(next, words(next).errorTitle);
       announcer.setLocale(next);
       const label = modeLabel(renderer, next);
       if (label !== null) hud.setMode(label);
@@ -777,6 +896,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       offEngaged();
       announcer.destroy();
       card.destroy();
+      loading.destroy();
       failure.destroy();
       settings?.destroy();
       settings = null;
@@ -794,24 +914,77 @@ function openLevel(wiring: LevelWiring): LevelSession {
   };
 }
 
+/* --------------------------------------------------------------- a level's words */
+
+/** The three strings a level owns, in one language. */
+interface LevelWords {
+  /** `level.<id>.title` — the place, and the waiting dialog's accessible name. */
+  readonly title: string;
+  /** `level.<id>.loading` — "Getting the harbour ready." */
+  readonly loading: string;
+  /** `level.<id>.error.title` — "We could not load Halifax." */
+  readonly errorTitle: string;
+}
+
+/** Those three strings, in whichever language is asked for. */
+type LevelWordsFor = (locale: UiLocale) => LevelWords;
+
 /**
- * The mode strip's label — "Skating", « Patinage » — or `null`.
+ * This level's own words, or `null` if this build has none for it.
  *
- * `null` is the answer for every mode but `skate`. The label is a copy row a
- * *level's* story owns (`TN-LEVEL-ottawa.md` writes `locomotion.skate.label`),
- * and the only level story written so far is Ottawa's. Québec City moves by
- * toboggan and has no story and therefore no row, so its strip carries no mode
- * rather than this file inventing the word — ADR-0010, and the same rule that
- * keeps a place name off a map card nobody has named.
+ * The rows are keyed on the level's id — `level.halifax.loading`,
+ * `level.halifax.error.title` — and that shape is the whole fix. There was one
+ * `level.loading` and one `level.error.title` in the game, both written when
+ * Ottawa was the only level with a story, and the three levels that shipped
+ * after it drew them: a player opening Halifax read that the canal was being
+ * got ready and, when a load failed, that Ottawa could not be loaded.
+ * `TN-WAIT-a-level-opens-or-it-does-not.md` writes one pair per level and
+ * refuses the unqualified keys, and this function is where a level id becomes
+ * the strings the two screens draw.
+ *
+ * A **resolver** rather than three strings, because the player can change
+ * language without leaving the level: the id is checked once, here, and the
+ * screens are handed new strings for the same level as often as they need them.
+ *
+ * `null` is not a defect this file papers over — see `enterLevel`, which refuses
+ * to open a level it cannot name.
+ */
+function levelWords(id: LevelId): LevelWordsFor | null {
+  const titleKey = `level.${String(id)}.title`;
+  const loadingKey = `level.${String(id)}.loading`;
+  const errorKey = `level.${String(id)}.error.title`;
+  /* Asked of the table, never assumed: `id` can come from an address a player
+     typed, and `text` is typed total over keys this file builds from data. */
+  if (!hasCopyRow(titleKey) || !hasCopyRow(loadingKey) || !hasCopyRow(errorKey)) return null;
+  return (locale) => ({
+    title: text(locale, titleKey),
+    loading: text(locale, loadingKey),
+    errorTitle: text(locale, errorKey),
+  });
+}
+
+/**
+ * The mode strip's label — "Walking", « Marche » — or `null`.
+ *
+ * **The key is the level document's, and the word is `app/ui`'s.** A level
+ * declares `locomotion[].labelKey`, which ADR-0010 makes a *key* rather than
+ * inline text precisely so that the wording is not the engine's, and
+ * `TN-MOVE-locomotion-labels.md` is the table it names. So this function reads
+ * the key the document carries rather than assembling one from the mode's id:
+ * a document that renames a mode's key and a table that has not caught up
+ * produce no label instead of the wrong label.
+ *
+ * `null` used to be the answer for every mode but `skate`, because the table had
+ * one row — which is why the level the game opens on drew an empty paragraph and
+ * a screen reader was told nothing about how the player moves. All four declared
+ * modes have rows now; `null` is left for the mode nobody has written a label
+ * for yet, because `TN-MOVE-02` would rather the strip be absent than say the
+ * mode's id, "Mode", or a dash.
  */
 function modeLabel(renderer: GameRenderer, locale: UiLocale): string | null {
-  const mode = renderer.level?.locomotion[0]?.mode;
-  if (mode === undefined) return null;
-  const key = `locomotion.${mode}.label` as CopyKey;
-  /* `text` is typed total and is not: the map screen reaches the same table with
-     keys built from data, and checks the same way. */
-  const label = text(locale, key) as string | undefined;
-  return label ?? null;
+  const key = renderer.level?.locomotion[0]?.labelKey;
+  if (key === undefined || !hasCopyRow(key)) return null;
+  return text(locale, key);
 }
 
 /* ------------------------------------------------------------------- pausing */

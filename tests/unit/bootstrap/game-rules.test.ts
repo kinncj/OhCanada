@@ -20,10 +20,38 @@ const config = (patch: Record<string, unknown> = {}): Record<string, unknown> =>
   save: { maxImportBytes: 1024 },
   scheduler: { exclusionWindow: 20, wrongWeight: 3, dailyNewLimit: 10 },
   study: { drillSize: 5 },
+  budgets: { timeToPlayMs: 6000 },
   ...patch,
 });
 
 describe('reading the progression half of the config', () => {
+  it('reads the time-to-play budget the stalled-load escape is timed from', () => {
+    /*
+     * `TN-LEVEL-02` offers a way out "after twice the time-to-play budget", and
+     * the budget CI enforces is `budgets.timeToPlayMs`. Read rather than
+     * hardcoded so the two cannot drift into two different numbers, and refused
+     * rather than defaulted: a default here decides how long a player stares at
+     * a waiting screen with no way out, silently.
+     */
+    const parsed = readGameRules(config());
+    expect(parsed.ok).toBe(true);
+    if (parsed.ok) expect(parsed.value.timeToPlayMs).toBe(6000);
+  });
+
+  it('refuses a config with no time-to-play budget', () => {
+    const { budgets: _unused, ...rest } = config();
+    const parsed = readGameRules(rest);
+
+    expect(parsed.ok).toBe(false);
+    if (!parsed.ok) expect(parsed.error.code).toBe('config.budgets.malformed');
+  });
+
+  it('refuses a time-to-play budget of zero, which offers the way out at once', () => {
+    const parsed = readGameRules(config({ budgets: { timeToPlayMs: 0 } }));
+    expect(parsed.ok).toBe(false);
+    if (!parsed.ok) expect(parsed.error.code).toBe('config.budgets.malformed');
+  });
+
   it('reads the two lists separately, and keeps the unnamed places', () => {
     const parsed = readGameRules(config());
 

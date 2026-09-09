@@ -28,7 +28,7 @@
  * DOM only (ADR-0005).
  */
 
-import { text, type UiLocale } from './copy';
+import { type UiLocale } from './copy';
 
 /**
  * The events the engine's scene probe already emits, as
@@ -74,7 +74,8 @@ export type LevelEventSource = (listener: (event: LevelEvent) => void) => () => 
 export const SPEAKS: Readonly<Record<LevelEventName, boolean>> = {
   /* "You are on the Rideau Canal in Ottawa. Skating." (TN-LEVEL-08) */
   'level/ready': true,
-  /* "We could not load Ottawa." (TN-LEVEL-02) */
+  /* "We could not load Halifax." (TN-LEVEL-02, TN-WAIT-02) — the failing
+     level's own title, from the caller. Once (TN-WAIT-05). */
   'level/failed': true,
   /* Continuous. Speaking for these is the flooding TN-LEVEL-08 forbids. */
   'player/moved': false,
@@ -124,6 +125,19 @@ export interface LevelAnnouncerOptions {
    * evaluated at `level/ready`, by which time the document is parsed.
    */
   readonly arrival: string | (() => string);
+  /**
+   * "We could not load Halifax." — `level.<id>.error.title` for the level being
+   * loaded, already localised. Required, and a thunk for the same reason
+   * {@link LevelAnnouncerOptions.arrival} is one: this subscription exists
+   * before the level is asked for, and the player's language can change while it
+   * lives.
+   *
+   * It used to be read from the copy table here, under a key with no level in
+   * it, so every level that failed told the player it was Ottawa. `TN-WAIT-02`:
+   * "a failure never names another level" — which a module that cannot know
+   * which level is loading can only keep by being told.
+   */
+  readonly failure: string | (() => string);
   /** Keyed by the `detail` the engine sends: `npc.officer`, `poi.parliament-hill`. */
   readonly targets?: Readonly<Record<string, LevelTarget>>;
   /**
@@ -153,6 +167,18 @@ export function createLevelAnnouncer(
 ): LevelAnnouncer {
   let locale = options.locale;
   let inReach: string | null = null;
+  /*
+   * `TN-WAIT-05`: the failure is announced once, "and it is not repeated when
+   * Try again is pressed and fails again". Pressing a button that fails the same
+   * way is a state the player just caused and is looking at; saying the same
+   * sentence a second and a third time is the flooding `TN-LEVEL-08` forbids,
+   * with the added insult of repetition. A `level/ready` clears it, so a level
+   * that recovers and later fails is news again.
+   */
+  let saidFailure: string | null = null;
+
+  const resolve = (value: string | (() => string)): string =>
+    typeof value === 'function' ? value() : value;
 
   const targetFor = (detail: string | undefined): LevelTarget | null => {
     if (detail === undefined) return null;
@@ -168,12 +194,17 @@ export function createLevelAnnouncer(
 
     switch (event.name) {
       case 'level/ready':
-        say(typeof options.arrival === 'function' ? options.arrival() : options.arrival);
+        saidFailure = null;
+        say(resolve(options.arrival));
         return;
 
-      case 'level/failed':
-        say(text(locale, 'level.error.title'));
+      case 'level/failed': {
+        const failure = resolve(options.failure);
+        if (failure === saidFailure) return;
+        saidFailure = failure;
+        say(failure);
         return;
+      }
 
       case 'poi/entered': {
         const target = targetFor(event.detail);
