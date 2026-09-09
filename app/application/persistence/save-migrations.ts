@@ -6,6 +6,13 @@
  * tripwire that said so out loud: a mechanism nothing has ever exercised on real
  * input is not a mechanism anyone should trust. Version 2 is what fires it.
  *
+ * **What changed in 3.** The exam attempt stopped being a score line and became a
+ * record of the exam (ADR-0027): `answers[]` in draw order replaced
+ * `askedQuestionIds` and `correctCount`, `finishedAt` stopped being nullable, and
+ * `examInProgress` arrived beside `exams` so an unfinished exam is not a row in
+ * the history. Version 2 wrote none of what version 3 needs — see
+ * `dropVersionTwoExams` for what that costs and why it costs nothing yet.
+ *
  * **What changed in 2.** `settings.holdToChooseMs` — TN-SET-09's single-switch
  * hold time — became a persisted property. It looks like a trivial addition and
  * it is not: `progress.schema.json` is `additionalProperties: false` with every
@@ -75,10 +82,49 @@ export const addHoldToChooseMs: SaveMigration = {
 };
 
 /**
+ * 2 -> 3: the exam record becomes the exam, and version-2 attempts do not survive.
+ *
+ * **The drop is the decision, not an oversight.** A version-2 attempt records
+ * `askedQuestionIds` and one `correctCount`; a version-3 attempt records, per
+ * question, the subject it came from, the option the player chose and the option
+ * that was right. None of those three was ever written down, so there is no
+ * function from the old record to the new one. What a conversion would have to
+ * do is invent them — and the shape of the invention is the one ADR-0024 names:
+ * twenty answers with `chosenIndex: null` would present a player's 16 out of 20
+ * as "answered nothing, got nothing wrong", on a result screen, in the past
+ * tense. A migration that lies is worse than one that drops.
+ *
+ * **What it costs, stated rather than glossed** — the same way 1 -> 2 states the
+ * hold time it cannot restore. In principle: a player's exam history. In fact:
+ * nothing, and the reason is checkable rather than asserted. **No shipped code
+ * path has ever written an exam attempt** — exam mode is unbuilt, and
+ * `withExamAttempt` is called from tests only — so no version-1 or version-2 save
+ * on any device contains one. `save-migrations.test.ts` pins that claim; when
+ * exam mode lands it will write version 3, and no new version-2 document can ever
+ * exist to be reached by this step.
+ *
+ * Everything else in the document is left exactly as found, including an `exams`
+ * that is not an array: the schema check runs next and says what is wrong with it
+ * in the language of a JSON pointer, which is a better error than anything a
+ * migration could repair its way into.
+ */
+export const dropVersionTwoExams: SaveMigration = {
+  from: 2,
+  to: 3,
+  apply: (document: Readonly<Record<string, unknown>>): Result<Record<string, unknown>> => {
+    const next: Record<string, unknown> = { ...document, version: 3, examInProgress: null };
+    // Untouched when it is not a list of attempts: not a shape this step
+    // understands, so it goes to the validator as it arrived.
+    if (Array.isArray(document['exams'])) next['exams'] = [];
+    return ok(next);
+  },
+};
+
+/**
  * Every step this build can take, oldest first.
  *
  * `migrateForward` looks steps up by their `from`, so order is documentation
  * rather than mechanism — but a list a person can read top to bottom is how the
  * next author sees that 1 -> 2 exists before writing 2 -> 3.
  */
-export const SAVE_MIGRATIONS: readonly SaveMigration[] = [addHoldToChooseMs];
+export const SAVE_MIGRATIONS: readonly SaveMigration[] = [addHoldToChooseMs, dropVersionTwoExams];

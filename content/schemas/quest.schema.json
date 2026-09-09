@@ -27,6 +27,22 @@
       "description": "One or two plain-language sentences shown in the quest log and announced in the live region when the quest is accepted.",
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
     },
+    "declinedLine": {
+      "description": "What the giver says when the player chooses \"Not now\". Optional, and silence is a legal answer to a decline: a quest with no line for a moment says nothing rather than borrowing another quest's words (TN-DIALOGUE-02).",
+      "$ref": "#/$defs/dialogueLine"
+    },
+    "reminderLine": {
+      "description": "What the giver says when the player engages them while this quest is accepted and unfinished. ONE LINE FOR THE WHOLE QUEST, not one per step: the step's own `prompt` already says what to do now, and a per-step reminder is a second place for one instruction to be written differently. A quest that ever needs a per-step line gets an optional override on `questStep`, which is an additive change - removing a per-step field once four documents carry it is not (OQ-DIALOGUE-2).",
+      "$ref": "#/$defs/dialogueLine"
+    },
+    "afterLine": {
+      "description": "What the giver says when the player engages them after this quest is complete. Not `summary` read back: a summary is written in the present tense as an instruction, so reading it to somebody who has already done it is a screen describing a state the game is not in.",
+      "$ref": "#/$defs/dialogueLine"
+    },
+    "doneLine": {
+      "description": "What the completion card says this quest was, in the past tense. It is the quest's own words, not the global `quest.done.body` copy row that string was: \"You skated to Parliament Hill and answered three questions\" names a landmark, a locomotion mode and a count, and all three belong to one quest (ADR-0010).",
+      "$ref": "#/$defs/dialogueLine"
+    },
     "steps": {
       "type": "array",
       "items": {

@@ -32,7 +32,7 @@ import type { SaveCodec } from '@application/ports/save-codec';
 import { validateProgressDocument } from '@application/persistence/progress-schema';
 
 /** The version this build writes. */
-export const CURRENT_SAVE_VERSION = 2;
+export const CURRENT_SAVE_VERSION = 3;
 
 /** The oldest version this build can read. Raised only when a migration is retired. */
 export const MIN_SUPPORTED_SAVE_VERSION = 1;

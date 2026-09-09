@@ -68,13 +68,17 @@
         "properties": { "indigenous": { "const": true } },
         "required": ["indigenous"]
       },
-      "then": { "required": ["nation", "nationSource", "communityReview"] },
+      "then": {
+        "required": ["nation", "nationSource", "communityReview"],
+        "$comment": "The three names are restated here as empty schemas ONLY to satisfy ajv's strictRequired lint, which asks that a property named in `required` be declared in the same subschema. They impose nothing: the real types are on this document's own `properties` above and still apply, because a conditional subschema is evaluated against the same instance. Without them this file does not compile at all - which is how it shipped, because no character document exists yet and ajv compiles a schema only when a document sends it something to validate (ADR-0024 section 4, and the same defect quest.schema.json carried).",
+        "properties": { "nation": {}, "nationSource": {}, "communityReview": {} }
+      },
       "else": {
         "not": {
           "anyOf": [
-            { "required": ["nation"] },
-            { "required": ["nationSource"] },
-            { "required": ["communityReview"] }
+            { "required": ["nation"], "properties": { "nation": {} } },
+            { "required": ["nationSource"], "properties": { "nationSource": {} } },
+            { "required": ["communityReview"], "properties": { "communityReview": {} } }
           ]
         }
       }

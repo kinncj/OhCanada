@@ -121,8 +121,20 @@ const playedGame = (): Progress => {
   return withExamAttempt(progress, {
     startedAt: at(ORIGIN - 3 * DAY),
     finishedAt: at(ORIGIN - 3 * DAY + 20 * 60_000),
-    askedQuestionIds: [questionId('government-1'), questionId('government-2')],
-    correctCount: 16,
+    answers: [
+      {
+        questionId: questionId('government-1'),
+        subjectId: subjectId(),
+        chosenIndex: 1,
+        correctIndex: 1,
+      },
+      {
+        questionId: questionId('government-2'),
+        subjectId: subjectId(),
+        chosenIndex: null,
+        correctIndex: 0,
+      },
+    ],
     passed: true,
     timed: true,
   });
@@ -161,9 +173,26 @@ const openTab = async (
 const version1Bytes = (progress: Progress): string => {
   const written = toProgressSnapshot(progress, { version: codec.version, updatedAt: ORIGIN });
   if (!written.ok) throw new Error('the fixture must be encodable');
-  const { settings, ...rest } = written.value;
+  const { settings, exams, examInProgress: _noSuchField, ...rest } = written.value;
   const { holdToChooseMs: _dropped, ...older } = settings;
-  return JSON.stringify({ ...rest, version: 1, settings: older });
+  // The inverse of both steps, so this really is a document the version-1 build
+  // could have written: no `examInProgress` field at all, and an attempt that is
+  // one total rather than twenty outcomes (ADR-0027).
+  return JSON.stringify({
+    ...rest,
+    version: 1,
+    settings: older,
+    exams: exams.map((attempt) => ({
+      startedAt: attempt.startedAt,
+      finishedAt: attempt.finishedAt,
+      askedQuestionIds: attempt.answers.map((answer) => answer.questionId),
+      correctCount: attempt.answers.filter(
+        (answer) => answer.chosenIndex === answer.correctIndex,
+      ).length,
+      passed: attempt.passed,
+      timed: attempt.timed,
+    })),
+  });
 };
 
 describe('a game played into IndexedDB comes back', () => {
@@ -215,12 +244,16 @@ describe('an existing player upgrades to this build', () => {
     const loaded = await loadProgress(tab.deps);
     expect(loaded.ok).toBe(true);
     if (!loaded.ok) return;
-    // Everything is theirs again except the one setting version 1 could not
-    // carry, which starts at the game's default. That loss is real and is
-    // recorded in `save-migrations.ts` rather than glossed.
+    // Everything is theirs again except two things version 1 could not carry:
+    // the setting, which starts at the game's default, and the exam attempt,
+    // which held a total where this build holds twenty outcomes. Both losses are
+    // real, both are stated in `save-migrations.ts` rather than glossed, and the
+    // second costs no player anything today because nothing has ever written an
+    // attempt (ADR-0027).
     expect(loaded.value).toEqual({
       ...played,
       settings: { ...played.settings, holdToChooseMs: DEFAULT_HOLD_TO_CHOOSE_MS },
+      exams: [],
     });
     expect(loaded.value?.reviews[0]?.phase).toBe('relearning');
     expect(loaded.value?.reviews[0]?.learningSteps).toBe(2);

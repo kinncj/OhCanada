@@ -13,10 +13,16 @@
  * by hand: a hand-written fixture drifts from what the previous build actually
  * wrote, and a migration tested against a fixture nobody ever stored proves
  * nothing about the save on a real device. Since this build can no longer *write*
- * version 1, the fixture is made by applying the exact inverse of the migration
- * (drop the property it adds, restore the version) to a real version-2
- * document. That inverse is one line, is visible below, and is the only honest
- * way to hold a document a build can no longer produce.
+ * version 1, the fixture is made by applying the exact inverse of every migration
+ * to a real current document. That inverse is visible below and is the only
+ * honest way to hold a document a build can no longer produce.
+ *
+ * **The file is still named for the first migration and now covers two**, which
+ * is right: what it protects is the *version-1 document*, not any one step. The
+ * second step (2 -> 3, ADR-0027) is the first that cannot carry everything
+ * forward — a version-2 exam attempt recorded a total where version 3 records
+ * twenty outcomes — so this file now also states, in a case of its own, exactly
+ * what a version-1 save loses and that it loses nothing else.
  */
 
 import { readFileSync } from 'node:fs';
@@ -120,29 +126,64 @@ const playedGame = (): Progress => {
   return withExamAttempt(progress, {
     startedAt: at(ORIGIN - 3 * DAY),
     finishedAt: at(ORIGIN - 3 * DAY + 20 * 60_000),
-    askedQuestionIds: [questionId('government-1'), questionId('government-2')],
-    correctCount: 16,
+    answers: [
+      {
+        questionId: questionId('government-1'),
+        subjectId: subjectId(),
+        chosenIndex: 2,
+        correctIndex: 2,
+      },
+      {
+        questionId: questionId('government-2'),
+        subjectId: subjectId(),
+        chosenIndex: null,
+        correctIndex: 1,
+      },
+    ],
     passed: true,
     timed: true,
   });
 };
 
-const version2 = (): ProgressSnapshot => {
+const current = (): ProgressSnapshot => {
   const written = toProgressSnapshot(playedGame(), { version: codec.version, updatedAt: ORIGIN });
   if (!written.ok) throw new Error('the fixture must be encodable by this build');
   return written.value;
 };
 
+/** What this build's document looks like once the exams are gone. */
+const currentWithoutExams = (): ProgressSnapshot => ({ ...current(), exams: [] });
+
 /**
- * The same save as the previous build wrote it: version 1, and without the one
- * property version 2 added. The inverse of `addHoldToChooseMs`, and nothing else
- * — if the next migration changes more than one property, this is where the
- * inverse grows, in the open.
+ * The same save as the version-1 build wrote it, by inverting every step.
+ *
+ *  - 2 -> 3 (`dropVersionTwoExams`): put the exams back in the shape version 2
+ *    wrote — `askedQuestionIds` and a `correctCount`, no `answers` — and remove
+ *    `examInProgress`, which version 2 had no field for.
+ *  - 1 -> 2 (`addHoldToChooseMs`): drop the setting version 2 added.
+ *
+ * The inverse grew in the open, as the previous version of this comment said it
+ * would. It is worth reading as a description of what version 2 could hold: one
+ * total per attempt, and nowhere at all for an exam still being taken.
  */
 const version1Bytes = (): string => {
-  const { settings, ...rest } = version2();
+  const { settings, exams, examInProgress: _noSuchField, ...rest } = current();
   const { holdToChooseMs: _dropped, ...settingsWithout } = settings;
-  return JSON.stringify({ ...rest, version: 1, settings: settingsWithout });
+  return JSON.stringify({
+    ...rest,
+    version: 1,
+    settings: settingsWithout,
+    exams: exams.map((attempt) => ({
+      startedAt: attempt.startedAt,
+      finishedAt: attempt.finishedAt,
+      askedQuestionIds: attempt.answers.map((answer) => answer.questionId),
+      correctCount: attempt.answers.filter(
+        (answer) => answer.chosenIndex === answer.correctIndex,
+      ).length,
+      passed: attempt.passed,
+      timed: attempt.timed,
+    })),
+  });
 };
 
 describe('a version-1 save is read by this build, whole', () => {
@@ -161,10 +202,11 @@ describe('a version-1 save is read by this build, whole', () => {
     if (!decoded.ok) return;
     expect(decoded.value.version).toBe(codec.version);
     expect(decoded.value.settings.holdToChooseMs).toBe(DEFAULT_HOLD_TO_CHOOSE_MS);
-    // Everything the format did not change is byte-for-byte what it was.
+    // Everything the format did not change is byte-for-byte what it was, and
+    // the two things it did change are the two named here and nothing else.
     expect(decoded.value).toEqual({
-      ...version2(),
-      settings: { ...version2().settings, holdToChooseMs: DEFAULT_HOLD_TO_CHOOSE_MS },
+      ...currentWithoutExams(),
+      settings: { ...current().settings, holdToChooseMs: DEFAULT_HOLD_TO_CHOOSE_MS },
     });
   });
 
@@ -172,7 +214,7 @@ describe('a version-1 save is read by this build, whole', () => {
     const decoded = codec.decode(version1Bytes());
     expect(decoded.ok).toBe(true);
     if (!decoded.ok) return;
-    expect(decoded.value.reviews).toEqual(version2().reviews);
+    expect(decoded.value.reviews).toEqual(current().reviews);
     expect(decoded.value.reviews.map((review) => review.phase)).toEqual([
       'learning',
       'review',
@@ -191,22 +233,44 @@ describe('a version-1 save is read by this build, whole', () => {
     expect(decoded.ok).toBe(true);
     if (!decoded.ok) return;
     const quests = decoded.value.levels.flatMap((level) => level.quests);
-    expect(quests).toEqual(version2().levels.flatMap((level) => level.quests));
+    expect(quests).toEqual(current().levels.flatMap((level) => level.quests));
     expect(quests.map((quest) => quest.status).sort()).toEqual(['active', 'declined']);
   });
 
-  it('keeps the stamp, the best score, the character and the exam', () => {
+  it('keeps the stamp, the best score, the character and the subjects started', () => {
     const decoded = codec.decode(version1Bytes());
     expect(decoded.ok).toBe(true);
     if (!decoded.ok) return;
-    expect(decoded.value.levels[0]?.stampEarnedAt).toBe(version2().levels[0]?.stampEarnedAt);
+    expect(decoded.value.levels[0]?.stampEarnedAt).toBe(current().levels[0]?.stampEarnedAt);
     expect(decoded.value.levels[0]?.bestScore).toBe(18);
-    expect(decoded.value.character).toEqual(version2().character);
-    expect(decoded.value.exams).toEqual(version2().exams);
-    expect(decoded.value.subjectsStarted).toEqual(version2().subjectsStarted);
+    expect(decoded.value.character).toEqual(current().character);
+    expect(decoded.value.subjectsStarted).toEqual(current().subjectsStarted);
   });
 
-  it('re-encodes what it migrated, so the next save is version 2', () => {
+  it('loses the exam it was carrying, and loses nothing else', () => {
+    /*
+     * The one thing this format change cannot carry, asserted rather than left
+     * to a doc comment (ADR-0027). A version-2 attempt holds `correctCount: 1`
+     * and a list of ids; a version-3 attempt holds, per question, the subject,
+     * the option chosen and the option that was right. Those were never written,
+     * so the alternatives were to drop the attempt or to invent them — and the
+     * invention reads on a result screen as "answered nothing, got nothing
+     * wrong" (ADR-0024).
+     */
+    const before = JSON.parse(version1Bytes()) as { readonly exams: readonly unknown[] };
+    expect(before.exams).toHaveLength(1);
+
+    const decoded = codec.decode(version1Bytes());
+    expect(decoded.ok).toBe(true);
+    if (!decoded.ok) return;
+    expect(decoded.value.exams).toEqual([]);
+    // Dropped, not half-converted: no attempt survives with its answers blanked.
+    expect(JSON.stringify(decoded.value)).not.toContain('chosenIndex');
+    // And no exam is offered for the player to "finish": absent, not empty.
+    expect(decoded.value.examInProgress).toBeNull();
+  });
+
+  it('re-encodes what it migrated, so the next save is this build\'s version', () => {
     const decoded = codec.decode(version1Bytes());
     expect(decoded.ok).toBe(true);
     if (!decoded.ok) return;
@@ -227,7 +291,7 @@ describe('a version-1 save is read by this build, whole', () => {
   });
 
   it('refuses a save from a build newer than this one, without migrating it', () => {
-    const newer = JSON.stringify({ ...version2(), version: codec.version + 1 });
+    const newer = JSON.stringify({ ...current(), version: codec.version + 1 });
     const decoded = codec.decode(newer);
     expect(decoded.ok).toBe(false);
     if (!decoded.ok) expect(decoded.error.code).toBe('save.version.newer');

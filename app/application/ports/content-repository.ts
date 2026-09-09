@@ -592,6 +592,27 @@ export interface QuestDocument {
   readonly giver: CharacterId;
   readonly title: LocalizedText;
   readonly summary: LocalizedText;
+  /**
+   * What the giver says at the three moments a step cannot speak for, plus what
+   * the completion card says this quest was.
+   *
+   * `steps[].dialogue` covers one moment — a step beginning — and the other four
+   * had no field at all, so the screens drew a step prompt or read the summary
+   * back in the present tense about a finished thing. They are `DialogueLine`s
+   * rather than copy rows because one giver now gives three quests (a per-giver
+   * key would be one string for three journeys) and because a line can state a
+   * fact about Canada, which a copy row has nowhere to source (ADR-0010,
+   * ADR-0003).
+   *
+   * Each is optional and silence is a legal answer: a quest with no line for a
+   * moment says nothing rather than borrowing another quest's words.
+   */
+  readonly declinedLine?: DialogueLine;
+  /** One per quest, never one per step: the step's own `prompt` says what to do now. */
+  readonly reminderLine?: DialogueLine;
+  readonly afterLine?: DialogueLine;
+  /** Past tense, drawn on the completion card. Not `summary`, which is an instruction. */
+  readonly doneLine?: DialogueLine;
   readonly steps: readonly QuestStepDocument[];
 }
 

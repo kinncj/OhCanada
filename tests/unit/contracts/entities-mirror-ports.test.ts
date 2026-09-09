@@ -156,6 +156,7 @@ describe('the domain aggregate is a player', () => {
       reviews: [],
       subjectsStarted: [],
       exams: [],
+      examInProgress: null,
     };
     expect(readPlayer(progress)).toBeNull();
   });

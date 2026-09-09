@@ -27,15 +27,71 @@ import type { PlayerCharacter } from '@domain/entities/character';
 import type { QuestState } from '@domain/entities/quest';
 import { withCharacter as setCharacter, withSettings as setSettings } from '@domain/entities/player';
 
-/** One run at the exam. IRCC mirror: 20 questions, 15 to pass, 30 minutes. */
+/**
+ * One question of one attempt: what was asked, what was chosen, what was right.
+ *
+ * `subjectId` and `correctIndex` are the bank as it stood when the question was
+ * asked, not a lookup: a result must still show its by-subject rows and its
+ * score after the question has left the build (TN-RESULT-07, ADR-0027).
+ *
+ * Correctness is `chosenIndex === correctIndex` and is not stored, so an
+ * unanswered question that somehow scored cannot be written down.
+ */
+export interface ExamAnswer {
+  readonly questionId: QuestionId;
+  readonly subjectId: SubjectId;
+  /** `null` is unanswered, which is not the same as wrong. 0–3. */
+  readonly chosenIndex: number | null;
+  /** Which option was marked right when this question was asked. 0–3. */
+  readonly correctIndex: number;
+}
+
+/** Was this answer right? The one place the comparison is spelled out. */
+export const isAnswerCorrect = (answer: ExamAnswer): boolean =>
+  answer.chosenIndex !== null && answer.chosenIndex === answer.correctIndex;
+
+/** How many of these were right. `correctCount` used to be stored; it is read (ADR-0027). */
+export const correctCountOf = (answers: readonly ExamAnswer[]): number =>
+  answers.filter(isAnswerCorrect).length;
+
+/** How many were answered at all. The complement is unanswered, never wrong. */
+export const answeredCountOf = (answers: readonly ExamAnswer[]): number =>
+  answers.filter((answer) => answer.chosenIndex !== null).length;
+
+/**
+ * One **finished** run at the exam — a result.
+ *
+ * IRCC mirror: 20 questions, 15 to pass, 30 minutes. The exam still being taken
+ * is `ExamInProgress`: `finishedAt` and `passed` describe a finished exam and
+ * nothing else, because leaving one records neither (TN-ATTEMPT-01).
+ */
 export interface ExamAttempt {
   readonly startedAt: EpochMillis;
-  readonly finishedAt: EpochMillis | null;
-  readonly askedQuestionIds: readonly QuestionId[];
-  readonly correctCount: number;
+  readonly finishedAt: EpochMillis;
+  readonly answers: readonly ExamAnswer[];
+  /** Recorded, not derived: the pass mark is config and may change under a result. */
   readonly passed: boolean;
   /** The timer is optional even in Exam mode; record whether it was on. */
   readonly timed: boolean;
+}
+
+/**
+ * The one exam the player started and has not finished.
+ *
+ * At most one exists, by the shape rather than by a rule: `Progress` holds a
+ * nullable field, not a second array to keep in order (TN-ATTEMPT-04).
+ */
+export interface ExamInProgress {
+  readonly startedAt: EpochMillis;
+  /** The draw, with `chosenIndex` null for whatever is not answered yet. */
+  readonly answers: readonly ExamAnswer[];
+  /**
+   * Milliseconds left, or `null` for an untimed exam.
+   *
+   * A duration, not an instant, so it stays a plain number in the save document
+   * too — `EpochMillis` is a point in time and this is a length of one (ADR-0012).
+   */
+  readonly remainingMs: number | null;
 }
 
 export interface LevelProgress {
@@ -59,7 +115,10 @@ export interface Progress extends Player {
   readonly lastPlayedLevelId: LevelId | null;
   readonly reviews: readonly ReviewRecord[];
   readonly subjectsStarted: readonly SubjectId[];
+  /** Finished attempts, oldest first. The unfinished one is not among them. */
   readonly exams: readonly ExamAttempt[];
+  /** The exam left unfinished, or `null`. At most one, by construction. */
+  readonly examInProgress: ExamInProgress | null;
 }
 
 /** A game that has not been played yet, with the levels the config opens. */
@@ -74,6 +133,7 @@ export const newProgress = (
   reviews: [],
   subjectsStarted: [],
   exams: [],
+  examInProgress: null,
 });
 
 export const emptyLevelProgress = (levelId: LevelId, unlocked: boolean): LevelProgress => ({
@@ -189,9 +249,18 @@ export const withSubjectStarted = (progress: Progress, subject: SubjectId): Prog
     ? progress
     : { ...progress, subjectsStarted: [...progress.subjectsStarted, subject] };
 
+/**
+ * File a finished attempt, and clear the exam in progress.
+ *
+ * Both edits or neither: a finished attempt can only have come from the exam the
+ * player was taking, and an appended result that left `examInProgress` set would
+ * offer the player an exam they have just finished (TN-ATTEMPT-04). Clearing a
+ * `null` is a no-op, so a caller with no exam in progress loses nothing.
+ */
 export const withExamAttempt = (progress: Progress, attempt: ExamAttempt): Progress => ({
   ...progress,
   exams: [...progress.exams, attempt],
+  examInProgress: null,
 });
 
 /**

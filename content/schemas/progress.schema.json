@@ -39,8 +39,13 @@
       "uniqueItems": true
     },
     "exams": {
+      "description": "Finished attempts, oldest first. Every one of them has a finish time and a verdict; the exam the player has not finished yet is `examInProgress` and is not a row here (ADR-0027). An empty list is the normal state of a game where no exam has been taken and carries no floor - nothing folds it into a verdict (ADR-0024).",
       "type": "array",
       "items": { "$ref": "#/$defs/examAttempt" }
+    },
+    "examInProgress": {
+      "description": "The one exam the player has started and not finished, or null. TN-ATTEMPT-04 asks that a document holding two unfinished attempts fail this schema; a nullable field holds at most one, so that document cannot be written down instead of being caught. Required rather than optional so \"no exam in progress\" and \"this build did not record one\" are different states, exactly as `lastPlayedLevelId` is.",
+      "anyOf": [{ "$ref": "#/$defs/examInProgress" }, { "type": "null" }]
     }
   },
   "required": [
@@ -53,7 +58,8 @@
     "lastPlayedLevelId",
     "reviews",
     "subjectsStarted",
-    "exams"
+    "exams",
+    "examInProgress"
   ],
   "additionalProperties": false,
 
@@ -238,37 +244,77 @@
       "additionalProperties": false
     },
 
+    "examAnswer": {
+      "title": "Exam answer document",
+      "description": "One question of one attempt: what was asked, what the player chose, and what was right at the time. `subjectId` and `correctIndex` are copied down from the question bank on purpose - TN-RESULT-07 requires a result read a year later to keep its by-subject rows and its score when the question has left the build or its key has been corrected, and forbids recomputing a score from a bank that has changed. THERE IS NO `correct` FLAG: correctness is `chosenIndex === correctIndex`, so \"unanswered, and correct\" is a state that cannot be written down rather than one a conditional has to forbid (ADR-0027).",
+      "type": "object",
+      "properties": {
+        "questionId": {
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questionId"
+        },
+        "subjectId": {
+          "description": "The subject this question was drawn from, as the build that asked it knew. Recorded, not looked up: TN-RESULT-07 draws a by-subject row for a subject this build may no longer know.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/subjectId"
+        },
+        "chosenIndex": {
+          "description": "Which option the player chose, or null for UNANSWERED - a third state, distinct from wrong, that TN-EXAM-04 and TN-TIMER-05 both require the result to keep. Mutable until the exam ends: the card lets an answer be changed.",
+          "anyOf": [{ "type": "integer", "minimum": 0, "maximum": 3 }, { "type": "null" }]
+        },
+        "correctIndex": {
+          "description": "Which option was marked right when this question was asked. Four options, so 0-3 (question.schema.json fixes the tuple length).",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "required": ["questionId", "subjectId", "chosenIndex", "correctIndex"],
+      "additionalProperties": false
+    },
+
     "examAttempt": {
       "title": "Exam attempt document",
-      "description": "One run at the exam. IRCC mirror: 20 questions, 15 to pass, 30 minutes, timer optional (CLAUDE.md, Purpose).",
+      "description": "One FINISHED run at the exam - a result. IRCC mirror: 20 questions, 15 to pass, 30 minutes, timer optional (CLAUDE.md, Purpose). An attempt that is still being taken is `examInProgress`, a different shape, so that `finishedAt` and `passed` are never asked to describe an exam nobody has finished (TN-ATTEMPT-01, ADR-0027). Every total is read out of `answers` and none is stored beside it: `askedQuestionIds` and `correctCount` were removed in save version 3 because a schema cannot check a stored total against the answers under it.",
       "type": "object",
       "properties": {
         "startedAt": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
-        "finishedAt": {
-          "anyOf": [
-            { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
-            { "type": "null" }
-          ]
-        },
-        "askedQuestionIds": {
+        "finishedAt": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+        "answers": {
+          "description": "Every question of the draw, in the order it was drawn, answered or not. `minItems: 1` because an exam with no questions is not an exam for any consumer, and an empty list reads as nothing wrong, nothing unanswered and no by-subject row to contradict the verdict beside it (ADR-0024). It is deliberately NOT pinned to game.config's exam.questionCount: a config change must not invalidate an attempt a player already made.",
           "type": "array",
-          "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questionId" }
+          "items": { "$ref": "#/$defs/examAnswer" },
+          "minItems": 1
         },
-        "correctCount": { "type": "integer", "minimum": 0 },
-        "passed": { "type": "boolean" },
+        "passed": {
+          "description": "Recorded, not derived. `exam.passMark` lives in game.config.json and may change under a saved result, the same reason `stampEarnedAt` is a recorded instant rather than a rule applied late.",
+          "type": "boolean"
+        },
         "timed": {
-          "description": "The timer is optional even in Exam mode; record whether it was on, so a result is never read as something it was not.",
+          "description": "The timer is optional even in Exam mode; record whether it was on, so a result is never read as something it was not. A timer switched off mid-exam (TN-TIMER rule 4) records an untimed exam here.",
           "type": "boolean"
         }
       },
-      "required": [
-        "startedAt",
-        "finishedAt",
-        "askedQuestionIds",
-        "correctCount",
-        "passed",
-        "timed"
-      ],
+      "required": ["startedAt", "finishedAt", "answers", "passed", "timed"],
+      "additionalProperties": false
+    },
+
+    "examInProgress": {
+      "title": "Exam in progress document",
+      "description": "The exam the player started and has not finished: the draw, the answers so far and the time left. It carries NO `finishedAt` and NO `passed`, because leaving an exam records neither (TN-ATTEMPT-01), and it is not a row in `exams`, because a nullable field holds at most one unfinished exam by construction (TN-ATTEMPT-04, ADR-0027).",
+      "type": "object",
+      "properties": {
+        "startedAt": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/isoInstant" },
+        "answers": {
+          "description": "The twenty questions as drawn, with `chosenIndex` null for the ones not yet answered. This is what makes TN-ATTEMPT-02 true: the same questions in the same order, the answers given, and the skipped ones still skipped. Floored at 1 for the reason given on the finished attempt.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/examAnswer" },
+          "minItems": 1
+        },
+        "remainingMs": {
+          "description": "Milliseconds left on the clock, or null for AN UNTIMED EXAM. One field, not a number beside a boolean, so \"timed with no time left recorded\" cannot be written (ADR-0027). The clock always comes back paused (TN-ATTEMPT-02), so nothing records whether it was running. Milliseconds because every other duration in this codebase is; the clock still draws whole minutes (TN-TIMER rule 2).",
+          "anyOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }]
+        }
+      },
+      "required": ["startedAt", "answers", "remainingMs"],
       "additionalProperties": false
     }
   }

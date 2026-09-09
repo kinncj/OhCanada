@@ -59,7 +59,12 @@ type Shape =
       readonly required: readonly string[];
     }
   | { readonly kind: 'record'; readonly keys: Shape; readonly values: Shape }
-  | { readonly kind: 'array'; readonly items: Shape; readonly uniqueItems?: boolean }
+  | {
+      readonly kind: 'array';
+      readonly items: Shape;
+      readonly uniqueItems?: boolean;
+      readonly minItems?: number;
+    }
   | { readonly kind: 'either'; readonly options: readonly Shape[] };
 
 /** One thing wrong with the document, located the way a schema error is. */
@@ -136,13 +141,30 @@ const reviewState = object({
   phase: { kind: 'string', values: ['new', 'learning', 'review', 'relearning'] },
 });
 
+const optionIndex: Shape = { kind: 'number', integer: true, minimum: 0, maximum: 3 };
+
+const examAnswer = object({
+  questionId: id,
+  subjectId: id,
+  chosenIndex: nullable(optionIndex),
+  correctIndex: optionIndex,
+});
+
+/** Never empty: an exam with no questions is not an exam (ADR-0024, ADR-0027). */
+const examAnswers: Shape = { kind: 'array', items: examAnswer, minItems: 1 };
+
 const examAttempt = object({
   startedAt: isoInstant,
-  finishedAt: nullable(isoInstant),
-  askedQuestionIds: { kind: 'array', items: id },
-  correctCount: countOf,
+  finishedAt: isoInstant,
+  answers: examAnswers,
   passed: { kind: 'boolean' },
   timed: { kind: 'boolean' },
+});
+
+const examInProgress = object({
+  startedAt: isoInstant,
+  answers: examAnswers,
+  remainingMs: nullable({ kind: 'number', integer: true, minimum: 0 }),
 });
 
 /** The root of `progress.schema.json`. */
@@ -157,6 +179,7 @@ const PROGRESS_SHAPE: Shape = object({
   reviews: { kind: 'array', items: reviewState },
   subjectsStarted: { kind: 'array', items: id, uniqueItems: true },
   exams: { kind: 'array', items: examAttempt },
+  examInProgress: nullable(examInProgress),
 });
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
@@ -258,6 +281,13 @@ const checkArray = (
 ): readonly Violation[] => {
   if (!Array.isArray(value)) return [{ path, message: 'must be an array' }];
   const violations: Violation[] = [];
+  if (shape.minItems !== undefined && value.length < shape.minItems) {
+    // An empty exam is the one this exists for: it reads as nothing wrong,
+    // nothing unanswered and no by-subject row to contradict the verdict beside
+    // it (ADR-0024). Reported at the array's own path, so "no answers" and "no
+    // `answers` property" are two different messages about two different states.
+    violations.push({ path, message: `must have at least ${String(shape.minItems)} entries` });
+  }
   value.forEach((entry, index) => {
     violations.push(...checkShape(shape.items, entry, `${path}/${index}`));
   });

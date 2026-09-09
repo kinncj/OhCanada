@@ -1,6 +1,10 @@
 # ADR-0010: Player-facing text lives with the document that means it
 
 - Status: Accepted (2026-09-08)
+- Amended 2026-09-09: the dividing line is applied to **what a quest giver says**, which is the first case
+  where a string that looked like chrome turned out to belong to one document. Four fields land on
+  `quest.schema.json` and `OQ-DIALOGUE-2` is ruled on. No new ADR: this is an instance of the rule below,
+  and a second ADR restating a decision is how a decision acquires two versions.
 
 ## Context
 
@@ -42,6 +46,11 @@ would have to agree with the first.
 - **The dividing line is reuse, not screen.** Does this string belong to one content document, or is it
   vocabulary many documents share? "Turn your phone upright" belongs to no level. "Skating" is the name of a
   mode eight levels may offer. "The Peace Tower was completed in 1927" belongs to exactly one landmark.
+- **A character's *name* is vocabulary; what a character *says in a quest* is that quest's content.**
+  (Added 2026-09-09.) `npc.guide.name` is one string every quest that guide gives will draw, so it is a
+  bundle row. "Slide down to the Chateau Frontenac and I will meet you there" is one quest's, and it belongs
+  to that quest's document. So `quest.schema.json` carries `declinedLine`, `reminderLine`, `afterLine` and
+  `doneLine`, each `$ref`ing the `dialogueLine` the steps already use.
 - **A locale bundle may not carry a claim about Canada.** If a string states a fact, it belongs in a content
   document, because that is the only place ADR-0003's `FactClaim` can reach it. This is the one rule here
   that no gate expresses; see Consequences.
@@ -64,6 +73,24 @@ would have to agree with the first.
 - **A locale file per question (`content/questions/<id>.en.json`).** Rejected: it doubles the file count and
   re-creates exactly the join it was meant to remove, with the added failure mode of a question whose FR file
   is missing entirely rather than whose FR string is missing.
+- **(2026-09-09) A per-giver copy row: `npc.officer.declined`, `npc.guide.reminder`.** The shape the Ottawa
+  quest actually shipped, written when the officer had one quest and was the only giver in the game. Rejected
+  because it is already false: the guide gives Halifax's quest, Quebec City's and Toronto's, so
+  `guide.reminder` would be one sentence serving three different journeys — and the officer's own row,
+  "Parliament Hill is that way. Keep going.", shows what such a sentence contains: a destination true of one
+  quest.
+- **(2026-09-09) A per-quest copy row: `quest.<id>.reminder`.** The only key shape that survives the previous
+  paragraph, and it is a copy table with one row per quest, each naming that quest's landmark and route —
+  the quest documents again, with a join. Rejected for the reason this ADR was written: a string that varies
+  per thing belongs to the thing. It also cannot carry a `FactClaim`, and a giver's line is exactly the class
+  of sentence ADR-0003 must be able to reach: a wrong claim in an NPC's mouth is as wrong as one on a
+  question card. A locale bundle may not carry a claim about Canada, and these lines may make one.
+- **(2026-09-09) A per-step `reminderLine` as well as a per-quest one** (`OQ-DIALOGUE-2`). **Ruled: quest
+  level only.** The step already carries `prompt`, the tracker already draws it, and a per-step reminder is a
+  second home for one instruction — the drift this ADR exists to prevent, reproduced inside one document.
+  The asymmetry decides it rather than taste: adding an optional per-step override later is additive and
+  costs no migration, while removing one after four quests have authored it is a content pass and a schema
+  break. So the reversible half is the half that is taken now.
 - **Inline text plus an optional key override, so either works.** Rejected outright. Two mechanisms for the
   same string is how a question ends up with a prompt in one place and a translation in another, and neither
   the schema nor a reviewer can tell which one the game will show.
@@ -87,6 +114,25 @@ would have to agree with the first.
   a schema would settle", and this is that settlement.
 - `LocomotionTuning.labelKey` and `CharacterSlot.labelKey` stay keys, and are the clearest test of the rule:
   they name engine vocabulary a level and a character *use*, rather than text a level or character *owns*.
+- **(2026-09-09) Four optional properties on `quest.schema.json`, and the gates that come with them.** Both
+  languages on a present line and a verified source on a factual one are held by the **schema**, because
+  `localizedText` requires `en` and `fr` and `factClaim` requires source and verification when `factual` is
+  true — so two of `TN-DIALOGUE-03`'s four gate scenarios are structural the moment a line is authored, with
+  no script to write. The other two are not, and are recorded rather than implied:
+  - **A line cannot be spoken by somebody the level does not place.** That is a cross-document check between
+    `content/quests/*.json` and `content/levels/*.json`, and `scripts/validate-content.mjs` walks documents
+    against their own schema only. It has to be written where the two documents meet.
+  - **The three shipped Ottawa copy rows have to move**, and moving them is a behaviour change
+    (`OQ-DIALOGUE-1`). The fields exist now; the rows are still what the screen draws. They move, and are
+    deleted, in one change — never deleted first, which would trade a gap for a regression.
+
+  - **OBLIGATION due=2026-10-09 owner=content** — move `officer.declined`, `officer.reminder` and
+    `officer.afterStamp` into `content/quests/ottawa-parliament-hill.json` as `declinedLine`, `reminderLine`
+    and `afterLine`, each with `factual: false` (all three are flavour), and delete the three copy rows in
+    the same change. Then add the speaker check to `scripts/validate-content.mjs`: a `declinedLine`,
+    `reminderLine`, `afterLine`, `doneLine` or `steps[].dialogue[]` whose `speaker` is not a character the
+    level places fails the build, naming the quest, the field and the speaker (`TN-DIALOGUE-03`), proved by
+    a failing fixture.
 - **The rule a gate cannot express, stated so its silence is not read as compliance:** nothing mechanical can
   tell whether a sentence in a locale bundle states a fact about Canada. `verify-content` can be pointed at
   every `FactClaim` in the content documents and check each one; it cannot notice a factual claim that was

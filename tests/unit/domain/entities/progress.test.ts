@@ -16,6 +16,9 @@ import {
   stampedLevelIds,
   withBestScore,
   withCharacter,
+  answeredCountOf,
+  correctCountOf,
+  isAnswerCorrect,
   withExamAttempt,
   withLevelUnlocked,
   withQuestState,
@@ -63,6 +66,9 @@ describe('a new game', () => {
   it('holds nothing the story does not promise', () => {
     expect(Object.keys(base()).sort()).toEqual([
       'character',
+      // The one exam the player has not finished, or null. It is not a row in
+      // `exams`, so at most one of them can exist (ADR-0027).
+      'examInProgress',
       'exams',
       // The level last played, so the title screen can offer Continue. It is in
       // TN-SAVE's *survives* table; "which screen the player was on" is
@@ -136,17 +142,45 @@ describe('unlocking, scores and exams', () => {
     expect(levelProgressFor(scored, levelId())?.bestScore).toBe(8);
   });
 
-  it('appends an exam attempt', () => {
-    const attempted = withExamAttempt(base(), {
+  it('appends a finished exam attempt, and closes the one in progress', () => {
+    const answer = {
+      questionId: questionId('q-01'),
+      subjectId: subjectId(),
+      chosenIndex: 1,
+      correctIndex: 1,
+    };
+    const taking = {
+      ...base(),
+      examInProgress: { startedAt: ORIGIN, answers: [answer], remainingMs: 60_000 },
+    };
+    const attempted = withExamAttempt(taking, {
       startedAt: ORIGIN,
       finishedAt: at(ORIGIN + 1000),
-      askedQuestionIds: [questionId('q-01')],
-      correctCount: 1,
+      answers: [answer],
       passed: false,
       timed: true,
     });
     expect(attempted.exams).toHaveLength(1);
+    // Both edits or neither: a filed result that left the exam in progress set
+    // would offer the player the exam they have just finished (TN-ATTEMPT-04).
+    expect(attempted.examInProgress).toBeNull();
+    expect(taking.examInProgress).not.toBeNull();
     expect(base().exams).toHaveLength(0);
+  });
+
+  it('reads the totals out of the answers instead of storing them', () => {
+    const answers = [
+      { questionId: questionId('q-01'), subjectId: subjectId(), chosenIndex: 1, correctIndex: 1 },
+      { questionId: questionId('q-02'), subjectId: subjectId(), chosenIndex: 0, correctIndex: 2 },
+      { questionId: questionId('q-03'), subjectId: subjectId(), chosenIndex: null, correctIndex: 0 },
+    ];
+    expect(correctCountOf(answers)).toBe(1);
+    expect(answeredCountOf(answers)).toBe(2);
+    // An unanswered question is not a wrong one, and cannot become a right one:
+    // there is no flag to set, only the two indexes to compare.
+    expect(isAnswerCorrect(answers[2]!)).toBe(false);
+    expect(correctCountOf([])).toBe(0);
+    expect(answeredCountOf([])).toBe(0);
   });
 });
 

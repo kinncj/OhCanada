@@ -67,7 +67,9 @@ export type {
 } from './content-repository';
 
 export type {
+  ExamAnswerDocument,
   ExamAttemptDocument,
+  ExamInProgressDocument,
   LevelProgressDocument,
   PlayerCharacterDocument,
   ProgressRepository,

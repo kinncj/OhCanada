@@ -66,14 +66,32 @@ const playedProgress = (): Progress => {
     ),
     {
       startedAt: ORIGIN,
-      finishedAt: null,
-      askedQuestionIds: [questionId('gov-01')],
-      correctCount: 0,
+      finishedAt: at(ORIGIN + 20 * 60_000),
+      answers: [
+        // One right, one wrong, one never answered: the three states a result
+        // has to tell apart, so the round trip is exercised on all three.
+        { questionId: questionId('gov-01'), subjectId: subjectId(), chosenIndex: 2, correctIndex: 2 },
+        { questionId: questionId('gov-02'), subjectId: subjectId(), chosenIndex: 0, correctIndex: 3 },
+        { questionId: questionId('gov-03'), subjectId: subjectId(), chosenIndex: null, correctIndex: 1 },
+      ],
       passed: false,
       timed: false,
     },
   );
 };
+
+/** The same game, still taking an exam: the other half of the format. */
+const midExamProgress = (): Progress => ({
+  ...playedProgress(),
+  examInProgress: {
+    startedAt: at(ORIGIN + 2 * DAY),
+    answers: [
+      { questionId: questionId('gov-04'), subjectId: subjectId(), chosenIndex: 1, correctIndex: 1 },
+      { questionId: questionId('gov-05'), subjectId: subjectId(), chosenIndex: null, correctIndex: 0 },
+    ],
+    remainingMs: 14 * 60_000,
+  },
+});
 
 const header = { version: 1, updatedAt: at(ORIGIN + DAY) };
 
@@ -116,13 +134,26 @@ describe('writing the document', () => {
 
     const brokenExam = withExamAttempt(emptyProgress(), {
       startedAt: at(Number.NaN),
-      finishedAt: null,
-      askedQuestionIds: [],
-      correctCount: 0,
+      finishedAt: at(ORIGIN),
+      answers: [
+        { questionId: questionId('gov-01'), subjectId: subjectId(), chosenIndex: null, correctIndex: 0 },
+      ],
       passed: false,
       timed: false,
     });
     expect(toProgressSnapshot(brokenExam, header).ok).toBe(false);
+
+    const brokenInProgress: Progress = {
+      ...emptyProgress(),
+      examInProgress: {
+        startedAt: at(Number.NaN),
+        answers: [
+          { questionId: questionId('gov-01'), subjectId: subjectId(), chosenIndex: null, correctIndex: 0 },
+        ],
+        remainingMs: null,
+      },
+    };
+    expect(toProgressSnapshot(brokenInProgress, header).ok).toBe(false);
 
     expect(toProgressSnapshot(emptyProgress(), { ...header, updatedAt: at(Number.NaN) }).ok).toBe(
       false,
@@ -141,6 +172,22 @@ describe('the round trip', () => {
     expect(read.ok).toBe(true);
     if (!read.ok) return;
     expect(read.value).toEqual(progress);
+  });
+
+  it('gives back an exam still in progress, with its answers and its clock', () => {
+    const progress = midExamProgress();
+    const written = toProgressSnapshot(progress, header);
+    expect(written.ok).toBe(true);
+    if (!written.ok) return;
+    // The document says the same thing the domain does: a duration stays a
+    // number on both sides, because it is a length of time and not a point in
+    // one, and an unanswered question is null on both sides.
+    expect(written.value.examInProgress?.remainingMs).toBe(14 * 60_000);
+    expect(written.value.examInProgress?.answers[1]?.chosenIndex).toBeNull();
+
+    const read = fromProgressSnapshot(written.value, locale());
+    expect(read.ok).toBe(true);
+    if (read.ok) expect(read.value).toEqual(progress);
   });
 
   it('survives being written as JSON and parsed back', () => {

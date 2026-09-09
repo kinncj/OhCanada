@@ -1,6 +1,9 @@
 # ADR-0024: An empty collection must not reduce to a pass
 
 - Status: Accepted (2026-09-08)
+- Amended 2026-09-09: the sharpest instance this ADR recorded — **a schema with no documents is validated by
+  nothing** — turned out to have a second half nobody had looked at: such a schema is not *compiled* either,
+  so it can be broken rather than merely unexercised. A gate was added. See §4 and the last Consequence.
 
 ## Context
 
@@ -101,6 +104,32 @@ own summary rather than to its corpus.
   exact sense ADR-0014 warns about, spotted in the act of adding it rather than a year later. That is the
   discipline this ADR was written to spread, applied better than the ADR stated it.
 
+### 4. A gate over an empty corpus does not even check that its rules are legal (added 2026-09-09)
+
+The near-miss in Consequences below — `progress.schema.json` requiring a property it did not declare, with
+`make validate-content` reporting OK because no progress documents exist — was recorded as a *validation*
+vacuum. It is worse than that, and `quest.schema.json` is the proof.
+
+`scripts/validate-content.mjs` calls `ajv.addSchema()` for every file in `content/schemas/`, and ajv compiles
+**lazily**: a schema is compiled the first time a document points at it. `quest.schema.json` named five
+properties in conditional branches and declared none of them in the same subschema, which ajv's
+`strictRequired` rejects at *compile* time. So from the day it was written until the day the first quest
+document existed, that file was not a lax validator — **it was not a validator at all**, and the gate that
+owns it printed a count of schemas as evidence. Two files in `content/schemas/` still have no documents under
+`content/` and one of them never will: `progress.schema.json` describes the save file.
+
+> **A schema is checked by compiling it, whether or not any document uses it.**
+
+The floor goes where the meaning is known (§2), and here that is neither the content walk nor any consumer:
+it is the schema directory itself. `tests/unit/contracts/every-schema-compiles.test.ts` compiles every file
+with ajv configured exactly as `validate-content` configures it, fails naming the file and ajv's own message,
+and asserts a floor on the count of files it compiled — a gate that compiled zero schemas is this ADR again,
+one level up. It is proved by compiling a deliberately broken copy of a real schema and asserting the
+failure, rather than by leaving a broken file on disk.
+
+This is also the second illustration of the escape recorded at the end of this file: **check a claim against
+another claim.** A schema compiling is a claim about the schema, and needs no corpus at all.
+
 ## Alternatives considered
 
 - **Find empty arrays with a lint rule.** The obvious mechanisation and it is the container error: it would
@@ -132,6 +161,11 @@ own summary rather than to its corpus.
   clause problem. The three of them now form a small set of rules held by review, which is itself worth
   watching: a project whose gates are its memory accumulating rules that gates cannot hold is a project
   slowly returning to attention as its enforcement.
+- **Every schema is compiled by a test, not only the ones content happens to reference** (added 2026-09-09,
+  §4). The rule was found while adding fields to `quest.schema.json` and `progress.schema.json` for ADR-0027,
+  which is the honest provenance: the file being edited had been uncompilable for its whole life and the
+  project's own authority on content shape had been enforcing nothing. Twelve schemas compile today; the gate
+  fails if that number reaches zero, and names the file if any one of them stops.
 - **The near-miss is the sharpest illustration and is recorded as such.** `progress.schema.json` briefly
   required a property it did not declare — which with `additionalProperties: false` invalidates every
   progress document — and `make validate-content` reported OK, because no progress documents exist. **A

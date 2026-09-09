@@ -25,6 +25,7 @@ import type { Result } from '@common/result';
 import type { EpochMillis, IsoInstant, LocaleCode } from '@domain/ids';
 import type {
   ExamAttemptDocument,
+  ExamInProgressDocument,
   LevelProgressDocument,
   ProgressSnapshot,
   QuestProgressDocument,
@@ -33,7 +34,12 @@ import type {
 
 import { clampSettings } from '@domain/entities/player';
 import type { ReviewRecord } from '@domain/scheduling/review-record';
-import type { ExamAttempt, LevelProgress, Progress } from '@domain/entities/progress';
+import type {
+  ExamAttempt,
+  ExamInProgress,
+  LevelProgress,
+  Progress,
+} from '@domain/entities/progress';
 import type { QuestState } from '@domain/entities/quest';
 
 import { fromIsoInstant, toIsoInstant } from '@application/persistence/iso-instant';
@@ -143,16 +149,21 @@ const reviewFromDocument = (document: ReviewStateDocument): Result<ReviewRecord>
   });
 };
 
+/*
+ * An answer crosses unchanged: four scalars, no instant among them. `remainingMs`
+ * is the same — a duration is a length of time, not a point in one, so it is a
+ * plain number on both sides and never goes near `toIsoInstant` (ADR-0012).
+ */
+
 const examToDocument = (attempt: ExamAttempt): Result<ExamAttemptDocument> => {
   const startedAt = toIsoInstant(attempt.startedAt);
   if (!startedAt.ok) return startedAt;
-  const finishedAt = nullableToIso(attempt.finishedAt);
+  const finishedAt = toIsoInstant(attempt.finishedAt);
   if (!finishedAt.ok) return finishedAt;
   return ok({
     startedAt: startedAt.value,
     finishedAt: finishedAt.value,
-    askedQuestionIds: attempt.askedQuestionIds,
-    correctCount: attempt.correctCount,
+    answers: attempt.answers,
     passed: attempt.passed,
     timed: attempt.timed,
   });
@@ -161,17 +172,30 @@ const examToDocument = (attempt: ExamAttempt): Result<ExamAttemptDocument> => {
 const examFromDocument = (document: ExamAttemptDocument): Result<ExamAttempt> => {
   const startedAt = fromIsoInstant(document.startedAt);
   if (!startedAt.ok) return startedAt;
-  const finishedAt = nullableFromIso(document.finishedAt);
+  const finishedAt = fromIsoInstant(document.finishedAt);
   if (!finishedAt.ok) return finishedAt;
   return ok({
     startedAt: startedAt.value,
     finishedAt: finishedAt.value,
-    askedQuestionIds: document.askedQuestionIds,
-    correctCount: document.correctCount,
+    answers: document.answers,
     passed: document.passed,
     timed: document.timed,
   });
 };
+
+const inProgressToDocument = (exam: ExamInProgress): Result<ExamInProgressDocument> =>
+  map(toIsoInstant(exam.startedAt), (startedAt) => ({
+    startedAt,
+    answers: exam.answers,
+    remainingMs: exam.remainingMs,
+  }));
+
+const inProgressFromDocument = (document: ExamInProgressDocument): Result<ExamInProgress> =>
+  map(fromIsoInstant(document.startedAt), (startedAt) => ({
+    startedAt,
+    answers: document.answers,
+    remainingMs: document.remainingMs,
+  }));
 
 /** Write the game out as the document `progress.schema.json` describes. */
 export const toProgressSnapshot = (
@@ -191,6 +215,9 @@ export const toProgressSnapshot = (
   if (!reviews.ok) return reviews;
   const exams = all(progress.exams.map(examToDocument));
   if (!exams.ok) return exams;
+  const inProgress =
+    progress.examInProgress === null ? null : inProgressToDocument(progress.examInProgress);
+  if (inProgress !== null && !inProgress.ok) return inProgress;
 
   return ok({
     $schema: header.schemaId ?? PROGRESS_SCHEMA_ID,
@@ -203,6 +230,7 @@ export const toProgressSnapshot = (
     reviews: reviews.value,
     subjectsStarted: progress.subjectsStarted,
     exams: exams.value,
+    examInProgress: inProgress === null ? null : inProgress.value,
   });
 };
 
@@ -224,6 +252,9 @@ export const fromProgressSnapshot = (
   if (!reviews.ok) return reviews;
   const exams = all(snapshot.exams.map(examFromDocument));
   if (!exams.ok) return exams;
+  const inProgress =
+    snapshot.examInProgress === null ? null : inProgressFromDocument(snapshot.examInProgress);
+  if (inProgress !== null && !inProgress.ok) return inProgress;
 
   return ok({
     character: snapshot.character,
@@ -236,5 +267,6 @@ export const fromProgressSnapshot = (
     reviews: reviews.value,
     subjectsStarted: snapshot.subjectsStarted,
     exams: exams.value,
+    examInProgress: inProgress === null ? null : inProgress.value,
   });
 };

@@ -111,16 +111,45 @@ const validSave = (): ProgressSnapshot => {
   );
 
   const snapshot = toProgressSnapshot(
-    { ...progress, exams: [
-      {
-        startedAt: ORIGIN,
-        finishedAt: at(ORIGIN + 1_800_000),
-        askedQuestionIds: [questionId('gov-01'), questionId('gov-02')],
-        correctCount: 15,
-        passed: true,
-        timed: true,
+    {
+      ...progress,
+      exams: [
+        {
+          startedAt: ORIGIN,
+          finishedAt: at(ORIGIN + 1_800_000),
+          answers: [
+            {
+              questionId: questionId('gov-01'),
+              subjectId: subjectId(),
+              chosenIndex: 3,
+              correctIndex: 3,
+            },
+            // Unanswered, so every mutation of a null `chosenIndex` is exercised
+            // against both validators rather than only the answered case.
+            {
+              questionId: questionId('gov-02'),
+              subjectId: subjectId(),
+              chosenIndex: null,
+              correctIndex: 0,
+            },
+          ],
+          passed: true,
+          timed: true,
+        },
+      ],
+      examInProgress: {
+        startedAt: at(ORIGIN + DAY),
+        answers: [
+          {
+            questionId: questionId('gov-03'),
+            subjectId: subjectId(),
+            chosenIndex: 1,
+            correctIndex: 2,
+          },
+        ],
+        remainingMs: 840_000,
       },
-    ] },
+    },
     { version: 1, updatedAt: at(ORIGIN + DAY) },
   );
   if (!snapshot.ok) throw new Error('the fixture must produce a valid snapshot');
@@ -246,6 +275,7 @@ describe('the shipped save validator agrees with progress.schema.json', () => {
     expect((document.reviews as Json[]).length).toBeGreaterThan(1);
     expect((document.subjectsStarted as Json[]).length).toBeGreaterThan(0);
     expect((document.exams as Json[]).length).toBeGreaterThan(0);
+    expect(document.examInProgress).not.toBeNull();
   });
 
   it('agrees with ajv on every single-property mutation of it', () => {

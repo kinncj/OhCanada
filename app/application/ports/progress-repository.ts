@@ -125,15 +125,72 @@ export interface LevelProgressDocument {
   readonly stampEarnedAt: IsoInstant | null;
 }
 
+/**
+ * One question of one attempt: what was asked, what was chosen, what was right.
+ *
+ * `subjectId` and `correctIndex` are copied down from the question bank rather
+ * than looked up, and that is the point of them: TN-RESULT-07 requires a result
+ * read a year later to keep its by-subject rows and its score after the question
+ * has left the build or its key has been corrected, and forbids recomputing a
+ * score from a bank that has changed.
+ *
+ * There is no `correct` flag. Correctness is `chosenIndex === correctIndex`, so
+ * "unanswered, and correct" is a state that cannot be written down rather than
+ * one a conditional has to forbid (ADR-0027).
+ */
+export interface ExamAnswerDocument {
+  readonly questionId: QuestionId;
+  readonly subjectId: SubjectId;
+  /** `null` is UNANSWERED — a third state, distinct from wrong. 0–3. */
+  readonly chosenIndex: number | null;
+  /** Which option was marked right when this question was asked. 0–3. */
+  readonly correctIndex: number;
+}
+
+/**
+ * One **finished** run at the exam — a result.
+ *
+ * IRCC mirror: 20 questions, 15 to pass, 30 minutes (CLAUDE.md). The exam still
+ * being taken is `ExamInProgressDocument`, a different shape, so `finishedAt` and
+ * `passed` are never asked to describe an exam nobody has finished
+ * (TN-ATTEMPT-01).
+ *
+ * Every total is read out of `answers` and none is stored beside it:
+ * `askedQuestionIds` and `correctCount` were removed in save version 3, because
+ * two stores for one number cannot be reconciled by anything — a schema cannot
+ * count array members (ADR-0027).
+ */
 export interface ExamAttemptDocument {
   readonly startedAt: IsoInstant;
-  readonly finishedAt: IsoInstant | null;
-  /** IRCC mirror: 20 questions, 15 to pass, 30 minutes (CLAUDE.md). */
-  readonly askedQuestionIds: readonly QuestionId[];
-  readonly correctCount: number;
+  readonly finishedAt: IsoInstant;
+  /** The draw, in order, answered or not. Never empty (ADR-0024). */
+  readonly answers: readonly ExamAnswerDocument[];
+  /** Recorded, not derived: `exam.passMark` is config and may change under a result. */
   readonly passed: boolean;
   /** The timer is optional even in Exam mode; record whether it was on. */
   readonly timed: boolean;
+}
+
+/**
+ * The one exam the player started and has not finished.
+ *
+ * No `finishedAt` and no `passed`: leaving an exam records neither
+ * (TN-ATTEMPT-01). It hangs off `ProgressSnapshot` as a nullable field rather
+ * than living in `exams`, so "at most one unfinished exam" (TN-ATTEMPT-04) is a
+ * property of the shape instead of a rule something has to check.
+ */
+export interface ExamInProgressDocument {
+  readonly startedAt: IsoInstant;
+  /** The draw, with `chosenIndex` null for what is not answered yet. Never empty. */
+  readonly answers: readonly ExamAnswerDocument[];
+  /**
+   * Milliseconds left on the clock, or `null` for an **untimed** exam.
+   *
+   * One field rather than a number beside a boolean, so a timed exam with no
+   * recorded time cannot be written. The clock always comes back paused, so
+   * nothing records whether it was running (TN-ATTEMPT-02, TN-TIMER).
+   */
+  readonly remainingMs: number | null;
 }
 
 /** One 0–1 level per audio bus. Fixed keys: the buses are code, not content. */
@@ -202,6 +259,8 @@ export interface ProgressSnapshot {
   readonly reviews: readonly ReviewStateDocument[];
   readonly subjectsStarted: readonly SubjectId[];
   readonly exams: readonly ExamAttemptDocument[];
+  /** The unfinished exam, or `null`. Required, so "none" and "not recorded" differ. */
+  readonly examInProgress: ExamInProgressDocument | null;
 }
 
 export interface ProgressRepository {
