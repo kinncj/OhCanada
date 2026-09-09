@@ -23,7 +23,43 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
+
+/**
+ * EVERY CASE IN THIS FILE SPAWNS THE REAL `make assets` CLI, and one of them
+ * runs it over the whole repository, so the 5 s default does not describe the
+ * work.
+ *
+ * The repository case walks all 80 sources and rasterises them: 3.99 s on this
+ * laptop, 11,188 ms on a GitHub runner, which put it just under the default here
+ * and well over it there. That is the same ~2.8x this container has already been
+ * measured at, the hard way -- the perf gate asserted an absolute frame budget
+ * on this runner and failed four consecutive deploys before it was changed to
+ * assert machine-subtracted cost instead (`tests/perf/budgets.spec.ts`). A
+ * wall-clock number tuned on a developer laptop is a gate that measures the
+ * container, not the thing under it.
+ *
+ * So 60 s is a CEILING, NOT A TARGET, and deliberately not "11.2 s plus a bit":
+ * it is ~5x the slowest observed runner time and ~15x this laptop's, which
+ * leaves it meaningless as a speed assertion on either machine while still
+ * catching a CLI that hangs. It is the same number as
+ * `art-handoff-gate.test.ts`, for the same reason, so this directory has one
+ * budget rather than two that drift apart.
+ *
+ * Set for the FILE rather than on the slow case, deliberately. The repository
+ * case is the one that is slow TODAY; `on every forbidden construct` already
+ * builds six scratch trees and `on a url() paint reference` two, and every case
+ * added below will spawn the CLI at least once. Pinning the exception to one
+ * case leaves the next one to fail on the runner and pass locally, which is the
+ * failure this change is about.
+ *
+ * The alternative was to make the repository case fast, and it was rejected: the
+ * only way to drop the rasterisation is to stop going through the real build
+ * path, and "walks EVERY source, including art with no level document yet" is
+ * the property that keeps this file from being a decoration (see the last
+ * describe). A faster case that covers less is worse than a slow one.
+ */
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
 
 const SCRIPT = fileURLToPath(new URL('../../../scripts/assets.mjs', import.meta.url));
 const REPO = fileURLToPath(new URL('../../../', import.meta.url));
