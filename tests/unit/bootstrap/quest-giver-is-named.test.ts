@@ -100,22 +100,32 @@ describe('every quest this build ships can name the character who gives it', () 
     expect(unnameable, unnameable.join('\n')).toEqual([]);
   });
 
-  it('names the guide, which is what three of the four quests waited on', () => {
+  it('names the guide, whoever it happens to give a quest for', () => {
     /*
-     * Not a re-statement of the row — `tests/unit/ui/copy.test.ts` owns the
-     * words — but of the join: the three documents that declare `guide` are
-     * asked, by their own `giver` field, whether this build can name them.
+     * Not a re-statement of the row -- `tests/unit/ui/copy.test.ts` owns the
+     * words -- but of the join: every document that declares `guide` is asked,
+     * by its own `giver` field, whether this build can name it.
+     *
+     * The membership is deliberately NOT pinned. It used to be, as the guard
+     * against this scenario becoming about nothing, and it broke the day a
+     * sixth quest chose the same giver -- which is the case it exists to
+     * protect, arriving and failing. The floor is that at least one quest is
+     * given by the guide; which ones is the content's business.
      */
     const byGuide = catalogue.quests.filter((quest) => String(quest.giver) === 'guide');
     expect(
-      byGuide.map((quest) => String(quest.id)).sort(),
+      byGuide.length,
       'no quest is given by the guide any more, so this scenario is about nothing',
-    ).toEqual([
-      'halifax-clock-and-pier',
-      'quebec-city-chateau-frontenac',
-      'toronto-cn-tower',
-    ]);
-    for (const quest of byGuide) expect(missingNameLocales(quest)).toEqual([]);
+    ).toBeGreaterThan(0);
+
+    const unnameable = byGuide
+      .filter((quest) => missingNameLocales(quest).length > 0)
+      .map(
+        (quest) =>
+          `${String(quest.id)} is given by the guide and app/ui/copy.ts has no ` +
+          `${nameKeyFor(quest)} in ${missingNameLocales(quest).join(' and ')}`,
+      );
+    expect(unnameable, unnameable.join('\n')).toEqual([]);
   });
 
   it('is proven by a giver nothing has a word for', () => {
