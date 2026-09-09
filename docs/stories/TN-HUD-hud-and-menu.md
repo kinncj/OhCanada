@@ -22,6 +22,13 @@ level: it has no HUD, no skater and nothing to leave a level from. It has its ow
 the timer control and "Leave the exam", specified in `TN-TIMER` and `TN-ATTEMPT` (`OQ-TIMER-4`). This file's
 "Leaving is not offered where there is nothing to leave" scenario is what keeps the two apart.
 
+**Amended a third time, 2026-09-08 — the interact prompt has a story of its own.**
+`TN-REACH-what-is-in-reach.md` owns what `interact-prompt` says, and adds one element to this strip,
+`interact-hint`. The prompt was drawing the landmark's own **name** from the level document, because
+`hud.interact.*` had never been written — which says what is there rather than what pressing does, and which
+put "CN Tower" inside `hud`, a surface `TN-NAMES-04` fails the build for. This file still owns the strip, its
+region name and its landmarks; it does not own the words in the prompt.
+
 Read `README.md` in this directory first. `TN-COPY-strings-and-counts.md` fixes the plural and state-word
 rules this file uses.
 
@@ -68,7 +75,9 @@ Everything else the HUD and the menu draw is defined elsewhere and is referenced
 | `common.close` | `TN-SET-settings.md` | The menu's close control |
 | `locomotion.<mode>.label` | `TN-MOVE-locomotion-labels.md` | `hud-mode-label` |
 | `hud.task`, `quest.step.*` | `TN-QUEST-parliament-hill.md` | `hud-quest-tracker` |
-| `hud.interact.*` | `TN-LEVEL-ottawa.md` | `interact-prompt` |
+| `hud.interact.poi`, `hud.interact.npc`, `hud.interact.done` | `TN-REACH-what-is-in-reach.md` | `interact-prompt` |
+| `hud.interact.<target>` | that level's own story — Ottawa's two are in `TN-LEVEL-ottawa.md` | `interact-prompt` |
+| `hud.interact.hint` | `TN-REACH-what-is-in-reach.md` | `interact-hint` |
 | `storage.warning`, `storage.warning.help` | `TN-SAVE-save-and-reload.md` | `storage-warning` |
 
 A string is written down in exactly one copy table. If a word is needed in two places, the second place
@@ -76,6 +85,11 @@ names the key and the file, as above. Two tables carrying the same words is how 
 words. **`passport.open` moved from `TN-QUEST` to `TN-PASSPORT` on 2026-09-08**, when the passport got a
 story: the screen owns both its heading and the label of the control that opens it, which is the rule
 `TN-SET` states for `settings.title` and `common.settings`. The wording did not change.
+
+**The prompt is never a name, and that rule is `TN-REACH`'s rather than this file's** — but it binds this
+strip, because the HUD is where it would be broken: `TN-NAMES-04` fails the build for a name on its list
+drawn by the HUD, and interpolating a level document's landmark name into `interact-prompt` is how such a
+name got there without passing through a copy table at all.
 
 ## Landmarks
 
@@ -153,6 +167,11 @@ Feature: The lower-third HUD
     Then the element "hud-quest-tracker" is not shown
     When I accept the quest
     Then "hud-quest-tracker" is shown, as described in TN-QUEST-02
+
+  Scenario: The prompt says what pressing will do, not what is there
+    When something comes within reach
+    Then "interact-prompt" reads a verb phrase, as TN-REACH-01 describes
+    And no string drawn inside "hud" is a landmark's name
 
   Scenario: The HUD does not take the input the level needs
     When I hold "move-right" over a part of the play area that is not a HUD control
@@ -343,6 +362,7 @@ Feature: Single-switch HUD
     When I press the switch briefly through the whole ring
     Then the warning is never highlighted as if it were a control
     And every real control is still reachable
+    And the same is true of "interact-hint", as TN-REACH-06 requires
 
   Scenario: Nothing opens or closes by itself
     When I do nothing for two minutes
@@ -559,3 +579,10 @@ Feature: Guarding the green tick on the landmark rules
   menu owned by the exam screen instead, because this one belongs to a level and offers a level's way out.
   *Recommendation:* two menus, one behaviour: modal, named, focus-trapping, escape closes, nothing counts
   down. If they end up sharing a component, the items are still the screen's to decide.
+- **`OQ-HUD-10` — how many things may the strip hold at once?** At 200 % text on a 390 × 844 viewport the
+  lower third can be carrying the mode label, the quest tracker, the storage warning, the interact prompt and
+  — the first time — `interact-hint`. `TN-HUD-08` and `TN-REACH-07` both assert that everything fits by
+  scrolling inside `hud`, which is a real answer and not an obviously comfortable one.
+  *Recommendation:* keep every element and let the strip scroll, because dropping one is dropping the only
+  copy of something a player needs; and measure it once the hint exists, in the same pass that measures the
+  warning and the tracker together.

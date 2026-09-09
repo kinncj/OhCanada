@@ -1,12 +1,18 @@
 # TN-HALIFAX — Level 1, Halifax: the words this level says for itself
 
-**Intent.** The level the game opens on speaks about Halifax — while it loads, in the HUD, and when it
-fails — and never about somewhere else.
+**Intent.** The level the game opens on speaks about Halifax — while it loads, in the HUD, when it fails and
+when it is finished — and never about somewhere else.
 
 **This is not the whole Halifax level story.** `TN-LEVELS-2-to-10-spine.md` fixes what this level is; the
 full story — walking, the camera, the guide, the two landmarks, the quest — is written in the slice that
 builds those, in the shape of `TN-LEVEL-ottawa.md`. What is here is the copy the level draws **today**,
 because a level document shipped, the game opens on it, and three strings on screen were another level's.
+
+**Amended 2026-09-08 — this level can now be finished, and the card that says so had no words for it.**
+Reaching the end of a level earns its stamp and offers the next one (`TN-DONE-finishing-a-level.md`), and
+`stamp.<id>.earned` existed for Ottawa alone. The game starts here, so **the first completion card any
+player ever sees was the one with no stamp line at all**. Two rows are added below, both written out per
+level for the reason the error title is: French takes a different preposition and article per place.
 
 Read `README.md` in this directory first. The rows this file does not own:
 
@@ -16,6 +22,8 @@ Read `README.md` in this directory first. The rows this file does not own:
 | The mode label the HUD draws | `locomotion.walk.label` — "Walking" / « Marche » | `TN-MOVE-locomotion-labels.md` |
 | The error card's body and its two buttons | `level.error.body`, `level.error.retry`, `level.error.back` | `TN-WAIT-a-level-opens-or-it-does-not.md` |
 | The waiting rule these strings obey | — | `TN-COPY-strings-and-counts.md` §Waiting copy |
+| The completion card that draws this file's two new rows | `level.complete.*`, `quest.done.title`, `map.open`, `common.keepPlaying` | `TN-DONE-finishing-a-level.md` |
+| What the HUD says when something is in reach | `hud.interact.*` | `TN-REACH-what-is-in-reach.md` |
 | The landmark names and blurbs | inline `localizedText` | `content/levels/halifax.json`, under `TN-NAMES-naming-real-places.md` |
 | The territorial statement | inline `localizedText` | `content/levels/halifax.json`, drawn by `about-this-place` (`docs/content-review.md` §10.2) |
 
@@ -25,6 +33,8 @@ Read `README.md` in this directory first. The rows this file does not own:
 |---|---|---|
 | `level.halifax.loading` | Getting the harbour ready. | Préparation du port. |
 | `level.halifax.error.title` | We could not load Halifax. | Nous n'avons pas pu charger Halifax. |
+| `stamp.halifax.earned` | You earned the Halifax stamp. | Vous avez obtenu le tampon d'Halifax. |
+| `level.halifax.play` | Play Halifax | Jouer à Halifax |
 
 **`level.halifax.loading` names the harbour because the harbour is what this level draws.** The level
 document's parallax layers are the sky, the citadel above the town, the uptown streets and the quayside, and
@@ -43,24 +53,37 @@ take in almost these words: not "a modal on level entry that the player dismisse
 splash card". A loading screen is a splash card the player waits past. A short paraphrase of a cited
 statement would also be an unsourced claim about a nation, made by an agent, which §1 does not allow at any
 tier. **The panel states the fact; the loading screen says what is being prepared; neither borrows the
-other's words.**
+other's words.** The same holds for the stamp line: a congratulation the player taps past is the same wrong
+shape, and `TN-DONE` restates it for the card.
 
 **`level.halifax.error.title` is written out rather than composed from the level's title.** `TN-WAIT` gives
 the general reason — French does not use one article for all ten places — and Halifax is the easy case that
 proves nothing on its own: « charger Halifax » takes no article, « charger la Ville de Québec » takes one.
 Written out, both are right; templated, one of them is wrong.
 
+**`stamp.halifax.earned` is the sentence the completion card draws when this level is finished**, whether
+the player finished its task or walked to the end. It names the **place**, never the landmark: a stamp may
+not be named after Pier 21 (`TN-NAMES-01`, `TN-PASSPORT-02`), and it states no territorial fact. « Tampon »
+is `TN-PASSPORT`'s settled word — a « timbre » is a postage stamp — and the elision in « d'Halifax » is what
+Canadian French does with this name (« le port d'Halifax »), which is exactly why the sentence is written
+here and not built from « le tampon de » plus a title.
+
+**`level.halifax.play` is the label on the control that opens this level from the card of the level before
+it.** English drops the place name straight in; French takes « à » with no article here and « dans la » for
+the Ville de Québec, so the row is written out per level like the error title. The button draws the level's
+title alone today, which is terse rather than wrong — this row is an improvement, and `TN-DONE` says so.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-HALIFAX-03`; the escape route and the error buttons are `TN-WAIT-04` |
-| Single switch | `TN-HALIFAX-03`; `TN-WAIT-04` |
-| Screen reader | `TN-HALIFAX-03` |
-| Reduced motion | `TN-HALIFAX-03` |
-| 200 % text | `TN-HALIFAX-03` |
-| Bilingual | `TN-HALIFAX-04` |
-| Failure path | `TN-HALIFAX-02`; the missing-row gate is `TN-WAIT-03` |
+| Keyboard only | `TN-HALIFAX-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06` |
+| Single switch | `TN-HALIFAX-03`; `TN-WAIT-04`; `TN-DONE-06` |
+| Screen reader | `TN-HALIFAX-03`; `TN-DONE-07` |
+| Reduced motion | `TN-HALIFAX-03`; `TN-DONE-07` |
+| 200 % text | `TN-HALIFAX-03`; `TN-DONE-07` |
+| Bilingual | `TN-HALIFAX-04`, and `TN-HALIFAX-05` for the two completion rows |
+| Failure path | `TN-HALIFAX-02`; the missing-row gate is `TN-WAIT-03` for two of these rows and `TN-DONE-05` for the other two |
 
 ---
 
@@ -203,6 +226,43 @@ Feature: The level in French
     And no string is drawn onto the canvas as part of an image
 ```
 
+## TN-HALIFAX-05 — Finishing Halifax, and opening it from somewhere else
+
+```gherkin
+Feature: This level's two sentences on the completion card
+  Scenario: Finishing this level says so in this level's words
+    Given the Halifax level is playable
+    When I finish it, by its task or by reaching the end
+    Then the element "quest-complete-stamp" reads "You earned the Halifax stamp."
+    And it does not read "You earned the Ottawa stamp."
+    And it does not contain "Pier 21"
+    And it does not contain "Mi'kma'ki", "Mi'kmaq" or the word "treaty"
+
+  Scenario: The same sentence in French, with its elision
+    Given the language is French
+    When I finish the Halifax level
+    Then "quest-complete-stamp" reads "Vous avez obtenu le tampon d'Halifax."
+    And it does not read "Vous avez obtenu le tampon de Halifax."
+    And it does not contain "timbre"
+
+  Scenario: The control that opens this level says what it will do
+    Given finishing another level opened Halifax
+    Then "quest-complete-next" reads "Play Halifax"
+    And in French it reads "Jouer à Halifax"
+    And it is not "Halifax" on its own
+
+  Scenario: Both rows exist in both languages, or the build fails
+    Then "stamp.halifax.earned" and "level.halifax.play" each have a value in "en" and in "fr"
+    And a missing row fails the content check, as TN-DONE-05 describes
+    And neither is assembled from a template with this level's title dropped into it
+
+  Scenario: A player who walked past everything is not told they learned something
+    Given I reached the end of Halifax having answered no question
+    Then "quest-complete-stamp" still reads "You earned the Halifax stamp."
+    And the line about my answers is the one in TN-DONE-02
+    And no sentence names a landmark in this level
+```
+
 ---
 
 ## Open questions
@@ -217,8 +277,16 @@ Feature: The level in French
   `TN-LEVELS` records that Pier 21 is a weak blind-identification subject and that the anchor may move to the
   Town Clock. Both are on the waterfront, so "Getting the harbour ready." survives either outcome —
   deliberately, because a loading sentence pinned to one landmark would have to be rewritten by an art
-  decision. Recorded so the next reader knows it was a choice.
+  decision. The stamp sentence and the play label survive it for the same reason: both name the place.
+  Recorded so the next reader knows it was a choice.
 - **`OQ-HALIFAX-3` — is level 1's subject bank ready?** `CLAUDE.md` requires ≥ 30 verified questions for
   `rights` before this level ships, and every shipped question today carries `subject: "government"`. Nothing
   in this file depends on it; it is recorded because the game now *opens* on this level, which makes the gap
-  the first one a player would meet. Routed to content, with `OQ-SPINE-3`.
+  the first one a player would meet. **It is worse than recorded, now that the level can be finished**: a
+  player who engages both landmarks in a level with no bank still reads `level.complete.none`, which is true
+  and reads as though they walked past everything. Routed to content, with `OQ-SPINE-3`.
+- **`OQ-HALIFAX-4` — this level has no per-target interact prompts.** `TN-REACH` gives it the generic rows —
+  "Look at this place" / « Regarder ce lieu » — where Ottawa names the officer and Parliament Hill. Neither
+  of this level's landmarks is on `TN-NAMES`'s list, so a per-target row is allowed and would read better.
+  *Recommendation:* write both in Halifax's full level story, with the guide's name and the arrival
+  announcement, rather than one at a time. Until then the generic row is correct, not a placeholder.

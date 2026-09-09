@@ -1,12 +1,18 @@
 # TN-TORONTO — Level 5, Toronto: the words this level says for itself
 
 **Intent.** Toronto tells the player what it is getting ready, names the way they move, and names itself when
-it fails — in both languages, with no building named on a screen that may not name one.
+it fails and when it is finished — in both languages, with no building named on a screen that may not name
+one.
 
 **This is not the whole Toronto level story.** `TN-LEVELS-2-to-10-spine.md` fixes what this level is; the
 full story — the bike, the square, the volunteer, the landmark card, the quest — is written in the slice that
 builds them, in the shape of `TN-LEVEL-ottawa.md`. What is here is the copy the level draws **today**,
 because `content/levels/toronto.json` shipped and the game can open it.
+
+**Amended 2026-09-08 — two more rows, and one of them keeps a trade name off one more screen.** A level can
+now be finished, which draws a stamp sentence and offers the next level
+(`TN-DONE-finishing-a-level.md`). This level's stamp is named after **Toronto**, never after the tower, for
+the reason its loading sentence does not name it either.
 
 Read `README.md` in this directory first. The rows this file does not own:
 
@@ -15,6 +21,8 @@ Read `README.md` in this directory first. The rows this file does not own:
 | Place name and subject line | `level.toronto.title`, `level.toronto.subtitle` | `TN-LEVELS-2-to-10-spine.md` |
 | The mode label the HUD draws | `locomotion.bike.label` — "Biking" / « Vélo » | `TN-MOVE-locomotion-labels.md` |
 | The error card's body and its two buttons | `level.error.body`, `level.error.retry`, `level.error.back` | `TN-WAIT-a-level-opens-or-it-does-not.md` |
+| The completion card that draws this file's two new rows | `level.complete.*`, `quest.done.title`, `map.open`, `common.keepPlaying` | `TN-DONE-finishing-a-level.md` |
+| What the HUD says when something is in reach | `hud.interact.*` | `TN-REACH-what-is-in-reach.md` |
 | The landmark name and blurb | inline `localizedText` | `content/levels/toronto.json`, under `TN-NAMES-naming-real-places.md` |
 | The territorial statement | inline `localizedText` | `content/levels/toronto.json`, drawn by `about-this-place` |
 
@@ -24,6 +32,8 @@ Read `README.md` in this directory first. The rows this file does not own:
 |---|---|---|
 | `level.toronto.loading` | Getting the city streets ready. | Préparation des rues de la ville. |
 | `level.toronto.error.title` | We could not load Toronto. | Nous n'avons pas pu charger Toronto. |
+| `stamp.toronto.earned` | You earned the Toronto stamp. | Vous avez obtenu le tampon de Toronto. |
+| `level.toronto.play` | Play Toronto | Jouer à Toronto |
 
 **`level.toronto.loading` names the streets because the streets are what the player rides on.** The level
 document's parallax layers are the sky, the skyline, a podium and a boulevard, and the level's locomotion
@@ -36,29 +46,36 @@ point-of-interest card's body and nowhere else, naming a loading message as one 
 appear. The tower is named on the card the player rides up to, inside a sentence that says what it is, with
 its source.
 
+**Neither does the stamp sentence, and neither does the HUD.** A stamp is named after a place
+(`TN-PASSPORT-02`), so this level's is "the Toronto stamp". The interact prompt is the screen where this rule
+is being broken today: it draws the landmark's own name from the level document, so a player in reach of the
+tower reads **"CN Tower"** in the HUD — inside `hud`, which `TN-NAMES-04` names among the surfaces that fail
+the build. `TN-REACH-what-is-in-reach.md` is where that is fixed, and this level is its worked example.
+
 **It does not mention Treaty 13, the Toronto Purchase, or the Mississaugas of the Credit.** The level
 document carries a sourced territorial statement and `docs/content-review.md` §10.2 fixes where a player
 reads it: the "About this place" panel, always reachable, never blocking, sourced — explicitly *not* a splash
-card the player waits past on the way into the game. A loading screen is that splash card. Compressing a
-cited treaty statement into a waiting sentence would also be an agent restating a claim about a nation
-without its source, which §1 does not allow at any tier. **The panel states the fact; the loading screen says
-what is being prepared.**
+card the player waits past on the way into the game. A loading screen is that splash card, and a stamp line
+is a congratulation the player taps past. Compressing a cited treaty statement into either would also be an
+agent restating a claim about a nation without its source, which §1 does not allow at any tier. **The panel
+states the fact; the loading screen says what is being prepared; the stamp says what was earned.**
 
-**`level.toronto.error.title` is written out rather than composed.** Toronto, like Halifax and Ottawa, takes
-no article in French — and `TN-LEVEL-quebec-city.md` is the row in the same set that does. One template
-cannot be right for both, so all four are written (`TN-WAIT`).
+**`level.toronto.error.title`, `stamp.toronto.earned` and `level.toronto.play` are written out rather than
+composed.** Toronto, like Halifax and Ottawa, takes no article in French — « charger Toronto », « le tampon
+de Toronto », « Jouer à Toronto » — and `TN-LEVEL-quebec-city.md` is the row in the same set that takes one
+in all three. One template cannot be right for both, so all four levels are written (`TN-WAIT`, `TN-DONE`).
 
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-TORONTO-03`; the escape route and the error buttons are `TN-WAIT-04` |
-| Single switch | `TN-TORONTO-03`; `TN-WAIT-04` |
-| Screen reader | `TN-TORONTO-03` |
-| Reduced motion | `TN-TORONTO-03` |
-| 200 % text | `TN-TORONTO-03` |
-| Bilingual | `TN-TORONTO-04` |
-| Failure path | `TN-TORONTO-02`; the missing-row gate is `TN-WAIT-03` |
+| Keyboard only | `TN-TORONTO-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06` |
+| Single switch | `TN-TORONTO-03`; `TN-WAIT-04`; `TN-DONE-06` |
+| Screen reader | `TN-TORONTO-03`; `TN-DONE-07` |
+| Reduced motion | `TN-TORONTO-03`; `TN-DONE-07` |
+| 200 % text | `TN-TORONTO-03`; `TN-DONE-07` |
+| Bilingual | `TN-TORONTO-04`, and `TN-TORONTO-05` for the two completion rows |
+| Failure path | `TN-TORONTO-02`; the missing-row gate is `TN-WAIT-03` for two of these rows and `TN-DONE-05` for the other two |
 
 ---
 
@@ -93,6 +110,12 @@ Feature: Toronto says what it is getting ready
     Then "poi-card" shows "CN Tower" as text, inside a sentence that says what it is
     And that is the only screen in this level that names it
     And no logo, wordmark or stylised lettering is drawn with it
+
+  Scenario: The HUD does not name it either
+    Given the Toronto level is playable
+    When I come within reach of the landmark
+    Then "interact-prompt" reads "Look at this place", as TN-REACH-02 requires
+    And no string drawn inside "hud" contains "CN Tower" or "Tour CN"
 ```
 
 ## TN-TORONTO-02 — Toronto fails in its own name (failure path)
@@ -183,7 +206,7 @@ Feature: The level in French
     Given the Toronto level is playable
     When I engage the landmark
     Then "poi-card" shows "Tour CN"
-    And no waiting or error string in either language contains it
+    And no waiting, error, stamp or prompt string in either language contains it
 
   Scenario: Both languages or neither
     Then every key in this file's table has a value in "en" and in "fr"
@@ -191,18 +214,59 @@ Feature: The level in French
     And no string is drawn onto the canvas as part of an image
 ```
 
+## TN-TORONTO-05 — Finishing Toronto, and opening it from somewhere else
+
+```gherkin
+Feature: This level's two sentences on the completion card
+  Scenario: Finishing this level says so in this level's words
+    Given the Toronto level is playable
+    When I finish it, by its task or by reaching the end
+    Then the element "quest-complete-stamp" reads "You earned the Toronto stamp."
+    And it does not contain "CN Tower"
+    And it does not contain "Treaty 13", "Toronto Purchase" or the name of a nation
+    And it does not name Ottawa, Halifax or Québec City
+
+  Scenario: The same sentence in French
+    Given the language is French
+    When I finish the Toronto level
+    Then "quest-complete-stamp" reads "Vous avez obtenu le tampon de Toronto."
+    And it does not contain "Tour CN"
+    And it does not contain "timbre"
+
+  Scenario: The control that opens this level says what it will do
+    Given finishing another level opened Toronto
+    Then "quest-complete-next" reads "Play Toronto"
+    And in French it reads "Jouer à Toronto"
+    And it is not "Toronto" on its own
+
+  Scenario: Both rows exist in both languages, or the build fails
+    Then "stamp.toronto.earned" and "level.toronto.play" each have a value in "en" and in "fr"
+    And a missing row fails the content check, as TN-DONE-05 describes
+    And neither is assembled from a template with this level's title dropped into it
+
+  Scenario: A player who rode past everything is not told they learned something
+    Given I reached the end of Toronto having answered no question
+    Then "quest-complete-stamp" still reads "You earned the Toronto stamp."
+    And the line about my answers is the one in TN-DONE-02
+    And no sentence on the card names the tower
+```
+
 ---
 
 ## Open questions
 
-- **`OQ-TORONTO-1` — the arrival announcement and the interact prompts are not written here.** Same reason as
-  `OQ-HALIFAX-1`: they belong with the volunteer, the square and the quest, in the full level story.
+- **`OQ-TORONTO-1` — the arrival announcement is not written here.** Same reason as `OQ-HALIFAX-1`: it
+  belongs with the volunteer, the square and the quest, in the full level story. **The interact prompt is no
+  longer waiting on that**: `TN-REACH` gives this level the generic rows, and it may not write a per-target
+  row for its landmark anyway, because the tower's name is on `TN-NAMES`'s list.
 - **`OQ-TORONTO-2` — `TN-LEVELS` gives this level Toronto City Hall as its landmark and the shipped document
   gives it the CN Tower.** The spine names City Hall's two curved towers as the blind-identification anchor,
   "civic, unmistakable in silhouette, and about the thing the level teaches", with the CN Tower as a *second*
   anchor on the skyline; `content/levels/toronto.json` ships one point of interest and it is the tower.
   Nothing in this file turns on it — no string here names either building — but the level's full story cannot
-  be written until the two agree. Routed to the plan owner and the art agent, with `OQ-SPINE-5`.
+  be written until the two agree. **It does change one thing**: Toronto City Hall is on `TN-NAMES`'s list as
+  a civic building, so whichever wins, no prompt, stamp or loading sentence may name it. Routed to the plan
+  owner and the art agent, with `OQ-SPINE-5`.
 - **`OQ-TORONTO-3` — level 5 and level 4 still draw from one question bank.** `OQ-SPINE-3`: every shipped
   question carries `subject: "government"` and roughly a dozen are about elections, which is this level's
   subject. Recorded here because this level is now openable, so the overlap is reachable rather than

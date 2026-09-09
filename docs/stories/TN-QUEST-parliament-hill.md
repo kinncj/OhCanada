@@ -29,6 +29,22 @@ in this directory that changed with it. `stamp.ottawa.earned` is one of them. Th
 `passport.open`, moved to the file that owns the passport screen, for the reason `TN-SET` gives about
 `common.settings` and `settings.title`: the screen owns both its heading and the control that opens it.
 
+**Amended again 2026-09-08 — this quest is no longer the only way to finish a level.** Reaching the end of a
+level earns its stamp and draws the same card, which is `TN-DONE-finishing-a-level.md`. Two consequences for
+this file, and neither changes a word of its copy:
+
+- **`stamp.ottawa.earned` is now one of four rows**, one per built level, each written in that level's own
+  story file. Ottawa's stays here, because the quest is what earns it here. `TN-DONE` carries the directory
+  and the gate that fails the build for a built level with no row.
+- **The card has lines this file does not own**: what the player answered in this level
+  (`level.complete.score` or `level.complete.none`), and the control that opens the level that just opened
+  (`level.<id>.play`). `TN-DONE` owns those, and it owns the heading on the path where no task was accepted.
+  This file keeps the quest path, unchanged.
+
+`OQ-DONE-5` records the one place the two files do not yet agree — this file's completion card offers
+"See my passport" and `TN-DONE`'s offers the map and the next level — and it is a question, not a decision:
+neither file changes until it is answered.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -63,6 +79,15 @@ in this directory that changed with it. `stamp.ottawa.earned` is one of them. Th
 | `quest.noQuestions` | The questions are not ready right now. Try again later. | Les questions ne sont pas prêtes pour l'instant. Réessayez plus tard. |
 
 `officer.greet` states a fact about Canada and is verified like a question (`OQ-LEVEL-4`).
+
+**`quest.done.title` is the heading on the quest path only.** A player who reaches the end of a level having
+accepted no task reads `level.complete.title` — "Level finished!" / « Niveau terminé! » — because "Task
+done!" would be a claim about something they never did. `TN-DONE` owns that row and the rule that picks
+between them; this one is unchanged.
+
+**`stamp.ottawa.earned` is per level, not per game.** Halifax, Québec City and Toronto have their own rows in
+their own story files, and the French takes a different form after « tampon » in three of the four
+(`TN-DONE`). This row is Ottawa's and stays here because the quest is what earns it here.
 
 **The dialogue's speaker label is `npc.officer.name`** — "The officer" / « L'agent » — defined in
 `TN-LEVEL-ottawa.md` with the rest of that character. It is not repeated here, because a name written down
@@ -198,6 +223,10 @@ Feature: Saying no
 ```
 
 ## TN-QUEST-04 — Finishing the task and earning the stamp
+
+This is the **quest path** through the completion card. The other path — reaching the end of the level, with
+or without a task — is `TN-DONE-finishing-a-level.md`, and the two agree on everything except which controls
+the card offers, which is `OQ-DONE-5`.
 
 ```gherkin
 Feature: Completing the quest
@@ -494,3 +523,10 @@ Feature: The quest in French
   such a list appears in the saved document. **An exam does need one**, and it has one — in its own
   `examAttempt` document and not in a quest step (`TN-ATTEMPT`, `OQ-EXAM-3`), which is what "a new field with
   its own story" meant.
+- **`OQ-QUEST-8` — a player can now finish this level without ever meeting the officer.** Reaching the end
+  of the canal earns the Ottawa stamp whether or not the quest was accepted (`TN-DONE`), so the quest is a
+  richer route through the level rather than the only one. Nothing in this file breaks — the quest still
+  waits, and `stamp/earned` still fires once — but the scenario "the quest cannot be completed twice" is now
+  reachable from a second direction. *Recommendation:* keep both routes and let the completion card be the
+  place that tells a player what they skipped (`TN-DONE-02`); the alternative, gating the level's end on its
+  quest, turns a learning tool into a lock and would be a design decision, not a copy one.

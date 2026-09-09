@@ -25,6 +25,16 @@ this file keeps only what is Ottawa's:
 Nothing about Ottawa's wording changed. Its two keys gained the level's id: `level.loading` is now
 `level.ottawa.loading`, and `level.error.title` is now `level.ottawa.error.title`.
 
+**Amended again 2026-09-08 — a level can now be finished, and two of this file's rows have neighbours.**
+Reaching the end of a level earns its stamp and offers the next one, which is
+`TN-DONE-finishing-a-level.md`. That gave every built level a `level.<id>.play` row (Ottawa's is below) and
+put `stamp.ottawa.earned` — still `TN-QUEST`'s, still unchanged — into a set of four. In the same pass,
+`TN-REACH-what-is-in-reach.md` took over the **generic** interact prompts, so that a level with no row of its
+own says "Look at this place" instead of drawing a landmark's name in the HUD. This file keeps Ottawa's two
+per-target prompts, and one of them is respelled: `hud.interact.poi.parliamentHill` is now
+`hud.interact.parliament-hill`, keyed on the id the level document gives the landmark, which is what
+`poi/entered` carries. **The wording did not change** (`OQ-REACH-1`).
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -34,7 +44,7 @@ Nothing about Ottawa's wording changed. Its two keys gained the level's id: `lev
 | Screen reader | `TN-LEVEL-08` — *The canvas is silent, the live region is not* |
 | Reduced motion | `TN-LEVEL-09` — *No parallax easing, no particles, same physics* |
 | 200 % text | `TN-LEVEL-10` — *The HUD at 200 %* |
-| Bilingual | `TN-LEVEL-11` — *Ottawa in French* |
+| Bilingual | `TN-LEVEL-11` — *Ottawa in French*; `TN-LEVEL-13` for the two completion rows |
 | Failure path | `TN-LEVEL-02` — *The level does not load* |
 
 ## Player-facing copy
@@ -46,20 +56,23 @@ Nothing about Ottawa's wording changed. Its two keys gained the level's id: `lev
 | `level.ottawa.loading` | Getting the canal ready. | Préparation du canal. |
 | `npc.officer.name` | The officer | L'agent |
 | `hud.interact.officer` | Talk to the officer | Parler à l'agent |
-| `hud.interact.poi.parliamentHill` | Look at Parliament Hill | Regarder la Colline du Parlement |
+| `hud.interact.parliament-hill` | Look at Parliament Hill | Regarder la Colline du Parlement |
 | `hud.turnAround` | Turn around | Faire demi-tour |
 | `poi.parliamentHill.title` | Parliament Hill | La Colline du Parlement |
 | `poi.parliamentHill.body` | The Parliament buildings are in Ottawa. The tall clock tower is called the Peace Tower. | Les édifices du Parlement sont à Ottawa. La haute tour de l'horloge s'appelle la tour de la Paix. |
 | `common.close` | Close | Fermer |
 | `level.ottawa.error.title` | We could not load Ottawa. | Nous n'avons pas pu charger Ottawa. |
+| `level.ottawa.play` | Play Ottawa | Jouer à Ottawa |
 | `announce.arrived.ottawa` | You are on the Rideau Canal in Ottawa. Skating. | Vous êtes sur le canal Rideau à Ottawa. Patinage. |
 
-Four strings this level draws are written elsewhere, because they are not Ottawa's:
-`locomotion.skate.label` — "Skating" / « Patinage » — is in `TN-MOVE-locomotion-labels.md`, and
+Five strings this level draws are written elsewhere, because they are not Ottawa's:
+`locomotion.skate.label` — "Skating" / « Patinage » — is in `TN-MOVE-locomotion-labels.md`;
 `level.error.body`, `level.error.retry` and `level.error.back` — "Check your connection and try again." /
 « Vérifiez votre connexion et réessayez. », "Try again" / « Réessayer », "Go back" / « Retour » — are in
-`TN-WAIT-a-level-opens-or-it-does-not.md`. The scenarios below still assert the words, because a scenario
-names what a player reads, not which table it came from.
+`TN-WAIT-a-level-opens-or-it-does-not.md`; and `stamp.ottawa.earned` — "You earned the Ottawa stamp." /
+« Vous avez obtenu le tampon d'Ottawa. » — is in `TN-QUEST-parliament-hill.md`, because the quest is what
+earns it here. The scenarios below still assert the words, because a scenario names what a player reads, not
+which table it came from.
 
 `poi.parliamentHill.body` is a factual claim and goes through the same verification as a question — see
 `OQ-LEVEL-4`.
@@ -81,6 +94,12 @@ The French is a noun phrase where the English is a sentence, and both end in a f
 canal. » is what a French speaker says about work in progress, and « Nous préparons le canal. » would promise
 a « nous » that no other string in this level uses.
 
+**`level.ottawa.play` is the label on the control that opens this level from the completion card of the level
+before it.** French takes « à » with no article here, as it does for Halifax and Toronto, and « dans la » for
+the Ville de Québec — which is why the row is written out per level exactly as the error title is
+(`TN-DONE`). It is an improvement rather than a fix: the card draws the level's title alone today, which is
+terse and not misleading.
+
 **`npc.officer.name` is the speaker's label**, and it is the string `TN-QUEST-08` needs when it requires the
 dialogue to have "an accessible name naming the speaker". It is drawn as the dialogue's heading and is that
 dialog's accessible name — one string doing both jobs, so a sighted player and a screen-reader user are told
@@ -88,6 +107,13 @@ the same thing. Under ADR-0010 a character's display name is inline content, car
 document as `localizedText`; the wording is fixed here so no agent has to invent it, and the level file
 transcribes it. **No dialogue in this game opens with a generic label**: "Speaker", "NPC", "Character" and
 an empty heading are all defects, and `TN-QUEST-08` fails on them.
+
+**The two `hud.interact.*` rows above are per-target rows, and this level is allowed to write them** because
+neither name is on `TN-NAMES-naming-real-places.md`'s list. `TN-REACH-what-is-in-reach.md` owns the generic
+rows a level without them draws, and owns the rule that decides which is used: a target the player has
+already finished with says "Done. See this one again", whatever this table carries. The keys are
+`hud.interact.<the id the level document gives the target>`, which is why the landmark's row is
+`hud.interact.parliament-hill` and not `hud.interact.poi.parliamentHill`.
 
 The officer is called "the officer" / « l'agent » in every string, never by an organisation's name — see
 *What is depicted*. `OQ-LEVEL-8` covers the one French question the label raises.
@@ -656,6 +682,34 @@ Feature: Pausing
     And no question, dialogue or quest step advanced while the tab was hidden
 ```
 
+## TN-LEVEL-13 — Finishing Ottawa, and opening it from somewhere else
+
+```gherkin
+Feature: This level on the completion card
+  Scenario: The stamp sentence is this level's, wherever it is written
+    Given the Ottawa level is playable
+    When I finish it, by the quest or by reaching the end
+    Then "quest-complete-stamp" reads "You earned the Ottawa stamp."
+    And in French it reads "Vous avez obtenu le tampon d'Ottawa."
+    And it does not contain "timbre"
+    And the row is TN-QUEST's, drawn here without being copied
+
+  Scenario: The control that opens this level says what it will do
+    Given finishing another level opened Ottawa
+    Then "quest-complete-next" reads "Play Ottawa"
+    And in French it reads "Jouer à Ottawa"
+    And it is not "Ottawa" on its own
+
+  Scenario: Both rows exist in both languages, or the build fails
+    Then "stamp.ottawa.earned" and "level.ottawa.play" each have a value in "en" and in "fr"
+    And a missing row fails the content check, as TN-DONE-05 describes
+    And neither is assembled from a template with this level's title dropped into it
+
+  Scenario: Neither row names the landmark
+    Then no string on the completion card contains "Parliament Hill" or "la Colline du Parlement"
+    And the stamp is named after the place, as TN-PASSPORT-02 requires
+```
+
 ---
 
 ## Open questions
@@ -694,7 +748,8 @@ Feature: Pausing
   together to « l'agente ». *Recommendation:* one decision, three strings, and the scenario "the officer is
   named the same way in every string" in `TN-LEVEL-11` is what stops two of them changing and the third not.
   Do **not** reach for « l'agent(e) » or « l'agent·e »: `docs/content-review.md` §8.6 forbids the bracketed
-  form, and it is unreadable to a screen reader in either language.
+  form, and it is unreadable to a screen reader in either language. `TN-REACH`'s generic « Parler à cette
+  personne » is unaffected by the answer, which is one small argument for the generic rows.
 - ~~**`OQ-LEVEL-9` — one loading string, or one per level?**~~ **Answered 2026-09-08: one per level, keyed on
   the level's id.** The recommendation stood and the game proved it the expensive way — the player now opens
   on Halifax and read Ottawa's sentence about the canal, and Ottawa's name on the error card, because one
@@ -702,7 +757,8 @@ Feature: Pausing
   `level.<id>.loading` and `level.<id>.error.title` replace them, this file owns Ottawa's pair, and
   `TN-WAIT-a-level-opens-or-it-does-not.md` owns the shape, the shared error chrome and the gate that fails
   the build for a level carrying neither. The rejected alternative is recorded there too: one shared sentence
-  naming no place says the same uninformative thing on every level.
+  naming no place says the same uninformative thing on every level. **The same answer was given twice more on
+  2026-09-08**, for `stamp.<id>.earned` and `level.<id>.play` (`TN-DONE`), and for the same French reason.
 - **`OQ-LEVEL-10` — is anything else in the game allowed a determinate progress figure?** `TN-COPY-07` allows
   one where the completed and total parts are both really known, and nothing in slice 1 knows both.
   *Recommendation:* leave it unused until something honestly measurable exists — a file import with a byte
