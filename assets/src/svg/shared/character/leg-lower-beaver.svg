@@ -1,11 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="46" height="115" viewBox="125 343 46 115" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. The guide's hind leg, lower, in pelt, ending in a tuft where the bare webbed foot begins. The outline is open across the top centre, where the thigh covers it.</title>
-  <path d="M 148,346 C 161,346 167,354 167,364 C 167,394 166,424 165,440 C 165,450 157,455 148,455 C 139,455 131,450 131,440 C 130,420 129,394 129,364 C 129,354 136,346 148,346 Z" fill="#7c4327"/>
-  <defs><clipPath id="llb"><path d="M 148,346 C 161,346 167,354 167,364 C 167,394 166,424 165,440 C 165,450 157,455 148,455 C 139,455 131,450 131,440 C 130,420 129,394 129,364 C 129,354 136,346 148,346 Z"/></clipPath></defs>
-  <g clip-path="url(#llb)">
-    <path d="M 139,354 C 146,354 147,362 146,374 C 144,400 146,428 144,448 L 132,448 C 133,428 132,400 132,374 C 131,362 132,354 139,354 Z" fill="#b4733b"/>
-    <path d="M 161,358 C 167,358 168,368 167,380 C 166,404 167,430 166,450 L 156,450 C 157,430 156,404 156,380 C 155,368 156,358 161,358 Z" fill="#401812"/>
-    <ellipse cx="148" cy="350" rx="24" ry="9" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="110" viewBox="110 349 41 110" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. The guide’s hind leg, knee to ankle.</title>
+  <path d="M 131,352 C 143,352 148,360 148,370 L 148,442 C 148,452 139,456 130,456 C 121,456 113,452 113,442 L 114,370 C 114,360 119,352 131,352 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="ll-beaver"><path d="M 131,352 C 143,352 148,360 148,370 L 148,442 C 148,452 139,456 130,456 C 121,456 113,452 113,442 L 114,370 C 114,360 119,352 131,352 Z"/></clipPath></defs>
+  <g clip-path="url(#ll-beaver)">
+    <path d="M 140,358 C 147,360 147,370 147,380 L 147,460 L 134,460 L 135,380 C 135,370 134,360 140,358 Z" fill="#401812"/>
+    <path d="M 121,360 C 126,360 127,370 127,380 L 126,460 L 114,460 L 114,380 C 114,370 115,362 121,360 Z" fill="#b4733b"/>
+    <ellipse cx="131" cy="356" rx="17" ry="8" fill="#16203a" opacity="0.18"/>
   </g>
-  <path d="M 160,347 C 165,350 167,356 167,364 C 167,394 166,424 165,440 C 165,450 157,455 148,455 C 139,455 131,450 131,440 C 130,420 129,394 129,364 C 129,356 132,350 137,347" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

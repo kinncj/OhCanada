@@ -29,7 +29,8 @@
     "middle of three brackets satisfies none of them: that is a mistake this pass made and undid.",
     "AMENDED 2026-09-08 while drawing Halifax (level 1) and Toronto (level 5). Five subjects added. TWO OF THEM ARE THE POINT OF THIS AMENDMENT. `town-clock` is allowed to demand a place name and `pier-21` IS NOT, and the difference is not a preference: the Town Clock is a specific building with a silhouette nothing else has, and Pier 21 is a brick shed whose one unmistakable feature is the name painted on it, which this project never draws. The PO refused to write an expectedBlindAnswer for it and recorded the Town Clock as a fallback anchor; the answer taken here is BOTH - Pier 21 is drawn, accurately, and asked only for what a shed can carry, and the level's Halifax identification rests on a second non-repeating hero that can carry it. Ottawa's canal passed on the verifier's inference rather than on the art; this is the same mistake refused before it is made rather than after.",
     "AND THE MEASURING LESSON REPEATS, in a new form. ADR-0014 records that averaging three individually-correct brackets produced a Chateau nobody photographed. Here the first build of the Town Clock took its stage heights and widths from a read of a gridded crop, by eye, and had the colonnade 29 per cent too narrow and the dial 16 per cent too small - errors that only appeared when every figure was re-expressed as a fraction of ONE measured quantity, the base building's width. A ratio is only a measurement if its denominator was measured too.",
-    "AMENDED 2026-09-08 while redrawing the player costume and adding the beaver guide. Two subjects added, and BOTH ARE CHARACTERS, which is why each carries a renderRecipe that builds a composite and demands a second figure in the frame: a character cannot be judged from one file and identical proportions cannot be judged from one figure. `player` ships with an EMPTY referenceFiles list and that is correct - it is a costume, not a landmark, and there is no photograph it is a simplification of; its accuracy bar is the palette, the proportion canon and the two-size test. `guide` ships with six, licence-checked before download, and with one labelled departure from them - white incisors where the animal's are orange - written down as an exaggeration rather than left looking like accuracy."
+    "AMENDED 2026-09-08 while redrawing the player costume and adding the beaver guide. Two subjects added, and BOTH ARE CHARACTERS, which is why each carries a renderRecipe that builds a composite and demands a second figure in the frame: a character cannot be judged from one file and identical proportions cannot be judged from one figure. `player` ships with an EMPTY referenceFiles list and that is correct - it is a costume, not a landmark, and there is no photograph it is a simplification of; its accuracy bar is the palette, the proportion canon and the two-size test. `guide` ships with six, licence-checked before download, and with one labelled departure from them - white incisors where the animal's are orange - written down as an exaggeration rather than left looking like accuracy.",
+    "AMENDED 2026-09-09 after the repository owner reported, from the live site, that the player \"looks extremely odd... it is looking at the user... shoulders are not proportional\". Both were true and both are fixed: every character is drawn THREE-QUARTER facing its direction of travel, and the shoulder canon is measured against a photograph instead of chosen. TWO CHANGES HERE ARE ABOUT THIS FILE RATHER THAN ABOUT THE ART. First, every character subject gains a \"turned toward the direction it travels\" entry, because a side-scroller character that faced the camera was a defect nothing in this file asked about. Second, the identical-proportions entry is TIGHTENED, and that is the more useful finding: IT PASSED on the art the owner was looking at. It passed because it asked whether two figures matched and they did - they were equally wrong. A comparison that cannot see the widest part of a figure is not measuring proportions. It now names the measurement, gives the number and its photographic source, and separates the garment (may differ, capped at 116 px) from the figure (identical, and the list of landmarks is written out). Two maskRegion probes are switched on at the same time - the officer hat and the guide tail - because the mechanism has been implemented and dormant since it was written, and both sheets make a claim about what carries the identification that nobody has tested."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -337,7 +338,14 @@
           "feature": "wide-brimmed felt hat",
           "why": "The strongest silhouette read at small size.",
           "detail": "Tan felt, flat level brim about 1.4 head-widths across, crown pinched to a point with a fore-and-aft crease, brown leather band with a small buckle.",
-          "palette": "felt, leather"
+          "palette": "felt, leather",
+          "maskRegion": {
+            "x": 73,
+            "y": 11,
+            "w": 98,
+            "h": 61
+          },
+          "maskRegionNote": "The hat window in character space, which is the space the single-figure render is built in. DIAGNOSTIC, never gating: it answers how much of the identification the brim alone carries, which is the question the first hand pass could not ask. officer.md 2 claims the brim is the single strongest read at small size; this is how that claim gets tested rather than asserted."
         },
         {
           "feature": "brown leather belt with a diagonal cross-strap",
@@ -369,9 +377,17 @@
           "palette": "brass"
         },
         {
+          "feature": "the figure is TURNED TOWARD THE DIRECTION IT TRAVELS",
+          "why": "This is a portrait 2D side-scroller and every character in it walks, skates, toboggans or bikes ALONG the screen. A character drawn front-on, facing the viewer, is wrong by construction - it reads as a menu portrait somebody slid sideways - and that is what the repository owner reported from the live site: \"it is looking at the user\". A verifier who describes the figure as facing the camera, or who cannot say which way it is going, FAILS this entry. No entry in this file asked about it before 2026-09-09, which is why a front-on side-scroller character shipped.",
+          "detail": "Three-quarter, canonical facing RIGHT, body about 40 degrees off strict profile toward the viewer. Five cues carry it and all five are checked: the chest plane and its fastening on the LEADING edge with the back on the trailing edge; ONE ear, low and well back on the near side, never two; a brow-and-nose bump on the leading silhouette edge; the eyes crowded toward the leading edge with the far eye foreshortened and close to the cheek edge; and BOTH feet pointing the way the character travels. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
+          "requiresComparisonFigure": false
+        },
+        {
           "feature": "cartoon proportions identical to every other character",
-          "why": "CLAUDE.md requires it, and this is the character most likely to tempt an artist into breaking it. A verifier shown ONE figure cannot check this and must not be asked to: confirming it from rig-contract.json is a code-level check wearing an art verifier's clothes, and docs/content-review.md 6.2 is explicit that \"comparison only works if everyone is compared\". The hand-off therefore carries a second figure - the player, same rig, different costume - beside the officer in one image, and the check is that nothing but the costume differs. Without that figure this entry is UNCHECKABLE and must be reported as such rather than scored present.",
-          "detail": "6 heads tall, 420 px at design resolution, same shoulder width, hands, feet, eye line and detail budget as the player.",
+          "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
+          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. On the shipped art that is 104 px on a 439 px figure, 0.237 - the hat sits above the crown and is not part of the height. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
+          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure 108 px (parka), 104 px (serge) and 112 px (beaver, at the waist). A verifier should NOT fail the pair over a few pixels of coat.",
+          "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the officer and the player and the guide, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
         }
       ],
@@ -438,13 +454,13 @@
         {
           "feature": "a coat with a waist",
           "why": "This is the entry the redraw exists for. The costume shipped as a slab of one width from shoulder to hem and the reported defect was, in the repository owner's words, that the character is still a rectangle. If a verifier can describe the torso as a box, this fails.",
-          "detail": "Shoulder about 148 px, waist about 112, hem about 152, with a drawcord and two toggles across the narrow point and a snow-white knit band along the hem.",
+          "detail": "Shoulder about 102 px, waist about 82, hem about 104, outline included, with a drawcord and two toggles across the narrow point and a snow-white knit band along the hem. Those numbers went DOWN: the old ones - 148 / 112 / 152 - were the shoulders the repository owner reported as out of proportion.",
           "palette": "cobalt, snow"
         },
         {
           "feature": "a scarf at the neck, hanging VERTICALLY",
           "why": "The strongest single element at phone size, and the one that must not become a diagonal: a shoulder-to-hip band across a chest is the officer's Sam Browne and the two characters must not converge at 25 percent.",
-          "detail": "Red, wrapped at the neck over the collar, with one tail hanging straight down the front.",
+          "detail": "Red, wrapped at the neck over the collar, with one tail hanging straight down the front - which in a right-facing three-quarter figure is the leading edge, so it also says which way the character is going. Narrower than it was: at the old width it read as a red bib across the whole chest.",
           "palette": "flag-red"
         },
         {
@@ -470,9 +486,17 @@
           "requiresComparisonFigure": false
         },
         {
+          "feature": "the figure is TURNED TOWARD THE DIRECTION IT TRAVELS",
+          "why": "This is a portrait 2D side-scroller and every character in it walks, skates, toboggans or bikes ALONG the screen. A character drawn front-on, facing the viewer, is wrong by construction - it reads as a menu portrait somebody slid sideways - and that is what the repository owner reported from the live site: \"it is looking at the user\". A verifier who describes the figure as facing the camera, or who cannot say which way it is going, FAILS this entry. No entry in this file asked about it before 2026-09-09, which is why a front-on side-scroller character shipped.",
+          "detail": "Three-quarter, canonical facing RIGHT, body about 40 degrees off strict profile toward the viewer. Five cues carry it and all five are checked: the chest plane and its fastening on the LEADING edge with the back on the trailing edge; ONE ear, low and well back on the near side, never two; a brow-and-nose bump on the leading silhouette edge; the eyes crowded toward the leading edge with the far eye foreshortened and close to the cheek edge; and BOTH feet pointing the way the character travels. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
+          "requiresComparisonFigure": false
+        },
+        {
           "feature": "cartoon proportions identical to every other character",
-          "why": "CLAUDE.md requires it. A verifier shown ONE figure cannot check this and must not be asked to; the hand-off carries the officer beside the player, same rig, different costume.",
-          "detail": "6 heads tall, 420 px at design resolution, same shoulder width, hands, feet, eye line and detail budget as the officer and the guide.",
+          "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
+          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. On the shipped art that is 108 px on a 439 px figure, 0.246. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
+          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure 108 px (parka), 104 px (serge) and 112 px (beaver, at the waist). A verifier should NOT fail the pair over a few pixels of coat.",
+          "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the player and the officer and the guide, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
         }
       ],
@@ -497,7 +521,7 @@
         "OQ-REVIEW-6"
       ],
       "notes": [
-        "referenceFiles is empty and that is correct: this is a costume, not a landmark, and there is no photograph it is a simplification OF. The accuracy bar it has to clear is the palette, the proportion canon and the two-size test, all of which are checkable without one.",
+        "referenceFiles is empty and that stays correct: this is a costume, not a landmark, and there is no photograph it is a simplification OF. The accuracy bar it has to clear is the palette, the proportion canon and the two-size test. ONE OF THOSE THREE IS NOW MEASURED FROM A PHOTOGRAPH ANYWAY, and it is named here rather than added above, because it is a reference for the FIGURE and not for the costume: assets/refs/ottawa/rideau-canal-skateway-ice.jpg (CC0-1.0, already credited) carries an adult in a winter parka, full length, facing the camera, and the shoulder rows in art-bible.md 7.2 are measured off them. Before that measurement the canon said 154 px of shoulder on a 420 px figure and nobody could say where the number came from, which is how it survived being 54 percent wrong.",
         "The blind answer does not have to contain the word Canadian. Parka, toque, scarf and mitts on a 6-head cartoon figure is the target; a verifier who says 'a person dressed for cold weather' has passed."
       ]
     },
@@ -1305,16 +1329,17 @@
       "mustBeRight": [
         {
           "feature": "the paddle tail, visible and out to one side",
-          "why": "One of the two features that carry the identification, and the one a front-facing character loses by default: anything drawn behind a front-facing torso is not drawn at all. If it disappears first at small size, it is drawn too small or too dark.",
+          "why": "One of the two features that carry the identification, and one that is carried out to the side rather than behind, because anything drawn behind a torso is not drawn at all. Since the guide turned to face its direction of travel, the wearer right side is the TRAILING side, so the paddle streams out behind a moving animal. If it disappears first at small size, it is drawn too small or too dark.",
           "detail": "A broad flat oval leaning down and away from the wearer's right hip, on a stub that leaves the body at the hip and tucks behind the leg, with three cross bands for scale and a large lit upper face. About 100 x 130 px in character space.",
           "palette": "hide",
           "maskRegion": {
-            "x": 0,
-            "y": 300,
-            "w": 120,
-            "h": 160
+            "x": 22,
+            "y": 281,
+            "w": 84,
+            "h": 141
           },
-          "whyMasked": "MEASURED against the 240x470 composite the renderRecipe builds: this rectangle covers the whole tail, stub and paddle, and leaves the head, body, forelimbs and the near hind leg untouched. It exists so the claim that the tail is load-bearing has a test - mask it and the identification should degrade."
+          "whyMasked": "MEASURED against the 240x470 composite the renderRecipe builds: this rectangle covers the whole tail, stub and paddle, and leaves the head, body, forelimbs and the near hind leg untouched. It exists so the claim that the tail is load-bearing has a test - mask it and the identification should degrade.",
+          "maskRegionNote": "The tail window in character space. DIAGNOSTIC, never gating. guide.md 3 calls the paddle one of the two features that make a beaver identifiable at phone size; with it painted out, what is left is the muzzle and the incisors, and the answer says which of the two is doing the work."
         },
         {
           "feature": "two large incisors below the mouth",
@@ -1330,9 +1355,9 @@
           "whyMasked": "MEASURED against the same composite: covers both incisors and the lower snout pad and leaves the eyes, brows, ears and body alone."
         },
         {
-          "feature": "small round ears set LOW and well back at the side of the skull",
+          "feature": "ONE small ear, set high and well BACK on the skull",
           "why": "This is the difference between a beaver and a bear, and the first version of this head got it wrong: high, large, rounded ears read as a bear in the render even though the teeth and tail were already right.",
-          "detail": "Round, about 22 px across, sitting just above the eye line at the widest point of the skull, mostly behind the head outline.",
+          "detail": "Small, dark, rounded, mostly inside the head silhouette, high and well back - which is where beaver-head-and-forepaws.jpg and beaver-alberta-profile.jpg put it. ONE, not two: the head is turned and a turned head shows one ear, and two is the loudest front-view signal there is. Ears that stand clear of the skull read as a bear; that has been drawn wrong twice now, high and round the first time and large and paired the second.",
           "palette": "leather, felt"
         },
         {
@@ -1351,9 +1376,17 @@
           "palette": "hide"
         },
         {
+          "feature": "the figure is TURNED TOWARD THE DIRECTION IT TRAVELS",
+          "why": "This is a portrait 2D side-scroller and every character in it walks, skates, toboggans or bikes ALONG the screen. A character drawn front-on, facing the viewer, is wrong by construction - it reads as a menu portrait somebody slid sideways - and that is what the repository owner reported from the live site: \"it is looking at the user\". A verifier who describes the figure as facing the camera, or who cannot say which way it is going, FAILS this entry. No entry in this file asked about it before 2026-09-09, which is why a front-on side-scroller character shipped.",
+          "detail": "Three-quarter, canonical facing RIGHT, body about 40 degrees off strict profile toward the viewer. Five cues carry it and all five are checked: the chest plane and its fastening on the LEADING edge with the back on the trailing edge; ONE ear, low and well back on the near side, never two; a brow-and-nose bump on the leading silhouette edge; the eyes crowded toward the leading edge with the far eye foreshortened and close to the cheek edge; and BOTH feet pointing the way the character travels. The near side is the wearer right side, so the near arm and leg draw in front. See art-bible.md 7.1.",
+          "requiresComparisonFigure": false
+        },
+        {
           "feature": "cartoon proportions identical to every other character",
-          "why": "CLAUDE.md requires it and this is the character most likely to tempt an artist into breaking it, because a real beaver's head is proportionally enormous. It is 6 heads tall on the same rig as the player. Without a second figure in the frame this entry is UNCHECKABLE and must be reported as such rather than scored present.",
-          "detail": "6 heads tall, 420 px at design resolution, same crown, sole, eye line, hand and foot sizes and stroke weights as the player and the officer.",
+          "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
+          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. On the shipped art that is 112 px at the waist on a 439 px figure, 0.255, with the tail excluded because it is held out to the side and is not part of the body. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
+          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure 108 px (parka), 104 px (serge) and 112 px (beaver, at the waist). A verifier should NOT fail the pair over a few pixels of coat.",
+          "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the guide and the player and the officer, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
         }
       ],

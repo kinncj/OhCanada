@@ -1,9 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="59" height="38" viewBox="128 424 59 38" shape-rendering="geometricPrecision">
-  <title>Brown riding boot, the wearer's left, the near side of the canonical pose. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.</title>
-  <path d="M 134,428 C 139.25,427.07 171.28,428.6 177,430 C 182.72,431.4 182.53,436.73 183,440 C 183.47,443.27 186.48,455.9 181,458 C 175.52,460.1 141.72,460.33 136,458 C 130.28,455.67 132.23,441.5 132,438 C 131.77,434.5 128.75,428.93 134,428 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="bt"><path d="M 134,428 C 139.25,427.07 171.28,428.6 177,430 C 182.72,431.4 182.53,436.73 183,440 C 183.47,443.27 186.48,455.9 181,458 C 175.52,460.1 141.72,460.33 136,458 C 130.28,455.67 132.23,441.5 132,438 C 131.77,434.5 128.75,428.93 134,428 Z"/></clipPath></defs>
-  <g clip-path="url(#bt)">
-    <ellipse cx="140" cy="436" rx="14" ry="8" fill="#b4733b"/>
-    <ellipse cx="158" cy="454" rx="26" ry="8" fill="#401812"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="63" height="47" viewBox="106 420 63 47" shape-rendering="geometricPrecision">
+  <title>High brown riding boot with a strap and buckle at the ankle, the wearer’s left - the FAR side of the three-quarter pose. Feet are the one pair the rig does not reflect, and in this view that is what buys the turn: both point the way the character travels, and the far one is drawn shorter and set back so it reads as depth.</title>
+  <path d="M 121,426 C 133,420 149,424 159,432 C 165,438 163,446 165,452 C 167,460 157,464 145,464 L 123,464 C 115,464 113,458 113,450 C 113,438 113,430 121,426 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="btf"><path d="M 121,426 C 133,420 149,424 159,432 C 165,438 163,446 165,452 C 167,460 157,464 145,464 L 123,464 C 115,464 113,458 113,450 C 113,438 113,430 121,426 Z"/></clipPath></defs>
+  <g clip-path="url(#btf)">
+      <ellipse cx="153" cy="436" rx="18" ry="13" fill="#b4733b"/>
+      <ellipse cx="117" cy="442" rx="15" ry="15" fill="#401812"/>
+      <path d="M 109,450 C 131,446 157,446 171,450 L 171,470 L 109,470 Z" fill="#401812"/>
+      <path d="M 109,450 C 131,446 157,446 171,450 L 171,456 C 157,452 131,452 109,456 Z" fill="#7c4327"/>
   </g>
+  <path d="M 112,424 L 154,424 C 159,424 159,434 154,434 L 112,434 C 107,434 107,424 112,424 Z" fill="#401812" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="128" y="423" width="10" height="12" rx="3" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
 </svg>

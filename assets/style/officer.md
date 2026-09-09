@@ -22,6 +22,22 @@ Nothing on this page changes the canon in `art-bible.md` §7. **6 heads tall, 42
 head 70 px.** The same shoulder width, hand size, foot length, eye line and face vocabulary as the player and
 as every future NPC.
 
+**Amended when the player was redrawn.** The player's shoulders were reported as out of proportion from the
+live site and they were: the canon's own shoulder row was 54 % over a measured photograph
+(`art-bible.md` §7.2). Identical proportions is an inclusion rule, not a style note, so **the officer moved
+with the player** rather than staying where it was and letting the two diverge. The tunic is now **104 px at
+its widest** against the parka's 108 and the guide's 112, all inside one declared 116 px cap. Every
+identifying feature in §2 is untouched, and the officer was re-rendered walking, at four sizes down to 0.25×,
+before this was written: red mass, dark hat brim, dark legs, yellow stripe, all still there.
+
+**And it turned.** Every character is now drawn three-quarter, facing its direction of travel
+(`art-bible.md` §7.1). For this character that is a gain rather than a cost, and it is worth saying why the
+alternative was refused: **a strict profile would have destroyed the Sam Browne.** Its shoulder-to-hip
+diagonal is half of this character's identity and needs a chest to run across. Three-quarter keeps the whole
+chest plane — the button row, both pocket flaps, the lanyard and the diagonal — on the leading edge, and the
+diagonal still runs upper-left to lower-right exactly as it does in
+`assets/refs/officer/red-serge-full-figure.jpg`, because the wearer's right shoulder is the near one.
+
 The officer is **not** drawn larger, not drawn with more detail, not given a more heroic stance and not given
 a rendering pass nobody else gets. `CLAUDE.md` requires identical cartoon proportions for all characters, and
 this is the character most likely to tempt an artist into breaking that. Costume distinguishes them. Stature
@@ -116,8 +132,10 @@ part list below was this sheet's guess and the shipped rig differs from it in th
   `lanyard` part: the standing collar, the shoulder straps, the Sam Browne and its diagonal, the buttons,
   the pocket flaps and the lanyard are all drawn **into `torso-serge`**, because none of them articulates
   independently of the tunic and each one as its own atlas frame would be decoded texture spent on nothing.
-- **Left and right arms and legs are one frame, mirrored.** Only the feet are sided. The far-side art drawn
-  a ramp step darker cost ≈ 1.5 MiB of decoded texture per level and Ottawa could not carry it.
+- **Left and right arms and legs are one frame, mirrored.** Only the feet are sided, and since the figure
+  turned that is the pair that *buys* the turn: both boots point the way the officer walks. The far-side
+  limb art drawn a ramp step darker cost ≈ 1.5 MiB of decoded texture per level and Ottawa could not carry
+  it; depth reads through overlap and the 6 px outline instead.
 - **The costume is a slot, not a character.** `costume: serge` is what makes this character the officer;
   everything else — skin, hair shape, hair colour, expression, head covering, feature — is the same rig the
   player uses, with the same proportions, which is exactly what §1 of this sheet asks for.

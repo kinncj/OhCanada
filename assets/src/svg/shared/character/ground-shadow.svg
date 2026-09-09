@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="112" height="24" viewBox="64 445 112 24" shape-rendering="geometricPrecision">
-  <title>Baked ground-contact shadow. Two flat ellipses, no runtime filter: the plain Canvas tier has no Filter pipeline (ADR-0011).</title>
-  <ellipse cx="120" cy="457" rx="56" ry="12" fill="#16203a" opacity="0.28"/>
-  <ellipse cx="120" cy="457" rx="36" ry="8" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="22" viewBox="70 446 100 22" shape-rendering="geometricPrecision">
+  <title>Baked ground-contact shadow, elongated along the direction of travel because the feet are staggered fore and aft in a three-quarter stance. Two flat ellipses, no runtime filter: the plain Canvas tier has no Filter pipeline (ADR-0011).</title>
+  <ellipse cx="120" cy="457" rx="50" ry="11" fill="#16203a" opacity="0.28"/>
+  <ellipse cx="120" cy="457" rx="32" ry="7" fill="#16203a" opacity="0.18"/>
 </svg>

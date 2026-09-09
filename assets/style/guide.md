@@ -27,12 +27,26 @@ So the guide is 6 heads of 70 px, 420 px crown to sole, the same crown line, the
 eye line, the same hand and foot sizes, the same three stroke weights and the same pivots as the player and
 the officer. It plays the same eight states and the same four expressions, on the same nine inputs.
 
+**It moved when the player's shoulders were corrected**, because that is what the rule means. The player was
+reported as out of proportion from the live site, the canon's shoulder row turned out to be 54 % over a
+measured photograph (`art-bible.md` §7.2), and the barrel came in with it: **112 px at the waist** against
+the parka's 108 and the tunic's 104, all inside one declared 116 px cap. The waist is still the widest point
+and still wider than the shoulder, because that taper is what makes this silhouette an animal.
+
+**And it turned with them.** Every character is drawn three-quarter facing its direction of travel now
+(`art-bible.md` §7.1), and of the three this is the one the turn helped most: a beaver seen from the front is
+a brown blob with teeth, and a beaver seen three-quarter has a **projecting muzzle** on the leading edge with
+the incisors hanging under it in profile. The two load-bearing features in §3 both got stronger for free.
+
 Two things make it work without a proportion break:
 
-- **`head-shell-beaver` is the same head box.** Cranium inside the human cranium's outline, ears small and
-  set low and well back at the side of the skull — which is where the references put them, and which is the
-  difference between a beaver and a bear. High round ears were drawn first and read as a bear; they were
-  redrawn after looking at the render, not at the markup.
+- **`head-shell-beaver` is the same head box.** Cranium inside the human cranium's outline, and **one ear
+  only** — small, dark, set high and well BACK on the skull and mostly inside the head silhouette, which is
+  where `beaver-head-and-forepaws.jpg` and `beaver-alberta-profile.jpg` put it. A second ear is the loudest
+  front-view signal there is, and a turned head does not have one. Big ears standing clear of the skull read
+  as a bear; that has now been drawn wrong twice — high and round the first time, large and paired the
+  second — and corrected both times by looking at the render rather than at the markup. The pale cheek and
+  throat that came in with the turn is doing part of that work too: a bear has no such patch.
 - **The muzzle and the incisors are in that same frame, under `face`.** The shared eyes, brows and mouth
   draw on top of the snout pad, so the guide's expressions are the game's expressions rather than a second
   set nobody would keep in sync.
@@ -52,8 +66,9 @@ pose-based subjects lost every small probe while landmarks survived. A character
 features that make a beaver a beaver get the weight the officer's leg stripe gets under its own rule.
 
 **The tail.** A broad flat scaly paddle, carried out to the wearer's right on a stub that leaves the body at
-the hip and tucks behind the leg. It is *not* behind the figure: this is a front-facing game and anything
-drawn behind a front-facing torso is not drawn at all. Three cross bands carry the scale as a rhythm, never
+the hip. It is *not* behind the figure: anything drawn behind a torso is not drawn at all. Since the guide
+turned, the wearer's right is the **trailing** side, so the paddle now streams out behind a moving animal
+instead of merely standing beside a stationary one — the same shape, doing more. Three cross bands carry the scale as a rhythm, never
 as a texture fill (`art-bible.md` §1). An inner ring was tried and removed — it made the paddle read as a
 shell. The lit face was then enlarged to cover most of the upper half, because at phone size the tail and
 the hind feet were both `hide-base` and merged into one dark mass; the hind feet now sit a tone lighter,
@@ -120,6 +135,14 @@ Recorded at length because it is invisible in the source and because **the next 
 hit it again.** The packer fills full-height columns, so what decides is not the area added but whether it
 fits the column that is open. Anyone adding a character part should read the `texture-memory` line before
 and after, and treat a jump in the *page dimensions* as the signal, not the file size on disk.
+
+**The three-quarter redraw ran that cliff backwards.** Turning every character to face its direction of
+travel (`art-bible.md` §7.1) changed no frame count — 60 before, 60 after — but a turned figure is a
+narrower figure, and 60 narrower windows freed a whole column: the shared page went from **1410 × 2044
+(10.99 MiB) to 1168 × 2044 (9.11 MiB)**, and Halifax from **26.10 MiB (77 %) to 24.21 MiB (71 %)** of its
+34 MiB budget. **−1.88 MiB of decoded texture at 2×, on every level, from a drawing decision.** The lesson
+is the same one in the other direction: the page dimensions are the number to watch, and they are decided by
+column packing rather than by total area — the total source area moved only −0.5 %.
 
 ## 6. References
 

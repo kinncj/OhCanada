@@ -1,8 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="90" viewBox="125 363 48 90" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. Brown riding-boot shaft, to just below the knee, with a strap and buckle at the ankle. The breech tucks in.</title>
-  <path d="M 129.01,378.63 L 131.01,438.63 C 131.48,452.69 169.46,451.42 168.99,437.37 L 166.99,377.37 C 166.52,363.31 128.54,364.58 129.01,378.63 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 154.46,381.81 L 156.46,433.81 C 156.61,437.75 167.24,437.34 167.09,433.4 L 165.09,381.4 C 164.94,377.47 154.31,377.88 154.46,381.81 Z" fill="#b4733b"/>
-  <path d="M 131.67,382.57 L 133.67,434.57 C 133.8,437.94 142.91,437.59 142.78,434.22 L 140.78,382.22 C 140.65,378.84 131.54,379.2 131.67,382.57 Z" fill="#401812"/>
-  <path d="M 132,429 L 168,429 C 171.7,429 171.7,419 168,419 L 132,419 C 128.3,419 128.3,429 132,429 Z" fill="#401812"/>
-  <rect x="154" y="418" width="12" height="12" rx="3" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="110" viewBox="110 349 41 110" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. Breeches, knee to ankle.</title>
+  <path d="M 131,352 C 143,352 148,360 148,370 L 148,442 C 148,452 139,456 130,456 C 121,456 113,452 113,442 L 114,370 C 114,360 119,352 131,352 Z" fill="#2b3660" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="ll-serge"><path d="M 131,352 C 143,352 148,360 148,370 L 148,442 C 148,452 139,456 130,456 C 121,456 113,452 113,442 L 114,370 C 114,360 119,352 131,352 Z"/></clipPath></defs>
+  <g clip-path="url(#ll-serge)">
+    <path d="M 140,358 C 147,360 147,370 147,380 L 147,460 L 134,460 L 135,380 C 135,370 134,360 140,358 Z" fill="#101629"/>
+    <path d="M 121,360 C 126,360 127,370 127,380 L 126,460 L 114,460 L 114,380 C 114,370 115,362 121,360 Z" fill="#464c92"/>
+    <path d="M 144,354 L 150,354 L 150,456 L 144,456 Z" fill="#d6a727"/>
+    <ellipse cx="131" cy="356" rx="17" ry="8" fill="#16203a" opacity="0.18"/>
+  </g>
 </svg>

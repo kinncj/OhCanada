@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="56" height="111" viewBox="150 133 56 111" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, upper: a down-filled tube with two quilt seams, leaning slightly away from the body so the arm is not parallel to the coat. The outline is OPEN across the top centre so the shoulder reads as part of the coat rather than a capsule bolted onto it; the gap sits inside the torso silhouette at every angle the walk cycle reaches.</title>
-  <path d="M 175,136 C 188,136 195,142 196,152 C 198,180 200,212 201,230 C 202,240 190,244 182,244 C 173,244 165,239 165,230 C 164,204 155,168 154,152 C 153,141 162,136 175,136 Z" fill="#153f86"/>
-  <defs><clipPath id="au"><path d="M 175,136 C 188,136 195,142 196,152 C 198,180 200,212 201,230 C 202,240 190,244 182,244 C 173,244 165,239 165,230 C 164,204 155,168 154,152 C 153,141 162,136 175,136 Z"/></clipPath></defs>
-  <g clip-path="url(#au)">
-    <path d="M 192,146 C 200,148 200,158 200,168 C 201,196 203,220 204,246 L 190,246 C 189,220 188,196 187,168 C 187,158 186,148 192,146 Z" fill="#2275c6"/>
-    <path d="M 164,148 C 170,148 171,158 172,168 C 174,196 176,222 177,246 L 166,246 C 165,222 163,196 161,168 C 160,158 159,150 164,148 Z" fill="#091740"/>
-    <path d="M 150,176 L 206,178" fill="none" stroke="#091740" stroke-width="4" stroke-linecap="round"/>
-    <path d="M 150,208 L 206,210" fill="none" stroke="#091740" stroke-width="4" stroke-linecap="round"/>
-    <ellipse cx="176" cy="138" rx="28" ry="10" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="114" viewBox="115 135 44 114" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line, which is why it hangs straight and is symmetric about its own axis - a leaning sleeve would cross its own mirrored copy. Parka sleeve, upper. The outline is OPEN across the top so the shoulder reads as part of the garment rather than a capsule bolted onto it; the gap sits inside the torso silhouette at every angle the walk cycle reaches.</title>
+  <path d="M 137,138 C 149,138 156,144 156,154 L 155,232 C 155,242 144,246 136,246 C 127,246 118,242 118,232 L 118,154 C 118,144 125,138 137,138 Z" fill="#153f86" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="au-parka"><path d="M 137,138 C 149,138 156,144 156,154 L 155,232 C 155,242 144,246 136,246 C 127,246 118,242 118,232 L 118,154 C 118,144 125,138 137,138 Z"/></clipPath></defs>
+  <g clip-path="url(#au-parka)">
+    <path d="M 148,146 C 156,148 156,158 156,168 L 156,250 L 142,250 L 143,168 C 143,158 142,148 148,146 Z" fill="#091740"/>
+    <path d="M 124,148 C 130,148 131,158 131,168 L 130,250 L 118,250 L 118,168 C 118,158 118,150 124,148 Z" fill="#2275c6"/>
+    <path d="M 116,176 L 158,176" fill="none" stroke="#091740" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 116,208 L 158,208" fill="none" stroke="#091740" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="137" cy="141" rx="22" ry="9" fill="#16203a" opacity="0.18"/>
   </g>
-  <path d="M 188,137 C 193,140 195,145 196,152 C 198,180 200,212 201,230 C 202,240 190,244 182,244 C 173,244 165,239 165,230 C 164,204 155,168 154,152 C 154,144 158,140 163,137" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 149,140 C 154,143 156,147 156,154 L 155,232 C 155,242 144,246 136,246 C 127,246 118,242 118,232 L 118,154 C 118,147 120,143 125,140" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

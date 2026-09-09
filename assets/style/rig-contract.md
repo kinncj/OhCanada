@@ -38,7 +38,7 @@ discouraged.
 
 One **state machine** per artboard, named `motion`. One name, so the adapter never has to choose.
 
-### Character space
+### Character space, and the direction everybody faces
 
 Every part is authored in one 240 × 470 coordinate system at design resolution:
 
@@ -49,6 +49,25 @@ Every part is authored in one 240 × 470 coordinate system at design resolution:
 | sole | y = 460 |
 | height | 420 px = **6 heads of 70 px**, the canon in `art-bible.md` §7 |
 | ground line | world y = 1280 (`ottawa-level.md` §3) |
+| view | **three-quarter, canonical facing RIGHT**, body turned ≈ 40° off strict profile toward the viewer |
+
+**The view is part of the rig, not a drawing preference.** This is a side-scroller: every character traverses
+along the screen, so the figure is turned toward its direction of travel and `setFacing('left')` mirrors the
+whole composite. `art-bible.md` §7.1 carries the reasoning and the list of cues that carry the turn; what
+this document has to say about it is structural, because in a turned figure **screen x is the fore-aft
+axis**. That is why the walk cycle reads: a limb swinging fore and aft swings horizontally on screen, at
+full amplitude, instead of foreshortening to nothing as it did front-on.
+
+Two consequences the rest of this page depends on:
+
+- **The near side is the wearer's RIGHT.** A person facing east, seen from the south, shows their right side
+  to the camera; their right shoulder projects *west* of their spine. So `-r` parts are the near ones and
+  they draw LAST, and the near shoulder sits at x = 103 while the far, chest-side shoulder sits at x = 137.
+  This is the reverse of the front-on rig that shipped before, and the z-order was swapped for it.
+- **A mirrored pair cannot hold a stride.** The five mirrored frames are reflected about x = 120, so
+  anything the authored copy does going right, its twin does going left, and a leaning limb crosses its own
+  reflection. The rest pose therefore hangs straight and the stride lives entirely in `states` — which is
+  also where it belongs, and it is why the comparison canvas the art hand-off builds shows a neutral stand.
 
 Each part's SVG `viewBox` **is its window in that space**, so a window origin is the part's offset and no
 placement number is written down twice. To draw a character standing at world `(x, y)`:
@@ -182,16 +201,16 @@ names, and a **pivot** — the joint it rotates about, in character space.
 | z | part | frame template | pivot | mirrored |
 |---|---|---|---|---|
 | 1 | `ground-shadow` | `ground-shadow` | 120, 457 | |
-| 2 | `tail` | `tail-{costume}` | 104, 300 | |
-| 3 | `arm-upper-r` | `arm-upper-{costume}` | 60, 142 | ✔ |
-| 4 | `arm-lower-r` | `arm-lower-{costume}` | 55, 214 | ✔ |
-| 5 | `hand-r` | `hand-{costume}` | 52, 282 | ✔ |
-| 6 | `leg-upper-r` | `leg-upper-{costume}` | 94, 264 | ✔ |
-| 7 | `leg-lower-r` | `leg-lower-{costume}` | 92, 362 | ✔ |
-| 8 | `foot-r` | `foot-r-{costume}` | 90, 436 | |
-| 9 | `leg-upper-l` | `leg-upper-{costume}` | 146, 264 | |
-| 10 | `leg-lower-l` | `leg-lower-{costume}` | 148, 362 | |
-| 11 | `foot-l` | `foot-l-{costume}` | 150, 436 | |
+| 2 | `tail` | `tail-{costume}` | 100, 296 | |
+| 3 | `arm-upper-l` | `arm-upper-{costume}` | 137, 146 | |
+| 4 | `arm-lower-l` | `arm-lower-{costume}` | 137, 214 | |
+| 5 | `hand-l` | `hand-{costume}` | 137, 282 | |
+| 6 | `leg-upper-l` | `leg-upper-{costume}` | 132, 264 | |
+| 7 | `leg-lower-l` | `leg-lower-{costume}` | 132, 362 | |
+| 8 | `foot-l` | `foot-l-{costume}` | 132, 436 | |
+| 9 | `leg-upper-r` | `leg-upper-{costume}` | 108, 264 | ✔ |
+| 10 | `leg-lower-r` | `leg-lower-{costume}` | 108, 362 | ✔ |
+| 11 | `foot-r` | `foot-r-{costume}` | 108, 436 | |
 | 12 | `torso` | `torso-{costume}` | 120, 264 | |
 | 13 | `head` | `head-{skin}` | 120, 112 | |
 | 14 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
@@ -200,9 +219,19 @@ names, and a **pivot** — the joint it rotates about, in character space.
 | 17 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
 | 18 | `hat` | `hat-{costume}` | 120, 112 | |
 | 19 | `feature` | `feature-{feature}` | 120, 112 | |
-| 20 | `arm-upper-l` | `arm-upper-{costume}` | 180, 142 | |
-| 21 | `arm-lower-l` | `arm-lower-{costume}` | 185, 214 | |
-| 22 | `hand-l` | `hand-{costume}` | 188, 282 | |
+| 20 | `arm-upper-r` | `arm-upper-{costume}` | 103, 146 | ✔ |
+| 21 | `arm-lower-r` | `arm-lower-{costume}` | 103, 214 | ✔ |
+| 22 | `hand-r` | `hand-{costume}` | 103, 282 | ✔ |
+
+**The `-r` and `-l` groups swapped places at z when the figure turned**, and this is the one change in this
+table that is not a number. In a right-facing three-quarter view the wearer's RIGHT side is the near one, so
+the near arm draws over the torso and the near leg over the far leg. The old order put the wearer's left in
+front, which was arbitrary on a front-on figure and is simply wrong on a turned one.
+
+**The pivots moved with it.** The arms hang 17 px either side of the centre line rather than 60, and the
+legs 12 px rather than 26, because a lateral offset in a turned body projects to `offset × sin(turn)`. Two
+sleeves 34 px apart overlap heavily at rest — which is what a three-quarter figure looks like — and the walk
+cycle separates them by swinging them fore and aft, which in this view is horizontally.
 
 **`hair` sits under `face` and that is deliberate.** It used to be over it. `head-shell` has to be above
 `hair` (it covers the head completely) and below `face` (so the shared expressions play on the guide rather
@@ -216,9 +245,9 @@ the same rule that makes `headCovering: none` work, with no branch in either bac
 every human artboard exactly one map lookup that misses.
 
 `r` and `l` are the **wearer's** right and left. The canonical facing is **right**, and in that facing the
-wearer's left limbs are nearer the camera, which is why they are drawn last. `setFacing('left')` mirrors the
-whole character; the Sam Browne's diagonal then runs the other way across the frame, which is correct — you
-are looking at the other side of the same person, not at a mistake.
+wearer's **right** limbs are nearer the camera, which is why they are drawn last. `setFacing('left')` mirrors
+the whole character; the Sam Browne's diagonal then runs the other way across the frame, which is correct —
+you are looking at the other side of the same person, not at a mistake.
 
 ### Empty parts need no special case
 
@@ -228,9 +257,19 @@ adding a head covering later is a new SVG plus one option string.
 
 ### Five parts are mirrored rather than drawn twice
 
-`arm-upper`, `arm-lower`, `hand`, `leg-upper` and `leg-lower` are geometrically identical on both sides
-about x = 120, so **one frame serves both and the rig mirrors the far one**. Feet are not: a mirrored foot
-points backwards, so `foot-r` and `foot-l` are separate art.
+`arm-upper`, `arm-lower`, `hand`, `leg-upper` and `leg-lower` are drawn straight and symmetric about their
+own axis, so **one frame serves both and the rig mirrors the NEAR one**. The art is authored at the FAR
+position, right of x = 120, and reflected to make the near limb.
+
+**That symmetry is a constraint the turn imposes, not a saving.** A three-quarter limb that leaned would
+have its reflection leaning the other way, and the pair would cross over each other at rest. So the rest
+pose hangs straight and the stride is keyframed. It also means the mirrored copy is not, strictly, what a
+turned limb looks like from that side — a sleeve is a tube and reads either way, and depth comes from
+overlap and the 6 px outline, which is what the outline is for.
+
+Feet are NOT mirrored, and in this view that is the pair that buys the turn rather than a cost: a mirrored
+foot would point backwards, and instead `foot-r` and `foot-l` are separate art with **both toes pointing the
+way the character travels**, the far one drawn 6 px shorter so the pair reads as depth.
 
 This was a budget decision and it should be recorded as one. Drawing the far-side limbs separately, one
 ramp step darker so depth read through tone, cost **≈ 1.5 MiB of decoded texture on every level** — Ottawa
@@ -244,10 +283,10 @@ re-render of the same geometry with the ramp shifted, and the contract does not 
 ## 5. The sprite fallback is the same rig, not a lesser one
 
 The fallback is **not** a flipbook of pre-composed frames. A flipbook would multiply
-`3 840 combinations × 8 states × frames` and could never ship; more to the point, it would be a *different*
+`5 760 combinations × 8 states × frames` and could never ship; more to the point, it would be a *different*
 character, and "the fallback nobody wants to look at" is how a seam quietly stops being a seam.
 
-Instead the atlas holds the **same twenty parts**, and the sprite adapter composites them with the **same
+Instead the atlas holds the **same twenty-two parts**, and the sprite adapter composites them with the **same
 per-part transforms** from `states` in the contract JSON. What the two backends actually differ in is
 interpolation and where the compositing happens — not in the art, the proportions, the poses or the names.
 
@@ -264,6 +303,13 @@ Each state gives `durationMs`, a loop mode (`loop`, `once`, `hold`) and keys at 
 each key carrying `[dx, dy, rotationDegrees]` per part about that part's pivot. Translation is in character
 space units, so nothing scales differently between the backends.
 
+**Every `[dx, dy]` in `states` is a solved chain, and it has to be, because the rig is FLAT.** Neither
+backend parents one part to another: `sprite-character-renderer.ts` places each part from its own pivot and
+rotates it on its own, so a rotated thigh does not carry the shin with it. The keyframes therefore ship the
+forward kinematics already done — the shin's `dx, dy` is where the knee ended up and its rotation is the
+thigh's plus its own, and the foot's is the same one link further out. A limb chain authored as if it were
+parented would come apart at the joint, which is what a detached shin in a walk cycle actually is.
+
 ---
 
 ## 6. Every state survives without Filters (ADR-0011)
@@ -275,14 +321,14 @@ state distinguished only by a glow does not exist on the plain path**, and colou
 | state | what makes it readable | plain path |
 |---|---|---|
 | `idle` | breathing rise on torso and head | shape motion |
-| `walk` / `run` | limb rotation; `run` is the same cycle at 1.45× amplitude and 0.69× duration | shape motion |
+| `walk` / `run` | limb rotation, swinging FORE AND AFT, which in a turned figure is horizontally across the screen at full amplitude; `run` is the same cycle at 1.45× amplitude and 0.69× duration | shape motion |
 | `jump-rise` / `jump-fall` | opposite arm and knee poses, not just an offset | shape difference |
 | `land` | one-shot compression of legs and torso | shape motion |
 | `talk` | the near hand opens and the head tilts | shape difference |
 | `interact` | the near arm reaches | shape difference |
 
 **No state anywhere in this rig uses a filter, a glow, a blur, a tint or an opacity ramp**, and no state is
-distinguished from another by colour alone. There is not a single `<filter>` element in any of the fifty
+distinguished from another by colour alone. There is not a single `<filter>` element in any of the sixty
 part sources. Ambient occlusion is baked flat shapes (`art-bible.md` §4) for the same reason.
 
 The four expressions differ in the **shape** of brow, pupil and mouth, so they survive greyscale, high
@@ -330,9 +376,9 @@ agree. Every check below is mechanical.
 
 **Against the atlas, so the fallback is provably the same vocabulary:**
 
-12. For every one of the 3 840 slot combinations, each part's resolved template is either a key in `frames`
+12. For every one of the 5 760 slot combinations, each part's resolved template is either a key in `frames`
     or absent from it; nothing resolves to a name that is neither.
-13. Every key in `frames` is reachable from some combination — 50 declared, 50 reachable.
+13. Every key in `frames` is reachable from some combination — 60 declared, 60 reachable.
 14. Every key in `frames` exists as a frame in `assets/dist/manifest.json` under the `shared` atlas.
 
 Check 14 is the one that catches the failure this contract exists to prevent: art renamed on one side only.
@@ -374,14 +420,14 @@ an empty file. That is the exact failure mode this repository keeps deleting: a 
 measures nothing. **A `.riv` that renders nothing must not be the thing 1.12 measures**, so it is not
 shipped as one.
 
-The sprite path, by contrast, is **complete**: fifty part sources, twenty parts, eight states with per-part
+The sprite path, by contrast, is **complete**: sixty part sources, twenty-two parts, eight states with per-part
 keys, and every name identical to the ones in the fixture. If Rive misses its budget, nothing is missing.
 
 ### What the next attempt should do
 
 Write an **SVG → `.riv` compiler in `scripts/`** — build tooling belongs there, next to `assets.mjs`, and a
 checked-in binary with no generator is the opaque artefact this repository avoids. It should read the same
-fifty sources, so Rive and the atlas cannot diverge by construction. Everything below is the part of that
+sixty sources, so Rive and the atlas cannot diverge by construction. Everything below is the part of that
 job that is already done.
 
 ### Format constants, recovered against `@rive-app/canvas` 2.42.0
@@ -458,12 +504,15 @@ an artefact nobody can audit. `sha256 7ae3e3ee7e4315fb4a1b4009f7c93baa47d816afc0
 
 ---
 
-## 9. Where this file should live
+## 9. Where this file lives, in two places
 
-`CLAUDE.md` says the contract is `content/characters/rig.json`. **That file does not exist**, and this page
-is not claiming otherwise: every mention of it below is a destination, not a citation. It is here because `assets/**` is the art
-agent's boundary and `content/**` is not, and because `content/` rejects any file without a `$schema` that
-`make validate-content` can resolve.
+`CLAUDE.md` says the contract is `content/characters/rig.json`. **It exists**, and it is a byte-for-byte
+mirror of `assets/style/rig-contract.json` except for its `$schema`, which is relative to `content/`. The
+copy under `assets/` is the one the contract test loads and the one an art change edits; the copy under
+`content/` is the one `make validate-content` walks. **They are edited together, in the same commit** — two
+live copies of one document with no gate comparing them is exactly the drift this page's own open-question
+table exists to catch, and the reason both exist is that `assets/**` is the art agent's boundary and
+`content/**` is not.
 
 **Answered.** `content/schemas/rig.schema.json` exists (ADR-0017) and `rig-contract.json` now carries a
 `$schema` line pointing at it. `tests/unit/contracts/rig-is-coherent.test.ts` reads the contract **from
@@ -491,10 +540,10 @@ What the schema constrains, all of it already present in `rig-contract.json`:
 | `states` | `durationMs`, `loop` ∈ `loop \| once \| hold`, `keys[]` | `t` ascending, first 0 and last 1; every part named in a key is a declared part |
 | `events[]` | `name`, `when`, `use` | unique names |
 
-**What is still open** is only the move: `content/characters/rig.json`, the path `CLAUDE.md` names, **does
-not exist**. Creating it is a `git mv` and a `$schema` value of `../schemas/rig.schema.json` instead of
-`../../content/schemas/rig.schema.json` — no key changes and no rewrite. Until then this is the normative
-copy, it validates in place, and the contract tests read it from `assets/style/`.
+**What is still open** is the *duplication*, not the move. `content/characters/rig.json` exists and carries
+`"$schema": "../schemas/rig.schema.json"`; this copy carries `"../../content/schemas/rig.schema.json"`. That
+is the only difference and it is the only difference allowed. Nothing mechanically compares the two yet, so
+until something does, the rule is procedural: **an edit to one is an edit to both, in one commit.**
 
 Two smaller notes for the architect, recorded rather than assumed:
 

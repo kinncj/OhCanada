@@ -1,15 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="80" height="92" viewBox="80 36 80 92" shape-rendering="geometricPrecision">
-  <title>Head, neck and ears in skin ramp 2. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default tone.</title>
-  <path d="M 107,100 L 107,122 C 107,131.62 133,131.62 133,122 L 133,100 C 133,90.38 107,90.38 107,100 Z" fill="#be6246" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <ellipse cx="89" cy="80" rx="6.5" ry="9.5" fill="#dfa477" stroke="#3a2018" stroke-width="3"/>
-  <ellipse cx="151" cy="80" rx="6.5" ry="9.5" fill="#dfa477" stroke="#3a2018" stroke-width="3"/>
-  <path d="M 90,66 C 90,48 103,40 120,40 C 137,40 150,48 150,66 L 150,88 C 150,102 138,110 120,110 C 102,110 90,102 90,88 Z" fill="#dfa477" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="hd"><path d="M 90,66 C 90,48 103,40 120,40 C 137,40 150,48 150,66 L 150,88 C 150,102 138,110 120,110 C 102,110 90,102 90,88 Z"/></clipPath></defs>
-  <g clip-path="url(#hd)">
-    <ellipse cx="98" cy="54" rx="22" ry="22" fill="#e8d4bb"/>
-    <ellipse cx="158" cy="104" rx="20" ry="20" fill="#be6246"/>
-  </g>
-  <g clip-path="url(#hd)">
-    <ellipse cx="120" cy="116" rx="24" ry="12" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="87" height="96" viewBox="76 37 87 96" shape-rendering="geometricPrecision">
+  <title>Head, neck and the one visible ear in skin ramp 2. Three-quarter view, facing right: cranium behind the face plane, brow and nose on the leading edge, and a single ear set low and well back on the near side. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default tone.</title>
+  <path d="M 104,98 L 104,122 C 104,132 130,132 130,122 L 130,98 C 130,88 104,88 104,98 Z" fill="#be6246" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="85" cy="88" rx="7" ry="9.5" fill="#dfa477" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 86,76 C 86,52 99,40 120,40 C 141,40 153,52 154,70 L 155,75 C 161,77 162,83 156,86 C 154,90 153,93 152,97 C 152,106 145,113 135,114 C 121,116 107,113 99,106 C 91,99 86,90 86,80 Z" fill="#dfa477" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="hd2"><path d="M 86,76 C 86,52 99,40 120,40 C 141,40 153,52 154,70 L 155,75 C 161,77 162,83 156,86 C 154,90 153,93 152,97 C 152,106 145,113 135,114 C 121,116 107,113 99,106 C 91,99 86,90 86,80 Z"/></clipPath></defs>
+  <g clip-path="url(#hd2)">
+    <ellipse cx="100" cy="60" rx="24" ry="24" fill="#e8d4bb"/>
+    <ellipse cx="156" cy="122" rx="24" ry="20" fill="#be6246"/>
+    <ellipse cx="124" cy="120" rx="22" ry="10" fill="#16203a" opacity="0.18"/>
   </g>
 </svg>

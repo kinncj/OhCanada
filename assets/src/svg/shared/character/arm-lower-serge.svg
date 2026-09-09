@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="41" height="94" viewBox="166 201 41 94" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. Scarlet tunic sleeve, lower.</title>
-  <path d="M 170.01,214.66 L 173.01,282.66 C 173.5,293.75 203.47,292.43 202.99,281.34 L 199.99,213.34 C 199.5,202.25 169.53,203.57 170.01,214.66 Z" fill="#c5342a" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 190.1,217.8 L 193.1,277.8 C 193.25,280.9 201.64,280.48 201.49,277.38 L 198.49,217.38 C 198.33,214.28 189.94,214.7 190.1,217.8 Z" fill="#db7961"/>
-  <path d="M 172.11,218.59 L 175.11,278.59 C 175.25,281.25 182.44,280.89 182.3,278.23 L 179.3,218.23 C 179.17,215.57 171.98,215.93 172.11,218.59 Z" fill="#841a28"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="102" viewBox="115 203 41 102" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. Scarlet tunic sleeve, lower, from the elbow to the cuff.</title>
+  <path d="M 136,206 C 147,206 153,212 153,222 L 152,288 C 152,298 143,302 135,302 C 126,302 118,298 118,288 L 119,222 C 119,212 125,206 136,206 Z" fill="#c5342a" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="al-serge"><path d="M 136,206 C 147,206 153,212 153,222 L 152,288 C 152,298 143,302 135,302 C 126,302 118,298 118,288 L 119,222 C 119,212 125,206 136,206 Z"/></clipPath></defs>
+  <g clip-path="url(#al-serge)">
+    <path d="M 146,214 C 153,216 153,224 153,232 L 152,304 L 140,304 L 141,232 C 141,224 140,216 146,214 Z" fill="#841a28"/>
+    <path d="M 125,216 C 130,216 131,224 131,232 L 130,304 L 119,304 L 119,232 C 119,224 119,218 125,216 Z" fill="#db7961"/>
+    <ellipse cx="136" cy="210" rx="18" ry="8" fill="#16203a" opacity="0.18"/>
+  </g>
 </svg>

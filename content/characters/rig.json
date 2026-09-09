@@ -4,10 +4,10 @@
     "The TrueNorth character rig contract, task 1.11. NORMATIVE: assets/style/rig-contract.md is the prose;",
     "this file is the same contract as data, and it is what the contract tests load.",
     "It is authored under assets/ because assets/** is the art agent boundary. content/schemas/rig.schema.json",
-    "(ADR-0017) validates this shape and tests/unit/contracts/rig-is-coherent.test.ts reads it from here, so",
-    "the $schema line above already points at the real schema and the eventual move to",
-    "content/characters/rig.json (the path CLAUDE.md names, which does not exist yet) is a git mv plus a",
-    "one-line relative-path edit. No key changes.",
+    "(ADR-0017) validates this shape and tests/unit/contracts/rig-is-coherent.test.ts reads it from here.",
+    "content/characters/rig.json - the path CLAUDE.md names - EXISTS and is a byte-for-byte mirror of this",
+    "file except for its $schema, which is relative to content/. The two are edited together, in the same",
+    "commit, or the rig has two live copies and no gate can tell you which one is stale.",
     "Every name here appears IDENTICALLY in the Rive file and in the sprite atlas. That identity is the",
     "whole point of ICharacterRenderer: gameplay code must not be able to tell which backend it got."
   ],
@@ -27,7 +27,7 @@
     "heightPx": 420,
     "headPx": 70,
     "heightHeads": 6,
-    "note": "Part windows are given in THIS space, so a window origin IS the part offset. To place a character at world (x, y) with its feet on the ground, draw each part at (x - 120 + frame.x, y - 460 + frame.y)."
+    "note": "Part windows are given in THIS space, so a window origin IS the part offset. To place a character at world (x, y) with its feet on the ground, draw each part at (x - 120 + frame.x, y - 460 + frame.y). THE VIEW IS PART OF THIS SPACE: every character is drawn three-quarter with the canonical facing RIGHT, about 40 degrees off strict profile toward the viewer, because this is a side-scroller and a figure that faces the camera cannot read as travelling. Screen x is therefore the FORE-AFT axis, which is what makes the walk cycle swing at full amplitude, and the near side is the wearer RIGHT - so the -r parts draw last. See art-bible.md 7.1 and rig-contract.md 1."
   },
   "artboards": [
     {
@@ -283,99 +283,98 @@
       "z": 2,
       "frame": "tail-{costume}",
       "pivot": [
-        104,
-        300
+        100,
+        296
       ],
       "mirrorX": false,
-      "note": "The guide's paddle tail. `tail-parka` and `tail-serge` are absent from `frames`, so the part draws nothing on every human artboard - the same mechanism every \"none\" option uses, and no special case in either backend. Carried out to the wearer's right and planted on the ground rather than tucked behind the body: a front-facing character hides anything drawn behind its torso, and this is one of the two features that make a beaver identifiable at phone size."
+      "note": "The guide’s paddle tail. `tail-parka` and `tail-serge` are absent from `frames`, so the part draws nothing on every human artboard - the same mechanism every \"none\" option uses, and no special case in either backend. Carried out to the wearer’s right, which in a right-facing three-quarter pose is the TRAILING side, so it streams out behind the animal instead of hiding behind its body."
     },
     {
-      "name": "arm-upper-r",
+      "name": "arm-upper-l",
       "z": 3,
       "frame": "arm-upper-{costume}",
       "pivot": [
-        60,
-        142
+        137,
+        146
       ],
-      "mirrorX": true
+      "mirrorX": false
     },
     {
-      "name": "arm-lower-r",
+      "name": "arm-lower-l",
       "z": 4,
       "frame": "arm-lower-{costume}",
       "pivot": [
-        55,
+        137,
         214
       ],
-      "mirrorX": true
+      "mirrorX": false
     },
     {
-      "name": "hand-r",
+      "name": "hand-l",
       "z": 5,
       "frame": "hand-{costume}",
       "pivot": [
-        52,
+        137,
         282
       ],
-      "mirrorX": true
-    },
-    {
-      "name": "leg-upper-r",
-      "z": 6,
-      "frame": "leg-upper-{costume}",
-      "pivot": [
-        94,
-        264
-      ],
-      "mirrorX": true
-    },
-    {
-      "name": "leg-lower-r",
-      "z": 7,
-      "frame": "leg-lower-{costume}",
-      "pivot": [
-        92,
-        362
-      ],
-      "mirrorX": true
-    },
-    {
-      "name": "foot-r",
-      "z": 8,
-      "frame": "foot-r-{costume}",
-      "pivot": [
-        90,
-        436
-      ],
-      "mirrorX": false,
-      "note": "Feet are the one pair that is not mirrored: a mirrored foot points backwards."
+      "mirrorX": false
     },
     {
       "name": "leg-upper-l",
-      "z": 9,
+      "z": 6,
       "frame": "leg-upper-{costume}",
       "pivot": [
-        146,
+        132,
         264
       ],
       "mirrorX": false
     },
     {
       "name": "leg-lower-l",
-      "z": 10,
+      "z": 7,
       "frame": "leg-lower-{costume}",
       "pivot": [
-        148,
+        132,
         362
       ],
       "mirrorX": false
     },
     {
       "name": "foot-l",
-      "z": 11,
+      "z": 8,
       "frame": "foot-l-{costume}",
       "pivot": [
-        150,
+        132,
+        436
+      ],
+      "mirrorX": false
+    },
+    {
+      "name": "leg-upper-r",
+      "z": 9,
+      "frame": "leg-upper-{costume}",
+      "pivot": [
+        108,
+        264
+      ],
+      "mirrorX": true
+    },
+    {
+      "name": "leg-lower-r",
+      "z": 10,
+      "frame": "leg-lower-{costume}",
+      "pivot": [
+        108,
+        362
+      ],
+      "mirrorX": true
+    },
+    {
+      "name": "foot-r",
+      "z": 11,
+      "frame": "foot-r-{costume}",
+      "pivot": [
+        108,
         436
       ],
       "mirrorX": false
@@ -418,8 +417,7 @@
         120,
         112
       ],
-      "mirrorX": false,
-      "note": "A costume-driven cover for the shared head, above `hair` and below `face`. It exists so an animal companion can join the ONE proportion canon instead of getting a second rig: the beaver's head is the same cranium box, the same eye line and the same width envelope as every human character's, drawn in pelt, and it carries the muzzle and the incisors in the same frame. Absent for parka and serge, so it draws nothing there - the same mechanism every \"none\" option uses. It deliberately does NOT consume {skin}: a pelt tone has no business in the skin slot the character creator offers (docs/content-review.md 8.1)."
+      "mirrorX": false
     },
     {
       "name": "face",
@@ -439,8 +437,7 @@
         120,
         112
       ],
-      "mirrorX": false,
-      "note": "Resolves to no frame when headCovering is \"none\"."
+      "mirrorX": false
     },
     {
       "name": "hat",
@@ -450,8 +447,7 @@
         120,
         112
       ],
-      "mirrorX": false,
-      "note": "Costume headwear. Resolves to no frame for the parka."
+      "mirrorX": false
     },
     {
       "name": "feature",
@@ -461,38 +457,37 @@
         120,
         112
       ],
-      "mirrorX": false,
-      "note": "Resolves to no frame when feature is \"none\"."
+      "mirrorX": false
     },
     {
-      "name": "arm-upper-l",
+      "name": "arm-upper-r",
       "z": 20,
       "frame": "arm-upper-{costume}",
       "pivot": [
-        180,
-        142
+        103,
+        146
       ],
-      "mirrorX": false
+      "mirrorX": true
     },
     {
-      "name": "arm-lower-l",
+      "name": "arm-lower-r",
       "z": 21,
       "frame": "arm-lower-{costume}",
       "pivot": [
-        185,
+        103,
         214
       ],
-      "mirrorX": false
+      "mirrorX": true
     },
     {
-      "name": "hand-l",
+      "name": "hand-r",
       "z": 22,
       "frame": "hand-{costume}",
       "pivot": [
-        188,
+        103,
         282
       ],
-      "mirrorX": false
+      "mirrorX": true
     }
   ],
   "atlas": {
@@ -515,21 +510,36 @@
               0
             ],
             "tail": [
-              0.0,
-              0,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
+              0,
+              0,
+              -3
+            ],
+            "arm-lower-l": [
+              3.56,
+              -0.09,
+              1
+            ],
+            "hand-l": [
+              2.37,
+              -0.1,
+              1
+            ],
+            "leg-upper-l": [
               0,
               0,
               0
             ],
-            "hand-r": [
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
               0,
               0,
               0
@@ -549,21 +559,6 @@
               0,
               0
             ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0
-            ],
             "torso": [
               0,
               0,
@@ -571,53 +566,53 @@
             ],
             "head": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "hair": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "head-shell": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "face": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "head-covering": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "hat": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "feature": [
               0,
-              0.0,
-              0.0
-            ],
-            "arm-upper-l": [
-              0,
               0,
               0
             ],
-            "arm-lower-l": [
+            "arm-upper-r": [
               0,
               0,
-              0
+              3
             ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "arm-lower-r": [
+              -3.56,
+              -0.09,
+              7
+            ],
+            "hand-r": [
+              -11.85,
+              -0.6,
+              7
             ]
           }
         },
@@ -630,53 +625,53 @@
               0
             ],
             "tail": [
-              0.0,
+              0,
               -1.6,
               0
             ],
-            "arm-upper-r": [
+            "arm-upper-l": [
               0,
-              0,
-              0
+              -1.6,
+              -3
             ],
-            "arm-lower-r": [
-              0,
-              0,
-              0
+            "arm-lower-l": [
+              3.56,
+              -1.69,
+              1
             ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0
-            ],
-            "foot-r": [
-              0,
-              0,
-              0
+            "hand-l": [
+              2.37,
+              -1.7,
+              1
             ],
             "leg-upper-l": [
               0,
-              0,
+              -1.6,
               0
             ],
             "leg-lower-l": [
               0,
-              0,
+              -1.6,
               0
             ],
             "foot-l": [
               0,
+              -1.6,
+              0
+            ],
+            "leg-upper-r": [
               0,
+              -1.6,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              -1.6,
+              0
+            ],
+            "foot-r": [
+              0,
+              -1.6,
               0
             ],
             "torso": [
@@ -686,53 +681,53 @@
             ],
             "head": [
               0,
-              -1.6,
-              0.0
+              -2,
+              0
             ],
             "hair": [
               0,
-              -1.6,
-              0.0
+              -2,
+              0
             ],
             "head-shell": [
               0,
-              -1.6,
-              0.0
+              -2,
+              0
             ],
             "face": [
               0,
-              -1.6,
-              0.0
+              -2,
+              0
             ],
             "head-covering": [
               0,
-              -1.6,
-              0.0
+              -2,
+              0
             ],
             "hat": [
               0,
-              -1.6,
-              0.0
+              -2,
+              0
             ],
             "feature": [
               0,
+              -2,
+              0
+            ],
+            "arm-upper-r": [
+              0,
               -1.6,
-              0.0
+              3
             ],
-            "arm-upper-l": [
-              0,
-              0,
-              0
+            "arm-lower-r": [
+              -3.56,
+              -1.69,
+              7
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "hand-r": [
+              -11.85,
+              -2.2,
+              7
             ]
           }
         },
@@ -745,21 +740,36 @@
               0
             ],
             "tail": [
-              -0.0,
-              0,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
+              0,
+              0,
+              -3
+            ],
+            "arm-lower-l": [
+              3.56,
+              -0.09,
+              1
+            ],
+            "hand-l": [
+              2.37,
+              -0.1,
+              1
+            ],
+            "leg-upper-l": [
               0,
               0,
               0
             ],
-            "hand-r": [
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
               0,
               0,
               0
@@ -779,21 +789,6 @@
               0,
               0
             ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0
-            ],
             "torso": [
               0,
               0,
@@ -801,58 +796,58 @@
             ],
             "head": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "hair": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "head-shell": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "face": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "head-covering": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "hat": [
               0,
-              0.0,
-              0.0
+              0,
+              0
             ],
             "feature": [
               0,
-              0.0,
-              0.0
-            ],
-            "arm-upper-l": [
-              0,
               0,
               0
             ],
-            "arm-lower-l": [
+            "arm-upper-r": [
               0,
               0,
-              0
+              3
             ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "arm-lower-r": [
+              -3.56,
+              -0.09,
+              7
+            ],
+            "hand-r": [
+              -11.85,
+              -0.6,
+              7
             ]
           }
         }
       ],
-      "note": "Breathing only: the torso and head rise 1.6 px. Under reducedMotion the state holds key 0."
+      "note": "Breathing only: the torso and head rise 1.6 px. The rest pose is a three-quarter stand with the limbs hanging straight, because the mirrored pair cannot hold a stride without crossing over itself - the stride belongs to the walk keys. Under reducedMotion the state holds key 0."
     },
     "walk": {
       "loop": "loop",
@@ -867,109 +862,109 @@
               0
             ],
             "tail": [
-              0.0,
-              -2.5,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
-              -0.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -8.0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0.0
-            ],
-            "torso": [
-              0,
-              -2.5,
-              0
-            ],
-            "head": [
-              0,
-              -2.5,
-              0
-            ],
-            "hair": [
-              0,
-              -2.5,
-              0
-            ],
-            "head-shell": [
-              0,
-              -2.5,
-              0
-            ],
-            "face": [
-              0,
-              -2.5,
-              0
-            ],
-            "head-covering": [
-              0,
-              -2.5,
-              0
-            ],
-            "hat": [
-              0,
-              -2.5,
-              0
-            ],
-            "feature": [
-              0,
-              -2.5,
               0
             ],
             "arm-upper-l": [
               0,
               0,
-              0.0
+              -11
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -8.0
+              12.98,
+              -1.25,
+              4
             ],
             "hand-l": [
+              8.23,
+              -1.41,
+              4
+            ],
+            "leg-upper-l": [
               0,
               0,
-              0
+              10
+            ],
+            "leg-lower-l": [
+              -17.02,
+              -1.49,
+              18
+            ],
+            "foot-l": [
+              -39.88,
+              -5.11,
+              2
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -12
+            ],
+            "leg-lower-r": [
+              20.38,
+              -2.14,
+              -10
+            ],
+            "foot-r": [
+              33.23,
+              -3.27,
+              -2
+            ],
+            "torso": [
+              0,
+              0,
+              3
+            ],
+            "head": [
+              0,
+              0,
+              -1.5
+            ],
+            "hair": [
+              0,
+              0,
+              -1.5
+            ],
+            "head-shell": [
+              0,
+              0,
+              -1.5
+            ],
+            "face": [
+              0,
+              0,
+              -1.5
+            ],
+            "head-covering": [
+              0,
+              0,
+              -1.5
+            ],
+            "hat": [
+              0,
+              0,
+              -1.5
+            ],
+            "feature": [
+              0,
+              0,
+              -1.5
+            ],
+            "arm-upper-r": [
+              0,
+              0,
+              13
+            ],
+            "arm-lower-r": [
+              -15.3,
+              -1.74,
+              20
+            ],
+            "hand-r": [
+              -38.55,
+              -5.84,
+              20
             ]
           }
         },
@@ -982,109 +977,109 @@
               0
             ],
             "tail": [
-              7.0,
-              -0.0,
-              0
-            ],
-            "arm-upper-r": [
               0,
-              0,
-              -26.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -22.0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              24.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              -10.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -24.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              20.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              10.0
-            ],
-            "torso": [
-              0,
-              -0.0,
-              0
-            ],
-            "head": [
-              0,
-              -0.0,
-              0
-            ],
-            "hair": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-shell": [
-              0,
-              -0.0,
-              0
-            ],
-            "face": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-covering": [
-              0,
-              -0.0,
-              0
-            ],
-            "hat": [
-              0,
-              -0.0,
-              0
-            ],
-            "feature": [
-              0,
-              -0.0,
-              0
+              -3,
+              4
             ],
             "arm-upper-l": [
               0,
-              0,
-              26.0
+              -3,
+              -2
             ],
             "arm-lower-l": [
-              0,
-              0,
-              6.0
+              2.37,
+              -3.04,
+              8
             ],
             "hand-l": [
+              -7.09,
+              -3.7,
+              8
+            ],
+            "leg-upper-l": [
               0,
+              -3,
+              -5
+            ],
+            "leg-lower-l": [
+              8.54,
+              -3.37,
+              27
+            ],
+            "foot-l": [
+              -25.05,
+              -11.44,
+              31
+            ],
+            "leg-upper-r": [
               0,
+              -3,
               0
+            ],
+            "leg-lower-r": [
+              0,
+              -3,
+              2
+            ],
+            "foot-r": [
+              -2.58,
+              -3.05,
+              2
+            ],
+            "torso": [
+              0,
+              -3,
+              3
+            ],
+            "head": [
+              0,
+              -3,
+              -1.5
+            ],
+            "hair": [
+              0,
+              -3,
+              -1.5
+            ],
+            "head-shell": [
+              0,
+              -3,
+              -1.5
+            ],
+            "face": [
+              0,
+              -3,
+              -1.5
+            ],
+            "head-covering": [
+              0,
+              -3,
+              -1.5
+            ],
+            "hat": [
+              0,
+              -3,
+              -1.5
+            ],
+            "feature": [
+              0,
+              -3,
+              -1.5
+            ],
+            "arm-upper-r": [
+              0,
+              -3,
+              4
+            ],
+            "arm-lower-r": [
+              -4.74,
+              -3.17,
+              14
+            ],
+            "hand-r": [
+              -21.19,
+              -5.19,
+              14
             ]
           }
         },
@@ -1097,109 +1092,109 @@
               0
             ],
             "tail": [
-              0.0,
-              -2.5,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
-              -0.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -8.0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0.0
-            ],
-            "torso": [
-              0,
-              -2.5,
-              0
-            ],
-            "head": [
-              0,
-              -2.5,
-              0
-            ],
-            "hair": [
-              0,
-              -2.5,
-              0
-            ],
-            "head-shell": [
-              0,
-              -2.5,
-              0
-            ],
-            "face": [
-              0,
-              -2.5,
-              0
-            ],
-            "head-covering": [
-              0,
-              -2.5,
-              0
-            ],
-            "hat": [
-              0,
-              -2.5,
-              0
-            ],
-            "feature": [
-              0,
-              -2.5,
               0
             ],
             "arm-upper-l": [
               0,
               0,
-              0.0
+              13
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -8.0
+              -15.3,
+              -1.74,
+              20
             ],
             "hand-l": [
+              -38.55,
+              -5.84,
+              20
+            ],
+            "leg-upper-l": [
               0,
               0,
-              0
+              -12
+            ],
+            "leg-lower-l": [
+              20.38,
+              -2.14,
+              -10
+            ],
+            "foot-l": [
+              33.23,
+              -3.27,
+              -2
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              10
+            ],
+            "leg-lower-r": [
+              -17.02,
+              -1.49,
+              18
+            ],
+            "foot-r": [
+              -39.88,
+              -5.11,
+              2
+            ],
+            "torso": [
+              0,
+              0,
+              3
+            ],
+            "head": [
+              0,
+              0,
+              -1.5
+            ],
+            "hair": [
+              0,
+              0,
+              -1.5
+            ],
+            "head-shell": [
+              0,
+              0,
+              -1.5
+            ],
+            "face": [
+              0,
+              0,
+              -1.5
+            ],
+            "head-covering": [
+              0,
+              0,
+              -1.5
+            ],
+            "hat": [
+              0,
+              0,
+              -1.5
+            ],
+            "feature": [
+              0,
+              0,
+              -1.5
+            ],
+            "arm-upper-r": [
+              0,
+              0,
+              -11
+            ],
+            "arm-lower-r": [
+              12.98,
+              -1.25,
+              4
+            ],
+            "hand-r": [
+              8.23,
+              -1.41,
+              4
             ]
           }
         },
@@ -1212,109 +1207,109 @@
               0
             ],
             "tail": [
-              -7.0,
-              -0.0,
-              0
-            ],
-            "arm-upper-r": [
               0,
-              0,
-              26.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              6.0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              -24.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              20.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              10.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              24.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              -10.0
-            ],
-            "torso": [
-              0,
-              -0.0,
-              0
-            ],
-            "head": [
-              0,
-              -0.0,
-              0
-            ],
-            "hair": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-shell": [
-              0,
-              -0.0,
-              0
-            ],
-            "face": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-covering": [
-              0,
-              -0.0,
-              0
-            ],
-            "hat": [
-              0,
-              -0.0,
-              0
-            ],
-            "feature": [
-              0,
-              -0.0,
-              0
+              -3,
+              -4
             ],
             "arm-upper-l": [
               0,
-              0,
-              -26.0
+              -3,
+              4
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -22.0
+              -4.74,
+              -3.17,
+              14
             ],
             "hand-l": [
+              -21.19,
+              -5.19,
+              14
+            ],
+            "leg-upper-l": [
               0,
-              0,
+              -3,
               0
+            ],
+            "leg-lower-l": [
+              0,
+              -3,
+              2
+            ],
+            "foot-l": [
+              -2.58,
+              -3.05,
+              2
+            ],
+            "leg-upper-r": [
+              0,
+              -3,
+              -5
+            ],
+            "leg-lower-r": [
+              8.54,
+              -3.37,
+              27
+            ],
+            "foot-r": [
+              -25.05,
+              -11.44,
+              31
+            ],
+            "torso": [
+              0,
+              -3,
+              3
+            ],
+            "head": [
+              0,
+              -3,
+              -1.5
+            ],
+            "hair": [
+              0,
+              -3,
+              -1.5
+            ],
+            "head-shell": [
+              0,
+              -3,
+              -1.5
+            ],
+            "face": [
+              0,
+              -3,
+              -1.5
+            ],
+            "head-covering": [
+              0,
+              -3,
+              -1.5
+            ],
+            "hat": [
+              0,
+              -3,
+              -1.5
+            ],
+            "feature": [
+              0,
+              -3,
+              -1.5
+            ],
+            "arm-upper-r": [
+              0,
+              -3,
+              -2
+            ],
+            "arm-lower-r": [
+              2.37,
+              -3.04,
+              8
+            ],
+            "hand-r": [
+              -7.09,
+              -3.7,
+              8
             ]
           }
         },
@@ -1327,113 +1322,114 @@
               0
             ],
             "tail": [
-              -0.0,
-              -2.5,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
-              0.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -8.0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              -0.0
-            ],
-            "torso": [
-              0,
-              -2.5,
-              0
-            ],
-            "head": [
-              0,
-              -2.5,
-              0
-            ],
-            "hair": [
-              0,
-              -2.5,
-              0
-            ],
-            "head-shell": [
-              0,
-              -2.5,
-              0
-            ],
-            "face": [
-              0,
-              -2.5,
-              0
-            ],
-            "head-covering": [
-              0,
-              -2.5,
-              0
-            ],
-            "hat": [
-              0,
-              -2.5,
-              0
-            ],
-            "feature": [
-              0,
-              -2.5,
               0
             ],
             "arm-upper-l": [
               0,
               0,
-              -0.0
+              -11
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -8.0
+              12.98,
+              -1.25,
+              4
             ],
             "hand-l": [
+              8.23,
+              -1.41,
+              4
+            ],
+            "leg-upper-l": [
               0,
               0,
-              0
+              10
+            ],
+            "leg-lower-l": [
+              -17.02,
+              -1.49,
+              18
+            ],
+            "foot-l": [
+              -39.88,
+              -5.11,
+              2
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -12
+            ],
+            "leg-lower-r": [
+              20.38,
+              -2.14,
+              -10
+            ],
+            "foot-r": [
+              33.23,
+              -3.27,
+              -2
+            ],
+            "torso": [
+              0,
+              0,
+              3
+            ],
+            "head": [
+              0,
+              0,
+              -1.5
+            ],
+            "hair": [
+              0,
+              0,
+              -1.5
+            ],
+            "head-shell": [
+              0,
+              0,
+              -1.5
+            ],
+            "face": [
+              0,
+              0,
+              -1.5
+            ],
+            "head-covering": [
+              0,
+              0,
+              -1.5
+            ],
+            "hat": [
+              0,
+              0,
+              -1.5
+            ],
+            "feature": [
+              0,
+              0,
+              -1.5
+            ],
+            "arm-upper-r": [
+              0,
+              0,
+              13
+            ],
+            "arm-lower-r": [
+              -15.3,
+              -1.74,
+              20
+            ],
+            "hand-r": [
+              -38.55,
+              -5.84,
+              20
             ]
           }
         }
-      ]
+      ],
+      "note": "A side-scroller walk, solved by forward kinematics from the hip and the shoulder. Screen x is the fore-aft axis in this view, so the swing is horizontal and reads at phone size; the near arm opposes the near leg. Contact at t 0 and t 0.5 is where `footfall` fires."
     },
     "run": {
       "loop": "loop",
@@ -1448,109 +1444,109 @@
               0
             ],
             "tail": [
-              0.0,
-              -3.62,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
-              -0.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -11.6
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0.0
-            ],
-            "torso": [
-              0,
-              -3.62,
-              0
-            ],
-            "head": [
-              0,
-              -3.62,
-              0
-            ],
-            "hair": [
-              0,
-              -3.62,
-              0
-            ],
-            "head-shell": [
-              0,
-              -3.62,
-              0
-            ],
-            "face": [
-              0,
-              -3.62,
-              0
-            ],
-            "head-covering": [
-              0,
-              -3.62,
-              0
-            ],
-            "hat": [
-              0,
-              -3.62,
-              0
-            ],
-            "feature": [
-              0,
-              -3.62,
               0
             ],
             "arm-upper-l": [
               0,
               0,
-              0.0
+              -15.95
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -11.6
+              18.69,
+              -2.62,
+              5.8
             ],
             "hand-l": [
+              11.81,
+              -2.97,
+              5.8
+            ],
+            "leg-upper-l": [
               0,
               0,
-              0
+              14.5
+            ],
+            "leg-lower-l": [
+              -24.54,
+              -3.12,
+              26.1
+            ],
+            "foot-l": [
+              -57.09,
+              -10.67,
+              2.9
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -17.4
+            ],
+            "leg-lower-r": [
+              29.31,
+              -4.48,
+              -14.5
+            ],
+            "foot-r": [
+              47.83,
+              -6.84,
+              -2.9
+            ],
+            "torso": [
+              0,
+              0,
+              7
+            ],
+            "head": [
+              0,
+              0,
+              -3.5
+            ],
+            "hair": [
+              0,
+              0,
+              -3.5
+            ],
+            "head-shell": [
+              0,
+              0,
+              -3.5
+            ],
+            "face": [
+              0,
+              0,
+              -3.5
+            ],
+            "head-covering": [
+              0,
+              0,
+              -3.5
+            ],
+            "hat": [
+              0,
+              0,
+              -3.5
+            ],
+            "feature": [
+              0,
+              0,
+              -3.5
+            ],
+            "arm-upper-r": [
+              0,
+              0,
+              18.85
+            ],
+            "arm-lower-r": [
+              -21.97,
+              -3.65,
+              29
+            ],
+            "hand-r": [
+              -54.94,
+              -12.17,
+              29
             ]
           }
         },
@@ -1563,109 +1559,109 @@
               0
             ],
             "tail": [
-              11.0,
-              -0.0,
-              0
-            ],
-            "arm-upper-r": [
               0,
-              0,
-              -37.7
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -31.9
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              34.8
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              -14.5
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -34.8
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              29.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              14.5
-            ],
-            "torso": [
-              0,
-              -0.0,
-              0
-            ],
-            "head": [
-              0,
-              -0.0,
-              0
-            ],
-            "hair": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-shell": [
-              0,
-              -0.0,
-              0
-            ],
-            "face": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-covering": [
-              0,
-              -0.0,
-              0
-            ],
-            "hat": [
-              0,
-              -0.0,
-              0
-            ],
-            "feature": [
-              0,
-              -0.0,
-              0
+              -4.35,
+              4
             ],
             "arm-upper-l": [
               0,
-              0,
-              37.7
+              -4.35,
+              -2.9
             ],
             "arm-lower-l": [
-              0,
-              0,
-              8.7
+              3.44,
+              -4.44,
+              11.6
             ],
             "hand-l": [
+              -10.23,
+              -5.83,
+              11.6
+            ],
+            "leg-upper-l": [
               0,
+              -4.35,
+              -7.25
+            ],
+            "leg-lower-l": [
+              12.37,
+              -5.13,
+              39.15
+            ],
+            "foot-l": [
+              -34.35,
+              -21.75,
+              44.95
+            ],
+            "leg-upper-r": [
               0,
+              -4.35,
               0
+            ],
+            "leg-lower-r": [
+              0,
+              -4.35,
+              2.9
+            ],
+            "foot-r": [
+              -3.74,
+              -4.44,
+              2.9
+            ],
+            "torso": [
+              0,
+              -4.35,
+              7
+            ],
+            "head": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "hair": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "head-shell": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "face": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "head-covering": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "hat": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "feature": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "arm-upper-r": [
+              0,
+              -4.35,
+              5.8
+            ],
+            "arm-lower-r": [
+              -6.87,
+              -4.7,
+              20.3
+            ],
+            "hand-r": [
+              -30.46,
+              -8.92,
+              20.3
             ]
           }
         },
@@ -1678,109 +1674,109 @@
               0
             ],
             "tail": [
-              0.0,
-              -3.62,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
-              -0.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -11.6
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0.0
-            ],
-            "torso": [
-              0,
-              -3.62,
-              0
-            ],
-            "head": [
-              0,
-              -3.62,
-              0
-            ],
-            "hair": [
-              0,
-              -3.62,
-              0
-            ],
-            "head-shell": [
-              0,
-              -3.62,
-              0
-            ],
-            "face": [
-              0,
-              -3.62,
-              0
-            ],
-            "head-covering": [
-              0,
-              -3.62,
-              0
-            ],
-            "hat": [
-              0,
-              -3.62,
-              0
-            ],
-            "feature": [
-              0,
-              -3.62,
               0
             ],
             "arm-upper-l": [
               0,
               0,
-              0.0
+              18.85
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -11.6
+              -21.97,
+              -3.65,
+              29
             ],
             "hand-l": [
+              -54.94,
+              -12.17,
+              29
+            ],
+            "leg-upper-l": [
               0,
               0,
-              0
+              -17.4
+            ],
+            "leg-lower-l": [
+              29.31,
+              -4.48,
+              -14.5
+            ],
+            "foot-l": [
+              47.83,
+              -6.84,
+              -2.9
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              14.5
+            ],
+            "leg-lower-r": [
+              -24.54,
+              -3.12,
+              26.1
+            ],
+            "foot-r": [
+              -57.09,
+              -10.67,
+              2.9
+            ],
+            "torso": [
+              0,
+              0,
+              7
+            ],
+            "head": [
+              0,
+              0,
+              -3.5
+            ],
+            "hair": [
+              0,
+              0,
+              -3.5
+            ],
+            "head-shell": [
+              0,
+              0,
+              -3.5
+            ],
+            "face": [
+              0,
+              0,
+              -3.5
+            ],
+            "head-covering": [
+              0,
+              0,
+              -3.5
+            ],
+            "hat": [
+              0,
+              0,
+              -3.5
+            ],
+            "feature": [
+              0,
+              0,
+              -3.5
+            ],
+            "arm-upper-r": [
+              0,
+              0,
+              -15.95
+            ],
+            "arm-lower-r": [
+              18.69,
+              -2.62,
+              5.8
+            ],
+            "hand-r": [
+              11.81,
+              -2.97,
+              5.8
             ]
           }
         },
@@ -1793,109 +1789,109 @@
               0
             ],
             "tail": [
-              -11.0,
-              -0.0,
-              0
-            ],
-            "arm-upper-r": [
               0,
-              0,
-              37.7
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              8.7
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              -34.8
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              29.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              14.5
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              34.8
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              -14.5
-            ],
-            "torso": [
-              0,
-              -0.0,
-              0
-            ],
-            "head": [
-              0,
-              -0.0,
-              0
-            ],
-            "hair": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-shell": [
-              0,
-              -0.0,
-              0
-            ],
-            "face": [
-              0,
-              -0.0,
-              0
-            ],
-            "head-covering": [
-              0,
-              -0.0,
-              0
-            ],
-            "hat": [
-              0,
-              -0.0,
-              0
-            ],
-            "feature": [
-              0,
-              -0.0,
-              0
+              -4.35,
+              -4
             ],
             "arm-upper-l": [
               0,
-              0,
-              -37.7
+              -4.35,
+              5.8
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -31.9
+              -6.87,
+              -4.7,
+              20.3
             ],
             "hand-l": [
+              -30.46,
+              -8.92,
+              20.3
+            ],
+            "leg-upper-l": [
               0,
-              0,
+              -4.35,
               0
+            ],
+            "leg-lower-l": [
+              0,
+              -4.35,
+              2.9
+            ],
+            "foot-l": [
+              -3.74,
+              -4.44,
+              2.9
+            ],
+            "leg-upper-r": [
+              0,
+              -4.35,
+              -7.25
+            ],
+            "leg-lower-r": [
+              12.37,
+              -5.13,
+              39.15
+            ],
+            "foot-r": [
+              -34.35,
+              -21.75,
+              44.95
+            ],
+            "torso": [
+              0,
+              -4.35,
+              7
+            ],
+            "head": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "hair": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "head-shell": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "face": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "head-covering": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "hat": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "feature": [
+              0,
+              -4.35,
+              -3.5
+            ],
+            "arm-upper-r": [
+              0,
+              -4.35,
+              -2.9
+            ],
+            "arm-lower-r": [
+              3.44,
+              -4.44,
+              11.6
+            ],
+            "hand-r": [
+              -10.23,
+              -5.83,
+              11.6
             ]
           }
         },
@@ -1908,113 +1904,114 @@
               0
             ],
             "tail": [
-              -0.0,
-              -3.62,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
-              0.0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -11.6
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              -0.0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-r": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              0.0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0.0
-            ],
-            "foot-l": [
-              0,
-              0,
-              -0.0
-            ],
-            "torso": [
-              0,
-              -3.62,
-              0
-            ],
-            "head": [
-              0,
-              -3.62,
-              0
-            ],
-            "hair": [
-              0,
-              -3.62,
-              0
-            ],
-            "head-shell": [
-              0,
-              -3.62,
-              0
-            ],
-            "face": [
-              0,
-              -3.62,
-              0
-            ],
-            "head-covering": [
-              0,
-              -3.62,
-              0
-            ],
-            "hat": [
-              0,
-              -3.62,
-              0
-            ],
-            "feature": [
-              0,
-              -3.62,
               0
             ],
             "arm-upper-l": [
               0,
               0,
-              -0.0
+              -15.95
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -11.6
+              18.69,
+              -2.62,
+              5.8
             ],
             "hand-l": [
+              11.81,
+              -2.97,
+              5.8
+            ],
+            "leg-upper-l": [
               0,
               0,
-              0
+              14.5
+            ],
+            "leg-lower-l": [
+              -24.54,
+              -3.12,
+              26.1
+            ],
+            "foot-l": [
+              -57.09,
+              -10.67,
+              2.9
+            ],
+            "leg-upper-r": [
+              0,
+              0,
+              -17.4
+            ],
+            "leg-lower-r": [
+              29.31,
+              -4.48,
+              -14.5
+            ],
+            "foot-r": [
+              47.83,
+              -6.84,
+              -2.9
+            ],
+            "torso": [
+              0,
+              0,
+              7
+            ],
+            "head": [
+              0,
+              0,
+              -3.5
+            ],
+            "hair": [
+              0,
+              0,
+              -3.5
+            ],
+            "head-shell": [
+              0,
+              0,
+              -3.5
+            ],
+            "face": [
+              0,
+              0,
+              -3.5
+            ],
+            "head-covering": [
+              0,
+              0,
+              -3.5
+            ],
+            "hat": [
+              0,
+              0,
+              -3.5
+            ],
+            "feature": [
+              0,
+              0,
+              -3.5
+            ],
+            "arm-upper-r": [
+              0,
+              0,
+              18.85
+            ],
+            "arm-lower-r": [
+              -21.97,
+              -3.65,
+              29
+            ],
+            "hand-r": [
+              -54.94,
+              -12.17,
+              29
             ]
           }
         }
-      ]
+      ],
+      "note": "The same cycle at 1.45x amplitude and 0.69x duration, with the torso leaning further into the run."
     },
     "jump-rise": {
       "loop": "hold",
@@ -2029,59 +2026,59 @@
               0
             ],
             "tail": [
-              -0.0,
+              0,
               -4,
               0
             ],
-            "arm-upper-r": [
+            "arm-upper-l": [
               0,
-              0,
-              -52
+              -4,
+              18
             ],
-            "arm-lower-r": [
-              0,
-              0,
-              -18
+            "arm-lower-l": [
+              -21.01,
+              -7.33,
+              34
             ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              20
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              -34
-            ],
-            "foot-r": [
-              0,
-              0,
-              -8
+            "hand-l": [
+              -59.04,
+              -18.95,
+              34
             ],
             "leg-upper-l": [
               0,
-              0,
-              -12
+              -4,
+              8
             ],
             "leg-lower-l": [
-              0,
-              0,
-              18
+              -13.64,
+              -4.95,
+              24
             ],
             "foot-l": [
+              -43.74,
+              -11.35,
+              14
+            ],
+            "leg-upper-r": [
               0,
-              0,
-              8
+              -4,
+              -9
+            ],
+            "leg-lower-r": [
+              15.33,
+              -5.21,
+              33
+            ],
+            "foot-r": [
+              -24.97,
+              -17.14,
+              45
             ],
             "torso": [
               0,
               -4,
-              0
+              4
             ],
             "head": [
               0,
@@ -2118,20 +2115,20 @@
               -4,
               -3
             ],
-            "arm-upper-l": [
+            "arm-upper-r": [
               0,
-              0,
-              52
+              -4,
+              -24
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              18
+            "arm-lower-r": [
+              27.66,
+              -9.88,
+              -4
             ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "hand-r": [
+              32.4,
+              -10.04,
+              -4
             ]
           }
         },
@@ -2144,113 +2141,114 @@
               0
             ],
             "tail": [
-              0.0,
-              -4,
+              0,
+              -7,
               0
-            ],
-            "arm-upper-r": [
-              0,
-              0,
-              -52
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              -18
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              20
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              -34
-            ],
-            "foot-r": [
-              0,
-              0,
-              -8
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -12
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              18
-            ],
-            "foot-l": [
-              0,
-              0,
-              8
-            ],
-            "torso": [
-              0,
-              -4,
-              0
-            ],
-            "head": [
-              0,
-              -4,
-              -3
-            ],
-            "hair": [
-              0,
-              -4,
-              -3
-            ],
-            "head-shell": [
-              0,
-              -4,
-              -3
-            ],
-            "face": [
-              0,
-              -4,
-              -3
-            ],
-            "head-covering": [
-              0,
-              -4,
-              -3
-            ],
-            "hat": [
-              0,
-              -4,
-              -3
-            ],
-            "feature": [
-              0,
-              -4,
-              -3
             ],
             "arm-upper-l": [
               0,
-              0,
-              52
+              -7,
+              24
             ],
             "arm-lower-l": [
-              0,
-              0,
-              18
+              -27.66,
+              -12.88,
+              44
             ],
             "hand-l": [
+              -74.89,
+              -31.96,
+              44
+            ],
+            "leg-upper-l": [
               0,
+              -7,
+              11
+            ],
+            "leg-lower-l": [
+              -18.7,
+              -8.8,
+              29
+            ],
+            "foot-l": [
+              -54.58,
+              -18.08,
+              17
+            ],
+            "leg-upper-r": [
               0,
-              0
+              -7,
+              -12
+            ],
+            "leg-lower-r": [
+              20.38,
+              -9.14,
+              44
+            ],
+            "foot-r": [
+              -31.03,
+              -29.91,
+              58
+            ],
+            "torso": [
+              0,
+              -7,
+              5
+            ],
+            "head": [
+              0,
+              -7,
+              -4
+            ],
+            "hair": [
+              0,
+              -7,
+              -4
+            ],
+            "head-shell": [
+              0,
+              -7,
+              -4
+            ],
+            "face": [
+              0,
+              -7,
+              -4
+            ],
+            "head-covering": [
+              0,
+              -7,
+              -4
+            ],
+            "hat": [
+              0,
+              -7,
+              -4
+            ],
+            "feature": [
+              0,
+              -7,
+              -4
+            ],
+            "arm-upper-r": [
+              0,
+              -7,
+              -32
+            ],
+            "arm-lower-r": [
+              36.03,
+              -17.33,
+              -6
+            ],
+            "hand-r": [
+              43.14,
+              -17.71,
+              -6
             ]
           }
         }
-      ]
+      ],
+      "note": "Arms and knees in opposite poses, not just an offset: the state has to read on the plain tier, which has no filters."
     },
     "jump-fall": {
       "loop": "hold",
@@ -2265,109 +2263,109 @@
               0
             ],
             "tail": [
-              0.0,
-              2,
+              0,
+              -4,
               0
-            ],
-            "arm-upper-r": [
-              0,
-              0,
-              -18
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              10
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              -14
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              10
-            ],
-            "foot-r": [
-              0,
-              0,
-              -8
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -22
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              26
-            ],
-            "foot-l": [
-              0,
-              0,
-              8
-            ],
-            "torso": [
-              0,
-              2,
-              0
-            ],
-            "head": [
-              0,
-              2,
-              4
-            ],
-            "hair": [
-              0,
-              2,
-              4
-            ],
-            "head-shell": [
-              0,
-              2,
-              4
-            ],
-            "face": [
-              0,
-              2,
-              4
-            ],
-            "head-covering": [
-              0,
-              2,
-              4
-            ],
-            "hat": [
-              0,
-              2,
-              4
-            ],
-            "feature": [
-              0,
-              2,
-              4
             ],
             "arm-upper-l": [
               0,
-              0,
-              18
+              -4,
+              -20
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -10
+              23.26,
+              -8.1,
+              -2
             ],
             "hand-l": [
+              25.63,
+              -8.14,
+              -2
+            ],
+            "leg-upper-l": [
               0,
+              -4,
+              -9
+            ],
+            "leg-lower-l": [
+              15.33,
+              -5.21,
+              5
+            ],
+            "foot-l": [
+              8.88,
+              -5.49,
+              15
+            ],
+            "leg-upper-r": [
               0,
-              0
+              -4,
+              8
+            ],
+            "leg-lower-r": [
+              -13.64,
+              -4.95,
+              34
+            ],
+            "foot-r": [
+              -55.02,
+              -17.6,
+              28
+            ],
+            "torso": [
+              0,
+              -4,
+              -3
+            ],
+            "head": [
+              0,
+              -4,
+              2
+            ],
+            "hair": [
+              0,
+              -4,
+              2
+            ],
+            "head-shell": [
+              0,
+              -4,
+              2
+            ],
+            "face": [
+              0,
+              -4,
+              2
+            ],
+            "head-covering": [
+              0,
+              -4,
+              2
+            ],
+            "hat": [
+              0,
+              -4,
+              2
+            ],
+            "feature": [
+              0,
+              -4,
+              2
+            ],
+            "arm-upper-r": [
+              0,
+              -4,
+              24
+            ],
+            "arm-lower-r": [
+              -27.66,
+              -9.88,
+              38
+            ],
+            "hand-r": [
+              -69.52,
+              -24.29,
+              38
             ]
           }
         },
@@ -2380,113 +2378,114 @@
               0
             ],
             "tail": [
-              -0.0,
-              2,
+              0,
+              -2,
               0
-            ],
-            "arm-upper-r": [
-              0,
-              0,
-              -18
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              10
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              -14
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              10
-            ],
-            "foot-r": [
-              0,
-              0,
-              -8
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              -22
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              26
-            ],
-            "foot-l": [
-              0,
-              0,
-              8
-            ],
-            "torso": [
-              0,
-              2,
-              0
-            ],
-            "head": [
-              0,
-              2,
-              4
-            ],
-            "hair": [
-              0,
-              2,
-              4
-            ],
-            "head-shell": [
-              0,
-              2,
-              4
-            ],
-            "face": [
-              0,
-              2,
-              4
-            ],
-            "head-covering": [
-              0,
-              2,
-              4
-            ],
-            "hat": [
-              0,
-              2,
-              4
-            ],
-            "feature": [
-              0,
-              2,
-              4
             ],
             "arm-upper-l": [
               0,
-              0,
-              18
+              -2,
+              -26
             ],
             "arm-lower-l": [
-              0,
-              0,
+              29.81,
+              -8.88,
               -10
             ],
             "hand-l": [
+              41.62,
+              -9.92,
+              -10
+            ],
+            "leg-upper-l": [
               0,
+              -2,
+              -13
+            ],
+            "leg-lower-l": [
+              22.05,
+              -4.51,
+              -5
+            ],
+            "foot-l": [
+              28.49,
+              -4.79,
+              7
+            ],
+            "leg-upper-r": [
               0,
-              0
+              -2,
+              12
+            ],
+            "leg-lower-r": [
+              -20.38,
+              -4.14,
+              28
+            ],
+            "foot-r": [
+              -55.12,
+              -12.8,
+              20
+            ],
+            "torso": [
+              0,
+              -2,
+              -5
+            ],
+            "head": [
+              0,
+              -2,
+              3
+            ],
+            "hair": [
+              0,
+              -2,
+              3
+            ],
+            "head-shell": [
+              0,
+              -2,
+              3
+            ],
+            "face": [
+              0,
+              -2,
+              3
+            ],
+            "head-covering": [
+              0,
+              -2,
+              3
+            ],
+            "hat": [
+              0,
+              -2,
+              3
+            ],
+            "feature": [
+              0,
+              -2,
+              3
+            ],
+            "arm-upper-r": [
+              0,
+              -2,
+              30
+            ],
+            "arm-lower-r": [
+              -34,
+              -11.11,
+              40
+            ],
+            "hand-r": [
+              -77.71,
+              -27.02,
+              40
             ]
           }
         }
-      ]
+      ],
+      "note": "The mirror image of jump-rise at the shoulder and the knee, so rise and fall differ in SHAPE and not in height alone."
     },
     "land": {
       "loop": "once",
@@ -2501,39 +2500,24 @@
               0
             ],
             "tail": [
-              0.0,
-              9,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
               0,
               0,
-              0
+              -16
             ],
-            "hand-r": [
-              0,
-              0,
-              0
+            "arm-lower-l": [
+              18.74,
+              -2.63,
+              4
             ],
-            "leg-upper-r": [
-              0,
-              0,
-              -6
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              12
-            ],
-            "foot-r": [
-              0,
-              0,
-              0
+            "hand-l": [
+              14,
+              -2.8,
+              4
             ],
             "leg-upper-l": [
               0,
@@ -2541,69 +2525,84 @@
               6
             ],
             "leg-lower-l": [
-              0,
-              0,
-              12
+              -10.24,
+              -0.54,
+              22
             ],
             "foot-l": [
+              -37.96,
+              -5.93,
+              16
+            ],
+            "leg-upper-r": [
               0,
               0,
-              0
+              -7
+            ],
+            "leg-lower-r": [
+              11.94,
+              -0.73,
+              9
+            ],
+            "foot-r": [
+              0.37,
+              -1.64,
+              15
             ],
             "torso": [
               0,
-              9,
-              0
+              0,
+              2
             ],
             "head": [
               0,
-              11,
+              0,
               0
             ],
             "hair": [
               0,
-              11,
+              0,
               0
             ],
             "head-shell": [
               0,
-              11,
+              0,
               0
             ],
             "face": [
               0,
-              11,
+              0,
               0
             ],
             "head-covering": [
               0,
-              11,
+              0,
               0
             ],
             "hat": [
               0,
-              11,
+              0,
               0
             ],
             "feature": [
               0,
-              11,
-              0
-            ],
-            "arm-upper-l": [
-              0,
               0,
               0
             ],
-            "arm-lower-l": [
+            "arm-upper-r": [
               0,
               0,
-              0
+              20
             ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "arm-lower-r": [
+              -23.26,
+              -4.1,
+              38
+            ],
+            "hand-r": [
+              -65.12,
+              -18.52,
+              38
             ]
           }
         },
@@ -2616,109 +2615,109 @@
               0
             ],
             "tail": [
-              0.0,
-              4.05,
-              0
-            ],
-            "arm-upper-r": [
               0,
-              0,
-              0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              -2.7
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              5.4
-            ],
-            "foot-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              2.7
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              5.4
-            ],
-            "foot-l": [
-              0,
-              0,
-              0
-            ],
-            "torso": [
-              0,
-              4.05,
-              0
-            ],
-            "head": [
-              0,
-              4.95,
-              0
-            ],
-            "hair": [
-              0,
-              4.95,
-              0
-            ],
-            "head-shell": [
-              0,
-              4.95,
-              0
-            ],
-            "face": [
-              0,
-              4.95,
-              0
-            ],
-            "head-covering": [
-              0,
-              4.95,
-              0
-            ],
-            "hat": [
-              0,
-              4.95,
-              0
-            ],
-            "feature": [
-              0,
-              4.95,
+              12,
               0
             ],
             "arm-upper-l": [
               0,
-              0,
-              0
+              12,
+              -22
             ],
             "arm-lower-l": [
-              0,
-              0,
-              0
+              25.47,
+              7.05,
+              8
             ],
             "hand-l": [
+              16.01,
+              6.39,
+              8
+            ],
+            "leg-upper-l": [
               0,
+              12,
+              9
+            ],
+            "leg-lower-l": [
+              -15.33,
+              10.79,
+              53
+            ],
+            "foot-l": [
+              -74.43,
+              -18.67,
+              43
+            ],
+            "leg-upper-r": [
               0,
-              0
+              12,
+              -10
+            ],
+            "leg-lower-r": [
+              17.02,
+              10.51,
+              34
+            ],
+            "foot-r": [
+              -24.36,
+              -2.14,
+              46
+            ],
+            "torso": [
+              0,
+              12,
+              5
+            ],
+            "head": [
+              0,
+              15,
+              3
+            ],
+            "hair": [
+              0,
+              15,
+              3
+            ],
+            "head-shell": [
+              0,
+              15,
+              3
+            ],
+            "face": [
+              0,
+              15,
+              3
+            ],
+            "head-covering": [
+              0,
+              15,
+              3
+            ],
+            "hat": [
+              0,
+              15,
+              3
+            ],
+            "feature": [
+              0,
+              15,
+              3
+            ],
+            "arm-upper-r": [
+              0,
+              12,
+              28
+            ],
+            "arm-lower-r": [
+              -31.92,
+              4.04,
+              58
+            ],
+            "hand-r": [
+              -89.59,
+              -27.93,
+              58
             ]
           }
         },
@@ -2731,21 +2730,36 @@
               0
             ],
             "tail": [
-              -0.0,
-              0,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
+              0,
+              0,
+              -3
+            ],
+            "arm-lower-l": [
+              3.56,
+              -0.09,
+              1
+            ],
+            "hand-l": [
+              2.37,
+              -0.1,
+              1
+            ],
+            "leg-upper-l": [
               0,
               0,
               0
             ],
-            "hand-r": [
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
               0,
               0,
               0
@@ -2761,21 +2775,6 @@
               0
             ],
             "foot-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
               0,
               0,
               0
@@ -2820,25 +2819,25 @@
               0,
               0
             ],
-            "arm-upper-l": [
+            "arm-upper-r": [
               0,
               0,
-              0
+              3
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              0
+            "arm-lower-r": [
+              -3.56,
+              -0.09,
+              7
             ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "hand-r": [
+              -11.85,
+              -0.6,
+              7
             ]
           }
         }
       ],
-      "note": "The only squash-and-stretch in the rig. Under reducedMotion this state is skipped entirely and the machine goes straight to idle or walk; no extra frames exist for the reduced path and none are needed."
+      "note": "The only squash-and-stretch in the rig: both knees fold and the body drops 12 px. Under reducedMotion this state is skipped entirely and the machine goes straight to the next one, which is why the selector tests it before anything else."
     },
     "talk": {
       "loop": "loop",
@@ -2853,21 +2852,36 @@
               0
             ],
             "tail": [
-              0.0,
-              -0.35,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
+              0,
+              0,
+              6
+            ],
+            "arm-lower-l": [
+              -7.11,
+              -0.37,
+              14
+            ],
+            "hand-l": [
+              -23.56,
+              -2.39,
+              14
+            ],
+            "leg-upper-l": [
               0,
               0,
               0
             ],
-            "hand-r": [
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
               0,
               0,
               0
@@ -2887,75 +2901,60 @@
               0,
               0
             ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0
-            ],
             "torso": [
               0,
-              -0.35,
+              0,
               0
             ],
             "head": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "hair": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "head-shell": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "face": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "head-covering": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "hat": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "feature": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
-            "arm-upper-l": [
+            "arm-upper-r": [
               0,
               0,
-              -4.9
+              -18
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              -10.5
+            "arm-lower-r": [
+              21.01,
+              -3.33,
+              22
             ],
-            "hand-l": [
-              0,
-              0,
-              -4.2
+            "hand-r": [
+              -4.46,
+              -8.28,
+              22
             ]
           }
         },
@@ -2968,109 +2967,109 @@
               0
             ],
             "tail": [
-              0.0,
-              -1.0,
+              0,
+              -1.2,
               0
             ],
-            "arm-upper-r": [
+            "arm-upper-l": [
               0,
-              0,
-              0
+              -1.2,
+              9
             ],
-            "arm-lower-r": [
-              0,
-              0,
-              0
+            "arm-lower-l": [
+              -10.64,
+              -2.04,
+              19
             ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0
-            ],
-            "foot-r": [
-              0,
-              0,
-              0
+            "hand-l": [
+              -32.78,
+              -5.74,
+              19
             ],
             "leg-upper-l": [
               0,
-              0,
+              -1.2,
               0
             ],
             "leg-lower-l": [
               0,
-              0,
+              -1.2,
               0
             ],
             "foot-l": [
               0,
+              -1.2,
+              0
+            ],
+            "leg-upper-r": [
               0,
+              -1.2,
+              0
+            ],
+            "leg-lower-r": [
+              0,
+              -1.2,
+              0
+            ],
+            "foot-r": [
+              0,
+              -1.2,
               0
             ],
             "torso": [
               0,
-              -1.0,
+              -1.2,
               0
             ],
             "head": [
               0,
-              -1.0,
-              2.5
+              -2.8,
+              5
             ],
             "hair": [
               0,
-              -1.0,
-              2.5
+              -2.8,
+              5
             ],
             "head-shell": [
               0,
-              -1.0,
-              2.5
+              -2.8,
+              5
             ],
             "face": [
               0,
-              -1.0,
-              2.5
+              -2.8,
+              5
             ],
             "head-covering": [
               0,
-              -1.0,
-              2.5
+              -2.8,
+              5
             ],
             "hat": [
               0,
-              -1.0,
-              2.5
+              -2.8,
+              5
             ],
             "feature": [
               0,
-              -1.0,
-              2.5
+              -2.8,
+              5
             ],
-            "arm-upper-l": [
+            "arm-upper-r": [
               0,
-              0,
-              -14.0
+              -1.2,
+              -30
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              -30.0
+            "arm-lower-r": [
+              34,
+              -10.31,
+              24
             ],
-            "hand-l": [
-              0,
-              0,
-              -12.0
+            "hand-r": [
+              6.34,
+              -16.19,
+              24
             ]
           }
         },
@@ -3083,21 +3082,36 @@
               0
             ],
             "tail": [
-              -0.0,
-              -0.35,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
+              0,
+              0,
+              6
+            ],
+            "arm-lower-l": [
+              -7.11,
+              -0.37,
+              14
+            ],
+            "hand-l": [
+              -23.56,
+              -2.39,
+              14
+            ],
+            "leg-upper-l": [
               0,
               0,
               0
             ],
-            "hand-r": [
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
               0,
               0,
               0
@@ -3117,80 +3131,65 @@
               0,
               0
             ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0
-            ],
             "torso": [
               0,
-              -0.35,
+              0,
               0
             ],
             "head": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "hair": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "head-shell": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "face": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "head-covering": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "hat": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
             "feature": [
               0,
-              -0.35,
-              0.88
+              0,
+              -5
             ],
-            "arm-upper-l": [
+            "arm-upper-r": [
               0,
               0,
-              -4.9
+              -18
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              -10.5
+            "arm-lower-r": [
+              21.01,
+              -3.33,
+              22
             ],
-            "hand-l": [
-              0,
-              0,
-              -4.2
+            "hand-r": [
+              -4.46,
+              -8.28,
+              22
             ]
           }
         }
       ],
-      "note": "An open near-side hand and a small head tilt. Dialogue text is DOM and carries the words; this state only says WHO is speaking, which is the visual equivalent the a11y rules ask for."
+      "note": "The near-side hand comes up and the head tilts. Dialogue text is DOM and carries the words; this state only says WHO is speaking, which is why it is shape and not a glow."
     },
     "interact": {
       "loop": "once",
@@ -3205,21 +3204,36 @@
               0
             ],
             "tail": [
-              0.0,
-              0,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
+              0,
+              0,
+              -3
+            ],
+            "arm-lower-l": [
+              3.56,
+              -0.09,
+              1
+            ],
+            "hand-l": [
+              2.37,
+              -0.1,
+              1
+            ],
+            "leg-upper-l": [
               0,
               0,
               0
             ],
-            "hand-r": [
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
               0,
               0,
               0
@@ -3235,21 +3249,6 @@
               0
             ],
             "foot-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
               0,
               0,
               0
@@ -3294,20 +3293,20 @@
               0,
               0
             ],
-            "arm-upper-l": [
+            "arm-upper-r": [
               0,
               0,
-              0
+              3
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              0
+            "arm-lower-r": [
+              -3.56,
+              -0.09,
+              7
             ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "hand-r": [
+              -11.85,
+              -0.6,
+              7
             ]
           }
         },
@@ -3320,109 +3319,109 @@
               0
             ],
             "tail": [
-              5.2,
-              -2,
+              0,
+              -1,
               0
-            ],
-            "arm-upper-r": [
-              0,
-              0,
-              0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0
-            ],
-            "foot-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0
-            ],
-            "torso": [
-              0,
-              -2,
-              0
-            ],
-            "head": [
-              0,
-              -2,
-              -4
-            ],
-            "hair": [
-              0,
-              -2,
-              -4
-            ],
-            "head-shell": [
-              0,
-              -2,
-              -4
-            ],
-            "face": [
-              0,
-              -2,
-              -4
-            ],
-            "head-covering": [
-              0,
-              -2,
-              -4
-            ],
-            "hat": [
-              0,
-              -2,
-              -4
-            ],
-            "feature": [
-              0,
-              -2,
-              -4
             ],
             "arm-upper-l": [
               0,
-              0,
-              -64
+              -1,
+              9
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -24
+              -10.64,
+              -1.84,
+              17
             ],
             "hand-l": [
+              -30.52,
+              -4.81,
+              17
+            ],
+            "leg-upper-l": [
               0,
+              -1,
+              5
+            ],
+            "leg-lower-l": [
+              -8.54,
+              -1.37,
+              11
+            ],
+            "foot-l": [
+              -22.66,
+              -2.73,
+              9
+            ],
+            "leg-upper-r": [
               0,
-              -10
+              -1,
+              -6
+            ],
+            "leg-lower-r": [
+              10.24,
+              -1.54,
+              0
+            ],
+            "foot-r": [
+              10.24,
+              -1.54,
+              2
+            ],
+            "torso": [
+              0,
+              -1,
+              3
+            ],
+            "head": [
+              0,
+              -1,
+              -2
+            ],
+            "hair": [
+              0,
+              -1,
+              -2
+            ],
+            "head-shell": [
+              0,
+              -1,
+              -2
+            ],
+            "face": [
+              0,
+              -1,
+              -2
+            ],
+            "head-covering": [
+              0,
+              -1,
+              -2
+            ],
+            "hat": [
+              0,
+              -1,
+              -2
+            ],
+            "feature": [
+              0,
+              -1,
+              -2
+            ],
+            "arm-upper-r": [
+              0,
+              -1,
+              -44
+            ],
+            "arm-lower-r": [
+              47.24,
+              -20.08,
+              -28
+            ],
+            "hand-r": [
+              79.16,
+              -28.04,
+              -28
             ]
           }
         },
@@ -3435,109 +3434,109 @@
               0
             ],
             "tail": [
-              -5.2,
-              -2,
+              0,
+              -1,
               0
-            ],
-            "arm-upper-r": [
-              0,
-              0,
-              0
-            ],
-            "arm-lower-r": [
-              0,
-              0,
-              0
-            ],
-            "hand-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-r": [
-              0,
-              0,
-              0
-            ],
-            "foot-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
-              0,
-              0,
-              0
-            ],
-            "torso": [
-              0,
-              -2,
-              0
-            ],
-            "head": [
-              0,
-              -2,
-              -4
-            ],
-            "hair": [
-              0,
-              -2,
-              -4
-            ],
-            "head-shell": [
-              0,
-              -2,
-              -4
-            ],
-            "face": [
-              0,
-              -2,
-              -4
-            ],
-            "head-covering": [
-              0,
-              -2,
-              -4
-            ],
-            "hat": [
-              0,
-              -2,
-              -4
-            ],
-            "feature": [
-              0,
-              -2,
-              -4
             ],
             "arm-upper-l": [
               0,
-              0,
-              -64
+              -1,
+              11
             ],
             "arm-lower-l": [
-              0,
-              0,
-              -24
+              -12.98,
+              -2.25,
+              19
             ],
             "hand-l": [
+              -35.11,
+              -5.95,
+              19
+            ],
+            "leg-upper-l": [
               0,
+              -1,
+              7
+            ],
+            "leg-lower-l": [
+              -11.94,
+              -1.73,
+              15
+            ],
+            "foot-l": [
+              -31.1,
+              -4.25,
+              13
+            ],
+            "leg-upper-r": [
               0,
-              -10
+              -1,
+              -8
+            ],
+            "leg-lower-r": [
+              13.64,
+              -1.95,
+              0
+            ],
+            "foot-r": [
+              13.64,
+              -1.95,
+              2
+            ],
+            "torso": [
+              0,
+              -1,
+              4
+            ],
+            "head": [
+              0,
+              -1,
+              -2
+            ],
+            "hair": [
+              0,
+              -1,
+              -2
+            ],
+            "head-shell": [
+              0,
+              -1,
+              -2
+            ],
+            "face": [
+              0,
+              -1,
+              -2
+            ],
+            "head-covering": [
+              0,
+              -1,
+              -2
+            ],
+            "hat": [
+              0,
+              -1,
+              -2
+            ],
+            "feature": [
+              0,
+              -1,
+              -2
+            ],
+            "arm-upper-r": [
+              0,
+              -1,
+              -49
+            ],
+            "arm-lower-r": [
+              51.32,
+              -24.39,
+              -37
+            ],
+            "hand-r": [
+              92.24,
+              -38.08,
+              -37
             ]
           }
         },
@@ -3550,21 +3549,36 @@
               0
             ],
             "tail": [
-              -0.0,
-              0,
-              0
-            ],
-            "arm-upper-r": [
               0,
               0,
               0
             ],
-            "arm-lower-r": [
+            "arm-upper-l": [
+              0,
+              0,
+              -3
+            ],
+            "arm-lower-l": [
+              3.56,
+              -0.09,
+              1
+            ],
+            "hand-l": [
+              2.37,
+              -0.1,
+              1
+            ],
+            "leg-upper-l": [
               0,
               0,
               0
             ],
-            "hand-r": [
+            "leg-lower-l": [
+              0,
+              0,
+              0
+            ],
+            "foot-l": [
               0,
               0,
               0
@@ -3580,21 +3594,6 @@
               0
             ],
             "foot-r": [
-              0,
-              0,
-              0
-            ],
-            "leg-upper-l": [
-              0,
-              0,
-              0
-            ],
-            "leg-lower-l": [
-              0,
-              0,
-              0
-            ],
-            "foot-l": [
               0,
               0,
               0
@@ -3639,446 +3638,447 @@
               0,
               0
             ],
-            "arm-upper-l": [
+            "arm-upper-r": [
               0,
               0,
-              0
+              3
             ],
-            "arm-lower-l": [
-              0,
-              0,
-              0
+            "arm-lower-r": [
+              -3.56,
+              -0.09,
+              7
             ],
-            "hand-l": [
-              0,
-              0,
-              0
+            "hand-r": [
+              -11.85,
+              -0.6,
+              7
             ]
           }
         }
-      ]
+      ],
+      "note": "The near arm reaches forward, along the direction of travel, so the gesture points at what was tapped."
     }
   },
   "frames": {
     "character-arm-lower-beaver": {
       "source": "src/svg/shared/character/arm-lower-beaver.svg",
-      "x": 164,
+      "x": 115,
       "y": 203,
-      "w": 45,
-      "h": 101
+      "w": 41,
+      "h": 102
     },
     "character-arm-lower-parka": {
       "source": "src/svg/shared/character/arm-lower-parka.svg",
-      "x": 164,
+      "x": 115,
       "y": 203,
-      "w": 47,
-      "h": 101
+      "w": 41,
+      "h": 102
     },
     "character-arm-lower-serge": {
       "source": "src/svg/shared/character/arm-lower-serge.svg",
-      "x": 166,
-      "y": 201,
+      "x": 115,
+      "y": 203,
       "w": 41,
-      "h": 94
+      "h": 102
     },
     "character-arm-upper-beaver": {
       "source": "src/svg/shared/character/arm-upper-beaver.svg",
-      "x": 150,
-      "y": 133,
-      "w": 56,
-      "h": 111
+      "x": 115,
+      "y": 135,
+      "w": 44,
+      "h": 114
     },
     "character-arm-upper-parka": {
       "source": "src/svg/shared/character/arm-upper-parka.svg",
-      "x": 150,
-      "y": 133,
-      "w": 56,
-      "h": 111
+      "x": 115,
+      "y": 135,
+      "w": 44,
+      "h": 114
     },
     "character-arm-upper-serge": {
       "source": "src/svg/shared/character/arm-upper-serge.svg",
-      "x": 159,
-      "y": 128,
-      "w": 47,
-      "h": 100
+      "x": 115,
+      "y": 135,
+      "w": 44,
+      "h": 114
     },
     "character-face-happy": {
       "source": "src/svg/shared/character/face-happy.svg",
-      "x": 98,
-      "y": 56,
-      "w": 44,
-      "h": 48
+      "x": 117,
+      "y": 57,
+      "w": 35,
+      "h": 46
     },
     "character-face-neutral": {
       "source": "src/svg/shared/character/face-neutral.svg",
-      "x": 98,
-      "y": 59,
-      "w": 44,
-      "h": 43
+      "x": 117,
+      "y": 60,
+      "w": 35,
+      "h": 41
     },
     "character-face-surprised": {
       "source": "src/svg/shared/character/face-surprised.svg",
-      "x": 98,
-      "y": 52,
-      "w": 44,
-      "h": 57
+      "x": 116,
+      "y": 53,
+      "w": 37,
+      "h": 55
     },
     "character-face-thinking": {
       "source": "src/svg/shared/character/face-thinking.svg",
-      "x": 98,
-      "y": 54,
-      "w": 44,
-      "h": 47
+      "x": 117,
+      "y": 56,
+      "w": 35,
+      "h": 43
     },
     "character-feature-glasses": {
       "source": "src/svg/shared/character/feature-glasses.svg",
-      "x": 86,
-      "y": 62,
-      "w": 68,
-      "h": 26
+      "x": 98,
+      "y": 64,
+      "w": 56,
+      "h": 23
     },
     "character-foot-l-beaver": {
       "source": "src/svg/shared/character/foot-l-beaver.svg",
-      "x": 126,
-      "y": 418,
-      "w": 69,
-      "h": 44
+      "x": 110,
+      "y": 420,
+      "w": 59,
+      "h": 47
     },
     "character-foot-l-parka": {
       "source": "src/svg/shared/character/foot-l-parka.svg",
-      "x": 126,
-      "y": 414,
-      "w": 65,
-      "h": 48
+      "x": 109,
+      "y": 412,
+      "w": 60,
+      "h": 55
     },
     "character-foot-l-serge": {
       "source": "src/svg/shared/character/foot-l-serge.svg",
-      "x": 128,
-      "y": 424,
-      "w": 59,
-      "h": 38
+      "x": 106,
+      "y": 420,
+      "w": 63,
+      "h": 47
     },
     "character-foot-r-beaver": {
       "source": "src/svg/shared/character/foot-r-beaver.svg",
-      "x": 60,
-      "y": 418,
-      "w": 69,
-      "h": 44
+      "x": 86,
+      "y": 416,
+      "w": 65,
+      "h": 47
     },
     "character-foot-r-parka": {
       "source": "src/svg/shared/character/foot-r-parka.svg",
-      "x": 66,
-      "y": 414,
-      "w": 65,
-      "h": 48
+      "x": 85,
+      "y": 408,
+      "w": 66,
+      "h": 55
     },
     "character-foot-r-serge": {
       "source": "src/svg/shared/character/foot-r-serge.svg",
-      "x": 68,
-      "y": 424,
-      "w": 59,
-      "h": 38
+      "x": 82,
+      "y": 416,
+      "w": 69,
+      "h": 47
     },
     "character-ground-shadow": {
       "source": "src/svg/shared/character/ground-shadow.svg",
-      "x": 64,
-      "y": 445,
-      "w": 112,
-      "h": 24
+      "x": 70,
+      "y": 446,
+      "w": 100,
+      "h": 22
     },
     "character-hair-bob-black": {
       "source": "src/svg/shared/character/hair-bob-black.svg",
-      "x": 72,
-      "y": 29,
-      "w": 96,
-      "h": 89
+      "x": 70,
+      "y": 25,
+      "w": 95,
+      "h": 98
     },
     "character-hair-bob-blond": {
       "source": "src/svg/shared/character/hair-bob-blond.svg",
-      "x": 72,
-      "y": 29,
-      "w": 96,
-      "h": 89
+      "x": 70,
+      "y": 25,
+      "w": 95,
+      "h": 98
     },
     "character-hair-bob-brown": {
       "source": "src/svg/shared/character/hair-bob-brown.svg",
-      "x": 72,
-      "y": 29,
-      "w": 96,
-      "h": 89
+      "x": 70,
+      "y": 25,
+      "w": 95,
+      "h": 98
     },
     "character-hair-bob-grey": {
       "source": "src/svg/shared/character/hair-bob-grey.svg",
-      "x": 72,
-      "y": 29,
-      "w": 96,
-      "h": 89
+      "x": 70,
+      "y": 25,
+      "w": 95,
+      "h": 98
     },
     "character-hair-bob-red": {
       "source": "src/svg/shared/character/hair-bob-red.svg",
-      "x": 72,
-      "y": 29,
-      "w": 96,
-      "h": 89
+      "x": 70,
+      "y": 25,
+      "w": 95,
+      "h": 98
     },
     "character-hair-coil-black": {
       "source": "src/svg/shared/character/hair-coil-black.svg",
-      "x": 72,
-      "y": 17,
-      "w": 100,
-      "h": 79
+      "x": 75,
+      "y": 21,
+      "w": 92,
+      "h": 58
     },
     "character-hair-coil-blond": {
       "source": "src/svg/shared/character/hair-coil-blond.svg",
-      "x": 72,
-      "y": 17,
-      "w": 100,
-      "h": 79
+      "x": 75,
+      "y": 21,
+      "w": 92,
+      "h": 58
     },
     "character-hair-coil-brown": {
       "source": "src/svg/shared/character/hair-coil-brown.svg",
-      "x": 72,
-      "y": 17,
-      "w": 100,
-      "h": 79
+      "x": 75,
+      "y": 21,
+      "w": 92,
+      "h": 58
     },
     "character-hair-coil-grey": {
       "source": "src/svg/shared/character/hair-coil-grey.svg",
-      "x": 72,
-      "y": 17,
-      "w": 100,
-      "h": 79
+      "x": 75,
+      "y": 21,
+      "w": 92,
+      "h": 58
     },
     "character-hair-coil-red": {
       "source": "src/svg/shared/character/hair-coil-red.svg",
-      "x": 72,
-      "y": 17,
-      "w": 100,
-      "h": 79
+      "x": 75,
+      "y": 21,
+      "w": 92,
+      "h": 58
     },
     "character-hair-crop-black": {
       "source": "src/svg/shared/character/hair-crop-black.svg",
-      "x": 83,
-      "y": 32,
-      "w": 74,
-      "h": 62
+      "x": 80,
+      "y": 29,
+      "w": 82,
+      "h": 48
     },
     "character-hair-crop-blond": {
       "source": "src/svg/shared/character/hair-crop-blond.svg",
-      "x": 83,
-      "y": 32,
-      "w": 74,
-      "h": 62
+      "x": 80,
+      "y": 29,
+      "w": 82,
+      "h": 48
     },
     "character-hair-crop-brown": {
       "source": "src/svg/shared/character/hair-crop-brown.svg",
-      "x": 83,
-      "y": 32,
-      "w": 74,
-      "h": 62
+      "x": 80,
+      "y": 29,
+      "w": 82,
+      "h": 48
     },
     "character-hair-crop-grey": {
       "source": "src/svg/shared/character/hair-crop-grey.svg",
-      "x": 83,
-      "y": 32,
-      "w": 74,
-      "h": 62
+      "x": 80,
+      "y": 29,
+      "w": 82,
+      "h": 48
     },
     "character-hair-crop-red": {
       "source": "src/svg/shared/character/hair-crop-red.svg",
-      "x": 83,
-      "y": 32,
-      "w": 74,
-      "h": 62
+      "x": 80,
+      "y": 29,
+      "w": 82,
+      "h": 48
     },
     "character-hair-long-black": {
       "source": "src/svg/shared/character/hair-long-black.svg",
-      "x": 56,
-      "y": 27,
-      "w": 128,
-      "h": 139
+      "x": 65,
+      "y": 21,
+      "w": 101,
+      "h": 155
     },
     "character-hair-long-blond": {
       "source": "src/svg/shared/character/hair-long-blond.svg",
-      "x": 56,
-      "y": 27,
-      "w": 128,
-      "h": 139
+      "x": 65,
+      "y": 21,
+      "w": 101,
+      "h": 155
     },
     "character-hair-long-brown": {
       "source": "src/svg/shared/character/hair-long-brown.svg",
-      "x": 56,
-      "y": 27,
-      "w": 128,
-      "h": 139
+      "x": 65,
+      "y": 21,
+      "w": 101,
+      "h": 155
     },
     "character-hair-long-grey": {
       "source": "src/svg/shared/character/hair-long-grey.svg",
-      "x": 56,
-      "y": 27,
-      "w": 128,
-      "h": 139
+      "x": 65,
+      "y": 21,
+      "w": 101,
+      "h": 155
     },
     "character-hair-long-red": {
       "source": "src/svg/shared/character/hair-long-red.svg",
-      "x": 56,
-      "y": 27,
-      "w": 128,
-      "h": 139
+      "x": 65,
+      "y": 21,
+      "w": 101,
+      "h": 155
     },
     "character-hand-beaver": {
       "source": "src/svg/shared/character/hand-beaver.svg",
-      "x": 158,
-      "y": 282,
+      "x": 103,
+      "y": 272,
       "w": 57,
-      "h": 52
+      "h": 57
     },
     "character-hand-parka": {
       "source": "src/svg/shared/character/hand-parka.svg",
-      "x": 159,
-      "y": 273,
-      "w": 60,
-      "h": 59
+      "x": 103,
+      "y": 272,
+      "w": 57,
+      "h": 57
     },
     "character-hand-serge": {
       "source": "src/svg/shared/character/hand-serge.svg",
-      "x": 168,
-      "y": 268,
-      "w": 52,
-      "h": 60
+      "x": 103,
+      "y": 272,
+      "w": 57,
+      "h": 57
     },
     "character-hat-serge": {
       "source": "src/svg/shared/character/hat-serge.svg",
       "x": 73,
       "y": 11,
-      "w": 94,
-      "h": 56
+      "w": 98,
+      "h": 61
     },
     "character-head-covering-toque": {
       "source": "src/svg/shared/character/head-covering-toque.svg",
-      "x": 77,
-      "y": -12,
-      "w": 86,
+      "x": 78,
+      "y": -6,
+      "w": 90,
       "h": 76
     },
     "character-head-shell-beaver": {
       "source": "src/svg/shared/character/head-shell-beaver.svg",
-      "x": 65,
-      "y": 32,
-      "w": 110,
+      "x": 76,
+      "y": 29,
+      "w": 105,
       "h": 110
     },
     "character-head-skin-1": {
       "source": "src/svg/shared/character/head-skin-1.svg",
-      "x": 80,
-      "y": 36,
-      "w": 80,
-      "h": 92
+      "x": 76,
+      "y": 37,
+      "w": 87,
+      "h": 96
     },
     "character-head-skin-2": {
       "source": "src/svg/shared/character/head-skin-2.svg",
-      "x": 80,
-      "y": 36,
-      "w": 80,
-      "h": 92
+      "x": 76,
+      "y": 37,
+      "w": 87,
+      "h": 96
     },
     "character-head-skin-3": {
       "source": "src/svg/shared/character/head-skin-3.svg",
-      "x": 80,
-      "y": 36,
-      "w": 80,
-      "h": 92
+      "x": 76,
+      "y": 37,
+      "w": 87,
+      "h": 96
     },
     "character-head-skin-4": {
       "source": "src/svg/shared/character/head-skin-4.svg",
-      "x": 80,
-      "y": 36,
-      "w": 80,
-      "h": 92
+      "x": 76,
+      "y": 37,
+      "w": 87,
+      "h": 96
     },
     "character-head-skin-5": {
       "source": "src/svg/shared/character/head-skin-5.svg",
-      "x": 80,
-      "y": 36,
-      "w": 80,
-      "h": 92
+      "x": 76,
+      "y": 37,
+      "w": 87,
+      "h": 96
     },
     "character-head-skin-6": {
       "source": "src/svg/shared/character/head-skin-6.svg",
-      "x": 80,
-      "y": 36,
-      "w": 80,
-      "h": 92
+      "x": 76,
+      "y": 37,
+      "w": 87,
+      "h": 96
     },
     "character-leg-lower-beaver": {
       "source": "src/svg/shared/character/leg-lower-beaver.svg",
-      "x": 125,
-      "y": 343,
-      "w": 46,
-      "h": 115
+      "x": 110,
+      "y": 349,
+      "w": 41,
+      "h": 110
     },
     "character-leg-lower-parka": {
       "source": "src/svg/shared/character/leg-lower-parka.svg",
-      "x": 125,
-      "y": 343,
-      "w": 46,
-      "h": 115
+      "x": 110,
+      "y": 349,
+      "w": 41,
+      "h": 110
     },
     "character-leg-lower-serge": {
       "source": "src/svg/shared/character/leg-lower-serge.svg",
-      "x": 125,
-      "y": 363,
-      "w": 48,
-      "h": 90
+      "x": 110,
+      "y": 349,
+      "w": 41,
+      "h": 110
     },
     "character-leg-upper-beaver": {
       "source": "src/svg/shared/character/leg-upper-beaver.svg",
-      "x": 117,
-      "y": 244,
-      "w": 58,
-      "h": 145
+      "x": 109,
+      "y": 247,
+      "w": 46,
+      "h": 140
     },
     "character-leg-upper-parka": {
       "source": "src/svg/shared/character/leg-upper-parka.svg",
-      "x": 117,
-      "y": 244,
-      "w": 58,
-      "h": 145
+      "x": 109,
+      "y": 247,
+      "w": 46,
+      "h": 140
     },
     "character-leg-upper-serge": {
       "source": "src/svg/shared/character/leg-upper-serge.svg",
-      "x": 108,
-      "y": 260,
-      "w": 76,
-      "h": 144
+      "x": 109,
+      "y": 247,
+      "w": 46,
+      "h": 140
     },
     "character-tail-beaver": {
       "source": "src/svg/shared/character/tail-beaver.svg",
-      "x": 2,
-      "y": 282,
-      "w": 110,
-      "h": 149
+      "x": 22,
+      "y": 281,
+      "w": 84,
+      "h": 141
     },
     "character-torso-beaver": {
       "source": "src/svg/shared/character/torso-beaver.svg",
-      "x": 53,
-      "y": 122,
-      "w": 134,
+      "x": 62,
+      "y": 123,
+      "w": 114,
       "h": 187
     },
     "character-torso-parka": {
       "source": "src/svg/shared/character/torso-parka.svg",
-      "x": 41,
-      "y": 122,
-      "w": 158,
-      "h": 186
+      "x": 65,
+      "y": 113,
+      "w": 111,
+      "h": 200
     },
     "character-torso-serge": {
       "source": "src/svg/shared/character/torso-serge.svg",
-      "x": 39,
-      "y": 120,
-      "w": 162,
-      "h": 180
+      "x": 70,
+      "y": 118,
+      "w": 106,
+      "h": 183
     }
   }
 }

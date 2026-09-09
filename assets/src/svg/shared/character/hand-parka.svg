@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="60" height="59" viewBox="159 273 60 59" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. Knitted mitt: one mass and a thumb, no separated fingers at any size. The thumb sits on the INNER edge, so it points toward the body on both hands once the frame is mirrored.</title>
-  <path d="M 179,300 C 169,296 162,302 164,311 C 166,320 178,323 184,316 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 194,288 C 207,288 215,295 215,304 L 215,316 C 215,331 173,331 173,316 L 173,304 C 173,295 181,288 194,288 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="mt"><path d="M 194,288 C 207,288 215,295 215,304 L 215,316 C 215,331 173,331 173,316 L 173,304 C 173,295 181,288 194,288 Z"/></clipPath></defs>
-  <g clip-path="url(#mt)">
-    <path d="M 208,292 C 216,294 216,304 215,314 C 214,324 216,330 216,336 L 202,336 C 202,326 201,312 202,302 C 202,294 203,292 208,292 Z" fill="#e27468"/>
-    <path d="M 176,294 C 182,294 183,304 183,314 C 183,324 182,330 182,336 L 170,336 C 170,326 170,312 170,302 C 170,296 171,294 176,294 Z" fill="#941835"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="57" height="57" viewBox="103 272 57 57" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. Knitted mitt with a white knit cuff: one mass and a thumb, no separated fingers at any size. The thumb is on the trailing edge of the authored frame so the NEAR hand carries it forward.</title>
+  <path d="M 122,298 C 112,294 105,300 107,309 C 109,318 121,321 127,314 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 137,286 C 149,286 157,294 157,304 L 157,314 C 157,330 117,330 117,314 L 117,304 C 117,294 125,286 137,286 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="mt-parka"><path d="M 137,286 C 149,286 157,294 157,304 L 157,314 C 157,330 117,330 117,314 L 117,304 C 117,294 125,286 137,286 Z"/></clipPath></defs>
+  <g clip-path="url(#mt-parka)">
+    <path d="M 150,290 C 158,292 158,302 157,312 C 156,322 158,328 158,334 L 144,334 C 144,324 143,310 144,300 C 144,292 145,290 150,290 Z" fill="#941835"/>
+    <path d="M 124,292 C 130,292 131,302 131,312 C 131,322 130,328 130,334 L 118,334 C 118,324 118,310 118,300 C 118,294 119,292 124,292 Z" fill="#e27468"/>
   </g>
-  <path d="M 181,276 L 207,276 C 215,276 215,294 207,294 L 181,294 C 173,294 173,276 181,276 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M 183,286 L 209,286 C 213,286 213,294 209,294 L 183,294 C 179,294 179,286 183,286 Z" fill="#c2d6e8"/>
+  <path d="M 123,274 L 151,274 C 159,274 159,292 151,292 L 123,292 C 115,292 115,274 123,274 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 125,284 L 153,284 C 157,284 157,292 153,292 L 125,292 C 121,292 121,284 125,284 Z" fill="#c2d6e8"/>
 </svg>

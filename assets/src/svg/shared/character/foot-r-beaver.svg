@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="69" height="44" viewBox="60 418 69 44" shape-rendering="geometricPrecision">
-  <title>The guide's webbed hind foot, the wearer's right, the far side of the canonical pose. Bare dark hide, a single rounded wedge with three toe notches, a tone lighter than the tail because the sole plane faces the sky and two dark masses of one tone merge at phone size, and the web between them. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.</title>
-  <path d="M 70,424 C 84,420 110,424 118,430 C 124,435 122,443 124,450 C 126,457 116,460 102,460 L 74,460 C 66,460 64,454 64,446 C 64,436 64,428 70,424 Z" fill="#44555f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="fbr"><path d="M 70,424 C 84,420 110,424 118,430 C 124,435 122,443 124,450 C 126,457 116,460 102,460 L 74,460 C 66,460 64,454 64,446 C 64,436 64,428 70,424 Z"/></clipPath></defs>
-  <g clip-path="url(#fbr)">
-    <ellipse cx="74" cy="430" rx="22" ry="12" fill="#44555f"/>
-    <ellipse cx="120" cy="456" rx="24" ry="14" fill="#242b33"/>
-    <path d="M 92,436 L 92,464" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round"/>
-    <path d="M 108,438 L 108,464" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="65" height="47" viewBox="86 416 65 47" shape-rendering="geometricPrecision">
+  <title>The guide’s webbed hind foot, a tone lighter than the paddle tail so the two do not merge into one dark mass at phone size, the wearer’s right - the NEAR side of the three-quarter pose. Feet are the one pair the rig does not reflect, and in this view that is what buys the turn: both point the way the character travels, and the far one is drawn full length on the near side.</title>
+  <path d="M 97,422 C 109,416 131,420 141,428 C 147,434 145,442 147,448 C 149,456 139,460 127,460 L 99,460 C 91,460 89,454 89,446 C 89,434 89,426 97,422 Z" fill="#44555f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="btn"><path d="M 97,422 C 109,416 131,420 141,428 C 147,434 145,442 147,448 C 149,456 139,460 127,460 L 99,460 C 91,460 89,454 89,446 C 89,434 89,426 97,422 Z"/></clipPath></defs>
+  <g clip-path="url(#btn)">
+      <ellipse cx="135" cy="432" rx="18" ry="13" fill="#7d8fa0"/>
+      <ellipse cx="93" cy="438" rx="15" ry="15" fill="#242b33"/>
+      <path d="M 85,446 C 107,442 139,442 153,446 L 153,466 L 85,466 Z" fill="#0f121a"/>
+      <path d="M 85,446 C 107,442 139,442 153,446 L 153,452 C 139,448 107,448 85,452 Z" fill="#242b33"/>
   </g>
 </svg>

@@ -1,13 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="47" height="101" viewBox="164 203 47 101" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, lower: one quilt seam and a knit storm cuff at the wrist. The outline is open across the top centre, where the upper sleeve covers it.</title>
-  <path d="M 184,206 C 195,206 201,212 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 167,212 173,206 184,206 Z" fill="#153f86"/>
-  <defs><clipPath id="al"><path d="M 184,206 C 195,206 201,212 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 167,212 173,206 184,206 Z"/></clipPath></defs>
-  <g clip-path="url(#al)">
-    <path d="M 197,214 C 204,216 204,226 205,236 C 206,258 208,282 208,302 L 195,302 C 194,282 193,258 192,236 C 192,226 192,216 197,214 Z" fill="#2275c6"/>
-    <path d="M 172,216 C 177,216 178,226 179,236 C 180,258 182,282 182,302 L 172,302 C 171,282 169,258 168,236 C 167,226 167,218 172,216 Z" fill="#091740"/>
-    <path d="M 158,250 L 212,252" fill="none" stroke="#091740" stroke-width="4" stroke-linecap="round"/>
-    <ellipse cx="185" cy="208" rx="24" ry="9" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="102" viewBox="115 203 41 102" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. Parka sleeve, lower, from the elbow to the cuff.</title>
+  <path d="M 136,206 C 147,206 153,212 153,222 L 152,288 C 152,298 143,302 135,302 C 126,302 118,298 118,288 L 119,222 C 119,212 125,206 136,206 Z" fill="#153f86" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="al-parka"><path d="M 136,206 C 147,206 153,212 153,222 L 152,288 C 152,298 143,302 135,302 C 126,302 118,298 118,288 L 119,222 C 119,212 125,206 136,206 Z"/></clipPath></defs>
+  <g clip-path="url(#al-parka)">
+    <path d="M 146,214 C 153,216 153,224 153,232 L 152,304 L 140,304 L 141,232 C 141,224 140,216 146,214 Z" fill="#091740"/>
+    <path d="M 125,216 C 130,216 131,224 131,232 L 130,304 L 119,304 L 119,232 C 119,224 119,218 125,216 Z" fill="#2275c6"/>
+    <path d="M 116,240 L 156,240" fill="none" stroke="#091740" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="136" cy="210" rx="18" ry="8" fill="#16203a" opacity="0.18"/>
   </g>
-  <path d="M 196,207 C 200,210 201,215 202,222 C 203,246 205,274 205,286 C 205,296 194,300 187,300 C 179,300 170,296 170,286 C 170,264 169,238 168,222 C 168,214 171,209 175,207" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 176,282 L 202,282 C 210,282 210,300 202,300 L 176,300 C 168,300 168,282 176,282 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="3" stroke-linejoin="round"/>
 </svg>

@@ -260,22 +260,87 @@ how the project avoids drawing some people as more heroic, more detailed or more
 
 **The canon is 6 heads tall.** No exceptions, for any character, in any level.
 
+### 7.1 Every character is drawn in THREE-QUARTER VIEW, facing the way it travels
+
+The game is a portrait 2D side-scroller. Every character in it walks, skates, toboggans or bikes ALONG the
+screen, so a character drawn front-on, looking out at the player, is wrong by construction: it reads as a
+menu portrait somebody slid sideways. **The canonical facing is RIGHT, with the body turned about 40° off
+strict profile toward the viewer**, and `setFacing('left')` mirrors the whole composite.
+
+Three-quarter rather than strict profile, and the reason is not taste:
+
+- **The expression system needs two eyes.** Four expressions differ in the shape of brow, pupil and mouth
+  (§6 of `rig-contract.md`). A strict profile shows one eye and one brow and loses half of that vocabulary.
+- **The officer's Sam Browne needs a chest.** Its shoulder-to-hip diagonal is half of that character's
+  identity and it is the reason it identified at 0.92 in a blind run. A chest seen edge-on has no diagonal
+  on it.
+- **The character creator needs a face.** Six skin ramps, four hair shapes, glasses: a profile hides the
+  far side of all of them.
+
+What carries the turn, and what a redraw must not quietly drop:
+
+| cue | where |
+|---|---|
+| chest plane and its fastening on the LEADING edge, back on the trailing edge | every torso |
+| ONE ear, low and well back on the near side | `head-skin-*`, `head-shell-beaver` |
+| a brow-and-nose bump on the leading silhouette edge, 8 px | `head-skin-*` |
+| eyes crowded toward the leading edge, far eye foreshortened and near the cheek edge | `face-*` |
+| both feet pointing the way the character travels, far foot shorter | `foot-r-*`, `foot-l-*` |
+
+**The near side is the wearer's RIGHT.** A person facing east, seen from the south, shows you their right
+side; their right shoulder lands *west* of their spine on your screen. So `-r` parts draw IN FRONT (z 9–11
+and 20–22) and `-l` parts behind, and the near shoulder sits at x = 103 while the far one — the leading,
+chest-side shoulder — sits at x = 137.
+
+### 7.2 The measurements, and where the widths come from
+
 | measurement | in heads | at design res (H = 420 px, head = 70 px) |
 |---|---|---|
 | total height | 6.00 | 420 px |
 | head height | 1.00 | 70 px |
 | head width | 0.85 | 60 px |
-| shoulder width | 2.20 | 154 px |
-| hip width | 1.80 | 126 px |
+| **shoulder joint span**, near pivot to far pivot, as projected in this view | 0.49 | **34 px** (x = 103 and 137) |
+| **shoulder width**, across the bare figure at the shoulder line | 1.37 | **96 px** |
+| **maximum dressed silhouette AT REST**, wherever it falls on the figure | ≤ 1.66 | **≤ 116 px** |
+| hip width | 1.30 | 91 px |
 | hip to sole | 2.80 | 196 px |
 | hand width | 0.55 | 38 px |
 | foot length | 0.70 | 49 px |
 | eye line | 0.50 of head height from the crown | 35 px down from the crown |
-| eye spacing | one eye-width apart | — |
+| eye spacing | one eye-width apart, foreshortened to ~0.65 of that in this view | — |
 
-- Head is a rounded shape wider at the cranium than the jaw, never a circle.
+**The shoulder rows are measured, and the old ones were not.** This table used to say *shoulder width 2.20
+heads = 154 px* with no statement of whether that meant the body or the coat, and it produced a figure the
+repository owner described as having shoulders that "are not proportional". It did. Against a photograph:
+
+> `assets/refs/ottawa/rideau-canal-skateway-ice.jpg`, the adult in a winter parka walking toward the camera
+> at the centre of the frame. Crown to sole **235 px**; across the shoulders with the arms hanging in
+> **56 px**; the coat body alone, at the chest, **49 px**. That is **0.238** and **0.209** of the figure's
+> own height. A child in a puffy jacket, three figures to the right, measures **0.257** with the arms held
+> out.
+
+The old canon was **0.367** of height — 54 % over the photograph on the anchor that decides how a silhouette
+reads, and 22 % over even in head units. What ships now is 96 px bare (**0.229**) and at most 116 px dressed
+(**0.276**), which is the photograph plus a deliberate cartoon broadening of about a tenth.
+
+**A garment may add bulk; a body may not.** A parka genuinely broadens the shoulders and a fitted tunic
+barely does, so the costumes are allowed to differ *within one budget*: the widest point of the dressed
+figure at rest is **108 px on the parka, 104 px on the serge and 112 px at the beaver's waist** (its paddle
+tail is a limb held out to one side and is measured separately, at 132 px), all inside the 116 px cap. What
+is identical is the *figure* — the crown, the sole, the eye line, the shoulder, hip, knee and ankle heights,
+the hand and foot frames, the stroke weights. Anyone tightening this rule should measure those, not the
+outline of the coat, and `assets/refs/references.json` now says so in the words a verifier is given.
+
+**The cap is on the figure, not on the animation.** The rest pose is what the art hand-off composites and
+what a proportion is judged from; a stride, a reach or a fall legitimately carries a hand or a foot outside
+it. The measured maximum across all eight states and every costume is **206 px**, at `jump-fall` t = 1,
+where both arms are out. That is a pose. Anything at rest over 116 px is a proportion, and is a defect.
+
+- Head is a rounded shape wider at the cranium than the jaw, never a circle, and it is turned: cranium
+  behind the face plane, one ear, a nose on the leading edge.
 - Hands are mitten-simplified: one mass plus a thumb. No separated fingers at any size.
-- Feet are single rounded wedges. Skates add a blade and a boot cuff, nothing else.
+- Feet are single rounded wedges and BOTH point the way the character travels. Skates add a blade and a
+  boot cuff, nothing else.
 - **Costume distinguishes characters. Stature never does.** An official, an elder, a child in a story role
   and the player all stand 6 heads tall in the same pose canon. Age and role read through clothing,
   silhouette and hair, not through being drawn bigger or smaller.

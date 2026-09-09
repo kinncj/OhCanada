@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="134" height="187" viewBox="53 122 134 187" shape-rendering="geometricPrecision">
-  <title>The guide's body: a barrel of pelt over a pale belly, narrow at the shoulder and full at the waist - the opposite taper to a coat, which is what makes the silhouette read as an animal rather than a person in a suit. Same shoulder and hip envelope as every other character.</title>
-  <path d="M 120,126 C 138,126 152,132 160,144 C 172,160 180,182 182,210 C 184,242 178,278 168,294 C 158,308 82,308 72,294 C 62,278 56,242 58,210 C 60,182 68,160 80,144 C 88,132 102,126 120,126 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="tb"><path d="M 120,126 C 138,126 152,132 160,144 C 172,160 180,182 182,210 C 184,242 178,278 168,294 C 158,308 82,308 72,294 C 62,278 56,242 58,210 C 60,182 68,160 80,144 C 88,132 102,126 120,126 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="114" height="187" viewBox="62 123 114 187" shape-rendering="geometricPrecision">
+  <title>The guide’s body, three-quarter view facing right: a barrel of pelt with the pale belly on the leading edge, narrow at the shoulder and full at the waist - the opposite taper to a coat, which is what makes the silhouette read as an animal rather than a person in a suit. Same crown, sole, shoulder and hip envelope as every other character.</title>
+  <path d="M 122,126 C 138,126 150,132 156,144 C 166,162 171,184 172,212 C 173,242 168,280 158,296 C 148,310 84,310 76,296 C 68,280 65,242 66,212 C 68,184 74,162 83,144 C 91,132 106,126 122,126 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="tb"><path d="M 122,126 C 138,126 150,132 156,144 C 166,162 171,184 172,212 C 173,242 168,280 158,296 C 148,310 84,310 76,296 C 68,280 65,242 66,212 C 68,184 74,162 83,144 C 91,132 106,126 122,126 Z"/></clipPath></defs>
   <g clip-path="url(#tb)">
-    <path d="M 76,148 C 88,142 94,150 90,164 C 82,192 88,236 82,272 C 78,292 68,300 62,312 L 44,312 L 44,148 Z" fill="#b4733b"/>
-    <path d="M 170,152 C 158,148 152,156 156,170 C 164,196 158,240 164,274 C 168,294 178,302 184,314 L 198,314 L 198,152 Z" fill="#401812"/>
-    <ellipse cx="120" cy="244" rx="52" ry="62" fill="#c29455"/>
-    <path d="M 96,186 C 116,186 128,198 126,214 C 118,206 100,204 88,212 C 80,218 76,232 78,244 C 70,230 74,204 84,192 C 88,188 92,186 96,186 Z" fill="#d5c18e"/>
-    <ellipse cx="120" cy="140" rx="52" ry="20" fill="#16203a" opacity="0.18"/>
+    <path d="M 80,150 C 92,144 98,152 94,166 C 86,194 92,238 86,274 C 82,294 72,302 66,314 L 50,314 L 50,150 Z" fill="#b4733b"/>
+    <path d="M 166,158 C 156,152 150,160 154,174 C 162,200 156,244 162,278 C 166,298 176,306 182,318 L 190,318 L 190,158 Z" fill="#401812"/>
+    <ellipse cx="140" cy="224" rx="40" ry="62" fill="#c29455"/>
+    <ellipse cx="136" cy="196" rx="22" ry="32" fill="#d5c18e"/>
+    <ellipse cx="120" cy="138" rx="40" ry="16" fill="#16203a" opacity="0.18"/>
   </g>
 </svg>

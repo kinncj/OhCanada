@@ -1,15 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="94" height="56" viewBox="73 11 94 56" shape-rendering="geometricPrecision">
-  <title>Wide-brimmed tan felt hat: flat level brim about 1.4 head widths, crown pinched to a point with a fore-and-aft crease, brown leather band and a small buckle. Nothing is written on the band.</title>
-  <path d="M 120,15 C 123.5,15 132.32,21.62 135,25 C 137.68,28.38 142.07,40.73 143,44 C 143.93,47.27 148.37,51.95 143,53 C 137.63,54.05 102.37,54.05 97,53 C 91.63,51.95 96.07,47.27 97,44 C 97.93,40.73 102.32,28.38 105,25 C 107.68,21.62 116.5,15 120,15 Z" fill="#c29455" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="cr"><path d="M 120,15 C 123.5,15 132.32,21.62 135,25 C 137.68,28.38 142.07,40.73 143,44 C 143.93,47.27 148.37,51.95 143,53 C 137.63,54.05 102.37,54.05 97,53 C 91.63,51.95 96.07,47.27 97,44 C 97.93,40.73 102.32,28.38 105,25 C 107.68,21.62 116.5,15 120,15 Z"/></clipPath></defs>
-  <g clip-path="url(#cr)">
-    <ellipse cx="104" cy="26" rx="14" ry="18" fill="#d5c18e"/>
-    <ellipse cx="141" cy="42" rx="13" ry="18" fill="#965630"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="98" height="61" viewBox="73 11 98 61" shape-rendering="geometricPrecision">
+  <title>Wide-brimmed tan felt hat, three-quarter view facing right: flat level brim seen obliquely, crown pinched to a point with a fore-and-aft crease, brown leather band with a small buckle. No badge and no lettering on the band.</title>
+  <ellipse cx="122" cy="52" rx="46" ry="17" fill="#c29455" stroke="#3a2018" stroke-width="6"/>
+  <defs><clipPath id="brim"><ellipse cx="122" cy="52" rx="46" ry="17"/></clipPath></defs>
+  <g clip-path="url(#brim)">
+      <ellipse cx="96" cy="44" rx="30" ry="12" fill="#d5c18e"/>
+      <ellipse cx="152" cy="62" rx="28" ry="12" fill="#965630"/>
   </g>
-  <path d="M 120,19 L 120,44" fill="none" stroke="#965630" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <ellipse cx="120" cy="53" rx="43" ry="10" fill="#c29455" stroke="#3a2018" stroke-width="6"/>
-  <ellipse cx="120" cy="51" rx="43" ry="8" fill="#d5c18e"/>
-  <ellipse cx="120" cy="55" rx="34" ry="5" fill="#965630"/>
-  <path d="M 99,53.5 L 141,53.5 C 145.07,53.5 145.07,42.5 141,42.5 L 99,42.5 C 94.93,42.5 94.93,53.5 99,53.5 Z" fill="#7c4327" stroke="#3a2018" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="132" y="42" width="12" height="12" rx="3" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
+  <path d="M 96,52 C 96,32 104,14 120,14 C 136,14 148,30 150,50 C 150,58 96,60 96,52 Z" fill="#c29455" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="crown"><path d="M 96,52 C 96,32 104,14 120,14 C 136,14 148,30 150,50 C 150,58 96,60 96,52 Z"/></clipPath></defs>
+  <g clip-path="url(#crown)">
+    <path d="M 100,50 C 100,34 106,18 118,18 C 122,18 124,22 122,30 C 118,40 114,46 112,54 Z" fill="#d5c18e"/>
+    <path d="M 140,26 C 148,34 150,42 150,52 L 132,54 C 134,42 136,32 140,26 Z" fill="#965630"/>
+    <ellipse cx="122" cy="50" rx="32" ry="8" fill="#16203a" opacity="0.18"/>
+  </g>
+  <path d="M 96,50 L 150,48 C 154,48 154,58 150,58 L 96,60 C 92,60 92,50 96,50 Z" fill="#7c4327" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="126" y="47" width="12" height="12" rx="3" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
 </svg>

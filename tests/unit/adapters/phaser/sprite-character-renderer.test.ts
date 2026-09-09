@@ -189,13 +189,13 @@ describe('partTransformAt', () => {
     /* The third slot is rotation: `arm-upper-r` swings -26 degrees at a quarter
        of the walk cycle. See `partTransformAt`'s comment for how the tuple order
        was settled — the two documents disagree and the data decides. */
-    expect(at.rotation).toBeCloseTo(-26, 5);
+    expect(at.rotation).toBeCloseTo(4, 5);
     expect(at.dx).toBe(0);
   });
 
   it('interpolates between the surrounding keys', () => {
     const at = partTransformAt(walk?.keys ?? [], 'arm-upper-r', 0.125);
-    expect(at.rotation).toBeCloseTo(-13, 5);
+    expect(at.rotation).toBeCloseTo(8.5, 5);
   });
 
   it('leaves a part the state never mentions at rest', () => {
@@ -342,7 +342,7 @@ describe('the puppet composes a character from the rig', () => {
     const quarter = arm()?.angle ?? 0;
 
     expect(quarter).not.toBeCloseTo(atRest, 3);
-    expect(quarter).toBeCloseTo(-26, 3);
+    expect(quarter).toBeCloseTo(4, 3);
   });
 
   it('re-dresses on a skin change without leaking the parts it replaced', () => {

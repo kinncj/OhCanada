@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="58" height="145" viewBox="117 244 58 145" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig mirrors it about the character centre line. The guide's hind leg, upper, in pelt. Same length and pivot as every other character's thigh; the body covers the hip end.</title>
-  <path d="M 146,248 C 162,248 171,256 171,268 C 171,302 169,342 168,366 C 167,378 156,385 146,385 C 136,385 125,378 124,366 C 123,342 121,302 121,268 C 121,256 130,248 146,248 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="lub"><path d="M 146,248 C 162,248 171,256 171,268 C 171,302 169,342 168,366 C 167,378 156,385 146,385 C 136,385 125,378 124,366 C 123,342 121,302 121,268 C 121,256 130,248 146,248 Z"/></clipPath></defs>
-  <g clip-path="url(#lub)">
-    <path d="M 133,258 C 141,258 143,266 141,278 C 138,306 141,342 138,372 C 136,382 126,382 127,372 C 124,342 127,306 125,278 C 124,266 125,258 133,258 Z" fill="#b4733b"/>
-    <path d="M 165,262 C 172,262 173,272 172,284 C 170,310 172,344 170,374 L 158,374 C 160,344 158,310 159,284 C 158,272 159,262 165,262 Z" fill="#401812"/>
-    <ellipse cx="146" cy="252" rx="30" ry="12" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="46" height="140" viewBox="109 247 46 140" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. The guide’s hind leg, hip to knee.</title>
+  <path d="M 132,250 C 145,250 152,258 152,270 L 151,368 C 151,380 140,384 131,384 C 121,384 112,380 112,368 L 113,270 C 113,258 119,250 132,250 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="lu-beaver"><path d="M 132,250 C 145,250 152,258 152,270 L 151,368 C 151,380 140,384 131,384 C 121,384 112,380 112,368 L 113,270 C 113,258 119,250 132,250 Z"/></clipPath></defs>
+  <g clip-path="url(#lu-beaver)">
+    <path d="M 142,258 C 150,260 150,270 150,282 L 150,388 L 136,388 L 137,282 C 137,270 136,260 142,258 Z" fill="#401812"/>
+    <path d="M 120,260 C 126,260 127,270 127,282 L 126,388 L 113,388 L 113,282 C 113,270 114,262 120,260 Z" fill="#b4733b"/>
+    <ellipse cx="132" cy="254" rx="20" ry="9" fill="#16203a" opacity="0.18"/>
   </g>
 </svg>
