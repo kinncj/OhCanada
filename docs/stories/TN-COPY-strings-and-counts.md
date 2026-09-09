@@ -150,8 +150,11 @@ knows, and this game usually does not: a browser download has no honest percenta
 list of steps whose sizes are not comparable.
 
 1. **A waiting message names the work.** "Getting the canal ready." / « Préparation du canal. » — a
-   sentence about what is being prepared, owned by the screen that waits (`level.loading` belongs to
-   `TN-LEVEL-ottawa.md`).
+   sentence about what is being prepared, owned by the screen that waits. **A level's waiting message is
+   owned by that level**, keyed `level.<id>.loading`, written in that level's story file, and bound by
+   `TN-WAIT-a-level-opens-or-it-does-not.md`: there is no unqualified `level.loading`, because one sentence
+   drawn by four levels told a player opening Halifax that the game was getting the Rideau Canal ready.
+   The example above is Ottawa's and belongs to `TN-LEVEL-ottawa.md`.
 2. **No figure the game cannot measure.** No percentage, no fraction, no "step 2 of 4", and no progress bar
    carrying a value. A bar that stops moving reads as a crash, and a percentage that jumps from 12 to 100
    teaches the player not to believe the next one.
@@ -417,6 +420,12 @@ Feature: Nobody authors copy except this directory
     When the unit suite runs
     Then it fails, naming the key
 
+  Scenario: A table with one row where the game needs one per level is a gap, not a table
+    Given a copy table carries one row for a string that varies by level
+    And more than one level document exists
+    Then the missing rows are reported as gaps, naming each level
+    And no level draws another level's row while that report is open
+
   Scenario: Both languages or neither
     Given a copy table carries an English string
     Then it carries the French string with the same key
@@ -466,6 +475,11 @@ Feature: Honest waiting copy
     Then "#tn-live-region" reads the waiting message once
     And it is not repeated while the wait continues
 
+  Scenario: The message belongs to the thing being waited for
+    Given two levels are each opened in turn
+    Then each shows its own waiting sentence
+    And neither shows a sentence naming a place it does not draw
+
   Scenario: Both languages wait the same way
     Given the language is French
     Then the waiting message is French
@@ -490,7 +504,9 @@ Feature: Honest waiting copy
 - **`OQ-COPY-3` — should the state words be nouns instead?** « Marche » / « Arrêt » would sidestep the
   agreement argument entirely and is what an appliance says. *Recommendation:* keep « Activé » /
   « Désactivé »: it is what software says in Canadian French, it is what a screen reader user expects from
-  every other application, and the label-and-value form already makes the agreement question moot.
+  every other application, and the label-and-value form already makes the agreement question moot. Note that
+  « Marche » is now the HUD's word for the `walk` locomotion mode (`TN-MOVE`), which is a second reason not
+  to reach for it here: one word, two meanings, on two screens a player sees minutes apart.
 - **`OQ-COPY-4` — is a label acceptable where the English is a sentence?** The fix to `study.summary.score`
   makes the French « Bonnes réponses : 4 sur 5 » where the English stays "You got 4 out of 5 right." The
   meaning is the same and the register is not. *Recommendation:* accept it, and put it in front of a French
@@ -510,3 +526,9 @@ Feature: Honest waiting copy
   after the second placeholder and no plural problem. *Recommendation:* accept the false positive and fix it
   by rewording, the same way rule 1 answers `OQ-COPY-5`. A rule that only fires on real defects needs a
   parser, and a parser for two languages is a bigger thing to be wrong than a copy table.
+- **`OQ-COPY-7` — a string that varies by level had no rule until it went wrong.** `TN-COPY-06` now carries
+  one ("a table with one row where the game needs one per level is a gap, not a table"), added after three
+  such strings were drawn by four levels for a week. *Recommendation:* when a screen takes a string as data
+  from its caller, the story that owns the screen states **how many rows the table needs and what varies
+  between them**, so a second caller is a missing row rather than a wrong sentence. `TN-WAIT` is the worked
+  example.

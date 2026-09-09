@@ -10,13 +10,22 @@ accessibility and bilingual scenarios, in the slice that builds it — the same 
 contracts that bind all nine: a level is added by data and assets alone, and a level whose depiction is
 blocked is not authored at all.
 
+**Amended 2026-09-08: three more levels have documents, so three more have copy.** `content/levels/` now
+holds `halifax`, `quebec-city`, `ottawa` and `toronto`, and the game opens on Halifax. Levels 1, 3 and 5
+therefore have *partial* story files — `TN-LEVEL-halifax.md`, `TN-LEVEL-quebec-city.md` and
+`TN-LEVEL-toronto.md` — which own the copy each of those levels draws today and nothing else. The full
+stories still belong to the slices that build the locomotion, the NPC and the quest. A level a player can
+already open cannot wait for its slice to be told what to say.
+
 Read `README.md` in this directory first. `TN-MAP-level-select.md` draws the ten entries below;
-`TN-LEVEL-ottawa.md` is the worked example of what each of these rows becomes.
+`TN-LEVEL-ottawa.md` is the worked example of what each of these rows becomes;
+`TN-MOVE-locomotion-labels.md` owns what the HUD calls each locomotion mode in the table below, and
+`TN-WAIT-a-level-opens-or-it-does-not.md` owns the two strings every built level needs.
 
 ## Three things that block work in this table, stated before the table
 
-Nothing here is a schedule. Three of these rows cannot be started, and one cannot be started in the shape
-`docs/plan/slices.md` currently describes.
+Nothing here is a schedule. Two of these rows cannot be started, and the third blocker has since been
+answered.
 
 1. **`docs/content-review.md` §1 blocks any level whose subject is a nation's territory or history**, and
    blocks any depiction of a named nation, until a Tier 3 reviewer exists. `OQ-REVIEW-2` — who that reviewer
@@ -26,7 +35,7 @@ Nothing here is a schedule. Three of these rows cannot be started, and one canno
    depicts the peoples of Inuit Nunangat or removes them from a level about where they live. Both readings
    need Tier 3. Level 2 and level 10 are therefore **not scoped below** — no landmark, no NPC, no id. Filling
    those cells in would make a blocked level look schedulable, and a plan that reads as schedulable gets
-   scheduled.
+   scheduled. `TN-MOVE` applies the same rule to their locomotion labels and writes neither.
 2. **`OQ-REVIEW-10` is unanswered and three locomotion modes depend on it.** The canoe (level 2), the kayak
    (named in that question and not assigned to a level) and the dogsled and qamutiik (level 10) are Indigenous
    technology used as generic Canadian symbols. `docs/content-review.md` §5.4 says so, and adds the sentence
@@ -34,13 +43,14 @@ Nothing here is a schedule. Three of these rows cannot be started, and one canno
    and slice 4 depends on it."* A locomotion mode is the most prop-like thing in this game — the player is
    sitting in it for the whole level. Flagged against levels 2 and 10 below and repeated here so it is not
    discovered mid-build.
-3. **Level 3's locomotion mode does not exist, and slice 2's whole claim is that no engine change is needed.**
-   `docs/plan/slices.md` gives level 3 a toboggan. `content/schemas/level.schema.json`'s `locomotionMode` and
-   `app/application/ports/locomotion.ts` both enumerate exactly eight modes — `walk`, `canoe`, `skate`,
-   `bike`, `train`, `horse`, `skateboard`, `dogsled` — and **`toboggan` is not among them**. So slice 2 as
-   written cannot be added by JSON and assets alone: it needs a new enum value in a schema and in a port
-   before the first line of level data is written. See `OQ-SPINE-1`; it is the plan owner's to resolve, and
-   it wants resolving before slice 2 starts rather than during it.
+3. ~~**Level 3's locomotion mode does not exist**~~ — **answered, and by the route this file asked for.**
+   `docs/plan/slices.md` gives level 3 a toboggan, and `toboggan` was not among the eight modes
+   `content/schemas/level.schema.json` and `app/application/ports/locomotion.ts` enumerated. ADR-0023 moved
+   the legal set of modes into `content/game.config.json#/locomotionModes`, which now lists nine including
+   `toboggan`, and `content/levels/quebec-city.json` declares it. Slice 2's claim survives: adding a mode is
+   a content edit and a locale key, not a schema and a port change. The ADR records one obligation that is
+   not this file's — `app/adapters/phaser/level-document.ts` still holds a hard-coded copy of the eight
+   names, so the claim is not fully true until that reads the config. See `OQ-SPINE-1`.
 
 ## The ten levels
 
@@ -49,16 +59,21 @@ is north, which is why no copy in `TN-MAP` claims the journey is east to west (`
 
 | # | Level id | Subject (bank key) | Place | Locomotion | Landmark that must survive blind identification | NPC | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | `halifax` | `rights` | Halifax, Nova Scotia | `walk` | Pier 21's waterfront frontage and Immigration Hall, with the harbour behind — see the note below on how weak this is | the guide | Ready to scope |
+| 1 | `halifax` | `rights` | Halifax, Nova Scotia | `walk` | Pier 21's waterfront frontage and Immigration Hall, with the harbour behind — see the note below on how weak this is | the guide | **Built, and the game opens here** — copy in `TN-LEVEL-halifax.md`; full story pending |
 | 2 | *not fixed* | `who-we-are` | *not scoped* | `canoe` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`** |
-| 3 | `quebec-city` | `history` | Québec City (Old Québec) | `toboggan` — **does not exist**, `OQ-SPINE-1` | Château Frontenac seen from Dufferin Terrace, with the ramparts | the archivist | Blocked on `OQ-SPINE-1` |
+| 3 | `quebec-city` | `history` | Québec City (Old Québec) | `toboggan` | Château Frontenac seen from Dufferin Terrace, with the ramparts | the archivist | **Built** — copy in `TN-LEVEL-quebec-city.md`; full story pending |
 | 4 | `ottawa` | `government` | Ottawa | `skate` | Centre Block and the Peace Tower from the canal | the officer | **Shipped** — `TN-LEVEL-ottawa.md` |
-| 5 | `toronto` | `elections` | Toronto | `bike` | Toronto City Hall's two curved towers across Nathan Phillips Square | the volunteer | Ready to scope, `OQ-SPINE-3` |
+| 5 | `toronto` | `elections` | Toronto | `bike` | Toronto City Hall's two curved towers across Nathan Phillips Square — **but the shipped document draws the CN Tower**, `OQ-TORONTO-2` | the volunteer | **Built** — copy in `TN-LEVEL-toronto.md`; full story pending, `OQ-SPINE-3` |
 | 6 | `winnipeg` | `justice` | Winnipeg | `walk` | The Canadian Museum for Human Rights, by its tower silhouette | the judge | Ready to scope |
 | 7 | `prairie-rail` | `modern-canada` | The Prairies | `train` | A wooden prairie grain elevator beside the track — a *named, cited* one, see below | the journalist | Ready to scope |
 | 8 | `alberta-foothills` | `economy` | The Alberta foothills | `horse` | A working ranch's gate and barn against the foothills, with the Rockies on the horizon | the rancher | Ready to scope, weak blind ID |
 | 9 | `vancouver` | `symbols` | Vancouver | `skateboard` | Canada Place's white sails on the waterfront | the artist | Ready to scope — **read the trap below** |
 | 10 | *not fixed* | `regions` | The North | `dogsled` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`** |
+
+**"Built" is not "shipped".** A built level has a document, a place on the map, a waiting sentence, an error
+title and a mode label, and can be opened. It does not yet have its own locomotion tuning proved by
+scenarios, its NPC, its quest, or the thirty verified questions `CLAUDE.md` requires for its subject before
+it ships. `TN-LEVELS-03` is the floor each of them still has to clear.
 
 ### Level 1 — Halifax, `rights`, walk
 
@@ -69,12 +84,15 @@ already produced the failure where a contract asked for "Ottawa" from art that w
 thing that says Ottawa. If the reference-accurate Pier 21 frontage does not return Pier 21 or Halifax under
 blind identification, the level's recognisability anchor moves to the **Halifax Town Clock on Citadel Hill**,
 and Pier 21 stays as the level's setting and quest location. Decide it from a real blind pass, not from
-argument.
+argument. The shipped document carries both as points of interest, and this level's waiting sentence names
+neither, so the decision costs no copy (`OQ-HALIFAX-2`).
 
 Halifax (Kjipuktuk) is in Mi'kma'ki. The "About this place" panel carries the sourced territorial fact
 (`docs/content-review.md` §10.2, and §1's may-ship list item 5). **That is a fact with a citation, not a
 depiction**, and it does not make this level a §1 blocked level — but the panel's wording is authored and
-verified like any other claim, and nothing in the level depicts a nation.
+verified like any other claim, and nothing in the level depicts a nation. **The panel is also the only place
+that statement appears**: `TN-LEVEL-halifax.md` keeps it out of the loading screen, because a screen the
+player waits past is the shape §10.2 rules out and a compressed paraphrase is an unsourced claim.
 
 ### Level 2 — `who-we-are`, canoe: not scoped, on purpose
 
@@ -86,14 +104,18 @@ re-ordering is the plan owner's.
 ### Level 3 — Québec City, `history`, toboggan
 
 The Château Frontenac is one of the most identifiable buildings in Canada and blind identification should be
-straightforward. The level runs along Dufferin Terrace and the Old Québec ramparts. The locomotion mode is
-the problem, not the level: see `OQ-SPINE-1`.
+straightforward. The level runs along Dufferin Terrace and the Old Québec ramparts. The locomotion mode was
+the problem and is not any more: ADR-0023 opened the set of modes to content and the shipped document
+declares `toboggan` first and `walk` second. The building may be named on its point-of-interest card and
+nowhere else (`TN-NAMES`), which is why the level's waiting sentence names the slope instead.
 
 ### Level 5 — Toronto, `elections`, bike
 
 Toronto City Hall is civic, unmistakable in silhouette, and about the thing the level teaches. The CN Tower
 can stand on the skyline as a second recognisability anchor; it must not carry a wordmark or a logo, under
-the same rule that keeps the RCMP's marks off the officer.
+the same rule that keeps the RCMP's marks off the officer. **The shipped document has this the other way
+round** — one point of interest, and it is the tower — which is `OQ-TORONTO-2` and has to be settled before
+the level's full story is written.
 
 **The question bank for this level may already be inside level 4's.** All 57 shipped questions are filed
 under `government`, and a dozen of them are about ballots, electoral districts, advance polls and who may
@@ -177,11 +199,20 @@ above were chosen on that basis:
 anywhere. Choosing epicene roles means seven of the eight levels never have to answer the question at all.
 "The archivist" is the one row where plain language and this rule pull against each other — see `OQ-SPINE-4`.
 
+**No NPC name is written as copy yet for levels 1, 3 and 5.** The three partial level files deliberately
+write only what those levels draw today; a speaker's label with no dialogue behind it is copy for behaviour
+nothing performs.
+
 ## Player-facing copy
 
 This file owns the place name and the subject line for the nine levels that are not Ottawa, because
 `TN-MAP` draws all ten and a place name written in two tables will eventually differ between two screens.
 Ottawa's pair stays in `TN-LEVEL-ottawa.md`.
+
+Two other kinds of level string are **not** here, and the split is deliberate: the waiting sentence and the
+error title belong to the level and are written in the level's own story file (`TN-WAIT`), and the mode label
+belongs to the *mode* and is written once in `TN-MOVE-locomotion-labels.md` — `walk` appears three times in
+the table above and is one string.
 
 | Key | EN | FR |
 |---|---|---|
@@ -209,10 +240,13 @@ this project has not earned the right to state. `TN-MAP-04` requires a card with
 placeholder — no "TBD", no "???", no empty box. Level 10 keeps "The North" because it is a region, not a
 nation's name for itself.
 
-**These are keyed on ids that are proposals**, not decisions: `content/levels/<id>.json` is the id, so the
-first file written fixes it (`app/adapters/phaser/level-catalog.ts`). Levels 2 and 10 have no id here on
-purpose. Subject lines are paraphrases of *Discover Canada*'s chapter names and go through the same
-verification as any other claim — `OQ-SPINE-2`.
+**Four of these ids are decisions now, not proposals.** `content/levels/halifax.json`,
+`quebec-city.json`, `ottawa.json` and `toronto.json` exist, and `content/game.config.json` lists the same
+four in `levels` and in `unlockRules.order` and holds a ten-slot `journey` whose two nulls are levels 2 and
+10. The remaining ids are still proposals: the first file written fixes each one
+(`app/adapters/phaser/level-catalog.ts`). Levels 2 and 10 have no id here on purpose. Subject lines are
+paraphrases of *Discover Canada*'s chapter names and go through the same verification as any other claim —
+`OQ-SPINE-2`.
 
 ---
 
@@ -241,10 +275,16 @@ Feature: Adding a level without touching the engine
     And a test that greps "app/" for any level id other than in a test fixture fails the build
 
   Scenario: A level that needs an engine change fails the claim, loudly
-    Given a level document declares a locomotion mode the schema does not enumerate
+    Given a level document declares a locomotion mode the config does not list
     When the content check runs
-    Then the build fails, naming the mode and the enum that would have to change
-    And the failure says that a new mode is a schema and port change, not level data
+    Then the build fails, naming the mode and the registry that would have to change
+    And the failure names "content/game.config.json", not a schema and not a port
+
+  Scenario: A new level costs its own words, and the build says so
+    Given a valid level document is added with no waiting sentence, error title or mode label
+    When the content check runs
+    Then the build fails, naming the level and each missing string
+    And no level draws another level's words while that check is red
 
   Scenario: The previous level is released before the next one loads
     When I leave one level and open another
@@ -290,6 +330,7 @@ Feature: The content-review shipping rule is a gate, not a paragraph
     When the content check runs
     Then the build fails, naming the mode and the open question
     And the message does not offer a way to override it in the document
+    And no copy table carries a label for either mode
 
   Scenario: The gate is proven by a failing case, not by a green run
     Then a fixture exists for each of the scenarios above
@@ -312,10 +353,13 @@ Feature: The floor every level story stands on
       | requirement |
       | its title and subject line have a value in "en" and in "fr" |
       | its own waiting sentence names what it is preparing, with no percentage, fraction, step count or ellipsis |
+      | its own error title names it, in both languages, written out rather than templated |
+      | the mode it declares has a label in both languages, and the HUD is never empty |
       | its NPC has a name that is a role, never an organisation, and never "Speaker", "NPC" or empty |
       | its landmark is reference-accurate and simplified, with references and credits recorded |
       | its landmark returns the intended subject under blind identification, and the contract asks for nothing the art is forbidden to draw |
       | its "About this place" panel is reachable from pause and from credits, is never modal, and states a sourced territorial fact |
+      | no screen but that panel states or paraphrases a territorial fact |
       | every factual sentence it puts on screen is verified like a question |
       | it is completable with a keyboard alone |
       | it is completable with one switch, using short and long presses only |
@@ -330,15 +374,16 @@ Feature: The floor every level story stands on
 
 ## Open questions
 
-- **`OQ-SPINE-1` — level 3's toboggan is not a locomotion mode, and slice 2 claims no engine changes.**
-  `locomotionMode` enumerates eight modes in `content/schemas/level.schema.json` and in
-  `app/application/ports/locomotion.ts`, and `toboggan` is not one of them, so the slice whose entire purpose
-  is proving a level is data would begin by editing a schema and a port. *Recommendation:* open the enum
-  before slice 2 starts, and state slice 2's claim as what the port's own header already claims — "adding a
-  mode is one strategy plus level data, never an edit to a scene, a camera or an input handler" — so the
-  proof is about scenes and not about enums. The alternative, giving level 3 `walk` in Old Québec, costs the
-  slice its most interesting tuning and should be a decision rather than a workaround. Routed to the plan
-  owner and the architect; `docs/plan/` and `content/` are not this file's to edit.
+- ~~**`OQ-SPINE-1` — level 3's toboggan is not a locomotion mode, and slice 2 claims no engine changes.**~~
+  **Answered 2026-09-08 by ADR-0023**, and by the route recommended here: the legal set of modes moved out of
+  `content/schemas/level.schema.json` and `app/application/ports/locomotion.ts` into
+  `content/game.config.json#/locomotionModes`, which lists nine names including `toboggan`;
+  `LocomotionMode` became a checked `string`, as `LevelId` already was. A typo is still a failing build,
+  because the set moved rather than vanished. **One obligation is outstanding and the claim is not fully true
+  until it lands** (ADR-0023, due 2026-10-08, owner engine): `app/adapters/phaser/level-document.ts` still
+  holds a hard-coded `LOCOMOTION_MODES` literal, so a level declaring a mode the adapter does not know passes
+  `validate-content` and fails at load — a worse failure than the one that was fixed. Not this directory's to
+  close; recorded so nobody reads "answered" as "done".
 - **`OQ-SPINE-2` — are the subject lines the official chapter names, and who verifies them?** The ten
   subjects are *Discover Canada*'s chapters, and IRCC publishes both languages. The French written above is a
   translation of meaning; the official French chapter titles exist and are citable. *Recommendation:* the
@@ -349,9 +394,11 @@ Feature: The floor every level story stands on
   `subject: "government"`, and roughly a dozen of them are about ballots, advance polls, electoral districts
   and who may vote — which is level 5's subject, Federal Elections. `CLAUDE.md` requires ≥ 30 verified
   questions *per subject* before a level ships, and two levels drawing from one bank would meet that bar
-  twice with one set of questions. *Recommendation:* the content lead splits the bank before level 5 is
-  authored, and `TN-LEVELS-03`'s last row is the check that keeps it split. Routed to content; this file
-  only records that the overlap exists.
+  twice with one set of questions. **Three levels now make this worse rather than one**: `halifax`,
+  `quebec-city` and `toronto` are openable and declare `rights`, `history` and `elections`, and no verified
+  question carries any of those three subjects. *Recommendation:* the content lead splits the bank before
+  level 5 is authored and fills the other three, and `TN-LEVELS-03`'s last row is the check that keeps them
+  split. Routed to content; this file only records that the overlap exists.
 - **`OQ-SPINE-4` — two NPC roles need the French agreement decision, and one of them is not plain language.**
   Level 8's « éleveur / éleveuse » has the same shape as `OQ-LEVEL-8`'s « agent / agente ». Level 3's
   « archiviste » is epicene and is *not* a grade-6 word in either language, which is the bar `CLAUDE.md`
@@ -363,17 +410,20 @@ Feature: The floor every level story stands on
 - **`OQ-SPINE-5` — do modern buildings and named venues raise the same question the RCMP uniform did?**
   Levels 5, 6 and 9 name buildings completed well within living memory, and one of them (the CN Tower) has a
   trademarked name. `OQ-LEVEL-1` established that this project asks before drawing something protected rather
-  than after. *Recommendation:* the same rule the officer got — draw the form, carry no wordmark, no logo and
-  no signage, cite the reference, credit the photograph — and one written answer from the project owner
-  covering the class rather than three tickets covering three buildings.
+  than after. **Answered in part by `TN-NAMES-naming-real-places.md`** for the *copy* half — the name is text,
+  in a point-of-interest card's body, once, with no mark and no claim of association — and the art half is
+  unchanged: draw the form, carry no wordmark, no logo and no signage, cite the reference, credit the
+  photograph. What is still the project owner's is whether trade names may appear at all (`OQ-NAMES-1`).
 - **`OQ-SPINE-6` — is a level's *place* allowed to be a region rather than a city?** Levels 7, 8 and 10 are
   regions, and `TN-MAP` draws a place name for each. A region is harder to identify blind than a city and
   harder to reference accurately. *Recommendation:* accept regions for those three, and require each to name
   one specific, cited, existing structure as its recognisability anchor — which is what the level 7 and
   level 8 notes above already do. A region with no specific reference is where an invented landmark comes
   from.
-- **`OQ-SPINE-7` — what happens to this file when each level gets its own story?** *Recommendation:* the row
-  stays and the detail moves. Each level story owns its own copy, its own art notes and its own scenarios;
-  this file keeps the table, the blockers and the two contracts, so there is still one page that answers
-  "what are the ten levels and which of them may be built". A spine that is deleted after the first level is
-  written is a spine that has to be rediscovered for the second.
+- **`OQ-SPINE-7` — what happens to this file when each level gets its own story?** **Being answered in
+  practice, and the recommendation held:** the row stays and the detail moves. Levels 1, 3 and 5 now have
+  files carrying their own copy, and this table keeps their subject, place, locomotion, landmark, NPC and
+  blockers. Each level story owns its own copy, its own art notes and its own scenarios; this file keeps the
+  table, the blockers and the two contracts, so there is still one page that answers "what are the ten levels
+  and which of them may be built". A spine that is deleted after the first level is written is a spine that
+  has to be rediscovered for the second.

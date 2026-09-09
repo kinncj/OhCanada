@@ -1,4 +1,4 @@
-# Stories — slice 1 (vertical proof, Level 4 Ottawa), the front door, the spine, and Exam mode
+# Stories — slice 1 (vertical proof), the front door, the four built levels, the spine, and Exam mode
 
 These files are the acceptance criteria for slice 1 and for slice F1. Every other task in
 `docs/plan/slice-1.md` builds against them. If a scenario here and an implementation disagree, the scenario
@@ -23,6 +23,26 @@ clock, the result and the unfinished attempt are three different arguments; the 
 `TN-NAMES` came out of the same pass: three files were asking the same unanswered question about naming a
 real place, and a question asked in three places belongs in a file of its own.
 
+**Amended a third time, 2026-09-08, because the game stopped opening on Ottawa.** Four level documents ship
+— `halifax`, `quebec-city`, `ottawa`, `toronto` — and `content/game.config.json` opens on **Halifax**. Three
+strings on that first screen were Ottawa's: the HUD's mode label was empty because the only
+`locomotion.<mode>.label` row written was `skate`, the waiting screen read "Getting the canal ready." on a
+Halifax load, and the error card read "We could not load Ottawa." whichever level had failed. One story file
+holding the only level copy in the directory is how that happens. So:
+
+- **`TN-MOVE-locomotion-labels.md`** owns every mode label, because a label belongs to a *mode* and three of
+  the four built levels declare `walk`. `locomotion.skate.label` moved there from `TN-LEVEL`, unchanged.
+- **`TN-WAIT-a-level-opens-or-it-does-not.md`** owns the shared error-card chrome and the key shape: there is
+  no `level.loading` and no `level.error.title` any more, only `level.<id>.loading` and
+  `level.<id>.error.title`, one pair per built level, and a gate that fails the build for a level with
+  neither. An unqualified key is a key two levels will disagree about, and two of them already did.
+- **`TN-LEVEL-halifax.md`**, **`TN-LEVEL-quebec-city.md`** and **`TN-LEVEL-toronto.md`** own their own pair.
+  They are deliberately *not* full level stories — the locomotion, camera, NPC and quest scenarios are
+  written in the slice that builds them — but a level a player can already open needs its own words now.
+- `OQ-LEVEL-9` is closed in `TN-LEVEL-ottawa.md` in favour of the answer it recommended a day earlier. It
+  was right, and nothing acted on it, which is the case for closing a recommendation rather than leaving it
+  as one.
+
 | File | Area | Covers |
 |---|---|---|
 | `TN-TITLE-title-screen.md` | `TN-TITLE` | The first screen on a cold load: Play, Continue, Study, Settings |
@@ -30,6 +50,11 @@ real place, and a question asked in three places belongs in a file of its own.
 | `TN-FLOW-first-run-and-return.md` | `TN-FLOW` | The route between screens, first run, return, and back out |
 | `TN-CREATOR-character-creator.md` | `TN-CREATOR` | Making a character before the first level |
 | `TN-LEVEL-ottawa.md` | `TN-LEVEL` | Loading Level 4, skate locomotion, camera, POIs, pause |
+| `TN-LEVEL-halifax.md` | `TN-HALIFAX` | Level 1's own copy: what it says while it opens, in the HUD, and when it fails |
+| `TN-LEVEL-quebec-city.md` | `TN-QUEBEC` | Level 3's own copy, and the row that proves a French error title cannot be templated |
+| `TN-LEVEL-toronto.md` | `TN-TORONTO` | Level 5's own copy, and the tower it may not name on a loading screen |
+| `TN-MOVE-locomotion-labels.md` | `TN-MOVE` | What the HUD calls each way of moving, once per mode |
+| `TN-WAIT-a-level-opens-or-it-does-not.md` | `TN-WAIT` | Which waiting sentence and which error title each level draws, and the shared chrome |
 | `TN-LEVELS-2-to-10-spine.md` | `TN-LEVELS` | The nine levels after Ottawa: subject, place, locomotion, landmark, NPC, blockers |
 | `TN-HUD-hud-and-menu.md` | `TN-HUD` | The lower-third HUD, the menu, the storage warning, the page's landmarks |
 | `TN-QUEST-parliament-hill.md` | `TN-QUEST` | Offer, accept, decline, track, complete, stamp |
@@ -46,6 +71,11 @@ real place, and a question asked in three places belongs in a file of its own.
 | `TN-NAMES-naming-real-places.md` | `TN-NAMES` | When a real building may be named in copy, and where it may not appear |
 | `TN-COPY-strings-and-counts.md` | `TN-COPY` | The rules every copy table obeys: plurals, state words, waiting copy, missing strings |
 
+**A level story's file name carries its level and its scenario ids carry its area.** `TN-LEVEL-ottawa.md`
+numbers its scenarios `TN-LEVEL-01`… because it was written when Ottawa was the only level; its three new
+neighbours use `TN-HALIFAX-nn`, `TN-QUEBEC-nn` and `TN-TORONTO-nn` so that no id means two things. When the
+remaining levels get stories, they take their own area rather than extending `TN-LEVEL`.
+
 `TN-SET` is not in the task-1.1 list. It is here because every other story states an accessibility
 precondition ("Given single-switch mode is on"), and a precondition nobody can set is not testable. It is
 deliberately small.
@@ -58,9 +88,11 @@ row cannot say two things. A rule with no story is a rule nothing can fail.
 Two more strings joined their tables on 2026-09-08, both found the same way — the screens had to take them
 from the caller as **required** options, so no screen could be mounted without somebody inventing a word.
 `hud.label`, the accessible name of the `hud` region that `TN-HUD-07` requires, is now in `TN-HUD`;
-`level.loading`, the text `TN-LEVEL-01` requires instead of a bare spinner, is now in `TN-LEVEL`, with the
-rule that it may not claim progress the game cannot measure. **A gap reported under `TN-COPY-06` is a debt,
-not a home.** A string that lives in a caller forever is a string two callers will eventually disagree about.
+the level's waiting sentence, the text `TN-LEVEL-01` requires instead of a bare spinner, is now written per
+level under `TN-WAIT`, with the rule that it may not claim progress the game cannot measure. **A gap
+reported under `TN-COPY-06` is a debt, not a home.** A string that lives in a caller forever is a string two
+callers will eventually disagree about — and a string written for one level and drawn by four is the same
+debt, paid by the player.
 
 `TN-RESUME` was added on 2026-09-08 for the sharpest version of that problem: not a rule nobody owned, but a
 moment **two stories owned and answered differently**. `TN-SAVE-01` said a question already answered is never
@@ -103,12 +135,15 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
 - **A string is written down once.** One key, one copy table, one file. Where a second screen needs the same
   words it names the key and the file that owns it (`TN-HUD` does this for nine keys, `TN-MAP` for the ten
   level names, `TN-TITLE` for four and `TN-PASSPORT` for eleven). Two tables carrying the same words is how
-  they stop being the same words.
+  they stop being the same words. **And the table's home follows what the string belongs to**, not which
+  screen draws it: a waiting sentence belongs to a level, a mode label belongs to a mode, and a button that
+  says "Go back" belongs to neither (`TN-WAIT`, `TN-MOVE`).
 - **A rule is written down once, too.** Where two stories describe the same moment, one of them owns it and
   the other links. `TN-RESUME` owns what happens to the questions when a step is resumed; `TN-FLOW` owns
   where a cold load lands and what "back" means; `TN-MAP` owns the three level states and `TN-PASSPORT`
-  reuses them rather than inventing a second vocabulary; `TN-SAVE`, `TN-CARD`, `TN-CREATOR` and `TN-HUD` name
-  them and do not restate them.
+  reuses them rather than inventing a second vocabulary; `TN-COPY-07` owns the waiting rule and `TN-WAIT`
+  owns which level draws which sentence; `TN-SAVE`, `TN-CARD`, `TN-CREATOR` and `TN-HUD` name them and do
+  not restate them.
 - **Counts and state words follow `TN-COPY-strings-and-counts.md`**, not each screen's judgement. It has one
   rule for plurals in both languages, and it exists because "1 questions" is not a Study bug, it is a bug in
   every string with a number in it. Its rule 9 — one counted noun per template — came out of Exam mode, where
@@ -116,11 +151,12 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
 - **A screen that is waiting says what it is doing, not how far along it is** (`TN-COPY-07`). No percentage,
   no step count, no ellipsis, no bar with a value, unless the game really knows both halves of the fraction —
   and in slice 1 it never does. The honest answer to a long wait is the escape route in `TN-LEVEL-02`.
-- **A screen never describes a state it is not in.** This project has shipped that defect three times: a boot
+- **A screen never describes a state it is not in.** This project has shipped that defect four times: a boot
   screen that read as a stalled progress bar, a caption saying there was no level to play over a running
-  level, and a game whose only entrance was a URL parameter. `TN-MAP-04` is the current form of the rule —
-  a level nobody has built yet is described as unbuilt, not as locked and not as an error — and
-  `TN-PASSPORT-04` applies it to a stamp for a level that does not exist.
+  level, a game whose only entrance was a URL parameter, and a Halifax load that said it was getting the
+  Rideau Canal ready. `TN-MAP-04` is the current form of the rule — a level nobody has built yet is described
+  as unbuilt, not as locked and not as an error — `TN-PASSPORT-04` applies it to a stamp for a level that does
+  not exist, and `TN-WAIT-01` applies it to the words a level waits in.
 - **Plain language**, roughly CLB 4 / grade 6. Short sentences. No jargon the player did not bring with them:
   the words *spaced repetition*, *FSRS*, *scheduler*, *due*, *card state* never appear on screen.
 - **One thumb, portrait.** Hold to move, tap to jump, tap an NPC or POI to engage. No scenario may need two
@@ -162,13 +198,18 @@ the same footing as its accessibility and bilingual ones:
 - **A nation's own name is identical in EN and FR** (§9.3). Where a story writes one, both columns match.
 - **Territory is stated, not performed.** Any level story includes the "About this place" panel: reachable
   from pause and from credits, never modal, never dismissed to reach gameplay, EN and FR, keyboard and
-  single switch (§10.2).
+  single switch (§10.2). **And it is the only place a territorial statement is drawn** — `TN-WAIT` and the
+  three new level files keep it out of loading copy, because a screen the player waits past is the shape
+  §10.2 names as the wrong one, and a compressed paraphrase of a cited statement is an unsourced claim.
 - **A blocked level is not scoped.** `TN-LEVELS` leaves level 2 and level 10 without a place, a landmark, an
   NPC or an id, because §1's shipping rule blocks both and `OQ-REVIEW-2` is unanswered. Filling those cells
-  in would make a blocked level look schedulable, and a plan that reads as schedulable gets scheduled.
+  in would make a blocked level look schedulable, and a plan that reads as schedulable gets scheduled. The
+  same rule keeps `canoe` and `dogsled` out of `TN-MOVE`'s table.
 - **A real building may be named; a business may not be advertised.** `TN-NAMES` is the rule and it is
   checkable: the name is text and never lettering in the art, it appears in the point-of-interest card's body
   and nowhere else, it carries no mark, and no sentence implies the place has anything to do with this game.
+  `TN-NAMES-01` names a loading message among the screens a name may not appear on, which is why no level's
+  waiting sentence names Pier 21, the CN Tower or the Château Frontenac.
 
 What a story must **not** do: assert that a depiction is approved. No scenario may encode a cultural
 sign-off, because no agent may grant one (`docs/content-review.md` §1). A story states what is on screen;
@@ -183,7 +224,9 @@ whether it may be on screen at all is that document's shipping rule, not a test.
   may take a different shape from the English where the English shape is what breaks it: `study.summary.score`
   is a sentence in English and a label in French, and `TN-STUDY` says why. `title.lastPlayed` is a label in
   both, because a sentence would need a preposition in front of a place name and French does not use one
-  preposition for all ten places.
+  preposition for all ten places — and `TN-WAIT` applies the same fact to the error title, which is written
+  out per level rather than templated because « charger Halifax » takes no article and « charger la Ville de
+  Québec » takes one.
 - Numbers are formatted for the locale, never concatenated: « 0,6 », « 150 % » with a space.
   `TN-COPY-strings-and-counts.md` says why this is a rule and not a preference.
 - A passport stamp is **« un tampon »**, never « un timbre ». `TN-PASSPORT` settles it and lists the four
@@ -202,6 +245,7 @@ provides it.
 | **ready to come back** | The scheduler would offer this question now. Never said on screen — the player sees only "New" or "Seen before". |
 | **open / locked / not made yet** | The three states a level can be in on the map. `TN-MAP` owns the rule that decides which, and the rule that "not made yet" wins over both other states. |
 | **earned / not earned yet / not made yet** | The three states a stamp can be in on the passport. `TN-PASSPORT` owns them, reuses `TN-MAP`'s third word and its key, and states the one place the precedence differs: an earned stamp stays earned even when the level is gone. |
+| **a built level** | A level with a document under `content/levels/`. Four today — `halifax`, `quebec-city`, `ottawa`, `toronto` — and each one owns a waiting sentence and an error title (`TN-WAIT`). |
 | **an attempt** | One run at the exam: the twenty questions it drew, the answers given, whether it was timed, and — once it has finished — whether it passed. At most one attempt is unfinished at a time (`TN-ATTEMPT-04`). |
 
 ### DOM markers
@@ -209,11 +253,11 @@ provides it.
 | `data-testid` | What it marks |
 |---|---|
 | `playable` | The level is loaded and accepts input. Already used by `tests/perf` and `tests/a11y`. |
-| `level-loading`, `level-error` | Load in progress; load failed. `level-loading` carries `level.loading` (`TN-LEVEL-01`). |
+| `level-loading`, `level-error` | Load in progress; load failed. `level-loading` carries the level's own `level.<id>.loading` (`TN-WAIT-01`). |
 | `scene-state` | The E2E scene probe — see below. |
 | `title-screen`, `title-play`, `title-continue`, `title-choose-level`, `title-study`, `title-exam`, `title-settings` | The title screen (`TN-TITLE`). `title-play` and `title-continue` are never both present. `title-exam` is the exam's way in and changes its label when an exam is unfinished (`TN-ATTEMPT-03`). |
 | `level-select`, `level-card-<id>` | The level select (`TN-MAP`). Each card reports `data-state` as `open`, `locked` or `not-built`. |
-| `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). `hud` is a region named by `hud.label`. |
+| `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). `hud` is a region named by `hud.label`; `hud-mode-label` carries the mode label `TN-MOVE` owns and is never empty. |
 | `menu` | The menu opened from `menu-button` (`TN-HUD-02`). It carries Settings, Study, the passport and "Leave the level". |
 | `move-left`, `move-right`, `turn-around` | The hold-to-move controls (see `OQ-INPUT-1`). |
 | `interact-prompt` | The "you can engage this" button shown when a target is in reach. |
@@ -311,6 +355,11 @@ to run at each screen of the route **against the built output**. Exam mode adds 
 (`TN-EXAM-08`, `TN-RESULT-10`) and the passport one (`TN-PASSPORT-09`); none of them is covered by anything
 that exists today.
 
+**The waiting screen is the sharpest case of a component nothing mounts.** `createLevelLoading` is
+constructed by the harness and by the unit suite and by nothing under `app/bootstrap`, so it passes every
+scan and no player has ever seen it (`OQ-WAIT-1`). A screen that is accessible and unreachable is not a
+screen.
+
 The scans do fail when something is wrong, which is the only reason to keep them. Two real defects were
 found by axe in task 1.15's own code before it went green: an empty unnamed button, caused by a CSS rule
 overriding `[hidden]`, and `color-contrast` returning *incomplete* on symbol-only nodes. Neither was
@@ -375,12 +424,15 @@ answer nobody has given. Cross-cutting ones live here.
 - **`OQ-SUBJECTS-1` — nothing declares the ten subjects, and three screens need them.**
   `exam.subjectsReady` counts "1 of 10" (`TN-EXAM-01`), the result names a subject with the level's own
   subject line (`TN-RESULT-03`), and the passport counts ten stamps (`TN-PASSPORT-01`) — and the only list of
-  ten in `content/` is `unlockRules.order`, which is a list of **level** ids, four of which do not match
-  `TN-LEVELS` and two of which are ids `TN-LEVELS` deliberately declines to write.
+  ten in `content/` is `unlockRules.order`, which is a list of **level** ids. **Partly answered
+  2026-09-08:** `content/game.config.json` now carries a ten-slot `journey` whose nulls are levels 2 and 10,
+  four ids in `levels` and four in `unlockRules.order`, which matches `TN-LEVELS`. What is still missing is
+  the list of *subjects* — the four built level documents declare `rights`, `history`, `government` and
+  `elections`, and no document declares the other six or binds a subject to a level.
   *Recommendation:* declare the ten subjects once in `game.config.json`, each with its id and the level it
-  belongs to, and reconcile the level ids with `TN-LEVELS` in the same change. Routed to the architect and
-  the plan owner; `content/` is not this directory's to edit. Recorded per screen as `OQ-EXAM-5`,
-  `OQ-RESULT-2` and `OQ-PASSPORT-2`, because three screens finding the same gap is usually one gap.
+  belongs to. Routed to the architect and the plan owner; `content/` is not this directory's to edit.
+  Recorded per screen as `OQ-EXAM-5`, `OQ-RESULT-2` and `OQ-PASSPORT-2`, because three screens finding the
+  same gap is usually one gap.
 - ~~**`OQ-SUBJECT-1` — Level 4's subject is not written down anywhere.**~~ **Answered.**
   `docs/plan/slice-1.md` records it — "How Canadians Govern Themselves" / « Comment les Canadiens se
   gouvernent » — and all 57 shipped questions carry `subject: "government"`. The remaining subject question
@@ -388,25 +440,28 @@ answer nobody has given. Cross-cutting ones live here.
   questions are about ballots and voting, so two levels currently draw from one bank. `OQ-SPINE-3` in
   `TN-LEVELS-2-to-10-spine.md`. **Exam mode makes this urgent rather than tidy**: a representative draw
   spreads across subjects, and two subjects sharing one bank is a draw that is not representative of either.
+  It is more urgent again now that levels 1, 3 and 5 are openable and none of them has a bank.
 - ~~**`OQ-REVIEW-1` — `docs/content-review.md` does not exist.**~~ **Answered 2026-09-08** — it exists now,
   and the questions it could not answer moved into it as `OQ-REVIEW-2` … `OQ-REVIEW-11`. Three of those now
   reach back into these stories: `OQ-REVIEW-6` recommends the skin-tone option names that `OQ-CREATOR-5`
   asked for; `OQ-REVIEW-2` — who may grant cultural sign-off — is unanswered and blocks nothing in slice 1
   only because slice 1 depicts no nation, while it blocks **levels 2 and 10 outright** (`TN-LEVELS`); and
   `OQ-REVIEW-10` — the canoe, the kayak, the dogsled and the qamutiik — is unanswered and is attached to
-  those same two levels' locomotion modes. `OQ-LEVEL-3` (the officer's gender presentation and skin tone) is
-  answered in part: whatever is chosen, §6 of that document fixes the proportions and §8.6 fixes how the
-  option is labelled — and `OQ-LEVEL-8` now names the three French strings that move together with it.
+  those same two levels' locomotion modes, which is why `TN-MOVE` writes no label for either. `OQ-LEVEL-3`
+  (the officer's gender presentation and skin tone) is answered in part: whatever is chosen, §6 of that
+  document fixes the proportions and §8.6 fixes how the option is labelled — and `OQ-LEVEL-8` now names the
+  three French strings that move together with it.
 - ~~**`OQ-REVIEW-7` — `CharacterSlot.default` versus "no tone is the default".**~~ **Answered 2026-09-08 —
   in the art bible's favour, and the whole conflict was the name.** The architect renamed the field to
   `fallback`, which is what `content/schemas/character.schema.json` now requires; nothing about the
   behaviour changed, and `TN-CREATOR-01` ("each group already has one option chosen") is unaffected. One
   stale reference remains outside this directory: `docs/content-review.md` still calls the field `default`
   in its open-questions section. That file is not this agent's to edit — flagged for its owner.
-- ~~**`OQ-ENTRY-1` — the game's data says there is no game.**~~ **Answered in part 2026-09-08.**
+- ~~**`OQ-ENTRY-1` — the game's data says there is no game.**~~ **Answered 2026-09-08.**
   `content/game.config.json` carried `"levels": []` and empty unlock rules, so every level was locked
-  including the only one that existed, and the map `TN-MAP` describes would have been a wall. It now carries
-  `initialLevels: ["ottawa"]`, ten ids in `unlockRules.order` and `levels: ["ottawa"]`, so the map has a data
-  source and `TN-MAP-06`'s first scenario can pass. **What is still open is which ten ids**, which is
-  `OQ-SUBJECTS-1` above. `TN-MAP-06`'s first scenario stays as the guard that fails if the config ever goes
-  back to opening nothing.
+  including the only one that existed. It now carries four built levels, a ten-slot journey and
+  `initialLevels: ["halifax"]`, so the map has a data source, `TN-MAP-06`'s first scenario can pass, and the
+  game opens on level 1 rather than on level 4. `TN-MAP-06`'s first scenario stays as the guard that fails if
+  the config ever goes back to opening nothing. **The entrance moving is what exposed the copy defect
+  `TN-WAIT` was written for**: three strings had been Ottawa's and were drawn by every level, and nothing
+  noticed while Ottawa was the only door.

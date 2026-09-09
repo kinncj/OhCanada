@@ -6,7 +6,24 @@ feeling like ice, not like pavement.
 
 Read `README.md` in this directory first: it fixes the shared markers, the scene probe, the event names and
 the single-switch contract these scenarios use. The HUD this level draws into is `TN-HUD-hud-and-menu.md`.
-The waiting rule `level.loading` obeys is in `TN-COPY-strings-and-counts.md`.
+The waiting rule `level.ottawa.loading` obeys is in `TN-COPY-strings-and-counts.md`.
+
+**Amended 2026-09-08: Ottawa is not the game's entrance any more, and three of its strings were never its
+own.** Four level documents ship — `halifax`, `quebec-city`, `ottawa`, `toronto` — and
+`content/game.config.json` opens on **Halifax**, not on this level. While this file held the only level story
+in the directory, three of its rows were being drawn on every level: the waiting sentence naming the canal,
+the error title naming Ottawa, and the one locomotion label. They have moved to the files that own them and
+this file keeps only what is Ottawa's:
+
+- **`TN-MOVE-locomotion-labels.md`** owns every `locomotion.<mode>.label`, including `skate` — a mode is
+  shared between levels and a label written per level is a label written three times.
+- **`TN-WAIT-a-level-opens-or-it-does-not.md`** owns the error card's shared body and buttons, and the rule
+  that each level carries its own `level.<id>.loading` and `level.<id>.error.title`.
+- **`TN-LEVEL-halifax.md`**, **`TN-LEVEL-quebec-city.md`** and **`TN-LEVEL-toronto.md`** own their own two
+  sentences, in the shape this file set.
+
+Nothing about Ottawa's wording changed. Its two keys gained the level's id: `level.loading` is now
+`level.ottawa.loading`, and `level.error.title` is now `level.ottawa.error.title`.
 
 ## Accessibility and bilingual coverage map
 
@@ -26,8 +43,7 @@ The waiting rule `level.loading` obeys is in `TN-COPY-strings-and-counts.md`.
 |---|---|---|
 | `level.ottawa.title` | Ottawa | Ottawa |
 | `level.ottawa.subtitle` | How Canadians govern themselves | Comment les Canadiens se gouvernent |
-| `level.loading` | Getting the canal ready. | Préparation du canal. |
-| `locomotion.skate.label` | Skating | Patinage |
+| `level.ottawa.loading` | Getting the canal ready. | Préparation du canal. |
 | `npc.officer.name` | The officer | L'agent |
 | `hud.interact.officer` | Talk to the officer | Parler à l'agent |
 | `hud.interact.poi.parliamentHill` | Look at Parliament Hill | Regarder la Colline du Parlement |
@@ -35,18 +51,23 @@ The waiting rule `level.loading` obeys is in `TN-COPY-strings-and-counts.md`.
 | `poi.parliamentHill.title` | Parliament Hill | La Colline du Parlement |
 | `poi.parliamentHill.body` | The Parliament buildings are in Ottawa. The tall clock tower is called the Peace Tower. | Les édifices du Parlement sont à Ottawa. La haute tour de l'horloge s'appelle la tour de la Paix. |
 | `common.close` | Close | Fermer |
-| `level.error.title` | We could not load Ottawa. | Nous n'avons pas pu charger Ottawa. |
-| `level.error.body` | Check your connection and try again. | Vérifiez votre connexion et réessayez. |
-| `level.error.retry` | Try again | Réessayer |
-| `level.error.back` | Go back | Retour |
+| `level.ottawa.error.title` | We could not load Ottawa. | Nous n'avons pas pu charger Ottawa. |
 | `announce.arrived.ottawa` | You are on the Rideau Canal in Ottawa. Skating. | Vous êtes sur le canal Rideau à Ottawa. Patinage. |
+
+Four strings this level draws are written elsewhere, because they are not Ottawa's:
+`locomotion.skate.label` — "Skating" / « Patinage » — is in `TN-MOVE-locomotion-labels.md`, and
+`level.error.body`, `level.error.retry` and `level.error.back` — "Check your connection and try again." /
+« Vérifiez votre connexion et réessayez. », "Try again" / « Réessayer », "Go back" / « Retour » — are in
+`TN-WAIT-a-level-opens-or-it-does-not.md`. The scenarios below still assert the words, because a scenario
+names what a player reads, not which table it came from.
 
 `poi.parliamentHill.body` is a factual claim and goes through the same verification as a question — see
 `OQ-LEVEL-4`.
 
-**`level.loading` is the text `TN-LEVEL-01` requires when it says the loading screen shows "text, not only a
-spinner".** It was reported as a gap under `TN-COPY-06` — the screen took it from the caller as a required
-option, so no screen could be mounted without somebody inventing a sentence — and it is written here now.
+**`level.ottawa.loading` is the text `TN-LEVEL-01` requires when it says the loading screen shows "text, not
+only a spinner".** It was reported as a gap under `TN-COPY-06` — the screen took it from the caller as a
+required option, so no screen could be mounted without somebody inventing a sentence — and it is written here
+now.
 
 It says what is being prepared and **nothing about how far along the load is**, because the game does not
 know: assets arrive over a connection with no honest percentage, and the load's steps are not comparable in
@@ -54,7 +75,7 @@ size. So the string carries no percentage, no fraction, no "step 2 of 4", no pro
 no ellipsis. A bar that stops moving reads as a crash — this project has already shipped a screen that read
 as a stalled progress bar — and three dots are a sentence nobody wrote. The honest answer to a long wait is
 the escape route in `TN-LEVEL-02`, not a bigger number. `TN-COPY-07` binds every other waiting screen to the
-same rule; this file owns the words.
+same rule; this file owns Ottawa's words and `TN-WAIT` owns the shape every level's key takes.
 
 The French is a noun phrase where the English is a sentence, and both end in a full stop: « Préparation du
 canal. » is what a French speaker says about work in progress, and « Nous préparons le canal. » would promise
@@ -674,13 +695,14 @@ Feature: Pausing
   named the same way in every string" in `TN-LEVEL-11` is what stops two of them changing and the third not.
   Do **not** reach for « l'agent(e) » or « l'agent·e »: `docs/content-review.md` §8.6 forbids the bracketed
   form, and it is unreadable to a screen reader in either language.
-- **`OQ-LEVEL-9` — one loading string, or one per level?** `level.loading` names the canal, which is true of
-  Ottawa and of nothing else; level 2 cannot use this sentence. *Recommendation:* keep the key `level.loading`
-  and let the level own the wording — under ADR-0010 the level file already carries inline `localizedText`
-  for its own content — so each level says what *it* is getting ready and no screen has to fall back to
-  "Loading". If instead a single shared sentence is wanted, it names no place ("Getting the level ready." /
-  « Préparation du niveau. ») and this file's scenarios change with it. What must not happen is one level's
-  sentence being shown while another level loads.
+- ~~**`OQ-LEVEL-9` — one loading string, or one per level?**~~ **Answered 2026-09-08: one per level, keyed on
+  the level's id.** The recommendation stood and the game proved it the expensive way — the player now opens
+  on Halifax and read Ottawa's sentence about the canal, and Ottawa's name on the error card, because one
+  unqualified key was drawn by four levels. `level.loading` and `level.error.title` are gone;
+  `level.<id>.loading` and `level.<id>.error.title` replace them, this file owns Ottawa's pair, and
+  `TN-WAIT-a-level-opens-or-it-does-not.md` owns the shape, the shared error chrome and the gate that fails
+  the build for a level carrying neither. The rejected alternative is recorded there too: one shared sentence
+  naming no place says the same uninformative thing on every level.
 - **`OQ-LEVEL-10` — is anything else in the game allowed a determinate progress figure?** `TN-COPY-07` allows
   one where the completed and total parts are both really known, and nothing in slice 1 knows both.
   *Recommendation:* leave it unused until something honestly measurable exists — a file import with a byte
