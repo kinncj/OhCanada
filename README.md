@@ -57,6 +57,11 @@ Corrections to the questions are the most valuable thing you can send — see
 [CONTRIBUTING.md](CONTRIBUTING.md), and the *Question correction* and *Cultural accuracy* issue
 templates. Please read the [Code of Conduct](CODE_OF_CONDUCT.md) first.
 
+To add or fix a question, a fact or a line of dialogue, [docs/guidelines/](docs/guidelines/README.md) is
+written for a first-time contributor who is not a programmer: what a question carries and why, a real
+question file explained field by field, why the official guide is sometimes out of date, and how to run
+the checks.
+
 If you want to understand how the project is put together before changing it, start with
 [CLAUDE.md](CLAUDE.md) — the working agreement — then [docs/architecture.md](docs/architecture.md) and
 the decision records in [docs/adr/](docs/adr/).

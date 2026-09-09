@@ -10,6 +10,11 @@ those two sentences.
 You do not need to be a programmer to help. The most valuable contribution to this project is telling us
 that something we say about Canada is wrong.
 
+**Adding or correcting a question, a fact, or a line of dialogue? Start with
+[`docs/guidelines/`](docs/guidelines/README.md).** It is written for a first-time contributor who is not a
+programmer, and it covers everything this page summarises, with a real question file explained field by
+field.
+
 - [Three things to know first](#three-things-to-know-first)
 - [Report a wrong question or a wrong depiction](#report-a-wrong-question-or-a-wrong-depiction)
 - [Run it on your machine](#run-it-on-your-machine)
@@ -41,9 +46,9 @@ closed. That can turn a green branch red overnight with no commit. If a check fa
 about something you have never touched, **say so in the pull request and stop** — do not try to fix it, and
 do not force anything. It is ours to clear.
 
-**Status, as of this writing:** early development. Slice 1 builds the first level (Ottawa). Nothing is
-playable yet and the question bank is still being authored, so on the day you read this there may be
-nothing yet to correct. `docs/plan/slices.md` tracks where the work is.
+**Status, as of this writing:** early development. Nothing is playable yet. The question bank, however, is
+real — several hundred verified questions across nine subjects — so there is plenty to check and correct.
+`node scripts/verify-content.mjs` prints today's counts, and `docs/plan/slices.md` tracks where the work is.
 
 ## Report a wrong question or a wrong depiction
 
@@ -99,10 +104,15 @@ The slower, browser-based gate — the same one the second required check runs:
 make assets build test-e2e test-perf test-a11y
 ```
 
-Two targets, `verify-content` and `verify-art`, are **placeholders today**. They print "not yet
-implemented (slice 1)" and exit zero. They are wired into CI already so that the gate exists before the
-content does; when they become real they will do the checking described below. Do not read a passing
-`verify-content` as "my question was verified".
+`verify-content` and `verify-art` are real gates now, not placeholders. `verify-content` binds every
+question to its cached source, checks both quoted passages against that source, checks that nothing was
+copied verbatim, and reads git history for the separation of duties described below. It prints its own
+counts on every run, including how many questions it could **not** check — the cached guide is Crown
+copyright and is not in this repository, so in CI the text checks cannot run and the summary says so rather
+than printing a tick. Do not read a passing `verify-content` as "my question was verified": what it proves
+is stated in its output, and a verified status still comes from a second reader.
+[`docs/guidelines/running-the-checks.md`](docs/guidelines/running-the-checks.md) explains each command, what
+a red run is telling you, and how to fetch the source locally.
 
 ## What happens to your pull request
 
@@ -179,8 +189,10 @@ The same rule now covers **any player-facing sentence that states a fact about C
 or a line of NPC dialogue, not only a question card. A wrong fact in a dialogue line is read by the same
 player for the same purpose.
 
-Read [ADR-0003](docs/adr/ADR-0003-content-verification.md) before touching `content/`. It is the whole rule,
-including the four statuses and the five checks.
+[`docs/guidelines/who-writes-what.md`](docs/guidelines/who-writes-what.md) is the practical version of this
+rule — what to put in the file, why moving a question needs two commits, and what the history check can and
+cannot see. [ADR-0003](docs/adr/ADR-0003-content-verification.md) is the whole rule, including the four
+statuses and the five checks, and it wins wherever the two disagree.
 
 ## Accessibility and plain language
 
@@ -266,6 +278,7 @@ Only if you are changing code or content. In rough order of how likely each is t
 
 | Document | What it will tell you |
 |---|---|
+| [`docs/guidelines/`](docs/guidelines/README.md) | How to add or correct a question, a landmark blurb or a line of dialogue, written for someone seeing this repository for the first time. Start here for anything under `content/`. |
 | [`CLAUDE.md`](CLAUDE.md) | The working agreement: the fixed decisions, the layer rules, the performance budgets, the accessibility and content rules. One page. Read it before changing anything. |
 | [ADR-0003](docs/adr/ADR-0003-content-verification.md) | The verification gate in full — the four statuses, the five checks, why authoring and verification are separated. Required reading before touching `content/`. |
 | [ADR-0004](docs/adr/ADR-0004-licensing.md) | Which licences are acceptable and what provenance an asset needs before it can ship. |
