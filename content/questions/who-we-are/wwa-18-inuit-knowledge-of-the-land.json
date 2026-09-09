@@ -40,10 +40,10 @@
     "quote": "Their knowledge of the land, sea and wildlife enabled them to adapt to one of the harshest environments on earth."
   },
   "verification": {
-    "status": "rejected",
+    "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T21:05:00Z",
+    "checkedAt": "2026-09-09T01:56:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Their knowledge of the land, sea and wildlife enabled them to adapt to one of the harshest environments on earth."
+    "evidence": "The Inuit, which means “the people” in the Inuktitut language, live in small, scattered communities across the Arctic. Their knowledge of the land, sea and wildlife enabled them to adapt to one of the harshest environments on earth."
   }
 }
