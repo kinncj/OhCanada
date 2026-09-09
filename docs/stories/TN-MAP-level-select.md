@@ -6,6 +6,14 @@ would open the next one, and is never left thinking the game is broken because m
 Read `README.md` in this directory first. `TN-TITLE-title-screen.md` owns the screen that opens this one;
 `TN-FLOW-first-run-and-return.md` owns the route in and out; `TN-LEVELS-2-to-10-spine.md` owns each level's
 subject, place name and blockers, and is where the nine place names in the copy table below come from.
+`TN-PASSPORT-my-passport.md` owns the passport this screen opens, and reuses this file's state rule.
+
+**Amended 2026-09-08 — « timbre » is now « tampon » in every French string on this screen.** `OQ-MAP-5`
+recorded that a « timbre » is a postage stamp and that the mark in a passport is a « tampon », and deferred
+the word to `TN-QUEST`. `TN-PASSPORT-my-passport.md` settles it in « tampon »'s favour and lists every
+string that moved; three of them are in the table below. The noun is masculine in both words, so nothing
+else about the strings changed. This screen also gained one control, "See my passport", beside the stamp
+count — `TN-PASSPORT-01` says why it lands here and not on the title screen.
 
 ## The problem this story is mostly about
 
@@ -40,6 +48,10 @@ list anybody maintains). Two sources, two different questions, and the bug this 
 answering one of them with the other. See `OQ-MAP-1`: the two sources do not agree today and one of them is
 empty.
 
+**The passport reuses this rule and differs from it in exactly one place**, which is written down in
+`TN-PASSPORT`: an earned stamp is shown as earned even when this build has no document for that level,
+because the map says what a player can do now and the passport says what they did.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -58,7 +70,7 @@ empty.
 |---|---|---|
 | `map.open` | Choose a level | Choisir un niveau |
 | `map.title` | Choose a level | Choisir un niveau |
-| `map.stamps` | Stamps: {{earned}} of {{total}} | Timbres : {{earned}} sur {{total}} |
+| `map.stamps` | Stamps: {{earned}} of {{total}} | Tampons : {{earned}} sur {{total}} |
 | `map.levelsReady` | Levels ready: {{ready}} of {{total}} | Niveaux prêts : {{ready}} sur {{total}} |
 | `map.moreComing` | More are coming. | D'autres arrivent. |
 | `map.state.open` | Open | Ouvert |
@@ -66,8 +78,8 @@ empty.
 | `map.state.notBuilt` | Not made yet | Pas encore créé |
 | `map.open.help` | You can play this now. | Vous pouvez y jouer maintenant. |
 | `map.locked.after` | Finish {{level}} first. | Terminez d'abord {{level}}. |
-| `map.locked.stamps.one` | Earn {{n}} more stamp to open this. | Gagnez encore {{n}} timbre pour ouvrir ce niveau. |
-| `map.locked.stamps.other` | Earn {{n}} more stamps to open this. | Gagnez encore {{n}} timbres pour ouvrir ce niveau. |
+| `map.locked.stamps.one` | Earn {{n}} more stamp to open this. | Gagnez encore {{n}} tampon pour ouvrir ce niveau. |
+| `map.locked.stamps.other` | Earn {{n}} more stamps to open this. | Gagnez encore {{n}} tampons pour ouvrir ce niveau. |
 | `map.notBuilt.help` | We are still making this level. | Ce niveau est encore en préparation. |
 | `map.number` | Level {{n}} | Niveau {{n}} |
 
@@ -75,7 +87,11 @@ The level names and subject lines are owned by `TN-LEVELS-2-to-10-spine.md` (`le
 `level.<id>.subtitle` for levels 1, 2 and 5 to 10) and by `TN-LEVEL-ottawa.md` (`level.ottawa.title`,
 `level.ottawa.subtitle`). This screen names the keys and does not carry the words: a place name written in
 two tables is a place name that will eventually differ between two screens. `common.back` is owned by
-`TN-FLOW-first-run-and-return.md`; `storage.warning` by `TN-SAVE-save-and-reload.md`.
+`TN-FLOW-first-run-and-return.md`; `storage.warning` by `TN-SAVE-save-and-reload.md`; `passport.open` by
+`TN-PASSPORT-my-passport.md`.
+
+`map.stamps`, `map.levelsReady`, `map.moreComing`, `map.state.notBuilt` and `map.notBuilt.help` are drawn by
+the passport too, by key. Five strings, one home, two screens that cannot drift apart.
 
 **Why `map.stamps` and `map.levelsReady` are labels with a preposition after the number.** `TN-COPY`'s
 counting rule 1: a noun before the number and « sur » after it has no plural form to get wrong in either
@@ -126,6 +142,13 @@ Feature: The level select screen
     Then it shows "Levels ready: 1 of 10"
     And it shows "More are coming."
     And it shows "Stamps: 0 of 10"
+
+  Scenario: The stamp count is a route as well as a number
+    Then a control "See my passport" is offered as "passport-open"
+    And it is at least 44 CSS px wide and tall
+    When I tap it
+    Then the element "passport" is visible, as TN-PASSPORT-01 describes
+    And coming back shows the level select in the state I left it in
 
   Scenario: One thumb, portrait, no sideways scroll
     Given the viewport is 390 x 844
@@ -387,7 +410,7 @@ Feature: Single-switch level select
     Then the highlight has visited all ten cards in order
     And each card's name and state are announced as the highlight arrives
     When I press the switch briefly again
-    Then the highlight moves on to "Back" and then wraps to the first card
+    Then the highlight moves on to "See my passport", then "Back", and then wraps to the first card
 
   Scenario: Long press chooses, and a card that cannot be opened says why
     Given the highlight is on an open card
@@ -400,7 +423,7 @@ Feature: Single-switch level select
 
   Scenario: The whole screen is usable with the switch alone
     When I use only short and long presses
-    Then I can reach every card, open the one that is open, and leave the screen
+    Then I can reach every card, open the one that is open, open the passport and leave the screen
 ```
 
 ## TN-MAP-09 — The map with a screen reader
@@ -472,7 +495,7 @@ Feature: The map honours the accessibility settings
     Given text scaling is 200 %
     And the language is French
     Then the whole of "Ce niveau est encore en préparation." is visible on its card
-    And the whole of "Gagnez encore 2 timbres pour ouvrir ce niveau." is visible on its card
+    And the whole of "Gagnez encore 2 tampons pour ouvrir ce niveau." is visible on its card
 ```
 
 ## TN-MAP-11 — The map in French
@@ -486,7 +509,7 @@ Feature: The level select in French
   Scenario: The screen is French
     Then the heading reads "Choisir un niveau"
     And the back control reads "Retour"
-    And the counts read "Niveaux prêts : 1 sur 10" and "Timbres : 0 sur 10"
+    And the counts read "Niveaux prêts : 1 sur 10" and "Tampons : 0 sur 10"
     And it shows "D'autres arrivent."
     And there is a space before each colon
     And no English word appears in "level-select"
@@ -502,10 +525,17 @@ Feature: The level select in French
 
   Scenario: The stamp sentence agrees with its number in French
     Given the unlock rules ask for 2 stamps and I have earned 1
-    Then the card shows "Gagnez encore 1 timbre pour ouvrir ce niveau."
-    And it does not show "1 timbres"
+    Then the card shows "Gagnez encore 1 tampon pour ouvrir ce niveau."
+    And it does not show "1 tampons"
     Given I have earned 0 stamps
-    Then the card shows "Gagnez encore 2 timbres pour ouvrir ce niveau."
+    Then the card shows "Gagnez encore 2 tampons pour ouvrir ce niveau."
+
+  Scenario: The word for a stamp is the passport's word
+    Then no string in "level-select" contains "timbre"
+    And the passport uses the same word, as TN-PASSPORT-11 requires
+
+  Scenario: The passport control is French
+    Then "passport-open" reads "Voir mon passeport"
 
   Scenario: Place names are what each language calls the place
     Then level 4 reads "Ottawa" in both languages
@@ -528,15 +558,15 @@ Feature: The level select in French
 ## Open questions
 
 - **`OQ-MAP-1` — the map has no data source today, and the one it should have is empty.**
-  `content/game.config.json` carries `"levels": []` and `unlockRules` with `initialLevels: []` and
-  `order: []`, while `content/levels/ottawa.json` exists. `unlockedLevelIds` on that config returns nothing,
-  so as the repository stands **every level is locked, including the only one that is built**, and the map
-  would be a wall. `TN-MAP-06`'s first scenario is written to fail on exactly that.
-  *Recommendation:* `game.config.json` carries all ten map entries in `levels` and all ten ids in
-  `unlockRules.order`, with `initialLevels: ["ottawa"]` until level 1 ships; the catalogue keeps answering
-  "is it built". Ten entries in a config for one level that exists is the point — the map is the plan, the
-  catalogue is the state. Routed to the architect and the plan owner; `content/` and `docs/plan/` are not
-  this file's to edit.
+  `content/game.config.json` carried `"levels": []` and `unlockRules` with `initialLevels: []` and
+  `order: []`, while `content/levels/ottawa.json` existed. `unlockedLevelIds` on that config returned
+  nothing, so **every level was locked, including the only one that was built**, and the map would have been
+  a wall. `TN-MAP-06`'s first scenario is written to fail on exactly that.
+  *Recommendation, partly taken:* the config now carries `initialLevels: ["ottawa"]` and ten ids in
+  `unlockRules.order`, and `levels` names the one level that exists. **The remaining gap is which ten ids**:
+  four of them (`mikmaki`, `alberta`, `rockies`, `the-north`) do not match `TN-LEVELS`, and two of those are
+  ids `TN-LEVELS` deliberately declines to write. `OQ-PASSPORT-2` carries it, because the passport counts to
+  ten from the same list. Routed to the architect and the plan owner; `content/` is not this file's to edit.
 - **`OQ-MAP-2` — is the map a map, or a list?** These scenarios require an ordered, vertically scrollable
   set of cards, because ten places east to west across a 1080×1920 portrait screen is a horizontal shape in a
   vertical window, and a horizontally panned map fails "the page does not scroll sideways" and needs a drag.
@@ -554,15 +584,17 @@ Feature: The level select in French
   `stampsToUnlockNext` at 1 and use `map.locked.after`, so the player is given a place rather than a number;
   keep the counting strings, because the config can change and a screen that has to invent a sentence when
   it does is the defect `TN-COPY-06` exists for.
-- **`OQ-MAP-5` — « timbre » or « tampon » for a stamp in a passport?** `TN-QUEST` fixed « le timbre
-  d'Ottawa », and this file follows it rather than introducing a second word. A « timbre » is a postage
-  stamp; the mark an officer puts in a passport is a « tampon ». *Recommendation:* `TN-QUEST` owns the word
-  and decides; if it changes, `map.stamps` and `map.locked.stamps.*` change with it in the same commit. Two
-  files with two words for one thing is the failure this note exists to prevent.
+- ~~**`OQ-MAP-5` — « timbre » or « tampon » for a stamp in a passport?**~~ **Answered 2026-09-08 —
+  « tampon ».** Settled in `TN-PASSPORT-my-passport.md`, which is the screen the word is about, and applied
+  in the same pass to `map.stamps`, `map.locked.stamps.one`, `map.locked.stamps.other` and
+  `stamp.ottawa.earned` — which is what this question required. « Cachet » was the other candidate and is
+  recorded as `OQ-PASSPORT-5` for the first French reviewer. `app/ui/copy.ts` still carries the old French
+  and is not this directory's to edit; the change is reported to the UI agent.
 - **`OQ-MAP-6` — does the map show a level's questions or best score?** `progress.schema.json` carries
-  `bestScore` per level. *Recommendation:* not in this slice. A score on a locked or unbuilt card is noise,
-  and a score on an open card invites a leaderboard, which this game does not have. Revisit with Exam mode
-  (F1), which is where a score means something.
+  `bestScore` per level. *Recommendation:* still no. A score on a locked or unbuilt card is noise, and a
+  score on an open card invites a leaderboard, which this game does not have. Exam mode has now landed and
+  put its result where it belongs — on the passport, most-recent only, no best and no average
+  (`TN-PASSPORT-06`, `OQ-RESULT-4`) — which is the answer this question was waiting for.
 - **`OQ-MAP-7` — can a player replay a finished level?** `TN-MAP-02` says yes, because nothing in the domain
   prevents it and a learning tool that locks its own content behind having seen it once is working against
   itself. *Recommendation:* keep it; if replay ever needs to differ from a first visit, that is a level

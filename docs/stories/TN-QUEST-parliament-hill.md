@@ -19,7 +19,15 @@ and why it may be one the player has already answered — is `TN-RESUME-question
 owns that moment for every story that touches it.
 
 Read `README.md` in this directory first. The question card itself is `TN-CARD-question-card.md`. The strip
-the tracker is drawn into is `TN-HUD-hud-and-menu.md`.
+the tracker is drawn into is `TN-HUD-hud-and-menu.md`. The screen the stamp lands in is
+`TN-PASSPORT-my-passport.md`.
+
+**Amended 2026-09-08 — « le timbre » is now « le tampon », and `passport.open` moved.** A « timbre » is a
+postage stamp; the mark an officer puts in a passport is « un tampon ». `OQ-MAP-5` recorded the defect and
+deferred to this file; `TN-PASSPORT-my-passport.md` settles it, in that word's favour, and lists every string
+in this directory that changed with it. `stamp.ottawa.earned` is one of them. The passport's own label,
+`passport.open`, moved to the file that owns the passport screen, for the reason `TN-SET` gives about
+`common.settings` and `settings.title`: the screen owns both its heading and the control that opens it.
 
 ## Accessibility and bilingual coverage map
 
@@ -50,8 +58,7 @@ the tracker is drawn into is `TN-HUD-hud-and-menu.md`.
 | `quest.step.answer` | Answer 3 questions ({{done}} of 3) | Répondez à 3 questions ({{done}} sur 3) |
 | `quest.done.title` | Task done! | Mission accomplie! |
 | `quest.done.body` | You skated to Parliament Hill and answered three questions. | Vous avez patiné jusqu'à la Colline du Parlement et répondu à trois questions. |
-| `stamp.ottawa.earned` | You earned the Ottawa stamp. | Vous avez obtenu le timbre d'Ottawa. |
-| `passport.open` | See my passport | Voir mon passeport |
+| `stamp.ottawa.earned` | You earned the Ottawa stamp. | Vous avez obtenu le tampon d'Ottawa. |
 | `common.keepPlaying` | Keep playing | Continuer à jouer |
 | `quest.noQuestions` | The questions are not ready right now. Try again later. | Les questions ne sont pas prêtes pour l'instant. Réessayez plus tard. |
 
@@ -60,6 +67,9 @@ the tracker is drawn into is `TN-HUD-hud-and-menu.md`.
 **The dialogue's speaker label is `npc.officer.name`** — "The officer" / « L'agent » — defined in
 `TN-LEVEL-ottawa.md` with the rest of that character. It is not repeated here, because a name written down
 twice is a name that can differ in two places. `TN-QUEST-08` asserts it is what the dialog is called.
+
+**`passport.open`** — "See my passport" / « Voir mon passeport » — is defined in
+`TN-PASSPORT-my-passport.md`. The completion card draws it and does not own it.
 
 `quest.step.answer` counts to a number the quest document fixes at three, so the author writes "3 questions"
 once and no plural rule applies (`TN-COPY-strings-and-counts.md`, rule 5). The `{{done}}` placeholder is not
@@ -223,7 +233,7 @@ Feature: Completing the quest
 
   Scenario: The stamp appears in the passport
     When I tap "See my passport"
-    Then the element "passport" is visible
+    Then the element "passport" is visible, as TN-PASSPORT-01 describes
     And it contains "stamp-ottawa"
     And "stamp-ottawa" has a text label naming Ottawa, not only a picture
 
@@ -435,7 +445,8 @@ Feature: The quest in French
     When the quest completes
     Then "quest-complete-card" shows "Mission accomplie!"
     And it shows "Vous avez patiné jusqu'à la Colline du Parlement et répondu à trois questions."
-    And it shows "Vous avez obtenu le timbre d'Ottawa."
+    And it shows "Vous avez obtenu le tampon d'Ottawa."
+    And it does not contain "timbre"
     And the buttons read "Voir mon passeport" and "Continuer à jouer"
 
   Scenario: The declined line is French
@@ -459,15 +470,17 @@ Feature: The quest in French
   scheduler cannot both be in charge. *Recommendation:* task 1.2 gives the `answer` step a `subject` and a
   `count`, and the scheduler picks; `questionIds` becomes an optional authored pool the scheduler picks
   *from*. Until this is settled, `TN-CARD-02` cannot be implemented as written.
-- **`OQ-QUEST-2` — where does a stamp live in the save?** `ProgressSnapshot` has `levels[].completedQuests`
-  and no stamps. *Recommendation:* one stamp per completed level quest, derived rather than stored, or an
-  explicit `stamps` array in `progress.schema.json`. Either is fine; nothing is fine.
+- **`OQ-QUEST-2` — where does a stamp live in the save?** **Answered.**
+  `content/schemas/progress.schema.json` records `stampEarnedAt` per level, nullable while the stamp has not
+  been earned, with the reason written beside it: `unlockRules.stampsToUnlockNext` counts these, so a stamp
+  is recorded rather than derived from a rule that could change under a saved game.
+  `TN-PASSPORT-my-passport.md` is the screen that reads it.
 - **`OQ-QUEST-3` — can a player abandon an accepted quest?** These scenarios say no: the quest simply waits.
-  *Recommendation:* keep it that way in slice 1; there is one quest and nothing to abandon it for.
-- **`OQ-QUEST-4` — is the passport a screen or a panel?** `TN-QUEST-04` only requires that
-  `stamp-ottawa` becomes visible inside `passport`. *Recommendation:* a full screen reached from the menu and
-  from the completion card, so slice 2 can add nine more stamps without redesigning a panel. `TN-HUD-02`
-  assumes the menu route exists, and `OQ-HUD-2` says why it has to.
+  *Recommendation:* keep it that way in slice 1; there is one quest and nothing to abandon it for. An exam
+  can be abandoned, and `TN-ATTEMPT` says why that is a different thing.
+- **`OQ-QUEST-4` — is the passport a screen or a panel?** **Answered — a full screen**, specified in
+  `TN-PASSPORT-my-passport.md`, reached from the level's menu, from the level select and from the completion
+  card. `TN-QUEST-04` still only requires that `stamp-ottawa` becomes visible inside `passport`.
 - **`OQ-QUEST-5` — does the player have to skate back to the officer?** These scenarios say no; the quest
   ends at the Hill. It costs the slice a return trip and gains it nothing. If the design wants the return
   trip for the feel of turning around on ice, it is a fourth step and this file changes.
@@ -478,5 +491,6 @@ Feature: The quest in French
   exists to catch.
 - **`OQ-QUEST-7` — does the answer step keep a per-step record of what it asked?** No, and that is a
   decision rather than an omission: `TN-RESUME` rejected it, and `TN-SAVE-03` has a scenario that fails if
-  such a list appears in the saved document. If a later quest genuinely needs one — an exam does — it is a
-  new field with its own story, not a quiet addition to this one.
+  such a list appears in the saved document. **An exam does need one**, and it has one — in its own
+  `examAttempt` document and not in a quest step (`TN-ATTEMPT`, `OQ-EXAM-3`), which is what "a new field with
+  its own story" meant.

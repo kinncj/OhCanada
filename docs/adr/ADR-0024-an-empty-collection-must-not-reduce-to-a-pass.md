@@ -85,11 +85,21 @@ been a failure — or an explicit `0 expected until slice 1 task N`. That rule i
 per printed number, and is exactly the anti-vacuum floor already written eight times, applied to the gate's
 own summary rather than to its corpus.
 
-- **OBLIGATION due=2026-10-08 owner=infra** — in `scripts/validate-content.mjs`, fail on
+- ~~**OBLIGATION due=2026-10-08 owner=infra** — in `scripts/validate-content.mjs`, fail on
   `localeBundlesChecked === 0` rather than reporting it, or declare zero legal in the script with the task
   that ends it. Then audit the other four counts in that success line for the same property. The EN/FR parity
   guarantee currently passes over zero files, which is the loudest instance and the one already in the output
-  of every run.
+  of every run.~~
+  **DISCHARGED 2026-09-08** — infra took the second branch and audited the rest. The summary line no longer
+  prints a count for locale bundles; it prints the claim instead: *"NO locale bundles exist yet, so EN/FR
+  parity is held by `app/ui/copy.ts` and `make typecheck`, not here (ADR-0010, ADR-0024)"*. Floors were added
+  to the content-document walk, the asset walk and the palette ramps.
+
+  It also caught something sharper than the obligation asked for, and it is the better half of the fix: a
+  floor on the *combined* length of a list that always contains `assets/credits.json` and
+  `assets/style/palette.json` **can never reach zero, so it is a floor that cannot fire** — decoration in the
+  exact sense ADR-0014 warns about, spotted in the act of adding it rather than a year later. That is the
+  discipline this ADR was written to spread, applied better than the ADR stated it.
 
 ## Alternatives considered
 

@@ -14,6 +14,11 @@ a decision that lives only in a commit message is a decision the next reader has
 Read `README.md` in this directory first. The card itself is `TN-CARD-question-card.md`; the step being
 resumed is `TN-QUEST-04` step 3; what survives a closed tab is `TN-SAVE-save-and-reload.md`.
 
+**This file is about a quest's answer step. An exam is resumed differently and by a different file** —
+`TN-ATTEMPT-leaving-and-resuming-an-exam.md`, which keeps the exact twenty questions it drew and does not
+consult the scheduler at all. `OQ-RESUME-3` asked that Exam mode say so explicitly rather than inherit this
+file by silence; it does, and it takes the opposite answer to the one recommended there.
+
 ## The decision — 2026-09-08
 
 **A reload does not hide a question that is ready to come back.** `TN-SAVE-01`'s fourth scenario used to
@@ -61,6 +66,10 @@ questions it has already put on screen lasts exactly one sitting and is not save
 camera position and the skater's speed. `TN-CARD-02`'s "in the same sitting" means this. Everything the
 scheduler needs in order to know *when a question should come back* is saved, and is row 7 of `TN-SAVE`'s
 survives table.
+
+**An exam is the one thing that spans sittings without depending on any of this.** Its twenty questions are
+chosen once, recorded, and asked again in the same order after any number of reloads (`TN-ATTEMPT-02`). It is
+not an exception to the rule above; it simply never asks the scheduler what to offer next.
 
 ## Player-facing copy
 
@@ -172,6 +181,13 @@ Feature: The sitting's memory ends with the sitting
     Then "hud-quest-tracker" shows "Answer 3 questions (3 of 3)"
     And the quest completes
     And no message tells the player how the questions were chosen
+
+  Scenario: An exam does not take part in any of this
+    Given an exam of twenty questions is unfinished and I closed the tab
+    When I open the game again and carry on
+    Then the questions are the twenty that were drawn, in their order
+    And none of them is chosen by the scheduler on the way back in
+    And a question I answered in that exam is not swapped for another
 ```
 
 ## TN-RESUME-03 — Coming back to a step that cannot go on (failure path)
@@ -344,14 +360,22 @@ Feature: Resuming in French
   seconds and becomes flaky. *Recommendation:* the clock is a port with a fake in tests, and the story keeps
   saying "an hour has passed" rather than naming the fake. If no such port exists, this is the one thing in
   this file that cannot be proved, and it should be raised before task 1.4 is called done, not after.
+  Exam mode needs the same port for the same reason (`OQ-TIMER-3`), and a second source of time is how a
+  paused clock quietly stops being paused.
 - **`OQ-RESUME-2` — should the step ever ask more than three cards to reach three *different* questions?**
   These scenarios say no: three answers finish the step, even if two of them were the same question across a
   reload. *Recommendation:* keep it. Counting different questions means persisting which ones the step asked,
   which is the option this file rejected, and it would let a step run to four or five cards without ever
   saying so in the tracker.
-- **`OQ-RESUME-3` — does this rule change for Exam mode?** Exam is twenty fixed questions and is not in this
-  slice. *Recommendation:* an exam in progress is not resumable at all, so the seam does not exist there; when
-  Exam mode is specified, say that explicitly rather than inheriting this file by silence.
+- ~~**`OQ-RESUME-3` — does this rule change for Exam mode?**~~ **Answered 2026-09-08, and not the way this
+  question recommended.** It recommended that "an exam in progress is not resumable at all, so the seam does
+  not exist there", and asked that Exam mode say so explicitly rather than inherit this file by silence.
+  `TN-ATTEMPT-leaving-and-resuming-an-exam.md` says the opposite explicitly: **an exam in progress is kept
+  and can be finished later**, because a drill loses nothing when a tab dies and an exam loses the whole
+  result, and because the per-question state a result needs anyway is most of what resuming costs. The seam
+  that does not exist is a different one — an exam never asks the scheduler what to offer next, so nothing in
+  this file applies to it. `OQ-ATTEMPT-1` carries the reversal and what would change if the project owner
+  prefers the simpler rule.
 - **`OQ-RESUME-4` — is "an hour" the right number to write in a scenario?** The real threshold is whatever the
   shortest lapse interval is, which `OQ-CARD-5` says must stay short enough for "soon" to be true. *An hour*
   is written here because it is comfortably past any such interval and reads as a plain fact to a player.

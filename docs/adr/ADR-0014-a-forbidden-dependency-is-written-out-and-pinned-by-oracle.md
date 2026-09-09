@@ -63,6 +63,35 @@ build that is not true, and it ships weight for nothing (ADR-0012).
 exactly where the import is not — that is the mechanism the whole pattern rests on, and it is why these tests
 are contract tests rather than unit tests of the module.
 
+## Corollary: do not average views of one thing (2026-09-08)
+
+The art agent hit a measurement error that belongs here rather than in the art bible, because it is the
+oracle discipline stated for measurement and it is not about art.
+
+Building the Château Frontenac from reference, it took three ratio brackets — **width:height**,
+**tower:wing**, **roof:width** — each derived correctly from photographs, and built to the middle of each.
+The result was **a visibly wrong building: a shape no photograph shows.**
+
+The cause is that the three brackets are not three measurements. They are **three views of one geometry**, so
+they are not independent, and the centre of each bracket is not a point that any single consistent building
+occupies. Averaging them produces a set of numbers that satisfies every constraint on average and none in
+fact. The fix was to rebuild from **one near-orthographic view** — a single internally consistent source.
+
+That is the same rule this ADR already states for validators, in a different medium:
+
+> The oracle is **the real thing, run for real.** … A hand-written table of expected values is not an oracle —
+> it is the same author writing the same assumption twice.
+
+Generalised: **when several measurements are views of one underlying object, reconcile to one consistent
+source rather than blending them.** A blend is not more accurate than its inputs; it is a fourth artefact that
+nothing produced and nothing can check. The pull toward averaging is strong precisely when each input is
+individually defensible, which is exactly when it is most wrong.
+
+It has a direct analogue in this repository's own gates and is worth naming so the discipline transfers: a
+validator checked against *the real ajv over the real schema file* is a single consistent source. A validator
+tuned until it agreed with the *average* of two hand-written expectations would be this error, and it would
+pass its own tests.
+
 ## Alternatives considered
 
 - **Put the forbidden thing behind a port and implement it in an adapter.** Satisfies every rule and is the

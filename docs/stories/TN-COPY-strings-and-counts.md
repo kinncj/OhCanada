@@ -37,6 +37,7 @@ This file owns two strings and rules about everybody else's.
 
 These confirm what task 1.15 wrote. They are the words `TN-SET-07` requires when it says a switch shows
 "its state as a word", and they are the only two state words in the game: no switch invents its own pair.
+The exam's timer switch (`TN-TIMER-01`) uses these two and no others.
 
 **Why « Activé » and not an agreeing form.** French adjectives agree, and the switch labels do not all share
 a gender — « Moins de mouvement » is masculine, « Police plus lisible » is feminine. An agreeing state word
@@ -84,6 +85,10 @@ Written once, obeyed by every table.
    both languages.
 8. **The rule is checked per language, not per key.** A template is safe only if it is safe in every
    language it is written in. See the worked example below, and `TN-COPY-03`.
+9. **One counted noun per template. A string that needs two is two strings.** A plural category is chosen
+   once per string, so a template with two numbers and a noun behind each cannot be right at every pair of
+   values in both languages — whichever number the form is chosen from, the other noun is wrong somewhere.
+   Split it. See the second worked example below.
 
 ### The worked example, because this rule was wrong about its own example
 
@@ -104,6 +109,23 @@ string and explains why the French is a label where the English is a sentence.
 `card.progress` was checked at the same time and is **not** affected: « Question {{n}} sur {{total}} » already
 puts a preposition after the number. A rule that flags everything is not a rule, and this one discriminates.
 
+### The second worked example — where rule 9 came from, 2026-09-08
+
+Exam mode wanted one sentence on its start screen:
+
+> "The exam has {{count}} questions. You need {{pass}} right to pass." /
+> « L'examen compte {{count}} questions. Il faut {{pass}} bonnes réponses pour réussir. »
+
+Two numbers, and a counted noun behind each. Rule 4 says the form is chosen by the number the noun follows —
+but there are two nouns following two different numbers, and a template gets one category. Chosen from
+`count`, a build with a pass mark of one draws « il faut 1 bonnes réponses »; chosen from `pass`, an exam of
+one question draws « L'examen compte 1 questions ». Neither is a rendering bug: the string is the bug.
+
+It is now two strings. `exam.rules.length` carries the noun and its `.one` and `.other` rows in both
+languages; `exam.rules.pass` — "You need {{pass}} out of {{count}} to pass." / « Il faut {{pass}} sur
+{{count}} pour réussir. » — follows both numbers with a preposition and needs no rows at all. `TN-EXAM`
+owns both and says why beside them.
+
 ### Strings this rule changes today
 
 | Was | Becomes |
@@ -112,9 +134,14 @@ puts a preposition after the number. A rule that flags everything is not a rule,
 | `study.short` | `study.short.one`, `study.short.other` — `TN-STUDY` |
 | `settings.holdTime.seconds` | `settings.holdTime.seconds.one`, `.other` — `TN-SET` |
 | `study.summary.score` (FR only) | reworded to « Bonnes réponses : {{correct}} sur {{total}} » — `TN-STUDY`. Reworded rather than split, because rule 1 comes before rule 2 and a string with no counted noun needs no plural rows at all. |
+| one `exam.rules` sentence | `exam.rules.length.one`, `.other` and `exam.rules.pass` — `TN-EXAM`, under rule 9 |
 
-With that fix, no string in this directory places a counted noun immediately after a placeholder in either
-language. `TN-COPY-03` and `TN-COPY-04` are what keep that true as tables grow.
+**Where a counted noun does follow a placeholder, it carries both rows in both languages, and that is the
+rule working rather than the rule being broken.** Five strings are in that position today, all in Exam mode,
+because no rewording removes the noun without making the sentence worse: `exam.timer.limit`,
+`exam.timer.left`, `exam.unanswered` (`TN-EXAM`), `exam.result.unanswered` (`TN-RESULT`) and
+`map.locked.stamps` (`TN-MAP`). Every other count in this directory takes rule 1's shape. `TN-COPY-03` and
+`TN-COPY-04` are what keep both halves true as the tables grow.
 
 ## Waiting copy
 
@@ -181,6 +208,13 @@ Feature: Counting in English
     When it is rendered with 4 correct out of 5
     Then it reads "You got 4 out of 5 right."
     And the only difference between the two readings is the number
+
+  Scenario: The exam's counts read correctly at one
+    When the string "exam.timer.left" is rendered with 1
+    Then it reads "1 minute left"
+    When the string "exam.unanswered" is rendered with 1
+    Then it reads "You have not answered 1 question."
+    And neither reads "1 minutes" or "1 questions"
 ```
 
 ## TN-COPY-02 — A count reads correctly in French, including where French differs
@@ -231,6 +265,15 @@ Feature: Counting in French
     And it does not read "1 bonnes réponses"
     And the English reading of the same string with the same numbers is "You got 1 out of 5 right."
     And neither reading changes any word except the number when rendered with 4 correct out of 5
+
+  Scenario: The exam's counted nouns agree in French
+    When the string "exam.timer.left" is rendered with 1
+    Then the French reading is "Il reste 1 minute"
+    And it does not read "Il reste 1 minutes"
+    When it is rendered with 30
+    Then it reads "Il reste 30 minutes"
+    When the string "exam.result.unanswered" is rendered with 1
+    Then it reads "Vous n'avez pas répondu à 1 question."
 ```
 
 ## TN-COPY-03 — A missing or wrong plural form is a build failure, not a screen (failure path)
@@ -282,6 +325,13 @@ Feature: Plural forms cannot go missing quietly
     And its form is chosen from the second placeholder
     When the unit suite runs
     Then it fails, naming the string
+
+  Scenario: A template with two counted nouns is refused, whichever number it chooses from
+    Given a template carries two placeholders with a noun after each
+    When the content check runs
+    Then the build fails, naming the key and pointing at rule 9
+    And the message says the string has to be split, not that a form is missing
+    And it fails in both languages independently
 ```
 
 ## TN-COPY-04 — Plural and state strings still fit at 200 %
@@ -319,6 +369,7 @@ Feature: A switch says what it is
   Scenario: The same two words are used by every switch
     Then no switch shows a state word other than "On" or "Off"
     And in French no switch shows a state word other than "Activé" or "Désactivé"
+    And that includes the exam's timer switch, wherever it is drawn
 
   Scenario: The word survives reduced motion
     Given reduced motion is on
@@ -449,5 +500,13 @@ Feature: Honest waiting copy
 - **`OQ-COPY-5` — how does the check find a noun?** `TN-COPY-03` refuses "a noun immediately after a
   placeholder", and nothing in this project parses French for parts of speech. *Recommendation:* the check
   is a lint, not a linguist — flag any template where a placeholder is followed by a space and a word, and
-  let the table answer by using the recommended form. A blunt check with no escape hatch is worth more than a
-  clever one with one, because the escape hatch is where the next « 1 bonnes réponses » will live.
+  let the table answer by using the recommended form **or by carrying both plural rows**. A blunt check with
+  no escape hatch is worth more than a clever one with one, because the escape hatch is where the next
+  « 1 bonnes réponses » will live. The exam's five counted nouns are the first keys to answer it the second
+  way, and they are listed above so the check's expected set is written down rather than discovered.
+- **`OQ-COPY-6` — can rule 9 be checked without understanding the sentence?** A template with two
+  placeholders and a word after each is mechanically detectable, and that is what `TN-COPY-03`'s last
+  scenario asks for. It will also flag a harmless string one day — « {{a}} sur {{b}} et voilà » has a word
+  after the second placeholder and no plural problem. *Recommendation:* accept the false positive and fix it
+  by rewording, the same way rule 1 answers `OQ-COPY-5`. A rule that only fires on real defects needs a
+  parser, and a parser for two languages is a bigger thing to be wrong than a copy table.

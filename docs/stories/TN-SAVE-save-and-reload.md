@@ -23,6 +23,8 @@ Every item below is asserted by a scenario in `TN-SAVE-01`. Nothing else is prom
 | 7 | For every question ever answered: that it was seen, whether the last answer was right, and when it should come back | Questions I got wrong come back first — including on the way back in (`TN-RESUME-01`) |
 | 8 | Which subjects have been started | Study offers the same drill |
 | 9 | The level last played | "Continue" on the title screen opens that level (`TN-FLOW-02`) |
+| 10 | An exam in progress: the twenty questions drawn in their order, every answer given, and the time left if the timer was on | "Finish your exam" opens the same exam where it was left (`TN-ATTEMPT-02`) |
+| 11 | Every finished exam attempt: its answers, whether it was timed, and whether it passed | The passport shows the most recent result (`TN-PASSPORT-06`) |
 
 **Row 9 was added 2026-09-08**, when `TN-FLOW-first-run-and-return.md` specified what a cold load lands on.
 "Continue" cannot name a level the save does not remember, and the alternative — reopening whichever level
@@ -30,6 +32,13 @@ sorts first — would silently take a player somewhere they had not been. `TN-FL
 and this row is what makes it possible; `OQ-SAVE-7` is the schema gap underneath it. It stores an id and
 nothing else: **where the skater was standing is still not saved**, deliberately, and the second table below
 is unchanged on that point.
+
+**Rows 10 and 11 were added 2026-09-08** with Exam mode. Row 10 is the one that reverses a previous
+recommendation: `OQ-RESUME-3` proposed that an exam in progress should not be resumable at all, and
+`TN-ATTEMPT-leaving-and-resuming-an-exam.md` takes the other answer, with the reasoning and the cost written
+out in that file. In one line: **a drill loses nothing when the tab dies and an exam loses the whole
+result**, and the per-question state a result needs anyway is most of what resuming costs. `OQ-SAVE-8` is
+the schema gap underneath both rows.
 
 ## What does not survive, on purpose
 
@@ -39,10 +48,16 @@ is unchanged on that point.
 | The camera position | Follows from the spawn point |
 | An open dialogue, landmark card or question card | Closed; an unanswered question is asked again |
 | A drill in progress | No drill is running; the answers already given are kept |
+| Which question of an exam was on screen | The exam opens at its first unanswered question (`TN-ATTEMPT-02`) |
 | Which questions this sitting has already put on screen | A question that is ready to come back may be asked again after a reload, even if it was asked before the tab closed. Row 7 above is why; `TN-RESUME-02` proves it |
 | The single-switch highlight position | Starts at the first item |
 | A load error | The game tries again |
 | Which screen the player was on | A cold load lands on the title screen, whatever screen the tab closed on (`TN-FLOW-04`) |
+
+**A drill and an exam are on opposite sides of this table on purpose.** The difference is not the number of
+questions, it is what is lost: a drill's answers are saved as they are given and a new drill is one tap, while
+an exam's answers are worth nothing until the twentieth is reached. `TN-ATTEMPT` carries the table that
+compares them.
 
 **Amended 2026-09-08.** The fifth row of that second table is new, and the fourth scenario of `TN-SAVE-01`
 was rewritten to match it. As written before, that scenario said the questions already answered are never
@@ -138,6 +153,19 @@ Feature: Progress survives a closed tab
     And the count in "hud-quest-tracker" is not reduced by it
     And no answer I already gave is asked for a second time to be counted again
 
+  Scenario: An exam in progress survives, with its answers and its time
+    Given I started an exam with the timer on and answered 12 of the 20 questions
+    When I close the tab and open the game again
+    Then the same twenty questions are in the exam, in the same order
+    And my twelve answers are still recorded
+    And the time left is what it was, as TN-ATTEMPT-02 requires
+    And no exam is running until I choose to carry on
+
+  Scenario: A finished exam survives as a result
+    Given I finished an exam with 17 right out of 20
+    When I close the tab and open the game again and open the passport
+    Then "passport-exam" shows that result, as TN-PASSPORT-06 describes
+
   Scenario: The save is one document that validates
     Then local storage holds one key for this game
     And its value is JSON that validates against "content/schemas/progress.schema.json"
@@ -167,6 +195,13 @@ Feature: Transient state is not saved
     Then no drill is running
     And the two answers I had given are still recorded
 
+  Scenario: An exam in progress does come back, and that is the difference
+    Given I was on question 13 of an exam of twenty when the tab closed
+    When I open the game again
+    Then no exam is running
+    And the exam is still there to be finished, as TN-ATTEMPT-03 describes
+    And which question was on screen is not what comes back — the first unanswered one is
+
   Scenario: An open dialogue does not come back
     Given the officer's offer was open when the tab closed
     When I open the game again
@@ -174,7 +209,7 @@ Feature: Transient state is not saved
     And the quest is in the state it was in before the dialogue opened
 
   Scenario: The screen I was on does not come back
-    Given the tab closed while the level select, Study or Settings was open
+    Given the tab closed while the level select, Study, the passport, an exam or Settings was open
     When I open the game again
     Then the title screen is shown, as TN-FLOW-04 requires
     And no screen is restored over it
@@ -184,6 +219,7 @@ Feature: Transient state is not saved
     When I open the game again
     Then the saved document holds no list of questions asked in a sitting
     And which question is offered next follows only from row 7 of the survives table
+    And the exam's own list of drawn questions is not that list: it belongs to one attempt and is named in row 10
 ```
 
 ## TN-SAVE-03 — When a save happens
@@ -207,10 +243,21 @@ Feature: Saving at the right moments
       | I change any setting |
       | I change the language |
       | a study drill finishes or is left |
+      | an exam starts and its questions are drawn |
+      | I answer or change an answer in an exam |
+      | I leave an exam |
+      | an exam finishes, by finishing it or by running out of time |
+      | I discard an unfinished exam to start a new one |
 
   Scenario: Skating does not write to storage
     When I skate for thirty seconds without engaging anything
     Then no "progress/saved" event is emitted
+
+  Scenario: A clock ticking does not write to storage
+    Given a timed exam is running
+    When a minute passes and the clock changes
+    Then no "progress/saved" event is emitted for the clock alone
+    And the time left is written with the next answer, and when I leave the exam
 
   Scenario: A save never blocks the game
     When a save is in progress
@@ -224,6 +271,7 @@ Feature: Saving at the right moments
     And it contains no free text typed by the player
     And it contains nothing that identifies the device or the player
     And the only level it names as "last played" is one the player opened themselves
+    And the only per-question list in it belongs to an exam attempt
 ```
 
 ## TN-SAVE-04 — A save that cannot be read (failure path)
@@ -275,6 +323,13 @@ Feature: A broken, foreign or newer save
     Then no error is shown
     And the title screen offers "Choose a level" instead of "Continue", as TN-TITLE-04 requires
     And every other item of progress is intact
+
+  Scenario: A save whose exam names questions this build does not have
+    Given the saved document holds an unfinished exam naming a question with no document
+    When I open the game
+    Then no error is shown
+    And the message described in TN-ATTEMPT-05 is what I meet when I open the exam
+    And every other item of progress is intact
 ```
 
 ## TN-SAVE-05 — Storage is not available (failure path)
@@ -296,6 +351,12 @@ Feature: Playing where nothing can be stored
     Then the event "progress/save-failed" is emitted
     And the warning is shown with a "Save to a file" button
     And the game keeps running
+
+  Scenario: An exam run where nothing can be stored says so
+    Given local storage cannot be written
+    When an exam is running
+    Then the sentence described in TN-ATTEMPT-05 replaces the promise that the exam is kept
+    And leaving the exam asks for a confirmation, because there is something to lose
 
   Scenario: No save yet is not an error
     Given I have never played
@@ -500,7 +561,8 @@ Feature: Saving and reloading in French
   The number belongs in `game.config.json` so the message and the check cannot drift apart.
 - **`OQ-SAVE-4` — is a save written on every change, or debounced?** These scenarios say "within one
   second", which allows a debounce and forbids a save on every frame. *Recommendation:* debounce to the end
-  of the current interaction, and always flush before the tab is hidden.
+  of the current interaction, and always flush before the tab is hidden. That last clause matters more now
+  that an exam is saved: a timed exam's remaining time is written when the tab is hidden, not when it changes.
 - **`OQ-SAVE-5` — what is the storage key?** `TN-SAVE-01` only requires exactly one key for this game.
   *Recommendation:* one key, versioned in its *value* and not in its name, so a migration does not orphan
   the previous key.
@@ -516,3 +578,11 @@ Feature: Saving and reloading in French
   `TN-FLOW-first-run-and-return.md`, recorded here too because this file's table is what promises it. Until
   it exists, `title-continue` is absent and the route still works through "Choose a level", so nothing in
   this file fails closed on it.
+- **`OQ-SAVE-8` — the save cannot record rows 10 and 11 either.** `examAttempt` carries `askedQuestionIds`,
+  `correctCount`, `passed` and `timed`, which is enough for neither: **results by subject need a per-question
+  outcome**, and **resuming needs the answers so far and the time left**. *Recommendation:* `OQ-EXAM-3`'s —
+  an `answers` array in draw order, each item naming the question, its subject, the chosen option or null and
+  whether it was correct, replacing `askedQuestionIds` and `correctCount`; plus a nullable
+  `remainingSeconds`. `finishedAt: null` already distinguishes an unfinished attempt, and `TN-ATTEMPT-04`
+  requires at most one of those at a time — which is a schema constraint worth writing down rather than a
+  convention. Routed to the architect; `content/` is not this directory's to edit.

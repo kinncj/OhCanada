@@ -17,6 +17,11 @@ specifies the route out of a level, and a player who reached a level from the le
 except the browser's back button, which this game must not depend on. `TN-FLOW` owns the route and the
 string; this file lists the item and does not restate either.
 
+**Amended again 2026-09-08 — this menu belongs to a level and Exam mode does not use it.** An exam is not a
+level: it has no HUD, no skater and nothing to leave a level from. It has its own small menu with Settings,
+the timer control and "Leave the exam", specified in `TN-TIMER` and `TN-ATTEMPT` (`OQ-TIMER-4`). This file's
+"Leaving is not offered where there is nothing to leave" scenario is what keeps the two apart.
+
 Read `README.md` in this directory first. `TN-COPY-strings-and-counts.md` fixes the plural and state-word
 rules this file uses.
 
@@ -58,7 +63,7 @@ Everything else the HUD and the menu draw is defined elsewhere and is referenced
 |---|---|---|
 | `common.settings` | `TN-SET-settings.md` | The menu's Settings item |
 | `study.open` | `TN-STUDY-study-mode.md` | The menu's Study item |
-| `passport.open` | `TN-QUEST-parliament-hill.md` | The menu's passport item |
+| `passport.open` | `TN-PASSPORT-my-passport.md` | The menu's passport item |
 | `flow.leaveLevel` | `TN-FLOW-first-run-and-return.md` | The menu's leave item |
 | `common.close` | `TN-SET-settings.md` | The menu's close control |
 | `locomotion.skate.label` | `TN-LEVEL-ottawa.md` | `hud-mode-label` |
@@ -68,7 +73,9 @@ Everything else the HUD and the menu draw is defined elsewhere and is referenced
 
 A string is written down in exactly one copy table. If a word is needed in two places, the second place
 names the key and the file, as above. Two tables carrying the same words is how they stop being the same
-words.
+words. **`passport.open` moved from `TN-QUEST` to `TN-PASSPORT` on 2026-09-08**, when the passport got a
+story: the screen owns both its heading and the label of the control that opens it, which is the rule
+`TN-SET` states for `settings.title` and `common.settings`. The wording did not change.
 
 ## Landmarks
 
@@ -178,7 +185,7 @@ Feature: Reaching the other screens
     When I tap "Study"
     Then the element "study-screen" is visible
     When I tap "See my passport"
-    Then the element "passport" is visible
+    Then the element "passport" is visible, as TN-PASSPORT-01 describes
 
   Scenario: Leaving the level is a way out, not another screen over the level
     When I tap "Leave the level"
@@ -189,6 +196,7 @@ Feature: Reaching the other screens
   Scenario: Leaving is not offered where there is nothing to leave
     Given no level is playable
     Then no menu anywhere in the game offers "Leave the level"
+    And an exam's menu offers "Leave the exam" instead, as TN-ATTEMPT-01 describes
 
   Scenario: Closing the menu returns the player to the ice
     When I tap "Close"
@@ -511,15 +519,15 @@ Feature: Guarding the green tick on the landmark rules
   (`move-left`, `move-right`, `turn-around`) are in the same lower third but are play controls, not chrome.
   *Recommendation:* one `hud` region for the chrome and a separate control layer for movement, so a modal can
   make the chrome inert without the level having to reason about its own input surface.
-- **`OQ-HUD-2` — does the passport belong in the menu in slice 1?** There is one stamp and it is shown on the
-  completion card. *Recommendation:* yes, keep the item — `TN-SAVE-01` asserts the stamp survives a reload,
-  and without a menu route the only way to see it after a reload is to finish the quest again, which is not
-  possible.
+- ~~**`OQ-HUD-2` — does the passport belong in the menu in slice 1?**~~ **Answered — yes**, and it now has a
+  story: `TN-PASSPORT-my-passport.md`. `TN-SAVE-01` asserts the stamp survives a reload, and without a menu
+  route the only way to see it after a reload would be to finish the quest again, which is not possible. The
+  passport is also reachable from the level select, beside the stamp count (`TN-MAP-01`).
 - **`OQ-HUD-3` — where does the storage warning sit when the HUD is not on screen?** `TN-CREATOR-03` shows it
   during character creation, and `TN-TITLE-04` shows it on the title screen, before any level exists.
   *Recommendation:* the warning belongs to the page, not to the level: one element, drawn inside `hud` when
   there is a HUD and above the screen's card when there is not. One element means one announcement, which is
-  what `TN-HUD-03` asserts.
+  what `TN-HUD-03` asserts. Exam mode is the third screen with no HUD that needs it (`TN-ATTEMPT-05`).
 - **`OQ-HUD-4` — is there a pause item in the menu?** Opening the menu already pauses, so a pause item would
   do nothing. *Recommendation:* no pause item; `TN-LEVEL-12` already covers pausing by rotation, by menu and
   by hiding the tab.
@@ -545,3 +553,9 @@ Feature: Guarding the green tick on the landmark rules
   opened over a question card (`TN-HUD-04`), so there is no half-answered question to lose.
   *Recommendation:* no confirmation. A dialog that always says "nothing will be lost" teaches the player to
   dismiss dialogs. Revisit only if something ever becomes losable, and then fix the losable thing first.
+  **Exam mode is where something does become losable**, and it takes the same shape: leaving asks nothing
+  when the exam is kept, and asks once when storage is blocked and it cannot be (`TN-ATTEMPT-05`).
+- **`OQ-HUD-9` — should the exam's menu be this menu with different items?** `OQ-TIMER-4` recommends a small
+  menu owned by the exam screen instead, because this one belongs to a level and offers a level's way out.
+  *Recommendation:* two menus, one behaviour: modal, named, focus-trapping, escape closes, nothing counts
+  down. If they end up sharing a component, the items are still the screen's to decide.

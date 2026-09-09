@@ -266,6 +266,83 @@ genuinely outside any file or declaration, so the floor-not-ceiling clause survi
 just a good deal tighter. **The budget stays at 64 MiB and not the device's limit** for precisely that
 residue.
 
+## How a shared texture is charged (amendment, 2026-09-08)
+
+Québec City landed — five parallax layers, the Château Frontenac, its own theme — so the question this ADR
+parked is answerable. The number: **the `shared@2x` character atlas is 9.91 MiB and is charged in full to
+both levels — 21 % of Ottawa's budget and 25 % of Québec City's.**
+
+### The finding is in the justification, not the number
+
+`scripts/assets.mjs` states why, and the sentence is the answer:
+
+> A `shared/` file is charged to every level, **because every level downloads it.**
+
+That is a **payload** argument. It is defensible for the payload gate — a player may enter any level first, so
+each level should carry the cost of fetching what it needs. It was then inherited by the **decoded-texture**
+gate, where it means something else entirely: a texture is *downloaded* per level but *resident* once. One
+allocation is being counted twice.
+
+This is not a defect and infra recorded the choice at the time. It is a rule that was correct for the budget
+it was written for and wrong for the budget it was reused in.
+
+### The decision: the charge follows the lifetime, not the download
+
+- **A texture that survives `unload` is BASELINE**: counted once, subtracted from the ceiling, charged to no
+  level.
+- **A texture dropped by `unload` is PER-LEVEL**: charged to every level that loads it.
+
+`shared/` is named for the fact that it outlives a level, so it is baseline. This is also what
+`docs/architecture.md` §3 already models — "manifest sum of `decodedBytes` + shared baseline ≤ 64 MB" — so the
+decision closes a gap between the diagram and the gate rather than opening one.
+
+What that is worth, on the sprite path that ships (ADR-0022):
+
+| | MiB |
+|---|---|
+| Shared character atlas, resident once | 9.91 |
+| Ottawa's own files (33.30 − 9.91) | 23.39 |
+| Québec City's own files (28.20 − 9.91) | 18.29 |
+| Render targets, uncounted residue | ~8.00 |
+| **Peak, baseline model** | **41.30 of 64 — 65 %** |
+
+**9.91 MiB of headroom was hidden by the double charge**, which is a fifth of a level's budget. Over-counting
+is the safe direction and it is not free: it makes art cut real quality to pay for memory nobody holds. This
+ADR already refused that trade once, for landmark scale.
+
+### And the character cost is currently counted twice, in two different models
+
+Art's derivation subtracts **10.33 MiB of Rive surfaces** from the ceiling *and* leaves the 9.91 MiB sprite
+atlas inside each level's file total. Those are the same characters, priced two ways:
+
+- **Sprite path** — the atlas is resident, surfaces are zero. ADR-0022 decided sprite ships.
+- **Rive path** — surfaces are resident, and the atlas need not be uploaded even if it was fetched.
+
+They are alternatives, not addends. So `64 − 10.33 − 8.00 = 45.67` is roughly 10 MiB tighter than the sprite
+path requires, and Québec City's recommended 40 MiB is correspondingly conservative. **Peak is
+`max(atlas, surfaces)`, never the sum**, because a character is drawn by one backend at a time.
+
+### What ships today, and why the gate does not change yet
+
+**The conservative double charge stays in the gate for now, and the baseline figure is reported beside it.**
+
+The baseline model is only true if two things hold, and neither is currently implemented: `unload` must not
+drop the shared atlas, and a transition must never hold two levels at once. `docs/architecture.md` §3
+specifies both — unload, then *measure back to baseline*, then check the budget, then load — but the loader
+fetches nothing at all today, so that sequence is a design and not a measured fact. Flipping the gate on the
+strength of an unimplemented sequence would under-count at exactly the moment that matters.
+
+Reporting both is the same discipline this ADR already applies to device scale and to Rive surfaces: print the
+number that ships and the number that would ship, so the difference is visible rather than argued.
+
+- **OBLIGATION due=2026-11-08 owner=engine** — make `docs/architecture.md` §3's sequence real and measured:
+  `unload` completes before the next fetch, the shared baseline survives it, and the "back to baseline" check
+  fires. A test must show the peak during a transition, not only the steady state — the swap is the moment the
+  double charge exists to protect, and it is the one moment no gate observes.
+- **OBLIGATION due=2026-11-08 owner=infra** — in `scripts/lib/texture-memory.mjs`, report the baseline-model
+  figure per level alongside the charged one, and label which is which. Do not change what the gate refuses
+  until the obligation above lands.
+
 ## Alternatives considered
 
 - **A single source with a generation step** — one constant, and the schema plus the two constants generated
@@ -317,8 +394,10 @@ residue.
   files; a shared atlas loaded once and charged to every level is not yet distinguished from a level's own.
   Naming it here is how it stays visible.
 
-  - **OBLIGATION due=2026-11-08 owner=architect** — decide how shared textures are charged: to the first
+  - ~~**OBLIGATION due=2026-11-08 owner=architect** — decide how shared textures are charged: to the first
     level that loads them, to every level, or to a separate baseline subtracted from each level's ceiling.
     Ottawa is the only level and has no shared textures, so the question is currently unanswerable from
     evidence; it becomes answerable when a second level exists. Until then `docs/architecture.md` §3's
-    "+ shared baseline" is a design intent that no gate implements.
+    "+ shared baseline" is a design intent that no gate implements.~~
+    **DISCHARGED 2026-09-08** — Québec City landed, the `shared@2x` character atlas is 9.91 MiB charged in
+    full to both levels, and the answer is **baseline**. See "How a shared texture is charged" below.

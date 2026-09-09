@@ -15,6 +15,21 @@ changed as a result — it is named here so a reader arriving from that side fin
 
 Read `README.md` in this directory first.
 
+## This file is the card inside a level or a drill. The exam's card is different, on purpose.
+
+**Amended 2026-09-08.** Exam mode reuses this card and changes four things about it, and each change has a
+reason written where it is made rather than a difference discovered by a reader:
+
+| In a level or a drill (this file) | In an exam (`TN-EXAM-03`) | Why |
+|---|---|---|
+| Feedback after every answer | No feedback until the exam ends (`TN-RESULT-04`) | An exam is a measurement. It mirrors the real test |
+| A "New" / "Seen before" tag | No tag | A hint about the player's history has no place in a measurement |
+| The answer cannot be changed | The answer can be changed until the exam is finished | This file's reason for locking an answer is *there is no timer, so a mis-tap only costs seeing the question again*. In an exam a mis-tap costs a mark, and the player most likely to mis-tap is the switch, large-text or screen-reader player |
+| Nothing counts down, anywhere | A clock may be running, if the player turned it on (`TN-TIMER`) | The one exception `CLAUDE.md` allows, and it is optional, pausable and stoppable |
+
+Everything else — four options, 44 px targets, the modal, the focus behaviour, the option wording being the
+whole accessible name — is identical, and the exam stories reference this file rather than restating it.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -48,6 +63,11 @@ Read `README.md` in this directory first.
 
 The question, its four options and its explanation are content (`content/questions/*`), EN and FR, written
 and verified by the content agents (tasks 1.7 and 1.8). Nothing in the UI writes question wording.
+
+`card.progress`, `card.answerIs`, `card.why`, `card.againSoon`, `card.yourAnswer` and `card.correctAnswer`
+are drawn by the exam too — by the card during an exam and by the review afterwards. They stay here.
+`exam.next` is a separate key from `card.next` even though the words are the same, for the reason
+`TN-EXAM`'s copy table gives.
 
 ---
 
@@ -126,6 +146,12 @@ Feature: Which questions come back, and when
     Then that question may be the one I got wrong, as TN-RESUME-01 requires
     And nothing is hidden from me because a reload happened in between
 
+  Scenario: An exam answer counts too
+    Given I answered a question wrongly in an exam
+    When I run a Study drill afterwards
+    Then that question is in the drill, as TN-RESULT-02 requires
+    And the exam's own draw ignored my review state, as TN-EXAM-02 requires
+
   Scenario: The scheduling words never appear
     When I read every string on the card in English and in French
     Then none of them contains "spaced repetition", "FSRS", "algorithm", "interval" or "due"
@@ -137,6 +163,7 @@ Feature: Which questions come back, and when
 Feature: Answering correctly
   Background:
     Given the element "question-card" is visible
+    And this is a level or a drill, not an exam
 
   Scenario: The card says so, and explains why
     When I tap the correct option
@@ -171,6 +198,7 @@ Feature: Answering correctly
 Feature: Answering wrongly
   Background:
     Given the element "question-card" is visible
+    And this is a level or a drill, not an exam
 
   Scenario: The player is corrected kindly, and told what is right
     When I tap a wrong option
@@ -195,6 +223,7 @@ Feature: Answering wrongly
     When I tap another option after answering
     Then no second "question/answered" event is emitted
     And the feedback does not change
+    And this holds because there is no timer here; in an exam the opposite holds, and TN-EXAM-03 says why
 ```
 
 ## TN-CARD-05 — Leaving, mis-tapping and double tapping (failure path)
@@ -203,6 +232,7 @@ Feature: Answering wrongly
 Feature: Getting out of the card
   Background:
     Given the element "question-card" is visible
+    And this is a level or a drill, not an exam
 
   Scenario: The card can be left without answering
     When I tap "Close" or press "Escape"
@@ -428,22 +458,28 @@ Feature: The question card in French
 - **`OQ-CARD-1` — tap to answer, or select then confirm?** These scenarios answer on the first tap.
   *Recommendation:* keep it. There is no timer, so the only cost of a mis-tap is a wrong answer that the
   player will see again — and a confirm step doubles the interactions for every player, including the
-  switch user. If usability testing disagrees, the change is one scenario in `TN-CARD-03`.
+  switch user. If usability testing disagrees, the change is one scenario in `TN-CARD-03`. **The exam is
+  where this reasoning stops holding**, and it takes the other answer rather than adding a confirm step:
+  `TN-EXAM-03` lets the answer be changed instead.
 - **`OQ-CARD-2` — are the four options shuffled?** These scenarios use the authored order, so a test can
   name the correct option. *Recommendation:* keep the authored order in slice 1; if shuffling is wanted
   later it must use the seeded `RandomSource` so a session stays replayable, and the content agents must be
-  told not to put the answer in the same position every time.
+  told not to put the answer in the same position every time. The same answer binds the exam, whose draw is
+  seeded for the same reason (`TN-EXAM-02`).
 - **`OQ-CARD-3` — how does the player know how many questions are left in the level?**
   `card.progress` says "Question 1 of 3" because the quest step asks for three. In Study, the total is the
-  drill size. *Recommendation:* one string, one meaning: "of" always counts the current activity, never the
-  whole bank. A step resumed after a reload continues that count rather than restarting it —
-  `TN-RESUME-01` asserts the card and the tracker never show two different numbers for the same step.
+  drill size; in an exam it is twenty. *Recommendation:* one string, one meaning: "of" always counts the
+  current activity, never the whole bank. A step resumed after a reload continues that count rather than
+  restarting it — `TN-RESUME-01` asserts the card and the tracker never show two different numbers for the
+  same step.
 - **`OQ-CARD-4` — does a question ever arrive outside a quest step?** Not in these scenarios. A question
   that appears while the player is skating would be an ambush, and no scenario allows it. If the design
-  wants questions at other points of interest, they arrive the same way: only on engagement.
+  wants questions at other points of interest, they arrive the same way: only on engagement. An exam is not
+  an exception — the player asked for twenty questions before the first one was drawn.
 - **`OQ-CARD-5` — what counts as "soon"?** **Answered in part, 2026-09-08.** The player is told a wrong
   question comes back soon; the scheduler decides when, and as built the shortest interval is about a
   minute, which makes the wording true. *Recommendation, unchanged:* the wording must stay true for the
   shortest interval the scheduler can produce. If FSRS is ever tuned so that a lapsed question is pushed
   days out, either this copy changes or the drill is allowed to pull it forward — and the scenarios in
-  `TN-RESUME` are the ones that fail first, by design.
+  `TN-RESUME` are the ones that fail first, by design. The exam's review prints the same sentence
+  (`TN-RESULT-04`), so it has to stay true there too.
