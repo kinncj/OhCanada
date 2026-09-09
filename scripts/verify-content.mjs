@@ -18,9 +18,13 @@
  *      throughout, a non-empty `evidence` when verified, and wording that is
  *      not lifted from the source.
  *
- *   C. ADR-0016 §2's four-row re-check table. Which clock a question is under
- *      depends on what the source register's `liveChecks[]` establishes about
- *      the source, not on the question alone.
+ *   C. ADR-0016 §2's four-row re-check table, and §3's banned terms. Which
+ *      clock a question is under depends on what the source register's
+ *      `liveChecks[]` establishes about the source, not on the question alone;
+ *      and where a flag says the publisher will never correct a fact, no option
+ *      or explanation may name it. Both rules come from
+ *      `scripts/lib/staleness.mjs`, which is the single implementation the
+ *      contract test imports too.
  *
  * WHAT THIS SCRIPT DELIBERATELY DOES NOT DO
  *
@@ -151,16 +155,24 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import {
+  applicableFlags,
+  bannedTermFaults,
+  dispositionRow,
+  STALE_AFTER_DAYS,
+} from './lib/staleness.mjs';
+
 /* -------------------------------------------------------------------------- */
 /* Constants that are decisions, with the measurement behind each one          */
 /* -------------------------------------------------------------------------- */
 
-/**
- * ADR-0003 and ADR-0016: 180 days is the age at which a granted status stops
- * being trusted. Which clock it is applied to — the question's `source.asOf` or
- * the register's `liveChecks[].checkedAt` — is ADR-0016 §2's table, below.
+/*
+ * 180 days — the age at which a granted status stops being trusted — is
+ * imported from scripts/lib/staleness.mjs with the table that decides which
+ * clock it applies to. One number, one rule, one file: ADR-0016's amendment
+ * named the duplicate as a boundary defect, and a second copy of the constant
+ * here would be the same defect in miniature.
  */
-const STALE_AFTER_DAYS = 180;
 
 /**
  * ADR-0003 check 5, "confirm the wording is not verbatim (n-gram check)".
@@ -245,10 +257,11 @@ Gate B  ADR-0003's CI clause, per document
         verified for the current sourceHash; four options; EN and FR; non-empty
         evidence when verified; source.quote contiguous in the extraction;
         wording not lifted from the source.
-Gate C  ADR-0016 §2's re-check table
+Gate C  ADR-0016 §2's re-check table and §3's banned terms
         which 180-day clock binds — the question's source.asOf or the register's
         liveChecks[].checkedAt — depends on what the register establishes about
-        the source.
+        the source; and no option or explanation may name a term the register
+        bans under a flag the publisher will never correct.
 `;
 
 const argv = process.argv.slice(2);
@@ -651,11 +664,25 @@ for (const [id, { manifest }] of sources) {
   if (name === null) continue;
   const file = join(SOURCES_DIR, name);
   if (!existsSync(file)) {
+    // How to get it back, from the register rather than from folklore. Before
+    // `extraction` existed this note told a contributor to re-fetch a file it
+    // could not tell them how to produce: the digest every question is granted
+    // against is the digest of the EXTRACTION, and nothing recorded how the
+    // extraction was made.
+    const extraction = isObject(manifest.extraction) ? manifest.extraction : null;
+    const how =
+      extraction === null
+        ? ` The register records no "extraction" block, so nothing here can tell you how to produce it.`
+        : extraction.unrecorded === true
+          ? ` The register declares the extraction UNRECORDED: nobody wrote down how it was made, so ` +
+            `${name} cannot be reproduced from ${str(manifest.file) ?? 'the document'} by anyone who ` +
+            `does not already have it. ${str(extraction.reason) ?? ''} See content/sources/README.md.`
+          : ` Re-derive it with \`make sources\` — the register records: ${str(extraction.command) ?? '(no command)'}`;
     const message =
       `${id}: the cached extraction ${name} is not present, so the verbatim, quote-contiguity ` +
       `and evidence checks cannot run against it. The file is git-ignored because the source is ` +
       `Crown copyright (committed: false), so this is expected in CI and NOT expected on a ` +
-      `verifier's machine. Re-fetch it, or pass --require-source to make this a failure.`;
+      `verifier's machine. Re-fetch it, or pass --require-source to make this a failure.${how}`;
     if (REQUIRE_SOURCE) fail(message);
     else note(message);
     continue;
@@ -679,124 +706,24 @@ for (const [id, { manifest }] of sources) {
 const containsRun = (extraction, text) => extraction.joined.includes(` ${words(text).join(' ')} `);
 
 /* -------------------------------------------------------------------------- */
-/* ADR-0016 §2 — which row of the table a question is under                    */
+/* ADR-0016 §2 and §3 — the row, and the ban, from one shared module            */
 /* -------------------------------------------------------------------------- */
 /*
- * The disposition belongs to the SOURCE and is read per chapter, because a
- * source with several chapters lives at several URLs and they are revised
- * independently. The live check that governs a question is the most recent one
- * whose `pages[]` names the question's chapter; when no check names it, the
- * question falls to row 1, which is the pre-ADR-0016 behaviour and the safe
- * direction.
+ * `applicableFlags`, `dispositionRow` and `bannedTermFaults` live in
+ * scripts/lib/staleness.mjs and are imported at the top of this file. They used
+ * to live here, in a copy this file and
+ * tests/unit/contracts/questions-cite-a-cached-source.test.ts each kept of the
+ * same rule; ADR-0016 recorded that as a boundary defect and this is the
+ * obligation it carried, discharged.
+ *
+ * Two things this file still owns, because they are output rather than rule:
+ * the note about a run of `source-unreachable` checks (the module returns the
+ * count and prints nothing), and every `fail()` below.
  */
-
-const applicableFlags = (manifest, chapter, page) =>
-  (manifest.knownStaleness ?? []).filter((flag) => {
-    if (!(flag.affects ?? []).some((affected) => str(affected) === chapter)) return false;
-    const flagPages = (flag.pages ?? []).flatMap((value) => {
-      const parsed = int(value);
-      return parsed === null ? [] : [parsed];
-    });
-    if (str(flag.grain) !== 'pages' || flagPages.length === 0) return true;
-    // A page-grain flag on a question with no page cannot be ruled out.
-    return page === null || flagPages.includes(page);
-  });
-
-const liveChecksForChapter = (manifest, chapter) =>
-  (manifest.liveChecks ?? [])
-    .filter((check) => (check.pages ?? []).some((page) => str(page.chapter) === chapter))
-    .sort((a, b) => String(a.checkedAt).localeCompare(String(b.checkedAt)));
-
-const dispositionFor = (manifest, chapter, flags, banRespected) => {
-  const checks = liveChecksForChapter(manifest, chapter);
-  if (checks.length === 0) {
-    return { row: 1, why: 'no live check in the register names this chapter', check: null };
-  }
-
-  // `source-unreachable` is explicitly "no state change": it does not become the
-  // disposition, it defers to the last check that decided anything. ADR-0016
-  // keeps it separate from `source-withdrawn` for exactly this reason — a DNS
-  // failure is not a retraction.
-  const trailingUnreachable = [];
-  for (let i = checks.length - 1; i >= 0; i -= 1) {
-    if (str(checks[i].finding) !== 'source-unreachable') break;
-    trailingUnreachable.push(checks[i]);
-  }
-  const decisive = checks
-    .filter((check) => str(check.finding) !== 'source-unreachable')
-    .at(-1);
-
-  if (trailingUnreachable.length > 0) {
-    note(
-      `${str(manifest.id) ?? '?'} / ${chapter}: the last ${String(trailingUnreachable.length)} ` +
-        `live check(s) are source-unreachable. ADR-0016 makes that a retry and not a state ` +
-        `change, so the disposition falls back to the last decisive check` +
-        `${decisive === undefined ? ' — and there is none, so this chapter is on row 1' : ''}. A ` +
-        `run of consecutive unreachables is its own signal and ADR-0016 says it needs its own ` +
-        `decision; none exists yet, so this is reported and not failed.`,
-    );
-  }
-  if (decisive === undefined) {
-    return { row: 1, why: 'every live check for this chapter is source-unreachable', check: null };
-  }
-
-  const finding = str(decisive.finding);
-  if (finding === 'source-withdrawn') return { row: 3, why: 'source-withdrawn', check: decisive };
-  if (finding === 'source-revised') {
-    return { row: 1, why: 'the latest live check found the source revised', check: decisive };
-  }
-  if (finding !== 'source-unrevised') {
-    return { row: 1, why: `unrecognised finding ${String(finding)}`, check: decisive };
-  }
-
-  // Row 2 additionally requires that EVERY flag over this question's region has
-  // declared the source will not revise, and that the question satisfies the
-  // banned-answer list that declaration makes mandatory. A flag still saying
-  // `unknown` means nobody has established the source is unrevised THERE, and
-  // `unknown` is treated exactly as `revises`.
-  const undeclared = flags.filter((flag) => str(flag.upstream) !== 'does-not-revise');
-  if (undeclared.length > 0) {
-    return {
-      row: 1,
-      why:
-        `the live check found the source unrevised, but the staleness flag(s) ` +
-        `${undeclared.map((flag) => `"${str(flag.topic) ?? '?'}"`).join(', ')} over this claim ` +
-        `declare upstream ${undeclared.map((flag) => str(flag.upstream) ?? 'absent').join(', ')}; ` +
-        `absent and "unknown" are treated exactly as "revises"`,
-      check: decisive,
-    };
-  }
-  if (!banRespected) {
-    return {
-      row: 1,
-      why:
-        'the flags declare does-not-revise but the question does not satisfy their ' +
-        'bannedFromAnswers list, so the mitigation row 2 depends on is not in place ' +
-        '(the failure itself belongs to tests/unit/contracts/questions-cite-a-cached-source.test.ts)',
-      check: decisive,
-    };
-  }
-  return { row: 2, why: 'source-unrevised, and every flag declares does-not-revise', check: decisive };
-};
 
 /* -------------------------------------------------------------------------- */
 /* Gates B and C, over the working tree                                        */
 /* -------------------------------------------------------------------------- */
-
-const WORDLIKE = /[\p{L}\p{N}]/u;
-const mentionsTerm = (text, term) => {
-  const haystack = text.toLocaleLowerCase();
-  const needle = term.trim().toLocaleLowerCase();
-  if (needle === '') return false;
-  for (let from = 0; ; ) {
-    const at = haystack.indexOf(needle, from);
-    if (at === -1) return false;
-    const before = at === 0 ? '' : haystack.charAt(at - 1);
-    const after = haystack.charAt(at + needle.length);
-    if (!WORDLIKE.test(before) && !WORDLIKE.test(after)) return true;
-    from = at + 1;
-  }
-};
 
 const questionFiles = jsonFilesUnder(QUESTIONS_DIR);
 
@@ -811,6 +738,9 @@ const tally = {
   maxVerbatimWhere: '(none)',
   minEvidenceRun: Number.POSITIVE_INFINITY,
   minEvidenceWhere: '(none)',
+  banFaults: 0,
+  banQuestions: 0,
+  banTermChecks: 0,
   unknownEvidenceWords: 0,
   quoteChecked: 0,
 };
@@ -1013,19 +943,45 @@ for (const path of questionFiles) {
 
   const chapter = str(source.chapter) ?? '';
   const flags = applicableFlags(manifest, chapter, int(source.page));
-  const answerText = [
-    ...options.flatMap((option) =>
-      isObject(option) ? [str(option.en), str(option.fr)] : [],
-    ),
-    ...(isObject(question.explanation) ? [str(question.explanation.en), str(question.explanation.fr)] : []),
-  ].filter((text) => text !== null);
-  const banRespected = flags.every((flag) =>
-    (flag.bannedFromAnswers ?? []).every(
-      (term) => str(term) === null || !answerText.some((text) => mentionsTerm(text, str(term))),
-    ),
-  );
 
-  const disposition = dispositionFor(manifest, chapter, flags, banRespected);
+  /* --- C0: ADR-0016 §3, no answer depends on a fact nobody will correct ---- */
+  //
+  // THIS FAILS THE RUN, and from the day ADR-0016 §3 landed (2026-09-08) until
+  // 2026-09-09 it did not.
+  // The ban used to reach this gate only as an input to the row: violating one
+  // demoted the question from row 2 to row 1, and row 1 fails only a claim that
+  // is `volatile` with an `asOf` past 180 days. So a banned term could be
+  // injected into a shipped option — "It is a member of the G8." into an economy
+  // question on a page the G8 flag covers — and `verify-content` stayed green,
+  // with the row tally as the only visible effect. The rule was enforced, but
+  // only by the contract test, so the two commands the content guidelines name
+  // agreed that a wrong fact was fine.
+  //
+  // It is checked for EVERY question, not only the shipped ones. A banned term
+  // is a defect in the answer, and `rejected` or `quarantined` is where a
+  // defective answer waits to be fixed, not a licence for it — which is also
+  // exactly what the contract gate does over the same corpus. Nothing here may
+  // be weaker than the file it was extracted from.
+  const bannedHere = flags.flatMap((flag) => flag.bannedFromAnswers ?? []);
+  if (bannedHere.length > 0) {
+    tally.banQuestions += 1;
+    tally.banTermChecks += bannedHere.length;
+  }
+  const banFaults = bannedTermFaults(question, String(sourceId), flags, where);
+  for (const fault of banFaults) fail(fault);
+  tally.banFaults += banFaults.length;
+
+  const disposition = dispositionRow(manifest, chapter, flags, banFaults.length === 0);
+  if (disposition.unreachableTail > 0) {
+    note(
+      `${String(sourceId)} / ${chapter}: the last ${String(disposition.unreachableTail)} ` +
+        `live check(s) are source-unreachable. ADR-0016 makes that a retry and not a state ` +
+        `change, so the disposition falls back to the last decisive check` +
+        `${disposition.check === null ? ' — and there is none, so this chapter is on row 1' : ''}. A ` +
+        `run of consecutive unreachables is its own signal and ADR-0016 says it needs its own ` +
+        `decision; none exists yet, so this is reported and not failed.`,
+    );
+  }
   tally.rows.set(disposition.row, (tally.rows.get(disposition.row) ?? 0) + 1);
 
   if (status === 'quarantined') continue; // already where the table wants it
@@ -1489,6 +1445,17 @@ console.log(
     `${String(tally.questions - tally.shipped)} excluded from the build.`,
 );
 console.log(`verify-content: ADR-0016 re-check disposition — ${rowLine}.`);
+// Printed on every run, including when it is zero, and with the SIZE of what was
+// searched rather than a tick. A banned-term gate that ran over no term list
+// produces output identical to one that ran over every list and found nothing
+// (ADR-0024), and this gate was silent about a real violation for long enough
+// that the difference is not hypothetical.
+console.log(
+  `verify-content: ADR-0016 §3 banned terms — ${String(tally.banQuestions)} question(s) sat under ` +
+    `a staleness flag naming ${String(tally.banTermChecks)} term(s) to search for; ` +
+    `${String(tally.banFaults)} violation(s)` +
+    `${tally.banQuestions === 0 ? '. NOTHING WAS SEARCHED: no question resolved to a flag with a bannedFromAnswers list, so this line is not evidence of anything' : ''}.`,
+);
 console.log(
   `verify-content: text checks ran against a cached extraction for ` +
     `${String(tally.verbatimChecked)} question(s); ${String(tally.verbatimUnchecked)} could NOT be ` +

@@ -20,6 +20,7 @@
     "test:a11y": "scripts/browser-suite-lock.sh playwright test --config tests/a11y/playwright.config.ts",
     "validate-content": "node scripts/validate-content.mjs",
     "verify-content": "node scripts/verify-content.mjs",
+    "sources": "node scripts/sources.mjs",
     "verify-art": "node scripts/verify-art.mjs",
     "assets": "node scripts/assets.mjs",
     "check-level-payload": "node scripts/check-level-payload.mjs",

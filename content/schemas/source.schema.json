@@ -34,9 +34,16 @@
       "pattern": "^[0-9a-f]{64}$"
     },
     "extractedTextSha256": {
-      "description": "SHA-256 of `extractedText`. Separate from `sha256` on purpose: a re-extraction with a different tool changes what the verifier read without changing the source document, and that is a difference the bank must be able to see.",
+      "description": "SHA-256 of `extractedText`. Separate from `sha256` on purpose: a re-extraction with a different tool changes what the verifier read without changing the source document, and that is a difference the bank must be able to see. Every question's `source.sourceHash` is this digest, so `extraction` below - how the bytes it covers were produced - is what decides whether an outsider can check a single one of them.",
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
+    },
+    "extraction": {
+      "description": "How `extractedText` was produced from `file`, precisely enough for someone who has only the URL to regenerate the same bytes. Required whenever there is an extraction, because without it the digest above is a number nobody outside this machine can reproduce: a contributor can download the correct document, match its `sha256`, and still be unable to run the verbatim check, the quote-contiguity check or the evidence check, all of which read the extraction and not the document (ADR-0003 says a claim about a source must be re-derivable from the cached bytes). The recorded form carries the tool, its version and the exact command; the unrecorded form exists so that an extraction whose command was never written down declares that fact instead of looking like one nobody has filled in yet - the same reason `committed` is required rather than inferred from a missing file.",
+      "oneOf": [
+        { "$ref": "#/$defs/recordedExtraction" },
+        { "$ref": "#/$defs/unrecordedExtraction" }
+      ]
     },
     "bytes": { "type": "integer", "minimum": 1 },
     "pages": {
@@ -96,8 +103,73 @@
     "chapters"
   ],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "$comment": "An extraction with no record of how it was made pins the whole question bank to a digest only its author can regenerate. Saying `unrecorded` is allowed; saying nothing is not. Only property names this object already declares appear here (ADR-0007).",
+      "if": {
+        "properties": { "extractedText": { "type": "string" } },
+        "required": ["extractedText"]
+      },
+      "then": {
+        "properties": { "extraction": { "type": "object" } },
+        "required": ["extraction"]
+      }
+    }
+  ],
 
   "$defs": {
+    "recordedExtraction": {
+      "title": "Recorded extraction",
+      "description": "The tool, the version and the command that turn `file` into `extractedText`. `make sources` runs this command and compares the result with `extractedTextSha256`, so it is checked rather than described.",
+      "type": "object",
+      "properties": {
+        "tool": {
+          "description": "The program, named the way a reader would install it - \"pdftotext (poppler-utils)\", not \"a PDF extractor\".",
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "description": "The version the recorded digest was produced with, exactly as the tool reports it. Text extraction is not stable across major versions of any extractor, so a digest with no version behind it is only half a record: when a re-run disagrees, this is the first thing to compare.",
+          "type": "string",
+          "minLength": 1
+        },
+        "versionCommand": {
+          "description": "How to ask the tool for that version, when it is not `<tool> --version`. `make sources` runs it and reports a mismatch, which is the difference between \"your extractor is newer than ours\" and \"the source moved\".",
+          "type": "string",
+          "minLength": 1
+        },
+        "command": {
+          "description": "The exact command, run from the repository root, that reads `file` and writes the extraction to STDOUT. Stdout rather than a path so that a re-run can be hashed and compared without overwriting the working copy, and so that a command cannot quietly write somewhere else: `make sources` refuses one containing an output redirection, a command separator or a substitution, and runs what is left through `sh -c`. A pipeline is fine.",
+          "type": "string",
+          "minLength": 1,
+          "not": { "pattern": "[>;`]|\\$\\(|\\|\\||&&" }
+        },
+        "reproducedAt": {
+          "description": "The date this command was last run and did produce `extractedTextSha256`, YYYY-MM-DD. A recorded command nobody has re-run is a claim; this is the date it was last a measurement.",
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": ["tool", "version", "command", "reproducedAt"],
+      "additionalProperties": false
+    },
+
+    "unrecordedExtraction": {
+      "title": "Unrecorded extraction",
+      "description": "The extraction exists and how it was made was not written down. A declared absence, not a gap: it keeps \"nobody recorded this\" distinguishable from \"this register predates the field\", it makes the count of irreproducible sources something `make sources` can print, and it cannot be reached by omission, because the schema requires an `extraction` of one form or the other. Replacing it with a recorded form is a matter of finding a command whose output hashes to `extractedTextSha256` - and if no command does, that is a finding about the corpus and belongs in `reason` rather than in a re-hashed register.",
+      "type": "object",
+      "properties": {
+        "unrecorded": { "const": true },
+        "reason": {
+          "description": "What is known about how the extraction was made, and what has already been tried and did not reproduce it. Written for the next person to attempt it, so they do not repeat the same two experiments.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["unrecorded", "reason"],
+      "additionalProperties": false
+    },
+
     "sourceChapter": {
       "title": "Source chapter",
       "type": "object",

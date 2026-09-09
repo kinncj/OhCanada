@@ -6,7 +6,7 @@ SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup lint typecheck test test-e2e test-perf test-a11y \
         assets check-assets check-textures validate-content verify-content verify-art art-handoff art-handoff-blind build preview clean \
-        check-obligations
+        check-obligations sources
 
 help: ## List every target
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -98,6 +98,36 @@ check-textures: ## Decoded texture memory per level vs textureBudgetBytes and th
 
 validate-content: ## Validate every content file against its JSON Schema
 	npm run validate-content
+
+# THIS TARGET RUNS A COMMAND RECORDED IN A CONTENT FILE, and it is NOT in CI or
+# in the deploy, on purpose.
+#
+# `content/sources/<id>.json` records `extractedTextSha256`, and every question's
+# `source.sourceHash` IS that digest. Until 2026-09-09 the register said nothing
+# about how the extraction was made, so a contributor could fetch the right PDF,
+# match its `sha256` exactly, and still be unable to produce a `.txt` that hashed
+# to the recorded value -- which left the verbatim, quote-contiguity and evidence
+# checks unrunnable for anyone who did not already have the file. The register
+# now carries `extraction`: the tool, its version and the exact command. This
+# runs that command and compares the result with the digest, so the record is
+# checked rather than described.
+#
+# The command is run through `sh -c` from the repository root. It must write to
+# STDOUT -- nothing passes it an output path -- and a command containing `>`, `;`,
+# `&&`, `||`, a backtick or `$(...)` is refused both here and by
+# content/schemas/source.schema.json. Bytes reach content/ only under `--write`.
+#
+# Not in CI because the documents are git-ignored (Crown copyright, ADR-0004):
+# there is nothing there for it to read, and a workflow that executed a string
+# out of a content file would buy a supply-chain hole in exchange for a check
+# that cannot run. `content/sources/README.md` promised this target since slice 1
+# and it did not exist; that is what this is.
+#
+#     npm run sources -- --write              re-derive and write the .txt
+#     npm run sources -- --require-recorded   fail on an extraction with no
+#                                             recorded command (5 of 7 today)
+sources: ## Re-derive each cached extraction from its document and check the digest
+	npm run sources
 
 # THE SEPARATION-OF-DUTIES GATE LIVES HERE, and it reads git history, so this
 # target needs the history to be present. Both workflows set `fetch-depth: 0` on

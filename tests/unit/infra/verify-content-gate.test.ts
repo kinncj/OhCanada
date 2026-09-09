@@ -77,6 +77,14 @@ const manifest = (overrides: Json = {}): Json => ({
   extractedText: 'fixture-source.txt',
   sha256: FILE_SHA,
   extractedTextSha256: SOURCE_SHA,
+  // The register has to say how the extraction was made, or its digest is a
+  // number only the machine that made it can reproduce (source.schema.json).
+  extraction: {
+    tool: 'cat (coreutils)',
+    version: 'fixture',
+    command: 'cat content/sources/fixture-source.txt',
+    reproducedAt: '2026-09-08',
+  },
   bytes: 13,
   pages: 100,
   retrievedAt: '2026-09-08',
@@ -1123,11 +1131,40 @@ describe("ADR-0003's CI clause, per document", () => {
     expect(reported.stdout).toContain('1 could NOT be checked because the extraction is absent');
     expect(reported.stdout).toContain('those questions are unchecked, not passing');
 
+    // and it says how to get the file back, out of the register rather than out
+    // of folklore. This note used to tell a contributor to "re-fetch" the
+    // EXTRACTION, which is not a thing you can fetch: it is derived, and until
+    // the register recorded the command, deriving it was guesswork.
+    expect(reported.stdout).toContain('Re-derive it with `make sources`');
+    expect(reported.stdout).toContain('cat content/sources/fixture-source.txt');
+
     // and --require-source turns it into a failure, which is what the verifier's
     // own runs use.
     const required = runFlat(root);
     expect(required.status).toBe(1);
     expect(required.out).toContain('is not present');
+  });
+
+  it('says so plainly when the register declares the extraction unrecorded', () => {
+    // Five of the seven real registers are in this state: the HTML pages'
+    // extractions were made by a command nobody wrote down, and no candidate
+    // tried since reproduces their digests. A contributor who cannot run the
+    // text checks should be told which of the two situations they are in.
+    const root = nextRoot('b-unrecorded-extraction');
+    write(root, 'content/sources/fixture-source.json', {
+      ...manifest(),
+      extraction: { unrecorded: true, reason: 'Nobody wrote it down.' },
+    });
+    write(root, 'content/questions/government/fix-0.json', question());
+
+    const reported = spawnSync(
+      process.execPath,
+      [SCRIPT, '--root', root, '--now', TODAY, '--no-history'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: GIT_ENV },
+    );
+    expect(reported.status).toBe(0);
+    expect(reported.stdout).toContain('declares the extraction UNRECORDED');
+    expect(reported.stdout).toContain('Nobody wrote it down.');
   });
 });
 
@@ -1328,6 +1365,126 @@ describe("ADR-0016 §2's re-check table", () => {
 /* -------------------------------------------------------------------------- */
 /* Anti-vacuum floors                                                          */
 /* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/* Gate C0 - ADR-0016 section 3, the banned terms                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * THE REGRESSION THESE CASES EXIST FOR. From the day ADR-0016 section 3 landed
+ * until 2026-09-09 this script did not
+ * fail on a banned term at all. It computed `banRespected` and handed it to
+ * section 2's table, where a violation demoted the question from row 2 to row 1
+ * - and row 1 fails only a claim that is `volatile` with an `asOf` past 180
+ * days, which a fresh question never is. So a wrong fact could be written into
+ * a shipped option and this gate printed OK, with one number in the row tally as
+ * the only visible effect.
+ *
+ * The rule was enforced the whole time by
+ * tests/unit/contracts/questions-cite-a-cached-source.test.ts, which is why CI
+ * was never exposed. What was exposed is the contributor who runs the two
+ * content commands the guidelines name and reads a pass over a banned term.
+ * Both gates now call `bannedTermFaults` in scripts/lib/staleness.mjs.
+ */
+describe("ADR-0016 section 3: an answer may not depend on a fact nobody will correct", () => {
+  const banned = (overrides: Json = {}): Json =>
+    question({
+      options: [
+        { en: 'Three.', fr: 'Trois.' },
+        { en: 'Her Majesty alone.', fr: 'Sa Majeste seule.' },
+        { en: 'Four.', fr: 'Quatre.' },
+        { en: 'Five.', fr: 'Cinq.' },
+      ],
+      ...overrides,
+    });
+
+  it('FAILS a shipped option carrying a banned term, rather than only demoting its row', () => {
+    const result = runFlat(
+      tree('c0-ban-fails', [banned()], withLiveCheck('source-unrevised', dateAgo(1))),
+    );
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('an option or explanation contains "Her Majesty"');
+    expect(result.out).toContain('bans from answers under the staleness flag');
+    // The demotion is still made - nothing is excused by a rule it is currently
+    // breaking - and it is still not the failure.
+    expect(result.out).toContain('1 on row 1 per-question re-verification');
+  });
+
+  it('fails the same way when the term is in the explanation and only in French', () => {
+    // Both official languages ship, so a stale fact in one of them is a stale
+    // fact shipped to half the players. The prompt is deliberately not searched.
+    const result = runFlat(
+      tree(
+        'c0-ban-french',
+        [
+          question({
+            prompt: { en: 'Who was Elizabeth?', fr: 'Qui etait Elizabeth ?' },
+            explanation: {
+              en: 'Two chambers and the Crown.',
+              fr: 'Deux chambres et la reine Elizabeth.',
+            },
+          }),
+        ],
+        withLiveCheck('source-unrevised', dateAgo(1)),
+      ),
+    );
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('an option or explanation contains "Elizabeth"');
+  });
+
+  it('does not fire on the answer routed around the stale fact, which is the point', () => {
+    const result = runFlat(
+      tree('c0-ban-clean', [question()], withLiveCheck('source-unrevised', dateAgo(1))),
+    );
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  it('fails a REJECTED question too: a banned term is a defect in the answer', () => {
+    // `rejected` and `quarantined` are excluded from the shipped-status rule
+    // because they are not in the build. They are not a licence to leave a wrong
+    // fact in the file: this is where a defective answer waits to be fixed, and
+    // the contract gate over the real corpus has always read every question
+    // regardless of status. Neither gate may be the weaker one.
+    const result = runFlat(
+      tree(
+        'c0-ban-rejected',
+        [
+          banned({
+            verification: {
+              status: 'rejected',
+              model: 'fixture-model',
+              checkedAt: daysAgo(2),
+              sourceHash: SOURCE_SHA,
+              evidence: 'Parliament has three parts: the Sovereign',
+            },
+          }),
+        ],
+        withLiveCheck('source-unrevised', dateAgo(1)),
+      ),
+    );
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('an option or explanation contains "Her Majesty"');
+  });
+
+  it('reports the SIZE of the search, so an idle check cannot look like a clean one', () => {
+    // ADR-0024. A banned-term gate that ran over no term list produces output
+    // identical to one that searched every list and found nothing, and this gate
+    // was silent about a real violation for long enough that the difference is
+    // not hypothetical.
+    const searched = runFlat(
+      tree('c0-ban-counted', [question()], withLiveCheck('source-unrevised', dateAgo(1))),
+    );
+    expect(searched.out).toContain(
+      'banned terms — 1 question(s) sat under a staleness flag naming 2 term(s) to search for; ' +
+        '0 violation(s)',
+    );
+
+    const nothing = runFlat(tree('c0-ban-nothing', [question()]));
+    expect(nothing.out).toContain('NOTHING WAS SEARCHED');
+    expect(nothing.status).toBe(0);
+  });
+});
 
 describe('the gate refuses to pass by having nothing to check', () => {
   it('fails on an empty content/questions/', () => {

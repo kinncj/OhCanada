@@ -304,10 +304,18 @@ exist once, in a module both a `.mjs` script and a `.ts` test import. It is not 
 domain nor application, it is build-time content tooling — so it wants `scripts/lib/` or equivalent, which is
 a placement decision, not an implementation one.
 
-- **OBLIGATION due=2026-11-08 owner=content-infra** — extract §2's row selection into one module imported by
+- ~~**OBLIGATION due=2026-11-08 owner=content-infra** — extract §2's row selection into one module imported by
   both `scripts/verify-content.mjs` and `tests/unit/contracts/questions-cite-a-cached-source.test.ts`, and
   delete both copies of `applicableFlags`. Until then the contract gate carries a comment naming the file it
-  is a copy of, which is a marker and not a mechanism.
+  is a copy of, which is a marker and not a mechanism.~~
+  **DISCHARGED 2026-09-09** — `scripts/lib/staleness.mjs`, with hand-written types in `staleness.d.mts` so
+  the TypeScript gate imports the same functions the `.mjs` script runs. Both copies of `applicableFlags`,
+  both of `dispositionRow`/`dispositionFor`, both of `mentionsTerm` and both of the 180-day constant are
+  gone. Taken early, and not for tidiness: closing the §3 defect below required the ban to fail inside
+  `verify-content`, and doing that against a duplicated rule would have written a THIRD copy. The row tally
+  over the real corpus is unchanged across the extraction — 206 on row 1, 183 on row 2 — which is what says
+  the move was behaviour-preserving. The divergence recorded in the next paragraph was carried across
+  unchanged and is still undecided.
 
 One divergence was found while transcribing and was deliberately **not** fixed in the copy, because fixing it
 in one of two implementations is how the two start disagreeing. `dispositionFor` reads only
@@ -316,7 +324,30 @@ in one of two implementations is how the two start disagreeing. `dispositionFor`
 schema permits that combination. It is probably a real gap — `agreesWithCache` is the per-chapter evidence and
 `finding` is the per-check summary, and on a multi-chapter check the summary can be true of one chapter and
 false of another — but it is a decision about §2's table and it belongs in the shared module, made once. It is
-recorded here rather than silently mirrored or silently tightened.
+recorded here rather than silently mirrored or silently tightened. It now sits in one place —
+`scripts/lib/staleness.mjs` names it in its header as the decision it refuses to make while merely moving
+code — so when it is decided, it is decided once.
+
+### §3's ban was checked by one gate and reported by the other
+
+Amendment of 2026-09-09. §3 says no shipped answer may depend on a fact the source will never correct,
+"checked on every build". `verify-content` did not check it. It computed `banRespected` and passed it to
+§2's table, where a violation demoted a question from row 2 to row 1 — and row 1 fails only a claim that is
+`volatile` with an `asOf` past 180 days, which a fresh question never is. Demonstrated rather than
+inferred: `"It is a member of the G8."` placed in an option of an economy question on p. 90, a page the G8
+flag covers, left `verify-content` green with the row tally as the only visible effect.
+
+The rule was enforced — by `tests/unit/contracts/questions-cite-a-cached-source.test.ts`, which fails on it —
+so CI was never at risk. What was at risk is the contributor who runs the two content commands the
+guidelines name and reads a pass over a banned term.
+
+`bannedTermFaults` now lives in the shared module and BOTH gates fail on the same strings, over every
+question rather than only the shipped ones: a banned term is a defect in the answer, and `rejected` is where
+a defective answer waits to be fixed, not a licence for it. The demotion to row 1 stays, because it is a
+different statement — nothing is excused by a rule it is currently breaking — and it was never the failure.
+`verify-content` now also prints, on every run, how many questions sat under a flag with a term list and how
+many terms were searched for, so a gate that has stopped searching cannot look like a gate that searched and
+found nothing (ADR-0024).
 
 ### What this amendment does not change
 

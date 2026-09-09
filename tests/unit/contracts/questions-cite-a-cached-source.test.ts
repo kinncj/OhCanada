@@ -58,14 +58,15 @@
  * real clock and **can turn a green tree red with no commit**, exactly like
  * `check-obligations`. That is the expiry working, not a flake.
  *
- * **`dispositionRow` below is a second implementation of ADR-0016 §2's table.**
- * The first is `dispositionFor` in `scripts/verify-content.mjs`, and this one was
- * written against it line by line. Nothing keeps them agreeing, and the unsafe
- * direction is specific: if `verify-content` tightens row 2 and this does not,
- * this file exempts questions from the volatile demand that `verify-content`
- * still holds on the row-1 clock, and both files pass. ADR-0016's amendment
- * records that as a boundary defect with an obligation to extract one shared
- * module; this comment is the marker until then, not the mechanism.
+ * **§2's table is not implemented here.** It used to be — a second copy of
+ * `dispositionFor` from `scripts/verify-content.mjs`, written against it line by
+ * line, with nothing keeping the two agreeing. ADR-0016 recorded that as a
+ * boundary defect with an obligation to extract one shared module, and
+ * `scripts/lib/staleness.mjs` is that module: this file and the script now
+ * import `applicableFlags`, `dispositionRow` and `bannedTermFaults` from it, so
+ * a change to the rule cannot reach one gate and miss the other. What is left
+ * here is what a contract test owns — the fixtures that pin each branch, and the
+ * corpus the rule is run over.
  *
  * **What this cannot do, stated so its silence is not read as coverage:** it
  * cannot tell whether a `knownStaleness` entry should exist. The gate enforces
@@ -79,6 +80,22 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+/**
+ * ADR-0016 §2 and §3, imported rather than restated. The module is `.mjs`
+ * because `scripts/verify-content.mjs` is a plain Node script with no build
+ * step; `scripts/lib/staleness.d.mts` beside it is what makes this import typed
+ * under `strict`, and it fails `make typecheck` if a signature moves.
+ */
+import {
+  applicableFlags,
+  bannedTermFaults,
+  dispositionRow,
+  mentionsTerm,
+  STALE_AFTER_DAYS,
+  type LiveCheckLike,
+  type StalenessFlag,
+} from '../../../scripts/lib/staleness.mjs';
+
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const SOURCES_DIR = `${REPO_ROOT}content/sources`;
 const QUESTIONS_DIR = `${REPO_ROOT}content/questions`;
@@ -88,28 +105,11 @@ interface SourceChapter {
   readonly page?: unknown;
   readonly endPage?: unknown;
 }
-interface KnownStaleness {
-  readonly topic?: unknown;
-  readonly affects?: readonly unknown[];
-  readonly grain?: unknown;
-  readonly pages?: readonly unknown[];
-  readonly upstream?: unknown;
-  readonly bannedFromAnswers?: readonly unknown[];
-}
-interface LiveCheckPage {
-  readonly url?: unknown;
-  readonly chapter?: unknown;
-  readonly sourceDateModified?: unknown;
-  readonly agreesWithCache?: unknown;
-  readonly claimsCompared?: readonly unknown[];
-}
-interface LiveCheck {
-  readonly checkedAt?: unknown;
-  readonly checkedBy?: unknown;
-  readonly finding?: unknown;
-  readonly consequence?: unknown;
-  readonly pages?: readonly LiveCheckPage[];
-}
+// The shapes a register carries, named once in the module that reads them. The
+// aliases keep this file's fixtures reading as they did when it defined them.
+type KnownStaleness = StalenessFlag;
+type LiveCheck = LiveCheckLike;
+
 interface SourceManifest {
   readonly id?: unknown;
   readonly committed?: unknown;
@@ -143,184 +143,11 @@ const str = (value: unknown): string | null => (typeof value === 'string' ? valu
 const int = (value: unknown): number | null =>
   typeof value === 'number' && Number.isInteger(value) ? value : null;
 
-/**
- * A banned term appears in text when it appears as a WHOLE word, case-insensitively.
- *
- * Whole-word rather than substring, because the terms are ordinary English and
- * French words: a substring match on "53" hits "1953" and "253", and one on
- * "Elizabeth" is fine but one on "Queen" would hit "Queensland". The register
- * chooses the terms and a term that still over-fires is refined there, which is
- * the safe direction - a build failure and one edit, against shipping a wrong
- * fact to somebody studying for a citizenship test.
- *
- * "Whole word" is bounded by anything that is not a letter or a digit. The
- * apostrophe is deliberately a BOUNDARY and not word-like, which the fixtures
- * below caught: treating it as word-like made French elision ("l'Elizabeth")
- * miss, and - far worse - made the English possessive ("Elizabeth's reign") miss
- * too. Both failures are in the dangerous direction, letting a banned term ship
- * by being adjacent to punctuation. Letters are matched by Unicode property, so
- * accented French is a word and "Elisabeth" is one word, not two.
- *
- * The term itself may contain spaces ("Her Majesty", "53 other nations"), which
- * is why this is a boundary check around a literal rather than a token set.
- */
-const WORDLIKE = /[\p{L}\p{N}]/u;
-
-export const mentionsTerm = (text: string, term: string): boolean => {
-  const haystack = text.toLocaleLowerCase();
-  const needle = term.trim().toLocaleLowerCase();
-  if (needle === '') return false;
-  let from = 0;
-  for (;;) {
-    const at = haystack.indexOf(needle, from);
-    if (at === -1) return false;
-    const before = at === 0 ? '' : haystack.charAt(at - 1);
-    const after = haystack.charAt(at + needle.length);
-    if (!WORDLIKE.test(before) && !WORDLIKE.test(after)) return true;
-    from = at + 1;
-  }
-};
-
-/** Every player-readable string of a question that an answer could hide a stale fact in. */
-const answerText = (question: QuestionLike): readonly string[] => {
-  const from = (value: LocalizedTextLike | undefined): readonly string[] =>
-    value === undefined
-      ? []
-      : [str(value.en), str(value.fr)].flatMap((text) => (text === null ? [] : [text]));
-  // The PROMPT is deliberately not included. A question may legitimately ask
-  // about a stale topic - the wrongness is in asserting a stale value as an
-  // answer, not in naming the subject. Options and explanation are what a player
-  // is told is TRUE.
-  return [...(question.options ?? []).flatMap(from), ...from(question.explanation)];
-};
-
-/* -------------------------------------------------------------------------- */
-/* ADR-0016 §2's table — which row is this question's chapter on?              */
-/* -------------------------------------------------------------------------- */
-
-/**
- * ADR-0003 and ADR-0016: 180 days is the age at which a granted status stops
- * being trusted. On row 2 the clock is applied to the register's
- * `liveChecks[].checkedAt` rather than to the question's `source.asOf`.
- */
-const STALE_AFTER_DAYS = 180;
-
 /** Whole days from an ISO date to another, or null if either is unreadable. */
 const ageInDays = (from: string, to: string): number | null => {
   const then = Date.parse(`${from}T00:00:00Z`);
   const now = Date.parse(`${to}T00:00:00Z`);
   return Number.isNaN(then) || Number.isNaN(now) ? null : Math.round((now - then) / 86_400_000);
-};
-
-/**
- * The staleness flags covering a claim, at the finest grain the flag offers.
- *
- * Page grain is preferred and chapter grain is the fallback, which is the whole
- * point: a flag on two facts in a long chapter used to force all 57 authored
- * questions volatile, and a flag that fires on everything carries the same
- * information as one that fires on nothing. A page-grain flag on a question with
- * no page cannot be ruled out, so it still applies - the missing page is its own
- * fault, reported separately.
- *
- * This is the second of the two functions duplicated from
- * `scripts/verify-content.mjs`; see the header.
- */
-export const applicableFlags = (
-  manifest: SourceManifest,
-  chapter: string,
-  page: number | null,
-): readonly KnownStaleness[] =>
-  (manifest.knownStaleness ?? []).filter((entry) => {
-    if (!(entry.affects ?? []).some((affected) => str(affected) === chapter)) return false;
-    const flagPages = (entry.pages ?? []).flatMap((value) => {
-      const parsed = int(value);
-      return parsed === null ? [] : [parsed];
-    });
-    if (str(entry.grain) !== 'pages' || flagPages.length === 0) return true;
-    return page === null || flagPages.includes(page);
-  });
-
-interface Disposition {
-  readonly row: 1 | 2 | 3;
-  readonly why: string;
-  readonly check: LiveCheck | null;
-}
-
-/**
- * The live checks naming a chapter, oldest first. Per chapter and not per
- * source: a document with several chapters lives at several URLs and they are
- * revised independently, so a verdict for the whole source would average
- * unrelated facts. A finding about `How Canadians Govern Themselves`, whose page
- * has not been touched since 2017, says nothing about `Who We Are`, whose page
- * was modified last month and still carries 2006-era census shares.
- */
-const liveChecksForChapter = (manifest: SourceManifest, chapter: string): readonly LiveCheck[] =>
-  [...(manifest.liveChecks ?? [])]
-    .filter((check) => (check.pages ?? []).some((page) => str(page.chapter) === chapter))
-    .sort((a, b) => String(a.checkedAt).localeCompare(String(b.checkedAt)));
-
-/**
- * ADR-0016 §2, transcribed from `dispositionFor` in `scripts/verify-content.mjs`.
- * Every branch that is not row 2 or row 3 returns row 1, which is the
- * pre-ADR-0016 behaviour and the safe direction: when in doubt, keep the clock
- * on the question.
- */
-export const dispositionRow = (
-  manifest: SourceManifest,
-  chapter: string,
-  flags: readonly KnownStaleness[],
-  banRespected: boolean,
-): Disposition => {
-  const checks = liveChecksForChapter(manifest, chapter);
-  if (checks.length === 0) {
-    return { row: 1, why: 'no live check in the register names this chapter', check: null };
-  }
-
-  // `source-unreachable` is "no state change" and not a disposition: a 500 or a
-  // DNS failure is not a retraction, so it defers to the last check that decided
-  // anything.
-  const decisive = checks.filter((check) => str(check.finding) !== 'source-unreachable').at(-1);
-  if (decisive === undefined) {
-    return { row: 1, why: 'every live check for this chapter is source-unreachable', check: null };
-  }
-
-  const finding = str(decisive.finding);
-  if (finding === 'source-withdrawn') return { row: 3, why: 'source-withdrawn', check: decisive };
-  if (finding === 'source-revised') {
-    return { row: 1, why: 'the latest live check found the source revised', check: decisive };
-  }
-  if (finding !== 'source-unrevised') {
-    return { row: 1, why: `unrecognised finding ${String(finding)}`, check: decisive };
-  }
-
-  // Row 2 needs BOTH halves. A flag still saying `unknown` means nobody has
-  // established the source is unrevised there, and `unknown` is treated exactly
-  // as `revises`.
-  const undeclared = flags.filter((flag) => str(flag.upstream) !== 'does-not-revise');
-  if (undeclared.length > 0) {
-    return {
-      row: 1,
-      why:
-        `the live check found the source unrevised, but the flag(s) ` +
-        `${undeclared.map((flag) => `"${str(flag.topic) ?? '?'}"`).join(', ')} over this claim ` +
-        `declare upstream ${undeclared.map((flag) => str(flag.upstream) ?? 'absent').join(', ')}, ` +
-        `and absent and "unknown" are treated exactly as "revises"`,
-      check: decisive,
-    };
-  }
-  // A question whose answers still depend on the stale fact has not put row 2's
-  // mitigation in place, so it does not get row 2's exemption. Nothing is
-  // excused by a rule it is currently breaking.
-  if (!banRespected) {
-    return {
-      row: 1,
-      why:
-        'the flags declare does-not-revise but this question does not satisfy their ' +
-        'bannedFromAnswers list, so the only mitigation row 2 rests on is not in place',
-      check: decisive,
-    };
-  }
-  return { row: 2, why: 'source-unrevised, and every flag declares does-not-revise', check: decisive };
 };
 
 /**
@@ -426,26 +253,12 @@ export const citationFaults = (
   // It runs before the volatile branch because its result is an INPUT to that
   // branch: a question breaking the ban has not put row 2's mitigation in place
   // and so cannot claim row 2's exemption.
-  const texts = answerText(question);
-  const banFaults: string[] = [];
-  for (const flag of flags) {
-    const banned = (flag.bannedFromAnswers ?? []).flatMap((value) => {
-      const term = str(value);
-      return term === null ? [] : [term];
-    });
-    if (banned.length === 0) continue;
-    const hits = banned.filter((term) => texts.some((text) => mentionsTerm(text, term)));
-    if (hits.length === 0) continue;
-    banFaults.push(
-      `${where}: an option or explanation contains ${hits.map((term) => `"${term}"`).join(', ')}, ` +
-        `which ${sourceId} bans from answers under the staleness flag "${str(flag.topic) ?? '?'}". ` +
-        `That flag declares upstream: "does-not-revise" - the official source states the same ` +
-        `out-of-date thing the cache does, so re-verifying can never correct this and marking the ` +
-        `question volatile buys nothing. Route the answer around the stale fact: change the option ` +
-        `or the explanation so it does not depend on it. If the term is over-broad, refine the ` +
-        `entry in the register rather than removing it.`,
-    );
-  }
+  // `verify-content` fails on exactly these strings, from exactly this call.
+  // Until 2026-09-09 it did not: the script fed the ban into the row and nothing
+  // else, so a banned term in a shipped option demoted the question from row 2
+  // to row 1 and produced no failure there at all. This file was the only gate
+  // that failed it.
+  const banFaults = [...bannedTermFaults(question, sourceId, flags, where)];
 
   // --- volatile, demanded on the rows where volatile is what arms the clock ---
   //
