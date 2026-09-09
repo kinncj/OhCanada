@@ -40,10 +40,10 @@
     "quote": "The towers, arches, sculptures and stained glass of the Parliament Buildings embody the French, English and Aboriginal traditions and the Gothic Revival architecture popular in the time of Queen Victoria. The buildings were completed in the 1860s."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "verified",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-09T17:10:00Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "The towers, arches, sculptures and stained glass of the Parliament Buildings embody the French, English and Aboriginal traditions and the Gothic Revival architecture popular in the time of Queen Victoria. The buildings were completed in the 1860s."
   }
 }
