@@ -1,6 +1,8 @@
 /**
- * The JSON save format: what gets written to `localStorage`, and what a player
- * carries between devices as a file.
+ * The JSON save format: what gets written to the browser's store — IndexedDB, or
+ * `localStorage` where that is unavailable (ADR-0026) — and what a player carries
+ * between devices as a file. The bytes are the same either way, deliberately: one
+ * format means one place where a save is validated.
  *
  * `decode` never trusts its input. In order, and the order is the point
  * (SECURITY.md):
@@ -30,7 +32,7 @@ import type { SaveCodec } from '@application/ports/save-codec';
 import { validateProgressDocument } from '@application/persistence/progress-schema';
 
 /** The version this build writes. */
-export const CURRENT_SAVE_VERSION = 1;
+export const CURRENT_SAVE_VERSION = 2;
 
 /** The oldest version this build can read. Raised only when a migration is retired. */
 export const MIN_SUPPORTED_SAVE_VERSION = 1;
@@ -38,12 +40,16 @@ export const MIN_SUPPORTED_SAVE_VERSION = 1;
 /**
  * One step forward in the save format.
  *
- * There are none yet — version 1 is the first — and there is deliberately no
- * placeholder pretending otherwise. The mechanism exists because `SaveCodec`
- * promises `decode` accepts "this version and every older one", and a promise
- * with no mechanism is the kind of thing this project keeps finding in its own
- * config files. The first real migration is written beside version 2 and passed
- * in from the composition root, where the version numbers live.
+ * The steps themselves live in `save-migrations.ts` and are passed in from the
+ * composition root, where the version numbers live — never defaulted here. The
+ * codec's job is to apply whatever it was given, in order, and to fail cleanly
+ * when a step it needs is missing; deciding *which* steps this build ships is
+ * assembly, not decoding.
+ *
+ * `apply` runs on a parsed, version-gated document and nothing more: the schema
+ * check comes after. So a step is handed input it may not recognise, and the
+ * contract is that it returns what it does not understand untouched rather than
+ * throwing or repairing.
  */
 export interface SaveMigration {
   readonly from: number;

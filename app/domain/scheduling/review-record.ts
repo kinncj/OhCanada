@@ -57,20 +57,20 @@ export interface ReviewRecord {
    * When this question was first answered — what "introduced" means for
    * `dailyNewLimit`.
    *
-   * NOT in `ReviewStateDocument` today; see the report for slice 1 task 1.4.
-   * Without it the only marker of a first sighting is `reps === 1`, which stops
-   * being true the moment the question is answered a second time, and the daily
-   * cap is then bypassed simply by drilling twice.
+   * Carried in `ReviewStateDocument` since slice 1 task 1.4 — it was missing at
+   * first, and without it the only marker of a first sighting is `reps === 1`,
+   * which stops being true the moment the question is answered a second time,
+   * and the daily cap is then bypassed simply by drilling twice.
    */
   readonly firstReviewedAt: EpochMillis | null;
   readonly phase: ReviewPhase;
   /**
    * Which short-term step the question is on.
    *
-   * NOT in `ReviewStateDocument` today — see the report for slice 1 task 1.4.
-   * Without it a question in `learning` or `relearning` cannot be resumed after
-   * a reload: the next gap is read from this index, and a missing one silently
-   * restarts the sequence. It is also what distinguishes "answered wrongly a
+   * Carried in `ReviewStateDocument` since slice 1 task 1.4. Without it a
+   * question in `learning` or `relearning` cannot be resumed after a reload: the
+   * next gap is read from this index, and a missing one silently restarts the
+   * sequence. It is also what distinguishes "answered wrongly a
    * moment ago" from "answered rightly a moment ago", which is what TN-CARD-02
    * and TN-STUDY-02 order the drill by.
    */

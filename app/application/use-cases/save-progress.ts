@@ -5,8 +5,8 @@
  * `ProgressSnapshot` document on the other, and `progress-document.ts` the only
  * crossing (ADR-0012). The repository decides *where* bytes go and the codec
  * decides *what* they are; neither is named here beyond its port, which is what
- * lets the same use case save to `localStorage`, to a file, and to whatever
- * slice 4 needs.
+ * lets the same use case save to IndexedDB, to `localStorage`, to a file, and to
+ * whatever slice 4 needs — none of which this file was changed for (ADR-0026).
  *
  * Stories: TN-SAVE-01 (everything promised comes back), TN-SAVE-03 (a save
  * happens at named moments and never blocks the game), TN-SAVE-04 (a broken,
@@ -88,7 +88,7 @@ export const exportProgress = (deps: SaveProgressDeps, progress: Progress): Resu
  *
  * Everything defensive about this lives in the codec — the size cap applied
  * before parsing, `JSON.parse` and never `eval`, the version gate, the whole
- * schema — because the same defence is needed for `localStorage`, and a check
+ * schema — because the same defence is needed for the browser's store, and a check
  * written twice is a check that will be right once. This function is the
  * conversion that follows a decode that already succeeded.
  *

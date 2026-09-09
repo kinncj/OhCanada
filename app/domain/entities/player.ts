@@ -9,8 +9,8 @@
  * `settings` and not `avatar` and `preferences`.
  *
  * TN-SAVE items 1, 2 and 3 — the character, the language and every accessibility
- * setting — are this file. Items 3's list is closed: eight switches and four
- * volumes, all of them in the schema, none of them free text.
+ * setting — are this file. Items 3's list is closed: eight switches, one hold
+ * time and four volumes, all of them in the schema, none of them free text.
  */
 
 import type { LocaleCode } from '@domain/ids';
@@ -30,6 +30,15 @@ export interface Settings {
   readonly locale: LocaleCode;
   readonly autoMove: boolean;
   readonly singleSwitch: boolean;
+  /**
+   * How long a single-switch player holds before the highlighted control is
+   * chosen, in milliseconds (`TN-SET-09`).
+   *
+   * Saved since format version 2. Before that it lived only in the DOM settings
+   * store, so a switch user who had set a two-second hold set it again every
+   * session - the one accessibility setting the game asked to be re-entered.
+   */
+  readonly holdToChooseMs: number;
   readonly reducedMotion: boolean;
   readonly highContrast: boolean;
   readonly dyslexiaFont: boolean;
@@ -51,6 +60,21 @@ export const MIN_TEXT_SCALE = 1;
 export const MAX_TEXT_SCALE = 2;
 
 /**
+ * Single-switch hold-time bounds and default, from
+ * `progress.schema.json#/$defs/settings/properties/holdToChooseMs`.
+ *
+ * The same three numbers exist in `app/ui/settings.ts`, and they have to: a DOM
+ * screen may import `@domain/ids` and nothing else from the domain
+ * (`outer-layers-use-domain-vocabulary-only`), so the screen cannot read these
+ * and the domain cannot read the screen's. `tests/unit/contracts/hold-time-is-one-number.test.ts`
+ * imports both and fails if they ever disagree - a claim checked against another
+ * claim, which is the only honest way to hold a constant that must be written twice.
+ */
+export const MIN_HOLD_TO_CHOOSE_MS = 200;
+export const MAX_HOLD_TO_CHOOSE_MS = 3_000;
+export const DEFAULT_HOLD_TO_CHOOSE_MS = 600;
+
+/**
  * Clamp, reading a non-finite value as the low end.
  *
  * JSON carries neither `NaN` nor `Infinity`, so one can only reach here from a
@@ -60,6 +84,18 @@ export const MAX_TEXT_SCALE = 2;
  */
 const clamp = (value: number, low: number, high: number): number =>
   Number.isFinite(value) ? Math.min(high, Math.max(low, value)) : low;
+
+/**
+ * Clamp, reading a non-finite value as the *default*.
+ *
+ * `clamp`'s low end is the safe answer for text scale and for volume; it is the
+ * wrong one for a hold time, where the low end is the twitchiest setting the
+ * game offers and a switch user who cannot hold that briefly would be locked out
+ * of their own controls by a broken number. The safe answer here is the one the
+ * game ships with.
+ */
+const clampHold = (value: number, low: number, high: number): number =>
+  Number.isFinite(value) ? Math.min(high, Math.max(low, value)) : DEFAULT_HOLD_TO_CHOOSE_MS;
 
 const clampVolumes = (volumes: VolumeSettings): VolumeSettings => ({
   master: clamp(volumes.master, 0, 1),
@@ -83,6 +119,7 @@ export const defaultSettings = (locale: LocaleCode): Settings => ({
   locale,
   autoMove: false,
   singleSwitch: false,
+  holdToChooseMs: DEFAULT_HOLD_TO_CHOOSE_MS,
   reducedMotion: false,
   highContrast: false,
   dyslexiaFont: false,
@@ -104,6 +141,14 @@ export const clampSettings = (settings: Settings, fallbackLocale: LocaleCode): S
   ...settings,
   locale: isSupportedLocale(`${settings.locale}`) ? settings.locale : fallbackLocale,
   textScale: clamp(settings.textScale, MIN_TEXT_SCALE, MAX_TEXT_SCALE),
+  /*
+   * Rounded as well as clamped: the schema types this one as an integer, and a
+   * hold time of 612.5 ms would be written back as a document `decode` refuses -
+   * a save that cannot be read by the build that wrote it.
+   */
+  holdToChooseMs: Math.round(
+    clampHold(settings.holdToChooseMs, MIN_HOLD_TO_CHOOSE_MS, MAX_HOLD_TO_CHOOSE_MS),
+  ),
   volumes: clampVolumes(settings.volumes),
 });
 

@@ -3,7 +3,7 @@
  * content schemas. Type-only: this file emits no JavaScript.
  *
  * Ids are branded so that a `QuestionId` can never be passed where a `QuestId`
- * is expected. Values still travel as plain strings in JSON and in `localStorage`.
+ * is expected. Values still travel as plain strings in JSON and in the save store.
  *
  * Slice 1, domain agent: add the parse/validate constructors (`parseLevelId`, ...)
  * next to the entities. Until then, the content adapter is the only place that

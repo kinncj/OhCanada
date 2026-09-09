@@ -2,7 +2,7 @@
  * SaveCodec — the JSON export/import format, separated from where bytes are stored.
  *
  * Two implementations are expected and both satisfy this port: the one the
- * persistence adapter uses to write `localStorage`, and the one the settings screen
+ * persistence adapter uses to write the browser's store, and the one the settings screen
  * uses for the copy-paste save code. Splitting codec from repository is what lets a
  * save move between devices without a server, and what makes format migration a
  * pure, unit-testable function.

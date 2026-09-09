@@ -136,8 +136,40 @@ if a second dead member appears, that trade changes and the checker gets built.
 - **A tripwire is a test that exists to fail once.** It will read as strange to whoever hits it, which is why
   its message must be an instruction rather than an assertion. That is a maintenance obligation on the test's
   wording, not on the test.
-- **Migration remains untested against a real version change, and now says so in a place that fires.** The
+- ~~**Migration remains untested against a real version change, and now says so in a place that fires.** The
   mechanism is unit-tested with a caller-supplied migration, which proves the loop, the ordering and the
-  missing-step failure — and proves nothing about whether a real version-1 document survives a real step.
+  missing-step failure — and proves nothing about whether a real version-1 document survives a real step.~~
+  **Superseded 2026-09-08 — the tripwire fired. See the amendment below.**
 - **Dead members in port files are found by review only.** Stated above; repeated here because a consequence
   section is where a reader looks for what is not covered.
+
+## Amendment (2026-09-08): the tripwire fired, and what it taught
+
+Save format version 2 landed with ADR-0026: `settings.holdToChooseMs` became a persisted property, which
+under `additionalProperties: false` with every property required is a format change rather than an addition.
+`tests/unit/contracts/save-format-version-is-still-one.test.ts` failed, its message was read as the
+instruction it was written to be, and it has been deleted. Its three demands landed as
+`app/application/persistence/save-migrations.ts`,
+`tests/unit/contracts/a-version-1-save-survives-the-first-migration.test.ts`, and this amendment.
+
+Three things the first real migration taught, none of which the tripwire could have known:
+
+1. **The hard part is not the loop; it is the fixture.** The test demanded "a genuine version-1 document
+   produced by this build's own `encode`" — and once version 2 exists, this build *cannot* encode version 1.
+   The honest fixture is a version-2 document with the **exact inverse of the migration** applied, written
+   out in the test where a reader sees it, rather than a hand-written blob that drifts from what the previous
+   build actually stored. A future tripwire of this kind should ask for "derived from this build's encode by
+   a visible inverse", which is the strongest thing available after the fact.
+2. **A migration runs on unvalidated input, and that is where migrations go wrong.** `decode` migrates at
+   step 4 and validates at step 5, so a step is handed a document that has been parsed and version-gated and
+   nothing more. The rule that fell out of writing one: **return what you do not understand untouched.** A
+   step that "repairs" a shape it has not recognised turns a save the player could still download into one
+   nobody can read, and the schema check that runs next would have produced a better message.
+3. **The migration's honest failure is a real loss, and it must be written down.** A version-1 save cannot
+   carry a hold time, so a switch user who had chosen two seconds gets the default. That is unrecoverable —
+   the number was never stored — and the temptation is to describe the step as "restoring" the setting. It is
+   recorded as a loss in `save-migrations.ts` instead.
+
+The tripwire's own design held up: it fired on the event rather than the calendar, it fired exactly once, and
+its message was the whole instruction. The one thing worth copying is that it named the *tests* that had to
+land, not just the code.

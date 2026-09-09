@@ -19,7 +19,7 @@ Portrait-first 2D side-scrolling game teaching the official IRCC Canadian citize
 | Engine | Phaser 4 (≥ 4.2), TypeScript strict, Vite. |
 | Characters | Rive (`@rive-app/canvas`) behind `ICharacterRenderer`; sprite-sheet fallback with identical slot names. |
 | Hosting | GitHub Pages via Actions calling Makefile targets. PWA. Capacitor optional and isolated in `infra/`. |
-| Storage | Local only: `localStorage` + JSON export/import. No accounts, no server, no analytics. |
+| Storage | Local only: IndexedDB, with `localStorage` as the fallback and the store a save is migrated out of (ADR-0026). JSON export/import. No accounts, no server, no analytics. |
 
 ## Architecture (enforced by dependency-cruiser in `make lint`)
 

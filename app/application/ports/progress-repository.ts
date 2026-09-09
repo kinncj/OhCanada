@@ -1,10 +1,13 @@
 /**
  * ProgressRepository — where a player's progress is kept, and nothing more.
  *
- * Storage is local only: `localStorage` plus JSON export/import, no accounts, no
- * server, no analytics (CLAUDE.md). This port hides that: the application asks for
- * a snapshot and hands one back. Quota failures, absent storage in private mode and
- * corrupt payloads all arrive as `Result` errors, never as thrown exceptions.
+ * Storage is local only: IndexedDB, with `localStorage` as the fallback where
+ * IndexedDB is unavailable, plus JSON export/import — no accounts, no server, no
+ * analytics (CLAUDE.md, ADR-0026). This port hides all of that: the application
+ * asks for a snapshot and hands one back, and it did not change when the store
+ * underneath it did, which is the seam doing its job. Quota failures, absent
+ * storage in private mode and corrupt payloads all arrive as `Result` errors,
+ * never as thrown exceptions.
  *
  * Serialisation is *not* this port's job — see `SaveCodec`.
  *
@@ -29,7 +32,7 @@ import type { Result } from '@common/result';
 
 /*
  * The five types below are *documents*: they are what gets written to
- * localStorage and what a player pastes back in from a save code, so they are
+ * the browser's store and what a player pastes back in from a save code, so they are
  * authored data in every sense that matters — just authored by the previous
  * session instead of by a content agent. ADR-0007 applies to them, and
  * `content/schemas/progress.schema.json` is now the authority on their shape, so
@@ -146,6 +149,16 @@ export interface SettingsDocument {
   readonly locale: LocaleCode;
   readonly autoMove: boolean;
   readonly singleSwitch: boolean;
+  /**
+   * TN-SET-09's single-switch hold time, in milliseconds.
+   *
+   * Added in save version 2. It was the one setting the game asked a switch user
+   * to re-enter every session, which is the least acceptable one to lose, and a
+   * new *required* property is a format change however small it looks: an older
+   * document without it is invalid under `additionalProperties: false`, so it
+   * arrives through `SaveMigration` 1 -> 2 rather than by widening the schema.
+   */
+  readonly holdToChooseMs: number;
   readonly reducedMotion: boolean;
   readonly highContrast: boolean;
   readonly dyslexiaFont: boolean;

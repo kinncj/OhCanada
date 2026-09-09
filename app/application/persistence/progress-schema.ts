@@ -93,6 +93,7 @@ const settings = object({
   locale: { kind: 'string', values: ['en', 'fr'] },
   autoMove: { kind: 'boolean' },
   singleSwitch: { kind: 'boolean' },
+  holdToChooseMs: { kind: 'number', integer: true, minimum: 200, maximum: 3_000 },
   reducedMotion: { kind: 'boolean' },
   highContrast: { kind: 'boolean' },
   dyslexiaFont: { kind: 'boolean' },

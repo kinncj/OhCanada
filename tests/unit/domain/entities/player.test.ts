@@ -6,7 +6,10 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  DEFAULT_HOLD_TO_CHOOSE_MS,
+  MAX_HOLD_TO_CHOOSE_MS,
   MAX_TEXT_SCALE,
+  MIN_HOLD_TO_CHOOSE_MS,
   MIN_TEXT_SCALE,
   clampSettings,
   defaultSettings,
@@ -69,6 +72,36 @@ describe('changing settings', () => {
       locale(),
     );
     expect(loud.volumes).toEqual({ master: 1, music: 0, sfx: 0.5, voice: 0 });
+  });
+
+  it('keeps the switch hold time a switch user chose (TN-SET-09)', () => {
+    const chosen = withSettings(newPlayer(locale()), { holdToChooseMs: 2_000 });
+    expect(chosen.settings.holdToChooseMs).toBe(2_000);
+    expect(defaultSettings(locale()).holdToChooseMs).toBe(DEFAULT_HOLD_TO_CHOOSE_MS);
+  });
+
+  it('clamps a hold time into its bounds and rounds it to a whole millisecond', () => {
+    // Rounded because the schema types it as an integer: a hold time of 612.5
+    // would be written back as a document this build refuses to read.
+    expect(clampSettings(settings({ holdToChooseMs: 99_000 }), locale()).holdToChooseMs).toBe(
+      MAX_HOLD_TO_CHOOSE_MS,
+    );
+    expect(clampSettings(settings({ holdToChooseMs: 1 }), locale()).holdToChooseMs).toBe(
+      MIN_HOLD_TO_CHOOSE_MS,
+    );
+    expect(clampSettings(settings({ holdToChooseMs: 612.5 }), locale()).holdToChooseMs).toBe(613);
+  });
+
+  it('reads a nonsense hold time as the default, not as the shortest one', () => {
+    // The opposite end from text scale and volume, on purpose: the low end here
+    // is the twitchiest setting the game offers, and a switch user who cannot
+    // hold that briefly would be locked out of their own controls by a broken
+    // number.
+    for (const broken of [Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(clampSettings(settings({ holdToChooseMs: broken }), locale()).holdToChooseMs).toBe(
+        DEFAULT_HOLD_TO_CHOOSE_MS,
+      );
+    }
   });
 
   it('falls an unreadable locale back rather than losing the save with it', () => {

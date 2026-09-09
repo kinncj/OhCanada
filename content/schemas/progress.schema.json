@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://truenorth.app/schemas/progress.schema.json",
   "title": "TrueNorth progress snapshot",
-  "description": "The whole persisted state: what SaveCodec.encode writes, what a player pastes back in from an exported save, and what ProgressRepository stores in localStorage. It is a document in every sense ADR-0007 means - authored by the previous session rather than by a content agent - and it is what SaveCodec.decode validates against before it trusts a byte of it. Storage is local only: no accounts, no server, no analytics (CLAUDE.md, Storage).",
+  "description": "The whole persisted state: what SaveCodec.encode writes, what a player pastes back in from an exported save, and what ProgressRepository stores in IndexedDB (localStorage is the fallback where IndexedDB is unavailable - ADR-0026). It is a document in every sense ADR-0007 means - authored by the previous session rather than by a content agent - and it is what SaveCodec.decode validates against before it trusts a byte of it. Storage is local only: no accounts, no server, no analytics (CLAUDE.md, Storage).",
   "type": "object",
   "properties": {
     "$schema": {
@@ -89,6 +89,12 @@
         "locale": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localeCode" },
         "autoMove": { "type": "boolean" },
         "singleSwitch": { "type": "boolean" },
+        "holdToChooseMs": {
+          "description": "TN-SET-09's single-switch hold time, in milliseconds. Persisted since save version 2: a switch user who set a two-second hold must not have to set it again next session, which is the least acceptable setting to lose.",
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 3000
+        },
         "reducedMotion": { "type": "boolean" },
         "highContrast": { "type": "boolean" },
         "dyslexiaFont": { "type": "boolean" },
@@ -105,6 +111,7 @@
         "locale",
         "autoMove",
         "singleSwitch",
+        "holdToChooseMs",
         "reducedMotion",
         "highContrast",
         "dyslexiaFont",
