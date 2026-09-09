@@ -40,10 +40,10 @@
     "quote": "about half of First Nations people live on reserve land in about 600 communities while the other half live off-reserve, mainly in urban centres."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "quarantined",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-08T21:05:00Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "Today, about half of First Nations people live on reserve land in about 600 communities while the other half live off-reserve, mainly in urban centres."
   }
 }

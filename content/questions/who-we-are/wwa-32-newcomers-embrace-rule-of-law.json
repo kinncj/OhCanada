@@ -40,10 +40,10 @@
     "quote": "In becoming Canadian, newcomers are expected to embrace democratic principles such as the rule of law."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "rejected",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-08T21:05:00Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "In becoming Canadian, newcomers are expected to embrace democratic principles such as the rule of law."
   }
 }
