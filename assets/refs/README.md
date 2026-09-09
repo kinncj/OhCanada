@@ -67,6 +67,34 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   geometry references only. Every file in this directory was **converted from its embedded profile to sRGB
   before any colour was sampled off it**, so the colours measured are the colours a browser shows — a step
   that was skipped on the first pass and produced brick that sampled as blue-grey.
+- `halifax/` — the Level 1 subjects: the Old Town Clock (three views), Pier 21 (three views) and the
+  waterfront boardwalk and harbour (three views). Nine files, licence-checked against the Commons API on
+  **2026-09-08** before any was downloaded: two CC0, four public domain, two CC BY 2.0, one CC BY 3.0 and one
+  CC BY 4.0.
+
+  **Two of the nine are colour traps and are labelled as such in `references.json`.**
+  `town-clock-close-elevation.jpg` is a warm dusk exposure — the grass reads brown — and is a geometry
+  reference only; `waterfront-boardwalk.jpg` is heavily processed, dark and high contrast under a storm sky,
+  and is a composition reference only. Every file was **converted from its embedded profile to sRGB before
+  any colour was sampled off it**, which is how the Town Clock's dial measured as a saturated blue rather
+  than as slate.
+
+  **The Town Clock cost real quality to the ShareAlike rule, for the third level running.** The
+  high-resolution near-orthographic elevations of it on Commons are CC BY-SA 3.0 and 4.0, and ADR-0004
+  forbids ShareAlike for art. One CC BY 4.0 photograph was available and it carried the whole measurement.
+  Every photograph of the Citadel is ShareAlike too, which is part of why the level's hill is landform and
+  carries no fort.
+
+- `toronto/` — the Level 5 subjects: the CN Tower (three views), the skyline under overcast, the waterfront
+  cycling trail and a separated bike lane. Six files, licence-checked on **2026-09-08** before download:
+  four CC0 and two CC BY 2.0/3.0.
+
+  `bike-lane-street.jpg` is CC BY 2.0 from the Government of Ontario and its licence page **specifies the
+  wording of the credit**: "Copyright Queen's Printer for Ontario, photo source: Ontario Growth Secretariat,
+  Ministry of Municipal Affairs and Housing". That wording is carried in the `author` field of its entry in
+  `assets/credits.json`, because `credits.schema.json` is `additionalProperties: false` and has no other
+  field it could go in. Rule 5 below has the same shape of problem and the same answer.
+
 - `officer/` — the slice-1 NPC: the scarlet review-order uniform, the wide-brimmed felt hat and Sam Browne
   belt hardware. The design sheet is `assets/style/officer.md`, which also records the marks that must
   **never** be drawn and why. The uniform silhouette is drawn; the insignia are not.

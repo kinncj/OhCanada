@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="960" viewBox="0 0 1080 960" shape-rendering="geometricPrecision">
+  <title>A hazy city summer sky: a flat sky-light field with five soft cloud banks, stepping to cloud-base and cloud-light in the last 70 rows. PALER THAN EVERY OTHER LEVEL ON PURPOSE - Ottawa is a deep cold winter blue, Quebec City a pale winter haze over snow, Halifax a bright maritime blue over grey timber, and this one is a bleached August afternoon over asphalt. Both band steps are at world y 890 and 925, behind the opaque haze band at the foot of layer-20-skyline, which starts at world 880 and is the one layer guaranteed beside this one at the low preset - so no hard step can ever show against open sky. World y 0..960; clouds are kept inside x 120..960 so the extreme columns stay flat band colour for the desktop side panel.</title>
+  <rect x="0" y="0" width="1080" height="890" fill="#a5d6ee"/>
+  <rect x="0" y="890" width="1080" height="35" fill="#dce9f3"/>
+  <rect x="0" y="925" width="1080" height="35" fill="#fbfdfe"/>
+  <ellipse cx="306" cy="228.16" rx="170" ry="31.92" fill="#dce9f3"/>
+  <ellipse cx="238" cy="208" rx="102" ry="33.6" fill="#fbfdfe"/>
+  <ellipse cx="374" cy="213.04" rx="95.2" ry="28.56" fill="#fbfdfe"/>
+  <ellipse cx="306" cy="196.24" rx="115.6" ry="36.96" fill="#fbfdfe"/>
+  <ellipse cx="708" cy="153.84" rx="134" ry="25.08" fill="#dce9f3"/>
+  <ellipse cx="654.4" cy="138" rx="80.4" ry="26.4" fill="#fbfdfe"/>
+  <ellipse cx="761.6" cy="141.96" rx="75.04" ry="22.44" fill="#fbfdfe"/>
+  <ellipse cx="708" cy="128.76" rx="91.12" ry="29.04" fill="#fbfdfe"/>
+  <ellipse cx="532" cy="419.76" rx="150" ry="28.12" fill="#dce9f3"/>
+  <ellipse cx="472" cy="402" rx="90" ry="29.6" fill="#fbfdfe"/>
+  <ellipse cx="592" cy="406.44" rx="84" ry="25.16" fill="#fbfdfe"/>
+  <ellipse cx="532" cy="391.64" rx="102" ry="32.56" fill="#fbfdfe"/>
+  <ellipse cx="866" cy="526.4" rx="118" ry="22.8" fill="#dce9f3"/>
+  <ellipse cx="818.8" cy="512" rx="70.8" ry="24" fill="#fbfdfe"/>
+  <ellipse cx="913.2" cy="515.6" rx="66.08" ry="20.4" fill="#fbfdfe"/>
+  <ellipse cx="866" cy="503.6" rx="80.24" ry="26.4" fill="#fbfdfe"/>
+  <ellipse cx="246" cy="642.8" rx="144" ry="26.6" fill="#dce9f3"/>
+  <ellipse cx="188.4" cy="626" rx="86.4" ry="28" fill="#fbfdfe"/>
+  <ellipse cx="303.6" cy="630.2" rx="80.64" ry="23.8" fill="#fbfdfe"/>
+  <ellipse cx="246" cy="616.2" rx="97.92" ry="30.8" fill="#fbfdfe"/>
+</svg>

@@ -58,7 +58,7 @@
     {
       "path": "refs/ottawa/parliament-hill-skyline-sunset.jpg",
       "kind": "reference",
-      "title": "Parliament Hill at sunset from K\u00ecwek\u00ec Point",
+      "title": "Parliament Hill at sunset from Kìwekì Point",
       "author": "Hayden Soloviev",
       "licence": "CC-BY-4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Parliament_Hill_at_sunset,_from_K%C3%ACwek%C3%AC_Point.jpg",
@@ -122,7 +122,7 @@
       "path": "refs/officer/sam-browne-belt-hardware.jpg",
       "kind": "reference",
       "title": "Sam Browne belt - buckle and strap hardware (British WW2 pattern, not RCMP issue)",
-      "author": "Auckland War Memorial Museum T\u0101maki Paenga Hira",
+      "author": "Auckland War Memorial Museum Tāmaki Paenga Hira",
       "licence": "CC-BY-4.0",
       "source": "https://commons.wikimedia.org/wiki/File:Belt,_Sam_Browne_(AM_2007.87.1-1).jpg",
       "modifications": "Downscaled to 1600 px long edge; metadata stripped."
@@ -131,7 +131,7 @@
       "path": "refs/officer/officer-and-peace-tower-portrait.jpg",
       "kind": "reference",
       "title": "A member of the RCMP poses in front of the Parliament Buildings for snapshooting tourists, Ottawa, Ontario",
-      "author": "Chris Lund / National Film Board of Canada. Phototh\u00e8que / Library and Archives Canada",
+      "author": "Chris Lund / National Film Board of Canada. Photothèque / Library and Archives Canada",
       "licence": "public-domain",
       "source": "https://commons.wikimedia.org/wiki/File:A_member_of_the_RCMP_poses_in_front_of_the_Parliament_Buildings_for_snapshooting_tourists._Ottawa,_Ontario,_Canada.jpg",
       "modifications": "Downscaled to 1600 px long edge (source is 980x1249, so unchanged); metadata stripped."
@@ -247,452 +247,452 @@
     {
       "path": "src/svg/shared/character/arm-lower-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"arm-lower-parka\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, lower.",
+      "title": "TrueNorth character rig part \"arm-lower-parka\" — One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, lower.",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/arm-lower-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"arm-lower-serge\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Scarlet tunic sleeve, lower.",
+      "title": "TrueNorth character rig part \"arm-lower-serge\" — One frame serves both sides: the rig mirrors it about the character centre line. Scarlet tunic sleeve, lower.",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/arm-upper-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"arm-upper-parka\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, upper.",
+      "title": "TrueNorth character rig part \"arm-upper-parka\" — One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, upper.",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/arm-upper-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"arm-upper-serge\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Scarlet tunic sleeve, upper.",
+      "title": "TrueNorth character rig part \"arm-upper-serge\" — One frame serves both sides: the rig mirrors it about the character centre line. Scarlet tunic sleeve, upper.",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/face-happy.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"face-happy\" \u2014 Face pose \"happy\" (a correct answer, a greeting). Brows, pupils and mouth differ in SHAPE, so the pose survives greysc\u2026",
+      "title": "TrueNorth character rig part \"face-happy\" — Face pose \"happy\" (a correct answer, a greeting). Brows, pupils and mouth differ in SHAPE, so the pose survives greysc…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/face-neutral.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"face-neutral\" \u2014 Face pose \"neutral\" (at rest). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale, high contrast\u2026",
+      "title": "TrueNorth character rig part \"face-neutral\" — Face pose \"neutral\" (at rest). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale, high contrast…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/face-surprised.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"face-surprised\" \u2014 Face pose \"surprised\" (a fall, a new place). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale\u2026",
+      "title": "TrueNorth character rig part \"face-surprised\" — Face pose \"surprised\" (a fall, a new place). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscale…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/face-thinking.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"face-thinking\" \u2014 Face pose \"thinking\" (a question card is open). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscal\u2026",
+      "title": "TrueNorth character rig part \"face-thinking\" — Face pose \"thinking\" (a question card is open). Brows, pupils and mouth differ in SHAPE, so the pose survives greyscal…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/feature-glasses.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"feature-glasses\" \u2014 Glasses. A cosmetic feature that works in every locomotion mode the game has, which is the bar an option has to clear\u2026",
+      "title": "TrueNorth character rig part \"feature-glasses\" — Glasses. A cosmetic feature that works in every locomotion mode the game has, which is the bar an option has to clear…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/foot-l-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"foot-l-parka\" \u2014 Winter boot, the wearer's left, the near side of the canonical pose. A single rounded wedge. Feet are the one pair tha\u2026",
+      "title": "TrueNorth character rig part \"foot-l-parka\" — Winter boot, the wearer's left, the near side of the canonical pose. A single rounded wedge. Feet are the one pair tha…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/foot-l-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"foot-l-serge\" \u2014 Brown riding boot, the wearer's left, the near side of the canonical pose. Feet are the one pair that is NOT mirrored:\u2026",
+      "title": "TrueNorth character rig part \"foot-l-serge\" — Brown riding boot, the wearer's left, the near side of the canonical pose. Feet are the one pair that is NOT mirrored:…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/foot-r-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"foot-r-parka\" \u2014 Winter boot, the wearer's right, the far side of the canonical pose. A single rounded wedge. Feet are the one pair tha\u2026",
+      "title": "TrueNorth character rig part \"foot-r-parka\" — Winter boot, the wearer's right, the far side of the canonical pose. A single rounded wedge. Feet are the one pair tha…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/foot-r-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"foot-r-serge\" \u2014 Brown riding boot, the wearer's right, the far side of the canonical pose. Feet are the one pair that is NOT mirrored:\u2026",
+      "title": "TrueNorth character rig part \"foot-r-serge\" — Brown riding boot, the wearer's right, the far side of the canonical pose. Feet are the one pair that is NOT mirrored:…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/ground-shadow.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"ground-shadow\" \u2014 Baked ground-contact shadow. Two flat ellipses, no runtime filter: the plain Canvas tier has no Filter pipeline (ADR-0\u2026",
+      "title": "TrueNorth character rig part \"ground-shadow\" — Baked ground-contact shadow. Two flat ellipses, no runtime filter: the plain Canvas tier has no Filter pipeline (ADR-0…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-bob-black.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-bob-black\" \u2014 Hair, mid length, ends at the jaw, ramp hair-black. Shape and colour are independent slots: every shape is offered wit\u2026",
+      "title": "TrueNorth character rig part \"hair-bob-black\" — Hair, mid length, ends at the jaw, ramp hair-black. Shape and colour are independent slots: every shape is offered wit…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-bob-blond.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-bob-blond\" \u2014 Hair, mid length, ends at the jaw, ramp hair-blond. Shape and colour are independent slots: every shape is offered wit\u2026",
+      "title": "TrueNorth character rig part \"hair-bob-blond\" — Hair, mid length, ends at the jaw, ramp hair-blond. Shape and colour are independent slots: every shape is offered wit…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-bob-brown.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-bob-brown\" \u2014 Hair, mid length, ends at the jaw, ramp hair-brown. Shape and colour are independent slots: every shape is offered wit\u2026",
+      "title": "TrueNorth character rig part \"hair-bob-brown\" — Hair, mid length, ends at the jaw, ramp hair-brown. Shape and colour are independent slots: every shape is offered wit…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-bob-grey.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-bob-grey\" \u2014 Hair, mid length, ends at the jaw, ramp hair-grey. Shape and colour are independent slots: every shape is offered with\u2026",
+      "title": "TrueNorth character rig part \"hair-bob-grey\" — Hair, mid length, ends at the jaw, ramp hair-grey. Shape and colour are independent slots: every shape is offered with…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-bob-red.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-bob-red\" \u2014 Hair, mid length, ends at the jaw, ramp hair-red. Shape and colour are independent slots: every shape is offered with\u2026",
+      "title": "TrueNorth character rig part \"hair-bob-red\" — Hair, mid length, ends at the jaw, ramp hair-red. Shape and colour are independent slots: every shape is offered with…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-coil-black.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-coil-black\" \u2014 Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-black. Shape and colour are ind\u2026",
+      "title": "TrueNorth character rig part \"hair-coil-black\" — Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-black. Shape and colour are ind…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-coil-blond.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-coil-blond\" \u2014 Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-blond. Shape and colour are ind\u2026",
+      "title": "TrueNorth character rig part \"hair-coil-blond\" — Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-blond. Shape and colour are ind…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-coil-brown.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-coil-brown\" \u2014 Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-brown. Shape and colour are ind\u2026",
+      "title": "TrueNorth character rig part \"hair-coil-brown\" — Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-brown. Shape and colour are ind…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-coil-grey.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-coil-grey\" \u2014 Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-grey. Shape and colour are inde\u2026",
+      "title": "TrueNorth character rig part \"hair-coil-grey\" — Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-grey. Shape and colour are inde…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-coil-red.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-coil-red\" \u2014 Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-red. Shape and colour are indep\u2026",
+      "title": "TrueNorth character rig part \"hair-coil-red\" — Hair, coily volume, drawn as a lobed silhouette and never as a texture fill, ramp hair-red. Shape and colour are indep…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-crop-black.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-crop-black\" \u2014 Hair, short crop, close to the head, ramp hair-black. Shape and colour are independent slots: every shape is offered w\u2026",
+      "title": "TrueNorth character rig part \"hair-crop-black\" — Hair, short crop, close to the head, ramp hair-black. Shape and colour are independent slots: every shape is offered w…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-crop-blond.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-crop-blond\" \u2014 Hair, short crop, close to the head, ramp hair-blond. Shape and colour are independent slots: every shape is offered w\u2026",
+      "title": "TrueNorth character rig part \"hair-crop-blond\" — Hair, short crop, close to the head, ramp hair-blond. Shape and colour are independent slots: every shape is offered w…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-crop-brown.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-crop-brown\" \u2014 Hair, short crop, close to the head, ramp hair-brown. Shape and colour are independent slots: every shape is offered w\u2026",
+      "title": "TrueNorth character rig part \"hair-crop-brown\" — Hair, short crop, close to the head, ramp hair-brown. Shape and colour are independent slots: every shape is offered w…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-crop-grey.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-crop-grey\" \u2014 Hair, short crop, close to the head, ramp hair-grey. Shape and colour are independent slots: every shape is offered wi\u2026",
+      "title": "TrueNorth character rig part \"hair-crop-grey\" — Hair, short crop, close to the head, ramp hair-grey. Shape and colour are independent slots: every shape is offered wi…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-crop-red.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-crop-red\" \u2014 Hair, short crop, close to the head, ramp hair-red. Shape and colour are independent slots: every shape is offered wit\u2026",
+      "title": "TrueNorth character rig part \"hair-crop-red\" — Hair, short crop, close to the head, ramp hair-red. Shape and colour are independent slots: every shape is offered wit…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-long-black.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-long-black\" \u2014 Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-black. Shape and colour are indep\u2026",
+      "title": "TrueNorth character rig part \"hair-long-black\" — Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-black. Shape and colour are indep…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-long-blond.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-long-blond\" \u2014 Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-blond. Shape and colour are indep\u2026",
+      "title": "TrueNorth character rig part \"hair-long-blond\" — Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-blond. Shape and colour are indep…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-long-brown.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-long-brown\" \u2014 Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-brown. Shape and colour are indep\u2026",
+      "title": "TrueNorth character rig part \"hair-long-brown\" — Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-brown. Shape and colour are indep…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-long-grey.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-long-grey\" \u2014 Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-grey. Shape and colour are indepe\u2026",
+      "title": "TrueNorth character rig part \"hair-long-grey\" — Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-grey. Shape and colour are indepe…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hair-long-red.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hair-long-red\" \u2014 Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-red. Shape and colour are indepen\u2026",
+      "title": "TrueNorth character rig part \"hair-long-red\" — Hair, long, falling over the shoulders in two masses with the chest clear, ramp hair-red. Shape and colour are indepen…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hand-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hand-parka\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Mitten: one mass and a thumb, no sepa\u2026",
+      "title": "TrueNorth character rig part \"hand-parka\" — One frame serves both sides: the rig mirrors it about the character centre line. Mitten: one mass and a thumb, no sepa…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hand-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hand-serge\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Plain brown leather gauntlet glove. N\u2026",
+      "title": "TrueNorth character rig part \"hand-serge\" — One frame serves both sides: the rig mirrors it about the character centre line. Plain brown leather gauntlet glove. N…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/hat-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hat-serge\" \u2014 Wide-brimmed tan felt hat: flat level brim about 1.4 head widths, crown pinched to a point with a fore-and-aft crease\u2026",
+      "title": "TrueNorth character rig part \"hat-serge\" — Wide-brimmed tan felt hat: flat level brim about 1.4 head widths, crown pinched to a point with a fore-and-aft crease…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/head-covering-toque.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-covering-toque\" \u2014 Knitted winter toque with a turned fold and a pom. Independent of hair, skin and costume: it is offered with every opt\u2026",
+      "title": "TrueNorth character rig part \"head-covering-toque\" — Knitted winter toque with a turned fold and a pom. Independent of hair, skin and costume: it is offered with every opt…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/head-skin-1.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-skin-1\" \u2014 Head, neck and ears in skin ramp 1. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default\u2026",
+      "title": "TrueNorth character rig part \"head-skin-1\" — Head, neck and ears in skin ramp 1. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/head-skin-2.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-skin-2\" \u2014 Head, neck and ears in skin ramp 2. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default\u2026",
+      "title": "TrueNorth character rig part \"head-skin-2\" — Head, neck and ears in skin ramp 2. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/head-skin-3.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-skin-3\" \u2014 Head, neck and ears in skin ramp 3. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default\u2026",
+      "title": "TrueNorth character rig part \"head-skin-3\" — Head, neck and ears in skin ramp 3. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/head-skin-4.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-skin-4\" \u2014 Head, neck and ears in skin ramp 4. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default\u2026",
+      "title": "TrueNorth character rig part \"head-skin-4\" — Head, neck and ears in skin ramp 4. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/head-skin-5.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-skin-5\" \u2014 Head, neck and ears in skin ramp 5. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default\u2026",
+      "title": "TrueNorth character rig part \"head-skin-5\" — Head, neck and ears in skin ramp 5. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/head-skin-6.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-skin-6\" \u2014 Head, neck and ears in skin ramp 6. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default\u2026",
+      "title": "TrueNorth character rig part \"head-skin-6\" — Head, neck and ears in skin ramp 6. Cranium wider than jaw, never a circle. Six ramps, one derivation rule, no default…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/leg-lower-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"leg-lower-parka\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Snow-trouser shin.",
+      "title": "TrueNorth character rig part \"leg-lower-parka\" — One frame serves both sides: the rig mirrors it about the character centre line. Snow-trouser shin.",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/leg-lower-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"leg-lower-serge\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Brown riding-boot shaft, to just belo\u2026",
+      "title": "TrueNorth character rig part \"leg-lower-serge\" — One frame serves both sides: the rig mirrors it about the character centre line. Brown riding-boot shaft, to just belo…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/leg-upper-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"leg-upper-parka\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Snow-trouser thigh.",
+      "title": "TrueNorth character rig part \"leg-upper-parka\" — One frame serves both sides: the rig mirrors it about the character centre line. Snow-trouser thigh.",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/leg-upper-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"leg-upper-serge\" \u2014 One frame serves both sides: the rig mirrors it about the character centre line. Midnight-blue breech: full at the thi\u2026",
+      "title": "TrueNorth character rig part \"leg-upper-serge\" — One frame serves both sides: the rig mirrors it about the character centre line. Midnight-blue breech: full at the thi…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/torso-parka.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"torso-parka\" \u2014 Winter parka: hooded-collar band, centre closure and a snow-white hem trim. Warm, dry and the right coat for a January\u2026",
+      "title": "TrueNorth character rig part \"torso-parka\" — Winter parka: hooded-collar band, centre closure and a snow-white hem trim. Warm, dry and the right coat for a January…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "src/svg/shared/character/torso-serge.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"torso-serge\" \u2014 Scarlet tunic in review order: standing collar and shoulder straps in midnight blue, one row of brass buttons, two poi\u2026",
+      "title": "TrueNorth character rig part \"torso-serge\" — Scarlet tunic in review order: standing collar and shoulder straps in midnight blue, one row of brass buttons, two poi…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md \u00a77 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
       "path": "style/rig-contract.json",
@@ -882,6 +882,240 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/particle-snow.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
+    },
+    {
+      "path": "refs/halifax/town-clock-elevation.jpg",
+      "kind": "reference",
+      "title": "Old Town Clock, Citadel Hill, Halifax - street elevation in full sun",
+      "author": "Hayden Soloviev",
+      "licence": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Halifax_Town_Clock_2.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/halifax/town-clock-close-elevation.jpg",
+      "kind": "reference",
+      "title": "Old Town Clock, Halifax - near elevation at dusk",
+      "author": "Morgan (Montreal)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Week_3_-_Greetings_From..._Halifax_Town_Clock_(24334667986).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/halifax/town-clock-1948.jpg",
+      "kind": "reference",
+      "title": "Old Town Clock, Halifax, from Citadel Hill, 1948",
+      "author": "Nova Scotia Information Service",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Halifax_Town_Clock_1948.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The file carried no colour profile."
+    },
+    {
+      "path": "refs/halifax/pier-21-entrance.jpg",
+      "kind": "reference",
+      "title": "Pier 21, Halifax - brick block and streamlined entrance",
+      "author": "Verne Equinox",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Pier21_Close.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The file carried no colour profile."
+    },
+    {
+      "path": "refs/halifax/pier-21-and-the-seaport.jpg",
+      "kind": "reference",
+      "title": "Pier 21 and the Halifax seaport seen from the hill",
+      "author": "ArcticMikee",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Pier21.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The file carried no colour profile."
+    },
+    {
+      "path": "refs/halifax/pier-21-liner-1934.jpg",
+      "kind": "reference",
+      "title": "An ocean liner alongside the Halifax pier sheds, 1934",
+      "author": "National Harbours Board",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Pier21in1934.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/halifax/waterfront-boardwalk.jpg",
+      "kind": "reference",
+      "title": "Halifax waterfront boardwalk - deck, lamps, benches and bollards",
+      "author": "B*lly Frank",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Halifax_Waterfront_looking_north,_July_2014_(14550455567).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The file carried no colour profile."
+    },
+    {
+      "path": "refs/halifax/waterfront-and-skyline.jpg",
+      "kind": "reference",
+      "title": "Halifax waterfront wharves with the town rising behind",
+      "author": "Dennis Sylvester Hurd",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Day_4_-_Halifax,_Nova_Scotia_(48746538297).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The file carried no colour profile."
+    },
+    {
+      "path": "refs/halifax/waterfront-harbour.jpg",
+      "kind": "reference",
+      "title": "Halifax harbour from the waterfront boardwalk",
+      "author": "Dennis Sylvester Hurd",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Day_4_-_Halifax,_Nova_Scotia_(48746022388).jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The file carried no colour profile."
+    },
+    {
+      "path": "refs/toronto/cn-tower-skyline-elevation.jpg",
+      "kind": "reference",
+      "title": "The CN Tower and the Toronto skyline from Centre Island",
+      "author": "TheWxResearcher",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Toronto_Skyline_viewed_from_Centre_Island.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/cn-tower-pod.jpg",
+      "kind": "reference",
+      "title": "The CN Tower's observation pod",
+      "author": "Wladyslaw Sojka",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Toronto_-_ON_-_CN_Tower_Turmkorb.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped. The file carried no colour profile."
+    },
+    {
+      "path": "refs/toronto/cn-tower-shaft.jpg",
+      "kind": "reference",
+      "title": "The CN Tower shaft and pod from directly below",
+      "author": "Scott Webb",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:CN_Tower,_Toronto,_Canada_(Unsplash_DJ_kOgH5u0o).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/skyline-overcast.jpg",
+      "kind": "reference",
+      "title": "The Toronto skyline under overcast from Algonquin Island",
+      "author": "Cornflower123",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Toronto_Skyline_March_2024.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/waterfront-trail.jpg",
+      "kind": "reference",
+      "title": "The waterfront cycling trail on Queens Quay, Toronto",
+      "author": "Geo Swan",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Queens_Quay,_2024_10_10_(54057829496).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/bike-lane-street.jpg",
+      "kind": "reference",
+      "title": "A separated bike lane on a Toronto street",
+      "author": "Ministry of Municipal Affairs and Housing. Required credit line: \"Copyright Queen's Printer for Ontario, photo source: Ontario Growth Secretariat, Ministry of Municipal Affairs and Housing\" - carried here because credits.schema.json is additionalProperties:false and has no field for a licence's own attribution wording.",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Toronto_Bike_Lanes_(Sherbourne_Street)_Bandes_cyclables_de_Toronto_(rue_Sherbourne)_(38301287985).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "src/svg/halifax/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Halifax summer sky - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/halifax/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/halifax-level.md; never traced."
+    },
+    {
+      "path": "src/svg/halifax/layer-20-citadel.svg",
+      "kind": "shipped",
+      "title": "The grassy hill above Halifax - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/layer-20-citadel.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/halifax/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/halifax-level.md; never traced."
+    },
+    {
+      "path": "src/svg/halifax/layer-30-uptown.svg",
+      "kind": "shipped",
+      "title": "The town on the Halifax slope - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/layer-30-uptown.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/halifax/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/halifax-level.md; never traced."
+    },
+    {
+      "path": "src/svg/halifax/layer-40-quayside.svg",
+      "kind": "shipped",
+      "title": "The Halifax harbour boardwalk and its wharves - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/layer-40-quayside.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/halifax/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/halifax-level.md; never traced."
+    },
+    {
+      "path": "src/svg/halifax/landmark-town-clock@1x.svg",
+      "kind": "shipped",
+      "title": "The Old Town Clock, Halifax - a level 1 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/landmark-town-clock@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/halifax/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/halifax-level.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key halifax-landmark-town-clock is unchanged and no level document moves. The art-bible section 5 two-size test was run at the shipping size of 800 x 1010 and passed at both probes, which is what ADR-0013 as amended requires before a landmark departs from the 2x default; at 2x it would cost 12.32 MiB of decoded texture instead of 3.08 MiB."
+    },
+    {
+      "path": "src/svg/halifax/landmark-pier-21@1x.svg",
+      "kind": "shipped",
+      "title": "Pier 21, Halifax - a level 1 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/landmark-pier-21@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/halifax/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/halifax-level.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key halifax-landmark-pier-21 is unchanged and no level document moves. The art-bible section 5 two-size test was run at the shipping size of 900 x 620 and passed at both probes, which is what ADR-0013 as amended requires before a landmark departs from the 2x default; at 2x it would cost 8.51 MiB of decoded texture instead of 2.13 MiB."
+    },
+    {
+      "path": "src/svg/toronto/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Toronto hazy summer sky - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/toronto/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/toronto-level.md; never traced."
+    },
+    {
+      "path": "src/svg/toronto/layer-20-skyline.svg",
+      "kind": "shipped",
+      "title": "A generic downtown skyline - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/layer-20-skyline.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/toronto/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/toronto-level.md; never traced."
+    },
+    {
+      "path": "src/svg/toronto/layer-30-podium.svg",
+      "kind": "shipped",
+      "title": "The street wall behind the Toronto trail - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/layer-30-podium.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/toronto/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/toronto-level.md; never traced."
+    },
+    {
+      "path": "src/svg/toronto/layer-40-boulevard.svg",
+      "kind": "shipped",
+      "title": "The Toronto waterfront cycling trail - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/layer-40-boulevard.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/toronto/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/toronto-level.md; never traced."
+    },
+    {
+      "path": "src/svg/toronto/landmark-cn-tower@1x.svg",
+      "kind": "shipped",
+      "title": "The CN Tower, Toronto - the level 5 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/landmark-cn-tower@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/toronto/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/toronto-level.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key toronto-landmark-cn-tower is unchanged and no level document moves. The art-bible section 5 two-size test was run at the shipping size of 700 x 1020 and passed at both probes, which is what ADR-0013 as amended requires before a landmark departs from the 2x default; at 2x it would cost 10.88 MiB of decoded texture instead of 2.72 MiB."
     }
   ]
 }

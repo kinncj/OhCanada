@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="1020" viewBox="0 0 700 1020" shape-rendering="geometricPrecision">
+  <title>A very tall slender concrete communications tower: a tapered hexagonal shaft splaying into legs at its foot, a wide observation pod about three fifths up carrying two dark glass bands and a fat white radome as its widest element, a much smaller pod higher up the shaft, and a long tapering antenna mast running from the observation pod to the tip. At its foot, a low white domed stadium in front of the tower, a glazed block and a street tree. The POI hero: present at every visual tier, on every device, because it is a POI artKey and not a parallax layer, and it is the only thing in this level that names a city.</title>
+  <rect x="0" y="1000" width="700" height="20" fill="#8b857c"/>
+  <rect x="0" y="1000" width="700" height="5" fill="#afaca5"/>
+  <path d="M 327.5 940 L 372.5 940 L 424 1000 L 275 1000 Z" fill="#8b857c"/>
+  <path d="M 327.5 940 L 350 940 L 350 1000 L 275 1000 Z" fill="#afaca5"/>
+  <path d="M 362 946 L 372.5 940 L 424 1000 L 396 1000 Z" fill="#605a55"/>
+  <rect x="336" y="962" width="9" height="38" fill="#605a55"/>
+  <rect x="356" y="962" width="9" height="38" fill="#605a55"/>
+  <path d="M 335.5 496 C 333 640, 330 800, 327.5 944 L 372.5 944 C 370 800, 367 640, 364.5 496 Z" fill="#8b857c"/>
+  <path d="M 335.5 496 C 333 640, 330 800, 327.5 944 L 337.5 944 C 340 800, 343 640, 345.5 496 Z" fill="#afaca5"/>
+  <path d="M 358 496 C 360 640, 363 800, 365 944 L 372.5 944 C 370 800, 367 640, 364.5 496 Z" fill="#605a55"/>
+  <rect x="320" y="492" width="60" height="16" fill="#16203a" opacity="0.18"/>
+  <rect x="308" y="398" width="84" height="14" fill="#afaca5"/>
+  <rect x="304" y="412" width="92" height="26" fill="#30384f"/>
+  <rect x="302" y="438" width="96" height="12" fill="#afaca5"/>
+  <rect x="305" y="450" width="90" height="18" fill="#30384f"/>
+  <rect x="322" y="494" width="56" height="14" fill="#57647a"/>
+  <ellipse cx="350" cy="484" rx="48.5" ry="20" fill="#cbd2da"/>
+  <ellipse cx="350" cy="478" rx="48.5" ry="20" fill="#f0f2f5"/>
+  <ellipse cx="338" cy="470" rx="30" ry="9" fill="#ffffff"/>
+  <rect x="330" y="230" width="40" height="11" fill="#afaca5"/>
+  <rect x="331" y="241" width="38" height="15" fill="#30384f"/>
+  <rect x="333" y="256" width="34" height="8" fill="#afaca5"/>
+  <path d="M 347 20 L 353 20 L 357.5 398 L 342.5 398 Z" fill="#8b857c"/>
+  <path d="M 347 20 L 350 20 L 350 398 L 342.5 398 Z" fill="#afaca5"/>
+  <ellipse cx="200" cy="1000" rx="190" ry="13" fill="#16203a" opacity="0.28"/>
+  <rect x="20" y="916" width="360" height="84" fill="#8b857c"/>
+  <rect x="20" y="916" width="360" height="10" fill="#afaca5"/>
+  <rect x="38" y="934" width="22" height="66" fill="#30384f"/>
+  <rect x="88" y="934" width="22" height="66" fill="#30384f"/>
+  <rect x="138" y="934" width="22" height="66" fill="#30384f"/>
+  <rect x="188" y="934" width="22" height="66" fill="#30384f"/>
+  <rect x="238" y="934" width="22" height="66" fill="#30384f"/>
+  <rect x="288" y="934" width="22" height="66" fill="#30384f"/>
+  <rect x="338" y="934" width="22" height="66" fill="#30384f"/>
+  <path d="M 20 918 A 180 94 0 0 1 380 918 Z" fill="#f0f2f5"/>
+  <path d="M 20 918 A 180 94 0 0 1 200 824 L 200 918 Z" fill="#ffffff"/>
+  <path d="M 296 862 A 180 94 0 0 1 380 918 L 330 918 Z" fill="#cbd2da"/>
+  <rect x="14" y="910" width="372" height="12" rx="5" fill="#57647a"/>
+  <rect x="470" y="886" width="230" height="114" fill="#57647a"/>
+  <rect x="470" y="886" width="60" height="114" fill="#7d8fa0"/>
+  <rect x="482" y="906" width="206" height="16" fill="#a9d0e5"/>
+  <rect x="482" y="936" width="206" height="16" fill="#a9d0e5"/>
+  <rect x="482" y="966" width="206" height="16" fill="#a9d0e5"/>
+  <ellipse cx="452" cy="1000" rx="46" ry="10" fill="#16203a" opacity="0.28"/>
+  <rect x="444" y="934" width="16" height="66" fill="#96632f"/>
+  <ellipse cx="452" cy="900" rx="44" ry="42" fill="#56993a"/>
+  <ellipse cx="430" cy="914" rx="30" ry="28" fill="#2c8055"/>
+  <ellipse cx="464" cy="878" rx="34" ry="30" fill="#89c05f"/>
+  <ellipse cx="350" cy="1000" rx="82" ry="12" fill="#16203a" opacity="0.28"/>
+</svg>

@@ -25,9 +25,18 @@ it.
   because that point is what makes it Gothic; a bench arm gets an 8 px round.
 - **Curves over straights.** Prefer one continuous curve to three straight segments. Limbs are capsules.
   Torsos are rounded rectangles. Snow banks are single swept arcs.
-- **Shape count budget.** A background prop is 3–8 shapes. A character part is 1–4. A landmark is under 60
-  shapes at the hero layer. If you are past that, you are drawing detail the player will never see at
-  1080 px wide on a phone held at arm's length.
+- ~~**Shape count budget.**~~ **RETIRED AS A GATE, 2026-09-08, by ADR-0025.** The figure was "a landmark is
+  under 60 shapes at the hero layer", and **no landmark this project has ever shipped met it**: Parliament
+  Hill is 166, the Château Frontenac 259, the Halifax Town Clock 113, Pier 21 137, the CN Tower 49. The
+  Peace Tower identified cold at 0.92 and the Château at 0.80. Shape count has **no runtime cost** — every
+  SVG is rasterised to atlas frames, so the GPU never sees a path — and it costs only source bytes and
+  rasterise time, neither of which is a budget in `CLAUDE.md`. **Report the count in the level sheet. The
+  binding tests are blind identification and the two-size test in §5.**
+
+  What the number was *reaching for* is still true and is now said directly: **do not draw detail that
+  vanishes at 25 %.** The 12 px minimum below and the two-size test enforce that, and they enforce it by
+  measuring the thing that matters instead of counting a proxy for it. The CN Tower is the ADR's own
+  example: 49 shapes, and it is the most recognisable render in the game.
 - **No texture, no noise, no gradients.** Surface variety comes from the three tones and from silhouette,
   not from fill patterns. The one sanctioned exception is the skate scoring on canal ice, which is a sparse
   repeating stroke overlay, authored as shapes.
@@ -41,8 +50,10 @@ shapes are wrong. Fixing this with colour or detail is not fixing it.
 
 ## 2. The three tones
 
-`palette.json` is the allow-list. **Any fill or stroke not in `colours` fails the palette lint.** Add a
-colour there, with a ramp, before you use it.
+`palette.json` is the allow-list. **Any fill or stroke not in `colours` is a defect.** Add a colour there,
+with a ramp, before you use it. This sentence used to say "fails the palette lint", and **there is no palette
+lint** — see `OQ-ART-11` in §11. Every level so far has been checked by hand; until the gate exists, check
+yours and say so in the level sheet.
 
 Three flat fills per material — `light`, `base`, `shade`. No fourth tone, no gradient, no dithering, no
 soft-light overlays.
@@ -204,8 +215,30 @@ y=1920  └───────────────────────
   the flat palette colour named in the level's theme, or the desktop side panel will show a visible join.
   `palette.json` `levelTheme` proposes those ids.
 - **Layer budget.** Six parallax layers at the `high` preset, four at `medium`, two at `low`
-  (`content/game.config.json`). Author six, and make layers 5 and 6 the ones that can vanish without the
-  scene collapsing — never put an identifying feature on a layer the `low` preset drops.
+  (`content/game.config.json`). **Which ones are dropped changed in slice 2 and it changes how you
+  compose.** `app/adapters/phaser/level-effects.ts` `selectLayers` keeps **the layers that cover the most
+  screen**, measured as visible width × visible height with the bottom clipped at the *highest* point of the
+  ground polyline; ties go to the nearer band. The old rule was "keep the highest depths", which is
+  nearest-first, and on Ottawa it dropped the sky and Parliament's silhouette and kept a canal wall that is
+  nine tenths behind the ground.
+
+  Three consequences for authoring, all of them measurable before you draw:
+  1. **Work out the coverage of every band and write it in the level sheet.** Ottawa at `low` keeps sky and
+     escarpment; Halifax keeps sky and quayside; Toronto keeps sky and skyline. Compose so that pair is a
+     picture.
+  2. **A band that sits mostly below the ground line ranks last and will be dropped first.** If your
+     foreground matters, give it rows above the ground line.
+  3. **Author as many layers as earn their texture, and no more.** "Author six" was this section's advice
+     until Québec City deleted a sixth that was visible in a 40 px sliver, and Halifax and Toronto shipped
+     four each for the same reason. A layer earns its texture only if its world band is not covered by a
+     nearer opaque layer. Never put an identifying feature on any repeating layer at all — see §5.
+
+- **Nothing you draw below the ground line will ever be seen.** `level-scene.ts` paints the ground polygon
+  opaque at depth 400, over every parallax layer at depth 100+, filling from the polyline down to the bottom
+  of the world. `selectLayers` models this correctly and the painter enforces it. Two shipped levels do not
+  respect it — Ottawa's ice band shows 30 of its 230 rows and Québec City's toboggan run shows none of its
+  560 — and both are one `offset.y` in a level document, not art. Draw the ground plane *behind* the player
+  as rows **above** y = 1280, and let `theme.ground` be the surface at the player's feet.
 
 ---
 
@@ -286,8 +319,18 @@ not resolve that conflict and does not need to: the schema decided, and this sec
   characters, and no concept of a loose prop. Six standalone prop files were authored for Ottawa and
   then deleted: their geometry was already inside a parallax tile, nothing could reference them, and the
   pipeline was packing and charging them to the level's texture budget anyway.
-- Per-level sheets sit beside this one — `assets/style/ottawa-level.md` for Level 4 — and carry the
-  layer table, world offsets, tier drop order, the plain/filtered table and the measured budgets.
+  **The same is true of `poi-marker-*` and `particle-*`, and two shipped levels still carry them.** There is
+  no POI-marker sprite in the schema or the scene — `PlayableMarker` is a DOM element — and falling snow is
+  drawn procedurally with `Graphics`, from no texture at all. Ottawa and Québec City each ship three such
+  sources; they are packed and charged and nothing can reference them. Halifax and Toronto author none.
+- **A POI has no `offset`.** `level-scene.ts` draws `poi.artKey` with origin `(0.5, 1)` at
+  `(position.x, groundYAt(position.x))`, above every layer. So **the landmark file's bottom edge IS the
+  ground line and its horizontal centre IS `position.x`** — author the ground contact into the bottom rows
+  of the file, and crop the top to the alpha bounds.
+- Per-level sheets sit beside this one — `halifax-level.md` (1), `quebec-city-level.md` (3),
+  `ottawa-level.md` (4) and `toronto-level.md` (5) — and carry the layer table, world offsets, coverage
+  figures and tier drop order, the plain/filtered table, the measured ratios and the measured budgets.
+  `halifax-level.md` §7 additionally records three engine findings that apply to every level.
 - Reference photographs stay in `assets/refs/` and are never shipped.
 
 ---
@@ -339,6 +382,7 @@ Recorded rather than resolved. Inventing a detail is worse than leaving a questi
 | **OQ-ART-08** | Is the officer's gender presentation fixed, or a player choice? Not an art decision. The art is built so it can be either: gender presentation is a **skin slot** on one artboard with one proportion canon, so either answer is a data change. | PO (`OQ-LEVEL-3`) | the officer rig contract, task 1.11 |
 | **OQ-ART-09** | Is scarlet review order plausible outdoors on canal ice in an Ottawa winter? It is a ceremonial uniform; the working winter answer is a parka. The level may be summer on the Hill and winter on the canal, or the officer may be posted ceremonially. A story and setting call, not an art one. | PO | the officer's placement in the level |
 | **OQ-ART-10** | Does the officer carry a visible sidearm? The reference shows a holstered one; `officer.md` currently drops it under "simplify away", which is an art convenience and not a decision. | PO | the officer artboard |
+| **OQ-ART-11** | **There is no palette lint.** §2 above and `CLAUDE.md` both say "the palette lint fails on anything else", and no such gate exists anywhere in the repository: `scripts/validate-content.mjs` checks the palette's *internal* integrity — every ramp tone and ink resolves to a colour in `colours` — and never opens an SVG, and `scripts/assets.mjs` never reads `palette.json` at all. Every level so far has been checked by hand, which is exactly what `OQ-ART-02` was closed for being. The check is about twenty lines over `assets/src/svg/**`, it should also refuse `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<style>` and any `url(#…)` that is not a `clipPath` (ADR-0011), and it belongs inside `make assets`. Run by hand on 2026-09-08 over all 80 sources, 3 648 shapes: 0 off-palette fills or strokes, 0 forbidden constructs. | infra | the claim in §2 and in `CLAUDE.md` |
 
 ---
 
@@ -346,7 +390,9 @@ Recorded rather than resolved. Inventing a detail is worse than leaving a questi
 
 - **Indigenous content.** Ottawa sits on **unceded Algonquin Anishinaabe territory**. Nothing in this bible
   designs a depiction of Indigenous people, art, regalia or land acknowledgement, and no such asset should be
-  authored for slice 1. `docs/content-review.md` governs that work, now exists, and is read before any of it
+  authored for slice 1. That holds unchanged for Halifax and Toronto: **no Indigenous content of any kind is
+  drawn in either level** — no regalia, no pattern, no cultural item on any background figure — and neither
+  level's sheet proposes a `territory` statement. `docs/content-review.md` governs that work, now exists, and is read before any of it
   is drawn — not after. Slice 4 is the Mi'kma'ki level and needs that review process actually running before
   it starts.
 - **UI, text and focus-ring colours.** `ui-a11y` owns those and they must pass WCAG AA. They are absent from

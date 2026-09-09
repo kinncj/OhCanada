@@ -74,8 +74,8 @@ Nine SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `quebec-city-layer-10-sky` | `layer-10-sky.svg` | 1080 × 950 | three flat sky bands, eight clouds |
 | `quebec-city-layer-20-farbank` | `layer-20-farbank.svg` | 1800 × 150 | the far bank across the river: a generic winter river town |
 | `quebec-city-layer-30-river` | `layer-30-river.svg` | 1800 × 160 | the St Lawrence: three water bands and drifting ice pans |
-| `quebec-city-layer-50-terrace` | `layer-50-terrace.svg` | 2016 × 640 | Dufferin Terrace: parapet, cast-iron railing, lamps, kiosk, benches, crowd, one timber footbridge, the chute's far wall |
-| `quebec-city-layer-60-slope` | `layer-60-slope.svg` | 1440 × 560 | the toboggan run: lane, divider ridges, runner streaks, near bank |
+| `quebec-city-layer-50-terrace` | `layer-50-terrace.svg` | 2016 × 640 | Dufferin Terrace: parapet, cast-iron railing, lamps, a **plain open timber shelter** (it was a striped kiosk — see §7), benches, crowd, one timber footbridge, the chute's far wall |
+| `quebec-city-layer-60-slope` | `layer-60-slope.svg` | 1440 × 560 | the toboggan run: a **packed-snow** lane (it was `ice` — see §7), modelled divider ridges, runner streaks, two riders on toboggans, near bank |
 | `quebec-city-landmark-chateau-frontenac` | `landmark-chateau-frontenac@1x.svg` | 1080 × 900 | **the POI hero**: the Château Frontenac |
 | `quebec-city-poi-marker-idle` | `poi-marker-idle.svg` | 132 × 176 | tappable POI marker, not in reach |
 | `quebec-city-poi-marker-active` | `poi-marker-active.svg` | 132 × 176 | tappable POI marker, in reach |
@@ -216,8 +216,8 @@ reference in any of the nine sources**, checked mechanically.
 | effect | plain form — what everyone sees | filtered form, if a tier ever offers one |
 |---|---|---|
 | ambient occlusion | flat `ao-shadow` ellipses at 0.28 under every ground contact and flat 0.18 rects at the two structural overlaps (tower-into-wings, chute wall onto the run). Baked into the SVG at author time. | none wanted. |
-| iced chute sheen | flat `snow-light` lozenges at 0.22 with a 11 px corner radius on an `ice-light` lane. Static shapes, authored. | an additive sheen sweep would be a bonus and must never be what makes the lane read as ice. |
-| runner scoring | 4 px `snow-light` bars at 0.30–0.42, 24 per 1440 px tile, **straight and level**. A toboggan runner scores straight lines; the curved arcs on Ottawa's ice are skate marks and would say "rink". | none. |
+| ~~iced chute sheen~~ | **REMOVED, §7.** The lane is packed snow in the `snow` ramp, not polished ice, because the `ice` ramp made a blind verifier read the whole lower half as a frozen river. | none. |
+| runner scoring | 4 px `snow-shade` grooves at 0.42 and `snow-light` bars, 39 per 1440 px tile, **straight and level**. A toboggan runner scores straight lines; the curved arcs on Ottawa's ice are skate marks and would say "rink". | none. |
 | falling snow | `quebec-city-particle-snow`, three flat opaque discs with a flat highlight. Phaser particles, ≤ 400 on a phone at every tier and 150 at `low`. | none. |
 | POI marker "in reach" | the ring **fills and gains a second ring** — a shape change, not a glow and not only a colour change. | a pulse is welcome; the shape difference already carries the state, so reduced motion and Canvas both stay correct. |
 | lamp globes | flat `white-base` disc with a `white-light` highlight disc. | a bloom would be a bonus. |
@@ -429,6 +429,57 @@ are skate marks and would say "rink" here, which is a different level and a diff
 place the two winter levels' surface treatments must not be shared, and it is a four-pixel decision that
 carries the locomotion.
 
+### Two defects a genuinely blind pass found, and what they cost to fix
+
+Recorded here rather than quietly corrected, because both were *predicted by this file's own rules* and got
+through anyway, and that is the useful part.
+
+**1. The kiosk was architecture pretending to be street furniture.** Unprimed, with no place name anywhere
+in its briefing, the verifier named **Terrasse Dufferin, Québec City** off `layer-50-terrace` — and its
+decisive cue was the kiosk: "green-and-white radial roof stripes, white finial, white pavilion with dark
+bays. It is the Dufferin Terrace kiosk as photographed in `dufferin-terrace-boardwalk.jpg`." That tile
+repeats every 2016 px, and this subject's own `neverAdd` already forbade "any other named or recognisable
+building, drawn into either of these two REPEATING tiles". §3 above even records moving the kiosk *inside*
+the tile for composition — it was reasoned about as furniture at the moment it should have been recognised as
+architecture. **It is now a plain open timber shelter**: a `wood-base` frame on three posts, a `slate-base`
+hipped roof, a bench, and no stripes, no finial and no white pavilion. `references.json` carries the rule in
+its new form — *furniture that is really architecture is architecture*.
+
+**2. The lane read as water, and the cause was in this contract rather than in the drawing.** The verifier
+read the whole lower half as a "frozen ice-covered river" with "wind-blown ice streaks" and recorded the
+built-chute feature **absent**. That is not a wording near-miss: none of the eight accepted answers is about
+water, so the subject was never read as a toboggan run at all. The diagnosis is exact and it is this file's
+fault, not the artist's eye — **feature 6 was fighting feature 1**. Feature 6 said "use the `ice` ramp for
+the polished lane", so the lane was the same blue-white ramp as the Rideau Canal Skateway, **in the same
+hand-off**, and the strongest colour signal in the picture said water. Correctly drawn straight runner marks
+cannot outvote a ramp. Three corrections, all in `layer-60-slope.svg`:
+
+- **The lane is now the `snow` ramp.** `ice` is forbidden on it in `references.json`, scoped to this subject
+  so it does not contradict the canal's requirement.
+- **The two lane dividers are modelled** — a shaded far flank, a lit crest, a shaded near flank — instead of
+  being a boundary between two flat colour bands, which reads as a change of surface rather than as a ridge.
+- **Two riders on flat wooden toboggans are drawn on the lane**, seated, knees up, leaning back, the posture
+  in `toboggan-slide-riders.jpg`. There was no toboggan and no rider anywhere in 1440 px, and a verifier was
+  being asked to name a sport from an empty surface.
+
+Note what the two runs of this subject are worth against each other: **the previous, primed reading recorded
+the built-chute feature PRESENT and this unprimed one recorded it absent.** That difference is the whole
+value of the anonymised hand-off.
+
+### And one placement finding that is not art's to fix
+
+`layer-60-slope` is placed at `offset.y` **1280** and this level's ground polyline is **1280** the whole way.
+`app/adapters/phaser/level-scene.ts` paints the ground polygon **opaque, at depth 400, over every parallax
+layer**, filling from the polyline to the bottom of the world. **So none of the toboggan run is visible in
+game** — the entire 1440 × 560 tile is painted over, including both corrections above. The `verify-art`
+hand-off composites the two tiles directly rather than through the engine, which is why the subject can be
+judged on art the player never sees.
+
+The fix is one number in `content/levels/quebec-city.json` — raise the run above the ground line, or lower
+the ground polyline under it — and it is content's, not art's. Ottawa has a milder form of the same problem
+(`layer-60-ice` at 1210 under a ground line at 1240 shows 30 of its 230 rows). `assets/style/halifax-level.md`
+§7.1 records it in full; Halifax and Toronto avoid it by construction, with no layer content below y = 1280.
+
 **The hoops became a footbridge.** Both historical photographs show a run of timber hoop arches over the chute.
 A run of them is overhead in *every* frame, including the one framing the landmark. One timber footbridge per
 2016 px tile does the same job — a portal the tobogganer passes through — and Ottawa already validated that
@@ -476,11 +527,10 @@ reduced motion.
 - **`OQ-QUEBEC-2`** — the territory statement for this level. Not an art decision and deliberately not proposed
   here: `docs/content-review.md` §10 requires a citable fact and nation names taken from that nation's own
   material, and no agent grants cultural sign-off. The art asserts nothing.
-- **`OQ-QUEBEC-3`** — the art bible says "a landmark is under 60 shapes at the hero layer". The Château is
-  **259** and Ottawa's Parliament Hill shipped at **166**, so no landmark has ever met that number and the
-  first one identified cold at 0.92 anyway. Shapes cost source bytes and rasterise time, not runtime memory.
-  Either the figure is wrong or both landmarks are, and it is the art bible's owner to say which. Trimmed here
-  from 281 to 259 by removing rock facets and quoins that vanish at 25 %.
+- ~~**`OQ-QUEBEC-3`**~~ — ~~the art bible says "a landmark is under 60 shapes at the hero layer".~~
+  **CLOSED 2026-09-08 by ADR-0025: the shape budget is retired as a gate.** Shape count has no runtime cost,
+  because every SVG is rasterised to atlas frames. Report the count; the binding tests are blind
+  identification and the two-size test. The art bible §1 now says so. The Château stays at 259.
 - **`OQ-ART-04`** — which red is the National Flag? Still open, and this level dodges it entirely: it draws no
   flag.
 - **One open blocker** — see §0. `content/levels/quebec-city.json` must land in the same commit as this art,

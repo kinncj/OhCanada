@@ -115,6 +115,9 @@
     "brick-light": "#cb8f62",
     "brick-base": "#ab5936",
     "brick-shade": "#6f271f",
+    "cobalt-light": "#2275c6",
+    "cobalt-base": "#153f86",
+    "cobalt-shade": "#091740",
     "copper-light": "#80caaa",
     "copper-base": "#46b896",
     "copper-shade": "#2b8179",
@@ -238,6 +241,13 @@
       "shade": "brick-shade",
       "derived": true,
       "material": "Red-brown facing brick. The Chateau Frontenac's walls, and the Old Quebec brick terraces. Base authored 2026-09-08 from assets/refs/quebec-city/chateau-frontenac-street-elevation.jpg, hue-filtered median of 106441 wall pixels = #a27447 hsl(29,42%,46%) under low warm autumn sun; the same wall in assets/refs/quebec-city/chateau-frontenac-portrait.jpg under overcast winter light medians #735749 hsl(20,21%,37%). The base is set between them and more saturated: hsl(18,52%,44%). It exists because `stone` is Nepean sandstone buff - drawing the Chateau in it would make Quebec City's landmark the same colour as Ottawa's, which is the one confusion this palette must not create."
+    },
+    "cobalt": {
+      "light": "cobalt-light",
+      "base": "cobalt-base",
+      "shade": "cobalt-shade",
+      "derived": true,
+      "material": "Deep blue painted joinery and clock dials. The Halifax Town Clock's four dials, which carry gold numerals and gold hands. Base authored 2026-09-08 from assets/refs/halifax/town-clock-elevation.jpg, converted from its embedded profile to sRGB first: the median of 11500 dial pixels in full sun is #113a7b = hsl(217,76%,27%). The base is set at hsl(218,73%,30%), a little lighter and marginally less saturated, so the brass numerals still read at phone size. It exists because `navy` is midnight-blue duty wool at hsl(228,38%,27%) - the same lightness and half the saturation - and a dial painted in it reads dark grey, which loses the one feature this landmark is named for. `sky-shade` was the other candidate and is rejected on principle: an atmosphere ramp is a hand-authored band set, exempt from the derivation formula, and painting a building with one is how a level starts looking like its own sky."
     },
     "copper": {
       "light": "copper-light",

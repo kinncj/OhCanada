@@ -1,0 +1,268 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "halifax",
+  "subject": "rights",
+  "order": 1,
+  "title": {
+    "en": "Halifax",
+    "fr": "Halifax"
+  },
+  "size": {
+    "x": 7200,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 400,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#3d8ccb",
+    "ground": "#8b857c",
+    "horizon": "#fbfdfe",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Mi'kmaq"
+    ],
+    "statement": {
+      "en": "Halifax is in Mi'kma'ki, the territory of the Mi'kmaq. The Peace and Friendship Treaties signed on this coast are not like the treaties signed later in other parts of Canada. They did not give up the land, or the right to use it.",
+      "fr": "Halifax se trouve au Mi'kma'ki, le territoire des Mi'kmaq. Les traités de paix et d'amitié signés sur cette côte ne ressemblent pas aux traités signés plus tard ailleurs au Canada. Ils n'ont pas cédé les terres, ni le droit de les utiliser."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "cirnac-peace-and-friendship-treaties",
+        "chapter": "Why are Peace and Friendship Treaties different than other historic treaties in Canada?",
+        "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028589/1539608999656",
+        "sourceHash": "2497a7462458b6a0f90acb427b87b05d628bec33627a048c2f7558d0b3bd655e",
+        "asOf": "2026-09-08T00:00:00Z",
+        "volatile": false,
+        "quote": "Unlike later treaties signed in other parts of Canada, the Peace and Friendship Treaties did not involve First Nations surrendering rights to the lands and resources they had traditionally used and occupied."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Kwilmu'kw Maw-klusuaqn Negotiation Office (Assembly of Nova Scotia Mi'kmaw Chiefs)",
+      "url": "https://mikmaqrights.com/",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.12,
+    "deadZone": {
+      "x": 60,
+      "y": 120
+    },
+    "offset": {
+      "x": 140,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 2016,
+      "y": 1280
+    },
+    {
+      "x": 4032,
+      "y": 1280
+    },
+    {
+      "x": 6048,
+      "y": 1280
+    },
+    {
+      "x": 7200,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "halifax-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "halifax-layer-20-citadel",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.16,
+        "y": 0.06
+      },
+      "offset": {
+        "x": 0,
+        "y": 620
+      },
+      "repeatX": true
+    },
+    {
+      "key": "halifax-layer-30-uptown",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.32,
+        "y": 0.14
+      },
+      "offset": {
+        "x": 0,
+        "y": 700
+      },
+      "repeatX": true
+    },
+    {
+      "key": "halifax-layer-40-quayside",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 860
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "town-clock",
+      "name": {
+        "en": "Halifax Town Clock",
+        "fr": "Tour de l'horloge d'Halifax"
+      },
+      "blurb": {
+        "en": "Halifax elected the first representative assembly in Canada, in 1758. Government by election grew here slowly and without war.",
+        "fr": "Halifax a élu la première assemblée représentative au Canada, en 1758. Ici, le gouvernement élu s'est développé lentement et sans guerre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 27,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Democratic institutions developed gradually and peacefully. The first representative assembly was elected in Halifax, Nova Scotia, in 1758."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 2400,
+        "y": 1280
+      },
+      "artKey": "halifax-landmark-town-clock",
+      "radiusPx": 260
+    },
+    {
+      "id": "pier-21",
+      "name": {
+        "en": "Pier 21",
+        "fr": "Quai 21"
+      },
+      "blurb": {
+        "en": "Canada is often called a land of immigrants. In the past 200 years, millions of newcomers have helped to build this country and to defend it.",
+        "fr": "On appelle souvent le Canada une terre d'immigration. Depuis 200 ans, des millions de nouveaux arrivants ont aidé à bâtir le pays et à le défendre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 21,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Canada is often referred to as a land of immigrants because, over the past 200 years, millions of newcomers have helped to build and defend our way of life."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 5600,
+        "y": 1280
+      },
+      "artKey": "halifax-landmark-pier-21",
+      "radiusPx": 240
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 35651584
+}

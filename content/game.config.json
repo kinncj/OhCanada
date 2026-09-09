@@ -11,7 +11,10 @@
   "designWidth": 1080,
   "designHeight": 1920,
   "levels": [
-    "ottawa"
+    "halifax",
+    "quebec-city",
+    "ottawa",
+    "toronto"
   ],
   "locomotionModes": [
     "walk",
@@ -38,11 +41,13 @@
   ],
   "unlockRules": {
     "initialLevels": [
-      "ottawa"
+      "halifax"
     ],
     "order": [
+      "halifax",
+      "quebec-city",
       "ottawa",
-      "quebec-city"
+      "toronto"
     ],
     "stampsToUnlockNext": 1
   },

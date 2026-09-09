@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2016" height="640" viewBox="0 0 2016 640" shape-rendering="geometricPrecision">
-  <title>Dufferin Terrace: a masonry parapet with an ornate cast-iron railing along its head, a rhythm of green lamp standards with white globe lamps, one striped bandstand kiosk, benches, people in winter coats, and one timber footbridge over the toboggan run. The chute wall runs along the foot. Survives the low preset. GENERIC by decision: this tile repeats, so it carries no landmark. World y 700..1340; ground line at local 580.</title>
+  <title>Dufferin Terrace: a masonry parapet with an ornate cast-iron railing along its head, a rhythm of green lamp standards with white globe lamps, one plain open timber shelter - GENERIC, and it is a correction: it was a striped bandstand kiosk with a green-and-white radial roof and a white finial, and an unprimed verifier named Terrasse Dufferin, Quebec City off it. This tile repeats every 2016 px, so a recognisable building on it breaks this subject own neverAdd. Street furniture that is really architecture, benches, people in winter coats, and one timber footbridge over the toboggan run. The chute wall runs along the foot. Survives the low preset. GENERIC by decision: this tile repeats, so it carries no landmark. World y 700..1340; ground line at local 580.</title>
   <rect x="0" y="450" width="2016" height="30" fill="#afaca5"/>
   <rect x="0" y="480" width="2016" height="120" fill="#8b857c"/>
   <rect x="0" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
@@ -400,29 +400,16 @@
   <rect x="1760" y="390" width="150" height="7" fill="#ffffff"/>
   <rect x="1768" y="410" width="14" height="40" fill="#154536"/>
   <rect x="1888" y="410" width="14" height="40" fill="#154536"/>
-  <rect x="682" y="300" width="236" height="150" fill="#f0f2f5"/>
-  <rect x="700" y="318" width="20" height="108" fill="#101629"/>
-  <rect x="734" y="318" width="20" height="108" fill="#101629"/>
-  <rect x="768" y="318" width="20" height="108" fill="#101629"/>
-  <rect x="802" y="318" width="20" height="108" fill="#101629"/>
-  <rect x="836" y="318" width="20" height="108" fill="#101629"/>
-  <rect x="870" y="318" width="20" height="108" fill="#101629"/>
-  <rect x="904" y="318" width="20" height="108" fill="#101629"/>
+  <rect x="682" y="300" width="236" height="150" fill="#5a2d19"/>
+  <rect x="694" y="312" width="212" height="126" fill="#30384f"/>
+  <rect x="682" y="300" width="18" height="150" fill="#96632f"/>
+  <rect x="784" y="300" width="18" height="150" fill="#96632f"/>
+  <rect x="900" y="300" width="18" height="150" fill="#96632f"/>
+  <rect x="694" y="404" width="212" height="18" fill="#c5994d"/>
   <rect x="670" y="288" width="260" height="16" fill="#96632f"/>
-  <path d="M 670 288 L 696 288 L 813 150 Z" fill="#2c8055"/>
-  <path d="M 696 288 L 722 288 L 813 150 Z" fill="#ffffff"/>
-  <path d="M 722 288 L 748 288 L 813 150 Z" fill="#2c8055"/>
-  <path d="M 748 288 L 774 288 L 813 150 Z" fill="#ffffff"/>
-  <path d="M 774 288 L 800 288 L 813 150 Z" fill="#2c8055"/>
-  <path d="M 800 288 L 826 288 L 813 150 Z" fill="#ffffff"/>
-  <path d="M 826 288 L 852 288 L 813 150 Z" fill="#2c8055"/>
-  <path d="M 852 288 L 878 288 L 813 150 Z" fill="#ffffff"/>
-  <path d="M 878 288 L 904 288 L 813 150 Z" fill="#2c8055"/>
-  <path d="M 904 288 L 930 288 L 813 150 Z" fill="#ffffff"/>
-  <path d="M 930 288 L 956 288 L 813 150 Z" fill="#2c8055"/>
-  <rect x="790" y="108" width="20" height="46" fill="#f0f2f5"/>
-  <circle cx="800" cy="100" r="13" fill="#ffffff"/>
-  <path d="M 740 214 L 813 150 L 860 210 L 813 176 Z" fill="#ffffff"/>
+  <path d="M 664 288 L 962 288 L 813 210 Z" fill="#57647a"/>
+  <path d="M 664 288 L 813 210 L 813 288 Z" fill="#7d8fa0"/>
+  <rect x="805" y="204" width="16" height="12" fill="#57647a"/>
   <rect x="156" y="0" width="488" height="12" fill="#96632f"/>
   <rect x="156" y="12" width="10" height="44" fill="#5a2d19"/>
   <rect x="196" y="12" width="10" height="44" fill="#5a2d19"/>

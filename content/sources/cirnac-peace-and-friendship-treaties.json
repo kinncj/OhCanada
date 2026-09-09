@@ -1,0 +1,43 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "cirnac-peace-and-friendship-treaties",
+  "title": "Peace and Friendship Treaties",
+  "publisher": "Crown-Indigenous Relations and Northern Affairs Canada",
+  "edition": "Web page under Negotiations in Atlantic Canada, fetched 8 September 2026",
+  "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028589/1539608999656",
+  "file": "cirnac-peace-and-friendship-treaties.html",
+  "extractedText": "cirnac-peace-and-friendship-treaties.txt",
+  "sha256": "ec4ce2e765c6200dd420ffd9c3678aa47a5e0a4cd3a558ebbe6a2ac01d49238c",
+  "extractedTextSha256": "2497a7462458b6a0f90acb427b87b05d628bec33627a048c2f7558d0b3bd655e",
+  "bytes": 19469,
+  "retrievedAt": "2026-09-08",
+  "licence": "Crown copyright, Government of Canada. Cited and paraphrased; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Peace and Friendship Treaties"
+    },
+    {
+      "title": "Why are Peace and Friendship Treaties different than other historic treaties in Canada?"
+    },
+    {
+      "title": "How is the situation today in the Maritimes and Gaspé different from other parts of Canada?"
+    },
+    {
+      "title": "What happens to the treaties once a new long-term agreement is negotiated?"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "A maintained page describing live negotiations",
+      "problem": "The two sections about what is happening TODAY - the Marshall negotiations in the Maritimes and Gaspé, and what becomes of the treaties once a long-term agreement is signed - describe a process that is still running and can be overtaken by an agreement without the page being rewritten. The historical section this cache is cited for, that the Peace and Friendship Treaties did not involve surrendering rights to the land, is a statement about eighteenth-century documents and does not expire.",
+      "affects": [
+        "How is the situation today in the Maritimes and Gaspé different from other parts of Canada?",
+        "What happens to the treaties once a new long-term agreement is negotiated?"
+      ],
+      "grain": "chapter",
+      "action": "do not draw a claim about the CURRENT state of negotiations from this cache; re-fetch the live page first"
+    }
+  ],
+  "grainNote": "One web page, four headings, no pagination, so `pages` is absent and a chapter carries a title alone. The staleness flag is scoped to the two present-tense sections rather than to the whole page, which is the discrimination `discover-canada.json`'s own grainNote asks for: the historical section a territory statement cites is not made volatile by negotiations moving."
+}

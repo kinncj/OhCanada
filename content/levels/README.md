@@ -42,3 +42,38 @@ not, so a missing variant is a plainer backdrop and never a blank screen.
 Drop `<id>.json` in this directory. `app/adapters/phaser/level-catalog.ts` globs it, so it appears in
 `levelIds()` and can be opened with `?level=<id>` without an engine change. If it needs one, the schema is
 wrong and that is the thing to fix (`docs/plan/slices.md`, Rules).
+
+## Where a level's art may sit, vertically
+
+`LevelScene` paints the ground polygon **opaque, at `DEPTH_GROUND` 400, over every parallax layer**
+(`DEPTH_LAYERS` 100 + index), filling from the polyline down to `size.y`. `selectLayers` models the same
+thing when it ranks layers by coverage, clipping each band at the highest point of the polyline. So:
+
+> **A parallax band is only visible above the ground line.** Rows below it are painted over, and they are
+> also charged to the level's texture budget.
+
+`halifax.json` and `toronto.json` are composed for that: no layer in either has content below y = 1280, and
+each near band's last twenty rows sit under the line on purpose so the tile and the ground polygon meet with
+no step. `assets/style/halifax-level.md` §7.1 records the two levels that are not composed for it —
+`quebec-city-layer-60-slope` (0 of 560 rows visible) and `ottawa-layer-60-ice` (26 of 560) — and calls the
+fix one number per document. It is not: both tiles are the near-ground *surface*, authored to run from the
+ground line down to the bottom of the frame, and the band immediately above each of them (the terrace, the
+canal wall) already occupies every row up to it. Raising the surface tile paints over the promenade; lowering
+the polyline moves the player 560 px into the lower third that ADR-0002 reserves for the question card, and
+the camera cannot compensate because `size.y` equals the design height and is therefore pinned. The change
+that fixes those two levels is in the scene — the ground **fill** below the near layers with the **crest**
+still above them, plus the matching change to `layerCoverage` — and it belongs to the engine, not here.
+
+## `halifax.json` and `toronto.json`
+
+| Part | Status | Owner |
+|---|---|---|
+| `size`, `spawn`, `ground`, `layers`, `pois[].position`, `radiusPx`, `artKey`, `theme` | **Measured.** Transcribed from `assets/style/halifax-level.md` §3 and `assets/style/toronto-level.md` §3, which are the numbers the tiles were drawn against. | art |
+| `theme.ink`, `theme.inkMuted` | **Copied from the other two levels and not derived.** Both sheets say the pair is `ui-a11y`'s and decline to propose one. Neither level's ground stop reaches 4.5:1 against it — Halifax's `#8b857c` needs a darker ink than `#1a2036`, Toronto's `#605a55` needs a lighter one than its sky does — so no single pair satisfies the schema's stated floor at both ends. Open. | ui-a11y |
+| `locomotion` | **Real.** `walk` is the tuning the other levels already ship; `bike` is new and sits inside `TN-LEVEL-03`'s band. `jump` is `null` on the bike: the Toronto art frames no jump and draws no gap, and a bunny-hop would be the trick system `CLAUDE.md` rules out. | engine + art |
+| `textureBudgetBytes` | **Derived**, 34 MiB, and re-checked: `make assets` measures Halifax at 25.01 MiB (74 %) and Toronto at 23.74 (70 %). | art (§5 of each sheet) |
+| `territory` | **Author's proposal, unverified.** Each cites a source cached in `content/sources/`; the nation names come from that nation's own material and no verifier has looked at either. | content-author + verifier |
+| `pois[].blurb`, `fact` | **Author's proposal, unverified**, paraphrased from the cached *Discover Canada* extraction at the recorded hash. | content-author + verifier |
+| `characters` | Empty. The guide and the volunteer have no character document yet. | content-author |
+| `quests` | Empty. | content-author |
+| `subject` | `rights` and `elections`, per `docs/stories/TN-LEVELS-2-to-10-spine.md`. **`content/questions/elections/` does not exist**; `OQ-SPINE-3` already records that level 5's bank is currently inside level 4's. | content-author |

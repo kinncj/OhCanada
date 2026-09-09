@@ -1,0 +1,221 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "toronto",
+  "subject": "elections",
+  "order": 5,
+  "title": {
+    "en": "Toronto",
+    "fr": "Toronto"
+  },
+  "size": {
+    "x": 7680,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 400,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#a5d6ee",
+    "ground": "#605a55",
+    "horizon": "#dce9f3",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Mississaugas of the Credit First Nation"
+    ],
+    "statement": {
+      "en": "Toronto stands inside the boundaries of the Toronto Purchase, Treaty No. 13, made in 1805. These are the treaty lands of the Mississaugas of the Credit First Nation.",
+      "fr": "Toronto se trouve à l'intérieur des limites de l'achat de Toronto, le traité no 13, conclu en 1805. Ce sont les terres visées par ce traité de la Première Nation des Mississaugas of the Credit."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "mncfn-toronto-purchase-treaty-13",
+        "chapter": "The Toronto Purchase Treaty, No. 13 (1805)",
+        "url": "https://mncfn.ca/the-toronto-purchase-treaty-no-13-1805/",
+        "sourceHash": "58c92c469fc9031015911338a5c92c3b79cd12fce00be049520fd09c81d73933",
+        "asOf": "2026-09-08T00:00:00Z",
+        "volatile": false,
+        "quote": "The cities of Etobicoke, Toronto, North York, York and Vaughan are located within the boundaries of the Toronto Purchase Treaty lands."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Mississaugas of the Credit First Nation",
+      "url": "https://mncfn.ca/treaty-lands-and-territory/",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.16,
+    "deadZone": {
+      "x": 80,
+      "y": 120
+    },
+    "offset": {
+      "x": 200,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1920,
+      "y": 1280
+    },
+    {
+      "x": 3840,
+      "y": 1280
+    },
+    {
+      "x": 5760,
+      "y": 1280
+    },
+    {
+      "x": 7680,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "toronto-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "toronto-layer-20-skyline",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.18,
+        "y": 0.08
+      },
+      "offset": {
+        "x": 0,
+        "y": 560
+      },
+      "repeatX": true
+    },
+    {
+      "key": "toronto-layer-30-podium",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.48,
+        "y": 0.24
+      },
+      "offset": {
+        "x": 0,
+        "y": 940
+      },
+      "repeatX": true
+    },
+    {
+      "key": "toronto-layer-40-boulevard",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 900
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "bike",
+      "maxSpeed": 720,
+      "acceleration": 980,
+      "deceleration": 380,
+      "turnAcceleration": 760,
+      "glide": 0.82,
+      "maxSpeedMultiplierDownhill": 1.2,
+      "drive": "held",
+      "jump": null,
+      "interaction": {
+        "reachPx": 260,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 110
+      },
+      "animation": {
+        "speedInput": "speed",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.bike.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "cn-tower",
+      "name": {
+        "en": "CN Tower",
+        "fr": "Tour CN"
+      },
+      "blurb": {
+        "en": "Toronto is the largest city in Canada. It is also the country's main centre for banks and finance.",
+        "fr": "Toronto est la plus grande ville du Canada. C'est aussi le principal centre bancaire et financier du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Toronto is the largest city in Canada and the country’s main financial centre."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3600,
+        "y": 1280
+      },
+      "artKey": "toronto-landmark-cn-tower",
+      "radiusPx": 240
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 35651584
+}

@@ -26,7 +26,9 @@
     "drawn - the Ottawa entry had to be corrected twice for asserting ratios from memory, and the correction",
     "was cheaper to make once here than twice there. Where three views of the same building bracket a ratio,",
     "the bracket is recorded AND the one internally consistent view is named, because a drawing built from the",
-    "middle of three brackets satisfies none of them: that is a mistake this pass made and undid."
+    "middle of three brackets satisfies none of them: that is a mistake this pass made and undid.",
+    "AMENDED 2026-09-08 while drawing Halifax (level 1) and Toronto (level 5). Five subjects added. TWO OF THEM ARE THE POINT OF THIS AMENDMENT. `town-clock` is allowed to demand a place name and `pier-21` IS NOT, and the difference is not a preference: the Town Clock is a specific building with a silhouette nothing else has, and Pier 21 is a brick shed whose one unmistakable feature is the name painted on it, which this project never draws. The PO refused to write an expectedBlindAnswer for it and recorded the Town Clock as a fallback anchor; the answer taken here is BOTH - Pier 21 is drawn, accurately, and asked only for what a shed can carry, and the level's Halifax identification rests on a second non-repeating hero that can carry it. Ottawa's canal passed on the verifier's inference rather than on the art; this is the same mistake refused before it is made rather than after.",
+    "AND THE MEASURING LESSON REPEATS, in a new form. ADR-0014 records that averaging three individually-correct brackets produced a Chateau nobody photographed. Here the first build of the Town Clock took its stage heights and widths from a read of a gridded crop, by eye, and had the colonnade 29 per cent too narrow and the dial 16 per cent too small - errors that only appeared when every figure was re-expressed as a fraction of ONE measured quantity, the base building's width. A ratio is only a measurement if its denominator was measured too."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -563,7 +565,7 @@
         {
           "feature": "the snow lane is a built chute with edges, not open hillside",
           "why": "This is a toboggan RUN, not a snowy field. The containment is the whole read, exactly as the built edges are what make Ottawa's ice a canal rather than a pond.",
-          "detail": "Both references show a chute with high walls and long straight lane dividers running downhill. TrueNorth is a portrait side-scroller and looks ACROSS the run, where the view down it does not exist, so in the side view the containment reads as: a low timber wall running the full width along the far side of the lane with snow capping it, two straight level lane-divider ridges running the full width, and a near snow bank framing the bottom of the frame. Straight, level, parallel edges - a built chute, never a natural slope."
+          "detail": "Both references show a chute with high walls and long straight lane dividers running downhill. TrueNorth is a portrait side-scroller and looks ACROSS the run, where the view down it does not exist, so in the side view the containment reads as: a low timber wall running the full width along the far side of the lane with snow capping it, two straight level lane-divider ridges running the full width, and a near snow bank framing the bottom of the frame. Straight, level, parallel edges - a built chute, never a natural slope. AMENDED 2026-09-08 after a genuinely blind pass recorded this feature ABSENT and read the whole lower half as a frozen ice-covered river: the two lane dividers were a boundary between two flat colour bands, which reads as a change of surface, not as a raised ridge. Each divider is now MODELLED - a shaded far flank, a lit crest and a shaded near flank - so it reads as a bank of snow standing above the lane."
         },
         {
           "feature": "straight parallel runner marks in the lane",
@@ -586,9 +588,15 @@
           "detail": "Six heads tall, the same proportion canon as the player, drawn small because they are further away and never because they matter less. Winter coats, toques, mitts, boots. No outline: a figure authored into a parallax tile is background. NO CULTURAL MARKER OF ANY KIND on any of them - docs/content-review.md 3.3 outcome 2, and it is a rule here rather than an oversight."
         },
         {
-          "feature": "cold winter light on snow that is not flat white",
-          "why": "Snow reads as a surface only against a second tone; a single white fills the lower third with nothing.",
-          "detail": "Use the `ice` ramp for the polished lane against `snow` for the banks, so the lane is a distinct surface."
+          "feature": "the lane is PACKED SNOW, and never the `ice` ramp",
+          "why": "AMENDED 2026-09-08, and this is the most useful thing anyone has learned about this subject. This entry used to say \"use the `ice` ramp for the polished lane against `snow` for the banks\", which made the lane the same blue-white ramp as the Rideau Canal Skateway - IN THE SAME HAND-OFF. A blind verifier read the render as a frozen river with wind-blown ice streaks and scored the built-chute feature absent; none of the eight accepted answers is about water, so the subject was not read as a toboggan run at all. Feature 6 was fighting feature 1 and the strongest colour signal won. Correctly drawn runner marks cannot outvote a ramp.",
+          "detail": "Use the `snow` ramp for the lane: `snow-base` for the lane body, `snow-light` for the sunlit crests and near lip, `snow-shade` for the flanks and the scored grooves. The `ice` ramp belongs to the Rideau Canal and must not appear anywhere on this lane.",
+          "palette": "snow"
+        },
+        {
+          "feature": "at least one rider seated on a flat wooden toboggan, on the lane",
+          "why": "ADDED 2026-09-08. There was no toboggan and no rider anywhere in 2016 px of this composite, and a blind verifier is being asked to name a sport from an empty surface. The single cheapest thing that says toboggan run is a toboggan on it.",
+          "detail": "Seated, knees up, leaning back, one hand on the rope, on a flat wooden deck with a curled front - the posture in quebec-city/toboggan-slide-riders.jpg. Six heads tall in the standing canon, drawn seated. No outline: a figure authored into a parallax tile is background. No cultural marker of any kind."
         }
       ],
       "simplifyAway": [
@@ -602,7 +610,9 @@
         "hockey boards, nets or line markings: this is a slide, not a rink",
         "a ski lift, a chairlift or a tow rope",
         "mountains on the horizon",
-        "any lettering, signage or wordmark, in either language"
+        "any lettering, signage or wordmark, in either language",
+        "the `ice` ramp anywhere on the lane. Scoped deliberately: `ice` is required of rideau-canal-skateway and forbidden here, and the reason is that the two subjects are judged in the same hand-off and a shared ramp made one of them read as the other",
+        "a recognisable building of any kind on these repeating tiles, INCLUDING street furniture. The terrace tile carried a striped bandstand kiosk with a green-and-white radial roof and a white finial, drawn from quebec-city/dufferin-terrace-boardwalk.jpg, and an unprimed verifier named Terrasse Dufferin, Quebec City off it - from a tile whose own rule this list already was. It is now a plain open timber shelter. The lesson generalises: furniture that is really architecture is architecture"
       ],
       "notes": [
         "dufferin-terrace-toboggan-slide-1905.jpg is the level's composition reference: the chute, its walls, the",
@@ -611,7 +621,8 @@
         "Both historical photographs show timber hoop arches over the run. The shipped tile draws ONE timber",
         "footbridge per 2016 px tile instead: a run of hoops would be overhead in every frame including the one",
         "framing the landmark, and the bridge is the same 'portal the player passes through' that Ottawa validated.",
-        "Where it falls, and why it matters: see assets/style/quebec-city-level.md section 3."
+        "Where it falls, and why it matters: see assets/style/quebec-city-level.md section 3.",
+        "BLIND PASS, 2026-09-08. This subject FAILED: the composite read as a frozen ice-covered river, and the built-chute feature was recorded absent. The two causes were in this contract rather than in the drawing - the `ice` ramp on the lane and flat colour-band dividers - and both are corrected above. A previous, primed reading had recorded the same feature PRESENT, which is what a primed reading is worth."
       ]
     },
     {
@@ -660,6 +671,479 @@
         "has the contract waiting instead of inventing one. Its lists are dormant while `renders` is empty.",
         "The id avoids ordinary English words on purpose. It was `quebec-city-from-the-river` for one run and the leak scanner in scripts/lib/art-handoff.mjs failed the hand-off on the token \"from\", which the briefing it writes obviously contains. That scanner takes single words from `id` and `expectedBlindAnswer` only, and its own comment says it was narrowed to those because an earlier version fired on \"from\", \"with\" and \"every\" - it assumes those two fields hold only distinctive words. THAT ASSUMPTION IS A CONSTRAINT ON THIS FILE and nothing states it here, so it is stated here: no subject id and no expectedBlindAnswer may contain a common English word of four letters or more. It cost one red run to find."
       ]
+    },
+    {
+      "id": "town-clock",
+      "subject": "The Old Town Clock on Citadel Hill, Halifax",
+      "renders": [
+        "src/svg/halifax/landmark-town-clock@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. scripts/lib/art-handoff.mjs builds it with `singleSource()`, the same builder as peace-tower and chateau-frontenac.",
+      "expectedBlindAnswer": [
+        "Halifax Town Clock",
+        "Old Town Clock",
+        "Halifax",
+        "the Town Clock, Halifax",
+        "Citadel Hill clock tower"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS ALLOWED TO DEMAND A PLACE NAME. It is a single non-repeating POI hero drawing one",
+        "specific building whose stack - white clapboard box, round colonnade, blue-and-gold dial, arched",
+        "belfry, green copper ogee dome, gold ball - is not shared by any other building this game will",
+        "ever draw. A verifier who cannot name it is reporting a defect in the drawing.",
+        "IT IS ALSO THE LEVEL'S ONLY ANCHOR THAT CAN. `pier-21` is the level's other hero and is NOT asked",
+        "for a place name; `halifax-quayside` is two repeating tiles and is not asked either. So Halifax",
+        "as a place rests on this render alone, which is a deliberate structural choice and is stated here",
+        "rather than left to be discovered: if this landmark stops identifying, the level stops being",
+        "identifiable, and no amount of work on the other two subjects buys it back."
+      ],
+      "referenceFiles": [
+        "halifax/town-clock-elevation.jpg",
+        "halifax/town-clock-close-elevation.jpg",
+        "halifax/town-clock-1948.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a deep blue dial with gold hands and gold marks, on a white drum",
+          "why": "The single strongest cue, and the pair that stops this landmark and Ottawa's from being the same landmark. The Peace Tower's dial is WHITE on a buff Gothic sandstone shaft; this one is BLUE on white-painted wood under a green copper dome. Drawn in one colour scheme the two levels would have one clock tower between them.",
+          "detail": "MEASURED on halifax/town-clock-elevation.jpg (1280x1600, converted from its embedded profile to sRGB before anything was sampled): the dial's centre is at (660, 848), its diameter is about 92 px, and the clock drum it sits on is 185 px wide, so DIAL : DRUM = 0.50. The dial colour is the hue-filtered median of 11500 sunlit dial pixels, #113a7b = hsl(217,76%,27%); `cobalt` was added to palette.json for it at hsl(218,73%,30%), a little lighter so the brass reads at phone size. The shipped art draws the dial at 115 on a 232 drum = 0.496. IT WAS DRAWN AT 0.59 FOR ONE BUILD, on a ratio taken from a colour segmentation that the sky above and the flanking sash windows either side were both contaminating; the number that stuck was read off a labelled grid crop of the same file, where what is being measured can be seen.",
+          "palette": "cobalt, brass, white"
+        },
+        {
+          "feature": "a green copper ogee dome under a small balustraded cupola and a gold ball",
+          "why": "The top of the silhouette, and the second thing a person uses to recognise it. A hemispherical dome or a pointed spire in its place changes the building.",
+          "detail": "MEASURED by copper-hue segmentation on halifax/town-clock-elevation.jpg, which is the one measurement on this subject a segmentation could make cleanly because nothing else in the frame is that hue: the dome occupies rows 600..700 and columns 567..751, so 185 wide by 100 tall - HEIGHT : WIDTH = 0.54, and WIDTH = 0.298 of the base building. It is an ogee, wider below than at the crown, not a hemisphere. Above it a short white cupola with a balustrade, and one gold ball finial about 0.05 of the base width.",
+          "palette": "copper, white, brass"
+        },
+        {
+          "feature": "an open arched belfry with bells, between the dial and the dome",
+          "detail": "A white octagonal stage with round-arched openings, the centre one wider than the two flanking it, and two bells visible inside. MEASURED: it occupies rows 700..788 and is about 150 px wide, which is 0.242 of the base building's width - NARROWER than the drum below it (0.298) and than the dome above it (0.298), and that pinch is what makes the stack read as a stack."
+        },
+        {
+          "feature": "a round colonnaded gallery below the dial, wider than every stage above it",
+          "why": "It is what makes the building classical rather than ecclesiastical, and it is the stage this drawing got wrong twice - 29 per cent too narrow on the first build and 15 per cent too WIDE on the correction, because the correction's denominator was contaminated. It is now measured off a grid crop.",
+          "detail": "MEASURED: the gallery's elliptical roof rim runs x 497..822 at row 935, so it is 325 px wide, which is 0.524 of the base building's width (620 px, x 357..977 at row 1150). The column ring inside it is 307 px. Against 0.298 for the clock drum above. A ring of plain columns - six read correctly; the number may differ from the photograph, the width may not - under a green copper rim, around a smaller white drum with one window."
+        },
+        {
+          "feature": "white painted wood, not stone and not brick",
+          "detail": "Every wall on this building is white-painted clapboard on a stone rubble plinth. Use the `white` ramp for the walls and `path` for the plinth. NOT `stone` (that is Nepean sandstone and belongs to Parliament Hill) and NOT `brick`.",
+          "palette": "white, path"
+        },
+        {
+          "feature": "it stands on a grassy slope, not on a street or a plaza",
+          "why": "The hill is half of why the building is where it is and half of what a photograph of it shows. On flat paving it reads as a town hall.",
+          "detail": "A turf slope running under the stone plinth, with the ground falling away either side. halifax/town-clock-elevation.jpg shows the glacis behind and below it; halifax/town-clock-1948.jpg shows the same slope from above with the town and the harbour beyond."
+        },
+        {
+          "feature": "proportion: a wide low base carrying a tall narrow stack",
+          "detail": "MEASURED against the base building's width, which is the one unambiguous quantity in the picture: base width 620 px (x 357..977 at row 1150); total height from the top of the gold ball (row 548) to the foot of the plinth (row 1310) 762 px, so WIDTH : HEIGHT = 1 : 1.23. Everything above the base roof (rows 548..1090) is 542 px = 0.874 of the base width. The shipped art is 738 x 953 = 1 : 1.29 with 0.894 above the roof, both inside the plus-or-minus 10 per cent band. Anything taller than 1 : 1.6 stops being this building and becomes a steeple."
+        }
+      ],
+      "simplifyAway": [
+        "clapboard boarding: it is a surface pattern, and art-bible section 1 forbids drawing one",
+        "glazing bars: a twelve-pane sash becomes one dark pane with one cross, which is rhythm replacing count",
+        "Roman numerals on the dial: at 137 px a numeral is 9 px, so they become four cardinal marks. The same substitution Ottawa made on the Peace Tower, for the same reason",
+        "the individual balusters of the cupola rail below 8 px",
+        "the Citadel's signal mast and whatever flag is flying from it. It stands behind the clock in halifax/town-clock-elevation.jpg and it is really there, but at cartoon scale a bare mast is a line and a drawn flag would assert something this project has not verified (OQ-ART-04)",
+        "the mouldings, dentils and brackets of the cornices: each becomes one flat band",
+        "the stone rubble coursing of the plinth: four flat marks, not a pattern"
+      ],
+      "neverAdd": [
+        "a pointed spire, a Gothic arch or any tracery ON THIS BUILDING. Scoped deliberately: a Gothic arch is required of peace-tower and forbidden here, and the reason is that this is a Palladian tower of 1803, not a Gothic Revival one",
+        "a cross, a weathervane or any religious emblem: it is not a church, and a cross on the cupola is the single most likely wrong addition",
+        "battlements, crenellation or arrow slits",
+        "a flag, a coat of arms, a wordmark or any lettering",
+        "brick or stone walls above the plinth",
+        "a second dial on the same visible face"
+      ],
+      "openQuestions": [
+        "OQ-ART-04"
+      ],
+      "notes": [
+        "halifax/town-clock-elevation.jpg is the PRIMARY reference and the only one measured. It is a long",
+        "street view in full sun, near-orthographic, with the whole building in frame, and it is the one",
+        "HOW THESE NUMBERS WERE TAKEN, because it matters on this photograph. Automated segmentation works for the dome, whose copper hue is unique in the frame, and FAILS everywhere else: the sky is a pale low-saturation blue that a white mask catches, the hillside behind the building is bright, and the drum's flanking sash windows and the gold hands both cut a blue mask. Three widths were wrong before this was noticed. The figures above are read off a LABELLED GRID CROP of the same file - the crop, its offsets and its scale are in scratch/gen/, and anyone can regenerate it - which is slower and is the only method here whose errors are visible while you are making them.",
+        "internally consistent view of the three.",
+        "halifax/town-clock-close-elevation.jpg is closer and from below, so its vertical proportions are",
+        "foreshortened, and its white balance is warm dusk - the grass reads brown. Use it for the belfry,",
+        "the bells and the window layout. NEVER for colour and never for a height ratio.",
+        "halifax/town-clock-1948.jpg is public domain and shows the clock from Citadel Hill with the town",
+        "and the harbour behind, which is the level's own composition. Its dial is WHITE: the dial was",
+        "repainted blue with gold later, and the level draws today's building. Use it for the setting.",
+        "PLACEMENT FLOOR: do not draw this landmark below 300 px wide anywhere the player is meant to",
+        "recognise it. That is the verifier's floor from Ottawa, adopted rather than re-derived, because no",
+        "blind pass has been run on this subject and the artist does not set the threshold for their own",
+        "work. What the size ladder shows as a DRAWING OBSERVATION and explicitly not an identification: at",
+        "200 px every mustBeRight feature is still legible, including the two bells and the gold ball.",
+        "The two-size test in art-bible section 5 was run at the shipping size of 800 x 1010 and passed at",
+        "both probes, which is what ADR-0013 as amended requires before a landmark ships at 1x rather than",
+        "the 2x default. The measured saving is 12.32 MiB -> 3.08 MiB of decoded texture."
+      ]
+    },
+    {
+      "id": "pier-21",
+      "subject": "The immigration and ocean terminal buildings at Pier 21, Halifax",
+      "renders": [
+        "src/svg/halifax/landmark-pier-21@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "an ocean terminal",
+        "a passenger ship terminal",
+        "a dockside terminal",
+        "a harbour terminal",
+        "a pier shed and an ocean liner",
+        "an immigration shed",
+        "Pier 21",
+        "Halifax"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS DELIBERATELY NOT ASKED FOR A PLACE NAME, and the reason is a property of the",
+        "building rather than of the drawing. Pier 21 is a brick shed. Its one unmistakable feature in every",
+        "photograph is the name PAINTED ON IT, and a round emblem beside the name - and this project draws",
+        "no lettering anywhere, for a reason that has nothing to do with this level: make verify-art refuses",
+        "any render source containing a <text> element, because a name drawn into the picture defeats every",
+        "byte-level leak check in the hand-off. Strip the name and what is left is a three-storey brick",
+        "block with a streamlined entrance, which is a building type and not a place.",
+        "SO THE GENERIC ANSWERS PASS. `Pier 21` and `Halifax` stay in the list because a verifier who names",
+        "them is not wrong - the liner, the terminal block and the immigrant train together are a fair",
+        "inference - but they are NOT required, and the gate must not reward them. Ottawa's canal subject",
+        "demanded a city name from a tile its own notes forbade putting a city cue on, passed on the",
+        "verifier's inference from project context, and had to be amended afterwards. The PO flagged this",
+        "one in advance and declined to write an expectedBlindAnswer for it. This is the answer to that:",
+        "draw the shed accurately, ask it only for what it can carry, and put the level's place-identity on",
+        "`town-clock`, which can.",
+        "One answer was removed from this list before it ever ran: \"a port terminal\". The hand-off's",
+        "leak scanner takes single words of four letters or more out of `id` and `expectedBlindAnswer`",
+        "and refuses any handed-over text containing one, and the briefing it writes contains the word",
+        "\"important\". `quebec-city-riverfront`'s note states the rule as \"no common English word of",
+        "four letters or more\"; the real rule is narrower and nastier - no word that is a SUBSTRING of",
+        "any word in the briefing. Checked mechanically against the real `leakTokens` before shipping."
+      ],
+      "referenceFiles": [
+        "halifax/pier-21-entrance.jpg",
+        "halifax/pier-21-liner-1934.jpg",
+        "halifax/pier-21-and-the-seaport.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a three-storey red brick block with a flat stone-coped parapet",
+          "why": "It is the building. Everything else in the frame is context for it.",
+          "detail": "Red-brown facing brick with a pale stone coping at the parapet, one stone band below the coping and one string course at mid height, and a rhythm of rectangular sash windows with stone sills, three storeys of them. MEASURED on halifax/pier-21-entrance.jpg, converted to sRGB first: the hue-filtered median of 104302 sunlit brick pixels is #c07e70 = hsl(11,39%,60%). That is a LIGHTER, REDDER brick than the Chateau Frontenac's, whose sunlit median is hsl(29,42%,46%). The shipped art uses the existing `brick` ramp anyway, whose light tone is hsl(25,52%,59%) - the same lightness, 14 degrees more orange. A second near-identical brick ramp was rejected: the two buildings are in different levels and never on screen together, and the palette does not need two reds to say brick. The departure is recorded here rather than hidden.",
+          "palette": "brick, stone"
+        },
+        {
+          "feature": "a pale streamlined entrance standing proud of the brick",
+          "why": "It is the one piece of architecture on the building that is not a shed, and it is what dates it. Without it the block is a warehouse.",
+          "detail": "A pale rendered pylon with rounded corners, a curved cantilevered canopy over the doorway and a small balcony with a plain pipe rail above it. Drawn from halifax/pier-21-entrance.jpg. NOT a classical portico, NOT columns."
+        },
+        {
+          "feature": "long low pier sheds running away on both sides",
+          "why": "A terminal is a shed with a small building attached, not a building on its own, and the length is the whole character of the place.",
+          "detail": "Two-storey sheds with shallow roofs carrying a raised monitor along the ridge, a rhythm of small windows, and walls markedly paler than the brick. They run off both edges of the frame: the real shed is over 350 m long and nothing in a portrait frame can show that except by leaving."
+        },
+        {
+          "feature": "an ocean liner berthed alongside, rising above the shed roof",
+          "why": "The ship is what a pier shed is FOR, and it is the difference between this render and a row of warehouses. halifax/pier-21-liner-1934.jpg shows exactly this: a three-funnelled liner alongside the shed, taller than everything on the pier.",
+          "detail": "A dark hull with a red boot band, a white superstructure with window bands and a row of boats along the boat deck, two buff funnels with dark tops, and one plain mast. Generic: no line's livery, no name, no house flag. Two funnels rather than three - the count may differ from the photograph, the massing may not."
+        },
+        {
+          "feature": "a railway coach standing on a track in front of the building",
+          "why": "People who arrived here left by train, and the track runs along the pier apron in every reference. It is drawn because halifax/pier-21-entrance.jpg shows a preserved coach standing exactly there, not because a train would be a nice idea.",
+          "detail": "A dark green heritage passenger coach on rails and sleepers, with a window rhythm, a brass stripe under the windows and two trucks. No lettering, no number, no reporting mark."
+        }
+      ],
+      "simplifyAway": [
+        "brick coursing and mortar joints",
+        "window glazing bars: one dark pane with one horizontal bar",
+        "the fire escapes, downpipes, roof vents and modern plant on the shed roofs",
+        "the parapet's brick corbelling and the moulded stone profiles: each becomes one flat band",
+        "the coach's underframe detail, couplers, steps and roof vents"
+      ],
+      "neverAdd": [
+        "the painted name on the parapet, in any size or language, or any other lettering anywhere in the level. It is what the building is known by and it is the one thing this project cannot draw",
+        "the round emblem beside the name on the brick face: it is the operating institution's mark, and an approximated mark is worse than none - the same reasoning art-bible section 10 applies to the officer's insignia",
+        "a clock face on this building. There is no clock here; the round sign is a sign, and drawing it as a clock would make this landmark and Ottawa's and Halifax's own Town Clock all the same landmark",
+        "a flag, a coat of arms or a house flag on the liner",
+        "a lighthouse, a fort or a bridge in the same frame: none of them is at Pier 21"
+      ],
+      "notes": [
+        "halifax/pier-21-entrance.jpg is CC BY 3.0 and is the primary reference for the brick block, the",
+        "streamlined entrance, the stone banding and the coach. It is an oblique view, so it is a reference",
+        "for elements and colour and NOT for a width-to-height ratio.",
+        "halifax/pier-21-liner-1934.jpg is public domain, is an aerial, and is the reference for the shed's",
+        "length, the liner alongside and the covered gangway. It is also the only reference showing what the",
+        "place was built to do.",
+        "halifax/pier-21-and-the-seaport.jpg is public domain, small and low contrast. It is here for one",
+        "thing: it shows how completely the painted name carries the building's identity, which is the",
+        "finding this subject's expectedBlindAnswerNote rests on.",
+        "PLACEMENT FLOOR: 300 px wide, adopted from Ottawa as above. The shipped source is 900 x 620."
+      ]
+    },
+    {
+      "id": "halifax-quayside",
+      "subject": "A timber harbour boardwalk running past working wharves",
+      "renders": [
+        "src/svg/halifax/layer-30-uptown.svg",
+        "src/svg/halifax/layer-40-quayside.svg"
+      ],
+      "renderRecipe": "Composite the two, the town above the quayside, the quayside placed 160 px below the town tile's top edge (world y 860 against 700). Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1800 and 2016) rather than laying them side by side, and draw the quayside over the town where they overlap, which is the order the level uses. Neither file answers the subject alone: a town with no waterfront is a town, and a boardwalk with nothing behind it is a fence. `twoParallaxTiles({ farMatch: 'uptown', nearMatch: 'quayside', nearTop: 160 })`.",
+      "expectedBlindAnswer": [
+        "a harbour boardwalk",
+        "a waterfront boardwalk",
+        "a wharf promenade",
+        "a dockside boardwalk",
+        "a harbour walk",
+        "a timber boardwalk",
+        "a working waterfront"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. Both renders are REPEATING parallax tiles - 1800 px and 2016 px - so a unique",
+        "landmark drawn on either appears three or four times across the level. Nothing on them may name a",
+        "city, and it follows that nothing may be DEMANDED of them that names one. No answer in this list",
+        "names Halifax, Nova Scotia, the Citadel or Pier 21, and a verifier who does name one of them is",
+        "not wrong - they are just not required to, and the gate must not reward it.",
+        "WHERE HALIFAX ACTUALLY COMES FROM: `town-clock`, a separate non-repeating POI hero that IS",
+        "required to be named. The boardwalk is where the player walks; the clock is what says which city."
+      ],
+      "referenceFiles": [
+        "halifax/waterfront-boardwalk.jpg",
+        "halifax/waterfront-and-skyline.jpg",
+        "halifax/waterfront-harbour.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a planked timber deck with a low kerb at the water's edge",
+          "why": "It is a BOARDWALK, not a quay and not a street. The planking and the timber edge are the whole read, exactly as the built edges are what make Ottawa's ice a canal rather than a pond.",
+          "detail": "Grey weathered planking with the boards running ACROSS the view, so the lines are horizontal. They were drawn as vertical separators for one composite and read as a picket fence. A low timber kerb along the far edge, with a lighter sunlit top."
+        },
+        {
+          "feature": "ornate dark lamp standards, bollards and benches along the water's edge",
+          "why": "It is what makes the deck a public promenade rather than a working pier, and it is the strongest built rhythm on these tiles.",
+          "detail": "Tall dark posts with a single white globe, drawn from halifax/waterfront-boardwalk.jpg; squat rounded mooring bollards; timber benches with dark ends. Everything the boardwalk carries stands at the FAR edge, so the deck nearest the camera stays clear for the player."
+        },
+        {
+          "feature": "open slips of water between the wharves, with moored hulls",
+          "why": "Half of a working waterfront is the water between the wharves, and a boardwalk with no water in the frame is a street.",
+          "detail": "Short bands of harbour water between the buildings, with a moored sailing hull and masts, and a tug with a dark hull and a white wheelhouse. Generic: no name, no livery, no house flag."
+        },
+        {
+          "feature": "low waterfront buildings with steep gables and dormers",
+          "detail": "Two- and three-storey buildings with steep pitched roofs, dormer rhythm and shopfronts at the foot, plus one timber cargo shed with big doors and a monitor roof. Rhythm, not count."
+        },
+        {
+          "feature": "people walking, to the same cartoon proportions as every other character",
+          "why": "CLAUDE.md requires identical cartoon proportions for every character, and background figures in a parallax tile are where that rule is quietly broken first.",
+          "detail": "Six heads tall, the same proportion canon as the player, drawn small because they stand further from the camera and never because they matter less. Summer clothes. No outline: a figure authored into a parallax tile is background. NO CULTURAL MARKER OF ANY KIND on any of them - docs/content-review.md 3.3 outcome 2, applied deliberately rather than by omission."
+        },
+        {
+          "feature": "gulls",
+          "detail": "A few white gulls on the bollards and in the air. Small, flat, two tones and a beak. They are the one thing on these tiles that says salt water rather than river."
+        }
+      ],
+      "simplifyAway": [
+        "individual planks below 12 px, and every plank end",
+        "the pile cribbing under the deck: it is below the level's ground line and is never drawn",
+        "rigging, shrouds and sails on the moored hulls: a mast and one crosstree is the rhythm",
+        "faces on the background figures below 12 px",
+        "street furniture above the lamp line"
+      ],
+      "neverAdd": [
+        "any named or recognisable building drawn into either of these two REPEATING tiles. Scoped deliberately: the Town Clock is required on the town-clock subject and forbidden here, and the reason is the tiling, not the building",
+        "any lettering, signage or wordmark, in either language",
+        "a lighthouse: Peggy's Cove is not in Halifax and is not this level",
+        "snow, ice or bare winter trees: this level is summer, and two of this game's other levels are already winter",
+        "mountains on the horizon"
+      ],
+      "notes": [
+        "halifax/waterfront-boardwalk.jpg is CC BY 2.0 and is the primary composition reference: the deck,",
+        "the lamps, the benches, the bollards and the interpretive panel in one frame. It is heavily",
+        "processed - dark, high contrast, a storm sky - so it is a reference for GEOMETRY only and never",
+        "for colour.",
+        "halifax/waterfront-and-skyline.jpg and halifax/waterfront-harbour.jpg are CC0 and are the colour",
+        "and massing references: the timber wharves, the low waterfront buildings, the slips and the town",
+        "rising behind them."
+      ]
+    },
+    {
+      "id": "cn-tower",
+      "subject": "The CN Tower, Toronto",
+      "renders": [
+        "src/svg/toronto/landmark-cn-tower@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "CN Tower",
+        "Toronto",
+        "the CN Tower, Toronto",
+        "Toronto downtown"
+      ],
+      "expectedBlindAnswerNote": [
+        "ALLOWED to demand a place name, on the same test `chateau-frontenac` passes: a single",
+        "non-repeating POI hero drawing one specific structure. It is the only thing in the Toronto level",
+        "that names a city - `toronto-trail` is two repeating tiles and is generic on purpose."
+      ],
+      "referenceFiles": [
+        "toronto/cn-tower-skyline-elevation.jpg",
+        "toronto/cn-tower-pod.jpg",
+        "toronto/cn-tower-shaft.jpg",
+        "toronto/skyline-overcast.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "one wide observation pod about three fifths of the way up a very slender shaft",
+          "why": "The composition, and the thing that makes this a tower and not a mast. The maskRegion below exists to put a number on how much of the identification it carries.",
+          "detail": "MEASURED on toronto/cn-tower-skyline-elevation.jpg (1600x1012) by thresholding the tower against the sky row by row. EVERY FIGURE IS IN MAIN POD WIDTHS, not in fractions of the total height, and that is deliberate: the tower's base is hidden behind the waterfront in this view and in every other reference here, so a ratio against the total height would have an unmeasured denominator - the mistake ADR-0014 records for the Chateau, in a different disguise. Pod maximum width 45 px at row 402. Shaft immediately below the pod 14 px, so SHAFT : POD = 1 : 3.2. Mast tip at row 207, so tip to pod centre = 195 = 4.33 pod widths. Shaft at row 554 is 18 px and the base flare begins about row 640, 5.3 pod widths below the pod centre. The shipped art is a 97 px pod with a 29 px shaft (1 : 3.3), 4.33 pod widths of mast, and the flare at 5.3. Anything with a shaft thicker than 1 : 2.5 stops being this tower.",
+          "maskRegion": {
+            "x": 296,
+            "y": 352,
+            "w": 108,
+            "h": 128
+          },
+          "whyMasked": "MEASURED against the shipped 700x1020 render: this rectangle covers the whole observation pod - the deck ring, both dark glass bands and the white radome - and leaves the mast, the smaller upper pod, the shaft, the splayed base, the domed stadium and the glazed block untouched. DIAGNOSTIC, never gating. The Chateau's masked probe dropped 0.80 to 0.35 and the Peace Tower's only 0.92 to 0.80, and the difference told us the Chateau identifies by ensemble and the Peace Tower by two hard tokens. This subject looks like a two-token one - the pod and the dome at its foot - and the mask is how that gets checked instead of assumed."
+        },
+        {
+          "feature": "the pod's widest element is a fat white ring below its glass bands",
+          "why": "It is the single most distinctive thing about the pod and it is what a cartoon flattens away first, leaving a plain disc on a stick.",
+          "detail": "From top to bottom: a pale metal deck ring, a dark glass band, a pale ring, a second dark glass band, then a WHITE torus that is wider than all of them, then a dark under-deck. Drawn from toronto/cn-tower-pod.jpg.",
+          "palette": "white, slate, path"
+        },
+        {
+          "feature": "a second, much smaller pod higher up the shaft",
+          "detail": "MEASURED: at row 310 the shaft widens to 16 px against the main pod's 45, so the upper pod is 0.36 of the main pod's width, and it sits 2.04 pod widths above the main pod's centre. It is small and it is not optional: without it the tower is a single-pod tower, which is a different building."
+        },
+        {
+          "feature": "a long tapering antenna mast above the pod",
+          "detail": "About four pod widths of mast above the pod centre, tapering to a point. DELIBERATE EXAGGERATION, and the only one on this subject: in the best reference here the mast is TWO TO THREE PIXELS wide, at the resolution limit of the photograph, which is 5 px at the size shipped and gone at the 25 per cent probe. It is drawn at 0.155 of the pod width at its base and 0.06 at the tip. Exaggerating an identifying feature is simplification (art-bible 5.2); adding one is invention."
+        },
+        {
+          "feature": "a tapered concrete shaft that splays into legs at its foot",
+          "detail": "Warm pale grey concrete, not steel and not glass. The shaft is a hexagonal prism in life; in elevation it reads as one tapering mass with two darker vertical strips for the ribs. At the bottom it splays out into legs - it is not a cylinder standing on the ground.",
+          "palette": "path"
+        },
+        {
+          "feature": "a low white domed stadium at the tower's foot",
+          "why": "CONTEXT, drawn because it is really there and is in front of the tower from the water in every wide reference here, and because it is what separates this render from a generic concrete communications tower. The same role Centre Block's wings play for the Peace Tower.",
+          "detail": "A shallow white dome on a low ring wall, its top about a sixth of the tower's height, standing in FRONT of the tower's base and hiding part of it. Its width is about a third of the tower's height. No roof panel joints, no retractable roof segments, no lettering."
+        }
+      ],
+      "simplifyAway": [
+        "the external elevator tracks and their glass fronts",
+        "the pod's coloured architectural lighting and any red band: it is programmable and changes nightly, so drawing one state asserts a state",
+        "the glass floor and the outdoor walk platform",
+        "the third rib of the shaft: two shaded strips read as a ribbed shaft, three read as noise",
+        "aerials, dishes and the plant on the mast",
+        "the stadium's roof panel joints, its hotel windows and its ring-wall structure below 12 px"
+      ],
+      "neverAdd": [
+        "lattice steelwork or guy wires: it is a free-standing reinforced concrete tower and drawing it as a guyed lattice mast is the single most likely wrong simplification",
+        "a second observation pod at the same level, a crown, a spire or a dome ON THE TOWER",
+        "a revolving restaurant sign, a wordmark or any lettering anywhere in the level",
+        "a flag on the mast",
+        "a clock face: there is no clock, and this game already has two clock towers"
+      ],
+      "notes": [
+        "toronto/cn-tower-skyline-elevation.jpg is CC0, is the PRIMARY reference and is the only one",
+        "measured: a long-distance view from the islands, so it is near-orthographic and the whole tower is",
+        "in frame. Its base is hidden behind the waterfront, which is why every ratio here is against the",
+        "pod's width rather than against the total height.",
+        "toronto/cn-tower-pod.jpg is CC BY 3.0 and is the reference for the pod's bands and the radome.",
+        "It is a close view from below, so it is a reference for the band ORDER and nothing else.",
+        "toronto/cn-tower-shaft.jpg is CC0, is an extreme worm's-eye view, and is here for the concrete's",
+        "colour and the ribbed shaft. It is useless for any proportion at all.",
+        "toronto/skyline-overcast.jpg is CC0 and shows the tower small against a flat overcast sky, which",
+        "is the closest thing here to how it reads at the size ladder's lower rungs.",
+        "PLACEMENT FLOOR: 300 px wide, adopted from Ottawa. The shipped source is 700 x 1020, and the tower",
+        "itself is 97 px wide at its widest - so the floor is about the FILE, not the shaft, and a level",
+        "that scales this landmark down loses the upper pod first and the mast second.",
+        "The two-size test was run at the shipping size and passed at both probes: at 25 per cent the pod,",
+        "the upper pod, the mast and the dome all survive, and the 120 px silhouette is a needle with one",
+        "bulge and a dome at its foot."
+      ]
+    },
+    {
+      "id": "toronto-trail",
+      "subject": "A separated cycling path along a city waterfront, under a downtown skyline",
+      "renders": [
+        "src/svg/toronto/layer-20-skyline.svg",
+        "src/svg/toronto/layer-40-boulevard.svg"
+      ],
+      "renderRecipe": "Composite the two, the skyline above the boulevard, the boulevard placed 340 px below the skyline tile's top edge (world y 900 against 560). Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1800 and 1440), and draw the boulevard over the skyline where they overlap. Neither file answers the subject alone: a skyline with no street is a skyline, and a path with nothing behind it is a path. `twoParallaxTiles({ farMatch: 'skyline', nearMatch: 'boulevard', nearTop: 340 })`.",
+      "expectedBlindAnswer": [
+        "a bike path",
+        "a cycle path",
+        "a bike lane",
+        "a city bike path",
+        "a waterfront bike path",
+        "a downtown bike lane",
+        "a cycle track"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, and this one has teeth: the skyline tile is the layer the LOW preset keeps,",
+        "so it is the most-seen art in the level, and it is precisely the layer that may not carry a",
+        "recognisable building. Every tower on it is a plain mass. A verifier who names Toronto from these",
+        "two tiles would be reporting a defect, not a pass.",
+        "WHERE TORONTO ACTUALLY COMES FROM: `cn-tower`, a separate non-repeating POI hero. The trail is",
+        "where the player rides; the tower is what says which city."
+      ],
+      "referenceFiles": [
+        "toronto/waterfront-trail.jpg",
+        "toronto/bike-lane-street.jpg",
+        "toronto/skyline-overcast.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "an asphalt path carrying a green line and a blue line along its length",
+          "why": "It is what makes the path a signed cycling route rather than a footpath, and the paired coloured lines are the strongest single piece of built character on these tiles.",
+          "detail": "Two flat longitudinal stripes, one green and one blue, running the full width of the tile, drawn from toronto/waterfront-trail.jpg where they run the length of the waterfront path. Straight, level and parallel."
+        },
+        {
+          "feature": "a white bicycle mark and a direction arrow painted on the surface",
+          "why": "It is what says BIKE rather than footpath, and it is the only symbol in the level.",
+          "detail": "Two wheels, a frame, bars and a saddle, flat white, drawn as shapes from toronto/bike-lane-street.jpg. A road marking, not a sign. There is no lettering anywhere in this level."
+        },
+        {
+          "feature": "a planted verge and a kerb separating the path from the road",
+          "why": "The separation is the whole point of the facility, and a lane painted at the edge of traffic is a different and more dangerous thing to depict.",
+          "detail": "A strip of grass with a sunlit top edge and a pale kerb along the far side of the path."
+        },
+        {
+          "feature": "young street trees, slim rather than mature",
+          "detail": "Recent plantings about twice head height with a narrow canopy, not a spreading avenue tree. toronto/waterfront-trail.jpg shows exactly this: thin trunks in a grass strip. Drawing them as mature maples would put the path in a park."
+        },
+        {
+          "feature": "people riding, to the same cartoon proportions as every other character",
+          "why": "CLAUDE.md requires identical cartoon proportions for every character, and background figures in a parallax tile are where that rule is quietly broken first.",
+          "detail": "Six heads tall, the same proportion canon as the player, drawn small because they are across the path. Helmets rather than hairstyles, because the level's locomotion is a bike. No outline. NO CULTURAL MARKER OF ANY KIND - docs/content-review.md 3.3 outcome 2."
+        },
+        {
+          "feature": "a dense downtown skyline of tall towers behind",
+          "detail": "Plain rectangular masses in pale concrete, dark glass and blue-green glass, with flat tops, crowns, setbacks and plant enclosures, standing out of an opaque haze band. Rhythm and massing only."
+        }
+      ],
+      "simplifyAway": [
+        "individual windows on the towers: a horizontal band rhythm, never a grid of panes",
+        "traffic signals, hydro poles and overhead wires",
+        "parked cars and moving traffic",
+        "the bike-share operator's livery on the bicycles in the rack: they are drawn in palette colours and carry no operator colour and no dock branding",
+        "kerb ramps, drainage and tactile paving"
+      ],
+      "neverAdd": [
+        "any named or recognisable building drawn into either of these two REPEATING tiles, and the CN Tower above all: it is required on the cn-tower subject and forbidden here, and the reason is the tiling, not the building",
+        "any lettering, signage or wordmark, in either language",
+        "a streetcar, a bus or a train in the cycling lane",
+        "mountains on the horizon: this city is on a lake plain",
+        "snow or winter trees: this level is late summer"
+      ],
+      "notes": [
+        "toronto/waterfront-trail.jpg is CC0 and is the primary reference: the separated path, the green",
+        "and blue lines, the grass verge, the young trees and the bike rack in one frame.",
+        "toronto/bike-lane-street.jpg is CC BY 2.0, from the Ontario government, and is the reference for",
+        "the green surface treatment, the white bicycle mark and the arrow. Its required credit line is in",
+        "the `author` field of its entry in assets/credits.json, which is where a licence condition of that",
+        "kind has to live: credits.schema.json is additionalProperties:false and has no other field for it.",
+        "toronto/skyline-overcast.jpg is CC0 and is the massing reference for the tower rhythm."
+      ]
     }
   ],
   "licenceAudit": {
@@ -672,6 +1156,6 @@
       "CC-BY-3.0",
       "CC-BY-4.0"
     ],
-    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa."
+    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa. Re-run 2026-09-08 for the fifteen Halifax and Toronto references, by the same method and before any of them was downloaded: five CC0, five public domain, three CC BY 2.0, two CC BY 3.0 and one CC BY 4.0. Every one is inside the accepted set above. The Halifax Town Clock's best photographs and every photograph of the Citadel are CC BY-SA and were rejected on licence, not on quality, for the third level running - and for the Town Clock that cost real quality, because the ShareAlike set includes the only high-resolution near-orthographic elevations. The one CC BY 4.0 file that was available carried the day."
   }
 }

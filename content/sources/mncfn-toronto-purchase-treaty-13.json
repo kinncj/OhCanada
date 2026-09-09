@@ -1,0 +1,33 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "mncfn-toronto-purchase-treaty-13",
+  "title": "The Toronto Purchase Treaty, No. 13 (1805)",
+  "publisher": "Mississaugas of the Credit First Nation",
+  "edition": "Web page posted 3 November 2020, fetched 8 September 2026",
+  "url": "https://mncfn.ca/the-toronto-purchase-treaty-no-13-1805/",
+  "file": "mncfn-toronto-purchase-treaty-13.html",
+  "extractedText": "mncfn-toronto-purchase-treaty-13.txt",
+  "sha256": "585db875e61f61fd2623873462fd492e7e56670d6bac1798cf7069f1e04bb9b5",
+  "extractedTextSha256": "58c92c469fc9031015911338a5c92c3b79cd12fce00be049520fd09c81d73933",
+  "bytes": 92809,
+  "retrievedAt": "2026-09-08",
+  "licence": "Copyright Mississaugas of the Credit First Nation. Cited and paraphrased; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "The Toronto Purchase Treaty, No. 13 (1805)"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "A nation's own account, and the reason it is cited rather than the Crown's",
+      "problem": "This page is the Mississaugas of the Credit's own history of the treaty their territory is defined by, which is what docs/content-review.md 3.2 asks for and what a Crown page cannot be. It is dated - posted 3 November 2020 - and the same site publishes later settlements (the Rouge Tract Settlement, 2025) that this page does not mention. Nothing cited from it here depends on the settlement record being current: the sentence used names which cities fall inside the treaty boundary.",
+      "affects": [
+        "The Toronto Purchase Treaty, No. 13 (1805)"
+      ],
+      "grain": "chapter",
+      "action": "re-fetch before drawing any claim about settlements, compensation or claims still in progress; the boundary sentence does not move"
+    }
+  ],
+  "grainNote": "One web page, one heading, no pagination. The flag is on the page's settlement narrative, not on its boundary statement, because those two go stale at completely different rates and a flag covering both would fire on everything."
+}
