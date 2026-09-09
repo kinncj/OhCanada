@@ -40,9 +40,9 @@
     "quote": "About 65% of the Aboriginal people are First Nations, while 30% are Métis and 4% Inuit."
   },
   "verification": {
-    "status": "quarantined",
+    "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T21:05:00Z",
+    "checkedAt": "2026-09-09T00:47:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "About 65% of the Aboriginal people are First Nations, while 30% are Métis and 4% Inuit."
   }

@@ -40,10 +40,10 @@
     "quote": "More than 600,000 Canadians served in the war, most of them volunteers, out of a total population of eight million."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "verified",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-09T00:47:00Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "More than 600,000 Canadians served in the war, most of them volunteers, out of a total population of eight million. … In total 60,000 Canadians were killed and 170,000 wounded."
   }
 }

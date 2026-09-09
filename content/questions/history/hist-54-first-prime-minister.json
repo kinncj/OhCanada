@@ -40,10 +40,10 @@
     "quote": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "verified",
+    "model": "claude-opus-5[1m]",
+    "checkedAt": "2026-09-09T00:47:00Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister. Born in Scotland on January 11, 1815, he came to Upper Canada as a child. … Parliament has recognized January 11 as Sir John A. Macdonald Day. His portrait is on the $10 bill."
   }
 }

@@ -40,10 +40,10 @@
     "quote": "about half of First Nations people live on reserve land in about 600 communities while the other half live off-reserve, mainly in urban centres."
   },
   "verification": {
-    "status": "quarantined",
+    "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T21:05:00Z",
+    "checkedAt": "2026-09-09T00:47:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Today, about half of First Nations people live on reserve land in about 600 communities while the other half live off-reserve, mainly in urban centres."
+    "evidence": "Today, about half of First Nations people live on reserve land in about 600 communities while the other half live off-reserve, mainly in urban centres. … The Inuit, which means “the people” in the Inuktitut language, live in small, scattered communities across the Arctic. … The Métis are a distinct people of mixed Aboriginal and European ancestry, the majority of whom live in the Prairie provinces."
   }
 }

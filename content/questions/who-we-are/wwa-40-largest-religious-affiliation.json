@@ -40,10 +40,10 @@
     "quote": "Many ethnic and religious groups live and work in peace as proud Canadians."
   },
   "verification": {
-    "status": "quarantined",
+    "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T21:05:00Z",
+    "checkedAt": "2026-09-09T00:47:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "The great majority of Canadians identify as Christians. The largest religious affiliation is Catholic, followed by various Protestant churches."
+    "evidence": "Many ethnic and religious groups live and work in peace as proud Canadians. … In Canada the state has traditionally partnered with faith communities to promote social welfare, harmony and mutual respect; to provide schools and health care; to resettle refugees; and to uphold religious freedom, religious expression and freedom of conscience. … Together, these diverse groups, sharing a common Canadian identity, make up today’s multicultural society."
   }
 }
