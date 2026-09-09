@@ -11,6 +11,73 @@
     "en": "Skate up the canal to Parliament Hill, find the Peace Tower, and answer three questions.",
     "fr": "Patinez sur le canal jusqu'à la Colline du Parlement, trouvez la tour de la Paix et répondez à trois questions."
   },
+  "declinedLine": {
+    "speaker": "officer",
+    "expression": "neutral",
+    "text": {
+      "en": "No trouble. I will be here on the canal when you want to go.",
+      "fr": "Pas de souci. Je serai ici, sur le canal, quand vous voudrez partir."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "officer",
+    "expression": "neutral",
+    "text": {
+      "en": "Keep going up the canal. Look up, and you will see the Peace Tower.",
+      "fr": "Continuez sur le canal. Levez les yeux et vous verrez la tour de la Paix."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "officer",
+    "expression": "happy",
+    "text": {
+      "en": "The federal government takes care of things like defence, money and citizenship. The provinces take care of schools, health and highways.",
+      "fr": "Le gouvernement fédéral s'occupe de choses comme la défense, la monnaie et la citoyenneté. Les provinces s'occupent des écoles, de la santé et des routes."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "How Canadians Govern Themselves",
+        "page": 54,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "These include defence, foreign policy, interprovincial trade and communications, currency, navigation, criminal law and citizenship. The provinces are responsible for municipal government, education, health, natural resources, property and civil rights, and highways."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "officer",
+    "expression": "happy",
+    "text": {
+      "en": "You skated up the canal to Parliament Hill, found the Peace Tower and answered three questions.",
+      "fr": "Vous avez patiné sur le canal jusqu'à la Colline du Parlement, trouvé la tour de la Paix et répondu à trois questions."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
   "steps": [
     {
       "id": "talk-to-the-officer",

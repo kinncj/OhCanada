@@ -11,6 +11,73 @@
     "en": "Walk with your guide from the Town Clock down to Pier 21. Along the way, answer questions about rights and responsibilities in Canada.",
     "fr": "Marchez avec votre guide de la tour de l'horloge jusqu'au quai 21. En chemin, répondez à des questions sur les droits et les responsabilités au Canada."
   },
+  "declinedLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "That is fine. The harbour will still be here. Come and find me when you are ready.",
+      "fr": "C'est correct. Le port sera encore là. Venez me retrouver quand vous serez prêt."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "We are walking down to the water. The Town Clock comes first.",
+      "fr": "On descend vers l'eau. La tour de l'horloge vient en premier."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "One more thing. A citizen of Canada may live and work in any part of the country, leave it freely and come back.",
+      "fr": "Encore une chose. Un citoyen du Canada peut vivre et travailler dans n'importe quelle partie du pays, le quitter librement et y revenir."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "Rights and Responsibilities of Citizenship",
+        "page": 12,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "Mobility Rights — Canadians can live and work anywhere they choose in Canada, enter and leave the country freely, and apply for a passport."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "You walked from the Town Clock down to Pier 21 and answered five questions about rights and responsibilities.",
+      "fr": "Vous avez marché de la tour de l'horloge jusqu'au quai 21 et répondu à cinq questions sur les droits et les responsabilités."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
   "steps": [
     {
       "id": "meet-the-guide",

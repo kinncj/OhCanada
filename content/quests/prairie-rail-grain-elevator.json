@@ -1,22 +1,22 @@
 {
   "$schema": "../schemas/quest.schema.json",
-  "id": "quebec-city-chateau-frontenac",
-  "levelId": "quebec-city",
+  "id": "prairie-rail-grain-elevator",
+  "levelId": "prairie-rail",
   "giver": "guide",
   "title": {
-    "en": "The Toboggan Run",
-    "fr": "La glissade"
+    "en": "The Train Across the Prairies",
+    "fr": "Le train à travers les Prairies"
   },
   "summary": {
-    "en": "Slide down to the Château Frontenac with your guide, then answer three questions about Canada's history.",
-    "fr": "Glissez jusqu'au Château Frontenac avec votre guide, puis répondez à trois questions sur l'histoire du Canada."
+    "en": "Ride the train across the Prairies with your guide. The train stops at the grain elevator, and you answer three questions there.",
+    "fr": "Traversez les Prairies en train avec votre guide. Le train s'arrête à l'élévateur à grain, et vous répondez à trois questions là-bas."
   },
   "declinedLine": {
     "speaker": "guide",
     "expression": "neutral",
     "text": {
-      "en": "That is fine. The snow will wait for us. Come back when you are ready.",
-      "fr": "C'est correct. La neige va nous attendre. Revenez quand vous serez prêt."
+      "en": "No problem. The train runs all day. Come and sit with me later.",
+      "fr": "Pas de problème. Le train roule toute la journée. Venez vous asseoir avec moi plus tard."
     },
     "fact": {
       "factual": false,
@@ -28,8 +28,8 @@
     "speaker": "guide",
     "expression": "neutral",
     "text": {
-      "en": "Keep sliding down the hill. The Château Frontenac is below us.",
-      "fr": "Continuez à glisser vers le bas de la côte. Le Château Frontenac est en bas."
+      "en": "Watch out the window for the tall grain elevator. The train stops there.",
+      "fr": "Regardez par la fenêtre pour voir le grand élévateur à grain. Le train s'y arrête."
     },
     "fact": {
       "factual": false,
@@ -41,20 +41,20 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "Canada was born on July 1, 1867. For many years that day was called Dominion Day. Today we call it Canada Day.",
-      "fr": "Le Canada est né le 1er juillet 1867. Pendant de nombreuses années, cette journée s'appelait le « jour du Dominion ». Aujourd'hui, on l'appelle la fête du Canada."
+      "en": "In 1980, Terry Fox began a run across the country. He wanted to raise money for cancer research.",
+      "fr": "En 1980, Terry Fox a commencé une course à travers le pays. Il voulait amasser de l'argent pour la recherche sur le cancer."
     },
     "fact": {
       "factual": true,
       "source": {
         "sourceId": "discover-canada",
-        "chapter": "Canada's History",
-        "page": 33,
+        "chapter": "Modern Canada",
+        "page": 50,
         "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
         "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
         "asOf": "2026-09-09T00:00:00Z",
         "volatile": false,
-        "quote": "The Dominion of Canada was officially born on July 1, 1867. Until 1982, July 1 was celebrated as “Dominion Day” to commemorate the day that Canada became a self-governing Dominion. Today it is officially known as Canada Day."
+        "quote": "In 1980, Terry Fox, a British Columbian who lost his right leg to cancer at the age of 18, began a cross-country run, the “Marathon of Hope,” to raise money for cancer research."
       },
       "verification": {
         "status": "unverified",
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You slid down to the Château Frontenac and answered three questions about Canada's history.",
-      "fr": "Vous avez glissé jusqu'au Château Frontenac et répondu à trois questions sur l'histoire du Canada."
+      "en": "You rode the train to the grain elevator and answered three questions about Canada today.",
+      "fr": "Vous avez pris le train jusqu'à l'élévateur à grain et répondu à trois questions sur le Canada d'aujourd'hui."
     },
     "fact": {
       "factual": false,
@@ -92,8 +92,8 @@
           "speaker": "guide",
           "expression": "happy",
           "text": {
-            "en": "Bonjour! I am your guide. Welcome to Québec City.",
-            "fr": "Bonjour! Je suis votre guide. Bienvenue à Québec."
+            "en": "Hello again! Take a seat by the window. This train crosses the Prairies.",
+            "fr": "Rebonjour! Prenez place près de la fenêtre. Ce train traverse les Prairies."
           },
           "fact": {
             "factual": false,
@@ -103,50 +103,22 @@
         },
         {
           "speaker": "guide",
-          "expression": "happy",
-          "text": {
-            "en": "O Canada is our national anthem. People sang it here for the very first time, in 1880.",
-            "fr": "Ô Canada est notre hymne national. On l'a chanté ici pour la toute première fois, en 1880."
-          },
-          "fact": {
-            "factual": true,
-            "source": {
-              "sourceId": "discover-canada",
-              "chapter": "Canadian Symbols",
-              "page": 84,
-              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
-              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-              "asOf": "2026-09-08T00:00:00Z",
-              "volatile": false,
-              "quote": "O Canada was proclaimed as the national anthem in 1980. It was first sung in Québec City in 1880."
-            },
-            "verification": {
-              "status": "unverified",
-              "model": "",
-              "checkedAt": null,
-              "sourceHash": "",
-              "evidence": ""
-            }
-          }
-        },
-        {
-          "speaker": "guide",
           "expression": "thinking",
           "text": {
-            "en": "In 1759, the British beat the French in a battle at Québec City, on the Plains of Abraham.",
-            "fr": "En 1759, les Britanniques ont battu les Français lors d'une bataille à Québec, sur les plaines d'Abraham."
+            "en": "In 1947, oil was found in Alberta. That was the start of Canada's modern energy industry.",
+            "fr": "En 1947, on a trouvé du pétrole en Alberta. C'était le début de l'industrie moderne de l'énergie au Canada."
           },
           "fact": {
             "factual": true,
             "source": {
               "sourceId": "discover-canada",
-              "chapter": "Canada's History",
-              "page": 25,
+              "chapter": "Modern Canada",
+              "page": 45,
               "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
               "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-              "asOf": "2026-09-08T00:00:00Z",
+              "asOf": "2026-09-09T00:00:00Z",
               "volatile": false,
-              "quote": "In 1759, the British defeated the French in the Battle of the Plains of Abraham at Québec City"
+              "quote": "The discovery of oil in Alberta in 1947 began Canada’s modern energy industry."
             },
             "verification": {
               "status": "unverified",
@@ -159,10 +131,38 @@
         },
         {
           "speaker": "guide",
-          "expression": "surprised",
+          "expression": "neutral",
           "text": {
-            "en": "Now hold on tight! Slide down to the Château Frontenac and I will meet you there.",
-            "fr": "Maintenant, tenez bon! Glissez jusqu'au Château Frontenac et je vous y rejoins."
+            "en": "The Official Languages Act came in 1969. Because of it, the federal government serves people in French and in English, all across the country.",
+            "fr": "La Loi sur les langues officielles est arrivée en 1969. Grâce à elle, le gouvernement fédéral sert les gens en français et en anglais, partout au pays."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Modern Canada",
+              "page": 46,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-09T00:00:00Z",
+              "volatile": false,
+              "quote": "This led to the Official Languages Act (1969), which guarantees French and English services in the federal government across Canada."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "The train stops at the grain elevator. We get off there, and I will ask you three questions.",
+            "fr": "Le train s'arrête à l'élévateur à grain. On descend là, et je vous poserai trois questions."
           },
           "fact": {
             "factual": false,
@@ -173,19 +173,19 @@
       ]
     },
     {
-      "id": "slide-to-the-chateau",
+      "id": "stop-at-the-grain-elevator",
       "kind": "visit",
-      "targetId": "chateau-frontenac",
+      "targetId": "grain-elevator",
       "prompt": {
-        "en": "Slide down to the Château Frontenac",
-        "fr": "Glissez jusqu'au Château Frontenac"
+        "en": "Stop the train at the grain elevator",
+        "fr": "Arrêtez le train à l'élévateur à grain"
       }
     },
     {
-      "id": "answer-at-the-chateau",
+      "id": "answer-at-the-elevator",
       "kind": "answer",
-      "targetId": "history",
-      "subject": "history",
+      "targetId": "modern-canada",
+      "subject": "modern-canada",
       "count": 3,
       "prompt": {
         "en": "Answer 3 questions",

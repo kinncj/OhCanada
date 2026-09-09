@@ -5,8 +5,13 @@
   "description": "One playable or non-playable character, `content/characters/<id>.json`. It describes the rig contract - artboard, state machine, inputs, skin slots - in vocabulary both backends of ICharacterRenderer honour, so a character never knows whether it was drawn by Rive or by a sprite atlas.",
   "type": "object",
   "properties": {
-    "$schema": { "type": "string", "minLength": 1 },
-    "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId" },
+    "$schema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "id": {
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
+    },
     "name": {
       "description": "Display name, carried inline (ADR-0010). A Mountie is named by role, never by a real person or a force.",
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
@@ -24,13 +29,17 @@
     "inputs": {
       "description": "State-machine inputs the rig must expose. Slice 1 task 1.11's contract test loads the .riv and asserts each of these exists, which is only possible because they are declared as data here.",
       "type": "array",
-      "items": { "$ref": "#/$defs/characterInput" },
+      "items": {
+        "$ref": "#/$defs/characterInput"
+      },
       "minItems": 1
     },
     "slots": {
       "description": "Every skin slot this character offers, with its options and its default. Slot and option names are identical in Rive and in the sprite atlas (CLAUDE.md, Characters); that identity is what makes the fallback a swap rather than a port. Declared as data so the character creator renders itself from the document instead of from a hardcoded list - adding a slot is content, not an engine change.",
       "type": "array",
-      "items": { "$ref": "#/$defs/characterSlot" },
+      "items": {
+        "$ref": "#/$defs/characterSlot"
+      },
       "minItems": 1
     },
     "indigenous": {
@@ -65,26 +74,60 @@
     {
       "$comment": "docs/content-review.md 3: a character depicted as Indigenous names one nation, cites it, and records whether the nation has been asked. A character not so depicted carries none of the three, so an unused nation field cannot sit in a file looking like a claim. Only property names this object already declares appear here (ADR-0007).",
       "if": {
-        "properties": { "indigenous": { "const": true } },
-        "required": ["indigenous"]
+        "properties": {
+          "indigenous": {
+            "const": true
+          }
+        },
+        "required": [
+          "indigenous"
+        ]
       },
       "then": {
-        "required": ["nation", "nationSource", "communityReview"],
+        "required": [
+          "nation",
+          "nationSource",
+          "communityReview"
+        ],
         "$comment": "The three names are restated here as empty schemas ONLY to satisfy ajv's strictRequired lint, which asks that a property named in `required` be declared in the same subschema. They impose nothing: the real types are on this document's own `properties` above and still apply, because a conditional subschema is evaluated against the same instance. Without them this file does not compile at all - which is how it shipped, because no character document exists yet and ajv compiles a schema only when a document sends it something to validate (ADR-0024 section 4, and the same defect quest.schema.json carried).",
-        "properties": { "nation": {}, "nationSource": {}, "communityReview": {} }
+        "properties": {
+          "nation": {},
+          "nationSource": {},
+          "communityReview": {}
+        }
       },
       "else": {
         "not": {
           "anyOf": [
-            { "required": ["nation"], "properties": { "nation": {} } },
-            { "required": ["nationSource"], "properties": { "nationSource": {} } },
-            { "required": ["communityReview"], "properties": { "communityReview": {} } }
+            {
+              "required": [
+                "nation"
+              ],
+              "properties": {
+                "nation": {}
+              }
+            },
+            {
+              "required": [
+                "nationSource"
+              ],
+              "properties": {
+                "nationSource": {}
+              }
+            },
+            {
+              "required": [
+                "communityReview"
+              ],
+              "properties": {
+                "communityReview": {}
+              }
+            }
           ]
         }
       }
     }
   ],
-
   "$defs": {
     "characterSlot": {
       "title": "Character slot",
@@ -92,18 +135,23 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Slot name, identical in the Rive artboard and in the atlas frame prefixes.",
-          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+          "description": "Slot name, identical to the rig's own slot key and to the atlas frame prefixes. NOT the kebab id form: this used to $ref common.schema's id, which is kebab-case, while content/characters/rig.json names its slots hairShape, hairColour and headCovering and interpolates them into part templates by exactly those keys. The pattern and the description contradicted each other, and a document could satisfy the pattern while naming a slot the rig does not have -- which is what the first two character documents did, validly.",
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z0-9]*$"
         },
         "labelKey": {
           "description": "Localiser key naming the slot in the creator, e.g. creator.slot.hair. A key, not inline text: it is UI vocabulary reused by every character (ADR-0010).",
           "type": "string",
           "minLength": 1
         },
-        "playerSelectable": { "type": "boolean" },
+        "playerSelectable": {
+          "type": "boolean"
+        },
         "options": {
           "type": "array",
-          "items": { "$ref": "#/$defs/characterSkinOption" },
+          "items": {
+            "$ref": "#/$defs/characterSkinOption"
+          },
           "minItems": 1
         },
         "fallback": {
@@ -111,35 +159,57 @@
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
         }
       },
-      "required": ["name", "labelKey", "playerSelectable", "options", "fallback"],
+      "required": [
+        "name",
+        "labelKey",
+        "playerSelectable",
+        "options",
+        "fallback"
+      ],
       "additionalProperties": false
     },
-
     "characterSkinOption": {
       "title": "Character skin option",
       "description": "One choice inside a slot. Every option has a name shown as text: colour is never the only signal (CLAUDE.md, Accessibility).",
       "type": "object",
       "properties": {
-        "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+        "id": {
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
         "labelKey": {
           "description": "Localiser key naming the option, e.g. creator.hair.curly.",
           "type": "string",
           "minLength": 1
         }
       },
-      "required": ["id", "labelKey"],
+      "required": [
+        "id",
+        "labelKey"
+      ],
       "additionalProperties": false
     },
-
     "characterInput": {
       "title": "Character input",
       "description": "One state-machine input. `kind` is what ICharacterRenderer's setBool, setNumber and fire address.",
       "type": "object",
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "kind": { "type": "string", "enum": ["bool", "number", "trigger"] }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "bool",
+            "number",
+            "trigger"
+          ]
+        }
       },
-      "required": ["name", "kind"],
+      "required": [
+        "name",
+        "kind"
+      ],
       "additionalProperties": false
     }
   }

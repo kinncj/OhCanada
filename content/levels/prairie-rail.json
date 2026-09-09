@@ -212,7 +212,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "prairie-rail-grain-elevator"
+  ],
   "pois": [
     {
       "id": "grain-elevator",
@@ -249,10 +251,21 @@
         "y": 1280
       },
       "artKey": "prairie-rail-landmark-grain-elevator",
-      "radiusPx": 300
+      "radiusPx": 300,
+      "questId": "prairie-rail-grain-elevator"
     }
   ],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "guide",
+      "position": {
+        "x": 1200,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "prairie-rail-grain-elevator"
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 37748736
 }

@@ -191,7 +191,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "winnipeg-human-rights-museum"
+  ],
   "pois": [
     {
       "id": "human-rights-museum",
@@ -228,10 +230,21 @@
         "y": 1280
       },
       "artKey": "winnipeg-landmark-human-rights-museum",
-      "radiusPx": 300
+      "radiusPx": 300,
+      "questId": "winnipeg-human-rights-museum"
     }
   ],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "officer",
+      "position": {
+        "x": 900,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "winnipeg-human-rights-museum"
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 37748736
 }

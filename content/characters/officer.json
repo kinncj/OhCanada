@@ -1,0 +1,179 @@
+{
+  "$schema": "../schemas/character.schema.json",
+  "id": "officer",
+  "name": {
+    "en": "The officer",
+    "fr": "L'agent"
+  },
+  "artboard": "officer",
+  "stateMachine": "motion",
+  "inputs": [
+    {
+      "name": "grounded",
+      "kind": "bool"
+    },
+    {
+      "name": "moving",
+      "kind": "bool"
+    },
+    {
+      "name": "talking",
+      "kind": "bool"
+    },
+    {
+      "name": "reducedMotion",
+      "kind": "bool"
+    },
+    {
+      "name": "speed",
+      "kind": "number"
+    },
+    {
+      "name": "verticalSpeed",
+      "kind": "number"
+    },
+    {
+      "name": "jump",
+      "kind": "trigger"
+    },
+    {
+      "name": "land",
+      "kind": "trigger"
+    },
+    {
+      "name": "interact",
+      "kind": "trigger"
+    }
+  ],
+  "slots": [
+    {
+      "name": "skin",
+      "labelKey": "creator.slot.skin",
+      "playerSelectable": false,
+      "options": [
+        {
+          "id": "skin-1",
+          "labelKey": "creator.skin.skin-1"
+        },
+        {
+          "id": "skin-2",
+          "labelKey": "creator.skin.skin-2"
+        },
+        {
+          "id": "skin-3",
+          "labelKey": "creator.skin.skin-3"
+        },
+        {
+          "id": "skin-4",
+          "labelKey": "creator.skin.skin-4"
+        },
+        {
+          "id": "skin-5",
+          "labelKey": "creator.skin.skin-5"
+        },
+        {
+          "id": "skin-6",
+          "labelKey": "creator.skin.skin-6"
+        }
+      ],
+      "fallback": "skin-3"
+    },
+    {
+      "name": "hairShape",
+      "labelKey": "creator.slot.hair-shape",
+      "playerSelectable": false,
+      "options": [
+        {
+          "id": "crop",
+          "labelKey": "creator.hair-shape.crop"
+        },
+        {
+          "id": "coil",
+          "labelKey": "creator.hair-shape.coil"
+        },
+        {
+          "id": "bob",
+          "labelKey": "creator.hair-shape.bob"
+        },
+        {
+          "id": "long",
+          "labelKey": "creator.hair-shape.long"
+        }
+      ],
+      "fallback": "crop"
+    },
+    {
+      "name": "hairColour",
+      "labelKey": "creator.slot.hair-colour",
+      "playerSelectable": false,
+      "options": [
+        {
+          "id": "black",
+          "labelKey": "creator.hair-colour.black"
+        },
+        {
+          "id": "brown",
+          "labelKey": "creator.hair-colour.brown"
+        },
+        {
+          "id": "blond",
+          "labelKey": "creator.hair-colour.blond"
+        },
+        {
+          "id": "red",
+          "labelKey": "creator.hair-colour.red"
+        },
+        {
+          "id": "grey",
+          "labelKey": "creator.hair-colour.grey"
+        }
+      ],
+      "fallback": "brown"
+    },
+    {
+      "name": "headCovering",
+      "labelKey": "creator.slot.head-covering",
+      "playerSelectable": false,
+      "options": [
+        {
+          "id": "none",
+          "labelKey": "creator.head-covering.none"
+        },
+        {
+          "id": "toque",
+          "labelKey": "creator.head-covering.toque"
+        }
+      ],
+      "fallback": "none"
+    },
+    {
+      "name": "feature",
+      "labelKey": "creator.slot.feature",
+      "playerSelectable": false,
+      "options": [
+        {
+          "id": "none",
+          "labelKey": "creator.feature.none"
+        },
+        {
+          "id": "glasses",
+          "labelKey": "creator.feature.glasses"
+        }
+      ],
+      "fallback": "none"
+    },
+    {
+      "name": "costume",
+      "labelKey": "creator.slot.costume",
+      "playerSelectable": false,
+      "options": [
+        {
+          "id": "serge",
+          "labelKey": "creator.costume.serge"
+        }
+      ],
+      "fallback": "serge"
+    }
+  ],
+  "indigenous": false
+}

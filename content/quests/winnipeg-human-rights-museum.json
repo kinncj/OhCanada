@@ -1,0 +1,196 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "winnipeg-human-rights-museum",
+  "levelId": "winnipeg",
+  "giver": "officer",
+  "title": {
+    "en": "The Same Law for Everyone",
+    "fr": "La même loi pour tout le monde"
+  },
+  "summary": {
+    "en": "Walk along the river to the Canadian Museum for Human Rights with the officer. Then answer three questions about the law.",
+    "fr": "Marchez le long de la rivière jusqu'au Musée canadien pour les droits de la personne avec l'agent. Ensuite, répondez à trois questions sur la loi."
+  },
+  "declinedLine": {
+    "speaker": "officer",
+    "expression": "neutral",
+    "text": {
+      "en": "That is all right. I will be here by the river when you are ready.",
+      "fr": "C'est correct. Je serai ici, au bord de la rivière, quand vous serez prêt."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "officer",
+    "expression": "neutral",
+    "text": {
+      "en": "Keep walking along the river. The museum is ahead of you.",
+      "fr": "Continuez à marcher le long de la rivière. Le musée est devant vous."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "officer",
+    "expression": "happy",
+    "text": {
+      "en": "You can also ask questions about how we do our police work. Almost every police force has a way to hear your concerns.",
+      "fr": "Vous pouvez aussi poser des questions sur notre travail de police. Presque tous les corps de police ont un moyen de recevoir vos préoccupations."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "The Justice System",
+        "page": 77,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "You can also question the police about their service or conduct if you feel you need to. Almost all police forces in Canada have a process by which you can bring your concerns to the police and seek action."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "officer",
+    "expression": "happy",
+    "text": {
+      "en": "You walked to the Canadian Museum for Human Rights and answered three questions about the law.",
+      "fr": "Vous avez marché jusqu'au Musée canadien pour les droits de la personne et répondu à trois questions sur la loi."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "steps": [
+    {
+      "id": "talk-to-the-officer",
+      "kind": "talk",
+      "targetId": "officer",
+      "prompt": {
+        "en": "Talk to the officer",
+        "fr": "Parlez à l'agent"
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "Hello! Welcome to Winnipeg.",
+            "fr": "Bonjour! Bienvenue à Winnipeg."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Here, a person in a criminal case is innocent until it is proven that they are guilty.",
+            "fr": "Ici, une personne dans une affaire criminelle est innocente jusqu'à ce qu'on prouve sa culpabilité."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "The Justice System",
+              "page": 75,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-09T00:00:00Z",
+              "volatile": false,
+              "quote": "Our judicial system is founded on the presumption of innocence in criminal matters, meaning everyone is innocent until proven guilty."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "The police are here to keep people safe. You can ask us for help after an accident, or if something of yours is stolen.",
+            "fr": "La police est là pour garder les gens en sécurité. Vous pouvez nous demander de l'aide après un accident, ou si on vous vole quelque chose."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "The Justice System",
+              "page": 76,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-09T00:00:00Z",
+              "volatile": false,
+              "quote": "The police are there to keep people safe and to enforce the law. You can ask the police for help in all kinds of situations—if there’s been an accident, if someone has stolen something from you"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Now walk along the river to the museum. I will ask you three questions there.",
+            "fr": "Maintenant, marchez le long de la rivière jusqu'au musée. Je vous poserai trois questions là-bas."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "walk-to-the-museum",
+      "kind": "visit",
+      "targetId": "human-rights-museum",
+      "prompt": {
+        "en": "Walk to the museum",
+        "fr": "Marchez jusqu'au musée"
+      }
+    },
+    {
+      "id": "answer-at-the-museum",
+      "kind": "answer",
+      "targetId": "justice",
+      "subject": "justice",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions",
+        "fr": "Répondez à 3 questions"
+      }
+    }
+  ]
+}

@@ -11,6 +11,73 @@
     "en": "Ride along the boulevard to the CN Tower with your guide, then answer three questions about voting in Canada.",
     "fr": "Roulez sur le boulevard jusqu'à la Tour CN avec votre guide, puis répondez à trois questions sur le vote au Canada."
   },
+  "declinedLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "That is okay. The tower is not going anywhere. Come back when you like.",
+      "fr": "C'est correct. La tour ne s'en va nulle part. Revenez quand vous voulez."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "Keep riding along the boulevard. The tower is easy to see from here.",
+      "fr": "Continuez à rouler sur le boulevard. La tour est facile à voir d'ici."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "You can vote on election day, or at an advance poll. Your voter information card tells you where to go.",
+      "fr": "Vous pouvez voter le jour de l'élection ou à un bureau de vote par anticipation. Votre carte d'information de l'électeur vous dit où aller."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "Federal Elections",
+        "page": 61,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "To vote either on election day or at advance polls, go to the polling station listed on your voter information card."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "You rode down the boulevard to the CN Tower and answered three questions about voting.",
+      "fr": "Vous avez roulé sur le boulevard jusqu'à la Tour CN et répondu à trois questions sur le vote."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
   "steps": [
     {
       "id": "meet-the-guide",
