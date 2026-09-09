@@ -120,7 +120,10 @@ export interface GameRendererOptions {
   readonly onLevelEvent?: SceneEventListener;
   /**
    * The moments a level *finishes* something: `quest/completed`,
-   * `level/completed`.
+   * `level/completed`, and `level/exitReached` — the player arriving at the end
+   * of the world, which is the only one of the three the scene observes for
+   * itself. It is a position and not an achievement; what it is worth is the
+   * composition root's to decide.
    *
    * A channel of its own rather than two more `onLevelEvent` names, because the
    * scene's event union is type-checked against `app/ui`'s in the composition
@@ -128,6 +131,26 @@ export interface GameRendererOptions {
    * `level-events.ts`. Binding it is one line when the words exist.
    */
   readonly onLevelMilestone?: SceneMilestoneListener;
+  /**
+   * The level's first playable frame exists.
+   *
+   * **Not the same moment as `loadLevel` resolving, and that difference is a
+   * defect somebody is currently working around.** `loadLevel` returns once the
+   * document has parsed and the scene has been handed to Phaser; Phaser then
+   * boots it, drains its loader and calls `create` one or more frames later.
+   * Everything that makes the level playable — the camera, the affordances and,
+   * since the dropped-first-keypress fix, the keyboard keys themselves — happens
+   * in `create`. So a caller that writes "ready" when `loadLevel` resolves is
+   * announcing a level the player cannot yet touch, and the first key they press
+   * in that window reaches nothing.
+   *
+   * `LevelScene` has always published this; nothing carried it out of the
+   * adapter. **No caller yet** — `app/bootstrap` owns the attribute and another
+   * agent owns that file — so it is reported rather than half-applied, exactly
+   * as `setPlayerAppearance` and `onLevelMilestone` were: the one line is
+   * `root.dataset['tnLevel'] = 'ready'`, moved out of `load()` and into here.
+   */
+  readonly onLevelReady?: (levelId: string) => void;
   /**
    * The device clock, injectable so a test can put the level at any hour.
    *
@@ -396,6 +419,9 @@ export class GameRenderer {
       ...(this.#options.onLevelMilestone === undefined
         ? {}
         : { onMilestone: this.#options.onLevelMilestone }),
+      ...(this.#options.onLevelReady === undefined
+        ? {}
+        : { onReady: this.#options.onLevelReady }),
     });
     this.#level = scene;
     /* Before `scene.add`, so the option is in force on the level's first frame

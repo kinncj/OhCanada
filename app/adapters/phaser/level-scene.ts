@@ -58,6 +58,7 @@ import {
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
+import { watchExit, type ExitWatch } from './level-exit';
 import {
   createTouchControls,
   hitTest,
@@ -199,6 +200,16 @@ const HAZE_HEIGHT = 180;
 const FLAKE_MIN_RADIUS = 3;
 const FLAKE_MAX_RADIUS = 8;
 
+/**
+ * Every key the level reads, as Phaser key names.
+ *
+ * One list, because it is also the list that must exist *before* the level says
+ * it is playable — see `#bindInput`. Two bindings per action, arrows and the
+ * WASD block, so the level is playable with either hand; `#sampleIntent` is
+ * where they are summed into an intent.
+ */
+const READ_KEYS = ['LEFT', 'RIGHT', 'A', 'D', 'SPACE', 'UP', 'W', 'E', 'ENTER'] as const;
+
 export interface LevelSceneOptions {
   readonly level: SceneLevel;
   readonly designWidth: number;
@@ -331,6 +342,24 @@ export class LevelScene extends Phaser.Scene {
   #locomotion: ReturnType<typeof createLocomotion>;
   readonly #tuning: LocomotionTuning;
   readonly #bounds: LevelBounds;
+  /**
+   * The end of the level, and the latch that lets it be announced once.
+   *
+   * Built from the document, so it is fixed for the life of the scene and the
+   * per-frame cost is one comparison — and, after the arrival, one field read.
+   * The rule it holds is `level-exit.ts`'s, not this file's: a scene that
+   * decided where a level ends would be a rule no `environment: 'node'` test
+   * could reach.
+   */
+  readonly #exit: ExitWatch;
+  /**
+   * The `Key` objects, created at bind time and read every frame.
+   *
+   * A map rather than nine fields, and populated in one loop over
+   * {@link READ_KEYS}, so "the keys the scene reads" and "the keys the scene
+   * registered before it said it was playable" cannot be two different lists.
+   */
+  readonly #keys = new Map<string, Phaser.Input.Keyboard.Key>();
   /** Fingers on the glass, and what they mean. Pure; see `touch-controls.ts`. */
   readonly #touch: TouchControls = createTouchControls();
   #autoMove = false;
@@ -443,6 +472,17 @@ export class LevelScene extends Phaser.Scene {
     this.#tuning = tuning;
     this.#locomotion = createLocomotion(tuning);
     this.#bounds = levelBounds(options.level.ground, options.level.size);
+    /*
+     * `designWidth / zoom` is what the camera can see, in world units, at every
+     * render scale: `#followInput` multiplies both by the backing scale and the
+     * quotient is what `followCamera` uses. So the end of the level is in the
+     * same place on a phone, on a tablet and on a centred desktop canvas.
+     */
+    this.#exit = watchExit({
+      bounds: this.#bounds,
+      spawnX: options.level.spawn.x,
+      viewWidth: options.designWidth / options.level.camera.zoom,
+    });
     this.#state = this.#locomotion.spawn(
       options.level.spawn.x,
       groundYAt(options.level.ground, options.level.spawn.x),
@@ -601,6 +641,10 @@ export class LevelScene extends Phaser.Scene {
       /* Fingers do not survive a level change, and neither does the listener
          that would keep answering for the game after this scene is gone. */
       this.#touch.cancelAll();
+      /* The keys belong to the scene's keyboard plugin, which goes with the
+         scene; the map is dropped so nothing holds a `Key` from a level that no
+         longer exists. */
+      this.#keys.clear();
       this.game.events.off(Phaser.Core.Events.BLUR, this.#releaseEveryPointer);
       this.events.off(Phaser.Scenes.Events.PAUSE, this.#releaseEveryPointer);
       this.events.off(Phaser.Scenes.Events.SLEEP, this.#releaseEveryPointer);
@@ -732,6 +776,23 @@ export class LevelScene extends Phaser.Scene {
 
     for (const event of step.events) this.#publishLocomotionEvent(event.kind);
     this.#updateReach();
+    /*
+     * Did they just arrive at the end of the level?
+     *
+     * After the frame's movement and after the reach, so the trace reads in the
+     * order it happened — the walk, then whatever came into reach on the way,
+     * then the arrival. The latch is inside `#exit`: this is `false` on every
+     * frame after the first, which is what stops a player jostling at the
+     * boundary from opening a completion card sixty times a second.
+     *
+     * The scene does not decide what the arrival is worth. It is a position, not
+     * an achievement, and a player can reach it having answered nothing; whether
+     * that finishes the level is `app/bootstrap`'s to say, which is why this is
+     * `level/exitReached` and not `level/completed`.
+     */
+    if (this.#exit.arrived(this.#state.x)) {
+      this.#emitMilestone('level/exitReached', this.#options.level.id);
+    }
 
     this.#camera = followCamera(this.#followInput(dt));
     this.cameras.main.setScroll(this.#camera.x, this.#camera.y);
@@ -803,6 +864,42 @@ export class LevelScene extends Phaser.Scene {
   #bindInput(): void {
     const keyboard = this.input.keyboard;
     keyboard?.addCapture(['LEFT', 'RIGHT', 'UP', 'DOWN', 'SPACE']);
+
+    /*
+     * Every key this level reads, created HERE — before the level says it is
+     * playable — and not on the first frame that happens to ask for one.
+     *
+     * This is the dropped first keypress, and it was ours. `KeyboardManager`
+     * pushes the DOM event and emits `MANAGER_PROCESS` **synchronously from the
+     * `keydown` handler**; `KeyboardPlugin.update` then looks the code up in
+     * `this.keys` and, finding nothing there, drops it — the queue is cleared
+     * whether or not anybody was listening. `#sampleIntent` used to call
+     * `addKey` lazily, so no `Key` existed until the scene's first `update` —
+     * one frame after `create` had already shown the playable marker. Any key
+     * pressed in that window went nowhere.
+     *
+     * That closes the window this file owns. A **wider** one is still open and
+     * is not ours: `app/bootstrap` writes `data-tn-level="ready"` when
+     * `loadLevel` resolves, which is before Phaser has booted the scene at all,
+     * so a key pressed then is dropped before this scene exists to hear it. It
+     * is reproducible by delaying the level's textures, and the one line that
+     * closes it is `GameRendererOptions.onLevelReady`.
+     *
+     * Nothing recovered from it either: a held key produces no further `keydown`
+     * under automation, and under a real OS the browser's auto-repeat is half a
+     * second away. The player pressed right, the game did nothing, and the only
+     * cure was to let go and press again — which is exactly what
+     * `tests/e2e/study-and-settings.spec.ts` had to do to walk at all.
+     *
+     * `enableCapture: false` on each key for the reason `#sampleIntent` gives:
+     * the page keeps its own key handling, so a DOM screen above the canvas is
+     * never starved of a keystroke. The five that must not scroll the window are
+     * captured plugin-wide on the line above, as before.
+     */
+    for (const name of READ_KEYS) {
+      const key = keyboard?.addKey(name, false);
+      if (key !== undefined) this.#keys.set(name, key);
+    }
 
     this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: Phaser.Input.Pointer) => {
       this.#touch.press(pointer.id, this.#viewPointOf(pointer), this.time.now);
@@ -888,10 +985,12 @@ export class LevelScene extends Phaser.Scene {
   }
 
   #sampleIntent(): LocomotionIntent {
-    const keyboard = this.input.keyboard;
-    /* `enableCapture: false`: the page keeps its own key handling, so a DOM
-       screen above the canvas is never starved of a keystroke. */
-    const down = (key: string): boolean => keyboard?.addKey(key, false).isDown ?? false;
+    /* Read from the keys `#bindInput` created before the level was announced
+       playable. Asking `addKey` here instead is what dropped the first press of
+       the session; see the note there. A key missing from the map means this
+       scene has no keyboard at all — headless, or input disabled — which reads
+       as "not held", the same answer it gave before. */
+    const down = (key: string): boolean => this.#keys.get(key)?.isDown ?? false;
 
     /*
      * Two bindings per action, arrows and the WASD block, so the level is

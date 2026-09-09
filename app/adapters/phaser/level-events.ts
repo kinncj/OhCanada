@@ -95,8 +95,27 @@ export function isSceneEventName(value: string): value is SceneEventName {
  * moment: the subject stops advertising itself as something to do, and the
  * milestone is published in the order it happened, after the engagement that
  * caused it. The screen that announces it belongs to `app/ui`.
+ *
+ * ## The one the scene decides for itself
+ *
+ * `level/exitReached` is the exception, and it is an exception in the same
+ * direction rather than against it. It is an **observation**, not a judgement:
+ * the scene owns the world's geometry, so "the player has arrived at the end of
+ * the level" is a fact only it can see, and it says so. It is emphatically *not*
+ * `level/completed` — reaching the end is a position, not an achievement, and a
+ * player can walk the length of a level having answered nothing. What that
+ * arrival is worth (open the next level? offer the completion card? nothing
+ * until the questions are answered?) is a product decision, and it belongs to
+ * `app/bootstrap` where the passport and the unlock rules are. `detail` is the
+ * level's own id, as it is for `level/completed`.
+ *
+ * Where the line is, and why it is not the far edge, is `level-exit.ts`.
  */
-export const SCENE_MILESTONE_NAMES = ['quest/completed', 'level/completed'] as const;
+export const SCENE_MILESTONE_NAMES = [
+  'quest/completed',
+  'level/completed',
+  'level/exitReached',
+] as const;
 
 export type SceneMilestoneName = (typeof SCENE_MILESTONE_NAMES)[number];
 

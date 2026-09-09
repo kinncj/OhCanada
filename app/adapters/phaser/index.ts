@@ -389,6 +389,24 @@ export {
   type SceneMilestoneName,
 } from './level-events';
 
+/*
+  Where a level ends.
+
+  Exported for the same reason the camera is: it is the arithmetic behind a
+  player-visible moment, and `level-scene.ts` cannot be loaded outside a browser,
+  so a rule left inside it would only ever be proved by driving one. The fraction
+  travels with the function because the test asserts the property — the player is
+  still walking, the camera has already stopped — at each level's own scale
+  rather than restating a pixel count per level.
+*/
+export {
+  EXIT_VIEW_FRACTION,
+  exitLineX,
+  watchExit,
+  type ExitLineInput,
+  type ExitWatch,
+} from './level-exit';
+
 export {
   MAX_NIGHT_BLEND,
   MAX_PHASE_STEP,
