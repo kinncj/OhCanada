@@ -334,7 +334,7 @@ test.describe('performance budgets', () => {
     });
 
     if (softwareRasteriser) {
-      console.log(
+      console.warn(
         `[perf] frame cost NOT asserted: this host rasterises in software, where the level's ` +
           `cost is a property of the rasteriser. Measured anyway, for the trend: the level adds ` +
           `${added.toFixed(2)} ms against a ${costBudget.toFixed(2)} ms budget — ${where}`,
