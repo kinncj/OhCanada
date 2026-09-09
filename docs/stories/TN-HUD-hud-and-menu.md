@@ -66,7 +66,7 @@ Everything else the HUD and the menu draw is defined elsewhere and is referenced
 | `passport.open` | `TN-PASSPORT-my-passport.md` | The menu's passport item |
 | `flow.leaveLevel` | `TN-FLOW-first-run-and-return.md` | The menu's leave item |
 | `common.close` | `TN-SET-settings.md` | The menu's close control |
-| `locomotion.skate.label` | `TN-LEVEL-ottawa.md` | `hud-mode-label` |
+| `locomotion.<mode>.label` | `TN-MOVE-locomotion-labels.md` | `hud-mode-label` |
 | `hud.task`, `quest.step.*` | `TN-QUEST-parliament-hill.md` | `hud-quest-tracker` |
 | `hud.interact.*` | `TN-LEVEL-ottawa.md` | `interact-prompt` |
 | `storage.warning`, `storage.warning.help` | `TN-SAVE-save-and-reload.md` | `storage-warning` |

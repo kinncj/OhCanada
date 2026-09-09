@@ -915,7 +915,7 @@
         {
           "feature": "a planked timber deck with a low kerb at the water's edge",
           "why": "It is a BOARDWALK, not a quay and not a street. The planking and the timber edge are the whole read, exactly as the built edges are what make Ottawa's ice a canal rather than a pond.",
-          "detail": "Grey weathered planking with the boards running ACROSS the view, so the lines are horizontal. They were drawn as vertical separators for one composite and read as a picket fence. A low timber kerb along the far edge, with a lighter sunlit top."
+          "detail": "The boards run ACROSS the view, so the lines between them are horizontal. They were drawn as vertical separators for one composite and read as a picket fence, and then as horizontal hairlines on a flat grey field and read as a PAVED STREET - a blind pass called the composite a waterfront main street and reached no accepted answer. Both failures came from this line, so it now says what makes a deck read as a deck rather than what colour it is. FOUR THINGS, all of them required. (1) Board courses of graded depth, the nearer ones taller, none thinner than 12 px, separated by a dark gap and a lit chamfer on the near board - the gaps between the boards are the strongest lines on the deck. (2) BOARD ENDS: butt joints at a regular period, staggered between courses, thin and quiet - drawn at the weight of the gaps they turn the deck into a brick wall. (3) Enough tone difference between adjacent boards to read as timber rather than as a poured surface, and warm: weathered timber is a warm grey-tan, and the `path` ramp alone is concrete. Author the deck from `stone-light` with `path-light` and `stone-base` boards through it and `path-shade` in the gaps. (4) A visible deck edge: a low timber kerb along the far edge with a lighter sunlit top, a dark underside so it stands proud of the deck, its cast shadow on the deck below it, and the deck's own shadow on the water in the open slips."
         },
         {
           "feature": "ornate dark lamp standards, bollards and benches along the water's edge",
@@ -942,7 +942,7 @@
         }
       ],
       "simplifyAway": [
-        "individual planks below 12 px, and every plank end",
+        "individual planks below 12 px. AMENDED 2026-09-08: this used to end \"and every plank end\", and the board ends are now REQUIRED by the first `mustBeRight` entry. A deck with no board ends is a floor of infinitely long planks, which is what a poured surface looks like",
         "the pile cribbing under the deck: it is below the level's ground line and is never drawn",
         "rigging, shrouds and sails on the moored hulls: a mast and one crosstree is the rhythm",
         "faces on the background figures below 12 px",
@@ -962,7 +962,19 @@
         "for colour.",
         "halifax/waterfront-and-skyline.jpg and halifax/waterfront-harbour.jpg are CC0 and are the colour",
         "and massing references: the timber wharves, the low waterfront buildings, the slips and the town",
-        "rising behind them."
+        "rising behind them.",
+        "BLIND PASS, 2026-09-08. This subject FAILED. Every `mustBeRight` feature was drawn and none of",
+        "`neverAdd` was present; the identifier read the composite as a small coastal town's waterfront main",
+        "street and reached none of the seven accepted answers. The single cause was the DECK: a flat grey",
+        "field with three hairline separators, no board ends, no visible edge. The cause was in this contract",
+        "and not in the drawing - `grey weathered planking` is a true description of a boardwalk and also a",
+        "true description of a pavement, and the drawing obeyed it. The first `mustBeRight` entry above now",
+        "describes the structure instead, and the deck is redrawn to it: graded board courses, staggered butt",
+        "joints on a 336 px period that tiles at the 2016 px seam with the straddling board given one tone at",
+        "both ends, warm board-to-board tone variation, and a modelled timber edge with its shadow on the deck",
+        "and on the water. Nothing else on the tile changed: no landmark was added and none may be, for the",
+        "reason in `expectedBlindAnswerNote`. Judged by rendering the composite and looking at it, three times,",
+        "not by reading the SVG."
       ]
     },
     {
@@ -1073,12 +1085,24 @@
         "a bike path",
         "a cycle path",
         "a bike lane",
+        "a bicycle lane",
+        "a protected bicycle lane",
         "a city bike path",
         "a waterfront bike path",
         "a downtown bike lane",
         "a cycle track"
       ],
       "expectedBlindAnswerNote": [
+        "AMENDED 2026-09-08, and the amendment is two words long. A blind pass answered \"a generic modern",
+        "city street with a protected bicycle lane\" and FAILED, because every accepted form of the word was",
+        "a contraction - bike, cycle, cycle track - and none was `bicycle`. The art was not at fault: every",
+        "`mustBeRight` entry was found on the tile and the answer describes what is drawn. So `a bicycle lane`",
+        "and `a protected bicycle lane` now pass. `protected` is accepted because the separation IS drawn and",
+        "is a `mustBeRight` entry of its own - a verifier who names it has seen more of the tile, not less.",
+        "This is the same amendment `rideau-canal-skateway` needed and it was found the same way, so state the",
+        "general rule once: an `expectedBlindAnswer` list is a VOCABULARY for one picture, and a list that",
+        "omits the plain word for the thing drawn measures the verifier's diction rather than the art. It is",
+        "widened to the honest answer and no further - nothing here accepts a footpath, a road or a pavement.",
         "GENERIC ON PURPOSE, and this one has teeth: the skyline tile is the layer the LOW preset keeps,",
         "so it is the most-seen art in the level, and it is precisely the layer that may not carry a",
         "recognisable building. Every tower on it is a plain mass. A verifier who names Toronto from these",

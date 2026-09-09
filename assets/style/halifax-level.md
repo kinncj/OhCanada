@@ -55,7 +55,7 @@ Six SVG sources. `scripts/assets.mjs` reads the level from the path, so everythi
 | `halifax-layer-10-sky` | `layer-10-sky.svg` | 1080 × 880 | 29 | one flat sky field and seven cumulus |
 | `halifax-layer-20-citadel` | `layer-20-citadel.svg` | 1800 × 160 | 51 | the grassy hill above the town, with spruce and maple on the lower slope |
 | `halifax-layer-30-uptown` | `layer-30-uptown.svg` | 1800 × 260 | 137 | the town on the slope: gabled houses, mid-rise blocks, one plain steeple, and a lower row of roofs |
-| `halifax-layer-40-quayside` | `layer-40-quayside.svg` | 2016 × 440 | 287 | the boardwalk, its lamps, benches, bollards, planters, panel, gulls and six people; two waterfront buildings, a cargo shed and two open slips |
+| `halifax-layer-40-quayside` | `layer-40-quayside.svg` | 2016 × 440 | 353 | the boardwalk — a **modelled plank deck**, §5.1 — its lamps, benches, bollards, planters, panel, gulls and six people; two waterfront buildings, a cargo shed and two open slips |
 | `halifax-landmark-town-clock` | `landmark-town-clock@1x.svg` | 800 × 1010 | 113 | **POI hero, and the level's only place-anchor** |
 | `halifax-landmark-pier-21` | `landmark-pier-21@1x.svg` | 900 × 620 | 137 | **POI hero**: the terminal, the liner and the immigrant train |
 
@@ -292,6 +292,50 @@ checked.
 3. **Two layers were designed and not drawn.** §2.
 4. **Nothing is drawn that only survives at 2×.** The smallest deliberate feature in the level is a 5 px
    glazing bar on the Town Clock's windows; the next smallest is an 8 px gold dial mark and a 9 px gull beak.
+
+### 5.1 The deck, redrawn: what makes a boardwalk read as a boardwalk
+
+**The blind pass of 2026-09-08 failed this subject on the deck alone.** Every `mustBeRight` feature was
+drawn and nothing from `neverAdd` was present; the identifier called the composite *a small coastal town's
+waterfront main street* and reached none of the seven accepted answers. **The deck read as pavement**, and it
+read as pavement because it was one: `path-light` from edge to edge with three 3 px `path-base` hairlines
+across it, at world y 1338, 1356 and 1374.
+
+The cause was in `references.json` and not in the drawing. The contract said *grey weathered planking*, which
+is a true description of a boardwalk and an equally true description of a concrete pavement, and the drawing
+obeyed it exactly. So the contract now describes the STRUCTURE, and the deck is drawn to it:
+
+| what | how it is drawn | why it is there |
+|---|---|---|
+| board courses | tops at local y 358, 370, 383, 397, 412, 428, graded so the nearer courses are taller | a deck receding from the camera, not a set of equal stripes. The thinnest is 12 px, the floor `references.json` sets for a plank that is drawn at all |
+| the gap between courses | 2 px `path-shade`, with a 1 px `stone-light` chamfer on the near board below it | on a real deck the gaps are the strongest lines. The chamfer is the key light, upper left, on the near board's top arris |
+| board ends | 1 px `path-base` butt joints on a 336 px period, staggered per course | **this is the feature the old drawing had none of.** Thin and quiet on purpose: drawn at the weight of the gaps they turn the deck into a brick wall, which is what the first attempt at this fix looked like |
+| board tone | `stone-light` dominant, with `path-light` and `stone-base` boards through it | weathered timber is a warm grey-tan. `path` alone is concrete, and that is the whole finding. Adjacent boards differ, because a poured surface does not |
+| the edge | `wood-base` kerb, `wood-light` sunlit cap, `wood-shade` underside, then 7 px of `ao-shadow` at 0.18 on the deck below it | it stands proud of the deck instead of being a painted line |
+| the water below the edge | 12 px of `water-shade` along the bottom of both open slips | the deck's own shadow on the water, which is what says the deck is a structure standing over it |
+
+**It tiles.** The butt joints sit on a 336 px period and 2016 / 336 = 6, so they repeat across the seam; the
+board that STRADDLES the seam is drawn with one tone at both ends, so the wrap has no colour change without a
+joint to explain it. Checked mechanically rather than by eye: the tile's last pixel column is identical to
+its first for all 96 rows of the deck.
+
+**Nothing else on the tile changed.** No landmark was added and none may be — the tile repeats every 2016 px
+and Halifax comes from the Town Clock, which passed cold. The tile is still 2016 × 440 at depth 40,
+`scrollFactor` 1.0, local y 420 is still the ground line, and the deck still occupies exactly the rows it
+occupied before, so **no number in `content/levels/halifax.json` moves.**
+
+**One consequence for the level document to be aware of, which is not a request to change it.** `theme.ground`
+is `path-base` `#8b857c` and the ground polygon fills from the polyline to the bottom of the world, so in game
+a warm timber deck now meets a cool grey mass at y = 1280 with the `cloud-light` crest between them. That
+reads as a sunlit deck over a shadowed wharf and is the better of the two available pictures: with the deck in
+`path-light` the two merged into one grey field, which is exactly what made the deck look like a road. If
+anyone ever wants them to match, the change is `theme.ground` and it is content's call, not art's.
+
+**Judged by looking.** Seven renders of the composite `twoParallaxTiles({ farMatch: 'uptown', nearMatch:
+'quayside', nearTop: 160 })` at 2016 × 600, plus the deck band at 2× and the tile seam at 3×. The first
+attempt put `wood-light` boards in the deck and read as a painted stage; the second matched the butt joints to
+the gaps and read as a brick wall; the third was still `path` throughout and read as paving slabs. None of
+that is visible in the SVG.
 
 ---
 

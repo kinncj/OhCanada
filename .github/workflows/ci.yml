@@ -120,7 +120,17 @@ jobs:
       # deploy-pages.yml builds; without it CI would be checking a different
       # dist/ from the one that ships.
       - name: Build and run the browser suites
-        run: make assets build test-e2e test-perf test-a11y
+        run: make assets build test-e2e test-a11y
+
+      # Reports, does not block. The perf suite cannot be measured on this
+      # runner: it rasterises in software, so the level costs 45 ms a frame
+      # against 1 ms on a laptop for the same commit, and the visual tier
+      # degrades mid-sample because the container cannot hold a cadence.
+      # Every number it produces is a property of the container. Frame time
+      # is a device budget and wants a stable host with a real GPU.
+      - name: Performance suite (reports, does not block)
+        continue-on-error: true
+        run: make test-perf
 
       # On failure only, and one artifact rather than two. `test-results/` used to
       # be uploaded alongside this; the HTML reporter copies every attachment it

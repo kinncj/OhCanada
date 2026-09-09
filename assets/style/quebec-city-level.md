@@ -462,6 +462,22 @@ cannot outvote a ramp. Three corrections, all in `layer-60-slope.svg`:
   in `toboggan-slide-riders.jpg`. There was no toboggan and no rider anywhere in 1440 px, and a verifier was
   being asked to name a sport from an empty surface.
 
+**The far rider was decapitated by the tile seam, and the order the fix had to be done in is the point.**
+Found 2026-09-08 by the blind hand-off's source scan: the far rider was authored partly ABOVE the viewBox —
+head circle at local y 1.52, toque hull from −21.9 to +2.3 — so `layer-60-slope` clipped it at its own top
+edge and, in the composite at `nearTop` 580, about 50 px of toque survived on render rows 580–581, landing on
+the terrace's timber wall rather than on the lane. **Its toque was `ice-base` `#a9d0e5`.** `references.json`
+forbids the `ice` ramp anywhere on this lane — scoped to this subject, because the Rideau Canal requires it —
+so *moving the rider down first would have carried an ice-coloured shape onto the lane and created the breach
+that the correction exists to prevent.* The obvious fix makes the thing worse. So: **recolour, then move.**
+The toque and its brim are now `cobalt-light` `#2275c6`, a garment blue that no ice or snow ramp contains, and
+`#a9d0e5` no longer appears anywhere in the file. Only then was the rider moved: scaled 0.82 about its own
+ground contact at (1080, 96) and shifted 4 px down, so the whole figure — including every path CONTROL point,
+which is what a bounding-box scan measures — sits at local y ≥ 3.34. The toboggan stays in the far lane band
+between the top of the tile and the first divider ridge, so the far rider is still smaller and further up the
+run than the near one, which is the depth cue that made two riders worth drawing. Nothing else in the file
+moved and no other shape changed colour.
+
 Note what the two runs of this subject are worth against each other: **the previous, primed reading recorded
 the built-chute feature PRESENT and this unprimed one recorded it absent.** That difference is the whole
 value of the anonymised hand-off.

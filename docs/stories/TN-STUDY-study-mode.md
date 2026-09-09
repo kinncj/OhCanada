@@ -49,8 +49,8 @@ Read `README.md` in this directory first. Every count on this screen follows the
 
 `study.count` and `study.short` are two rows each because one row draws "1 questions" — see
 `TN-COPY-strings-and-counts.md` for the rule and for why English and French need the same mechanism and not
-the same condition. `study.error` deliberately mirrors `level.error.title` and `level.error.body` in
-`TN-LEVEL-ottawa.md`: the same failure said the same way, so the player learns one sentence, not two.
+the same condition. `study.error` deliberately mirrors `level.<id>.error.title` and `level.error.body` in
+`TN-WAIT-a-level-opens-or-it-does-not.md`: the same failure said the same way, so the player learns one sentence, not two.
 `study.error.retry` is the same two words as `level.error.retry` and a separate key, so the two screens can
 be reworded independently.
 
