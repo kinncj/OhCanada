@@ -2,7 +2,13 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { LevelId } from '@domain/ids';
 
-import { createLevelSelect, levelCardState, type MapEntry } from '@ui/level-select';
+import {
+  createLevelSelect,
+  describeEntry,
+  levelCardState,
+  levelTitle,
+  type MapEntry,
+} from '@ui/level-select';
 
 import { buildPage, type FakeElement, type FakePage } from './support/fake-dom';
 
@@ -451,5 +457,77 @@ describe('leaving, focusing and speaking French', () => {
         'Halifax. Ouvert. Vous pouvez y jouer maintenant.',
       );
     });
+  });
+});
+
+
+/**
+ * The map's description of one card, without a map on the page.
+ *
+ * It was a method on the screen and is a pure function now, because the moment a
+ * player most needs to hear "Halifax is open" is the moment the level select
+ * does not exist: the completion card, over the level they have just finished.
+ * `TN-MAP-03` — "it is announced as open when I reach it" — is a promise about a
+ * fact, not about a screen, so the sentence has to be reachable from both.
+ *
+ * The alternative was a new copy row naming the level that just opened, which
+ * would be one more string per level in two languages, written at the one screen
+ * that needed it. Three reviewed rows joined is the same fact in words somebody
+ * has already checked.
+ */
+describe('describing one card away from the map', () => {
+  const MAP = {
+    locale: 'en' as const,
+    entries: [
+      { number: 1, id: id('halifax'), built: true, unlocked: true, stamped: true },
+      { number: 3, id: id('quebec-city'), built: true, unlocked: true },
+      { number: 4, id: id('ottawa'), built: true, unlocked: false, stampsNeeded: 2 },
+      { number: 2, built: false, unlocked: false },
+    ] satisfies MapEntry[],
+    stampsToUnlock: 1,
+  };
+
+  it('says the place, the state and the reason, in that order', () => {
+    expect(describeEntry(MAP, id('quebec-city'))).toBe(
+      'Québec City. Open. You can play this now.',
+    );
+  });
+
+  it('is the same sentence the screen itself draws', () => {
+    const { screen: select } = open({ entries: MAP.entries, stampsToUnlock: MAP.stampsToUnlock });
+    /* One rule, one place. A card that read one way on the map and another way
+       on the card that sent the player there would be two answers to one
+       question. */
+    for (const entry of MAP.entries) {
+      if (entry.id === undefined) continue;
+      expect(select.describe(entry.id)).toBe(describeEntry(MAP, entry.id));
+    }
+  });
+
+  it('still says why a locked card is locked', () => {
+    expect(describeEntry(MAP, id('ottawa'))).toBe(
+      'Ottawa. Locked. Earn 2 more stamps to open this.',
+    );
+  });
+
+  it('answers null for a card this build does not have', () => {
+    expect(describeEntry(MAP, id('nowhere'))).toBeNull();
+  });
+
+  it('is French', () => {
+    expect(describeEntry({ ...MAP, locale: 'fr' }, id('quebec-city'))).toBe(
+      'Ville de Québec. Ouvert. Vous pouvez y jouer maintenant.',
+    );
+  });
+
+  it('gives a level its own name, and no name to a level that has none', () => {
+    const [halifax, , , levelTwo] = MAP.entries;
+    expect(levelTitle('en', halifax as MapEntry)).toBe('Halifax');
+    /*
+     * Level 2 has a subject line and deliberately no place name
+     * (`docs/content-review.md` §1). `null` is what stops a completion card
+     * offering a button labelled with a number.
+     */
+    expect(levelTitle('en', levelTwo as MapEntry)).toBeNull();
   });
 });

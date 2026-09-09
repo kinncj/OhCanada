@@ -113,6 +113,105 @@ function hasRow(key: CopyKey): boolean {
   return text('en', key) !== undefined;
 }
 
+/**
+ * What the map needs to describe one card, without a map on the page.
+ *
+ * Every field is already an option of {@link LevelSelectOptions}; the type
+ * exists so {@link describeEntry} can be called by a screen that is *not* the
+ * level select — the completion card, which has to name the level that just
+ * opened while the player is still in the level they finished, and the map does
+ * not exist at that moment.
+ */
+export interface MapDescription {
+  readonly locale: UiLocale;
+  /** The ten entries, in map order. Never sorted, here or anywhere. */
+  readonly entries: readonly MapEntry[];
+  /** `unlockRules.stampsToUnlockNext`, for a locked card with no other answer. */
+  readonly stampsToUnlock: number;
+}
+
+/** One card's state, as the word `TN-MAP-01` requires on screen. */
+function stateWordFor(locale: UiLocale, state: LevelCardState): string {
+  if (state === 'open') return text(locale, 'map.state.open');
+  if (state === 'locked') return text(locale, 'map.state.locked');
+  return text(locale, 'map.state.notBuilt');
+}
+
+/**
+ * The sentence under a card.
+ *
+ * A locked card either names the level to finish first — right when one stamp
+ * opens the next level, which is `OQ-MAP-4`'s recommendation — or counts the
+ * stamps still needed. The count comes from the caller, because how many
+ * stamps are left is the domain's arithmetic; the *choice between the two
+ * sentences* is presentation and belongs here.
+ */
+function helpForEntry(
+  map: MapDescription,
+  entry: MapEntry,
+  state: LevelCardState,
+  index: number,
+): string {
+  const { locale, entries } = map;
+  if (state === 'not-built') return text(locale, 'map.notBuilt.help');
+  if (state === 'open') return text(locale, 'map.open.help');
+
+  const needed = entry.stampsNeeded;
+  if (typeof needed === 'number') return count(locale, 'map.locked.stamps', needed);
+
+  const previous = entries[index - 1];
+  const previousTitle = previous === undefined ? null : titleKeyOf(previous);
+  if (previousTitle !== null) {
+    return text(locale, 'map.locked.after', { level: text(locale, previousTitle) });
+  }
+  return count(locale, 'map.locked.stamps', map.stampsToUnlock);
+}
+
+/**
+ * One card, read out: its place, its state and the sentence under it.
+ *
+ * "Halifax. Open. You can play this now." — **three rows this screen already
+ * draws, joined**, and no fourth sentence written anywhere. That is the whole
+ * reason it is a pure function rather than a method: `TN-MAP-03` says a level
+ * that opens "is announced as open when I reach it", and the moment a player
+ * most needs to hear it is the moment the map does not exist — the completion
+ * card, over the level they have just finished. A sentence naming the level that
+ * just opened is a copy row nobody has written; this is the same fact said in
+ * words that have been reviewed, rather than a fourth string invented at the one
+ * screen that needed it.
+ *
+ * `null` when this build has no such card, which is the honest answer for an id
+ * that reached here from a save or an address rather than from the journey.
+ */
+export function describeEntry(map: MapDescription, id: LevelId): string | null {
+  const index = map.entries.findIndex((candidate) => candidate.id === id);
+  const entry = map.entries[index];
+  if (entry === undefined) return null;
+  const state = levelCardState(entry);
+  const titleKey = titleKeyOf(entry);
+  /* A card with no place name — level 2 — is described by its number, which is
+     the handle its rows are keyed on and the only name it has. */
+  const name =
+    titleKey === null
+      ? text(map.locale, 'map.number', { n: entry.number })
+      : text(map.locale, titleKey);
+  return `${name}. ${stateWordFor(map.locale, state)}. ${helpForEntry(map, entry, state, index)}`;
+}
+
+/**
+ * A level's place name, or `null` when this build has none for it.
+ *
+ * Exported for the same caller and the same reason as {@link describeEntry}: the
+ * completion card's route into the level that just opened is labelled with that
+ * level's own name, because `level.<id>.title` is a row that exists in both
+ * languages and "Play {{level}}" is a sentence nobody has written. Level 2 has
+ * no place name on purpose, so `null` is a state rather than a failure.
+ */
+export function levelTitle(locale: UiLocale, entry: MapEntry): string | null {
+  const key = titleKeyOf(entry);
+  return key === null ? null : text(locale, key);
+}
+
 export interface LevelSelectOptions {
   readonly locale: UiLocale;
   /** The ten entries, in map order. This screen never sorts them. */
@@ -334,34 +433,20 @@ export function createLevelSelect(
     return element(doc, 'li', { className: 'tn-levels__item', children: [control, help] });
   }
 
-  function stateWord(state: LevelCardState): string {
-    if (state === 'open') return text(locale, 'map.state.open');
-    if (state === 'locked') return text(locale, 'map.state.locked');
-    return text(locale, 'map.state.notBuilt');
+  /* Both delegate to the pure functions above, which are also what the
+     completion card calls. One rule, one place: a card that reads one way on the
+     map and another way on the card that sent the player there would be two
+     answers to one question. */
+  function description(): MapDescription {
+    return { locale, entries, stampsToUnlock: options.stampsToUnlock };
   }
 
-  /**
-   * The sentence under a card.
-   *
-   * A locked card either names the level to finish first — right when one stamp
-   * opens the next level, which is `OQ-MAP-4`'s recommendation — or counts the
-   * stamps still needed. The count comes from the caller, because how many
-   * stamps are left is the domain's arithmetic; the *choice between the two
-   * sentences* is presentation and belongs here.
-   */
+  function stateWord(state: LevelCardState): string {
+    return stateWordFor(locale, state);
+  }
+
   function helpFor(entry: MapEntry, state: LevelCardState, index: number): string {
-    if (state === 'not-built') return text(locale, 'map.notBuilt.help');
-    if (state === 'open') return text(locale, 'map.open.help');
-
-    const needed = entry.stampsNeeded;
-    if (typeof needed === 'number') return count(locale, 'map.locked.stamps', needed);
-
-    const previous = entries[index - 1];
-    const previousTitle = previous === undefined ? null : titleKeyOf(previous);
-    if (previousTitle !== null) {
-      return text(locale, 'map.locked.after', { level: text(locale, previousTitle) });
-    }
-    return count(locale, 'map.locked.stamps', options.stampsToUnlock);
+    return helpForEntry(description(), entry, state, index);
   }
 
   return {
@@ -401,15 +486,7 @@ export function createLevelSelect(
       return true;
     },
     describe(id): string | null {
-      const index = entries.findIndex((candidate) => candidate.id === id);
-      const entry = entries[index];
-      if (entry === undefined) return null;
-      const state = levelCardState(entry);
-      const titleKey = titleKeyOf(entry);
-      /* A card with no place name — level 2 — is described by its number, which
-         is the handle its rows are keyed on and the only name it has. */
-      const name = titleKey === null ? text(locale, 'map.number', { n: entry.number }) : text(locale, titleKey);
-      return `${name}. ${stateWord(state)}. ${helpFor(entry, state, index)}`;
+      return describeEntry(description(), id);
     },
     destroy(): void {
       root.remove();

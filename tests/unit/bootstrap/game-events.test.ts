@@ -30,15 +30,21 @@ import { describe, expect, it, vi } from 'vitest';
    `game-renderer.ts`, which imports Phaser, which touches `window` at module
    scope and cannot load under `environment: 'node'`. `game-events.ts` reaches
    the barrel with an `import type`, which is erased, so production is unaffected. */
-import { SCENE_EVENT_NAMES, isSceneEventName } from '@adapters/phaser/level-events';
+import {
+  SCENE_EVENT_NAMES,
+  SCENE_MILESTONE_NAMES,
+  isSceneEventName,
+} from '@adapters/phaser/level-events';
 import { text } from '@ui/copy';
 import { SPEAKS, createLevelAnnouncer, type LevelEventName } from '@ui/level-events';
 
 import {
   createGameEventBus,
+  createMilestoneBus,
   levelEventSource,
   publishLevelFailed,
   publishSceneEvent,
+  publishSceneMilestone,
 } from '../../../app/bootstrap/game-events';
 
 describe('the engine and the UI name the same events', () => {
@@ -199,5 +205,76 @@ describe('the wiring end to end: bus -> announcer -> live region', () => {
     publishSceneEvent(bus, 'level/ready', 'ottawa');
 
     expect(said).toEqual([]);
+  });
+});
+
+
+/**
+ * The other channel: what a level has *finished*.
+ *
+ * `level/exitReached` is the one that makes "reach the end of a level and it
+ * sends you to a new one" possible at all — the scene owns the world's geometry,
+ * so it is the only thing that can see the player arrive, and what the arrival
+ * is *worth* is decided in `app/bootstrap`. This suite covers the carrier
+ * between the two, and the one property that matters about it: it is a separate
+ * channel, so a milestone can never be mistaken for something the announcer
+ * should speak.
+ */
+describe('the milestone channel', () => {
+  it('carries every milestone the scene can publish', () => {
+    const bus = createMilestoneBus();
+    const heard: { name: string; detail?: string }[] = [];
+    bus.onAny((event) => {
+      heard.push({ name: event.type, ...event.payload });
+    });
+
+    for (const name of SCENE_MILESTONE_NAMES) publishSceneMilestone(bus, name, 'halifax');
+
+    expect(heard.map((event) => event.name)).toEqual([...SCENE_MILESTONE_NAMES]);
+    expect(heard.every((event) => event.detail === 'halifax')).toBe(true);
+  });
+
+  it('tells "no subject" from "a subject nobody set"', () => {
+    const bus = createMilestoneBus();
+    const heard: Record<string, unknown>[] = [];
+    bus.on('level/exitReached', (payload) => {
+      heard.push({ ...payload });
+    });
+
+    publishSceneMilestone(bus, 'level/exitReached');
+    /* `exactOptionalPropertyTypes`: `{ detail: undefined }` is a different value
+       from `{}`, and a subscriber that got the first could not tell them apart. */
+    expect(heard).toEqual([{}]);
+    expect(Object.hasOwn(heard[0] ?? {}, 'detail')).toBe(false);
+  });
+
+  it('is not the announcer’s bus, so no milestone reaches the live region', () => {
+    const milestones = createMilestoneBus();
+    const bus = createGameEventBus();
+    const said: string[] = [];
+    createLevelAnnouncer(levelEventSource(bus), {
+      locale: 'en',
+      announce: (message) => said.push(message),
+      arrival: 'You are in Halifax.',
+      failure: text('en', 'level.halifax.error.title'),
+    });
+
+    for (const name of SCENE_MILESTONE_NAMES) publishSceneMilestone(milestones, name, 'halifax');
+
+    /*
+     * The split is the point. Reusing `poi/engaged` to mean "and it is finished
+     * now" would give one name two meanings and make the announcer say the wrong
+     * thing; putting a milestone on the level bus would give `SPEAKS` a row
+     * nobody has decided. What a finished level says is the completion card's,
+     * and the card is read on arrival.
+     */
+    expect(said).toEqual([]);
+  });
+
+  it('names no milestone the engine cannot publish', () => {
+    /* The event map is derived from `SceneMilestoneName`, so this is a
+       compile-time fact restated at runtime for the failure message: a name
+       added on one side and not the other stops compiling first. */
+    expect([...SCENE_MILESTONE_NAMES]).toContain('level/exitReached');
   });
 });

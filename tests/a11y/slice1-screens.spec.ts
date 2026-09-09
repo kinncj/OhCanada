@@ -67,6 +67,11 @@ interface HarnessOptions {
   readonly answered?: number;
   /** `false` draws the completion card with no stamp row, which is most levels. */
   readonly stamp?: boolean;
+  /**
+   * `false` draws the completion card with no route into a new level: the last
+   * level in the chain, and a level replayed for a stamp it already had.
+   */
+  readonly next?: boolean;
 }
 
 /** Open one screen and wait for the marker that says it is really there. */
@@ -87,6 +92,7 @@ async function openScreen(
   if (options.sound === true) params.set('sound', '1');
   if (options.answered !== undefined) params.set('answered', String(options.answered));
   if (options.stamp === false) params.set('stamp', '0');
+  if (options.next === false) params.set('next', '0');
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -710,6 +716,103 @@ test.describe('the level completion card', () => {
     const before = await root.textContent();
     await page.waitForTimeout(2_000);
     expect(await root.textContent()).toBe(before);
+  });
+
+  /*
+   * Reaching the end of a level is what finishes it, so this card now opens over
+   * a live scene at the end of a walk rather than after a question. Two new
+   * states come with that, and both are scanned: a route straight into the level
+   * that just opened, and a player who walked the whole level and answered
+   * nothing.
+   */
+
+  test('offers the level that just opened, named and described', async ({ page }) => {
+    const root = await openScreen(page, 'complete');
+    const play = root.locator('[data-testid="quest-complete-next"]');
+    await expect(play).toHaveText('Québec City');
+    /* Named by the place, described by what the map says about it: the reason is
+       read after the name, never as part of it (`TN-MAP-09`). */
+    await expect(play).toHaveAccessibleDescription('Québec City. Open. You can play this now.');
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('says what the player answered, and says nothing when they answered nothing', async ({
+    page,
+  }) => {
+    const played = await openScreen(page, 'complete');
+    await expect(played.locator('[data-testid="quest-complete-progress"]')).toHaveText(
+      'You got 2 out of 3 right.',
+    );
+
+    /*
+     * A player can walk from the spawn to the end of the level without engaging
+     * a single landmark. The stamp is still earned — that is the product
+     * decision — so the card is still shown, and what it must not do is claim
+     * the subject was learned.
+     */
+    const walked = await openScreen(page, 'complete', { answered: 0 });
+    await expect(walked.locator('[data-testid="quest-complete-progress"]')).toHaveCount(0);
+    await expect(walked).toHaveAccessibleName('Task done!');
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('reads with no route into a new level, which is the last level in the chain', async ({
+    page,
+  }) => {
+    const root = await openScreen(page, 'complete', { next: false });
+    await expect(root.locator('[data-testid="quest-complete-next"]')).toHaveCount(0);
+    /* The map becomes the way forward rather than the card having none. */
+    await expect(root.locator('[data-testid="quest-complete-map"]')).toHaveAttribute(
+      'data-tn-action',
+      'primary',
+    );
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('keeps every way on a 44 px target at 200 % text', async ({ page }) => {
+    await openScreen(page, 'complete', { textScale: 200 });
+    expect(await undersizedTargets(page)).toEqual([]);
+    expect(await scrollsSideways(page)).toBe(false);
+  });
+
+  test('is reachable with the keyboard alone, three ways on and no trap', async ({ page }) => {
+    const root = await openScreen(page, 'complete');
+    await page.keyboard.press('Tab');
+    const reached = new Set<string>();
+    for (let step = 0; step < 6; step += 1) {
+      reached.add(await focusedTestId(page));
+      await page.keyboard.press('Tab');
+    }
+
+    expect([...reached].sort()).toEqual(
+      ['quest-complete-keep-playing', 'quest-complete-map', 'quest-complete-next'].sort(),
+    );
+    await expect(root).toBeVisible();
+  });
+
+  test('reads in French, with the new level in French too', async ({ page }) => {
+    const root = await openScreen(page, 'complete', { locale: 'fr' });
+    await expect(root.locator('[data-testid="quest-complete-next"]')).toHaveText(
+      'Ville de Québec',
+    );
+    await expect(root.locator('[data-testid="quest-complete-next-level"]')).toContainText(
+      'Vous pouvez y jouer maintenant.',
+    );
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('is still proven in high contrast and with less movement', async ({ page }) => {
+    await openScreen(page, 'complete', { contrast: 'high', motion: 'reduced' });
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
   });
 });
 

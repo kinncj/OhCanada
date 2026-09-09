@@ -35,7 +35,7 @@
  * once, in a type.
  */
 
-import type { SceneEventName } from '@adapters/phaser';
+import type { SceneEventName, SceneMilestoneName } from '@adapters/phaser';
 import { createEventBus, type EventBus } from '@common/event-bus';
 import type { LevelEvent, LevelEventName, LevelEventSource } from '@ui/level-events';
 
@@ -109,4 +109,60 @@ export function levelEventSource(bus: GameEventBus): LevelEventSource {
       const { detail } = event.payload;
       listener(detail === undefined ? { name: event.type } : { name: event.type, detail });
     });
+}
+
+/* -------------------------------------------------------------- milestones */
+
+/**
+ * The second channel: the moments a level *finishes* something.
+ *
+ * `app/adapters/phaser/level-events.ts` says why they are not in
+ * `SCENE_EVENT_NAMES` — `publishSceneEvent` is typed `SceneEventName ->
+ * EventBus<LevelEventName>`, so widening the scene's union with a name `app/ui`
+ * has never declared is a type error right here, and that check was doing its
+ * job: `app/ui` had no completed-level vocabulary and inventing one in the
+ * adapter is not the adapter's to do.
+ *
+ * So the milestones ride their own bus. The shape is deliberately identical to
+ * {@link GameEventBus} — one optional `detail` — because the two channels differ
+ * in *meaning*, not in mechanism: a scene event is something the world is doing,
+ * a milestone is something the world has finished. Merging them would give
+ * `poi/engaged` two meanings, which is the rename `level-events.ts` refuses.
+ *
+ * ## Who listens, and why it is not `app/ui`
+ *
+ * Nobody in `app/ui` subscribes to this. A milestone is not an announcement: it
+ * is a fact the **domain** has to be told about first — the stamp is written,
+ * the unlock rule is re-run over the new save, and only then is there anything
+ * to put on a screen. That sequence is the composition root's (ADR-0005), so
+ * `openLevel` subscribes here, folds the fact into `Progress`, and hands the
+ * *result* to `app/ui/level-complete.ts` as data.
+ */
+export type MilestoneEventMap = { readonly [K in SceneMilestoneName]: LevelEventPayload };
+
+export type MilestoneBus = EventBus<MilestoneEventMap>;
+
+export function createMilestoneBus(): MilestoneBus {
+  return createEventBus<MilestoneEventMap>();
+}
+
+/**
+ * Publish one milestone on the bus.
+ *
+ * The drift check {@link publishSceneEvent} performs has no counterpart here and
+ * needs none: the event map above is *derived* from `SceneMilestoneName`, so the
+ * two lists cannot disagree. What can still go wrong is a milestone nobody
+ * handles, and that is caught in `main.ts`, where the subscription is exhaustive
+ * over the same union.
+ *
+ * The spread is not decoration: `exactOptionalPropertyTypes` makes
+ * `{ detail: undefined }` a different type from `{}`, and a subscriber that
+ * received the first could not tell "no subject" from "a subject nobody set".
+ */
+export function publishSceneMilestone(
+  bus: MilestoneBus,
+  name: SceneMilestoneName,
+  detail?: string,
+): void {
+  bus.emit(name, detail === undefined ? {} : { detail });
 }

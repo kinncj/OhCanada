@@ -21,7 +21,7 @@
 import type { LevelId } from '../../app/domain/ids';
 
 import { createCharacterCreator, type CreatorSlot } from '../../app/ui/character-creator';
-import type { MapEntry } from '../../app/ui/level-select';
+import { describeEntry, type MapEntry } from '../../app/ui/level-select';
 import { createShell } from '../../app/ui/shell';
 import { createDialogue } from '../../app/ui/dialogue';
 import { createHud } from '../../app/ui/hud';
@@ -408,17 +408,54 @@ switch (screen) {
    * and no description, and it must still read.
    */
   case 'complete': {
+    /*
+     * `?stamp=0` drops the stamp sentence; `?answered=0` drops the score line,
+     * which is the card a player gets for **walking to the end of a level
+     * without answering anything** — a real state since reaching the end is what
+     * finishes a level, and a different accessibility question from the full
+     * card: fewer descriptions, one fewer action, and the dialog still has to
+     * read. `?next=0` takes the route into the new level away, which is the last
+     * level in the chain and a replayed level.
+     */
+    const walkedPast = params.get('answered') === '0';
+    const nothingOpened = params.get('next') === '0';
     createLevelComplete(ui, {
       locale,
       announce,
       singleSwitch: store.current.singleSwitch,
       onChooseLevel: () => undefined,
       onKeepPlaying: () => undefined,
-    }).show(
-      params.get('stamp') === '0'
+      ...(nothingOpened ? {} : { onPlayNext: () => undefined }),
+    }).show({
+      ...(params.get('stamp') === '0'
         ? {}
-        : { stampMessage: text(locale, 'stamp.ottawa.earned') },
-    );
+        : { stampMessage: text(locale, 'stamp.ottawa.earned') }),
+      ...(walkedPast
+        ? {}
+        : {
+            progressMessage: text(locale, 'study.summary.score', { correct: 2, total: 3 }),
+          }),
+      ...(nothingOpened
+        ? {}
+        : {
+            next: {
+              /* The level that just opened, exactly as the composition root
+                 hands it over: the level's own place name, and the map's own
+                 description of its card. */
+              title: text(locale, 'level.quebec-city.title'),
+              description: describeEntry(
+                {
+                  locale,
+                  entries: [
+                    { number: 3, id: 'quebec-city' as LevelId, built: true, unlocked: true },
+                  ],
+                  stampsToUnlock: 1,
+                },
+                'quebec-city' as LevelId,
+              ) ?? '',
+            },
+          }),
+    });
     break;
   }
 

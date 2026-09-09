@@ -32,7 +32,11 @@ import { hasCopyRow, text } from '@ui/copy';
  */
 const CONFIG = JSON.parse(
   readFileSync(fileURLToPath(new URL('../../content/game.config.json', import.meta.url)), 'utf8'),
-) as { readonly unlockRules: UnlockRules };
+) as {
+  readonly unlockRules: UnlockRules;
+  /** The map's ten places, in map order — a different list from the unlock order. */
+  readonly journey: readonly (string | null)[];
+};
 
 const BUILT_LEVELS = readdirSync(
   fileURLToPath(new URL('../../content/levels', import.meta.url)),
@@ -89,5 +93,77 @@ export const START_LEVEL_MODE_LABEL: string = ((): string => {
         'docs/stories/TN-MOVE-locomotion-labels.md and transcribe it.',
     );
   }
+  return text('en', key);
+})();
+
+
+/* --------------------------------------------------- where the level leads --- */
+
+/**
+ * The level that opens when the start level is finished.
+ *
+ * Derived the same way the game derives it, and for the same reason
+ * {@link START_LEVEL} is: it was Ottawa, it is Québec City, and it moves again
+ * when Mi'kma'ki ships. Three questions, asked of the same three sources
+ * `app/bootstrap/journey.ts` and `main.ts` ask:
+ *
+ *  - **the unlock rule**, run over a passport holding exactly the start level's
+ *    stamp. The real domain function, not a restatement;
+ *  - **the map order**, `journey`, because `openedWhileIn` takes the *first*
+ *    newly opened card in map order and that is the one the completion card
+ *    offers;
+ *  - **built**, from `content/levels/`, because a level with no document cannot
+ *    be walked into.
+ *
+ * `null` when this build's chain opens nothing — a real state for a game with
+ * one level, and the spec that needs a second level says so rather than failing
+ * on an `undefined`.
+ */
+const openedBefore = new Set(unlockedLevelIds(CONFIG.unlockRules, []).map(String));
+
+const nextFound = CONFIG.journey.find(
+  (id): id is string =>
+    id !== null &&
+    BUILT_LEVELS.includes(id) &&
+    !openedBefore.has(id) &&
+    unlockedLevelIds(CONFIG.unlockRules, [found as never])
+      .map(String)
+      .includes(id),
+);
+
+/** The id of that level, or `null` when finishing the start level opens nothing. */
+export const NEXT_LEVEL: string | null = nextFound ?? null;
+
+/** What the completion card's route into it is labelled: that level's own name. */
+export const NEXT_LEVEL_TITLE: string | null = ((): string | null => {
+  if (NEXT_LEVEL === null) return null;
+  const key = `level.${NEXT_LEVEL}.title`;
+  if (!hasCopyRow(key)) {
+    throw new Error(
+      `content/game.config.json opens "${NEXT_LEVEL}" after "${START_LEVEL}" and ` +
+        `app/ui/copy.ts has no ${key}, so the completion card can offer no route into it ` +
+        'and a player who finishes a level is left one tap short of the next one.',
+    );
+  }
+  return text('en', key);
+})();
+
+/**
+ * How the HUD says the player moves in that level, in English.
+ *
+ * The one fact that tells the two levels apart from outside the game: they
+ * declare different locomotion, so the mode strip changing is proof that the
+ * *second* level loaded rather than the first one reloading.
+ */
+export const NEXT_LEVEL_MODE_LABEL: string | null = ((): string | null => {
+  if (NEXT_LEVEL === null) return null;
+  const document = JSON.parse(
+    readFileSync(
+      fileURLToPath(new URL(`../../content/levels/${NEXT_LEVEL}.json`, import.meta.url)),
+      'utf8',
+    ),
+  ) as { readonly locomotion?: readonly { readonly labelKey: string }[] };
+  const key = document.locomotion?.[0]?.labelKey;
+  if (key === undefined || !hasCopyRow(key)) return null;
   return text('en', key);
 })();

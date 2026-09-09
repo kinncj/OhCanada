@@ -67,14 +67,24 @@ import {
   type SaveProgressDeps,
 } from '@application/use-cases/save-progress';
 import { defaultSettings, withSettings } from '@domain/entities/player';
-import { newProgress, stampedLevelIds, type Progress } from '@domain/entities/progress';
+import {
+  newProgress,
+  stampedLevelIds,
+  withStamp,
+  type Progress,
+} from '@domain/entities/progress';
 import type { EpochMillis, LevelId, LocaleCode } from '@domain/ids';
 import { hasCopyRow, text, type UiLocale } from '@ui/copy';
 import { createHud, type Hud } from '@ui/hud';
 import { createLevelAnnouncer, type LevelTarget } from '@ui/level-events';
-import { createLevelComplete, type LevelComplete } from '@ui/level-complete';
+import {
+  createLevelComplete,
+  type LevelComplete,
+  type LevelCompleteContent,
+  type LevelCompleteNext,
+} from '@ui/level-complete';
 import { createLevelError, createLevelLoading } from '@ui/level-screens';
-import type { MapEntry } from '@ui/level-select';
+import { describeEntry, levelTitle, type MapEntry } from '@ui/level-select';
 import { announce, clearAnnouncements, mountLiveRegion } from '@ui/live-region';
 import { createPoiCard } from '@ui/poi-card';
 import { createRotateOverlay } from '@ui/rotate-overlay';
@@ -91,10 +101,13 @@ import { createShell } from '@ui/shell';
 import { readGameRules, type GameRules } from './game-rules';
 import {
   createGameEventBus,
+  createMilestoneBus,
   levelEventSource,
   publishLevelFailed,
   publishSceneEvent,
+  publishSceneMilestone,
   type GameEventBus,
+  type MilestoneBus,
 } from './game-events';
 import { isPlayable, journeyEntries } from './journey';
 import { createDrillRunner, type DrillRunner } from './quiz';
@@ -138,6 +151,12 @@ function main(): void {
    * neither end knows the other exists (ADR-0005).
    */
   const bus = createGameEventBus();
+  /*
+   * The second channel: what a level has *finished*, as opposed to what it is
+   * doing. `game-events.ts` says why it is a bus of its own and not four more
+   * names on the first one.
+   */
+  const milestones = createMilestoneBus();
 
   const parsed = parseBootConfig(gameConfigDocument);
   if (!parsed.ok) {
@@ -157,11 +176,44 @@ function main(): void {
   document.title = config.title;
   root.lang = config.defaultLocale;
 
+  /**
+   * Who wants to know that a level has become **playable**.
+   *
+   * A set rather than one callback because the renderer is built once, at boot,
+   * and level sessions come and go: the session that is open registers, and
+   * unregisters when it closes, so a scene booting into a level that has already
+   * been left reaches nobody.
+   *
+   * The distinction it carries is a real defect rather than a nicety.
+   * `loadLevel` resolves when the document has parsed and the scene has been
+   * handed to Phaser; Phaser boots it and calls `create` one or more frames
+   * later, and everything that makes a level playable — the camera, the
+   * affordances, the keyboard keys — happens in `create`. Writing "ready" and
+   * taking the waiting screen down at the earlier moment shows the player a
+   * level they cannot touch: measured with a 1.5 s delay on the textures, a real
+   * key press in that window was lost two runs in three.
+   */
+  const playableListeners = new Set<(levelId: string) => void>();
+
   const renderer = new GameRenderer({
     parent: gameHost,
     config,
     onLevelEvent: (name, detail) => {
       publishSceneEvent(bus, name, detail);
+    },
+    /*
+     * **The line the engine's half needed.** `level/exitReached` is the scene
+     * saying the player has arrived at the end of the world — a position, not an
+     * achievement, as `level-events.ts` in the adapter is careful to say. What
+     * that arrival is worth is decided in `openLevel` below, where the passport
+     * and the unlock rules are.
+     */
+    onLevelMilestone: (name, detail) => {
+      publishSceneMilestone(milestones, name, detail);
+    },
+    /* The level's first playable frame. See {@link playableListeners}. */
+    onLevelReady: (levelId) => {
+      for (const listen of [...playableListeners]) listen(levelId);
     },
   });
   applyPageTheme(renderer);
@@ -218,6 +270,13 @@ function main(): void {
     uiHost,
     gameHost,
     bus,
+    milestones,
+    onLevelPlayable: (listen) => {
+      playableListeners.add(listen);
+      return () => {
+        playableListeners.delete(listen);
+      };
+    },
     renderer,
     pause,
     config,
@@ -233,6 +292,14 @@ interface FrontDoor {
   readonly uiHost: HTMLElement;
   readonly gameHost: HTMLElement;
   readonly bus: GameEventBus;
+  /** The finished-something channel. See `game-events.ts`. */
+  readonly milestones: MilestoneBus;
+  /**
+   * Hear about a level's first playable frame; the returned function stops
+   * listening. Registration rather than one callback, because the renderer
+   * outlives every level session.
+   */
+  readonly onLevelPlayable: (listen: (levelId: string) => void) => () => void;
   readonly renderer: GameRenderer;
   readonly pause: PauseControl;
   readonly config: BootConfig;
@@ -257,7 +324,8 @@ interface FrontDoor {
  * frame time in a game — and nothing is drawn twice waiting for it.
  */
 async function openFrontDoor(deps: FrontDoor): Promise<void> {
-  const { root, uiHost, gameHost, bus, renderer, pause, config, rules } = deps;
+  const { root, uiHost, gameHost, bus, milestones, renderer, pause, config, rules } = deps;
+  const { onLevelPlayable } = deps;
 
   /*
    * `#game`'s place on the page, remembered before anything moves it.
@@ -432,11 +500,11 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       console.error(
         `[bootstrap] an answer was not recorded. ${result.error.code}: ${result.error.message}`,
       );
-      return { stampEarned: false };
+      return { stampEarned: false, correct: false };
     }
     progress = result.value.progress;
     persist();
-    return { stampEarned: result.value.stampEarned };
+    return { stampEarned: result.value.stampEarned, correct: result.value.judgement.correct };
   };
 
   /**
@@ -606,6 +674,8 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       uiHost,
       gameHost,
       bus,
+      milestones,
+      onLevelPlayable,
       renderer,
       pause,
       store,
@@ -620,11 +690,53 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       questions: studySource,
       record: recordAnswer,
       onExportSave: exportSave,
+      /*
+       * Reaching the end of the level earns its stamp.
+       *
+       * `withStamp` rather than a use case, for the same reason `withSettings`
+       * is called directly a few lines up: there is no `finishLevel` use case to
+       * hold the clock for, the rule is one pure domain function, and the clock
+       * is already here. It is **idempotent by design** — TN-QUEST-04's "exactly
+       * one Ottawa stamp however many times the quest is finished" — so a level
+       * finished twice moves nothing and opens nothing a second time.
+       *
+       * The unlock rule is not run here and never is in this file: it is
+       * `unlockedLevelIds`' over the stamps in the save, and `entriesNow()` asks
+       * it fresh. Writing the stamp *is* opening the next level.
+       */
+      finishLevel: () => {
+        progress = withStamp(progress, id, clock.now());
+        persist();
+      },
       onLeave: () => {
         leaveLevel();
       },
       onLeaveToLevel: (next) => {
         leaveLevel(next);
+      },
+      onPlayNextLevel: (next) => {
+        playNextLevel(next);
+      },
+      /*
+       * The map's own words about the card that just opened, without the map.
+       *
+       * `entriesNow()` rather than `entries`: the stamp was written a moment ago
+       * and `entries` is the list as it was when this level was entered, which is
+       * precisely the list in which the new level is still locked.
+       */
+      describeNext: (next, forLocale) => {
+        const map = {
+          locale: forLocale,
+          entries: entriesNow(),
+          stampsToUnlock: rules.unlockRules.stampsToUnlockNext,
+        };
+        const entry = map.entries.find((candidate) => candidate.id === next);
+        const title = entry === undefined ? null : levelTitle(forLocale, entry);
+        const description = describeEntry(map, next);
+        /* A level with no place name — level 2, on purpose — gets no route of
+           its own rather than a button labelled with a number. */
+        if (title === null || description === null) return null;
+        return { title, description };
       },
       /*
        * What opened while this level was open.
@@ -672,8 +784,21 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     return opened?.id ?? null;
   }
 
-  function leaveLevel(focusLevelId?: LevelId): void {
-    if (session === null) return;
+  /**
+   * Take the level down, and leave the shell holding the map.
+   *
+   * Everything both ways out of a level share, and nothing either of them
+   * decides. `false` means there was no level open, which every caller treats as
+   * "nothing to do" rather than as a failure — leaving twice is a double tap on
+   * a control, not a defect.
+   *
+   * Split out of {@link leaveLevel} when the completion card gained a route
+   * straight into the next level: that route needs the whole teardown and none
+   * of the hand-back, because the map it would hand to is a screen the player
+   * never sees.
+   */
+  function teardownLevel(): boolean {
+    if (session === null) return false;
     /* The announcements queued by a level describe something the player can no
        longer reach, so they are dropped rather than read over the map. */
     clearAnnouncements();
@@ -695,6 +820,11 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
      */
     entries = entriesNow();
     shell.setEntries(entries);
+    return true;
+  }
+
+  function leaveLevel(focusLevelId?: LevelId): void {
+    if (!teardownLevel()) return;
     /*
      * After the HUD is destroyed, and it puts the player back on the card they
      * just left rather than at the top of the map (`TN-FLOW-03`) — unless a
@@ -709,6 +839,44 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     const opened = focusLevelId ?? openedWhileIn(entriesOnEntry);
     entriesOnEntry = entries;
     shell.leaveLevel(opened === null ? {} : { focusLevelId: opened });
+  }
+
+  /**
+   * Finish one level and open the next one, without stopping on the map.
+   *
+   * "Once you reach the end of a level, it should send you to a new level" —
+   * this is that sentence, and it is the completion card's primary action. The
+   * map is still one tap away on the same card, and leaving the new level still
+   * lands on it, so `TN-FLOW`'s one rule — "back always goes one step up the
+   * route, and never further" — is untouched.
+   *
+   * A **request**, checked here rather than trusted, exactly like
+   * `onPlayLevel`. The id came from `openedWhileIn`, which already requires the
+   * level to be built and unlocked, but the save can be written to between the
+   * card being drawn and the button being pressed, and `enterLevel` refuses a
+   * level this build has no words for by taking the player to the map — a route
+   * that needs the map to be *attached*, which it is not while a level is
+   * open. So the refusal happens up here, where the fallback is a real screen:
+   * the map, focused on the card that just opened, which is where every other
+   * way out of a level lands.
+   */
+  function playNextLevel(id: LevelId): void {
+    if (session === null) return;
+    if (!isPlayable(entriesNow(), id) || levelWords(id) === null) {
+      console.error(
+        `[bootstrap] refused to open "${String(id)}" straight from the level just finished: ` +
+          'not built, not unlocked, or this build has no copy rows for it. Taking the ' +
+          'player to the map instead (TN-FLOW-05).',
+      );
+      leaveLevel(id);
+      return;
+    }
+    if (!teardownLevel()) return;
+    /* The comparison the *next* level's completion card will be made against.
+       `enterLevel` sets it again from the same value; setting it here as well
+       keeps the invariant true even on the path that refuses below. */
+    entriesOnEntry = entries;
+    enterLevel(id);
   }
 
   const requested = new URLSearchParams(window.location?.search ?? '').get('level');
@@ -748,6 +916,17 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
 interface AnswerOutcome {
   /** True only on the answer that earned the stamp, never on a repeat. */
   readonly stampEarned: boolean;
+  /**
+   * Was it right?
+   *
+   * Not for the card — the card judged the answer before this call and is
+   * already saying so. It is for the **completion card**, which has to be able
+   * to tell a player who answered three questions from one who walked the length
+   * of the level and answered none. Reaching the end earns the stamp either way,
+   * so without this the same card would claim the same thing about two very
+   * different sittings, which is the game lying to a learner.
+   */
+  readonly correct: boolean;
 }
 
 interface LevelSession {
@@ -767,6 +946,15 @@ interface LevelWiring {
   readonly uiHost: HTMLElement;
   readonly gameHost: HTMLElement;
   readonly bus: GameEventBus;
+  /** What the level has *finished*: `level/exitReached`, and the two after it. */
+  readonly milestones: MilestoneBus;
+  /**
+   * The level's first playable frame, from the scene's own `create`.
+   *
+   * Not `loadLevel` resolving: see {@link FrontDoor.onLevelPlayable}. The
+   * returned function stops listening and is called when the session closes.
+   */
+  readonly onLevelPlayable: (listen: (levelId: string) => void) => () => void;
   readonly renderer: GameRenderer;
   readonly pause: PauseControl;
   readonly store: SettingsStore;
@@ -785,6 +973,16 @@ interface LevelWiring {
   /** Record one answer. See {@link AnswerOutcome} for what comes back and why. */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
   readonly onExportSave: () => void;
+  /**
+   * The level is finished: write its stamp into the passport.
+   *
+   * Called when the player reaches the end of the world, and called by nothing
+   * else. It is the caller's because only the caller holds `Progress` and the
+   * save, and it is **idempotent in the domain** — `withStamp` keeps the first
+   * moment rather than moving it, so a level finished twice is one stamp, one
+   * unlock and one line in the passport.
+   */
+  readonly finishLevel: () => void;
   readonly onLeave: () => void;
   /**
    * Leave, and land the player on a card other than this level's.
@@ -794,6 +992,36 @@ interface LevelWiring {
    * and lands on the card they left (`TN-FLOW-03`).
    */
   readonly onLeaveToLevel: (id: LevelId) => void;
+  /**
+   * Leave, and open that level straight away, without stopping on the map.
+   *
+   * "Once you reach the end of a level, it should send you to a new level" —
+   * `map.open` is one tap short of that, so the completion card offers the
+   * level itself as its primary action. Coherent with `TN-FLOW`: that story's
+   * one rule is about *back* ("back always goes one step up the route, and never
+   * further"), which is untouched — leaving the new level still lands on the
+   * map. The map is not skipped for a first-run player either; they have already
+   * come through it to reach this level, which is the reason `TN-FLOW` gives for
+   * the creator handing to the map rather than to a level.
+   *
+   * A request, like `onPlayLevel`: the caller re-checks that the level is built,
+   * unlocked and nameable, and falls back to the map rather than opening a black
+   * screen.
+   */
+  readonly onPlayNextLevel: (id: LevelId) => void;
+  /**
+   * What to say about the level that just opened, in a given language.
+   *
+   * The caller's, because it is the map's answer and the map is not on the page:
+   * `describeEntry` composes "Halifax. Open. You can play this now." out of rows
+   * the level select already draws. A sentence naming the newly opened level is
+   * a copy row nobody has written; this is the same fact in reviewed words
+   * rather than a fourth string invented at the one screen that needed it.
+   *
+   * `null` for a level this build cannot name — level 2 has a subject line and
+   * deliberately no place name — and the card then offers the map alone.
+   */
+  readonly describeNext: (id: LevelId, locale: UiLocale) => LevelCompleteNext | null;
   /**
    * Which level opened while this one was being played, or `null`.
    *
@@ -1059,29 +1287,64 @@ function openLevel(wiring: LevelWiring): LevelSession {
     holdMs: store.current.holdToChooseMs,
     onAnswer: (question, chosenIndex) => {
       const outcome = wiring.record(question, chosenIndex);
+      answeredHere += 1;
+      if (outcome.correct) correctHere += 1;
       /* Remembered rather than acted on: the completion card must not open over
          the explanation the player is still reading. It opens when the question
          is done. */
-      if (outcome.stampEarned) stamped = true;
+      if (outcome.stampEarned) finished = true;
     },
     onFinished: () => {
-      pause.release('poi');
-      if (stamped) {
-        stamped = false;
-        showCompleted();
-        return;
-      }
-      /* Back where they were. The card's own trap restores to whatever was
-         focused when it opened, which is the landmark card that has since gone,
-         so the destination is named. */
-      const prompt = hud.prompt;
-      if (prompt !== null && prompt.isConnected) prompt.focus({ preventScroll: true });
-      else hud.focus();
+      backToTheLevel();
     },
   });
 
-  /** Set by an answer that earned the stamp; read once, when the question ends. */
-  let stamped = false;
+  /**
+   * Leave the landmark chain: release its hold, and either open the completion
+   * card or put the player back where they were.
+   *
+   * One function because there are two ways out of that chain — a question that
+   * was answered, and a landmark that had no question to ask — and only the
+   * first of them used to look at {@link finished}. A level finished while a
+   * card was open would have set the flag and never drawn anything.
+   */
+  function backToTheLevel(): void {
+    pause.release('poi');
+    if (finished) {
+      showCompleted();
+      return;
+    }
+    /* Back where they were. The card's own trap restores to whatever was
+       focused when it opened, which is the landmark card that has since gone,
+       so the destination is named. */
+    const prompt = hud.prompt;
+    if (prompt !== null && prompt.isConnected) prompt.focus({ preventScroll: true });
+    else hud.focus();
+  }
+
+  /**
+   * The level is finished and the card is owed.
+   *
+   * Set by an answer that earned the stamp *and* by reaching the end of the
+   * world, and read when there is nothing on screen for the card to open over.
+   */
+  let finished = false;
+
+  /** Has the completion card been drawn in this sitting of this level? */
+  let cardShown = false;
+
+  /**
+   * What the player answered **at this level's landmarks**, this sitting.
+   *
+   * Not a Study drill taken from the menu over the level: Study reports its own
+   * score on its own summary, and folding it in here would let a player answer
+   * ten questions in the menu and be told the level taught them. Not the save
+   * either — `Progress` counts reviews per question and not per level, and a
+   * card claiming "you answered three here" about a sitting three weeks ago
+   * would be a different sentence than the one it looks like.
+   */
+  let answeredHere = 0;
+  let correctHere = 0;
 
   /**
    * The card that says the level's task is done, and offers the way on.
@@ -1095,21 +1358,134 @@ function openLevel(wiring: LevelWiring): LevelSession {
     announce: wiring.announce,
     singleSwitch: store.current.singleSwitch,
     holdMs: store.current.holdToChooseMs,
+    /* Straight into the level that just opened — what the player asked for.
+       Re-asked at the press rather than captured when the card was drawn: the
+       save can have changed under an open card. */
+    onPlayNext: () => {
+      const next = openedByThisLevel();
+      /* No new level means the control should not have been drawn; the map is
+         the honest fallback rather than a press that does nothing. */
+      if (next === null) wiring.onLeave();
+      else wiring.onPlayNextLevel(next);
+    },
     onChooseLevel: () => {
       const next = openedByThisLevel();
       if (next === null) wiring.onLeave();
       else wiring.onLeaveToLevel(next);
     },
     onKeepPlaying: () => {
-      pause.release('poi');
-      hud.focus();
+      pause.release('complete');
     },
+    /*
+     * Where focus goes when the card closes back into the level.
+     *
+     * The card's trap restores to whatever opened it, and the thing that opens
+     * it now is **the end of the world** — published by a canvas that is
+     * `aria-hidden` and holds no focus, so the trap would restore to `<body>`.
+     * The HUD's `<main>` is a real destination — programmatically focusable,
+     * never in the Tab order — and it is on the page for as long as the level
+     * is. It is exactly where `Hud.focus` puts a player arriving from the map.
+     */
+    restoreFocusTo: () => hud.main,
   });
 
+  /**
+   * Everything the completion card says, resolved in whatever language is in
+   * force when it is asked — including after the player changes language with
+   * the card open.
+   *
+   * Three lines, each of which is drawn only while it is **true**:
+   *
+   *  - the stamp sentence, `stamp.<id>.earned`, for levels this build has a row
+   *    for. Only Ottawa has one; a level without draws no stamp line rather than
+   *    naming another place;
+   *  - what the player answered here. `study.summary.score` is the row — the
+   *    same sentence, about the same fact, that the Study summary draws, reused
+   *    rather than reworded exactly as `passport.state.earned` is reused by the
+   *    map. **Absent when they answered nothing**, which is the whole point:
+   *    reaching the end earns the stamp, and a card that said the same thing to
+   *    a player who read three landmarks and to one who walked straight past
+   *    them would be claiming a subject was learned when nothing was answered;
+   *  - the level that just opened, in the map's own words.
+   *
+   * A purpose-written sentence for the "answered nothing" case is the one string
+   * this card wants and does not have. Reported as a copy gap rather than
+   * invented here (ADR-0010).
+   */
+  function completionContent(forLocale: UiLocale): LevelCompleteContent {
+    const stampKey = `stamp.${String(id)}.earned`;
+    const next = openedByThisLevel();
+    const described = next === null ? null : wiring.describeNext(next, forLocale);
+    return {
+      ...(hasCopyRow(stampKey) ? { stampMessage: text(forLocale, stampKey) } : {}),
+      ...(answeredHere === 0
+        ? {}
+        : {
+            progressMessage: text(forLocale, 'study.summary.score', {
+              correct: correctHere,
+              total: answeredHere,
+            }),
+          }),
+      ...(described === null ? {} : { next: described }),
+    };
+  }
+
+  /**
+   * Draw the card, once.
+   *
+   * **Once per sitting of this level**, whichever way the level was finished and
+   * however many times it is finished again: walking back over the exit line,
+   * or answering the last question of a quest after having already reached the
+   * end, must not draw a second card or announce a second time. The stamp is
+   * idempotent in the domain and this is the same promise on the screen.
+   */
   function showCompleted(): void {
-    pause.hold('poi');
-    const key = `stamp.${String(id)}.earned`;
-    completed.show(hasCopyRow(key) ? { stampMessage: text(locale, key) } : {});
+    finished = false;
+    if (cardShown) return;
+    cardShown = true;
+    /* The card's own reason, not the landmark's. `poi` is taken and released by
+       the landmark chain; a dialog that borrowed it could be closed by a chain
+       finishing underneath it and leave a live level running behind an open
+       card — or, the other way round, leave the level frozen after the card had
+       gone. The menu did exactly that once. */
+    pause.hold('complete');
+    completed.show(completionContent);
+  }
+
+  /**
+   * The player reached the end of the level.
+   *
+   * `level/exitReached` is the scene reporting a **position**; this is where it
+   * becomes an achievement, which is the split `app/adapters/phaser`'s
+   * `level-events.ts` asks for and the reason the decision is here. In order:
+   * the stamp goes into the passport (so `unlockedLevelIds` has already opened
+   * whatever it opens before anything is drawn), the world is told the level is
+   * over so nothing left in it keeps asking to be done, and then — and only
+   * then — the card says so.
+   *
+   * Idempotent at every step: `withStamp` keeps the first moment,
+   * `markLevelComplete` returns early, and {@link showCompleted} draws once.
+   */
+  function reachedTheEnd(): void {
+    if (cardShown) return;
+    wiring.finishLevel();
+    /*
+     * The world's half. `markLevelComplete` had no caller anywhere in the app —
+     * a capability nothing composed, which is the shape this project keeps
+     * finding — so every affordance in a finished level went on pulsing at a
+     * player who had already been given credit for it.
+     */
+    renderer.markLevelComplete();
+    /* A level cannot advance while a modal is open — the pause stops the scene,
+       and the scene is what watches the exit line — so this branch is a guard
+       rather than a path. It is here because the failure it prevents is a
+       completion card opening on top of a question card, and two traps over one
+       `<main>` is not a state any screen recovers from. */
+    if (card.visible || runner.running) {
+      finished = true;
+      return;
+    }
+    showCompleted();
   }
 
   /**
@@ -1162,6 +1538,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
     learning = null;
     if (about === null) {
       pause.release('poi');
+      /* The chain was torn down rather than finished — a language change, the
+         level closing — so there is nowhere to put focus and nothing owed. */
       return;
     }
 
@@ -1173,9 +1551,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
             `${drawn.error.code}: ${drawn.error.message}`,
         );
       }
-      pause.release('poi');
-      const prompt = hud.prompt;
-      if (prompt !== null && prompt.isConnected) prompt.focus({ preventScroll: true });
+      backToTheLevel();
       return;
     }
 
@@ -1261,6 +1637,48 @@ function openLevel(wiring: LevelWiring): LevelSession {
     engage(detail);
   });
 
+  /**
+   * The end of the level, and the two milestones that are not it.
+   *
+   * `level/exitReached` is the one the player produces by walking: the scene
+   * sees the geometry, this file decides what the arrival is worth.
+   *
+   * `level/completed` comes back the other way — it is the scene's echo of the
+   * `markLevelComplete` call {@link reachedTheEnd} makes — and `quest/completed`
+   * is one subject in a level finishing, not the level. Both go through the same
+   * idempotent entry rather than being ignored: a quest that finishes a level is
+   * a route the domain already supports, and if a future scene ever publishes
+   * `level/completed` first, the card is drawn once either way.
+   *
+   * `detail` is the level's id. A milestone naming **another** level is a wiring
+   * mistake — one bus, one level open at a time — and it is refused rather than
+   * used, because opening the wrong level's completion card would give a player
+   * a stamp for somewhere they have not been.
+   */
+  const offMilestone = wiring.milestones.onAny((event) => {
+    const { detail } = event.payload;
+    if (detail !== undefined && detail !== `${id}`) {
+      console.error(
+        `[bootstrap] "${event.type}" arrived for "${detail}" while "${String(id)}" was the ` +
+          'open level. Ignored: a milestone for another level cannot be about this one.',
+      );
+      return;
+    }
+    switch (event.type) {
+      case 'level/exitReached':
+      case 'level/completed':
+        reachedTheEnd();
+        return;
+      case 'quest/completed':
+        /* One subject finished, not the level. The world has already stopped
+           advertising it (`LevelScene.markCompleted`), and the quest tracker
+           that would say so is not wired — reported, not faked. */
+        return;
+      default:
+        return;
+    }
+  });
+
   async function load(): Promise<void> {
     root.dataset['tnLevel'] = 'loading';
     loading.show();
@@ -1285,8 +1703,30 @@ function openLevel(wiring: LevelWiring): LevelSession {
       publishLevelFailed(bus, `${id}`);
       return;
     }
-    /* `TN-WAIT-01`: the waiting screen goes when the level is playable, and it
-       goes out of the accessibility tree rather than behind a style rule. */
+    /*
+     * And nothing else. `loadLevel` resolving is **not** the level becoming
+     * playable — see {@link levelIsPlayable}, which is what takes the waiting
+     * screen down.
+     */
+  }
+
+  /**
+   * The level's first playable frame: the camera is framed, the affordances are
+   * built and the keyboard keys exist.
+   *
+   * `TN-WAIT-01` — "the waiting screen goes when the level is playable" — and
+   * this is the line that makes the word *playable* true. It used to run when
+   * `loadLevel` resolved, which is one or more frames earlier: Phaser has been
+   * handed the scene by then and has not booted it, so the page said "ready",
+   * the waiting screen went, and the first key the player pressed reached a
+   * scene that did not exist yet. Measured with a 1.5 s delay on the level's
+   * textures, that key press was lost two runs in three.
+   *
+   * Safe to arrive before or after `load()` finishes, and safe to arrive twice:
+   * every line is idempotent.
+   */
+  function levelIsPlayable(): void {
+    /* Out of the accessibility tree rather than behind a style rule. */
     loading.hide();
     root.dataset['tnLevel'] = 'ready';
     /* The side panels are this level's sky and ground now, not the boot
@@ -1296,6 +1736,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
     const label = modeLabel(renderer, locale);
     if (label !== null) hud.setMode(label);
   }
+
+  const offPlayable = wiring.onLevelPlayable(() => {
+    levelIsPlayable();
+  });
 
   void load();
 
@@ -1333,6 +1777,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
     close(): void {
       offFailure();
       offEngaged();
+      offMilestone();
+      offPlayable();
       announcer.destroy();
       /* `learning` first: a landmark card destroyed with a question still owed
          would otherwise draw one over a level that no longer exists. */
@@ -1355,6 +1801,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       hud.main.remove();
       pause.release('menu');
       pause.release('poi');
+      pause.release('complete');
       pause.release('settings');
       pause.release('study');
     },
@@ -1436,7 +1883,15 @@ function modeLabel(renderer: GameRenderer, locale: UiLocale): string | null {
 
 /* ------------------------------------------------------------------- pausing */
 
-type PauseReason = 'orientation' | 'menu' | 'poi' | 'settings' | 'study' | 'shell';
+type PauseReason =
+  | 'orientation'
+  | 'menu'
+  | 'poi'
+  /** The completion card. Its own reason, never the landmark chain's. */
+  | 'complete'
+  | 'settings'
+  | 'study'
+  | 'shell';
 
 interface PauseControl {
   hold(reason: PauseReason): void;

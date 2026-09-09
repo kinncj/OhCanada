@@ -24,11 +24,13 @@ function open(overrides: Partial<Parameters<typeof createLevelComplete>[1]> = {}
   const announce = vi.fn();
   const onChooseLevel = vi.fn();
   const onKeepPlaying = vi.fn();
+  const onPlayNext = vi.fn();
   const card = createLevelComplete(page.host, {
     locale: 'en',
     announce,
     onChooseLevel,
     onKeepPlaying,
+    onPlayNext,
     ...overrides,
   });
   return {
@@ -37,9 +39,16 @@ function open(overrides: Partial<Parameters<typeof createLevelComplete>[1]> = {}
     announce,
     onChooseLevel,
     onKeepPlaying,
+    onPlayNext,
     at: (testId: string) => page.doc.byTestId(testId),
   };
 }
+
+/** The level that opened, as the composition root hands it over. */
+const NEXT = {
+  title: 'Québec City',
+  description: 'Québec City. Open. You can play this now.',
+} as const;
 
 const OTTAWA_STAMP = text('en', 'stamp.ottawa.earned');
 
@@ -207,5 +216,181 @@ describe('the level completion card', () => {
     card.show({});
     card.destroy();
     expect(at('quest-complete-card')).toBeNull();
+  });
+});
+
+
+/**
+ * The half of this card the user asked for: "once you reach the end of a level,
+ * it should send you to a new level."
+ *
+ * Reaching the end of the world finishes the level, so the card is now reachable
+ * without a single question having been answered — which is why the two groups
+ * below are about what it is allowed to *claim*, and about the route on being
+ * one tap rather than two.
+ */
+describe('the way on from a finished level', () => {
+  it('offers the level that just opened, named by that level', () => {
+    const { card, at } = open();
+    card.show({ stampMessage: OTTAWA_STAMP, next: NEXT });
+
+    const play = at('quest-complete-next');
+    expect(play?.textContent).toBe('Québec City');
+    /* Named by the place, described by what the map says about it — never a
+       sentence this screen wrote. */
+    expect(at('quest-complete-next-level')?.textContent).toBe(NEXT.description);
+    expect(
+      play?.getAttribute('aria-describedby'),
+      'the reason is read after the name, never as part of it (TN-MAP-09)',
+    ).toBe('tn-level-complete-next');
+  });
+
+  it('sends the player there on one press, not two', () => {
+    const { card, at, onPlayNext, onChooseLevel } = open();
+    card.show({ next: NEXT });
+    at('quest-complete-next')?.click();
+
+    expect(onPlayNext).toHaveBeenCalledTimes(1);
+    expect(onChooseLevel, 'the map is the other route, not a stop on this one')
+      .not.toHaveBeenCalled();
+  });
+
+  it('offers no route into a level when none opened', () => {
+    const { card, at } = open();
+    card.show({ stampMessage: OTTAWA_STAMP });
+
+    expect(
+      at('quest-complete-next'),
+      'a control with no destination is a dead control, which is worse than one fewer',
+    ).toBeNull();
+    expect(at('quest-complete-next-level')).toBeNull();
+  });
+
+  it('offers no route when the caller cannot take one', () => {
+    const page = buildPage();
+    /* No `onPlayNext`: the composition root has nowhere to send the player, so
+       the control is absent rather than present and dead. */
+    const card = createLevelComplete(page.host, { locale: 'en' });
+    card.show({ next: NEXT });
+    expect(page.doc.byTestId('quest-complete-next')).toBeNull();
+  });
+
+  it('keeps the map as the way forward while there is nowhere new to go', () => {
+    const { card, at } = open();
+    card.show({});
+    expect(at('quest-complete-map')?.getAttribute('data-tn-action')).toBe('primary');
+  });
+
+  it('never draws two primary actions on one screen', () => {
+    const { card, at } = open();
+    card.show({ next: NEXT });
+
+    expect(at('quest-complete-next')?.getAttribute('data-tn-action')).toBe('primary');
+    expect(
+      at('quest-complete-map')?.getAttribute('data-tn-action'),
+      'one action per screen carries the player forward; two is a screen with no answer',
+    ).toBeNull();
+  });
+
+  it('still offers the map and the level they are in, on every showing', () => {
+    const { card, at } = open();
+    card.show({ next: NEXT });
+    expect(at('quest-complete-map')).not.toBeNull();
+    expect(at('quest-complete-keep-playing')).not.toBeNull();
+  });
+});
+
+describe('what the card claims about what the player did', () => {
+  it('says what they answered, when they answered something', () => {
+    const { card, at } = open();
+    card.show({ progressMessage: 'You got 2 out of 3 right.' });
+    expect(at('quest-complete-progress')?.textContent).toBe('You got 2 out of 3 right.');
+  });
+
+  it('says nothing about answers when there were none', () => {
+    const { card, at } = open();
+    /* Reaching the end earns the stamp whether or not anything was answered. A
+       card that scored a level nobody answered anything in would be claiming a
+       subject was learned when nothing was. */
+    card.show({ stampMessage: OTTAWA_STAMP });
+    expect(at('quest-complete-progress')).toBeNull();
+  });
+
+  it('describes itself with everything it is saying, not only the stamp', () => {
+    const { card, at, page } = open();
+    card.show({
+      stampMessage: OTTAWA_STAMP,
+      progressMessage: 'You got 2 out of 3 right.',
+      next: NEXT,
+    });
+
+    const root = at('quest-complete-card');
+    const described = page.doc.getElementById(root?.getAttribute('aria-describedby') ?? '');
+    expect(described?.textContent).toContain(OTTAWA_STAMP);
+    expect(described?.textContent).toContain('You got 2 out of 3 right.');
+    expect(described?.textContent).toContain(NEXT.description);
+  });
+
+  it('announces the news once and does not read the whole card twice', () => {
+    const { card, announce } = open();
+    card.show({
+      stampMessage: OTTAWA_STAMP,
+      progressMessage: 'You got 2 out of 3 right.',
+      next: NEXT,
+    });
+
+    expect(announce).toHaveBeenCalledTimes(1);
+    /* The rest is the dialog's description and is read on arrival; saying it
+       through the live region as well is the double-speaking every other screen
+       here avoids. */
+    expect(announce).toHaveBeenCalledWith(`Task done! ${OTTAWA_STAMP}`, 'en');
+  });
+});
+
+describe('the card follows the language, and lets go of the level', () => {
+  it('redraws every sentence in the new language when the caller can resolve one', () => {
+    const { card, at } = open();
+    card.show((locale) => ({
+      stampMessage: text(locale, 'stamp.ottawa.earned'),
+      next: { title: locale === 'fr' ? 'Ville de Québec' : 'Québec City', description: 'x' },
+    }));
+
+    card.setLocale('fr');
+    expect(at('quest-complete-stamp')?.textContent).toBe(text('fr', 'stamp.ottawa.earned'));
+    expect(at('quest-complete-next')?.textContent).toBe('Ville de Québec');
+    expect(at('quest-complete-map')?.textContent).toBe('Choisir un niveau');
+  });
+
+  it('puts focus somewhere real when it closes, never on the body', () => {
+    const page = buildPage();
+    const destination = page.doc.createElement('button');
+    page.host.append(destination as unknown as HTMLElement);
+    const card = createLevelComplete(page.host, {
+      locale: 'en',
+      onKeepPlaying: () => undefined,
+      restoreFocusTo: () => destination as unknown as HTMLElement,
+    });
+    card.show({});
+    page.doc.byTestId('quest-complete-keep-playing')?.click();
+
+    /*
+     * The world opens this card, and the world is a canvas that is
+     * `aria-hidden` and holds no focus — so the trap would restore to `<body>`,
+     * which is where a keyboard user loses their place and a screen reader goes
+     * quiet.
+     */
+    expect(page.doc.activeElement).toBe(destination);
+  });
+
+  it('never focuses a destination that has left the page', () => {
+    const page = buildPage();
+    const detached = page.doc.createElement('button');
+    const card = createLevelComplete(page.host, {
+      locale: 'en',
+      restoreFocusTo: () => detached as unknown as HTMLElement,
+    });
+    card.show({});
+    expect(() => page.doc.byTestId('quest-complete-keep-playing')?.click()).not.toThrow();
+    expect(page.doc.activeElement).not.toBe(detached);
   });
 });

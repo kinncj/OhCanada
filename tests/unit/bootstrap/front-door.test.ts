@@ -150,6 +150,26 @@ const hoisted = vi.hoisted(() => {
      * a listener the test found.
      */
     emit: ((name: string, detail?: string) => void) | null;
+    /**
+     * The renderer's `onLevelMilestone`, captured the same way and for the same
+     * reason: `level/exitReached` is the scene saying the player walked to the
+     * end of the world, and driving the sink is driving the real wire.
+     */
+    milestone: ((name: string, detail?: string) => void) | null;
+    /** How many times the world was told the level is over. */
+    markedComplete: number;
+    /**
+     * The renderer's `onLevelReady`: the level's **first playable frame**.
+     *
+     * A different moment from `loadLevel` resolving, which is the whole reason
+     * it exists — Phaser is handed the scene by the time the promise settles and
+     * boots it one or more frames later, so the camera, the affordances and the
+     * keyboard keys do not exist yet. The fake below reproduces that gap rather
+     * than papering over it.
+     */
+    playable: ((levelId: string) => void) | null;
+    /** Does the fake scene boot at all? `false` is a level that never comes up. */
+    scenesBoot: boolean;
     /** What the fake `StudySession` hands back, and how often it was asked. */
     drillCalls: number[];
     availableCalls: number;
@@ -169,6 +189,8 @@ const hoisted = vi.hoisted(() => {
      * domain says a stamp was earned.
      */
     stampFor: string | null;
+    /** What the faked `answerQuestion` judges the next answers to be. */
+    answersAreCorrect: boolean;
   } = {
     calls: [],
     loadCalls: [],
@@ -205,12 +227,17 @@ const hoisted = vi.hoisted(() => {
     completeOptions: null,
     leftTo: [],
     emit: null,
+    milestone: null,
+    markedComplete: 0,
+    playable: null,
+    scenesBoot: true,
     drillCalls: [],
     availableCalls: 0,
     recorded: [],
     prompts: [],
     studyShown: [],
     stampFor: null,
+    answersAreCorrect: true,
   };
   return { state };
 });
@@ -234,8 +261,14 @@ vi.mock('@adapters/phaser', () => ({
   hasLevel: (id: string): boolean => hoisted.state.built.includes(id),
   GameRenderer: class {
     readonly ready = Promise.resolve();
-    constructor(options: { onLevelEvent?: (name: string, detail?: string) => void }) {
+    constructor(options: {
+      onLevelEvent?: (name: string, detail?: string) => void;
+      onLevelMilestone?: (name: string, detail?: string) => void;
+      onLevelReady?: (levelId: string) => void;
+    }) {
       hoisted.state.emit = options.onLevelEvent ?? null;
+      hoisted.state.milestone = options.onLevelMilestone ?? null;
+      hoisted.state.playable = options.onLevelReady ?? null;
     }
     get palette(): Record<string, string> {
       return { sky: '#8ecae6' };
@@ -245,13 +278,31 @@ vi.mock('@adapters/phaser', () => ({
     }
     async loadLevel(id: string): Promise<unknown> {
       hoisted.state.loadCalls.push(id);
-      return Promise.resolve(hoisted.state.loadResult);
+      const result = hoisted.state.loadResult as { ok: boolean };
+      /*
+       * The scene boots *after* this promise settles, which is the gap the
+       * whole `onLevelReady` seam is about. Modelled as a later microtask
+       * rather than as the same one: a fake that called back synchronously
+       * would let a caller that writes "ready" at the wrong moment keep
+       * passing, which is exactly the defect this reproduces.
+       */
+      if (result.ok && hoisted.state.scenesBoot) {
+        void Promise.resolve()
+          .then(() => Promise.resolve())
+          .then(() => {
+            hoisted.state.playable?.(id);
+          });
+      }
+      return Promise.resolve(result);
     }
     get level(): unknown {
       return hoisted.state.level;
     }
     setAutoMove(enabled: boolean): void {
       hoisted.state.autoMove.push(enabled);
+    }
+    markLevelComplete(): void {
+      hoisted.state.markedComplete += 1;
     }
     pause(): void {
       hoisted.state.paused += 1;
@@ -496,6 +547,15 @@ vi.mock('@application/use-cases/answer-question', async () => {
         value: {
           progress: earn === null ? input.progress : withStamp(input.progress, earn as never, 1 as never),
           stampEarned: earn !== null,
+          /*
+           * The judgement, because the completion card counts on it: reaching
+           * the end of a level earns the stamp whether or not anything was
+           * answered, so "how many did you get right here" is the only thing on
+           * that card telling a played level from a walked-through one. Driven
+           * from the fixture, so a suite can be about a player who answered
+           * correctly and a player who did not.
+           */
+          judgement: { correct: hoisted.state.answersAreCorrect },
         },
       };
     },
@@ -747,6 +807,11 @@ beforeEach(() => {
   hoisted.state.prompts = [];
   hoisted.state.studyShown = [];
   hoisted.state.stampFor = null;
+  hoisted.state.answersAreCorrect = true;
+  hoisted.state.milestone = null;
+  hoisted.state.markedComplete = 0;
+  hoisted.state.playable = null;
+  hoisted.state.scenesBoot = true;
   doc = mountPage();
   vi.stubGlobal('document', asDocument(doc));
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -1153,6 +1218,19 @@ const emit = (name: string, detail?: string): void => {
   sink(name, detail);
 };
 
+/**
+ * The scene's milestone channel, driven at the seam the composition root wires.
+ *
+ * `level/exitReached` is the engine's half of "once you reach the end of a level
+ * it should send you to a new level": the scene watches the geometry and says
+ * the player has arrived. Everything after it is this file's.
+ */
+const reachEnd = (detail: string = `${START_LEVEL}`): void => {
+  const sink = hoisted.state.milestone;
+  if (sink === null) throw new Error('the renderer was never handed a milestone sink');
+  sink('level/exitReached', detail);
+};
+
 describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
   const arrive = async (): Promise<void> => {
     hoisted.state.level = LOADED_LEVEL;
@@ -1333,6 +1411,285 @@ describe('finishing a level says so, and leads to the next one', () => {
     await flush();
 
     expect(hoisted.state.leftTo.at(-1)).toEqual({ focusLevelId: EARNED_LEVEL });
+  });
+});
+
+describe('"ready" means the player can touch it', () => {
+  /**
+   * `loadLevel` resolving and the level becoming playable are two moments, and
+   * for a while the page announced the first one.
+   *
+   * Phaser is handed the scene when the promise settles and boots it one or more
+   * frames later; the camera, the affordances and — since the dropped-first-key
+   * fix — the keyboard keys themselves are all created in `create`. So the page
+   * said "ready", the waiting screen came down, and a key pressed in that window
+   * reached a scene that did not exist. Measured with a 1.5 s delay on the
+   * level's textures, it was lost two runs in three.
+   */
+  it('waits for the scene to boot before saying so', async () => {
+    /* A level whose scene never comes up: the document parsed, Phaser has it,
+       and `create` has not run. */
+    hoisted.state.scenesBoot = false;
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+
+    expect(
+      levelState(),
+      'the page called a level ready while its scene had not been built, so the first ' +
+        'thing the player does — press a key — reaches nothing',
+    ).toBe('loading');
+    expect(
+      hoisted.state.loadingHidden,
+      'and the waiting screen came down over a level nobody can touch (TN-WAIT-01)',
+    ).toBe(0);
+  });
+
+  it('says so, and takes the waiting screen down, once it has', async () => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+
+    expect(levelState()).toBe('ready');
+    expect(hoisted.state.loadingHidden).toBe(1);
+  });
+
+  it('stops listening when the level is left, so a late scene reaches nobody', async () => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    /* A scene booting into a level that has already been left would otherwise
+       write `ready` over a page that is showing the map. */
+    hoisted.state.playable?.(`${START_LEVEL}`);
+    expect(levelState()).toBeUndefined();
+  });
+});
+
+describe('reaching the end of a level finishes it and offers the next one', () => {
+  /**
+   * Walk to the end of the world, having answered nothing.
+   *
+   * The whole point of the scenario: `level/exitReached` is a **position**, and
+   * a player can reach it without engaging a single landmark. It still finishes
+   * the level, because that is the product decision — the points of interest are
+   * where the learning happens and the end of the world is the finish line — and
+   * the card is what has to be honest about it.
+   */
+  const walkToTheEnd = async (): Promise<void> => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    reachEnd();
+    await flush();
+  };
+
+  it('earns the stamp, so the next level is really open on the map', async () => {
+    await walkToTheEnd();
+    /* The map is rebuilt on the way out — `setEntries` replaces every card, so
+       it is done while no list is on screen (`TN-FLOW-03`). This is what the
+       player actually finds there. */
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    const entries = hoisted.state.entries as {
+      id?: LevelId;
+      unlocked: boolean;
+      stamped?: boolean;
+    }[];
+    expect(
+      entries.find((entry) => entry.id === START_LEVEL)?.stamped,
+      `walking to the end of ${String(START_LEVEL)} must put its stamp in the passport`,
+    ).toBe(true);
+    expect(
+      entries.find((entry) => entry.id === EARNED_LEVEL)?.unlocked,
+      `and that stamp is what opens ${String(EARNED_LEVEL)}: nothing else in the game ` +
+        'writes one',
+    ).toBe(true);
+  });
+
+  it('tells the world the level is over, so nothing in it keeps asking to be done', async () => {
+    await walkToTheEnd();
+    expect(
+      hoisted.state.markedComplete,
+      'markLevelComplete had no caller anywhere in the app, so every affordance in a ' +
+        'finished level went on pulsing at a player who had already been given credit',
+    ).toBe(1);
+  });
+
+  it('draws the completion card', async () => {
+    await walkToTheEnd();
+    expect(hoisted.state.completeShown).toHaveLength(1);
+  });
+
+  it('says nothing about answers when the player answered none', async () => {
+    await walkToTheEnd();
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
+      progressMessage?: string;
+    };
+    expect(
+      resolve('en').progressMessage,
+      'a card that scored a level nobody answered anything in would be claiming a ' +
+        'subject was learned when nothing was',
+    ).toBeUndefined();
+  });
+
+  it('scores the questions the player did answer, at this level’s landmarks', async () => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+
+    /* One landmark, one question, answered wrongly: the count is what the
+       player did, not what they got right. */
+    hoisted.state.answersAreCorrect = false;
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+    const question = hoisted.state.questionOptions as {
+      onAnswer: (index: number, right: boolean) => void;
+      onNext: () => void;
+    };
+    question.onAnswer(1, false);
+    question.onNext();
+    await flush();
+
+    reachEnd();
+    await flush();
+
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
+      progressMessage?: string;
+    };
+    expect(resolve('en').progressMessage).toBe(
+      text('en', 'study.summary.score', { correct: 0, total: 1 }),
+    );
+    expect(resolve('fr').progressMessage).toBe(
+      text('fr', 'study.summary.score', { correct: 0, total: 1 }),
+    );
+  });
+
+  it('names the level that just opened in the map’s own words, in either language', async () => {
+    await walkToTheEnd();
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
+      next?: { title: string; description: string };
+    };
+
+    const next = resolve('en').next;
+    expect(
+      next?.title,
+      `the route into ${String(EARNED_LEVEL)} is labelled with that level's own name, ` +
+        'because "Play {{level}}" is a sentence nobody has written',
+    ).toBe(text('en', `level.${String(EARNED_LEVEL)}.title` as never));
+    /* Three rows the map already draws, joined — never a fourth sentence. */
+    expect(next?.description).toContain(text('en', 'map.state.open'));
+    expect(next?.description).toContain(text('en', 'map.open.help'));
+
+    expect(resolve('fr').next?.description).toContain(text('fr', 'map.open.help'));
+  });
+
+  it('draws one card however many times the player walks over the end', async () => {
+    await walkToTheEnd();
+    reachEnd();
+    reachEnd();
+    await flush();
+
+    expect(
+      hoisted.state.completeShown,
+      'a quest finished twice is one stamp and one unlock; a level finished twice is ' +
+        'one card',
+    ).toHaveLength(1);
+    expect(hoisted.state.markedComplete).toBe(1);
+  });
+
+  it('ignores a milestone that names another level', async () => {
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    reachEnd(`${UNBUILT_LEVEL}`);
+    await flush();
+
+    expect(
+      hoisted.state.completeShown,
+      'one bus, one open level: a milestone for somewhere else cannot be about this one',
+    ).toEqual([]);
+    expect(hoisted.state.markedComplete).toBe(0);
+  });
+
+  it('goes straight into the level that just opened when the player asks for it', async () => {
+    await walkToTheEnd();
+    modalOption<{ onPlayNext: () => void }>('quest-complete-card').onPlayNext();
+    await flush();
+
+    /* Out of one level and into the next, without the map in between. */
+    expect(hoisted.state.calls).toContain(`shell.enterLevel:${String(EARNED_LEVEL)}`);
+    expect(hoisted.state.loadCalls.at(-1)).toBe(`${EARNED_LEVEL}`);
+    expect(
+      hoisted.state.calls.filter((call) => call === 'shell.leaveLevel'),
+      'the map is offered on the same card; it is not a screen the player is made to ' +
+        'pass through',
+    ).toEqual([]);
+  });
+
+  it('leaves the new level back to the map, so back still goes one step up', async () => {
+    await walkToTheEnd();
+    modalOption<{ onPlayNext: () => void }>('quest-complete-card').onPlayNext();
+    await flush();
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    expect(hoisted.state.calls).toContain('shell.leaveLevel');
+  });
+
+  it('still offers the map, and lands on the card that just opened', async () => {
+    await walkToTheEnd();
+    modalOption<{ onChooseLevel: () => void }>('quest-complete-card').onChooseLevel();
+    await flush();
+
+    expect(hoisted.state.leftTo.at(-1)).toEqual({ focusLevelId: EARNED_LEVEL });
+  });
+
+  it('does not leave the level frozen when the card is closed', async () => {
+    await walkToTheEnd();
+    const pausedWithCardUp = hoisted.state.paused;
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    await flush();
+
+    /*
+     * The menu did exactly this once: it took a hold and never let go, and the
+     * level behind it stopped and would not start. A completion card is another
+     * dialog over a live scene.
+     */
+    expect(pausedWithCardUp).toBeGreaterThan(0);
+    expect(hoisted.state.resumed, 'the level was left paused behind a card that has gone')
+      .toBeGreaterThan(0);
+  });
+
+  it('offers no route into a level that is finished but opened nothing', async () => {
+    /* Every level in the chain already stamped: finishing one again opens
+       nothing, and the card must not claim otherwise. */
+    hoisted.state.level = LOADED_LEVEL;
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    reachEnd();
+    await flush();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    /* Back in, and finish it a second time. The stamp is already in the save. */
+    hoisted.state.completeShown = [];
+    shellOption<(id: LevelId) => void>('onPlayLevel')(START_LEVEL);
+    await flush();
+    emit('level/ready');
+    reachEnd();
+    await flush();
+
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
+      next?: unknown;
+    };
+    expect(
+      resolve('en').next,
+      'nothing opened this time, so there is no news to announce and no route to offer',
+    ).toBeUndefined();
   });
 });
 
