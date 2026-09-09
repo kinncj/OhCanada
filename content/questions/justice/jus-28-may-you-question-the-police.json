@@ -3,8 +3,8 @@
   "id": "jus-28-may-you-question-the-police",
   "subject": "justice",
   "prompt": {
-    "en": "In Canada, are you allowed to question the police about their service or conduct?",
-    "fr": "Au Canada, avez-vous le droit de questionner les policiers sur leur service ou leur conduite?"
+    "en": "If a police officer treats you badly, may you speak up about it?",
+    "fr": "Si un policier vous traite mal, avez-vous le droit d'en parler?"
   },
   "options": [
     {
