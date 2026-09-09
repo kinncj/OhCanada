@@ -203,6 +203,24 @@ export class GameRenderer {
           );
           this.#marker = installPlayableMarker(options.parent);
           this.#probe = startRendererProbe(game, options.config, this.#scene, (profile) => {
+            /*
+             * Fewer pixels first, then tell the scene — it re-derives its camera
+             * zoom from the scale manager and must read the new size.
+             *
+             * A resize is a **gap, not a slow frame**: the same class of event
+             * as a resume, which has re-armed the warm-up since slice 0. It
+             * matters more now than it did. Before `renderScale` was wired a
+             * tier change altered particle and layer counts, which move the cost
+             * a little; it now changes the **pixel count** — promoting Ottawa
+             * from low to medium grows the drawing buffer from 810x1440 to
+             * 1080x1920, 1.78x the fragments — so the measurement feeds back
+             * into the thing being measured. The frames right after a resize
+             * also pay for reallocating the framebuffer, and charging those to
+             * the new tier is how a tracker oscillates: promote, measure the
+             * reallocation, demote, promote again. Discarding them lets each
+             * tier be judged on frames it actually drew.
+             */
+            if (applyBackingScale(game, options.config, profile)) this.#probe?.reset();
             this.#level?.applyProfile(profile);
           });
           this.#scene?.publish({ paused: this.#paused });
@@ -290,7 +308,7 @@ export class GameRenderer {
    * (TN-LEVEL-02).
    */
   async loadLevel(id: string): Promise<Result<void>> {
-    const document = await this.#catalog.load(id);
+    const document = await this.#catalog.load(id, this.#config.locomotionModes);
     if (!document.ok) return document;
 
     /*
@@ -539,22 +557,6 @@ function startRendererProbe(
     /* One mechanism, not two: the tier the renderer probe measured is published
        through the same element a locomotion scenario reads. */
     onProfile: (profile) => {
-      /*
-       * Fewer pixels, before anything is told about the new tier.
-       *
-       * `renderScale` and `maxPixelRatio` were resolved into `RenderProfile` and
-       * applied by nothing: the tier degraded particle count and parallax layer
-       * count and never the fragment count, which is the dominant cost on the
-       * exact devices ADR-0011 exists to keep playable. `Scale.FIT` keeps the
-       * canvas *backing store* at the design resolution and stretches it with
-       * CSS, so this resizes the buffer and lets CSS stretch a smaller one — the
-       * letterbox, the aspect ratio and the world the camera sees are all
-       * unchanged, there are simply fewer fragments to shade.
-       *
-       * Before `onProfileChanged`, because the scene re-derives its camera zoom
-       * from the scale manager and must read the new size, not the old one.
-       */
-      applyBackingScale(game, config, profile);
       scene?.publish({ ...profileToSnapshot(profile), renderer: identity.kind });
       /* The level re-derives everything the tier controls from the new profile:
          how many parallax layers are drawn and how much snow falls. This is the
@@ -569,9 +571,14 @@ function startRendererProbe(
  *
  * Guarded on an actual change: `resize` fires `RESIZE`, which re-sizes every
  * camera in every scene, and doing that on every closed measurement window
- * would be work the measurement then reports.
+ * would be work the measurement then reports. Returns whether it resized, so
+ * the caller can discard the frames that paid for it.
  */
-function applyBackingScale(game: Phaser.Game, config: BootConfig, profile: RenderProfile): void {
+function applyBackingScale(
+  game: Phaser.Game,
+  config: BootConfig,
+  profile: RenderProfile,
+): boolean {
   const scale = backingScaleFor({
     renderScale: profile.renderScale,
     maxPixelRatio: profile.maxPixelRatio,
@@ -581,8 +588,9 @@ function applyBackingScale(game: Phaser.Game, config: BootConfig, profile: Rende
 
   const width = Math.round(config.designWidth * scale);
   const height = Math.round(config.designHeight * scale);
-  if (game.scale.gameSize.width === width && game.scale.gameSize.height === height) return;
+  if (game.scale.gameSize.width === width && game.scale.gameSize.height === height) return false;
   game.scale.resize(width, height);
+  return true;
 }
 
 /**

@@ -61,6 +61,10 @@ export interface BootConfig
          tier is a content edit, and so the tiers cannot drift from the budgets
          they were written against. */
       | 'graphicsPresets'
+      /* The locomotion vocabulary a level may name (ADR-0023). Read here so the
+         level parser can be handed it rather than holding a second copy — the
+         copy that let `toboggan` pass `validate-content` and fail at load. */
+      | 'locomotionModes'
     >,
     /* Flattened out of `featureFlags`: the scene needs the flag, not the block. */
     Pick<FeatureFlags, 'debugOverlay'>,
@@ -131,6 +135,24 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 const invalid = (field: string, message: string) =>
   appErr('invalid', `config.boot.${field}`, message, { field });
+
+/** A non-empty array of non-empty strings, or an `invalid` naming the field. */
+function readStringArray(
+  source: Record<string, unknown>,
+  field: string,
+): Result<readonly string[]> {
+  const value = source[field];
+  if (!Array.isArray(value) || value.length === 0) {
+    return invalid(field, `"${field}" must be a non-empty array of strings.`);
+  }
+  const values = value.filter(
+    (entry): entry is string => typeof entry === 'string' && entry.length > 0,
+  );
+  if (values.length !== value.length) {
+    return invalid(field, `"${field}" must contain only non-empty strings.`);
+  }
+  return ok(values);
+}
 
 function readString(
   source: Record<string, unknown>,
@@ -327,6 +349,19 @@ export function parseBootConfig(raw: unknown): Result<BootConfig> {
   const palette = readPalette(raw);
   if (!palette.ok) return palette;
 
+  /*
+   * The locomotion modes a level document may name.
+   *
+   * From the config, never a literal in the engine (ADR-0023). `level-document.ts`
+   * held the list as an array of eight strings, and Québec City arriving with
+   * `toboggan` passed `make validate-content` — the schema knew the mode — and
+   * then failed at load, because the parser did not. Two lists of the same thing
+   * is one list too many, and the one in the engine is the one a content author
+   * cannot see.
+   */
+  const locomotionModes = readStringArray(raw, 'locomotionModes');
+  if (!locomotionModes.ok) return locomotionModes;
+
   const graphicsPresets = readGraphicsPresets(raw);
   if (!graphicsPresets.ok) return graphicsPresets;
 
@@ -342,6 +377,7 @@ export function parseBootConfig(raw: unknown): Result<BootConfig> {
     backgroundColor: palette.value.sky,
     palette: palette.value,
     debugOverlay,
+    locomotionModes: locomotionModes.value,
     graphicsPresets: graphicsPresets.value,
     frameTimeMs: frameTimeMs.value,
   });

@@ -154,7 +154,6 @@ export {
   any business holding a scene.
 */
 export {
-  LOCOMOTION_MODES,
   MAX_DECODED_TEXTURE_BYTES,
   parseLevelDocument,
   refuseOverBudget,

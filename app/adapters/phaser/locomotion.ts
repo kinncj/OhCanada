@@ -64,7 +64,6 @@ import type {
 } from '@application/ports';
 import { appErr, ok, type Result } from '@common/result';
 
-import { LOCOMOTION_MODES } from './level-document';
 
 /**
  * The longest step the simulation will take, ~33 ms.
@@ -346,22 +345,27 @@ export function applyBounds(
 /**
  * The registry that makes "data plus one strategy" true.
  *
- * Every mode in the schema's enum resolves to the same `createLocomotion`, so
- * `modes` is the vocabulary a level document may name and not a list of things
- * somebody remembered to implement. A `mode` outside it fails as `unsupported`
- * at load time — which is what the port asks for, and the only failure this
- * factory has.
+ * Every mode in `content/game.config.json`'s `locomotionModes` resolves to the
+ * same `createLocomotion`, so `modes` is the vocabulary a level document may
+ * name and not a list of things somebody remembered to implement. A `mode`
+ * outside it fails as `unsupported` at load time — which is what the port asks
+ * for, and the only failure this factory has.
+ *
+ * The list is **passed in** rather than held here (ADR-0023). It used to be an
+ * engine literal, and Québec City declaring `toboggan` passed every content gate
+ * and then failed at load — a content-only level broken by engine code, which is
+ * the one thing "a level is addable by JSON and assets alone" rules out.
  */
-export function createLocomotionFactory(): LocomotionFactory {
+export function createLocomotionFactory(modes: readonly string[]): LocomotionFactory {
   return {
-    modes: LOCOMOTION_MODES,
+    modes,
     create(tuning: LocomotionTuning): Result<Locomotion> {
-      if (!LOCOMOTION_MODES.includes(tuning.mode)) {
+      if (!modes.includes(tuning.mode)) {
         return appErr(
           'unsupported',
           'locomotion.mode.unknown',
           `no locomotion mode named "${String(tuning.mode)}"; the level document names one the ` +
-            `schema does not declare. Known: ${LOCOMOTION_MODES.join(', ')}.`,
+            `config does not declare. Known: ${modes.join(', ')}.`,
           { mode: tuning.mode },
         );
       }

@@ -18,6 +18,19 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+import gameConfigJson from '@content/game.config.json';
+/**
+ * The locomotion vocabulary, from the config the game actually reads.
+ *
+ * Not a literal: `level-document.ts` held one, and Québec City declaring
+ * `toboggan` passed `make validate-content` and then failed at load. A test
+ * restating the list would let that come back one copy at a time (ADR-0023).
+ */
+const MODES: readonly string[] = (
+  gameConfigJson as { locomotionModes: readonly string[] }
+).locomotionModes;
+
+
 import {
   bundledLevelCatalog,
   firstLevelId,
@@ -62,14 +75,14 @@ describe('the catalog is derived from the directory, never listed', () => {
 describe('loading a level', () => {
   it('parses every level the catalog claims to have', async () => {
     for (const id of levelIds()) {
-      const result = await loadLevel(id);
+      const result = await loadLevel(id, MODES);
       expect(result.ok, result.ok ? '' : result.error.message).toBe(true);
       if (result.ok) expect(result.value.id).toBe(id);
     }
   });
 
   it('fails as not-found for an id nobody authored, and names what exists', async () => {
-    const result = await loadLevel('atlantis');
+    const result = await loadLevel('atlantis', MODES);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.error.kind).toBe('not-found');
@@ -81,7 +94,7 @@ describe('loading a level', () => {
   });
 
   it('is a Result, never a throw — a level that will not load is expected', async () => {
-    await expect(loadLevel('atlantis')).resolves.toMatchObject({ ok: false });
+    await expect(loadLevel('atlantis', MODES)).resolves.toMatchObject({ ok: false });
   });
 });
 
@@ -124,16 +137,16 @@ describe('interpreting what came back', () => {
   });
 
   it('unwraps a JSON module, which is what the bundler actually returns', () => {
-    const result = interpretLevelModule('testville', { default: document() });
+    const result = interpretLevelModule('testville', { default: document() }, MODES);
     expect(result.ok, result.ok ? '' : result.error.message).toBe(true);
   });
 
   it('accepts a bare object too, so the shape is not different under test', () => {
-    expect(interpretLevelModule('testville', document()).ok).toBe(true);
+    expect(interpretLevelModule('testville', document(), MODES).ok).toBe(true);
   });
 
   it('refuses a document whose id disagrees with its file name', () => {
-    const result = interpretLevelModule('testville', document({ id: 'somewhere-else' }));
+    const result = interpretLevelModule('testville', document({ id: 'somewhere-else' }), MODES);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.error.code).toBe('content.level.idMismatch');
@@ -142,7 +155,7 @@ describe('interpreting what came back', () => {
   });
 
   it('passes a parse failure straight through rather than relabelling it', () => {
-    const result = interpretLevelModule('testville', document({ layers: [] }));
+    const result = interpretLevelModule('testville', document({ layers: [] }), MODES);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error.code).toContain('content.level.layers');
   });

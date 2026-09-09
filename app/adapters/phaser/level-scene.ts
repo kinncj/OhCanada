@@ -806,9 +806,18 @@ export class LevelScene extends Phaser.Scene {
         this.#texturedLayers += 1;
         const source = this.textures.get(layer.key).getSourceImage();
         const height = source.height;
-        /* One screen wide, plus one tile of slack so the seam is always off
-           screen — never `level.size.x`. See `LayerView.tiled`. */
-        const width = layer.repeatX ? designWidth + source.width : source.width;
+        /*
+         * Exactly one screen wide — never `level.size.x`, and no longer a screen
+         * plus a tile of slack.
+         *
+         * The slack was over-caution: `tilePositionX` wraps the texture inside
+         * the quad, so a quad the width of the viewport shows an unbroken band
+         * at every scroll offset and the seam has nowhere to appear. Carrying
+         * the extra tile made Ottawa's sky quad 2160 wide and its skyline 2880,
+         * for a camera that sees 1080 — vertices, clipping and texture memory
+         * for pixels no one can look at.
+         */
+        const width = layer.repeatX ? designWidth : source.width;
         const sprite = this.add
           .tileSprite(layer.offset.x, layer.offset.y, width, height, layer.key)
           .setOrigin(0, 0)

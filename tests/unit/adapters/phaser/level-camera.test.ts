@@ -34,11 +34,25 @@ import { createLocomotion } from '@adapters/phaser/locomotion';
 import { groundYAt, levelBounds, slopeAt } from '@adapters/phaser/ground-profile';
 import { parseLevelDocument } from '@adapters/phaser/level-document';
 
+import gameConfigJson from '@content/game.config.json';
+/**
+ * The locomotion vocabulary, from the config the game actually reads.
+ *
+ * Not a literal: `level-document.ts` held one, and Québec City declaring
+ * `toboggan` passed `make validate-content` and then failed at load. A test
+ * restating the list would let that come back one copy at a time (ADR-0023).
+ */
+const MODES: readonly string[] = (
+  gameConfigJson as { locomotionModes: readonly string[] }
+).locomotionModes;
+
+
 const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 
 const ottawa = (() => {
   const parsed = parseLevelDocument(
     JSON.parse(readFileSync(`${REPO_ROOT}content/levels/ottawa.json`, 'utf8')),
+    MODES,
   );
   if (!parsed.ok) throw new Error(parsed.error.message);
   return parsed.value;

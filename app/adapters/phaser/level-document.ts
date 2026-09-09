@@ -271,12 +271,16 @@ function readLayers(source: Record<string, unknown>): Result<readonly ParallaxLa
  * in the repository and fails the build on it. Re-checking it at runtime would
  * give one defect two owners and would let a level ship that CI never saw.
  */
-function readTuning(raw: unknown, where: string): Result<LocomotionTuning> {
+function readTuning(
+  raw: unknown,
+  where: string,
+  modes: readonly string[],
+): Result<LocomotionTuning> {
   if (!isRecord(raw)) return invalid(where, `"${where}" must be an object.`);
 
   const mode = raw['mode'];
-  if (typeof mode !== 'string' || !LOCOMOTION_MODES.includes(mode as LocomotionTuning['mode'])) {
-    return invalid(`${where}.mode`, `"${where}.mode" must be one of ${LOCOMOTION_MODES.join(', ')}.`);
+  if (typeof mode !== 'string' || !modes.includes(mode)) {
+    return invalid(`${where}.mode`, `"${where}.mode" must be one of ${modes.join(', ')}.`);
   }
   const drive = raw['drive'];
   if (drive !== 'held' && drive !== 'auto') {
@@ -324,18 +328,6 @@ function readTuning(raw: unknown, where: string): Result<LocomotionTuning> {
     labelKey,
   });
 }
-
-/** `level.schema.json#/$defs/locomotionMode`, in schema order. */
-export const LOCOMOTION_MODES: readonly LocomotionTuning['mode'][] = [
-  'walk',
-  'canoe',
-  'skate',
-  'bike',
-  'train',
-  'horse',
-  'skateboard',
-  'dogsled',
-];
 
 function readJump(raw: unknown, where: string): Result<LocomotionTuning['jump']> {
   if (raw === null) return ok(null);
@@ -530,7 +522,23 @@ function readAssets(source: Record<string, unknown>): Result<readonly LevelAsset
  * scenario: the texture-budget refusal is the *last* check, and it happens here
  * — before the loader has been handed anything it could fetch.
  */
-export function parseLevelDocument(raw: unknown): Result<SceneLevel> {
+export function parseLevelDocument(
+  raw: unknown,
+  /**
+   * The locomotion modes a level may name, from `content/game.config.json`.
+   *
+   * **Required, with no default**, and that is the whole point (ADR-0023). This
+   * parser held its own list of eight mode names, so Québec City declaring
+   * `toboggan` passed `make validate-content` — the schema knew the mode — and
+   * then failed at load with `"locomotion[0].mode" must be one of walk, canoe,
+   * skate, …`. A content-only level had broken on an engine literal, which is
+   * exactly what "a level is addable by JSON and assets alone" forbids.
+   *
+   * A default parameter would have kept that copy alive for any caller that
+   * forgot, which is every caller eventually. Passing it is now the only option.
+   */
+  modes: readonly string[],
+): Result<SceneLevel> {
   if (!isRecord(raw)) return invalid('document', 'a level document must be a JSON object.');
 
   const id = readId(raw, 'id');
@@ -557,7 +565,7 @@ export function parseLevelDocument(raw: unknown): Result<SceneLevel> {
   if (!rawLocomotion.ok) return rawLocomotion;
   const locomotion: LocomotionTuning[] = [];
   for (const [index, item] of rawLocomotion.value.entries()) {
-    const tuning = readTuning(item, `locomotion[${String(index)}]`);
+    const tuning = readTuning(item, `locomotion[${String(index)}]`, modes);
     if (!tuning.ok) return tuning;
     locomotion.push(tuning.value);
   }

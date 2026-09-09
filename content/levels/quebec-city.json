@@ -1,0 +1,277 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "quebec-city",
+  "subject": "history",
+  "order": 3,
+  "title": {
+    "en": "Québec City",
+    "fr": "Ville de Québec"
+  },
+  "size": {
+    "x": 6048,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 1050,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#3d8ccb",
+    "ground": "#e6eff7",
+    "horizon": "#dce9f3",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Huron-Wendat"
+    ],
+    "statement": {
+      "en": "The Huron-Wendat Nation calls its customary territory Nionwentsïo. It follows both shores of the St. Lawrence River, between the Saint-Maurice and the Saguenay. The Nation's reserve, Wendake, sits inside the boundaries of Québec City.",
+      "fr": "La Nation huronne-wendat appelle son territoire coutumier le Nionwentsïo. Il longe les deux rives du fleuve Saint-Laurent, entre la Saint-Maurice et le Saguenay. La réserve de la Nation, Wendake, se trouve à l'intérieur des limites de la ville de Québec."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "huron-wendat-nionwentsio-brief-2016",
+        "chapter": "PART I — PRESENTATION AND HISTORY OF THE HURON-WENDAT NATION",
+        "page": 4,
+        "url": "https://www.ourcommons.ca/Content/Committee/421/TRAN/Brief/BR8708093/br-external/HuronWendatFirstNationCouncil-9505010-e.pdf",
+        "sourceHash": "367d7d1ee559569d1ec5b5ac349c167dfe275faeebb13500c328fefdf77f53d2",
+        "asOf": "2026-09-08T00:00:00Z",
+        "volatile": false,
+        "quote": "The Wendake reserve is located in the administrative region of the Quebec national capital and is within the boundaries of the City of Quebec, which makes the Huron-Wendat Nation one of the most urbanized aboriginal nations in Quebec."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Conseil de la Nation huronne-wendat (Nation Wendat)",
+      "url": "https://www.wendake.ca/histoire-et-culture",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.12,
+    "deadZone": {
+      "x": 60,
+      "y": 120
+    },
+    "offset": {
+      "x": 160,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1512,
+      "y": 1280
+    },
+    {
+      "x": 3024,
+      "y": 1280
+    },
+    {
+      "x": 4536,
+      "y": 1280
+    },
+    {
+      "x": 6048,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "quebec-city-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "quebec-city-layer-20-farbank",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.2,
+        "y": 0.08
+      },
+      "offset": {
+        "x": 0,
+        "y": 790
+      },
+      "repeatX": true
+    },
+    {
+      "key": "quebec-city-layer-30-river",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.34,
+        "y": 0.12
+      },
+      "offset": {
+        "x": 0,
+        "y": 930
+      },
+      "repeatX": true
+    },
+    {
+      "key": "quebec-city-layer-50-terrace",
+      "depth": 50,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 700
+      },
+      "repeatX": true
+    },
+    {
+      "key": "quebec-city-layer-60-slope",
+      "depth": 60,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 1280
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "toboggan",
+      "maxSpeed": 700,
+      "acceleration": 760,
+      "deceleration": 480,
+      "turnAcceleration": 640,
+      "glide": 0.95,
+      "maxSpeedMultiplierDownhill": 1.6,
+      "drive": "held",
+      "jump": {
+        "impulse": 720,
+        "maxHoldMs": 0,
+        "airControl": 0.2,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 240,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 70
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.toboggan.label"
+    },
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "chateau-frontenac",
+      "name": {
+        "en": "Château Frontenac",
+        "fr": "Château Frontenac"
+      },
+      "blurb": {
+        "en": "Samuel de Champlain built a fort in 1608 where Québec City stands today.",
+        "fr": "Samuel de Champlain a bâti un fort en 1608 à l'endroit où se trouve aujourd'hui la ville de Québec."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1608 Champlain built a fortress at what is now Québec City."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 1540,
+        "y": 1280
+      },
+      "artKey": "quebec-city-landmark-chateau-frontenac",
+      "radiusPx": 240
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 41943040
+}

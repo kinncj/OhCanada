@@ -77,7 +77,10 @@ export function firstLevelId(): string | null {
  * button. A UI that shows the same card for both would be telling a player to
  * retry something that cannot succeed.
  */
-export async function loadLevel(id: string): Promise<Result<SceneLevel>> {
+export async function loadLevel(
+  id: string,
+  modes: readonly string[],
+): Promise<Result<SceneLevel>> {
   const path = Object.keys(LEVEL_MODULES).find((key) => idOf(key) === id);
   if (path === undefined) {
     return appErr(
@@ -101,7 +104,7 @@ export async function loadLevel(id: string): Promise<Result<SceneLevel>> {
     );
   }
 
-  return interpretLevelModule(id, raw);
+  return interpretLevelModule(id, raw, modes);
 }
 
 /**
@@ -112,7 +115,11 @@ export async function loadLevel(id: string): Promise<Result<SceneLevel>> {
  * that downloaded perfectly can still be unusable, and an untestable failure
  * path is a failure path nobody has ever seen work.
  */
-export function interpretLevelModule(id: string, raw: unknown): Result<SceneLevel> {
+export function interpretLevelModule(
+  id: string,
+  raw: unknown,
+  modes: readonly string[],
+): Result<SceneLevel> {
   /* A JSON module is `{ default: … }` under the bundler and the raw object under
      a test that stubs it; both are accepted rather than assuming a shape that
      differs between the artefact under test and the artefact deployed. */
@@ -121,7 +128,7 @@ export function interpretLevelModule(id: string, raw: unknown): Result<SceneLeve
       ? (raw as { readonly default: unknown }).default
       : raw;
 
-  const parsed = parseLevelDocument(document);
+  const parsed = parseLevelDocument(document, modes);
   if (!parsed.ok) return parsed;
   if (parsed.value.id !== id) {
     return appErr(
@@ -142,7 +149,8 @@ export function interpretLevelModule(id: string, raw: unknown): Result<SceneLeve
  */
 export interface LevelCatalog {
   ids(): readonly string[];
-  load(id: string): Promise<Result<SceneLevel>>;
+  /** `modes` is `content/game.config.json`'s `locomotionModes` (ADR-0023). */
+  load(id: string, modes: readonly string[]): Promise<Result<SceneLevel>>;
 }
 
 export const bundledLevelCatalog: LevelCatalog = {

@@ -23,6 +23,19 @@ import {
 } from '@adapters/phaser/level-document';
 import { DEFAULT_PALETTE } from '@adapters/phaser/boot-config';
 
+import gameConfigJson from '@content/game.config.json';
+/**
+ * The locomotion vocabulary, from the config the game actually reads.
+ *
+ * Not a literal: `level-document.ts` held one, and Québec City declaring
+ * `toboggan` passed `make validate-content` and then failed at load. A test
+ * restating the list would let that come back one copy at a time (ADR-0023).
+ */
+const MODES: readonly string[] = (
+  gameConfigJson as { locomotionModes: readonly string[] }
+).locomotionModes;
+
+
 const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 const LEVELS_DIR = `${REPO_ROOT}content/levels`;
 
@@ -85,7 +98,7 @@ const minimal = (): Record<string, unknown> => ({
 });
 
 const parsed = (patch: Record<string, unknown> = {}): ReturnType<typeof parseLevelDocument> =>
-  parseLevelDocument({ ...minimal(), ...patch });
+  parseLevelDocument({ ...minimal(), ...patch }, MODES);
 
 describe('every authored level parses', () => {
   it('there is at least one, so this suite is not measuring an empty directory', () => {
@@ -93,25 +106,25 @@ describe('every authored level parses', () => {
   });
 
   it.each(levelFiles)('%s', (file) => {
-    const result = parseLevelDocument(readLevel(file));
+    const result = parseLevelDocument(readLevel(file), MODES);
     expect(result.ok, result.ok ? '' : result.error.message).toBe(true);
   });
 
   it.each(levelFiles)('%s: the file name is the id', (file) => {
-    const result = parseLevelDocument(readLevel(file));
+    const result = parseLevelDocument(readLevel(file), MODES);
     if (!result.ok) throw new Error(result.error.message);
     expect(result.value.id).toBe(file.slice(0, -'.json'.length));
   });
 
   it.each(levelFiles)('%s: the manifest fits the declared texture budget', (file) => {
-    const result = parseLevelDocument(readLevel(file));
+    const result = parseLevelDocument(readLevel(file), MODES);
     if (!result.ok) throw new Error(result.error.message);
     expect(refuseOverBudget(result.value)).toBeNull();
     expect(result.value.textureBudgetBytes).toBeLessThanOrEqual(MAX_DECODED_TEXTURE_BYTES);
   });
 
   it.each(levelFiles)('%s: the ground polyline fits inside the declared size', (file) => {
-    const result = parseLevelDocument(readLevel(file));
+    const result = parseLevelDocument(readLevel(file), MODES);
     if (!result.ok) throw new Error(result.error.message);
     for (const point of result.value.ground) {
       expect(point.x).toBeGreaterThanOrEqual(0);
@@ -121,7 +134,7 @@ describe('every authored level parses', () => {
   });
 
   it.each(levelFiles)('%s: the spawn is inside the level', (file) => {
-    const result = parseLevelDocument(readLevel(file));
+    const result = parseLevelDocument(readLevel(file), MODES);
     if (!result.ok) throw new Error(result.error.message);
     expect(result.value.spawn.x).toBeGreaterThanOrEqual(0);
     expect(result.value.spawn.x).toBeLessThanOrEqual(result.value.size.x);
@@ -138,7 +151,7 @@ describe('the parser refuses what the schema would reject', () => {
     ['a null', null],
     ['an array', []],
   ])('rejects %s', (_label, value) => {
-    expect(parseLevelDocument(value).ok).toBe(false);
+    expect(parseLevelDocument(value, MODES).ok).toBe(false);
   });
 
   it.each([
@@ -273,7 +286,7 @@ describe('a level too heavy for the texture budget is refused, not crashed into'
 
 describe('the parse carries through what the scene must not silently drop', () => {
   it('keeps a POI fact block whole, because ADR-0003 governs it', () => {
-    const document = parseLevelDocument(readLevel(levelFiles[0] ?? ''));
+    const document = parseLevelDocument(readLevel(levelFiles[0] ?? ''), MODES);
     if (!document.ok) throw new Error(document.error.message);
     for (const poi of document.value.pois) {
       expect(typeof poi.fact.factual).toBe('boolean');

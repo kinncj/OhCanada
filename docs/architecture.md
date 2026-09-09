@@ -261,6 +261,22 @@ flowchart TB
 Indigenous content passes `docs/content-review.md` as well: name the nation depicted, no invented patterns,
 no sacred items as props, no caricature, identical cartoon proportions for every character.
 
+### A level's art and its document land together
+
+Found while building the second level, and recorded because it is the shape every level from here will have
+and it contradicts a reasonable assumption.
+
+`scripts/assets.mjs` refuses to guess which level a source file belongs to — `assets/src/svg/<levelId>/…`
+resolves by the level id, and an unresolvable path is a hard failure rather than a warning. The level document
+is what supplies that id, and the gate also checks that every key a document names is actually produced. So:
+
+- a level document without its art names keys that resolve to nothing;
+- art without its level document has an owner id that matches no level.
+
+**Neither is valid alone, so they are not committable separately.** That is deliberate — it is what makes "a
+level has to load from its JSON alone" checkable — but it means art and content cannot land independently for
+a level, and a slice plan that plots them as separate tasks is plotting one commit as two.
+
 ## 5. Ports
 
 All under `app/application/ports/`, re-exported from `index.ts`. Interfaces and types only.

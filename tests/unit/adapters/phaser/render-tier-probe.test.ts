@@ -420,3 +420,74 @@ describe('startRenderTierProbe', () => {
     expect(probe.decision.measured).toBe(false);
   });
 });
+
+describe('a tier change that changes the cost of the frames it is measured from', () => {
+  /**
+   * The feedback loop `renderScale` introduced, and the guard against it.
+   *
+   * Before the pixel count was tier-controlled, promoting a device changed how
+   * many parallax layers and particles it drew — a real but modest cost change.
+   * Promotion now also grows the **drawing buffer**: Ottawa going from `low` to
+   * `medium` takes it from 810x1440 to 1080x1920, 1.78x the fragments. So the
+   * decision alters the very quantity the next window measures, and the frames
+   * immediately after the resize also pay to reallocate the framebuffer.
+   *
+   * Charged to the new tier, those frames demote it; the demotion resizes back;
+   * the cheap frames promote it again. A deploy failed three times reporting
+   * `tier "medium"` at 64 ms — a tier whose own definition allows 16.7 — which
+   * is what being caught mid-cycle looks like.
+   *
+   * `GameRenderer` therefore re-arms the warm-up after a resize, the way it has
+   * always done after a resume, because a resize is a gap and not a slow frame.
+   * These two cases pin the halves of that: the discard must swallow the
+   * reallocation, and it must not swallow a device that is genuinely slow.
+   */
+  it('does not demote on the frames that paid for the resize', () => {
+    const fake = fakeSignals();
+    const probe = startRenderTierProbe(
+      probeOptions({
+        signals: fake.signals,
+        recorder: createFrameCostRecorder({ warmupFrames: 2, windowFrames: 4 }),
+      }),
+    );
+
+    /* Settle high on cheap frames. */
+    fake.run(2 + 1 + 4 + 4, 3);
+    expect(probe.profile.tier).toBe('high');
+
+    /* The resize lands. `GameRenderer` calls this; here it is called directly,
+       because what is being pinned is that a reset makes the expensive frames
+       after it unmeasured rather than damning. */
+    probe.reset();
+    fake.run(2, 400);
+
+    expect(
+      probe.profile.tier,
+      'the frames that reallocated the framebuffer were charged to the tier that caused ' +
+        'the reallocation, which is how a tracker oscillates instead of converging',
+    ).toBe('high');
+  });
+
+  it('still demotes a device that is slow after the warm-up, not just during it', () => {
+    const fake = fakeSignals();
+    const probe = startRenderTierProbe(
+      probeOptions({
+        signals: fake.signals,
+        recorder: createFrameCostRecorder({ warmupFrames: 2, windowFrames: 4 }),
+      }),
+    );
+    fake.run(2 + 1 + 4 + 4, 3);
+    expect(probe.profile.tier).toBe('high');
+
+    probe.reset();
+    /* Past the discard, and still expensive: this is a real device, and the
+       whole mechanism exists to take it down a tier. */
+    fake.run(2 + 1 + 4, 400);
+
+    expect(
+      probe.profile.tier,
+      'the reset swallowed a genuinely slow device, so nothing can ever be demoted after a ' +
+        'resize — which is worse than the oscillation it was added to stop',
+    ).toBe('low');
+  });
+});

@@ -40,13 +40,26 @@ import {
 } from '@adapters/phaser/locomotion';
 import { parseLevelDocument } from '@adapters/phaser/level-document';
 
+import gameConfigJson from '@content/game.config.json';
+/**
+ * The locomotion vocabulary, from the config the game actually reads.
+ *
+ * Not a literal: `level-document.ts` held one, and Québec City declaring
+ * `toboggan` passed `make validate-content` and then failed at load. A test
+ * restating the list would let that come back one copy at a time (ADR-0023).
+ */
+const MODES: readonly string[] = (
+  gameConfigJson as { locomotionModes: readonly string[] }
+).locomotionModes;
+
+
 const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 
 const ottawa = (() => {
   const raw: unknown = JSON.parse(
     readFileSync(`${REPO_ROOT}content/levels/ottawa.json`, 'utf8'),
   );
-  const parsed = parseLevelDocument(raw);
+  const parsed = parseLevelDocument(raw, MODES);
   if (!parsed.ok) throw new Error(`content/levels/ottawa.json did not parse: ${parsed.error.message}`);
   return parsed.value;
 })();
@@ -551,12 +564,19 @@ describe('animationSpeed is the normalised speed the rig is fed', () => {
 });
 
 describe('the factory is a registry, not a list of things somebody remembered', () => {
-  const factory = createLocomotionFactory();
+  const factory = createLocomotionFactory(MODES);
 
-  it('offers every mode the schema declares', () => {
-    expect([...factory.modes].sort()).toEqual(
-      ['bike', 'canoe', 'dogsled', 'horse', 'skate', 'skateboard', 'train', 'walk'].sort(),
-    );
+  it('offers every mode the config declares, and nothing it does not', () => {
+    /*
+     * Read from `content/game.config.json`, not restated (ADR-0023). This test
+     * used to list eight names, and the ninth — `toboggan`, for Québec City —
+     * arrived in content and broke the engine at load: the parser held its own
+     * copy of the vocabulary and refused a mode the schema had already accepted.
+     * A test with a tenth copy would have hidden the fix as readily as it hid
+     * the bug.
+     */
+    expect([...factory.modes].sort()).toEqual([...MODES].sort());
+    expect(MODES.length, 'the config declares no modes, so this asserts nothing').toBeGreaterThan(1);
   });
 
   it.each(factory.modes)('builds %s from the same strategy', (mode) => {

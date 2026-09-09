@@ -29,6 +29,8 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+import gameConfigJson from '@content/game.config.json';
+
 const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 const ADAPTER_DIR = `${REPO_ROOT}app/adapters/phaser`;
 const LEVELS_DIR = `${REPO_ROOT}content/levels`;
@@ -85,14 +87,27 @@ describe("no level's content vocabulary appears in the engine", () => {
   });
 });
 
-describe('no locomotion mode name appears outside the module that states the enum', () => {
-  const MODES = ['walk', 'canoe', 'skate', 'bike', 'train', 'horse', 'skateboard', 'dogsled'];
-  /* `level-document.ts` mirrors `level.schema.json#/$defs/locomotionMode`, which
-     is exactly where a list of mode names belongs: it is the vocabulary a
-     document may use, and the parser has to reject anything outside it. */
-  const ALLOWED = new Set(['level-document.ts']);
+describe('no locomotion mode name appears anywhere in the engine', () => {
+  /**
+   * Every mode the config declares, read from the config (ADR-0023).
+   *
+   * There used to be an allowance here: `level-document.ts` was permitted to
+   * name them, on the grounds that it mirrored `level.schema.json`'s enum and
+   * a parser must reject what is outside the vocabulary. That allowance was the
+   * defect. Québec City arrived declaring `toboggan`, passed
+   * `make validate-content` because the schema knew the mode, and then failed at
+   * load with `"locomotion[0].mode" must be one of walk, canoe, skate, …` — a
+   * content-only level broken by an engine literal, which is precisely what "a
+   * level is addable by JSON and assets alone" rules out.
+   *
+   * So the vocabulary now lives in `content/game.config.json` and is handed to
+   * the parser, and **no file in this directory may name a mode**. The list is
+   * read from the config here too: a test that restated it would let the copies
+   * come back one at a time.
+   */
+  const MODES = (gameConfigJson as { locomotionModes: readonly string[] }).locomotionModes;
 
-  it.each(sourceFiles.filter((file) => !ALLOWED.has(file)))('%s', (file) => {
+  it.each(sourceFiles)('%s', (file) => {
     const code = codeOf(file);
     const found = MODES.filter((mode) => new RegExp(`['"\`]${mode}['"\`]`, 'u').test(code));
     expect(
@@ -103,9 +118,11 @@ describe('no locomotion mode name appears outside the module that states the enu
     ).toEqual([]);
   });
 
-  it('the one allowed file really is the one that mirrors the schema', () => {
-    const code = codeOf('level-document.ts');
-    for (const mode of MODES) expect(code).toContain(`'${mode}'`);
+  it('is not vacuous: the config really does declare the vocabulary', () => {
+    /* If `locomotionModes` ever emptied, every assertion above would pass over
+       an empty list and this gate would be measuring nothing. */
+    expect(MODES.length).toBeGreaterThan(1);
+    expect(MODES).toContain('walk');
   });
 });
 
