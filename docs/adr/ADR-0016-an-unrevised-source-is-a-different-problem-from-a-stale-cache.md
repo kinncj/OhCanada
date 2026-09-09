@@ -192,6 +192,144 @@ Two details were settled by a failing fixture rather than by preference, which i
   support. The lesson repeated here: a register that points at bytes, hashes and quoted claims is checkable,
   and one that points at a recollection is not.
 
+## Amendment, 2026-09-08 — the `volatile` demand belongs to row 1, and the row is read from the register
+
+This amends §2 and §3 above. It adds no new decision: it is §2's table applied to a gate that was never told
+§2 had happened, plus the one thing §2 left implicit.
+
+### The contradiction
+
+`tests/unit/contracts/questions-cite-a-cached-source.test.ts` still carried ADR-0003's check 4 verbatim —
+*a question drawn from a region a staleness flag covers is marked `volatile`* — and §3's ban check was added
+beside it rather than in place of it. The two branches then asserted opposite things about the same flag:
+
+| Branch | What it tells the author |
+|---|---|
+| volatile | "Set `source.volatile` to true. A volatile question is re-verified every run against the live page." |
+| ban | "Marking the question volatile buys nothing: the live page states the same wrong thing." |
+
+Both fire on `Population shares and religious affiliation in Who We Are`
+(`upstream: "does-not-revise"`, `grain: "pages"`, `pages: [17, 18, 21]`). Nineteen questions failed. Four put
+a stale census figure in an answer and are a true positive. The other fifteen are on treaty rights in the
+Constitution, the Royal Proclamation of 1763, residential schools, the 2008 apology, what "Inuit" means in
+Inuktitut, Michif — facts that will never move, sharing a page with the census shares and sharing nothing
+else with them.
+
+### The proposal, and why it is not quite the decision
+
+The proposal was: **`upstream: "does-not-revise"` on the flag exempts the question from the volatile demand.**
+That is nearly §2 row 2, and the gap is the entire safety argument. Row 2 requires *two* things, and the flag
+supplies one of them:
+
+1. every staleness flag over the question's region declares `does-not-revise` with a `bannedFromAnswers` list
+   the question satisfies — **the flag's contribution**; and
+2. the latest decisive live check naming the question's chapter found `source-unrevised` — **the register's
+   contribution**, dated, attributed, and reproducible from `claimsCompared`.
+
+`upstream: "does-not-revise"` alone is an undated sentence typed by whoever last read the page. Exempting on
+it would reproduce, one level up, the exact defect §2 exists to remove: an obligation switched off by an
+assertion that never expires and that nothing ever re-tests. The clock is not in the flag. **It has never
+been in the flag.** It is `liveChecks[].checkedAt`, and it is the register's job to carry it.
+
+### The exemption on the flag alone would also have been unsafe here, by a route neither reading anticipated
+
+Row 1's clock is armed by `volatile`. `scripts/verify-content.mjs` quarantines a row-1 question when
+`source.volatile === true` **and** `source.asOf` is over 180 days; a non-volatile row-1 question has no clock
+at all, which is correct, because a stable fact from a maintained source does not expire on a calendar.
+
+`Who We Are` has no `liveChecks[]` entry. Those fifteen questions are therefore on **row 1**. Dropping the
+volatile demand for them — on the strength of a flag that says the source will never revise, with nothing in
+the register establishing that it will not — would have taken them off the only clock they have and put
+nothing in its place. The gate would have gone green and the questions would have become unexpiring. The
+proposal's own stated fear, arriving through the interaction of two files rather than through the flag.
+
+### Decision
+
+**`volatile` is demanded exactly when it is the mechanism that arms the question's clock — on row 1 — and the
+row is read from the register, never from the flag alone.**
+
+Per question, mechanically, with `flags` the staleness flags applying at the finest grain they offer:
+
+| Condition | The gate demands |
+|---|---|
+| no flag applies | nothing (over-marking stays legal, §"Consequences") |
+| a flag applies and the chapter is on **row 1** | `source.volatile === true` — unchanged from ADR-0003 check 4 |
+| a flag applies and the chapter is on **row 2**, with a governing live check under 180 days old | nothing; §3's banned terms are the whole mitigation |
+| a flag applies and the chapter is on **row 2**, with a governing live check **over** 180 days old | `source.volatile === true` again, naming the aged-out check |
+| a flag applies and the chapter is on **row 3** (`source-withdrawn`) | `source.volatile === true`; `verify-content` separately requires the quarantine |
+
+The row is computed exactly as `verify-content.mjs` computes it, and row 2 keeps §2's requirement that the
+question already satisfy `bannedFromAnswers`: a question whose answers depend on the stale fact has not put
+row 2's mitigation in place, so it falls to row 1 and is held to row 1's demand. Nothing is exempted on the
+strength of a mitigation it is currently violating.
+
+**The last row of that table is the expiry mechanism, and it is the point of this amendment.** The exemption
+is not granted by a flag; it is granted by a dated live check, and it lapses on its own 181 days later. When
+it lapses the questions fall back onto the per-question volatile demand — so the mechanism that turns the
+exemption off is the same one that turned it on, and it needs no second gate. This turns a tree red with no
+commit, exactly as `check-obligations` does, and for the same reason.
+
+### The evidence for `Who We Are` existed, and was in the wrong field
+
+This amendment's practical effect on those fifteen questions depended on one register edit, and finding it is
+the sharpest part of the finding. The flag's `action` reads, in prose:
+
+> The live page (who-are-canadians.html, Date modified 2025-08-08) still carries every one of them, so the
+> modification date is not evidence of revision and re-fetching resolves nothing.
+
+That is a live check. It has a URL, a `sourceDateModified`, an `agreesWithCache`, and — in the flag's
+`problem` — its `claimsCompared`. It was performed on 2026-09-08 and written into a field no gate can read,
+in the same file as the array §1 created to hold it, four flags below an existing entry of exactly that
+shape. §1 rejected "record the finding in `knownStaleness` prose" on the grounds that *nothing can branch on
+it*; the register did it anyway within the day.
+
+It has been transcribed into `liveChecks[]`, and the transcription says in `checkedBy` and `consequence` that
+it is a transcription and that the transcriber performed no fetch. That distinction matters more than the
+tidiness: §"Consequences" already says `liveChecks` records a claim rather than a fact, and a relocated claim
+must not acquire authority it did not have. What the transcription *does* buy is the only thing prose could
+never buy — the claim now expires on 2027-03-07.
+
+### One rule, two implementations: a boundary defect, named
+
+`scripts/verify-content.mjs` and `tests/unit/contracts/questions-cite-a-cached-source.test.ts` now both
+compute "which row of §2's table is this question on?" from the same three inputs, in two languages, from
+duplicated copies of `applicableFlags`. They agree today because the second was written against the first,
+line by line. Nothing keeps them agreeing, and the dangerous direction is specific: if `verify-content`
+tightens row 2 and the contract gate does not, the gate exempts questions from the volatile demand that
+`verify-content` still has on the row-1 clock — and the gap is silent, because each file passes.
+
+That is a boundary defect and not a tidiness complaint. Two agents needed the same rule and each got a copy.
+The rule is one function over `(manifest, chapter, page, banRespected, today)` returning a row, and it should
+exist once, in a module both a `.mjs` script and a `.ts` test import. It is not in `app/` — it is neither
+domain nor application, it is build-time content tooling — so it wants `scripts/lib/` or equivalent, which is
+a placement decision, not an implementation one.
+
+- **OBLIGATION due=2026-11-08 owner=content-infra** — extract §2's row selection into one module imported by
+  both `scripts/verify-content.mjs` and `tests/unit/contracts/questions-cite-a-cached-source.test.ts`, and
+  delete both copies of `applicableFlags`. Until then the contract gate carries a comment naming the file it
+  is a copy of, which is a marker and not a mechanism.
+
+One divergence was found while transcribing and was deliberately **not** fixed in the copy, because fixing it
+in one of two implementations is how the two start disagreeing. `dispositionFor` reads only
+`liveChecks[].finding`; it never reads `pages[].agreesWithCache`. So a check recording
+`finding: "source-unrevised"` on an entry whose page says `agreesWithCache: false` grants row 2, and the
+schema permits that combination. It is probably a real gap — `agreesWithCache` is the per-chapter evidence and
+`finding` is the per-check summary, and on a multi-chapter check the summary can be true of one chapter and
+false of another — but it is a decision about §2's table and it belongs in the shared module, made once. It is
+recorded here rather than silently mirrored or silently tightened.
+
+### What this amendment does not change
+
+- `volatile`'s meaning. It is still *this fact can change without notice*, still the author's judgement about
+  the fact, still required on every `factSource`. What changed is only when a **gate** may demand it.
+- Over-marking. A question marked volatile under no flag, or under a row-2 flag, is still not a fault.
+- §3. The banned-term check is untouched and is now the *sole* mitigation on row 2 rather than one of two,
+  which is what §2 said it was and what the gate contradicted.
+- Anything under `unknown` or `revises`. `Oath of Citizenship` still declares `upstream: "unknown"`, so the
+  questions on pages 2–3 are on row 1 and are still held to the volatile demand even though a second flag
+  over the same pages declares `does-not-revise`. Both directions are exercised by the live corpus, not only
+  by fixtures.
+
 ## A note on the two-quote design, ratified
 
 The same verification pass reports that **51 of 57 `evidence` spans differ from their `source.quote`**,

@@ -83,7 +83,7 @@
       "affects": [
         "Rights and Responsibilities of Citizenship"
       ],
-      "action": "volatile: verify against the live canada.ca page, never against this file",
+      "action": "volatile: verify against the live canada.ca page, never against this file. upstream is still \"unknown\" here, so ADR-0016 section 2 puts questions on pages 2-3 on row 1 and the volatile demand stands, even though the flag below over the same pages declares does-not-revise. Absent and unknown are treated exactly as revises, because continuing to fetch is the safe direction.",
       "grain": "pages",
       "upstream": "unknown",
       "pages": [
@@ -98,7 +98,7 @@
         "How Canadians Govern Themselves",
         "Canadian Symbols"
       ],
-      "action": "volatile: verify against the live canada.ca page",
+      "action": "Route the answers around these terms; that is bannedFromAnswers and it is the mitigation that works. Whether volatile is also DEMANDED depends on the chapter, not on this flag: How Canadians Govern Themselves has a live check finding source-unrevised, so it is on ADR-0016 section 2 row 2 and the clock is on liveChecks[].checkedAt at the source. Canadian Symbols has no live check, so it is on row 1 and its questions must be volatile to be on any clock at all.",
       "pages": [
         57
       ],
@@ -128,7 +128,7 @@
         "Federal Elections",
         "Modern Canada"
       ],
-      "action": "volatile: re-verify every run, quarantine when asOf exceeds 180 days",
+      "action": "Route the answers around these terms. How Canadians Govern Themselves and Federal Elections both carry a live check finding source-unrevised, so they are on ADR-0016 section 2 row 2: one fetch per chapter into liveChecks[] replaces per-question re-verification, and the 180-day clock is on that check. Modern Canada has no live check, so it is on row 1 and volatile is still demanded there.",
       "pages": [
         57,
         60,
@@ -158,7 +158,7 @@
       "affects": [
         "Rights and Responsibilities of Citizenship"
       ],
-      "action": "volatile: verify against the live canada.ca page, never against this file",
+      "action": "volatile: verify against the live canada.ca page, never against this file. Rights and Responsibilities of Citizenship has no entry in liveChecks[], so ADR-0016 section 2 puts it on row 1 and the volatile demand stands; the does-not-revise declaration below buys the exemption only once a live check for this chapter records that the page really is unrevised.",
       "pages": [
         2,
         3
@@ -170,6 +170,30 @@
         "Sa Majesté",
         "Queen Elizabeth",
         "Elizabeth II"
+      ]
+    },
+    {
+      "topic": "Population shares and religious affiliation in Who We Are",
+      "problem": "The chapter's proportions are from the 2006 census era and the 2021 Census has moved all of them. The guide says First Nations are \"about 65%\" of Indigenous people (2021: 58.0%), that \"about half\" of First Nations people live on reserve (2021: 40.6% among status First Nations), and that \"the great majority of Canadians identify as Christians\" (2021: 53.3%, just over half). The last is the worst for a learning game: \"No religion\" is now 34.6%, larger than Catholic at 29.9%, so a question teaching the guide's framing punishes a learner who knows the current figure. Recorded at chapter grain for a few minutes on 2026-09-08, which forced volatile on all 46 questions in the chapter when three carry the shares — the same defect this register already had for the Oath, repeated by the same hand within the hour.",
+      "affects": [
+        "Who We Are"
+      ],
+      "grain": "pages",
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "about 65%",
+        "65%",
+        "about half of First Nations",
+        "great majority of Canadians",
+        "great majority",
+        "13%",
+        "18 million Anglophones"
+      ],
+      "action": "volatile: never put one of these shares in an option or an explanation. The live page (who-are-canadians.html, Date modified 2025-08-08) still carries every one of them, so the modification date is not evidence of revision and re-fetching resolves nothing. Recorded here as prose first, which was the same defect ADR-0016 section 1 had already fixed: that sentence is a live check, and it has been transcribed into liveChecks[] where a gate can read it and where it expires. With it, Who We Are is on ADR-0016 section 2 row 2, so the volatile demand no longer fires on the fifteen questions that share pages 17, 18 and 21 with these shares and carry facts that will never move - treaty rights, the Royal Proclamation, residential schools, the 2008 apology, the meaning of \"Inuit\", Michif. bannedFromAnswers is the whole mitigation on row 2, and the clock that keeps it honest is liveChecks[].checkedAt, not a per-question re-fetch. Claim-level grain would still be finer than page grain, but it is no longer what this entry costs: page grain now over-reaches only into a term search, not into fifteen re-verifications.",
+      "pages": [
+        17,
+        18,
+        21
       ]
     }
   ],
@@ -210,6 +234,26 @@
         }
       ],
       "consequence": "IRCC has not revised Discover Canada for the accession. The live pages still read \"Her Majesty is a symbol of Canadian sovereignty\", \"53 other nations\", \"Her Majesty's Loyal Opposition\" and \"308 electoral districts\", and caption a photo \"Queen Elizabeth II\". So our cache is not drifting behind a maintained source: the source itself is unrevised, cache and live agree, and both are out of date. A drift-based quarantine has no trigger and re-fetching cannot resolve a stale fact. What makes the bank shippable is bannedFromAnswers, not a future fetch."
+    },
+    {
+      "checkedAt": "2026-09-08",
+      "checkedBy": "architect, transcribing the content verifier's finding — no fetch was performed by the transcriber",
+      "pages": [
+        {
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/who-are-canadians.html",
+          "chapter": "Who We Are",
+          "sourceDateModified": "2025-08-08",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "First Nations are about 65% of Indigenous people",
+            "about half of First Nations people live on reserve",
+            "the great majority of Canadians identify as Christians",
+            "the share of Canadians reporting a Chinese language at home"
+          ]
+        }
+      ],
+      "finding": "source-unrevised",
+      "consequence": "TRANSCRIBED, NOT FETCHED. This finding was made by the content verifier on 2026-09-08 and written as prose into knownStaleness[\"Population shares and religious affiliation in Who We Are\"].action: \"The live page (who-are-canadians.html, Date modified 2025-08-08) still carries every one of them, so the modification date is not evidence of revision and re-fetching resolves nothing.\" ADR-0016 section 1 created this array precisely so that finding could be branched on, and rejected recording it in knownStaleness prose because nothing can read it there; it was recorded there anyway, four flags below an entry of exactly this shape. The architect moved it and re-fetched nothing, so this entry inherits whatever authority the prose had and acquires none. What it buys is the one thing prose could not: the claim now expires. It puts Who We Are on ADR-0016 section 2 row 2, which lifts the volatile demand from the fifteen questions on pages 17, 18 and 21 that carry historical and definitional facts, and starts a 180-day clock on the source that quarantines every question in the chapter on 2027-03-07 unless somebody looks again. A first-hand check by the verifier should replace this entry rather than be appended beside it."
     }
   ]
 }

@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "About half on reserve land and about half off reserve, mainly in cities.",
-      "fr": "Environ la moitié dans des réserves et environ la moitié hors réserve, surtout dans les villes."
+      "en": "Some live on reserve land, and many others live off reserve, mainly in cities.",
+      "fr": "Certains vivent dans des réserves, et beaucoup d'autres vivent hors réserve, surtout dans les villes."
     },
     {
       "en": "Almost all of them on reserve land.",
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "About half of First Nations people live on reserve land, in roughly 600 communities. The other half live off reserve, mostly in urban centres.",
-    "fr": "Environ la moitié des membres des Premières Nations vivent dans des réserves, réparties dans quelque 600 collectivités. L'autre moitié vit hors réserve, principalement dans les centres urbains."
+    "en": "First Nations people live in both kinds of places. There are around 600 reserve communities across the country, and many First Nations people make their home off reserve, most often in cities.",
+    "fr": "Les membres des Premières Nations vivent dans les deux types de milieux. Il y a environ 600 collectivités dans les réserves partout au pays, et beaucoup de membres des Premières Nations habitent hors réserve, le plus souvent dans les villes."
   },
   "source": {
     "sourceId": "discover-canada",

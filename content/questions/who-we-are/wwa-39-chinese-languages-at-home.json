@@ -3,31 +3,31 @@
   "id": "wwa-39-chinese-languages-at-home",
   "subject": "who-we-are",
   "prompt": {
-    "en": "In which Canadian city do 13% of people speak Chinese languages at home?",
-    "fr": "Dans quelle ville canadienne 13 % des habitants parlent-ils des langues chinoises à la maison?"
+    "en": "After English, which languages are spoken at home most often in Vancouver and Toronto?",
+    "fr": "Après l'anglais, quelles langues parle-t-on le plus souvent à la maison à Vancouver et à Toronto?"
   },
   "options": [
     {
-      "en": "Vancouver.",
-      "fr": "Vancouver."
+      "en": "Chinese languages.",
+      "fr": "Les langues chinoises."
     },
     {
-      "en": "Toronto.",
-      "fr": "Toronto."
+      "en": "French.",
+      "fr": "Le français."
     },
     {
-      "en": "Montreal.",
-      "fr": "Montréal."
+      "en": "Spanish.",
+      "fr": "L'espagnol."
     },
     {
-      "en": "Calgary.",
-      "fr": "Calgary."
+      "en": "Punjabi.",
+      "fr": "Le pendjabi."
     }
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "Chinese languages are the second most-spoken at home after English in two of Canada's biggest cities: 13% of people in Vancouver and 7% in Toronto.",
-    "fr": "Les langues chinoises sont les deuxièmes langues les plus parlées à la maison après l'anglais dans deux des plus grandes villes du Canada : 13 % des habitants à Vancouver et 7 % à Toronto."
+    "en": "Languages other than English and French are widely spoken in Canadian homes. In Vancouver and in Toronto, two of the country's biggest cities, Chinese languages come second at home, after English.",
+    "fr": "D'autres langues que l'anglais et le français sont très présentes dans les foyers canadiens. À Vancouver comme à Toronto, deux des plus grandes villes du pays, les langues chinoises viennent au deuxième rang à la maison, après l'anglais."
   },
   "source": {
     "sourceId": "discover-canada",
@@ -37,7 +37,7 @@
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "asOf": "2026-09-08T00:00:00Z",
     "volatile": true,
-    "quote": "In Vancouver, 13% of the population speak Chinese languages at home; in Toronto, the number is 7%."
+    "quote": "Chinese languages are the second most-spoken at home, after English, in two of Canada’s biggest cities."
   },
   "verification": {
     "status": "unverified",

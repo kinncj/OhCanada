@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The Second World War began in 1939 when the Nazi dictator of Germany invaded Poland and conquered much of Europe. The attack on Belgium and France in 1914 belongs to the First World War.",
-    "fr": "La Seconde Guerre mondiale a commencé en 1939 lorsque le dictateur nazi de l'Allemagne a envahi la Pologne et conquis une grande partie de l'Europe. L'attaque contre la Belgique et la France en 1914 appartient à la Première Guerre mondiale."
+    "en": "The war started in 1939, when Germany's Nazi dictator sent his armies into Poland and went on to take most of Europe. Germany's attack on Belgium and France in 1914 opened the earlier war, not this one.",
+    "fr": "La guerre a commencé en 1939, quand le dictateur nazi de l'Allemagne a envoyé ses armées en Pologne, puis a pris la majeure partie de l'Europe. L'attaque allemande contre la Belgique et la France en 1914 a ouvert la guerre précédente, pas celle-ci."
   },
   "source": {
     "sourceId": "discover-canada",

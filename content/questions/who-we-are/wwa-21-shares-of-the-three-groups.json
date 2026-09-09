@@ -3,31 +3,31 @@
   "id": "wwa-21-shares-of-the-three-groups",
   "subject": "who-we-are",
   "prompt": {
-    "en": "Which of the three groups makes up the largest share of Aboriginal people in Canada?",
-    "fr": "Lequel des trois groupes forme la plus grande part des personnes autochtones au Canada?"
+    "en": "Which of the three groups of Aboriginal peoples is the largest in Canada?",
+    "fr": "Lequel des trois groupes de peuples autochtones est le plus nombreux au Canada?"
   },
   "options": [
     {
-      "en": "First Nations, at about 65%.",
-      "fr": "Les Premières Nations, avec environ 65 %."
+      "en": "First Nations.",
+      "fr": "Les Premières Nations."
     },
     {
-      "en": "Métis, at about 65%.",
-      "fr": "Les Métis, avec environ 65 %."
+      "en": "Métis.",
+      "fr": "Les Métis."
     },
     {
-      "en": "Inuit, at about 65%.",
-      "fr": "Les Inuit, avec environ 65 %."
+      "en": "Inuit.",
+      "fr": "Les Inuit."
     },
     {
-      "en": "The three groups are about equal in size.",
-      "fr": "Les trois groupes sont à peu près de taille égale."
+      "en": "The three groups are about the same size.",
+      "fr": "Les trois groupes sont à peu près de la même taille."
     }
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "About 65% of Aboriginal people are First Nations, about 30% are Métis and about 4% are Inuit. The three groups are not equal in size.",
-    "fr": "Environ 65 % des personnes autochtones sont des membres des Premières Nations, environ 30 % sont des Métis et environ 4 % sont des Inuit. Les trois groupes ne sont pas de taille égale."
+    "en": "First Nations are the largest of the three groups. Métis come next, and Inuit are the smallest of the three. The three groups are not the same size.",
+    "fr": "Les Premières Nations forment le plus grand des trois groupes. Viennent ensuite les Métis, et les Inuit sont le moins nombreux des trois. Les trois groupes ne sont pas de la même taille."
   },
   "source": {
     "sourceId": "discover-canada",

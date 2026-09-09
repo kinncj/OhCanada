@@ -3,31 +3,31 @@
   "id": "wwa-40-largest-religious-affiliation",
   "subject": "who-we-are",
   "prompt": {
-    "en": "What is the largest single religious affiliation in Canada?",
-    "fr": "Quelle est la plus grande appartenance religieuse au Canada?"
+    "en": "How do Canada's many ethnic and religious groups live and work in the country?",
+    "fr": "Comment les nombreux groupes ethniques et religieux du Canada vivent-ils et travaillent-ils au pays?"
   },
   "options": [
     {
-      "en": "Catholic.",
-      "fr": "Catholique."
+      "en": "Side by side and in peace, as proud Canadians.",
+      "fr": "Côte à côte et en paix, en tant que fiers Canadiens."
     },
     {
-      "en": "Protestant.",
-      "fr": "Protestante."
+      "en": "Apart from one another, each group in its own part of the country.",
+      "fr": "Séparément, chaque groupe dans sa propre région du pays."
     },
     {
-      "en": "Muslim.",
-      "fr": "Musulmane."
+      "en": "Only after they give up their own religion and customs.",
+      "fr": "Seulement après avoir renoncé à leur religion et à leurs coutumes."
     },
     {
-      "en": "No religion.",
-      "fr": "Aucune religion."
+      "en": "Under one official church chosen by the government.",
+      "fr": "Sous une seule Église officielle choisie par le gouvernement."
     }
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The great majority of Canadians identify as Christians. The largest single affiliation is Catholic, followed by various Protestant churches.",
-    "fr": "La grande majorité des Canadiens se disent chrétiens. La plus grande appartenance est catholique, suivie de diverses Églises protestantes."
+    "en": "Canada is home to people of many ethnic backgrounds and many faiths. They live and work here peacefully, proud to be Canadians. Canada also protects religious freedom and freedom of conscience.",
+    "fr": "Le Canada compte des gens de nombreuses origines ethniques et de nombreuses confessions. Ils vivent et travaillent ici en paix, fiers d'être Canadiens. Le Canada protège aussi la liberté de religion et la liberté de conscience."
   },
   "source": {
     "sourceId": "discover-canada",
@@ -37,7 +37,7 @@
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "asOf": "2026-09-08T00:00:00Z",
     "volatile": true,
-    "quote": "The largest religious affiliation is Catholic, followed by various Protestant churches."
+    "quote": "Many ethnic and religious groups live and work in peace as proud Canadians."
   },
   "verification": {
     "status": "unverified",

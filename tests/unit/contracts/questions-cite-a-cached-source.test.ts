@@ -17,8 +17,9 @@
  *   3. `sourceHash` is the hash of what the verifier actually read — the
  *      manifest's `extractedTextSha256` when there is an extraction, its `sha256`
  *      otherwise. A mismatch means the source moved and the claim is stale.
- *   4. **A question drawn from a chapter the manifest already flags as stale is
- *      marked `volatile`.**
+ *   4. **A question drawn from a region the manifest already flags as stale is
+ *      marked `volatile` — when, and only when, `volatile` is what arms its
+ *      clock.**
  *
  * Check 4 is the one worth explaining. The cached *Discover Canada* is the 2012
  * large-print edition, and its Oath of Citizenship is a trap rather than merely
@@ -33,11 +34,38 @@
  * the Oath, in a game teaching people to take it.
  *
  * The manifest records those regions in `knownStaleness[]`. A `knownStaleness`
- * block an author is trusted to read is prose; this makes it a gate. `volatile`
- * is not a decoration — CLAUDE.md re-verifies volatile items every run and
- * quarantines them when the source changes or `asOf` exceeds 180 days — so
- * forcing it on questions from a flagged chapter routes them to the live page
- * automatically, which is exactly what each flag's `action` asks for in words.
+ * block an author is trusted to read is prose; this makes it a gate.
+ *
+ * **ADR-0016's amendment of 2026-09-08 is why check 4 reads a row and not a
+ * flag.** `volatile` is not a routing directive. It is the author's judgement
+ * that a fact can change without notice, and the only thing a gate can do with
+ * it is observe that on ADR-0016 §2 **row 1** it is what arms the 180-day
+ * `source.asOf` quarantine in `verify-content`. On **row 2** the clock has moved
+ * to the source — `liveChecks[].checkedAt` — and demanding `volatile` buys a
+ * live fetch per question per run against a page that has been established as
+ * unrevised, which is a re-check that structurally cannot produce a finding.
+ *
+ * So the demand fires per row, and the row comes from the **register**, never
+ * from the flag alone. `upstream: "does-not-revise"` on its own is an undated
+ * sentence somebody typed after reading a page once; exempting on it would be an
+ * obligation switched off by an assertion that never expires. Row 2 needs the
+ * flag's declaration *and* a dated `liveChecks[]` entry finding
+ * `source-unrevised` for that chapter, and when that entry ages past 180 days
+ * the exemption lapses and the volatile demand comes back. The mechanism that
+ * grants the exemption is the mechanism that revokes it.
+ *
+ * That is also why this file takes a `today`: the corpus check below runs on the
+ * real clock and **can turn a green tree red with no commit**, exactly like
+ * `check-obligations`. That is the expiry working, not a flake.
+ *
+ * **`dispositionRow` below is a second implementation of ADR-0016 §2's table.**
+ * The first is `dispositionFor` in `scripts/verify-content.mjs`, and this one was
+ * written against it line by line. Nothing keeps them agreeing, and the unsafe
+ * direction is specific: if `verify-content` tightens row 2 and this does not,
+ * this file exempts questions from the volatile demand that `verify-content`
+ * still holds on the row-1 clock, and both files pass. ADR-0016's amendment
+ * records that as a boundary defect with an obligation to extract one shared
+ * module; this comment is the marker until then, not the mechanism.
  *
  * **What this cannot do, stated so its silence is not read as coverage:** it
  * cannot tell whether a `knownStaleness` entry should exist. The gate enforces
@@ -166,6 +194,135 @@ const answerText = (question: QuestionLike): readonly string[] => {
   return [...(question.options ?? []).flatMap(from), ...from(question.explanation)];
 };
 
+/* -------------------------------------------------------------------------- */
+/* ADR-0016 §2's table — which row is this question's chapter on?              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * ADR-0003 and ADR-0016: 180 days is the age at which a granted status stops
+ * being trusted. On row 2 the clock is applied to the register's
+ * `liveChecks[].checkedAt` rather than to the question's `source.asOf`.
+ */
+const STALE_AFTER_DAYS = 180;
+
+/** Whole days from an ISO date to another, or null if either is unreadable. */
+const ageInDays = (from: string, to: string): number | null => {
+  const then = Date.parse(`${from}T00:00:00Z`);
+  const now = Date.parse(`${to}T00:00:00Z`);
+  return Number.isNaN(then) || Number.isNaN(now) ? null : Math.round((now - then) / 86_400_000);
+};
+
+/**
+ * The staleness flags covering a claim, at the finest grain the flag offers.
+ *
+ * Page grain is preferred and chapter grain is the fallback, which is the whole
+ * point: a flag on two facts in a long chapter used to force all 57 authored
+ * questions volatile, and a flag that fires on everything carries the same
+ * information as one that fires on nothing. A page-grain flag on a question with
+ * no page cannot be ruled out, so it still applies - the missing page is its own
+ * fault, reported separately.
+ *
+ * This is the second of the two functions duplicated from
+ * `scripts/verify-content.mjs`; see the header.
+ */
+export const applicableFlags = (
+  manifest: SourceManifest,
+  chapter: string,
+  page: number | null,
+): readonly KnownStaleness[] =>
+  (manifest.knownStaleness ?? []).filter((entry) => {
+    if (!(entry.affects ?? []).some((affected) => str(affected) === chapter)) return false;
+    const flagPages = (entry.pages ?? []).flatMap((value) => {
+      const parsed = int(value);
+      return parsed === null ? [] : [parsed];
+    });
+    if (str(entry.grain) !== 'pages' || flagPages.length === 0) return true;
+    return page === null || flagPages.includes(page);
+  });
+
+interface Disposition {
+  readonly row: 1 | 2 | 3;
+  readonly why: string;
+  readonly check: LiveCheck | null;
+}
+
+/**
+ * The live checks naming a chapter, oldest first. Per chapter and not per
+ * source: a document with several chapters lives at several URLs and they are
+ * revised independently, so a verdict for the whole source would average
+ * unrelated facts. A finding about `How Canadians Govern Themselves`, whose page
+ * has not been touched since 2017, says nothing about `Who We Are`, whose page
+ * was modified last month and still carries 2006-era census shares.
+ */
+const liveChecksForChapter = (manifest: SourceManifest, chapter: string): readonly LiveCheck[] =>
+  [...(manifest.liveChecks ?? [])]
+    .filter((check) => (check.pages ?? []).some((page) => str(page.chapter) === chapter))
+    .sort((a, b) => String(a.checkedAt).localeCompare(String(b.checkedAt)));
+
+/**
+ * ADR-0016 §2, transcribed from `dispositionFor` in `scripts/verify-content.mjs`.
+ * Every branch that is not row 2 or row 3 returns row 1, which is the
+ * pre-ADR-0016 behaviour and the safe direction: when in doubt, keep the clock
+ * on the question.
+ */
+export const dispositionRow = (
+  manifest: SourceManifest,
+  chapter: string,
+  flags: readonly KnownStaleness[],
+  banRespected: boolean,
+): Disposition => {
+  const checks = liveChecksForChapter(manifest, chapter);
+  if (checks.length === 0) {
+    return { row: 1, why: 'no live check in the register names this chapter', check: null };
+  }
+
+  // `source-unreachable` is "no state change" and not a disposition: a 500 or a
+  // DNS failure is not a retraction, so it defers to the last check that decided
+  // anything.
+  const decisive = checks.filter((check) => str(check.finding) !== 'source-unreachable').at(-1);
+  if (decisive === undefined) {
+    return { row: 1, why: 'every live check for this chapter is source-unreachable', check: null };
+  }
+
+  const finding = str(decisive.finding);
+  if (finding === 'source-withdrawn') return { row: 3, why: 'source-withdrawn', check: decisive };
+  if (finding === 'source-revised') {
+    return { row: 1, why: 'the latest live check found the source revised', check: decisive };
+  }
+  if (finding !== 'source-unrevised') {
+    return { row: 1, why: `unrecognised finding ${String(finding)}`, check: decisive };
+  }
+
+  // Row 2 needs BOTH halves. A flag still saying `unknown` means nobody has
+  // established the source is unrevised there, and `unknown` is treated exactly
+  // as `revises`.
+  const undeclared = flags.filter((flag) => str(flag.upstream) !== 'does-not-revise');
+  if (undeclared.length > 0) {
+    return {
+      row: 1,
+      why:
+        `the live check found the source unrevised, but the flag(s) ` +
+        `${undeclared.map((flag) => `"${str(flag.topic) ?? '?'}"`).join(', ')} over this claim ` +
+        `declare upstream ${undeclared.map((flag) => str(flag.upstream) ?? 'absent').join(', ')}, ` +
+        `and absent and "unknown" are treated exactly as "revises"`,
+      check: decisive,
+    };
+  }
+  // A question whose answers still depend on the stale fact has not put row 2's
+  // mitigation in place, so it does not get row 2's exemption. Nothing is
+  // excused by a rule it is currently breaking.
+  if (!banRespected) {
+    return {
+      row: 1,
+      why:
+        'the flags declare does-not-revise but this question does not satisfy their ' +
+        'bannedFromAnswers list, so the only mitigation row 2 rests on is not in place',
+      check: decisive,
+    };
+  }
+  return { row: 2, why: 'source-unrevised, and every flag declares does-not-revise', check: decisive };
+};
+
 /**
  * The whole check as one pure function over already-parsed documents, so the
  * fixtures below exercise the same code the corpus does. A predicate proved on
@@ -175,6 +332,9 @@ export const citationFaults = (
   question: QuestionLike,
   where: string,
   manifests: ReadonlyMap<string, SourceManifest>,
+  // The real clock by default. Row 2's exemption expires against this, so the
+  // corpus check below is deliberately date-dependent; the fixtures pin it.
+  today: string = new Date().toISOString().slice(0, 10),
 ): readonly string[] => {
   const source = question.source;
   if (source === undefined) return [];
@@ -249,54 +409,25 @@ export const citationFaults = (
   // whole point: a flag on two facts in a long chapter used to force all 57
   // authored questions volatile, and a flag that fires on everything carries the
   // same information as one that fires on nothing.
-  const flags = (manifest.knownStaleness ?? []).filter((entry) => {
-    if (!(entry.affects ?? []).some((affected) => str(affected) === chapter)) return false;
-    const flagPages = (entry.pages ?? []).flatMap((value) => {
-      const parsed = int(value);
-      return parsed === null ? [] : [parsed];
-    });
-    // `grain: "pages"` narrows to the listed pages; anything else is the whole
-    // chapter. A page-grain flag on a question with no page cannot be ruled out,
-    // so it still applies - the missing page is reported separately above.
-    if (str(entry.grain) !== 'pages' || flagPages.length === 0) return true;
-    return page === null || flagPages.includes(page);
-  });
-
-  if (flags.length > 0 && source.volatile !== true) {
-    const grains = flags
-      .map((entry) => {
-        const topic = str(entry.topic) ?? '?';
-        return str(entry.grain) === 'pages'
-          ? `${topic} (pages ${(entry.pages ?? []).join(', ')})`
-          : `${topic} (whole chapter)`;
-      })
-      .join('; ');
-    found.push(
-      `${where}: ${sourceId} flags this claim as known-stale - ${grains} - and the question is not ` +
-        `marked volatile. A volatile question is re-verified every run against the live page and ` +
-        `quarantined when the source moves or asOf passes 180 days, which is what each flag asks ` +
-        `for in words. Set source.volatile to true, or move the claim off the flagged page.`,
-    );
-  }
-  if (flags.length === 0 && source.volatile === true) {
-    // Not a failure. Over-marking is safe and sometimes right: a fact can be
-    // volatile for a reason the register has not noticed, which is exactly the
-    // judgement the staleness gate says it cannot make.
-  }
+  const flags = applicableFlags(manifest, chapter, page);
 
   // --- answers may not depend on a fact the source will never correct --------
   //
-  // ADR-0016. When a flag declares `upstream: "does-not-revise"`, marking the
-  // question volatile buys nothing: the live page states the same wrong thing,
-  // so the re-verification it routes to can only ever return "unchanged". The
-  // mitigation that works is the one the author used unprompted - write the
-  // answers so that none of them depends on the stale fact - and this is what
-  // makes that a checked property instead of an unrecorded judgement.
+  // ADR-0016 §3. When a flag declares `upstream: "does-not-revise"`, the live
+  // page states the same wrong thing, so re-verification can only ever return
+  // "unchanged". The mitigation that works is the one the author used unprompted
+  // — write the answers so that none of them depends on the stale fact — and this
+  // is what makes that a checked property instead of an unrecorded judgement.
   //
   // The check is deliberately on the ANSWERS, not the question. A prompt may name
   // a stale topic; what may not happen is a player being told a stale value is
   // true.
+  //
+  // It runs before the volatile branch because its result is an INPUT to that
+  // branch: a question breaking the ban has not put row 2's mitigation in place
+  // and so cannot claim row 2's exemption.
   const texts = answerText(question);
+  const banFaults: string[] = [];
   for (const flag of flags) {
     const banned = (flag.bannedFromAnswers ?? []).flatMap((value) => {
       const term = str(value);
@@ -305,7 +436,7 @@ export const citationFaults = (
     if (banned.length === 0) continue;
     const hits = banned.filter((term) => texts.some((text) => mentionsTerm(text, term)));
     if (hits.length === 0) continue;
-    found.push(
+    banFaults.push(
       `${where}: an option or explanation contains ${hits.map((term) => `"${term}"`).join(', ')}, ` +
         `which ${sourceId} bans from answers under the staleness flag "${str(flag.topic) ?? '?'}". ` +
         `That flag declares upstream: "does-not-revise" - the official source states the same ` +
@@ -315,6 +446,59 @@ export const citationFaults = (
         `entry in the register rather than removing it.`,
     );
   }
+
+  // --- volatile, demanded on the rows where volatile is what arms the clock ---
+  //
+  // ADR-0016 amendment 2026-09-08. The demand is not "a flag applies"; it is
+  // "a flag applies AND this chapter is on a row where `volatile` is the only
+  // clock the question has". The row comes from the register's `liveChecks[]`,
+  // never from `upstream` alone.
+  if (flags.length > 0 && source.volatile !== true) {
+    const disposition = dispositionRow(manifest, chapter, flags, banFaults.length === 0);
+    const checkedAt = str(disposition.check?.checkedAt);
+    const age = checkedAt === null ? null : ageInDays(checkedAt, today);
+    const exempt = disposition.row === 2 && age !== null && age <= STALE_AFTER_DAYS;
+
+    const grains = flags
+      .map((entry) => {
+        const topic = str(entry.topic) ?? '?';
+        return str(entry.grain) === 'pages'
+          ? `${topic} (pages ${(entry.pages ?? []).join(', ')})`
+          : `${topic} (whole chapter)`;
+      })
+      .join('; ');
+
+    if (!exempt) {
+      const because =
+        disposition.row === 3
+          ? `the latest live check for "${chapter}" found the page source-withdrawn, so every ` +
+            `question citing it quarantines (ADR-0016 §2 row 3) and volatile is the least of it`
+          : disposition.row === 2
+            ? `"${chapter}" is on ADR-0016 §2 row 2, but the live check that put it there ` +
+              `${age === null ? `has no readable checkedAt (${checkedAt ?? 'absent'})` : `was ${String(age)} days ago, over ${String(STALE_AFTER_DAYS)}`}. ` +
+              `Row 2's exemption from this demand rests entirely on that date, so it has lapsed and ` +
+              `the clock falls back onto the question. The real fix is ONE live check appended to ` +
+              `${sourceId}'s liveChecks[] for this chapter, not N re-verifications`
+            : `"${chapter}" is on ADR-0016 §2 row 1 (${disposition.why}), and on row 1 volatile is ` +
+              `what arms the only clock the question has: verify-content quarantines a volatile ` +
+              `claim once source.asOf passes ${String(STALE_AFTER_DAYS)} days, and a non-volatile ` +
+              `row-1 claim is on no clock at all`;
+      found.push(
+        `${where}: ${sourceId} flags this claim as known-stale - ${grains} - and the question is not ` +
+          `marked volatile. ${because}. Set source.volatile to true, or move the claim off the ` +
+          `flagged page.`,
+      );
+    }
+  }
+  if (flags.length === 0 && source.volatile === true) {
+    // Not a failure. Over-marking is safe and sometimes right: a fact can be
+    // volatile for a reason the register has not noticed, which is exactly the
+    // judgement the staleness gate says it cannot make. The same applies to a
+    // question marked volatile under a row-2 flag: the exemption lifts the
+    // DEMAND, it does not forbid the mark.
+  }
+
+  found.push(...banFaults);
 
   return found;
 };
@@ -473,6 +657,305 @@ describe('answers do not depend on a fact the source will never correct (ADR-001
       // miss "Elizabeth's", which is how a banned term ships.
       expect(mentionsTerm(text, term)).toBe(expected);
     });
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/* ADR-0016 amendment — the volatile demand is row 1's, and the row is the      */
+/* register's, not the flag's                                                   */
+/* -------------------------------------------------------------------------- */
+
+describe("the volatile demand follows ADR-0016 §2's row, not upstream alone", () => {
+  const TODAY = '2026-09-08';
+  const daysBefore = (days: number, from = TODAY): string =>
+    new Date(Date.parse(`${from}T00:00:00Z`) - days * 86_400_000).toISOString().slice(0, 10);
+
+  const flag = (over: Partial<KnownStaleness> = {}): KnownStaleness => ({
+    topic: 'The monarch',
+    affects: ['How Canadians Govern Themselves'],
+    grain: 'pages',
+    pages: [56],
+    upstream: 'does-not-revise',
+    bannedFromAnswers: ['Elizabeth'],
+    ...over,
+  });
+
+  const check = (over: Partial<LiveCheck> = {}): LiveCheck => ({
+    checkedAt: TODAY,
+    checkedBy: 'content-verifier',
+    finding: 'source-unrevised',
+    consequence: 'recorded',
+    pages: [
+      {
+        url: 'https://example.invalid/how-canadians-govern-themselves.html',
+        chapter: 'How Canadians Govern Themselves',
+        sourceDateModified: '2017-12-21',
+        agreesWithCache: true,
+        claimsCompared: ["the Sovereign's role and title"],
+      },
+    ],
+    ...over,
+  });
+
+  const register = (
+    flags: readonly KnownStaleness[],
+    checks: readonly LiveCheck[] | undefined,
+  ): ReadonlyMap<string, SourceManifest> =>
+    new Map([
+      [
+        'discover-canada',
+        {
+          id: 'discover-canada',
+          sha256: 'a'.repeat(64),
+          extractedText: 'discover-canada.txt',
+          extractedTextSha256: 'b'.repeat(64),
+          pages: 129,
+          chapters: [{ title: 'How Canadians Govern Themselves', page: 54, endPage: 59 }],
+          knownStaleness: flags,
+          ...(checks === undefined ? {} : { liveChecks: checks }),
+        },
+      ],
+    ]);
+
+  const ask = (options: readonly string[] = ['A', 'B', 'C', 'D']): QuestionLike => ({
+    id: 'q',
+    options: options.map((en) => ({ en, fr: en })),
+    explanation: { en: 'A neutral explanation.', fr: 'A neutral explanation.' },
+    source: {
+      sourceId: 'discover-canada',
+      chapter: 'How Canadians Govern Themselves',
+      page: 56,
+      sourceHash: 'b'.repeat(64),
+      volatile: false,
+    },
+  });
+
+  const demandsVolatile = (
+    manifests: ReadonlyMap<string, SourceManifest>,
+    question: QuestionLike = ask(),
+  ): readonly string[] =>
+    citationFaults(question, 'f', manifests, TODAY).filter((fault) =>
+      fault.includes('not marked volatile'),
+    );
+
+  describe('both halves of row 2 are required, and the flag is only one of them', () => {
+    it('does not demand volatile when a fresh live check finds the source unrevised', () => {
+      // The fifteen collateral questions. Under `does-not-revise` a re-fetch can
+      // only ever return "unchanged", so demanding the mark that routes to a
+      // re-fetch is an obligation whose success condition is unreachable.
+      expect(demandsVolatile(register([flag()], [check()]))).toEqual([]);
+    });
+
+    it('still demands volatile when nothing in the register backs the declaration', () => {
+      // THE TRAP, and the reason `upstream` alone is not the predicate. A flag
+      // saying "the source will never revise this" and no live check is an
+      // undated sentence somebody typed after reading a page once. Exempting on
+      // it switches off the only clock the question has and puts nothing in its
+      // place — the vacuity moved one level up rather than removed.
+      const faults = demandsVolatile(register([flag()], undefined));
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('no live check in the register names this chapter');
+      expect(faults[0]).toContain('row-1 claim is on no clock at all');
+    });
+
+    it('still demands volatile when the flag says unknown', () => {
+      const faults = demandsVolatile(register([flag({ upstream: 'unknown' })], [check()]));
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('"unknown" are treated exactly as "revises"');
+    });
+
+    it('still demands volatile when the flag says revises', () => {
+      expect(demandsVolatile(register([flag({ upstream: 'revises' })], [check()]))).toHaveLength(1);
+    });
+
+    it('still demands volatile when the flag declares no upstream at all', () => {
+      // Absent means unknown, and unknown is treated exactly as revises. A
+      // register written before ADR-0016 must not acquire an exemption by
+      // omission.
+      const bare = { ...flag() };
+      delete (bare as { upstream?: unknown }).upstream;
+      delete (bare as { bannedFromAnswers?: unknown }).bannedFromAnswers;
+      expect(demandsVolatile(register([bare], [check()]))).toHaveLength(1);
+    });
+
+    it('demands volatile when ONE of several flags over the same claim is not does-not-revise', () => {
+      // The live corpus's shape on pages 2-3: two flags over the Oath, one
+      // `does-not-revise` and one still `unknown`. Row 2 needs EVERY flag over
+      // the region, because a single flag nobody has checked upstream means the
+      // region has not been established as unrevised.
+      const faults = demandsVolatile(
+        register([flag(), flag({ topic: 'The Oath', upstream: 'unknown' })], [check()]),
+      );
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('"The Oath"');
+    });
+  });
+
+  describe('the register can revoke the exemption as well as grant it', () => {
+    it('demands volatile again when the latest check finds the source revised', () => {
+      const faults = demandsVolatile(
+        register([flag()], [check({ checkedAt: daysBefore(30) }), check({ finding: 'source-revised' })]),
+      );
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('found the source revised');
+    });
+
+    it('reads the LATEST decisive check, not the first', () => {
+      // Ordering is by checkedAt, not by position in the array. A register that
+      // appends out of order must not be able to resurrect an exemption.
+      expect(
+        demandsVolatile(
+          register([flag()], [check({ finding: 'source-revised', checkedAt: daysBefore(30) }), check()]),
+        ),
+      ).toEqual([]);
+    });
+
+    it('treats source-unreachable as no state change, not as a revocation', () => {
+      // ADR-0016 keeps `source-unreachable` apart from `source-withdrawn` for
+      // this reason: a DNS failure is not a retraction, so it defers to the last
+      // check that decided anything.
+      expect(
+        demandsVolatile(
+          register([flag()], [check(), check({ finding: 'source-unreachable', checkedAt: daysBefore(1) })]),
+        ),
+      ).toEqual([]);
+    });
+
+    it('falls back to row 1 when every check for the chapter is unreachable', () => {
+      const faults = demandsVolatile(register([flag()], [check({ finding: 'source-unreachable' })]));
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('source-unreachable');
+    });
+
+    it('demands volatile and names the quarantine when the source is withdrawn', () => {
+      const faults = demandsVolatile(register([flag()], [check({ finding: 'source-withdrawn' })]));
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('source-withdrawn');
+    });
+
+    it('binds the check to the chapter, so a check on another chapter grants nothing', () => {
+      // A finding about a page untouched since 2017 says nothing about a page
+      // modified last month. Averaging them across a source would be the
+      // container error ADR-0019 names.
+      const elsewhere = check({
+        pages: [
+          {
+            url: 'https://example.invalid/federal-elections.html',
+            chapter: 'Federal Elections',
+            sourceDateModified: '2025-08-08',
+            agreesWithCache: true,
+            claimsCompared: ['the number of electoral districts'],
+          },
+        ],
+      });
+      expect(demandsVolatile(register([flag()], [elsewhere]))).toHaveLength(1);
+    });
+  });
+
+  describe('a question breaking the ban does not get the exemption the ban pays for', () => {
+    it('demands volatile as well as reporting the banned term', () => {
+      // Row 2's whole justification is that `bannedFromAnswers` replaces the
+      // re-check. A question violating it has not put that mitigation in place,
+      // so it falls to row 1 and is held to row 1's demand. Nothing is excused
+      // by a rule it is currently breaking.
+      const faults = citationFaults(
+        ask(['Queen Elizabeth II', 'B', 'C', 'D']),
+        'f',
+        register([flag()], [check()]),
+        TODAY,
+      );
+      expect(faults).toHaveLength(2);
+      expect(faults.some((fault) => fault.includes('does not satisfy their bannedFromAnswers'))).toBe(
+        true,
+      );
+      expect(faults.some((fault) => fault.includes('"Elizabeth"'))).toBe(true);
+    });
+  });
+
+  describe('the exemption expires, and the expiry is the whole reason it is safe to grant', () => {
+    it('holds at exactly 180 days', () => {
+      expect(demandsVolatile(register([flag()], [check({ checkedAt: daysBefore(180) })]))).toEqual([]);
+    });
+
+    it('lapses at 181 days, and the demand comes back', () => {
+      // The mechanism that grants the exemption is the mechanism that revokes
+      // it. No second gate, no second field, and nothing to remember to check.
+      const faults = demandsVolatile(register([flag()], [check({ checkedAt: daysBefore(181) })]));
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('181 days ago, over 180');
+      expect(faults[0]).toContain("ONE live check appended to discover-canada's liveChecks[]");
+    });
+
+    it('lapses when the governing check has no readable date', () => {
+      // Row 2 rests entirely on that date, so an unreadable one is not a reason
+      // to keep trusting it.
+      const faults = demandsVolatile(register([flag()], [check({ checkedAt: 'sometime' })]));
+      expect(faults).toHaveLength(1);
+      expect(faults[0]).toContain('has no readable checkedAt');
+    });
+
+    it('does not treat over-marking under a row-2 flag as a fault', () => {
+      // The exemption lifts the DEMAND; it does not forbid the mark. `volatile`
+      // is still the author's judgement about the fact.
+      const marked = { ...ask(), source: { ...ask().source, volatile: true } };
+      expect(citationFaults(marked, 'f', register([flag()], [check()]), TODAY)).toEqual([]);
+    });
+  });
+});
+
+describe('the exemption does real work on the real register, and really expires (ADR-0016)', () => {
+  // Fixtures prove the predicate; these two prove it is not idling. An exemption
+  // that no shipped question uses, or one whose expiry no shipped question can
+  // reach, is the vacuum ADR-0024 names — and it would be this amendment
+  // committing the defect it was written to remove.
+  //
+  // Only the row-2 direction is exercised by the corpus today: no authored
+  // question sits under a flag on row 1. That asymmetry is in the safe
+  // direction — row 1 is the STRICT branch, so leaving it to fixtures cannot let
+  // anything through — and it is stated rather than left to be inferred from a
+  // passing suite.
+  const questions = jsonFilesUnder(QUESTIONS_DIR).map(
+    (path) => [path.slice(REPO_ROOT.length), JSON.parse(readFileSync(path, 'utf8')) as QuestionLike] as const,
+  );
+  const TODAY = new Date().toISOString().slice(0, 10);
+  const LATER = new Date(Date.now() + 400 * 86_400_000).toISOString().slice(0, 10);
+
+  const volatileDemands = (today: string): readonly string[] =>
+    questions.flatMap(([where, question]) =>
+      citationFaults(question, where, manifests, today).filter((fault) =>
+        fault.includes('not marked volatile'),
+      ),
+    );
+
+  it('read the corpus it judges', () => {
+    expect(questions.length, 'no content/questions/**/*.json parsed').toBeGreaterThan(0);
+  });
+
+  it('exempts questions today that a flag-only rule would have failed', () => {
+    // These are the questions the amendment is about: they sit on a flagged page
+    // and carry a fact that cannot move — treaty rights, the Royal Proclamation,
+    // residential schools, the 2008 apology, what "Inuit" means, Michif.
+    const exempt = questions.filter(([, question]) => {
+      const source = question.source;
+      if (source === undefined || source.volatile === true) return false;
+      const chapter = str(source.chapter);
+      const manifest = manifests.get(str(source.sourceId) ?? '');
+      if (chapter === null || manifest === undefined) return false;
+      const flags = applicableFlags(manifest, chapter, int(source.page));
+      return flags.length > 0 && dispositionRow(manifest, chapter, flags, true).row === 2;
+    });
+    expect(exempt.length, 'no shipped question is exempted by row 2').toBeGreaterThan(0);
+    expect(volatileDemands(TODAY)).toEqual([]);
+  });
+
+  it('fails those same questions once the governing live check ages out', () => {
+    // The expiry proved against the register that ships, not a fixture. If this
+    // ever returns nothing, the exemption has become unexpirable in practice and
+    // the amendment has traded a vacuous gate for a silent one.
+    const lapsed = volatileDemands(LATER);
+    expect(lapsed.length, `no question expires by ${LATER}`).toBeGreaterThan(0);
+    expect(lapsed.every((fault) => fault.includes('has lapsed'))).toBe(true);
+    expect(lapsed.some((fault) => fault.includes("liveChecks[]"))).toBe(true);
   });
 });
 
