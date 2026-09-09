@@ -39,6 +39,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -301,6 +302,45 @@ const subjectsOf = (root: string): readonly ReferenceSubject[] =>
     }
   ).subjects;
 
+/** A keymap entry, as the harness writes it. The identifier never reads this. */
+interface KeymapEntry {
+  readonly render: string;
+  readonly subjectId: string;
+  readonly probe: string;
+  readonly gating: boolean;
+  readonly sources: readonly string[];
+  readonly slots: Record<string, unknown>;
+}
+
+interface RigPart {
+  name: string;
+  z: number;
+  frame: string;
+}
+interface RigFrame {
+  source: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+interface Rig {
+  parts: RigPart[];
+  atlas: { framePrefix: string };
+  frames: Record<string, RigFrame>;
+  slots: Record<string, { options?: string[]; fallback?: string | null }>;
+  expressions: { names: string[]; fallback: string };
+  artboards: { characterId: string; skins: Record<string, string>; playerSelectableSlots: string[] }[];
+}
+
+/**
+ * The rig as it stands, read at run time for the same reason the subjects are:
+ * the part list, the z order and the option sets all move, and a case that
+ * listed today's is a case that stops describing the rig without failing.
+ */
+const rigOf = (root: string): Rig =>
+  JSON.parse(readFileSync(join(root, 'assets', 'style', 'rig-contract.json'), 'utf8')) as Rig;
+
 describe('the gate over the repository as it stands', () => {
   const gate = run(['--root', REPO]);
 
@@ -412,28 +452,244 @@ describe('the gate over the repository as it stands', () => {
     }
   });
 
-  it('varies the officer between runs, because a character is never judged from one file', () => {
-    // references.json: "The skin and hair choice must be VARIED between runs - a
-    // subject that only ever renders with one tone is a subject nobody checked
-    // the others of."
-    // UNSEEDED, which is how a real run goes. `--seed` exists so the rest of
-    // this file is deterministic and is the one thing a real run must not use.
-    const slotsOf = (): string => {
-      const built = handoff(REPO, [...CHEAP], null);
-      const keymap = readKeymap(built.keymapPath);
-      return keymap.entries
-        .filter((e: { subjectId: string; gating: boolean }) => e.subjectId === 'officer' && e.gating)
-        .map((e: { slots: { skin: string; hairShape: string; hairColour: string } }) =>
-          [e.slots.skin, e.slots.hairShape, e.slots.hairColour].join('/'),
-        )
-        .sort()
+  it('draws every part of a character artboard that only its costume decides', () => {
+    // THE HALF OF THE CASE ABOVE THAT A CHARACTER SUBJECT SKIPS, and the gap
+    // the two new artboards would have fallen into. The source checklist above
+    // is skipped for a subject built from SLOT CHOICES, correctly: its
+    // `renders[]` is a sample of one appearance, not a manifest. That exemption
+    // covers the whole figure, though, so a character builder wired to the
+    // WRONG COSTUME - or one that drops a part - renders a complete, plausible
+    // figure of somebody else, hands it over, and prints the same summary. It
+    // is the quiet direction again, one layer in.
+    //
+    // What is checkable is the part of a figure that the slots do not decide:
+    // a part whose frame template reads NO slot but `{costume}` resolves to
+    // exactly one frame per artboard, so if that frame exists in the rig its
+    // source MUST have been composited. Derived from rig-contract.json and from
+    // the costume the keymap records, so it covers an artboard nobody has
+    // written yet - which is exactly what it failed to do last time.
+    const rig = rigOf(REPO);
+    const built = handoff(REPO, [...CHEAP], null);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath) as { entries: KeymapEntry[] };
+
+    const figures = keymap.entries.filter((e) => e.gating && e.slots.costume !== undefined);
+    expect(figures.length, 'no character figure was handed over').toBeGreaterThan(0);
+
+    const costumeOnly = rig.parts.filter((part) =>
+      [...part.frame.matchAll(/\{(\w+)\}/g)].every((match) => match[1] === 'costume'),
+    );
+    expect(
+      costumeOnly.length,
+      'no part of the rig is decided by the costume alone; this case checks nothing',
+    ).toBeGreaterThan(5);
+
+    for (const figure of figures) {
+      const costume = String(figure.slots.costume);
+      const used = new Set(figure.sources);
+      for (const part of costumeOnly) {
+        const frame = rig.frames[`${rig.atlas.framePrefix}${part.frame.replace(/\{costume\}/g, costume)}`];
+        // `atlas.rule`: a template that is not in `frames` draws nothing, which
+        // is how one artboard gets no tail and another gets no hat. Not a defect.
+        if (!frame) continue;
+        expect(
+          used.has(frame.source),
+          `a figure of costume "${costume}" left out "${part.name}", which its costume ` +
+            `alone decides: the rig gives it "${frame.source}" and no render used the file`,
+        ).toBe(true);
+      }
+    }
+  });
+
+  it('renders every character artboard more than one way, in a run and between runs', () => {
+    // Every character recipe in references.json says a version of "the skin and
+    // hair choice must be VARIED between runs - a subject that only ever
+    // renders with one tone is a subject nobody checked the others of".
+    //
+    // DERIVED, over every artboard the hand-off carries, and not written for
+    // one of them. This case named a single subject until the day two more
+    // arrived, at which point it still passed while asserting nothing about
+    // either - and `--variants` was itself keyed on that one subject id, so
+    // the new artboards would have been rendered once each with the clause
+    // quietly unmet. That is ADR-0019 in one case: the property belongs to a
+    // character artboard, not to the first one somebody wrote a case about.
+    //
+    // The slots a figure did not vary ON PURPOSE are excluded by reading
+    // `inertSlots` off the keymap, which is the same field the shipped summary
+    // reads. One artboard's skin and hair are drawn and then covered entirely;
+    // demanding that they vary would be demanding coverage of something nobody
+    // can see, and "fixing" it would put a fur tone in the list of skin tones
+    // the character creator offers.
+    const tuple = (slots: KeymapEntry['slots']): string => {
+      const inert = new Set((slots.inertSlots as string[] | undefined) ?? []);
+      return Object.entries(slots)
+        .filter(([key]) => !['costume', 'variantIndex', 'inertSlots'].includes(key))
+        .filter(([key]) => !inert.has(key))
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([key, value]) => `${key}=${String(value)}`)
         .join(' ');
     };
-    // Four rather than five: 120 skin/hair combinations, so four runs all landing
-    // on the same one is about one in a million. Cheap builds, because this reads
-    // the keymap and not the pixels.
-    const runs = new Set([slotsOf(), slotsOf(), slotsOf(), slotsOf()]);
-    expect(runs.size, `four runs produced ${runs.size} distinct skin/hair sets`).toBeGreaterThan(1);
+
+    // UNSEEDED, which is how a real run goes: `--seed` exists so the rest of
+    // this file is deterministic and is the one thing a real run must not use.
+    //
+    // SIX RUNS, and the number is the narrowest artboard's arithmetic rather
+    // than a feeling. One artboard varies a single four-option slot, and its
+    // two variants are drawn without replacement, so a run shows one of six
+    // pairs; six runs all landing on the same pair is 1 in 6^5, about one in
+    // eight thousand. Four runs would have been one in two hundred, which is a
+    // case that fails a correct build a few times a year - and this file's own
+    // argument is that a flaky gate gets disabled.
+    const RUNS = 6;
+    const seen = new Map<string, Set<string>>();
+    for (let index = 0; index < RUNS; index += 1) {
+      const keymap = readKeymap(
+        handoff(REPO, ['--variants', '2', '--no-ladder'], null).keymapPath,
+      ) as { entries: KeymapEntry[] };
+      const figures = keymap.entries.filter((e) => e.gating && e.slots.costume !== undefined);
+      expect(figures.length).toBeGreaterThan(0);
+
+      const perSubject = new Map<string, string[]>();
+      for (const figure of figures) {
+        perSubject.set(figure.subjectId, [...(perSubject.get(figure.subjectId) ?? []), tuple(figure.slots)]);
+      }
+      for (const [subjectId, tuples] of perSubject) {
+        // WITHIN one run, and this half needs no luck at all: `--variants 2`
+        // exists to render a subject twice with different choices, and two
+        // independent draws collide often enough to matter (one time in four
+        // for the narrowest artboard). They are drawn without replacement, so
+        // two figures of one subject in one run are different by construction.
+        expect(
+          new Set(tuples).size,
+          `${subjectId} rendered ${String(tuples.length)} figure(s) in one run and ` +
+            `${String(new Set(tuples).size)} of them differ: ${JSON.stringify(tuples)}`,
+        ).toBe(tuples.length);
+        for (const value of tuples) {
+          seen.set(subjectId, (seen.get(subjectId) ?? new Set()).add(value));
+        }
+      }
+    }
+
+    expect(seen.size, 'no character artboard was handed over').toBeGreaterThan(0);
+    for (const [subjectId, values] of seen) {
+      // BETWEEN runs: more distinct appearances than any one run produced.
+      expect(
+        values.size,
+        `${subjectId} produced ${String(values.size)} distinct appearance(s) over ` +
+          `${String(RUNS)} runs of two figures each`,
+      ).toBeGreaterThan(2);
+    }
+  });
+
+  it('hands over the bare-headed figure of every artboard whose covering a person picks', () => {
+    // references.json: "at least one run must set headCovering=none, because the
+    // toque carries a large share of the identification and a costume that only
+    // reads with a hat on has not been checked."
+    //
+    // ASSERTED ON THE SMALLEST RUN THERE IS - one figure per subject - because
+    // that is where a rule phrased as "at least one" quietly becomes "on
+    // average". The first implementation of this pinned the bare head to
+    // variant 0 and let the shuffle place the other option anywhere, so a
+    // `--variants 1` run always covered the clause and a `--variants 2` run
+    // covered it twice and rendered the covering zero times. Both halves are
+    // asserted: the bare head is in every run, and the covering is reachable.
+    //
+    // WHICH ARTBOARDS, from rig-contract.json rather than from a list here: the
+    // ones whose `playerSelectableSlots` name the covering as a slot a person
+    // chooses. An artboard that draws its own hat, or that may not wear one at
+    // all, is not making this promise and must not be held to it.
+    const rig = rigOf(REPO);
+    const slot = 'headCovering';
+    const artboards = rig.artboards.filter((board) => board.playerSelectableSlots.includes(slot));
+    expect(artboards.length, `no artboard offers "${slot}"`).toBeGreaterThan(0);
+    const bare = rig.slots[slot]?.fallback;
+    expect(bare).toBe('none');
+
+    const figuresOf = (extra: readonly string[]): KeymapEntry[] =>
+      (readKeymap(handoff(REPO, extra, null).keymapPath) as { entries: KeymapEntry[] }).entries
+        .filter((e) => e.gating && e.slots.costume !== undefined);
+
+    const smallest = figuresOf([...CHEAP]);
+    for (const board of artboards) {
+      const costume = board.skins.costume;
+      const mine = smallest.filter((figure) => String(figure.slots.costume) === costume);
+      expect(mine.length, `no figure of costume "${costume}" in the smallest run`).toBeGreaterThan(0);
+      expect(
+        mine.some((figure) => String(figure.slots[slot]) === bare),
+        `every figure of costume "${costume}" in a one-figure run wears a covering; the ` +
+          `costume has not been checked without one`,
+      ).toBe(true);
+    }
+
+    const twice = figuresOf(['--variants', '2', '--no-ladder']);
+    for (const board of artboards) {
+      const worn = new Set(
+        twice.filter((f) => String(f.slots.costume) === board.skins.costume).map((f) => f.slots[slot]),
+      );
+      expect(
+        worn.size,
+        `costume "${board.skins.costume}" rendered ${String(worn.size)} head covering(s) over ` +
+          `two figures; a slot pinned to one value is not a slot`,
+      ).toBeGreaterThan(1);
+    }
+  });
+
+  it('prints a slot that CANNOT apply differently from one that failed, and counts it nowhere', () => {
+    // THE DISTINCTION THIS EXISTS FOR. One artboard in the contract is not a
+    // person: its fills are hide and felt rather than a `skin-1`..`skin-6`
+    // ramp, so docs/content-review.md 6.2's "every skin fill is a skin ramp
+    // entry" row genuinely cannot apply to it, and art recorded that as an
+    // exemption for one non-human artboard so a verifier scores it NOT
+    // APPLICABLE rather than FAILED.
+    //
+    // Two things have to be true for that to mean anything, and neither is
+    // "the harness stayed quiet":
+    //   - it PRINTS, under its own word, because silence reads exactly like a
+    //     rule nobody got to; and
+    //   - it COUNTS NOWHERE. The slot still takes the rig's fallback and is
+    //     still drawn, so a summary that counted it would report one more skin
+    //     tone exercised than the run exercised, on an artboard where the tone
+    //     is painted over. That is a green number about something nobody can
+    //     see, which is the shape of every failure this harness refuses.
+    const built = handoff(REPO, ['--variants', '2', '--no-ladder'], null);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath) as { entries: KeymapEntry[] };
+
+    const figures = keymap.entries.filter((e) => e.gating && e.slots.costume !== undefined);
+    const inertOf = (entry: KeymapEntry): string[] => (entry.slots.inertSlots as string[]) ?? [];
+    const exempt = [...new Set(figures.filter((f) => inertOf(f).length > 0).map((f) => f.subjectId))];
+    expect(
+      exempt.length,
+      'no artboard declares a slot it cannot vary; this case checks nothing',
+    ).toBeGreaterThan(0);
+
+    expect(built.result.stdout).toContain('NOT APPLICABLE');
+    for (const subjectId of exempt) {
+      expect(built.result.stdout).toContain(`N/A ${subjectId} - `);
+      // Not a failure, and not merely absent from the failure list: the words
+      // must differ where a reader looks.
+      expect(built.result.stdout).not.toContain(`FAIL ${subjectId}`);
+      expect(built.result.output).not.toMatch(new RegExp(`${subjectId}[^\\n]*(FAILED|is missing)`));
+    }
+
+    // The counted total is over the figures the check APPLIES to, and it is
+    // read back from the line the operator sees rather than from the keymap
+    // twice.
+    const applicable = figures.filter((figure) => !inertOf(figure).includes('skin'));
+    const tones = new Set(applicable.map((figure) => String(figure.slots.skin)));
+    const printed = /(\d+) skin tone\(s\)/.exec(built.result.stdout);
+    expect(printed, built.result.stdout).toBeTruthy();
+    expect(
+      Number(printed![1]),
+      `the summary counted ${printed![1]} skin tone(s); ${String(tones.size)} figure tone(s) ` +
+        `were chosen on artboards where a skin ramp applies`,
+    ).toBe(tones.size);
+    // And the fallback the exempt artboard carries is present in the keymap all
+    // the same -- it is DRAWN, not omitted, which is why a composite without it
+    // would not be what ships.
+    for (const figure of figures.filter((f) => inertOf(f).includes('skin'))) {
+      expect(figure.slots.skin).toBe(rigOf(REPO).slots.skin?.fallback);
+    }
   });
 });
 
@@ -703,11 +959,38 @@ describe('the anonymisation', () => {
         }
       }
     }
-    expect(sourceTokens.size).toBeGreaterThan(5);
+    /**
+     * A TOKEN THAT IS ITSELF HEX IS EXCLUDED, AND THAT IS NOT A HOLE IN THIS.
+     *
+     * Found by this case failing on a clean run: one render was named
+     * `40f18b1976face89.png`, and `face` is a word of `face-neutral.svg`.
+     * Nothing leaked. Sixteen hex characters spell `face`, `cafe`, `beef` and
+     * `decade` by arithmetic, about once in every 2400 names for a four-letter
+     * one, and the hand-off now carries about twenty. That is a case that fails
+     * a correct run a few times a year - and this file's own argument is that a
+     * FLAKY GATE GETS DISABLED AND A DISABLED GATE LEAKS SILENTLY.
+     *
+     * What replaces it for those tokens is STRONGER, not weaker: the regex on
+     * the line below says the name is sixteen hex characters and nothing else,
+     * so it cannot carry semantic content at all. The substring assertion is
+     * the legible statement of intent and it keeps every token the regex does
+     * not already settle. `scanForLeaks` makes the same split, for the same
+     * reason, and only for names it has just proved opaque.
+     */
+    const hexSpellable = [...sourceTokens].filter((token) => /^[0-9a-f]+$/.test(token));
+    const meaningful = [...sourceTokens].filter((token) => !/^[0-9a-f]+$/.test(token));
+    expect(
+      meaningful.length,
+      `only ${String(meaningful.length)} token(s) are not hex-spellable`,
+    ).toBeGreaterThan(5);
+    // Named rather than merely skipped, so that a contract which somehow made
+    // MOST of its tokens hex-spellable would be visible here rather than
+    // quietly emptying the check.
+    expect(hexSpellable.length).toBeLessThan(meaningful.length);
 
     for (const name of renders) {
       expect(name).toMatch(/^[0-9a-f]{16}\.png$/);
-      for (const token of sourceTokens) {
+      for (const token of meaningful) {
         expect(name.toLowerCase(), `render name "${name}" contains "${token}"`).not.toContain(token);
       }
     }
@@ -1281,6 +1564,69 @@ describe('scoring a verdict', () => {
     const scored = s.score();
     expect(scored.status, scored.output).toBe(1);
     expect(scored.stderr).toContain('no feature audit came back');
+  });
+
+  it('says so when the contract has a subject this record never covered', () => {
+    // THE SAME VACUUM AS A MISSING BUILDER, ONE LAYER UP. `checkContract`
+    // refuses a subject it cannot render, loudly, because "skipping an unknown
+    // subject would verify four fifths of the set and print the same OK". A
+    // RECORD has the identical hole and it is harder to see: a verdict is
+    // scored against its own manifest, so a record made before two subjects
+    // existed scores every subject it holds, cleanly, and the summary reads as
+    // a full pass with a smaller denominator. Nothing in it says the contract
+    // has since grown.
+    //
+    // Advisory, not fatal, and the line is the one this scorer already draws: a
+    // missing record makes no claim. Under `--require-identification`, where a
+    // claim is required, it is a failure.
+    const grown = fixture('grew-a-subject');
+    const built = handoff(grown);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath);
+    const answers = JSON.parse(readFileSync(built.answersPath, 'utf8'));
+    for (const item of answers.identifications) item.answer = 'The Peace Tower, Parliament Hill';
+    writeFileSync(built.answersPath, JSON.stringify(answers, null, 2));
+    const auditPath = join(built.out, 'audit.json');
+    writeFileSync(
+      auditPath,
+      JSON.stringify({ runId: keymap.runId, ...CLEAN_AUDIT }, null, 2),
+    );
+    const score = (extra: readonly string[] = []): Run =>
+      run([
+        'score', '--root', grown,
+        '--keymap', built.keymapPath,
+        '--answers', built.answersPath,
+        '--audit', auditPath,
+        ...extra,
+      ]);
+
+    // The control: this record answers everything the contract renders today.
+    const before = score();
+    expect(before.status, before.output).toBe(0);
+    expect(before.stdout).toContain('0 in the contract and not in this record');
+
+    // Art lands a subject. Nothing about the record changes.
+    const references = JSON.parse(
+      readFileSync(join(grown, 'assets', 'refs', 'references.json'), 'utf8'),
+    ) as { subjects: unknown[] };
+    references.subjects = [...references.subjects, { ...PEACE_TOWER, id: 'cn-tower' }];
+    writeFileSync(
+      join(grown, 'assets', 'refs', 'references.json'),
+      JSON.stringify(references, null, 2),
+    );
+
+    const after = score();
+    expect(after.stdout).toContain('STALE - cn-tower');
+    expect(after.stdout).toContain('covers it with NONE');
+    expect(after.stdout).toContain('1 in the contract and not in this record');
+    // Not a failure on its own: nobody has looked, and the record does not
+    // pretend otherwise.
+    expect(after.status, after.output).toBe(0);
+    expect(after.stdout).not.toContain('FAIL cn-tower');
+
+    const strict = score(['--require-identification']);
+    expect(strict.status, strict.output).toBe(1);
+    expect(strict.stderr).toContain('NOT ESTABLISHED');
   });
 
   it('fails an audit naming a feature the contract does not carry', () => {
@@ -2142,11 +2488,29 @@ describe('probes', () => {
     // exists to stop a flaky gate. These two seeds are known to fall on opposite
     // sides, so the check is exact: if the side ever stops varying, both land the
     // same way and this fails every time rather than sometimes.
-    const sideFor = (seed: string): string =>
-      readKeymap(handoff(REPO, [...CHEAP], seed).keymapPath).entries.find(
-        (e: { probe: string }) => e.probe === 'comparison',
-      ).slots.subjectSide;
-    expect([sideFor('side-a'), sideFor('side-b')].sort()).toEqual(['left', 'right']);
+    //
+    // PER SUBJECT, and no longer `entries.find(...)`. That took the FIRST
+    // comparison in a shuffled directory, which was one subject's side when
+    // there was one subject with a comparison figure and is an arbitrary
+    // subject's now that there are three. It would have gone on passing while
+    // checking that two different subjects landed on two different sides,
+    // which is not a property of anything.
+    const sidesFor = (seed: string): Map<string, string> =>
+      new Map(
+        (readKeymap(handoff(REPO, [...CHEAP], seed).keymapPath) as { entries: KeymapEntry[] }).entries
+          .filter((entry) => entry.probe === 'comparison')
+          .map((entry) => [entry.subjectId, String(entry.slots.subjectSide)]),
+      );
+    const first = sidesFor('side-a');
+    const second = sidesFor('side-c');
+    expect(first.size, 'no comparison figure to check the side of').toBeGreaterThan(0);
+    expect([...second.keys()].sort()).toEqual([...first.keys()].sort());
+    for (const [subjectId, side] of first) {
+      expect(
+        [side, second.get(subjectId)].sort(),
+        `${subjectId} stood on the ${side} under both seeds`,
+      ).toEqual(['left', 'right']);
+    }
   });
 
   it('fails a subject that needs a comparison figure and has no builder for one', () => {
@@ -2195,6 +2559,144 @@ describe('probes', () => {
     const result = run(['--root', fixture('bad-mask', { subjects: [bad, UNRENDERED] })]);
     expect(result.status, result.output).toBe(1);
     expect(result.stderr).toContain('falls outside');
+  });
+});
+
+/* ================================================================== *
+ * 7b. "This rule cannot apply here" is a claim, and it is checked
+ * ================================================================== */
+
+/**
+ * An exemption that is believed rather than checked is the most expensive kind
+ * of comment in this repository: it reads as a decision protecting something,
+ * so the next reader trusts it, and it goes on reading the same way for years
+ * after it stopped being true (ADR-0017 §, ADR-0019).
+ *
+ * The exemption here is real. One artboard in the contract is not a person; its
+ * fills are hide and felt rather than a `skin-1`..`skin-6` ramp, and
+ * docs/content-review.md 6.2's "every skin fill is a skin ramp entry" row
+ * cannot apply to it. The MECHANICAL half of the reason is that those slots are
+ * drawn and then covered entirely by a later part of that costume - and that
+ * half moves. The rig gained two parts and reordered `hair` under `face` in one
+ * commit. A covering that has been moved above what it covers, shrunk below it,
+ * or removed RENDERS PERFECTLY; there is no exception to catch and nothing in
+ * the picture to notice.
+ *
+ * So the hand-off re-derives the claim from the rig's z order and part windows
+ * on every run, and these cases prove all three ways of breaking it fail. They
+ * run against the REAL art through a doctored rig, because a fixture rig would
+ * only prove the check reads its own fixture.
+ */
+describe('a slot declared NOT APPLICABLE has to still be invisible', () => {
+  /** The real sources and the real contract, with the rig bent out of shape. */
+  const bentRig = (name: string, bend: (rig: Rig) => void): string => {
+    const root = scratch(name);
+    mkdirSync(join(root, 'assets', 'refs'), { recursive: true });
+    mkdirSync(join(root, 'assets', 'style'), { recursive: true });
+    // Symlinked, not copied: these cases are about the rig, and rasterising the
+    // real art is the point of running them against it.
+    symlinkSync(join(REPO, 'assets', 'src'), join(root, 'assets', 'src'));
+
+    const references = JSON.parse(
+      readFileSync(join(REPO, 'assets', 'refs', 'references.json'), 'utf8'),
+    ) as { subjects: { id: string; renders: string[]; mustBeRight?: { requiresComparisonFigure?: boolean }[] }[] };
+    // The artboards that declare a covered slot, found rather than named: the
+    // hand-off records them, so the fixture asks it which they are.
+    const keymap = readKeymap(handoff(REPO, [...CHEAP], 'bent-seed').keymapPath) as {
+      entries: KeymapEntry[];
+    };
+    const exempt = new Set(
+      keymap.entries
+        .filter((entry) => ((entry.slots.inertSlots as string[] | undefined) ?? []).length > 0)
+        .map((entry) => entry.subjectId),
+    );
+    expect(exempt.size, 'no artboard declares a covered slot').toBeGreaterThan(0);
+    references.subjects = references.subjects.filter((subject) => exempt.has(subject.id));
+
+    writeFileSync(
+      join(root, 'assets', 'refs', 'references.json'),
+      JSON.stringify(references, null, 2),
+    );
+    const rig = rigOf(REPO);
+    bend(rig);
+    writeFileSync(join(root, 'assets', 'style', 'rig-contract.json'), JSON.stringify(rig, null, 2));
+    return root;
+  };
+
+  /**
+   * The part the exemption RESTS ON, read off the keymap rather than named.
+   *
+   * `coveredBy` is recorded beside `inertSlots` for exactly this: the reason an
+   * exemption holds is a fact about the rig, the rig moves, and a case that
+   * re-derived the reason here would be re-deriving it with the same rule it is
+   * supposed to be testing.
+   */
+  const exemption = (): { slot: string; cover: RigPart; readers: RigPart[] } => {
+    const rig = rigOf(REPO);
+    const keymap = readKeymap(handoff(REPO, [...CHEAP], 'cover-seed').keymapPath) as {
+      entries: KeymapEntry[];
+    };
+    const figure = keymap.entries.find(
+      (entry) => Object.keys((entry.slots.coveredBy as Record<string, string>) ?? {}).length > 0,
+    );
+    expect(figure, 'no figure carries a covered slot').toBeTruthy();
+    const coveredBy = figure!.slots.coveredBy as Record<string, string>;
+    const [slot, by] = Object.entries(coveredBy)[0] ?? ['', ''];
+    expect(slot, 'the figure records no covered slot').not.toBe('');
+    const cover = rig.parts.find((part) => part.name === by);
+    expect(cover, `the rig has no part named "${by}"`).toBeTruthy();
+    const readers = rig.parts.filter((part) => part.frame.includes(`{${slot}}`));
+    expect(readers.length, `no part of the rig reads "${slot}"`).toBeGreaterThan(0);
+    return { slot, cover: cover!, readers };
+  };
+
+  /** Every frame key a part can resolve to, whatever the slots say. */
+  const framesOf = (rig: Rig, part: RigPart): string[] => {
+    const prefix = `${rig.atlas.framePrefix}${part.frame.split('{')[0]}`;
+    return Object.keys(rig.frames).filter((key) => key.startsWith(prefix));
+  };
+
+  it('builds when the claim holds, which is the control for the three below', () => {
+    const result = run(['--root', bentRig('bent-none', () => {})]);
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain('NOT APPLICABLE');
+  });
+
+  it('fails when what is covered is moved on top of what covers it', () => {
+    const { cover, readers } = exemption();
+    const root = bentRig('bent-z', (bent) => {
+      for (const part of bent.parts) {
+        if (readers.some((reader) => reader.name === part.name)) part.z = cover.z + 50;
+      }
+    });
+    const result = run(['--root', root]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('It is on top, so it is visible');
+    expect(result.stderr).toContain('neither varied it nor checked it');
+  });
+
+  it('fails when what covers it no longer covers all of it', () => {
+    const { cover } = exemption();
+    const root = bentRig('bent-window', (bent) => {
+      for (const key of framesOf(bent, cover)) {
+        bent.frames[key] = { ...(bent.frames[key] as RigFrame), w: 8, h: 8 };
+      }
+    });
+    const result = run(['--root', root]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('does not contain');
+    expect(result.stderr).toContain('Part of the slot shows');
+  });
+
+  it('fails when what covers it is not drawn on this artboard at all', () => {
+    const { cover } = exemption();
+    const root = bentRig('bent-gone', (bent) => {
+      for (const key of framesOf(bent, cover)) delete bent.frames[key];
+    });
+    const result = run(['--root', root]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('draws nothing here');
+    expect(result.stderr).toContain('An exemption whose reason has gone');
   });
 });
 

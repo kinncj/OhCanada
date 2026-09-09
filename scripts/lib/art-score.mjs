@@ -653,6 +653,43 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
     });
   }
 
+  /* ---------------- what this record never covered at all ---------------- */
+
+  /**
+   * A SUBJECT THE CONTRACT RENDERS AND THIS RECORD NEVER SAW.
+   *
+   * Every floor above is drawn over the record's own manifest, which answers
+   * "was everything in this record checked" and cannot answer "was everything
+   * checked". Those came apart the day the contract grew two character
+   * subjects: the record on file covers ten subjects, cleanly, and the
+   * contract now has twelve. Nothing in the output said so. The summary line
+   * read `scored 7/10`, and 10 was the record's number.
+   *
+   * It is the SAME SHAPE as the refusal in `checkContract` one layer down --
+   * "skipping an unknown subject would verify four fifths of the set and print
+   * the same OK" -- moved up to where the set is counted, and it matters most
+   * in the mode that is meant to be gating: under `--require-identification` a
+   * record covering ten of twelve would otherwise be a pass.
+   *
+   * `stale` AND NOT `failures`, deliberately, and the line between them is the
+   * one this file already draws: A MISSING RECORD MAKES NO CLAIM. Nobody has
+   * looked at these subjects and the record does not pretend otherwise, so it
+   * is advisory by default and fatal exactly where a claim is required. A
+   * subject `renders: []` is skipped, because it is unrendered by decision and
+   * there was never anything to hand over.
+   */
+  const covered = new Set(wanted);
+  for (const subject of references.subjects ?? []) {
+    if (!Array.isArray(subject.renders) || subject.renders.length === 0) continue;
+    if (covered.has(subject.id)) continue;
+    stale.push(
+      `${subject.id}: the contract gives it ${subject.renders.length} render source(s) and ` +
+        `this record covers it with NONE. Not a pass and not a failure — nobody has ever ` +
+        `looked at it through this harness, and a record scored out of its own manifest ` +
+        `cannot say so on its own. Re-run the hand-off and record a verdict that covers it.`,
+    );
+  }
+
   return {
     failures,
     stale,
@@ -681,6 +718,16 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
       subjectsPassed: scored.filter((row) => row.pass).length,
       subjectsStaleArt: scored.filter((row) => row.state === 'stale').length,
       subjectsUnrendered: unrendered.size,
+      // Subjects the contract renders that this record never covered. Beside
+      // `subjectsScored` because their DIFFERENCE is the finding: a record can
+      // score every subject it holds and still be a record about most of the
+      // art.
+      subjectsNotInRecord: (references.subjects ?? []).filter(
+        (subject) =>
+          Array.isArray(subject.renders) &&
+          subject.renders.length > 0 &&
+          !covered.has(subject.id),
+      ).length,
       featuresChecked,
       featuresUncheckable: scored.reduce((sum, row) => sum + row.featuresUncheckable, 0),
     },

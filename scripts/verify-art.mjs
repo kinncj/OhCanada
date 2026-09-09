@@ -189,9 +189,51 @@ const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 function printHandoffSummary(keymap, { where = null } = {}) {
   const subjects = new Set(keymap.entries.map((e) => e.subjectId));
   const gating = keymap.entries.filter((e) => e.gating);
-  const figures = keymap.entries.filter((e) => e.slots?.skin !== undefined);
-  const skins = new Set(figures.map((e) => e.slots.skin));
-  const hairs = new Set(figures.map((e) => `${e.slots.hairShape}-${e.slots.hairColour}`));
+
+  /* ---------------------------------------------------------------- *
+   * NOT APPLICABLE, WHICH IS NEITHER A PASS NOR A FAILURE
+   * ---------------------------------------------------------------- */
+  /*
+   * One artboard in the contract is not a person. Its fills are hide and felt
+   * rather than a `skin-1`..`skin-6` ramp, and the corresponding row of
+   * docs/content-review.md 6.2 -- "every skin fill is a skin ramp entry" --
+   * GENUINELY CANNOT APPLY TO IT. art recorded that as an exemption for one
+   * non-human artboard, so a verifier scores it NOT APPLICABLE rather than
+   * FAILED, and the harness has to be able to say the difference out loud.
+   *
+   * TWO THINGS FOLLOW, and the first is the one that would otherwise be silent:
+   *
+   *   - the slots that cannot apply DO NOT COUNT AS COVERAGE. They take the
+   *     rig's fallback, so counting them here would report one more tone
+   *     exercised than any run exercised, on an artboard where the tone is
+   *     drawn and then painted over. That is a green number about something
+   *     nobody can see, which is the shape of every failure this harness
+   *     exists to refuse.
+   *   - and they are PRINTED, under their own word. Silence would read as
+   *     "nothing to say about that artboard", which is what a failure that was
+   *     never checked also looks like.
+   *
+   * The hand-off does not take the exemption on trust: scripts/lib/art-handoff.mjs
+   * re-derives it from the rig's z order and part windows on every run, and a
+   * claim that has stopped holding is a build failure, not a quieter line here.
+   *
+   * ONE FIGURE, ONE ROW. `probe === 'full'` because the size-ladder rungs are
+   * the SAME figure at smaller sizes; counting each of them as a character
+   * figure reported three times as many as any run built.
+   */
+  const figures = keymap.entries.filter((e) => e.probe === 'full' && e.slots?.skin !== undefined);
+  const inertOf = (entry) => entry.slots?.inertSlots ?? [];
+  const varying = figures.filter((entry) => !inertOf(entry).includes('skin'));
+  const skins = new Set(varying.map((e) => e.slots.skin));
+  const hairs = new Set(varying.map((e) => `${e.slots.hairShape}-${e.slots.hairColour}`));
+
+  const notApplicable = new Map();
+  for (const entry of keymap.entries) {
+    if (inertOf(entry).length === 0) continue;
+    const seen = notApplicable.get(entry.subjectId) ?? new Set();
+    for (const slot of inertOf(entry)) seen.add(slot);
+    notApplicable.set(entry.subjectId, seen);
+  }
   const px = keymap.entries.reduce((sum, e) => sum + e.width * e.height, 0);
   const bytes = keymap.entries.reduce((sum, e) => sum + (e.bytes ?? 0), 0);
 
@@ -203,10 +245,24 @@ function printHandoffSummary(keymap, { where = null } = {}) {
   );
   if (figures.length > 0) {
     console.log(
-      `verify-art: ${figures.length} character figure(s), ${skins.size} skin tone(s) and ` +
-        `${hairs.size} hair combination(s) this run` +
+      `verify-art: ${figures.length} character figure(s), ${varying.length} of them with a ` +
+        `skin ramp to vary: ${skins.size} skin tone(s) and ${hairs.size} hair ` +
+        `combination(s) this run` +
         (quiet ? '.' : ` (${[...skins].join(', ')}; ${[...hairs].join(', ')}).`),
     );
+  }
+  if (notApplicable.size > 0) {
+    const slots = new Set([...notApplicable.values()].flatMap((set) => [...set]));
+    console.log(
+      `verify-art: ${notApplicable.size} artboard(s) carry ${slots.size} slot(s) that are NOT ` +
+        `APPLICABLE - drawn and then wholly covered by a later part of that costume, ` +
+        `re-derived from the rig's z order and part windows this run. Neither a pass nor a ` +
+        `failure: a check that CANNOT apply (docs/content-review.md 6.2, "every skin fill is ` +
+        `a skin-1..skin-6 ramp entry") is scored n/a, and it is counted in no total above.`,
+    );
+    for (const [subjectId, slotNames] of quiet ? [] : notApplicable) {
+      console.log(`verify-art:   N/A ${subjectId} - ${[...slotNames].sort().join(', ')}.`);
+    }
   }
   if (quiet) {
     if (keymap.unrendered.length > 0) {
@@ -247,7 +303,10 @@ function printScore(result) {
       `${t.featuresChecked} mustBeRight feature(s) confirmed present, ` +
       `${t.featuresUncheckable} uncheckable, ` +
       `${t.rendersStaleArt} NOT re-checked because the art moved, ` +
-      `${t.subjectsUnrendered} unrendered by decision.`,
+      `${t.subjectsUnrendered} unrendered by decision, ` +
+      // Beside the scored count and not folded into it: a record can score
+      // every subject it holds and still be a record about most of the art.
+      `${t.subjectsNotInRecord} in the contract and not in this record at all.`,
   );
   // Scoring happens after the reveal, so naming subjects here is not a leak --
   // but `--quiet` is asked for by an identifier who may still be mid-run, so it

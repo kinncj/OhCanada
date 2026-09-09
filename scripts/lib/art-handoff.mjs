@@ -324,6 +324,23 @@ export function digestSources({ assets, sources, read = null }) {
   return out;
 }
 
+/**
+ * Rasterised sources, for the length of ONE hand-off.
+ *
+ * A character artboard draws about twenty parts and several of them are the
+ * same file (two arms, two legs), and a run now builds twelve figures across
+ * three artboards and their comparison canvases -- so `ground-shadow` alone was
+ * being rasterised a dozen times per run, from bytes that cannot have changed
+ * in between. Cleared at the top of every `buildHandoff` rather than kept for
+ * the process: the cache is keyed by path, and a second run against a different
+ * `--root` in the same process is a different tree.
+ *
+ * NOT AN OPTIMISATION OF THE CHECKS. `refuseDrawnText` still runs on the first
+ * read of each file, and its verdict is a property of the bytes, so caching it
+ * reports the same failure once instead of a dozen times.
+ */
+let rasterCache = new Map();
+
 async function rasterise(assets, rel, failures) {
   const found = resolveSource(assets, rel);
   if (!found) {
@@ -332,9 +349,12 @@ async function rasterise(assets, rel, failures) {
     );
     return null;
   }
+  if (rasterCache.has(found.path)) return rasterCache.get(found.path);
   const svg = readFileSync(found.path, 'utf8');
   refuseDrawnText(svg, found.rel, failures);
-  return sharp(Buffer.from(svg)).png().toBuffer();
+  const png = await sharp(Buffer.from(svg)).png().toBuffer();
+  rasterCache.set(found.path, png);
+  return png;
 }
 
 /**
@@ -477,6 +497,379 @@ const twoParallaxTiles = ({ farMatch, nearMatch, nearTop, what }) =>
     return { png, sources: [farRel, nearRel], slots: { nearTop } };
   };
 
+/* ------------------------------------------------------------------ *
+ * Character figures: which slot got what, and why
+ * ------------------------------------------------------------------ */
+
+/**
+ * THREE ANSWERS TO "WHAT DID THIS SLOT GET", AND ONLY ONE OF THEM IS A CHOICE.
+ *
+ * Every character artboard plays the SAME part list in the SAME z order; what
+ * differs is which templates resolve, because `atlas.rule` says a part whose
+ * resolved template is not in `frames` draws nothing. That makes three quite
+ * different facts look identical in a keymap unless they are recorded apart:
+ *
+ *   varied   the run salt chooses, and chooses DIFFERENTLY for each figure.
+ *            The recipes demand it in as many words -- "a subject that only
+ *            ever renders with one tone is a subject nobody checked the others
+ *            of" -- so this is the default and the interesting one.
+ *
+ *   pinned   the contract fixes it. A head covering on an artboard that draws
+ *            its own hat is two hats; an accessory on an artboard whose
+ *            `neverAdd` forbids accessories of any kind is a defect drawn on
+ *            purpose.
+ *
+ * `why` on the last two is PROSE FOR A READER OF THE PLAN and no code branches
+ * on it. It is a field rather than a comment because a reason kept in the
+ * object it governs moves with it: the plans below are the one place a slot's
+ * value and the decision behind it are both written, and a comment twenty lines
+ * away is the thing that goes stale. `covered`'s is quoted back in the failure
+ * message when the claim stops holding, which is exactly when somebody needs to
+ * read it.
+ *
+ *   covered  THE SLOT IS DRAWN AND THEN WHOLLY HIDDEN by a later part of this
+ *            costume. It takes the rig's fallback, it is not varied, and -- this
+ *            is the whole point of the state -- NOT HAVING VARIED IT IS NOT A
+ *            FAILURE. One artboard in today's contract is not a person: its
+ *            fills are `leather`, `felt`, `hide` and `white` rather than a
+ *            `skin-1`..`skin-6` ramp, so the docs/content-review.md 6.2 row
+ *            "every skin fill is a skin ramp entry" GENUINELY CANNOT APPLY to
+ *            it. art recorded that as an exemption for one non-human artboard
+ *            so that a verifier scores it NOT APPLICABLE rather than FAILED,
+ *            and this is where the harness holds the two apart -- the same
+ *            split, for the same reason, as `stale` against `staleArt` in
+ *            art-score.mjs. A rule nobody could check must not print like a
+ *            rule that was checked and did not hold, and a summary that counted
+ *            an invisible fallback as one more skin tone exercised would be
+ *            reporting coverage of something nobody can see.
+ *
+ * AND THE EXEMPTION IS CHECKED, NOT BELIEVED. `covered` names the part that
+ * does the covering and `checkCoveredSlots` reads the rig for it: that part
+ * must draw on this costume, must sit LATER IN Z than every part the slot
+ * feeds, and its window must contain theirs. This rig has already moved
+ * underneath this file once -- two parts arrived and `hair` went below `face` --
+ * and a claim of "you cannot see it anyway" that has stopped being true RENDERS
+ * PERFECTLY and says nothing. If the covering part is moved, shrunk, reordered
+ * or removed, the exemption fails loudly instead of going on being printed.
+ */
+const varied = ({ first = null } = {}) => ({ how: 'varied', first });
+const pinned = (value, why) => ({ how: 'pinned', value, why });
+const covered = (by, why) => ({ how: 'covered', by, why });
+
+/**
+ * `expression` is a slot of the rig like any other to a template, and is NOT in
+ * `slots` -- it lives in `expressions`, because the state machine drives it.
+ * One reader for both so a plan can name it beside the rest.
+ */
+const slotOptions = (rig, slot) =>
+  slot === 'expression' ? (rig.expressions?.names ?? []) : (rig.slots?.[slot]?.options ?? []);
+const slotFallback = (rig, slot) =>
+  slot === 'expression' ? (rig.expressions?.fallback ?? null) : (rig.slots?.[slot]?.fallback ?? null);
+
+/** The frame a part resolves to under a set of slot choices, or undefined. */
+const resolveFrame = (rig, part, slots) =>
+  rig.frames?.[
+    `${rig.atlas.framePrefix}${part.frame.replace(
+      /\{(\w+)\}/g,
+      (_, slot) => slots[slot] ?? `{${slot}}`,
+    )}`
+  ];
+
+const containsWindow = (outer, inner) =>
+  outer.x <= inner.x &&
+  outer.y <= inner.y &&
+  outer.x + outer.w >= inner.x + inner.w &&
+  outer.y + outer.h >= inner.y + inner.h;
+
+/** The plan's own words for why a slot was exempt, quoted when it stops being. */
+const because = (choice) => (choice.why ? ` The plan's reason was: "${choice.why}".` : '');
+
+/**
+ * Does the "you cannot see it anyway" claim still hold on this artboard?
+ *
+ * Z ORDER AND GEOMETRY, both, because either alone is satisfiable by art that
+ * shows the slot. A covering part drawn first is behind what it claims to hide;
+ * a covering part drawn last but smaller leaves an edge of it showing. What
+ * this cannot check is OPACITY -- whether the covering part is solid over that
+ * window is the drawing's business and the design sheet's claim. Said out loud
+ * so the exemption is not read as bigger than it is.
+ */
+function checkCoveredSlots({ rig, subjectId, plan, slots, failures }) {
+  const parts = rig.parts ?? [];
+  for (const [slot, choice] of Object.entries(plan)) {
+    if (choice.how !== 'covered') continue;
+
+    const cover = parts.find((part) => part.name === choice.by);
+    const coverFrame = cover ? resolveFrame(rig, cover, slots) : undefined;
+    if (!cover || !coverFrame) {
+      failures.push(
+        `${subjectId}: "${slot}" is declared NOT APPLICABLE on this artboard because ` +
+          `"${choice.by}" covers it, and "${choice.by}" draws nothing here. An exemption ` +
+          `whose reason has gone is a rule nobody is checking any more, and this one hides ` +
+          `a slot the run then deliberately did not vary.${because(choice)}`,
+      );
+      continue;
+    }
+
+    const readers = parts.filter((part) => part.frame.includes(`{${slot}}`));
+    if (readers.length === 0) {
+      failures.push(
+        `${subjectId}: "${slot}" is declared NOT APPLICABLE and no part of the rig reads it, ` +
+          `so the exemption protects nothing and would outlive the slot.${because(choice)}`,
+      );
+      continue;
+    }
+
+    for (const part of readers) {
+      const frame = resolveFrame(rig, part, slots);
+      if (!frame) continue; // Draws nothing on this artboard: nothing to cover.
+      if (part.z >= cover.z) {
+        failures.push(
+          `${subjectId}: "${slot}" is declared NOT APPLICABLE because "${choice.by}" covers ` +
+            `"${part.name}" — and "${part.name}" draws at z ${part.z}, at or above ` +
+            `"${choice.by}" at z ${cover.z}. It is on top, so it is visible, so the slot IS ` +
+            `applicable and this run neither varied it nor checked it.${because(choice)}`,
+        );
+        continue;
+      }
+      if (!containsWindow(coverFrame, frame)) {
+        failures.push(
+          `${subjectId}: "${slot}" is declared NOT APPLICABLE because "${choice.by}" covers ` +
+            `"${part.name}", and it does not: a ${coverFrame.w}x${coverFrame.h} window at ` +
+            `(${coverFrame.x},${coverFrame.y}) does not contain "${part.name}"'s ` +
+            `${frame.w}x${frame.h} at (${frame.x},${frame.y}). Part of the slot ` +
+            `shows.${because(choice)}`,
+        );
+      }
+    }
+  }
+}
+
+/**
+ * The varied slots' options, shuffled once per subject per run.
+ *
+ * WHY A SEQUENCE AND NOT N INDEPENDENT DRAWS. `--variants` exists to render a
+ * subject more than once with different choices, and independent draws collide:
+ * two figures that land on the same slots are byte-identical, hash to one
+ * opaque name, and the harness refuses the run -- an intermittent failure whose
+ * frequency is 1 in (number of options) for a subject with one varied slot.
+ * The narrowest such subject today has four. Drawing without replacement makes
+ * the variants distinct by construction rather than by luck.
+ */
+const sequencesFor = (rig, plan, rng) => {
+  const out = {};
+  for (const [slot, choice] of Object.entries(plan)) {
+    if (choice.how !== 'varied') continue;
+    const shuffled = shuffle(rng, slotOptions(rig, slot));
+    // `first` is how a recipe demands that one value be rendered in EVERY run,
+    // whatever the salt says: "at least one run must set headCovering=none,
+    // because the toque carries a large share of the identification and a
+    // costume that only reads with a hat on has not been checked." It moves to
+    // the front of the sequence rather than overriding variant 0, so the demand
+    // costs the run no variety: with two options, one run renders both. The
+    // first implementation DID override variant 0, and on the very first seed it
+    // was tried on the shuffle put the same value at index 1 -- so the run
+    // satisfied "at least one" and rendered the other option zero times, which
+    // is the half of the recipe that says VARIED.
+    out[slot] =
+      choice.first === null
+        ? shuffled
+        : [choice.first, ...shuffled.filter((option) => option !== choice.first)];
+  }
+  return out;
+};
+
+/** How many distinct figures a plan can produce, which caps `--variants`. */
+const distinctFigures = (rig, plan) =>
+  Math.max(
+    1,
+    ...Object.entries(plan)
+      .filter(([, choice]) => choice.how === 'varied')
+      .map(([slot]) => slotOptions(rig, slot).length),
+  );
+
+/**
+ * A plan resolved to one figure's slots. ONE WALK OF THE PLAN, TWO CHOOSERS:
+ * the two answers that are NOT a choice - a value the contract pinned and a
+ * value nothing can see - are handled here and only here, so the variant path
+ * and the comparison path cannot drift into disagreeing about which slots a
+ * figure declares not applicable.
+ */
+function resolvePlan({ rig, plan, choose }) {
+  const slots = {};
+  const notApplicable = [];
+  const coveredBy = {};
+  for (const [slot, choice] of Object.entries(plan)) {
+    if (choice.how === 'pinned') {
+      slots[slot] = choice.value;
+      continue;
+    }
+    if (choice.how === 'covered') {
+      slots[slot] = slotFallback(rig, slot);
+      notApplicable.push(slot);
+      coveredBy[slot] = choice.by;
+      continue;
+    }
+    slots[slot] = choose(slot, slotOptions(rig, slot)) ?? slotFallback(rig, slot);
+  }
+  return { slots, notApplicable, coveredBy };
+}
+
+/** Variant N of a subject: the Nth entry of each varied slot's shuffled sequence. */
+const slotsForVariant = ({ rig, plan, variantIndex, sequences }) =>
+  resolvePlan({
+    rig,
+    plan,
+    choose: (slot) => {
+      const sequence = sequences[slot] ?? [];
+      return sequence[variantIndex % Math.max(1, sequence.length)];
+    },
+  });
+
+/**
+ * One independent draw of a plan, optionally avoiding another figure's choices.
+ * Used by the comparison canvas, where the two figures must differ in
+ * everything the rig can vary so that identical proportions are the one thing
+ * left to read.
+ */
+const drawSlots = ({ rig, plan, rng, avoid = null }) =>
+  resolvePlan({
+    rig,
+    plan,
+    choose: (slot, options) => {
+      const taken = avoid?.[slot];
+      const rest = taken === undefined ? options : options.filter((option) => option !== taken);
+      return pick(rng, rest.length > 0 ? rest : options);
+    },
+  });
+
+/**
+ * "A CHARACTER IS NEVER JUDGED FROM ONE FILE." Every part is unidentifiable
+ * alone — a sleeve is a coloured capsule — so the subject is the rig assembled,
+ * and the plan above says how this artboard fills it in.
+ *
+ * The chosen slots go in the keymap (which the identifier never reads), so the
+ * scorer can say which figure a verdict was about, and so a reader can tell a
+ * slot that was varied from one that could not be.
+ */
+const characterFigure = (plan) => {
+  const build = async ({ assets, rig, subject, failures, rng, variantIndex = 0, memo }) => {
+    const sequences = memo.has(subject.id)
+      ? memo.get(subject.id)
+      : memo.set(subject.id, sequencesFor(rig, plan, rng)).get(subject.id);
+    const { slots, notApplicable, coveredBy } = slotsForVariant({
+      rig,
+      plan,
+      variantIndex,
+      sequences,
+    });
+    checkCoveredSlots({ rig, subjectId: subject.id, plan, slots, failures });
+    const made = await composeFigure({ assets, rig, slots, failures });
+    if (!made) return null;
+    return {
+      png: await flatten(sharp(made.png)),
+      sources: made.sources,
+      // `inertSlots` is what makes NOT APPLICABLE printable downstream: without
+      // it a fallback value in the keymap is indistinguishable from a chosen
+      // one. `coveredBy` is the REASON, recorded beside it, so the record says
+      // which part of the rig the exemption rests on rather than leaving a
+      // reader to work it out from a z order that moves.
+      slots: { ...slots, variantIndex, inertSlots: notApplicable, coveredBy },
+    };
+  };
+  build.distinctFigures = (rig) => distinctFigures(rig, plan);
+  return build;
+};
+
+/**
+ * THE THREE ARTBOARDS, AS PLANS. Each is the prose recipe in
+ * `references.json` read literally, and nothing else lives here: what a builder
+ * DOES is `characterFigure` above, which is one function for all three.
+ */
+
+/** costume=serge, and everything the recipe says to vary. */
+const OFFICER_PLAN = {
+  costume: pinned('serge', 'the artboard IS the costume; it is not player-selectable'),
+  skin: varied(),
+  hairShape: varied(),
+  hairColour: varied(),
+  expression: varied(),
+  headCovering: pinned(
+    'none',
+    'this costume draws `hat-{costume}` over the crown, and its wide-brimmed felt hat is a ' +
+      '`mustBeRight` feature. A second covering on top of it is two hats.',
+  ),
+  feature: pinned('none', 'the recipe names skin, hair and expression as what varies here'),
+};
+
+/**
+ * costume=parka, and the artboard the officer's comparison canvas has been
+ * building all along -- which is worth having checked rather than assumed. It
+ * had: `COMPARISONS.officer` picked its partner with
+ * `costume.options.find(o => o !== 'serge')`, which returned `parka` only
+ * because `parka` happens to come first in a list that has since grown a third
+ * member. The partner is now NAMED, because "the one that is not the officer's"
+ * stopped being a description of one thing the moment a third artboard landed,
+ * and the contract's own words for the entry are "the officer beside the
+ * player, same rig, different costume".
+ *
+ * TWO CLAUSES THE OTHER PLANS DO NOT HAVE:
+ *   - `headCovering` varies, because it is a player-selectable slot here rather
+ *     than part of the costume, and
+ *   - variant 0 pins it to `none`, because the recipe requires it: "at least
+ *     one run must set headCovering=none ... a costume that only reads with a
+ *     hat on has not been checked". `first` makes that true of every run
+ *     including a `--variants 1` one, rather than true on average.
+ */
+const PLAYER_PLAN = {
+  costume: pinned('parka', 'the artboard IS the costume; it is not player-selectable'),
+  skin: varied(),
+  hairShape: varied(),
+  hairColour: varied(),
+  expression: varied(),
+  headCovering: varied({ first: 'none' }),
+  feature: varied(),
+};
+
+/**
+ * costume=beaver: the non-human artboard, on the same rig at the same six
+ * heads, and the one place `covered` earns its keep.
+ *
+ * The recipe: "Use costume=beaver and leave every other slot at its fallback:
+ * head-skin and hair-crop ARE drawn and are then covered entirely by
+ * head-shell-beaver, which is why no pelt tone was added to the skin slot, and
+ * a composite that omits them is not what ships. Vary the expression between
+ * runs."
+ *
+ * So this plan is not "the guide has no skin". It has one, it is drawn, and it
+ * cannot be seen -- which is why omitting those parts would be a different
+ * picture from the shipped one, and why varying them would be reporting
+ * coverage of something invisible. `covered('head-shell')` says exactly that
+ * and is checked against the rig's z order and part windows every run.
+ *
+ * `expression` still varies, and the rig is why: `face` draws at z 16, ABOVE
+ * `head-shell` at 15, so the shared eyes, brows and mouth land on the snout pad
+ * and this artboard's expressions are the game's expressions. The same z order
+ * that makes skin not applicable makes expression applicable, from the same
+ * three numbers.
+ */
+const GUIDE_PLAN = {
+  costume: pinned('beaver', 'the artboard IS the costume; it is not player-selectable'),
+  skin: covered(
+    'head-shell',
+    'the head shell draws over the shared head and the short crop entirely, which is why no ' +
+      'pelt tone was added to the skin slot',
+  ),
+  hairShape: covered('head-shell', 'the same shell, over the same window'),
+  hairColour: covered('head-shell', 'the same shell, over the same window'),
+  expression: varied(),
+  headCovering: pinned(
+    'none',
+    "this subject's `neverAdd` forbids clothing, a hat, a scarf or an accessory of any kind",
+  ),
+  feature: pinned('none', 'same clause: it is an animal companion, not a person in a suit'),
+};
+
 const RECIPES = {
   /** A single source, rasterised on its own at 1x. */
   'peace-tower': singleSource(),
@@ -582,30 +975,22 @@ const RECIPES = {
   }),
 
   /**
-   * "A CHARACTER IS NEVER JUDGED FROM ONE FILE." Every part is unidentifiable
-   * alone — a sleeve is a red capsule — so the subject is the rig assembled.
+   * THE THREE CHARACTER ARTBOARDS, one builder, three plans.
    *
-   * The recipe's other clause is the one with teeth: "The skin and hair choice
-   * must be VARIED between runs - a subject that only ever renders with one tone
-   * is a subject nobody checked the others of." So the slots are drawn from the
-   * run salt, not fixed, and `--variants` emits more than one figure per run.
-   * The chosen slots go in the keymap (which the identifier never reads), so the
-   * scorer can say which figure a verdict was about.
+   * "A CHARACTER IS NEVER JUDGED FROM ONE FILE." Every part is unidentifiable
+   * alone -- a sleeve is a coloured capsule -- so each subject is the rig
+   * assembled, and what differs between them is the plan above and nothing
+   * else. That is deliberate: the identical-proportions entry these three
+   * subjects share is only answerable if they are built by the same code, and
+   * three copies of a figure builder would drift into three canons.
+   *
+   * `--variants` emits more than one figure per run for each of them, because
+   * every one of the three recipes says some version of "a subject that only
+   * ever renders with one tone is a subject nobody checked the others of".
    */
-  officer: async ({ assets, rig, failures, rng, variantIndex, costume = 'serge' }) => {
-    const slots = {
-      costume,
-      skin: pick(rng, rig.slots.skin.options),
-      hairShape: pick(rng, rig.slots.hairShape.options),
-      hairColour: pick(rng, rig.slots.hairColour.options),
-      expression: pick(rng, rig.expressions.names),
-      headCovering: 'none',
-      feature: 'none',
-    };
-    const made = await composeFigure({ assets, rig, slots, failures });
-    if (!made) return null;
-    return { png: await flatten(sharp(made.png)), sources: made.sources, slots: { ...slots, variantIndex } };
-  },
+  officer: characterFigure(OFFICER_PLAN),
+  player: characterFigure(PLAYER_PLAN),
+  guide: characterFigure(GUIDE_PLAN),
 };
 
 /**
@@ -623,13 +1008,12 @@ async function composeFigure({ assets, rig, slots, failures }) {
   const sources = [];
 
   for (const part of parts) {
-    const key = `${rig.atlas.framePrefix}${part.frame.replace(
-      /\{(\w+)\}/g,
-      (_, slot) => slots[slot] ?? `{${slot}}`,
-    )}`;
-    const frame = rig.frames[key];
     // atlas.rule: "A part whose resolved template is not in `frames` draws
-    // nothing. That is how every `none` option works." Not an error.
+    // nothing. That is how every `none` option works." Not an error. ONE
+    // resolver, shared with `checkCoveredSlots`: a second copy of the template
+    // substitution would eventually disagree with this one, and the exemption
+    // check would then be vouching for a frame this never draws.
+    const frame = resolveFrame(rig, part, slots);
     if (!frame) continue;
     const buf = await rasterise(assets, frame.source, failures);
     if (!buf) continue;
@@ -654,9 +1038,10 @@ async function composeFigure({ assets, rig, slots, failures }) {
 }
 
 /**
- * THE COMPARISON FIGURE: two figures side by side on one canvas.
+ * TWO FIGURES SIDE BY SIDE ON ONE CANVAS, built the same way and differing in
+ * everything the rig can vary.
  *
- * One `mustBeRight` entry on the character subject is "cartoon proportions
+ * One `mustBeRight` entry on each character subject is "cartoon proportions
  * identical to every other character", and a hand-off holding a single figure
  * CANNOT ANSWER IT. On the first run through this harness it was scored present
  * anyway -- confirmed from `rig-contract.json` rather than from the picture,
@@ -665,43 +1050,37 @@ async function composeFigure({ assets, rig, slots, failures }) {
  * says so: the entry carries `requiresComparisonFigure` and the recipe requires
  * two figures built the same way.
  *
- * The two differ in SKIN, HAIR SHAPE, HAIR COLOUR AND EXPRESSION as well as
+ * They differ in SKIN, HAIR SHAPE, HAIR COLOUR AND EXPRESSION as well as
  * costume, drawn without replacement so they really are different. That is the
  * point: if everything varies except the proportions and the proportions still
  * match, the entry is answered visually, in the way the rule intends. Two
  * figures identical but for costume would prove far less.
  *
+ * `against` NAMES THE PARTNER rather than deriving it. Each contract entry
+ * names the figure it wants beside the subject, in words, and there are three
+ * artboards now: "the one that is not this one" describes a set, not a figure.
+ *
+ * BOTH SIDES DROP `headCovering` AND `feature`. A comparison canvas exists to
+ * make the crown line, the sole line, the eye line and the hand and foot sizes
+ * readable side by side, and a hat sits above the crown. Pinning them off is
+ * not a variation the pair is skipping; it is the pair's own requirement, and
+ * it keeps this canvas comparing the two things it is about.
+ *
  * Which side the subject stands on is drawn from the run salt, so an identifier
  * cannot learn "the left one is the answer" across runs.
  */
-const COMPARISONS = {
-  officer: async ({ assets, rig, failures, rng }) => {
-    const other = (list, taken) => {
-      const rest = list.filter((option) => option !== taken);
-      return rest.length > 0 ? pick(rng, rest) : taken;
-    };
-    const a = {
-      costume: 'serge',
-      skin: pick(rng, rig.slots.skin.options),
-      hairShape: pick(rng, rig.slots.hairShape.options),
-      hairColour: pick(rng, rig.slots.hairColour.options),
-      expression: pick(rng, rig.expressions.names),
-      headCovering: 'none',
-      feature: 'none',
-    };
-    const b = {
-      costume: rig.slots.costume?.options?.find((o) => o !== 'serge') ?? 'parka',
-      skin: other(rig.slots.skin.options, a.skin),
-      hairShape: other(rig.slots.hairShape.options, a.hairShape),
-      hairColour: other(rig.slots.hairColour.options, a.hairColour),
-      expression: other(rig.expressions.names, a.expression),
-      headCovering: 'none',
-      feature: 'none',
-    };
+const figurePair = ({ plan, against }) =>
+  async ({ assets, rig, subject, failures, rng }) => {
+    const mine = drawSlots({ rig, plan, rng });
+    const theirs = drawSlots({ rig, plan: against, rng, avoid: mine.slots });
+    for (const side of [mine.slots, theirs.slots]) {
+      if (side.headCovering !== undefined) side.headCovering = 'none';
+      if (side.feature !== undefined) side.feature = 'none';
+    }
+    checkCoveredSlots({ rig, subjectId: subject.id, plan, slots: mine.slots, failures });
 
-    const left = rng() < 0.5;
-    const subjectFirst = left;
-    const [first, second] = subjectFirst ? [a, b] : [b, a];
+    const subjectFirst = rng() < 0.5;
+    const [first, second] = subjectFirst ? [mine.slots, theirs.slots] : [theirs.slots, mine.slots];
     const one = await composeFigure({ assets, rig, slots: first, failures });
     const two = await composeFigure({ assets, rig, slots: second, failures });
     if (!one || !two) return null;
@@ -715,9 +1094,44 @@ const COMPARISONS = {
         ]),
       ),
       sources: [...new Set([...one.sources, ...two.sources])],
-      slots: { subjectSide: subjectFirst ? 'left' : 'right', subject: a, comparison: b },
+      slots: {
+        subjectSide: subjectFirst ? 'left' : 'right',
+        subject: mine.slots,
+        comparison: theirs.slots,
+        inertSlots: mine.notApplicable,
+        coveredBy: mine.coveredBy,
+      },
     };
-  },
+  };
+
+/**
+ * Keyed like RECIPES and for the same reason: a subject whose contract asks for
+ * a comparison figure and has no builder here FAILS, rather than quietly
+ * handing over a picture that cannot answer the entry it was added for.
+ */
+const COMPARISONS = {
+  /** "the officer (costume=serge) and the player (costume=parka)". */
+  officer: figurePair({ plan: OFFICER_PLAN, against: PLAYER_PLAN }),
+
+  /** "the player (costume=parka) and the officer (costume=serge)". */
+  player: figurePair({ plan: PLAYER_PLAN, against: OFFICER_PLAN }),
+
+  /**
+   * "THE HAND-OFF MUST CONTAIN THE PLAYER BESIDE THE GUIDE on one canvas, for
+   * the same reason the officer's does: identical proportions cannot be judged
+   * from one figure." The partner is the player rather than the officer because
+   * the contract says so, and because the entry's own `detail` is measured
+   * against it: "same crown, sole, eye line, hand and foot sizes and stroke
+   * weights as the player and the officer".
+   *
+   * This is also the pair where the not-applicable slots are visible as a
+   * difference between the two halves: the subject's skin and hair are the rig
+   * fallbacks under a shell that hides them, and the partner's are drawn
+   * without replacement against those fallbacks, so the partner is a person
+   * with a different tone and a different hair shape and the canvas still
+   * compares the only thing it is for.
+   */
+  guide: figurePair({ plan: GUIDE_PLAN, against: PLAYER_PLAN }),
 };
 
 /* ------------------------------------------------------------------ *
@@ -1079,10 +1493,33 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
 
     if (chunks !== null) {
       // A render.
-      if (!OPAQUE_NAME.test(name)) {
+      const opaque = OPAQUE_NAME.test(name);
+      if (!opaque) {
         failures.push(`${name}: not an opaque render name (expected 16 hex characters + .png)`);
       }
       for (const token of lowered) {
+        /*
+         * A TOKEN THAT IS ITSELF HEX CANNOT BE FOUND IN A HEX NAME, and looking
+         * for it is the same false-positive trap this file already refuses when
+         * it declines to grep PNG bytes for words.
+         *
+         * Sixteen hex characters spell "face", "cafe", "beef" and "decade" by
+         * arithmetic, about once in every 2400 names for a four-letter one. The
+         * contract has no such token today; "cafe" in one candidate answer on a
+         * Quebec City subject is all it would take, and the result would be a
+         * gate that fails a clean run a few times a year with a leak report
+         * about a name that carries nothing. A FLAKY GATE GETS DISABLED, AND A
+         * DISABLED GATE LEAKS SILENTLY, which is the argument this whole file
+         * is built on.
+         *
+         * SKIPPED ONLY WHERE THE NAME IS PROVED OPAQUE. `OPAQUE_NAME` is the
+         * stronger statement and it was checked one line above: a name of
+         * sixteen hex characters and nothing else cannot carry semantic content
+         * at all. On a name that FAILED that test the token is meaningful again
+         * and is still searched for, so a render called `cafe-frontenac.png`
+         * is caught by both halves.
+         */
+        if (opaque && /^[0-9a-f]+$/.test(token)) continue;
         if (name.toLowerCase().includes(token)) {
           failures.push(`${name}: the render's own name contains "${token}"`);
         }
@@ -1227,6 +1664,7 @@ export async function buildHandoff({
   workingArea = null,
 }) {
   const failures = [];
+  rasterCache = new Map();
   const { assets, references, rig } = loadContract({ root });
   const { renderable, unrendered } = checkContract({ references, failures });
 
@@ -1235,8 +1673,32 @@ export async function buildHandoff({
   const runId = createHash('sha256').update(`run:${salt}`).digest('hex').slice(0, 16);
 
   const built = [];
+  /**
+   * Per-run, per-subject state a builder needs to keep BETWEEN its variants --
+   * today, the shuffled option sequences that make `--variants N` produce N
+   * DISTINCT figures rather than N independent draws that may collide. Created
+   * here and thrown away with the run, because it is derived from the run salt
+   * and must not survive into another run under a different salt.
+   */
+  const memo = new Map();
+
   for (const subject of renderable) {
-    const copies = subject.id === 'officer' ? Math.max(1, variants) : 1;
+    /**
+     * HOW MANY FIGURES OF THIS SUBJECT, and it is no longer a subject id.
+     *
+     * `subject.id === 'officer'` was here, which was true and became wrong the
+     * moment a second and third character artboard landed: the new subjects
+     * would have been rendered once each, their recipes' "must be VARIED
+     * between runs" quietly unmet, and the summary would have looked the same.
+     * A builder that can produce more than one distinct figure says so, and
+     * says how many -- capped, because asking for more variants than a plan has
+     * distinct appearances produces two byte-identical renders, which this
+     * harness (rightly) refuses as one verdict answering both.
+     */
+    const builder = RECIPES[subject.id];
+    const copies = builder.distinctFigures
+      ? Math.min(Math.max(1, variants), builder.distinctFigures(rig))
+      : 1;
 
     // The comparison figure, when the contract says a feature needs one. Keyed
     // like RECIPES and for the same reason: a subject that asks for one and has
@@ -1266,7 +1728,7 @@ export async function buildHandoff({
     }
 
     for (let variantIndex = 0; variantIndex < copies; variantIndex += 1) {
-      const made = await RECIPES[subject.id]({ assets, rig, subject, failures, rng, variantIndex });
+      const made = await builder({ assets, rig, subject, failures, rng, variantIndex, memo });
       if (!made) continue;
 
       const masks = (subject.mustBeRight ?? [])

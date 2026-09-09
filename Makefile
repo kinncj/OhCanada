@@ -73,8 +73,19 @@ assets: ## Build assets/dist from assets/src, then hold both per-level budgets
 #     npm run check-level-payload  -- --dir dist --source dist --no-scan-root
 #     npm run check-texture-memory -- --dir dist --source dist
 #
+# ONE CLASS OF WORD THIS FILE MAY NOT CONTAIN, and "DEVICE" below is not a
+# stylistic choice. `verify-art` hands an identifier a directory of hashed
+# images and asks it to name what it sees. A subject id, a render filename or a
+# candidate answer spelled anywhere the identifier plausibly looks turns an
+# open-set identification into a multiple-choice one -- and a run that leaked
+# produces output identical to a clean one, so there is nothing to notice
+# afterwards. This file is one of those places: it is the target the identifier
+# was told to run. tests/unit/infra/art-handoff-gate.test.ts asserts it against
+# the real contract, so a word that becomes a subject id later fails here on the
+# day it does.
+#
 # Two targets because they are two quantities, not two views of one. `check-assets`
-# weighs what a player DOWNLOADS; `check-textures` weighs what the GPU HOLDS, which
+# weighs what a DEVICE DOWNLOADS; `check-textures` weighs what the GPU HOLDS, which
 # is width x height x 4 and has nothing to do with how well WebP compressed it. A
 # level can pass the first at 3 MB and fail the second at 130 MB -- that is how this
 # project's predecessor lost a WebGL context, on a device that had reported every
