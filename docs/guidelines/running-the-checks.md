@@ -56,8 +56,12 @@ it cannot see.
 
 The unit and contract suite. For content work the one that matters is the contract test binding questions to
 their source register — and in particular **the banned-term check** described in
-[`when-the-guide-is-out-of-date.md`](when-the-guide-is-out-of-date.md). That check lives here, not in
-`verify-content`, so if you are writing near a page the register flags, run `make test` before you push.
+[`when-the-guide-is-out-of-date.md`](when-the-guide-is-out-of-date.md).
+
+`verify-content` now fails on a banned term too, so you will normally see it before you get here. It did not
+until 2026-09-09: a banned term only demoted the question to a row whose failure needed other conditions, so
+a term the register forbids could sit in a shipped answer while the content commands printed a pass. Both
+gates enforce it now, from one shared implementation rather than two copies that could drift apart.
 
 ## `make lint`
 
@@ -87,11 +91,22 @@ manifest, save it in `content/sources/` under the `file` name the manifest gives
 If the digest does not match, **stop**. Either the document changed or you have a different edition, and in
 both cases every question verified against the old digest is due for re-checking.
 
-**A gap you should know about:** the text checks read the *extracted* `.txt`, whose own digest is recorded as
-`extractedTextSha256`, and the manifest does not record how that extraction was produced. So there is
-currently no documented way to reproduce it byte-for-byte from the PDF. If your local run reports the
-extraction as absent, that is expected and is not something you need to solve — write the question, and note
-in the pull request that the text checks could not run locally.
+**To run the text checks you need the extracted `.txt`**, whose own digest is recorded as
+`extractedTextSha256`. The manifest records the command that produced it, so you can make it yourself:
+
+```
+make sources
+```
+
+For *Discover Canada* that runs `pdftotext -layout` (poppler 26.08.0). The `-layout` flag is load-bearing —
+`-raw`, `-nopgbrk` and the no-flag form all produce a different digest. If the output does not match the
+recorded one, **stop and say so**. Do not re-hash the register to match your tool: every question is granted
+against that digest, so changing it silently re-points 389 verifications at bytes nobody has checked.
+
+**Five of the seven registers cannot be reproduced yet.** Their text was extracted by a command nobody wrote
+down, and each one says so in its own `extraction.reason`. `make sources` prints them every run. If you are
+working from one of those, the text checks cannot run locally — write the question and say so in the pull
+request. This is a real gap in the project, not something you need to solve.
 
 ## Reading a red run
 
