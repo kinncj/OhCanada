@@ -58,6 +58,8 @@ import {
 import { answerQuestion } from '@application/use-cases/answer-question';
 import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
+import { createExamSession, type ExamSession } from '@application/use-cases/exam-session';
+import { countAnswered, countRight } from '@application/use-cases/exam-attempt';
 import { createStudySession, type StudySession } from '@application/use-cases/study-session';
 import type {
   Clock,
@@ -97,7 +99,7 @@ import {
 import { createLevelError, createLevelLoading } from '@ui/level-screens';
 import { describeEntry, type MapEntry } from '@ui/level-select';
 import { announce, clearAnnouncements, mountLiveRegion } from '@ui/live-region';
-import { createPassport, type Passport } from '@ui/passport';
+import { createPassport, type Passport, type PassportExam } from '@ui/passport';
 import { createPoiCard } from '@ui/poi-card';
 import { createRotateOverlay } from '@ui/rotate-overlay';
 import {
@@ -122,10 +124,13 @@ import {
   type MilestoneBus,
 } from './game-events';
 import { isPlayable, journeyEntries } from './journey';
+import { createExamController, type ExamController } from './exam';
+import { createExamEventLog } from './exam-events';
 import { createQuestController, type QuestController } from './quest';
 import { readQuests, questsForLevel, type QuestCatalogue } from './quests';
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
+import { readSubjectIndex } from './subjects';
 
 /**
  * The config is imported, not fetched. It is on the 6 s time-to-play budget and
@@ -134,6 +139,13 @@ import { createStudyController, type StudyController } from './study';
  * `parseBootConfig` and `readGameRules` still validate it at runtime:
  * `make validate-content` guards the repository, these guard the artefact.
  */
+
+/** The page's query string, or `null` where there is no address to read. */
+function readPageSearch(view: unknown): string | null {
+  const location = (view as { readonly location?: { readonly search?: unknown } } | null)
+    ?.location;
+  return typeof location?.search === 'string' ? location.search : null;
+}
 
 function main(): void {
   const root = document.documentElement;
@@ -410,6 +422,29 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * warning the title screen carries, and neither prevents play.
    */
   const storageBlocked = progressStore.blocked || !loaded.ok;
+  /**
+   * The exam's event trace, and the two `progress/*` names the stories assert
+   * beside it.
+   *
+   * Installed on `window` only under `?e2e=1`, exactly as the scene probe is:
+   * `emit` is a no-op on a normal load and `window.__tnExam` is `undefined`, so
+   * a player's build carries no debug surface. Emitting is unconditional at
+   * every call site, because a caller that had to ask whether the probe was on
+   * would be one forgotten branch away from an event that fires in a test and
+   * not in the game.
+   */
+  const examEvents = createExamEventLog({
+    /* Read defensively. This runs under `environment: 'node'` in
+       `tests/unit/bootstrap/`, against a `window` double that has no
+       `location` — and a boot sequence that threw there would be a debug
+       surface breaking the game it is supposed to observe. */
+    search: readPageSearch(window),
+    target: window as unknown as Record<string, unknown>,
+  });
+  /* `TN-ATTEMPT-05` turns on this flag: a browser that cannot save changes what
+     leaving an exam costs, so the exam's menu has to know. It starts as the boot
+     answer and moves the first time a write actually fails. */
+  let storageFailing = storageBlocked;
   if (!loaded.ok) {
     console.error(`[bootstrap] the save could not be read. ${loaded.error.code}: ${loaded.error.message}`);
   }
@@ -418,6 +453,11 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     loaded.ok && loaded.value !== null
       ? loaded.value
       : newProgress(defaultSettings(config.defaultLocale), rules.unlockRules.initialLevels);
+
+  /* `TN-ATTEMPT-02`: "the event `progress/loaded` is emitted" when the game
+     comes back to an exam it did not finish. Emitted for every load, because the
+     event is about the save being read and not about what was in it. */
+  examEvents.emit('progress/loaded');
 
   /*
    * The question bank, wired.
@@ -446,6 +486,22 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * will not load is a different thing entirely, so it is named on the console
    * and the other quests still load.
    */
+  /*
+   * The exam's own draw, on its own stream.
+   *
+   * `random.fork('exam')` rather than the study stream: `TN-EXAM-02` requires two
+   * saves with the same seed to draw the same twenty questions whatever else the
+   * player has done, and a shared stream would move the draw every time a card
+   * shuffled or a drill ran. It is a different object from `studySource` for a
+   * stronger reason than tidiness — `ExamSession` has no `progress` in its
+   * dependencies at all, so the draw *cannot* read a review record.
+   */
+  const examSource: ExamSession = createExamSession({
+    bank: bundledQuestionBank,
+    random: random.fork('exam'),
+    rules: rules.exam,
+  });
+
   const questCatalogue: QuestCatalogue = readQuests();
   for (const refusal of questCatalogue.refused) {
     console.error(`[bootstrap] a quest document was refused. ${refusal}`);
@@ -490,10 +546,18 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
   /** Write the game down. Nothing waits for it and a failure never stops play. */
   const persist = (): void => {
     void saveProgress(save, progress).then((written) => {
-      if (written.ok) return;
+      if (written.ok) {
+        examEvents.emit('progress/saved');
+        return;
+      }
       console.error(`[bootstrap] progress was not saved. ${written.error.code}`);
+      examEvents.emit('progress/save-failed');
+      storageFailing = true;
       shell.setStorageWarning(true);
       session?.hud.setStorageWarning(true);
+      /* `TN-EXAM-05`: the exam carries on, and the promise its menu makes about
+         leaving changes to the true one (`TN-ATTEMPT-05`). */
+      shellExam?.setStorageBlocked(true);
     });
   };
 
@@ -626,6 +690,15 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
         announce,
         singleSwitch: store.current.singleSwitch,
         holdMs: store.current.holdToChooseMs,
+        /* `TN-PASSPORT-06`. Drawn from what is already saved, so it is right the
+           moment the screen opens; the one thing it cannot know yet is whether
+           the bank can run an exam at all, which arrives below. */
+        exam: examPanel(examReady),
+        onOpenExam: () => {
+          shellPassport?.hide();
+          shell.setModalOpen(false);
+          openExam();
+        },
         onBack: () => {
           shellPassport?.hide();
           shell.setModalOpen(false);
@@ -633,31 +706,152 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       });
       shell.setModalOpen(true);
       shellPassport.show();
-    },
-    onOpenStudy: () => {
-      shellStudy ??= createStudyController({
-        host: shell.main,
-        session: studySource,
-        store,
-        announce,
-        record: (question, chosenIndex) => {
-          recordAnswer(question, chosenIndex);
-        },
-        onOpen: () => {
-          shell.setModalOpen(true);
-        },
-        onClose: () => {
-          shell.setModalOpen(false);
-        },
+      /*
+       * Whether the exam can run, asked once and folded in when it answers.
+       *
+       * The passport opens on what the save knows rather than waiting for the
+       * bank: a screen that held itself back for a network call would be a
+       * blank passport, and everything above this line is already true.
+       */
+      void examSource.readiness().then((readiness) => {
+        if (!readiness.ok) return;
+        examReady = readiness.value.ready;
+        shellPassport?.setExam(examPanel(examReady));
       });
-      shellStudy.open();
     },
+    onOpenStudy: openShellStudy,
+    /*
+     * Exam mode, from the title screen (`TN-EXAM-01`) — and the way back to an
+     * exam the player left, because `title-exam` is one control with two labels
+     * (`OQ-ATTEMPT-4`).
+     *
+     * The same seam as Study and for the same reasons: `app/bootstrap/exam.ts`
+     * owns the screens because it needs the bank, the live `progress`, the save
+     * and the `Clock`, none of which `app/ui` may hold (ADR-0005). Mounted into
+     * `shell.main` — the page's one `<main>` while the shell is showing, and a
+     * `dialog` is not a landmark — and bracketed with `setModalOpen`, because two
+     * enabled switch rings both answer "tap anywhere".
+     */
+    onOpenExam: openExam,
+    examUnfinished: progress.examInProgress !== null,
   });
 
   /* Built on the first Study, kept for the session: the drill's `recentlyAsked`
      lives in `studySource` and the screen's is only DOM, but rebuilding the
      screen on every open would throw away a summary the player is reading. */
   let shellStudy: StudyController | null = null;
+
+  function openShellStudy(): void {
+    shellStudy ??= createStudyController({
+      host: shell.main,
+      session: studySource,
+      store,
+      announce,
+      record: (question, chosenIndex) => {
+        recordAnswer(question, chosenIndex);
+      },
+      onOpen: () => {
+        shell.setModalOpen(true);
+      },
+      onClose: () => {
+        shell.setModalOpen(false);
+      },
+    });
+    shellStudy.open();
+  }
+
+  /*
+   * Exam mode, kept for the session like Study: it holds the questions drawn,
+   * the clock and the attempt being taken, and rebuilding it on every open would
+   * be rebuilding the exam.
+   */
+  let shellExam: ExamController | null = null;
+
+  function openExam(): void {
+    shellExam ??= createExamController({
+      host: shell.main,
+      session: examSource,
+      store,
+      announce,
+      clock,
+      progress: () => progress,
+      /* Apply and save in one step, so an answer and the exam it belongs to are
+         never written a tick apart (`TN-ATTEMPT-02`). */
+      update: (change) => {
+        progress = change(progress);
+        persist();
+      },
+      /* The same single write every other answer in the game goes through, with
+         no quest supplied — so an exam updates the review schedule and cannot
+         advance a quest (`TN-RESULT-05`). */
+      record: (question, chosenIndex) => {
+        recordAnswer(question, chosenIndex);
+      },
+      events: examEvents,
+      subjects: () =>
+        readSubjectIndex((message) => {
+          console.error(`[bootstrap] ${message}`);
+        }),
+      /*
+       * "Subjects ready: 1 of 10". The ten come from `journey`, which is the same
+       * list the map counts its places from and the passport counts its slots
+       * from — `OQ-EXAM-5` asks for the subjects to be declared in
+       * `game.config.json`, and until they are, the ten chapters and the ten
+       * levels are the same ten and this is the only number in the build that is
+       * not invented here.
+       */
+      subjectsTotal: rules.journey.length,
+      storageBlocked: () => storageFailing,
+      openSettings: (onClosed) => {
+        shell.openSettings(onClosed);
+      },
+      openStudy: openShellStudy,
+      onOpen: () => {
+        shell.setModalOpen(true);
+      },
+      onClose: () => {
+        shell.setModalOpen(false);
+      },
+      onAttemptChanged: () => {
+        shell.setExamUnfinished(progress.examInProgress !== null);
+        shellPassport?.setExam(examPanel(examReady));
+      },
+    });
+    shellExam.open();
+  }
+
+  /**
+   * The practice exam as the passport shows it (`TN-PASSPORT-06`).
+   *
+   * The **most recent** finished attempt, never the best and never a count of
+   * them; an unfinished exam is a route back rather than a result, because an
+   * exam nobody finished has no verdict to show. `ready` is `null` until the
+   * bank has answered, and a build that cannot run the exam says so instead of
+   * offering a control that opens an apology.
+   */
+  let examReady: boolean | null = null;
+
+  function examPanel(ready: boolean | null): PassportExam {
+    const unfinished = progress.examInProgress;
+    if (unfinished !== null) {
+      return {
+        kind: 'unfinished',
+        answered: countAnswered(unfinished.answers),
+        total: unfinished.answers.length,
+      };
+    }
+    const last = progress.exams.at(-1);
+    if (last !== undefined) {
+      return {
+        kind: 'result',
+        passed: last.passed,
+        correct: countRight(last.answers),
+        total: last.answers.length,
+        timed: last.timed,
+      };
+    }
+    return ready === false ? { kind: 'not-ready' } : { kind: 'none' };
+  }
   /* The passport is the other way round — it holds nothing a player would lose
      and everything it draws is derived from the save — so it is rebuilt on every
      opening and destroyed with the shell. */

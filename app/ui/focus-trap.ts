@@ -100,6 +100,22 @@ export interface FocusTrap {
   activate(): void;
   /** Undo all of that and put focus back where it was, if that element still exists. */
   release(): void;
+  /**
+   * Stop holding the document, **without** giving focus back.
+   *
+   * For a surface that has another surface over it: a menu opened from a dialog,
+   * a confirmation, a settings screen opened from an exam. Two active traps on
+   * one page fight over Tab and — worse — the outer one has already marked the
+   * inner one `inert`, so every control in it is unclickable and the hit test
+   * lands on an ancestor. That was measured, not imagined: the exam's own menu
+   * was unusable until this existed.
+   *
+   * `release()` cannot do this job, because it restores focus, and the whole
+   * point is that the surface above has just taken it.
+   */
+  suspend(): void;
+  /** Hold the document again. A no-op unless the trap is active and suspended. */
+  resume(): void;
 }
 
 /**
@@ -114,6 +130,8 @@ export function createFocusTrap(
   const exempt = options.exemptFromInertSelector ?? PERCEIVABLE_WHILE_MODAL_SELECTOR;
 
   let active = false;
+  /** Active, but standing aside for a surface above. Focus is somebody else's. */
+  let suspended = false;
   let restoreTo: HTMLElement | null = null;
   /* Only what *we* set, so releasing never clears someone else's `inert`. */
   const inerted: HTMLElement[] = [];
@@ -171,6 +189,7 @@ export function createFocusTrap(
     activate(): void {
       if (active) return;
       active = true;
+      suspended = false;
 
       restoreTo = activeElementOf(doc);
       applyInert();
@@ -178,9 +197,24 @@ export function createFocusTrap(
       container.focus({ preventScroll: true });
     },
 
+    suspend(): void {
+      if (!active || suspended) return;
+      suspended = true;
+      doc.removeEventListener('keydown', onKeydown, true);
+      clearInert();
+    },
+
+    resume(): void {
+      if (!active || !suspended) return;
+      suspended = false;
+      applyInert();
+      doc.addEventListener('keydown', onKeydown, true);
+    },
+
     release(): void {
       if (!active) return;
       active = false;
+      suspended = false;
 
       doc.removeEventListener('keydown', onKeydown, true);
       clearInert();

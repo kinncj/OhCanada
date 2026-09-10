@@ -24,7 +24,7 @@
  */
 
 import { appErr, ok, type Result } from '@common/result';
-import type { SchedulerTuning, StudyRules } from '@application/ports';
+import type { ExamRules, SchedulerTuning, StudyRules } from '@application/ports';
 import type { Journey, UnlockRules } from '@domain/entities/level';
 import type { LevelId } from '@domain/ids';
 
@@ -54,6 +54,18 @@ export interface GameRules {
   readonly scheduler: SchedulerTuning;
   /** `#/study` — how many questions one drill asks (`TN-STUDY-02`). */
   readonly study: StudyRules;
+  /**
+   * `#/exam` — twenty questions, fifteen to pass, thirty minutes, timer optional.
+   *
+   * Read here for the reason `scheduler` is: how long an exam is and what passes
+   * it are rules about the player, not about a canvas. **No default and no
+   * partial read**: `TN-EXAM-01` asserts that a build whose `questionCount` is 10
+   * and whose `passMark` is 8 draws "The exam has 10 questions." and "You need 8
+   * out of 10 to pass.", which is only true if nobody anywhere writes 20 down. A
+   * silently defaulted pass mark would decide whether a player passed and say
+   * nothing about having decided it.
+   */
+  readonly exam: ExamRules;
   /**
    * `#/budgets/timeToPlayMs` — how long a level is allowed to take to open.
    *
@@ -177,6 +189,31 @@ export function readGameRules(document: unknown): Result<GameRules> {
     );
   }
 
+  const exam = document['exam'];
+  if (
+    !isRecord(exam) ||
+    typeof exam['questionCount'] !== 'number' ||
+    typeof exam['passMark'] !== 'number' ||
+    typeof exam['timeLimitSeconds'] !== 'number' ||
+    typeof exam['timerOptional'] !== 'boolean' ||
+    !Number.isInteger(exam['questionCount']) ||
+    exam['questionCount'] < 1 ||
+    !Number.isInteger(exam['passMark']) ||
+    exam['passMark'] < 0 ||
+    exam['passMark'] > exam['questionCount'] ||
+    exam['timeLimitSeconds'] <= 0
+  ) {
+    return appErr(
+      'invalid',
+      'config.exam.malformed',
+      'exam needs `questionCount` and `passMark` as whole numbers with the pass mark no ' +
+        'larger than the length, `timeLimitSeconds` as a positive number and `timerOptional` ' +
+        'as a boolean. A pass mark larger than the exam is one nobody can reach, and a ' +
+        'defaulted one would decide whether a player passed without saying so.',
+      {},
+    );
+  }
+
   const budgets = document['budgets'];
   const timeToPlayMs = isRecord(budgets) ? budgets['timeToPlayMs'] : undefined;
   if (typeof timeToPlayMs !== 'number' || timeToPlayMs <= 0) {
@@ -201,5 +238,11 @@ export function readGameRules(document: unknown): Result<GameRules> {
       dailyNewLimit: scheduler['dailyNewLimit'],
     },
     study: { drillSize },
+    exam: {
+      questionCount: exam['questionCount'],
+      passMark: exam['passMark'],
+      timeLimitSeconds: exam['timeLimitSeconds'],
+      timerOptional: exam['timerOptional'],
+    },
   });
 }

@@ -54,6 +54,20 @@ export interface Screen {
   setLocale(locale: UiLocale): void;
   /** Re-read the switch ring after the card's contents changed. */
   refreshSwitch(): void;
+  /**
+   * Another surface the caller mounted is over this one, or is no longer.
+   *
+   * Stands the focus trap and the switch ring down together, because they fail
+   * together: two active traps fight over Tab **and** the outer one marks the
+   * inner one `inert`, which makes every control in it unclickable; two enabled
+   * rings both answer "tap anywhere". Focus is untouched — the surface above has
+   * just taken it, and `hide()` is the call that gives it back.
+   *
+   * This is the same contract `app/ui/shell.ts` states as `setModalOpen`, held
+   * one level down: a dialog that opens its own menu is in exactly the position
+   * the shell is in when it opens Study.
+   */
+  setCovered(covered: boolean): void;
   setSwitchEnabled(enabled: boolean, holdMs?: number): void;
   destroy(): void;
 }
@@ -91,9 +105,13 @@ export function createScreen(host: HTMLElement, options: ScreenOptions): Screen 
   });
 
   let visible = false;
+  let covered = false;
 
   const onKeyDown = (event: KeyboardEvent): void => {
     if (event.key !== 'Escape' || event.defaultPrevented) return;
+    /* A surface above owns Escape while it is there. Without this, one press
+       closes both the confirmation and the screen underneath it. */
+    if (covered) return;
     if (!visible || options.onEscape === undefined) return;
     event.preventDefault();
     options.onEscape();
@@ -102,7 +120,7 @@ export function createScreen(host: HTMLElement, options: ScreenOptions): Screen 
   element.addEventListener('keydown', onKeyDown);
 
   const applySwitch = (): void => {
-    if (visible && switchOptions.enabled) {
+    if (visible && !covered && switchOptions.enabled) {
       ring.enable();
       ring.highlight(0);
     } else {
@@ -121,6 +139,7 @@ export function createScreen(host: HTMLElement, options: ScreenOptions): Screen 
     show(): void {
       if (visible) return;
       visible = true;
+      covered = false;
       /* `hidden` off first: focus cannot land on a hidden element. */
       element.hidden = false;
       trap.activate();
@@ -159,8 +178,16 @@ export function createScreen(host: HTMLElement, options: ScreenOptions): Screen 
       element.setAttribute('lang', locale);
     },
 
+    setCovered(next: boolean): void {
+      if (covered === next) return;
+      covered = next;
+      if (next) trap.suspend();
+      else if (visible) trap.resume();
+      applySwitch();
+    },
+
     refreshSwitch(): void {
-      if (!visible || !switchOptions.enabled) return;
+      if (!visible || covered || !switchOptions.enabled) return;
       ring.refresh();
       /* A re-render can take the highlighted item off the page. Landing on the
          first item is better than leaving a switch user with no highlight and

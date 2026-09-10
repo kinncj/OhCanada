@@ -20,6 +20,10 @@ const config = (patch: Record<string, unknown> = {}): Record<string, unknown> =>
   save: { maxImportBytes: 1024 },
   scheduler: { exclusionWindow: 20, wrongWeight: 3, dailyNewLimit: 10 },
   study: { drillSize: 5 },
+  /* Exam mode reads its four numbers from here rather than writing any of them
+     into a screen (`TN-EXAM-01`), so a config with no `exam` block is refused
+     for the same reason one with no `scheduler` is. */
+  exam: { questionCount: 20, passMark: 15, timeLimitSeconds: 1800, timerOptional: true },
   budgets: { timeToPlayMs: 6000 },
   ...patch,
 });

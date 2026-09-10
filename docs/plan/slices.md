@@ -16,7 +16,7 @@ State lives here, not in conversation history. Update the status column when a s
 | 9 | Level 9 — Canadian Symbols (Rockies to Vancouver, skateboard) | Level + quest + verified questions | Not started |
 | 10 | Level 10 — Canada's Regions (The North, dogsled) | Level + quest + verified questions | Not started |
 | C1..C10 | Content slices | ≥ 30 verified questions per subject; run in parallel with level work | Not started |
-| F1 | Exam mode | Official format, optional timer, results by subject | Not started |
+| F1 | Exam mode | Official format, optional timer, results by subject | **Built** — 2026-09-09. Start screen, twenty-question draw, running exam, optional clock, result with by-subject rows and the full review, leaving and resuming, the passport panel. Open: the ten subjects are still not declared in `game.config.json` (`OQ-EXAM-5`), so `exam.subjectsReady` counts `journey.length` as the map and passport already do |
 | F2 | Accessibility pass | Full audit: keyboard, switch, screen reader, scaling, contrast | Not started |
 | F3 | PWA and offline | Workbox per level, installable, offline after first load | Not started |
 | F4 | Performance pass | Every target device against the budgets | Not started |

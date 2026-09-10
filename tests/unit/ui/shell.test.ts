@@ -609,3 +609,77 @@ describe('taking the shell down', () => {
     expect(() => store.set('locale', 'fr')).not.toThrow();
   });
 });
+
+describe('the exam, from the front door', () => {
+  it('draws no exam control when the composition root offers none', () => {
+    const { shell, at } = mount();
+    shell.start();
+    expect(at('title-exam')).toBeNull();
+  });
+
+  it('offers the exam and hands the request straight over', () => {
+    const onOpenExam = vi.fn();
+    const { shell, at } = mount({ onOpenExam });
+    shell.start();
+    at('title-exam')?.click();
+    expect(onOpenExam).toHaveBeenCalledOnce();
+    /* The shell routes; it does not own an exam screen (`ADR-0005`). */
+    expect(at('exam-start')).toBeNull();
+  });
+
+  it('relabels the one control when an exam is left unfinished', () => {
+    const { shell, at } = mount({ onOpenExam: () => undefined });
+    shell.start();
+    expect(at('title-exam')?.textContent).toBe('Practice exam');
+    shell.setExamUnfinished(true);
+    expect(at('title-exam')?.textContent).toBe('Finish your exam');
+  });
+
+  it('opens on the unfinished label when the save already had one', () => {
+    const { shell, at } = mount({ onOpenExam: () => undefined, examUnfinished: true });
+    shell.start();
+    expect(at('title-exam')?.textContent).toBe('Finish your exam');
+  });
+});
+
+describe('settings, opened from a screen the caller owns', () => {
+  it('calls back when it closes, so an exam clock can carry on', () => {
+    /* `TN-TIMER-03`: the clock is paused for exactly as long as Settings is
+       open, and the only place that knows when it closes is the shell. */
+    const closed = vi.fn();
+    const { shell, at } = mount();
+    shell.start();
+    shell.openSettings(closed);
+    expect(at('settings-screen')?.hidden).toBe(false);
+    expect(closed).not.toHaveBeenCalled();
+    at('settings-close')?.click();
+    expect(closed).toHaveBeenCalledOnce();
+  });
+
+  it('calls back once, not again the next time Settings is opened', () => {
+    const closed = vi.fn();
+    const { shell, at } = mount();
+    shell.start();
+    shell.openSettings(closed);
+    at('settings-close')?.click();
+    shell.openSettings();
+    at('settings-close')?.click();
+    expect(closed).toHaveBeenCalledOnce();
+  });
+
+  it('gives the page back to whatever was over it, not to the shell', () => {
+    /*
+     * Settings can be opened from over another modal — the exam's own menu — and
+     * clearing the modal flag on close would bring the shell's switch ring back
+     * under a dialog that is still on the page.
+     */
+    const { shell, store, page, at } = mount();
+    shell.start();
+    store.set('singleSwitch', true);
+    shell.setModalOpen(true);
+    const ringWhileModal = page.doc.listenerCount('pointerdown');
+    shell.openSettings();
+    at('settings-close')?.click();
+    expect(page.doc.listenerCount('pointerdown')).toBe(ringWhileModal);
+  });
+});

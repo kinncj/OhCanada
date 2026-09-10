@@ -185,3 +185,19 @@ plan that overstates is worse than one that is behind — the next reader trusts
 - **ADR-0008 cannot see this.** Its gate reads import edges, so a port with two implementations looks
   consumed even when nothing constructs either. "A port exists when something calls it" is satisfied by an
   implementation nothing composes.
+
+- **`OQ-SCHEMA-1`'s two schema changes landed on 2026-09-09, and Exam mode is now buildable.**
+  `content/schemas/quest.schema.json` carries `declinedLine`, `reminderLine`, `afterLine` and `doneLine`
+  (ADR-0010, amended — a giver's line is quest content, and `OQ-DIALOGUE-2` is ruled quest-level);
+  `content/schemas/progress.schema.json` carries an `answers[]` record per attempt, a nullable
+  `examInProgress` beside `exams`, and no `askedQuestionIds` or `correctCount` (ADR-0027). **The save format
+  is version 3** and the 2 -> 3 step drops version-2 attempts, which cannot be converted and which no player
+  holds. Two things are still owed by other owners: the three Ottawa copy rows have to move into the quest
+  document and `validate-content` needs the speaker cross-check (ADR-0010 carries the dated marker, owner=content), and
+  **Exam mode itself is unbuilt — this change made it buildable and built none of it.**
+- **A schema with no documents was never compiled, so two of them were broken.**
+  `tests/unit/contracts/every-schema-compiles.test.ts` compiles every file in `content/schemas/` with ajv
+  configured as the content gate configures it. It found `character.schema.json` carrying the same
+  `strictRequired` defect `quest.schema.json` had — a conditional branch requiring properties it did not
+  declare — which meant the character schema had never validated anything. Fixed in the same change;
+  ADR-0024 §4 carries the rule.

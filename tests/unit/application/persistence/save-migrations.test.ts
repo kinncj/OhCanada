@@ -10,9 +10,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { readdirSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-
+import { CURRENT_SAVE_VERSION } from '@application/persistence/json-save-codec';
 import {
   SAVE_MIGRATIONS,
   addHoldToChooseMs,
@@ -88,18 +86,6 @@ describe('1 -> 2: the switch hold time becomes a saved setting', () => {
 /* 2 -> 3                                                                     */
 /* -------------------------------------------------------------------------- */
 
-const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
-
-/** Every `.ts` file under a directory, recursively. */
-const sourceFilesUnder = (directory: string): readonly string[] =>
-  readdirSync(directory, { withFileTypes: true }).flatMap((entry) =>
-    entry.isDirectory()
-      ? sourceFilesUnder(`${directory}/${entry.name}`)
-      : entry.name.endsWith('.ts')
-        ? [`${directory}/${entry.name}`]
-        : [],
-  );
-
 const migrate = (document: Record<string, unknown>): Record<string, unknown> => {
   const migrated = dropVersionTwoExams.apply(document);
   expect(migrated.ok).toBe(true);
@@ -168,25 +154,24 @@ describe('2 -> 3: the exam record becomes the exam', () => {
     expect(migrated['subjectsStarted']).toEqual(['government']);
   });
 
-  it('is dropping attempts no player can be holding, and that is checkable', () => {
+  it('is dropping attempts no build that could write one ever wrote', () => {
     /*
-     * The step's justification, pinned rather than asserted in prose: version 2
-     * is a format only builds without Exam mode ever wrote, and no such build
-     * could produce an attempt — `withExamAttempt` is called by tests and by
-     * nothing under `app/`. When Exam mode lands it writes version 3, and no new
-     * version-2 document can be created for this step to reach.
+     * The step's justification, pinned rather than asserted in prose.
      *
-     * If this fails, exam mode was built: check that it writes version 3 (it
-     * will — `CURRENT_SAVE_VERSION` is 3), then delete this case. It has done
-     * its job, which is to make the claim in the migration's doc comment true on
-     * the day the claim was made.
+     * It used to be pinned the other way round: no file under `app/` called
+     * `withExamAttempt`, so no build could produce a version-2 attempt for this
+     * step to reach. **Exam mode has landed and that case has done its job** —
+     * `app/bootstrap/exam.ts` files an attempt now, through
+     * `app/application/use-cases/exam-attempt.ts` — and the case retired itself
+     * exactly as its own comment instructed.
+     *
+     * What is left is the claim that survived: an attempt is only ever written
+     * by a build that writes **version 3**, so the document this step drops
+     * attempts from is still one no player can be holding. `CURRENT_SAVE_VERSION`
+     * is what makes that true, so `CURRENT_SAVE_VERSION` is what is asserted.
      */
-    const callers = ['app/application', 'app/adapters', 'app/bootstrap', 'app/ui', 'app/domain']
-      .flatMap((directory) => sourceFilesUnder(`${REPO_ROOT}${directory}`))
-      .filter((file) => !file.endsWith('app/domain/entities/progress.ts'))
-      // A call, not a mention: the migration's own doc comment names the
-      // function in the sentence this case exists to keep true.
-      .filter((file) => readFileSync(file, 'utf8').includes('withExamAttempt('));
-    expect(callers, callers.join('\n')).toEqual([]);
+    expect(CURRENT_SAVE_VERSION).toBe(3);
+    expect(dropVersionTwoExams.from).toBe(2);
+    expect(dropVersionTwoExams.to).toBe(CURRENT_SAVE_VERSION);
   });
 });

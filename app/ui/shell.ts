@@ -116,6 +116,20 @@ export interface ShellOptions {
    */
   readonly onOpenStudy?: () => void;
   /**
+   * The practice exam, from the title screen (`TN-EXAM-01`).
+   *
+   * The same seam as {@link ShellOptions.onOpenStudy}: the composition root owns
+   * every exam screen because it holds the bank, the save and the clock, mounts
+   * them into {@link Shell.main} and brackets them with
+   * {@link Shell.setModalOpen}. Absent draws no control.
+   */
+  readonly onOpenExam?: () => void;
+  /**
+   * An exam is saved and unfinished, so the one exam control offers to finish it
+   * rather than to start another (`TN-ATTEMPT-03`).
+   */
+  readonly examUnfinished?: boolean;
+  /**
    * The passport, from the level select (`TN-PASSPORT-01`).
    *
    * The same seam as {@link ShellOptions.onOpenStudy} and for the same reason:
@@ -167,10 +181,19 @@ export interface Shell {
   readonly setEntries: (entries: readonly MapEntry[]) => void;
   /** A save was read, or a level became ready: offer or withdraw Continue. */
   readonly setResumeLevelId: (id: LevelId | null) => void;
+  /** An exam was left, finished or discarded: relabel the title's exam control. */
+  readonly setExamUnfinished: (unfinished: boolean) => void;
   /** A character was created, or found in a save: the creator step is done. */
   readonly setCharacterRequired: (required: boolean) => void;
   /** `TN-TITLE-04`: this browser is not saving. Raised on the title screen. */
   readonly setStorageWarning: (raised: boolean) => void;
+  /**
+   * Open Settings over whatever is showing, and call back when it closes.
+   *
+   * Exposed for the exam, which offers Settings from its own menu and has to
+   * know when the player is answering again (`TN-TIMER-03`).
+   */
+  readonly openSettings: (onClosed?: () => void) => void;
   /**
    * A modal the *caller* mounted into {@link Shell.main} opened or closed. Two
    * enabled switch rings both answer "tap anywhere", so the shell's stands down
@@ -208,6 +231,7 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
   let entries = options.entries;
   let resumeLevelId: LevelId | null = options.resumeLevelId ?? null;
   let characterRequired = options.creator?.required === true;
+  let examUnfinished = options.examUnfinished === true;
   let selection: CharacterSelection | undefined = options.creator?.initialSelection;
   let view: ShellView | null = null;
   let modalOpen = false;
@@ -299,16 +323,38 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     levelSelect = null;
   }
 
-  function openSettings(): void {
+  /**
+   * The settings screen, from wherever asked for it.
+   *
+   * `onClosed` exists for the exam: `TN-TIMER-03` requires the exam clock to be
+   * paused for exactly as long as Settings is open — "nobody pays exam time for
+   * raising their text size" — and the only place that knows when it closes is
+   * here. A caller with nothing to resume passes nothing.
+   *
+   * The modal flag is **restored** rather than cleared. Settings can be opened
+   * from over another modal (the exam's menu), and clearing it on close would
+   * bring the shell's switch ring back under a dialog that is still on the page.
+   */
+  function openSettings(onClosed?: () => void): void {
+    const wasModal = modalOpen;
+    /* Guarded rather than trusted: this function is also a click handler's
+       target in two places, and a DOM event arriving as `onClosed` would be
+       called as one exactly once and then never explain itself. */
+    const wanted = typeof onClosed === 'function' ? onClosed : undefined;
+    let closed: (() => void) | undefined = wanted;
     settings ??= createSettingsScreen(main, {
       store,
       ...(options.announce === undefined ? {} : { announce: options.announce }),
       onClose: () => {
         settings?.hide();
-        setModalOpen(false);
+        setModalOpen(wasModal);
+        const notify = closed;
+        closed = undefined;
+        notify?.();
       },
       ...(options.now === undefined ? {} : { now: options.now }),
     });
+    closed = wanted;
     setModalOpen(true);
     settings.show();
   }
@@ -328,7 +374,11 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       locale: store.current.locale,
       routes: routesOf(),
       ...(options.onOpenStudy === undefined ? {} : { onOpenStudy: options.onOpenStudy }),
-      onOpenSettings: openSettings,
+      ...(options.onOpenExam === undefined ? {} : { onOpenExam: options.onOpenExam }),
+      examUnfinished,
+      onOpenSettings: () => {
+        openSettings();
+      },
     });
   }
 
@@ -397,7 +447,9 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
            are still being made (`TN-FLOW`, seam 2). */
         show('level-select');
       },
-      onOpenSettings: openSettings,
+      onOpenSettings: () => {
+        openSettings();
+      },
     });
     creator.show();
   }
@@ -540,6 +592,12 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       syncRing();
     },
 
+    setExamUnfinished(unfinished): void {
+      examUnfinished = unfinished;
+      title?.setExamUnfinished(unfinished);
+      syncRing();
+    },
+
     setCharacterRequired(required): void {
       characterRequired = required;
       title?.setRoutes(routesOf());
@@ -553,6 +611,8 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     },
 
     setModalOpen,
+
+    openSettings,
 
     destroy(): void {
       unsubscribe();

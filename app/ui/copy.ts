@@ -131,6 +131,135 @@ const EN = {
   'study.leave': 'Leave',
   'study.leaveKept': 'Your answers so far are saved.',
 
+  /* docs/stories/TN-EXAM-starting-and-answering.md */
+  /* The practice exam, and it says **practice** on every screen that names it:
+     this game is not from IRCC (`title.notOfficial`), and a screen that says
+     "Exam" to somebody preparing for a real test they are anxious about is one
+     word away from being read as the real thing (`TN-EXAM`, decision 1).
+
+     No number is written into a row here. `exam.rules.length` and
+     `exam.rules.pass` carry `exam.questionCount` and `exam.passMark` from
+     `content/game.config.json` as placeholders, and they are two rows rather
+     than one because a plural category is chosen once per string — "The exam has
+     20 questions. You need 15 out of 20 to pass." carries two counted nouns
+     behind two different numbers, and at a pass mark of one the French would
+     draw the wrong ending whichever placeholder the form came from
+     (`TN-COPY` rule 9). */
+  'exam.open': 'Practice exam',
+  'exam.title': 'Practice exam',
+  'exam.intro': 'This is a practice exam in the same shape as the real test.',
+  'exam.rules.length.one': 'The exam has {{count}} question.',
+  'exam.rules.length.other': 'The exam has {{count}} questions.',
+  'exam.rules.pass': 'You need {{pass}} out of {{count}} to pass.',
+  'exam.noFeedback': 'You will see how you did at the end.',
+  'exam.changeAnswers': 'You can go back and change an answer before you finish.',
+  'exam.subjectsReady': 'Subjects ready: {{ready}} of {{total}}',
+  'exam.subjects.help': 'This exam only asks about the subjects that are ready.',
+  'exam.start': 'Start the exam',
+  'exam.previous': 'Previous',
+  /* The same two words as `card.next` and a separate key on purpose, for the
+     reason `study.error.retry` and `level.error.retry` are separate: `card.next`
+     moves past feedback the player has just read, `exam.next` moves between
+     questions nobody has been marked on yet, and either may be reworded without
+     the other. Nothing draws both at once. */
+  'exam.next': 'Next',
+  'exam.finish': 'Finish the exam',
+  'exam.answered': 'Answers given: {{done}} of {{total}}',
+  'exam.notAnsweredYet': 'Not answered yet',
+  'exam.unanswered.one': 'You have not answered {{n}} question.',
+  'exam.unanswered.other': 'You have not answered {{n}} questions.',
+  'exam.goToUnanswered': 'Go to the first one you skipped',
+  'exam.finishAnyway': 'Finish anyway',
+  'exam.notReady.title': 'The exam is not ready yet',
+  'exam.notReady.body':
+    'We are still writing the questions. You can practise in Study instead.',
+
+  /* docs/stories/TN-TIMER-the-exam-clock.md */
+  /* The one clock this game is allowed, and every word it can say.
+
+     **The limit is a separate row from the label.** "Use the 30-minute timer"
+     writes a configuration number into a sentence, and `timeLimitSeconds` is
+     configuration: `exam.timer.use` carries no number and `exam.timer.limit`
+     carries it with both forms in both languages, drawn beside the switch as its
+     value. `settings.state.on` and `settings.state.off` are the words the switch
+     shows; this block invents no third pair.
+
+     `exam.timer.left` is a counted noun because there is no honest way to write
+     "26 minutes left" with a preposition after the number, so it takes
+     `TN-COPY`'s rule 2 and carries both forms in both languages —
+     « Il reste 1 minutes » is the defect that rule exists to prevent. Below one
+     minute the clock says so in words rather than counting seconds: a per-second
+     display is motion nobody asked for and is the difference between a limit and
+     a pressure (`TN-TIMER` rule 2). */
+  'exam.timer.use': 'Use the timer',
+  'exam.timer.help':
+    'The real test has a time limit. With the timer off, you can take as long as you like.',
+  'exam.timer.limit.one': '{{n}} minute',
+  'exam.timer.limit.other': '{{n}} minutes',
+  'exam.timer.left.one': '{{n}} minute left',
+  'exam.timer.left.other': '{{n}} minutes left',
+  'exam.timer.lessThanMinute': 'Less than 1 minute left',
+  'exam.timer.paused': 'Timer paused',
+  'exam.timer.off': 'No timer. Take as long as you like.',
+  'exam.timer.stop': 'Turn the timer off',
+  'exam.timer.stopped': 'The timer is off. You can take as long as you like.',
+  'exam.timer.timeUp.title': 'Time is up',
+  'exam.timer.timeUp.body': 'We marked the questions you answered.',
+
+  /* docs/stories/TN-RESULT-exam-results.md */
+  /* A count of right answers, never a percentage, a grade, a letter, a star, a
+     streak or a rank — and never a word that calls the player a failure. The
+     heading under the pass mark is "Not this time" and the sentence under it is
+     arithmetic, not judgement (`TN-RESULT`, and `TN-CARD-04`'s rule held here).
+
+     Every count on this screen puts its noun in front of the number and a
+     preposition after it (`TN-COPY` rule 1), which is why `exam.result.score`,
+     `exam.result.passMark` and `exam.result.subjectRow` carry no plural rows in
+     either language. `exam.result.unanswered` could not take that shape, so it
+     carries both forms under rule 2. */
+  'exam.result.title': 'Your exam',
+  'exam.result.passed.title': 'You passed',
+  'exam.result.notYet.title': 'Not this time',
+  'exam.result.score': 'Right answers: {{correct}} out of {{total}}',
+  'exam.result.passMark': 'You need {{pass}} out of {{total}} to pass.',
+  'exam.result.withTimer': 'You took this exam with the timer.',
+  'exam.result.noTimer': 'You took this exam without the timer.',
+  'exam.result.bySubject': 'How you did, subject by subject',
+  'exam.result.subjectRow': '{{subject}}: {{correct}} out of {{total}}',
+  'exam.result.unanswered.one': 'You did not answer {{n}} question.',
+  'exam.result.unanswered.other': 'You did not answer {{n}} questions.',
+  'exam.result.review': 'See every question',
+  'exam.result.noAnswer': 'You did not answer this one.',
+  'exam.result.unavailable': 'This question could not be shown.',
+  'exam.result.practise': 'Practise the questions you missed',
+  'exam.again': 'Try the exam again',
+
+  /* docs/stories/TN-ATTEMPT-leaving-and-resuming-an-exam.md */
+  /* Leaving an exam costs nothing, so leaving asks nothing — `exam.leave.confirm`
+     and `exam.leave.stay` are drawn in exactly one case, the browser that cannot
+     save, where leaving really does end the exam. That is the only difference
+     between the two cases (`TN-ATTEMPT-05`).
+
+     `exam.resume.continue` is "Carry on" and « Reprendre », not « Continuer »,
+     even though `title.continue` is « Continuer » and means something similar:
+     two controls that both read « Continuer » on two screens a player reaches in
+     the same minute is how a player learns to stop reading them. */
+  'exam.leave': 'Leave the exam',
+  'exam.leave.kept': 'Your exam is saved. You can finish it later.',
+  'exam.leave.notKept':
+    'This browser is not saving your progress, so leaving will end this exam.',
+  'exam.leave.confirm': 'Leave and lose this exam?',
+  'exam.leave.stay': 'Keep going',
+  'exam.resume': 'Finish your exam',
+  'exam.resume.title': 'You have an exam to finish',
+  'exam.resume.continue': 'Carry on',
+  'exam.new': 'Start a new exam',
+  'exam.new.confirm': 'Your unfinished exam will be gone. Start a new one?',
+  'exam.new.keep': 'Keep the one I have',
+  'exam.gone.title': 'We could not open your exam',
+  'exam.gone.body':
+    'Some of its questions are not in this version. You can start a new exam.',
+
   /* docs/stories/TN-PASSPORT-my-passport.md */
   /* The screen owns its heading **and** the label of the control that opens it,
      which is the rule `TN-SET` states for `settings.title` and
@@ -144,13 +273,17 @@ const EN = {
      `map.notBuilt.help` and `map.number` are drawn by this screen and owned by
      `TN-MAP` for the same reason.
 
-     **No `passport.exam.*` row is here yet**, and that is the honest state
-     rather than an omission: this build has no exam, so a "Practice exam" panel
-     would name a feature the game does not have and offer a control that opens
-     nothing. The three rows are written in `TN-PASSPORT`'s table and are
-     transcribed when Exam mode lands, together with `TN-EXAM-05`'s not-ready
-     sentence, which nothing has transcribed either. */
+     **The three `passport.exam.*` rows are here now.** They were held back while
+     this build had no exam — a "Practice exam" panel naming a feature the game
+     did not have and offering a control that opened nothing — and Exam mode is
+     what they were waiting for. `TN-EXAM-05`'s not-ready sentence landed with
+     them, as `exam.notReady.title` and `exam.notReady.body` above; the passport
+     draws it in the one case `TN-PASSPORT-06` names, where the exam cannot run
+     and no control may offer to start it. */
   'passport.open': 'See my passport',
+  'passport.exam.title': 'Practice exam',
+  'passport.exam.none': 'You have not taken the practice exam yet.',
+  'passport.exam.last': 'Your last practice exam',
   'passport.title': 'My passport',
   'passport.intro': "You earn a stamp when you finish a level's task.",
   'passport.state.notEarned': 'Not earned yet',
@@ -560,7 +693,84 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'study.leave': 'Quitter',
   'study.leaveKept': 'Vos réponses sont enregistrées.',
 
+  'exam.open': 'Examen pratique',
+  'exam.title': 'Examen pratique',
+  'exam.intro': "Cet examen pratique a la même forme que le vrai examen.",
+  'exam.rules.length.one': "L'examen compte {{count}} question.",
+  'exam.rules.length.other': "L'examen compte {{count}} questions.",
+  'exam.rules.pass': 'Il faut {{pass}} sur {{count}} pour réussir.',
+  'exam.noFeedback': 'Vous verrez votre résultat à la fin.',
+  'exam.changeAnswers':
+    'Vous pouvez revenir en arrière et changer une réponse avant de terminer.',
+  'exam.subjectsReady': 'Sujets prêts : {{ready}} sur {{total}}',
+  'exam.subjects.help': 'Cet examen ne porte que sur les sujets qui sont prêts.',
+  'exam.start': "Commencer l'examen",
+  'exam.previous': 'Précédent',
+  'exam.next': 'Suivant',
+  'exam.finish': "Terminer l'examen",
+  'exam.answered': 'Réponses données : {{done}} sur {{total}}',
+  'exam.notAnsweredYet': 'Pas encore répondu',
+  'exam.unanswered.one': 'Il reste {{n}} question sans réponse.',
+  'exam.unanswered.other': 'Il reste {{n}} questions sans réponse.',
+  'exam.goToUnanswered': 'Aller à la première question sans réponse',
+  'exam.finishAnyway': 'Terminer quand même',
+  'exam.notReady.title': "L'examen n'est pas encore prêt",
+  'exam.notReady.body':
+    'Nous écrivons encore les questions. Vous pouvez vous exercer dans la révision.',
+
+  'exam.timer.use': 'Utiliser le chronomètre',
+  'exam.timer.help':
+    "Le vrai examen a une limite de temps. Sans chronomètre, vous pouvez prendre tout le temps qu'il vous faut.",
+  'exam.timer.limit.one': '{{n}} minute',
+  'exam.timer.limit.other': '{{n}} minutes',
+  'exam.timer.left.one': 'Il reste {{n}} minute',
+  'exam.timer.left.other': 'Il reste {{n}} minutes',
+  'exam.timer.lessThanMinute': "Il reste moins d'une minute",
+  'exam.timer.paused': 'Chronomètre en pause',
+  'exam.timer.off': "Aucun chronomètre. Prenez tout le temps qu'il vous faut.",
+  'exam.timer.stop': 'Arrêter le chronomètre',
+  'exam.timer.stopped':
+    "Le chronomètre est arrêté. Vous pouvez prendre tout le temps qu'il vous faut.",
+  'exam.timer.timeUp.title': 'Le temps est écoulé',
+  'exam.timer.timeUp.body': 'Nous avons corrigé les questions auxquelles vous avez répondu.',
+
+  'exam.result.title': 'Votre examen',
+  'exam.result.passed.title': 'Vous avez réussi',
+  'exam.result.notYet.title': 'Pas cette fois',
+  'exam.result.score': 'Bonnes réponses : {{correct}} sur {{total}}',
+  'exam.result.passMark': 'Il faut {{pass}} sur {{total}} pour réussir.',
+  'exam.result.withTimer': 'Vous avez fait cet examen avec le chronomètre.',
+  'exam.result.noTimer': 'Vous avez fait cet examen sans chronomètre.',
+  'exam.result.bySubject': 'Vos résultats par sujet',
+  'exam.result.subjectRow': '{{subject}} : {{correct}} sur {{total}}',
+  'exam.result.unanswered.one': "Vous n'avez pas répondu à {{n}} question.",
+  'exam.result.unanswered.other': "Vous n'avez pas répondu à {{n}} questions.",
+  'exam.result.review': 'Voir toutes les questions',
+  'exam.result.noAnswer': "Vous n'avez pas répondu à celle-ci.",
+  'exam.result.unavailable': "Cette question n'a pas pu être affichée.",
+  'exam.result.practise': 'Réviser les questions manquées',
+  'exam.again': "Refaire l'examen",
+
+  'exam.leave': "Quitter l'examen",
+  'exam.leave.kept': 'Votre examen est enregistré. Vous pourrez le terminer plus tard.',
+  'exam.leave.notKept':
+    "Ce navigateur n'enregistre pas votre progression : quitter mettra fin à cet examen.",
+  'exam.leave.confirm': 'Quitter et perdre cet examen?',
+  'exam.leave.stay': "Continuer l'examen",
+  'exam.resume': 'Terminer votre examen',
+  'exam.resume.title': 'Vous avez un examen à terminer',
+  'exam.resume.continue': 'Reprendre',
+  'exam.new': 'Commencer un nouvel examen',
+  'exam.new.confirm': 'Votre examen non terminé sera supprimé. En commencer un nouveau?',
+  'exam.new.keep': "Garder celui que j'ai",
+  'exam.gone.title': "Nous n'avons pas pu ouvrir votre examen",
+  'exam.gone.body':
+    "Certaines de ses questions ne sont pas dans cette version. Vous pouvez commencer un nouvel examen.",
+
   'passport.open': 'Voir mon passeport',
+  'passport.exam.title': 'Examen pratique',
+  'passport.exam.none': "Vous n'avez pas encore fait l'examen pratique.",
+  'passport.exam.last': 'Votre dernier examen pratique',
   'passport.title': 'Mon passeport',
   'passport.intro': "Vous obtenez un tampon lorsque vous terminez la mission d'un niveau.",
   'passport.state.notEarned': 'Pas encore obtenu',

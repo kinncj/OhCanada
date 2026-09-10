@@ -32,6 +32,9 @@ import { interactHint, interactPrompt } from '../../app/ui/interact';
 import { mountLiveRegion, announce } from '../../app/ui/live-region';
 import { createPassport } from '../../app/ui/passport';
 import { createPoiCard } from '../../app/ui/poi-card';
+import { createExamResult, type ExamReviewItem } from '../../app/ui/exam-result';
+import { createExamScreen, type ExamTimerView } from '../../app/ui/exam-screen';
+import { createExamStartScreen, type ExamStartState } from '../../app/ui/exam-start';
 import { createQuestionCard, type QuestionView } from '../../app/ui/question-card';
 import { createSettingsScreen } from '../../app/ui/settings-screen';
 import { createStudyScreen, type StudyState } from '../../app/ui/study-screen';
@@ -662,6 +665,202 @@ switch (screen) {
   }
 
   /*
+   * Exam mode's three screens (`TN-EXAM`, `TN-TIMER`, `TN-RESULT`, `TN-ATTEMPT`).
+   *
+   * Every state that matters to a scan is a parameter, because most of them
+   * cannot be reached by clicking: a clock with four minutes left, an exam that
+   * ran out of time, a saved attempt whose questions have left the build. The
+   * numbers below are fixtures; the *words* all come from `app/ui/copy.ts`, so
+   * what axe measures is the string the game draws.
+   */
+  case 'exam-start': {
+    const state = ((): ExamStartState => {
+      switch (params.get('state')) {
+        case 'not-ready':
+          return { kind: 'not-ready' };
+        case 'error':
+          return {
+            kind: 'error',
+            message: text(locale, 'study.error'),
+          };
+        case 'resume':
+          return {
+            kind: 'resume',
+            answered: 12,
+            total: 20,
+            remainingMs: params.get('timer') === 'off' ? null : 14 * 60_000,
+          };
+        case 'gone':
+          return { kind: 'gone' };
+        default:
+          return {
+            kind: 'ready',
+            questionCount: 20,
+            passMark: 15,
+            timeLimitMs: 1_800_000,
+            /* `?subjects=0` is the build that cannot derive the number and
+               therefore draws no line at all (`OQ-EXAM-5`). */
+            ...(params.get('subjects') === '0'
+              ? {}
+              : { subjects: { ready: 1, total: 10 } }),
+          };
+      }
+    })();
+
+    const start = createExamStartScreen(ui, {
+      locale,
+      announce,
+      singleSwitch: store.current.singleSwitch,
+      onStart: () => undefined,
+      onContinue: () => undefined,
+      onNewExam: () => undefined,
+      onOpenStudy: () => undefined,
+      onRetry: () => undefined,
+      onBack: () => undefined,
+    });
+    start.show(state);
+    /* `?timer=on` turns the switch on, which is the state with the fill, the
+       tick and the state word "On" — the one a contrast scan has to see. */
+    if (params.get('timer') === 'on') {
+      ui.querySelector<HTMLElement>('[data-testid="exam-timer-toggle"]')?.click();
+    }
+    break;
+  }
+
+  case 'exam': {
+    const total = 20;
+    const chosen: (number | null)[] = Array.from({ length: total }, (_unused, index) =>
+      params.get('answered') === 'all' || index < Number(params.get('answered') ?? '0')
+        ? 1
+        : null,
+    );
+    const at = Number(params.get('at') ?? '0');
+    const timer = ((): ExamTimerView => {
+      switch (params.get('timer')) {
+        case 'running':
+          return { kind: 'running', remainingMs: 30 * 60_000, paused: false };
+        case 'last-minute':
+          return { kind: 'running', remainingMs: 50_000, paused: false };
+        case 'paused':
+          return { kind: 'running', remainingMs: 20 * 60_000, paused: true };
+        case 'stopped':
+          return { kind: 'stopped' };
+        default:
+          return { kind: 'none' };
+      }
+    })();
+
+    const exam = createExamScreen(ui, {
+      locale,
+      announce,
+      singleSwitch: store.current.singleSwitch,
+      storageBlocked: params.get('storage') === 'blocked',
+      question: (index) =>
+        index < 0 || index >= total
+          ? null
+          : {
+              index,
+              total,
+              prompt: QUESTION.prompt,
+              options: [...QUESTION.options],
+              chosenIndex: chosen[index] ?? null,
+            },
+      answered: () => chosen.filter((value) => value !== null).length,
+      unanswered: () => chosen.flatMap((value, index) => (value === null ? [index] : [])),
+      timer: () => timer,
+      onChoose: (index, chosenIndex) => {
+        chosen[index] = chosenIndex;
+        exam.refresh();
+      },
+      onFinish: () => undefined,
+      onLeave: () => undefined,
+      onOpenSettings: () => undefined,
+      onStopTimer: () => undefined,
+    });
+    exam.show(Number.isFinite(at) ? at : 0);
+
+    switch (params.get('over')) {
+      case 'menu':
+        ui.querySelector<HTMLElement>('[data-testid="exam-menu-button"]')?.click();
+        break;
+      case 'unanswered':
+        ui.querySelector<HTMLElement>('[data-testid="exam-finish"]')?.click();
+        break;
+      case 'leave':
+        ui.querySelector<HTMLElement>('[data-testid="exam-menu-button"]')?.click();
+        ui.querySelector<HTMLElement>('[data-testid="exam-leave"]')?.click();
+        break;
+      default:
+        break;
+    }
+    break;
+  }
+
+  case 'exam-result': {
+    const passed = params.get('passed') !== '0';
+    const correct = passed ? 17 : 11;
+    const item = (
+      chosenIndex: number | null,
+      correctIndex: number,
+      unavailable = false,
+    ): ExamReviewItem =>
+      unavailable
+        ? { prompt: null, options: [], chosenIndex, correctIndex }
+        : {
+            prompt: QUESTION.prompt,
+            options: [...QUESTION.options],
+            chosenIndex,
+            correctIndex,
+            ...(QUESTION.explanation === undefined
+              ? {}
+              : { explanation: QUESTION.explanation }),
+          };
+
+    const result = createExamResult(ui, {
+      locale,
+      announce,
+      singleSwitch: store.current.singleSwitch,
+      onPractise: () => undefined,
+      onAgain: () => undefined,
+      onClose: () => undefined,
+    });
+    result.show({
+      correct,
+      total: 20,
+      passMark: 15,
+      passed,
+      timed: params.get('timer') !== 'off',
+      timeUp: params.get('timeup') === '1',
+      unanswered: params.get('timeup') === '1' ? 4 : 0,
+      subjects: [
+        {
+          id: 'government',
+          name: text(locale, 'level.ottawa.subtitle'),
+          correct: 8,
+          total: 10,
+        },
+        {
+          id: 'elections',
+          name: text(locale, 'level.toronto.subtitle'),
+          correct: 3,
+          total: 5,
+        },
+        /* A subject this build cannot name keeps its numbers and loses its
+           label (`TN-RESULT-07`), which is a different thing for a scan to
+           read than a named row. */
+        { id: 'who-we-are', name: null, correct: 2, total: 5 },
+      ],
+      subjectsReady: { ready: 1, total: 10 },
+      /* Right, wrong, unanswered and gone — the four states a review item can
+         be in, all on one page, because telling them apart without colour is
+         the whole accessibility question here. */
+      review: [item(0, 0), item(2, 1), item(null, 3), item(null, 0, true)],
+    });
+    if (params.get('over') === 'review') result.openReview();
+    break;
+  }
+
+  /*
    * The shell: the game's front door, and the page a cold load lands on.
    *
    * This is the one case in this harness that is a whole *page* rather than a
@@ -669,6 +868,7 @@ switch (screen) {
    * with axe's `region` and `landmark-one-main` rules ON. See
    * `tests/a11y/shell.spec.ts`.
    */
+
   case 'shell': {
     const view = params.get('view') ?? 'title';
     const built =
@@ -699,6 +899,8 @@ switch (screen) {
          (`TN-PASSPORT-01`, `OQ-PASSPORT-3`): the stamp count is already on this
          screen, so the control that opens it belongs beside the count. */
       ...(params.get('passport') === '1' ? { onOpenPassport: (): void => undefined } : {}),
+      ...(params.get('exam') === '1' ? { onOpenExam: (): void => undefined } : {}),
+      examUnfinished: params.get('unfinished') === '1',
       ...(params.get('export') === '1' ? { onExportSave: (): void => undefined } : {}),
     });
 

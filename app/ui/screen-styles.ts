@@ -970,6 +970,84 @@ const CSS = `
   .tn-hud__warning { border: 0.25rem solid CanvasText; }
 }
 
+/* ------------------------------------------------------------------ *
+ * Exam mode.
+ *
+ * Almost nothing, on purpose. The exam reuses the sheet, the option buttons
+ * and the state words every other screen uses; what it adds is a clock that is
+ * TEXT (TN-TIMER rule 5: no draining ring, no filling bar, no colour-only
+ * warning, and therefore nothing for reduced motion to remove) and a card that
+ * is a named region rather than a second dialog.
+ * ------------------------------------------------------------------ */
+
+.tn-exam__clock {
+  font-weight: 800;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border: var(--tn-edge-width) solid var(--tn-edge-soft);
+  border-radius: var(--tn-radius);
+  padding: 0.625rem 0.875rem;
+  background: var(--tn-paper-2);
+  color: var(--tn-ink);
+}
+
+/* "Timer paused" reads as a state word, in the same place every other state
+   word on this screen sits -- and the time left stays beside it, because a
+   player who opened a menu still wants to know what they are coming back to. */
+.tn-exam__clock [data-testid="exam-clock-paused"]:not([hidden]) {
+  text-transform: none;
+  border-inline-end: var(--tn-edge-width) solid var(--tn-edge-soft);
+  padding-inline-end: 0.5rem;
+}
+
+.tn-exam__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/*
+  The chosen option in an exam.
+
+  The FILL is the third signal. The first is the tick, the second is the words
+  "Your answer" inside the button, and both are drawn by app/ui/exam-screen.ts
+  in the same breath. the .tn-screen [aria-pressed="true"] rule above already supplies
+  the brass fill and the heavier border; this rule only adds the border STYLE,
+  so the chosen option is still distinguishable in greyscale and under forced
+  colours (TN-EXAM-09, "the chosen option is distinguishable without colour").
+*/
+.tn-screen__options button[aria-pressed="true"] {
+  border-style: double;
+}
+
+/* The review's marked options: a list item, not a control, so the option rules
+   above do not reach it and it needs its own. Same three signals. */
+[data-testid="exam-review"] li[data-tn-answer] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius);
+  padding: 0.5rem 0.75rem;
+}
+[data-testid="exam-review"] li[data-tn-answer="correct"] {
+  background: var(--tn-right);
+  border-width: 0.25rem;
+}
+[data-testid="exam-review"] li[data-tn-answer="wrong"] {
+  background: var(--tn-wrong);
+  border-width: 0.25rem;
+  border-style: dashed;
+}
+
+@media (forced-colors: active) {
+  .tn-exam__clock { border: 0.125rem solid CanvasText; }
+  [data-testid="exam-review"] li[data-tn-answer] { border: 0.125rem solid CanvasText; }
+  [data-testid="exam-review"] li[data-tn-answer="wrong"] { border-style: dashed; }
+}
+
 /* Motion is a separate axis from the visual tier: the attribute is written from
    the setting OR the media query, and the media query is also honoured alone. */
 [data-tn-motion="reduced"] .tn-screen,

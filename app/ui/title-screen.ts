@@ -75,8 +75,23 @@ export interface TitleScreenOptions {
   readonly routes: TitleScreenRoutes;
   /** `study.open`. Absent hides the item rather than drawing a dead control. */
   readonly onOpenStudy?: () => void;
+  /**
+   * The practice exam (`TN-EXAM-01`), and the way back to an unfinished one
+   * (`TN-ATTEMPT-03`).
+   *
+   * **One control, two labels.** `OQ-ATTEMPT-4` keeps the screen at five items
+   * rather than growing a sixth: an exam left unfinished changes what this
+   * control says — "Finish your exam" instead of "Practice exam" — so a player
+   * never meets two exam controls and never has to work out which one holds
+   * theirs. It is still a control and never a message.
+   *
+   * Absent hides the item, like every other route here.
+   */
+  readonly onOpenExam?: () => void;
   /** `common.settings`. Absent hides the item. */
   readonly onOpenSettings?: () => void;
+  /** An exam is saved and unfinished, so the exam item offers to finish it. */
+  readonly examUnfinished?: boolean;
 }
 
 export interface TitleScreen {
@@ -90,6 +105,8 @@ export interface TitleScreen {
   readonly setLocale: (locale: UiLocale) => void;
   /** The save was read, or a level was played: redraw the ways in. */
   readonly setRoutes: (routes: TitleScreenRoutes) => void;
+  /** An exam was left, finished or discarded: the exam item changes its label. */
+  readonly setExamUnfinished: (unfinished: boolean) => void;
   /** `TN-TITLE-05`: focus starts on the primary control, never on the body. */
   readonly focus: () => void;
   readonly destroy: () => void;
@@ -101,6 +118,7 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
 
   let locale = options.locale;
   let routes = options.routes;
+  let examUnfinished = options.examUnfinished === true;
   let primary: HTMLElement | null = null;
 
   const root = element(doc, 'div', {
@@ -250,6 +268,19 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
       );
     }
 
+    if (options.onOpenExam !== undefined) {
+      items.push(
+        button(doc, {
+          testId: 'title-exam',
+          /* `TN-ATTEMPT-03`: "it does not read 'Practice exam'" while there is
+             one to finish. The label is the whole of how a player learns the
+             exam survived their closing the tab. */
+          text: text(locale, examUnfinished ? 'exam.resume' : 'exam.open'),
+          onClick: options.onOpenExam,
+        }),
+      );
+    }
+
     if (options.onOpenSettings !== undefined) {
       items.push(
         button(doc, {
@@ -286,6 +317,10 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
     },
     setRoutes(next): void {
       routes = next;
+      render();
+    },
+    setExamUnfinished(unfinished): void {
+      examUnfinished = unfinished;
       render();
     },
     focus(): void {

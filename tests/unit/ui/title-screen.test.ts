@@ -243,3 +243,69 @@ describe('arriving', () => {
     expect(at('title-screen')).toBeNull();
   });
 });
+
+describe('the way into the practice exam', () => {
+  /* `TN-EXAM-01` and `TN-ATTEMPT-03`: one control, two labels. */
+
+  it('is not drawn when the caller offers no exam', () => {
+    /* `TN-TITLE-01`: a route that is not available is absent from the
+       accessibility tree, never greyed out. */
+    expect(open().at('title-exam')).toBeNull();
+  });
+
+  it('reads "Practice exam" and opens it', () => {
+    const onOpenExam = vi.fn();
+    const { at } = open({ onOpenExam });
+    const exam = at('title-exam');
+    expect(exam?.textContent).toBe('Practice exam');
+    expect(exam?.tagName).toBe('BUTTON');
+    exam?.click();
+    expect(onOpenExam).toHaveBeenCalledTimes(1);
+  });
+
+  it('reads "Finish your exam" while one is unfinished, and is still a control', () => {
+    const { at } = open({ onOpenExam: () => undefined, examUnfinished: true });
+    expect(at('title-exam')?.textContent).toBe('Finish your exam');
+    expect(at('title-exam')?.textContent).not.toBe('Practice exam');
+    expect(at('title-exam')?.tagName).toBe('BUTTON');
+  });
+
+  it('changes its label when the exam is left or finished, without a second control', () => {
+    const { screen, page, at } = open({ onOpenExam: () => undefined });
+    screen.setExamUnfinished(true);
+    expect(at('title-exam')?.textContent).toBe('Finish your exam');
+    expect(page.ui.querySelectorAll('[data-testid="title-exam"]')).toHaveLength(1);
+    screen.setExamUnfinished(false);
+    expect(at('title-exam')?.textContent).toBe('Practice exam');
+  });
+
+  it('is French', () => {
+    const { screen, at } = open({ onOpenExam: () => undefined });
+    screen.setLocale('fr');
+    expect(at('title-exam')?.textContent).toBe('Examen pratique');
+    screen.setExamUnfinished(true);
+    expect(at('title-exam')?.textContent).toBe('Terminer votre examen');
+  });
+
+  it('sits after Study and before Settings', () => {
+    /* `OQ-EXAM-7` routes the position to `TN-TITLE`'s owner and `TN-EXAM-01`
+       asserts only that the control exists. The order is pinned here so a change
+       to it is a deliberate one. */
+    const { page } = open({
+      onOpenStudy: () => undefined,
+      onOpenExam: () => undefined,
+      onOpenSettings: () => undefined,
+    });
+    const order = page.ui
+      .querySelectorAll('button')
+      .map((control) => control.getAttribute('data-testid'));
+    expect(order.slice(-3)).toEqual(['title-study', 'title-exam', 'title-settings']);
+  });
+
+  it('never takes focus from the primary control', () => {
+    /* An exam is the wrong first click for somebody who has answered nothing,
+       so it is offered and never the thing focus lands on. */
+    const { screen, at } = open({ onOpenExam: () => undefined });
+    expect(screen.primary).not.toBe(at('title-exam'));
+  });
+});

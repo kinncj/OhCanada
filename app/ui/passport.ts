@@ -40,14 +40,20 @@
  * the screen is a warning, a placeholder or a red state (`TN-PASSPORT-03`,
  * `TN-PASSPORT-04`).
  *
- * ## No exam panel, yet
+ * ## The exam panel
  *
- * `TN-PASSPORT-06` puts the most recent practice exam on this screen. This build
- * has no exam: no start screen, no attempt, no result. Drawing "Practice exam"
- * with no control that opens one would name a feature the game does not have,
- * which is the defect this project keeps finding from the other end. The rows
- * are written in the story and are transcribed when Exam mode lands; the panel
- * is reported, not faked.
+ * `TN-PASSPORT-06` puts the most recent practice exam on this screen, and it is
+ * here now that there is one to put. It was deliberately absent while there was
+ * not: "Practice exam" over a control that opened nothing would have named a
+ * feature the game did not have.
+ *
+ * Four states and no fifth, because there are only four true things to say: no
+ * exam has been finished, one is unfinished, one is finished, or the exam cannot
+ * run at all. The unfinished one shows **no score** — an exam nobody finished
+ * has no verdict, which is why `finishedAt` and `passed` live on a different
+ * type from `examInProgress` (`ADR-0027`) — and the finished one shows the
+ * **most recent** result rather than the best: `OQ-RESULT-4` keeps a history, an
+ * average and an attempt count off every screen in this game.
  *
  * DOM only (ADR-0005).
  */
@@ -56,6 +62,26 @@ import { text, type UiLocale } from './copy';
 import { button, element, mark, replaceChildren } from './dom';
 import { levelTitle, type MapEntry } from './level-select';
 import { createScreen, type Screen } from './screen';
+
+/**
+ * The practice exam, as this screen shows it (`TN-PASSPORT-06`).
+ *
+ * `unfinished` carries a count of answers and no score on purpose: it is not a
+ * result, and the only thing the passport offers for it is the way back to it.
+ */
+export type PassportExam =
+  | { readonly kind: 'none' }
+  | { readonly kind: 'unfinished'; readonly answered: number; readonly total: number }
+  | {
+      readonly kind: 'result';
+      readonly passed: boolean;
+      readonly correct: number;
+      readonly total: number;
+      /** Was the clock running? A result is never read as something it was not. */
+      readonly timed: boolean;
+    }
+  /** Fewer verified questions exist than the exam needs (`TN-EXAM-05`). */
+  | { readonly kind: 'not-ready' };
 
 /** The three states, in the words `TN-PASSPORT-01` requires on `data-state`. */
 export type StampState = 'earned' | 'not-earned' | 'not-built';
@@ -88,6 +114,13 @@ export interface PassportOptions {
   readonly announce?: (message: string, lang?: string) => void;
   /** `common.back`: one step back to wherever this was opened from. Escape too. */
   readonly onBack?: () => void;
+  /**
+   * The exam panel. Absent draws no panel at all — the same rule every control
+   * on this screen follows, and the reason there was none before Exam mode.
+   */
+  readonly exam?: PassportExam;
+  /** Opens the exam. Absent draws no control, whatever the panel says. */
+  readonly onOpenExam?: () => void;
   readonly singleSwitch?: boolean;
   readonly holdMs?: number;
   readonly now?: () => number;
@@ -102,6 +135,8 @@ export interface Passport {
   hide(): void;
   /** A stamp was earned: redraw the slots without rebuilding the screen. */
   setEntries(entries: readonly MapEntry[]): void;
+  /** An exam finished, or was left: redraw the panel without rebuilding. */
+  setExam(exam: PassportExam | null): void;
   setLocale(locale: UiLocale): void;
   setSingleSwitch(enabled: boolean, holdMs?: number): void;
   destroy(): void;
@@ -111,6 +146,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
   const doc = host.ownerDocument;
   let locale = options.locale;
   let entries = options.entries;
+  let exam: PassportExam | null = options.exam ?? null;
 
   const screen: Screen = createScreen(host, {
     id: 'tn-passport',
@@ -153,9 +189,16 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     testId: 'passport-slots',
   });
 
+  /* Below the slots: the stamps are what a passport is, and the exam is a
+     different kind of record kept in the same place (`TN-PASSPORT-06`). */
+  const examPanel = element(doc, 'div', {
+    testId: 'passport-exam',
+    className: 'tn-screen__group',
+  });
+
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
 
-  screen.card.append(title, intro, counts, emptySlot, list, actions);
+  screen.card.append(title, intro, counts, emptySlot, list, examPanel, actions);
 
   render();
 
@@ -290,6 +333,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     );
 
     replaceChildren(list, entries.map(slot));
+    renderExam();
 
     replaceChildren(
       actions,
@@ -310,6 +354,115 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
        far down they had scrolled. */
     if (typeof screen.card.scrollTop === 'number') screen.card.scrollTop = scroll;
     if (focusedHandle !== null) focusSlot(focusedHandle);
+  }
+
+  /**
+   * The exam panel, or nothing at all.
+   *
+   * `TN-PASSPORT-06`'s last scenario is the one that shapes this function: where
+   * the exam cannot run, the panel says so in `TN-EXAM-05`'s words and "does not
+   * offer to start an exam that cannot start". A control that opens a screen
+   * whose only content is an apology is worse than no control.
+   */
+  function renderExam(): void {
+    if (exam === null) {
+      replaceChildren(examPanel, []);
+      examPanel.hidden = true;
+      return;
+    }
+    examPanel.hidden = false;
+
+    const parts: HTMLElement[] = [];
+    const openLabel =
+      exam.kind === 'unfinished' ? text(locale, 'exam.resume') : text(locale, 'exam.open');
+
+    switch (exam.kind) {
+      case 'not-ready':
+        parts.push(
+          element(doc, 'h2', {
+            className: 'tn-screen__legend',
+            text: text(locale, 'passport.exam.title'),
+          }),
+          element(doc, 'p', {
+            testId: 'passport-exam-not-ready',
+            text: text(locale, 'exam.notReady.title'),
+          }),
+          element(doc, 'p', {
+            className: 'tn-screen__help',
+            text: text(locale, 'exam.notReady.body'),
+          }),
+        );
+        break;
+      case 'none':
+        parts.push(
+          element(doc, 'h2', {
+            className: 'tn-screen__legend',
+            text: text(locale, 'passport.exam.title'),
+          }),
+          element(doc, 'p', {
+            testId: 'passport-exam-none',
+            text: text(locale, 'passport.exam.none'),
+          }),
+        );
+        break;
+      case 'unfinished':
+        /* Not a result: a count of answers, and the way back to them. */
+        parts.push(
+          element(doc, 'h2', {
+            className: 'tn-screen__legend',
+            text: text(locale, 'passport.exam.title'),
+          }),
+          element(doc, 'p', {
+            testId: 'passport-exam-unfinished',
+            text: text(locale, 'exam.answered', {
+              done: exam.answered,
+              total: exam.total,
+            }),
+          }),
+        );
+        break;
+      case 'result':
+        parts.push(
+          element(doc, 'h2', {
+            className: 'tn-screen__legend',
+            text: text(locale, 'passport.exam.last'),
+          }),
+          element(doc, 'p', {
+            testId: 'passport-exam-verdict',
+            text: text(
+              locale,
+              exam.passed ? 'exam.result.passed.title' : 'exam.result.notYet.title',
+            ),
+          }),
+          element(doc, 'p', {
+            testId: 'passport-exam-score',
+            text: text(locale, 'exam.result.score', {
+              correct: exam.correct,
+              total: exam.total,
+            }),
+          }),
+          element(doc, 'p', {
+            className: 'tn-screen__help',
+            text: text(
+              locale,
+              exam.timed ? 'exam.result.withTimer' : 'exam.result.noTimer',
+            ),
+          }),
+        );
+        break;
+    }
+
+    if (exam.kind !== 'not-ready' && options.onOpenExam !== undefined) {
+      parts.push(
+        button(doc, {
+          testId: 'passport-exam-open',
+          text: openLabel,
+          onClick: options.onOpenExam,
+        }),
+      );
+    }
+
+    replaceChildren(examPanel, parts);
   }
 
   function focusedSlotHandle(): string | null {
@@ -358,6 +511,12 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
 
     setEntries(next): void {
       entries = next;
+      render();
+      screen.refreshSwitch();
+    },
+
+    setExam(next): void {
+      exam = next;
       render();
       screen.refreshSwitch();
     },

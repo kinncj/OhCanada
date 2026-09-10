@@ -335,3 +335,109 @@ describe('the passport in French', () => {
     expect(page.doc.activeElement?.getAttribute('data-level-handle')).toBe('ottawa');
   });
 });
+
+describe('the practice exam on the passport', () => {
+  /* `TN-PASSPORT-06`: the one place an exam result is kept. */
+
+  it('is absent until there is one to draw', () => {
+    /* The panel was deliberately missing while this build had no exam: naming a
+       feature the game does not have is the defect from the other end. */
+    const { at } = open();
+    expect(at('passport-exam')?.hidden).toBe(true);
+  });
+
+  it('says nothing has been taken yet, and offers the way in', () => {
+    const onOpenExam = vi.fn();
+    const { at } = open({ exam: { kind: 'none' }, onOpenExam });
+    expect(at('passport-exam')?.textContent).toContain('Practice exam');
+    expect(at('passport-exam-none')?.textContent).toBe(
+      'You have not taken the practice exam yet.',
+    );
+    expect(at('passport-exam-open')?.textContent).toBe('Practice exam');
+    at('passport-exam-open')?.click();
+    expect(onOpenExam).toHaveBeenCalledOnce();
+  });
+
+  it('shows the most recent result, and no history beside it', () => {
+    const { at } = open({
+      exam: { kind: 'result', passed: true, correct: 17, total: 20, timed: true },
+      onOpenExam: () => undefined,
+    });
+    expect(at('passport-exam')?.textContent).toContain('Your last practice exam');
+    expect(at('passport-exam-verdict')?.textContent).toBe('You passed');
+    expect(at('passport-exam-score')?.textContent).toBe('Right answers: 17 out of 20');
+    expect(at('passport-exam')?.textContent).toContain('You took this exam with the timer.');
+    for (const word of ['best', 'average', 'streak', 'attempt']) {
+      expect(at('passport-exam')?.textContent.toLowerCase()).not.toContain(word);
+    }
+  });
+
+  it('shows a later result rather than a better one', () => {
+    const { at } = open({
+      exam: { kind: 'result', passed: false, correct: 11, total: 20, timed: false },
+      onOpenExam: () => undefined,
+    });
+    expect(at('passport-exam-verdict')?.textContent).toBe('Not this time');
+    expect(at('passport-exam-score')?.textContent).toBe('Right answers: 11 out of 20');
+  });
+
+  it('shows no score for an exam nobody has finished, and offers the way back', () => {
+    const { at } = open({
+      exam: { kind: 'unfinished', answered: 12, total: 20 },
+      onOpenExam: () => undefined,
+    });
+    expect(at('passport-exam-unfinished')?.textContent).toBe('Answers given: 12 of 20');
+    expect(at('passport-exam-verdict')).toBeNull();
+    expect(at('passport-exam-score')).toBeNull();
+    expect(at('passport-exam-open')?.textContent).toBe('Finish your exam');
+  });
+
+  it('offers nothing where the exam cannot start', () => {
+    const { at } = open({ exam: { kind: 'not-ready' }, onOpenExam: () => undefined });
+    expect(at('passport-exam-not-ready')?.textContent).toBe('The exam is not ready yet');
+    expect(at('passport-exam')?.textContent).toContain(
+      'We are still writing the questions. You can practise in Study instead.',
+    );
+    expect(at('passport-exam-open')).toBeNull();
+  });
+
+  it('redraws when an exam finishes, without rebuilding the screen', () => {
+    const { passport, at } = open({ exam: { kind: 'none' }, onOpenExam: () => undefined });
+    passport.setExam({ kind: 'result', passed: true, correct: 15, total: 20, timed: false });
+    expect(at('passport-exam-score')?.textContent).toBe('Right answers: 15 out of 20');
+  });
+
+  it('is French', () => {
+    const { passport, at } = open({
+      exam: { kind: 'result', passed: false, correct: 11, total: 20, timed: false },
+      onOpenExam: () => undefined,
+    });
+    passport.setLocale('fr');
+    expect(at('passport-exam')?.textContent).toContain('Votre dernier examen pratique');
+    expect(at('passport-exam-verdict')?.textContent).toBe('Pas cette fois');
+    expect(at('passport-exam-score')?.textContent).toBe('Bonnes réponses : 11 sur 20');
+    expect(at('passport-exam')?.textContent).toContain(
+      'Vous avez fait cet examen sans chronomètre.',
+    );
+  });
+
+  it('says in French that no exam has been taken yet', () => {
+    const { passport, at } = open({ exam: { kind: 'none' }, onOpenExam: () => undefined });
+    passport.setLocale('fr');
+    expect(at('passport-exam-none')?.textContent).toBe(
+      "Vous n'avez pas encore fait l'examen pratique.",
+    );
+  });
+
+  it('earns no stamp: the count is untouched by a pass', () => {
+    /* `TN-PASSPORT-06` and `TN-RESULT-05`: an exam earns no stamp and opens no
+       level. The panel is beside the slots and changes none of them. */
+    const { at } = open({
+      exam: { kind: 'result', passed: true, correct: 20, total: 20, timed: false },
+      entries: entries(BUILT, []),
+      onOpenExam: () => undefined,
+    });
+    expect(at('passport-counts')?.textContent).toContain('Stamps: 0 of 10');
+    expect(at('stamp-ottawa')?.getAttribute('data-state')).toBe('not-earned');
+  });
+});
