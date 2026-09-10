@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-19-industrialized-country",
+  "subject": "economy",
+  "prompt": {
+    "en": "Discover Canada places Canada in a group of leading countries of the world. How does the guide describe those countries?",
+    "fr": "Découvrir le Canada place le Canada dans un groupe de grands pays du monde. Comment le guide décrit-il ces pays?"
+  },
+  "options": [
+    {
+      "en": "They are industrialized countries.",
+      "fr": "Ce sont des pays industrialisés."
+    },
+    {
+      "en": "They are developing countries.",
+      "fr": "Ce sont des pays en développement."
+    },
+    {
+      "en": "They are countries that share a single currency.",
+      "fr": "Ce sont des pays qui partagent une même monnaie."
+    },
+    {
+      "en": "They are countries that trade only inside their own region.",
+      "fr": "Ce sont des pays qui ne commercent qu'à l'intérieur de leur propre région."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide counts Canada among the world's leading industrialized countries. An industrialized country has large factories and service businesses as well as farms, forests and mines.",
+    "fr": "Le guide compte le Canada parmi les principaux pays industrialisés du monde. Un pays industrialisé possède de grandes usines et des entreprises de services, en plus de ses fermes, de ses forêts et de ses mines."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Economy",
+    "page": 90,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "Today, Canada has one of the ten largest economies in the world and is part of the G8 group of leading industrialized countries"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

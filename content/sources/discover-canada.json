@@ -238,6 +238,27 @@
         "all of us command"
       ],
       "action": "Both the stale line and the current one are banned, for the reason G7 is banned beside G8. The two facts flanking it on the same page -- proclaimed 1980, first sung in Quebec City 1880 -- cannot move and are what the shipped questions grade."
+    },
+    {
+      "topic": "NAFTA and its replacement in Canada's Economy",
+      "problem": "Page 90 says Mexico joined in 1994 in \"the broader North American Free Trade Agreement (NAFTA)\". NAFTA was replaced by CUSMA on 2020-07-01. The live page, Date modified 2025-04-11, still says NAFTA, so this is upstream and permanent -- the same disposition as the G8 entry beside it.",
+      "affects": [
+        "Canada's Economy"
+      ],
+      "grain": "pages",
+      "pages": [
+        90
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "NAFTA",
+        "ALENA",
+        "CUSMA",
+        "ACEUM",
+        "North American Free Trade Agreement",
+        "Accord de libre-echange nord-americain"
+      ],
+      "action": "Both the dead name and the current one are banned, for the reason G7 is banned beside G8: an option naming CUSMA is right about the world and wrong about the document the exam is drawn from. The two shipped questions on this sentence survive it, because they grade the year and the country rather than the agreement's name. Recorded and not flagged: the same sentence's \"over 444 million people and over $1 trillion in merchandise trade in 2008\" is a 2008 figure printed as current. Nothing cites it and nothing should."
     }
   ],
   "grainNote": "knownStaleness entries carry `pages` where the affected claims are localised, and fall back to `affects` chapters where they are not. Chapter grain alone made 57 of 57 authored questions volatile because two facts in the chapter were, which stopped the flag discriminating: everything is re-verified every run and quarantined at 180 days, so nothing is prioritised. A flag that fires on everything carries the same information as a flag that fires on nothing.",
