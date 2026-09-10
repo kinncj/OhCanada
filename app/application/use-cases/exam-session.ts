@@ -190,30 +190,17 @@ export function drawExam(
   const spare = trimmed.reduce((total, bank) => total + bank.questions.length, 0);
   const pools = spare >= count ? trimmed : banks;
 
-  /*
-   * Each subject's deck is shuffled **before** the quotas are worked out, not
-   * after, and the order matters for a measured reason.
-   *
-   * `SeededRandomSource` is sfc32 with no warm-up rounds, so the first few
-   * outputs of two nearby seeds are nearly equal — measured: the first shuffle
-   * of a three-element array is *identical* for every seed from 1 to 40. Working
-   * the quotas out first would therefore hand the remainder round in the same
-   * order every time, and `TN-EXAM-02`'s "each of the three subjects can be the
-   * one that contributes 6" would be false in exactly the way nobody would ever
-   * see. Shuffling the decks first spends a few hundred numbers and leaves the
-   * stream warm. Reported upward as an adapter defect: the fix belongs in the
-   * generator, and this ordering is correct on its own terms either way — a
-   * subject's questions are drawn from a shuffled deck rather than sliced off
-   * the front of the directory.
-   */
-  const decks = pools.map((bank) => ({
-    subject: bank.subject,
-    questions: random.shuffle(bank.questions),
-  }));
+  const quotas = allocateQuotas(count, pools.map((bank) => bank.questions.length), random);
 
-  const quotas = allocateQuotas(count, decks.map((deck) => deck.questions.length), random);
-
-  const picked = decks.flatMap((deck, index) => deck.questions.slice(0, quotas[index] ?? 0));
+  /* Each subject's share comes off a shuffled deck rather than off the front of
+     the directory, so the same subject does not open with the same question in
+     every exam. The quotas are worked out first, which is the order that reads
+     — it used to be the other way round to keep the seeded stream warm past a
+     cold-start defect in `SeededRandomSource`, and that defect is fixed in the
+     generator now (splitmix32 seeding plus the specified warm-up rounds). */
+  const picked = pools.flatMap((bank, index) =>
+    random.shuffle(bank.questions).slice(0, quotas[index] ?? 0),
+  );
 
   return random.shuffle(picked);
 }
