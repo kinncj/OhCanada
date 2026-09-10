@@ -271,6 +271,116 @@
         "echanges de marchandises en 2008"
       ],
       "action": "No option or explanation may rest on a trade volume or a population total from this page, and that includes a corrected one: a 2026 figure is right about the world and wrong about the document the exam is drawn from, which is the reason G7 is banned beside G8 in the entry above. The teachable propositions in this sentence are the DATES and the PARTNERS -- free trade with the United States in 1988, Mexico joining in 1994 -- and both are already claimed. Ask about those or about nothing here."
+    },
+    {
+      "topic": "Population totals in Canada's Regions",
+      "problem": "Every population count in the chapter is a 2011-era figure printed in the present tense. Page 94: \"Canada has a population of about 34 million people\" (2021 Census 36,991,981, and past 41 million since). Page 98: \"Nearly eight million people live in Quebec\". Page 99: \"At more than 12 million, the people of Ontario\". Page 102: British Columbia \"with a population of four million\". Page 103: the three territories \"have a population of only 100,000\". Page 104: Yellowknife \"(population 20,000)\" and, on page 100, St. Boniface's Francophone community \"at 45,000\". Confirmed against the live page (canadas-regions.html, Date modified 2025-05-12) on 2026-09-10: every figure is still there, unchanged.",
+      "affects": [
+        "Canada's Regions"
+      ],
+      "grain": "pages",
+      "pages": [
+        94,
+        98,
+        99,
+        100,
+        102,
+        103,
+        104
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "34 million",
+        "34 millions",
+        "eight million",
+        "huit millions",
+        "12 million",
+        "12 millions",
+        "four million",
+        "quatre millions",
+        "100,000",
+        "100 000",
+        "45,000",
+        "45 000",
+        "20,000",
+        "20 000"
+      ],
+      "action": "No option and no explanation may state a population from this chapter, and that includes a CORRECTED one - a 2026 count is right about the world and wrong about the document the exam is drawn from, which is the reason G7 is banned beside G8 on page 90. The terms above are the literal spellings the guide uses; the rule is wider than the list and a figure written with a non-breaking space or spelled out (\"thirty-four million\") evades the matcher without evading the rule. What the chapter offers instead, and what the fourteen shipped economy questions grade, is which province produces WHAT - resources, industries, ports and capitals - none of which is a magnitude."
+    },
+    {
+      "topic": "Shares, proportions and rankings in Canada's Regions",
+      "problem": "The chapter's proportions are census-era or output-share figures that have moved, and its rankings are point-in-time. Page 94: Ottawa is \"Canada's fourth largest metropolitan area\". Page 98: Quebec's \"More than three-quarters speak French as their first language\" (2021 Census 74.8% mother tongue, now under three-quarters) and \"Ontario and Quebec produce more than three-quarters of all Canadian manufactured goods\". Page 99: Ontario is \"more than one-third of Canadians\". Page 100: Manitoba's \"14% reporting Ukrainian origins\" and \"largest Aboriginal population of any province, at over 15%\" (2021: 18.1%, and largest by SHARE only - Ontario is largest by count), and Saskatchewan's \"40% of the arable land in Canada\". Page 102: \"About one-half of all the goods produced in B.C. are forestry products\" and \"approximately 600 provincial parks\". Confirmed against the live page on 2026-09-10: all still present, unchanged.",
+      "affects": [
+        "Canada's Regions"
+      ],
+      "grain": "pages",
+      "pages": [
+        94,
+        98,
+        99,
+        100,
+        102
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "three-quarters",
+        "trois quarts",
+        "one-half",
+        "la moitié",
+        "40%",
+        "40 %",
+        "14%",
+        "14 %",
+        "15%",
+        "15 %",
+        "600 provincial parks",
+        "600 parcs provinciaux",
+        "fourth largest metropolitan area",
+        "quatrième région métropolitaine"
+      ],
+      "action": "Ask which province produces a thing, never what share of it. \"Ontario and Quebec make most of Canada's manufactured goods\" is durable and is what eco-25 grades; \"more than three-quarters\" is not, and sits in that question's source.quote only, where nothing a player reads can inherit it. Two entries here are deliberately narrower than the stale fact and this says so rather than letting the list imply coverage: \"one-third\" is NOT banned, because the territories holding one-third of Canada's land mass is geography and cannot move, and Ontario at more than one-third of Canadians is still true; and bare \"half\" and \"moitié\" are not banned because they are ordinary words whose every use would fire. A share that slips through in those spellings is caught by the verifier reading the chapter, not here."
+    },
+    {
+      "topic": "The pre-accession monarch in Canada's Regions",
+      "problem": "Page 94 dates Ottawa's selection as capital to \"1857 by Queen Victoria, the great-great-grandmother of Queen Elizabeth II\". The reigning monarch is King Charles III, so the relationship the sentence states is one generation short and the title is wrong. Recorded separately from \"The monarch and the Governor General\", which covers page 57 in two other chapters, because this is a different sentence on a different page and ADR-0016's register is one entry per claim - the same reason G8 and NAFTA are separate entries on page 90. Confirmed against the live page on 2026-09-10: unchanged. Note that page 104's \"Queen Elizabeth I in 1576\" is a sixteenth-century reference and is correct; the banned term is \"Elizabeth II\" and does not reach it.",
+      "affects": [
+        "Canada's Regions"
+      ],
+      "grain": "pages",
+      "pages": [
+        94
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "Queen Elizabeth II",
+        "Elizabeth II",
+        "reine Elizabeth II",
+        "Her Majesty",
+        "Sa Majesté",
+        "great-great-grandmother",
+        "arrière-arrière-grand-mère"
+      ],
+      "action": "Route the answers around the Sovereign entirely on this page. The durable proposition in the sentence is that Ottawa was chosen as the capital in 1857, and it can be asked without naming any monarch. No economy question cites page 94; this flag is recorded before it is needed, for the regions bank that ADR-0028 sends to these same pages."
+    },
+    {
+      "topic": "The size of Nunavut's Legislative Assembly",
+      "problem": "Page 104 says \"The 19-member Legislative Assembly chooses a premier and ministers by consensus.\" Nunavut's Legislative Assembly has had 22 seats since the 2013 general election. The consensus government mechanism the sentence describes is correct and durable; only the count is wrong. Confirmed against the live page on 2026-09-10: still 19.",
+      "affects": [
+        "Canada's Regions"
+      ],
+      "grain": "pages",
+      "pages": [
+        104
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "19-member",
+        "19 member",
+        "19 membres",
+        "22-member",
+        "22 membres"
+      ],
+      "action": "Both the stale count and the current one are banned, for the reason G7 is banned beside G8: an option saying 22 is right about Nunavut and wrong about the document the exam is drawn from. Ask about consensus government, which is the teachable and unmoving part of the sentence. Recorded at page grain on 104 alone; no shipped question cites that page."
     }
   ],
   "grainNote": "knownStaleness entries carry `pages` where the affected claims are localised, and fall back to `affects` chapters where they are not. Chapter grain alone made 57 of 57 authored questions volatile because two facts in the chapter were, which stopped the flag discriminating: everything is re-verified every run and quarantined at 180 days, so nothing is prioritised. A flag that fires on everything carries the same information as a flag that fires on nothing.",
@@ -372,6 +482,44 @@
         }
       ],
       "consequence": "Kept as a SEPARATE entry from Canada's Economy precisely because this page disagrees with the cache and that one does not. The disagreement is an EDITION difference, not cache drift: the read-online HTML has been updated for the accession in the Royal Anthem section alone -- it now reads God Save the King and prints God save our gracious King -- while the cached PDF, downloaded the same day and byte-identical to this file's sha256, reads Queen. The Crown section of the same live page still describes Queen Elizabeth II's Diamond Jubilee, so the update is one section deep. The pre-2018 O Canada line is present in BOTH editions and is the drift this check exists to record. Note that finding source-unrevised sits here beside agreesWithCache false: ADR-0016's amendment recorded that dispositionFor reads only the finding and never the page's agreement, and called it probably a real gap. This is its first live instance, with a benign cause."
+    },
+    {
+      "checkedAt": "2026-09-10",
+      "checkedBy": "content-verifier",
+      "finding": "source-unrevised",
+      "pages": [
+        {
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/canadas-regions.html",
+          "chapter": "Canada's Regions",
+          "sourceDateModified": "2025-05-12",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the Atlantic Provinces' coasts and natural resources - fishing, farming, forestry and mining",
+            "Prince Edward Island's beaches, red soil and agriculture",
+            "Labrador's immense hydro-electric resources",
+            "Nova Scotia's long history of coal mining, forestry and agriculture",
+            "Saint John as New Brunswick's largest city, port and manufacturing centre",
+            "Ontario and Quebec producing more than three-quarters of Canadian manufactured goods",
+            "Toronto as the largest city and the country's main financial centre",
+            "the Prairie Provinces as rich in energy resources and fertile farmland",
+            "Manitoba's economy: agriculture, mining and hydro-electric power generation",
+            "Saskatchewan's deposits of uranium and potash",
+            "Alberta as the largest producer of oil and gas",
+            "British Columbia's forestry products - lumber, newsprint, and pulp and paper",
+            "the northern territories' gold, lead, copper, diamond and zinc mines and their oil and gas deposits",
+            "Canada's population of about 34 million and the territories' population of only 100,000",
+            "Ottawa as Canada's fourth largest metropolitan area, and Queen Victoria as the great-great-grandmother of Queen Elizabeth II",
+            "Quebec's nearly eight million people and the more-than-three-quarters French mother-tongue share",
+            "Ontario's more than 12 million people and more than one-third of Canadians",
+            "Manitoba's 45,000-strong St. Boniface Francophone community, 14% Ukrainian origins and over 15% Aboriginal population",
+            "Saskatchewan's 40% of Canada's arable land",
+            "British Columbia's population of four million and approximately 600 provincial parks",
+            "Nunavut's 19-member Legislative Assembly and about 85% Inuit population",
+            "the Northwest Territories' more-than-half Aboriginal population and Yellowknife's population of 20,000"
+          ]
+        }
+      ],
+      "consequence": "Fetched first-hand, twice, in answer to ADR-0028's precondition that this chapter be live-checked before any economy question cites it. Fourteen economy questions (eco-20 to eco-33) now do. The live page agrees with the cached extraction on every one of the twenty-two claims above, including every point-in-time figure: the 2011-era population totals, the census-era shares, the pre-accession \"great-great-grandmother of Queen Elizabeth II\" on page 94 and Nunavut's 19-member Legislative Assembly, which has had 22 seats since 2013. The Date modified of 2025-05-12 is therefore not evidence of revision, exactly as it was not for Who We Are: the page has been touched and these facts have not. Disposition is does-not-revise and the mitigation is the four page-grain flags added beside this entry, not a future fetch. What was NOT found is worth recording because ADR-0028 predicted it: the chapter does not call Nunavut \"Canada's newest territory\" anywhere, so that anticipated flag has no referent. All fourteen new questions were checked against every banned term these flags introduce and none contains a digit or a fraction in any option or explanation, in either language. This entry puts Canada's Regions on ADR-0016 section 2 row 2, so the flags demand no volatile marking, and the clock that keeps them honest is this checkedAt - 2027-03-09."
     }
   ]
 }

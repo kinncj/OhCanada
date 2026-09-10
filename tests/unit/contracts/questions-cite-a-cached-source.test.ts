@@ -1003,7 +1003,31 @@ describe('a question cites a cached source that exists, and says so (ADR-0003)',
 
     // Whitespace is normalised on both sides: a PDF extraction wraps lines
     // wherever the page did, and a quote copied out of it is one paragraph.
-    const flat = (text: string): string => text.replace(/\s+/gu, ' ').trim();
+    /*
+     * Rejoin words the extraction broke at a real hyphen before collapsing
+     * whitespace.
+     *
+     * `pdftotext -layout` wraps "three-quarters" and "hydro-electric" as
+     * "three-\nquarters", so collapsing whitespace alone leaves "three- quarters"
+     * and a correctly cited quote reads as fabricated. Two economy questions were
+     * red on exactly that while `verify-content` reported all 404 quotes
+     * contiguous -- two implementations of one rule disagreeing about what
+     * "contiguous" means.
+     *
+     * The lenient one is right here, and that matters more than the fix: it is
+     * also the one that caught two genuinely fabricated citations. The project
+     * was relying on the weaker check while the stricter sat red for a reason
+     * nobody was watching.
+     */
+    const flat = (text: string): string =>
+      text
+        .normalize('NFKC')
+        .replace(/(\p{L})-\s*\n\s*(\p{L})/gu, '$1-$2')
+        .replace(/[\u2018\u2019\u02BC]/gu, "'")
+        .replace(/[\u201C\u201D]/gu, '"')
+        .replace(/[\u2010-\u2015]/gu, '-')
+        .replace(/\s+/gu, ' ')
+        .trim();
 
     for (const path of jsonFilesUnder(QUESTIONS_DIR)) {
       const question = JSON.parse(readFileSync(path, 'utf8')) as QuestionLike;
