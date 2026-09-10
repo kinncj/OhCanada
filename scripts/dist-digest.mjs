@@ -15,10 +15,16 @@
  *
  *   - the `build` job builds dist/, prints this digest and publishes it as a
  *     job output;
- *   - the browser suites download that artefact and serve it — so what e2e and
- *     axe exercise is that build, not a rebuild of the same commit;
- *   - the `deploy` job downloads the same artefact and runs this script with
- *     `--expect <digest>` before it hands anything to Pages.
+ *   - the browser suites download that artefact, check it against that digest
+ *     before they run a test, and serve it — so what e2e and axe exercise is
+ *     that build, not a rebuild of the same commit and not an artefact that
+ *     lost something on the way;
+ *   - the `deploy` job downloads the same artefact and checks it again as its
+ *     last act before it hands anything to Pages.
+ *
+ * Drilled on 2026-09-09 (run 34429077318): a build job publishing a digest that
+ * did not describe its own dist/ failed all eight browser jobs before a single
+ * test ran, turned the fan-in red, and left `Deploy to Pages` SKIPPED.
  *
  * So the claim is no longer "the same job built and tested these bytes"; it is
  * "these are the same BYTES, and here is the number that says so". A rebuild
@@ -202,9 +208,11 @@ if (digest !== expected) {
       `  expected  ${expected}   (recorded by the build job)`,
       `  found     ${digest}   over ${summary} in ${dir}`,
       '',
-      '  Nothing is uploaded. The end-to-end and accessibility suites ran against the',
-      '  tree the build job produced, and this is a different tree, so no gate in this',
-      '  run has seen these bytes. Likely causes, in the order they have happened:',
+      '  This is not the tree the build job produced, so nothing in this run has gated',
+      '  these bytes: not the suites, if this is a test job, and not deploy-check, if',
+      '  this is the deploy. Whichever job you are reading, it stops here.',
+      '',
+      '  Likely causes, in the order they have happened:',
       '',
       '    - the artefact upload dropped hidden files (`include-hidden-files: true` is',
       '      required on upload-artifact v4+, and dist/ carries at least .gitkeep);',
