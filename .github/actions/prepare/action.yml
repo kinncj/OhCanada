@@ -43,6 +43,14 @@ inputs:
       what shipped is what was tested.
     required: false
     default: 'false'
+  digest:
+    description: >
+      The digest the build job recorded over dist/, i.e.
+      `needs.build.outputs.digest`. REQUIRED whenever `built` is "true", and
+      checked rather than trusted: the download below is verified against it
+      before a single test runs.
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -81,3 +89,22 @@ runs:
       with:
         name: built-assets
         path: assets/dist
+
+    # EVERY CONSUMER CHECKS, NOT JUST THE DEPLOY. The deploy job has to verify
+    # the digest - it is the step before the bytes reach the internet - but if
+    # only it checked, an artefact round trip that quietly dropped files would
+    # let the whole browser suite run green against a tree nobody ships, and the
+    # first sign of it would be a red deploy at the end of a run that looked
+    # fine. Then the question "did the tests pass on the real build?" would have
+    # the answer "no, and nothing said so".
+    #
+    # It costs a fifth of a second. `make verify-dist` refuses an empty DIGEST
+    # rather than reading it as "no expectation", so a job that downloads the
+    # artefact and forgets to pass the digest fails here instead of testing
+    # something unverified.
+    - name: The downloaded site is the one the build job made
+      if: inputs.built == 'true'
+      shell: bash
+      env:
+        DIGEST: ${{ inputs.digest }}
+      run: make verify-dist DIGEST="$DIGEST"

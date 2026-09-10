@@ -136,11 +136,11 @@ jobs:
         run: make assets build
 
       # ONE BUILD PER RUN, AND A NUMBER THAT SAYS SO. Every browser suite below
-      # downloads these artefacts instead of rebuilding, so what e2e and axe
-      # exercise is this tree and not a re-derivation of it. deploy-pages.yml
-      # uses the same digest to refuse to upload anything else; here it is just
-      # published, so that a shard which somehow rebuilt would be visible in the
-      # log rather than plausible.
+      # downloads these artefacts instead of rebuilding, and checks this digest
+      # against what it downloaded before it runs a test - so "e2e passed" is a
+      # statement about THIS tree, not about a re-derivation of it that nobody
+      # compared. deploy-pages.yml uses the same digest one step further on, to
+      # refuse to hand Pages anything else.
       - name: Digest the built site
         id: digest
         run: |
@@ -206,6 +206,7 @@ jobs:
         with:
           browser: 'true'
           built: 'true'
+          digest: ${{ needs.build.outputs.digest }}
 
       - name: End-to-end suite, shard ${{ matrix.shard }} of 6
         run: make test-e2e SHARD=${{ matrix.shard }}/6
@@ -242,6 +243,7 @@ jobs:
         with:
           browser: 'true'
           built: 'true'
+          digest: ${{ needs.build.outputs.digest }}
 
       - name: Accessibility suite, shard ${{ matrix.shard }} of 2
         run: make test-a11y SHARD=${{ matrix.shard }}/2
@@ -277,6 +279,7 @@ jobs:
         with:
           browser: 'true'
           built: 'true'
+          digest: ${{ needs.build.outputs.digest }}
 
       - name: Performance suite
         run: make test-perf

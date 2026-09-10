@@ -51,13 +51,14 @@
 #   2. ONE BUILD, AND A DIGEST THAT SAYS SO. `build` runs `make assets build`
 #      once and publishes `dist/` as an artefact plus a SHA-256 over every path
 #      and byte in it (`make dist-digest`). The e2e, a11y and perf jobs download
-#      that artefact and serve it - they do not rebuild. `deploy` downloads the
-#      same artefact and runs `make verify-dist DIGEST=...` before it hands
-#      anything to Pages. So the claim is not "the same job built and tested
-#      these bytes" but the stronger "these are the same BYTES, and here is the
-#      number that says so". An artefact round trip that dropped the dotfiles,
-#      or a job that rebuilt instead of downloading, is a red deploy rather than
-#      a quiet substitution.
+#      that artefact and serve it - they do not rebuild - and each of them
+#      checks the digest against what it downloaded BEFORE it runs a test.
+#      `deploy` downloads the same artefact and checks it again as its last act
+#      before Pages sees anything. So the claim is not "the same job built and
+#      tested these bytes" but the stronger "these are the same BYTES, in every
+#      job that touched them, and here is the number that says so". An artefact
+#      round trip that dropped the dotfiles is then a red job wherever it
+#      happened, rather than a suite passing against a tree nobody ships.
 #
 #   3. FAIL CLOSED, THROUGH ONE FAN-IN. `deploy` needs `gate`; `gate` needs
 #      every blocking job, runs with `if: always()` so that it cannot be SKIPPED
@@ -255,6 +256,7 @@ jobs:
         with:
           browser: 'true'
           built: 'true'
+          digest: ${{ needs.build.outputs.digest }}
 
       - name: End-to-end suite, shard ${{ matrix.shard }} of 6
         run: make test-e2e SHARD=${{ matrix.shard }}/6
@@ -288,6 +290,7 @@ jobs:
         with:
           browser: 'true'
           built: 'true'
+          digest: ${{ needs.build.outputs.digest }}
 
       - name: Accessibility suite, shard ${{ matrix.shard }} of 2
         run: make test-a11y SHARD=${{ matrix.shard }}/2
@@ -324,6 +327,7 @@ jobs:
         with:
           browser: 'true'
           built: 'true'
+          digest: ${{ needs.build.outputs.digest }}
 
       - name: Performance suite
         run: make test-perf
