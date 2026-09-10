@@ -679,6 +679,15 @@ vi.mock('@ui/passport', () => ({
       setEntries: () => undefined,
       setLocale: () => undefined,
       setSingleSwitch: () => undefined,
+      /*
+       * Present because the real passport has it, not because a case here
+       * calls it. Exam readiness resolves on a promise the composition root
+       * fires and does not await, so a method missing from this stub throws
+       * AFTER this file's cases have finished -- landing as an unhandled
+       * rejection inside whichever file vitest happens to be running next.
+       * It passed here in isolation and failed the deploy in a full run.
+       */
+      setExam: () => undefined,
       destroy: () => {
         hoisted.state.passportsDestroyed += 1;
       },
