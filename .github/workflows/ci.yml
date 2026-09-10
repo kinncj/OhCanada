@@ -10,16 +10,47 @@
 # runs this same gate set before it publishes, so a second copy on the same
 # trigger would only double the queue and split the signal across two workflows.
 #
-# ACTION MAJORS
-# Every `actions/*` pin here runs on the Node 24 runtime. The Node 20 runtime is
-# deprecated and the runner was already forcing these actions onto Node 24 with
-# a warning, so the bump removes the annotation rather than changing behaviour.
-# `setup-node` v5 added automatic caching and v6 narrowed it to npm; both are
-# moot here because `cache: npm` is set explicitly and package.json declares no
-# `packageManager` field. `upload-artifact` v7 added an `archive` input that
-# defaults to `true`, i.e. the v4 behaviour, and still honours
-# `if-no-files-found` and `retention-days`. Artifact names are unique within a
-# run, so the v4+ "no overwriting an existing artifact" rule does not bite.
+# WHY THIS IS TWELVE JOBS AND NOT TWO
+# Measured on run 34417758101 (2026-09-09, the same gate set in one job):
+# 20m04s wall, of which the end-to-end suite was 11m18s and the accessibility
+# suite 2m53s - both at `workers: 1`, one after the other, on one 4-vCPU runner.
+# The suites are not wasteful; they are big, and both configs pin one worker on
+# purpose, because these tests drive real-time physics and a second browser on
+# the same CPU turns an assertion stated in seconds into a measurement of the
+# machine. So the lever is more MACHINES, not more workers: six e2e shards and
+# two a11y shards, each on its own runner, each still one worker, each test
+# running in exactly the environment it ran in before. Nothing is skipped -
+# `--shard=i/n` partitions the suite and the fan-in job below fails if any shard
+# fails.
+#
+# Everything the old single job did, this still does, and in the same order
+# where order matters (`make build` still validates content first; `make assets`
+# still runs the payload and texture gates over what it just built).
+#
+# JOB NAMES ARE LOAD-BEARING - DO NOT RENAME WITHOUT READING THIS
+# The `name:` of two jobs below is a *required status check* on `main`
+# (repository ruleset "main-require-checks", set 2026-09-08; docs/runbook.md 3).
+# The required contexts are those two strings, character for character:
+#
+#     "Lint, types, unit tests, content"
+#     "Build, e2e, perf, a11y"
+#
+# GitHub matches a required check by name and waits forever for one that never
+# reports. So renaming a job here, or moving one of these two into a reusable
+# workflow (where it would report as "<caller> / <inner>"), wedges EVERY open
+# pull request on "Expected - Waiting for status to be reported", with no error
+# anywhere. It fails silent, not loud. That is why the graph below is written
+# out in full in both workflow files rather than shared through `workflow_call`;
+# only the repeated STEPS are shared, in .github/actions/prepare.
+#
+# The second of those names now covers strictly MORE than it did: it is a fan-in
+# over the build, all six e2e shards and both a11y shards, and it fails if any
+# of them fails. It is not the job that runs them.
+#
+# If you change a `name:`, update the ruleset in the same change:
+#   gh api repos/kinncj/OhCanada/rulesets/22600404 \
+#     --jq '.rules[] | select(.type=="required_status_checks")
+#            | .parameters.required_status_checks[].context'
 name: CI
 
 on:
@@ -32,60 +63,35 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# JOB NAMES ARE LOAD-BEARING - DO NOT RENAME WITHOUT READING THIS
-# The `name:` of each job below is a *required status check* on `main` (classic
-# branch protection, set 2026-09-08; docs/runbook.md 3). The required contexts
-# are those two strings, character for character:
-#
-#     "Lint, types, unit tests, content"
-#     "Build, e2e, perf, a11y"
-#
-# GitHub matches a required check by name and waits forever for one that never
-# reports. So renaming a job here, splitting one in two, or adding a third gate
-# job without updating the branch protection wedges EVERY open pull request on
-# "Expected - Waiting for status to be reported", with no error anywhere. It
-# fails silent, not loud.
-#
-# If you change a `name:`, update the contexts in the same change:
-#   gh api repos/kinncj/OhCanada/branches/main/protection \
-#     --jq '.required_status_checks.contexts[]'
 jobs:
   static:
     name: Lint, types, unit tests, content
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      # FULL HISTORY, DELIBERATELY. `make verify-content` carries ADR-0003's
-      # separation-of-duties gate, and that gate is a question about COMMITS:
-      # may this one have both authored a claim and granted its verification?
-      # `actions/checkout` defaults to `fetch-depth: 1`, which is one commit, and
-      # a history gate over one commit inspects almost nothing and reports green
-      # -- the quietest way for the only thing standing between an agent and
-      # marking its own work verified to become decorative. The script refuses to
-      # run on a shallow clone rather than pass over what it cannot see, so
-      # removing this line turns the gate red, not silent. That is on purpose.
-      # The repository is small; a full fetch costs seconds.
+      # FULL HISTORY, DELIBERATELY, AND ONLY HERE. `make verify-content` carries
+      # ADR-0003's separation-of-duties gate, and that gate is a question about
+      # COMMITS: may this one have both authored a claim and granted its
+      # verification? `actions/checkout` defaults to `fetch-depth: 1`, which is
+      # one commit, and a history gate over one commit inspects almost nothing
+      # and reports green -- the quietest way for the only thing standing
+      # between an agent and marking its own work verified to become decorative.
+      # The script refuses to run on a shallow clone rather than pass over what
+      # it cannot see, so removing this line turns the gate red, not silent.
+      # That is on purpose. The repository is small; a full fetch costs seconds.
+      #
+      # No other job runs it, and `git log` is the only git any script here
+      # touches, so every other job below takes the default shallow clone.
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          cache: npm
-
-      - name: Install
-        run: make setup
+      # No browser here: this job never opens one, and `make setup` would spend
+      # 21 s installing Chromium for nothing.
+      - uses: ./.github/actions/prepare
 
       - name: Lint, typecheck, test, validate and verify content
         run: make lint typecheck test validate-content verify-content
-
-      # Reports, does not block. deploy-pages.yml carries the reasoning: this
-      # gate measures how recognisable a drawing is, not whether the game is
-      # correct. Content verification above still blocks.
-      - name: Art verification (reports, does not block)
-        continue-on-error: true
-        run: make verify-art
 
       # 14 days, not the 90-day repository default and not the 3 days this was
       # cut to during the artifact-quota incident. 3 days was a quota measure and
@@ -101,36 +107,108 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-  browser:
-    name: Build, e2e, perf, a11y
+  build:
+    name: Build the site
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
+    outputs:
+      digest: ${{ steps.digest.outputs.digest }}
     steps:
       - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          cache: npm
-
-      - name: Install
-        run: make setup
+      # Reports, does not block. deploy-pages.yml carries the reasoning: this
+      # gate measures how recognisable a drawing is, not whether the game is
+      # correct. Content verification in the `static` job still blocks.
+      #
+      # It sits here rather than in `static` because it needs neither the git
+      # history nor a browser, and `static` is the longest job in the graph:
+      # five seconds is five seconds off the critical path.
+      - name: Art verification (reports, does not block)
+        continue-on-error: true
+        run: make verify-art
 
       # `assets` is included so a pull request builds exactly what
       # deploy-pages.yml builds; without it CI would be checking a different
-      # dist/ from the one that ships.
-      - name: Build and run the browser suites
-        run: make assets build test-e2e test-a11y
+      # dist/ from the one that ships. It also runs the level-payload and
+      # texture-memory gates over what it just built, in the same process.
+      - name: Build assets and the site
+        run: make assets build
 
-      # Reports, does not block. The perf suite cannot be measured on this
-      # runner: it rasterises in software, so the level costs 45 ms a frame
-      # against 1 ms on a laptop for the same commit, and the visual tier
-      # degrades mid-sample because the container cannot hold a cadence.
-      # Every number it produces is a property of the container. Frame time
-      # is a device budget and wants a stable host with a real GPU.
-      - name: Performance suite (reports, does not block)
-        continue-on-error: true
-        run: make test-perf
+      # ONE BUILD PER RUN, AND A NUMBER THAT SAYS SO. Every browser suite below
+      # downloads these artefacts instead of rebuilding, so what e2e and axe
+      # exercise is this tree and not a re-derivation of it. deploy-pages.yml
+      # uses the same digest to refuse to upload anything else; here it is just
+      # published, so that a shard which somehow rebuilt would be visible in the
+      # log rather than plausible.
+      - name: Digest the built site
+        id: digest
+        run: |
+          set -euo pipefail
+          digest="$(make dist-digest)"
+          if [ -z "$digest" ]; then
+            echo "::error::make dist-digest produced nothing; refusing to publish an empty digest."
+            exit 1
+          fi
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      # `include-hidden-files` is REQUIRED, not tidy. upload-artifact v4+
+      # excludes dotfiles by default, dist/ carries at least `.gitkeep` today
+      # (Vite copies it out of assets/dist via publicDir) and could carry
+      # `.well-known/assetlinks.json` or `.nojekyll` tomorrow. Without this the
+      # suites would test a tree the deploy does not ship - though the digest
+      # check in deploy-pages.yml would then turn that into a red deploy rather
+      # than a quiet one.
+      #
+      # One day of retention: these exist to be handed to the jobs in this run.
+      # Rollback re-runs a whole workflow (docs/runbook.md 3), which rebuilds.
+      - name: Upload the built site
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+      # assets/dist separately: the a11y and perf harnesses are served by a Vite
+      # DEV server (their configs explain why), and vite.config.ts sets
+      # `publicDir: 'assets/dist'`, so those suites need this directory as well
+      # as dist/.
+      - name: Upload the built assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: built-assets
+          path: assets/dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  e2e:
+    name: e2e ${{ matrix.shard }}/6
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      # `fail-fast: false` on purpose. The default cancels the sibling shards as
+      # soon as one fails, which would hand back one shard's failures and
+      # silence the rest - and tests/e2e/playwright.config.ts already concedes an
+      # incomplete list once, via `maxFailures: 5`. Conceding it twice would make
+      # a red run nearly unreadable. Cancelled shards would also still fail the
+      # fan-in, so this costs runner minutes on an already-red run and nothing
+      # else.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
+        with:
+          browser: 'true'
+          built: 'true'
+
+      - name: End-to-end suite, shard ${{ matrix.shard }} of 6
+        run: make test-e2e SHARD=${{ matrix.shard }}/6
 
       # On failure only, and one artifact rather than two. `test-results/` used to
       # be uploaded alongside this; the HTML reporter copies every attachment it
@@ -138,11 +216,119 @@ jobs:
       # bytes for one run's evidence and the second copy was browsable only by
       # hand. The report is self-contained - open index.html, click the failing
       # test, the trace viewer loads from within it.
+      #
+      # Named per shard because artifact names must be unique within a run.
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-e2e-${{ matrix.shard }}
           path: playwright-report
           if-no-files-found: ignore
           retention-days: 14
+
+  a11y:
+    name: a11y ${{ matrix.shard }}/2
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
+        with:
+          browser: 'true'
+          built: 'true'
+
+      - name: Accessibility suite, shard ${{ matrix.shard }} of 2
+        run: make test-a11y SHARD=${{ matrix.shard }}/2
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-a11y-${{ matrix.shard }}
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # Reports, does not block. The perf suite cannot be measured on this
+  # runner: it rasterises in software, so the level costs 45 ms a frame
+  # against 1 ms on a laptop for the same commit, and the visual tier
+  # degrades mid-sample because the container cannot hold a cadence.
+  # Every number it produces is a property of the container. Frame time
+  # is a device budget and wants a stable host with a real GPU.
+  #
+  # Not sharded, and the missing option is the point: tests/perf pins itself to
+  # one worker because it measures frame time, and splitting it across runners
+  # would mean comparing samples taken on different machines.
+  perf:
+    name: Performance (reports, does not block)
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
+        with:
+          browser: 'true'
+          built: 'true'
+
+      - name: Performance suite
+        run: make test-perf
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-perf
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # THE REQUIRED CHECK. This job runs no test; it reads the results of the jobs
+  # that did, and it is red unless every blocking one is green.
+  #
+  # `if: always()` so it reports even when something upstream failed or was
+  # cancelled - without it, a failed `build` would SKIP this job, and a skipped
+  # required check never reports, which is the wedge described at the top of
+  # this file. With it, the check goes red and says which gate did.
+  #
+  # `perf` is awaited and reported but not required, exactly as before: it is
+  # `continue-on-error` at the job level, so its `result` cannot be trusted to
+  # distinguish a pass from a failure, and it is not asserted on either.
+  browser:
+    name: Build, e2e, perf, a11y
+    needs: [build, e2e, a11y, perf]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every blocking browser gate passed
+        env:
+          BUILD: ${{ needs.build.result }}
+          E2E: ${{ needs.e2e.result }}
+          A11Y: ${{ needs.a11y.result }}
+          PERF: ${{ needs.perf.result }}
+        run: |
+          set -uo pipefail
+          # A matrix job's result is the aggregate: 'success' only if EVERY
+          # shard succeeded. Anything else - failure, cancelled, skipped - is
+          # not a pass and is not treated as one.
+          status=0
+          for gate in "build:$BUILD" "e2e:$E2E" "a11y:$A11Y"; do
+            name="${gate%%:*}"
+            result="${gate#*:}"
+            if [ "$result" = success ]; then
+              echo "ok       $name"
+            else
+              echo "::error::$name reported '$result', which is not a pass. This check is red."
+              status=1
+            fi
+          done
+          echo "reported $PERF   perf (does not block)"
+          exit "$status"

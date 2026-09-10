@@ -8,28 +8,68 @@
 # sits in.
 #
 # Rollback: re-run the last successful run of this workflow from the Actions tab
-# (see docs/runbook.md). Nothing else is needed - Pages serves whatever artefact
-# the most recent successful run uploaded.
+# (see docs/runbook.md). "Re-run all jobs" re-runs the whole graph below at the
+# same commit, so the rebuild is gated exactly as the original was, and the
+# deploy job at the end publishes it. Nothing else is needed - Pages serves
+# whatever artefact the most recent successful run uploaded. Do NOT use "re-run
+# failed jobs" for a rollback: on a run that succeeded there are none, and on a
+# run that failed you would be re-running the thing that failed, not restoring
+# the thing that worked.
 #
-# WHY THIS JOB RUNS THE WHOLE GATE SET
-# `vite build` does not typecheck and does not run a test. Until now this
+# WHY THIS WORKFLOW RUNS THE WHOLE GATE SET
+# `vite build` does not typecheck and does not run a test. Until 2026-09-08 this
 # workflow ran `validate-content assets build` and nothing else, and ci.yml was a
 # separate workflow on the same `push: main` trigger with no relationship to it -
 # so a defect that only appears on the merged tree (a type error, a broken test,
 # an axe violation) turned CI red while this workflow published the artefact
 # regardless. Two ways to close that: gate on `workflow_run` of CI, or run the
 # gates here. This picks the second, because:
-#   - the bytes that get uploaded are then built by the same job that verified
-#     them; a `workflow_run` gate verifies a SHA and trusts that the deploy job
-#     checks out the same one;
+#   - the bytes that get uploaded are then produced and verified inside ONE
+#     workflow run, at one commit; a `workflow_run` gate verifies a SHA in one
+#     run and trusts that a second, later run checks out the same one;
 #   - `workflow_run` deploys fail *open* in the confusing direction - if the
 #     event is missed or the conclusion filter is wrong, nothing deploys and
 #     nobody is told;
 #   - `workflow_dispatch` (the rollback path) has no `workflow_run` payload, so
 #     that design needs a second, untested code path for exactly the case we
 #     most need to work.
-# The cost is wall-clock, not duplicated work: ci.yml no longer triggers on
-# `push: main`, because this job is now the same gate.
+#
+# WHAT CHANGED, AND WHAT DID NOT
+# It used to be one job, in sequence, and that cost 20m04s (run 34417758101).
+# 14m11s of it was the two browser suites running one after the other at
+# `workers: 1` on one 4-vCPU runner. The gates now run as parallel jobs. What
+# has to survive that is the sentence above: the deployed bytes must be bytes
+# this run gated. Three things hold it, and they are the things to check if you
+# restructure this again:
+#
+#   1. ONE RUN, ONE COMMIT. Every job below is in this workflow run, so
+#      `github.sha` is a single value for all of them and every checkout
+#      resolves the same commit. That is the difference from `workflow_run`,
+#      which starts a NEW run whose checkout defaults to the branch head at
+#      trigger time - not to the commit that was verified.
+#
+#   2. ONE BUILD, AND A DIGEST THAT SAYS SO. `build` runs `make assets build`
+#      once and publishes `dist/` as an artefact plus a SHA-256 over every path
+#      and byte in it (`make dist-digest`). The e2e, a11y and perf jobs download
+#      that artefact and serve it - they do not rebuild. `deploy` downloads the
+#      same artefact and runs `make verify-dist DIGEST=...` before it hands
+#      anything to Pages. So the claim is not "the same job built and tested
+#      these bytes" but the stronger "these are the same BYTES, and here is the
+#      number that says so". An artefact round trip that dropped the dotfiles,
+#      or a job that rebuilt instead of downloading, is a red deploy rather than
+#      a quiet substitution.
+#
+#   3. FAIL CLOSED, THROUGH ONE FAN-IN. `deploy` needs `gate`; `gate` needs
+#      every blocking job, runs with `if: always()` so that it cannot be SKIPPED
+#      into silence, and exits non-zero unless each of them reports exactly
+#      'success'. A matrix shard's failure fails its whole job, which fails
+#      `gate`, which means `deploy` never starts - GitHub does not run a job
+#      whose `needs` failed. There is no `continue-on-error` and no
+#      `if: always()` anywhere on the path from a gate to the upload.
+#
+# What still fails open, unchanged and on purpose: `verify-art` and the
+# performance suite. Both were already report-only before this change, both stay
+# report-only, and the reasons are at their jobs below.
 #
 # ACTION MAJORS
 # Every `actions/*` pin here runs on the Node 24 runtime. The Node 20 runtime is
@@ -40,8 +80,10 @@
 # `packageManager` field. `upload-artifact` v7 added an `archive` input that
 # defaults to `true`, i.e. the v4 behaviour, and still honours
 # `if-no-files-found` and `retention-days`. Artifact names are unique within a
-# run, so the v4+ "no overwriting an existing artifact" rule does not bite.
-# `checkout` v7 blocks fork-PR checkout under `pull_request_target` and
+# run - the per-shard reports below are named for their shard - so the v4+ "no
+# overwriting an existing artifact" rule does not bite. `download-artifact` v8
+# reads what v7 writes and needs no extra permission for artefacts from its own
+# run. `checkout` v7 blocks fork-PR checkout under `pull_request_target` and
 # `workflow_run`; neither workflow uses those triggers. `configure-pages` v6 and
 # `deploy-pages` v5 are Node 24 rebuilds with no input changes.
 name: Deploy to GitHub Pages
@@ -56,6 +98,14 @@ permissions:
   pages: write
   id-token: write
 
+# WORKFLOW-LEVEL, NOT ON THE DEPLOY JOB, and that is a deliberate refusal of a
+# free-looking speed-up. Grouping only the `deploy` job would let two pushes run
+# their gate sets side by side, and then whichever finished first would deploy
+# first - so a run for an older commit could land on Pages AFTER a newer one and
+# quietly roll the site back. At the workflow level GitHub keeps at most one
+# pending run per group and supersedes older pending ones, so deploys stay in
+# push order. The queueing this costs is much cheaper now that a run is minutes
+# rather than twenty of them.
 concurrency:
   group: pages
   # `false` on purpose: cancelling a run that is midway through
@@ -66,38 +116,44 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Gate, build and deploy
+  static:
+    name: Lint, types, unit tests, content
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 20
     steps:
-      # FULL HISTORY, DELIBERATELY. `make verify-content` carries ADR-0003's
-      # separation-of-duties gate, and that gate is a question about COMMITS:
-      # may this one have both authored a claim and granted its verification?
-      # `actions/checkout` defaults to `fetch-depth: 1`, which is one commit, and
-      # a history gate over one commit inspects almost nothing and reports green
-      # -- the quietest way for the only thing standing between an agent and
-      # marking its own work verified to become decorative. The script refuses to
-      # run on a shallow clone rather than pass over what it cannot see, so
-      # removing this line turns the gate red, not silent. That is on purpose.
-      # The repository is small; a full fetch costs seconds.
+      # FULL HISTORY, DELIBERATELY, AND ONLY HERE. `make verify-content` carries
+      # ADR-0003's separation-of-duties gate, and that gate is a question about
+      # COMMITS: may this one have both authored a claim and granted its
+      # verification? `actions/checkout` defaults to `fetch-depth: 1`, which is
+      # one commit, and a history gate over one commit inspects almost nothing
+      # and reports green -- the quietest way for the only thing standing
+      # between an agent and marking its own work verified to become decorative.
+      # The script refuses to run on a shallow clone rather than pass over what
+      # it cannot see, so removing this line turns the gate red, not silent.
+      # That is on purpose. The repository is small; a full fetch costs seconds.
+      #
+      # No other job runs it, and `git log` is the only git any script here
+      # touches, so every other job below takes the default shallow clone.
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          cache: npm
-
-      - name: Install
-        run: make setup
+      # No browser here: this job never opens one, and `make setup` would spend
+      # 21 s installing Chromium for nothing.
+      - uses: ./.github/actions/prepare
 
       - name: Lint, typecheck, unit tests and content verification
         run: make lint typecheck test validate-content verify-content
+
+  build:
+    name: Build the site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      digest: ${{ steps.digest.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
 
       # Art verification reports; it does not hold the deploy.
       #
@@ -112,40 +168,270 @@ jobs:
       # It stays in the run, it stays red when it fails, and its record still
       # refuses to pass over art nobody has looked at. What changed is only
       # that a cosmetic art finding no longer stops a correct game shipping.
-      # Content verification above is NOT in this category and still blocks:
-      # a wrong fact is a wrong game.
+      # Content verification in `static` is NOT in this category and still
+      # blocks: a wrong fact is a wrong game.
+      #
+      # It sits in this job rather than in `static` because it needs neither the
+      # git history nor a browser, and `static` is the longest job in the graph.
       - name: Art verification (reports, does not block)
         continue-on-error: true
         run: make verify-art
 
+      # `make assets` runs the level-payload and texture-memory gates over what
+      # it just built; `make build` validates content, builds, and then runs
+      # deploy-check over dist/ for the payload budgets and the 100 MB per-file
+      # cap. All three still block, in the same order, in the job that produces
+      # the bytes they are weighing.
       - name: Build assets and the site
         run: make assets build
 
-      - name: End-to-end, performance and accessibility suites
-        run: make test-e2e test-a11y
+      - name: Digest the built site
+        id: digest
+        run: |
+          set -euo pipefail
+          digest="$(make dist-digest)"
+          if [ -z "$digest" ]; then
+            echo "::error::make dist-digest produced nothing; refusing to publish an empty digest."
+            exit 1
+          fi
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
-      # Reports, does not block. The perf suite cannot be measured on this
-      # runner: it rasterises in software, so the level costs 45 ms a frame
-      # against 1 ms on a laptop for the same commit, and the visual tier
-      # degrades mid-sample because the container cannot hold a cadence.
-      # Every number it produces is a property of the container. Frame time
-      # is a device budget and wants a stable host with a real GPU.
-      - name: Performance suite (reports, does not block)
-        continue-on-error: true
-        run: make test-perf
+      # `include-hidden-files` is REQUIRED, not tidy, and it is the same
+      # argument as on the Pages upload at the bottom of this file.
+      # upload-artifact v4+ excludes dotfiles by default. dist/ carries at least
+      # `.gitkeep` today (Vite copies it out of assets/dist via publicDir) and
+      # could carry `.well-known/assetlinks.json` (see infra/capacitor/) or
+      # `.nojekyll` tomorrow. Losing them here would mean the suites tested one
+      # tree and Pages served another -- except that the digest check in
+      # `deploy` turns that into a red deploy instead of a silent one.
+      - name: Upload the built site
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+      # assets/dist separately: the a11y and perf harnesses are served by a Vite
+      # DEV server (their configs explain why), and vite.config.ts sets
+      # `publicDir: 'assets/dist'`, so those suites need this directory as well
+      # as dist/.
+      - name: Upload the built assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: built-assets
+          path: assets/dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  # SIX SHARDS, ONE WORKER EACH. tests/e2e/playwright.config.ts pins `workers: 1`
+  # on CI because this suite drives real-time physics and asserts relationships
+  # stated in seconds; a second browser on the same runner makes those
+  # assertions a measurement of the machine. Sharding does not touch that - every
+  # test still runs alone on a 4-vCPU runner, in the same environment it ran in
+  # when the whole suite was serial. What changes is only how many runners there
+  # are. `--shard=i/n` partitions the suite, so nothing is skipped, and `gate`
+  # below fails if any shard does.
+  e2e:
+    name: e2e ${{ matrix.shard }}/6
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      # `fail-fast: false` on purpose. The default cancels the sibling shards as
+      # soon as one fails, which would hand back one shard's failures and
+      # silence the rest - and tests/e2e/playwright.config.ts already concedes an
+      # incomplete list once, via `maxFailures: 5`. Conceding it twice would make
+      # a red run nearly unreadable. Cancelled shards would still fail `gate`, so
+      # this costs runner minutes on an already-red run and nothing else.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
+        with:
+          browser: 'true'
+          built: 'true'
+
+      - name: End-to-end suite, shard ${{ matrix.shard }} of 6
+        run: make test-e2e SHARD=${{ matrix.shard }}/6
 
       # Failure only: on a green run this step never fires, and the deploy below
       # is the artefact that matters. 14 days matches ci.yml - long enough that
       # the report is still there when someone comes back to a failed deploy.
       # What bounds its *size* is tests/*/playwright.config.ts, not this number.
+      # Named per shard because artifact names must be unique within a run.
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-e2e-${{ matrix.shard }}
           path: playwright-report
           if-no-files-found: ignore
           retention-days: 14
+
+  a11y:
+    name: a11y ${{ matrix.shard }}/2
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
+        with:
+          browser: 'true'
+          built: 'true'
+
+      - name: Accessibility suite, shard ${{ matrix.shard }} of 2
+        run: make test-a11y SHARD=${{ matrix.shard }}/2
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-a11y-${{ matrix.shard }}
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # Reports, does not block. The perf suite cannot be measured on this
+  # runner: it rasterises in software, so the level costs 45 ms a frame
+  # against 1 ms on a laptop for the same commit, and the visual tier
+  # degrades mid-sample because the container cannot hold a cadence.
+  # Every number it produces is a property of the container. Frame time
+  # is a device budget and wants a stable host with a real GPU.
+  #
+  # Not sharded, and the missing option is the point: tests/perf pins itself to
+  # one worker because it measures frame time, and splitting it across runners
+  # would mean comparing samples taken on different machines under different
+  # load - the same mistake in a new place.
+  perf:
+    name: Performance (reports, does not block)
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/prepare
+        with:
+          browser: 'true'
+          built: 'true'
+
+      - name: Performance suite
+        run: make test-perf
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-perf
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # THE ONE PLACE THE DEPLOY IS ALLOWED THROUGH.
+  #
+  # `deploy` needs this and nothing else, so this job is the whole answer to
+  # "how does the upload know everything that matters passed".
+  #
+  # `if: always()` is what makes it safe rather than what makes it lax. Without
+  # it, a failed `build` would SKIP this job, and a skipped job's dependents are
+  # skipped too - which is the right outcome, but it arrives with no error and
+  # no red check. With it, this job runs whatever happened upstream, reads the
+  # results, and is red unless every blocking one is exactly 'success'. Anything
+  # else - failure, cancelled, skipped - is not a pass and is not read as one.
+  #
+  # A matrix job's `result` is the aggregate over its shards: 'success' only if
+  # every shard succeeded. So `needs: e2e` covers all six.
+  #
+  # `perf` is awaited and reported but not asserted, exactly as before. It is
+  # `continue-on-error` at the job level, so its `result` cannot be trusted to
+  # distinguish a pass from a failure - which is precisely why nothing here
+  # depends on it.
+  gate:
+    name: All gates
+    needs: [static, build, e2e, a11y, perf]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every blocking gate passed
+        env:
+          STATIC: ${{ needs.static.result }}
+          BUILD: ${{ needs.build.result }}
+          E2E: ${{ needs.e2e.result }}
+          A11Y: ${{ needs.a11y.result }}
+          PERF: ${{ needs.perf.result }}
+        run: |
+          set -uo pipefail
+          status=0
+          for gate in "static:$STATIC" "build:$BUILD" "e2e:$E2E" "a11y:$A11Y"; do
+            name="${gate%%:*}"
+            result="${gate#*:}"
+            if [ "$result" = success ]; then
+              echo "ok       $name"
+            else
+              echo "::error::$name reported '$result', which is not a pass. Nothing will be deployed."
+              status=1
+            fi
+          done
+          echo "reported $PERF   perf (does not block)"
+          exit "$status"
+
+  deploy:
+    name: Deploy to Pages
+    needs: [gate, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # Shallow, and no `npm ci`. This job builds nothing: it downloads the tree
+      # `build` produced, checks it is that tree, and uploads it.
+      # `scripts/dist-digest.mjs` imports node builtins only, so the dependencies
+      # would be 8 s spent on nothing.
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Download the built site
+        uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: dist
+
+      # THE HAND-OFF CHECK. Everything above this line ran in other jobs; this
+      # is where their work becomes bytes on the internet, and this step is the
+      # reason that is allowed. It re-derives the digest from what was just
+      # downloaded and refuses anything that is not the tree `build` produced and
+      # the suites ran against.
+      #
+      # `make verify-dist` refuses an empty DIGEST rather than treating it as
+      # "no expectation" -- an unset variable is the one way this could stop
+      # comparing, and it would look exactly like a pass.
+      #
+      # deploy-check is NOT re-run here. It already ran in `build`, over a tree
+      # this digest proves is byte-identical to this one; running it again would
+      # re-answer a question the digest has already settled.
+      - name: These are the bytes the gates ran against
+        env:
+          # Through the environment rather than interpolated into the script.
+          # The value is hex from our own script today, but a `${{ }}` spliced
+          # straight into a `run:` is a shell-injection shape, and this is the
+          # last step before bytes reach the internet.
+          DIGEST: ${{ needs.build.outputs.digest }}
+        run: make verify-dist DIGEST="$DIGEST"
 
       - name: Configure Pages
         uses: actions/configure-pages@v6
@@ -153,8 +439,8 @@ jobs:
       # `include-hidden-files` restores the v3 behaviour this workflow was
       # written against. v4 of this action started excluding dotfiles from the
       # tar by default (`--exclude=.[^/]*`), which would silently deploy a
-      # different set of bytes from the one `deploy-check` just weighed: that
-      # script walks all of dist/ for the 100 MB per-file cap and the payload
+      # different set of bytes from the one `deploy-check` weighed: that script
+      # walks all of dist/ for the 100 MB per-file cap and the payload
       # budgets, hidden files included. A gate that measures a superset of what
       # ships is a gate that can be wrong in the direction nobody notices.
       # Today the only dotfile in dist/ is `.gitkeep`, copied out of

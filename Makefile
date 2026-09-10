@@ -4,17 +4,28 @@
 
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
-.PHONY: help setup lint typecheck test test-e2e test-perf test-a11y \
+.PHONY: help setup deps browsers lint typecheck test test-e2e test-perf test-a11y \
         assets check-assets check-textures validate-content verify-content verify-art art-handoff art-handoff-blind build preview clean \
-        check-obligations sources
+        check-obligations sources dist-digest verify-dist
 
 help: ## List every target
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| sort \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
-setup: ## Install dependencies and the Playwright browser
+# THREE TARGETS, AND `setup` STILL MEANS WHAT IT MEANT. `make setup` installs
+# the dependencies and the browser, exactly as before; the two halves are named
+# so that a CI job which never opens a browser can skip the half it does not
+# use. `npx playwright install --with-deps chromium` costs 21 s on the runner
+# (measured: 5 s of download, the rest apt-get), and the lint/typecheck/unit/
+# content job and the build job pay it for nothing. Locally, keep typing
+# `make setup` - it is the same two commands in the same order.
+setup: deps browsers ## Install dependencies and the Playwright browser
+
+deps: ## Install the npm dependencies only, with no browser
 	npm ci
+
+browsers: ## Install the Playwright browser and the OS packages it needs
 	npx playwright install --with-deps chromium
 
 lint: ## ESLint, the dependency-cruiser architecture rules, the ADR-0009 obligation gate
@@ -54,14 +65,37 @@ test: ## Vitest unit and integration tests with coverage thresholds
 # config: Playwright deletes outputDir in `createRemoveOutputDirsTask`, which
 # runs BEFORE `globalSetup`, so by the time any hook of ours could refuse, the
 # other run's artefacts are already gone. Use these targets.
-test-e2e: ## Playwright end-to-end suite against the production build
-	npm run test:e2e
+#
+# SHARD=<i>/<n> RUNS ONE SLICE, AND ONLY CI SHOULD PASS IT.
+#
+#     make test-e2e SHARD=3/6      the third sixth of the suite, alone
+#
+# The suites got slow the honest way - they grew - and both configs pin
+# `workers: 1` on CI because these tests drive real-time physics and a second
+# browser on the same runner makes an assertion stated in seconds a measurement
+# of the machine. So the fix for wall clock is MORE MACHINES, not more workers
+# per machine: each shard is a separate runner, each still runs one worker, and
+# each test executes in exactly the environment it executed in before. Nothing
+# is skipped: `--shard=i/n` partitions the suite, the workflows fan every shard
+# into one job, and that job fails if any shard fails.
+#
+# Leave SHARD unset and you get the whole suite, which is what a local run
+# should always be.
+SHARD ?=
+shard_flag = $(if $(SHARD),-- --shard=$(SHARD))
 
+test-e2e: ## Playwright end-to-end suite against the production build (SHARD=i/n for one slice)
+	npm run test:e2e $(shard_flag)
+
+# NOT SHARDABLE, and the missing option is the point. tests/perf pins itself to
+# one worker because it measures frame time; splitting it across runners would
+# mean comparing numbers taken on different machines under different load, which
+# is the same mistake in a new place. It is 7 tests and it does not block.
 test-perf: ## Playwright performance-budget suite
 	npm run test:perf
 
-test-a11y: ## Playwright axe-core accessibility suite
-	npm run test:a11y
+test-a11y: ## Playwright axe-core accessibility suite (SHARD=i/n for one slice)
+	npm run test:a11y $(shard_flag)
 
 assets: ## Build assets/dist from assets/src, then hold both per-level budgets
 	npm run assets
@@ -204,6 +238,32 @@ art-handoff-blind: ## Same, printing no subject id: safe to run AS the identifie
 build: validate-content ## Validate content, build the site, then check the artefact
 	npm run build
 	node scripts/deploy-check.mjs
+
+# THE HAND-OFF BETWEEN THE JOB THAT BUILDS AND THE JOB THAT DEPLOYS.
+#
+# The gate set used to run in the same job as the upload, and deploy-pages.yml's
+# header said why: the bytes uploaded were built by the job that verified them.
+# The gates now run in parallel jobs - that is where the wall clock went - so
+# that sentence needs something to stand on other than "same job".
+#
+# It stands on these two. `dist-digest` prints one SHA-256 over every path and
+# every byte in dist/; the build job records it, the browser suites run against
+# the artefact it describes, and the deploy job re-derives it from what it
+# downloaded before it hands anything to Pages. Same number, same tree, same
+# bytes on the site as under the tests - and a mismatch stops the deploy rather
+# than being discovered later.
+#
+#     make dist-digest                 print the digest (stdout, nothing else)
+#     make verify-dist DIGEST=<sha256> refuse anything that is not that tree
+#
+# DIGEST= with nothing after it is REFUSED, not treated as "no expectation": an
+# unset variable is the one way this could quietly stop comparing, and it would
+# look exactly like a pass.
+dist-digest: ## One sha256 over every file in dist/, for the deploy hand-off
+	@node scripts/dist-digest.mjs
+
+verify-dist: ## Refuse to ship bytes that are not the bytes the gates ran against
+	node scripts/dist-digest.mjs --expect "$(DIGEST)"
 
 # `sync-workflows` used to live here, copying infra/github/workflows into
 # .github/workflows. Both the target and the mirror are gone: .github/workflows

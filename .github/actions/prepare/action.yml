@@ -1,0 +1,83 @@
+# The prelude every gate job shares: Node, the dependencies, and - for the jobs
+# that test the site rather than build it - the exact dist/ the build job
+# produced.
+#
+# THE CHECKOUT IS NOT IN HERE, and cannot be. A local action is addressed by
+# workspace path, so `uses: ./.github/actions/prepare` only resolves once
+# `actions/checkout` has already put this file on disk. Every job therefore
+# checks out first, which is no loss: only one job needs the full history, and
+# the reason it needs it deserves to be written where it is asked for.
+#
+# WHY A COMPOSITE ACTION AND NOT A REUSABLE WORKFLOW
+#
+# ci.yml and deploy-pages.yml now run the same job graph and differ only in
+# their trigger and their tail, so the obvious move is `workflow_call`. It is the
+# wrong one HERE, and the reason is in ci.yml's header: two job names are
+# required status checks on main, matched character for character. A job that
+# runs a reusable workflow does not report under its own name - every job inside
+# it reports as "<caller job> / <inner job>" - so moving the graph into a
+# reusable workflow renames both required contexts, and a required context that
+# never reports leaves every open pull request on "Expected - Waiting for status
+# to be reported" with no error anywhere. Silent, not loud.
+#
+# So the job GRAPH is written out in both files and the repeated STEPS live
+# here. That removes the duplication that actually drifts - action versions, the
+# Node major, the install command - and leaves duplicated the part a reader
+# needs to see in place anyway.
+name: Prepare the workspace
+description: Install Node and dependencies, and optionally fetch the built site.
+
+inputs:
+  browser:
+    description: >
+      "true" also installs the Playwright browser and its OS packages, which
+      costs 21 s on the runner. Jobs that never open a browser leave this alone
+      and run `make deps` instead of `make setup`.
+    required: false
+    default: 'false'
+  built:
+    description: >
+      "true" downloads the `site` and `built-assets` artefacts the build job
+      uploaded, into dist/ and assets/dist/. The browser suites serve THOSE
+      bytes - they do not rebuild - which is what lets the deploy job prove that
+      what shipped is what was tested.
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+        cache: npm
+
+    # `make deps` is `npm ci`; `make setup` is that plus the browser. Both are
+    # Makefile targets, so a green `make` locally is still the check CI runs.
+    - name: Install
+      shell: bash
+      run: make ${{ inputs.browser == 'true' && 'setup' || 'deps' }}
+
+    # ONE BUILD PER RUN. These two artefacts are written once, by the build job,
+    # and every suite that needs a built tree downloads them rather than running
+    # `make build` again. Two reasons, and the second is the important one:
+    #   - a rebuild per shard would cost more than the sharding saves;
+    #   - the browser suites must exercise the SAME BYTES the deploy uploads.
+    #     Rebuilding "the same commit" in nine jobs makes that a claim about
+    #     reproducibility instead of a fact, and nothing here checks it.
+    # `site` is dist/, the thing that ships. `built-assets` is assets/dist/,
+    # which the a11y and perf harnesses need because they are served by a Vite
+    # dev server (vite.config.ts sets publicDir: 'assets/dist').
+    - name: Download the built site
+      if: inputs.built == 'true'
+      uses: actions/download-artifact@v8
+      with:
+        name: site
+        path: dist
+
+    - name: Download the built assets
+      if: inputs.built == 'true'
+      uses: actions/download-artifact@v8
+      with:
+        name: built-assets
+        path: assets/dist

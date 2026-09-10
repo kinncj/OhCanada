@@ -62,9 +62,12 @@
 # other run's artefacts are already gone. If you are automating this repository,
 # call `make test-e2e`.
 #
-# Serial runs are unaffected, and so is CI -- ci.yml and deploy-pages.yml run
-# these targets one after another in a single job, so the lock is never contended
-# there.
+# Serial runs are unaffected, and so is CI. Both workflows used to run these
+# targets one after another in a single job; they now run them in separate jobs,
+# six e2e shards and two a11y shards, each on its own runner with its own
+# checkout and its own /tmp. Either way no two Playwright runs share a working
+# tree, so the lock is never contended in CI -- it is here for the person who
+# starts a second run by hand.
 
 set -euo pipefail
 
