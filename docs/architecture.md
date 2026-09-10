@@ -297,7 +297,7 @@ is recorded there.
 |---|---|---|---|
 | `ContentRepository` | fetch, ajv, caching | Async, `Result`-returning; `unload` serves the texture budget (ADR-0013) | Consumed |
 | `ProgressRepository` | IndexedDB, `localStorage`, quota, private mode | `ok(null)` means "no save", not "storage failed" — and never means "the store would not answer" (ADR-0024, ADR-0026) | Consumed |
-| `SaveCodec` | the export/import format | `decode` validates and migrates; never trusts its input. Save format version 2; the first real migration (1 -> 2) landed with ADR-0026 and retired ADR-0015's tripwire | Consumed |
+| `SaveCodec` | the export/import format | `decode` validates and migrates; never trusts its input. Save format **version 3**: 1 -> 2 landed with ADR-0026 and retired ADR-0015's tripwire, 2 -> 3 with ADR-0027, which made an exam attempt a record of the exam rather than a score line and gave the unfinished exam a field of its own | Consumed |
 | `Clock` | `Date.now`, `performance.now` | `now()` for scheduling, `elapsed()` monotonic for timers. **No `nowIso()`** — ADR-0015 removed it; `toIsoInstant(clock.now())` is the one conversion | Consumed |
 | `RandomSource` | `Math.random` | Seeded variant makes an exam draw replayable | Consumed |
 | `Locomotion` | how a mode moves | Pure `step`; implementations live in the domain | Consumed |
