@@ -57,7 +57,10 @@ Portrait-first 2D side-scrolling game teaching the official IRCC Canadian citize
   EN and FR text, and non-verbatim wording. Author and verifier are separate agents; the author never sets
   verification status, the verifier never edits question text.
 - `volatile` items are re-verified every run and quarantined when the source changes or `asOf` exceeds 180 days.
-- ≥ 30 verified questions per subject before that level ships.
+- ≥ 30 verified questions per subject before that level ships. No subject is exempt, however short its
+  chapter. A subject is a teaching **remit**, not a chapter of *Discover Canada*: it draws from wherever
+  in the guide its material appears, and two subjects may share a chapter but never a proposition
+  (identified by `source.quote`). ADR-0028.
 - Indigenous content follows `docs/content-review.md`: name the nation depicted, no invented patterns, no
   sacred items as props, no caricature. Cartoon proportions are identical for all characters.
 

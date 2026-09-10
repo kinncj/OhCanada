@@ -172,6 +172,7 @@
 
     "sourceChapter": {
       "title": "Source chapter",
+      "$comment": "There is deliberately NO `level` property here. One existed, described as \"which of the ten levels teaches this chapter\", it had no caller, and it was false: eleven `government` questions (level 4) cite the Federal Elections chapter (level 5) and interleave with `elections` questions on pages 60, 62 and 66. A subject is a teaching remit and a chapter is where the sentences are; the relation is many-to-many and the unit of exclusive claim is the proposition, identified by a question's `source.quote` and checked in `tests/unit/contracts/a-proposition-belongs-to-one-subject.test.ts`. See ADR-0028. `additionalProperties: false` below is what stops the field coming back.",
       "type": "object",
       "properties": {
         "title": {
@@ -184,12 +185,6 @@
           "description": "Last page of the chapter, inclusive. Without it a chapter is only a START marker and every page after it belongs to the previous chapter by accident - which is how 27 questions from pp. 60-69 came to cite `Federal Elections`, mechanically correct and wrong at a glance. An explicit range is what lets a question's `source.page` be checked against the chapter it claims.",
           "type": "integer",
           "minimum": 1
-        },
-        "level": {
-          "description": "Which of the ten levels teaches this chapter, when one does.",
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 10
         }
       },
       "required": ["title"],
