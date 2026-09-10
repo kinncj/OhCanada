@@ -17,6 +17,13 @@ be able to repeat it. `TN-DIALOGUE-what-a-quest-giver-says.md` carries the decis
 cost; this file carries the rule, so that a reader arriving here is not told something narrower than the
 project actually does. Both files point at each other, as `README.md` requires.
 
+**Amended again 2026-09-09 — one row on the list below now describes nothing this game draws, and it is
+labelled rather than deleted.** The row was "a named ranch, a named grain elevator", for levels 7 and 8, and
+**both levels have now shipped without naming either**. Level 9 shipped in the same change and does exercise
+its row: `content/levels/vancouver.json` names **Canada Place**, so the first entry on this list a player
+will actually meet through a point-of-interest card is level 9's. See the note under the table and
+`OQ-NAMES-6`.
+
 Read `README.md` in this directory first. `TN-LEVELS-2-to-10-spine.md` owns which landmark each level draws;
 `TN-PASSPORT-my-passport.md` reuses this file's rule for what a stamp is named after; each level's own story
 owns its point-of-interest copy and is bound by the rules below.
@@ -38,7 +45,7 @@ looking at or of where they are being sent, and never as anything else.** Concre
    task the player accepted is not chrome, and a tracker that will not name the destination is worse for the
    player who most needs it read aloud.
 3. **A level is named after its place, not after its landmark.** Level 3 is "Québec City" / « Ville de
-   Québec ». The building is what the player finds inside it.
+   Québec ». Level 9 is "Vancouver", not "Canada Place". The building is what the player finds inside it.
 4. **No mark, ever.** No logo, no wordmark, no stylised typeface, no crest, no colour scheme borrowed from a
    brand, no possessive corporate form. The name is set in the game's own body type at the game's own size.
 5. **No claim of association.** No sentence says or implies that the place, its owner or its operator made,
@@ -59,24 +66,35 @@ of place. `OQ-NAMES-1` records what would have to change.
 
 ## The class this covers
 
-| Place | Level | Why it is here |
-|---|---|---|
-| Château Frontenac | 3 | An operating hotel under a live trade name — `OQ-QUEBEC-1` |
-| CN Tower | 5 | A trademarked name, on the skyline as a second recognisability anchor |
-| Toronto City Hall | 5 | Civic, and named after a city, not a business |
-| Canadian Museum for Human Rights | 6 | An institution with its own visual identity |
-| Canada Place | 9 | A building whose name is also a brand |
-| Pier 21 | 1 | A national historic site, named in its own right |
-| A named ranch, a named grain elevator | 7, 8 | `TN-LEVELS` requires a *specific, cited* structure rather than a type |
+| Place | Level | Why it is here | Drawn today? |
+|---|---|---|---|
+| Château Frontenac | 3 | An operating hotel under a live trade name — `OQ-QUEBEC-1` | Yes, in the quest |
+| CN Tower | 5 | A trademarked name, on the skyline as a second recognisability anchor | Yes, in the quest |
+| Toronto City Hall | 5 | Civic, and named after a city, not a business | No |
+| Canadian Museum for Human Rights | 6 | An institution with its own visual identity | Yes, in the level document's point of interest |
+| Canada Place | 9 | A building whose name is also a brand | Yes, in the level document's point of interest |
+| Pier 21 | 1 | A national historic site, named in its own right | Yes, in the quest |
+| A named ranch, a named grain elevator | 7, 8 | `TN-LEVELS` requires a *specific, cited* structure rather than a type | **No — see below** |
 
 Every one of them is drawn from a cited reference with a credit, carries no mark, and may be named under the
 seven rules above. Nothing on this list may be named on a stamp, on the map or in a level title.
 
-**The last row is not exercised today.** `content/levels/prairie-rail.json` names its landmark "Prairie
-grain elevator" — a type, not a trade name — and the art ships blank because every real elevator carries its
-company's name painted across the crib and `make verify-art` refuses lettering (`OQ-PRAIRIE-3`). The row
-stays because it is still right for level 8's named ranch and for any future named reference; it is recorded
-here so nobody reads the table as a claim that level 7 names a business.
+**The last row is not exercised by either of the levels it was written for, and both have now shipped.**
+`content/levels/prairie-rail.json` names its landmark "Prairie grain elevator" and the art ships blank,
+because every real elevator carries its company's name painted across the crib and `make verify-art` refuses
+lettering (`OQ-PRAIRIE-3`). `content/levels/alberta-foothills.json` names its landmark **"Working ranch"** /
+« Ranch en activité » — also a type — even though `assets/style/alberta-foothills-level.md` §0 records that
+the render was measured from the **Bar U Ranch National Historic Site** at Longview from eight CC BY 2.0
+photographs. **"Bar U" appears in the art sheet and in the reference credits and in no player-facing string
+anywhere in this game.** The row stays because it is still the right rule if a named site is ever drawn; it
+is labelled here so nobody reads the table as a claim that this game names a business it does not
+(`OQ-NAMES-6`).
+
+**Level 9 is the row that does the opposite.** `content/levels/vancouver.json` names Canada Place in its
+point-of-interest name **and** its blurb, in both languages, with a `discover-canada` source on the fact —
+which is rules 1, 2 and 7 working exactly as written. `TN-LEVEL-vancouver.md` keeps it off that level's
+loading screen, error card, stamp sentence, play label and interact prompt, and `TN-VANCOUVER-01` asserts
+each of those absences by name.
 
 ## Accessibility and bilingual coverage map
 
@@ -113,12 +131,14 @@ Feature: A real place is named where naming it does a job
 
   Scenario: The level is named after the place
     Then the level's title is "Québec City"
+    And level 9's title is "Vancouver" and not "Canada Place"
     And no level title in this game is the name of a building, a hotel or a business
 
   Scenario: The stamp is named after the place
     Given I earn level 3's stamp
     Then its label in the passport is "Québec City"
     And it is not "Château Frontenac"
+    And level 9's is "Vancouver" and not "Canada Place"
 
   Scenario: The name is nowhere else
     Then no name on this file's list appears on "title-screen", "level-select", "passport",
@@ -141,6 +161,12 @@ Feature: A real place is named where naming it does a job
     Then the card's factual sentences carry a source
     And a dialogue line naming one carries its own "fact" claim
     And the content check fails the build for a factual sentence with none
+
+  Scenario: A landmark named as a type is not on this list at all
+    Given a level document names its landmark "Prairie grain elevator" or "Working ranch"
+    Then no rule in this file applies to that string
+    And it may appear in the point-of-interest card like any other authored name
+    And nothing in this game names the specific building the art was measured from
 ```
 
 ## TN-NAMES-02 — A name is text, so everybody gets it
@@ -186,6 +212,7 @@ Feature: The name is a string, not a picture
 Feature: A name that is the same in both languages says so
   Scenario: A name identical in English and French is written identically
     Then the card shows "Château Frontenac" in English and "Château Frontenac" in French
+    And it shows "Canada Place" in English and "Canada Place" in French
     And the key has a value in both languages, not one value used for both by accident
 
   Scenario: The sentence around the name is a translation of meaning
@@ -230,6 +257,7 @@ Feature: The rule is checkable, not a promise
   Scenario: The exception is a set of paths, not a document
     Then the only content fields allowed to carry such a name are a quest document's "summary",
       its "dialogue[].text" and its "steps[].prompt"
+    And a point of interest's own "name" and "blurb" are the other place, as rule 2 allows
     And such a name in any other field of any document fails the check
 
   Scenario: Lettering in the art fails the art check
@@ -245,6 +273,12 @@ Feature: The rule is checkable, not a promise
   Scenario: The list is data, not a habit
     Then the names this check looks for are declared in one place
     And adding a level that names a real place adds its name to that list in the same change
+    And "Canada Place" is on that list because level 9 names it
+
+  Scenario: A row on the list that nothing draws is reported, not silently kept
+    Then a name on the list that appears in no shipped document is reported by the check
+    And the report is not a failure, because a rule may be written before it is exercised
+    And the report names the row, so the list cannot quietly describe a game that does not exist
 ```
 
 ---
@@ -256,20 +290,23 @@ Feature: The rule is checkable, not a promise
   which is a worse card in plain-language terms — "the big hotel above the river" is evasive, and a newcomer
   who later hears the name has learned nothing transferable. **Since 2026-09-09 the cost is larger than one
   copy pass**: three shipped quest documents name their destination in a summary, a dialogue line and a step
-  prompt, so the stricter line is a content pass over `content/quests/` as well. *Recommendation:* ship the
-  decision above, and put it in front of the project owner before the first public build, exactly as
-  `OQ-TITLE-4` does for the not-official sentence. What must not happen is the name being used more widely
-  than rule 2 allows because nobody re-read this file.
+  prompt, and **two shipped level documents name a building in a point of interest** — Winnipeg's museum and
+  Vancouver's Canada Place — so the stricter line is a content pass over `content/quests/` and
+  `content/levels/` both. *Recommendation:* ship the decision above, and put it in front of the project owner
+  before the first public build, exactly as `OQ-TITLE-4` does for the not-official sentence. What must not
+  happen is the name being used more widely than rule 2 allows because nobody re-read this file.
 - **`OQ-NAMES-2` — does this file cover people as well as places?** No. Depicting or naming a person is
   `docs/content-review.md`'s subject, and it is stricter in ways this file must not appear to soften.
   *Recommendation:* keep this file about places and buildings only, and say so at the top of any level story
   that names a person. **A character's own name is `npc.<id>.name` and is a role**, which
   `TN-GUIDE-the-guide.md` and `TN-LEVEL-ottawa.md` own for the two characters that exist.
 - **`OQ-NAMES-3` — where does the checkable list of names live?** `TN-NAMES-04` requires one place that
-  declares the names the content check looks for, and nothing in `content/` has one today.
-  *Recommendation:* beside the reference credits, since every name on the list already has a cited reference
-  in `assets/refs/references.json`. Routed to the architect; `content/` and `assets/` are not this
-  directory's to edit.
+  declares the names the content check looks for, and nothing in `content/` has one today. **It now has to
+  hold "Canada Place" as well**, and "Canada Place" is the hardest string on it to check for, because
+  "Canada" appears in dozens of legitimate sentences and the check has to match the whole phrase and not the
+  first word. *Recommendation:* beside the reference credits, since every name on the list already has a
+  cited reference in `assets/refs/references.json`, and match on the full phrase. Routed to the architect;
+  `content/` and `assets/` are not this directory's to edit.
 - **`OQ-NAMES-4` — is level 3's point-of-interest copy written yet?** No — but its **quest** is, and it names
   the building three times (`content/quests/quebec-city-chateau-frontenac.json`). That is allowed under rule
   2 as amended, and it means the first place a player will read this name is a line of dialogue rather than
@@ -284,3 +321,13 @@ Feature: The rule is checkable, not a promise
   going. *Recommendation:* keep the exception mechanical — three JSON paths in one document type — and
   review it the next time a quest document gains a field, because the way this rule fails is by a fourth
   field quietly joining the set.
+- **`OQ-NAMES-6` — the "named ranch, named grain elevator" row describes nothing, twice over, and that is a
+  finding about `TN-LEVELS` rather than about this file.** `OQ-PRAIRIE-3` kept the row on the grounds that it
+  was "still right for level 8's named ranch"; level 8 has since shipped with a landmark called "Working
+  ranch". Both levels are regions rather than cities, both were asked by `TN-LEVELS` for "one specific,
+  cited, existing structure", both got one — and **in both cases the name that would identify it is either
+  painted on the building (which `verify-art` refuses) or is a site's name the level chose not to use.** The
+  pattern is not an accident and `OQ-SPINE-6` is where it belongs: a region's anchor identifies a *type*.
+  *Recommendation:* keep the row and keep the label above it, and let `TN-NAMES-04`'s last scenario report an
+  unexercised row rather than assert one. If a third region ships the same way, `TN-LEVELS` should stop
+  asking for a named structure and start asking for a cited one, which is what it actually gets.
