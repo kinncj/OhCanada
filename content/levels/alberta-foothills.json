@@ -227,7 +227,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "alberta-foothills-ranch-barn"
+  ],
   "pois": [
     {
       "id": "ranch-barn",
@@ -264,10 +266,21 @@
         "y": 1280
       },
       "artKey": "alberta-foothills-landmark-ranch-barn",
-      "radiusPx": 300
+      "radiusPx": 300,
+      "questId": "alberta-foothills-ranch-barn"
     }
   ],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "guide",
+      "position": {
+        "x": 1200,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "alberta-foothills-ranch-barn"
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 37748736
 }

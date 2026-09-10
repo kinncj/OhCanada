@@ -1,0 +1,196 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "alberta-foothills-ranch-barn",
+  "levelId": "alberta-foothills",
+  "giver": "guide",
+  "title": {
+    "en": "The Ranch in the Foothills",
+    "fr": "Le ranch dans les contreforts"
+  },
+  "summary": {
+    "en": "Ride across the foothills with your guide to the working ranch. You answer three questions about Canada's economy there.",
+    "fr": "Traversez les contreforts à cheval avec votre guide jusqu'au ranch en activité. Vous répondez à trois questions sur l'économie du Canada là-bas."
+  },
+  "declinedLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "That is fine. The horses will wait. Come and find me when you want to ride.",
+      "fr": "C'est bien ainsi. Les chevaux vont attendre. Venez me voir quand vous voudrez partir."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "Keep riding along the fence line. The ranch barn is ahead of you.",
+      "fr": "Continuez à chevaucher le long de la clôture. La grange du ranch est devant vous."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "Alberta also has the Badlands. Their rough ground holds some of the richest beds of dinosaur bones and old fossils in the world.",
+      "fr": "L'Alberta a aussi les Badlands. Leur sol accidenté renferme parmi les plus riches gisements d'ossements de dinosaures et de vieux fossiles au monde."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 101,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "The rugged Badlands house some of the world’s richest deposits of prehistoric fossils and dinosaur finds."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "You rode across the foothills to the ranch and answered three questions about Canada's economy.",
+      "fr": "Vous avez traversé les contreforts à cheval jusqu'au ranch et répondu à trois questions sur l'économie du Canada."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "steps": [
+    {
+      "id": "meet-the-guide",
+      "kind": "talk",
+      "targetId": "guide",
+      "prompt": {
+        "en": "Talk to your guide",
+        "fr": "Parlez à votre guide"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Good morning! Take the reins. We ride from here.",
+            "fr": "Bonjour! Prenez les rênes. On part d'ici."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "Alberta has national parks. Banff National Park was created in 1885.",
+            "fr": "L'Alberta a des parcs nationaux. Le parc national Banff a été créé en 1885."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 101,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-09T00:00:00Z",
+              "volatile": false,
+              "quote": "Alberta has five national parks, including Banff National Park, established in 1885."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Alberta is known for farming too. Its big cattle ranches help make Canada one of the world's main beef producers.",
+            "fr": "L'Alberta est aussi reconnue pour l'agriculture. Ses grands ranchs de bétail aident à faire du Canada un des principaux producteurs de bœuf au monde."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 101,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-09T00:00:00Z",
+              "volatile": false,
+              "quote": "Alberta is also renowned for agriculture, especially for the vast cattle ranches that make Canada one of the world’s major beef producers."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Follow the trail to the ranch barn. I will ask you three questions when we get there.",
+            "fr": "Suivez la piste jusqu'à la grange du ranch. Je vous poserai trois questions une fois là-bas."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "ride-to-the-ranch",
+      "kind": "visit",
+      "targetId": "ranch-barn",
+      "prompt": {
+        "en": "Ride to the ranch",
+        "fr": "Rendez-vous au ranch à cheval"
+      }
+    },
+    {
+      "id": "answer-at-the-ranch",
+      "kind": "answer",
+      "targetId": "economy",
+      "subject": "economy",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions",
+        "fr": "Répondez à 3 questions"
+      }
+    }
+  ]
+}

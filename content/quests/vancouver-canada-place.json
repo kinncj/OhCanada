@@ -1,0 +1,196 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "vancouver-canada-place",
+  "levelId": "vancouver",
+  "giver": "officer",
+  "title": {
+    "en": "Symbols on the Waterfront",
+    "fr": "Des symboles sur le front de mer"
+  },
+  "summary": {
+    "en": "Skate along the waterfront to Canada Place with the officer. Then answer three questions about Canada's symbols.",
+    "fr": "Roulez en planche à roulettes le long du front de mer jusqu'à Canada Place avec l'agent. Répondez ensuite à trois questions sur les symboles du Canada."
+  },
+  "declinedLine": {
+    "speaker": "officer",
+    "expression": "neutral",
+    "text": {
+      "en": "That is all right. I will be here by the water when you are ready.",
+      "fr": "C'est correct. Je serai ici, au bord de l'eau, quand vous serez prêt."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "officer",
+    "expression": "neutral",
+    "text": {
+      "en": "Keep rolling along the water. Canada Place is ahead of you.",
+      "fr": "Continuez à rouler le long de l'eau. Canada Place est devant vous."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "officer",
+    "expression": "happy",
+    "text": {
+      "en": "My police service, the courts and Parliament all work under the Crown. The Crown is a symbol of government in Canada.",
+      "fr": "Mon service de police, les tribunaux et le Parlement relèvent tous de la Couronne. La Couronne est un symbole du gouvernement au Canada."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "Canadian Symbols",
+        "page": 78,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "The Crown is a symbol of government, including Parliament, the legislatures, the courts, police services and the Canadian Forces."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "officer",
+    "expression": "happy",
+    "text": {
+      "en": "You skated along the waterfront to Canada Place and answered three questions about Canada's symbols.",
+      "fr": "Vous avez roulé en planche le long du front de mer jusqu'à Canada Place et répondu à trois questions sur les symboles du Canada."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "steps": [
+    {
+      "id": "talk-to-the-officer",
+      "kind": "talk",
+      "targetId": "officer",
+      "prompt": {
+        "en": "Talk to the officer",
+        "fr": "Parlez à l'agent"
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "Hello! Welcome to the Vancouver waterfront.",
+            "fr": "Bonjour! Bienvenue sur le front de mer de Vancouver."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Canada has a motto in Latin, A Mari Usque Ad Mare. It means from sea to sea. The country took it after the First World War.",
+            "fr": "Le Canada a une devise en latin, A Mari Usque Ad Mare. Elle signifie « d'un océan à l'autre ». Le pays l'a adoptée après la Première Guerre mondiale."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canadian Symbols",
+              "page": 80,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-09T00:00:00Z",
+              "volatile": false,
+              "quote": "As an expression of national pride after the First World War, Canada adopted an official coat of arms and a national motto, A Mari Usque Ad Mare, which in Latin means “from sea to sea.”"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "The maple leaf is the country's best-known symbol. French Canadians took it up in the 1700s, and it has been on our uniforms since the 1850s.",
+            "fr": "La feuille d'érable est le symbole le plus connu du pays. Les Canadiens français l'ont adoptée dans les années 1700, et elle est sur nos uniformes depuis les années 1850."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canadian Symbols",
+              "page": 79,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-09T00:00:00Z",
+              "volatile": false,
+              "quote": "The maple leaf is Canada’s best-known symbol. Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Now skate along to Canada Place. I will ask you three questions there.",
+            "fr": "Maintenant, roulez jusqu'à Canada Place. Je vous poserai trois questions là-bas."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "skate-to-canada-place",
+      "kind": "visit",
+      "targetId": "canada-place",
+      "prompt": {
+        "en": "Skate to Canada Place",
+        "fr": "Rendez-vous à Canada Place"
+      }
+    },
+    {
+      "id": "answer-at-canada-place",
+      "kind": "answer",
+      "targetId": "symbols",
+      "subject": "symbols",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions",
+        "fr": "Répondez à 3 questions"
+      }
+    }
+  ]
+}

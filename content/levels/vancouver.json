@@ -219,7 +219,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "vancouver-canada-place"
+  ],
   "pois": [
     {
       "id": "canada-place",
@@ -236,7 +238,7 @@
         "source": {
           "sourceId": "discover-canada",
           "chapter": "Canadian Symbols",
-          "page": 78,
+          "page": 79,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-09T00:00:00Z",
@@ -256,10 +258,21 @@
         "y": 1280
       },
       "artKey": "vancouver-landmark-canada-place",
-      "radiusPx": 320
+      "radiusPx": 320,
+      "questId": "vancouver-canada-place"
     }
   ],
-  "characters": [],
+  "characters": [
+    {
+      "characterId": "officer",
+      "position": {
+        "x": 1150,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "vancouver-canada-place"
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 37748736
 }
