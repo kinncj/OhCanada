@@ -1,0 +1,265 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "vancouver",
+  "subject": "symbols",
+  "order": 9,
+  "title": {
+    "en": "Vancouver",
+    "fr": "Vancouver"
+  },
+  "size": {
+    "x": 7680,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 420,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#3d8ccb",
+    "ground": "#605a55",
+    "horizon": "#a5d6ee",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Musqueam Indian Band",
+      "Squamish Nation",
+      "Tsleil-Waututh Nation"
+    ],
+    "statement": {
+      "en": "This level is set on the Vancouver waterfront, on the shore of Burrard Inlet. These lands and waters are the traditional territories of the Musqueam, the Squamish and the Tsleil-Waututh. The Tsleil-Waututh are the People of the Inlet, and their territory takes in Burrard Inlet — səlilwət — and the waters that drain into it.",
+      "fr": "Ce niveau se déroule sur le front de mer de Vancouver, au bord de la baie Burrard. Ces terres et ces eaux sont les territoires traditionnels des Musqueam, des Squamish et des Tsleil-Waututh. Les Tsleil-Waututh sont le peuple de la baie, et leur territoire comprend la baie Burrard — səlilwət — et les eaux qui s'y déversent."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "twnation-our-story",
+        "chapter": "Our Story",
+        "url": "https://twnation.ca/our-story/",
+        "sourceHash": "3b401ed259aa6b5cbf94cf01c0bf69fdca7ec65eb8206b6db433365c999107a7",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": true,
+        "quote": "a distinct Coast Salish Nation whose territory includes səlilwət (Burrard Inlet) and the waters draining into it"
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "MST Development Corporation, The Partners (the development corporation the Musqueam Indian Band, Squamish Nation and Tsleil-Waututh Nation own jointly, whose page names all three and speaks in all three voices)",
+      "url": "https://mstdevelopment.ca/the-partners/",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.13,
+    "deadZone": {
+      "x": 70,
+      "y": 120
+    },
+    "offset": {
+      "x": 160,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1920,
+      "y": 1280
+    },
+    {
+      "x": 3840,
+      "y": 1280
+    },
+    {
+      "x": 5760,
+      "y": 1280
+    },
+    {
+      "x": 7680,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "vancouver-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.05,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "vancouver-layer-20-north-shore",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.12,
+        "y": 0.05
+      },
+      "offset": {
+        "x": 0,
+        "y": 660
+      },
+      "repeatX": true
+    },
+    {
+      "key": "vancouver-layer-30-inlet",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.32,
+        "y": 0.14
+      },
+      "offset": {
+        "x": 0,
+        "y": 860
+      },
+      "repeatX": true
+    },
+    {
+      "key": "vancouver-layer-40-seawall",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 900
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "skateboard",
+      "maxSpeed": 520,
+      "acceleration": 1600,
+      "deceleration": 900,
+      "turnAcceleration": 1200,
+      "glide": 0.62,
+      "maxSpeedMultiplierDownhill": 1.25,
+      "drive": "held",
+      "jump": {
+        "impulse": 760,
+        "maxHoldMs": 0,
+        "airControl": 0.55,
+        "coyoteMs": 100,
+        "bufferMs": 130,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 240,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 70
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.skateboard.label"
+    },
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "canada-place",
+      "name": {
+        "en": "Canada Place",
+        "fr": "Canada Place"
+      },
+      "blurb": {
+        "en": "Canada's flag flew for the first time in 1965. Its red, white and red bands come from the flag of the Royal Military College in Kingston, founded in 1876, and the maple leaf on it is the country's best-known symbol.",
+        "fr": "Le drapeau du Canada a flotté pour la première fois en 1965. Ses bandes rouge, blanche et rouge proviennent du drapeau du Collège militaire royal de Kingston, fondé en 1876, et la feuille d'érable qui s'y trouve est le symbole le plus connu du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 78,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "A new Canadian flag was raised for the first time in 1965. The red-white-red pattern comes from the flag of the Royal Military College, Kingston, founded in 1876."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3840,
+        "y": 1280
+      },
+      "artKey": "vancouver-landmark-canada-place",
+      "radiusPx": 320
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 37748736
+}

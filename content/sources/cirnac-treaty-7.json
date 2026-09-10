@@ -1,0 +1,58 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "cirnac-treaty-7",
+  "title": "Treaty Texts: Treaty and Supplementary Treaty No. 7",
+  "publisher": "Crown-Indigenous Relations and Northern Affairs Canada",
+  "edition": "Transcription of the 1966 Queen's Printer reprint of the 1877 edition, web page fetched 9 September 2026",
+  "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028793/1581292336658",
+  "file": "cirnac-treaty-7.html",
+  "extractedText": "cirnac-treaty-7.txt",
+  "sha256": "762d65ef037648210f783904caad20b40aefde3d8d4e4cd63c9d0b5f2cf5e518",
+  "extractedTextSha256": "93a61bc461fa0bff50e6d270270ec756964693e6ab188c3e7cf0bc8d51fb53e2",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/cirnac-treaty-7.html",
+    "reproducedAt": "2026-09-09"
+  },
+  "bytes": 43549,
+  "retrievedAt": "2026-09-09",
+  "licence": "Crown copyright, Government of Canada. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Treaty No. 7",
+      "level": 8
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "The Crown's own words, not a nation's account of its own territory",
+      "problem": "This is the treaty text as the Crown transcribed and reprinted it. It is a primary source for WHERE the treaty area is and WHEN the treaty was made, and it is not a source for who anyone is: the articles name the parties as `the Blackfeet, Blood, Piegan, Sarcee, Stony and other Indians`, which are nineteenth-century exonyms and are not what any of those nations calls itself. content/levels/alberta-foothills.json quotes this document ONLY for the geography and the date, and takes every nation NAME from the Treaty 7 First Nations Chiefs' Association's own About page instead. No exonym from this document appears anywhere in the game.",
+      "affects": [
+        "Treaty No. 7"
+      ],
+      "grain": "chapter",
+      "action": "if a verifier is ever tempted to widen the quoted sentence, stop at the geography. A nation's name is the nationSource's job and never this document's."
+    },
+    {
+      "topic": "One government page, revised without notice, whose hash covers the whole template",
+      "problem": "The transcription itself is a fixed historical text, but it sits in a canada.ca template with navigation, a date-modified stamp and a feedback widget, all of which move for reasons that have nothing to do with the treaty. The `sha256` will drift while the claim does not.",
+      "affects": [
+        "Treaty No. 7"
+      ],
+      "grain": "chapter",
+      "action": "when the hash stops matching, compare the extracted text around `north of the United States Boundary Line` before assuming the claim moved"
+    },
+    {
+      "topic": "The statement is about Treaty No. 7 and is silent about the Metis",
+      "problem": "The Bar U Ranch sits in the Metis Nation of Alberta's Region 3, and this document says nothing about that: it is a treaty text and the Metis are not party to it. A level document carries exactly ONE `nationSource` and one `fact.source`, so the statement cannot carry both a treaty account and a Metis one without a second of each. It is narrowed to what the two cited bodies say rather than widened past them.",
+      "affects": [
+        "Treaty No. 7"
+      ],
+      "grain": "chapter",
+      "action": "routed to content and to the schema owner: this is the second level to hit the one-nationSource limit, after content/levels/winnipeg.json. Do not fill the gap by paraphrasing an uncited claim about the Metis into the statement."
+    }
+  ],
+  "grainNote": "One web page and one heading, so all three flags are at chapter grain. The first is about what this document is entitled to say, the second about how often its bytes move, and the third about what it does not cover; a re-fetch answers only the second."
+}

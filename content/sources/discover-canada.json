@@ -9,6 +9,13 @@
   "extractedText": "discover-canada-2012-large-print.txt",
   "sha256": "3426e3f4465b8b518262fb7b91a493b1ceae6ae239e5d9aeb2dd40f348dbd4fb",
   "extractedTextSha256": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+  "extraction": {
+    "tool": "pdftotext (poppler-utils)",
+    "version": "26.08.0",
+    "versionCommand": "pdftotext -v",
+    "command": "pdftotext -layout content/sources/discover-canada-2012-large-print.pdf -",
+    "reproducedAt": "2026-09-09"
+  },
   "bytes": 910364,
   "pages": 129,
   "retrievedAt": "2026-09-08",

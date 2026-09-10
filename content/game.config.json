@@ -16,7 +16,9 @@
     "ottawa",
     "toronto",
     "winnipeg",
-    "prairie-rail"
+    "prairie-rail",
+    "alberta-foothills",
+    "vancouver"
   ],
   "locomotionModes": [
     "walk",
@@ -51,7 +53,9 @@
       "ottawa",
       "toronto",
       "winnipeg",
-      "prairie-rail"
+      "prairie-rail",
+      "alberta-foothills",
+      "vancouver"
     ],
     "stampsToUnlockNext": 1
   },

@@ -1,0 +1,58 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "twnation-our-story",
+  "title": "Our Story - Tsleil-Waututh Nation",
+  "publisher": "Tsleil-Waututh Nation",
+  "edition": "Nation website, Our Story page, fetched 9 September 2026",
+  "url": "https://twnation.ca/our-story/",
+  "file": "twnation-our-story.html",
+  "extractedText": "twnation-our-story.txt",
+  "sha256": "8eb8ae8c7973c57a9187b9e8788dbd13dac93daca21f7cbc804c5ebfaf4a52c2",
+  "extractedTextSha256": "3b401ed259aa6b5cbf94cf01c0bf69fdca7ec65eb8206b6db433365c999107a7",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/twnation-our-story.html",
+    "reproducedAt": "2026-09-09"
+  },
+  "bytes": 305874,
+  "retrievedAt": "2026-09-09",
+  "licence": "Copyright Tsleil-Waututh Nation. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Our Story",
+      "level": 9
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "A nation speaking for itself, and for nobody else",
+      "problem": "This is the strongest kind of source docs/content-review.md 3.2 asks for - the nation's own published account of its own territory, in its own first person - and it covers exactly ONE of the three nations content/levels/vancouver.json names. The quoted sentence is about Tsleil-Waututh territory. The Musqueam and the Squamish are named from a separate page, MST Development Corporation's `The Partners`, which the three nations own jointly and which speaks in all three voices; that page is the level's `nationSource`. A level carries one `fact.source` and one `nationSource`, so the two halves of the statement rest on two different documents and only one of them is registered here.",
+      "affects": [
+        "Our Story"
+      ],
+      "grain": "chapter",
+      "action": "routed rather than hidden. Either the schema gains more than one source per statement, or a verifier finds one page published jointly by all three nations that states the territory as well as the names. Do not narrow the statement to the Tsleil-Waututh alone: downtown Vancouver is within all three territories and naming one would be a smaller claim than the truth."
+    },
+    {
+      "topic": "A live nation website with no date on the page",
+      "problem": "The page carries news, a strategic plan and video links beside the historical account, so its hash will move for reasons that have nothing to do with the quoted sentence.",
+      "affects": [
+        "Our Story"
+      ],
+      "grain": "chapter",
+      "action": "when the hash stops matching, re-read the sentence containing `whose territory includes` before assuming the claim moved"
+    },
+    {
+      "topic": "The word `unceded` is deliberately absent from the level's statement",
+      "problem": "No treaty covers the city of Vancouver and the word `unceded` is the one nearly every Canadian institution uses for it. This page does not use it, and content/levels/vancouver.json therefore does not either. That is the `say nothing a source does not` rule applied to a word that would have been easy and defensible to write.",
+      "affects": [
+        "Our Story"
+      ],
+      "grain": "chapter",
+      "action": "if the statement is ever to say `unceded`, cite a page that says it. Do not add the word on the strength of it being true."
+    }
+  ],
+  "grainNote": "One web page and one heading. The first flag is about what this document is entitled to cover, the second about how often its bytes move, and the third about a word the statement leaves out on purpose."
+}

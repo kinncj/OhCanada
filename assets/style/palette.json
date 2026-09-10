@@ -142,6 +142,9 @@
     "grass-light": "#89c05f",
     "grass-base": "#56993a",
     "grass-shade": "#276121",
+    "pasture-light": "#9dac53",
+    "pasture-base": "#677b37",
+    "pasture-shade": "#30451c",
     "wood-light": "#c5994d",
     "wood-base": "#96632f",
     "wood-shade": "#5a2d19",
@@ -263,7 +266,7 @@
       "base": "oxide-base",
       "shade": "oxide-shade",
       "derived": true,
-      "material": "Red-oxide paint on board-and-batten timber: the prairie grain elevator. Base authored from assets/refs/prairie-rail/grain-elevator-chamberlain.jpg as the HSL midpoint of the two large measured faces - the sunlit driveway annex, median of 300x120 at (120,1080) = hsl(8,73%,36%), and the shaded crib gable, median of 320x560 at (740,620) = hsl(13,63%,32%) - giving hsl(11,68%,34%) = #91301c. NOT `brick`, whose base is hsl(17,52%,44%): eight degrees more orange, sixteen points less saturated and ten points lighter, which under this palette's own three-tone rule turns a painted elevator into a masonry wall. Light and shade are the published formula."
+      "material": "Red-oxide paint on board-and-batten timber: the prairie grain elevator. Base authored from assets/refs/prairie-rail/grain-elevator-chamberlain.jpg as the HSL midpoint of the two large measured faces - the sunlit driveway annex, median of 300x120 at (120,1080) = hsl(8,73%,36%), and the shaded crib gable, median of 320x560 at (740,620) = hsl(13,63%,32%) - giving hsl(11,68%,34%) = #91301c. NOT `brick`, whose base is hsl(17,52%,44%): eight degrees more orange, sixteen points less saturated and ten points lighter, which under this palette's own three-tone rule turns a painted elevator into a masonry wall. Light and shade are the published formula. MEASURED AGAIN 2026-09-09 for the Bar U Ranch barn on the alberta-foothills level, and NO RAMP WAS ADDED, which is the finding. Six medians on three CC BY 2.0 references - work-horse-barn-elevation.jpg at (500,715) hsl(4,56%,21%) and (900,760) hsl(4,50%,21%); work-horse-barn-gable-end.jpg at (1080,430) hsl(7,54%,18%) and (1250,430) hsl(3,52%,22%); percheron-at-the-barn-wall.jpg at (60,250) hsl(8,51%,26%) and (360,230) hsl(5,37%,23%) - median hsl(5,51%,21%). All three photographs are late-evening or overcast, so the sample is about 13 points of lightness below the material; corrected for the photograph's own light it lands near hsl(6,60%,34%), which is five degrees and eight points of saturation from this ramp's own base at the same lightness. Barn red and elevator red are the same red-oxide paint on the same painted timber, and a second ramp would have been this palette's first duplicate."
     },
     "cobalt": {
       "light": "cobalt-light",
@@ -291,7 +294,7 @@
       "base": "ice-base",
       "shade": "ice-shade",
       "derived": true,
-      "material": "Rideau Canal skateway ice. Also architectural curtain-wall glazing: the Canadian Museum for Human Rights' glass cloud, measured at hsl(203,41%,80%) sunlit on winnipeg/cmhr-elevation-from-the-river.jpg against ice-base's hsl(202,52%,78%) - one degree of hue apart, which is why no glass ramp was added."
+      "material": "Rideau Canal skateway ice. Also architectural curtain-wall glazing: the Canadian Museum for Human Rights' glass cloud, measured at hsl(203,41%,80%) sunlit on winnipeg/cmhr-elevation-from-the-river.jpg against ice-base's hsl(202,52%,78%) - one degree of hue apart, which is why no glass ramp was added. Also the North Shore mountains across Burrard Inlet on the vancouver level, measured at hsl(210,48%,65%) and hsl(210,45%,63%) on assets/refs/vancouver/canada-place-and-the-north-shore.jpg against ice-shade's hsl(212,60%,62%) - two degrees of hue and two points of lightness apart - which is the same test that kept the museum's glass out of a ramp of its own."
     },
     "water": {
       "light": "water-light",
@@ -314,6 +317,13 @@
       "derived": true,
       "material": "Summer lawn on the Hill."
     },
+    "pasture": {
+      "light": "pasture-light",
+      "base": "pasture-base",
+      "shade": "pasture-shade",
+      "derived": true,
+      "material": "Foothills rangeland: the rough-fescue pasture of the Alberta foothills, and the level's largest colour area. Base authored 2026-09-09 from three independent medians on two CC BY 2.0 references - assets/refs/alberta-foothills/foothills-and-front-range.jpg, 350x60 of sunlit near pasture at (1150,520) = hsl(75,35%,38%) and 300x30 of mid pasture at (900,470) = hsl(83,18%,36%), and alberta-foothills/log-rail-fence.jpg, 300x60 of sunlit turf at (1200,800) = hsl(79,40%,29%) - giving hsl(78,38%,35%) = #677b37. Light and shade are the published formula. IT IS NOT `grass`, and that was checked the way `felt` was checked for prairie straw rather than argued: `grass` spans hue 94 (light) to 114 (shade) and every one of the three measurements falls OUTSIDE that span, 11 to 19 degrees to the yellow side. `grass` is the mown summer lawn on Parliament Hill; this is dry native bunchgrass, and one ramp for both would make the Alberta foothills the same material as an Ottawa lawn. `felt` was the other candidate and is rejected in the other direction: its base is hsl(31,49%,55%), which is cut straw, not living grass."
+    },
     "wood": {
       "light": "wood-light",
       "base": "wood-base",
@@ -326,7 +336,7 @@
       "base": "path-base",
       "shade": "path-shade",
       "derived": true,
-      "material": "Stone paving, asphalt, concrete. The only near-neutral ramp."
+      "material": "Stone paving, asphalt, concrete. The only near-neutral ramp. Also weathered cedar shingle: the Bar U barn roof medians hsl(20,5%,50%), hsl(26,3%,44%) and hsl(0,1%,50%) across three references against this ramp's base at hsl(31,7%,51%), so the roof is drawn in `path` and no grey was added."
     },
     "flag-red": {
       "light": "flag-red-light",
@@ -516,6 +526,24 @@
       "why": "The palest sky in the game and the largest, because on the prairie the sky is most of the picture. Measured on assets/refs/prairie-rail/grain-elevator-chamberlain.jpg: 300x200 px of open sky at (100,100) reads hsl(213,50%,61%), between sky-base and sky-light, and sky-light is taken so that the horizon band can go to cloud-light without a visible step. Shares its zenith with Toronto and its horizon with Halifax; the ground - dark straw rather than pavement - is what keeps all three apart.",
       "skyBandStops": {
         "note": "NONE. prairie-rail/layer-10-sky.svg is ONE FLAT sky-light field. Same reason as Winnipeg's, and harder: at the LOW preset this level keeps the sky and the railbed, and the railbed is transparent everywhere above the rail head, so there is no opaque layer anywhere in the sky's band to hide a step behind."
+      }
+    },
+    "alberta-foothills-late-summer": {
+      "sky": "sky-shade",
+      "ground": "pasture-shade",
+      "horizon": "cloud-shade",
+      "why": "A deep, dry continental blue over foothills rangeland in late summer. MEASURED on assets/refs/alberta-foothills/rangeland-cattle-and-wire-fence.jpg: 1200x60 of open sky at (200,20) reads hsl(214,47%,43%) against sky-shade's hsl(212,69%,39%), and 1200x40 of the haze band at (200,420) reads hsl(215,18%,71%) against cloud-shade's hsl(206,44%,80%) - nine points of lightness apart, which is the largest gap of any horizon in the game and is recorded rather than rounded away, because an atmosphere ramp is hand-authored and exempt from the derivation formula. The ground is the pasture's own turf in shadow, which is the arrangement Halifax arrived at the hard way. This is the third triple whose zenith is sky-shade and no two of the eight triples differ in only one of their three.",
+      "skyBandStops": {
+        "note": "NONE. alberta-foothills/layer-10-sky.svg is ONE FLAT sky-shade field. Same reason as Winnipeg's and the Prairies': at the LOW preset this level keeps the sky and the rangeland, and the rangeland is transparent everywhere above its own grass horizon at world 1130, so there is no opaque layer inside the sky's band to hide a band step behind."
+      }
+    },
+    "vancouver-pacific-afternoon": {
+      "sky": "sky-base",
+      "ground": "path-shade",
+      "horizon": "sky-light",
+      "why": "A clear marine afternoon over Burrard Inlet, paling toward a bright horizon over the water. The zenith is authored BETWEEN two references that disagree and both are recorded: 600x40 of open sky at (600,15) on assets/refs/vancouver/canada-place-from-the-west.jpg reads hsl(218,49%,30%) and 700x40 at (400,40) on seawall-path-and-harbour.jpg reads hsl(204,99%,47%); sky-base is hsl(206,58%,52%) and is taken toward the brighter because this level is an afternoon on the water. The horizon is sky-light against the second reference's low sky at hsl(208,91%,70%). THE GROUND IS TORONTO'S, and that is allowed rather than overlooked: the rule this palette keeps is that no two triples are equal and no triple differs from another in only ONE of its three, and (sky-base, sky-light) differs from Toronto's (sky-light, cloud-base) in both of the other two. Both levels are city waterfront paving and both grounds are that paving in shadow.",
+      "skyBandStops": {
+        "note": "NONE. vancouver/layer-10-sky.svg is ONE FLAT sky-base field, for the same reason as the three levels above it. Its clouds are high CIRRUS rather than cumulus, which is what refs/vancouver/seawall-path-and-harbour.jpg shows and is the only sky of its kind in the game."
       }
     }
   },

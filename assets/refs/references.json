@@ -32,7 +32,9 @@
     "AMENDED 2026-09-08 while redrawing the player costume and adding the beaver guide. Two subjects added, and BOTH ARE CHARACTERS, which is why each carries a renderRecipe that builds a composite and demands a second figure in the frame: a character cannot be judged from one file and identical proportions cannot be judged from one figure. `player` ships with an EMPTY referenceFiles list and that is correct - it is a costume, not a landmark, and there is no photograph it is a simplification of; its accuracy bar is the palette, the proportion canon and the two-size test. `guide` ships with six, licence-checked before download, and with one labelled departure from them - white incisors where the animal's are orange - written down as an exaggeration rather than left looking like accuracy.",
     "AMENDED 2026-09-09 after the repository owner reported, from the live site, that the player \"looks extremely odd... it is looking at the user... shoulders are not proportional\". Both were true and both are fixed: every character is drawn THREE-QUARTER facing its direction of travel, and the shoulder canon is measured against a photograph instead of chosen. TWO CHANGES HERE ARE ABOUT THIS FILE RATHER THAN ABOUT THE ART. First, every character subject gains a \"turned toward the direction it travels\" entry, because a side-scroller character that faced the camera was a defect nothing in this file asked about. Second, the identical-proportions entry is TIGHTENED, and that is the more useful finding: IT PASSED on the art the owner was looking at. It passed because it asked whether two figures matched and they did - they were equally wrong. A comparison that cannot see the widest part of a figure is not measuring proportions. It now names the measurement, gives the number and its photographic source, and separates the garment (may differ, capped at 116 px) from the figure (identical, and the list of landmarks is written out). Two maskRegion probes are switched on at the same time - the officer hat and the guide tail - because the mechanism has been implemented and dormant since it was written, and both sheets make a claim about what carries the identification that nobody has tested.",
     "AMENDED AGAIN 2026-09-09, the same day, after the first correction was rendered at 390 px beside the other two figures. The body turn had landed and THE HEAD TURN HAD NOT: the guide read as travelling and both humans read as standing still, facing the viewer, which is the defect the amendment above was written for. The heads now turn further than the bodies - about 25 degrees off profile against 40 - and are built as an ASYMMETRIC OUTLINE rather than as a symmetric egg with cues drawn on it. THE LESSON IS ABOUT THIS FILE AS MUCH AS ABOUT THE ART: the first correction satisfied every word of the entry as it was then written, because the entry listed cues and the cues were all present and all sub-pixel. An entry listing features a verifier can tick off at 1x does not test what a player sees. It now says WHICH cue carries the read at phone size, and it says to judge at 390 px.",
-    "AMENDED 2026-09-09 while drawing Winnipeg (level 6) and The Prairies (level 7). Four subjects added, and the PAIR of them is the point again. `human-rights-museum` IS allowed to demand a place name and `grain-elevator` IS NOT, on the same test that separated town-clock from pier-21: the museum is one specific building whose stack - a stepped Tyndall limestone mountain, a curved blue-green glass shell and a glazed spire with an open steel lattice - nothing else in this game will ever share, and the elevator is a TYPE. Every prairie elevator carries its company's name and its town's name painted across the crib, this project draws no lettering anywhere, and what is left without them is the standard plan that stood in a thousand prairie towns. Its list asks for a grain elevator and never for Saskatchewan. The consequence is stated rather than left to be discovered: The Prairies as a PLACE rests on nothing in this level's art, by design, because the level is a region rather than a town and its identity is the type and not a landmark."
+    "AMENDED 2026-09-09 while drawing Winnipeg (level 6) and The Prairies (level 7). Four subjects added, and the PAIR of them is the point again. `human-rights-museum` IS allowed to demand a place name and `grain-elevator` IS NOT, on the same test that separated town-clock from pier-21: the museum is one specific building whose stack - a stepped Tyndall limestone mountain, a curved blue-green glass shell and a glazed spire with an open steel lattice - nothing else in this game will ever share, and the elevator is a TYPE. Every prairie elevator carries its company's name and its town's name painted across the crib, this project draws no lettering anywhere, and what is left without them is the standard plan that stood in a thousand prairie towns. Its list asks for a grain elevator and never for Saskatchewan. The consequence is stated rather than left to be discovered: The Prairies as a PLACE rests on nothing in this level's art, by design, because the level is a region rather than a town and its identity is the type and not a landmark.",
+    "AMENDED 2026-09-09 while drawing The Alberta foothills (level 8) and Vancouver (level 9). Four subjects added, and the PAIR of levels is the point once more. `five-sails` IS allowed to demand a place name and `ranch-barn` IS NOT, on the test that separated town-clock from pier-21 and human-rights-museum from grain-elevator: Canada Place is one specific building whose five white fabric sails over a long low pier are shared by nothing else this game will draw, and a ranch barn with a corral is a TYPE - the candidates that would have identified the place, Head-Smashed-In Buffalo Jump above all, are a docs/content-review.md section 1 depiction question and not an art question, so they are not here. Level 8's list asks for a RANCH and never for Alberta, and the consequence is stated rather than left to be discovered: THE ALBERTA FOOTHILLS AS A PLACE REST ON NOTHING IN THAT LEVEL'S ART, exactly as the Prairies do, because the level is a region and its honest anchor is the type. The Rocky Mountain front IS drawn, on layer 20, and is deliberately not a graded subject: it repeats, the low preset drops it, and a landform spanning two countries identifies a landform and not a province.",
+    "AND ONE ANSWER CANNOT BE WRITTEN DOWN, WHICH IS THE OTHER FINDING OF THIS AMENDMENT. The correct unprompted answer to `five-sails` is the building's own name, and it contains a common noun that the hand-off's own briefing also contains. `leakTokens` takes every word of four letters or more out of `id` and `expectedBlindAnswer` and refuses any handed-over text containing one, so listing the name would turn make verify-art red on a hand-off that leaks nothing - and the subject id is `five-sails` rather than the building's name for the same reason. The answer is scored on `Vancouver` and on `five sails`, both of which the same sentence almost always carries, and the one-line fix is routed rather than worked around. Every list below was checked MECHANICALLY against the real `leakTokens` and the real BRIEFING before shipping, which is how `open`, `part`, `size` and `paint` were kept out of them as well."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -1814,6 +1816,389 @@
         "THE SKY AND THE FAR HORIZON ARE NOT PART OF THIS SUBJECT. layer-10-sky.svg and layer-20-horizon.svg are",
         "drawn, credited and shipped and are asked no question: one is a flat field with clouds and the other is",
         "a distant shelterbelt and two farmsteads, and neither has a feature that could identify anything."
+      ]
+    },
+    {
+      "id": "ranch-barn",
+      "subject": "A working cattle ranch in the Alberta foothills: a red board-sided gable barn with a louvred ridge cupola, a peeled-log corral and a work horse. Drawn from the Bar U Ranch National Historic Site at Longview, Alberta.",
+      "renders": [
+        "src/svg/alberta-foothills/landmark-ranch-barn@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. scripts/lib/art-handoff.mjs builds it with `singleSource()`, the same builder as peace-tower, chateau-frontenac, town-clock, cn-tower, human-rights-museum and grain-elevator.",
+      "expectedBlindAnswer": [
+        "a ranch",
+        "a cattle ranch",
+        "a working ranch",
+        "a ranch yard",
+        "a horse ranch",
+        "a ranch barn",
+        "a barn and a corral",
+        "a barn and corral",
+        "a stable and a corral",
+        "a farmyard and a corral"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT MAY NOT DEMAND A PLACE NAME, and the reason is the one that governs `pier-21` and",
+        "`grain-elevator`. A ranch barn is a standard timber building type that stood across western North",
+        "America; nothing drawn says which country it is in, let alone which province. `Alberta`, `the",
+        "foothills` and any town name are NOT in the accepted list and the gate MUST NOT reward them. A",
+        "verifier who names a province here has inferred it from project context, which is the mistake the",
+        "Ottawa canal subject made and had to be amended for.",
+        "WHAT IT MAY DEMAND IS THE WORD RANCH, and that IS a measurement rather than a preference. The render",
+        "draws a barn AND a corral AND a horse inside the corral, and those three together are what separates",
+        "a ranch from a farm. So `a red barn`, `a barn` and `a farm` alone do NOT pass: an answer naming only",
+        "the building is a true report that the corral and the horse did not carry, which is information about",
+        "the drawing and is what this gate is for. Every accepted phrase names the enclosure or the word ranch.",
+        "THE CONSEQUENCE IS STRUCTURAL. Level 8 is a REGION and nothing in its art is asked to name a place -",
+        "not this hero and not `alberta-foothills-rangeland`. The Rocky Mountain front IS in the level, on",
+        "layer 20, and is not a graded subject: it repeats and the low preset drops it."
+      ],
+      "referenceFiles": [
+        "alberta-foothills/work-horse-barn-elevation.jpg",
+        "alberta-foothills/work-horse-barn-gable-end.jpg",
+        "alberta-foothills/percheron-at-the-barn-wall.jpg",
+        "alberta-foothills/log-rail-fence.jpg",
+        "alberta-foothills/ranch-yard-and-front-range.jpg",
+        "alberta-foothills/ranch-yard-and-distant-peaks.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "red-oxide painted timber walls",
+          "why": "Barn red on a gable barn is the strongest single colour cue this subject has.",
+          "detail": "MEASURED 2026-09-09, six medians across three references: work-horse-barn-elevation.jpg at (500,715) hsl(4,56%,21%) and (900,760) hsl(4,50%,21%); work-horse-barn-gable-end.jpg at (1080,430) hsl(7,54%,18%) and (1250,430) hsl(3,52%,22%); percheron-at-the-barn-wall.jpg at (60,250) hsl(8,51%,26%) and (360,230) hsl(5,37%,23%). Median hsl(5,51%,21%). All three photographs are late evening or overcast, so the sample sits about 13 points of lightness below the material. Drawn in the `oxide` ramp - the prairie grain elevator's own red-oxide paint on the same painted timber - and NO NEW RAMP WAS ADDED: corrected for the photographs' light the sample lands five degrees of hue and eight points of saturation from oxide-base. Not `brick`, which is masonry, and not `wood`, which is bare timber."
+        },
+        {
+          "feature": "a gable end facing the viewer, and a long flank running off it",
+          "detail": "The gable rise is 0.735 of the eave height. MEASURED at the LEFT end of work-horse-barn-elevation.jpg, where the eave line is horizontal across 785 px (slope +0.010), which proves the camera sits at eave height and makes the vertical readings there free of foreshortening: ridge 528, eave 692, foundation 915. THE PLAN WIDTH IS NOT MEASURED. It is 1.47 of the eave height, DERIVED from a 12:12 pitch, because no reference in the set gives a gable end free of foreshortening; that is written here rather than left looking like accuracy. The drawn flank is 1.45 eave heights against a real 3.6, shortened so the corral has somewhere to stand - the same decision, for the same reason, as the grain elevator's annex."
+        },
+        {
+          "feature": "a louvred cupola on the ridge",
+          "why": "The ridge vent separates a barn from a house or a machine shed at any scale, and it is the top of the silhouette.",
+          "detail": "A small louvred box centred on the ridge over the flank, about 0.43 of the eave height wide, rising about 0.22 of the eave height above the ridge, with its own low pyramid roof and four horizontal louvre bars."
+        },
+        {
+          "feature": "a run of small white-framed windows along the flank",
+          "detail": "Five, evenly spaced: rhythm replacing count (art-bible section 5 rule 3). MEASURED window height 0.233 of the eave height and sill 0.31 of the eave height above the foot, off seven windows on the primary reference. The white frames are the barn's only bright trim and are what stop the flank reading as a blank wall."
+        },
+        {
+          "feature": "a large sliding door on the gable end",
+          "detail": "White-framed, on a visible head track, about 0.4 of the gable-end width, reaching from the foot to a little over half the eave height, with a diagonal ledge brace."
+        },
+        {
+          "feature": "a peeled-log post-and-rail corral in front of the barn, and a braced gate in it",
+          "why": "THIS IS THE FEATURE THAT MAKES THE SUBJECT A RANCH. Without it the render is a barn, which is why every accepted answer names the enclosure or the word ranch.",
+          "detail": "Round peeled posts on a regular rhythm with three round rails, in the `wood` ramp from log-rail-fence.jpg, and one gate with a single diagonal brace. Never sawn pickets, never wire, never a stone wall."
+        },
+        {
+          "feature": "one horse standing inside the corral",
+          "detail": "A grey Percheron, from percheron-at-the-barn-wall.jpg. Drawn at 118 px at the withers against the barn's 300 px eave: the eave is about 4.2 m, so 1 m is 71 px and a 1.65 m horse is 117. The animal is at the BUILDING's scale, not at a scale that would read better, which is the only way the barn keeps its measured proportions."
+        },
+        {
+          "feature": "a grey weathered shingle roof",
+          "detail": "MEASURED hsl(20,5%,50%), hsl(26,3%,44%) and hsl(0,1%,50%) across three references against `path`'s base at hsl(31,7%,51%), so the roof is drawn in `path` and no grey was added. Not green, not red, not metal."
+        }
+      ],
+      "simplifyAway": [
+        "the board-and-batten battens and every shingle course beyond an even rhythm",
+        "the hay-track hardware, the ladders and the lightning rods",
+        "the farm machinery that stands in the yard in every reference",
+        "the corral's wire, staples and gate hardware",
+        "the horse's dapples, feather and harness",
+        "the foundation's stonework, which is one flat band",
+        "the Red Ensign that flies over the ranch office in two references: it is a historical flag and drawing it would make the render a claim about a date"
+      ],
+      "neverAdd": [
+        "any lettering, number or date, in either language",
+        "a ranch brand, a company device or a gate sign - an approximated brand is worse than none (art-bible's 'drop, never substitute')",
+        "a grain elevator or a silo: that is level 7's landmark and one here would move this level's identity onto another level's subject",
+        "a gambrel, hip or round roof - the reference is a straight gable, and a gambrel is the American barn silhouette this one is not",
+        "a windmill, a weather vane or a cupola finial",
+        "mountains INSIDE this file: the Rocky Mountain front is a parallax layer, and a hero carrying it would put the level's landform on the one render that never repeats",
+        "a person, a wagon or a saddle: the rancher is an NPC nobody has placed, and a hero is not where a character goes"
+      ],
+      "notes": [
+        "The reference set is eight CC BY 2.0 photographs, seven of them from one visit to the Bar U Ranch National Historic Site by one Flickr photographer. LICENCE FIRST, AND IT COST THE BEST FILES: every dedicated barn elevation on Wikimedia Commons - `Bar U Ranch saddle horse barn east side`, `west side`, `work horse barn` - is CC BY-SA 4.0, and the site panoramas are CC BY-SA 3.0, which ADR-0004 excludes for its ShareAlike condition. That is why the measurement leans on a flank view taken in evening light rather than on an orthographic elevation, and why the plan width is a derivation."
+      ]
+    },
+    {
+      "id": "alberta-foothills-rangeland",
+      "subject": "Rolling foothills rangeland: grass ridges with tree bluffs in the folds, a wire fence on wooden posts, cattle grazing and a two-track ranch road.",
+      "renders": [
+        "src/svg/alberta-foothills/layer-30-foothills.svg",
+        "src/svg/alberta-foothills/layer-40-rangeland.svg"
+      ],
+      "renderRecipe": "Composite the two, the rangeland drawn OVER the foothills, which is the order the level uses. In world coordinates the rangeland tile's top edge is 60 px ABOVE the foothills tile's top edge (world y 880 against 940), so the offset is NEGATIVE: `twoParallaxTiles({ farMatch: 'foothills', nearMatch: 'rangeland', nearTop: -60 })`. This is the SECOND negative offset in that table, after prairie-rail-line, and for the same reason: the foreground tile spends its top 250 rows on fence posts and wire that stand UP into the sky. Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1800 and 1920) rather than laying them side by side. Neither file answers the subject alone: ridges with no fence and no stock are hills, and a fence with nothing behind it is a fence. THE MOUNTAIN FRONT IS NOT IN THIS COMPOSITE: it lives on layer-20, which is a third tile and is deliberately out of scope, so the answer is a landform these two tiles actually show.",
+      "expectedBlindAnswer": [
+        "foothills",
+        "rolling grassland",
+        "rolling hills",
+        "rangeland",
+        "cattle country",
+        "ranch country",
+        "grazing land",
+        "a pasture",
+        "a cattle pasture",
+        "farmland",
+        "rough grazing",
+        "prairie"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, and this one has teeth. The foothills tile repeats every 1800 px and the",
+        "rangeland every 1920, so neither may carry anything that identifies a place: there is no building of",
+        "any kind on either, and the cattle and the fence are types. A verifier who names a province from",
+        "these two tiles would be reporting a defect rather than passing.",
+        "`the Rockies`, `the Rocky Mountains` and any mountain answer are NOT in this list, and their absence",
+        "is deliberate: the mountain front is drawn, on a third tile, and is not in this render. A contract",
+        "that accepted it here would reward a memory of the level rather than a reading of the picture.",
+        "THE LIST IS WIDE ON THE PLAIN WORDS AND NARROW ON EVERYTHING ELSE, which is the amendment",
+        "toronto-trail and rideau-canal-skateway both needed. `farmland` and `prairie` pass because a person",
+        "looking at ridges, stock and a fence may honestly say either and would not be wrong about what is",
+        "drawn. `a field`, `a park`, `a lawn` and `a golf course` do not: they miss the stock, the fence or",
+        "the relief, and those three are the picture."
+      ],
+      "referenceFiles": [
+        "alberta-foothills/foothills-and-front-range.jpg",
+        "alberta-foothills/rangeland-cattle-and-wire-fence.jpg",
+        "alberta-foothills/log-rail-fence.jpg",
+        "alberta-foothills/ranch-yard-and-distant-peaks.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "rolling grass ridges, one behind another",
+          "detail": "Three ridge lines in the `pasture` ramp, each a rolling curve rather than a straight band, with coulees cut down the near faces. Relief is the difference between this subject and the flat farmland of prairie-rail-line, and it is what a verifier is reading."
+        },
+        {
+          "feature": "dark tree bluffs in the folds of the ridges",
+          "detail": "Aspen and spruce clumps in the `pine` ramp, scattered along the ridge feet and in the coulees, as rounded lobes and spires. Never a continuous forest edge."
+        },
+        {
+          "feature": "a wire fence on wooden posts, running across the whole tile",
+          "why": "The post rhythm is what makes movement legible at a horse's speed, and a fence is what tells a viewer this grass is worked rather than wild.",
+          "detail": "Posts on an exact divisor of the 1920 px tile so the rhythm does not break at the seam, three wires, and the posts standing UP above the grass horizon into transparent sky."
+        },
+        {
+          "feature": "cattle grazing",
+          "detail": "Hereford - red body, white face, white topline and stockings - from rangeland-cattle-and-wire-fence.jpg. Three per tile, at the grass horizon, small. They are a TYPE and not a herd portrait."
+        },
+        {
+          "feature": "a two-track ranch road along the ground line",
+          "detail": "Two pale wheel tracks in the `felt` ramp with grass between them, on the level's ground polyline. Never a paved road, never a kerb, never a marking."
+        },
+        {
+          "feature": "yellow-green grass rather than lawn green",
+          "detail": "MEASURED hsl(75,35%,38%), hsl(83,18%,36%) and hsl(79,40%,29%) across two references. Drawn in the `pasture` ramp, which was ADDED for this level because all three measurements fall OUTSIDE `grass`'s own hue span of 94 to 114 degrees - the same test that kept prairie straw inside `felt` and the museum's glazing inside `ice`."
+        }
+      ],
+      "simplifyAway": [
+        "every blade, tussock detail and seed head below 12 px",
+        "the wire's sag between posts, and the staples",
+        "the cattle's ear tags, horns and individual markings",
+        "the ruts, gravel and puddles in the two-track",
+        "the fence's corner braces and gates"
+      ],
+      "neverAdd": [
+        "any building at all - a barn, a shed, a house, a windmill or a grain elevator. These are repeating tiles and the level's only non-repeating anchor is `ranch-barn`",
+        "a mountain range: it is on layer-20 and this composite is deliberately not asked about it",
+        "any lettering, sign or number",
+        "a paved road, a power line or a vehicle",
+        "a person, and any cultural marker on anything"
+      ],
+      "notes": [
+        "SCOPED AS A LANDFORM AND NOT A PLACE, which is the whole reason this entry has the shape it does. See `ranch-barn`'s note for what that costs the level."
+      ]
+    },
+    {
+      "id": "five-sails",
+      "subject": "Canada Place, Vancouver: the cruise-ship terminal and convention centre, five white fabric sails on masts over a long two-level pier building standing on piles in Burrard Inlet.",
+      "renders": [
+        "src/svg/vancouver/landmark-canada-place@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. `singleSource()`. The file is 1000 x 800 and its bottom 280 rows are deliberately empty, so the rasterised subject is a building floating above the foot of the frame; that is not a defect and the reason is in the file's own title.",
+      "expectedBlindAnswer": [
+        "Vancouver",
+        "five sails",
+        "five sail",
+        "Burrard Inlet",
+        "Vancouver harbour",
+        "Vancouver waterfront"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS ALLOWED TO DEMAND A PLACE NAME, and it is the only render in this level that may. It",
+        "is a single non-repeating POI hero drawing one specific building whose five white fabric sails on a",
+        "long low pier are shared by nothing else this game will ever draw. A verifier who cannot place it is",
+        "reporting a defect in the drawing. `vancouver-seawall` is two repeating tiles and is asked for a",
+        "waterfront path and never for a city, so Vancouver as a place rests on this render alone.",
+        "AND THE BUILDING'S OWN NAME IS NOT IN THE LIST, WHICH IS A DEFECT IN THE HARNESS AND NOT IN THE ART.",
+        "`leakTokens` takes every word of four letters or more out of `id` and `expectedBlindAnswer` and",
+        "refuses any handed-over text that contains one; the briefing the hand-off writes asks the identifier",
+        "to name a real, named p-l-a-c-e or thing. The building's name contains that noun, so writing it here",
+        "would turn make verify-art red on a hand-off that leaks nothing - and the subject id is `five-sails`",
+        "rather than the building's name for exactly the same reason.",
+        "WHAT IS SCORED INSTEAD is the CITY, which the same answer almost always carries, and `five sails`,",
+        "which is what the building is popularly called and is the count its own architecture is named for.",
+        "The residual risk is stated plainly: a verifier who writes the building's name AND NOTHING ELSE is",
+        "scored a miss while being exactly right. The fix is one line and is routed rather than worked around:",
+        "reword the briefing to ask for `a real, named building or landmark`. This entry is amended the day",
+        "that lands. `pier-21`'s note stated this rule first; this is its most expensive instance."
+      ],
+      "referenceFiles": [
+        "vancouver/canada-place-from-the-west.jpg",
+        "vancouver/canada-place-pier-at-dusk.jpg",
+        "vancouver/five-sails-close.jpg",
+        "vancouver/canada-place-from-the-water.jpg",
+        "vancouver/canada-place-and-the-north-shore.jpg",
+        "vancouver/sail-masts-and-rigging.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "exactly five white fabric sails",
+          "why": "The count is the identification. Art-bible section 5 rule 3 lets a repeated detail's number differ from the reference; here the number IS the feature, and the building is popularly called by it.",
+          "detail": "Five sharp peaks in a row on one continuous white fabric mass, in the `white` ramp. Four reads as a marquee and six as a circus tent; neither is this building."
+        },
+        {
+          "feature": "asymmetric sails: a steep concave rise on the left to a sharp peak, then a long shallow sweep down to the right",
+          "why": "This is the whole shape. The first build drew five symmetric cones and they read as tents.",
+          "detail": "MEASURED on five-sails-close.jpg: between the first and second masts the fabric bottoms out at y 700 against peaks at y 300 and a deck at y 1100 - 42 per cent of the drop, NOT the whole of it. A valley that reaches the deck separates the sails into individual tents; a valley at 0.42 keeps them one roof with five peaks."
+        },
+        {
+          "feature": "the sails stand on a long, low, two-level white building",
+          "detail": "MEASURED against H = the sail peak to the waterline, in one column at the near end of canada-place-from-the-west.jpg: sails 0.384 H, the deck-edge zone 0.070 H, the two-level block 0.411 H, the piles and their shadow 0.135 H, and the mast spacing 0.384 H, so a sail is as wide as it is tall. The block is longer than the sail row and reads as a pier, not a hall."
+        },
+        {
+          "feature": "the building stands on piles over open water",
+          "why": "It is a pier. A version of this building sitting on a shore is a conference centre and not this one.",
+          "detail": "A dark under-deck shadow, a rhythm of piles below it, and water at the foot. Its base does not touch the bottom of the frame."
+        },
+        {
+          "feature": "stay cables fanning down to the right of every mast",
+          "detail": "Two or three straight lines from each mast head down to the deck, in the `slate` ramp, from sail-masts-and-rigging.jpg. They are the one dark element on a white building and are what stops the sail row reading as a paper cut-out."
+        },
+        {
+          "feature": "the National Flag of Canada on the promenade",
+          "detail": "ONE flag on a short pole at deck level, where the primary reference shows several. Drawn 46 px wide at design resolution; the art bible's floor is 40, below which a flag stops being a flag. The leaf is a bold five-lobe silhouette, not an eleven-point outline.",
+          "maskRegion": {
+            "x": 410,
+            "y": 86,
+            "w": 66,
+            "h": 42
+          },
+          "whyMasked": "DIAGNOSTIC, never gating. This level's subject is Canadian symbols and the flag is the one saturated colour on an otherwise white building, so the honest question is whether the render identifies without it or whether the flag is doing the work. MEASURED against the shipped 1000 x 800 render: the flag's ink occupies x 417-468 and rows 94-121 and its pole runs to row 224, so this rectangle removes the flag and the head of its pole and takes nothing else except a patch of sail fabric behind it - which is stated rather than claimed to be zero. THE FLAG IS DRAWN ONCE RATHER THAN TWICE BECAUSE OF THIS PROBE: the mechanism takes one rectangle, and two flags 370 px apart could not be removed by one without taking a sail with them."
+        },
+        {
+          "feature": "a glazed colonnade under the promenade deck",
+          "detail": "White columns on a regular bay with the recess dark behind them, in `slate` and `ice`. The under-deck is in its own shadow in every reference, and drawing it light makes the pier read as a cruise ship."
+        }
+      ],
+      "simplifyAway": [
+        "the several hundred fabric panel seams and their catenary cables",
+        "the second and third rows of sails behind the first, which produce eight to ten apparent peaks from most angles",
+        "the glazing mullions of the convention centre, the hotel block at the west end and the cruise ships alongside",
+        "the promenade's lamp standards, bollards, seating and interpretive panels",
+        "the flag's eleven-point leaf outline: at 46 px the notches are under 3 px, so the leaf is a bold five-lobe silhouette (art-bible section 5 rule 3)"
+      ],
+      "neverAdd": [
+        "any lettering or wordmark. The building carries its name in steel letters on its west face in one reference and this project draws no text anywhere",
+        "the emblem beside that name, or any logo, funnel mark or shipping livery",
+        "a totem pole, in any form, including background, silhouette and icon (docs/content-review.md section 5.2)",
+        "an inuksuk, in any form, for the same reason and under the same open question",
+        "a suspension bridge: the Lions Gate is real and a hundred metres of skyline away, and it is this level's fallback anchor rather than a part of this one",
+        "a dome, a spire, a clock or a tower on the pier",
+        "a sixth sail, and no sail behind another"
+      ],
+      "notes": [
+        "LICENCE FIRST, and it cost the best files again, for the fifth level running. Every one of Dietmar Rabich's 6720 px views of this building on Wikimedia Commons is CC BY-SA 4.0 and ADR-0004 excludes ShareAlike, so the measurement is made on a 2048 px CC BY 3.0 view and a 4032 px CC BY 2.0 one. The licences were established through the Commons API before anything was downloaded."
+      ]
+    },
+    {
+      "id": "vancouver-seawall",
+      "subject": "A paved waterfront path along a low sea wall with a white balustrade, open salt water beyond it, benches, lamp standards, conifers and gulls.",
+      "renders": [
+        "src/svg/vancouver/layer-30-inlet.svg",
+        "src/svg/vancouver/layer-40-seawall.svg"
+      ],
+      "renderRecipe": "Composite the two, the seawall drawn OVER the inlet, which is the order the level uses. The seawall tile's top edge is 40 px BELOW the inlet tile's top edge (world y 900 against 860): `twoParallaxTiles({ farMatch: 'inlet', nearMatch: 'seawall', nearTop: 40 })`. Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1800 and 1920). THE SEAM CLOSES HERE, unlike toronto-trail and winnipeg-riverwalk: the inlet tile is opaque from its own top edge and runs to composite y 300, and the seawall tile is opaque from composite y 290, so the two overlap by 10 px and no matte shows between them. The 40 px above the inlet's top edge carries the cedar tops, the lamp heads and the gulls.",
+      "expectedBlindAnswer": [
+        "a seawall",
+        "a sea wall",
+        "a waterfront path",
+        "a waterfront promenade",
+        "a waterfront walkway",
+        "a harbour promenade",
+        "a harbourside path",
+        "a shoreline path",
+        "a path beside the sea",
+        "a promenade beside the water",
+        "an esplanade beside the sea",
+        "a coastal path"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. Both tiles repeat - 1800 and 1920 - so neither may carry a recognisable building:",
+        "the far shore is plain masses and conifers, the two gantry cranes are types, and the ferry and the",
+        "bulk carrier are types. A verifier who names a city from these two tiles would be reporting a defect.",
+        "EVERY ACCEPTED PHRASE NAMES THE WATER, and that is the line this list draws rather than a preference.",
+        "Half of this composite is open salt water and the wall exists because of it, so `a promenade`, `a",
+        "park path`, `a paved walkway` and `a boardwalk` alone do NOT pass. Two of those are accepted answers",
+        "of `winnipeg-riverwalk`, whose picture is a stone parapet with no open water in it, and a list that",
+        "accepted both would stop being able to tell the two subjects apart - which is the reason that entry",
+        "gives for refusing `a boardwalk`.",
+        "WHERE VANCOUVER ACTUALLY COMES FROM: `five-sails`, a separate non-repeating POI hero. The seawall is",
+        "where the player travels; the pier is what says which city."
+      ],
+      "referenceFiles": [
+        "vancouver/seawall-path-and-harbour.jpg",
+        "vancouver/coal-harbour-and-the-north-shore.jpg",
+        "vancouver/canada-place-and-the-north-shore.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "open salt water in flat tones, filling the upper half",
+          "detail": "Three flat `water` tones and straight ripple bars, never a gradient and never a blur (ADR-0011). MEASURED hsl(204,29%,22%) on canada-place-and-the-north-shore.jpg against water-shade's hsl(210,65%,29%)."
+        },
+        {
+          "feature": "a white balustrade of turned balusters between heavier piers",
+          "why": "It is the one piece of furniture that says SEA WALL rather than park railing, and it is what the reference actually has.",
+          "detail": "A continuous run of short white balusters under a coping rail, with a broader pier every 208 px, from seawall-path-and-harbour.jpg. Never a steel guardrail, never glass."
+        },
+        {
+          "feature": "a paved path along the near side of the wall",
+          "detail": "Flat `path` tones with joint lines on a rhythm. It is the surface the player travels on and must read as paving rather than as sand or grass."
+        },
+        {
+          "feature": "a lawn verge with benches on it",
+          "detail": "A strip of `grass` between the balustrade and the paving, with timber-slat benches on steel legs. `grass` and not level 8's `pasture`: a mown seaside park lawn is the same material as the lawn on Parliament Hill."
+        },
+        {
+          "feature": "tall conifers and lamp standards standing up into the sky",
+          "detail": "Two western red cedars per tile as stacked dark lobed tiers, and twin-globe lamp standards on a 470 px rhythm. Both stand ABOVE the tile's opaque line into transparent sky, which is why the tile is 430 px tall."
+        },
+        {
+          "feature": "gulls",
+          "detail": "Flat white double-arc shapes in the air, three to seven per tile. They are the one thing that puts the picture at the sea rather than at a lake."
+        },
+        {
+          "feature": "people with no cultural marker of any kind",
+          "detail": "Four background figures on the paving, in the shared proportion canon, drawn from the palette's skin and hair ramps with ordinary clothing (docs/content-review.md section 3.3, outcome 2). No regalia, no pattern, no cultural item, on any of them."
+        }
+      ],
+      "simplifyAway": [
+        "the balustrade's mouldings, plinths and drainage scuppers",
+        "the wave texture, foam and reflections on the water",
+        "the far shore's individual buildings, cranes and cars beyond a low band of masses",
+        "every leaf, needle and branch: a cedar is stacked lobed tiers",
+        "the benches' fixings, the bins and the cycle-lane markings",
+        "faces beyond the shared four-cue set on the background figures"
+      ],
+      "neverAdd": [
+        "any recognisable building on either tile. Both repeat, and the level's only anchor is `five-sails`",
+        "a totem pole, in any form, including background, silhouette and icon (docs/content-review.md section 5.2)",
+        "an inuksuk, in any form, for the same reason",
+        "a canoe, a kayak or any Indigenous watercraft as scenery (OQ-REVIEW-10)",
+        "a suspension bridge, a named ship or a named ferry livery",
+        "any lettering, sign, hull name or funnel mark",
+        "snow: this level is a clear afternoon and two of this game's levels are winter already"
+      ],
+      "notes": [
+        "The seam closing to the pixel here is worth carrying, because it is the third arrangement this project has tried and the first that needed no hole. halifax-quayside closes at 160 by putting the near tile's first opaque row exactly on the far tile's bottom edge; toronto-trail and winnipeg-riverwalk both leave a band of matte that a third tile fills in the level. This one closes because the far tile is opaque from its own top edge, which is a property of drawing WATER rather than a skyline."
       ]
     }
   ],

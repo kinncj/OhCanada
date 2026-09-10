@@ -9,6 +9,13 @@
   "extractedText": "huron-wendat-nionwentsio-brief-2016.txt",
   "sha256": "8a540d2a4745a37f39b35a2447876918c50d083f36d4adee7040d9e9d5a3dbeb",
   "extractedTextSha256": "367d7d1ee559569d1ec5b5ac349c167dfe275faeebb13500c328fefdf77f53d2",
+  "extraction": {
+    "tool": "pdftotext (poppler-utils)",
+    "version": "26.08.0",
+    "versionCommand": "pdftotext -v",
+    "command": "pdftotext -layout content/sources/huron-wendat-nionwentsio-brief-2016.pdf -",
+    "reproducedAt": "2026-09-09"
+  },
   "bytes": 89630,
   "retrievedAt": "2026-09-08",
   "licence": "Published by the Huron-Wendat Nation as a submission to a House of Commons committee. Cited and quoted; not redistributed.",

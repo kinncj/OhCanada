@@ -9,6 +9,10 @@
   "extractedText": "parks-canada-the-forks-nhs.txt",
   "sha256": "5eec3f84b9b7d7aecc1f99276a1272454bb858913d8fa7188d67de4e445ee332",
   "extractedTextSha256": "f1e1749ea9bef82ec40b12391715afcbfc90799c252814acead0a8ff9b112ba2",
+  "extraction": {
+    "unrecorded": true,
+    "reason": "Not recorded when the page was cached, and not recovered since. What the .txt shows is a tag-stripping of the .html rather than a browser rendering: it keeps the site navigation chrome, decodes entities, holds each paragraph on one line, and carries artefacts only a regex stripper leaves - a bare `--->` where a comment opened with a `>` inside it, and a fragment of a meta attribute ending `\">`. Two candidates were run on 2026-09-09 and NEITHER reproduces extractedTextSha256: a regex stripper (tags to newlines, entities decoded, blank lines dropped) and Chromium's document.body.innerText through Playwright. This is not cosmetic: content/levels/winnipeg.json cites this digest as the sourceHash of its territory statement, so a shipped claim is pinned to bytes that only a machine already holding the file can produce. Someone who fetched the page and matched its sha256 still cannot check the quote."
+  },
   "bytes": 50932,
   "retrievedAt": "2026-09-09",
   "licence": "Crown copyright, Government of Canada. Cited and paraphrased; not redistributed.",

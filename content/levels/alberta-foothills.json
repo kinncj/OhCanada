@@ -1,0 +1,273 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "alberta-foothills",
+  "subject": "economy",
+  "order": 8,
+  "title": {
+    "en": "The Alberta foothills",
+    "fr": "Les contreforts de l'Alberta"
+  },
+  "size": {
+    "x": 8640,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 440,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#1f5fa8",
+    "ground": "#30451c",
+    "horizon": "#b9cfe2",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Bearspaw",
+      "Chiniki",
+      "Wesley",
+      "Blood Tribe",
+      "Piikani Nation",
+      "Siksika Nation",
+      "Tsuut'ina Nation"
+    ],
+    "statement": {
+      "en": "This level is set in the foothills of south-western Alberta, where the plains meet the Rocky Mountains. These are the lands of Treaty No. 7, made on 22 September 1877. The treaty area runs north from the United States border, east of the central range of the Rocky Mountains, and south and west of the lands of Treaties No. 6 and No. 4. Its seven First Nations are the Bearspaw, the Chiniki, the Wesley, the Blood Tribe, the Piikani Nation, the Siksika Nation and the Tsuut'ina Nation.",
+      "fr": "Ce niveau se déroule dans les contreforts du sud-ouest de l'Alberta, là où les plaines rencontrent les Rocheuses. Ces terres sont visées par le Traité no 7, conclu le 22 septembre 1877. Le territoire du traité s'étend au nord de la frontière des États-Unis, à l'est de la chaîne centrale des Rocheuses, et au sud et à l'ouest des terres visées par les Traités no 6 et no 4. Ses sept Premières Nations sont les Bearspaw, les Chiniki, les Wesley, la Tribu des Blood, la Nation Piikani, la Nation Siksika et la Nation Tsuut'ina."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "cirnac-treaty-7",
+        "chapter": "Treaty No. 7",
+        "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028793/1581292336658",
+        "sourceHash": "93a61bc461fa0bff50e6d270270ec756964693e6ab188c3e7cf0bc8d51fb53e2",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "the Territory north of the United States Boundary Line, east of the central range of the Rocky Mountains, and south and west of Treaties numbers six and four"
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Treaty 7 First Nations Chiefs' Association (the political body for the seven Treaty 7 First Nations, which its own About page names as the Bearspaw, Chiniki, Wesley, Blood Tribe, Piikani Nation, Siksika Nation and Tsuut'ina Nation)",
+      "url": "https://www.treaty7.org/about",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.11,
+    "deadZone": {
+      "x": 70,
+      "y": 120
+    },
+    "offset": {
+      "x": 180,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1920,
+      "y": 1280
+    },
+    {
+      "x": 3840,
+      "y": 1280
+    },
+    {
+      "x": 5760,
+      "y": 1280
+    },
+    {
+      "x": 7680,
+      "y": 1280
+    },
+    {
+      "x": 8640,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "alberta-foothills-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "alberta-foothills-layer-20-front-range",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.09,
+        "y": 0.035
+      },
+      "offset": {
+        "x": 0,
+        "y": 740
+      },
+      "repeatX": true
+    },
+    {
+      "key": "alberta-foothills-layer-30-foothills",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.24,
+        "y": 0.1
+      },
+      "offset": {
+        "x": 0,
+        "y": 940
+      },
+      "repeatX": true
+    },
+    {
+      "key": "alberta-foothills-layer-40-rangeland",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 880
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "horse",
+      "maxSpeed": 620,
+      "acceleration": 1400,
+      "deceleration": 1000,
+      "turnAcceleration": 1250,
+      "glide": 0.34,
+      "maxSpeedMultiplierDownhill": 1.15,
+      "drive": "held",
+      "jump": {
+        "impulse": 900,
+        "maxHoldMs": 0,
+        "airControl": 0.4,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 280,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 80
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.horse.label"
+    },
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "ranch-barn",
+      "name": {
+        "en": "Working ranch",
+        "fr": "Ranch en activité"
+      },
+      "blurb": {
+        "en": "Ranching is part of agriculture, one of Canada's natural resource industries. Forestry, fishing, agriculture, mining and energy helped build the country, and many parts of Canada still depend on them.",
+        "fr": "L'élevage fait partie de l'agriculture, l'une des industries des ressources naturelles du Canada. La foresterie, la pêche, l'agriculture, les mines et l'énergie ont aidé à bâtir le pays, et de nombreuses régions du Canada en dépendent encore."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 91,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Natural resources industries include forestry, fishing, agriculture, mining and energy. These industries have played an important part in the country's history and development."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 4320,
+        "y": 1280
+      },
+      "artKey": "alberta-foothills-landmark-ranch-barn",
+      "radiusPx": 300
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 37748736
+}

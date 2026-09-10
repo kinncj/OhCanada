@@ -9,6 +9,10 @@
   "extractedText": "cirnac-peace-and-friendship-treaties.txt",
   "sha256": "ec4ce2e765c6200dd420ffd9c3678aa47a5e0a4cd3a558ebbe6a2ac01d49238c",
   "extractedTextSha256": "2497a7462458b6a0f90acb427b87b05d628bec33627a048c2f7558d0b3bd655e",
+  "extraction": {
+    "unrecorded": true,
+    "reason": "Not recorded when the page was cached, and not recovered since. What the .txt shows is a tag-stripping of the .html rather than a browser rendering: it keeps the site navigation chrome, decodes entities, holds each paragraph on one line, and carries artefacts only a regex stripper leaves - a bare `--->` where a comment opened with a `>` inside it, and a fragment of a meta attribute ending `\">`. Two candidates were run on 2026-09-09 and NEITHER reproduces extractedTextSha256: a regex stripper (tags to newlines, entities decoded, blank lines dropped) and Chromium's document.body.innerText through Playwright. This is not cosmetic: content/levels/halifax.json cites this digest as the sourceHash of its territory statement, so a shipped claim is pinned to bytes that only a machine already holding the file can produce. Someone who fetched the page and matched its sha256 still cannot check the quote."
+  },
   "bytes": 19469,
   "retrievedAt": "2026-09-08",
   "licence": "Crown copyright, Government of Canada. Cited and paraphrased; not redistributed.",

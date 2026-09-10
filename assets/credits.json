@@ -1530,6 +1530,240 @@
       "licence": "CC-BY-2.0",
       "source": "https://commons.wikimedia.org/wiki/File:Sintaluta_Sunrise_(53587373927).jpg",
       "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/alberta-foothills/ranch-yard-and-front-range.jpg",
+      "kind": "reference",
+      "title": "Bar U Ranch, Alberta - the ranch yard with the foothills and the ranges behind",
+      "author": "davebloggs007 (Commons attribution: \"Thank you for visiting my page\" from Canada)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:A_trip_to_Bar_U_Ranch_Alberta_Canada_I_have_been_past_here_many_times_but_this_was_my_first_visit_and_i_will_be_back_again_for_sure,_what_a_little_jem_well_worth_a_visit_for_sure._(28666856194).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/alberta-foothills/work-horse-barn-elevation.jpg",
+      "kind": "reference",
+      "title": "Bar U Ranch, Alberta - the work horse barn from the side, near-orthographic",
+      "author": "davebloggs007 (Commons attribution: \"Thank you for visiting my page\" from Canada)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:A_trip_to_Bar_U_Ranch_Alberta_Canada_I_have_been_past_here_many_times_but_this_was_my_first_visit_and_i_will_be_back_again_for_sure,_what_a_little_jem_well_worth_a_visit_for_sure._(29289600265).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/alberta-foothills/work-horse-barn-gable-end.jpg",
+      "kind": "reference",
+      "title": "Bar U Ranch, Alberta - the work horse barn showing its gable end and flank",
+      "author": "davebloggs007 (Commons attribution: \"Thank you for visiting my page\" from Canada)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:A_trip_to_Bar_U_Ranch_Alberta_Canada_I_have_been_past_here_many_times_but_this_was_my_first_visit_and_i_will_be_back_again_for_sure,_what_a_little_jem_well_worth_a_visit_for_sure._(29289591515).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/alberta-foothills/percheron-at-the-barn-wall.jpg",
+      "kind": "reference",
+      "title": "Bar U Ranch, Alberta - a grey Percheron work horse at a red-painted log wall",
+      "author": "davebloggs007 (Commons attribution: \"Thank you for visiting my page\" from Canada)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:A_trip_to_Bar_U_Ranch_Alberta_Canada_I_have_been_past_here_many_times_but_this_was_my_first_visit_and_i_will_be_back_again_for_sure,_what_a_little_jem_well_woth_a_visit_for_sure._(29289573825).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/alberta-foothills/ranch-yard-and-distant-peaks.jpg",
+      "kind": "reference",
+      "title": "Bar U Ranch, Alberta - the yard buildings with the distant peaks behind",
+      "author": "davebloggs007 (Commons attribution: \"Thank you for visiting my page\" from Canada)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:A_trip_to_Bar_U_Ranch_Alberta_Canada_I_have_been_past_here_many_times_but_this_was_my_first_visit_and_i_will_be_back_again_for_sure,_what_a_little_jem_well_worth_a_visit_for_sure._(28666880724).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/alberta-foothills/log-rail-fence.jpg",
+      "kind": "reference",
+      "title": "Bar U Ranch, Alberta - a peeled-log post-and-rail fence",
+      "author": "davebloggs007 (Commons attribution: \"Thank you for visiting my page\" from Canada)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:HFF_Happy_Fence_Friday_(29106205880).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/alberta-foothills/foothills-and-front-range.jpg",
+      "kind": "reference",
+      "title": "The Alberta foothills west of Calgary, with the snow-capped Rocky Mountain front",
+      "author": "davebloggs007 (Commons attribution: \"Thank you for visiting my page\" from Canada)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Heading_west_on_high_way_22x_Calgary_Alberta_(9054140190).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/alberta-foothills/rangeland-cattle-and-wire-fence.jpg",
+      "kind": "reference",
+      "title": "Hereford cattle on southern Alberta rangeland behind a wire fence",
+      "author": "Jason Woodhead",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:ONEFOUR_ALBERTA_2020_(50351065802).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/canada-place-from-the-west.jpg",
+      "kind": "reference",
+      "title": "Canada Place, Vancouver - the whole pier from the west, with a cruise ship",
+      "author": "Ian Spence",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canada_Place_(218231747).jpeg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/canada-place-pier-at-dusk.jpg",
+      "kind": "reference",
+      "title": "Canada Place, Vancouver - the pier and its sails at dusk",
+      "author": "Richard Eriksson from Toronto, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canada_Place_(51657618951).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/five-sails-close.jpg",
+      "kind": "reference",
+      "title": "Canada Place, Vancouver - the five sails close, in monochrome",
+      "author": "Edna Winti",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:2016_366_129_Five_Sails_(26298453174).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/canada-place-and-the-north-shore.jpg",
+      "kind": "reference",
+      "title": "Canada Place, the SeaBus and the North Shore mountains across Burrard Inlet",
+      "author": "Ruth Hartnup from Vancouver, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Canada_Place,_SeaBus_and_Port_of_Vancouver_(10966303204).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/canada-place-from-the-water.jpg",
+      "kind": "reference",
+      "title": "Canada Place, Vancouver - the waterfront from above the harbour",
+      "author": "dronepicr",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Waterfront_Vancouver_(44674423722).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/sail-masts-and-rigging.jpg",
+      "kind": "reference",
+      "title": "Canada Place, Vancouver - a sail mast, its fabric and its stay cables",
+      "author": "Roy Luck",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sails_on_Canada_Place_cruise_ship_terminal_(5945742251).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/seawall-path-and-harbour.jpg",
+      "kind": "reference",
+      "title": "The Vancouver seawall: balustrade, benches, lawn and the harbour",
+      "author": "GoToVan",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Stanley_Park_Seawall.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/vancouver/coal-harbour-and-the-north-shore.jpg",
+      "kind": "reference",
+      "title": "Coal Harbour, Vancouver - the seawall planting, the marina and the North Shore",
+      "author": "GoToVan from Vancouver, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Coal_Harbour_(29039328112).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "src/svg/alberta-foothills/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Alberta foothills deep summer sky - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/alberta-foothills/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/alberta-foothills-level.md; never traced."
+    },
+    {
+      "path": "src/svg/alberta-foothills/layer-20-front-range.svg",
+      "kind": "shipped",
+      "title": "The Rocky Mountain front in three ranges - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/layer-20-front-range.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/alberta-foothills/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/alberta-foothills-level.md; never traced."
+    },
+    {
+      "path": "src/svg/alberta-foothills/layer-30-foothills.svg",
+      "kind": "shipped",
+      "title": "Rolling foothill ridges and aspen bluffs - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/layer-30-foothills.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/alberta-foothills/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/alberta-foothills-level.md; never traced."
+    },
+    {
+      "path": "src/svg/alberta-foothills/layer-40-rangeland.svg",
+      "kind": "shipped",
+      "title": "Near rangeland, ranch track, cattle and wire fence - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/layer-40-rangeland.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/alberta-foothills/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/alberta-foothills-level.md; never traced."
+    },
+    {
+      "path": "src/svg/alberta-foothills/landmark-ranch-barn@1x.svg",
+      "kind": "shipped",
+      "title": "A working ranch barn, corral and work horse - point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/landmark-ranch-barn@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/alberta-foothills/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/alberta-foothills-level.md; never traced."
+    },
+    {
+      "path": "src/svg/vancouver/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Vancouver clear Pacific sky with cirrus - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/vancouver/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/vancouver-level.md; never traced."
+    },
+    {
+      "path": "src/svg/vancouver/layer-20-north-shore.svg",
+      "kind": "shipped",
+      "title": "The North Shore mountains across the inlet - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/layer-20-north-shore.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/vancouver/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/vancouver-level.md; never traced."
+    },
+    {
+      "path": "src/svg/vancouver/layer-30-inlet.svg",
+      "kind": "shipped",
+      "title": "Burrard Inlet, the far shore and harbour traffic - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/layer-30-inlet.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/vancouver/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/vancouver-level.md; never traced."
+    },
+    {
+      "path": "src/svg/vancouver/layer-40-seawall.svg",
+      "kind": "shipped",
+      "title": "The seawall promenade, balustrade, cedars and people - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/layer-40-seawall.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/vancouver/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/vancouver-level.md; never traced."
+    },
+    {
+      "path": "src/svg/vancouver/landmark-canada-place@1x.svg",
+      "kind": "shipped",
+      "title": "Canada Place, Vancouver - point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/landmark-canada-place@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/vancouver/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/vancouver-level.md; never traced."
     }
   ]
 }

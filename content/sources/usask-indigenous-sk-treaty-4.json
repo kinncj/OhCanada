@@ -9,6 +9,10 @@
   "extractedText": "usask-indigenous-sk-treaty-4.txt",
   "sha256": "93c17d772de7d39a5511c79a7f6ba1b67271e77073607f09ef780ce86a1e8873",
   "extractedTextSha256": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
+  "extraction": {
+    "unrecorded": true,
+    "reason": "Not recorded when the page was cached, and not recovered since. What the .txt shows is a tag-stripping of the .html rather than a browser rendering: it keeps the site navigation chrome, decodes entities, holds each paragraph on one line, and carries artefacts only a regex stripper leaves - a bare `--->` where a comment opened with a `>` inside it, and a fragment of a meta attribute ending `\">`. Two candidates were run on 2026-09-09 and NEITHER reproduces extractedTextSha256: a regex stripper (tags to newlines, entities decoded, blank lines dropped) and Chromium's document.body.innerText through Playwright. This is not cosmetic: content/levels/prairie-rail.json cites this digest as the sourceHash of its territory statement, so a shipped claim is pinned to bytes that only a machine already holding the file can produce. Someone who fetched the page and matched its sha256 still cannot check the quote."
+  },
   "bytes": 198728,
   "retrievedAt": "2026-09-09",
   "licence": "Copyright University of Saskatchewan. Cited and paraphrased; not redistributed.",
