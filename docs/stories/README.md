@@ -120,12 +120,57 @@ whole subject is federal elections. The label is "Horse" / « Cheval ». Nothing
 strength of the reservation, which is what this directory's rule about naming a mode only when a document
 declares it was for.
 
+**Amended a seventh time, 2026-09-09: the character creator has never been mounted, and the reason was
+copy.** `content/characters/rig.json` declares five player-selectable slots, nineteen options and 480
+reachable appearances, all of them drawn and shipped; `app/ui/copy.ts` carried labels for **three** slots
+that do not match the rig's five, one of which (`creator.slot.coat`) names a slot that is
+`playerSelectable: false`, and **no option names at all**. So a player cannot choose their character, 480
+appearances sit in the payload with no route to them, and `docs/plan/slice-1.md` records the creator as
+unreachable "for a stated reason, not for want of a line". This directory was that reason. Three files
+answer it, and the split is the same rule this directory has applied five times now — **the table's home
+follows what the string belongs to**:
+
+- **`TN-LOOK-what-the-player-can-choose.md`** owns the five slot labels and thirteen of the nineteen option
+  names, because a slot label belongs to the **slot** and an option name belongs to the **option**: four
+  things draw them, and the creator screen is only one. It also holds the key shape (`creator.slot.<rig slot
+  name>` and `creator.<rig slot name>.<rig option id>`, spelled as the rig spells them, so a gate can
+  generate the expected set instead of trusting a list), the deny-list that keeps a judgement word or a
+  people's name out of an option, and five French forms English does not need — plural agreement with
+  « cheveux », « Roux » rather than « Rouges », « Tuque » against "Toque", and **the one table where English
+  is the language carrying the gendered form**: "Blonde" is refused and "Blond" ships.
+- **`TN-SKIN-naming-the-six-skin-tones.md`** owns the other six and is **the ruling on `OQ-REVIEW-6`**. It
+  is its own file because it is the slot most likely to be re-decided, and the other four must not be held
+  while it is — the creator ships one group short rather than not at all.
+- **`TN-FIRSTRUN-choosing-a-character-before-playing.md`** owns the seam mounting the creator opens: what
+  "first run" means, whether the screen can be skipped, and what happens to the title screen. **`title.play`
+  is written, translated, shipped and has never been drawn**, because the shell can only represent a first
+  run when a creator block is passed and none ever has — so `TN-TITLE-01`'s "the element `title-play` is
+  visible" has never been able to pass on the shipped page. That file is the eighth instance of a decision
+  going in a file with what it costs, rather than into a commit message.
+
+**The skin-tone ruling is the one an implementer must not paraphrase, so it is summarised here and argued
+there.** Every tone is named by its ordinal and by a lightness band it shares with exactly one other tone —
+"1, light" … "6, dark" / « 1, clair » … « 6, foncé ». It **adopts** `docs/content-review.md` §8.1's
+recommended direction and amends its wording twice: the cue goes on **all six** rather than on the two ends,
+because four bare numbers between two described ends makes the palest and the deepest the marked cases and
+the rest unremarkable; and the deep end is called **"dark"** rather than "deep", because a euphemism at one
+end with the plain word at the other says that one end needs softening, and because French offers no
+euphemism to match, so the recommendation as written had the two languages doing different things. The band
+word is a **measurement** — `TN-SKIN-02` sorts the six `skin-N-base` entries in `palette.json` and fails the
+build if the order or the two-two-two banding is wrong — which is this project's standard applied to a copy
+row. **Nothing in that file is a sign-off**, `docs/content-review.md` §1 puts creator skin tones on the list
+that may ship without a Tier 3 reviewer, and §7's asymmetry is live: a report that these names are wrong
+fails them, and nothing passes them.
+
 | File | Area | Covers |
 |---|---|---|
 | `TN-TITLE-title-screen.md` | `TN-TITLE` | The first screen on a cold load: Play, Continue, Study, Settings |
 | `TN-MAP-level-select.md` | `TN-MAP` | The ten levels, their order and their three states |
 | `TN-FLOW-first-run-and-return.md` | `TN-FLOW` | The route between screens, first run, return, and back out |
-| `TN-CREATOR-character-creator.md` | `TN-CREATOR` | Making a character before the first level |
+| `TN-FIRSTRUN-choosing-a-character-before-playing.md` | `TN-FIRSTRUN` | What "first run" means, why the creator cannot be skipped and never has to be used, and how it re-opens from Settings |
+| `TN-CREATOR-character-creator.md` | `TN-CREATOR` | The creator **screen**: its chrome, its focus order, its failure to save |
+| `TN-LOOK-what-the-player-can-choose.md` | `TN-LOOK` | The five slots and thirteen of the nineteen option names, the key shape, and the deny-list |
+| `TN-SKIN-naming-the-six-skin-tones.md` | `TN-SKIN` | The six skin ramps, the ruling on `OQ-REVIEW-6`, and the measurement that keeps it true |
 | `TN-LEVEL-ottawa.md` | `TN-LEVEL` | Loading Level 4, skate locomotion, camera, POIs, pause |
 | `TN-LEVEL-halifax.md` | `TN-HALIFAX` | Level 1's own copy: what it says while it opens, in the HUD, when it fails and when it is finished |
 | `TN-LEVEL-quebec-city.md` | `TN-QUEBEC` | Level 3's own copy, and the rows that prove a French sentence cannot be templated |
@@ -201,6 +246,14 @@ changed a screen they had never opened. `TN-EXAMMENU` writes the two rows and st
 instances share from a new angle: **a missing string that reads correctly is worse than one that reads
 wrong**, because only the second kind gets reported.
 
+**The creator's nineteen option names are the sixth, and they are the first where the missing strings
+stopped a whole feature from being mounted at all.** Not a wrong word, not a borrowed row: no rows. Five
+slots, nineteen options, 480 shipped appearances, and a UI agent correctly refusing to invent the words
+because ADR-0010 forbids it. `TN-LOOK` and `TN-SKIN` write them, and the rule they add is a *shape* rule
+rather than an ownership one: **a key derived from a data file by one rule can be generated and compared;
+a key somebody types can only be trusted.** `creator.slot.coat` is what happens without it — a row naming a
+slot that has never existed, sitting in the shipped bundle, matching nothing and failing nothing.
+
 `TN-RESUME` was added on 2026-09-08 for the sharpest version of that problem: not a rule nobody owned, but a
 moment **two stories owned and answered differently**. `TN-SAVE-01` said a question already answered is never
 asked again after a reload; `TN-CARD-02` and `TN-CARD-04` promise the player, in printed copy, that a
@@ -239,6 +292,19 @@ what was missing — while the tick it would naturally have drawn beside that wo
 to be an accessible name rather than a visible kicker, because `TN-RESULT-01` requires the verdict to be the
 first line and a label above it is a pause before bad news.
 
+`TN-FIRSTRUN` is the sixth, and it is the first that decides **a product question the code had been
+answering by omission**. Whether a player must choose a character before playing was never written down, so
+the shipped behaviour was whatever the shell happened to do — which was to never draw `title.play` at all.
+It rules that the creator is on the route and has **no skip control**, and that **nothing in it is
+required**: the screen opens with a complete randomised character and the primary control is enabled from
+the first frame, so a player passes through the screen and never has to use it. The load-bearing reason is
+not the tap count. **A skip would have to land somewhere**, and the only appearance available without a draw
+is each slot's `fallback` — which the rig says in as many words is for NPC documents and save recovery and
+is "never rendered as a pre-selection". A skip button therefore reintroduces the default player through the
+back door, undoing `assets/style/art-bible.md` §8, `docs/content-review.md` §8.1 and `OQ-REVIEW-7` with a
+control added for convenience. The same reasoning decides the save-recovery path in `TN-LOOK-05`: an option
+id this build no longer has is replaced by a **uniform draw**, never by the fallback.
+
 Two words were settled in an earlier pass, in the files that own them rather than in the files that noticed
 them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp and the mark in a passport is a
 « tampon » — settled by `TN-PASSPORT` and applied to `TN-QUEST` and `TN-MAP` in the same change
@@ -256,12 +322,19 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
   question in that file, not a licence to improvise.
 - **A string is written down once.** One key, one copy table, one file. Where a second screen needs the same
   words it names the key and the file that owns it (`TN-HUD` does this for nine keys, `TN-MAP` for the ten
-  level names, `TN-TITLE` for four and `TN-PASSPORT` for eleven). Two tables carrying the same words is how
-  they stop being the same words. **And the table's home follows what the string belongs to**, not which
-  screen draws it: a waiting sentence belongs to a level, a mode label belongs to a mode, a stamp sentence
-  belongs to the level it names, an interact prompt belongs to what is in reach, a character's name belongs
-  to the character, a menu belongs to the screen it is a way out of, and a button that says "Go back" belongs
-  to none of them (`TN-WAIT`, `TN-MOVE`, `TN-DONE`, `TN-REACH`, `TN-GUIDE`, `TN-EXAMMENU`).
+  level names, `TN-TITLE` for four, `TN-PASSPORT` for eleven and `TN-CREATOR` for twenty-two). Two tables
+  carrying the same words is how they stop being the same words. **And the table's home follows what the
+  string belongs to**, not which screen draws it: a waiting sentence belongs to a level, a mode label belongs
+  to a mode, a stamp sentence belongs to the level it names, an interact prompt belongs to what is in reach,
+  a character's name belongs to the character, a menu belongs to the screen it is a way out of, **a slot
+  label belongs to the slot and an option name belongs to the option**, and a button that says "Go back"
+  belongs to none of them (`TN-WAIT`, `TN-MOVE`, `TN-DONE`, `TN-REACH`, `TN-GUIDE`, `TN-EXAMMENU`,
+  `TN-LOOK`).
+- **A key derived from data beats a key somebody typed.** `creator.slot.<rig slot name>` and
+  `creator.<rig slot name>.<rig option id>` are generated from `content/characters/rig.json`, so a slot with
+  no row, an option with no row and a row with no slot are all build failures naming the offender
+  (`TN-LOOK-04`). The alternative shipped `creator.slot.coat` for a slot that has never existed, matching
+  nothing and failing nothing. The same rule gives `creator.skin.skin-1`, which stutters and stays.
 - **A string that varies per thing belongs to the thing, and sometimes the thing is not a copy table.**
   `TN-DIALOGUE` is where that rule reaches content: a line one quest's giver speaks lives on that quest's
   document, because a per-quest key in a global table is the quest documents with extra steps — and because
@@ -271,14 +344,18 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
   `level.complete.score` is *not* `study.summary.score` because the two screens are answering different
   questions and neither may reword the other's (`TN-DONE`, `TN-PASSPORT-05`). `card.yourAnswer` **is** shared
   by the level's card, the exam and the review, by the first half of that test — and what differs between
-  them is the *shape* beside it, not the words (`TN-EXAMMENU`).
+  them is the *shape* beside it, not the words (`TN-EXAMMENU`). **Two slots that both declare an option
+  called `none` do *not* share a row**, because "None" under a head covering and "No" under glasses are two
+  answers to two questions (`TN-LOOK`).
 - **A rule is written down once, too.** Where two stories describe the same moment, one of them owns it and
   the other links. `TN-RESUME` owns what happens to the questions when a step is resumed; `TN-FLOW` owns
-  where a cold load lands and what "back" means; `TN-MAP` owns the three level states and `TN-PASSPORT`
-  reuses them rather than inventing a second vocabulary; `TN-COPY-07` owns the waiting rule and `TN-WAIT`
-  owns which level draws which sentence; `TN-DONE` owns what a finished level may claim; `TN-DIALOGUE` owns
-  what a giver says at the three moments a step cannot cover; `TN-EXAMMENU` owns which menu an exam draws;
-  `TN-SAVE`, `TN-CARD`, `TN-CREATOR` and `TN-HUD` name them and do not restate them.
+  where a cold load lands and what "back" means; `TN-FIRSTRUN` owns what decides which way in the title
+  screen offers and whether the creator can be skipped; `TN-MAP` owns the three level states and
+  `TN-PASSPORT` reuses them rather than inventing a second vocabulary; `TN-COPY-07` owns the waiting rule and
+  `TN-WAIT` owns which level draws which sentence; `TN-DONE` owns what a finished level may claim;
+  `TN-DIALOGUE` owns what a giver says at the three moments a step cannot cover; `TN-EXAMMENU` owns which
+  menu an exam draws; `TN-SAVE`, `TN-CARD`, `TN-CREATOR`, `TN-TITLE` and `TN-HUD` name them and do not
+  restate them.
 - **Counts and state words follow `TN-COPY-strings-and-counts.md`**, not each screen's judgement. It has one
   rule for plurals in both languages, and it exists because "1 questions" is not a Study bug, it is a bug in
   every string with a number in it. Its rule 9 — one counted noun per template — came out of Exam mode, where
@@ -286,23 +363,27 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
 - **A screen that is waiting says what it is doing, not how far along it is** (`TN-COPY-07`). No percentage,
   no step count, no ellipsis, no bar with a value, unless the game really knows both halves of the fraction —
   and in slice 1 it never does. The honest answer to a long wait is the escape route in `TN-LEVEL-02`.
-- **A screen never describes a state it is not in.** This project has shipped that defect five times: a boot
+- **A screen never describes a state it is not in.** This project has shipped that defect six times: a boot
   screen that read as a stalled progress bar, a caption saying there was no level to play over a running
   level, a game whose only entrance was a URL parameter, a Halifax load that said it was getting the Rideau
-  Canal ready, and a completion card that says "Task done!" to a player who accepted no task. `TN-MAP-04` is
-  the current form of the rule — a level nobody has built yet is described as unbuilt, not as locked and not
-  as an error — `TN-PASSPORT-04` applies it to a stamp for a level that does not exist, `TN-WAIT-01` applies
-  it to the words a level waits in, and `TN-DONE-01` applies it to the heading of a finished level. **Four of
-  the eight built levels declare no quest**, so that heading is now wrong on the only route half the built
-  game has.
+  Canal ready, a completion card that says "Task done!" to a player who accepted no task, and **a group
+  heading for a `coat` slot the rig has never had**. `TN-MAP-04` is the current form of the rule — a level
+  nobody has built yet is described as unbuilt, not as locked and not as an error — `TN-PASSPORT-04` applies
+  it to a stamp for a level that does not exist, `TN-WAIT-01` applies it to the words a level waits in,
+  `TN-DONE-01` applies it to the heading of a finished level, and `TN-LOOK-01` applies it to a group that
+  cannot exist. **Four of the eight built levels declare no quest**, so that heading is now wrong on the only
+  route half the built game has.
 - **Plain language**, roughly CLB 4 / grade 6. Short sentences. No jargon the player did not bring with them:
   the words *spaced repetition*, *FSRS*, *scheduler*, *due*, *card state* never appear on screen. **And no
   word this game teaches the player to read one way may be used on screen to mean another** — which is why
-  level 8's horse is labelled "Horse" and not "Riding" (`TN-MOVE`).
+  level 8's horse is labelled "Horse" and not "Riding" (`TN-MOVE`). It binds the creator too: "Tight curls"
+  ships over "Coily" on a grade-6 argument, and `OQ-LOOK-2` records that the plainer word may simply be the
+  worse one.
 - **A game that teaches never marks the player down.** A wrong answer costs nothing (`TN-CARD`), a quest
   completes on a wrong answer (`TN-QUEST-04`), a player who reaches the end of a level having answered
-  nothing is told so plainly and invited back rather than scored (`TN-DONE-02`), and declining a quest is
-  never made to feel like a mistake (`TN-DIALOGUE`). No screen outside `TN-RESULT` reports a result, and none
+  nothing is told so plainly and invited back rather than scored (`TN-DONE-02`), declining a quest is
+  never made to feel like a mistake (`TN-DIALOGUE`), and a player who walks out of the creator without
+  finishing is not told they did (`TN-FIRSTRUN-03`). No screen outside `TN-RESULT` reports a result, and none
   of them uses a grade, a star, a streak or a percentage. **Inside an exam this reaches the marks as well as
   the words**: a chosen option carries a neutral indicator and never a tick, because the exam promised no
   feedback until the end (`TN-EXAMMENU-06`).
@@ -310,8 +391,9 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
   hands, a pinch, a swipe, a drag or a double tap. This binds the map too: ten places east to west is a
   horizontal shape in a vertical window, and `TN-MAP` resolves it as a vertical list rather than a panned map
   (`OQ-MAP-2`). It binds the exam as well: twenty questions are reached with Previous and Next, never with a
-  swipe. **And it binds the words**: no player-facing string names an input, because a sentence that says
-  "tap" is wrong for a keyboard and for a switch (`TN-REACH`).
+  swipe. It binds the creator: five groups and nineteen options are reached by scrolling up and down, never
+  by a carousel (`TN-CREATOR-02`). **And it binds the words**: no player-facing string names an input,
+  because a sentence that says "tap" is wrong for a keyboard and for a switch (`TN-REACH`).
 - **One timer, and it is optional.** Nothing on screen counts down, and no scenario may pass or fail on how
   fast the player acts — **except the exam clock**, which exists only inside a practice exam, only when the
   player turned it on for that attempt, pauses whenever they are not answering, and can be turned off
@@ -328,7 +410,8 @@ them. **« Timbre » became « tampon »** — a « timbre » is a postage stamp
 - **A check that passes is not the same as a check that ran.** A lint rule that never executed, a scan rule
   that self-passed and a test that was skipped all report exactly what a clean run reports. Where a story
   leans on a tool's green tick, it also says how that tick can be made to go red — `TN-HUD-10` is the worked
-  example, and it exists because `landmark-one-main` passed on a page with no `<main>` at all.
+  example, and it exists because `landmark-one-main` passed on a page with no `<main>` at all. `TN-LOOK-04`
+  and `TN-SKIN-02` each carry their own negative control for the same reason.
 
 ## Depiction is acceptance too
 
@@ -337,20 +420,30 @@ contain. A story that puts a person or a place on screen carries these as scenar
 the same footing as its accessibility and bilingual ones:
 
 - **A "what is depicted" section, before the scenarios**, naming what the art agent is being asked to draw
-  and — explicitly — what is *not* depicted. `TN-LEVEL-ottawa.md` does this for the officer and
-  `TN-GUIDE-the-guide.md` does it for the beaver.
+  and — explicitly — what is *not* depicted. `TN-LEVEL-ottawa.md` does this for the officer,
+  `TN-GUIDE-the-guide.md` for the beaver and `TN-LOOK` for the player's own character, which is the one case
+  where the answer is a rule rather than a decision: the creator offers **nothing nation-specific**, and
+  `docs/content-review.md` §3.4 says so as a rule and not as an open question.
 - **No option is coupled to another.** Where the player picks how somebody looks, a scenario asserts that
   choosing any option in one group leaves every other group's option count unchanged
-  (`docs/content-review.md` §8.2). This is the mechanically checkable half of "no caricature".
+  (`docs/content-review.md` §8.2). This is the mechanically checkable half of "no caricature". `TN-LOOK-02`
+  and `TN-SKIN-03` assert it from both directions, and `TN-LOOK-02` adds the arithmetic the rig contract
+  already states: the product of the five option counts is 480, and no combination is refused.
 - **The randomiser is uniform.** Where a "surprise me" exists, a scenario asserts every option can come up
-  (§8.3). A weighted default player is a statement made in code.
+  (§8.3). A weighted default player is a statement made in code. `TN-LOOK-03` asserts it for the button and
+  for the draw on open, and `TN-FIRSTRUN-02` asserts it for the character a player saves **without touching
+  anything**, which is the draw that actually ships most often.
 - **No French copy about the player requires gender agreement** (§8.6). FR scenarios assert the wording, and
   the wording never contains `(e)`, `·e` or a bracketed ending. This binds copy about *characters* too where
   a story fixes their name: see `OQ-LEVEL-8`, and `TN-LEVELS`'s NPC table, which chooses epicene French role
   nouns so that most levels never have to answer the question. **The guide is the one character
   for which the question cannot arise at all** — « guide » is epicene and the referent is an animal — and
   `TN-GUIDE` says so rather than leaving it to be re-derived. Level 8's rancher is one of the two that still
-  need it answered (`OQ-SPINE-4`); level 9's artist does not, because « l'artiste » is epicene.
+  need it answered (`OQ-SPINE-4`); level 9's artist does not, because « l'artiste » is epicene. **The creator
+  is where the rule is easiest to break and hardest to see**: every French hair value agrees with
+  « cheveux » and every French tone value agrees with « teint », never with the player, and `TN-LOOK-10`
+  asserts both the agreement and the absence of a bracketed ending in one scenario so the two cannot be
+  traded against each other.
 - **A companion animal is a depiction like any other.** `TN-GUIDE` states that the beaver carries no
   clothing, regalia, pattern or cultural item of any kind, that `indigenous` is `false` for it and is
   required rather than inferred, and that its name is a role — because "truly Canadian" is exactly the brief
@@ -372,8 +465,11 @@ the same footing as its accessibility and bilingual ones:
 - **A blocked level is not scoped.** `TN-LEVELS` leaves level 2 and level 10 without a place, a landmark, an
   NPC or an id, because §1's shipping rule blocks both and `OQ-REVIEW-2` is unanswered. Filling those cells
   in would make a blocked level look schedulable, and a plan that reads as schedulable gets scheduled. The
-  same rule keeps `canoe` and `dogsled` out of `TN-MOVE`'s table. **Level 2 now has a full question bank and
-  is still blocked**, because a bank is not a licence to depict.
+  same rule keeps `canoe` and `dogsled` out of `TN-MOVE`'s table, and it keeps a hijab, a dastaar, a patka,
+  a kippah and a tichel out of `TN-LOOK`'s head-covering table: §8.7 requires each to cite a documented tying
+  style, none is drawn, and **a copy row for an option nobody has drawn is the same defect as a scoped
+  blocked level** (`OQ-LOOK-4`). **Level 2 now has a full question bank and is still blocked**, because a
+  bank is not a licence to depict.
 - **A real building may be named; a business may not be advertised.** `TN-NAMES` is the rule and it is
   checkable: the name is text and never lettering in the art, it appears in the point-of-interest card's body
   **and in a quest's own words about going there**, it carries no mark, and no sentence implies the place has
@@ -385,7 +481,9 @@ the same footing as its accessibility and bilingual ones:
 
 What a story must **not** do: assert that a depiction is approved. No scenario may encode a cultural
 sign-off, because no agent may grant one (`docs/content-review.md` §1). A story states what is on screen;
-whether it may be on screen at all is that document's shipping rule, not a test.
+whether it may be on screen at all is that document's shipping rule, not a test. **`TN-SKIN` is the file
+most likely to be misread on this point**, so it says it twice: it rules on wording, its scenarios check
+presence, absence and a measurement, and nothing in it means the names are right.
 
 ## French style
 
@@ -416,13 +514,25 @@ whether it may be on screen at all is that document's shipping rule, not a test.
   grassland and it is level 7's **title**, so level 8's waiting sentence is « Préparation du pâturage. »
   `TN-WAIT`'s fourth loading rule and `OQ-WAIT-4` come from that, and the check it asks for is mechanical:
   every waiting sentence compared against every level title, in both languages, including titles added later.
+- **The creator's tables are the first place a French value must agree with a noun in its own label.**
+  `TN-LOOK` writes them out: hair adjectives are masculine **plural** because they agree with « cheveux »
+  (« Courts », « Longs », « Noirs », « Bruns », « Blonds »), red hair is « Roux » and never « Rouges »,
+  « Gris » already carries its plural, and skin-tone band words are masculine **singular** because they agree
+  with « teint » (« clair », « moyen », « foncé »). None of them ever agrees with the player, which is what
+  keeps `docs/content-review.md` §8.6 satisfied while the strings inflect at all.
+- **The creator also produced the first row where the *English* carries a gendered form.** "Blonde" is the
+  feminine spelling and would gender a player the game never asks about; the value is "Blond". Recorded
+  because every earlier instance of this rule pointed the other way.
 - Numbers are formatted for the locale, never concatenated: « 0,6 », « 150 % » with a space.
   `TN-COPY-strings-and-counts.md` says why this is a rule and not a preference.
 - A passport stamp is **« un tampon »**, never « un timbre ». `TN-PASSPORT` settles it and lists the four
   strings that changed.
 - **A row whose two languages are the same word is written twice, not shared.** `locomotion.train.label` is
   "Train" and « Train »; `exam.menu` is "Menu" and « Menu »; `TN-MOVE-06` and `TN-EXAMMENU-05` assert both
-  values exist, so a missing French value fails even though the screen would read correctly.
+  values exist, so a missing French value fails even though the screen would read correctly. **And a row
+  whose two languages differ by one letter is written out for the opposite reason**: "Toque" against
+  « Tuque » is not a typo, both spellings are current in Canada in their own language, and `TN-LOOK-10`
+  asserts both so that nobody silently corrects one into the other.
 
 ## Shared test vocabulary
 
@@ -440,6 +550,8 @@ provides it.
 | **a built level** | A level with a document under `content/levels/`. Eight today — `halifax`, `quebec-city`, `ottawa`, `toronto`, `winnipeg`, `prairie-rail`, `alberta-foothills`, `vancouver` — and each one owns a waiting sentence, an error title, a stamp sentence and a play label (`TN-WAIT`, `TN-DONE`). Four of the eight have a quest; four do not. **Built is not shippable**: level 8's subject bank holds eighteen verified questions against `CLAUDE.md`'s floor of thirty, and it is in `unlockRules.order` anyway (`OQ-ALBERTA-2`). |
 | **finishing a level** | Either completing its task or reaching the end of it. Both earn the stamp and both draw the completion card, and every sentence on that card has to be true of the second (`TN-DONE`). |
 | **an attempt** | One run at the exam: the twenty questions it drew, the answers given, whether it was timed, and — once it has finished — whether it passed. At most one attempt is unfinished at a time (`TN-ATTEMPT-04`). |
+| **a slot** | One runtime-swappable part of a character's appearance, named by `content/characters/rig.json` and identical in the Rive file and the sprite atlas. Five are player-selectable: `skin`, `hairShape`, `hairColour`, `headCovering`, `feature`. `costume` is a slot and is **not** one of them. `TN-LOOK` owns their labels. |
+| **a first run** | A sitting in which the save carries **no character**. Not an empty save, not a save with no level played. `TN-FIRSTRUN` owns the term and the table of what each control is drawn for. |
 
 ### DOM markers
 
@@ -448,13 +560,14 @@ provides it.
 | `playable` | The level is loaded and accepts input. Already used by `tests/perf` and `tests/a11y`. |
 | `level-loading`, `level-error` | Load in progress; load failed. `level-loading` carries the level's own `level.<id>.loading` (`TN-WAIT-01`). |
 | `scene-state` | The E2E scene probe — see below. |
-| `title-screen`, `title-play`, `title-continue`, `title-choose-level`, `title-study`, `title-exam`, `title-settings` | The title screen (`TN-TITLE`). `title-play` and `title-continue` are never both present. `title-exam` is the exam's way in and changes its label when an exam is unfinished (`TN-ATTEMPT-03`). |
+| `title-screen`, `title-play`, `title-continue`, `title-choose-level`, `title-study`, `title-exam`, `title-settings` | The title screen (`TN-TITLE`). `title-play` and `title-continue` are never both present, and which one is drawn is decided by whether the save has a character (`TN-FIRSTRUN-01`). `title-exam` is the exam's way in and changes its label when an exam is unfinished (`TN-ATTEMPT-03`). |
 | `level-select`, `level-card-<id>` | The level select (`TN-MAP`). Each card reports `data-state` as `open`, `locked` or `not-built`. |
 | `hud`, `hud-quest-tracker`, `hud-mode-label`, `menu-button` | The lower-third HUD (`TN-HUD`). `hud` is a region named by `hud.label`; `hud-mode-label` carries the mode label `TN-MOVE` owns and is never empty; `hud-quest-tracker` carries the current step's own prompt, which is the one HUD string allowed to name a real place (`TN-NAMES-01`). |
 | `menu` | The menu opened from `menu-button` (`TN-HUD-02`). It carries Settings, Study, the passport and "Leave the level". **It is never present during an exam** (`TN-EXAMMENU-02`). |
 | `move-left`, `move-right`, `turn-around` | The hold-to-move controls (see `OQ-INPUT-1`). |
 | `interact-prompt`, `interact-hint` | What is in reach and what pressing it will do (`TN-REACH`). The prompt is a verb phrase and never a landmark's name; `interact-hint` is the one-time explanation of the marks, is never in the tab order or the switch ring, and blocks nothing. |
-| `character-creator`, `character-preview`, `slot-skin`, `slot-hair`, `slot-coat`, `randomise-character`, `start-playing`, `creator-settings`, `creator-save-error`, `creator-retry`, `creator-continue` | Character creator. |
+| `character-creator`, `character-preview`, `randomise-character`, `start-playing`, `creator-done`, `creator-back`, `creator-settings`, `creator-save-error`, `creator-retry`, `creator-continue`, `creator-option-gone` | The character creator (`TN-CREATOR`, `TN-FIRSTRUN`). `start-playing` and `creator-done` are never both present: the first is drawn on a first run and the second when the screen was opened from Settings. `character-preview` is named by `creator.preview.label` and reports `data-skin`, `data-hair-shape`, `data-hair-colour`, `data-head-covering` and `data-feature`. |
+| `slot-skin`, `slot-hair-shape`, `slot-hair-colour`, `slot-head-covering`, `slot-feature` | The creator's five groups, in that order, one per player-selectable slot in `content/characters/rig.json` (`TN-LOOK-01`). Each has role `radiogroup`. **There is no `slot-hair` and no `slot-coat`**: the rig splits hair into two slots on purpose and has no `coat` slot at all. Every option inside a group reports `data-slot`, `data-option` and `data-chosen`, which is what makes the slot-independence check writable without nineteen ids (`TN-LOOK-02`). |
 | `dialogue`, `dialogue-speaker`, `dialogue-text`, `dialogue-accept`, `dialogue-decline`, `dialogue-next` | NPC dialogue. `dialogue-speaker` carries the speaker's name — `npc.officer.name` or `npc.guide.name` — and is the dialog's accessible name (`TN-QUEST-08`, `TN-GUIDE-05`). |
 | `poi-card`, `poi-card-close` | Landmark information card. One of the two places a name on `TN-NAMES`'s list may appear. |
 | `about-this-place`, `about-this-place-open`, `about-this-place-close` | The territorial statement panel (`docs/content-review.md` §10.2). |
@@ -467,7 +580,7 @@ provides it.
 | `exam-menu-button`, `exam-menu` | The exam's own menu (`TN-EXAMMENU`). Deliberately not `menu-button` and `menu`: a test that cannot tell the two menus apart is a test that would have passed while the exam drew the level's. |
 | `exam-result`, `exam-result-score`, `exam-result-by-subject`, `subject-row-<id>`, `exam-review`, `exam-again` | The result and its review (`TN-RESULT`). `exam-result` is named by `exam.result.title`, which is not drawn as a visible line (`TN-EXAMMENU`, ruling 3). |
 | `exam-resume` | The screen an unfinished exam is picked up from (`TN-ATTEMPT-03`). |
-| `settings-screen`, `settings-close`, `setting-language`, `setting-auto-move`, `setting-single-switch`, `setting-hold-time`, `setting-reduced-motion`, `setting-high-contrast`, `setting-dyslexia-font`, `setting-text-size`, `setting-text-size-value`, `setting-subtitles`, `setting-sound` | Settings. `setting-sound` is present only when a sound ships (`TN-SET-01`). |
+| `settings-screen`, `settings-close`, `setting-character`, `setting-language`, `setting-auto-move`, `setting-single-switch`, `setting-hold-time`, `setting-reduced-motion`, `setting-high-contrast`, `setting-dyslexia-font`, `setting-text-size`, `setting-text-size-value`, `setting-subtitles`, `setting-sound` | Settings. `setting-character` re-opens the creator (`TN-FIRSTRUN-04`) and is absent while the screen behind Settings *is* the creator (`TN-CREATOR-11`). `setting-sound` is present only when a sound ships (`TN-SET-01`). |
 | `storage-warning`, `save-error`, `save-export`, `save-import`, `save-import-error` | Persistence. `storage-warning` is owned by `TN-HUD-03` and appears on the title screen too (`OQ-HUD-3`). |
 
 ### The scene probe
@@ -492,17 +605,21 @@ Proposed by these stories, fixed by the use cases that emit them (task 1.5). `le
 `player/braked` · `poi/entered` · `poi/left` · `poi/engaged` · `npc/engaged` · `dialogue/opened` ·
 `dialogue/closed` · `quest/offered` · `quest/accepted` · `quest/declined` · `quest/step-completed` ·
 `quest/completed` · `stamp/earned` · `question/asked` · `question/answered` · `question/dismissed` ·
-`study/started` · `study/finished` · `character/created` · `settings/changed` · `locale/changed` ·
-`progress/saved` · `progress/save-failed` · `progress/loaded` · `passport/opened` · `exam/started` ·
-`exam/answered` · `exam/left` · `exam/resumed` · `exam/discarded` · `exam/time-up` · `exam/finished`.
+`study/started` · `study/finished` · `character/created` · `character/changed` · `settings/changed` ·
+`locale/changed` · `progress/saved` · `progress/save-failed` · `progress/loaded` · `passport/opened` ·
+`exam/started` · `exam/answered` · `exam/left` · `exam/resumed` · `exam/discarded` · `exam/time-up` ·
+`exam/finished`.
 
-Four of them were new with `TN-FLOW` and eight with Exam mode and the passport; all are covered by
-`OQ-EVENT-1` like the rest. **`level/exitReached` and `level/completed` are not proposals** — the scene
-already publishes both, and they are two different things on purpose: reaching the end is a *position* the
-world reports, and completing the level is what the domain decides that position is worth (`TN-DONE`).
-**An exam does not emit `question/asked` or `question/answered`**, so nothing that counts a quest step can be
-advanced by an exam (`TN-RESULT-05`). **Opening the exam's menu emits nothing**, and `TN-EXAMMENU-02`
-requires that no item on it emits `exam/finished`.
+Four of them were new with `TN-FLOW`, eight with Exam mode and the passport, and one with `TN-FIRSTRUN`; all
+are covered by `OQ-EVENT-1` like the rest. **`level/exitReached` and `level/completed` are not proposals** —
+the scene already publishes both, and they are two different things on purpose: reaching the end is a
+*position* the world reports, and completing the level is what the domain decides that position is worth
+(`TN-DONE`). **`character/created` and `character/changed` are two names for the same shape of payload**, and
+that is deliberate too: the first is what makes a player exist and what the first-run route waits on, the
+second is what Settings emits, and a listener that re-runs the route must never see the second
+(`TN-FIRSTRUN-04`, `OQ-FIRSTRUN-3`). **An exam does not emit `question/asked` or `question/answered`**, so
+nothing that counts a quest step can be advanced by an exam (`TN-RESULT-05`). **Opening the exam's menu emits
+nothing**, and `TN-EXAMMENU-02` requires that no item on it emits `exam/finished`.
 
 ### The single-switch contract
 
@@ -516,6 +633,12 @@ these stories use:
 
 Every story proves that its whole flow is completable with those two gestures alone, and `TN-FLOW-07` proves
 the *route between* them is too — which is the case a per-screen proof cannot reach. See `OQ-SWITCH-1`.
+
+**The creator is the screen with the most items in its ring**, and the answer is not a shortcut: `TN-LOOK-07`
+requires the ring to reach every one of the nineteen options and to wrap once, and `TN-FIRSTRUN-06` requires
+"Start playing" to be reachable **without choosing anything**, in no more presses than there are items. A
+skip control would have sat in the same ring and saved nobody anything, which is one of the four reasons
+`TN-FIRSTRUN` refuses one.
 
 **The "no countdown" half of that contract is structural, not promised.** Task 1.15 classified a press *on
 release*, from two timestamps, and `tests/unit/ui/single-switch.test.ts` greps `app/ui/single-switch.ts` for
@@ -552,9 +675,11 @@ over it, and Exam mode are still only scanned through the harness. See `OQ-TEST-
 to run at each screen of the route **against the built output**. Exam mode adds four screens to scan
 (`TN-EXAM-08`, `TN-RESULT-10`) and a fifth with `TN-EXAMMENU-04`'s menu, the passport one
 (`TN-PASSPORT-09`) and the completion card one (`TN-DONE-07`); none of them is covered by anything that
-exists today.
+exists today. **The creator is the sharpest case of all of them**: it passes the harness scan and no player
+has ever seen it, because nothing under `app/bootstrap` mounts it — `TN-FIRSTRUN-07`'s last scenario is what
+turns that into acceptance rather than a note.
 
-**The waiting screen is the sharpest case of a component nothing mounts.** `createLevelLoading` is
+**The waiting screen is the second sharpest case of a component nothing mounts.** `createLevelLoading` is
 constructed by the harness and by the unit suite and by nothing under `app/bootstrap`, so it passes every
 scan and no player has ever seen it (`OQ-WAIT-1`). A screen that is accessible and unreachable is not a
 screen. **Eight levels now ship a waiting sentence nobody can read**, which is the same debt at eight times
@@ -604,10 +729,11 @@ answer nobody has given. Cross-cutting ones live here.
   another: per-component, the harness's assembled page in states the shipped config cannot reach, and the
   built output as loaded.
   **What is still open is the rest of the route.** The built-output scan covers the title screen and the map;
-  the level with its HUD, a modal open over it, and every screen of Exam mode and the passport are still
-  scanned only through the harness. `TN-FLOW-08` states the whole route as acceptance, and it is not
-  discharged until each of those is scanned against `dist/` too. Reports may now say the a11y suite proves
-  the shipped **front door**; they may not yet say it proves the shipped game.
+  the creator, the level with its HUD, a modal open over it, and every screen of Exam mode and the passport
+  are still scanned only through the harness. `TN-FLOW-08` states the whole route as acceptance and
+  `TN-FIRSTRUN-07` states the first-run leg of it, and neither is discharged until each of those is scanned
+  against `dist/` too. Reports may now say the a11y suite proves the shipped **front door**; they may not yet
+  say it proves the shipped game.
 - **`OQ-TEST-3` — can a test move the clock?** Several scenarios in `TN-RESUME` say "an hour has passed",
   because what the scheduler offers depends on time and nothing else can express that, and every scenario in
   `TN-TIMER-03` and `TN-TIMER-05` says "five minutes pass" for the same reason. If the time those two read is
@@ -615,6 +741,12 @@ answer nobody has given. Cross-cutting ones live here.
   and then becomes ignored. *Recommendation:* one clock port, injected like every other adapter, read by both
   the scheduler and the exam; the stories keep saying "an hour has passed" and never name the fake. See
   `OQ-RESUME-1` and `OQ-TIMER-3`. **Two sources of time is how a paused clock quietly stops being paused.**
+- **`OQ-TEST-4` — where does a seeded draw come from?** `TN-LOOK-03`, `TN-SKIN-01` and `TN-FIRSTRUN-02` all
+  say "1000 seeded draws", because uniformity is the only way to check that no appearance is the default and
+  `docs/content-review.md` §8.3 asks for exactly that check. If the randomiser reads `Math.random` directly,
+  none of those scenarios can be written. *Recommendation:* one randomness port, injected like the clock,
+  read by the creator and by the save-recovery path in `TN-LOOK-05`; the stories keep saying "seeded" and
+  never name the fake. Same shape and same owner as `OQ-TEST-3`.
 - **`OQ-SWITCH-1` — short press / long press, or something else?** *Recommendation:* as described above; it
   needs no timer the player can lose to, which auto-scanning does. Task 1.15 implemented it with no
   scheduling primitive at all, which is the strongest form of that argument, and `TN-TIMER-07` keeps that
@@ -630,6 +762,16 @@ answer nobody has given. Cross-cutting ones live here.
   missing one, and all three are blocked on nothing but an owner. *Recommendation:* route them as one change
   to the architect, with `TN-WAIT-03`, `TN-DIALOGUE-03` and `TN-VANCOUVER-01` as their acceptance. Neither
   directory file writes a row until the field exists.
+- **`OQ-CHARDOC-1` — there is no player character document, only a rig contract.**
+  `content/characters/rig.json` is the rig, and `content/schemas/character.schema.json` describes a
+  *character* with `slots[]`, each slot carrying a `labelKey` and each option carrying a `labelKey` — which
+  is exactly the shape `TN-LOOK` and `TN-SKIN` write the values for. No such document exists, so nothing
+  today binds a key to a slot. *Recommendation:* `content/characters/player.json`, authored against that
+  schema, with the five player-selectable slots, nineteen options and the keys spelled as `TN-LOOK`'s rule
+  spells them, `indigenous: false` and no `nation` (`docs/content-review.md` §3.4). Until it exists,
+  `TN-LOOK-04`'s gate has to read the rig instead, which works and is one indirection further from the thing
+  the creator actually renders. Routed to the architect and the content author; `content/` is not this
+  directory's to edit.
 - **`OQ-SUBJECTS-1` — nothing declares the ten subjects, and three screens need them.**
   `exam.subjectsReady` counts "1 of 10" (`TN-EXAM-01`), the result names a subject with the level's own
   subject line (`TN-RESULT-03`), and the passport counts ten stamps (`TN-PASSPORT-01`) — and the only list of
@@ -656,20 +798,28 @@ answer nobody has given. Cross-cutting ones live here.
   reason a bank cannot answer.
 - ~~**`OQ-REVIEW-1` — `docs/content-review.md` does not exist.**~~ **Answered 2026-09-08** — it exists now,
   and the questions it could not answer moved into it as `OQ-REVIEW-2` … `OQ-REVIEW-11`. Three of those now
-  reach back into these stories: `OQ-REVIEW-6` recommends the skin-tone option names that `OQ-CREATOR-5`
-  asked for; `OQ-REVIEW-2` — who may grant cultural sign-off — is unanswered and blocks nothing in slice 1
-  only because slice 1 depicts no nation, while it blocks **levels 2 and 10 outright** (`TN-LEVELS`); and
-  `OQ-REVIEW-10` — the canoe, the kayak, the dogsled and the qamutiik — is unanswered and is attached to
-  those same two levels' locomotion modes, which is why `TN-MOVE` writes no label for either. `OQ-LEVEL-3`
-  (the officer's gender presentation and skin tone) is answered in part: whatever is chosen, §6 of that
-  document fixes the proportions and §8.6 fixes how the option is labelled — and `OQ-LEVEL-8` now names the
-  three French strings that move together with it.
+  reach back into these stories: **`OQ-REVIEW-6` is answered in `TN-SKIN-naming-the-six-skin-tones.md`**,
+  which is also the answer `OQ-CREATOR-5` asked for; `OQ-REVIEW-2` — who may grant cultural sign-off — is
+  unanswered and blocks nothing in slice 1 only because slice 1 depicts no nation, while it blocks **levels 2
+  and 10 outright** (`TN-LEVELS`); and `OQ-REVIEW-10` — the canoe, the kayak, the dogsled and the qamutiik —
+  is unanswered and is attached to those same two levels' locomotion modes, which is why `TN-MOVE` writes no
+  label for either. `OQ-LEVEL-3` (the officer's gender presentation and skin tone) is answered in part:
+  whatever is chosen, §6 of that document fixes the proportions and §8.6 fixes how the option is labelled —
+  and `OQ-LEVEL-8` now names the three French strings that move together with it.
+  **One consequence of answering `OQ-REVIEW-6` here is that two documents now recommend two wordings.**
+  `docs/content-review.md` §8.1 and its §12 still recommend "Skin tone 1 (lightest)"…"(deepest)", and
+  `assets/style/art-bible.md` §8 still says the ramps ship unnamed until the question is settled. Neither
+  file is this directory's to edit; `OQ-SKIN-4` states what their owners have to change, and until they do, a
+  reader has no way to tell which wording shipped.
 - ~~**`OQ-REVIEW-7` — `CharacterSlot.default` versus "no tone is the default".**~~ **Answered 2026-09-08 —
   in the art bible's favour, and the whole conflict was the name.** The architect renamed the field to
   `fallback`, which is what `content/schemas/character.schema.json` now requires; nothing about the
   behaviour changed, and `TN-CREATOR-01` ("each group already has one option chosen") is unaffected. One
   stale reference remains outside this directory: `docs/content-review.md` still calls the field `default`
   in its open-questions section. That file is not this agent's to edit — flagged for its owner.
+  **`TN-FIRSTRUN` and `TN-LOOK-05` are what stop that answer being undone by a convenience**: a skip control
+  and a save-recovery path are the two places where the fallback would silently become the default player,
+  and both are ruled out in favour of a uniform draw.
 - ~~**`OQ-ENTRY-1` — the game's data says there is no game.**~~ **Answered 2026-09-08.**
   `content/game.config.json` carried `"levels": []` and empty unlock rules, so every level was locked
   including the only one that existed. It now carries eight built levels, a ten-slot journey and
@@ -680,3 +830,6 @@ answer nobody has given. Cross-cutting ones live here.
   noticed while Ottawa was the only door. **It exposed a fourth the same way**: the stamp sentence was
   Ottawa's too, and the level the game now opens on had none (`TN-DONE`). **And a fifth, on 2026-09-09**:
   the quest on that same level could not be given at all, because its giver had no name (`TN-GUIDE`).
+  **The sixth is the one the entrance never reached**: `title.play` is the control that opens the creator,
+  and because the creator has never been mounted the shell has never been able to represent a first run, so
+  that control has never been drawn on any door the game has had (`TN-FIRSTRUN`).

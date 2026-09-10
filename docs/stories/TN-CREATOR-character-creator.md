@@ -16,6 +16,25 @@ this file does not restate it. Where a scenario below still says "the Ottawa lev
 `start-playing`, it means the route in `TN-FLOW-01` completes to the Ottawa level; nothing else about those
 scenarios changed.
 
+**Amended 2026-09-09 — this file no longer says what the slots are.** It said three: `skin`, `hair`, `coat`.
+The rig says five — `skin`, `hairShape`, `hairColour`, `headCovering`, `feature` — with nineteen options
+between them and 480 reachable appearances, and `coat` is `costume`, which is `playerSelectable: false` and
+names *which character an artboard is* rather than how a player customised one. A group heading for a group
+that cannot exist is a screen describing a state it is not in, in copy. Three files carry what moved:
+
+- **`TN-LOOK-what-the-player-can-choose.md`** owns the five slot labels, thirteen of the nineteen option
+  names, the key shape both follow, and the rule that no name is a judgement or a people. A slot label
+  belongs to the slot, for the same reason a mode label belongs to a mode (`TN-MOVE`) and a name belongs to
+  a character (`TN-GUIDE`): four things draw it, and this screen is only one of them.
+- **`TN-SKIN-naming-the-six-skin-tones.md`** owns the other six, and rules on `OQ-REVIEW-6`. It is its own
+  file because it is the slot most likely to be re-decided and the other four must not be held while it is.
+- **`TN-FIRSTRUN-choosing-a-character-before-playing.md`** owns when this screen is offered, that it cannot
+  be skipped, that nothing in it is required, and that it re-opens from Settings with a differently named
+  primary control. It also records why `title.play` has never been drawn.
+
+`OQ-CREATOR-1`, `OQ-CREATOR-4` and `OQ-CREATOR-5` are closed by those three files and are struck through
+below rather than deleted, so a reader who arrives from a citation finds the answer instead of a gap.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -29,28 +48,51 @@ scenarios changed.
 | Failure path | `TN-CREATOR-03` — *The character cannot be saved* |
 | The way in to accessibility itself | `TN-CREATOR-11` — *Settings, before there is a game to pause* |
 
+The five groups and the nineteen options carry their own copies of every path in `TN-LOOK-06` … `TN-LOOK-10`
+and `TN-SKIN-05` … `TN-SKIN-08`. This file's a11y scenarios are about the **screen** — its focus order, its
+live region, its layout at 200 % — and do not restate them.
+
 ## Player-facing copy
+
+This file owns the screen's own chrome. **It owns no slot label and no option name**; those are `TN-LOOK`'s
+and `TN-SKIN`'s.
 
 | Key | EN | FR |
 |---|---|---|
 | `creator.title` | Make your character | Créez votre personnage |
 | `creator.intro` | Pick how you look. You can change this later in Settings. | Choisissez votre apparence. Vous pourrez la changer plus tard dans les Réglages. |
-| `creator.slot.skin` | Skin tone | Teint de peau |
-| `creator.slot.hair` | Hair | Cheveux |
-| `creator.slot.coat` | Coat | Manteau |
+| `creator.preview.label` | Your character | Votre personnage |
 | `creator.randomise` | Surprise me | Au hasard |
 | `creator.start` | Start playing | Commencer à jouer |
 | `creator.saveFailed` | We could not save your character. You can keep playing, but your choices may be lost. | Nous n'avons pas pu enregistrer votre personnage. Vous pouvez continuer à jouer, mais vos choix pourraient être perdus. |
 | `creator.retry` | Try again | Réessayer |
 | `creator.continue` | Keep playing | Continuer quand même |
 
+`creator.slot.skin`, `creator.slot.hair` and `creator.slot.coat` used to be in this table. The first moved to
+`TN-LOOK` unchanged; the other two are **deleted**, because the rig splits hair into two slots on purpose and
+has no `coat` slot at all.
+
+Rows this screen draws and does not own:
+
+| Key | Owned by | Drawn here as |
+|---|---|---|
+| `creator.slot.*` (5), `creator.hairShape.*` (4), `creator.hairColour.*` (5), `creator.headCovering.*` (2), `creator.feature.*` (2), `creator.optionGone` | `TN-LOOK-what-the-player-can-choose.md` | The groups, their options, and the message when a saved option is gone |
+| `creator.skin.*` (6) | `TN-SKIN-naming-the-six-skin-tones.md` | The six tones |
+| `creator.done` | `TN-FIRSTRUN-choosing-a-character-before-playing.md` | The primary control when this screen was opened from Settings |
+| `common.back` | `TN-FLOW-first-run-and-return.md` | `creator-back` |
+| `common.settings` | `TN-SET-settings.md` | `creator-settings` |
+
 The settings control on this screen uses `common.settings` — "Settings" / « Réglages » — defined in
 `TN-SET-settings.md`. It needs a key of its own and **not words of its own**: the button names the screen it
 opens, and a screen reader user who has heard "Settings" in the HUD menu should hear the same word here.
 `settings.title` stays the heading of that screen, so the two can be reworded apart if they ever need to be.
 
-Option names are content (`content/locales/*`), one key per slot option, e.g. `creator.hair.curly` →
-"Curly" / « Bouclés ». Every option has a name; no option is identified by colour alone.
+**`creator.preview.label` is a new row and it closes a gap nobody had named.** `TN-CREATOR-06` has required
+since it was written that `character-preview` carry "a text description listing the chosen option of every
+slot", and a description needs something to hang on: the preview is a region with an accessible name, and
+that name is this row. The description itself is **not** a row — it is the five slot rows and the five chosen
+option rows, joined in the label-and-value form `TN-COPY-05` fixes ("Skin tone: 4, medium. Hair: Short. …"),
+so it needs no template, has no counted noun, and cannot drift from the names the groups are showing.
 
 ---
 
@@ -71,15 +113,21 @@ Feature: Choosing how the player looks
     And the element "title-screen" is gone
     And it shows the heading "Make your character"
     And it shows "character-preview"
-    And the groups "slot-skin", "slot-hair" and "slot-coat" are each visible
+    And the groups "slot-skin", "slot-hair-shape", "slot-hair-colour", "slot-head-covering"
+      and "slot-feature" are each visible
     And each group already has one option chosen
     And the button "start-playing" is enabled
 
   Scenario: Choosing an option updates the preview and nothing else
-    When I tap the third option in "slot-hair"
+    When I tap the third option in "slot-hair-shape"
     Then that option is marked as chosen
     And no other group's chosen option changes
-    And "character-preview" reports "data-hair" equal to that option's id
+    And "character-preview" reports "data-hair-shape" equal to that option's id
+
+  Scenario: The preview reports every slot, not only the one that changed
+    Then "character-preview" reports "data-skin", "data-hair-shape", "data-hair-colour",
+      "data-head-covering" and "data-feature"
+    And each is the id of that group's chosen option
 
   Scenario: Surprise me picks a whole character at once
     When I tap "randomise-character"
@@ -90,6 +138,7 @@ Feature: Choosing how the player looks
   Scenario: Starting play carries the character into the game
     When I tap "start-playing"
     Then the event "character/created" is emitted with one option per slot
+    And it carries a value for all five slots
     And the event "progress/saved" is emitted
     And the element "level-select" is visible, as TN-FLOW-01 describes
     When I choose the one open level
@@ -101,7 +150,7 @@ Feature: Choosing how the player looks
   Scenario: A returning player does not see the creator again
     Given I have a saved game with a character
     When I open the game
-    Then the element "title-screen" is visible, as TN-FLOW-02 describes
+    Then the element "title-screen" is visible, as TN-FLOW-02 and TN-FIRSTRUN-01 describe
     And the element "character-creator" is not shown
     And one tap on "title-continue" reaches "playable"
 ```
@@ -116,6 +165,12 @@ Feature: One-thumb portrait creator
     Then every option button and every group is at least 44 CSS px wide and tall
     And "start-playing" and "randomise-character" are inside the lower third of the viewport
     And the page does not scroll sideways
+
+  Scenario: Five groups and nineteen options still fit one thumb
+    Given the viewport is 390 x 844
+    Then every group is reachable by scrolling up and down only
+    And no group is reached by a sideways scroll, a carousel or a swipe
+    And "start-playing" stays reachable at every scroll position, or is reachable by scrolling to it
 
   Scenario: No forbidden gesture is needed
     Then no control in "character-creator" requires a swipe, a drag, a pinch or a double tap
@@ -173,12 +228,12 @@ Feature: Keyboard-only character creation
     Then focus is still inside "character-creator"
 
   Scenario: Arrow keys move within a group, Tab moves between groups
-    When I press "Tab" until focus is inside "slot-hair"
+    When I press "Tab" until focus is inside "slot-hair-shape"
     And I press "ArrowRight"
-    Then the next option in "slot-hair" is chosen
+    Then the next option in "slot-hair-shape" is chosen
     And focus is on that option
     When I press "Tab"
-    Then focus leaves "slot-hair" and lands on the next group or control
+    Then focus leaves "slot-hair-shape" and lands on the next group or control
 
   Scenario: The whole flow finishes from the keyboard
     When I choose one option in each group with the arrow keys
@@ -214,7 +269,7 @@ Feature: Single-switch character creation
     Then the highlight is on the first item again
 
   Scenario: Long press chooses the highlighted item
-    Given the highlight is on the second option of "slot-coat"
+    Given the highlight is on the second option of "slot-head-covering"
     When I hold the switch past the hold-to-choose threshold
     Then that option is chosen
     And the choice is announced in "#tn-live-region"
@@ -234,16 +289,18 @@ Feature: The creator without sight of the preview
 
   Scenario: The screen has a name and a structure
     Then "character-creator" has an accessible name that is not empty
-    And each of "slot-skin", "slot-hair" and "slot-coat" is a group with an accessible name
+    And each of "slot-skin", "slot-hair-shape", "slot-hair-colour", "slot-head-covering" and
+      "slot-feature" is a group with an accessible name
     And every option is a radio with an accessible name that is a word, not a colour swatch
 
   Scenario: Choosing is announced in words
-    When I choose the option named "Curly" in "slot-hair"
-    Then "#tn-live-region" reads "Hair: Curly"
+    When I choose the option named "Tight curls" in "slot-hair-shape"
+    Then "#tn-live-region" reads "Hair: Tight curls"
     And exactly one element on the page has an "aria-live" attribute
 
   Scenario: The preview is described, not just drawn
-    Then "character-preview" has a text description listing the chosen option of every slot
+    Then "character-preview" has the accessible name "Your character"
+    And it has a text description listing the chosen option of every slot
     And that description updates when a choice changes
 
   Scenario: The canvas is not read
@@ -288,6 +345,13 @@ Feature: Large text in the creator
     And every control is still at least 44 CSS px wide and tall
     And "start-playing" is reachable, by scrolling down if needed
     And "creator-settings" is reachable, by scrolling if needed
+    And "creator-back" is reachable, by scrolling if needed
+
+  Scenario: Five groups at 200 % do not push the primary control out of reach
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    Then "start-playing" is reachable by scrolling down and is not covered by any other element
+    And no group is collapsed, hidden or truncated to make room for it
 
   Scenario: The dyslexia-friendly font does not break the layout
     Given "setting-dyslexia-font" is on
@@ -305,15 +369,16 @@ Feature: Character creation in French
   Scenario: Every visible string is French
     When the element "character-creator" is visible
     Then the heading reads "Créez votre personnage"
-    And the groups read "Teint de peau", "Cheveux" and "Manteau"
+    And the groups read "Teint de peau", "Cheveux", "Couleur des cheveux", "Couvre-chef" and "Lunettes"
     And the buttons read "Au hasard" and "Commencer à jouer"
     And the settings control reads "Réglages"
+    And the back control reads "Retour"
     And no English word appears in "character-creator"
     And the screen carries "lang" equal to "fr"
 
   Scenario: Choices are announced in French
-    When I choose the hair option named "Bouclés"
-    Then "#tn-live-region" reads "Cheveux : Bouclés"
+    When I choose the hair option named "Boucles serrées"
+    Then "#tn-live-region" reads "Cheveux : Boucles serrées"
 
   Scenario: The save failure message is French
     Given writing to local storage fails
@@ -321,8 +386,12 @@ Feature: Character creation in French
     Then a message says "Nous n'avons pas pu enregistrer votre personnage. Vous pouvez continuer à jouer, mais vos choix pourraient être perdus."
     And the buttons read "Réessayer" and "Continuer quand même"
 
+  Scenario: No string on this screen asks the player's gender
+    Then no string in "character-creator" contains "(e)", "·e" or a bracketed ending
+    And "Créez votre personnage" and "Choisissez votre apparence." are drawn in that form for every player
+
   Scenario: A missing French string is visible as a bug, not silently English
-    Given the French bundle has no value for "creator.slot.coat"
+    Given the French bundle has no value for "creator.slot.headCovering"
     When the content check runs
     Then the build fails, naming the missing French string
 ```
@@ -371,10 +440,10 @@ Feature: Reaching Settings from the creator
     And it offers the same controls as TN-SET-01 describes, including "Hold time"
 
   Scenario: Closing returns to the creator, with the choices intact
-    Given I had chosen the third option in "slot-hair"
+    Given I had chosen the third option in "slot-hair-shape"
     When I open Settings and close it
     Then the element "character-creator" is visible again
-    And the third option in "slot-hair" is still chosen
+    And the third option in "slot-hair-shape" is still chosen
     And focus returns to "creator-settings"
 
   Scenario: A setting changed here applies here
@@ -391,6 +460,10 @@ Feature: Reaching Settings from the creator
     Then "title-settings" on the title screen opens the same settings screen,
       as TN-TITLE-01 and TN-FLOW-07 require
     And a player who needs one-button mode never has to reach the creator to turn it on
+
+  Scenario: Settings does not offer a route back into this screen while I am on it
+    Then "setting-character" is not offered while "character-creator" is the screen behind Settings
+    And no route exists that opens the creator from the creator
 
   Scenario: From the keyboard
     Given I am using a keyboard only
@@ -426,27 +499,42 @@ Feature: Reaching Settings from the creator
 
 ## Open questions
 
-- **`OQ-CREATOR-1` — how many slots and how many options each?** The stories assume three slots (`skin`,
-  `hair`, `coat`) because the character seam names slots as shared vocabulary and the art budget for slice 1
-  is small. *Recommendation:* three slots, four to six options each, decided with the art agent in task 1.9
-  and fixed by `character.schema.json` in 1.2. If the art lands with different slot names, this file is
-  updated, not the schema.
+- ~~**`OQ-CREATOR-1` — how many slots and how many options each?**~~ **Answered 2026-09-09, by the rig
+  rather than by this file.** `content/characters/rig.json` declares five player-selectable slots — `skin`
+  (6), `hairShape` (4), `hairColour` (5), `headCovering` (2), `feature` (2) — nineteen options and 480
+  reachable appearances, all of it drawn and shipped. The recommendation here was three slots of four to six
+  options and it was wrong in both directions: fewer slots than the art has, and one slot (`coat`) the art
+  never had. `TN-LOOK` writes the names. **The rule that survives is the one this question got right:** if
+  the art lands with different slot names, this directory is updated and the schema is not.
 - **`OQ-CREATOR-2` — does the player type a name?** Not in these scenarios. A free-text name brings
   profanity filtering, personal data in a save file and interpolation into two languages with different
   gender agreement. *Recommendation:* no name field in slice 1; the officer greets the player without one.
 - **`OQ-CREATOR-3` — where does the character live in the save?** `ProgressSnapshot` in
   `app/application/ports/progress-repository.ts` has no field for it, so as written today the character
   cannot survive a reload and `TN-SAVE-01` cannot pass. *Recommendation:* task 1.2 adds a `character` block
-  to `progress.schema.json` and to `ProgressSnapshot`.
-- **`OQ-CREATOR-4` — can the character be changed later?** `creator.intro` promises "you can change this
-  later in Settings". *Recommendation:* keep the promise in slice 1 by re-opening this same screen from
-  Settings, or delete that sentence. Do not ship the sentence without the button. `TN-CREATOR-11` is the
-  other half of the same route and makes this cheaper: the two screens already know how to open each other.
-- **`OQ-CREATOR-5` — skin tone option names.** Naming skin tones in two languages is a content-review
-  matter, not a UI one. *Recommendation:* neutral, non-food names decided under `docs/content-review.md`
-  (`OQ-REVIEW-6`), never a colour word alone.
+  to `progress.schema.json` and to `ProgressSnapshot`. **`TN-FIRSTRUN-01` now depends on this too**, and
+  more sharply: the title screen's Play-or-Continue branch is decided by whether that block is present, so
+  until it exists there is no way to be a returning player and `title.play` is the only branch that can be
+  drawn. That is the opposite of today's defect and it is the same missing field.
+- ~~**`OQ-CREATOR-4` — can the character be changed later?**~~ **Answered 2026-09-09 in
+  `TN-FIRSTRUN`, ruling 3, in favour of keeping the promise.** Settings offers "Change my character", it
+  re-opens this same screen, and the primary control is then `creator.done` — "Done" / « Terminé » — and
+  returns to Settings. `creator.intro` keeps its sentence, and `TN-FIRSTRUN-04`'s last scenario is the check
+  that pairs the sentence with the button so neither can ship without the other.
+- ~~**`OQ-CREATOR-5` — skin tone option names.**~~ **Answered 2026-09-09 in
+  `TN-SKIN-naming-the-six-skin-tones.md`**, which is the ruling on `OQ-REVIEW-6` this question routed the
+  decision to: an ordinal and a lightness band shared by two options, "1, light" … "6, dark" / « 1, clair »
+  … « 6, foncé », adopting `docs/content-review.md` §8.1's direction and amending its wording in two places.
+  The recommendation here — "neutral, non-food names decided under `docs/content-review.md`, never a colour
+  word alone" — is what was done.
 - **`OQ-CREATOR-6` — is the creator still the right place for a first-run player to meet Settings?**
   `TN-CREATOR-11` was written when this was the first screen. It is now the second, and `TN-TITLE` puts a
   settings control one step earlier. *Recommendation:* keep both. Two routes to Settings cost one button and
   remove the case where a player who cannot use the creator has already passed the only way to fix that.
   The scenario that asserts they open the same screen is what stops them drifting into two screens.
+- **`OQ-CREATOR-7` — the creator is reachable from Settings and Settings is reachable from the creator.**
+  That is a cycle, and a player can walk it forever. It is harmless for the pointer and the keyboard and it
+  is a trap for a switch user, who cannot see the depth they are at. *Recommendation:* the route is
+  one-directional per sitting — `setting-character` is not offered while the screen behind Settings is the
+  creator, which `TN-CREATOR-11` now asserts — and the alternative, a breadcrumb, is a second navigation
+  vocabulary on a screen that has one control. Routed to `TN-SET`, which owns the item.

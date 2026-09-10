@@ -11,6 +11,12 @@ Read `README.md` in this directory first. Export, import and delete live in `TN-
 reached from this same screen. The plural rule and the state-word rule this file uses are fixed by
 `TN-COPY-strings-and-counts.md`.
 
+**Amended 2026-09-09 with one row and one control.** `creator.intro` has promised since it was written that
+"You can change this later in Settings", and there has never been a control here that keeps the promise.
+`TN-FIRSTRUN-choosing-a-character-before-playing.md` rules that the promise ships with the button
+(`OQ-CREATOR-4`, closed), and this file owns the row, because the item is on this screen. What the item
+*opens* — the creator, on its second errand, with `creator.done` as its primary control — is that file's.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -29,6 +35,7 @@ reached from this same screen. The plural rule and the state-word rule this file
 |---|---|---|
 | `settings.title` | Settings | Réglages |
 | `common.settings` | Settings | Réglages |
+| `settings.character` | Change my character | Modifier votre personnage |
 | `settings.language` | Language | Langue |
 | `settings.language.en` | English | English |
 | `settings.language.fr` | Français | Français |
@@ -65,6 +72,13 @@ not repeated here.
 (`TN-HUD-02`) and from the character creator (`TN-CREATOR-11`). One key for a heading and a button label
 would make a change to either a change to both.
 
+**`settings.character` is an appearance control on a screen of accessibility switches, and it is here
+anyway**, because that is where `creator.intro` sends the player and a promise is kept where it was made.
+It sits at the top of the screen, above the switches, and it is the only item on this screen that opens
+another screen rather than changing a value. **Neither language requires gender agreement about the player**
+— « Modifier votre personnage » agrees with « personnage », which is masculine whoever is playing — and
+`TN-SET-08` asserts it, because this is the one row on this screen that talks about the player at all.
+
 The language names are written in their own language and are never translated.
 
 Hold-time values: **Short 0.3 s, Medium 0.6 s, Long 1.2 s, Very long 2.0 s.** Medium is the default. Named
@@ -93,6 +107,19 @@ Feature: The settings screen
       "High contrast", "Easier-to-read font", "Text size" and "Subtitles"
     And each has a visible label, not an icon alone
     And each is at least 44 CSS px wide and tall
+
+  Scenario: The way back into the character creator is present and is not a switch
+    Then the element "setting-character" is visible and reads "Change my character"
+    And it is a button that opens another screen, not a switch, a slider or a group
+    And it is the first item on the screen, above the switches
+    And it is at least 44 CSS px wide and tall
+    And it has a visible text label, not an icon alone
+    And activating it opens the creator, as TN-FIRSTRUN-04 describes
+
+  Scenario: It is absent where it would open the screen the player is already on
+    Given Settings was opened from the character creator
+    Then "setting-character" is not present in the accessibility tree
+    And no route exists that opens the creator from the creator
 
   Scenario: The hold-time control is present whenever one-button mode can be turned on
     Then a control "Hold time" is shown, as described in TN-SET-09
@@ -186,6 +213,13 @@ Feature: Settings when storage fails
     Then the hold time is clamped to the longest value the screen offers
     And a long press still chooses
     And the game does not fail to start
+
+  Scenario: The character control does not claim to have saved a character it could not
+    Given writing to local storage fails
+    When I change my character from here and tap "Done"
+    Then no message says the character was saved
+    And "storage-warning" is visible
+    And the character I chose is drawn for the rest of the sitting
 ```
 
 ## TN-SET-04 — Settings from the keyboard
@@ -203,6 +237,12 @@ Feature: Keyboard-only settings
     And the language control changes with the arrow keys
     And "Hold time" changes with the arrow keys
     And "Text size" changes with the arrow keys and reports its value as text
+
+  Scenario: The control that opens another screen gives focus back
+    When I press "Tab" until focus is on "setting-character" and press "Enter"
+    Then focus moves into "character-creator"
+    When I finish there and return
+    Then focus returns to "setting-character"
 
   Scenario: The screen is a modal that gives focus back
     Then "Tab" cannot leave "settings-screen"
@@ -225,6 +265,13 @@ Feature: Single-switch settings
   Scenario: The mode cannot trap the player
     Then no setting can put the game into a state that the switch alone cannot leave
     And that includes every value "Hold time" offers
+
+  Scenario: The creator can be reached and left with the switch alone
+    Given single-switch mode is on
+    When I use only short and long presses
+    Then I can reach and choose "setting-character"
+    And I can reach and choose "creator-done"
+    And I am returned to "settings-screen" with the highlight on "setting-character"
 ```
 
 ## TN-SET-06 — Settings with a screen reader
@@ -236,6 +283,7 @@ Feature: Announcing settings
     And each switch is a checkbox or a switch with an accessible name and state
     And "Text size" is a slider or a group with an accessible name and a value in percent
     And "Hold time" is a group with an accessible name, whose options are radios with names that are words
+    And "setting-character" is a button with the accessible name "Change my character"
 
   Scenario: A change is announced once
     When I turn on "Less movement"
@@ -284,6 +332,11 @@ Feature: Settings in French
     And the labels read "Langue", "Déplacement automatique", "Mode à un bouton", "Durée du maintien",
       "Moins de mouvement", "Contraste élevé", "Police plus lisible", "Taille du texte" and "Sous-titres"
     And the close button reads "Fermer"
+
+  Scenario: The character control is French and asks nobody's gender
+    Then "setting-character" reads "Modifier votre personnage"
+    And it does not contain "(e)", "·e" or a bracketed ending
+    And it agrees with "personnage" and with nothing about the player
 
   Scenario: The sound labels are French when the sound section is shown
     Given the game ships at least one sound
@@ -416,3 +469,15 @@ Feature: Choosing how long a long press is
   the switch user turning the mode on for the first time will want the threshold in the same screen, not
   after a reload. *Recommendation:* keep it visible always. If the screen gets crowded, group it under
   "One-button mode" visually without making it conditional.
+- **`OQ-SET-6` — does an appearance control belong on a screen of accessibility switches?** It does not,
+  strictly: everything else here changes a value and this one opens a screen. It is here because
+  `creator.intro` says "Settings" and a promise is kept where it was made, and because a "My character"
+  section for a single item is a heading nobody needs. *Recommendation:* one item at the top, as
+  `TN-SET-01` requires. Revisit if a second appearance-shaped control ever lands — a body slot
+  (`OQ-REVIEW-8`) would be the first — at which point a section is worth its heading and this row moves into
+  it without changing its words.
+- **`OQ-SET-7` — is "Change my character" the right wording, or is it "My character"?** The verb form says
+  what activating it does, which is this directory's rule for a control; the noun form is shorter and reads
+  better as a menu item. *Recommendation:* keep the verb. « Modifier votre personnage » is the longer of the
+  two strings on this screen after the two help texts, and `TN-SET-07` already measures the screen at 200 %,
+  so the cost is bounded and measured rather than assumed.
