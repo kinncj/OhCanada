@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
+    "checkedAt": "2026-09-10T01:33:16Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "The Sovereign is a part of Parliament, playing an important, non-partisan role as the focus of citizenship and allegiance, most visibly during royal visits to Canada. Her Majesty is a symbol of Canadian sovereignty, a guardian of constitutional freedoms, and a reflection of our history."
+    "evidence": "As a constitutional monarchy, Canada’s Head of State is a hereditary Sovereign (Queen or King), who reigns in accordance with the Constitution: the rule of law. The Sovereign is a part of Parliament, playing an important, non-partisan role as the focus of citizenship and allegiance, most visibly during royal visits to Canada."
   }
 }

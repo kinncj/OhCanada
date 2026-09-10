@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-09T00:47:00Z",
+    "checkedAt": "2026-09-10T01:33:16Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "At the time of Confederation, the vote was limited to property-owning adult white males. This was common in most democratic countries at the time."
+    "evidence": "At the time of Confederation, the vote was limited to property-owning adult white males. This was common in most democratic countries at the time. The effort by women to achieve the right to vote is known as the women’s suffrage movement."
   }
 }

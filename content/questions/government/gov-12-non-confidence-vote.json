@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
+    "checkedAt": "2026-09-10T01:33:16Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Cabinet ministers are responsible to the elected representatives, which means they must retain the “confidence of the House” and have to resign if they are defeated in a non-confidence vote."
+    "evidence": "These representatives are responsible for passing laws, approving and monitoring expenditures, and keeping the government accountable. Cabinet ministers are responsible to the elected representatives, which means they must retain the “confidence of the House” and have to resign if they are defeated in a non-confidence vote."
   }
 }
