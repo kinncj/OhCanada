@@ -10,7 +10,11 @@
  * that closing one of three does not start it again.
  */
 
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it, vi } from 'vitest';
+
+import { CHOSEN_GLYPH, UNCHOSEN_GLYPH } from '@ui/dom';
 
 import type { ExamClock, ExamClockPhase } from '@ui/exam-clock';
 import {
@@ -190,7 +194,7 @@ describe('answering', () => {
     const chosenOption = fixture.at('option-2');
     expect(chosenOption?.getAttribute('aria-pressed')).toBe('true');
     expect(chosenOption?.textContent).toContain('Your answer');
-    expect(chosenOption?.textContent).toContain('✓');
+    expect(chosenOption?.textContent).toContain(CHOSEN_GLYPH);
     expect(fixture.announce).toHaveBeenCalledWith(
       'Your answer: The governor general',
       'en',
@@ -493,6 +497,196 @@ describe("the exam's menu", () => {
     expect(fixture.at('exam-menu')?.hidden).toBe(false);
     expect(fixture.chosen[0]).toBe(0);
     expect(fixture.handlers['onFinish']).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * `docs/stories/TN-EXAMMENU-the-exam-menu-and-the-chosen-answer.md` — the two
+ * defects that file rules on, each with the gate that stops it coming back.
+ *
+ * This block is written as a gate rather than as a single assertion because both
+ * defects were invisible to the suite that shipped them: the exam drew the HUD's
+ * two keys and a test that could not tell the menus apart passed, and the exam
+ * drew a tick beside a chosen answer and the test asserting "a word and a shape"
+ * asserted the shape it happened to find.
+ */
+describe('TN-EXAMMENU-06 — the chosen option says recorded, never right', () => {
+  const TICK = '\u2713';
+  const CROSS = '\u2717';
+  const VERDICT_GLYPHS = [TICK, CROSS, '\u2714', '\u2718', '\u274C', '\u2705'];
+
+  /** Every character a running exam draws, in every state it can be in. */
+  const everythingDrawn = (fixture: Fixture): string => {
+    const seen: string[] = [];
+    /* Unanswered, answered, answer changed, moved away and back, menu open,
+       timed and untimed — the states a tick could hide in. */
+    seen.push(fixture.texts());
+    fixture.at('option-2')?.click();
+    seen.push(fixture.texts());
+    fixture.at('option-0')?.click();
+    seen.push(fixture.texts());
+    fixture.at('exam-next')?.click();
+    seen.push(fixture.texts());
+    fixture.at('exam-previous')?.click();
+    seen.push(fixture.texts());
+    fixture.setTimer({ kind: 'running', remainingMs: 60_000, paused: false });
+    seen.push(fixture.texts());
+    fixture.at('exam-menu-button')?.click();
+    seen.push(fixture.texts());
+    fixture.at('exam-menu-close')?.click();
+    seen.push(fixture.texts());
+    return seen.join('\n');
+  };
+
+  it('marks the chosen option with a neutral filled indicator, never a tick', () => {
+    const fixture = open();
+    fixture.at('option-2')?.click();
+    const chosenOption = fixture.at('option-2');
+    expect(chosenOption?.textContent).toContain('Your answer');
+    expect(chosenOption?.textContent).toContain(CHOSEN_GLYPH);
+    expect(chosenOption?.textContent).not.toContain(TICK);
+    expect(chosenOption?.textContent).not.toContain(CROSS);
+  });
+
+  it('differs from an unchosen option by fill and not by symbol', () => {
+    /* `OQ-EXAMMENU-5`'s recommendation, taken: the radio pattern. Two fills of
+       one shape, so no symbol in a running exam carries a verdict. */
+    const fixture = open();
+    fixture.at('option-2')?.click();
+    const marks = fixture.page.ui.querySelectorAll('[data-tn-chosen]');
+    expect(marks).toHaveLength(4);
+    const filled = marks.filter((node) => node.getAttribute('data-tn-chosen') === 'true');
+    expect(filled).toHaveLength(1);
+    expect(filled[0]?.textContent).toBe(CHOSEN_GLYPH);
+    for (const node of marks) {
+      if (node.getAttribute('data-tn-chosen') === 'true') continue;
+      expect(node.textContent).toBe(UNCHOSEN_GLYPH);
+    }
+    /* One shape, two fills: both are circles, and neither is a symbol the other
+       is not. */
+    expect(CHOSEN_GLYPH).not.toBe(UNCHOSEN_GLYPH);
+    /* The mark is the shape; the word is what a screen reader is given. */
+    for (const node of marks) expect(node.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('nothing about the mark differs between a right answer and a wrong one', () => {
+    /* The screen is never told which option is right, so it cannot draw a
+       difference — asserted rather than assumed, because the way a verdict gets
+       onto this screen is a caller learning how to tell it. */
+    const first = open();
+    first.at('option-0')?.click();
+    const second = open();
+    second.at('option-3')?.click();
+    const without = (text: string | undefined, wording: string): string =>
+      (text ?? '').replace(wording, '');
+    expect(without(first.at('option-0')?.textContent, OPTIONS[0] ?? '')).toBe(
+      without(second.at('option-3')?.textContent, OPTIONS[3] ?? ''),
+    );
+    expect(first.at('option-0')?.getAttribute('aria-pressed')).toBe(
+      second.at('option-3')?.getAttribute('aria-pressed'),
+    );
+  });
+
+  it('draws no tick and no cross anywhere in a running exam, in either language', () => {
+    for (const locale of ['en', 'fr'] as const) {
+      const fixture = open();
+      if (locale === 'fr') fixture.screen.setLocale('fr');
+      const drawn = everythingDrawn(fixture);
+      for (const glyph of VERDICT_GLYPHS) {
+        expect(
+          drawn.includes(glyph),
+          `a running exam drew "${glyph}" (${locale}): TN-EXAMMENU-06`,
+        ).toBe(false);
+      }
+    }
+  });
+
+  it('fails a build whose source reaches for a tick or a cross at all', () => {
+    /*
+     * The half a rendered state cannot prove: a tick behind a branch this suite
+     * does not walk is still a tick a player can meet. `exam.noFeedback` printed
+     * the promise on the start screen, so the exam screen may not hold the glyph
+     * at all — and the story asks for a build that draws one to fail, not for a
+     * scenario that happens to catch one.
+     */
+    const source = readFileSync(new URL('../../../app/ui/exam-screen.ts', import.meta.url), 'utf8');
+    for (const glyph of VERDICT_GLYPHS) {
+      expect(
+        source.includes(glyph),
+        `app/ui/exam-screen.ts contains "${glyph}": TN-EXAMMENU-06`,
+      ).toBe(false);
+    }
+  });
+
+  it('keeps the complementary word for a question with no answer', () => {
+    /* `exam.notAnsweredYet`, and no option marked. The pair a player meets
+       inside an exam is "Your answer" / "Not answered yet". */
+    const fixture = open();
+    expect(fixture.texts()).not.toContain('Your answer');
+    const marks = fixture.page.ui.querySelectorAll('[data-tn-chosen="true"]');
+    expect(marks).toHaveLength(0);
+  });
+
+  it('marks the chosen option in French without a verdict in it', () => {
+    const fixture = open();
+    fixture.screen.setLocale('fr');
+    fixture.at('option-2')?.click();
+    const chosenOption = fixture.at('option-2');
+    expect(chosenOption?.textContent).toContain('Votre réponse');
+    expect(chosenOption?.textContent).not.toContain('Votre choix');
+    expect(chosenOption?.textContent).toContain(CHOSEN_GLYPH);
+  });
+});
+
+describe("TN-EXAMMENU-01 — the exam's menu is the exam's", () => {
+  it('draws its own two rows, and never the HUD\'s', () => {
+    const fixture = open();
+    expect(fixture.at('exam-menu-button')?.textContent).toBe('Menu');
+    fixture.at('exam-menu-button')?.click();
+    const menu = fixture.at('exam-menu');
+    expect(menu?.hidden).toBe(false);
+    const name = fixture.page.ui.querySelector(
+      `[id="${menu?.getAttribute('aria-labelledby') ?? ''}"]`,
+    );
+    /* The control matches `hud.menu` word for word; the **dialog's name** is
+       where the two menus have to differ, because it is what a screen reader
+       announces on entry. */
+    expect(name?.textContent).toBe('Exam menu');
+    expect(name?.textContent).not.toBe('Menu');
+  });
+
+  it('is named in French, and offers no way out of a level', () => {
+    const fixture = open();
+    fixture.screen.setLocale('fr');
+    expect(fixture.at('exam-menu-button')?.textContent).toBe('Menu');
+    fixture.at('exam-menu-button')?.click();
+    const menu = fixture.at('exam-menu');
+    const name = fixture.page.ui.querySelector(
+      `[id="${menu?.getAttribute('aria-labelledby') ?? ''}"]`,
+    );
+    expect(name?.textContent).toBe("Menu de l'examen");
+    expect(fixture.texts()).not.toContain('Quitter le niveau');
+  });
+
+  it("never draws the level menu's testids, and never reads the HUD's keys", () => {
+    /*
+     * `TN-EXAMMENU-02`: the two menus cannot be confused. The testids are
+     * deliberately not `menu-button` and `menu` — a test that could not tell
+     * them apart is the test that passed while the exam drew the level's.
+     */
+    const fixture = open();
+    fixture.at('exam-menu-button')?.click();
+    expect(fixture.at('menu-button')).toBeNull();
+    expect(fixture.at('menu')).toBeNull();
+    expect(fixture.texts()).not.toContain('Leave the level');
+
+    const source = readFileSync(new URL('../../../app/ui/exam-screen.ts', import.meta.url), 'utf8');
+    for (const key of ["'hud.menu'", "'hud.menu.title'"]) {
+      expect(
+        source.includes(key),
+        `app/ui/exam-screen.ts reads ${key}, which is TN-HUD's: TN-EXAMMENU-02`,
+      ).toBe(false);
+    }
   });
 });
 

@@ -94,6 +94,46 @@ describe('passing', () => {
     expect(fixture.textAt('exam-result-pass-mark')).toBe('You need 15 out of 20 to pass.');
   });
 
+  it('names the screen with "Your exam" and draws no line above the verdict', () => {
+    /*
+     * `TN-RESULT-01` and `TN-RESULT-10`, reconciled by `TN-EXAMMENU`'s ruling 3.
+     *
+     * `exam.result.title` used to be a kicker over the `<h1>`, so a player who
+     * did not pass read "Your exam" and *then* "Not this time" — a label sitting
+     * above a verdict, which is a pause before bad news. The row is right and
+     * the place was wrong: it is the **accessible name** `TN-RESULT-10`'s first
+     * scenario has always required and never named, which costs no visible line
+     * and is what a screen-reader user hears on arrival, before the live region
+     * reads the verdict and the score.
+     */
+    const fixture = open();
+    const root = fixture.at('exam-result');
+    expect(root?.getAttribute('aria-label')).toBe('Your exam');
+    expect(root?.getAttribute('aria-label')).not.toBe('');
+    /* Not both: `aria-labelledby` would win and the name would silently become
+       the verdict again. */
+    expect(root?.getAttribute('aria-labelledby')).toBeNull();
+    /* And nothing draws it. */
+    expect(fixture.at('exam-result-title')).toBeNull();
+    expect(fixture.texts()).not.toContain('Your exam');
+  });
+
+  it('puts the verdict first for the player who did not pass, too', () => {
+    /* `TN-RESULT-02` is the case that decides it. */
+    const fixture = open(view({ correct: 9, passed: false }));
+    expect(fixture.textAt('exam-result-verdict')).toBe('Not this time');
+    expect(fixture.texts().indexOf('Not this time')).toBe(0);
+    expect(fixture.at('exam-result')?.getAttribute('aria-label')).toBe('Your exam');
+  });
+
+  it('names the screen in French, and still puts the verdict first', () => {
+    const fixture = open();
+    fixture.result.setLocale('fr');
+    expect(fixture.at('exam-result')?.getAttribute('aria-label')).toBe('Votre examen');
+    expect(fixture.textAt('exam-result-verdict')).toBe('Vous avez réussi');
+    expect(fixture.texts()).not.toContain('Votre examen');
+  });
+
   it('is a pass at exactly the pass mark', () => {
     expect(open(view({ correct: 15 })).textAt('exam-result-verdict')).toBe('You passed');
   });

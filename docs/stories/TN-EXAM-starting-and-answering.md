@@ -92,7 +92,8 @@ Keys this screen draws and does not own:
 
 | Key | Owned by |
 |---|---|
-| `card.progress`, `card.close` | `TN-CARD-question-card.md` |
+| `card.progress`, `card.close`, `card.yourAnswer` | `TN-CARD-question-card.md` |
+| `exam.menu`, `exam.menu.title` | `TN-EXAMMENU-the-exam-menu-and-the-chosen-answer.md` |
 | `common.back`, `common.close` | `TN-FLOW-first-run-and-return.md`, `TN-SET-settings.md` |
 | `map.moreComing` | `TN-MAP-level-select.md` |
 | `study.open` | `TN-STUDY-study-mode.md` |
@@ -284,6 +285,8 @@ Feature: Answering the exam
     When I tap "option-2"
     Then the event "exam/answered" is emitted for question 1
     And "option-2" is marked as chosen, by a word and a shape and not by colour alone
+    And the word is "Your answer" and the shape is neutral, as TN-EXAMMENU-06 requires
+    And it is not a tick and it is not a cross
     And no feedback about being right or wrong is shown
     And focus moves to "exam-next"
     And the exam has not moved to question 2 by itself
@@ -502,8 +505,17 @@ Feature: Single-switch exam
   Scenario: The highlight ring holds the options and the controls
     When I press the switch briefly through the whole ring
     Then the highlight visits "option-0" to "option-3", then "exam-previous", "exam-next" and "exam-finish"
+    And then "exam-menu-button", which is last
     And it wraps to "option-0"
     And each item is announced in "#tn-live-region" as the highlight arrives
+
+  Scenario: The way out is the last thing the ring reaches
+    Given the highlight is on "exam-finish"
+    When I press the switch briefly once
+    Then the highlight is on "exam-menu-button", the fifth and last item
+    And a switch user cycling towards the next question never lands on the way out first
+    And "exam-menu-button" is visually separate from the three controls that move through the exam
+    And this is OQ-EXAMMENU-3's recommendation, taken: TN-EXAMMENU adds the control and this file owns the ring
 
   Scenario: A long press answers
     Given the highlight is on "option-1"

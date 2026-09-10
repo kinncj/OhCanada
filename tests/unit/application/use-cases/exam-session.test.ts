@@ -97,22 +97,44 @@ describe('how the twenty are shared out', () => {
      * list order would make the same subject short in every exam of every save
      * — a bias nobody would ever see and everybody would inherit.
      *
-     * Driven through `drawExam` rather than through `allocateQuotas` directly,
-     * because that is where the property is actually true. `SeededRandomSource`
-     * is sfc32 with no warm-up rounds and the first shuffle of a three-element
-     * array is identical for every seed from 1 to 40 — measured, and reported
-     * upward as an adapter defect. `drawExam` shuffles the decks first, which
-     * leaves the stream warm before the remainder is handed round; this case
-     * fails if that ordering is ever "tidied up".
+     * Asserted on `allocateQuotas`, which is where the property lives: it is the
+     * *first* thing the stream is asked for, and one shuffle of three decides
+     * it. This case used to be driven through `drawExam` instead, because
+     * `SeededRandomSource` was sfc32 with no warm-up rounds and its first
+     * shuffle of three was identical for every seed from 1 to 40 — `drawExam`
+     * shuffled the decks first, which spent a few hundred numbers and left the
+     * stream warm before the remainder was handed round. That made the exam
+     * correct by an ordering nobody could touch. The generator is fixed
+     * (splitmix32 seeding plus the specified warm-up), the ordering in
+     * `drawExam` is back to the one that reads, and the claim is made here
+     * against a cold stream, which is the harder version of it.
      */
+    const seeds = Array.from({ length: 40 }, (_unused, index) => index + 1);
+    /* ADR-0024: over no seeds, "each subject can be short" is vacuously true. */
+    expect(seeds).toHaveLength(40);
+
+    const shortOnes = new Set<number>();
+    for (const seed of seeds) {
+      const quotas = allocateQuotas(20, [40, 40, 40], createSeededRandom(seed));
+      expect([...quotas].sort()).toEqual([6, 7, 7]);
+      shortOnes.add(quotas.indexOf(6));
+    }
+    expect([...shortOnes].sort()).toEqual([0, 1, 2]);
+  });
+
+  it('carries that through the whole draw, not only through the allocation', () => {
+    /* The same claim one level up, so the two cannot drift: whatever `drawExam`
+       does between the quotas and the cards, each of the three subjects still
+       has to be able to be the one that contributes six. */
+    const seeds = Array.from({ length: 40 }, (_unused, index) => index + 1);
+    expect(seeds).toHaveLength(40);
+
     const shortOnes = new Set<string>();
-    for (let seed = 1; seed <= 40; seed += 1) {
+    for (const seed of seeds) {
       const counted = countBySubject(
         drawExam(bankOf({ a: 40, b: 40, c: 40 }), 20, createSeededRandom(seed)),
       );
-      const short = Object.entries(counted).sort(
-        ([, left], [, right]) => left - right,
-      )[0];
+      const short = Object.entries(counted).sort(([, left], [, right]) => left - right)[0];
       if (short !== undefined) shortOnes.add(short[0]);
     }
     expect([...shortOnes].sort()).toEqual(['a', 'b', 'c']);

@@ -100,6 +100,9 @@ Feature: A result at or above the pass mark
     Then the element "exam-result" is visible
     And the event "exam/finished" was emitted with passed true
     And the first line reads "You passed"
+    And no line is drawn above it
+    And "Your exam" is not drawn on the screen at all, because it is this screen's
+      accessible name and not a kicker, as TN-EXAMMENU's ruling 3 decides
     And it shows "Right answers: 17 out of 20"
     And it shows "You need 15 out of 20 to pass."
 
@@ -420,8 +423,11 @@ Feature: Announcing the result
   Scenario: The result is a named screen and is read from the top
     When the exam finishes
     Then "exam-result" has an accessible name that is not empty
+    And that name is "exam.result.title" — "Your exam" / « Votre examen »
+    And it is carried as an accessible name, not as a visible line above the verdict
     And focus moves to it
     And "#tn-live-region" reads whether I passed and the score line, once
+    And hearing "Your exam" and then "You passed" is two sentences, not a repetition to remove
 
   Scenario: The by-subject rows are a list, or a table with headers
     Then the rows are exposed as a list of items, or as a table whose columns are named

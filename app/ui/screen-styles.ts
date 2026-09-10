@@ -1010,15 +1010,32 @@ const CSS = `
 /*
   The chosen option in an exam.
 
-  The FILL is the third signal. The first is the tick, the second is the words
-  "Your answer" inside the button, and both are drawn by app/ui/exam-screen.ts
-  in the same breath. the .tn-screen [aria-pressed="true"] rule above already supplies
-  the brass fill and the heavier border; this rule only adds the border STYLE,
-  so the chosen option is still distinguishable in greyscale and under forced
-  colours (TN-EXAM-09, "the chosen option is distinguishable without colour").
+  The background FILL is the third signal. The first is the choice indicator --
+  a circle, filled when the option is chosen and empty when it is not -- and the
+  second is the words "Your answer" inside the button; app/ui/exam-screen.ts
+  draws both in the same breath. The .tn-screen [aria-pressed="true"] rule above
+  already supplies the brass fill and the heavier border; this rule only adds the
+  border STYLE, so the chosen option is still distinguishable in greyscale and
+  under forced colours (TN-EXAM-09, "the chosen option is distinguishable without
+  colour").
+
+  It used to be a TICK, and that was the defect TN-EXAMMENU-06 names: a tick
+  beside an answer mid-exam is feedback exam.noFeedback promised not to give. The
+  two glyphs are one shape with two fills for that reason -- never a tick, never
+  a cross -- so nothing in a running exam carries a verdict. Both are text, so
+  forced colours and greyscale keep them and reduced motion has nothing to
+  remove.
 */
 .tn-screen__options button[aria-pressed="true"] {
   border-style: double;
+}
+
+.tn-screen__mark--choice {
+  /* Sized and spaced identically whichever fill it carries, so the two states
+     differ by fill alone and the option's text never shifts when it is taken. */
+  inline-size: 1.25rem;
+  text-align: center;
+  line-height: 1;
 }
 
 /* The review's marked options: a list item, not a control, so the option rules

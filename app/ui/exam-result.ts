@@ -130,16 +130,26 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
   });
 
   /*
-   * "Your exam", as a kicker above the verdict rather than as the heading.
+   * "Your exam" is this screen's **accessible name**, and nothing is drawn above
+   * the verdict.
    *
-   * `TN-RESULT-01` is explicit that the result "says so first" — the first line
-   * a player reads is whether they passed — so the `<h1>` is the verdict and
-   * this row keeps its place as the small line that says which screen this is.
+   * It used to be a kicker — a small line reading `exam.result.title` over the
+   * `<h1>` — and `TN-EXAMMENU`'s ruling 3 is that the row is right and the place
+   * was wrong. `TN-RESULT-01` requires the verdict to be the first line a player
+   * reads, and `TN-RESULT-02` is the case that decides it: somebody who did not
+   * pass read "Your exam", then "Not this time". A label above a verdict is a
+   * pause before bad news, which is the one place a screen should be quickest.
+   *
+   * The row is still needed, and `TN-RESULT-10` has always required it without
+   * naming it: "`exam-result` has an accessible name that is not empty", and
+   * `exam.result.title` is the only row in `TN-RESULT`'s copy table that no
+   * scenario in that file draws. As the name it does three jobs — it satisfies
+   * that scenario, it is what a screen-reader user hears on arrival *before* the
+   * live region reads the verdict and the score, and it occupies no visible
+   * line. Hearing "Your exam" and then "You passed" is not a repetition to
+   * remove: they are two sentences and the second is not derivable from the
+   * first.
    */
-  const eyebrow = element(doc, 'p', {
-    testId: 'exam-result-title',
-    className: 'tn-screen__eyebrow',
-  });
 
   /* `TN-TIMER-05`: the exam ended at zero. It says so plainly, and it is not a
      failure by itself — the verdict below is whatever the answers earned. */
@@ -151,7 +161,6 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
 
   const verdict = element(doc, 'h1', { id: 'tn-exam-result-verdict', testId: 'exam-result-verdict' });
   verdict.tabIndex = -1;
-  screen.labelledBy(verdict);
 
   const score = element(doc, 'p', {
     id: 'tn-exam-result-score',
@@ -166,7 +175,7 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
   });
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
 
-  screen.card.append(eyebrow, timeUp, verdict, score, summary, bySubject, actions);
+  screen.card.append(timeUp, verdict, score, summary, bySubject, actions);
 
   /* ------------------------------------------------------------ the review */
 
@@ -281,7 +290,9 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
     if (view === null) return;
     const current = view;
 
-    eyebrow.textContent = text(locale, 'exam.result.title');
+    /* Re-read on every render because it is locale-dependent, like every other
+       string here — `setLocale` redraws and the name has to follow. */
+    screen.label(text(locale, 'exam.result.title'));
 
     timeUp.hidden = !current.timeUp;
     replaceChildren(

@@ -49,6 +49,17 @@ export interface Screen {
   hide(): void;
   /** Point the accessible name at an element inside the card. */
   labelledBy(element: HTMLElement): void;
+  /**
+   * Name the screen with a string rather than with an element it draws.
+   *
+   * For the surface whose name must **not** occupy a visible line:
+   * `TN-RESULT-01` requires the verdict to be the first thing a player reads and
+   * `TN-RESULT-10` requires the screen to have a non-empty accessible name, and
+   * `TN-EXAMMENU`'s ruling 3 is that `exam.result.title` is the second of those
+   * and not a label above the first. `aria-labelledby` is cleared, because the
+   * two attributes together are a silent contest that `aria-labelledby` wins.
+   */
+  label(name: string): void;
   /** Point the accessible description at an element inside the card. */
   describedBy(element: HTMLElement | null): void;
   setLocale(locale: UiLocale): void;
@@ -161,8 +172,14 @@ export function createScreen(host: HTMLElement, options: ScreenOptions): Screen 
     },
 
     labelledBy(target: HTMLElement): void {
+      element.removeAttribute('aria-label');
       if (target.id === '') target.id = `${options.id}-label-${String(sequence)}`;
       element.setAttribute('aria-labelledby', target.id);
+    },
+
+    label(name: string): void {
+      element.removeAttribute('aria-labelledby');
+      element.setAttribute('aria-label', name);
     },
 
     describedBy(target: HTMLElement | null): void {

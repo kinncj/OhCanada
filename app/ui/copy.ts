@@ -174,6 +174,34 @@ const EN = {
   'exam.notReady.body':
     'We are still writing the questions. You can practise in Study instead.',
 
+  /* docs/stories/TN-EXAMMENU-the-exam-menu-and-the-chosen-answer.md */
+  /* The exam's own menu, and not the HUD's.
+
+     `exam-screen` drew `hud.menu` and `hud.menu.title` until these two rows
+     existed, and `TN-HUD-02` says in as many words that the HUD's menu belongs
+     to a level and that Exam mode does not use it. A screen drawing another
+     screen's keys is how the two stop being able to differ, and these two must
+     be able to: one of them offers "Leave the level", and one of them opens over
+     the only surface in this game that can be lost.
+
+     **The control matches `hud.menu` word for word and the dialog's name does
+     not.** One word for one thing wherever a player can see which screen they
+     are on; a name that says *which* menu this is where they cannot — "Menu,
+     dialog" tells somebody who cannot see the exam behind it nothing about where
+     they are, and "Exam menu, dialog" confirms in two words that the exam is
+     still there.
+
+     It is "Exam menu" and not "Practice exam menu": a player reading this name
+     has already passed `title.exam`, `exam.title` and `exam.start`, and a fourth
+     restatement is length a screen-reader user pays for on every open
+     (`OQ-EXAMMENU-1`).
+
+     `exam.menu` is the same word in both languages and is written twice, never
+     shared — `TN-MOVE-06` and `TN-NAMES-03`'s rule, and the reason
+     `locomotion.train.label` is two rows. */
+  'exam.menu': 'Menu',
+  'exam.menu.title': 'Exam menu',
+
   /* docs/stories/TN-TIMER-the-exam-clock.md */
   /* The one clock this game is allowed, and every word it can say.
 
@@ -359,12 +387,19 @@ const EN = {
   'stamp.toronto.earned': 'You earned the Toronto stamp.',
   'stamp.winnipeg.earned': 'You earned the Winnipeg stamp.',
   'stamp.prairie-rail.earned': 'You earned the Prairies stamp.',
+  /* `TN-LEVEL-alberta-foothills.md`: the bare plural used attributively, because
+     the title is "The Alberta foothills" on the map and a template would have
+     drawn "the The Alberta foothills stamp". */
+  'stamp.alberta-foothills.earned': 'You earned the Alberta foothills stamp.',
+  'stamp.vancouver.earned': 'You earned the Vancouver stamp.',
   'level.halifax.play': 'Play Halifax',
   'level.quebec-city.play': 'Play Québec City',
   'level.ottawa.play': 'Play Ottawa',
   'level.toronto.play': 'Play Toronto',
   'level.winnipeg.play': 'Play Winnipeg',
   'level.prairie-rail.play': 'Play the Prairies',
+  'level.alberta-foothills.play': 'Play the Alberta foothills',
+  'level.vancouver.play': 'Play Vancouver',
 
   /* docs/stories/TN-HUD-hud-and-menu.md */
   /* The accessible name of the `hud` region (`TN-HUD-07`). It names what the
@@ -444,6 +479,24 @@ const EN = {
      word — and it is the same word in both languages, written twice on purpose
      (`TN-MOVE-06`, `TN-NAMES-03`), never one value shared. */
   'locomotion.train.label': 'Train',
+  /* The sixth and seventh, brought by the two documents that declare them:
+     `content/levels/alberta-foothills.json` puts `horse` first and
+     `content/levels/vancouver.json` puts `skateboard` first.
+
+     **"Horse", never "Riding".** `OQ-MOVE-4` reserved "Riding" for this mode and
+     withdrew it: in Canadian English a riding is an electoral district,
+     `content/questions/elections/elec-03-another-name-for-a-riding.json` teaches
+     exactly that, and level 5's whole subject is federal elections. A strip that
+     means one thing where a question card means another is a word this game has
+     taught the player to misread.
+
+     « Planche à roulettes » is the one value in this table that is not a single
+     word in its language, and it is still a noun and not a phrase about one:
+     « planche à roulettes » *is* the French noun for the object, the way « À
+     pied » and « En train » are not (`TN-MOVE-06`). It is also the longest label
+     of the eight, which `TN-MOVE-05` measures by name at 200 % text. */
+  'locomotion.horse.label': 'Horse',
+  'locomotion.skateboard.label': 'Skateboarding',
 
   /* docs/stories/TN-WAIT-a-level-opens-or-it-does-not.md */
   /* The three rows every level's error card shares. They name no place, state
@@ -496,6 +549,22 @@ const EN = {
      "The Prairies" on the map, and "We could not load {{level}}." would produce
      "We could not load The Prairies." mid-sentence. */
   'level.prairie-rail.error.title': 'We could not load the Prairies.',
+  /* `TN-LEVEL-alberta-foothills.md`. The waiting sentence names the pasture —
+     the ground the horse walks on — and names neither the province, the
+     foothills, the Rockies, a town, the ranch nor a treaty: a loading screen is
+     the splash card `docs/content-review.md` §10.2 rules out for a territorial
+     statement, and the level's own title is already above it. The error title is
+     the first in either language to need writing out in **both**: "The Alberta
+     foothills" and « Les contreforts de l'Alberta » both carry a capital article
+     on the map, and both are written here with a lower-case one. */
+  'level.alberta-foothills.loading': 'Getting the pasture ready.',
+  'level.alberta-foothills.error.title': 'We could not load the Alberta foothills.',
+  /* `TN-LEVEL-vancouver.md`. The third level on water and the third noun for it:
+     Halifax has the harbour, Winnipeg the riverbank, this one the waterfront.
+     Not "the seawall" — in Vancouver the Seawall is a named path, and
+     `TN-NAMES-01` keeps real names off a loading screen. */
+  'level.vancouver.loading': 'Getting the waterfront ready.',
+  'level.vancouver.error.title': 'We could not load Vancouver.',
   /* docs/stories/TN-TITLE-title-screen.md */
   /* `title.game` is the product's name and is the same string in both
      languages, like the language names in `TN-SET`. It is never translated. */
@@ -718,6 +787,13 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'exam.notReady.body':
     'Nous écrivons encore les questions. Vous pouvez vous exercer dans la révision.',
 
+  /* docs/stories/TN-EXAMMENU-the-exam-menu-and-the-chosen-answer.md */
+  /* « Menu » is the same word as the English and is declared here anyway: a
+     French value that fell back to the English one reads correctly and hides a
+     missing row (`TN-EXAMMENU-05`). */
+  'exam.menu': 'Menu',
+  'exam.menu.title': "Menu de l'examen",
+
   'exam.timer.use': 'Utiliser le chronomètre',
   'exam.timer.help':
     "Le vrai examen a une limite de temps. Sans chronomètre, vous pouvez prendre tout le temps qu'il vous faut.",
@@ -807,12 +883,21 @@ const FR: Readonly<Record<CopyRow, string>> = {
   /* The fourth form after « tampon », and the one no template reaches:
      « des » is *de + les*. */
   'stamp.prairie-rail.earned': 'Vous avez obtenu le tampon des Prairies.',
+  /* One row, two prepositional forms: « des » is *de + les*, and « de l'Alberta »
+     is the first elision on a province name in this game. A template that got
+     the first right would still have had to carry the second
+     (`TN-LEVEL-alberta-foothills.md`). */
+  'stamp.alberta-foothills.earned':
+    "Vous avez obtenu le tampon des contreforts de l'Alberta.",
+  'stamp.vancouver.earned': 'Vous avez obtenu le tampon de Vancouver.',
   'level.halifax.play': 'Jouer à Halifax',
   'level.quebec-city.play': 'Jouer dans la Ville de Québec',
   'level.ottawa.play': 'Jouer à Ottawa',
   'level.toronto.play': 'Jouer à Toronto',
   'level.winnipeg.play': 'Jouer à Winnipeg',
   'level.prairie-rail.play': 'Jouer dans les Prairies',
+  'level.alberta-foothills.play': "Jouer dans les contreforts de l'Alberta",
+  'level.vancouver.play': 'Jouer à Vancouver',
 
   'hud.label': 'Commandes du jeu',
   'hud.menu': 'Menu',
@@ -852,6 +937,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
      so a missing French row fails the check instead of reading correctly. Not
      « En train », which is a phrase where every other row is a bare noun. */
   'locomotion.train.label': 'Train',
+  'locomotion.horse.label': 'Cheval',
+  'locomotion.skateboard.label': 'Planche à roulettes',
 
   'level.error.body': 'Vérifiez votre connexion et réessayez.',
   'level.error.retry': 'Réessayer',
@@ -874,6 +961,19 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.winnipeg.error.title': "Nous n'avons pas pu charger Winnipeg.",
   'level.prairie-rail.loading': 'Préparation de la voie ferrée.',
   'level.prairie-rail.error.title': "Nous n'avons pas pu charger les Prairies.",
+  /* « Préparation du pâturage », not « de la prairie »: « la prairie » is the
+     plainest French noun for open grassland and it is **the title of level 7**,
+     so the obvious word would have put the previous level's name on this
+     level's waiting screen — the exact defect `TN-WAIT` exists to make
+     impossible, arriving through a common noun instead of a template. English
+     has no such collision, which is why the two languages were written
+     separately rather than translated from each other
+     (`TN-LEVEL-alberta-foothills.md`). */
+  'level.alberta-foothills.loading': 'Préparation du pâturage.',
+  'level.alberta-foothills.error.title':
+    "Nous n'avons pas pu charger les contreforts de l'Alberta.",
+  'level.vancouver.loading': 'Préparation du front de mer.',
+  'level.vancouver.error.title': "Nous n'avons pas pu charger Vancouver.",
   'title.game': 'TrueNorth',
   'title.tagline': "Préparez-vous à l'examen de citoyenneté canadienne.",
   'title.notOfficial': "Ce jeu n'est pas fait par le gouvernement du Canada.",

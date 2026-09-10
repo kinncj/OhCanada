@@ -255,6 +255,51 @@ describe('the copy table', () => {
       text('en', 'level.prairie-rail.error.title'),
       'the title was dropped into a template, capital and all',
     ).not.toContain(text('en', 'level.prairie-rail.title'));
+
+    /* `TN-LEVEL-alberta-foothills.md` and `TN-LEVEL-vancouver.md`, levels 8 and
+       9. Two things are asserted here that no earlier level could assert:
+
+       - the **French** loading sentence is « Préparation du pâturage. » and not
+         « Préparation de la prairie. », because « la prairie » is level 7's own
+         title and the obvious common noun would have put the previous level's
+         name on this level's waiting screen — the defect `TN-WAIT` exists to
+         make impossible, arriving through a noun instead of a template;
+       - the Alberta error title is the first whose **French** needed writing out
+         as well as its English: both titles carry a capital article on the map
+         and both rows carry a lower-case one. */
+    expect(text('en', 'level.alberta-foothills.loading')).toBe('Getting the pasture ready.');
+    expect(text('fr', 'level.alberta-foothills.loading')).toBe('Préparation du pâturage.');
+    expect(text('fr', 'level.alberta-foothills.loading')).not.toBe(
+      'Préparation de la prairie.',
+    );
+    expect(text('fr', 'level.alberta-foothills.loading')).not.toContain('prairie');
+    expect(text('en', 'level.alberta-foothills.error.title')).toBe(
+      'We could not load the Alberta foothills.',
+    );
+    expect(text('fr', 'level.alberta-foothills.error.title')).toBe(
+      "Nous n'avons pas pu charger les contreforts de l'Alberta.",
+    );
+    expect(text('en', 'level.vancouver.loading')).toBe('Getting the waterfront ready.');
+    expect(text('fr', 'level.vancouver.loading')).toBe('Préparation du front de mer.');
+    expect(text('en', 'level.vancouver.error.title')).toBe('We could not load Vancouver.');
+    expect(text('fr', 'level.vancouver.error.title')).toBe(
+      "Nous n'avons pas pu charger Vancouver.",
+    );
+    for (const locale of UI_LOCALES) {
+      expect(
+        text(locale, 'level.alberta-foothills.error.title'),
+        'the title was dropped into a template, capital and all',
+      ).not.toContain(text(locale, 'level.alberta-foothills.title'));
+    }
+    /* Three levels are on water and no two of them use the same noun, in either
+       language — the check `TN-VANCOUVER-01` asks for rather than trusts,
+       because a sentence a player has read three times stops being read. */
+    for (const locale of UI_LOCALES) {
+      const onWater = ['halifax', 'winnipeg', 'vancouver'].map((id) =>
+        text(locale, `level.${id}.loading` as Parameters<typeof text>[1]),
+      );
+      expect(new Set(onWater).size, `two levels on water share a sentence (${locale})`).toBe(3);
+    }
   });
 
   it('refuses a waiting or failure key with no level in it', () => {
@@ -367,6 +412,26 @@ describe('the copy table', () => {
     expect(text('en', 'level.prairie-rail.play')).toBe('Play the Prairies');
     expect(text('en', 'stamp.winnipeg.earned')).toBe('You earned the Winnipeg stamp.');
     expect(text('en', 'level.winnipeg.play')).toBe('Play Winnipeg');
+    /* Levels 8 and 9. The Alberta stamp is one row carrying **two** prepositional
+       forms — « des » is *de + les*, and « de l'Alberta » is the first elision on
+       a province name in this game — which is a stronger argument against
+       templating than any earlier row: a template that got the first right would
+       still have had to carry the second. The English takes the bare plural
+       attributively for the same reason the Prairies does. */
+    expect(text('fr', 'stamp.alberta-foothills.earned')).toBe(
+      "Vous avez obtenu le tampon des contreforts de l'Alberta.",
+    );
+    expect(text('fr', 'level.alberta-foothills.play')).toBe(
+      "Jouer dans les contreforts de l'Alberta",
+    );
+    expect(text('en', 'stamp.alberta-foothills.earned')).toBe(
+      'You earned the Alberta foothills stamp.',
+    );
+    expect(text('en', 'level.alberta-foothills.play')).toBe('Play the Alberta foothills');
+    expect(text('fr', 'stamp.vancouver.earned')).toBe('Vous avez obtenu le tampon de Vancouver.');
+    expect(text('fr', 'level.vancouver.play')).toBe('Jouer à Vancouver');
+    expect(text('en', 'stamp.vancouver.earned')).toBe('You earned the Vancouver stamp.');
+    expect(text('en', 'level.vancouver.play')).toBe('Play Vancouver');
 
     for (const locale of UI_LOCALES) {
       for (const key of KEYS.filter((row) => String(row).startsWith('stamp.'))) {
@@ -490,13 +555,38 @@ describe('the copy table', () => {
     expect([...declared].sort(), 'a level moves in a way nothing has a word for').toEqual(
       written.map(String).sort(),
     );
+    /*
+     * The shape rule is `TN-MOVE-06`'s — "every value is a noun or a noun
+     * phrase, in both languages … no value begins with a preposition … no value
+     * is a verb in the imperative", with « À pied », « En train » and « À
+     * cheval » named as the failures it is written against.
+     *
+     * It used to be asserted as "one word", which was true of the seven rows
+     * that existed and is **not** the rule: `TN-MOVE`'s own prose says the shape
+     * is one word "wherever a language has one", and « Planche à roulettes » is
+     * one noun in three words because French has no shorter one that is not an
+     * anglicism (« Skateboard ») or a collision (« Planche », against « planche
+     * à neige »). A "one word" check would have refused the row the story
+     * writes, which is the check being wrong rather than the copy.
+     */
+    const LEADING_PREPOSITIONS = ['à', 'en', 'de', 'du', 'by', 'on', 'with', 'to'];
     for (const key of written) {
       for (const locale of UI_LOCALES) {
         const value = text(locale, key);
         expect(value, `${String(key)} (${locale}) is empty`).not.toBe('');
-        expect(value.split(' ').length, `${String(key)} (${locale}) is not one word`).toBe(1);
         expect(value.includes('.'), `${String(key)} (${locale}) is a sentence`).toBe(false);
+        const first = (value.split(' ')[0] ?? '').toLowerCase();
+        expect(
+          LEADING_PREPOSITIONS.includes(first),
+          `${String(key)} (${locale}) begins with a preposition: ${value}`,
+        ).toBe(false);
       }
+      /* English has a single word for every mode any level declares, so the
+         tighter half of the rule is still checked where it holds. */
+      expect(
+        text('en', key).split(' ').length,
+        `${String(key)} (en) is not one word`,
+      ).toBe(1);
     }
     /* The five labels, literally, from `TN-MOVE-locomotion-labels.md`. */
     expect(text('en', 'locomotion.walk.label')).toBe('Walking');
@@ -513,6 +603,22 @@ describe('the copy table', () => {
        correctly. */
     expect(text('en', 'locomotion.train.label')).toBe('Train');
     expect(text('fr', 'locomotion.train.label')).toBe('Train');
+    /* The sixth and seventh, brought by `content/levels/alberta-foothills.json`
+       and `content/levels/vancouver.json`.
+
+       **"Horse", not "Riding".** `OQ-MOVE-4` reserved "Riding" for this mode and
+       withdrew it: a riding is an electoral district in Canadian English, and
+       `content/questions/elections/elec-03-another-name-for-a-riding.json`
+       teaches exactly that on level 5. The two spellings are refused by name so
+       the reservation cannot come back through a reword. */
+    expect(text('en', 'locomotion.horse.label')).toBe('Horse');
+    expect(text('fr', 'locomotion.horse.label')).toBe('Cheval');
+    expect(text('en', 'locomotion.skateboard.label')).toBe('Skateboarding');
+    expect(text('fr', 'locomotion.skateboard.label')).toBe('Planche à roulettes');
+    for (const locale of UI_LOCALES) {
+      expect(text(locale, 'locomotion.horse.label')).not.toBe('Riding');
+      expect(text(locale, 'locomotion.horse.label')).not.toBe('Équitation');
+    }
   });
 
   it('names the guide by its role, and tells a player what talking to it does', () => {

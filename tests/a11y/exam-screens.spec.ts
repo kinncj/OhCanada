@@ -1,6 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
+import { CHOSEN_GLYPH } from '@ui/dom';
+
 import { HARNESS_URL } from './playwright.config';
 
 /**
@@ -25,6 +27,14 @@ import { HARNESS_URL } from './playwright.config';
 
 const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 const RULESET = [...WCAG, 'best-practice'];
+
+/**
+ * The glyphs a running exam may never draw (`TN-EXAMMENU-06`). The chosen-state
+ * indicator is imported rather than spelt out, so a change to the shape is one
+ * edit; the verdict glyphs are spelt out here, because they are what this suite
+ * exists to refuse and must not be able to follow a change to the source.
+ */
+const VERDICT_GLYPHS = ['\u2713', '\u2717', '\u2714', '\u2718', '\u274C', '\u2705'];
 
 /**
  * The same two page-level rules the component scans disable, for the same
@@ -318,8 +328,84 @@ test.describe('a running exam', () => {
     await openScreen(page, 'exam', { contrast: 'high' });
     const option = page.locator('[data-testid="option-1"]');
     await option.click();
-    await expect(option).toContainText('✓');
+    await expect(option).toContainText(CHOSEN_GLYPH);
     await expect(option).toContainText('Your answer');
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('marks the chosen option as recorded, never as right', async ({ page }) => {
+    /*
+     * `TN-EXAMMENU-06`. The exam drew a **tick** beside "Your answer", which is
+     * `TN-CARD-04`'s pairing on a screen where the player has already been
+     * marked — and here nothing has been marked, and `exam.noFeedback` has just
+     * promised in printed copy that nothing will be until the end.
+     *
+     * The word is right and stays. The shape is one shape with two fills, so
+     * "chosen" and "not chosen" differ by fill and no symbol in a running exam
+     * carries a verdict.
+     */
+    const root = await openScreen(page, 'exam');
+    await page.locator('[data-testid="option-1"]').click();
+
+    const chosen = page.locator('[data-tn-chosen="true"]');
+    await expect(chosen).toHaveCount(1);
+    await expect(chosen).toHaveText(CHOSEN_GLYPH);
+    await expect(page.locator('[data-tn-chosen="false"]')).toHaveCount(3);
+
+    /* Nothing anywhere on a running exam is a tick or a cross. */
+    const drawn = await root.innerText();
+    for (const glyph of VERDICT_GLYPHS) {
+      expect(drawn.includes(glyph), `a running exam drew "${glyph}"`).toBe(false);
+    }
+    /* And the mark is not read: the word and `aria-pressed` are what the
+       accessibility tree is given (`TN-EXAM-08`). */
+    await expect(page.locator('[data-testid="option-1"]')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(await chosen.getAttribute('aria-hidden')).toBe('true');
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test("names its own menu, and never the HUD's", async ({ page }) => {
+    /*
+     * `TN-EXAMMENU-01` and `TN-EXAMMENU-04`. The control says the same word as
+     * the HUD's on purpose — one word for one thing wherever a player can see
+     * which screen they are on — and the **dialog's name** is where the two have
+     * to differ, because "Menu, dialog" tells somebody who cannot see the exam
+     * behind it nothing about where they are.
+     */
+    await openScreen(page, 'exam', { over: 'menu' });
+    await expect(page.locator('[data-testid="exam-menu-button"]')).toHaveText('Menu');
+    const menu = page.locator('[data-testid="exam-menu"]');
+    await expect(menu).toBeVisible();
+    await expect(menu).toHaveAccessibleName('Exam menu');
+    /* The level's menu can never open over an exam (`TN-EXAMMENU-02`). */
+    await expect(page.locator('[data-testid="menu"]')).toHaveCount(0);
+    await expect(page.locator('[data-testid="menu-button"]')).toHaveCount(0);
+    await expect(menu).not.toContainText('Leave the level');
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test("names its own menu in French, at 200 %", async ({ page }) => {
+    /* `TN-EXAMMENU-04`'s longest-French scenario and `TN-EXAMMENU-05`. */
+    await openScreen(page, 'exam', {
+      over: 'menu',
+      locale: 'fr',
+      textScale: 200,
+      timer: 'running',
+    });
+    const menu = page.locator('[data-testid="exam-menu"]');
+    await expect(menu).toHaveAccessibleName("Menu de l'examen");
+    await expect(menu).toContainText("Quitter l'examen");
+    await expect(menu).toContainText('Arrêter le chronomètre');
+    await expect(menu).toContainText('Réglages');
+
     const results = await scan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);
   });
@@ -438,6 +524,27 @@ test.describe('the exam result', () => {
     await openScreen(page, 'exam-result');
     await expect(page.locator('[data-testid="exam-result-verdict"]')).toBeFocused();
     await expect(page.locator('[data-testid="exam-result-verdict"]')).toHaveText('You passed');
+  });
+
+  test('is named "Your exam" and draws no line above the verdict', async ({ page }) => {
+    /*
+     * `TN-RESULT-10`'s "an accessible name that is not empty", and
+     * `TN-EXAMMENU`'s ruling 3 about which string it is. `exam.result.title` was
+     * drawn as a kicker over the `<h1>`, so a player who did not pass read "Your
+     * exam" and then "Not this time" — a label before a verdict, which
+     * `TN-RESULT-01` refuses. As the screen's **name** it costs no visible line
+     * and is what a screen-reader user hears on arrival.
+     */
+    for (const [locale, name, verdict] of [
+      ['en', 'Your exam', 'Not this time'],
+      ['fr', 'Votre examen', 'Pas cette fois'],
+    ] as const) {
+      const root = await openScreen(page, 'exam-result', { locale, passed: false });
+      await expect(root).toHaveAccessibleName(name);
+      const drawn = await root.innerText();
+      expect(drawn, `"${name}" is drawn on the result`).not.toContain(name);
+      expect(drawn.indexOf(verdict), 'the verdict is not the first line').toBe(0);
+    }
   });
 
   test('reads the score line as one phrase', async ({ page }) => {

@@ -98,14 +98,24 @@ const LEVEL_IDS: readonly string[] = readdirSync(
   .map((name) => name.slice(0, -'.json'.length))
   .sort();
 
-/** The ids the harness accepts, kept honest by the scan below. */
+/**
+ * The ids the harness accepts, kept honest by the scan below.
+ *
+ * This list is compared against `content/levels/` rather than trusted
+ * ("every level with a document has a waiting sentence to scan"), so a level
+ * that ships a document and is not added here fails rather than going unscanned.
+ * The Alberta foothills and Vancouver arrived that way and were covered by none
+ * of these scans until they were added — the third and fourth levels to do it.
+ */
 type Place =
   | 'halifax'
   | 'quebec-city'
   | 'ottawa'
   | 'toronto'
   | 'winnipeg'
-  | 'prairie-rail';
+  | 'prairie-rail'
+  | 'alberta-foothills'
+  | 'vancouver';
 
 const PLACES: readonly Place[] = [
   'halifax',
@@ -114,6 +124,8 @@ const PLACES: readonly Place[] = [
   'toronto',
   'winnipeg',
   'prairie-rail',
+  'alberta-foothills',
+  'vancouver',
 ];
 
 /** `level.<id>.loading` and `level.<id>.error.title`, in one language. */
@@ -718,7 +730,16 @@ test.describe('the level is loading, or did not load', () => {
       /* The title is the dialog's accessible name, not merely text on it. */
       await expect(root).toHaveAccessibleName(title);
       const drawn = (await root.textContent()) ?? '';
-      for (const other of ['Halifax', 'Québec', 'Ottawa', 'Toronto', 'Winnipeg', 'Prairies']) {
+      for (const other of [
+        'Halifax',
+        'Québec',
+        'Ottawa',
+        'Toronto',
+        'Winnipeg',
+        'Prairies',
+        'Alberta',
+        'Vancouver',
+      ]) {
         if (title.includes(other)) continue;
         expect(drawn, `the ${place} card named ${other}`).not.toContain(other);
       }
@@ -754,6 +775,108 @@ test.describe('the level is loading, or did not load', () => {
 
     const results = await componentScan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('the Alberta foothills fail in their own name, in both languages', async ({ page }) => {
+    /*
+     * `TN-ALBERTA-02`, and the first level whose **French** title needed writing
+     * out as well as its English: « Les contreforts de l'Alberta » dropped into
+     * « Nous n'avons pas pu charger {{level}}. » gives « charger Les
+     * contreforts ». Both rows carry a lower-case article where the map's title
+     * carries a capital one, and both spellings are refused here by name.
+     */
+    const english = await open(page, 'level-error', { place: 'alberta-foothills' });
+    await expect(english).toHaveAccessibleName('We could not load the Alberta foothills.');
+    await expect(english, 'the English title was dropped into a template').not.toContainText(
+      'load The Alberta foothills',
+    );
+
+    const french = await open(page, 'level-error', {
+      place: 'alberta-foothills',
+      locale: 'fr',
+    });
+    await expect(french).toHaveAccessibleName(
+      "Nous n'avons pas pu charger les contreforts de l'Alberta.",
+    );
+    await expect(french, 'the French title was dropped into a template').not.toContainText(
+      'charger Les contreforts',
+    );
+
+    /* The longest French strings this project has: they fit at 200 % or the
+       scan says so (`TN-ALBERTA-03`). */
+    const big = await open(page, 'level-error', {
+      place: 'alberta-foothills',
+      locale: 'fr',
+      textScale: 200,
+    });
+    await expect(big).toContainText("Nous n'avons pas pu charger les contreforts de l'Alberta.");
+    expect(await scrollsSideways(page)).toBe(false);
+    expect(await undersizedTargets(page)).toEqual([]);
+
+    const results = await componentScan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('the foothills waiting sentence does not borrow the Prairies\' name', async ({ page }) => {
+    /*
+     * `TN-ALBERTA-04`. « La prairie » is the plainest French noun for open
+     * grassland and it is **the title of level 7**, so the obvious word would
+     * have put the previous level's name on this level's waiting screen — the
+     * defect `TN-WAIT` exists to make impossible, arriving through a common noun
+     * rather than through a template. English has no such collision, which is
+     * why the two languages were written separately.
+     */
+    await open(page, 'level-loading', { place: 'alberta-foothills', locale: 'fr' });
+    const french = page.locator('#tn-level-loading-message');
+    await expect(french).toHaveText('Préparation du pâturage.');
+    expect(
+      ((await french.textContent()) ?? '').toLowerCase(),
+      "the foothills drew the Prairies' noun",
+    ).not.toContain('prairie');
+
+    /*
+     * `TN-ALBERTA-01`: the **sentence** names no place, no landmark and no
+     * treaty. It is read from the message paragraph rather than the whole card,
+     * because the card's `<h1>` is the level's own title and the player can
+     * already see it — repeating "Alberta" in the sentence below it is what this
+     * refuses.
+     */
+    await open(page, 'level-loading', { place: 'alberta-foothills' });
+    const english = page.locator('#tn-level-loading-message');
+    await expect(english).toHaveText('Getting the pasture ready.');
+    const drawnEn = ((await english.textContent()) ?? '').toLowerCase();
+    for (const word of ['alberta', 'foothills', 'rockies', 'ranch', 'bar u', 'treaty']) {
+      expect(drawnEn, `the waiting sentence names "${word}"`).not.toContain(word);
+    }
+  });
+
+  test('Vancouver waits on a noun no other level on water uses', async ({ page }) => {
+    /*
+     * `TN-VANCOUVER-01`: three of this game's levels are on water and no two of
+     * them use the same noun, in either language. Checked rather than trusted,
+     * because a loading screen a player has seen three times stops being read.
+     */
+    for (const locale of ['en', 'fr'] as const) {
+      const sentences: string[] = [];
+      for (const place of ['halifax', 'winnipeg', 'vancouver'] as const) {
+        await open(page, 'level-loading', { place, locale });
+        const message = page.locator('#tn-level-loading-message');
+        sentences.push(((await message.textContent()) ?? '').trim());
+      }
+      expect(new Set(sentences).size, `two levels on water share a sentence (${locale})`).toBe(3);
+    }
+
+    await open(page, 'level-loading', { place: 'vancouver', locale: 'fr' });
+    const french = page.locator('#tn-level-loading-message');
+    await expect(french).toHaveText('Préparation du front de mer.');
+    const drawn = (await french.textContent()) ?? '';
+    /* A geographic word, not a claim: no nation, no inlet, no territory. */
+    for (const word of ['Musqueam', 'Squamish', 'Tsleil', 'Burrard', 'territoire']) {
+      expect(drawn, `the waiting sentence says "${word}"`).not.toContain(word);
+    }
+    /* And not the named path: in Vancouver the Seawall is a proper noun, which
+       `TN-NAMES-01` keeps off a loading screen. */
+    expect(drawn.toLowerCase()).not.toContain('seawall');
   });
 
   test('the French failure title is written out, not composed', async ({ page }) => {

@@ -47,7 +47,7 @@
  */
 
 import { count, labelled, text, type UiLocale } from './copy';
-import { button, element, mark, replaceChildren } from './dom';
+import { button, chosenMark, element, replaceChildren } from './dom';
 import { clockText, type ExamClock } from './exam-clock';
 import { createConfirm, type Confirm } from './confirm';
 import { createScreen, type Screen } from './screen';
@@ -664,16 +664,34 @@ export function createExamScreen(host: HTMLElement, options: ExamScreenOptions):
           onClick: () => {
             choose(index);
           },
+          /*
+           * `TN-EXAMMENU-06`: the word stays and the **shape** changes.
+           *
+           * This drew a tick beside "Your answer", which is
+           * `TN-CARD-04`'s pairing — and on that screen the tick is earned,
+           * because the player has just been marked. Here nothing has been
+           * marked and `exam.noFeedback` has just promised in printed copy that
+           * nothing will be until the end, so a tick is feedback the exam said
+           * it would not give and a cross is worse.
+           *
+           * {@link chosenMark} draws one shape with two fills, on every option,
+           * so "chosen" and "not chosen" differ by fill and not by symbol, and
+           * nothing about the mark differs between an option that is right and
+           * one that is not. The word beside it is unchanged: "Your answer" is
+           * what the review will use for the same option, and a second word for
+           * one idea inside one feature is what `TN-EXAMMENU`'s ruling 2
+           * refused.
+           */
           children: chosen
             ? [
-                mark(doc, '✓'),
+                chosenMark(doc, true),
                 element(doc, 'span', { text: wording }),
                 element(doc, 'span', {
                   className: 'tn-screen__state',
                   text: text(locale, 'card.yourAnswer'),
                 }),
               ]
-            : [element(doc, 'span', { text: wording })],
+            : [chosenMark(doc, false), element(doc, 'span', { text: wording })],
         });
         return element(doc, 'li', { children: [control] });
       }),
@@ -709,7 +727,14 @@ export function createExamScreen(host: HTMLElement, options: ExamScreenOptions):
     previous.textContent = text(locale, 'exam.previous');
     next.textContent = text(locale, 'exam.next');
     finish.textContent = text(locale, 'exam.finish');
-    menuButton.textContent = text(locale, 'hud.menu');
+    /* `exam.menu` and `exam.menu.title`, not `hud.menu` and `hud.menu.title`:
+       `TN-EXAMMENU` gives the exam's menu its own two rows, and `TN-HUD-02` says
+       the HUD's menu belongs to a level and that Exam mode does not use it. The
+       control says the same word as the HUD's on purpose; the **dialog's name**
+       is where the two have to differ, because it is what a screen reader
+       announces on entry and "Menu, dialog" tells somebody who cannot see the
+       exam behind it nothing about where they are (`TN-EXAMMENU-04`). */
+    menuButton.textContent = text(locale, 'exam.menu');
 
     /*
      * `aria-disabled`, never `disabled`. `TN-EXAM-03` allows either "not
@@ -730,7 +755,7 @@ export function createExamScreen(host: HTMLElement, options: ExamScreenOptions):
   }
 
   function renderMenu(): void {
-    menuTitle.textContent = text(locale, 'hud.menu.title');
+    menuTitle.textContent = text(locale, 'exam.menu.title');
     menuPromise.textContent = text(
       locale,
       storageBlocked ? 'exam.leave.notKept' : 'exam.leave.kept',

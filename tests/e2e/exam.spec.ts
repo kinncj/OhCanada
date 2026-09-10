@@ -54,6 +54,13 @@ async function waitForEvent(page: Page, name: string): Promise<void> {
     .toBe(true);
 }
 
+/**
+ * The glyphs a running exam may never draw (`TN-EXAMMENU-06`). Spelt out rather
+ * than imported, because they are what this suite refuses and must not be able
+ * to follow a change to `app/ui`.
+ */
+const VERDICT_GLYPHS = ['\u2713', '\u2717', '\u2714', '\u2718', '\u274C', '\u2705'];
+
 const progressText = (page: Page): Promise<string> =>
   page.locator('[data-testid="question-progress"]').innerText();
 
@@ -318,6 +325,85 @@ test.describe('the practice exam, on the shipped build', () => {
     );
     /* `TN-RESULT-05`: an exam earns no stamp. */
     await expect(page.locator('[data-testid="passport-counts"]')).toContainText('Stamps: 0 of');
+  });
+
+  test('marks a chosen answer as recorded, from its own menu, never as right', async ({
+    page,
+  }) => {
+    /*
+     * `TN-EXAMMENU-06` and `TN-EXAMMENU-01`, on the shipped build.
+     *
+     * Two defects, one screen. The exam drew a **tick** beside "Your answer" —
+     * `TN-CARD-04`'s pairing, on a screen where the player has already been
+     * marked — after printing `exam.noFeedback` ("You will see how you did at
+     * the end.") on the start screen four taps earlier. And it drew `hud.menu`
+     * and `hud.menu.title`, which `TN-HUD-02` says belong to a level and are not
+     * used by Exam mode.
+     */
+    await frontDoor(page);
+    await page.locator('[data-testid="title-exam"]').click();
+    await expect(page.locator('[data-testid="exam-start"]')).toContainText(
+      'You will see how you did at the end.',
+    );
+    await page.locator('[data-testid="exam-begin"]').click();
+    await waitForEvent(page, 'exam/started');
+
+    const exam = page.locator('[data-testid="exam-screen"]');
+    await expect(exam).toBeVisible();
+
+    /* Before an answer: four empty indicators and no "Your answer". */
+    await expect(page.locator('[data-tn-chosen="false"]')).toHaveCount(4);
+    await expect(page.locator('[data-tn-chosen="true"]')).toHaveCount(0);
+    await expect(exam).not.toContainText('Your answer');
+
+    await page.locator('[data-testid="option-1"]').click();
+    await expect(page.locator('[data-testid="option-1"]')).toContainText('Your answer');
+    await expect(page.locator('[data-tn-chosen="true"]')).toHaveCount(1);
+    await expect(page.locator('[data-tn-chosen="false"]')).toHaveCount(3);
+
+    /* One shape with two fills, and no verdict glyph anywhere on the screen. */
+    const drawn = await exam.innerText();
+    for (const glyph of VERDICT_GLYPHS) {
+      expect(drawn.includes(glyph), `a running exam drew "${glyph}"`).toBe(false);
+    }
+    /* And nothing on any question says whether the answer was right. */
+    for (const word of ['Correct answer', 'Not quite', 'Well done']) {
+      expect(drawn, `a running exam said "${word}"`).not.toContain(word);
+    }
+
+    /* The exam's own menu, with the exam's own two rows. */
+    await expect(page.locator('[data-testid="exam-menu-button"]')).toHaveText('Menu');
+    await page.locator('[data-testid="exam-menu-button"]').click();
+    const menu = page.locator('[data-testid="exam-menu"]');
+    await expect(menu).toBeVisible();
+    await expect(menu).toHaveAccessibleName('Exam menu');
+    /* `TN-EXAMMENU-02`: the level's menu can never open over an exam. */
+    await expect(page.locator('[data-testid="menu"]')).toHaveCount(0);
+    await expect(page.locator('[data-testid="menu-button"]')).toHaveCount(0);
+    await expect(menu).not.toContainText('Leave the level');
+    await page.locator('[data-testid="exam-menu-close"]').click();
+    await expect(menu).toBeHidden();
+
+    /* The answer survived the menu, still marked and still unmarked-on. */
+    await expect(page.locator('[data-testid="option-1"]')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await expect(page.locator('[data-tn-chosen="true"]')).toHaveCount(1);
+
+    /* And the result names itself without drawing a line above the verdict
+       (`TN-RESULT-01`, `TN-RESULT-10`, `TN-EXAMMENU`'s ruling 3). */
+    await page.locator('[data-testid="exam-finish"]').click();
+    await page.locator('[data-testid="exam-finish-anyway"]').click();
+    const result = page.locator('[data-testid="exam-result"]');
+    await expect(result).toBeVisible();
+    await expect(result).toHaveAccessibleName('Your exam');
+    const shown = await result.innerText();
+    expect(shown, '"Your exam" is drawn above the verdict').not.toContain('Your exam');
+    expect(
+      shown.startsWith('You passed') || shown.startsWith('Not this time'),
+      `the verdict is not the first line: ${shown.slice(0, 40)}`,
+    ).toBe(true);
   });
 
   test('asks before finishing with questions unanswered, and counts them as unanswered', async ({
