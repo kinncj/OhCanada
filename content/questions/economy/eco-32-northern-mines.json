@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-32-northern-mines",
+  "subject": "economy",
+  "prompt": {
+    "en": "According to the guide, which of these is mined in Canada's northern territories?",
+    "fr": "Selon le guide, laquelle de ces ressources est extraite dans les territoires du Nord canadien?"
+  },
+  "options": [
+    {
+      "en": "Bauxite.",
+      "fr": "La bauxite."
+    },
+    {
+      "en": "Tin.",
+      "fr": "L'étain."
+    },
+    {
+      "en": "Diamonds.",
+      "fr": "Les diamants."
+    },
+    {
+      "en": "Sulphur.",
+      "fr": "Le soufre."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The guide lists mines in the North for gold, lead, copper, diamonds and zinc.",
+    "fr": "Le guide mentionne dans le Nord des mines d'or, de plomb, de cuivre, de diamants et de zinc."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 103,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "There are gold, lead, copper, diamond and zinc mines"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

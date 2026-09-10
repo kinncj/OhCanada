@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-24-saint-john-port-and-manufacturing",
+  "subject": "economy",
+  "prompt": {
+    "en": "In New Brunswick, which city does the guide call the largest city, port and manufacturing centre?",
+    "fr": "Au Nouveau-Brunswick, quelle ville le guide décrit-il comme la plus grande ville, le principal port et le centre manufacturier?"
+  },
+  "options": [
+    {
+      "en": "Fredericton.",
+      "fr": "Fredericton."
+    },
+    {
+      "en": "Moncton.",
+      "fr": "Moncton."
+    },
+    {
+      "en": "Bathurst.",
+      "fr": "Bathurst."
+    },
+    {
+      "en": "Saint John.",
+      "fr": "Saint John."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Saint John is the biggest city in New Brunswick. Ships load and unload there, and factories there make goods.",
+    "fr": "Saint John est la plus grande ville du Nouveau-Brunswick. Des navires y chargent et y déchargent des marchandises, et des usines y fabriquent des produits."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Saint John is the largest city, port and manufacturing centre"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

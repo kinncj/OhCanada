@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-27-prairies-energy-and-farmland",
+  "subject": "economy",
+  "prompt": {
+    "en": "How does Discover Canada describe the Prairie Provinces?",
+    "fr": "Comment Découvrir le Canada décrit-il les provinces des Prairies?"
+  },
+  "options": [
+    {
+      "en": "They have plenty of energy resources and very fertile farmland.",
+      "fr": "Elles disposent d'abondantes ressources énergétiques et de terres agricoles très fertiles."
+    },
+    {
+      "en": "They live mainly from fishing and shipbuilding.",
+      "fr": "Elles vivent surtout de la pêche et de la construction navale."
+    },
+    {
+      "en": "They have little farmland and few resources.",
+      "fr": "Elles ont peu de terres agricoles et peu de ressources."
+    },
+    {
+      "en": "They are known for their sea ports and shipping.",
+      "fr": "Elles sont reconnues pour leurs ports de mer et le transport maritime."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Manitoba, Saskatchewan and Alberta hold oil, gas and other energy resources, and some of the best farmland anywhere in the world.",
+    "fr": "Le Manitoba, la Saskatchewan et l'Alberta possèdent du pétrole, du gaz et d'autres ressources énergétiques, ainsi que certaines des meilleures terres agricoles au monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "the Prairie Provinces, rich in energy resources and some of the most fertile farmland"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

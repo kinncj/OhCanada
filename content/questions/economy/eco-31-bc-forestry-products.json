@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-31-bc-forestry-products",
+  "subject": "economy",
+  "prompt": {
+    "en": "Forestry products fill a large part of what British Columbia produces. Which of these does the guide list as one of them?",
+    "fr": "Les produits forestiers occupent une grande place dans la production de la Colombie-Britannique. Lequel de ces produits le guide nomme-t-il?"
+  },
+  "options": [
+    {
+      "en": "Potash.",
+      "fr": "La potasse."
+    },
+    {
+      "en": "Newsprint.",
+      "fr": "Le papier journal."
+    },
+    {
+      "en": "Aircraft engines.",
+      "fr": "Les moteurs d'avion."
+    },
+    {
+      "en": "Crude oil.",
+      "fr": "Le pétrole brut."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Trees cut in British Columbia become lumber, newsprint, and pulp and paper products. Those goods are a large share of what the province produces.",
+    "fr": "Les arbres coupés en Colombie-Britannique deviennent du bois d'œuvre, du papier journal et des produits de pâtes et papiers. Ces biens représentent une grande part de ce que produit la province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 102,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "forestry products, including lumber, newsprint, and pulp and paper products"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

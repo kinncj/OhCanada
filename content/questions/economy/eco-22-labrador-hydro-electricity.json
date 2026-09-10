@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-22-labrador-hydro-electricity",
+  "subject": "economy",
+  "prompt": {
+    "en": "Discover Canada says Labrador has a very large supply of one kind of energy. Which kind?",
+    "fr": "Découvrir le Canada dit que le Labrador possède d'immenses ressources d'un certain type d'énergie. Lequel?"
+  },
+  "options": [
+    {
+      "en": "Nuclear power.",
+      "fr": "L'énergie nucléaire."
+    },
+    {
+      "en": "Coal-fired power.",
+      "fr": "L'électricité produite au charbon."
+    },
+    {
+      "en": "Hydro-electric power.",
+      "fr": "L'énergie hydroélectrique."
+    },
+    {
+      "en": "Wind power.",
+      "fr": "L'énergie éolienne."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Fast-moving water in Labrador is used to make electricity. The guide calls those hydro-electric resources immense, which means very large.",
+    "fr": "L'eau qui coule avec force au Labrador sert à produire de l'électricité. Le guide qualifie ces ressources hydroélectriques d'immenses, c'est-à-dire très grandes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Labrador also has immense hydro-electric resources"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

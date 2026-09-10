@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-26-toronto-financial-centre",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which city does Discover Canada call the country's main financial centre?",
+    "fr": "Quelle ville Découvrir le Canada présente-t-il comme le principal centre financier du pays?"
+  },
+  "options": [
+    {
+      "en": "Ottawa.",
+      "fr": "Ottawa."
+    },
+    {
+      "en": "Montreal.",
+      "fr": "Montréal."
+    },
+    {
+      "en": "Toronto.",
+      "fr": "Toronto."
+    },
+    {
+      "en": "Calgary.",
+      "fr": "Calgary."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Toronto is the largest city in Canada. The guide says it is where the country's banking and finance business is centred.",
+    "fr": "Toronto est la plus grande ville du Canada. Le guide en fait le centre principal des banques et de la finance au pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 99,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Toronto is the largest city in Canada and the country’s main financial centre"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

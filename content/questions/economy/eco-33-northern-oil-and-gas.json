@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-33-northern-oil-and-gas",
+  "subject": "economy",
+  "prompt": {
+    "en": "The guide says the northern territories have mines. Which other energy resource does it say is being developed there?",
+    "fr": "Le guide dit que les territoires du Nord ont des mines. Quelle autre ressource énergétique y est mise en valeur, selon lui?"
+  },
+  "options": [
+    {
+      "en": "Tidal power stations.",
+      "fr": "Des centrales marémotrices."
+    },
+    {
+      "en": "Solar farms.",
+      "fr": "Des parcs solaires."
+    },
+    {
+      "en": "Geothermal wells.",
+      "fr": "Des puits géothermiques."
+    },
+    {
+      "en": "Oil and gas deposits.",
+      "fr": "Des gisements de pétrole et de gaz."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "As well as its mines, the North holds oil and gas underground. The guide says work is under way to develop those deposits.",
+    "fr": "En plus de ses mines, le Nord renferme du pétrole et du gaz dans son sous-sol. Le guide indique que ces gisements sont en cours de mise en valeur."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 103,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Oil and gas deposits are being developed"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-23-nova-scotia-industries",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which industries does the guide say Nova Scotia has worked in for a long time?",
+    "fr": "Dans quelles industries la Nouvelle-Écosse travaille-t-elle depuis longtemps, selon le guide?"
+  },
+  "options": [
+    {
+      "en": "Diamond mining and oil sands.",
+      "fr": "L'extraction de diamants et les sables bitumineux."
+    },
+    {
+      "en": "Aerospace and software.",
+      "fr": "L'aérospatiale et les logiciels."
+    },
+    {
+      "en": "Potash mining and wheat growing.",
+      "fr": "L'extraction de la potasse et la culture du blé."
+    },
+    {
+      "en": "Coal mining, forestry and farming.",
+      "fr": "L'extraction du charbon, la foresterie et l'agriculture."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Nova Scotia has dug coal, cut timber and worked the land for generations. Those industries shaped many communities in the province.",
+    "fr": "La Nouvelle-Écosse extrait du charbon, coupe du bois et cultive la terre depuis des générations. Ces industries ont façonné de nombreuses communautés de la province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Nova Scotia has a long history of coal mining, forestry and agriculture"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

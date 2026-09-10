@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-28-manitoba-economy",
+  "subject": "economy",
+  "prompt": {
+    "en": "The guide says Manitoba's economy rests on three activities. Which three?",
+    "fr": "Selon le guide, l'économie du Manitoba repose sur trois activités. Lesquelles?"
+  },
+  "options": [
+    {
+      "en": "Fishing, shipbuilding and tourism.",
+      "fr": "La pêche, la construction navale et le tourisme."
+    },
+    {
+      "en": "Banking, insurance and film.",
+      "fr": "Les banques, les assurances et le cinéma."
+    },
+    {
+      "en": "Farming, mining and making hydro-electric power.",
+      "fr": "L'agriculture, l'exploitation minière et la production d'électricité hydroélectrique."
+    },
+    {
+      "en": "Oil sands, potash and uranium.",
+      "fr": "Les sables bitumineux, la potasse et l'uranium."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "People in Manitoba earn a living from crops and livestock, from mines, and from dams that turn moving water into electricity.",
+    "fr": "Au Manitoba, on gagne sa vie grâce aux cultures et à l'élevage, grâce aux mines et grâce aux barrages qui transforment l'eau en électricité."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Manitoba’s economy is based on agriculture, mining and hydro-electric power generation"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

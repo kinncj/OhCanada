@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-30-alberta-oil-and-gas",
+  "subject": "economy",
+  "prompt": {
+    "en": "Discover Canada names Alberta as the country's leading producer of what?",
+    "fr": "Découvrir le Canada présente l'Alberta comme le premier producteur au pays de quoi?"
+  },
+  "options": [
+    {
+      "en": "Wind and solar power.",
+      "fr": "D'énergie éolienne et solaire."
+    },
+    {
+      "en": "Coal and peat.",
+      "fr": "De charbon et de tourbe."
+    },
+    {
+      "en": "Uranium and potash.",
+      "fr": "D'uranium et de potasse."
+    },
+    {
+      "en": "Oil and gas.",
+      "fr": "De pétrole et de gaz."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Oil and gas are the heart of Alberta's economy, and the province produces more of them than any other part of Canada.",
+    "fr": "Le pétrole et le gaz sont au cœur de l'économie albertaine, et la province en produit plus que toute autre région du Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 101,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Alberta is the largest producer of oil and gas"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

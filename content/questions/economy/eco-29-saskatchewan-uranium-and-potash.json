@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-29-saskatchewan-uranium-and-potash",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which two minerals does Discover Canada name in Saskatchewan?",
+    "fr": "Quels deux minéraux Découvrir le Canada nomme-t-il en Saskatchewan?"
+  },
+  "options": [
+    {
+      "en": "Bauxite and tin.",
+      "fr": "La bauxite et l'étain."
+    },
+    {
+      "en": "Uranium and potash.",
+      "fr": "L'uranium et la potasse."
+    },
+    {
+      "en": "Nickel and cobalt.",
+      "fr": "Le nickel et le cobalt."
+    },
+    {
+      "en": "Silver and asbestos.",
+      "fr": "L'argent et l'amiante."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The guide names deposits of uranium and potash in Saskatchewan. Potash is a mineral used to make fertilizer for crops.",
+    "fr": "Le guide mentionne des gisements d'uranium et de potasse en Saskatchewan. La potasse est un minéral qui sert à fabriquer des engrais pour les cultures."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "richest deposits of uranium and potash, used in fertilizer"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-21-pei-farming",
+  "subject": "economy",
+  "prompt": {
+    "en": "What is Prince Edward Island known for, according to Discover Canada?",
+    "fr": "Selon Découvrir le Canada, pour quoi l'Île-du-Prince-Édouard est-elle reconnue?"
+  },
+  "options": [
+    {
+      "en": "Its oil refineries.",
+      "fr": "Ses raffineries de pétrole."
+    },
+    {
+      "en": "Its beaches, red soil and farming.",
+      "fr": "Ses plages, sa terre rouge et son agriculture."
+    },
+    {
+      "en": "Its car factories.",
+      "fr": "Ses usines d'automobiles."
+    },
+    {
+      "en": "Its uranium mines.",
+      "fr": "Ses mines d'uranium."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Prince Edward Island is the smallest province. Its red soil is good for crops, and farming is a large part of how people there earn a living.",
+    "fr": "L'Île-du-Prince-Édouard est la plus petite province. Sa terre rouge convient bien aux cultures, et l'agriculture occupe une grande place dans la façon dont les gens y gagnent leur vie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "known for its beaches, red soil and agriculture"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

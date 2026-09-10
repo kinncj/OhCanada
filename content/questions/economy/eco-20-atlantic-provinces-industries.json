@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-20-atlantic-provinces-industries",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which natural resources does Discover Canada say made Atlantic Canada an important part of the country's history?",
+    "fr": "Selon Découvrir le Canada, quelles ressources naturelles ont fait du Canada atlantique une partie importante de l'histoire du pays?"
+  },
+  "options": [
+    {
+      "en": "Fishing, farming, forestry and mining.",
+      "fr": "La pêche, l'agriculture, la foresterie et l'exploitation minière."
+    },
+    {
+      "en": "Aerospace, banking, film-making and software.",
+      "fr": "L'aérospatiale, les services bancaires, le cinéma et les logiciels."
+    },
+    {
+      "en": "Car assembly, oil refining, steel and rubber.",
+      "fr": "L'assemblage d'automobiles, le raffinage du pétrole, l'acier et le caoutchouc."
+    },
+    {
+      "en": "Wheat growing, potash mining, cattle ranching and oil sands.",
+      "fr": "La culture du blé, l'extraction de la potasse, l'élevage de bovins et les sables bitumineux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The sea and the land shape the work people do on the east coast. The guide names fishing, farming, forestry and mining, and says they helped build these provinces.",
+    "fr": "La mer et la terre façonnent le travail des gens sur la côte est. Le guide nomme la pêche, l'agriculture, la foresterie et l'exploitation minière, et dit qu'elles ont contribué à bâtir ces provinces."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Atlantic Canada’s coasts and natural resources, including fishing, farming, forestry and mining"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-25-ontario-quebec-manufacturing",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which two provinces make most of Canada's manufactured goods, according to the guide?",
+    "fr": "Selon le guide, quelles deux provinces fabriquent la plus grande partie des produits manufacturés du Canada?"
+  },
+  "options": [
+    {
+      "en": "Alberta and Saskatchewan.",
+      "fr": "L'Alberta et la Saskatchewan."
+    },
+    {
+      "en": "Ontario and Quebec.",
+      "fr": "L'Ontario et le Québec."
+    },
+    {
+      "en": "British Columbia and Manitoba.",
+      "fr": "La Colombie-Britannique et le Manitoba."
+    },
+    {
+      "en": "Nova Scotia and New Brunswick.",
+      "fr": "La Nouvelle-Écosse et le Nouveau-Brunswick."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Most of the country's factories stand in southern Ontario and southern Quebec. Together the two provinces turn out the largest share of Canada's manufactured goods.",
+    "fr": "La plupart des usines du pays se trouvent dans le sud de l'Ontario et le sud du Québec. Ensemble, ces deux provinces produisent la plus grande part des biens manufacturés du Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 98,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Together, Ontario and Quebec produce more than three-quarters of all Canadian manufactured goods"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
