@@ -297,7 +297,13 @@ function printHandoffSummary(keymap, { where = null } = {}) {
 function printScore(result) {
   const t = result.totals;
   console.log(
-    `verify-art: scored ${t.subjectsPassed}/${t.subjectsScored} subject(s) over ` +
+    // "in this record" NAMES THE DENOMINATOR, and it is there because the two
+    // numbers collided the day the contract outgrew the record twice over: the
+    // line read "scored 7/10 subject(s) ... 10 in the contract and not in this
+    // record at all", and the two tens are different sets that happen to be the
+    // same size. The whole point of printing both is that the DIFFERENCE is the
+    // finding, which a reader cannot see if the ratio's denominator is unnamed.
+    `verify-art: scored ${t.subjectsPassed}/${t.subjectsScored} subject(s) in this record, over ` +
       `${t.rendersScored}/${t.renders} render(s) whose art is unchanged since the verdict, ` +
       `${t.gatingRenders} gating and ${t.diagnosticRenders} diagnostic, ` +
       `${t.featuresChecked} mustBeRight feature(s) confirmed present, ` +

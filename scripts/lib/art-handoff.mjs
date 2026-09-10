@@ -1110,6 +1110,148 @@ const RECIPES = {
     what: 'a fields tile and a railbed tile',
   }),
 
+  /** A single source, rasterised on its own at 1x. Level 8's only non-repeating
+   * anchor, and the only render on it that names anything: the contract asks the
+   * two tiles beside it for a LANDFORM and refuses a province, so the level's
+   * identity rests on this file and never on a repeating layer. */
+  'ranch-barn': singleSource(),
+
+  /**
+   * THE SECOND NEGATIVE OFFSET IN THE TABLE, AND THE ONE WHERE THE NAIVE
+   * BUILDER WOULD HAVE GOT AWAY WITH IT.
+   *
+   * "In world coordinates the rangeland tile's top edge is 60 px ABOVE the
+   * foothills tile's top edge (world y 880 against 940), so the offset is
+   * NEGATIVE." Confirmed against content/levels/alberta-foothills.json: layer-30
+   * offset.y 940, layer-40 offset.y 880. 880 - 940 = -60.
+   *
+   * THE SIGN IS RIGHT AND THE STATED REASON IS NOT THE ONE THAT MEASURES.
+   * `prairie-rail-line`'s reason -- the foreground tile's ink STANDS UP into the
+   * sky above the far tile's top edge -- does not hold here, and the recipe's
+   * "top 250 rows on fence posts and wire" describes what is not SOLID rather
+   * than what is drawn. Measured on today's tiles:
+   *
+   *     foothills  1800x200. First ink row 23, solid ground from row 69.
+   *     rangeland  1920x410. Rows 0-189 ENTIRELY EMPTY. Fence posts from row
+   *                190, about 9% column coverage, and the contract's three
+   *                wires show here as two full-width rows, 202-205 and 224-227
+   *                -- the third falls at or below the solid line and cannot be
+   *                counted this way. Solid ground from row 246.
+   *
+   * So the fence rises above nothing: at -60 its first ink lands at composite
+   * y 190, which is 130 px BELOW the far tile's top edge at y 60. What the
+   * negative sign buys is THE SEAM. At -60 the foothills occupy composite 60-259
+   * and the rangeland is solid from 246, so they overlap by 14 rows and no matte
+   * shows between the ridge foot and the grass. A POSITIVE 60 puts the foothills
+   * at 0-199 and the rangeland's first fence post at 250: fifty rows of bare
+   * matte under the ridges, and 106 rows between the hills' last row and the
+   * first solid one. That is a hole this level does not have, and it is the
+   * whole of what the sign decides here.
+   *
+   * AND THE CROP BUG DOES NOT BITE THIS ONE, WHICH IS WHY IT IS WRITTEN DOWN.
+   * The naive `top: nearTop` builder deletes the near tile's top `-nearTop`
+   * rows, and on this art those 60 rows are EMPTY -- measured on the shipped
+   * render: 0 non-matte pixels in 115200. Run both ways rather than reasoned
+   * about, and the run needed two steps because the first one lands on the same
+   * accident prairie-rail did:
+   *
+   *   - on TODAY'S tiles the naive builder THROWS, and not as a guard.
+   *     `Math.max(fm.height, nearTop + nm.height)` gives 350 and the near tile
+   *     is 410, so sharp refuses an input taller than the canvas. Identical luck,
+   *     one level later, which is how much that luck is worth.
+   *   - given a canvas with the room the naive arithmetic denies it, sharp
+   *     crops and draws, and the result's top 350 rows are BYTE-IDENTICAL to the
+   *     shifted composite's rows 60-409.
+   *
+   * So this entry does not re-prove what prairie-rail proved; it proves the other
+   * half of it. The crop was harmless HERE, and only because of where this tile
+   * happens to start drawing -- which is a fact about one SVG and not a property
+   * of the builder. The picture is right because `twoParallaxTiles` SHIFTS. The
+   * next negative offset will not be so lucky, and nothing in the output would
+   * say so.
+   */
+  'alberta-foothills-rangeland': twoParallaxTiles({
+    farMatch: 'foothills',
+    nearMatch: 'rangeland',
+    nearTop: -60,
+    what: 'a foothills tile and a rangeland tile',
+  }),
+
+  /**
+   * A single source, rasterised on its own at 1x, and its level's only render
+   * that may be asked for a place at all: the two seawall tiles repeat.
+   *
+   * ITS BOTTOM 280 ROWS ARE EMPTY AND THAT IS PART OF THE SUBJECT. The file is
+   * 1000x800 and its last ink is on row 519, because `mustBeRight` says "the
+   * building stands on piles over open water ... its base does not touch the
+   * bottom of the frame". `singleSource()` flattens the whole 1000x800 onto the
+   * matte and never trims to the ink, so the pier is handed over floating, which
+   * is the picture the contract is about. Worth stating rather than leaving to
+   * be noticed: a builder that cropped to the drawn extent would render a
+   * building standing ON something, which is the one reading this subject's own
+   * `why` rules out.
+   *
+   * THE ANSWER THIS SUBJECT CANNOT BE SCORED ON is not a property of the
+   * builder; see the note above BRIEFING, which is where it was fixed.
+   */
+  'five-sails': singleSource(),
+
+  /**
+   * "The seawall tile's top edge is 40 px BELOW the inlet tile's top edge (world
+   * y 900 against 860)." Confirmed against content/levels/vancouver.json:
+   * layer-30 offset.y 860, layer-40 offset.y 900. 900 - 860 = 40.
+   *
+   * THE ONLY COMPOSITE IN THIS TABLE WITH NO MATTE IN IT, and the recipe's
+   * claim is measured rather than taken on trust:
+   *
+   *     inlet    1800x300. EVERY row at 100% coverage -- opaque from its own top
+   *              edge, which halifax's town tile and toronto's skyline are not.
+   *     seawall  1920x430. Ink from row 0 at 1-34% coverage (cedar tops, lamp
+   *              heads, gulls), solid paving from row 250.
+   *
+   * At 40 the inlet fills composite 0-299 and the seawall is solid from 290, so
+   * the two overlap by 10 rows and no matte shows between them. Measured on the
+   * shipped render, the claim is stronger than the recipe makes it: THIS
+   * COMPOSITE CONTAINS NO MATTE AT ALL -- not one matte pixel in 902400. The far
+   * tile reaches the top edge and the near tile reaches the bottom, so the
+   * seawall's sparse top 250 rows -- cedar tops, lamp heads, gulls -- read
+   * against WATER rather than against grey, which is also what the level shows:
+   * the inlet spans world y 860-1160 and every one of those cedars stands in
+   * front of it. Several other seams close; this is the only picture with no
+   * grey in it anywhere.
+   *
+   * ONE CORRECTION TO THE RECIPE'S OWN WORDS, since a later reader will compare
+   * them: "the 40 px above the inlet's top edge carries the cedar tops" is not
+   * what a positive offset does. At +40 the NEAR tile starts 40 px below the far
+   * one, so there is nothing above the inlet's top edge in this composite at all.
+   * The offset and the seam arithmetic in that recipe are right; that sentence
+   * describes the level's sky band rather than this render.
+   *
+   * EIGHT COMPOSITES AND THREE KINDS OF SEAM, and which one a subject gets is a
+   * property of the FAR TILE rather than of a better offset. Measured across the
+   * table as the worst matte fraction of any row BELOW the far tile going solid:
+   *
+   *     halifax-quayside              0.0%   meets to the pixel, zero overlap
+   *     prairie-rail-line             0.0%   overlaps
+   *     rideau-canal-skateway         0.1%   overlaps
+   *     alberta-foothills-rangeland   4.8%   overlaps by 14 rows
+   *     dufferin-terrace-toboggan-run 57.9%  a band of matte at y 318
+   *     toronto-trail                 82.4%  a band of matte at y 477
+   *     winnipeg-riverwalk            94.3%  a band of matte at y 475
+   *     vancouver-seawall             0.0%   overlaps by 10 rows
+   *
+   * Five of the eight close and three leave a band. Only this one has no grey
+   * ANYWHERE, which is the distinction worth keeping and is not a better offset:
+   * it reads that way because open water is opaque from its own top edge and a
+   * skyline with sky in it is not.
+   */
+  'vancouver-seawall': twoParallaxTiles({
+    farMatch: 'inlet',
+    nearMatch: 'seawall',
+    nearTop: 40,
+    what: 'an inlet tile and a seawall tile',
+  }),
+
   /**
    * THE THREE CHARACTER ARTBOARDS, one builder, three plans.
    *
@@ -1816,6 +1958,50 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
  * Deliberately says nothing about what is in the pictures, what the candidate
  * answers are, or how many distinct subjects there are. Every word here is
  * scanned against the leak tokens, so it cannot drift into naming one.
+ *
+ * AND THE ASK NAMES NO CATEGORY, WHICH IS A REPAIR AND NOT A STYLE CHOICE.
+ *
+ * It read "if you believe it is a real, named place or thing, name it", and one
+ * subject in the contract could not be scored on its own name because of it. The
+ * right unprompted answer to `five-sails` is the building's name; that name ends
+ * in the noun the ask used; and `leakTokens` takes every word of four letters or
+ * more out of `expectedBlindAnswer` and refuses any handed-over text that
+ * contains one. So writing the correct answer into the contract would have
+ * turned `make verify-art` red on a hand-off that leaks nothing. The subject id
+ * is `five-sails` for the same reason, and the contract states the residual risk
+ * in as many words: a verifier who writes the building's name AND NOTHING ELSE
+ * is scored a miss while being exactly right.
+ *
+ * THE PROPOSED FIX WAS "a real, named building or landmark", AND IT IS WORSE ON
+ * BOTH COUNTS, which is why it is not the wording that shipped:
+ *
+ *   1. IT COLLIDES TODAY, BEFORE ANYBODY ADDS ANYTHING. `land` is already a leak
+ *      token -- it is a word of `alberta-foothills-rangeland`'s accepted answer
+ *      "grazing land", which arrived in the same commit as the proposal -- and
+ *      the scan is a SUBSTRING match, so "landmark" contains it. Measured: that
+ *      wording puts one collision into a set that has none.
+ *   2. IT NARROWS THE ASK. This hand-off carries landscape tiles, a canal, a
+ *      hill and three character figures as well as buildings. Telling the
+ *      identifier that a named answer is expected to be architecture is a hint
+ *      about the contents, printed on the one text the identifier is meant to
+ *      read. "place or thing" was very nearly categoryless; "building or
+ *      landmark" is not.
+ *
+ * So the noun is GONE rather than swapped. A category noun in the ask is a
+ * standing collision with the accepted answers, because accepted answers ARE
+ * category nouns -- swapping one for another buys a level or two and lands back
+ * here. "has a name of its own" asks for exactly what "named place or thing"
+ * asked for, of a wider set of things, and takes no word out of the contract's
+ * vocabulary. Checked mechanically rather than read over: 796 tokens across 22
+ * subjects, zero collisions, and still zero with the building's name added to
+ * `expectedBlindAnswer` -- which is what makes this a fix for `five-sails`
+ * rather than a rewording next to it.
+ *
+ * AND NOTHING ELSE IS RELAXED. No token is exempted, no scan is narrowed, no
+ * answer matches more loosely, no subject is skipped. The only thing that
+ * changed is the question the identifier is asked, and it got MORE open, not
+ * less -- which is the opposite direction from the two proposals this file has
+ * declined.
  */
 const BRIEFING = `You have been handed a directory of images and nothing else.
 
@@ -1826,7 +2012,7 @@ than it appears to be -- which is the failure this hand-off exists to prevent.
 
 For EVERY image in answers.json, before you read anything else, write:
   answer      - what it is, as specifically as you can honestly be. If you
-                believe it is a real, named place or thing, name it.
+                believe it is real and has a name of its own, give that name.
   cues        - what in the image made you say that, most important first.
   confidence  - 0 to 1.
   moreCertain - what would have made you more certain.
