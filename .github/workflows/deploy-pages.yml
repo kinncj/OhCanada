@@ -356,10 +356,13 @@ jobs:
   # A matrix job's `result` is the aggregate over its shards: 'success' only if
   # every shard succeeded. So `needs: e2e` covers all six.
   #
-  # `perf` is awaited and reported but not asserted, exactly as before. It is
-  # `continue-on-error` at the job level, so its `result` cannot be trusted to
-  # distinguish a pass from a failure - which is precisely why nothing here
-  # depends on it.
+  # `perf` is awaited and reported but not asserted, exactly as before - and it
+  # is worth knowing WHY the second half of that is not optional. Measured on
+  # run 34427461281: the perf job failed on the container's frame sampling, and
+  # `needs.perf.result` came back 'success' anyway, because a job-level
+  # `continue-on-error` rewrites the result the needs context reports. Asserting
+  # on it would therefore be a gate that always passes - a fail-open wearing a
+  # check's clothes. It is printed for what it is worth and nothing turns on it.
   gate:
     name: All gates
     needs: [static, build, e2e, a11y, perf]
@@ -387,7 +390,13 @@ jobs:
               status=1
             fi
           done
-          echo "reported $PERF   perf (does not block)"
+          # NOT "reported success". Measured on run 34427461281: the perf job
+          # FAILED and `needs.perf.result` was still 'success', because a
+          # job-level `continue-on-error` rewrites the result the needs context
+          # reports. So this value cannot tell a pass from a failure, and
+          # printing it as though it could would be the most confident wrong
+          # line in the log. Say what it is worth instead.
+          echo "not asserted  perf - job-level continue-on-error makes its result '$PERF' whatever happened; read the job."
           exit "$status"
 
   deploy:
