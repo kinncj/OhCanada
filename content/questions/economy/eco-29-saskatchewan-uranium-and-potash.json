@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-10T01:30:00Z",
+    "checkedAt": "2026-09-10T02:39:12Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” … It also boasts the world’s richest deposits of uranium and potash, used in fertilizer, and produces oil and natural gas."
+    "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” has 40% of the arable land in Canada and is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash, used in fertilizer, and produces oil and natural gas."
   }
 }
