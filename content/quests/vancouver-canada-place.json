@@ -8,8 +8,8 @@
     "fr": "Des symboles sur le front de mer"
   },
   "summary": {
-    "en": "Skate along the waterfront to Canada Place with the officer. Then answer three questions about Canada's symbols.",
-    "fr": "Roulez en planche à roulettes le long du front de mer jusqu'à Canada Place avec l'agent. Répondez ensuite à trois questions sur les symboles du Canada."
+    "en": "Skate along the waterfront with the officer. You stop at the marina, at Canada Place and at the cargo ship, and at each one you learn something about Canada's symbols and then answer questions about it.",
+    "fr": "Roulez en planche à roulettes le long du front de mer avec l'agent. Vous vous arrêtez à la marina, à Canada Place et au navire de charge; à chaque halte, vous apprenez une chose sur les symboles du Canada, puis vous répondez à des questions dessus."
   },
   "declinedLine": {
     "speaker": "officer",
@@ -28,8 +28,8 @@
     "speaker": "officer",
     "expression": "neutral",
     "text": {
-      "en": "Keep rolling along the water. Canada Place is ahead of you.",
-      "fr": "Continuez à rouler le long de l'eau. Canada Place est devant vous."
+      "en": "Keep rolling along the water. The marina comes first, then Canada Place, then the cargo ship.",
+      "fr": "Continuez à rouler le long de l'eau. La marina vient en premier, puis Canada Place, puis le navire de charge."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "officer",
     "expression": "happy",
     "text": {
-      "en": "You skated along the waterfront to Canada Place and answered three questions about Canada's symbols.",
-      "fr": "Vous avez roulé en planche le long du front de mer jusqu'à Canada Place et répondu à trois questions sur les symboles du Canada."
+      "en": "You skated the whole waterfront with me, from the marina out to the cargo ship, and answered everything I asked about Canada's symbols.",
+      "fr": "Vous avez parcouru tout le front de mer avec moi, de la marina jusqu'au navire de charge, et répondu à tout ce que je vous ai demandé sur les symboles du Canada."
     },
     "fact": {
       "factual": false,
@@ -84,16 +84,16 @@
       "kind": "talk",
       "targetId": "officer",
       "prompt": {
-        "en": "Talk to the officer",
-        "fr": "Parlez à l'agent"
+        "en": "Meet the officer on the seawall",
+        "fr": "Retrouvez l'agent sur la promenade du bord de mer"
       },
       "dialogue": [
         {
           "speaker": "officer",
           "expression": "happy",
           "text": {
-            "en": "Hello! Welcome to the Vancouver waterfront.",
-            "fr": "Bonjour! Bienvenue sur le front de mer de Vancouver."
+            "en": "Hello again. Different coast, same uniform. Welcome to the Vancouver waterfront.",
+            "fr": "Rebonjour. Une autre côte, le même uniforme. Bienvenue sur le front de mer de Vancouver."
           },
           "fact": {
             "factual": false,
@@ -161,8 +161,8 @@
           "speaker": "officer",
           "expression": "neutral",
           "text": {
-            "en": "Now skate along to Canada Place. I will ask you three questions there.",
-            "fr": "Maintenant, roulez jusqu'à Canada Place. Je vous poserai trois questions là-bas."
+            "en": "Now skate along the water with me. We stop three times, and I will ask you about each stop.",
+            "fr": "Maintenant, roulez le long de l'eau avec moi. On s'arrête trois fois, et je vous poserai des questions à chaque halte."
           },
           "fact": {
             "factual": false,
@@ -173,13 +173,119 @@
       ]
     },
     {
+      "id": "skate-along-to-the-marina",
+      "kind": "visit",
+      "targetId": "marina",
+      "prompt": {
+        "en": "Skate along to the marina",
+        "fr": "Roulez jusqu'à la marina"
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Look at the flags on those boats. Not every one of them is the flag you already know.",
+            "fr": "Regardez les drapeaux sur ces bateaux. Ils ne sont pas tous celui que vous connaissez déjà."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "thinking",
+          "text": {
+            "en": "The Union Jack is Canada's official Royal Flag. The Canadian Red Ensign was the country's flag for about a hundred years.",
+            "fr": "L'Union Jack est le drapeau royal officiel du Canada. Le Red Ensign canadien a été le drapeau du pays pendant une centaine d'années."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canadian Symbols",
+              "page": 79,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "The Union Jack is our official Royal Flag. The Canadian Red Ensign served as the Canadian flag for about 100 years."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-marina",
+      "kind": "answer",
+      "targetId": "symbols",
+      "subject": "symbols",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about Canada's flags",
+        "fr": "Répondez à 2 questions sur les drapeaux du Canada"
+      }
+    },
+    {
       "id": "skate-to-canada-place",
       "kind": "visit",
       "targetId": "canada-place",
       "prompt": {
         "en": "Skate to Canada Place",
         "fr": "Rendez-vous à Canada Place"
-      }
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "This one flies the flag you do know. There is a second mark inside, on every piece of paper.",
+            "fr": "Ici, on hisse le drapeau que vous connaissez. Il y a une deuxième marque à l'intérieur, sur chaque document."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Canada's coat of arms carries symbols of England, France, Scotland and Ireland, with red maple leaves. You will see it on dollar bills, on government papers and on public buildings.",
+            "fr": "Les armoiries du Canada portent des symboles de l'Angleterre, de la France, de l'Écosse et de l'Irlande, avec des feuilles d'érable rouges. Vous les verrez sur les billets de banque, sur les documents du gouvernement et sur les édifices publics."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canadian Symbols",
+              "page": 80,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "The arms contain symbols of England, France, Scotland and Ireland as well as red maple leaves. Today the arms can be seen on dollar bills, government documents and public buildings."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
     },
     {
       "id": "answer-at-canada-place",
@@ -188,8 +294,71 @@
       "subject": "symbols",
       "count": 3,
       "prompt": {
-        "en": "Answer 3 questions",
-        "fr": "Répondez à 3 questions"
+        "en": "Answer 3 questions about the flag and the coat of arms",
+        "fr": "Répondez à 3 questions sur le drapeau et les armoiries"
+      }
+    },
+    {
+      "id": "go-on-to-the-cargo-ship",
+      "kind": "visit",
+      "targetId": "bulk-carrier",
+      "prompt": {
+        "en": "Go on to the cargo ship",
+        "fr": "Continuez jusqu'au navire de charge"
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "One last stop, at the big ship. This one is about you, and about the test you are studying for.",
+            "fr": "Une dernière halte, au grand navire. Celle-ci vous concerne, et elle concerne l'examen que vous préparez."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "The two official languages, English and French, are counted among this country's symbols. To become a citizen you must show that you know enough of one of them.",
+            "fr": "Les deux langues officielles, l'anglais et le français, comptent parmi les symboles du pays. Pour devenir citoyen, vous devez démontrer que vous en maîtrisez suffisamment une des deux."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canadian Symbols",
+              "page": 82,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": true,
+              "quote": "English and French are the two official languages and are important symbols of identity. English speakers (Anglophones) and French speakers (Francophones) have lived together in partnership and creative tension for more than 300 years. You must have adequate knowledge of English or French to become a Canadian citizen."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-cargo-ship",
+      "kind": "answer",
+      "targetId": "symbols",
+      "subject": "symbols",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about the two official languages",
+        "fr": "Répondez à 2 questions sur les deux langues officielles"
       }
     }
   ]

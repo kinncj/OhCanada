@@ -8,8 +8,8 @@
     "fr": "La promenade du port"
   },
   "summary": {
-    "en": "Walk with your guide from the Town Clock down to Pier 21. Along the way, answer questions about rights and responsibilities in Canada.",
-    "fr": "Marchez avec votre guide de la tour de l'horloge jusqu'au quai 21. En chemin, répondez à des questions sur les droits et les responsabilités au Canada."
+    "en": "Walk with your guide from the Town Clock down to the water. You stop four times. At each stop your guide tells you one thing about rights and responsibilities in Canada, and then asks you about it.",
+    "fr": "Marchez avec votre guide de la tour de l'horloge jusqu'à l'eau. Vous faites quatre haltes. À chaque halte, votre guide vous apprend une chose sur les droits et les responsabilités au Canada, puis vous pose des questions dessus."
   },
   "declinedLine": {
     "speaker": "guide",
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You walked from the Town Clock down to Pier 21 and answered five questions about rights and responsibilities.",
-      "fr": "Vous avez marché de la tour de l'horloge jusqu'au quai 21 et répondu à cinq questions sur les droits et les responsabilités."
+      "en": "You walked the whole harbour with me, from the Town Clock to the tugs, and answered every question I asked about rights and responsibilities.",
+      "fr": "Vous avez parcouru tout le port avec moi, de la tour de l'horloge jusqu'aux remorqueurs, et répondu à toutes mes questions sur les droits et les responsabilités."
     },
     "fact": {
       "factual": false,
@@ -84,8 +84,8 @@
       "kind": "talk",
       "targetId": "guide",
       "prompt": {
-        "en": "Talk to your guide",
-        "fr": "Parlez à votre guide"
+        "en": "Meet your guide by the harbour",
+        "fr": "Retrouvez votre guide au bord du port"
       },
       "dialogue": [
         {
@@ -161,8 +161,8 @@
           "speaker": "guide",
           "expression": "neutral",
           "text": {
-            "en": "Come with me. We stop at the Town Clock first, then we walk down to Pier 21.",
-            "fr": "Venez avec moi. On s'arrête d'abord à la tour de l'horloge, puis on descend au quai 21."
+            "en": "Come with me. We stop four times on the way down to the water, and I have something to tell you at each one.",
+            "fr": "Venez avec moi. On fait quatre haltes en descendant vers l'eau, et j'ai quelque chose à vous dire à chacune."
           },
           "fact": {
             "factual": false,
@@ -179,7 +179,50 @@
       "prompt": {
         "en": "Find the Town Clock",
         "fr": "Trouvez la tour de l'horloge"
-      }
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Stand still a moment. This is a good spot to talk about what the country asks of you.",
+            "fr": "Arrêtez-vous un instant. C'est un bon endroit pour parler de ce que le pays vous demande."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "Voting is a right here. It is also a duty: you are asked to vote in federal elections, in provincial or territorial ones, and in the local ones too.",
+            "fr": "Voter est un droit ici. C'est aussi un devoir : on vous demande de voter aux élections fédérales, aux élections provinciales ou territoriales, et aussi aux élections municipales."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Rights and Responsibilities of Citizenship",
+              "page": 14,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Voting in elections — The right to vote comes with a responsibility to vote in federal, provincial or territorial and local elections."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
     },
     {
       "id": "answer-at-the-clock",
@@ -188,8 +231,71 @@
       "subject": "rights",
       "count": 2,
       "prompt": {
-        "en": "Answer 2 questions",
-        "fr": "Répondez à 2 questions"
+        "en": "Answer 2 questions about voting",
+        "fr": "Répondez à 2 questions sur le vote"
+      }
+    },
+    {
+      "id": "stop-at-the-market-stall",
+      "kind": "visit",
+      "targetId": "market-stall",
+      "prompt": {
+        "en": "Stop at the market stall",
+        "fr": "Arrêtez-vous à l'étal de marché"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "A market is a good place to see the next one at work.",
+            "fr": "Un marché est un bon endroit pour voir la suite à l'œuvre."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Obeying the law is one of the things citizenship asks of you. People and governments alike are held to written law and not to somebody's mood. Nobody stands above it.",
+            "fr": "Respecter la loi fait partie de ce que la citoyenneté vous demande. Les personnes comme les gouvernements sont tenus par des lois écrites, et non par l'humeur de quelqu'un. Personne n'est au-dessus d'elles."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Rights and Responsibilities of Citizenship",
+              "page": 13,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Obeying the law — One of Canada’s founding principles is the rule of law. Individuals and governments are regulated by laws and not by arbitrary actions. No person or group is above the law."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-market-stall",
+      "kind": "answer",
+      "targetId": "rights",
+      "subject": "rights",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about obeying the law",
+        "fr": "Répondez à 2 questions sur le respect de la loi"
       }
     },
     {
@@ -199,7 +305,50 @@
       "prompt": {
         "en": "Walk down to Pier 21",
         "fr": "Descendez jusqu'au quai 21"
-      }
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "This is the bottom of the walk. What I want to tell you here is about you, not about the building.",
+            "fr": "C'est ici que se termine la descente. Ce que je veux vous dire ici parle de vous, pas du bâtiment."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "The Charter treats many cultures living together as a basic part of what Canada is. People here are asked to respect that mix and to live at peace inside it.",
+            "fr": "La Charte présente la coexistence de nombreuses cultures comme un trait fondamental de ce qu'est le Canada. On demande aux gens d'ici de respecter cette diversité et d'y vivre en paix."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Rights and Responsibilities of Citizenship",
+              "page": 12,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Multiculturalism — A fundamental characteristic of the Canadian heritage and identity. Canadians celebrate the gift of one another’s presence and work hard to respect pluralism and live in harmony."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
     },
     {
       "id": "answer-at-pier-21",
@@ -208,8 +357,71 @@
       "subject": "rights",
       "count": 3,
       "prompt": {
-        "en": "Answer 3 questions",
-        "fr": "Répondez à 3 questions"
+        "en": "Answer 3 questions about the Charter and your rights",
+        "fr": "Répondez à 3 questions sur la Charte et vos droits"
+      }
+    },
+    {
+      "id": "go-on-to-the-harbour-tug",
+      "kind": "visit",
+      "targetId": "harbour-tug",
+      "prompt": {
+        "en": "Go on to the harbour tug",
+        "fr": "Continuez jusqu'au remorqueur"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "One last stop, right at the water. Then I am done talking.",
+            "fr": "Une dernière halte, tout près de l'eau. Ensuite, j'aurai fini de parler."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "There is work of this kind open to you as well. You can serve in the Coast Guard, or in a police force or a fire department where you live.",
+            "fr": "Ce genre de travail vous est aussi ouvert. Vous pouvez servir dans la Garde côtière, ou dans un service de police ou de pompiers de votre localité."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Rights and Responsibilities of Citizenship",
+              "page": 15,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "You may also serve in the Coast Guard or emergency services in your community such as a police force or fire department."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-harbour-tug",
+      "kind": "answer",
+      "targetId": "rights",
+      "subject": "rights",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about serving your community",
+        "fr": "Répondez à 2 questions sur le service à la collectivité"
       }
     }
   ]

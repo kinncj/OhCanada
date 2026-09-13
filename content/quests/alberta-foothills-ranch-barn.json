@@ -8,8 +8,8 @@
     "fr": "Le ranch dans les contreforts"
   },
   "summary": {
-    "en": "Ride across the foothills with your guide to the working ranch. You answer three questions about Canada's economy there.",
-    "fr": "Traversez les contreforts à cheval avec votre guide jusqu'au ranch en activité. Vous répondez à trois questions sur l'économie du Canada là-bas."
+    "en": "Ride across the foothills with your guide. You stop at the gate, at the barn and out among the cattle, and at each stop you learn a piece of how Canada earns its living, then answer questions about it.",
+    "fr": "Traversez les contreforts à cheval avec votre guide. Vous vous arrêtez à la barrière, à la grange et au milieu du troupeau; à chaque halte, vous apprenez un aspect de la façon dont le Canada gagne sa vie, puis vous répondez à des questions dessus."
   },
   "declinedLine": {
     "speaker": "guide",
@@ -28,8 +28,8 @@
     "speaker": "guide",
     "expression": "neutral",
     "text": {
-      "en": "Keep riding along the fence line. The ranch barn is ahead of you.",
-      "fr": "Continuez à chevaucher le long de la clôture. La grange du ranch est devant vous."
+      "en": "Keep riding along the fence line. The gate comes first, then the barn, then the cattle.",
+      "fr": "Continuez à chevaucher le long de la clôture. La barrière vient en premier, puis la grange, puis le troupeau."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You rode across the foothills to the ranch and answered three questions about Canada's economy.",
-      "fr": "Vous avez traversé les contreforts à cheval jusqu'au ranch et répondu à trois questions sur l'économie du Canada."
+      "en": "You rode the whole spread with me, from the gate out to the herd, and answered everything I asked about Canada's economy.",
+      "fr": "Vous avez parcouru tout le domaine avec moi, de la barrière jusqu'au troupeau, et répondu à tout ce que je vous ai demandé sur l'économie du Canada."
     },
     "fact": {
       "factual": false,
@@ -84,8 +84,8 @@
       "kind": "talk",
       "targetId": "guide",
       "prompt": {
-        "en": "Talk to your guide",
-        "fr": "Parlez à votre guide"
+        "en": "Meet your guide before the ride",
+        "fr": "Retrouvez votre guide avant de partir"
       },
       "dialogue": [
         {
@@ -161,8 +161,8 @@
           "speaker": "guide",
           "expression": "happy",
           "text": {
-            "en": "Follow the trail to the ranch barn. I will ask you three questions when we get there.",
-            "fr": "Suivez la piste jusqu'à la grange du ranch. Je vous poserai trois questions une fois là-bas."
+            "en": "Follow the trail. We pull up three times, and I have something for you at each stop.",
+            "fr": "Suivez la piste. On s'arrête trois fois, et j'ai quelque chose pour vous à chaque halte."
           },
           "fact": {
             "factual": false,
@@ -173,13 +173,119 @@
       ]
     },
     {
+      "id": "ride-up-to-the-ranch-gate",
+      "kind": "visit",
+      "targetId": "ranch-gate",
+      "prompt": {
+        "en": "Ride up to the ranch gate",
+        "fr": "Rendez-vous à la barrière du ranch"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Hold up at the gate. Before we reach the ranch, one thing about the rest of the country's work.",
+            "fr": "Arrêtez-vous à la barrière. Avant d'arriver au ranch, une chose sur le reste du travail au pays."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "Service industries give people thousands of different kinds of job: transport, schools, health care, building, banking, shops, tourism, government.",
+            "fr": "Les industries de services offrent aux gens des milliers de métiers différents : transport, écoles, soins de santé, construction, banques, commerces, tourisme, fonction publique."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Economy",
+              "page": 91,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Service industries provide thousands of different jobs in areas like transportation, education, health care, construction, banking, communications, retail services, tourism and government."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-ranch-gate",
+      "kind": "answer",
+      "targetId": "economy",
+      "subject": "economy",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about the kinds of work in Canada",
+        "fr": "Répondez à 2 questions sur les types d'emplois au Canada"
+      }
+    },
+    {
       "id": "ride-to-the-ranch",
       "kind": "visit",
       "targetId": "ranch-barn",
       "prompt": {
         "en": "Ride to the ranch",
         "fr": "Rendez-vous au ranch à cheval"
-      }
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Tie up here. What leaves this barn is raw, and raw is not the only thing this country sells.",
+            "fr": "Attachez le cheval ici. Ce qui sort de cette grange est brut, et le brut n'est pas la seule chose que ce pays vend."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Manufacturing makes goods to sell at home and abroad: paper, machines, cars, aircraft parts, food, clothing.",
+            "fr": "La fabrication produit des biens à vendre au pays et à l'étranger : papier, machines, automobiles, pièces d'avion, aliments, vêtements."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Economy",
+              "page": 91,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Manufacturing industries make products to sell in Canada and around the world. Manufactured products include paper, high technology equipment, aerospace technology, automobiles, machinery, food, clothing and many other goods."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
     },
     {
       "id": "answer-at-the-ranch",
@@ -188,8 +294,71 @@
       "subject": "economy",
       "count": 3,
       "prompt": {
-        "en": "Answer 3 questions",
-        "fr": "Répondez à 3 questions"
+        "en": "Answer 3 questions about what Canada makes and sells",
+        "fr": "Répondez à 3 questions sur ce que le Canada produit et vend"
+      }
+    },
+    {
+      "id": "ride-out-to-the-herd",
+      "kind": "visit",
+      "targetId": "beef-cattle",
+      "prompt": {
+        "en": "Ride out to the herd",
+        "fr": "Poussez jusqu'au troupeau"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Walk your horse through them, slowly. One last thing, about where all this goes.",
+            "fr": "Passez au pas au milieu du troupeau. Une dernière chose, sur la destination de tout cela."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Canada and the United States buy more from each other than from anybody else. Each one is the other's largest trading partner.",
+            "fr": "Le Canada et les États-Unis s'achètent plus de biens l'un à l'autre qu'à quiconque. Chacun est le plus grand partenaire commercial de l'autre."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Economy",
+              "page": 92,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": true,
+              "quote": "Canada enjoys close relations with the United States and each is the other’s largest trading partner."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-herd",
+      "kind": "answer",
+      "targetId": "economy",
+      "subject": "economy",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about trade with the United States",
+        "fr": "Répondez à 2 questions sur le commerce avec les États-Unis"
       }
     }
   ]

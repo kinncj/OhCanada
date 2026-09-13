@@ -8,8 +8,8 @@
     "fr": "Patinez jusqu'à la Colline du Parlement"
   },
   "summary": {
-    "en": "Skate up the canal to Parliament Hill, find the Peace Tower, and answer three questions.",
-    "fr": "Patinez sur le canal jusqu'à la Colline du Parlement, trouvez la tour de la Paix et répondez à trois questions."
+    "en": "Skate up the canal with the officer. You stop at the Library, at the Peace Tower and at the warming hut, and at each one the officer explains a piece of how Canada is governed and then asks you about it.",
+    "fr": "Patinez sur le canal avec l'agent. Vous vous arrêtez à la Bibliothèque, à la tour de la Paix et à la cabane chauffée; à chaque halte, l'agent vous explique un aspect de la façon dont le Canada est gouverné, puis vous pose des questions dessus."
   },
   "declinedLine": {
     "speaker": "officer",
@@ -28,8 +28,8 @@
     "speaker": "officer",
     "expression": "neutral",
     "text": {
-      "en": "Keep going up the canal. Look up, and you will see the Peace Tower.",
-      "fr": "Continuez sur le canal. Levez les yeux et vous verrez la tour de la Paix."
+      "en": "Keep going up the canal. The Library comes first, then the Peace Tower, then the warming hut.",
+      "fr": "Continuez sur le canal. La Bibliothèque vient en premier, puis la tour de la Paix, puis la cabane chauffée."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "officer",
     "expression": "happy",
     "text": {
-      "en": "You skated up the canal to Parliament Hill, found the Peace Tower and answered three questions.",
-      "fr": "Vous avez patiné sur le canal jusqu'à la Colline du Parlement, trouvé la tour de la Paix et répondu à trois questions."
+      "en": "You skated the canal from the Library to the warming hut, stopping three times, and answered everything I asked about how Canada is governed.",
+      "fr": "Vous avez patiné sur le canal, de la Bibliothèque jusqu'à la cabane chauffée, avec trois haltes, et répondu à tout ce que je vous ai demandé sur la gouvernance du Canada."
     },
     "fact": {
       "factual": false,
@@ -84,8 +84,8 @@
       "kind": "talk",
       "targetId": "officer",
       "prompt": {
-        "en": "Talk to the officer",
-        "fr": "Parlez à l'agent"
+        "en": "Meet the officer on the canal",
+        "fr": "Retrouvez l'agent sur le canal"
       },
       "dialogue": [
         {
@@ -120,8 +120,8 @@
           "speaker": "officer",
           "expression": "neutral",
           "text": {
-            "en": "Skate up the canal to Parliament Hill and find the Peace Tower. Then answer three questions.",
-            "fr": "Patinez sur le canal jusqu'à la Colline du Parlement et trouvez la tour de la Paix. Ensuite, répondez à trois questions."
+            "en": "Skate up the canal with me. We stop three times, and each stop is a piece of how this country is run.",
+            "fr": "Patinez sur le canal avec moi. On fait trois haltes, et chacune porte sur un aspect de la gouvernance du pays."
           },
           "fact": {
             "factual": false,
@@ -132,13 +132,119 @@
       ]
     },
     {
+      "id": "skate-to-the-library",
+      "kind": "visit",
+      "targetId": "library-of-parliament",
+      "prompt": {
+        "en": "Skate up to the Library of Parliament",
+        "fr": "Patinez jusqu'à la Bibliothèque du Parlement"
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Stop here a moment. This is the working end of Parliament, and the work is slower than people think.",
+            "fr": "Arrêtez-vous un instant. C'est ici que le Parlement travaille, et le travail est plus lent qu'on ne le croit."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "thinking",
+          "text": {
+            "en": "A bill is a proposal for a new law. Nothing becomes law until both chambers have passed it and it has been given royal assent.",
+            "fr": "Un projet de loi est une proposition de nouvelle loi. Rien ne devient loi tant que les deux chambres ne l'ont pas adopté et qu'il n'a pas reçu la sanction royale."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "How Canadians Govern Themselves",
+              "page": 55,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Both the House of Commons and the Senate consider and review bills (proposals for new laws). No bill can become law in Canada until it has been passed by both chambers and has received royal assent, granted by the Governor General on behalf of the Sovereign."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-library",
+      "kind": "answer",
+      "targetId": "government",
+      "subject": "government",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about how a bill becomes law",
+        "fr": "Répondez à 2 questions sur la façon dont un projet de loi devient une loi"
+      }
+    },
+    {
       "id": "find-the-peace-tower",
       "kind": "visit",
       "targetId": "parliament-hill",
       "prompt": {
         "en": "Find the Peace Tower",
         "fr": "Trouvez la tour de la Paix"
-      }
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "Stand still and look up. What you are looking at is not one thing. It is three.",
+            "fr": "Arrêtez-vous et levez les yeux. Ce que vous regardez n'est pas une seule chose. C'en est trois."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "Parliament has three parts: the Sovereign, the Senate and the House of Commons. In a province it is the Lieutenant Governor and the elected Assembly.",
+            "fr": "Le Parlement compte trois parties : le souverain, le Sénat et la Chambre des communes. Dans une province, ce sont le lieutenant-gouverneur et l'Assemblée élue."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "How Canadians Govern Themselves",
+              "page": 55,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Parliament has three parts: the Sovereign (Queen or King), the Senate and the House of Commons. Provincial legislatures comprise the Lieutenant Governor and the elected Assembly."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
     },
     {
       "id": "answer-on-the-hill",
@@ -147,8 +253,71 @@
       "subject": "government",
       "count": 3,
       "prompt": {
-        "en": "Answer 3 questions",
-        "fr": "Répondez à 3 questions"
+        "en": "Answer 3 questions about the parts of Parliament",
+        "fr": "Répondez à 3 questions sur les parties du Parlement"
+      }
+    },
+    {
+      "id": "stop-at-the-warming-hut",
+      "kind": "visit",
+      "targetId": "warming-hut",
+      "prompt": {
+        "en": "Stop at the warming hut",
+        "fr": "Arrêtez-vous à la cabane chauffée"
+      },
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "expression": "happy",
+          "text": {
+            "en": "Get out of the wind for a minute. One last thing, and it is the one you will meet most often.",
+            "fr": "Mettez-vous à l'abri du vent une minute. Une dernière chose, et c'est celle que vous rencontrerez le plus souvent."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "officer",
+          "expression": "neutral",
+          "text": {
+            "en": "There is not one government here. There are four kinds: federal, provincial, territorial and municipal.",
+            "fr": "Il n'y a pas un seul gouvernement ici. Il y en a quatre ordres : fédéral, provincial, territorial et municipal."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "How Canadians Govern Themselves",
+              "page": 54,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "There are federal, provincial, territorial and municipal governments in Canada."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-warming-hut",
+      "kind": "answer",
+      "targetId": "government",
+      "subject": "government",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about the levels of government",
+        "fr": "Répondez à 2 questions sur les ordres de gouvernement"
       }
     }
   ]

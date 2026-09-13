@@ -8,8 +8,8 @@
     "fr": "Une halte sur la roche nue"
   },
   "summary": {
-    "en": "This place has something to tell you. Stop, read it, then answer three questions about who Canadians are.",
-    "fr": "Ce lieu a quelque chose à vous apprendre. Arrêtez-vous, lisez, puis répondez à trois questions sur qui sont les Canadiens."
+    "en": "This place has something to tell you, and so do the two stops further along the rock. Read at each one, then answer the questions it leaves you about who Canadians are.",
+    "fr": "Ce lieu a quelque chose à vous apprendre, et les deux haltes plus loin sur la roche aussi. Lisez à chacune, puis répondez aux questions qu'elle vous laisse sur qui sont les Canadiens."
   },
   "declinedLine": {
     "speaker": "peggys-point-light",
@@ -26,8 +26,8 @@
   "reminderLine": {
     "speaker": "peggys-point-light",
     "text": {
-      "en": "There are still three questions here, about who Canadians are.",
-      "fr": "Il reste ici trois questions sur qui sont les Canadiens."
+      "en": "There are still questions here, about who Canadians are, and two more stops along the rock.",
+      "fr": "Il reste ici des questions sur qui sont les Canadiens, et deux autres haltes sur la roche."
     },
     "fact": {
       "factual": false,
@@ -65,8 +65,8 @@
   "doneLine": {
     "speaker": "peggys-point-light",
     "text": {
-      "en": "You walked the bare rock and answered three questions about who Canadians are.",
-      "fr": "Vous avez marché sur la roche nue et répondu à trois questions sur qui sont les Canadiens."
+      "en": "You walked the bare rock from the light to the last house, and answered every question it left you about who Canadians are.",
+      "fr": "Vous avez parcouru la roche nue, du phare jusqu'à la dernière maison, et répondu à toutes les questions laissées sur qui sont les Canadiens."
     },
     "fact": {
       "factual": false,
@@ -153,8 +153,8 @@
         {
           "speaker": "peggys-point-light",
           "text": {
-            "en": "Three questions follow, about who Canadians are. Take as long as you need.",
-            "fr": "Trois questions suivent, sur qui sont les Canadiens. Prenez tout le temps qu'il vous faut."
+            "en": "Three questions about that come next. After them, keep walking: there are two more stops along the rock, and each has something of its own.",
+            "fr": "Trois questions là-dessus viennent ensuite. Après, continuez à marcher : il y a deux autres haltes sur la roche, chacune avec sa propre matière."
           },
           "fact": {
             "factual": false,
@@ -171,8 +171,130 @@
       "subject": "who-we-are",
       "count": 3,
       "prompt": {
-        "en": "Answer 3 questions",
-        "fr": "Répondez à 3 questions"
+        "en": "Answer 3 questions about the two official languages",
+        "fr": "Répondez à 3 questions sur les deux langues officielles"
+      }
+    },
+    {
+      "id": "walk-on-to-the-fish-store",
+      "kind": "visit",
+      "targetId": "fish-store",
+      "prompt": {
+        "en": "Walk on to the fish store",
+        "fr": "Continuez jusqu'au hangar de pêche"
+      },
+      "dialogue": [
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "Nothing about this ground is easy. Work was got out of it anyway.",
+            "fr": "Rien n'est facile sur ce sol. On en a tout de même tiré du travail."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "A belief in ordered freedom, in enterprise, in hard work and in fair play built a well-off country out of rough ground, from this ocean west to the Pacific and north to the Arctic.",
+            "fr": "Une foi dans la liberté ordonnée, dans l'esprit d'entreprise, dans le travail acharné et dans le franc-jeu a bâti un pays prospère sur un sol difficile, de cet océan jusqu'au Pacifique à l'ouest et jusqu'à l'Arctique au nord."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Who We Are",
+              "page": 16,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "A belief in ordered liberty, enterprise, hard work and fair play have enabled Canadians to build a prosperous society in a rugged environment from our Atlantic shores to the Pacific Ocean and to the Arctic Circle"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-fish-store",
+      "kind": "answer",
+      "targetId": "who-we-are",
+      "subject": "who-we-are",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about what built this country",
+        "fr": "Répondez à 2 questions sur ce qui a bâti ce pays"
+      }
+    },
+    {
+      "id": "walk-on-to-the-village-house",
+      "kind": "visit",
+      "targetId": "village-house",
+      "prompt": {
+        "en": "Walk on to the village house",
+        "fr": "Continuez jusqu'à la maison du village"
+      },
+      "dialogue": [
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "A house is where a life gets built. The last thing here is about the life you are starting.",
+            "fr": "Une maison, c'est là qu'une vie se bâtit. La dernière chose ici porte sur la vie que vous commencez."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "Whoever arrives here to become Canadian is expected to take up this country's democratic principles. The rule of law is the example given.",
+            "fr": "Quiconque arrive ici pour devenir canadien doit adopter les principes démocratiques du pays. La règle de droit est l'exemple donné."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Who We Are",
+              "page": 20,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "In becoming Canadian, newcomers are expected to embrace democratic principles such as the rule of law."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-village-house",
+      "kind": "answer",
+      "targetId": "who-we-are",
+      "subject": "who-we-are",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about becoming Canadian",
+        "fr": "Répondez à 2 questions sur le fait de devenir canadien"
       }
     }
   ]

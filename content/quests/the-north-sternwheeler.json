@@ -8,8 +8,8 @@
     "fr": "Une halte sur la plage de galets"
   },
   "summary": {
-    "en": "Stop at the vessel on the stones and read what this place has to say. Then answer three questions about Canada's regions.",
-    "fr": "Arrêtez-vous au bateau posé sur les galets et lisez ce que ce lieu a à vous apprendre. Répondez ensuite à trois questions sur les régions du Canada."
+    "en": "Stop at the vessel on the stones and read what this place has to say. Then walk on to the driftwood, where there is more, and answer the questions each stop leaves you about Canada's regions.",
+    "fr": "Arrêtez-vous au bateau posé sur les galets et lisez ce que ce lieu a à vous apprendre. Continuez ensuite jusqu'au bois flotté, où il y a d'autres choses, et répondez aux questions que chaque halte vous laisse sur les régions du Canada."
   },
   "declinedLine": {
     "speaker": "yukon-river-sternwheeler",
@@ -26,8 +26,8 @@
   "reminderLine": {
     "speaker": "yukon-river-sternwheeler",
     "text": {
-      "en": "Three questions about Canada's regions are still unanswered here.",
-      "fr": "Trois questions sur les régions du Canada attendent encore ici."
+      "en": "Questions about Canada's regions are still unanswered here, and there is a second stop further along the bar.",
+      "fr": "Des questions sur les régions du Canada attendent encore ici, et il y a une deuxième halte plus loin sur la plage."
     },
     "fact": {
       "factual": false,
@@ -65,8 +65,8 @@
   "doneLine": {
     "speaker": "yukon-river-sternwheeler",
     "text": {
-      "en": "You walked the gravel bar and answered three questions about Canada's regions.",
-      "fr": "Vous avez marché sur la plage de galets et répondu à trois questions sur les régions du Canada."
+      "en": "You walked the gravel bar from the vessel to the driftwood and answered every question left here about Canada's regions.",
+      "fr": "Vous avez parcouru la plage de galets, du bateau jusqu'au bois flotté, et répondu à toutes les questions laissées ici sur les régions du Canada."
     },
     "fact": {
       "factual": false,
@@ -87,8 +87,8 @@
         {
           "speaker": "yukon-river-sternwheeler",
           "text": {
-            "en": "This vessel rests on the stones of the bar, above the water. Two things about this part of the country come first, then three questions.",
-            "fr": "Ce bateau repose sur les galets, au-dessus de l'eau. D'abord deux choses sur cette partie du pays, puis trois questions."
+            "en": "This vessel rests on the stones of the bar, above the water. Two things about this part of the country come first, then questions on them.",
+            "fr": "Ce bateau repose sur les galets, au-dessus de l'eau. D'abord deux choses sur cette partie du pays, puis des questions là-dessus."
           },
           "fact": {
             "factual": false,
@@ -153,8 +153,8 @@
         {
           "speaker": "yukon-river-sternwheeler",
           "text": {
-            "en": "Three questions about Canada's regions come next. Nothing here is timed.",
-            "fr": "Trois questions sur les régions du Canada viennent ensuite. Rien ici n'est chronométré."
+            "en": "Two questions on that come next. Then keep walking along the bar: there is more at the driftwood. Nothing here is timed.",
+            "fr": "Deux questions là-dessus viennent ensuite. Puis continuez le long de la plage : il y a d'autres choses au bois flotté. Rien ici n'est chronométré."
           },
           "fact": {
             "factual": false,
@@ -169,10 +169,71 @@
       "kind": "answer",
       "targetId": "regions",
       "subject": "regions",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about Canada's North",
+        "fr": "Répondez à 2 questions sur le Nord du Canada"
+      }
+    },
+    {
+      "id": "walk-on-to-the-driftwood",
+      "kind": "visit",
+      "targetId": "driftwood",
+      "prompt": {
+        "en": "Walk on to the driftwood",
+        "fr": "Continuez jusqu'au bois flotté"
+      },
+      "dialogue": [
+        {
+          "speaker": "yukon-river-sternwheeler",
+          "text": {
+            "en": "This wood came down from somewhere upstream. Rivers are how this part of the country moves.",
+            "fr": "Ce bois est descendu de quelque part en amont. Les rivières, c'est ce qui fait bouger cette partie du pays."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "yukon-river-sternwheeler",
+          "text": {
+            "en": "The Mackenzie is the second-longest river system in North America. Only the Mississippi is longer.",
+            "fr": "Le Mackenzie est le deuxième plus long réseau fluvial d'Amérique du Nord. Seul le Mississippi est plus long."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 104,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "The Mackenzie River, at 4,200 kilometres, is the second-longest river system in North America after the Mississippi and drains an area of 1.8 million square kilometres."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-driftwood",
+      "kind": "answer",
+      "targetId": "regions",
+      "subject": "regions",
       "count": 3,
       "prompt": {
-        "en": "Answer 3 questions",
-        "fr": "Répondez à 3 questions"
+        "en": "Answer 3 questions about the land and rivers of the North",
+        "fr": "Répondez à 3 questions sur les terres et les rivières du Nord"
       }
     }
   ]
