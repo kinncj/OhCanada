@@ -135,6 +135,109 @@ describe('the shell, on a cold load', () => {
   });
 });
 
+describe('changing a character that already exists', () => {
+  /** A returning player: a character in the save, so no creator on the route. */
+  const returning = (over: Partial<Parameters<typeof createShell>[1]> = {}): Fixture =>
+    mount({
+      creator: { slots: SLOTS, required: false, initialSelection: { coat: 'parka' } },
+      onChangeCharacter: vi.fn(),
+      ...over,
+    });
+
+  it('offers the way back in from Settings, and opens the same screen', () => {
+    const { shell, at } = returning();
+    shell.start();
+    at('title-settings')?.click();
+
+    expect(at('setting-character')?.textContent).toBe('Change my character');
+    at('setting-character')?.click();
+
+    expect(at('character-creator')).not.toBeNull();
+    expect(at('slot-coat')).not.toBeNull();
+  });
+
+  it('opens on the character I have, not on a new draw', () => {
+    const { shell, at } = returning({
+      creator: { slots: SLOTS, required: false, initialSelection: { coat: 'anorak' } },
+    });
+    shell.start();
+    at('title-settings')?.click();
+    at('setting-character')?.click();
+
+    expect(at('slot-coat-anorak')?.getAttribute('aria-checked')).toBe('true');
+    expect(at('slot-coat-parka')?.getAttribute('aria-checked')).toBe('false');
+  });
+
+  it('finishes with "Done", which is a different event from "created"', () => {
+    /* `TN-FIRSTRUN`, ruling 3, and the whole reason there are two callbacks: a
+       listener that re-runs the first-run route must not be able to fire from
+       Settings. */
+    const onChangeCharacter = vi.fn();
+    const onCreateCharacter = vi.fn();
+    const { shell, at, page } = returning({ onChangeCharacter, onCreateCharacter });
+    shell.start();
+    at('title-settings')?.click();
+    at('setting-character')?.click();
+    at('slot-coat-anorak')?.click();
+
+    expect(at('start-playing')).toBeNull();
+    at('creator-done')?.click();
+
+    expect(onChangeCharacter).toHaveBeenCalledWith({ coat: 'anorak' });
+    expect(onCreateCharacter).not.toHaveBeenCalled();
+    expect(at('settings-screen')?.hidden).toBe(false);
+    expect(at('character-creator')).toBeNull();
+    expect(page.doc.activeElement).toBe(at('setting-character'));
+  });
+
+  it('goes back to Settings with the saved character unchanged', () => {
+    const onChangeCharacter = vi.fn();
+    const { shell, at } = returning({ onChangeCharacter });
+    shell.start();
+    at('title-settings')?.click();
+    at('setting-character')?.click();
+    at('slot-coat-anorak')?.click();
+    at('creator-back')?.click();
+
+    expect(onChangeCharacter).not.toHaveBeenCalled();
+    expect(at('settings-screen')?.hidden).toBe(false);
+
+    /* And the character the player *has* is what the screen offers next time,
+       never the one they walked away from. */
+    at('setting-character')?.click();
+    expect(at('slot-coat-parka')?.getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('offers no route from the creator into the creator', () => {
+    /* `TN-CREATOR-11` and `TN-SET-01`: absent where it would open the screen
+       the player is already on. A cycle is harmless for a pointer and a trap
+       for a switch user, who cannot see the depth they are at. */
+    const { shell, at } = firstRun({ onChangeCharacter: vi.fn() });
+    shell.start();
+    at('title-play')?.click();
+    at('creator-settings')?.click();
+
+    expect(at('settings-screen')).not.toBeNull();
+    expect(at('setting-character')).toBeNull();
+  });
+
+  it('offers no "Change my character" before there is a character to change', () => {
+    const { shell, at } = firstRun({ onChangeCharacter: vi.fn() });
+    shell.start();
+    at('title-settings')?.click();
+
+    expect(at('setting-character')).toBeNull();
+  });
+
+  it('draws no item at all when the composition root saves no character', () => {
+    const { shell, at } = mount({ creator: { slots: SLOTS, required: false } });
+    shell.start();
+    at('title-settings')?.click();
+
+    expect(at('setting-character')).toBeNull();
+  });
+});
+
 describe('the first run, end to end', () => {
   it('goes title -> creator -> level select', () => {
     const onCreateCharacter = vi.fn();
@@ -179,6 +282,46 @@ describe('the first run, end to end', () => {
     at('title-choose-level')?.click();
     expect(shell.view).toBe('level-select');
     expect(at('character-creator')).toBeNull();
+  });
+
+  it('takes Back out of the creator to the title, having saved nothing', () => {
+    /* `TN-FIRSTRUN-03`: no `character/created`, no confirmation, and nothing on
+       the screen says the player lost anything — they are still a first-run
+       player, so "Play" is what the title offers again. */
+    const onCreateCharacter = vi.fn();
+    const { shell, at, page } = firstRun({ onCreateCharacter });
+    shell.start();
+    at('title-play')?.click();
+    at('slot-coat-anorak')?.click();
+
+    at('creator-back')?.click();
+
+    expect(shell.view).toBe('title');
+    expect(at('character-creator')).toBeNull();
+    expect(onCreateCharacter).not.toHaveBeenCalled();
+    expect(at('title-play')).not.toBeNull();
+    expect(at('title-continue')).toBeNull();
+    expect(at('title-choose-level')).toBeNull();
+    expect(page.doc.activeElement).toBe(at('title-play'));
+  });
+
+  it('tells the player once that an option in their save is gone', () => {
+    const { shell, at } = firstRun({
+      creator: { slots: SLOTS, required: true, initialSelection: { coat: 'parka' }, optionRepaired: true },
+      onCreateCharacter: vi.fn(),
+      onChangeCharacter: vi.fn(),
+    });
+    shell.start();
+    at('title-play')?.click();
+    expect(at('creator-option-gone')?.hidden).toBe(false);
+
+    /* Finished, saved — and the next time the screen is opened it says nothing,
+       because the repair is not news any more (`TN-LOOK-05`). */
+    at('start-playing')?.click();
+    at('level-select-back')?.click();
+    at('title-settings')?.click();
+    at('setting-character')?.click();
+    expect(at('creator-option-gone')?.hidden).toBe(true);
   });
 
   it('asks the composition root to load a level; it never loads one itself', () => {
@@ -406,7 +549,13 @@ describe('a level transition', () => {
     shell.enterLevel(id('ottawa'));
     shell.leaveLevel();
 
-    expect(at('settings-screen')?.hidden).toBe(true);
+    /* Gone rather than hidden, since the settings screen now goes with the view
+       it was opened over: whether it draws "Change my character" depends on
+       which screen is behind it, so one kept instance would carry the item
+       from the map into the creator. Either way the promise is the same — no
+       settings screen is left open across a level transition. */
+    const screen = at('settings-screen');
+    expect(screen === null || screen.hidden).toBe(true);
   });
 
   it('redraws what progress opened while the player was away', () => {

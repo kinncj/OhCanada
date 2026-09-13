@@ -42,6 +42,11 @@ export type CopyParams = Readonly<Record<string, string | number>>;
 const EN = {
   /* docs/stories/TN-SET-settings.md */
   'settings.title': 'Settings',
+  /* An appearance control on a screen of accessibility switches, and here
+     anyway: it is where `creator.intro` sends the player, so it is where the
+     promise is kept. Neither language agrees with the player — « personnage »
+     is masculine whoever is playing. */
+  'settings.character': 'Change my character',
   'settings.language': 'Language',
   'settings.language.en': 'English',
   'settings.language.fr': 'Français',
@@ -79,18 +84,77 @@ const EN = {
   'settings.state.on': 'On',
   'settings.state.off': 'Off',
 
-  /* docs/stories/TN-CREATOR-character-creator.md */
+  /* docs/stories/TN-CREATOR-character-creator.md — the screen's own chrome. It
+     owns no slot label and no option name; those are the two blocks below. */
   'creator.title': 'Make your character',
   'creator.intro': 'Pick how you look. You can change this later in Settings.',
-  'creator.slot.skin': 'Skin tone',
-  'creator.slot.hair': 'Hair',
-  'creator.slot.coat': 'Coat',
+  'creator.preview.label': 'Your character',
   'creator.randomise': 'Surprise me',
   'creator.start': 'Start playing',
   'creator.saveFailed':
     'We could not save your character. You can keep playing, but your choices may be lost.',
   'creator.retry': 'Try again',
   'creator.continue': 'Keep playing',
+
+  /* docs/stories/TN-FIRSTRUN-choosing-a-character-before-playing.md — the
+     primary control when this screen was opened from Settings. Exactly one of
+     `creator.start` and `creator.done` is drawn, because each is named for
+     where it goes. */
+  'creator.done': 'Done',
+
+  /* docs/stories/TN-LOOK-what-the-player-can-choose.md — the five slots and
+     thirteen of the nineteen options. `TN-SKIN` owns the other six.
+
+     **The key is derived from the rig, by one rule, in two shapes.** A slot row
+     is `creator.slot.<slotName>` and an option row is
+     `creator.<slotName>.<optionId>`, both spelled exactly as
+     `content/characters/rig.json` spells them. That is why
+     `creator.skin.skin-1` stutters and stays: a key a gate can generate from
+     the rig needs no mapping table, and a prettier key is a table somebody
+     maintains and eventually gets wrong.
+
+     `creator.slot.hair` and `creator.slot.coat` are deleted rather than
+     reworded. The first named a slot the rig split in two on purpose; the
+     second named `costume`, which is not player-selectable and says which
+     character an artboard is.
+
+     `headCovering.none` and `feature.none` are two rows and never one: "None"
+     and "No" are two words, and one shared row would be one row saying two
+     things. */
+  'creator.slot.skin': 'Skin tone',
+  'creator.slot.hairShape': 'Hair',
+  'creator.slot.hairColour': 'Hair colour',
+  'creator.slot.headCovering': 'Head covering',
+  'creator.slot.feature': 'Glasses',
+  'creator.hairShape.crop': 'Short',
+  'creator.hairShape.coil': 'Tight curls',
+  'creator.hairShape.bob': 'Chin length',
+  'creator.hairShape.long': 'Long',
+  'creator.hairColour.black': 'Black',
+  'creator.hairColour.brown': 'Brown',
+  'creator.hairColour.blond': 'Blond',
+  'creator.hairColour.red': 'Red',
+  'creator.hairColour.grey': 'Grey',
+  'creator.headCovering.none': 'None',
+  'creator.headCovering.toque': 'Toque',
+  'creator.feature.none': 'No',
+  'creator.feature.glasses': 'Yes',
+  'creator.optionGone':
+    'One of your choices is not in this version. We picked a new one. You can change it here.',
+
+  /* docs/stories/TN-SKIN-naming-the-six-skin-tones.md — an ordinal and a
+     lightness band shared by two options, so no tone is the marked case and
+     none is the unremarkable one. The band word is a measurement of
+     `assets/style/palette.json`, asserted by
+     `tests/unit/ui/skin-tone-names-are-measured.test.ts`. The noun lives on
+     `creator.slot.skin`, so the live region reads "Skin tone: 4, medium" and
+     never "Skin tone: Skin tone 4". */
+  'creator.skin.skin-1': '1, light',
+  'creator.skin.skin-2': '2, light',
+  'creator.skin.skin-3': '3, medium',
+  'creator.skin.skin-4': '4, medium',
+  'creator.skin.skin-5': '5, dark',
+  'creator.skin.skin-6': '6, dark',
 
   /* docs/stories/TN-CARD-question-card.md */
   'card.progress': 'Question {{n}} of {{total}}',
@@ -680,6 +744,7 @@ export type CountKey = BaseOf<PluralRow>;
  */
 const FR: Readonly<Record<CopyRow, string>> = {
   'settings.title': 'Réglages',
+  'settings.character': 'Modifier votre personnage',
   'settings.language': 'Langue',
   'settings.language.en': 'English',
   'settings.language.fr': 'Français',
@@ -713,15 +778,54 @@ const FR: Readonly<Record<CopyRow, string>> = {
 
   'creator.title': 'Créez votre personnage',
   'creator.intro': "Choisissez votre apparence. Vous pourrez la changer plus tard dans les Réglages.",
-  'creator.slot.skin': 'Teint de peau',
-  'creator.slot.hair': 'Cheveux',
-  'creator.slot.coat': 'Manteau',
+  'creator.preview.label': 'Votre personnage',
   'creator.randomise': 'Au hasard',
   'creator.start': 'Commencer à jouer',
   'creator.saveFailed':
     "Nous n'avons pas pu enregistrer votre personnage. Vous pouvez continuer à jouer, mais vos choix pourraient être perdus.",
   'creator.retry': 'Réessayer',
   'creator.continue': 'Continuer quand même',
+
+  'creator.done': 'Terminé',
+
+  /* Five French forms English does not have, and they are the finding rather
+     than a detail. Every `hairShape` and `hairColour` value is a PLURAL
+     adjective, because it agrees with « cheveux » — never with the player, so
+     « Court(e) » is not a fix, it is the rule in `docs/content-review.md` §8.6
+     being broken. Red hair is « Roux » and never « Rouges ». « Gris » already
+     carries its plural. « Tuque » is the Canadian French spelling of the
+     Canadian English « Toque », and neither is a typo. */
+  'creator.slot.skin': 'Teint de peau',
+  'creator.slot.hairShape': 'Cheveux',
+  'creator.slot.hairColour': 'Couleur des cheveux',
+  'creator.slot.headCovering': 'Couvre-chef',
+  'creator.slot.feature': 'Lunettes',
+  'creator.hairShape.crop': 'Courts',
+  'creator.hairShape.coil': 'Boucles serrées',
+  'creator.hairShape.bob': 'Au menton',
+  'creator.hairShape.long': 'Longs',
+  'creator.hairColour.black': 'Noirs',
+  'creator.hairColour.brown': 'Bruns',
+  'creator.hairColour.blond': 'Blonds',
+  'creator.hairColour.red': 'Roux',
+  'creator.hairColour.grey': 'Gris',
+  'creator.headCovering.none': 'Aucun',
+  'creator.headCovering.toque': 'Tuque',
+  'creator.feature.none': 'Non',
+  'creator.feature.glasses': 'Oui',
+  'creator.optionGone':
+    "Un de vos choix ne se trouve pas dans cette version. Nous en avons choisi un autre. Vous pouvez le modifier ici.",
+
+  /* « clair », « moyen » and « foncé » agree with « teint », which is masculine
+     singular, so this is the one table in the creator whose two languages have
+     identical grammar. There is no « clair(e) » to write and none may be
+     introduced. */
+  'creator.skin.skin-1': '1, clair',
+  'creator.skin.skin-2': '2, clair',
+  'creator.skin.skin-3': '3, moyen',
+  'creator.skin.skin-4': '4, moyen',
+  'creator.skin.skin-5': '5, foncé',
+  'creator.skin.skin-6': '6, foncé',
 
   'card.progress': 'Question {{n}} sur {{total}}',
   'card.kind.new': 'Nouvelle',

@@ -130,6 +130,7 @@ const hoisted = vi.hoisted(() => {
     loadingHidden: number;
     loadingStallAfterMs: number | undefined;
     autoMove: boolean[];
+    appearance: Record<string, string>[];
     /** Every question the card was asked to present, in order. */
     questionsAsked: unknown[];
     /** Which host the question card was mounted into. */
@@ -237,6 +238,7 @@ const hoisted = vi.hoisted(() => {
     loadingHidden: 0,
     loadingStallAfterMs: undefined,
     autoMove: [],
+    appearance: [],
     questionsAsked: [],
     questionHost: null,
     questionOptions: null,
@@ -327,6 +329,12 @@ vi.mock('@adapters/phaser', () => ({
     }
     setAutoMove(enabled: boolean): void {
       hoisted.state.autoMove.push(enabled);
+    }
+    /* The other capability that had no caller until the creator was mounted:
+       what the player chose is what the level draws (`TN-CREATOR-01`, "the
+       skater uses the options I chose"). */
+    setPlayerAppearance(skins: Readonly<Record<string, string>>): void {
+      hoisted.state.appearance.push({ ...skins });
     }
     markLevelComplete(): void {
       hoisted.state.markedComplete += 1;

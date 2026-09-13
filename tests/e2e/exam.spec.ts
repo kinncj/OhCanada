@@ -1,5 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
+import { ensureCharacter } from './front-door';
+
 /**
  * A practice exam, sat end to end on the shipped build.
  *
@@ -315,6 +317,13 @@ test.describe('the practice exam, on the shipped build', () => {
     /* And the result is kept: the passport shows the most recent one. */
     await page.locator('[data-testid="exam-back"]').click();
     await expect(page.locator('[data-testid="title-screen"]')).toBeVisible();
+    /* The map is behind "Choose a level", which a player without a character
+       has not been offered yet: the title screen draws "Play" for them and Play
+       opens the creator (`TN-FIRSTRUN-01`). The exam is reachable from either
+       branch — it is the one thing on this screen that is — so the character is
+       made here rather than at the top of the test, which would have changed
+       what the exam itself was started from. */
+    await ensureCharacter(page);
     await page.locator('[data-testid="title-choose-level"]').click();
     await page.locator('[data-testid="passport-open"]').click();
     await expect(page.locator('[data-testid="passport-exam"]')).toContainText(

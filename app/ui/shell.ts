@@ -82,10 +82,24 @@ export type ShellView = 'title' | 'creator' | 'level-select';
 /** The character creator's content, per language. Names are content, not copy. */
 export interface ShellCreatorOptions {
   readonly slots: Readonly<Record<UiLocale, readonly CreatorSlot[]>>;
-  /** `true` on a first run: Play goes through the creator before the map. */
+  /**
+   * `true` on a first run: Play goes through the creator before the map.
+   *
+   * **Decided by whether the save has a character and by nothing else**
+   * (`TN-FIRSTRUN`, ruling 1). Not "the save is empty", not "no level has been
+   * played": a save with stamps and answers and no character is a first run,
+   * goes to the creator, and keeps every stamp. The caller answers that
+   * question; the shell only draws the branch.
+   */
   readonly required: boolean;
   /** A saved character, so a returning player is not re-randomised. */
   readonly initialSelection?: CharacterSelection;
+  /**
+   * A saved option this build no longer has was replaced by a uniform draw. The
+   * creator says so, once, the next time the player can act on it
+   * (`TN-LOOK-05`).
+   */
+  readonly optionRepaired?: boolean;
 }
 
 export interface ShellOptions {
@@ -108,6 +122,16 @@ export interface ShellOptions {
   readonly onPlayLevel: (id: LevelId) => void;
   /** `character/created`. The composition root saves it. */
   readonly onCreateCharacter?: (selection: CharacterSelection) => void;
+  /**
+   * `character/changed` — the creator re-opened from Settings and finished.
+   *
+   * A **different** callback from {@link ShellOptions.onCreateCharacter}, and
+   * deliberately not one with a flag: `TN-FIRSTRUN` ruling 3 requires that a
+   * listener which re-runs the first-run route cannot be triggered from
+   * Settings, and the only way to guarantee that is for the two to be unable to
+   * reach each other. Absent draws no "Change my character" item at all.
+   */
+  readonly onChangeCharacter?: (selection: CharacterSelection) => void;
   /**
    * Study, from the title screen. The composition root owns the study screen (it
    * needs the scheduler), mounts it into {@link Shell.main}, and brackets it
@@ -233,6 +257,11 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
   let characterRequired = options.creator?.required === true;
   let examUnfinished = options.examUnfinished === true;
   let selection: CharacterSelection | undefined = options.creator?.initialSelection;
+  /* What the caller last saved, so Back out of the editor puts the character
+     the player *has* back on the screen rather than the one they were trying
+     out (`TN-FIRSTRUN-04`: "my saved character is unchanged"). */
+  let savedSelection: CharacterSelection | undefined = options.creator?.initialSelection;
+  let optionRepaired = options.creator?.optionRepaired === true;
   let view: ShellView | null = null;
   let modalOpen = false;
   let storageBlocked = false;
@@ -240,6 +269,19 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
 
   let title: TitleScreen | null = null;
   let creator: CharacterCreator | null = null;
+  /*
+   * The creator on its *second* errand, and a separate object from the one
+   * above on purpose.
+   *
+   * The first-run creator is a **view**: it replaces the title screen, `back`
+   * goes to the title, and finishing it goes on to the map. This one is a
+   * **surface over Settings**: the view behind it never changed, `back` and
+   * "Done" both return to Settings, and the shell's own ring stays down the
+   * whole time because a modal is open. One object serving both would have to
+   * carry a mode that decides four different behaviours, and `clearView` would
+   * destroy the editor every time the view under Settings was rebuilt.
+   */
+  let editor: CharacterCreator | null = null;
   let levelSelect: LevelSelect | null = null;
   let settings: SettingsScreen | null = null;
   let warning: StorageWarning | null = null;
@@ -277,6 +319,7 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       title?.setLocale(next.locale);
       levelSelect?.setLocale(next.locale);
       creator?.setLocale(next.locale, slotsFor(next.locale));
+      editor?.setLocale(next.locale, slotsFor(next.locale));
       warning?.setLocale(next.locale);
     }
     syncRing();
@@ -321,6 +364,21 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     title = null;
     creator = null;
     levelSelect = null;
+    /*
+     * Settings goes with the view, and this is not tidiness.
+     *
+     * Whether Settings draws "Change my character" is decided by which view is
+     * behind it, and the screen is built once and kept. A Settings built over
+     * the map and carried into the creator would offer the route the creator
+     * forbids — "no route exists that opens the creator from the creator"
+     * (`TN-CREATOR-11`) — and would offer it precisely to the switch user
+     * `OQ-CREATOR-7` is about. The screen holds no state a player would lose:
+     * every control reads the store.
+     */
+    settings?.destroy();
+    settings = null;
+    editor?.destroy();
+    editor = null;
   }
 
   /**
@@ -335,6 +393,61 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
    * from over another modal (the exam's menu), and clearing it on close would
    * bring the shell's switch ring back under a dialog that is still on the page.
    */
+  /**
+   * The creator, re-opened from Settings (`TN-FIRSTRUN-04`).
+   *
+   * It opens on the character the player has rather than on a new draw, its
+   * primary control is "Done" and returns to Settings, and Back returns to
+   * Settings having changed nothing. Settings is **hidden and kept**, not
+   * destroyed: it is the screen the player is coming back to, and rebuilding it
+   * would land them at the top of a list they were partway down.
+   */
+  function openCharacterEditor(): void {
+    if (options.creator === undefined) return;
+    const locale = store.current.locale;
+    settings?.hide();
+    editor?.destroy();
+    editor = createCharacterCreator(main, {
+      slots: slotsFor(locale),
+      locale,
+      primary: 'done',
+      ...(options.announce === undefined ? {} : { announce: options.announce }),
+      ...(selection === undefined ? {} : { initialSelection: selection }),
+      ...(options.random === undefined ? {} : { random: options.random }),
+      ...(options.now === undefined ? {} : { now: options.now }),
+      singleSwitch: store.current.singleSwitch,
+      holdMs: store.current.holdToChooseMs,
+      motion: store.current.reducedMotion ? 'reduced' : 'full',
+      onChange: (next) => {
+        selection = next;
+      },
+      onStart: (next) => {
+        selection = next;
+        savedSelection = next;
+        options.onChangeCharacter?.(next);
+        closeCharacterEditor();
+      },
+      /* Back changes nothing, so the saved character is what it was and no
+         `character/changed` is emitted (`TN-FIRSTRUN-04`). The selection the
+         player was playing with is dropped by re-reading it on the next open. */
+      onBack: () => {
+        selection = savedSelection;
+        closeCharacterEditor();
+      },
+    });
+    editor.show();
+  }
+
+  function closeCharacterEditor(): void {
+    editor?.destroy();
+    editor = null;
+    /* `modalOpen` is still true — Settings never gave the page back — so the
+       shell's ring stays down until Settings itself closes. */
+    settings?.show();
+    settings?.focusCharacter();
+    syncRing();
+  }
+
   function openSettings(onClosed?: () => void): void {
     const wasModal = modalOpen;
     /* Guarded rather than trusted: this function is also a click handler's
@@ -345,6 +458,26 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     settings ??= createSettingsScreen(main, {
       store,
       ...(options.announce === undefined ? {} : { announce: options.announce }),
+      /*
+       * Offered from every view except the creator itself, which is
+       * `TN-CREATOR-11`'s "Settings does not offer a route back into this
+       * screen while I am on it" and `TN-SET-01`'s "it is absent where it would
+       * open the screen the player is already on". Read at *build* time, and
+       * the screen is built the first time Settings is opened — which is why
+       * `clearView` drops it: a Settings built over the map would otherwise
+       * carry the item into the creator on the next Play.
+       *
+       * It is also absent while the player has no character yet. "Change my
+       * character" from the title screen of a first run would let a player
+       * confirm — and the game save — an appearance they never saw the creator
+       * offer them, through a screen whose whole errand is *changing* one.
+       */
+      ...(options.onChangeCharacter === undefined ||
+      options.creator === undefined ||
+      characterRequired ||
+      view === 'creator'
+        ? {}
+        : { onChangeCharacter: openCharacterEditor }),
       onClose: () => {
         settings?.hide();
         setModalOpen(wasModal);
@@ -435,12 +568,23 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       singleSwitch: store.current.singleSwitch,
       holdMs: store.current.holdToChooseMs,
       motion: store.current.reducedMotion ? 'reduced' : 'full',
+      optionRepaired,
+      /* `TN-FIRSTRUN-03`: back to the title, having saved nothing and having
+         asked nothing. The player is still a first-run player afterwards, so
+         `characterRequired` is untouched. */
+      onBack: () => {
+        show('title');
+      },
       onChange: (next) => {
         selection = next;
       },
       onStart: (next) => {
         selection = next;
+        savedSelection = next;
         characterRequired = false;
+        /* Told once. `TN-LOOK-05`: "the repair is saved, so I am told once and
+           not every time." */
+        optionRepaired = false;
         options.onCreateCharacter?.(next);
         /* The creator hands to the map, not straight to a level: the map is
            where a player learns this is a journey with ten places and that nine
@@ -617,6 +761,8 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     destroy(): void {
       unsubscribe();
       ring.destroy();
+      editor?.destroy();
+      editor = null;
       clearView();
       warning?.destroy();
       warning = null;

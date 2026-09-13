@@ -256,6 +256,70 @@ describe('the settings screen', () => {
     expect(page.doc.activeElement).toBe(menu);
   });
 
+  describe('the way back into the character creator', () => {
+    const openWithCharacter = (
+      onChangeCharacter: () => void,
+      initial: Partial<Settings> = {},
+    ): { page: FakePage; root: FakeElement; screen: ReturnType<typeof createSettingsScreen> } => {
+      const page = buildPage();
+      const store = createSettingsStore({ ...DEFAULT_SETTINGS, ...initial });
+      const screen = createSettingsScreen(page.host, {
+        store,
+        onChangeCharacter,
+        now: () => 0,
+      });
+      screen.show();
+      const root = page.doc.byTestId('settings-screen');
+      if (root === null) throw new Error('the settings screen did not mount');
+      return { page, root, screen };
+    };
+
+    it('is a button with a visible label, first on the screen, above the switches', () => {
+      /* `TN-SET-01`, and `OQ-FIRSTRUN-2`: one item at the top, named for what it
+         opens. An appearance control is not an accessibility setting and a
+         section heading for one item is a heading nobody needs. */
+      const onChange = vi.fn();
+      const { root } = openWithCharacter(onChange);
+      const control = root.byTestId('setting-character');
+
+      expect(control?.tagName).toBe('BUTTON');
+      expect(control?.textContent).toBe('Change my character');
+      expect(control?.getAttribute('role')).toBeNull();
+
+      const card = control?.parentElement;
+      const order = (card?.children ?? []).map((node) => node.getAttribute('data-testid'));
+      expect(order[1]).toBe('setting-character');
+      expect(order.indexOf('setting-character')).toBeLessThan(order.indexOf('setting-language'));
+    });
+
+    it('opens the creator, and takes focus back when the caller gives it back', () => {
+      const onChange = vi.fn();
+      const { page, root, screen } = openWithCharacter(onChange);
+      root.byTestId('setting-character')?.click();
+      expect(onChange).toHaveBeenCalledTimes(1);
+
+      /* `TN-FIRSTRUN-04`: "focus returns to `setting-character`". The creator is
+         the caller's surface, so the caller is what knows it has gone. */
+      expect(screen.focusCharacter()).toBe(true);
+      expect(page.doc.activeElement).toBe(root.byTestId('setting-character'));
+    });
+
+    it('reads French in French, and asks nobody their gender', () => {
+      const { root } = openWithCharacter(vi.fn(), { locale: 'fr' });
+      const label = root.byTestId('setting-character')?.textContent ?? '';
+
+      expect(label).toBe('Modifier votre personnage');
+      expect(/\(e\)|·e|-e\)/.test(label)).toBe(false);
+    });
+
+    it('is absent — not disabled — when the caller offers no route', () => {
+      const { root, screen } = open();
+
+      expect(root.byTestId('setting-character')).toBe(null);
+      expect(screen.focusCharacter()).toBe(false);
+    });
+  });
+
   it('turns one-button mode on from inside itself, and off again with the switch alone', () => {
     /* TN-SET-05: "no setting can put the game into a state that the switch alone
        cannot leave". */

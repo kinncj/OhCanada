@@ -229,10 +229,16 @@ describe('the character creator', () => {
   it('describes the preview in text, and updates it', () => {
     const { root, option, page } = open();
     const preview = root.byTestId('character-preview');
-    const describedBy = preview?.getAttribute('aria-labelledby') ?? '';
+    const describedBy = preview?.getAttribute('aria-describedby') ?? '';
     const description = page.doc.getElementById(describedBy);
 
     expect(preview?.getAttribute('role')).toBe('img');
+    /* `TN-CREATOR-06`: the preview is *named* "Your character" and *described*
+       by the five label-and-value pairs. The description is a sibling, because
+       a role="img" hides its own subtree and the sentence has to stay text on
+       the page for the art-fails-to-load case. */
+    expect(preview?.getAttribute('aria-label')).toBe('Your character');
+    expect(description?.parentElement).toBe(preview?.parentElement);
     expect(description?.textContent).toContain('Skin tone');
 
     option('slot-hair', 'curly').click();
@@ -448,6 +454,139 @@ describe('the character creator', () => {
       expect(root.byTestId('creator-retry')?.textContent).toBe('Réessayer');
       expect(root.byTestId('creator-continue')?.textContent).toBe('Continuer quand même');
     });
+  });
+
+  describe('the two errands, and the two names of one control', () => {
+    it('is on the first run by default: "Start playing", and no "Done"', () => {
+      const { root } = open();
+
+      expect(root.byTestId('start-playing')?.textContent).toBe('Start playing');
+      expect(root.byTestId('creator-done')).toBe(null);
+    });
+
+    it('reads "Done" when Settings opened it, and offers no "Start playing"', () => {
+      /* `TN-FIRSTRUN-04`: the primary control is named for where it goes, and
+         exactly one of the two is present in any state of this screen — so a
+         player is never asked to guess which button keeps their changes. */
+      const onStart = vi.fn();
+      const { root } = open({ primary: 'done', onStart });
+
+      expect(root.byTestId('creator-done')?.textContent).toBe('Done');
+      expect(root.byTestId('start-playing')).toBe(null);
+
+      root.byTestId('creator-done')?.click();
+      expect(onStart).toHaveBeenCalledTimes(1);
+    });
+
+    it('reads "Terminé" in French, and keeps reading it after a language change', () => {
+      const { creator, root } = open({ primary: 'done', locale: 'fr', slots: FR_SLOTS });
+      expect(root.byTestId('creator-done')?.textContent).toBe('Terminé');
+
+      creator.setLocale('en', SLOTS);
+      expect(root.byTestId('creator-done')?.textContent).toBe('Done');
+      expect(root.byTestId('start-playing')).toBe(null);
+    });
+  });
+
+  describe('the way out', () => {
+    it('offers Back, which goes one step up the route and saves nothing', () => {
+      const onBack = vi.fn();
+      const { root, onStart } = open({ onBack });
+
+      expect(root.byTestId('creator-back')?.textContent).toBe('Back');
+      root.byTestId('creator-back')?.click();
+
+      expect(onBack).toHaveBeenCalledTimes(1);
+      expect(onStart).not.toHaveBeenCalled();
+    });
+
+    it('routes Escape to Back, so Escape never means quit', () => {
+      const onBack = vi.fn();
+      const { root } = open({ onBack });
+
+      root.dispatchEvent(new FakeEvent('keydown', { key: 'Escape' }));
+      expect(onBack).toHaveBeenCalledTimes(1);
+    });
+
+    it('offers no skip, and no control that leaves without a character', () => {
+      /* `TN-FIRSTRUN-02`: "the only ways out are start-playing, creator-back and
+         creator-settings". A skip would have to land somewhere, and the only
+         appearance available without a draw is the rig's fallback. */
+      const { root } = open({ onBack: vi.fn() });
+      /* Controls, not prose: `creator.intro` says "You can change this later in
+         Settings", which is the promise `TN-FIRSTRUN` ruling 3 makes true
+         rather than a way past this screen. */
+      const controls = root.querySelectorAll('button').map((node) => node.textContent.toLowerCase());
+
+      for (const refused of ['skip', 'later', 'no thanks', 'maybe later']) {
+        expect(
+          controls.some((label) => label.includes(refused)),
+          `a control reads "${refused}"`,
+        ).toBe(false);
+      }
+      expect(controls.filter((label) => label !== '').length).toBeGreaterThan(3);
+      expect(root.byTestId('start-playing')?.disabled).toBe(false);
+    });
+
+    it('draws no Back at all when the caller has nowhere to send the player', () => {
+      const { root } = open();
+      expect(root.byTestId('creator-back')).toBe(null);
+    });
+  });
+
+  describe('an option in my save that is not in this build', () => {
+    it('says so, once, without covering anything or asking to be dismissed', () => {
+      const { root, announce } = open({ optionRepaired: true });
+      const notice = root.byTestId('creator-option-gone');
+
+      expect(notice?.hidden).toBe(false);
+      expect(notice?.textContent).toBe(
+        'One of your choices is not in this version. We picked a new one. You can change it here.',
+      );
+      expect(announce).toHaveBeenCalledWith(
+        'One of your choices is not in this version. We picked a new one. You can change it here.',
+      );
+      expect(announce).toHaveBeenCalledTimes(1);
+      /* It does not have to be dismissed to reach the way on. */
+      expect(root.byTestId('start-playing')?.disabled).toBe(false);
+    });
+
+    it('says nothing when nothing was repaired', () => {
+      const { root, announce } = open();
+
+      expect(root.byTestId('creator-option-gone')?.hidden).toBe(true);
+      expect(announce).not.toHaveBeenCalled();
+    });
+
+    it('says it in French', () => {
+      const { root } = open({ locale: 'fr', slots: FR_SLOTS, optionRepaired: true });
+      expect(root.byTestId('creator-option-gone')?.textContent).toBe(
+        'Un de vos choix ne se trouve pas dans cette version. Nous en avons choisi un autre. Vous pouvez le modifier ici.',
+      );
+    });
+  });
+
+  it('publishes the preview hooks in the kebab case the story names', () => {
+    /* `data-${slot.id}` published `data-hairshape`, because an HTML attribute
+       name is lower-cased by the parser: a hook every reader would have had to
+       misspell in the same way to find. */
+    const { creator, root } = open({
+      slots: [
+        {
+          id: 'hairShape',
+          testId: 'slot-hair-shape',
+          label: 'Hair',
+          options: [
+            { id: 'crop', name: 'Short' },
+            { id: 'coil', name: 'Tight curls' },
+          ],
+        },
+      ],
+    });
+    const preview = root.byTestId('character-preview');
+
+    expect(preview?.getAttribute('data-hair-shape')).toBe(creator.selection['hairShape']);
+    expect(preview?.getAttribute('data-hairshape')).toBe(null);
   });
 
   it('closes and cleans up', () => {

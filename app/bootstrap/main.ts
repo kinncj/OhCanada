@@ -77,6 +77,7 @@ import { defaultSettings, withSettings } from '@domain/entities/player';
 import {
   newProgress,
   stampedLevelIds,
+  withCharacter,
   withStamp,
   type Progress,
 } from '@domain/entities/progress';
@@ -112,6 +113,13 @@ import {
 import { createSettingsScreen, type SettingsScreen } from '@ui/settings-screen';
 import { createShell } from '@ui/shell';
 
+import {
+  creatorSlotsByLocale,
+  missingCreatorRows,
+  repairSelection,
+  toPlayerCharacter,
+  toSelection,
+} from './character-slots';
 import { readGameRules, type GameRules } from './game-rules';
 import {
   createGameEventBus,
@@ -627,6 +635,87 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     URL.revokeObjectURL(url);
   };
 
+  /* ------------------------------------------------------- the character */
+
+  /*
+   * The character creator, mounted — and the branch that decides whether a cold
+   * load draws "Play" or "Continue".
+   *
+   * `TN-FIRSTRUN` ruling 1: **a player is on their first run when the save
+   * carries no character, and by nothing else.** Not when the save is empty,
+   * not when no level has been played, not when there is no
+   * `lastPlayedLevelId`. A save with stamps and answers and no character — an
+   * import, a save written before this wire existed, a repair that dropped a
+   * malformed block — is a first run, goes to the creator, and keeps every
+   * stamp and every answer. That is why the line below asks `progress.character`
+   * and nothing else.
+   *
+   * Until this existed, no creator block was ever passed to the shell, the
+   * first-run branch could not be represented, and `title.play` was a row in the
+   * copy table that had never been drawn on a shipped page.
+   */
+  const creatorRandom = random.fork('character');
+  const creatorSlots = creatorSlotsByLocale();
+  /*
+   * A slot or an option the rig declares that nothing has named. Dropped from
+   * the screen rather than drawn as a key, and said out loud, because ADR-0010
+   * forbids this directory inventing player-facing text and a group heading
+   * reading `creator.slot.fringe` is that rule broken where a player can see
+   * it. `tests/unit/bootstrap/character-slots.test.ts` fails the build on the
+   * same condition, so this is what the program does if one ever ships.
+   */
+  for (const key of missingCreatorRows()) {
+    console.error(
+      `[bootstrap] the rig declares a creator row nothing names: "${key}". That option or ` +
+        'group is not offered. See docs/stories/TN-LOOK-what-the-player-can-choose.md.',
+    );
+  }
+
+  /*
+   * The saved appearance, repaired with a **uniform draw** and never with the
+   * rig's `fallback`.
+   *
+   * `TN-LOOK-05`: "the slot whose option is gone was filled by a uniform draw
+   * over that slot's options. And it was not filled with the rig's `fallback`
+   * for that slot." The fallback is what the rig reserves for NPC documents and
+   * save recovery, and a repair that reached for it would put the default
+   * player back through the one door nobody was watching. `repairSkins` in
+   * `app/domain/entities/character.ts` does exactly that and is right for the
+   * NPC it was written for; the creator's repair is `repairSelection`.
+   *
+   * A save with no character is not a repair — it is a first run — so it raises
+   * no message and the draw is simply the creator opening.
+   */
+  const repairedCharacter = repairSelection(toSelection(progress.character), creatorRandom.next);
+  let characterSelection = repairedCharacter.selection;
+  /*
+   * A repaired character is written back now, not when the player next finishes
+   * the creator. `TN-LOOK-05` requires the level to be playable with the drawn
+   * option immediately — "the game never blocks, and never quietly picks the
+   * middle of a ramp" — and requires the player to be told once rather than
+   * every time.
+   */
+  if (repairedCharacter.repaired) {
+    progress = withCharacter(progress, toPlayerCharacter(characterSelection));
+    persist();
+  }
+  /* The level draws what the player chose. Takes effect at the next level open,
+     which is every open in this route: the creator is always upstream of a
+     level. */
+  renderer.setPlayerAppearance(characterSelection);
+
+  /** Save the character, tell the level, and say which of the two events it was. */
+  const keepCharacter = (
+    selection: Readonly<Record<string, string>>,
+    event: 'character/created' | 'character/changed',
+  ): void => {
+    characterSelection = { ...selection };
+    progress = withCharacter(progress, toPlayerCharacter(characterSelection));
+    renderer.setPlayerAppearance(characterSelection);
+    examEvents.emit(event);
+    persist();
+  };
+
   let session: LevelSession | null = null;
 
   const shell = createShell(uiHost, {
@@ -636,6 +725,24 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     announce,
     ...(progress.lastPlayedLevelId === null ? {} : { resumeLevelId: progress.lastPlayedLevelId }),
     onExportSave: exportSave,
+    creator: {
+      slots: creatorSlots,
+      required: progress.character === null,
+      initialSelection: characterSelection,
+      optionRepaired: repairedCharacter.repaired,
+    },
+    /*
+     * Two callbacks, not one with a flag (`TN-FIRSTRUN`, ruling 3). The first
+     * is the first run and is what the route waits on; the second is Settings,
+     * and a listener that re-ran the first-run route on it would take a player
+     * who changed their hair back to the level select.
+     */
+    onCreateCharacter: (selection) => {
+      keepCharacter(selection, 'character/created');
+    },
+    onChangeCharacter: (selection) => {
+      keepCharacter(selection, 'character/changed');
+    },
     /*
      * A request, not a transition (`TN-FLOW`). The map only draws a control on a
      * card it believes is open, but a save carried in from another build — or a

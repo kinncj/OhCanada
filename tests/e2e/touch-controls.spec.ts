@@ -9,6 +9,7 @@ import {
   WALK_DEADZONE_PX,
 } from '@adapters/phaser/touch-controls';
 
+import { reachLevelSelect } from './front-door';
 import { START_LEVEL } from './start-level';
 
 /**
@@ -757,10 +758,7 @@ test.describe('auto-move, from the switch a player can actually reach', () => {
     await expect(toggle).toHaveAttribute('aria-checked', 'true');
     await page.locator('[data-testid="settings-close"]').click();
 
-    await page
-      .locator('[data-testid="title-play"], [data-testid="title-choose-level"]')
-      .first()
-      .click();
+    await reachLevelSelect(page);
     /*
      * The card the map actually opens, not this file's level.
      *

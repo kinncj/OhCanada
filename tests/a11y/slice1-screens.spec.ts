@@ -83,6 +83,10 @@ interface HarnessOptions {
   readonly stamps?: 'none' | 'one';
   /** `quest` is the path where a task really was done; the default is a level. */
   readonly reason?: 'quest' | 'level';
+  /** The creator on its second errand: "Done" rather than "Start playing". */
+  readonly primary?: 'done';
+  /** The creator after a saved option was redrawn (`TN-LOOK-05`). */
+  readonly repaired?: boolean;
 }
 
 /** Open one screen and wait for the marker that says it is really there. */
@@ -106,6 +110,8 @@ async function openScreen(
   if (options.next === false) params.set('next', '0');
   if (options.stamps !== undefined) params.set('stamps', options.stamps);
   if (options.reason !== undefined) params.set('reason', options.reason);
+  if (options.primary !== undefined) params.set('primary', options.primary);
+  if (options.repaired === true) params.set('repaired', '1');
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -463,10 +469,35 @@ test.describe('settings', () => {
 });
 
 test.describe('the character creator', () => {
+  /* The rig's five, as `TN-LOOK-01` names them. Written out rather than read
+     from the rig, because a spec that derives its expectation from the same
+     source as the code cannot fail when the source is wrong. */
+  const GROUPS = [
+    'slot-skin',
+    'slot-hair-shape',
+    'slot-hair-colour',
+    'slot-head-covering',
+    'slot-feature',
+  ] as const;
+
+  test('offers exactly the rig’s five groups, in the rig’s order', async ({ page }) => {
+    const root = await openScreen(page, 'creator');
+    const groups = root.locator('[role="radiogroup"]');
+
+    await expect(groups).toHaveCount(GROUPS.length);
+    for (const [index, slot] of GROUPS.entries()) {
+      await expect(groups.nth(index)).toHaveAttribute('data-testid', slot);
+    }
+    /* `costume` says which character an artboard is, not how a player
+       customised one, so no group is drawn for it. */
+    await expect(root.locator('[data-testid="slot-coat"]')).toHaveCount(0);
+    await expect(root.locator('[data-testid="slot-hair"]')).toHaveCount(0);
+  });
+
   test('every option is a named radio, never a bare swatch', async ({ page }) => {
     const root = await openScreen(page, 'creator');
 
-    for (const slot of ['slot-skin', 'slot-hair', 'slot-coat']) {
+    for (const slot of GROUPS) {
       const group = root.locator(`[data-testid="${slot}"]`);
       await expect(group).toHaveAttribute('role', 'radiogroup');
       await expect(group).toHaveAccessibleName(/\S/);
@@ -475,9 +506,60 @@ test.describe('the character creator', () => {
       const count = await options.count();
       expect(count, `${slot} has no options`).toBeGreaterThan(0);
       for (let index = 0; index < count; index += 1) {
-        /* "an accessible name that is a word, not a colour swatch". */
+        /* "an accessible name that is a word, not a colour swatch" — and on the
+           skin group that is the whole point: it is the one screen where colour
+           is the content, so the name is the non-visual equivalent. */
         await expect(options.nth(index)).toHaveAccessibleName(/[A-Za-zÀ-ÿ]/);
       }
+    }
+  });
+
+  test('names the six tones by an ordinal and a band, never by a hex or an id', async ({
+    page,
+  }) => {
+    const root = await openScreen(page, 'creator');
+    const options = root.locator('[data-testid="slot-skin"] [role="radio"]');
+
+    await expect(options).toHaveCount(6);
+    for (const [index, name] of [
+      '1, light',
+      '2, light',
+      '3, medium',
+      '4, medium',
+      '5, dark',
+      '6, dark',
+    ].entries()) {
+      await expect(options.nth(index)).toHaveAccessibleName(name);
+    }
+    /* Nothing marks `skin-3` — the rig's fallback — differently from the other
+       five, and the word "default" appears nowhere (`TN-SKIN-01`). */
+    await expect(root).not.toContainText('default');
+  });
+
+  test('is a radio group and never a switch, even where the options read Yes and No', async ({
+    page,
+  }) => {
+    const root = await openScreen(page, 'creator');
+    const feature = root.locator('[data-testid="slot-feature"]');
+
+    await expect(feature).toHaveAttribute('role', 'radiogroup');
+    await expect(feature.locator('[role="radio"]')).toHaveCount(2);
+    await expect(root.locator('[role="switch"]')).toHaveCount(0);
+    await expect(feature).not.toContainText('On');
+    await expect(feature).not.toContainText('Off');
+  });
+
+  test('every option is at least 44 CSS px wide and tall', async ({ page }) => {
+    const root = await openScreen(page, 'creator');
+    const options = root.locator('[role="radio"]');
+    const count = await options.count();
+
+    expect(count).toBe(19);
+    for (let index = 0; index < count; index += 1) {
+      const box = await options.nth(index).boundingBox();
+      expect(box, `option ${String(index)} has no box`).not.toBeNull();
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
     }
   });
 
@@ -487,31 +569,58 @@ test.describe('the character creator', () => {
     const countIn = (slot: string) =>
       root.locator(`[data-testid="${slot}"] [role="radio"]`).count();
 
-    const before = { hair: await countIn('slot-hair'), coat: await countIn('slot-coat') };
+    const before = await Promise.all(GROUPS.slice(1).map((slot) => countIn(slot)));
     const skins = root.locator('[data-testid="slot-skin"] [role="radio"]');
 
     for (let index = 0; index < (await skins.count()); index += 1) {
       await skins.nth(index).click();
-      expect(await countIn('slot-hair')).toBe(before.hair);
-      expect(await countIn('slot-coat')).toBe(before.coat);
+      const after = await Promise.all(GROUPS.slice(1).map((slot) => countIn(slot)));
+      expect(after).toEqual(before);
     }
   });
 
   test('describes the preview in text, and updates it', async ({ page }) => {
     const root = await openScreen(page, 'creator');
     const preview = root.locator('[data-testid="character-preview"]');
-    await expect(preview).toHaveAccessibleName(/Skin tone/);
 
-    await root.locator('[data-testid="slot-hair-braids"]').click();
-    await expect(preview).toHaveAccessibleName(/Hair: Braids/);
-    await expect(preview).toHaveAttribute('data-hair', 'braids');
+    /* Named "Your character" and *described* by the five label-and-value
+       pairs (`TN-CREATOR-06`). */
+    await expect(preview).toHaveAccessibleName('Your character');
+    await expect(preview).toHaveAccessibleDescription(/Skin tone/);
+
+    await root.locator('[data-testid="slot-hair-shape-coil"]').click();
+    await expect(preview).toHaveAccessibleDescription(/Hair: Tight curls/);
+    await expect(preview).toHaveAttribute('data-hair-shape', 'coil');
   });
 
-  test('offers a way into Settings, because it is the first screen', async ({ page }) => {
-    /* OQ-SET-1: without it, a first-run player who needs one-button mode or
-       200 % text cannot reach either. */
+  test('offers a way into Settings, and a way back, and no skip', async ({ page }) => {
+    /* OQ-SET-1: without Settings, a first-run player who needs one-button mode
+       or 200 % text cannot reach either. `TN-FIRSTRUN-02`: the only ways out
+       are these three. */
     const root = await openScreen(page, 'creator');
     await expect(root.locator('[data-testid="creator-settings"]')).toBeVisible();
+    await expect(root.locator('[data-testid="creator-back"]')).toBeVisible();
+    await expect(root.locator('[data-testid="start-playing"]')).toBeEnabled();
+    await expect(root.locator('[data-testid="creator-done"]')).toHaveCount(0);
+
+    for (const refused of ['Skip', 'Later', 'No thanks', 'Maybe later']) {
+      await expect(root.locator(`button:text-is("${refused}")`)).toHaveCount(0);
+    }
+  });
+
+  test('reads "Done" and offers no "Start playing" on its second errand', async ({ page }) => {
+    const root = await openScreen(page, 'creator', { primary: 'done' });
+    await expect(root.locator('[data-testid="creator-done"]')).toBeVisible();
+    await expect(root.locator('[data-testid="start-playing"]')).toHaveCount(0);
+  });
+
+  test('says an option is gone without covering the way on', async ({ page }) => {
+    const root = await openScreen(page, 'creator', { repaired: true });
+    const notice = root.locator('[data-testid="creator-option-gone"]');
+
+    await expect(notice).toBeVisible();
+    await expect(notice).toContainText('not in this version');
+    await expect(root.locator('[data-testid="start-playing"]')).toBeEnabled();
   });
 
   test('does not animate the preview under reduced motion', async ({ page }) => {
@@ -524,7 +633,7 @@ test.describe('the character creator', () => {
 
   test('marks the chosen option with a shape as well as a colour', async ({ page }) => {
     const root = await openScreen(page, 'creator');
-    const chosen = root.locator('[data-testid="slot-coat-anorak"]');
+    const chosen = root.locator('[data-testid="slot-hair-colour-red"]');
     await chosen.click();
     await expect(chosen).toHaveAttribute('aria-checked', 'true');
     await expect(chosen.locator('[aria-hidden="true"]')).toHaveText('✓');
@@ -532,13 +641,36 @@ test.describe('the character creator', () => {
 
   test('moves within a group with the arrow keys', async ({ page }) => {
     const root = await openScreen(page, 'creator');
-    await root.locator('[data-testid="slot-hair-curly"]').focus();
+    /* Chosen first, because the roving tabindex means the chosen option is the
+       one Tab lands on — so "the next option" is the one after the chosen one,
+       and a focus() onto an option a keyboard cannot reach would be testing a
+       state no player is in. */
+    await root.locator('[data-testid="slot-hair-colour-black"]').click();
     await page.keyboard.press('ArrowRight');
-    await expect(root.locator('[data-testid="slot-hair-straight"]')).toHaveAttribute(
+    await expect(root.locator('[data-testid="slot-hair-colour-brown"]')).toHaveAttribute(
       'aria-checked',
       'true',
     );
-    expect(await focusedTestId(page)).toBe('slot-hair-straight');
+    expect(await focusedTestId(page)).toBe('slot-hair-colour-brown');
+  });
+
+  test('reads French in French, with the agreements English does not have', async ({ page }) => {
+    const root = await openScreen(page, 'creator', { locale: 'fr' });
+
+    await expect(root.locator('[data-testid="slot-hair-shape"]')).toHaveAccessibleName('Cheveux');
+    await expect(root.locator('[data-testid="slot-hair-colour"]')).toHaveAccessibleName(
+      'Couleur des cheveux',
+    );
+    await expect(root.locator('[data-testid="slot-head-covering"]')).toHaveAccessibleName(
+      'Couvre-chef',
+    );
+    await expect(root.locator('[data-testid="slot-hair-shape-coil"]')).toHaveAccessibleName(
+      'Boucles serrées',
+    );
+    await expect(root.locator('[data-testid="slot-hair-colour-red"]')).toHaveAccessibleName('Roux');
+    await expect(root.locator('[data-testid="slot-head-covering-toque"]')).toHaveAccessibleName(
+      'Tuque',
+    );
   });
 });
 

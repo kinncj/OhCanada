@@ -46,6 +46,7 @@ import {
   type Settings,
 } from '../../app/ui/settings';
 import { hasCopyRow, isUiLocale, text, type UiLocale } from '../../app/ui/copy';
+import { creatorSlots, repairSelection } from '../../app/bootstrap/character-slots';
 
 const params = new URLSearchParams(window.location.search);
 const ui = document.getElementById('ui');
@@ -71,40 +72,18 @@ const apply = (): void =>
 apply();
 store.subscribe(apply);
 
-const slotsFor = (locale: UiLocale): readonly CreatorSlot[] => [
-  {
-    id: 'skin',
-    testId: 'slot-skin',
-    label: locale === 'fr' ? 'Teint de peau' : 'Skin tone',
-    /* Unnamed ramp, ordinal only: docs/content-review.md 8.1 leaves the naming
-       open (OQ-REVIEW-6), so the fixture names nobody. */
-    options: [1, 2, 3, 4, 5, 6].map((n) => ({
-      id: `skin-${String(n)}`,
-      name: locale === 'fr' ? `Teint ${String(n)}` : `Skin tone ${String(n)}`,
-    })),
-  },
-  {
-    id: 'hair',
-    testId: 'slot-hair',
-    label: locale === 'fr' ? 'Cheveux' : 'Hair',
-    options: [
-      { id: 'coily', name: locale === 'fr' ? 'Crépus' : 'Coily' },
-      { id: 'curly', name: locale === 'fr' ? 'Bouclés' : 'Curly' },
-      { id: 'straight', name: locale === 'fr' ? 'Raides' : 'Straight' },
-      { id: 'braids', name: locale === 'fr' ? 'Tresses' : 'Braids' },
-    ],
-  },
-  {
-    id: 'coat',
-    testId: 'slot-coat',
-    label: locale === 'fr' ? 'Manteau' : 'Coat',
-    options: [
-      { id: 'parka', name: 'Parka' },
-      { id: 'anorak', name: 'Anorak' },
-      { id: 'peacoat', name: locale === 'fr' ? 'Caban' : 'Pea coat' },
-    ],
-  },
-];
+/*
+ * The creator's five groups, the rig's and the copy table's, not a fixture's.
+ *
+ * This used to be three invented slots — `skin`, `hair`, `coat` — with invented
+ * names, which meant the scan measured a screen the game does not draw: three
+ * groups where the game has five, thirteen options where it has nineteen, and
+ * option names no bundle carries. `app/bootstrap/character-slots.ts` derives
+ * the real list from `content/characters/rig.json` and names it from
+ * `app/ui/copy.ts`, so what axe sees here is what a player sees, including the
+ * longest French name (« Boucles serrées ») the 200 % scans exist to measure.
+ */
+const slotsFor = (which: UiLocale): readonly CreatorSlot[] => creatorSlots(which);
 
 const SLOTS: readonly CreatorSlot[] = slotsFor(locale);
 
@@ -252,6 +231,13 @@ const mapEntries = (built: readonly string[]): readonly MapEntry[] =>
     stamped: id !== undefined && id === STAMPED,
   }));
 
+/*
+ * A fixed appearance, so a scan is reproducible. Drawn from the real slot list
+ * with a constant source rather than written out, so an option the art agent
+ * renames cannot leave this fixture naming something the rig has never had.
+ */
+const FIXED_CHARACTER = repairSelection(undefined, () => 0.5).selection;
+
 const level = LEVEL[locale];
 
 const screen = params.get('screen') ?? 'settings';
@@ -274,7 +260,12 @@ switch (screen) {
       announce,
       /* Fixed rather than random, so a scan is reproducible. The randomiser
          itself is proved uniform in the unit suite. */
-      initialSelection: { skin: 'skin-3', hair: 'curly', coat: 'parka' },
+      initialSelection: FIXED_CHARACTER,
+      /* So the `creator-option-gone` sentence is on the page for at least one
+         scan rather than being the one state axe never sees (`TN-LOOK-05`). */
+      optionRepaired: params.get('repaired') === '1',
+      onBack: () => undefined,
+      ...(params.get('primary') === 'done' ? { primary: 'done' as const } : {}),
       singleSwitch: store.current.singleSwitch,
       motion: store.current.reducedMotion ? 'reduced' : 'full',
       onOpenSettings: () => undefined,
@@ -889,10 +880,14 @@ switch (screen) {
            which is the flow these scans are about. */
         required: view === 'creator',
         /* Fixed rather than random, so a scan is reproducible. */
-        initialSelection: { skin: 'skin-3', hair: 'curly', coat: 'parka' },
+        initialSelection: FIXED_CHARACTER,
       },
       announce,
       onPlayLevel: () => undefined,
+      onCreateCharacter: () => undefined,
+      /* So Settings draws "Change my character" and the scan sees the route
+         back into the creator (`TN-SET-01`). */
+      onChangeCharacter: () => undefined,
       ...(params.get('resume') === '1' ? { resumeLevelId: 'ottawa' as LevelId } : {}),
       ...(params.get('study') === '1' ? { onOpenStudy: (): void => undefined } : {}),
       /* `passport.open` on the level select, which is the passport's home

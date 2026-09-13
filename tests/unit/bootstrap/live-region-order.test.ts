@@ -72,6 +72,7 @@ vi.mock('@adapters/phaser', () => ({
       return {};
     }
     setAutoMove(): void {}
+    setPlayerAppearance(): void {}
     pause(): void {}
     resume(): void {}
   },

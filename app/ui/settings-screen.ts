@@ -46,6 +46,18 @@ export interface SettingsScreenOptions {
   /** Close and Escape both route here; the caller resumes the game. */
   readonly onClose?: () => void;
   /**
+   * "Change my character", which re-opens the creator (`TN-SET-01`,
+   * `TN-FIRSTRUN-04`).
+   *
+   * **Absent draws no control**, and that is the whole of `TN-SET-01`'s "it is
+   * absent where it would open the screen the player is already on": Settings
+   * opened *from* the creator passes nothing, so no route exists that opens the
+   * creator from the creator and a switch user cannot walk a cycle they cannot
+   * see the depth of (`OQ-CREATOR-7`). A disabled control would still be in the
+   * ring and would still have to be explained.
+   */
+  readonly onChangeCharacter?: () => void;
+  /**
    * `OQ-SET-3`: the four volume controls have nothing to control until audio
    * ships, and "a control that does nothing is worse than a missing one". The
    * copy is transcribed and ready; this flag is how the audio agent turns the
@@ -61,6 +73,15 @@ export interface SettingsScreen {
   readonly visible: boolean;
   show(): void;
   hide(): void;
+  /**
+   * Put focus back on "Change my character".
+   *
+   * `TN-FIRSTRUN-04`: "focus returns to `setting-character`" when the creator
+   * closes. The creator is a separate surface mounted by the caller, so the
+   * caller is the only thing that knows the creator has gone; this is how it
+   * gives the focus back. Answers `false` when the control is not drawn.
+   */
+  focusCharacter(): boolean;
   destroy(): void;
 }
 
@@ -140,8 +161,29 @@ export function createSettingsScreen(
     },
   });
 
+  /* First item on the screen, above the switches (`TN-SET-01`, `OQ-FIRSTRUN-2`):
+     an appearance control is not an accessibility setting, and a section
+     heading for one item is a heading nobody needs. */
+  const characterButton =
+    options.onChangeCharacter === undefined
+      ? null
+      : button(doc, {
+          testId: 'setting-character',
+          text: text(locale(), 'settings.character'),
+          onClick: options.onChangeCharacter,
+        });
+  if (characterButton !== null) {
+    const control = characterButton;
+    rows.push({
+      refresh: (next) => {
+        control.textContent = text(next, 'settings.character');
+      },
+    });
+  }
+
   screen.card.append(
     title,
+    ...(characterButton === null ? [] : [characterButton]),
     languageGroup(),
     ...SWITCHES.map(switchRow),
     holdTimeGroup(),
@@ -185,6 +227,11 @@ export function createSettingsScreen(
     },
     hide(): void {
       screen.hide();
+    },
+    focusCharacter(): boolean {
+      if (characterButton === null) return false;
+      characterButton.focus();
+      return true;
     },
     destroy(): void {
       unsubscribe();

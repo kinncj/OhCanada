@@ -44,6 +44,23 @@ export const EXAM_EVENT_NAMES = [
   'progress/saved',
   'progress/save-failed',
   'progress/loaded',
+  /*
+   * The creator's two, and they are two names rather than one with a flag.
+   *
+   * `TN-FIRSTRUN` ruling 3: `character/created` is emitted the first time — it
+   * is what makes the player exist and what the first-run route waits on — and
+   * `character/changed` every time after, from Settings. A listener that
+   * re-runs the first-run route on `character/created` must never see it fire
+   * from Settings, and the only way to guarantee that is for the two cases to
+   * be unable to say each other's name. One event with a flag would be one
+   * `if` away from the bug (`OQ-FIRSTRUN-3`).
+   *
+   * They are here, beside the three `progress/*`, for the reason those are:
+   * this module is the trace the stories read, not a bus, and a name nothing
+   * can observe is a name nothing can be held to.
+   */
+  'character/created',
+  'character/changed',
 ] as const;
 
 export type ExamEventName = (typeof EXAM_EVENT_NAMES)[number];

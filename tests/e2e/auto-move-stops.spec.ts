@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test, type Page } from '@playwright/test';
 
+import { reachLevelSelect } from './front-door';
 import { START_LEVEL } from './start-level';
 
 /**
@@ -192,10 +193,7 @@ async function playWithAutoMove(page: Page): Promise<void> {
   await expect(toggle).toHaveAttribute('aria-checked', 'true');
   await page.locator('[data-testid="settings-close"]').click();
 
-  await page
-    .locator('[data-testid="title-play"], [data-testid="title-choose-level"]')
-    .first()
-    .click();
+  await reachLevelSelect(page);
   await page.locator(`[data-testid="level-card-${START_LEVEL}"]`).click();
   await page.waitForSelector('[data-testid="playable"]');
 }

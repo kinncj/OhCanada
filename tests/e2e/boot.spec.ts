@@ -5,6 +5,7 @@ import sharp from 'sharp';
 
 import { expect, test, type Page } from '@playwright/test';
 
+import { reachLevelSelect } from './front-door';
 import { START_LEVEL, START_LEVEL_MODE_LABEL } from './start-level';
 
 /**
@@ -264,11 +265,10 @@ test.describe('boot', () => {
     await page.goto('./');
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
 
-    await page
-      .locator('[data-testid="title-play"], [data-testid="title-choose-level"]')
-      .first()
-      .click();
-    await expect(page.locator('[data-testid="level-select"]')).toBeVisible();
+    /* Through the creator on a first run, which is what `title-play` opens now
+       that a creator block reaches the shell (`TN-FIRSTRUN-01`). The route
+       gained a step and nothing about the claim below changed. */
+    await reachLevelSelect(page);
 
     const card = page.locator(`[data-testid="level-card-${START_LEVEL}"]`);
     await expect(

@@ -43,6 +43,11 @@ describe('the names', () => {
       'progress/saved',
       'progress/save-failed',
       'progress/loaded',
+      /* The creator's two. Two names and not one with a flag, so a listener
+         that runs the first-run route on `character/created` cannot be fired
+         from Settings (`TN-FIRSTRUN`, ruling 3). */
+      'character/created',
+      'character/changed',
     ]);
   });
 
