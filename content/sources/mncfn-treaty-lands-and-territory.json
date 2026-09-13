@@ -1,0 +1,66 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "mncfn-treaty-lands-and-territory",
+  "title": "Treaty Lands & Territory - Mississaugas of the Credit First Nation",
+  "publisher": "Mississaugas of the Credit First Nation (MCFN)",
+  "edition": "Nation website, Treaty Lands & Territory page, fetched 13 September 2026",
+  "url": "https://mncfn.ca/treaty-lands-and-territory/",
+  "file": "mncfn-treaty-lands-and-territory.html",
+  "extractedText": "mncfn-treaty-lands-and-territory.txt",
+  "sha256": "a92ed1c11b9a90724e285cce9f4bf67814e3915d34c43849194807c41336bc52",
+  "extractedTextSha256": "148556d2ec2bec761e1e2197944b4550b549e9d939881194a7fecceeccd5ec16",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/mncfn-treaty-lands-and-territory.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 82414,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Mississaugas of the Credit First Nation. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Treaty Lands & Territory"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "`sha256` above CANNOT be reproduced by re-fetching, and the reason is a security beacon",
+      "problem": "This page embeds a Wordfence live-traffic beacon whose URL carries a fresh random token on every request: `})('//mncfn.ca/?wordfence_lh=1&hid=01BCFBE674496CBBC2626E5E39C6E0AA');`. Three fetches on 2026-09-13 produced three different `hid` values and therefore three different file digests; nothing else in the 82 KB differed. So `sha256` here is the digest of ONE fetch and re-fetching will never match it. This is the exact defect the source registry was built to catch, recorded rather than hidden: a hash that pins a beacon instead of a document. The extraction command strips `<script>` blocks, so the beacon never reaches the extraction: `extractedTextSha256` WAS identical across all three fetches, and it is the only digest on this register anybody else can check.",
+      "affects": [
+        "Treaty Lands & Territory"
+      ],
+      "grain": "chapter",
+      "action": "check `extractedTextSha256`, never `sha256`, for this source. A `sha256` mismatch here means only that you fetched the page; it carries no information at all. Do not re-hash this register on each fetch to make the number look current - that would make it look reproducible while staying meaningless."
+    },
+    {
+      "topic": "The cited URL redirects",
+      "problem": "`https://mncfn.ca/treaty-lands-and-territory/`, the URL in content/levels/toronto.json, answers 301 and the bytes cached here were served from `https://mncfn.ca/about-mncfn/treaty-lands-and-territory/`. `url` above is the requested URL so that it matches the level document.",
+      "affects": [
+        "Treaty Lands & Territory"
+      ],
+      "grain": "chapter",
+      "action": "fetch with redirects followed."
+    },
+    {
+      "topic": "The page names the Nation and describes the territory; it does not name Toronto",
+      "problem": "This page carries `Mississaugas of the Credit First Nation` seven times, which is the exact value in content/levels/toronto.json's `nations` array, and it describes the territory in the Nation's own words: `The Mississaugas of the Credit occupied, controlled and exercised stewardship over approximately 3.9 million acres of lands, waters, and resources in Southern Ontario. Their territory extended from the Rouge River Valley westward across to the headwaters of the Thames River, down to Long Point on Lake Erie and then followed the shoreline of Lake Erie, the Niagara River, and Lake Ontario until arriving back at the Rouge River Valley.` The word `Toronto` appears only in the treaty title `The Toronto Purchase Treaty, No. 13 (1805)` in the sub-navigation. The level's claim that Toronto stands inside the Treaty 13 boundary comes from mncfn-toronto-purchase-treaty-13, a different page of the same site.",
+      "affects": [
+        "Treaty Lands & Territory"
+      ],
+      "grain": "chapter",
+      "action": "cite this register for the Nation's name and for the territory description. For Toronto specifically, mncfn-toronto-purchase-treaty-13 is still the page that says so."
+    },
+    {
+      "topic": "The page's sub-navigation is a live list of treaties and claims",
+      "problem": "The left navigation lists the Nation's treaties and settlements, including `The Rouge Tract Settlement (2025)` and `Title Claim to Water`, which are live matters. The historical paragraphs this register is cited for do not move; the list beside them does.",
+      "affects": [
+        "Treaty Lands & Territory"
+      ],
+      "grain": "chapter",
+      "action": "when `extractedTextSha256` stops matching, re-read the paragraph beginning `The Mississaugas of the Credit occupied, controlled and exercised stewardship` before assuming the claim moved."
+    }
+  ],
+  "grainNote": "One web page and one heading. Four flags, and the first is the one to read: this is a register whose file digest is not reproducible, it says so in its own text, and it names the substitute digest that is. The rest describe a redirect, what the page does and does not name, and which part of it moves."
+}

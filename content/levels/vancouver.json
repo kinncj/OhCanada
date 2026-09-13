@@ -54,8 +54,8 @@
     "nationSource": {
       "publisher": "MST Development Corporation, The Partners (the development corporation the Musqueam Indian Band, Squamish Nation and Tsleil-Waututh Nation own jointly, whose page names all three and speaks in all three voices)",
       "url": "https://mstdevelopment.ca/the-partners/",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "2fe891ceec60579cd5b1567bfef843805f16d63b67b9877359139a5395f5167a",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

@@ -1,0 +1,69 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "kmk-home",
+  "title": "Kwilmu’kw Maw-klusuaqn - we are seeking consensus (home page)",
+  "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
+  "edition": "Organisation website, home page, fetched 13 September 2026",
+  "url": "https://mikmaqrights.com/",
+  "file": "kmk-home.html",
+  "extractedText": "kmk-home.txt",
+  "sha256": "f8ad74f60d45552f60feaf917d253bb5d99734f053ee0e76d029b7a7d153c553",
+  "extractedTextSha256": "a40d51fab87c20ae66f93f5562f41048f8df886a46e62e154832a12c47a93a0b",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/kmk-home.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 119992,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Kwilmu'kw Maw-klusuaqn / Assembly of Nova Scotia Mi'kmaw Chiefs. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "PJILA’SI – KWILMU’KW MAW-KLUSUAQN"
+    },
+    {
+      "title": "About Us"
+    },
+    {
+      "title": "The Assembly of Nova Scotia Mi’kmaw Chiefs"
+    },
+    {
+      "title": "ANSMC Media Releases"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "This page does NOT state that Halifax is in Mi'kma'ki, and that is the finding",
+      "problem": "content/levels/halifax.json's statement opens `Halifax is in Mi'kma'ki, the territory of the Mi'kmaq` and cites this home page as its `nationSource`. Both words are on the page and neither is used to make that claim. `Mi’kma’ki` appears six times and every one of them is a press-release DATELINE or a headline about spraying - `Mi’kma’ki – Maw-lukutijik Saqmaq (Assembly) is calling for meaningful consultation`, `Assembly Opposes Planned Glyphosate Spraying in Mi’kma’ki` - the way a release from Ottawa is datelined Ottawa. `Halifax` appears exactly once, also as a dateline: `Halifax, Nova Scotia – Chief Sidney Peters, Glooscap First Nation and Chief Leroy Denny, Eskasoni First Nation`. The words `territory` and `unceded` do not appear on the page at all. There is no sentence here placing Halifax, or any other named place, inside Mi'kma'ki. The strongest territorial sentences the page does carry are `We have never surrendered, ceded or sold the Aboriginal Title to any lands and resources in Nova Scotia` and `We work on behalf of the Mi’kmaq of Nova Scotia`, both of which are about Nova Scotia rather than about Halifax.",
+      "affects": [
+        "ANSMC Media Releases",
+        "About Us"
+      ],
+      "grain": "chapter",
+      "action": "this register supports the NAME `Mi'kmaq` and nothing more. Do not read a dateline as a territorial assertion: the Assembly datelining its own releases `Mi’kma’ki` is the Assembly saying where it speaks from, and turning that into `Halifax is in Mi'kma'ki` would be the project making the claim in the Assembly's name. Whether the halifax statement can be repaired at all is a question for whoever revises it, and the answer this cache gives is no - not from this page, and not from content/sources/kmk-about-consultation.json either, which contains one `Mi’kma’ki` and no `Halifax`."
+    },
+    {
+      "topic": "A home page that is mostly a live news feed",
+      "problem": "Most of this page's 14 KB of text is the organisation's current news, media releases and newsletters. At the time of caching the newest item was dated `[September 11, 2026]` - two days before this fetch. `extractedTextSha256` will therefore stop matching within days, for reasons that have nothing to do with the standing text. The standing text - the `PJILA’SI` welcome, the `About Us` paragraph, the Five Pillars, the `Key Accomplishments` list - does not move.",
+      "affects": [
+        "PJILA’SI – KWILMU’KW MAW-KLUSUAQN",
+        "About Us",
+        "ANSMC Media Releases"
+      ],
+      "grain": "chapter",
+      "action": "when the digest stops matching, re-read the `About Us` paragraph beginning `We work on behalf of the Mi’kmaq of Nova Scotia` before assuming anything moved. Expect this register to need re-fetching more often than any other in this directory, and expect the re-fetch to find the same standing text under a different news list."
+    },
+    {
+      "topic": "The apostrophe is U+2019 throughout, and the level documents use U+0027",
+      "problem": "This site writes `Mi’kmaq`, `Mi’kma’ki`, `Kwilmu’kw` and `PJILA’SI` with the right single quotation mark. content/levels/halifax.json and content/levels/peggys-cove.json write `Mi'kmaq` with the ASCII apostrophe. A containment check that compares the level's `nations` entry against these bytes literally will therefore MISS, and a verifier who normalises before comparing has quietly edited a nation's own orthography to make a check pass.",
+      "affects": [
+        "About Us"
+      ],
+      "grain": "chapter",
+      "action": "compare deliberately, and record which form was compared. Do not rewrite either side to match the other without saying so: docs/content-review.md 9.3 says the diacritics and orthography are copied exactly from the nationSource, which means the question of which apostrophe this project ships is a real one and not a normalisation detail."
+    }
+  ],
+  "grainNote": "One web page, four headings taken from the page's own h1/h2 elements. Flags at chapter grain because a home page has no pages to point at. The first flag is the whole reason this register exists: the level that cites this URL makes a claim the URL does not make, and recording that is more use than caching the page quietly and leaving the next reader to discover it."
+}

@@ -48,16 +48,19 @@ This target is not in CI. The documents are git-ignored, so there would be nothi
 and a workflow that ran a command out of a content file would be a supply-chain hole bought for a
 check that cannot run there anyway.
 
-## Five of the seven extractions cannot be reproduced by anyone
+## Five of the nineteen extractions cannot be reproduced by anyone
 
 Recorded here because it is a live gap, not a to-do someone might tidy. `make sources` prints it on
 every run and `npm run sources -- --require-recorded` fails on it.
 
-The two PDF sources — `discover-canada` and `huron-wendat-nionwentsio-brief-2016` — record a command
-and reproduce their digests. The five HTML sources do not: how their `.txt` was made was never
-written down, and two candidate pipelines (a regex tag-stripper, and Chromium's
-`document.body.innerText` through Playwright) were tried on 2026-09-09 and neither reproduces the
-recorded digest. Each register says so in `extraction.reason` rather than leaving the field empty.
+Fourteen registers record a command and reproduce their digests here: the two PDF sources
+— `discover-canada` and `huron-wendat-nionwentsio-brief-2016` — and twelve HTML ones. The other
+five HTML sources do not: how their `.txt` was made was never written down, and two candidate
+pipelines (a regex tag-stripper, and Chromium's `document.body.innerText` through Playwright)
+were tried on 2026-09-09 and neither reproduces the recorded digest. Each register says so in
+`extraction.reason` rather than leaving the field empty. The count was five of seven until
+2026-09-13, when eight nation-source registers were cached with recorded commands; the five did
+not shrink, the denominator grew, and that is the less flattering of the two readings.
 
 This is not cosmetic. Every one of those five digests is cited as the `sourceHash` of a level's
 territory statement, so a shipped claim about whose land a level is set on is pinned to bytes only a

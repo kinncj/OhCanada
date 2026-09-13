@@ -52,8 +52,8 @@
     "nationSource": {
       "publisher": "Kwanlin Dün First Nation — the same body whose own words the statement quotes, on the same page. The clause about the City of Whitehorse and the meaning of Kwanlin are two further passages of that one page; content/sources/kdfn-about-us.json records which, and records the one nation this statement does not name and why.",
       "url": "https://www.kwanlindun.com/about/",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "d4d43d845d97752fa058e658598d7a2ccfd9dc3d4e4deb0a8992a334e3d91415",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

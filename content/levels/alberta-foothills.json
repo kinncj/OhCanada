@@ -58,8 +58,8 @@
     "nationSource": {
       "publisher": "Treaty 7 First Nations Chiefs' Association (the political body for the seven Treaty 7 First Nations, which its own About page names as the Bearspaw, Chiniki, Wesley, Blood Tribe, Piikani Nation, Siksika Nation and Tsuut'ina Nation)",
       "url": "https://www.treaty7.org/about",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "75cc747158d102530b7161bf281a2352797f54c434180ce589fd424e9c7f8af3",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

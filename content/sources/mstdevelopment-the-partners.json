@@ -1,0 +1,66 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "mstdevelopment-the-partners",
+  "title": "The Partners - MST Development Corporation",
+  "publisher": "MST Development Corporation, owned jointly by the Musqueam Indian Band, the Squamish Nation and the Tsleil-Waututh Nation",
+  "edition": "Corporation website, The Partners page, fetched 13 September 2026",
+  "url": "https://mstdevelopment.ca/the-partners/",
+  "file": "mstdevelopment-the-partners.html",
+  "extractedText": "mstdevelopment-the-partners.txt",
+  "sha256": "c83e21479ac5c6322b007f051347325f76fddc7d01376c55229e7fd473af4f8d",
+  "extractedTextSha256": "2fe891ceec60579cd5b1567bfef843805f16d63b67b9877359139a5395f5167a",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/mstdevelopment-the-partners.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 31098,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright MST Development Corporation / Musqueam Indian Band, Squamish Nation and Tsleil-Waututh Nation. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "The Partners"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "This page DOES state Musqueam territory in the first person, which is what the Vancouver statement was missing",
+      "problem": "content/twnation-our-story's first staleness flag routed a question: content/levels/vancouver.json names three nations and the one registered source covers only the Tsleil-Waututh, so the statement was quarantined and the flag forbade narrowing it. This page answers half of that and is recorded as the answer. Under `About the Musqueam Indian Band` it says, in the first person: `The Musqueam people are descendants of the Coast Salish. Our traditional territory occupies what is now Vancouver and surrounding areas` and `Although a metropolitan city has developed in the heart of Musqueam territory, our community maintains strong cultural and traditional beliefs.` That is a Musqueam statement that Musqueam traditional territory takes in what is now Vancouver. Under `About the Squamish Nation` it says `The Squamish Nation is comprised of descendants of the Coast Salish Aboriginal peoples who lived in the present day Squamish Valley and Greater Vancouver area. Our historical links to these lands and waters are numerous and Squamish place names exist throughout the territory.` That is weaker: it locates the Squamish Nation's ancestors in the Greater Vancouver area and asserts place names throughout the territory, rather than stating flatly that Vancouver is Squamish traditional territory. The opening sentence covers all three at once - `this partnership reflects our long tradition of working together` and `jobs and economic activity within our traditional territories`.",
+      "affects": [
+        "The Partners"
+      ],
+      "grain": "chapter",
+      "action": "for the Musqueam half, quote this page. For the Squamish half, quote it for what it says and no further, or find a page published by the Squamish Nation itself. Do not upgrade `descendants of the Coast Salish Aboriginal peoples who lived in the present day Squamish Valley and Greater Vancouver area` into `this is Squamish traditional territory` - that is the project making the stronger claim in the Nation's name."
+    },
+    {
+      "topic": "A development corporation is not the three governments, and the page is dated 2016",
+      "problem": "docs/content-review.md 3.2 asks for the nation's own published material - its government, its cultural centre, its language authority. This is the nations' jointly owned real-estate company, speaking in their first person on a page whose footer reads `MST Development Corporation | 2016`. Nothing on it has been revised in the caching agent's sight, and the whole page is 4.5 KB. It is materially better than a Crown page asserting the same thing, and it is not musqueam.bc.ca, squamish.net or twnation.ca.",
+      "affects": [
+        "The Partners"
+      ],
+      "grain": "chapter",
+      "action": "prefer each nation's own site where one carries the sentence. Cite this page when it is the only page that names all three in one voice, and say in the citation that it is the partnership's page rather than a government's."
+    },
+    {
+      "topic": "The page's own wording collides with two of this project's language rules",
+      "problem": "It writes `Aboriginal` (`Coast Salish Aboriginal peoples`) and `Indian Band` (the Musqueam Indian Band's own legal name), which docs/content-review.md 9.1 routes away from except when quoting; and the Squamish sentence puts a living nation's ancestors in the past tense - `who lived in the present day Squamish Valley` - which 9.3 names as the museum-exhibit failure. Both are the page's words about itself, so both are quotable and neither is adoptable.",
+      "affects": [
+        "The Partners"
+      ],
+      "grain": "chapter",
+      "action": "quote exactly and mark it as the source's term, per 9.2. Do not carry the past tense into the level's own sentence, and do not silently modernise the quote either."
+    },
+    {
+      "topic": "The cited URL redirects",
+      "problem": "`https://mstdevelopment.ca/the-partners/`, the URL in content/levels/vancouver.json, answers 301 and the bytes cached here were served from `https://mstdevelopment.ca/about-us/the-partners/`. `url` above is the requested URL so that it matches the level document.",
+      "affects": [
+        "The Partners"
+      ],
+      "grain": "chapter",
+      "action": "fetch with redirects followed."
+    }
+  ],
+  "grainNote": "One web page and one heading. The first flag is why this register was cached at all - it is the missing Musqueam source the twnation register asked for, and it is honest about the Squamish half being thinner. The rest record what kind of publisher this is, which of its words may be quoted but not adopted, and where the URL leads."
+}

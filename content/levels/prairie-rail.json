@@ -53,8 +53,8 @@
     "nationSource": {
       "publisher": "File Hills Qu'Appelle Tribal Council (eleven Treaty Four First Nations, among them Peepeekisis Cree Nation, Star Blanket Cree Nation and Muscowpetung Saulteaux Nation)",
       "url": "https://www.fhqtc.com/member-first-nations",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "b728ac28bf985859dd8b75c0133aab948d54dbb4cac34e10eaf891f54ddbe6fa",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

@@ -1,0 +1,64 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "treaty1-home",
+  "title": "Home - Treaty One",
+  "publisher": "Treaty One Nation (the seven First Nations who are signatories to Treaty No. 1)",
+  "edition": "Nation website, home page, fetched 13 September 2026",
+  "url": "https://treaty1.ca/",
+  "file": "treaty1-home.html",
+  "extractedText": "treaty1-home.txt",
+  "sha256": "4fc643c9f9c8d1a0da5e30d59c1efa83da2f1407d4f6e94c3b0f553fe19a0f5b",
+  "extractedTextSha256": "fca917b187e85cc6b56ba253ca575f94ab0a5e4ce611c304c48c8ac83434d46e",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/treaty1-home.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 313272,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Treaty One Nation. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Welcome to Treaty One Territory"
+    },
+    {
+      "title": "As Long As The Sun Shines, The Grass Grows, And The Rivers Flow"
+    },
+    {
+      "title": "News & Opportunities"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "This page contains NONE of the seven names in the Winnipeg level's `nations` array",
+      "problem": "content/levels/winnipeg.json names `Anishinaabeg`, `Nehiyawak`, `Ininiwak`, `Anisininewuk`, `Dakota Oyate`, `Denesuline` and `Red River Métis`, and cites this home page as its `nationSource`. Not one of those seven strings occurs on this page; `Métis` does not occur on it at all. Those names come from the level's `fact.source`, parks-canada-the-forks-nhs, which is a CROWN page. What this page does contain is the sentence that justifies the `publisher` string exactly - `Treaty One Nation is composed of the seven First Nations who are signatories to the first of the numbered Treaties, originally signed on August 3, 1871 at Lower Fort Garry` - and the seven signatories by name in its navigation: Brokenhead Ojibway Nation, Long Plain First Nation, Peguis First Nation, Roseau River Anishinaabe First Nation, Sagkeeng First Nation, Sandy Bay Ojibway First Nation and Swan Lake First Nation. Those are two different lists of nations, produced by two different bodies for two different purposes, and the level currently reads as though the second supports the first.",
+      "affects": [
+        "Welcome to Treaty One Territory"
+      ],
+      "grain": "chapter",
+      "action": "cite this register for the seven SIGNATORY names and for the treaty date, and nothing else. The seven peoples Parks Canada names as the traditional territory holders of The Forks - which include the Red River Métis, who are not and could not be a Treaty 1 signatory - are supported by parks-canada-the-forks-nhs and by no page cached here. OQ-WINNIPEG-3 already asks whether one nationSource can carry a sentence naming seven peoples; this is the evidence that at this URL it cannot."
+    },
+    {
+      "topic": "The level says August 1871; the page says August 3, 1871, and also just August 1871",
+      "problem": "Two sentences on the page date the treaty differently in precision: `Treaty No. 1 was negotiated and entered into in August 1871 at Lower Fort Garry` and `originally signed on August 3, 1871 at Lower Fort Garry`. Neither contradicts the other and neither contradicts the level, which does not give the date at all.",
+      "affects": [
+        "Welcome to Treaty One Territory"
+      ],
+      "grain": "chapter",
+      "action": "if a date is ever added to the Winnipeg statement, use `August 3, 1871` and quote the sentence that carries it."
+    },
+    {
+      "topic": "A home page that is mostly a business and news feed",
+      "problem": "Most of this page is the Naawi-Oodena master plan, the Treaty One Development Corporation, a gas station opening, upcoming events and a news list. The two standing sentences this register is cited for sit in a small part of it. `extractedTextSha256` will move whenever the Nation posts, and it will move for reasons that have nothing to do with either sentence.",
+      "affects": [
+        "News & Opportunities",
+        "As Long As The Sun Shines, The Grass Grows, And The Rivers Flow"
+      ],
+      "grain": "chapter",
+      "action": "when the digest stops matching, re-read the sentence beginning `Treaty One Nation is composed of the seven First Nations` before assuming anything moved."
+    }
+  ],
+  "grainNote": "One web page, three headings taken from the page's own h1/h2 elements. The first flag is the finding: the level that cites this URL names seven peoples this page does not name, and the page names seven First Nations the level does not. The other two are a date the page states twice at different precision, and the ordinary volatility of a home page."
+}

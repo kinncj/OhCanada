@@ -52,8 +52,8 @@
     "nationSource": {
       "publisher": "Kwilmu'kw Maw-klusuaqn Negotiation Office (Assembly of Nova Scotia Mi'kmaw Chiefs)",
       "url": "https://mikmaqrights.com/",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "a40d51fab87c20ae66f93f5562f41048f8df886a46e62e154832a12c47a93a0b",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

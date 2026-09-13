@@ -1,0 +1,80 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "wendake-histoire-et-culture",
+  "title": "Histoire & culture | Wendake",
+  "publisher": "Conseil de la Nation huronne-wendat (the site and the page speak as `la Nation Wendat` and `le Conseil de la Nation Wendat`)",
+  "edition": "Nation website, Histoire & culture page, French only, fetched 13 September 2026",
+  "url": "https://www.wendake.ca/histoire-et-culture",
+  "file": "wendake-histoire-et-culture.html",
+  "extractedText": "wendake-histoire-et-culture.txt",
+  "sha256": "d90ff37f9dcf89e507b43c7e2540c9c3ea43713c6361959a98e657b7af36461c",
+  "extractedTextSha256": "e0f648dfa4ae6109f6df93dbbb97e906cbe2c4597f59cfaa642346a27dfbe224",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/wendake-histoire-et-culture.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 260346,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Conseil de la Nation huronne-wendat. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "NOTRE FORCE INTEMPORELLE"
+    },
+    {
+      "title": "Notre communauté"
+    },
+    {
+      "title": "Notre mythe créateur"
+    },
+    {
+      "title": "Notre influence"
+    },
+    {
+      "title": "Un vaste territoire de savoir-faire"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "The Nation's own page does not use the word `Huron-Wendat`",
+      "problem": "content/levels/quebec-city.json's `nations` array holds `Huron-Wendat`, taken from the English of the Nation's 2016 parliamentary brief. On this page, which is the Nation's own current site, the strings `Huron-Wendat` and `huronne-wendat` do not occur at all. The page says `la Nation Wendat` (22 times), `Wendat` (48 times) and `Wendake`. So the `nationSource` for this level does not contain the name the level records.",
+      "affects": [
+        "NOTRE FORCE INTEMPORELLE",
+        "Notre communauté"
+      ],
+      "grain": "chapter",
+      "action": "route it; do not normalise. `Conseil de la Nation huronne-wendat` remains the Council's legal name and the form the 2016 brief uses in English, and `Nation Wendat` is what the Nation calls itself on its own website today. Which one a game prints is a question about the nation's own name, which docs/content-review.md 1 says no agent settles."
+    },
+    {
+      "topic": "The territory is spelled `Onyionhwentsïio’` here and `Nionwentsïo` in the level",
+      "problem": "content/levels/quebec-city.json says `The Huron-Wendat Nation calls its customary territory Nionwentsïo`, from the 2016 brief's `the Nionwentsïo, which means \"our magnificent land\"`. This page spells the same territory `Onyionhwentsïio’` - six occurrences, five of them with U+2019 and one, in the heading `Wendake, au cœur du Onyionhwentsïio'`, with U+0027. The inconsistency is the page's own and is recorded rather than tidied. The page also carries a related word in a subhead: `Wendat ïonyionhwentsou’tenh`.",
+      "affects": [
+        "NOTRE FORCE INTEMPORELLE"
+      ],
+      "grain": "chapter",
+      "action": "copy whichever form is cited exactly, from the document it is cited from, and never merge the two. docs/content-review.md 9.3 requires diacritics and orthography copied exactly from the nationSource, and this register exists partly so that a later reader does not `correct` one spelling of a nation's word for its own land into the other."
+    },
+    {
+      "topic": "The extent stated here is larger than the extent the level states",
+      "problem": "The level says the territory `follows both shores of the St. Lawrence River, between the Saint-Maurice and the Saguenay`, from the 2016 brief. This page states: `Le Onyionhwentsïio’, territoire traditionnel de la Nation Wendat, couvre 66 065 kilomètres carrés. Il s’étend de la rivière Saguenay, à l’est et au nord, jusqu’à la rivière Saint-Maurice à l’ouest, et au sud du fleuve Saint-Laurent jusqu’au fleuve Saint-Jean.` - Saguenay to Saint-Maurice, and south of the St. Lawrence as far as the Saint-Jean, with a figure in square kilometres. A second passage repeats it as `territoire ancestral allant du Saguenay au Saint-Maurice, du fleuve Saint-Laurent au Saint-Jean`. These are not contradictory but they are not the same sentence, and the Nation's current figure is the more specific of the two.",
+      "affects": [
+        "NOTRE FORCE INTEMPORELLE",
+        "Un vaste territoire de savoir-faire"
+      ],
+      "grain": "chapter",
+      "action": "a finding for whoever next revisits the Quebec City statement, not a licence to edit it here. This page is also silent on the clause the level's fact actually turns on - it says Wendake sits `au cœur de cet espace ancestral`, never that Wendake is inside the boundaries of the City of Québec, which remains the 2016 brief's sentence and the 2016 brief's alone."
+    },
+    {
+      "topic": "French only at this URL, and the site is being rebuilt around an election",
+      "problem": "No English version of this page was found; the string `English` does not appear on it. The navigation carries `Élections 2026` and `Cercle national de consultation sur l'avenir de la Nation Wendat`, and the page body contains a stray authoring artefact, `Replace image here:`, so the site is in active revision. A level that ships EN and FR from the first commit has, for this nation, a source in one language only.",
+      "affects": [
+        "Notre communauté"
+      ],
+      "grain": "chapter",
+      "action": "quote in French and translate nothing that is a name. If an English statement from this Nation is ever needed, it has to come from a document the Nation published in English - the 2016 brief is one - and not from translating this page."
+    }
+  ],
+  "grainNote": "One web page, five headings taken from the page's own h1/h2 elements. Four flags, and three of them are about content/levels/quebec-city.json rather than about this document: the Nation's name, its word for its territory, and the extent of it are each recorded differently here from in the 2016 brief the level quotes. They are at chapter grain because a web page has no pages, and they are recorded together because a reader who finds one of them will want the other two."
+}

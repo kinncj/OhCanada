@@ -1,0 +1,52 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "treaty7-about-us",
+  "title": "About Us - Treaty 7 First Nations Chiefs' Association",
+  "publisher": "Treaty 7 First Nations Chiefs' Association (T7FNCA)",
+  "edition": "Association website, About Us page, fetched 13 September 2026",
+  "url": "https://www.treaty7.org/about",
+  "file": "treaty7-about-us.html",
+  "extractedText": "treaty7-about-us.txt",
+  "sha256": "88b186c8fef007a4d2c2edcec946a486b9c969eb021ccf6904b865971c01d694",
+  "extractedTextSha256": "75cc747158d102530b7161bf281a2352797f54c434180ce589fd424e9c7f8af3",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/treaty7-about-us.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 542830,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Treaty 7 First Nations Chiefs' Association. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "ABOUT US"
+    },
+    {
+      "title": "OUR VISION"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "This page carries the NAMES and says nothing whatever about territory",
+      "problem": "content/levels/alberta-foothills.json cites this page as its `nationSource`, and the page earns that exactly: one sentence names all seven nations in the level's `nations` array, in the same order and the same spelling - `the Bearspaw, Chiniki, Wesley, Blood Tribe, Piikani Nation, Siksika Nation, and Tsuut'ina Nation`, with a straight apostrophe in Tsuut'ina. What the page does NOT contain is any statement about where Treaty 7 land is. The words `territory`, `land`, `Alberta` and `foothills` do not appear on it at all. Every geographic clause in the level's statement - the United States border, the central range of the Rocky Mountains, south and west of Treaties six and four - comes from the CROWN's transcription of the treaty text (cirnac-treaty-7), not from here.",
+      "affects": [
+        "ABOUT US"
+      ],
+      "grain": "chapter",
+      "action": "cite this register for the seven names and nothing else. If the level's territorial extent is ever challenged, the document to re-read is cirnac-treaty-7, and the honest description of the split is that the nations name themselves here while the Crown draws the boundary there."
+    },
+    {
+      "topic": "892 bytes of text inside a 542 KB Wix page",
+      "problem": "The visible text of this page is under a kilobyte; the rest of the file is the Wix runtime. So `sha256` is dominated by bytes that have nothing to do with the sentence being cited, and a platform-wide Wix change will move it while the sentence sits untouched. The extraction keeps the site chrome (`top of page`, `Use tab to navigate through the menu items.`, `bottom of page`) because the command strips tags rather than rendering the page, and a navigation change moves `extractedTextSha256` as well.",
+      "affects": [
+        "ABOUT US",
+        "OUR VISION"
+      ],
+      "grain": "chapter",
+      "action": "when either digest stops matching, re-read the single sentence beginning `The Treaty 7 First Nations Chiefs' Association (T7FNCA) serves as the political entity` before assuming the names moved. A chrome-only change is not a change to the claim."
+    }
+  ],
+  "grainNote": "One web page and two headings. Both flags are at chapter grain because the page is one screen of text and there is nothing finer to point at. The first flag is the load-bearing one: it says what this source is entitled to support (seven names) and what it is not (any statement about land)."
+}

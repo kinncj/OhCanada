@@ -1,0 +1,57 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "fhqtc-member-first-nations",
+  "title": "Member First Nations - File Hills Qu'Appelle Tribal Council",
+  "publisher": "File Hills Qu'Appelle Tribal Council (FHQTC)",
+  "edition": "Tribal council website, Member First Nations page, fetched 13 September 2026",
+  "url": "https://www.fhqtc.com/member-first-nations",
+  "file": "fhqtc-member-first-nations.html",
+  "extractedText": "fhqtc-member-first-nations.txt",
+  "sha256": "3a41214810a97ab2c8ae7385cb759dde693d1b83d63ce56d5c3703f35e2155f4",
+  "extractedTextSha256": "b728ac28bf985859dd8b75c0133aab948d54dbb4cac34e10eaf891f54ddbe6fa",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/fhqtc-member-first-nations.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 193153,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright File Hills Qu'Appelle Tribal Council. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Member First Nations"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "The cited URL redirects, and the register records the URL as cited",
+      "problem": "`https://www.fhqtc.com/member-first-nations`, the URL in content/levels/prairie-rail.json, answers 301 and the bytes cached here were served from `https://fhqtc.com/about/member-first-nations/`. `url` above is the requested URL so that it matches the level document; the effective URL is recorded here so nobody has to rediscover the hop.",
+      "affects": [
+        "Member First Nations"
+      ],
+      "grain": "chapter",
+      "action": "fetch with redirects followed. If the redirect ever stops resolving, try the effective URL before concluding the page is gone."
+    },
+    {
+      "topic": "Eleven member First Nations, and the level names two categories instead",
+      "problem": "The page lists eleven members with their Chiefs and addresses: Carry the Kettle Nakoda Nation, Little Black Bear's Band, Muscowpetung Saulteaux Nation, Nekaneet First Nation, Okanese First Nation, Pasqua First Nation, Peepeekisis Cree Nation, Piapot First Nation, Standing Buffalo Dakota Nation, Star Blanket Cree Nation and Wood Mountain Lakota First Nation. That confirms the `publisher` string in content/levels/prairie-rail.json exactly, including the three nations it names. The level's own `nations` array, however, is `Cree` and `Saulteaux`, and those two words occur on this page ONLY inside the compound names `Peepeekisis Cree Nation`, `Star Blanket Cree Nation` and `Muscowpetung Saulteaux Nation`. They came from the treaty narrative in usask-indigenous-sk-treaty-4, not from here, and the council's own membership also includes Nakoda, Dakota and Lakota nations that the level names nowhere.",
+      "affects": [
+        "Member First Nations"
+      ],
+      "grain": "chapter",
+      "action": "cite this register for the eleven member names. Whether `Cree` and `Saulteaux` - the treaty's words for the parties at Fort Qu'Appelle in 1874 - are the right values for a `nations` array that docs/content-review.md 3.1 says must name one nation as that nation names itself is a question for the author and the verifier, and this page is the evidence that the tribal council's own answer is eleven specific names."
+    },
+    {
+      "topic": "A contact directory, so the bytes move whenever leadership or a phone number does",
+      "problem": "Most of this page's 8.6 KB of text is Chiefs' names, post boxes, phone and fax numbers and member websites, and one card reads `Coming Soon…`. An election in any of eleven nations moves `extractedTextSha256` without any change to the membership list this register is cited for. The page carries WordPress nonce values and a Wordfence script inside `<script>` blocks; the extraction strips those, so `extractedTextSha256` is insulated from them but `sha256` is not.",
+      "affects": [
+        "Member First Nations"
+      ],
+      "grain": "chapter",
+      "action": "when a digest stops matching, compare the eleven headings before assuming the membership changed. A Chief's name changing is not a change to the claim; a name leaving or joining the list is."
+    }
+  ],
+  "grainNote": "One web page and one heading. Three flags: where the URL actually leads, what the page names versus what the level names, and why its digests will drift. The middle flag is the one that matters to a verifier, because it separates what this source proves from what the level says."
+}

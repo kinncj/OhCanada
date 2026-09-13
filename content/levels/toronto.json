@@ -52,8 +52,8 @@
     "nationSource": {
       "publisher": "Mississaugas of the Credit First Nation",
       "url": "https://mncfn.ca/treaty-lands-and-territory/",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "148556d2ec2bec761e1e2197944b4550b549e9d939881194a7fecceeccd5ec16",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

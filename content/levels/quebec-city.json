@@ -53,8 +53,8 @@
     "nationSource": {
       "publisher": "Conseil de la Nation huronne-wendat (Nation Wendat)",
       "url": "https://www.wendake.ca/histoire-et-culture",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "e0f648dfa4ae6109f6df93dbbb97e906cbe2c4597f59cfaa642346a27dfbe224",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

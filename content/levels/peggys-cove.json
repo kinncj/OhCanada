@@ -52,8 +52,8 @@
     "nationSource": {
       "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs — the same body whose own words the statement quotes. This is the first level whose fact.source and nationSource are one body, speaking for itself about its own lands.",
       "url": "https://mikmaqrights.com/?page_id=53",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

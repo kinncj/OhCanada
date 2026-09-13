@@ -58,8 +58,8 @@
     "nationSource": {
       "publisher": "Treaty One Nation (the seven First Nations who are signatories to Treaty No. 1)",
       "url": "https://treaty1.ca/",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "fca917b187e85cc6b56ba253ca575f94ab0a5e4ce611c304c48c8ac83434d46e",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

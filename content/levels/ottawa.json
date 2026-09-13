@@ -52,8 +52,8 @@
     "nationSource": {
       "publisher": "Algonquin Anishinabeg Nation Tribal Council",
       "url": "https://anishinabemowin.ca/en_CA/",
-      "sourceHash": "",
-      "asOf": null,
+      "sourceHash": "b3501b65d656d9c03644bbcac7778bd38d3ed7848fddabacd1187cf374e1d136",
+      "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",
         "model": "",

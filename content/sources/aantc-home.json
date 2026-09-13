@@ -1,0 +1,61 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "aantc-home",
+  "title": "AANTC - Algonquin Anishinabeg Nation Tribal Council language resources",
+  "publisher": "Algonquin Anishinabeg Nation Tribal Council (AANTC / Conseil tribal de la nation algonquine anishinabeg, CTNAA)",
+  "edition": "Tribal council language-resources website, English home page (en_CA), fetched 13 September 2026",
+  "url": "https://anishinabemowin.ca/en_CA/",
+  "file": "aantc-home.html",
+  "extractedText": "aantc-home.txt",
+  "sha256": "c950aa54e6bde45e017c89e0c6c56a70ec4da36d49d8109f646c485830ce8b9b",
+  "extractedTextSha256": "b3501b65d656d9c03644bbcac7778bd38d3ed7848fddabacd1187cf374e1d136",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/aantc-home.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 111179,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Algonquin Anishinabeg Nation Tribal Council. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "Kwey kakina!"
+    },
+    {
+      "title": "Language Content"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "The nation's own page spells it `Algonquin Anishinabeg`; the level spells it `Anishinabe Algonquin`",
+      "problem": "content/levels/ottawa.json's `nations` array holds the single value `Anishinabe Algonquin`, taken from the CROWN's wording in the level's `fact.source` - a Canada.ca news release datelined `Ottawa, unceded, unsurrendered territory of the Anishinabe Algonquin Nation`. This page, which is the tribal council's own, says `Welcome to the Algonquin Anishinabeg Nation Tribal Council language resources website` and `various Algonquin dialects`. The string `Anishinabe Algonquin` does not occur on it in that order; `Anishinabe` occurs only as the first nine letters of `Anishinabeg`. So the `nationSource` for this level does not literally contain the name the level records, and the two orderings come from two different authorities - the nation's own, and the Crown's.",
+      "affects": [
+        "Kwey kakina!"
+      ],
+      "grain": "chapter",
+      "action": "do not edit either string to make a check pass. Which order this project ships is a question about whose name it is, and per docs/content-review.md 3.1 and 9.3 the answer runs toward the nation's own page rather than the news release. Route it; a verifier may not settle it by normalising, and an author may not settle it by preferring the Crown's word order because it is the one already written down."
+    },
+    {
+      "topic": "A language-resources site, not a territory page",
+      "problem": "This is the tribal council's Anishinabemowin teaching site: colouring books, story books, picture dictionaries and curriculum resources for Barriere Lake, Kitcisakik, Kitigan Zibi, Lac Simon, Long Point, Pikogan, Timiskaming, Wahgoshig and Abitibiwinni. The words `territory`, `Ottawa` and `unceded` appear nowhere on it. It supports that the Algonquin Anishinabeg Nation Tribal Council exists, publishes in its own language, and names those communities. It supports nothing about where Ottawa stands.",
+      "affects": [
+        "Kwey kakina!",
+        "Language Content"
+      ],
+      "grain": "chapter",
+      "action": "the Ottawa territorial claim rests entirely on cirnac-algonquin-parliamentary-precinct, a Crown source. docs/content-review.md 10.2 asks for the nation's own material where one exists, and this cache is evidence that for this level the nation's own material - at this URL - does not carry the fact. Report that rather than treating the pairing as settled."
+    },
+    {
+      "topic": "Part of the page is behind a login",
+      "problem": "The navigation carries `Account`, `Register`, `Login`, `Logout`, `Members` and `Password Reset`, and the page says in its own words: `Some resources are restricted on this site. To gain access, please contact: anishinabemowin@aantc-ctnaa.ca`. What is cached here is the anonymous view. There is material on this site that this project fetched nothing of, and which it has no standing to request.",
+      "affects": [
+        "Language Content"
+      ],
+      "grain": "chapter",
+      "action": "do not attempt to reach the restricted material. Record the anonymous view as the anonymous view, and if a claim ever needs what is behind the login, the answer is that the claim cannot be made."
+    }
+  ],
+  "grainNote": "One web page and two headings. Three flags: a name spelled two ways by two authorities, a source that does not carry the fact the level pairs it with, and a part of the site nobody here may read. The first two are findings about content/levels/ottawa.json rather than about this document, and they are here because this is the file the next reader will open."
+}
