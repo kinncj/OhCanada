@@ -15,18 +15,24 @@ import { buildPage, type FakeElement, type FakePage } from './support/fake-dom';
 /**
  * `docs/stories/TN-MAP-level-select.md`.
  *
- * Nine of the ten levels do not exist, so the assertions that matter are the
- * ones about the two ways a level can be closed. `TN-MAP-05` is a failure-path
- * story: a level nobody built must never be described as a level the player has
- * not earned, and neither may read as a defect.
+ * All ten levels exist now, so the fixture names all ten. The assertions that
+ * matter are still the ones about the two ways a card can be closed: `TN-MAP-05`
+ * is a failure-path story, and a level nobody built must never be described as a
+ * level the player has not earned, nor read as a defect.
+ *
+ * The id-less entry that used to be levels 2 and 10 is kept — once, in
+ * {@link MAP} — because the guard that answers `null` rather than drawing a
+ * number is still live code. ADR-0024: an empty collection must not reduce to a
+ * pass, and a guard whose only input has been deleted is that same vacuity
+ * wearing a green tick.
  */
 
 const id = (value: string): LevelId => value as LevelId;
 
-/** The ten of `TN-LEVELS-2-to-10-spine.md`, with 2 and 10 deliberately unscoped. */
-const SPINE: readonly (readonly [number, string | undefined])[] = [
+/** The ten of `TN-LEVELS-2-to-10-spine.md`, all of them named. */
+const SPINE: readonly (readonly [number, string])[] = [
   [1, 'halifax'],
-  [2, undefined],
+  [2, 'peggys-cove'],
   [3, 'quebec-city'],
   [4, 'ottawa'],
   [5, 'toronto'],
@@ -34,15 +40,15 @@ const SPINE: readonly (readonly [number, string | undefined])[] = [
   [7, 'prairie-rail'],
   [8, 'alberta-foothills'],
   [9, 'vancouver'],
-  [10, undefined],
+  [10, 'the-north'],
 ];
 
 const entries = (built: readonly string[], unlocked: readonly string[]): readonly MapEntry[] =>
   SPINE.map(([number, levelId]) => ({
     number,
-    ...(levelId === undefined ? {} : { id: id(levelId) }),
-    built: levelId !== undefined && built.includes(levelId),
-    unlocked: levelId !== undefined && unlocked.includes(levelId),
+    id: id(levelId),
+    built: built.includes(levelId),
+    unlocked: unlocked.includes(levelId),
   }));
 
 /** Ottawa open, Halifax built and not earned, the other eight not made yet. */
@@ -113,7 +119,7 @@ describe('the level select', () => {
 
     expect(handles).toEqual([
       'halifax',
-      '2',
+      'peggys-cove',
       'quebec-city',
       'ottawa',
       'toronto',
@@ -121,7 +127,7 @@ describe('the level select', () => {
       'prairie-rail',
       'alberta-foothills',
       'vancouver',
-      '10',
+      'the-north',
     ]);
   });
 
@@ -135,14 +141,33 @@ describe('the level select', () => {
     expect(ottawa?.textContent).toContain('How Canadians govern themselves');
   });
 
-  it('draws no place name and no placeholder where the place is not decided', () => {
+  it('names the two levels that were slots until they were built', () => {
     const { at } = open();
-    const levelTwo = at('level-card-2');
 
-    expect(levelTwo?.textContent).toContain('Level 2');
-    expect(levelTwo?.textContent).toContain('Who we are');
+    const two = at('level-card-peggys-cove');
+    expect(two?.textContent).toContain('Level 2');
+    expect(two?.textContent).toContain("Peggy's Cove");
+    expect(two?.textContent).toContain('Who we are');
+
+    const ten = at('level-card-the-north');
+    expect(ten?.textContent).toContain('Level 10');
+    expect(ten?.textContent).toContain('The North');
+    expect(ten?.textContent).toContain("Canada's regions");
+  });
+
+  it('draws no placeholder where a place is not decided', () => {
+    /* No entry in the shipped map is in this state any more, so the guard is
+       handed one on purpose. The alternative to checking is the word
+       "undefined" on a card, and `TN-MAP-04` forbids a placeholder in that
+       space at all — including the level's number standing in for its name. */
+    const { at } = open({
+      entries: [{ number: 11, built: false, unlocked: false }],
+    });
+    const unbuilt = at('level-card-11');
+
+    expect(unbuilt?.textContent).toContain('Level 11');
     for (const placeholder of ['TBD', '???', 'undefined', 'null', 'coming soon']) {
-      expect(levelTwo?.textContent?.toLowerCase()).not.toContain(placeholder.toLowerCase());
+      expect(unbuilt?.textContent?.toLowerCase()).not.toContain(placeholder.toLowerCase());
     }
   });
 });
@@ -505,7 +530,8 @@ describe('describing one card away from the map', () => {
       { number: 1, id: id('halifax'), built: true, unlocked: true, stamped: true },
       { number: 3, id: id('quebec-city'), built: true, unlocked: true },
       { number: 4, id: id('ottawa'), built: true, unlocked: false, stampsNeeded: 2 },
-      { number: 2, built: false, unlocked: false },
+      /* No id: a level nobody built. See the note at the top of this file. */
+      { number: 11, built: false, unlocked: false },
     ] satisfies MapEntry[],
     stampsToUnlock: 1,
   };
@@ -544,13 +570,13 @@ describe('describing one card away from the map', () => {
   });
 
   it('gives a level its own name, and no name to a level that has none', () => {
-    const [halifax, , , levelTwo] = MAP.entries;
+    const [halifax, , , unnamed] = MAP.entries;
     expect(levelTitle('en', halifax as MapEntry)).toBe('Halifax');
     /*
-     * Level 2 has a subject line and deliberately no place name
-     * (`docs/content-review.md` §1). `null` is what stops a completion card
-     * offering a button labelled with a number.
+     * `null` is what stops a completion card offering a button labelled with a
+     * number. Every shipped level has a name today; this entry has none so that
+     * the answer is still asserted rather than assumed.
      */
-    expect(levelTitle('en', levelTwo as MapEntry)).toBeNull();
+    expect(levelTitle('en', unnamed as MapEntry)).toBeNull();
   });
 });

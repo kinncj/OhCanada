@@ -446,6 +446,10 @@ const EN = {
      level missing either row fails `tests/unit/ui/copy.test.ts` rather than
      reaching a player wearing another level's words. */
   'stamp.halifax.earned': 'You earned the Halifax stamp.',
+  /* `TN-LEVEL-peggys-cove.md`. The possessive is the village's own and the
+     apostrophe is the one *Discover Canada* writes; the Canadian
+     Geographical Names Database writes "Peggys Cove" and this game does not. */
+  'stamp.peggys-cove.earned': "You earned the Peggy's Cove stamp.",
   'stamp.quebec-city.earned': 'You earned the Québec City stamp.',
   'stamp.ottawa.earned': 'You earned the Ottawa stamp.',
   'stamp.toronto.earned': 'You earned the Toronto stamp.',
@@ -456,7 +460,12 @@ const EN = {
      drawn "the The Alberta foothills stamp". */
   'stamp.alberta-foothills.earned': 'You earned the Alberta foothills stamp.',
   'stamp.vancouver.earned': 'You earned the Vancouver stamp.',
+  /* `TN-LEVEL-the-north.md`. "the North" mid-sentence, lower-case article
+     against a title capitalised on the map — the Prairies' problem again,
+     and the tenth level is where it stops recurring. */
+  'stamp.the-north.earned': 'You earned the North stamp.',
   'level.halifax.play': 'Play Halifax',
+  'level.peggys-cove.play': "Play Peggy's Cove",
   'level.quebec-city.play': 'Play Québec City',
   'level.ottawa.play': 'Play Ottawa',
   'level.toronto.play': 'Play Toronto',
@@ -464,6 +473,7 @@ const EN = {
   'level.prairie-rail.play': 'Play the Prairies',
   'level.alberta-foothills.play': 'Play the Alberta foothills',
   'level.vancouver.play': 'Play Vancouver',
+  'level.the-north.play': 'Play the North',
 
   /* docs/stories/TN-HUD-hud-and-menu.md */
   /* The accessible name of the `hud` region (`TN-HUD-07`). It names what the
@@ -600,6 +610,12 @@ const EN = {
      interpolation is what makes both languages right. */
   'level.halifax.loading': 'Getting the harbour ready.',
   'level.halifax.error.title': 'We could not load Halifax.',
+  /* `TN-LEVEL-peggys-cove.md`. The waiting sentence names the bare rock
+     because bare rock is the ground the player walks on, and because a
+     loading screen is the splash card `docs/content-review.md` §10.2 rules
+     out for anything territorial. */
+  'level.peggys-cove.loading': 'Getting the bare rock ready.',
+  'level.peggys-cove.error.title': "We could not load Peggy's Cove.",
   'level.quebec-city.loading': 'Getting the snowy slope ready.',
   'level.quebec-city.error.title': 'We could not load Québec City.',
   'level.ottawa.loading': 'Getting the canal ready.',
@@ -629,6 +645,11 @@ const EN = {
      `TN-NAMES-01` keeps real names off a loading screen. */
   'level.vancouver.loading': 'Getting the waterfront ready.',
   'level.vancouver.error.title': 'We could not load Vancouver.',
+  /* `TN-LEVEL-the-north.md`. The gravel shore, not the river and not the
+     bar: Halifax has the harbour, Winnipeg the riverbank, Vancouver the
+     waterfront, and a fourth level on water needed a fourth noun. */
+  'level.the-north.loading': 'Getting the gravel shore ready.',
+  'level.the-north.error.title': 'We could not load the North.',
   /* docs/stories/TN-TITLE-title-screen.md */
   /* `title.game` is the product's name and is the same string in both
      languages, like the language names in `TN-SET`. It is never translated. */
@@ -690,7 +711,8 @@ const EN = {
      card to draw no placeholder in its place. */
   'level.halifax.title': 'Halifax',
   'level.halifax.subtitle': 'Rights and responsibilities',
-  'level.2.subtitle': 'Who we are',
+  'level.peggys-cove.title': "Peggy's Cove",
+  'level.peggys-cove.subtitle': 'Who we are',
   'level.quebec-city.title': 'Québec City',
   'level.quebec-city.subtitle': "Canada's history",
   'level.ottawa.title': 'Ottawa',
@@ -705,8 +727,8 @@ const EN = {
   'level.alberta-foothills.subtitle': "Canada's economy",
   'level.vancouver.title': 'Vancouver',
   'level.vancouver.subtitle': 'Canadian symbols',
-  'level.10.title': 'The North',
-  'level.10.subtitle': "Canada's regions",
+  'level.the-north.title': 'The North',
+  'level.the-north.subtitle': "Canada's regions",
 } as const;
 
 /** Every row in the table, plural forms included. */
@@ -980,6 +1002,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
      template would have been wrong in French, and — since the Prairies — in
      English too. */
   'stamp.halifax.earned': "Vous avez obtenu le tampon d'Halifax.",
+  /* Not translated, and the apostrophe is the same character in both
+     languages — the level document's own. */
+  'stamp.peggys-cove.earned': "Vous avez obtenu le tampon de Peggy's Cove.",
   'stamp.quebec-city.earned': 'Vous avez obtenu le tampon de la Ville de Québec.',
   'stamp.ottawa.earned': "Vous avez obtenu le tampon d'Ottawa.",
   'stamp.toronto.earned': 'Vous avez obtenu le tampon de Toronto.',
@@ -994,7 +1019,12 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'stamp.alberta-foothills.earned':
     "Vous avez obtenu le tampon des contreforts de l'Alberta.",
   'stamp.vancouver.earned': 'Vous avez obtenu le tampon de Vancouver.',
+  /* The fifth form after « tampon », and the first contraction of *de + le*
+     in this game: a template corrected four times still writes
+     « le tampon de le Nord ». */
+  'stamp.the-north.earned': 'Vous avez obtenu le tampon du Nord.',
   'level.halifax.play': 'Jouer à Halifax',
+  'level.peggys-cove.play': "Jouer à Peggy's Cove",
   'level.quebec-city.play': 'Jouer dans la Ville de Québec',
   'level.ottawa.play': 'Jouer à Ottawa',
   'level.toronto.play': 'Jouer à Toronto',
@@ -1002,6 +1032,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.prairie-rail.play': 'Jouer dans les Prairies',
   'level.alberta-foothills.play': "Jouer dans les contreforts de l'Alberta",
   'level.vancouver.play': 'Jouer à Vancouver',
+  /* The fourth play shape, after « à », « dans la » and « dans les ».
+     Not « Jouer au Nord » — « au Nord » is a compass instruction. */
+  'level.the-north.play': 'Jouer dans le Nord',
 
   'hud.label': 'Commandes du jeu',
   'hud.menu': 'Menu',
@@ -1049,7 +1082,12 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.error.back': 'Retour',
 
   'level.halifax.loading': 'Préparation du port.',
+  /* « La côte rocheuse » is one letter from « les Rocheuses », which level 8's
+     art contract deliberately refuses to claim; « la roche nue » ships. */
+  'level.peggys-cove.loading': 'Préparation de la roche nue.',
   'level.halifax.error.title': "Nous n'avons pas pu charger Halifax.",
+  'level.peggys-cove.error.title':
+    "Nous n'avons pas pu charger Peggy's Cove.",
   'level.quebec-city.loading': 'Préparation de la pente enneigée.',
   /* The row that proves the template would have been wrong: the article is
      here and it is absent from the other three. */
@@ -1077,7 +1115,16 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.alberta-foothills.error.title':
     "Nous n'avons pas pu charger les contreforts de l'Alberta.",
   'level.vancouver.loading': 'Préparation du front de mer.',
+  /* « La rive » is Winnipeg's and « le rivage » is a word away from it;
+     « la grève » is the exact Quebec French noun for a gravel shore and also
+     means a labour strike, which a newcomer studying for citizenship meets
+     first. « La plage de galets » ships. */
+  'level.the-north.loading': 'Préparation de la plage de galets.',
   'level.vancouver.error.title': "Nous n'avons pas pu charger Vancouver.",
+  /* The article goes down and the noun keeps its capital: « le nord » in
+     lower case is a direction. Level 8 is the opposite case, so a template
+     taught to lower-case a title's first word would set this one pointing. */
+  'level.the-north.error.title': "Nous n'avons pas pu charger le Nord.",
   'title.game': 'TrueNorth',
   'title.tagline': "Préparez-vous à l'examen de citoyenneté canadienne.",
   'title.notOfficial': "Ce jeu n'est pas fait par le gouvernement du Canada.",
@@ -1111,7 +1158,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
 
   'level.halifax.title': 'Halifax',
   'level.halifax.subtitle': 'Droits et responsabilités',
-  'level.2.subtitle': 'Qui nous sommes',
+  'level.peggys-cove.title': "Peggy's Cove",
+  'level.peggys-cove.subtitle': 'Qui nous sommes',
   'level.quebec-city.title': 'Ville de Québec',
   'level.quebec-city.subtitle': "L'histoire du Canada",
   'level.ottawa.title': 'Ottawa',
@@ -1126,8 +1174,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.alberta-foothills.subtitle': "L'économie du Canada",
   'level.vancouver.title': 'Vancouver',
   'level.vancouver.subtitle': 'Les symboles canadiens',
-  'level.10.title': 'Le Nord',
-  'level.10.subtitle': 'Les régions du Canada',
+  'level.the-north.title': 'Le Nord',
+  'level.the-north.subtitle': 'Les régions du Canada',
 };
 
 /**
