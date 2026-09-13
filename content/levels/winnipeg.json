@@ -48,11 +48,11 @@
         "quote": "The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
       },
       "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
+        "status": "verified",
+        "model": "claude-opus-5[1m]",
+        "checkedAt": "2026-09-13T19:13:39Z",
+        "sourceHash": "f1e1749ea9bef82ec40b12391715afcbfc90799c252814acead0a8ff9b112ba2",
+        "evidence": "The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
       }
     },
     "nationSource": {
@@ -218,11 +218,11 @@
           "quote": "Winnipeg's French Quarter, St. Boniface, has Western Canada's largest Francophone community at 45,000."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5[1m]",
+          "checkedAt": "2026-09-13T19:13:39Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Winnipeg’s French Quarter, St. Boniface, has Western Canada’s largest Francophone community at 45,000."
         }
       },
       "position": {
@@ -255,11 +255,11 @@
           "quote": "The law in Canada applies to everyone, including judges, politicians and the police."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5[1m]",
+          "checkedAt": "2026-09-13T19:13:39Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada is governed by an organized system of laws. These laws are the written rules intended to guide people in our society. They are made by elected representatives. The courts settle disputes and the police enforce the laws. The law in Canada applies to everyone, including judges, politicians and the police."
         }
       },
       "position": {
@@ -293,11 +293,11 @@
           "quote": "The maple leaf is Canada’s best-known symbol. Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s, and are carved into the headstones of our fallen soldiers buried overseas and in Canada."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5[1m]",
+          "checkedAt": "2026-09-13T19:13:39Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The maple leaf is Canada’s best-known symbol. Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s, and are carved into the headstones of our fallen soldiers buried overseas and in Canada."
         }
       },
       "position": {
