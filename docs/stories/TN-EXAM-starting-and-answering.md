@@ -13,6 +13,14 @@ Read `README.md` in this directory first. The clock is `TN-TIMER-the-exam-clock.
 `TN-ATTEMPT-leaving-and-resuming-an-exam.md`. The question card itself is `TN-CARD-question-card.md`, and
 this file says precisely how the exam's use of it differs.
 
+**Amended 2026-09-13 — every subject has a bank, so two scenarios stopped describing this game.** All ten
+directories under `content/questions/` now hold questions, which is what `exam.subjectsReady` counts, so
+"one subject is ready" is a premise a scenario has to supply rather than the state the game is in. Those
+scenarios stay and each names its own premise, because a build with fewer subjects ready is a build this game
+has had for its whole life and may have again. **`map.moreComing` is drawn here only while `ready` is less
+than `total`**, which `TN-MAP` now states as a rule for all four screens that draw it — this one, the result,
+the level select and the passport.
+
 ## What an exam is, and what it is not
 
 | | A Study drill (`TN-STUDY`) | An exam (this file) |
@@ -100,8 +108,16 @@ Keys this screen draws and does not own:
 | `exam.timer.*` | `TN-TIMER-the-exam-clock.md` |
 | `exam.result.*`, `exam.again` | `TN-RESULT-exam-results.md` |
 | `exam.leave*`, `exam.resume*`, `exam.new*` | `TN-ATTEMPT-leaving-and-resuming-an-exam.md` |
-| `storage.warning`, `storage.warning.help` | `TN-SAVE-save-and-reload.md` |
 | `level.<id>.subtitle` | `TN-LEVELS-2-to-10-spine.md`, `TN-LEVEL-ottawa.md` — the subject names on the result |
+| `storage.warning`, `storage.warning.help` | `TN-SAVE-save-and-reload.md` |
+
+**`map.moreComing` is borrowed on purpose, and `TN-MAP` owns the condition as well as the words.** This
+screen draws it beside `exam.subjectsReady`, which counts **subjects with a bank**; the level select and the
+passport draw it beside `map.levelsReady`, which counts **levels with a document**. It is one sentence about
+one fact — this game is not finished — so it is one key, and the rule that goes with it is *drawn only while
+`ready` is less than `total`*, tested against whichever count sits beside it. The two counts can disagree
+inside one build, which is exactly why the rule lives with the key rather than on a screen (`TN-MAP`,
+`OQ-PASSPORT-7`).
 
 **Why `exam.rules` is two keys and not one.** "The exam has 20 questions. You need 15 out of 20 to pass."
 carries **two** counted nouns behind **two** different numbers, and a plural category is chosen once per
@@ -160,6 +176,14 @@ Feature: Starting a practice exam
     And it shows "More are coming."
     And it shows "This exam only asks about the subjects that are ready."
     And nothing on the screen reads as an error
+
+  Scenario: Every subject ready promises nothing more
+    Given every subject has a bank
+    Then it shows "Subjects ready: 10 of 10"
+    And it does not show "More are coming."
+    And nothing is drawn in that sentence's place
+    And this is TN-MAP's rule, tested against the count that sits beside it
+    And it still shows "This exam only asks about the subjects that are ready."
 
   Scenario: The timer is a choice made here, and only here
     Then the control described in TN-TIMER-01 is on this screen
@@ -224,7 +248,15 @@ Feature: A representative draw, not a drill
     And the remaining 18 are spread across the other subjects that are ready
     And the exam still asks 20 questions
 
-  Scenario: Only one subject is ready, which is this game today
+  Scenario: Ten subjects ready, which is this game today
+    Given every subject has a bank
+    When I start an exam of 20 questions
+    Then each of the ten subjects contributes 2 questions
+    And there is no remainder to spread, because 20 divides evenly by 10
+    And no subject is left out for having the smallest bank
+    And the subject with 18 verified questions contributes the same 2 as the one with 96
+
+  Scenario: One subject ready, which is a build this game has had
     Given verified questions exist for one subject only
     When I start an exam of 20 questions
     Then all 20 come from that subject
@@ -642,10 +674,18 @@ Feature: The exam in French
     And it shows "L'examen compte 20 questions."
     And it shows "Il faut 15 sur 20 pour réussir."
     And it shows "Vous verrez votre résultat à la fin."
-    And it shows "Sujets prêts : 1 sur 10"
     And there is a space before each colon
     And the button reads "Commencer l'examen"
     And no English word appears in "exam-start"
+
+  Scenario: The subject count and its promise are French, on the same condition as the English
+    Given verified questions exist for one subject only
+    Then it shows "Sujets prêts : 1 sur 10"
+    And it shows "D'autres arrivent."
+    Given every subject has a bank
+    Then it shows "Sujets prêts : 10 sur 10"
+    And it does not show "D'autres arrivent."
+    And the condition is the same in both languages, because it is one row and one rule
 
   Scenario: The exam length reads correctly at one
     When the string "exam.rules.length" is rendered with a count of 1
@@ -712,20 +752,31 @@ Feature: The exam in French
   keep `passed` and `timed`; add a nullable `remainingSeconds` for a timed attempt in progress. Storing
   `subjectId` on the answer rather than looking it up makes an old result readable after the bank changes.
   `finishedAt: null` already means "in progress" and needs no new field. Routed to the architect;
-  `content/` is not this directory's to edit.
+  `content/` is not this directory's to edit. **Ten subjects now have banks**, so a result by subject is a
+  screen a player can actually fill and this question has stopped being theoretical.
 - **`OQ-EXAM-4` — do exam answers count against the daily limit on new questions?** These scenarios say no:
   `dailyNewLimit` governs how many unseen questions a *drill* introduces, and an exam that refuses to draw
   unseen questions cannot be representative. They do still update the review state, so a question missed in
   the exam comes back in Study — which is the whole point of taking one. *Recommendation:* keep both halves,
   and say so in the scheduler's own tests, because the measured defect that produced `firstReviewedAt` is
   exactly the kind that comes back when a second caller starts creating reviews.
-- **`OQ-EXAM-5` — how are subjects counted when a subject has no level?** `exam.subjectsReady` says "1 of 10"
-  and the ten come from *Discover Canada*'s ten chapters, which are also the ten levels. Nothing in
-  `content/` enumerates the ten subject ids; `unlockRules.order` enumerates ten **level** ids, and two of them
-  (`mikmaki`, `the-north`) are ids `TN-LEVELS` deliberately does not name. *Recommendation:* the ten subjects
-  are declared once, in `game.config.json`, beside the levels; until they are, "of 10" is a number this screen
-  cannot derive and `TN-EXAM-01`'s fourth scenario fails closed on it. See `OQ-PASSPORT-2`, which is the same
-  gap seen from the passport.
+- **`OQ-EXAM-5` — the ten this screen counts are subjects, and nothing in `content/` declares them.**
+  `exam.subjectsReady` reads "{{ready}} of {{total}}". **`ready` is derived and `total` is not**:
+  `ExamReadiness.subjectsReady` counts the subjects that have a bank at all, from the same load that draws the
+  questions, so the number on the screen and the number of cards cannot disagree — while the **total is handed
+  to the screen by the composition root**, and no file under `content/` states that this game has ten
+  subjects. **The part of this question that was about level ids is answered, and it was the wrong list to be
+  looking at**: it said `unlockRules.order` named `mikmaki` and `the-north`, ids `TN-LEVELS` declined to
+  write. `content/game.config.json` names ten level ids and all ten match this directory — `halifax`,
+  `peggys-cove`, `quebec-city`, `ottawa`, `toronto`, `winnipeg`, `prairie-rail`, `alberta-foothills`,
+  `vancouver`, `the-north` — and `OQ-MAP-1` and `OQ-PASSPORT-2` are closed on that fact. **The subject gap is
+  what remains, and a level list cannot close it**: a subject is a teaching *remit*, not a level and not a
+  chapter (ADR-0028), two subjects may share a chapter but never a proposition, and `economy` draws its
+  industry material from *Canada's Regions* while `regions` keeps the rest. *Recommendation, unchanged:*
+  declare the ten subjects once in `game.config.json`, each with its id and the level it belongs to, and let
+  `total` come from there rather than from a caller. Until it does, "of 10" is a number this screen is told
+  rather than one it can check. See `OQ-SUBJECTS-1` and `OQ-RESULT-2`, which is the same gap seen from the
+  result.
 - **`OQ-EXAM-6` — should a player be able to choose a subject to be examined on?** Not here: an exam whose
   subjects the player picks is a drill with a score. *Recommendation:* leave it out; if the wish appears, it
   belongs to `TN-STUDY` as a chosen-subject drill (`OQ-STUDY-2`), not to the exam.

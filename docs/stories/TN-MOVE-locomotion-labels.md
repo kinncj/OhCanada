@@ -22,15 +22,25 @@ electoral district and this game teaches that in
 `content/questions/elections/elec-03-another-name-for-a-riding.json`. The reversal, its evidence and its cost
 are below.
 
-## Why this is one shared table and not a row in eight level stories
+**Amended a third time, 2026-09-13 — the last two levels landed and this table did not change.**
+`content/levels/peggys-cove.json` and `content/levels/the-north.json` each declare **`walk` and nothing
+else**, so ten built levels are named by the seven rows below and **no row was added**. That is worth an
+amendment note precisely because nothing happened: the table this file argued should be keyed on modes rather
+than on levels absorbed two whole levels at zero cost, and the two modes those levels were designed around —
+`canoe` and `dogsled` — **still have no label, because no document declares them** (`TN-MOVE-02`). The rule
+that a mode is named when a document declares it, and not before, is now the only reason this table does not
+contain two labels for two vehicles nobody may draw.
+
+## Why this is one shared table and not a row in ten level stories
 
 A loading sentence belongs to a level. A mode label does not: it belongs to a **mode**, and a mode is shared.
-Today's eight built level documents declare seven modes between them, and **seven of the eight declare the
-same one** — every level except Toronto lists `walk`, most of them as a second mode:
+Today's ten built level documents declare seven modes between them, and **nine of the ten declare the same
+one** — every level except Toronto lists `walk`, some of them as a second mode:
 
 | Level document | `locomotion[].mode`, in the order the document declares them |
 |---|---|
 | `content/levels/halifax.json` | `walk` |
+| `content/levels/peggys-cove.json` | `walk` |
 | `content/levels/quebec-city.json` | `toboggan`, `walk` |
 | `content/levels/ottawa.json` | `skate`, `walk` |
 | `content/levels/toronto.json` | `bike` |
@@ -38,29 +48,34 @@ same one** — every level except Toronto lists `walk`, most of them as a second
 | `content/levels/prairie-rail.json` | `train`, `walk` |
 | `content/levels/alberta-foothills.json` | `horse`, `walk` |
 | `content/levels/vancouver.json` | `skateboard`, `walk` |
+| `content/levels/the-north.json` | `walk` |
 
-Written in each level's own story, `walk` would be written seven times, and `README.md`'s rule is that two
+Written in each level's own story, `walk` would be written nine times, and `README.md`'s rule is that two
 tables carrying the same words is how they stop being the same words. So the labels live here, and each level
 story names the key and points at this file.
 
 This is also what ADR-0010 already decided and what the port already assumes: a mode label is *engine
-vocabulary a level uses*, not *text a level owns* — "Skating is the name of a mode eight levels may offer" —
+vocabulary a level uses*, not *text a level owns* — "Skating is the name of a mode ten levels may offer" —
 which is why `LocomotionTuning.labelKey` is a **key** and not inline `localizedText`. ADR-0023 adds the
 other half: opening the set of modes to content means "adding a mode still costs a locale key", and this is
 the table that key is written in. `prairie-rail` was the first level to pay that cost and paid exactly one
-row; `alberta-foothills` and `vancouver` are the second and third, and each paid exactly one row too. **Three
-levels in a row paying one row each is the ADR's claim holding up under load**, and it is worth writing down
-because the claim was made before any level tested it.
+row; `alberta-foothills` and `vancouver` are the second and third, and each paid exactly one row too.
+**`peggys-cove` and `the-north` paid nothing**, which is the other half of the same claim: a level that
+declares a mode the game already has costs no row at all.
 
 ## The rule that decides which rows exist
 
 **A mode gets a label in this table when a level document declares it, and not before.**
 
 - `content/game.config.json#/locomotionModes` lists nine legal modes (ADR-0023). Two of them —
-  `canoe` and `dogsled` — are declared by no level document, so they have no row. Writing labels for them
-  would be writing copy for levels nobody has scoped, and both belong to levels `TN-LEVELS` deliberately
-  leaves unscoped under `docs/content-review.md` §1 and `OQ-REVIEW-10`. A blocked level with its HUD copy
-  already written reads as schedulable, and a plan that reads as schedulable gets scheduled.
+  `canoe` and `dogsled` — are declared by no level document, so they have no row. **The two levels those
+  modes were designed for have now shipped, and both declare `walk`** (`assets/style/peggys-cove-level.md`
+  §9, `assets/style/the-north-level.md` §9): `OQ-REVIEW-10` is unanswered, `docs/content-review.md` §5.4
+  names both as Indigenous technology used as generic Canadian symbols, and neither has any rig art — a
+  canoe needs a seated pose and a paddle cycle, and a dogsled needs **a team of animals, which is a second
+  rig this game does not have**. Writing labels for them would be writing copy for vehicles nobody may draw.
+  A blocked mode with its HUD copy already written reads as schedulable, and a plan that reads as
+  schedulable gets scheduled.
 - The row is added in the same change as the level document that needs it, and `TN-MOVE-02` is the gate that
   makes that mandatory rather than remembered.
 
@@ -89,7 +104,8 @@ train » are, and those are what `TN-MOVE-06` was written to keep out.
 **Why these words and not the near neighbours.**
 
 - **`walk` → "Walking" / « Marche ».** The plainest word in either language, and « Marche » is the noun that
-  matches « Patinage ». Not « À pied », which is a phrase where every other row is a noun.
+  matches « Patinage ». Not « À pied », which is a phrase where every other row is a noun. **It is now the
+  label nine levels draw**, which is the strongest argument in this directory for a shared table.
 - **`toboggan` → "Sledding" / « Glissade ».** "Tobogganing" is the word that matches the mode's id and it is
   a harder word than the thing it describes; the bar is CLB 4 / grade 6 and "sledding" clears it. In Québec
   French the activity is « la glissade » (« faire de la glissade »), which is why the French is not
@@ -130,10 +146,11 @@ train » are, and those are what `TN-MOVE-06` was written to keep out.
   phrase with no participle in it, so `docs/content-review.md` §8.6's bracketed forms cannot appear here
   (`TN-MOVE-06`).
 
-**The longest label in the game is now « Planche à roulettes », in French, on level 9.** It replaces
+**The longest label in the game is « Planche à roulettes », in French, on level 9.** It replaces
 « Patinage » in that role and it is nineteen characters against eight, so `TN-MOVE-05`'s measurement is a
-real one for the first time rather than a formality. `TN-VANCOUVER-03` measures it in the level that draws
-it, and this file measures it across all eight.
+real one rather than a formality. `TN-VANCOUVER-03` measures it in the level that draws it, and this file
+measures it across all ten. **The last two levels could not have unseated it**, because both draw
+« Marche ».
 
 ## Accessibility and bilingual coverage map
 
@@ -167,6 +184,7 @@ Feature: The mode strip is filled in
     Examples:
       | level                 | mode       | label         |
       | Halifax               | walk       | Walking       |
+      | Peggy's Cove          | walk       | Walking       |
       | Québec City           | toboggan   | Sledding      |
       | Ottawa                | skate      | Skating       |
       | Toronto               | bike       | Biking        |
@@ -174,6 +192,7 @@ Feature: The mode strip is filled in
       | The Prairies          | train      | Train         |
       | The Alberta foothills | horse      | Horse         |
       | Vancouver             | skateboard | Skateboarding |
+      | The North             | walk       | Walking       |
 
   Scenario: The two skating modes are never confusable
     Given the Ottawa level is playable
@@ -199,10 +218,11 @@ Feature: The mode strip is filled in
     Then both draw the same string for it
     And no level document carries its own wording for a mode label
 
-  Scenario: Seven levels declaring one mode draw one string
+  Scenario: Nine levels declaring one mode draw one string
     Given every built level except Toronto declares "walk"
     Then each draws "Walking" from the same row
     And no level has a walking label of its own
+    And the two levels added on 2026-09-13 added no row to this table
 ```
 
 ## TN-MOVE-02 — A mode with no label is a build failure, never an empty strip (failure path)
@@ -246,8 +266,9 @@ Feature: A missing mode label fails the build, not the player
   Scenario: The set of labels and the set of declared modes are compared, not assumed
     Then every mode declared by any document under "content/levels" has a row in both languages
     And a row in this table for a mode no level declares is reported, so the table cannot silently grow
-    And "canoe" and "dogsled" have no row while no document declares them
-    And "horse" and "skateboard" have a row because two documents now do
+    And "canoe" and "dogsled" have no row, because no document declares them
+    And that is still true with all ten levels built, including the two the modes were designed for
+    And "horse" and "skateboard" have a row because two documents do
 ```
 
 ## TN-MOVE-03 — The label is information, not a control
@@ -322,7 +343,7 @@ Feature: The word is the signal and it has to fit
     And the page does not scroll sideways
     And no HUD control is covered by it
 
-  Scenario: The longest label of the eight is measured by name
+  Scenario: The longest label of the ten is measured by name
     Given text scaling is 200 %
     And the viewport is 390 x 844
     And the language is French
@@ -331,6 +352,7 @@ Feature: The word is the signal and it has to fit
     And it does not cover "menu-button", "interact-prompt" or "hud-quest-tracker"
     And the strip may scroll inside "hud" to show it, as TN-HUD-08 allows
     And nothing is dropped from the strip to make room for it
+    And no other built level draws a longer label in either language
 ```
 
 ## TN-MOVE-06 — The labels in both languages
@@ -345,6 +367,7 @@ Feature: Every mode is named in English and in French
     Examples:
       | level                 | fr                  |
       | Halifax               | Marche              |
+      | Peggy's Cove          | Marche              |
       | Québec City           | Glissade            |
       | Ottawa                | Patinage            |
       | Toronto               | Vélo                |
@@ -352,6 +375,7 @@ Feature: Every mode is named in English and in French
       | The Prairies          | Train               |
       | The Alberta foothills | Cheval              |
       | Vancouver             | Planche à roulettes |
+      | The North             | Marche              |
 
   Scenario: No label needs gender agreement
     Then no value in this table contains "(e)", "·e" or a bracketed ending
@@ -396,8 +420,9 @@ Feature: Every mode is named in English and in French
   mode being added with a strip that keeps naming the first. **The Prairies makes this more than
   theoretical**: it declares `train` first and `walk` second, and `assets/style/prairie-rail-level.md` says
   why — the walk tuning is there so the level stays completable if the train proves too coarse for a point of
-  interest. Levels 8 and 9 declare a second mode for the same reason. If the player ever leaves the horse or
-  the board, the strip has to say so.
+  interest. Levels 8 and 9 declare a second mode for the same reason. **Levels 2 and 10 declare one mode
+  each**, so they are the two levels where this scenario can never fail, which is worth knowing when it is
+  next debugged.
 - **`OQ-MOVE-3` — where does this table live once `content/locales/*` exists?** ADR-0010 puts mode labels in
   a locale bundle, and `LocomotionTuning.labelKey` already names the key a level uses. *Recommendation:* the
   rows move to the bundle unchanged, keeping the exact key spelling above, and this file stays their story —
@@ -422,3 +447,12 @@ Feature: Every mode is named in English and in French
   the first French reviewer with `OQ-MOVE-1` and `OQ-MOVE-4`, as one question about four words rather than
   four questions. Whichever way each goes, one value changes in one row and no scenario above changes shape —
   except `TN-MOVE-05`'s named measurement, which would move to whichever label is then the longest.
+- **`OQ-MOVE-6` — the table is finished for this game and two of its nine legal modes will never be drawn
+  without an answer nobody has given.** Ten levels are built, seven modes are named, and `canoe` and
+  `dogsled` are declared by nothing. `OQ-REVIEW-10` is the question, and the two levels that would have
+  needed it shipped on `walk` instead — which means **this table will never be the thing that forces the
+  question**, and nor will the map. *Recommendation:* remove the two unused modes from
+  `content/game.config.json#/locomotionModes` **or** record beside them that they are held pending
+  `OQ-REVIEW-10`, so a future author reading the config does not find two legal modes and assume they are
+  available. A legal value nothing uses and nobody may use is exactly the shape of a trap. Routed to the
+  architect and to `docs/content-review.md`'s owner; `content/` is not this directory's to edit.

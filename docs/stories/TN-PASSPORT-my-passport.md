@@ -7,6 +7,15 @@ journey is left, and never be told that a level nobody has built yet is somethin
 requires the Ottawa stamp to appear in `passport`, `TN-SAVE-01` requires it to still be there after a reload,
 and `progress.schema.json` records `stampEarnedAt` per level. This file is the screen those three describe.
 
+**Amended 2026-09-13 — the game now contains all ten levels, and two things in this file were written for a
+game that did not.** `content/levels/` holds ten documents and `content/game.config.json` lists the same ten
+in `levels`, in `unlockRules.order` and in a `journey` with no nulls. So: **no slot on this screen is "Not
+made yet" in the shipped build**, which is a state this file still describes and must keep describing,
+because it is about what a *build* contains; **the key table below no longer names `level.10.title`**, because
+levels 2 and 10 have ids and their copy rows are keyed on them (`TN-LEVELS`); and **"More are coming." is now
+a false sentence on a complete map**, which is `OQ-PASSPORT-7` and is the first thing in this directory that
+the map filling up broke rather than fixed.
+
 Read `README.md` in this directory first. `TN-MAP-level-select.md` owns the rule that decides what state a
 level is in and this file reuses it rather than inventing a second vocabulary;
 `TN-QUEST-parliament-hill.md` owns earning a stamp; `TN-RESULT-exam-results.md` owns the exam result this
@@ -37,6 +46,13 @@ The rule, in order:
 which is true, and the map is where locks are explained. A fourth word here would be a fourth thing to
 translate and a fourth thing to get wrong.
 
+**The third state is unreachable in today's build and stays in this file.** Ten documents exist, so no slot
+draws "Not made yet" on the shipped game. The state is about what a build contains — a partial checkout, a
+level pulled for a cultural-accuracy report (`docs/content-review.md` §7, which says the depiction is
+disabled *first*), a branch mid-migration — and every one of those is a state a player could meet.
+`TN-PASSPORT-04` keeps its scenarios and says its own premise out loud rather than relying on the shipped
+config to supply it.
+
 ## The word for a stamp in French — settled
 
 `OQ-MAP-5` has been open since the map shipped: `TN-QUEST` wrote « le timbre d'Ottawa », `TN-MAP` followed it
@@ -60,7 +76,8 @@ grade 6 and it is not the word a newcomer will have met at a border. `OQ-PASSPOR
 reviewer may still prefer it.
 
 **This is a change to shipped copy.** `app/ui/copy.ts` carries the French strings above and is not this
-directory's to edit; the change is reported to the UI agent rather than made here.
+directory's to edit; the change is reported to the UI agent rather than made here. **Ten levels now depend on
+that word**, because every one of them owns a `stamp.<id>.earned` row that uses it (`TN-DONE`).
 
 ## Accessibility and bilingual coverage map
 
@@ -93,16 +110,27 @@ directory's to edit; the change is reported to the UI agent rather than made her
 "See my passport" / « Voir mon passeport » — and the key now lives in the file that owns the screen. `TN-HUD`
 and `TN-QUEST` name the key and point here, as they already do for nine other keys.
 
+**`passport.intro` says "a level's task" and six of the ten levels have none.** Reaching the end of a level
+earns its stamp too (`TN-DONE`), so the sentence describes one of the two routes and the more common route
+is the other one. That is `OQ-PASSPORT-8`, and it is a wording question rather than a behaviour one — no
+scenario in this file depends on the answer.
+
 Keys this screen draws and does not own:
 
 | Key | Owned by |
 |---|---|
 | `map.stamps`, `map.levelsReady`, `map.moreComing`, `map.state.notBuilt`, `map.notBuilt.help`, `map.number` | `TN-MAP-level-select.md` |
 | `level.ottawa.title` | `TN-LEVEL-ottawa.md` |
-| `level.<id>.title`, `level.10.title` | `TN-LEVELS-2-to-10-spine.md` |
+| `level.<id>.title`, for the other nine | `TN-LEVELS-2-to-10-spine.md` |
 | `exam.result.passed.title`, `exam.result.notYet.title`, `exam.result.score`, `exam.result.noTimer`, `exam.result.withTimer` | `TN-RESULT-exam-results.md` |
 | `exam.open` | `TN-EXAM-starting-and-answering.md` |
 | `common.back`, `common.close` | `TN-FLOW-first-run-and-return.md`, `TN-SET-settings.md` |
+
+**That second row used to read `level.<id>.title`, `level.10.title`.** While level 10 had no id, its title was
+keyed on its position in the journey, and this table named the exception. Both of the levels that needed that
+exception shipped on 2026-09-13, so there is one spelling for all ten and **no key on this screen contains a
+level's number** — `TN-WAIT-03` and `TN-DONE-05` now refuse a numbered key outright. `map.number` is not a
+counter-example: it is the string "Level {{n}}", which *displays* a position and is not keyed on one.
 
 **`map.stamps` is the count on this screen too**, and that is deliberate: "Stamps: 3 of 10" is the same fact
 on the map and in the passport, and a second key would let the two disagree. Its shape — noun, number,
@@ -121,6 +149,7 @@ Feature: The passport screen
 
   Background:
     Given I have a saved game
+    And this build contains ten level documents
 
   Scenario: It is reachable from the level's menu
     Given the Ottawa level is playable
@@ -145,8 +174,14 @@ Feature: The passport screen
     Then it shows the heading "My passport"
     And it shows "You earn a stamp when you finish a level's task."
     And it shows "Stamps: 0 of 10"
-    And it shows "Levels ready: 1 of 10"
-    And it shows "More are coming."
+    And it shows "Levels ready: 10 of 10"
+
+  Scenario: A complete map does not promise more
+    Given every level in the journey has a document
+    Then the screen does not show "More are coming."
+    And it does not show any sentence promising a level that is not in the journey
+    And the same is true of the level select, which draws the same key
+    And a build with fewer than ten documents does show it, as TN-PASSPORT-04 requires
 
   Scenario: Ten slots, in the order the journey takes
     Then ten stamp slots are shown
@@ -203,7 +238,13 @@ Feature: An earned stamp
 
   Scenario: A stamp is named after a place, not a building
     Then no stamp's label is the name of a landmark, a hotel or a business
+    And no slot reads "Peggy's Point Lighthouse", "Canada Place" or "Yukon River sternwheeler"
     And the rule is the one in TN-NAMES-01
+
+  Scenario: Every slot's label is the level's own title row
+    Then each of the ten slots draws "level.<id>.title" for its level
+    And none of them draws a key containing that level's number
+    And a slot whose title row is missing draws no place name and no placeholder
 
   Scenario: The stamp survives a reload
     When I close the tab and open the game again and open the passport
@@ -214,6 +255,14 @@ Feature: An earned stamp
     Given I engage the officer again after finishing the quest
     Then the passport still contains exactly one Ottawa stamp
     And the count is unchanged
+
+  Scenario: The tenth stamp is not a different kind of event
+    Given I have earned nine stamps
+    When I earn the tenth
+    Then the screen shows "Stamps: 10 of 10"
+    And that slot reads "Earned" like the other nine
+    And no message congratulates me on finishing the game
+    And nothing on the screen says there is nothing left to do
 ```
 
 ## TN-PASSPORT-03 — A stamp I have not earned yet
@@ -253,10 +302,15 @@ Feature: A level that exists and has not been finished
 
 ## TN-PASSPORT-04 — A level that is not made yet
 
+**The shipped build has no slot in this state**, because all ten level documents exist. These scenarios name
+their own premise rather than borrowing it from the config, and they stay, because a build with a level
+missing is a state a player can meet — a partial checkout, a branch mid-migration, or a level pulled after a
+cultural-accuracy report, which `docs/content-review.md` §7 requires to happen *before* the discussion.
+
 ```gherkin
 Feature: The same precedence the map uses
   Background:
-    Given no level document exists for level 7
+    Given this build contains no level document for level 7
     And the element "passport" is visible
 
   Scenario: It says the game is still being made, in the map's words
@@ -283,10 +337,11 @@ Feature: The same precedence the map uses
     And the stamp count still counts out of 10
 
   Scenario: A slot with no place name draws no placeholder
-    Given a level has no place name yet, as TN-LEVELS leaves levels 2 and 10
+    Given a level in this build has no title row in the active language
     Then no place name is shown on that slot
     And no placeholder text is drawn in its place
     And the slot still shows its level number
+    And levels 2 and 10 were this scenario's worked example until they shipped with ids and titles
 
   Scenario: The distinction is derived, not authored
     Then no level document, locale string or config field declares a slot as "not made yet"
@@ -324,6 +379,11 @@ Feature: The one place the map's precedence does not apply
     And the extra stamp is not drawn as an eleventh slot
     And the count never exceeds the total
     And the content check has already reported the id, as TN-MAP-06 describes
+
+  Scenario: A save written before a level was renamed
+    Given the saved document records a stamp under an id no level document uses
+    Then it is treated as the scenario above, not as a defect the player is told about
+    And no screen asks the player to do anything about it
 
   Scenario: The passport opens when there is nothing to show
     Given the save has no levels recorded at all
@@ -462,6 +522,11 @@ Feature: Announcing the passport
     And a slot that is not earned contains "Not earned yet"
     And no slot's state has to be inferred from styling
 
+  Scenario: A place name with an apostrophe or an accent is read as a place
+    Then the second slot's name contains "Peggy's Cove" and is not spelled out
+    And the third slot's name contains "Québec City", or "Ville de Québec" in French
+    And the tenth slot's name contains "The North", or "Le Nord" in French
+
   Scenario: A stamp picture is not read as a picture
     Then each stamp image is either "aria-hidden" with a text label beside it,
       or has alternative text that is the level's place name
@@ -506,6 +571,14 @@ Feature: The passport honours the accessibility settings
     And all ten slots are reachable by scrolling down
     And every control is still at least 44 CSS px wide and tall
 
+  Scenario: The longest place name on a slot fits
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    And the language is French
+    Then the whole of "Les contreforts de l'Alberta" is visible on its slot
+    And the whole of "Ville de Québec" is visible on its slot
+    And neither is truncated with an ellipsis
+
   Scenario: The longest French sentence still fits
     Given text scaling is 200 %
     And the language is French
@@ -530,8 +603,7 @@ Feature: The passport in French
     Then the heading reads "Mon passeport"
     And it shows "Vous obtenez un tampon lorsque vous terminez la mission d'un niveau."
     And it shows "Tampons : 0 sur 10"
-    And it shows "Niveaux prêts : 1 sur 10"
-    And it shows "D'autres arrivent."
+    And it shows "Niveaux prêts : 10 sur 10"
     And there is a space before each colon
     And no English word appears in "passport"
 
@@ -552,12 +624,15 @@ Feature: The passport in French
     And no slot shows "Earned", "Not earned yet" or "Not made yet"
 
   Scenario: The not-made-yet slot uses the map's French, word for word
+    Given this build contains no level document for level 7
     Then it shows "Pas encore créé"
     And it shows "Ce niveau est encore en préparation."
 
   Scenario: Place names are what each language calls the place
     Then level 4 reads "Ottawa" in both languages
     And level 3 reads "Ville de Québec" in French
+    And level 2 reads "Peggy's Cove" in French, with the same apostrophe as the English
+    And level 10 reads "Le Nord" in French, with its own capitals, because a slot label is a title
     And every place name shown has a value in both "en" and "fr"
 
   Scenario: The exam line is French
@@ -590,15 +665,19 @@ Feature: The passport in French
   is one nobody asked. Revisit if the passport ever becomes something a player wants to look back through
   rather than a progress screen — and if it does, the date is formatted by `Intl.DateTimeFormat` for the
   active locale and never assembled from parts.
-- **`OQ-PASSPORT-2` — the passport counts to ten and the data does not agree on which ten.**
-  `content/game.config.json` names ten ids in `unlockRules.order`, including `mikmaki`, `alberta`, `rockies`
-  and `the-north`; `TN-LEVELS-2-to-10-spine.md` names `alberta-foothills` and `vancouver`, and deliberately
-  gives **no id at all** to levels 2 and 10, because naming a nation's territory as the setting of a level
-  nobody may build yet states a plan this project has not earned the right to state. So four of the ten slots
-  cannot be matched to a story, and two of them carry ids the story owner declined to write.
-  *Recommendation:* reconcile the ids in `game.config.json` with `TN-LEVELS` before the passport is built, and
-  keep levels 2 and 10 as positions in the order rather than as named places. Routed to the architect and the
-  plan owner; `content/` is not this directory's to edit. Same gap as `OQ-EXAM-5` and `OQ-RESULT-2`.
+- ~~**`OQ-PASSPORT-2` — the passport counts to ten and the data does not agree on which ten.**~~
+  **Answered 2026-09-13, by the reconciliation this question asked for.** When it was written,
+  `content/game.config.json` named ten ids including `mikmaki`, `alberta`, `rockies` and `the-north`, none of
+  which matched `TN-LEVELS`, and two of them were ids the story owner had deliberately declined to write.
+  The config now lists **ten ids that all match**: `halifax`, `peggys-cove`, `quebec-city`, `ottawa`,
+  `toronto`, `winnipeg`, `prairie-rail`, `alberta-foothills`, `vancouver`, `the-north` — in `levels`, in
+  `unlockRules.order` and in a `journey` with no nulls — and `content/levels/` holds a document for each. So
+  every slot on this screen matches a story and a document. **The recommendation was half taken and the other
+  half was overtaken**: it asked that levels 2 and 10 stay positions rather than named places, and both are
+  named places now, for a reason this question could not have anticipated — `TN-LEVELS`' blockers section
+  separates a level's *subject* from its *place*, and a village and a river bank were never what §1 blocked.
+  `OQ-EXAM-5` and `OQ-RESULT-2` describe the same gap from two other screens and both can be closed the same
+  way.
 - **`OQ-PASSPORT-3` — is the passport reachable from the title screen?** It is not, today: the routes are the
   level's menu, the level select and the quest completion card, so a returning player has to open the map to
   see their stamps. `OQ-TITLE-2` says the title screen shows no progress, and this file agrees with it.
@@ -608,11 +687,33 @@ Feature: The passport in French
   stamp shape for a level that does not exist, because a dotted outline reads as a slot the player could fill.
   *Recommendation:* the same treatment `TN-MAP-04` gives an unbuilt card — the state word, the sentence, and
   no picture at all. If the art wants a visual placeholder, it must be distinguishable from an unearned stamp
-  by shape and not by opacity.
+  by shape and not by opacity. **No slot is in that state in the shipped build**, which makes this cheaper to
+  answer and easier to get wrong unnoticed.
 - **`OQ-PASSPORT-5` — « tampon » or « cachet »?** Settled above as « tampon », and « cachet » is the
   considered alternative: it is what an official seal is called, it is a register above grade 6, and it is not
   the word a newcomer meets at a border. *Recommendation:* keep « tampon » and put both in front of the first
-  French reviewer. What must not come back is « timbre », which is a postage stamp in every register.
+  French reviewer. What must not come back is « timbre », which is a postage stamp in every register. **Ten
+  stamp sentences now use the word**, so a reversal is ten rows rather than one.
 - **`OQ-PASSPORT-6` — does the passport belong in the exam's menu too?** A player in the middle of an exam
   cannot reach it. *Recommendation:* no. The exam's menu carries Settings, the timer control and "Leave the
   exam" (`OQ-TIMER-4`), and a progress screen in the middle of a measurement is a distraction with no purpose.
+- **`OQ-PASSPORT-7` — "More are coming." is now a false sentence, on two screens, and neither of them owns
+  it.** `map.moreComing` — "More are coming." / « D'autres arrivent. » — is drawn beside `map.levelsReady`
+  on the level select and on this screen. It was true for every build this project has had until
+  2026-09-13, and it is false on a build whose journey is complete: **ten of ten levels are ready and no
+  eleventh is planned**. A screen promising content that is not coming is the defect `README.md` calls "a
+  screen never describes a state it is not in", arriving from the one direction nobody watches — a sentence
+  that stopped being true because the work finished. `TN-PASSPORT-01`'s fifth scenario asserts the fix from
+  this screen's side. *Recommendation:* `TN-MAP` owns the key and should own the rule: **draw `map.moreComing`
+  only while `ready` is less than `total`**, on both screens, with a scenario in each. The string stays,
+  because a partial build still needs it. Routed to `TN-MAP`'s next revision; nothing here changes the
+  wording.
+- **`OQ-PASSPORT-8` — `passport.intro` describes the route six of the ten levels do not have.** "You earn a
+  stamp when you finish a level's task." / « Vous obtenez un tampon lorsque vous terminez la mission d'un
+  niveau. » Four levels have a quest; **six have none**, and on those the stamp is earned by reaching the end
+  (`TN-DONE`). The sentence is not false — finishing a task does earn a stamp — but it names the rarer of the
+  two routes as if it were the only one, and a player on level 2 or level 10 who reads it may go looking for
+  a task that is not there. *Recommendation:* reword to cover both without naming a mechanic — "You earn a
+  stamp when you finish a level." / « Vous obtenez un tampon lorsque vous terminez un niveau. » — which is
+  shorter, true on both routes, and grade-6 in both languages. Held as a question rather than applied because
+  `passport.intro` is shipped copy and rewording it is a French reviewer's call as much as this file's.

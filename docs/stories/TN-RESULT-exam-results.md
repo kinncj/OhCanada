@@ -30,6 +30,11 @@ The result names a subject with **the same string the map draws as that level's 
 subject; writing a second set of ten subject names is how two screens end up calling the same chapter two
 things. `OQ-RESULT-2` records the one thing that is missing to make this work.
 
+**Amended 2026-09-13.** Every level has an id and every subject has a bank, so the half of `OQ-RESULT-2` that
+was about levels with no id is gone and the half that matters is sharper: **a level knows its subject and
+nothing goes the other way.** `map.moreComing` on this screen now follows `TN-MAP`'s rule — drawn only while
+`ready` is less than `total`, tested against the count of subjects that sits beside it.
+
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
@@ -73,7 +78,8 @@ Keys this screen draws and does not own:
 | `passport.open` | `TN-PASSPORT-my-passport.md` |
 | `study.open` | `TN-STUDY-study-mode.md` |
 | `level.<id>.subtitle` | `TN-LEVELS-2-to-10-spine.md`, `TN-LEVEL-ottawa.md` |
-| `map.moreComing` | `TN-MAP-level-select.md` |
+| `exam.subjectsReady` | `TN-EXAM-starting-and-answering.md` |
+| `map.moreComing` | `TN-MAP-level-select.md` — **and so is the condition it is drawn on** |
 
 **Every count on this screen puts its noun in front of the number and a preposition after it**, which is
 `TN-COPY`'s rule 1 and the reason `exam.result.score`, `exam.result.passMark` and `exam.result.subjectRow`
@@ -196,6 +202,13 @@ Feature: How I did, subject by subject
     Then that row reads "Federal elections: 3 out of 5"
     And the subject's name is the same string the level select draws as that level's subject line
 
+  Scenario: Ten rows is the shape of a complete game
+    Given every subject has a bank
+    And the exam drew 2 questions from each of the ten
+    Then ten rows are shown
+    And each reads "<subject>: <n> out of 2"
+    And their order is the journey's order, so the rows read as the map reads
+
   Scenario: The rows add up to the exam
     Then the totals across the rows add up to 20
     And the right answers across the rows add up to the number on the score line
@@ -211,6 +224,13 @@ Feature: How I did, subject by subject
     Then it shows "Subjects ready: 1 of 10"
     And it shows "More are coming."
     And nothing on the screen suggests the missing subjects are the player's doing
+
+  Scenario: Every subject ready promises nothing more
+    Given every subject has a bank
+    Then it shows "Subjects ready: 10 of 10"
+    And it does not show "More are coming."
+    And nothing is drawn in that sentence's place
+    And this is TN-MAP's rule, tested against the count that sits beside it
 
   Scenario: A row is not a colour
     Then each row's numbers are text
@@ -358,6 +378,12 @@ Feature: The result survives, or says it did not
     And no placeholder such as "TBD", "???" or an empty box is drawn
     And the row's numbers are still shown
 
+  Scenario: A past attempt names a level id this build has renamed
+    Given a saved attempt's subject resolves to a level id no document uses
+    Then the row is drawn as the scenario above describes
+    And no screen asks the player to do anything about it
+    And this is why OQ-EXAM-3 stores the subject on the answer rather than looking it up
+
   Scenario: The result can always be left
     Given the element "exam-result" is visible
     Then a control returns me to the title screen
@@ -477,6 +503,12 @@ Feature: The result honours the accessibility settings
     And every control is fully visible and at least 44 CSS px tall
     And the page does not scroll sideways
 
+  Scenario: Ten rows fit as well as four
+    Given text scaling is 200 %
+    And the exam drew from all ten subjects
+    Then all ten rows are readable by scrolling down
+    And the longest French subject line, "Les contreforts de l'Alberta", is not truncated in its row
+
   Scenario: The French lines fit too
     Given text scaling is 200 %
     And the language is French
@@ -521,6 +553,15 @@ Feature: The exam result in French
     Then the heading reads "Vos résultats par sujet"
     And a row reads "Les élections fédérales : 3 sur 5"
     And each subject's name is the French subject line the level select draws
+    And a row for the tenth subject reads "Les régions du Canada : 1 sur 2"
+
+  Scenario: The subject count and its promise are French, on the same condition as the English
+    Given verified questions exist for one subject only
+    Then it shows "Sujets prêts : 1 sur 10"
+    And it shows "D'autres arrivent."
+    Given every subject has a bank
+    Then it shows "Sujets prêts : 10 sur 10"
+    And it does not show "D'autres arrivent."
 
   Scenario: The unanswered line agrees with its number in French
     Given I did not answer exactly 1 question
@@ -562,17 +603,28 @@ Feature: The exam result in French
   `OQ-EXAM-3` carries the recommendation — an `answers` array whose items name the question, its subject, the
   chosen option or null, and whether it was correct. This file is the reason it needs the subject on the
   answer rather than by lookup: a result read a year later must still be readable when the bank has moved on
-  (`TN-RESULT-07`). Routed to the architect; `content/` is not this directory's to edit.
+  (`TN-RESULT-07`). Routed to the architect; `content/` is not this directory's to edit. **Ten subjects now
+  have banks**, so this is the screen standing between a finished exam and the only breakdown this game
+  offers, and it is still unbuildable.
 - **`OQ-RESULT-2` — nothing maps a subject id to the level whose subject line names it.** The result draws
-  `level.<id>.subtitle` for a `subjectId` such as `government`, and the join between the two lives nowhere:
-  level documents carry a subject, but no index goes the other way, and two of the ten levels have no id at
-  all (`TN-LEVELS`). *Recommendation:* the ten subjects are declared once in `game.config.json`, each with
-  its id and the level it belongs to, and the copy key follows from the level. Same gap as `OQ-EXAM-5` and
-  `OQ-PASSPORT-2`, seen from a third screen — which is usually the sign that the missing thing is one thing.
+  `level.<id>.subtitle` for a `subjectId` such as `government`, and **the join between the two lives
+  nowhere**: each level document carries a `subject`, and no index goes the other way. **The half of this
+  question that was about missing level ids is answered and is removed rather than left standing**: it said
+  two of the ten levels had no id at all, which was true while levels 2 and 10 were unscoped and stopped
+  being true when `peggys-cove` and `the-north` shipped. All ten levels have ids, all ten are in
+  `content/game.config.json`, and all ten subjects have a directory under `content/questions/` — **and none
+  of that builds the index**, because scanning ten level documents for a `subject` field is deriving a map
+  from the wrong end and breaks the moment a subject has no level. *Recommendation, unchanged:* the ten
+  subjects are declared once in `game.config.json`, each with its id and the level it belongs to, and the
+  copy key follows from the level. ADR-0028 is why the join cannot be assumed to be one-to-one forever: a
+  subject is a teaching remit, two subjects may share a chapter, and `economy` already draws from *Canada's
+  Regions*. Same gap as `OQ-EXAM-5` and `OQ-SUBJECTS-1`, seen from a third screen — which is usually the sign
+  that the missing thing is one thing.
 - **`OQ-RESULT-3` — should a subject row say what to do about it?** Today one control practises everything
   missed. A per-row "Practise this subject" would be better advice and needs subject-chosen drills, which
   `OQ-STUDY-2` has not decided. *Recommendation:* one control now, per-row controls when Study can take a
-  subject. Do not put a control on a row that opens the same drill as every other row.
+  subject. Do not put a control on a row that opens the same drill as every other row. **Ten rows makes this
+  worse rather than better**: one control under ten rows is the least specific advice the screen could give.
 - **`OQ-RESULT-4` — does the player ever see how many exams they have taken?** No, deliberately: a count of
   attempts is a shaming number for the player who needed six, and an encouraging one for nobody.
   *Recommendation:* keep the most recent result only (`TN-PASSPORT-06`), and never draw a history, an average

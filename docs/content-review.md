@@ -711,17 +711,38 @@ answer nobody has given.
   symbols that belong to specific peoples, and three of them are planned locomotion modes (slices 4, 10).
   *Recommendation:* treat each as a Tier 3 subject in its own right and answer them together with
   `OQ-REVIEW-2`, before the slices that need them are scheduled — not while they are being built.
+  **Amended 2026-09-13:** the two levels that were to carry the canoe and the dogsled have shipped, and both
+  declare `walk` instead — `content/levels/peggys-cove.json` and `content/levels/the-north.json` — so this
+  question now blocks nothing that is being built and is at its most forgettable. `content/game.config.json`
+  still lists both modes as legal and no document declares either, which is a legal value nobody may use;
+  `docs/stories/TN-MOVE-locomotion-labels.md`'s `OQ-MOVE-6` asks for them to be removed from the config or
+  marked as held pending this question.
 - **`OQ-REVIEW-11` — who owns this document?** It is currently the PO's, written by an agent, governing art
   and content authored by other agents. *Recommendation:* the PO holds the text; changes to §1, §5.2 and §10
   need the project owner, because they are the parts an agent has no standing to relax.
 
 ---
 
-## 13. Obligation
+## 13. Obligations
 
 Written in the ADR-0009 marker format, checked by `scripts/check-obligations.mjs` on every `make lint`, so
 that the question in `OQ-REVIEW-2` cannot be quietly outlived. The blast radius is the deploy, deliberately:
 this is the one commitment in this project whose lapse should be loud.
+
+**Two of the three below were written somewhere the gate cannot read, and that is why they are here.**
+`scripts/check-obligations.mjs` scans `*.md` under `docs/` and nothing else, so the markers the art agent
+wrote in `assets/style/peggys-cove-level.md` §0 and `assets/style/the-north-level.md` §0 — for the two levels
+shipped on 2026-09-13, each naming a nation whose own words those levels quote — had **no clock on them at
+all**. The art agent reported that plainly rather than assuming the markers counted, which is why it cost one
+commit instead of a session. They are copied below so that a date exists today, with the full scope kept
+rather than summarised, because a summarised obligation is one somebody discharges without doing the work.
+
+**This is a stop-gap and it should be replaced.** Two owners can write an obligation and only one directory
+is read, so the next art sheet's marker will be decoration again — written, most likely, by somebody who has
+just learned from this very pattern that writing it is enough. *Recommendation:* teach the gate to scan
+`assets/style/` as well, keep these copies, and delete this paragraph when it lands. Routed to the engine
+agent; `scripts/` is not this document's to edit. `OQ-PEGGYS-4`, `OQ-NORTH-5` and `OQ-SPINE-9` are the same
+request from the three story files that found it.
 
 - **OBLIGATION due=2026-12-08 owner=po** — put `OQ-REVIEW-2` to the project owner and record the answer in
   §1 of this document: either a named Tier 3 reviewer and how they are engaged and paid, or a written
@@ -729,3 +750,39 @@ this is the one commitment in this project whose lapse should be loud.
   that date, re-date it with a note saying what was tried — re-dating with a reason is legitimate
   (ADR-0009); letting the date pass in silence is what this marker exists to prevent. Until it is answered,
   §1's shipping rule stands and nothing in its blocked list may be authored.
+
+- **OBLIGATION due=2026-12-08 owner=po** — put the Peggy's Cove level in front of a Tier 3 reviewer from the
+  **Mi'kmaq**, and record the answer. Scope: `content/levels/peggys-cove.json`, the two `peggys-cove-*`
+  subjects in `assets/refs/references.json`, and `docs/stories/TN-LEVEL-peggys-cove.md`. The date is
+  deliberately `OQ-REVIEW-2`'s. Copied verbatim in substance from `assets/style/peggys-cove-level.md` §0,
+  where the gate could not read it. **What a reviewer still needs to check, and what no gate and no agent in
+  this repository can:** (1) whether the territorial statement in the level document is an honest use of
+  Kwilmu'kw Maw-klusuaqn's words rather than an extraction of them; (2) whether quoting the Assembly of Nova
+  Scotia Mi'kmaw Chiefs in a **game** is wanted at all, and whether an About-this-place panel is the form
+  they would choose; (3) whether naming this place "Peggy's Cove" and not naming the Mi'kmaw name for this
+  coast is a silence that should be filled or one that should be left; (4) whether a level set here that
+  depicts **nobody** reads as respect or as erasure — §10.3 already says that naming the territory and
+  depicting nobody from it "is a half-step … It is not the thing that would be right", and this level is
+  exactly that half-step; (5) whether anything in the art — the rock, the stores, the water — carries a
+  meaning an outsider cannot see. **Nothing in this repository may record an answer to any of these.** Per
+  §1, an agent may write `communityReview.status = "not-sought"` and nothing else, and none is written. Per
+  `docs/stories/TN-PEGGYS-06`, no string that level draws may imply that this review has happened.
+
+- **OBLIGATION due=2026-12-08 owner=po** — put the North level in front of a Tier 3 reviewer from **Kwanlin
+  Dün First Nation**, and record the answer. Scope: `content/levels/the-north.json`, the two `the-north`
+  subjects in `assets/refs/references.json`, and `docs/stories/TN-LEVEL-the-north.md`. The date is
+  deliberately `OQ-REVIEW-2`'s. Copied in substance from `assets/style/the-north-level.md` §0, where the gate
+  could not read it. **What a reviewer still needs to check, and what no gate and no agent here can:**
+  (1) whether quoting Kwanlin Dün First Nation's own acknowledgement of the **Tagish Kwan** inside a game's
+  About-this-place panel is an honest use of it or an extraction of it; (2) whether **Chu Níikwän** and
+  **Kwanlin** — words taken from the nation's own page — may be printed by this project at all, and whether
+  their spelling and diacritics are right; (3) whether a level titled *The North* that never leaves the
+  Yukon, and whose picture is a settler freight boat on a gravel bar, misrepresents the region it is named
+  for; (4) whether naming one nation and being silent about the **Ta'an Kwäch'än Council**, whose government
+  is in the same city, is the correct reading of a rule that says name only what a source names —
+  `content/sources/kdfn-about-us.json` sets out why the silence is there and what would close it;
+  (5) whether a level about **Canada's regions** that depicts nobody in a region where most people are
+  Indigenous reads as respect or as erasure, which §10.3 already calls a half-step. **Nothing in this
+  repository may record an answer to any of these.** Per §1 an agent may write
+  `communityReview.status = "not-sought"` and nothing else, and none is written. Per
+  `docs/stories/TN-NORTH-06`, no string that level draws may imply that this review has happened.

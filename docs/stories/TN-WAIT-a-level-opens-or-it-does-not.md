@@ -24,6 +24,17 @@ are both wrong for it, and the two rows are written out with a lower-case articl
 easiest row this table has, and the two shipped together on purpose — an easy case beside a hard one is how a
 template's supporters and its opponents look at the same evidence.
 
+**Amended a third time, 2026-09-13 — the last two levels shipped and the table is complete at ten.**
+`content/levels/peggys-cove.json` and `content/levels/the-north.json` are built, drawn and listed, and their
+rows are in `TN-LEVEL-peggys-cove.md` and `TN-LEVEL-the-north.md`. **Level 10 is the row this table has been
+predicting since level 7**, and it is sharper than level 8's: the English needs a lower-case article, the
+French needs a lower-case article **and a capital noun** — « charger le Nord », never « Le Nord » and never
+« le nord », because « le nord » in lower case is a compass direction rather than a region. **A template
+corrected three times would still have been wrong on the tenth level, in a fourth new way.** Level 2 is the
+opposite case and is written out all the same: "Peggy's Cove" takes no article in either language, and the
+only thing to get wrong is the apostrophe, which the Canadian Geographical Names Database drops and this game
+keeps because *Discover Canada* keeps it.
+
 ## The defect this file exists to make impossible
 
 A player opening the game today lands on Halifax and reads *"Getting the canal ready."* and, if the load
@@ -49,12 +60,19 @@ is a key two levels will eventually disagree about, which is exactly what happen
 `level.ottawa.loading` and `level.ottawa.error.title` and are written in `TN-LEVEL-ottawa.md`; the wording is
 unchanged.
 
+**And a key numbered by map position does not exist either.** `TN-LEVELS` carried `level.2.subtitle` and
+`level.10.title` while those two levels had no id; both levels shipped on 2026-09-13 and both keys were
+re-spelled on the id. `TN-WAIT-03`'s "an unqualified key is refused" scenario covers the numbered shape too:
+a key that names a level by its place in the journey re-points at a different level the day somebody re-orders
+`journey`, which is the unqualified-key defect with a digit in it.
+
 **The error title is written out per level and never assembled from a template.** "We could not load
-{{level}}." looks like it would save seven rows. It does not survive French: the place name takes no article
-in « Nous n'avons pas pu charger Halifax. » and takes one in « Nous n'avons pas pu charger la Ville de
-Québec. » and a plural one in « Nous n'avons pas pu charger les Prairies. » This is the same reason
-`title.lastPlayed` is a label rather than a sentence (`TN-TITLE-title-screen.md`): **French does not use one
-preposition, or one article, for all ten places.**
+{{level}}." looks like it would save nine rows. It does not survive French: the place name takes no article
+in « Nous n'avons pas pu charger Halifax. », takes one in « Nous n'avons pas pu charger la Ville de
+Québec. », a plural one in « Nous n'avons pas pu charger les Prairies. » and a masculine singular one in
+« Nous n'avons pas pu charger le Nord. » This is the same reason `title.lastPlayed` is a label rather than a
+sentence (`TN-TITLE-title-screen.md`): **French does not use one preposition, or one article, for all ten
+places.**
 
 **And since the Prairies shipped, the English does not either.** That level's title is "The Prairies", with a
 capital T, because that is how the map names it; dropped into the template it produces "We could not load
@@ -68,10 +86,16 @@ foothills." and « Nous n'avons pas pu charger Les contreforts de l'Alberta. » 
 languages, from one level document. Both rows are written out with a lower-case article
 (`TN-ALBERTA-02`).
 
+**And the North breaks them differently from each other, which is the last thing this argument needed.**
+English wants "the North" where the title says "The North". French wants « le Nord » where the title says
+« Le Nord » — **the article goes down and the noun does not**, because « contreforts » is a common noun and
+« Nord » is the name of a region. A template that had learned to lower-case the first word of a title would
+produce « le nord », which is a direction, on a level about Canada's regions (`TN-NORTH-02`, `TN-NORTH-04`).
+
 The same argument settles the loading sentence, from the other end: it is not a place name at all. It names
-**the work**, in common nouns — the canal, the harbour, the slope, the streets, the riverbank, the track, the
-pasture, the waterfront — so it says what the player is waiting for rather than repeating a title they can
-already see.
+**the work**, in common nouns — the canal, the harbour, the bare rock, the slope, the streets, the riverbank,
+the track, the pasture, the waterfront, the gravel shore — so it says what the player is waiting for rather
+than repeating a title they can already see.
 
 ## What a loading sentence may not contain
 
@@ -83,26 +107,34 @@ Four rules on top of `TN-COPY-07`, because a loading screen is where they are mo
    **nowhere else**. `TN-NAMES-01` names a loading message among the screens they may not appear on. A
    waiting screen is not a card body and it is not a character speaking: it is read by somebody who has not
    arrived yet, it carries no source, and a trade name there is an advertisement with a spinner behind it.
+   Peggy's Point Lighthouse and the Yukon River sternwheeler join that list from the other end — neither is
+   anybody's brand, and both are still kept off the waiting screen, because the rule is about where a name
+   teaches something and not about who owns it.
 2. **No real place the level does not draw.** The sentence describes the ground under the player's feet in
    the level being loaded, and nothing else. **It also may not name something the level's art contract
-   forbids**, which is level 9's case: `assets/style/vancouver-level.md` §0 puts totem poles, the inuksuk and
-   the Lions Gate Bridge in `neverAdd`, and a sentence naming one would put in words what the art was told
-   not to draw.
-3. **No territorial statement, and no paraphrase of one.** Halifax is in Mi'kma'ki, Toronto is on Treaty 13
-   land, Winnipeg's level is set at The Forks on Treaty No. 1 territory and in the homeland of the Red River
-   Métis, the Prairies level is on Treaty No. 4 land, the Alberta foothills are on Treaty No. 7 land, and
-   Vancouver's level is on territories the Musqueam, the Squamish and the Tsleil-Waututh all hold; every one
-   of those level documents carries a sourced statement, and `docs/content-review.md` §10.2 fixes where a
-   player reads them — the **"About this place"** panel, always available, never blocking, sourced, never "a
-   splash card". A loading screen is a splash card the player taps past to reach gameplay, which §10.2 names
-   as the one shape this must not take, and a 40-character paraphrase of a cited statement is an unsourced
-   claim about a nation. The two are kept apart on purpose: the panel states the fact, the loading screen
-   says what is being prepared, and neither borrows the other's words.
+   forbids**, which is level 9's case and level 10's: `assets/style/vancouver-level.md` §0 puts totem poles,
+   the inuksuk and the Lions Gate Bridge in `neverAdd`, and `assets/style/the-north-level.md` §0 puts the
+   inuksuk, the qamutiik, the dogsled, the kayak and the canoe there. A sentence naming one would put in
+   words what the art was told not to draw.
+3. **No territorial statement, and no paraphrase of one.** Halifax is in Mi'kma'ki, Peggy's Cove is on the
+   Atlantic coast of Nova Scotia and its level quotes the Assembly of Nova Scotia Mi'kmaw Chiefs, Toronto is
+   on Treaty 13 land, Winnipeg's level is set at The Forks on Treaty No. 1 territory and in the homeland of
+   the Red River Métis, the Prairies level is on Treaty No. 4 land, the Alberta foothills are on Treaty
+   No. 7 land, Vancouver's level is on territories the Musqueam, the Squamish and the Tsleil-Waututh all
+   hold, and the North's level quotes Kwanlin Dün First Nation; every one of those level documents carries a
+   sourced statement, and `docs/content-review.md` §10.2 fixes where a player reads them — the **"About this
+   place"** panel, always available, never blocking, sourced, never "a splash card". A loading screen is a
+   splash card the player taps past to reach gameplay, which §10.2 names as the one shape this must not take,
+   and a 40-character paraphrase of a cited statement is an unsourced claim about a nation. The two are kept
+   apart on purpose: the panel states the fact, the loading screen says what is being prepared, and neither
+   borrows the other's words.
 4. **No other level's name, in either language, including through a common noun.** This is the rule level 8
    added, and it is the one a French writer would never see coming: « la prairie » is the plainest French
    word for open grassland and it is **level 7's title**. The Alberta foothills' French waiting sentence is
    « Préparation du pâturage. » for that reason and no other (`TN-ALBERTA-01`). A sentence naming the ground
-   correctly can still name the wrong level.
+   correctly can still name the wrong level. **Level 10 is the row that was expected to break it and did
+   not**: « le Nord » is a plain French noun as well as a title, and the sentence names the stones —
+   « la plage de galets » — rather than the direction (`OQ-WAIT-4`, `OQ-NORTH-4`).
 
 ## Player-facing copy
 
@@ -120,13 +152,14 @@ here from `TN-LEVEL-ottawa.md` unchanged, because they were never Ottawa's. `lev
 `level.error.back` too, for the escape route `TN-LEVEL-02` offers on a stalled load — one string, one
 meaning, both screens.
 
-## The eight built levels and their two rows each
+## The ten built levels and their two rows each
 
 Written in the level's own story file, listed here so one page answers "what does each level say":
 
 | Level | `level.<id>.loading` EN | `level.<id>.error.title` EN | Story file |
 |---|---|---|---|
 | `halifax` | Getting the harbour ready. | We could not load Halifax. | `TN-LEVEL-halifax.md` |
+| `peggys-cove` | Getting the bare rock ready. | We could not load Peggy's Cove. | `TN-LEVEL-peggys-cove.md` |
 | `quebec-city` | Getting the snowy slope ready. | We could not load Québec City. | `TN-LEVEL-quebec-city.md` |
 | `ottawa` | Getting the canal ready. | We could not load Ottawa. | `TN-LEVEL-ottawa.md` |
 | `toronto` | Getting the city streets ready. | We could not load Toronto. | `TN-LEVEL-toronto.md` |
@@ -134,14 +167,19 @@ Written in the level's own story file, listed here so one page answers "what doe
 | `prairie-rail` | Getting the railway track ready. | We could not load the Prairies. | `TN-LEVEL-prairie-rail.md` |
 | `alberta-foothills` | Getting the pasture ready. | We could not load the Alberta foothills. | `TN-LEVEL-alberta-foothills.md` |
 | `vancouver` | Getting the waterfront ready. | We could not load Vancouver. | `TN-LEVEL-vancouver.md` |
+| `the-north` | Getting the gravel shore ready. | We could not load the North. | `TN-LEVEL-the-north.md` |
 
 French is in each file beside its English, and this table is a directory rather than a second copy of the
 strings: **the level story is where an implementer transcribes from.**
 
-**Eight loading sentences and no noun is used twice, in either language.** Three of the eight are on water —
-« le port », « la rive », « le front de mer » — and they were checked against each other rather than written
-in isolation, because a sentence a player has read three times stops being read at all
-(`TN-VANCOUVER-01`).
+**Ten loading sentences and no noun is used twice, in either language.** Three of the ten are on water —
+« le port », « la rive », « le front de mer » — and two more are on the ground beside it — « la roche nue »,
+« la plage de galets ». They were checked against each other rather than written in isolation, because a
+sentence a player has read three times stops being read at all (`TN-VANCOUVER-01`). **Two of those five cost
+a first choice**: « la côte rocheuse » was dropped for level 2 because « rocheuse » is one letter from « les
+Rocheuses », which level 8's art contract deliberately refuses to claim, and « la grève » was dropped for
+level 10 because its other meaning is a labour strike and this game's readers are newcomers who will meet
+that meaning first (`TN-PEGGYS-04`, `TN-NORTH-04`).
 
 ## Accessibility and bilingual coverage map
 
@@ -175,6 +213,7 @@ Feature: The waiting screen belongs to the level being loaded
     Examples:
       | level                 | sentence                         |
       | Halifax               | Getting the harbour ready.       |
+      | Peggy's Cove          | Getting the bare rock ready.     |
       | Québec City           | Getting the snowy slope ready.   |
       | Ottawa                | Getting the canal ready.         |
       | Toronto               | Getting the city streets ready.  |
@@ -182,6 +221,7 @@ Feature: The waiting screen belongs to the level being loaded
       | The Prairies          | Getting the railway track ready. |
       | The Alberta foothills | Getting the pasture ready.       |
       | Vancouver             | Getting the waterfront ready.    |
+      | The North             | Getting the gravel shore ready.  |
 
   Scenario: One level's sentence is never shown while another loads
     Given I leave one level and open another
@@ -189,9 +229,15 @@ Feature: The waiting screen belongs to the level being loaded
     And no sentence naming a place absent from the level being loaded is drawn
 
   Scenario: No two levels wait in the same words
-    Then the eight sentences above are eight different strings
-    And their French counterparts are eight different strings
+    Then the ten sentences above are ten different strings
+    And their French counterparts are ten different strings
     And no noun is used by two of them in either language
+
+  Scenario: No waiting sentence contains a level title, in either language
+    Then each of the ten sentences is compared against each of the ten titles in both languages
+    And none contains one
+    And "Préparation de la prairie." and "Préparation du nord." would each fail this scenario
+    And the comparison is made by the check and not by the author
 
   Scenario: The sentence does not change while the load runs
     Given "level-loading" is visible
@@ -231,6 +277,7 @@ Feature: The error card names the level that failed
     Examples:
       | level                 | id                | title                                    |
       | Halifax               | halifax           | We could not load Halifax.               |
+      | Peggy's Cove          | peggys-cove       | We could not load Peggy's Cove.          |
       | Québec City           | quebec-city       | We could not load Québec City.           |
       | Ottawa                | ottawa            | We could not load Ottawa.                |
       | Toronto               | toronto           | We could not load Toronto.               |
@@ -238,6 +285,7 @@ Feature: The error card names the level that failed
       | The Prairies          | prairie-rail      | We could not load the Prairies.          |
       | The Alberta foothills | alberta-foothills | We could not load the Alberta foothills. |
       | Vancouver             | vancouver         | We could not load Vancouver.             |
+      | The North             | the-north         | We could not load the North.             |
 
   Scenario: The title is the dialog's accessible name
     Given "level-error" is visible
@@ -246,19 +294,29 @@ Feature: The error card names the level that failed
 
   Scenario: A failure never names another level
     Given the Halifax level fails
-    Then no string on "level-error" names Ottawa, Québec City, Toronto, Winnipeg, the Prairies,
-      the Alberta foothills or Vancouver
+    Then no string on "level-error" names Peggy's Cove, Ottawa, Québec City, Toronto, Winnipeg,
+      the Prairies, the Alberta foothills, Vancouver or the North
 
   Scenario: No title is the level's id
     Given any built level fails
     Then the title names the level the way the map names it
-    And it never contains "prairie-rail", "alberta-foothills" or any other id
+    And it never contains "prairie-rail", "alberta-foothills", "peggys-cove", "the-north"
+      or any other id
 
-  Scenario: Two of the eight carry a lower-case article the title does not
+  Scenario: Three of the ten carry a lower-case article the title does not
     Then the Prairies' English title reads "the Prairies" mid-sentence
     And the Alberta foothills' English title reads "the Alberta foothills" mid-sentence
+    And the North's English title reads "the North" mid-sentence
     And the Alberta foothills' French title reads "les contreforts de l'Alberta" mid-sentence
+    And the North's French title reads "le Nord" mid-sentence, with the capital "N" kept
     And a build that draws any level title's own capitalisation mid-sentence fails this scenario
+    And a build that draws "le nord" in lower case fails it too
+
+  Scenario: The apostrophe in a place name is the level document's own character
+    Given the Peggy's Cove level fails
+    Then the title contains the same apostrophe character as that level document's "en" title
+    And the French title contains that same character
+    And no title in either language reads "Peggys Cove"
 
   Scenario: Trying again keeps the same words
     Given "level-error" is visible for a level
@@ -286,15 +344,22 @@ Feature: A shipped level cannot inherit another level's words
     When the content check runs
     Then the build fails, naming the key and pointing at this file
 
+  Scenario: A key numbered by position is refused too
+    Given a copy table declares a level key containing the level's number instead of its id
+    When the content check runs
+    Then the build fails, naming the key
+    And the message says a position is not an identity
+    And "level.2.subtitle", "level.10.title" and "level.10.subtitle" are named as the rows this retired
+
   Scenario: No screen may be mounted without the sentence
     Given a caller mounts the waiting screen
     Then the sentence is a required value, not a defaulted one
     And a waiting screen with no sentence cannot be constructed
 
   Scenario: The check counts levels, not rows
-    Given the number of documents under "content/levels" is eight
-    Then eight "level.<id>.loading" rows and eight "level.<id>.error.title" rows exist in each language
-    And a ninth level document with no rows fails the check on the day it is added
+    Given the number of documents under "content/levels" is ten
+    Then ten "level.<id>.loading" rows and ten "level.<id>.error.title" rows exist in each language
+    And an eleventh level document with no rows fails the check on the day it is added
 
   Scenario: The check is proven by failing fixtures
     Then a fixture exists for each scenario above
@@ -339,13 +404,14 @@ Feature: Both screens are reachable by everybody
     Then both of its sentences are readable, by scrolling if needed
     And "Try again" and "Go back" are fully visible and at least 44 CSS px tall
 
-  Scenario: The longest error title of the eight is measured by name
+  Scenario: The longest error title of the ten is measured by name
     Given text scaling is 200 %
     And the viewport is 390 x 844
     And the language is French
     When "level-error" is visible for the Alberta foothills
     Then the whole of "Nous n'avons pas pu charger les contreforts de l'Alberta." is readable
     And it is not truncated with an ellipsis
+    And the two levels added on 2026-09-13 are both shorter than it, which is measured and not assumed
 ```
 
 ## TN-WAIT-05 — Waiting and failing with a screen reader, and with motion off
@@ -386,6 +452,7 @@ Feature: Every level's two strings exist in English and in French
     Examples:
       | level                 | sentence                          |
       | Halifax               | Préparation du port.              |
+      | Peggy's Cove          | Préparation de la roche nue.      |
       | Québec City           | Préparation de la pente enneigée. |
       | Ottawa                | Préparation du canal.             |
       | Toronto               | Préparation des rues de la ville. |
@@ -393,6 +460,7 @@ Feature: Every level's two strings exist in English and in French
       | The Prairies          | Préparation de la voie ferrée.    |
       | The Alberta foothills | Préparation du pâturage.          |
       | Vancouver             | Préparation du front de mer.      |
+      | The North             | Préparation de la plage de galets. |
 
   Scenario Outline: The French failure names the level the French way
     Given the language is French
@@ -403,6 +471,7 @@ Feature: Every level's two strings exist in English and in French
     Examples:
       | level                 | title                                                     |
       | Halifax               | Nous n'avons pas pu charger Halifax.                      |
+      | Peggy's Cove          | Nous n'avons pas pu charger Peggy's Cove.                 |
       | Québec City           | Nous n'avons pas pu charger la Ville de Québec.           |
       | Ottawa                | Nous n'avons pas pu charger Ottawa.                       |
       | Toronto               | Nous n'avons pas pu charger Toronto.                      |
@@ -410,13 +479,16 @@ Feature: Every level's two strings exist in English and in French
       | The Prairies          | Nous n'avons pas pu charger les Prairies.                 |
       | The Alberta foothills | Nous n'avons pas pu charger les contreforts de l'Alberta. |
       | Vancouver             | Nous n'avons pas pu charger Vancouver.                    |
+      | The North             | Nous n'avons pas pu charger le Nord.                      |
 
-  Scenario: Three French articles, two English ones, eight levels, and no template
-    Then the French error titles use no article, "la" and "les" across the eight built levels
+  Scenario: Four French articles, two English ones, ten levels, and no template
+    Then the French error titles use no article, "la", "les" and "le" across the ten built levels
     And the English error titles use no article and "the"
     And no title in either language is assembled from a template with the level's name dropped into it
-    And the Prairies and the Alberta foothills are each written out with a lower-case article in English
-    And the Alberta foothills is written out with a lower-case article in French as well
+    And the Prairies, the Alberta foothills and the North are each written out with a lower-case
+      article in English
+    And the Alberta foothills and the North are each written out with a lower-case article in French
+    And only the North keeps a capital letter on the noun after that article
 
   Scenario: The two languages describe the same level
     Then every "level.<id>.loading" and "level.<id>.error.title" key has a value in "en" and in "fr"
@@ -426,6 +498,7 @@ Feature: Every level's two strings exist in English and in French
     Then no waiting sentence in either language contains a name from TN-NAMES-naming-real-places.md's list
     And no waiting sentence states a territorial fact or paraphrases one
     And no waiting sentence contains another level's title in either language
+    And no waiting sentence contains a word on any level's "neverAdd" list
     And the territorial statement is drawn only by "about-this-place"
 ```
 
@@ -440,31 +513,34 @@ Feature: Every level's two strings exist in English and in French
   shipped page. *Recommendation:* wire it in the same change that transcribes these rows, so the first level
   that draws a sentence draws its own. Routed to the engine and UI agents; `app/` is not this directory's to
   edit. Until it is wired, `TN-WAIT-01` fails, which is the correct state for a scenario describing something
-  the game does not do. **Eight levels now ship a sentence nobody can read**, which is the same debt at
-  eight times the size.
+  the game does not do. **Ten levels now ship a sentence nobody can read**, which is the same debt at ten
+  times the size and is no longer growing, because there is no eleventh level coming.
 - **`OQ-WAIT-2` — where do these rows live once `content/levels/*.json` can carry them?** ADR-0010 says a
   level's own text is inline `localizedText` on the level document, and `level.schema.json` has no field for
   a waiting sentence or an error title today. *Recommendation:* add two optional-in-schema, required-in-gate
   fields when a schema change is next opened, keep the key spelling `level.<id>.loading` and
   `level.<id>.error.title` for whatever draws them, and let `TN-WAIT-03` keep failing the build for a level
   that carries neither. Routed to the architect; `content/` is not this directory's to edit. **Two schema
-  changes are now queued for the same file family** — this one and
+  changes are queued for the same file family** — this one and
   `TN-DIALOGUE-what-a-quest-giver-says.md`'s four quest fields — and they are cheaper opened together.
 - **`OQ-WAIT-3` — is "the harbour" too close to naming Halifax Harbour?** The sentence uses a common noun
   with a definite article, exactly as Ottawa's "the canal" does for the Rideau Canal, and neither is on
-  `TN-NAMES`'s list. *Recommendation:* accept both, and treat the pattern as the rule for the levels still to
-  come — describe the ground, do not name it. Winnipeg's "the riverbank", the Prairies' "the railway track",
-  the foothills' "the pasture" and Vancouver's "the waterfront" are the third to sixth applications of it
-  (`OQ-WINNIPEG-4`, `OQ-ALBERTA-5`). If a reviewer wants the stricter line, every sentence loses the article
-  ("Getting the level ready.") and every level says the same uninformative thing, which is what `OQ-LEVEL-9`
-  already rejected.
-- **`OQ-WAIT-4` — rule 4 arrived late and nothing checks the other seven levels against it.** The Alberta
-  foothills found it: a French common noun for the ground — « la prairie » — is another level's **title**.
-  The rule is now written and `TN-WAIT-06` asserts it, but the other seven sentences were written before
-  anybody was looking for it, and « le port », « la rive », « le canal », « la pente enneigée », « les rues
-  de la ville », « la voie ferrée » and « le front de mer » have only been checked against the eight titles
-  that exist today. **Levels 2 and 10 have no place name yet**, and "The North" / « Le Nord » is the one
-  still to come that is most likely to collide with a plain noun. *Recommendation:* make the check
-  mechanical — every waiting sentence is compared against every level title in both languages, including
-  titles added later — rather than a rule each author remembers. Routed with `OQ-WAIT-2`, because the same
-  gate would carry it.
+  `TN-NAMES`'s list. *Recommendation:* accept both, and treat the pattern as the rule — describe the ground,
+  do not name it. Winnipeg's "the riverbank", the Prairies' "the railway track", the foothills' "the
+  pasture", Vancouver's "the waterfront", Peggy's Cove's "the bare rock" and the North's "the gravel shore"
+  are the third to eighth applications of it (`OQ-WINNIPEG-4`, `OQ-ALBERTA-5`, `OQ-PEGGYS-5`). **The set is
+  now complete at ten and the rule held for all of them**, which is the strongest thing that can be said for
+  a rule that was written for one sentence. If a reviewer wants the stricter line, every sentence loses the
+  article ("Getting the level ready.") and every level says the same uninformative thing, which is what
+  `OQ-LEVEL-9` already rejected.
+- **`OQ-WAIT-4` — rule 4 arrived late, the level it was most afraid of has now shipped, and the check is
+  still a human's.** The Alberta foothills found the rule: a French common noun for the ground — « la
+  prairie » — is another level's **title**. This question then named "The North" / « Le Nord » as the row
+  still to come most likely to collide, and **it did not collide**: level 10's sentence names the stones,
+  « la plage de galets », and level 2's names the rock. **But that was established by one agent reading ten
+  titles against ten sentences in two languages**, which is exactly the work this question said should stop
+  being a person's. *Recommendation, and now is the moment:* make the check mechanical — every waiting
+  sentence compared against every level title in both languages — **because the set is complete for the first
+  time**, and a complete set is the cheapest thing to write a comparison over. `TN-WAIT-01`'s fourth scenario
+  is that check written as acceptance. Routed with `OQ-WAIT-2`; `OQ-NORTH-4` is the same request from the
+  level that survived it.

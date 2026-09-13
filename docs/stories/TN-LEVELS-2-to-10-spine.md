@@ -46,35 +46,81 @@ shippable.** `content/levels/alberta-foothills.json` and `content/levels/vancouv
   status column below says so rather than letting the word "Built" carry a meaning it has not earned. See
   `OQ-ALBERTA-2`.
 
+**Amended a fourth time, 2026-09-13: the last two levels landed, the map is complete, and the two rows this
+file refused to scope were scoped by the rule this file wrote rather than in spite of it.**
+`content/levels/peggys-cove.json` and `content/levels/the-north.json` are built, drawn
+(`assets/style/peggys-cove-level.md`, `assets/style/the-north-level.md`), listed in `levels`, in `journey`
+and in `unlockRules.order`, and covered by `TN-LEVEL-peggys-cove.md` and `TN-LEVEL-the-north.md`. **The
+journey has no `null` slots left: ten built, ten documents, ten sets of copy.** Five things follow:
+
+- **What unblocked them is a distinction between a level's *subject* and a level's *place*, and it is now
+  written into the blockers section below** rather than living in two art sheets. It is the first item in
+  that section, because it is the thing a reader of this table most needs and the thing nothing recorded.
+- **Neither level declares the locomotion mode this table gave it.** Both declare `walk`. `canoe` and
+  `dogsled` are still declared by no document and still have no label, so `OQ-REVIEW-10` is **unanswered and
+  unengaged** rather than answered, and `TN-MOVE-02`'s last scenario passes on the day the map filled up.
+- **Neither level adds a row to `TN-MOVE`**, and neither places an NPC or declares a quest. **Six of the ten
+  built levels are now finished only by reaching the end of them** (`TN-DONE`, `OQ-DONE-1`).
+- **`regions` has a bank, and this file said it had none.** `content/questions/regions/` holds **fifty-eight
+  authored questions, all fifty-eight reported verified** — behind `history`'s ninety-six and ahead of the
+  other eight subjects. The correction is recorded in `OQ-SPINE-3` rather than quietly applied.
+- **Level 8 is still the only built level that may not ship**, and it is now one of ten rather than one of
+  eight. Nothing about that improved; the denominator moved.
+
 Read `README.md` in this directory first. `TN-MAP-level-select.md` draws the ten entries below;
 `TN-LEVEL-ottawa.md` is the worked example of what each of these rows becomes;
 `TN-MOVE-locomotion-labels.md` owns what the HUD calls each locomotion mode in the table below,
 `TN-WAIT-a-level-opens-or-it-does-not.md` owns the two strings every built level needs, and
 `TN-GUIDE-the-guide.md` owns the one NPC name that is written down today.
 
-## Three things that block work in this table, stated before the table
+## What blocks work in this table, stated before the table
 
-Nothing here is a schedule. Two of these rows cannot be started, and the third blocker has since been
-answered.
+Nothing here is a schedule. Two of these rows could not be started for a year of sessions; both can be
+started now, and the reason they can is worth more than the rows themselves.
 
-1. **`docs/content-review.md` §1 blocks any level whose subject is a nation's territory or history**, and
-   blocks any depiction of a named nation, until a Tier 3 reviewer exists. `OQ-REVIEW-2` — who that reviewer
-   is and whether there is money for one — is unanswered, and it carries an obligation dated **2026-12-08**.
-   That blocks **level 2 (Mi'kma'ki)** outright, which `OQ-REVIEW-3` already says, and it blocks **level 10
-   (The North)** for the same reason: a level whose subject is Canada's regions, set in the North, either
-   depicts the peoples of Inuit Nunangat or removes them from a level about where they live. Both readings
-   need Tier 3. Level 2 and level 10 are therefore **not scoped below** — no landmark, no NPC, no id. Filling
-   those cells in would make a blocked level look schedulable, and a plan that reads as schedulable gets
-   scheduled. `TN-MOVE` applies the same rule to their locomotion labels and writes neither. **Level 2's
-   question bank exists** — 46 verified questions under `who-we-are` — and that changes nothing: a bank is
-   not a licence to depict, and the block is about depiction.
-2. **`OQ-REVIEW-10` is unanswered and three locomotion modes depend on it.** The canoe (level 2), the kayak
-   (named in that question and not assigned to a level) and the dogsled and qamutiik (level 10) are Indigenous
-   technology used as generic Canadian symbols. `docs/content-review.md` §5.4 says so, and adds the sentence
-   that matters here: *"A canoe as a vehicle the player rides is exactly the prop case in §5.1's second test,
-   and slice 4 depends on it."* A locomotion mode is the most prop-like thing in this game — the player is
-   sitting in it for the whole level. Flagged against levels 2 and 10 below and repeated here so it is not
-   discovered mid-build.
+1. **The block is on a level's *subject* and on *depiction*. It was never on a *place*, and that is what
+   unblocked levels 2 and 10.** `docs/content-review.md` §1's shipping rule, item 5, blocks *"any level whose
+   **subject** is a nation's territory or history"* until a Tier 3 reviewer exists, and §1 also blocks any
+   depiction of a named nation. `OQ-REVIEW-2` — who that reviewer is and whether there is money for one — is
+   still unanswered and still carries an obligation dated **2026-12-08**. **None of that blocks a level whose
+   subject is a *Discover Canada* chapter and whose place is a village or a river bank**, because §1's own
+   may-ship list, item 5, permits **a territorial fact line** with a citation, and `TN-LEVELS-02`'s second
+   scenario says the same thing from the gate's side: *a citation is not a depiction*. The test a level has
+   to pass is four questions, and both new levels answer them the same way:
+
+   | §1 asks | `peggys-cove` | `the-north` |
+   |---|---|---|
+   | Is the level's **subject** a nation's territory or history? | No — *Who We Are*, bank key `who-we-are` | No — *Canada's Regions*, bank key `regions` |
+   | What is its **place**? | A fishing village in Nova Scotia, named as a village | A river bank in the Yukon, at Whitehorse |
+   | Does anything in it **depict** a nation? | No — **no figure of any kind is drawn**, at any scale | No — the same, and `neverAdd` says so on both art subjects |
+   | Does it declare a mode `OQ-REVIEW-10` blocks? | No — `walk` | No — `walk` |
+
+   **This is the same shape `halifax` has shipped in since slice 1**, on the same coast and in the same
+   territory: a place, a chapter, a sourced statement in "About this place", and no depiction. What is
+   different is only that these two levels' statements are sourced **better** — level 2's `fact.source` and
+   `nationSource` are one Mi'kmaw body speaking for itself, which is what `OQ-WINNIPEG-3` and `OQ-VANCOUVER-4`
+   asked for and neither could get.
+
+   **What the distinction does not do is make the block smaller.** A level *in Mi'kma'ki*, with Mi'kma'ki as
+   its place name, is still §1 item 5 exactly and was refused
+   (`assets/style/peggys-cove-level.md` §0). A level set in **Inuit Nunangat** — Iqaluit, Tuktoyaktuk,
+   Pangnirtung — is still blocked, because the identifying built things there *are* Inuit, and
+   `assets/style/the-north-level.md` §0 records that choosing the Yukon instead is **a scope decision rather
+   than a solution**. Both levels carry a **Tier 3 obligation** naming what a reviewer from the Mi'kmaq and
+   from Kwanlin Dün First Nation still owes, both are dated 2026-12-08 to match `OQ-REVIEW-2`, and **no copy
+   in this directory may imply that review has happened** (`TN-PEGGYS-06`, `TN-NORTH-06`).
+2. **`OQ-REVIEW-10` is unanswered, and no level document engages it.** The canoe, the kayak, the dogsled and
+   the qamutiik are Indigenous technology used as generic Canadian symbols; `docs/content-review.md` §5.4
+   says so and adds the sentence that settles it — *"A canoe as a vehicle the player rides is exactly the prop
+   case in §5.1's second test."* This table gave level 2 a canoe and level 10 a dogsled, **and both levels
+   shipped declaring `walk`**, each for two reasons either of which would have been enough: the review
+   question is open, and there is no rig art (`assets/style/peggys-cove-level.md` §9,
+   `assets/style/the-north-level.md` §9 — a dogsled needs a team of animals, which is a second rig this game
+   does not have). `content/game.config.json` still lists both modes as legal, no document declares either,
+   `TN-MOVE` writes no label for either, and `TN-LEVELS-02` makes a document that declares one a build
+   failure with no override. **The locomotion column below keeps the mode each level was designed around and
+   the Status column says what shipped**, because a table that quietly replaced them would erase the
+   question.
 3. ~~**Level 3's locomotion mode does not exist**~~ — **answered, and by the route this file asked for.**
    `docs/plan/slices.md` gives level 3 a toboggan, and `toboggan` was not among the eight modes
    `content/schemas/level.schema.json` and `app/application/ports/locomotion.ts` enumerated. ADR-0023 moved
@@ -94,7 +140,7 @@ is north, which is why no copy in `TN-MAP` claims the journey is east to west (`
 | # | Level id | Subject (bank key) | Place | Locomotion | Landmark that must survive blind identification | NPC | Status |
 |---|---|---|---|---|---|---|---|
 | 1 | `halifax` | `rights` | Halifax, Nova Scotia | `walk` | Pier 21's waterfront frontage and Immigration Hall, with the harbour behind — see the note below on how weak this is | the guide | **Built, and the game opens here** — copy in `TN-LEVEL-halifax.md`; quest authored; bank 37 verified; full story pending |
-| 2 | *not fixed* | `who-we-are` | *not scoped* | `canoe` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`**; bank 46 verified and unusable until the block lifts |
+| 2 | `peggys-cove` | `who-we-are` | Peggy's Cove, Nova Scotia — **a village, not a territory** | `walk` (**not** the `canoe` this table designed for; §2 above) | Peggy's Point Lighthouse, by its proportions — squat, and a third of it red — see below | none placed yet | **Built** — copy in `TN-LEVEL-peggys-cove.md`; no NPC, no quest; bank 46 verified |
 | 3 | `quebec-city` | `history` | Québec City (Old Québec) | `toboggan` | Château Frontenac seen from Dufferin Terrace, with the ramparts | the guide | **Built** — copy in `TN-LEVEL-quebec-city.md`; quest authored; bank 96 verified; full story pending |
 | 4 | `ottawa` | `government` | Ottawa | `skate` | Centre Block and the Peace Tower from the canal | the officer | **Shipped** — `TN-LEVEL-ottawa.md`; bank 38 verified |
 | 5 | `toronto` | `elections` | Toronto | `bike` | Toronto City Hall's two curved towers across Nathan Phillips Square — **but the shipped document draws the CN Tower**, `OQ-TORONTO-2` | the guide | **Built** — copy in `TN-LEVEL-toronto.md`; quest authored; bank 36 verified; full story pending |
@@ -102,15 +148,15 @@ is north, which is why no copy in `TN-MAP` claims the journey is east to west (`
 | 7 | `prairie-rail` | `modern-canada` | The Prairies (southern Saskatchewan) | `train` | A wooden prairie grain elevator beside the track — a standard plan, drawn from a cited building, shipping **blank**, see below | the journalist — **not placed yet** | **Built** — copy in `TN-LEVEL-prairie-rail.md`; no NPC, no quest; bank 39 verified |
 | 8 | `alberta-foothills` | `economy` | The Alberta foothills | `horse` | A working ranch's barn and corral against the foothills, drawn from the Bar U and named as a **type**, see below | the rancher — **not placed yet** | **Built, and NOT shippable** — copy in `TN-LEVEL-alberta-foothills.md`; no NPC, no quest; **bank 18 verified of a floor of 30** (`OQ-ALBERTA-2`) |
 | 9 | `vancouver` | `symbols` | Vancouver | `skateboard` | Canada Place's five white sails on the waterfront | the artist — **not placed yet** | **Built** — copy in `TN-LEVEL-vancouver.md`; no NPC, no quest; bank 42 verified |
-| 10 | *not fixed* | `regions` | The North | `dogsled` | *not scoped* | *not scoped* | **Blocked — §1 and `OQ-REVIEW-10`**; no bank |
+| 10 | `the-north` | `regions` | The North — drawn as **Whitehorse on the Yukon River**, and only that, see below | `walk` (**not** the `dogsled` this table designed for; §2 above) | A Yukon River sternwheeler, by its stern wheel and its hog posts — asked for a **type**, never for a place | none placed yet | **Built** — copy in `TN-LEVEL-the-north.md`; no NPC, no quest; bank 58 verified |
 
 **"Built" is not "shipped", and level 8 is where that stopped being a caption.** A built level has a
 document, a place on the map, a waiting sentence, an error title, a stamp sentence, a play label and a mode
 label, and can be opened. It does not yet have its own locomotion tuning proved by scenarios, its NPC or its
-quest. Until level 8 it also always had a bank above the floor; level 8 does not, and it is in
-`unlockRules.order` regardless, so a player can reach it, finish it and earn its stamp today.
-`TN-LEVELS-03`'s last row is the one it fails, and nothing else in this directory fails closed on it — which
-is exactly why it is written in the status column rather than left to a test nobody has run.
+quest. Nine of the ten clear their bank floor; level 8 does not, and it is in `unlockRules.order` regardless,
+so a player can reach it, finish it and earn its stamp today. `TN-LEVELS-03`'s last row is the one it fails,
+and nothing else in this directory fails closed on it — which is exactly why it is written in the status
+column rather than left to a test nobody has run.
 
 **Three of the four authored quests are given by the guide.** `content/quests/halifax-clock-and-pier.json`,
 `quebec-city-chateau-frontenac.json` and `toronto-cn-tower.json` all declare `"giver": "guide"`, and the
@@ -138,14 +184,35 @@ verified like any other claim, and nothing in the level depicts a nation. **The 
 that statement appears**: `TN-LEVEL-halifax.md` keeps it out of the loading screen, because a screen the
 player waits past is the shape §10.2 rules out and a compressed paraphrase is an unsourced claim.
 
-### Level 2 — `who-we-are`, canoe: not scoped, on purpose
+### Level 2 — Peggy's Cove, `who-we-are`, walk
 
-Blocked by `docs/content-review.md` §1, shipping-rule item 5, and by `OQ-REVIEW-10` for its locomotion. The
-place, the landmark and the NPC are deliberately blank. **A bank of 46 verified questions exists for this
-subject and does not unblock it**: the block is on depicting a nation and on setting a level in its
-territory, not on asking a question sourced from *Discover Canada*. `OQ-REVIEW-3` recommends that
-`docs/plan/slices.md` re-orders so this slice is not started and then abandoned mid-flight; that
-re-ordering is the plan owner's.
+**This row was blank for four sessions and the blank was correct at the time.** What filled it is the
+distinction in §1 above, not a decision to proceed anyway: the level's **subject** is *Discover Canada*'s
+*Who We Are* chapter, its **place** is a fishing village on the Atlantic coast of Nova Scotia named as a
+village, and **nothing in it depicts anybody** — `assets/style/peggys-cove-level.md` §0 records that
+`neverAdd` on both art subjects carries *"a figure of any kind, at any scale, including a silhouette and a
+crowd"*, which is stricter than `docs/content-review.md` §3.3 outcome 2 requires and is a decision rather
+than an omission.
+
+The landmark is **Peggy's Point Lighthouse**, and this file's usual worry is inverted here: it is not that
+the subject is unidentifiable, it is that it is a *type* with several hundred instances in Nova Scotia. The
+claim the level makes is that the **proportions** identify it — 2.39 base widths tall where a cartoon
+lighthouse is four to six, and nearly a third of it red — and `assets/style/peggys-cove-level.md` §7 writes
+the failure mode into the contract rather than hoping it away: **if a real blind pass returns only a type,
+the finding is that this level has no place anchor**, and the fix is a second cited point of interest, not a
+longer answer list. **The level's place rests on that one render**, which is the third level in a row to land
+there (`OQ-SPINE-6`).
+
+The territorial statement is quoted from **Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the
+Assembly of Nova Scotia Mi'kmaw Chiefs** — the first level whose `fact.source` and whose `nationSource` are
+**one body speaking for itself about its own lands**. It lives in "About this place" and nowhere else.
+`TN-LEVEL-peggys-cove.md` carries the copy-side rules, and two of them are silences this table should also
+record: **the word "unceded" is not used**, because the cited page says *"never surrendered, ceded, or sold"*
+and the statement says that; and **the word "Mi'kma'ki" is not used on this level**, because no source this
+level cites carries it — Halifax's document names it on the strength of a Crown page, and importing it here
+would put two documents behind one sentence.
+
+**The canoe is not declared and no copy names one.** §2 above; `assets/style/peggys-cove-level.md` §9.
 
 ### Level 3 — Québec City, `history`, toboggan
 
@@ -155,6 +222,9 @@ the problem and is not any more: ADR-0023 opened the set of modes to content and
 declares `toboggan` first and `walk` second. The building may be named on its point-of-interest card, and —
 since `TN-DIALOGUE-what-a-quest-giver-says.md` — in this level's own quest, where the guide sends the player
 to it. It may appear nowhere else (`TN-NAMES`), which is why the level's waiting sentence names the slope.
+
+**Its bank is the largest in the game**, at ninety-six verified `history` questions — more than three times
+the floor, and the number every other subject in this file is measured against.
 
 ### Level 5 — Toronto, `elections`, bike
 
@@ -257,7 +327,8 @@ subjects, "so the prohibition is a checked contract clause and not a paragraph i
 Lions Gate Bridge is in `neverAdd` too so the recorded fallback cannot drift into the seawall tile. Nothing
 in the level draws Indigenous content of any kind and the seawall's four background figures carry no cultural
 marker. `TN-LEVEL-vancouver.md` carries the copy-side half: no string in the level names any of the three in
-either language.
+either language. **Level 10 now carries the same arrangement for a longer list**, which makes it the pattern
+rather than one level's precaution.
 
 Canada Place is the anchor and it is a strong one — five white sails on a long low pier is a stack nothing
 else this game will draw — and it is a building drawn from a cited reference under `TN-NAMES`, which it now
@@ -273,18 +344,46 @@ smaller claim than the truth — and the word **"unceded" is deliberately absent
 not use it. Neither is a copy decision to revisit.
 
 The level's symbols content — the flag, the maple leaf, the beaver, the anthem — comes from *Discover
-Canada* under ADR-0003 like any other question, and the `symbols` bank now holds **42 verified questions**,
-which is the largest margin over the floor of any built level after level 3. **The beaver is also this
-game's companion character**, and `TN-GUIDE-the-guide.md` is why that costs nothing here: the guide is named
-by role, never "the beaver", so a level that teaches the symbol is not competing with a label the player has
-been reading since level 1.
+Canada* under ADR-0003 like any other question, and the `symbols` bank now holds **42 verified questions**.
+**The beaver is also this game's companion character**, and `TN-GUIDE-the-guide.md` is why that costs nothing
+here: the guide is named by role, never "the beaver", so a level that teaches the symbol is not competing
+with a label the player has been reading since level 1.
 
-### Level 10 — The North, `regions`, dogsled: not scoped, on purpose
+### Level 10 — The North, `regions`, walk: one region drawn and named for three
 
-Blocked twice over: §1's shipping rule (a level about Canada's regions, set in the North, cannot avoid the
-question of who lives there) and `OQ-REVIEW-10` (the dogsled and the qamutiik). The place name "The North"
-is written in the copy table below because the map has to name ten levels; **nothing else about this level is
-scoped**, and the map draws it as "Not made yet" like the rest (`TN-MAP-04`).
+**The second row this file left blank, and it is filled the same way level 2's is** — by §1's own distinction
+— **with one difference that has to be stated rather than buried**: the spine's sentence about this level was
+right about the level it was describing. *"A level whose subject is Canada's regions, set in the North,
+either depicts the peoples of Inuit Nunangat or removes them from a level about where they live."* A level in
+Iqaluit, Tuktoyaktuk or Pangnirtung still cannot be drawn, because the identifying built things there **are**
+Inuit — the inuksuk, the qamutiik, the sod house, the igloo-form church at Inuvik, the Legislative Assembly
+of Nunavut and its mace — and `docs/content-review.md` §5.2 and `OQ-REVIEW-10` cover most of them by name.
+
+**What shipped is the Yukon: a gravel bar on the Yukon River at Whitehorse, with a steel-and-timber freight
+vessel on it.** `assets/style/the-north-level.md` §11 states the terms plainly and this table repeats them so
+nobody has to find the sheet: **Nunavut and the Northwest Territories are not in this picture**, the level is
+titled *The North*, it teaches a chapter that covers all three territories, and every pixel of it is one of
+them. That is a **scope decision, not a solution**, and a future slice giving the other two their own levels
+does not have to undo anything here. `TN-NORTH-06` makes it a copy rule too: no string claims the level shows
+more than it shows.
+
+The landmark is a **sternwheeler**, and it is level 7's and level 8's outcome a third time: the vessel
+carries its own name in large letters across the bow and the pilot house in every reference, `make verify-art`
+refuses a `<text>` element, and `art-bible.md` forbids substituting an invented mark, so **it ships nameless
+and its blind contract asks for a type and is never asked for a place**. The North as a place therefore rests
+on nothing in this level's art, and the level's answer to *where* is its title, its territorial statement and
+its bank — none of which is a picture (`OQ-SPINE-6`).
+
+The territorial statement is quoted from **Kwanlin Dün First Nation's** own About page, and two things about
+it bind copy. **Endonyms are identical in both languages** — `Kwanlin Dün First Nation`, `Tagish Kwan` and
+`Chu Níikwän`, diacritics included (`docs/content-review.md` §9.3). And **the Ta'an Kwäch'än Council is not
+named, deliberately**: its government is in Whitehorse, and neither the cited page nor the Council's own
+history page says Whitehorse is inside its traditional territory, so naming it would be the invention the
+register exists to prevent. `content/sources/kdfn-about-us.json` records the silence and what would close it,
+and **no copy on this level resolves it in either direction** — the same shape as level 8's silence about the
+Métis Nation of Alberta.
+
+**The dogsled is not declared and no copy names one.** §2 above; `assets/style/the-north-level.md` §9.
 
 ## The NPCs, and one French decision that is cheaper made once
 
@@ -305,6 +404,7 @@ were chosen on that basis:
 | 7 | the journalist | le journaliste / la journaliste | Yes |
 | 8 | the rancher | l'éleveur / l'éleveuse | **No** — `OQ-SPINE-4` |
 | 9 | the artist | l'artiste | Yes |
+| 2, 10 | *none proposed* | — | **The question does not arise**, because no role is written — see below |
 
 `docs/content-review.md` §8.6 forbids « l'agent(e) » and « l'agent·e », and forbids any French copy about the
 *player* needing agreement. This table is about characters, not the player, so the rule that binds is
@@ -318,6 +418,12 @@ being a grade-6 word is answered by the same fact. **Levels 6, 7, 8 and 9 place 
 "the judge", "the journalist", "the rancher" and "the artist" are proposals, and no name is written as copy
 for any of them — a speaker's label with no dialogue behind it is copy for behaviour nothing performs.
 
+**Levels 2 and 10 are given no role at all, and that is deliberate rather than an omission after
+unblocking.** Their art sheets record that **no figure of any kind is drawn on either level**, at any scale,
+including a silhouette. Proposing a role here would be proposing the first figure either level has ever had,
+in a table, without the reading `docs/content-review.md` §1 requires. `OQ-PEGGYS-1` and `OQ-NORTH-1` route it
+to those levels' full stories, with one instruction each: choose an **epicene** French role noun.
+
 ## Player-facing copy
 
 This file owns the place name and the subject line for the nine levels that are not Ottawa, because
@@ -326,14 +432,15 @@ Ottawa's pair stays in `TN-LEVEL-ottawa.md`.
 
 Two other kinds of level string are **not** here, and the split is deliberate: the waiting sentence and the
 error title belong to the level and are written in the level's own story file (`TN-WAIT`), and the mode label
-belongs to the *mode* and is written once in `TN-MOVE-locomotion-labels.md` — `walk` appears seven times in
-the table above and is one string.
+belongs to the *mode* and is written once in `TN-MOVE-locomotion-labels.md` — `walk` is now declared by nine
+of the ten levels and is one string.
 
 | Key | EN | FR |
 |---|---|---|
 | `level.halifax.title` | Halifax | Halifax |
 | `level.halifax.subtitle` | Rights and responsibilities | Droits et responsabilités |
-| `level.2.subtitle` | Who we are | Qui nous sommes |
+| `level.peggys-cove.title` | Peggy's Cove | Peggy's Cove |
+| `level.peggys-cove.subtitle` | Who we are | Qui nous sommes |
 | `level.quebec-city.title` | Québec City | Ville de Québec |
 | `level.quebec-city.subtitle` | Canada's history | L'histoire du Canada |
 | `level.toronto.title` | Toronto | Toronto |
@@ -346,28 +453,39 @@ the table above and is one string.
 | `level.alberta-foothills.subtitle` | Canada's economy | L'économie du Canada |
 | `level.vancouver.title` | Vancouver | Vancouver |
 | `level.vancouver.subtitle` | Canadian symbols | Les symboles canadiens |
-| `level.10.title` | The North | Le Nord |
-| `level.10.subtitle` | Canada's regions | Les régions du Canada |
+| `level.the-north.title` | The North | Le Nord |
+| `level.the-north.subtitle` | Canada's regions | Les régions du Canada |
 
-**Two of these titles carry a capital article, and the sentences that use them may not.** "The Prairies" and
-"The Alberta foothills" are how the map names those levels; mid-sentence they are "the Prairies" and "the
-Alberta foothills", and « Les contreforts de l'Alberta » is « les contreforts de l'Alberta ». That is not
-this table's problem to solve — it is why `TN-WAIT` and `TN-DONE` write their rows out per level instead of
-templating them, and why level 8 breaks the template in **both** languages where level 7 broke it in one.
+**Two rows were keyed on a level's *number* until 2026-09-13, and they are keyed on its id now.** While
+levels 2 and 10 had no id, this table carried `level.2.subtitle`, `level.10.title` and `level.10.subtitle` —
+positional keys, which were the honest shape for a level with no id and are the wrong shape the moment one
+exists. `content/levels/peggys-cove.json` and `content/levels/the-north.json` shipped, so the keys are
+`level.peggys-cove.*` and `level.the-north.*`, spelled as the documents spell the ids. **Nothing else in this
+game may use a positional level key**: `TN-WAIT-03` and `TN-DONE-05` already refuse an unqualified key, and
+a key numbered by map position is the same defect wearing a digit — it silently re-points at a different
+level the day somebody re-orders `journey`. `TN-PASSPORT`'s "keys this screen draws and does not own" table
+carried `level.10.title` and is corrected in the same change.
 
-**Level 2 has a subject line and no place name**, and that is the correct output of the rules above rather
-than an omission: naming a nation's territory as the setting of a level nobody may build yet states a plan
-this project has not earned the right to state. `TN-MAP-04` requires a card with no place name to draw no
-placeholder — no "TBD", no "???", no empty box. Level 10 keeps "The North" because it is a region, not a
-nation's name for itself.
+**Three of these titles carry a capital article, and the sentences that use them may not.** "The Prairies",
+"The Alberta foothills" and "The North" are how the map names those levels; mid-sentence they are "the
+Prairies", "the Alberta foothills" and "the North". « Les contreforts de l'Alberta » is « les contreforts de
+l'Alberta » — article *and* noun in lower case, because « contreforts » is a common noun — and **« Le Nord »
+is « le Nord », with the capital N kept**, because « le nord » in lower case is a compass direction and not a
+region. That is not this table's problem to solve: it is why `TN-WAIT` and `TN-DONE` write their rows out per
+level instead of templating them, and why level 10 breaks the template in both languages **in two different
+ways in one row**.
 
-**Eight of these ids are decisions now, not proposals.** `content/levels/halifax.json`,
-`quebec-city.json`, `ottawa.json`, `toronto.json`, `winnipeg.json`, `prairie-rail.json`,
-`alberta-foothills.json` and `vancouver.json` exist, and `content/game.config.json` lists the same eight in
-`levels` and in `unlockRules.order` and holds a ten-slot `journey` whose two nulls are levels 2 and 10. The
-remaining ids are still proposals, and both belong to blocked levels, so **the id column of this table is now
-complete for every level that may be built at all**. Subject lines are paraphrases of *Discover Canada*'s
-chapter names and go through the same verification as any other claim — `OQ-SPINE-2`.
+**Level 2 has a place name now, and the rule that kept it blank is unchanged.** While the level was blocked,
+`TN-MAP-04` required a card with no place name to draw no placeholder — no "TBD", no "???", no empty box —
+and that scenario stays, because it is about any unbuilt level and not about level 2. What changed is not the
+rule but the level: its place is a village, its subject is a chapter, and naming it states nothing this
+project has not earned the right to state. **It is still not called "Mi'kma'ki"**, and it never will be under
+§1 item 5 (`assets/style/peggys-cove-level.md` §0).
+
+**All ten ids are decisions now, and none is a proposal.** `content/levels/` holds ten documents and
+`content/game.config.json` lists the same ten in `levels`, in `unlockRules.order` and in a `journey` with **no
+`null` slots left**. Subject lines are paraphrases of *Discover Canada*'s chapter names and go through the
+same verification as any other claim — `OQ-SPINE-2`.
 
 ---
 
@@ -411,12 +529,24 @@ Feature: Adding a level without touching the engine
     Then TN-MOVE's table gained exactly one row for each
     And no schema, port or adapter changed for any of them
 
+  Scenario: The last two levels cost no row at all
+    Given "peggys-cove" and "the-north" each declare only "walk"
+    Then TN-MOVE's table gained no row for either
+    And the labels for "canoe" and "dogsled" still do not exist
+    And ten built levels declare seven of the nine modes the config lists
+
   Scenario: A new level costs its own words, and the build says so
     Given a valid level document is added with no waiting sentence, error title, stamp sentence,
       play label or mode label
     When the content check runs
     Then the build fails, naming the level and each missing string
     And no level draws another level's words while that check is red
+
+  Scenario: A level's keys are spelled with its id, never with its position
+    Given a level document declares an id
+    Then every key that varies by level is "<prefix>.<id>.<suffix>", spelled as the document spells the id
+    And a key containing the level's number in place of its id fails the content check
+    And "level.2.subtitle", "level.10.title" and "level.10.subtitle" are the three rows this rule retired
 
   Scenario: The previous level is released before the next one loads
     When I leave one level and open another
@@ -446,6 +576,14 @@ Feature: The content-review shipping rule is a gate, not a paragraph
     Then the check passes on that ground alone
     And the statement is drawn only by "about-this-place"
 
+  Scenario: A subject is not a place
+    Given a level document's subject is a Discover Canada chapter
+    And its place is a settlement or a landform rather than a nation's territory
+    And nothing in it depicts any nation
+    Then §1 item 5 is not engaged by the level's setting
+    And "peggys-cove" and "the-north" are the two worked examples
+    And a level document whose place name is a nation's territory fails this scenario
+
   Scenario: A bank is not a licence
     Given a subject has a full bank of verified questions
     And the level that would teach it is blocked under §1
@@ -457,6 +595,13 @@ Feature: The content-review shipping rule is a gate, not a paragraph
     And the change was made by an agent
     Then the check fails
     And the message says that no agent may grant cultural sign-off, for any reason
+
+  Scenario: No copy may imply a review that has not happened
+    Given no community review with status "granted" exists for a level
+    Then no string that level draws, in either language, contains "reviewed", "approved" or "endorsed"
+    And none contains "in partnership with", "with the support of", "en partenariat" or "avec le soutien"
+    And no screen renders a "communityReview" status
+    And TN-PEGGYS-06 and TN-NORTH-06 are the two levels where this is asserted by name
 
   Scenario: A vague nation value is refused
     Given a document declares a nation value that is a category rather than a nation
@@ -475,12 +620,14 @@ Feature: The content-review shipping rule is a gate, not a paragraph
     Then the build fails, naming the mode and the open question
     And the message does not offer a way to override it in the document
     And no copy table carries a label for either mode
+    And no document declares either mode today, on any of the ten built levels
 
   Scenario: The prohibition survives the art contract, in both directions
     Given a level's art contract lists an item in "neverAdd"
     Then no copy string in that level names it in either language
     And no level document field names it
     And level 9's totem poles, inuksuk and suspension bridge are the worked example
+    And level 10's inuksuk, qamutiik, dogsled, kayak and canoe are the second
 
   Scenario: The gate is proven by a failing case, not by a green run
     Then a fixture exists for each of the scenarios above
@@ -496,6 +643,7 @@ finished. Written as acceptance so a level story can be checked against it befor
 **One row of this list is failing today**, and it is the last one: level 8 ships with eighteen verified
 `economy` questions against a floor of thirty and is in `unlockRules.order` (`OQ-ALBERTA-2`). It is recorded
 here as well as in the table above, because a floor nobody notices being crossed is a floor nobody has.
+Nine of the ten built levels clear it, and level 8 is the one that does not.
 
 ```gherkin
 Feature: The floor every level story stands on
@@ -506,6 +654,7 @@ Feature: The floor every level story stands on
     Examples:
       | requirement |
       | its title and subject line have a value in "en" and in "fr" |
+      | every key it owns is spelled with its id and never with its position in the journey |
       | its own waiting sentence names what it is preparing, with no percentage, fraction, step count or ellipsis |
       | its own waiting sentence contains no other level's title, in either language |
       | its own error title names it, in both languages, written out rather than templated |
@@ -517,6 +666,7 @@ Feature: The floor every level story stands on
       | its landmark returns the intended subject under blind identification, and the contract asks for nothing the art is forbidden to draw |
       | its "About this place" panel is reachable from pause and from credits, is never modal, and states a sourced territorial fact |
       | no screen but that panel states or paraphrases a territorial fact |
+      | no string it draws implies a cultural review that has not happened |
       | every factual sentence it puts on screen is verified like a question |
       | it is completable with a keyboard alone |
       | it is completable with one switch, using short and long presses only |
@@ -532,6 +682,7 @@ Feature: The floor every level story stands on
     When the content check runs
     Then the build reports the level, the subject and the count
     And "alberta-foothills" is that level today
+    And it is the only one of the ten
 ```
 
 ---
@@ -547,70 +698,87 @@ Feature: The floor every level story stands on
   until it lands** (ADR-0023, due 2026-10-08, owner engine): `app/adapters/phaser/level-document.ts` still
   holds a hard-coded `LOCOMOTION_MODES` literal, so a level declaring a mode the adapter does not know passes
   `validate-content` and fails at load — a worse failure than the one that was fixed. **Three shipped levels
-  now depend on it**: `prairie-rail` declares `train`, `alberta-foothills` declares `horse` and `vancouver`
-  declares `skateboard`, all three are in the config's nine, and whether the adapter's literal contains them
-  decides whether those levels open at all. Not this directory's to close; recorded so nobody reads
-  "answered" as "done", and the exposure has tripled since it was written.
+  depend on it** — `prairie-rail`'s `train`, `alberta-foothills`'s `horse` and `vancouver`'s `skateboard` —
+  and the two levels shipped on 2026-09-13 depend on it not at all, because both declare `walk`, which is the
+  cheapest possible evidence that the exposure is in the *new* modes and not in the count of levels. Not this
+  directory's to close; recorded so nobody reads "answered" as "done".
 - **`OQ-SPINE-2` — are the subject lines the official chapter names, and who verifies them?** The ten
   subjects are *Discover Canada*'s chapters, and IRCC publishes both languages. The French written above is a
   translation of meaning; the official French chapter titles exist and are citable. *Recommendation:* the
   `content-verifier` checks each pair against canada.ca and records the source, exactly as for a question —
   a subject line is on screen and states what a chapter is called. Where the official title differs from the
-  table above, the official title wins and this file is amended.
+  table above, the official title wins and this file is amended. **All ten pairs now exist**, so this is one
+  pass rather than a standing task, and « Qui nous sommes » and « Les régions du Canada » are the two rows
+  added on 2026-09-13. **ADR-0028 is the reason the second of those is not simply the chapter's name**: a
+  subject is a *remit*, the industry material in *Canada's Regions* belongs to `economy`, and `regions` keeps
+  the rest. The subject line still says what the level teaches; the verifier should read that ADR before
+  deciding what it is being checked against.
 - ~~**`OQ-SPINE-3` — level 4's and level 5's question banks overlap.**~~ **Answered 2026-09-09, by the split
-  this question asked for.** When it was written, all 57 shipped questions carried `subject: "government"`
-  and a dozen of them were about ballots, advance polls, electoral districts and who may vote — level 5's
-  subject. `content/questions/` now holds nine subject directories: `rights` 37 verified, `who-we-are` 46,
-  `history` 96, `government` 38, `elections` 36, `justice` 31, `modern-canada` 39, **`economy` 18** and
-  **`symbols` 42**. **What this question said last is now stale and is corrected here**: it said `economy`
-  and `symbols` had "no bank at all", and both have one. `symbols` clears the floor comfortably and level 9
-  is fine. **`economy` does not**, and that is `OQ-ALBERTA-2` rather than this question — the overlap this
-  question was about is gone, and what remains is a shortfall on one subject and no bank at all for
-  `regions`. Closed, with the correction recorded rather than the number quietly updated.
-- **`OQ-SPINE-4` — one NPC role still needs the French agreement decision, and one worry answered itself.**
-  Level 8's « éleveur / éleveuse » has the same shape as `OQ-LEVEL-8`'s « agent / agente ».
-  **Level 8 has now shipped without placing a character**, so nothing is blocked and nothing has been written
-  either way — which is the cheapest state for this question to be in and is worth one line: the level that
-  needs the answer is built, and the answer is still not needed. **« Archiviste » is no longer a problem**:
-  level 3 places the guide, not an archivist, so the one epicene role that was not grade-6 is not in any
-  document. *Recommendation:* answer `OQ-LEVEL-8` once for all ten levels rather than eight times, and if the
-  answer is a form that agrees, prefer an epicene role for every remaining level — level 9's « l'artiste »
-  shows what that buys. Do not reach for a bracketed ending in any case.
+  this question asked for, and corrected twice since.** `content/questions/` now holds ten subject
+  directories: `rights` 37 verified, `who-we-are` 46, `history` 96, `government` 38, `elections` 36,
+  `justice` 31, `modern-canada` 39, **`economy` 18**, `symbols` 42 and **`regions` 58**. **The correction
+  this question has now made twice is the same correction**: it said `economy` and `symbols` had "no bank at
+  all" and both had one, and it then said there was "no bank at all for `regions`" — which was true when it
+  was written and is not true now. `regions` is the **second largest bank in the game**, behind `history`'s
+  ninety-six, and clears the floor by twenty-eight. The overlap this question was about is gone; what remains
+  is a shortfall on exactly one subject, which is `OQ-ALBERTA-2`. Closed, with both corrections recorded
+  rather than the numbers quietly updated — a question that has been wrong about a count twice should say so,
+  because the next reader is entitled to know how this file's numbers age.
+- **`OQ-SPINE-4` — one NPC role still needs the French agreement decision, and two levels retired the
+  question rather than answering it.** Level 8's « éleveur / éleveuse » has the same shape as `OQ-LEVEL-8`'s
+  « agent / agente », and level 8 has shipped without placing a character, so nothing is blocked and nothing
+  has been written either way. **Levels 2 and 10 shipped placing no character and proposing no role**, which
+  is the cheapest possible state and is a decision rather than an oversight: neither level draws a figure of
+  any kind, so a proposed role would have been the first one. *Recommendation:* answer `OQ-LEVEL-8` once for
+  all ten levels rather than eight times, and prefer an epicene role for every level that still has to place
+  one — level 9's « l'artiste » shows what that buys. Do not reach for a bracketed ending in any case.
 - **`OQ-SPINE-5` — do modern buildings and named venues raise the same question the RCMP uniform did?**
   Levels 5, 6 and 9 name buildings completed well within living memory, and one of them (the CN Tower) has a
   trademarked name. `OQ-LEVEL-1` established that this project asks before drawing something protected rather
   than after. **Answered in part by `TN-NAMES-naming-real-places.md`** for the *copy* half — the name is text,
   in a point-of-interest card's body or in the words a quest's giver says about going there, once, with no
   mark and no claim of association — and the art half is unchanged: draw the form, carry no wordmark, no logo
-  and no signage, cite the reference, credit the photograph. **Level 9 has now exercised it**: Canada Place is
-  named in its level document's point of interest, in both languages, with a source, and nowhere else. What is
-  still the project owner's is whether trade names may appear at all (`OQ-NAMES-1`), and that question is now
-  larger than it was, because three shipped quest documents and two shipped level documents name a building
-  (`OQ-DIALOGUE-5`).
+  and no signage, cite the reference, credit the photograph. **Level 2 adds a case the list did not have**:
+  Peggy's Point Lighthouse is a named structure that is nobody's brand and carries no mark at all, named in
+  its point-of-interest card in both languages and nowhere else — which is the easy end of the same rule and
+  is worth having on the list beside the hard ones. What is still the project owner's is whether trade names
+  may appear at all (`OQ-NAMES-1`).
 - **`OQ-SPINE-6` — is a level's *place* allowed to be a region rather than a city?** Levels 7, 8 and 10 are
-  regions, and `TN-MAP` draws a place name for each. A region is harder to identify blind than a city and
-  harder to reference accurately. **Levels 7 and 8 have both now answered the copy half and both confirmed
-  the worry on the art half, the same way**: their four rows work (`TN-PRAIRIE`, `TN-ALBERTA`), and each
-  landmark is a *type* — "Prairie grain elevator", "Working ranch" — drawn from a specific cited building
-  whose name cannot be used, in one case because it is painted on the crib and in the other because the
-  document chose not to. **That is a pattern rather than two accidents.** *Recommendation:* accept regions
-  for those three, and change what is asked of them: require each to name one **specific, cited, existing**
-  structure as its reference, and stop requiring the *name* to reach the player, because two regions in a row
-  have shown it cannot. `OQ-NAMES-6` records the same finding from `TN-NAMES`'s side. A region with no
-  specific reference is still where an invented landmark comes from, and that half of the rule stands.
-- **`OQ-SPINE-7` — what happens to this file when each level gets its own story?** **Being answered in
-  practice, and the recommendation held:** the row stays and the detail moves. Levels 1, 3, 5, 6, 7, 8 and 9
-  now have files carrying their own copy, and this table keeps their subject, place, locomotion, landmark,
-  NPC and blockers. Each level story owns its own copy, its own art notes and its own scenarios; this file
-  keeps the table, the blockers and the two contracts, so there is still one page that answers "what are the
-  ten levels and which of them may be built". A spine that is deleted after the first level is written is a
-  spine that has to be rediscovered for the second. **Seven of the ten now have a file and the three that do
-  not are Ottawa, which has a full one, and levels 2 and 10, which are blocked** — so this file's remaining
-  job is the table, the blockers and the two gates, exactly as predicted.
-- **`OQ-SPINE-8` — "Built" now means two different things in the status column, and one line of prose is
-  holding them apart.** Seven built levels clear their bank floor; level 8 does not, and every one of them
-  reads as "Built" at a glance. *Recommendation:* the status column gains an explicit state — `built`,
-  `shippable`, `shipped` — or `game.config.json` stops listing a level in `unlockRules.order` until its bank
-  clears, which would make the config the single source of that fact and delete the ambiguity rather than
-  document it. The second is better and is not this directory's to make. Routed to the plan owner with
-  `OQ-ALBERTA-2`.
+  regions, and `TN-MAP` draws a place name for each. **All three have now shipped and all three landed the
+  same way**, which makes it a pattern three times over: each landmark is a *type* — "Prairie grain
+  elevator", "Working ranch", "Yukon River sternwheeler" — drawn from a specific cited structure whose name
+  cannot reach the player, twice because the name is painted on the building and `make verify-art` refuses a
+  `<text>` element. **And level 2 shows the same failure mode on a level that is not a region**: a lighthouse
+  is a type with several hundred instances in one province, so its place-anchor rests on measured proportions
+  and on a contract that says what to do if a blind pass returns only the type. *Recommendation, unchanged
+  and now better evidenced:* accept regions, require each to name one **specific, cited, existing** structure
+  as its reference, and stop requiring the *name* to reach the player. A region with no specific reference is
+  still where an invented landmark comes from, and that half of the rule stands. `OQ-NAMES-6` records the
+  same finding from `TN-NAMES`'s side.
+- **`OQ-SPINE-7` — what happens to this file when each level gets its own story?** **Answered in practice.**
+  All ten levels now have a story file — Ottawa a full one, the other nine partial — and this table keeps
+  their subject, place, locomotion, landmark, NPC and blockers. Each level story owns its own copy, its own
+  art notes and its own scenarios; this file keeps the table, the blockers and the two contracts, so there is
+  still one page that answers "what are the ten levels and which of them may be built". A spine that is
+  deleted after the first level is written is a spine that has to be rediscovered for the second.
+  **The prediction held exactly**: the detail moved and the rows stayed. What this file now owns that no
+  level story can is the **subject-versus-place distinction** in the blockers section, because it is the rule
+  two levels were unblocked by and neither of them is the right place to keep a rule about all ten.
+- **`OQ-SPINE-8` — "Built" means two different things in the status column, and one line of prose is holding
+  them apart.** Nine built levels clear their bank floor; level 8 does not, and every one of them reads as
+  "Built" at a glance. *Recommendation:* the status column gains an explicit state — `built`, `shippable`,
+  `shipped` — or `game.config.json` stops listing a level in `unlockRules.order` until its bank clears, which
+  would make the config the single source of that fact and delete the ambiguity rather than document it. The
+  second is better and is not this directory's to make. **The map filling up makes this worse rather than
+  better**: with ten of ten built, "how much of this game is finished" is a question the status column is now
+  the only answer to, and it answers it in prose. Routed to the plan owner with `OQ-ALBERTA-2`.
+- **`OQ-SPINE-9` — two Tier 3 obligations exist for these ten levels and nothing was reading either of
+  them.** `assets/style/peggys-cove-level.md` §0 and `assets/style/the-north-level.md` §0 each carry an
+  ADR-0009 marker dated 2026-12-08, naming what a reviewer from the Mi'kmaq and from Kwanlin Dün First
+  Nation still owes — and `scripts/check-obligations.mjs` scans `*.md` under `docs/` only, so both were
+  decoration. The art agent reported that plainly rather than assuming the markers counted, which is why it
+  cost one commit. Both are copied into `docs/content-review.md` §13 in this change.
+  *Recommendation:* **also widen the scanner to `assets/style/`**, and treat the copies as the stop-gap they
+  are — two owners can write an obligation and only one directory is read, so the next art sheet's marker
+  will be decoration again. Routed to the engine agent. `OQ-PEGGYS-4` and `OQ-NORTH-5` are the same question
+  from the two level stories.

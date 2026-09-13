@@ -11,6 +11,14 @@ them, in the shape of `TN-LEVEL-ottawa.md`. What is here is the copy the level d
 `content/levels/vancouver.json` shipped, `content/game.config.json` lists it in `levels`, in `journey` and in
 `unlockRules.order`, and three copy gates are failing by name for want of these four rows and one mode label.
 
+**Amended 2026-09-13 — this is no longer the last level.** `content/levels/the-north.json` shipped and sits
+after Vancouver in `unlockRules.order`, so finishing this level now **offers** one rather than offering
+nothing, and `TN-VANCOUVER-05`'s last scenario is rewritten rather than left to pass for a reason that
+stopped being true. Two other statements in this file were true when written and are updated with their
+reason: level 10 brings the **fifth** French form after « tampon » (« du Nord »), so "the four shapes stay
+four" is now "the four this level knew about stayed four until the tenth level"; and the list of levels an
+error card may not name gains Peggy's Cove and the North. Nothing about this level's own four rows changed.
+
 Read `README.md` in this directory first. The rows this file does not own:
 
 | What | Key | Owned by |
@@ -45,7 +53,9 @@ Halifax is "the harbour" / « le port », Winnipeg is "the riverbank" / « la ri
 waterfront" / « le front de mer ». That is checked rather than trusted (`TN-VANCOUVER-01`), because a
 loading screen a player has seen three times before stops being read at all, and because Winnipeg's own file
 rejected "the promenade" for exactly this reason — two levels sounding the same is how a player stops hearing
-either.
+either. **Two more levels have landed beside water since**, and neither took a noun this one uses: Peggy's
+Cove waits in "the bare rock" / « la roche nue » and the North in "the gravel shore" / « la plage de galets »
+(`TN-WAIT-01`).
 
 **« Le front de mer » also appears in this level's territorial statement, and that is not the statement
 leaking.** The statement's first sentence sets the scene — « Ce niveau se déroule sur le front de mer de
@@ -69,7 +79,9 @@ in any form, including background, silhouette, icon and loading art — and that
 recorded fallback that is also in `neverAdd` so it cannot drift into the seawall tile. A copy row is the
 other door into the same room: a waiting sentence or a stamp line naming any of the three would put on screen
 in words what the art contract forbids in pixels. `TN-VANCOUVER-01` and `TN-VANCOUVER-05` check for all three
-in both languages.
+in both languages. **Level 10 now carries the same arrangement for a longer list** — the inuksuk, the
+qamutiik, the dogsled, the kayak and the canoe — which makes this the pattern rather than one level's
+precaution (`TN-NORTH-06`).
 
 ### The territorial statement names three nations, and no row here narrows it
 
@@ -108,7 +120,10 @@ Vancouver's four rows correctly would produce four wrong ones for the level imme
 levels are each other's evidence**, which is why they landed together.
 
 `stamp.vancouver.earned` adds **no new French shape** after « tampon » — it is « de », the form Toronto and
-Winnipeg already take. The four shapes stay four: « d' », « de la », « de », « des ».
+Winnipeg already take. **Four shapes were all this table had when this file was written, and level 10 added
+the fifth**: « du Nord », *de + le* contracting, on the last level in the order (`TN-DONE`, `TN-NORTH-05`).
+The four this level knew about — « d' », « de la », « de », « des » — are unchanged, and this level still
+adds none of them.
 
 **« Tampon », never « timbre »** — `TN-PASSPORT-my-passport.md` settled it.
 
@@ -118,7 +133,8 @@ Winnipeg already take. The four shapes stay four: « d' », « de la », « de �
 `walk` second and `"labelKey": "locomotion.skateboard.label"` on it. So `skateboard` gets a label under
 `TN-MOVE`'s rule that a mode is named when a level document declares it, and not before. The row is written
 in `TN-MOVE-locomotion-labels.md`, with the other six. The second declared mode is `walk`, whose label
-already exists, so this level adds exactly one row to that table and no more.
+already exists, so this level adds exactly one row to that table and no more. **It is the last row that
+table gained**: the two levels after it declare `walk` and nothing else.
 
 **"Skateboarding" and not "Skating", because level 4 has "Skating" and it means ice.** Ottawa's `skate` is
 "Skating" / « Patinage » on the canal. Two modes whose labels differ by one syllable would be a strip that
@@ -134,10 +150,10 @@ earns the stamp and draws the completion card (`TN-DONE`). Everything on that ca
 who rolled from the spawn to the exit, and `TN-DONE-02` is the sentence for the one who answered nothing on
 the way.
 
-**The subject bank clears the floor, and it is the only one of the two levels shipped in this change that
-does.** `content/questions/symbols/` holds **forty-two authored questions, all forty-two reported verified**,
-against `CLAUDE.md`'s thirty. `economy` — the level immediately before this one — holds nineteen and
-eighteen, which is `OQ-ALBERTA-2`. See `OQ-VANCOUVER-2`.
+**The subject bank clears the floor.** `content/questions/symbols/` holds **forty-two authored questions, all
+forty-two reported verified**, against `CLAUDE.md`'s thirty. `economy` — the level immediately before this
+one — holds nineteen and eighteen, which is `OQ-ALBERTA-2` and is still, with all ten levels built, the only
+bank below the floor. See `OQ-VANCOUVER-2`.
 
 ## Accessibility and bilingual coverage map
 
@@ -168,6 +184,7 @@ Feature: Vancouver says what it is getting ready
   Scenario: No two levels wait in the same noun
     Then the waiting sentences of Halifax, Winnipeg and Vancouver share no noun in English
     And "le port", "la rive" and "le front de mer" are three different nouns in French
+    And neither of the two levels added after this one uses any of them
     And a build in which two levels draw the same waiting sentence fails this scenario
 
   Scenario: The HUD says how I move here
@@ -232,8 +249,8 @@ Feature: The error card names this level
     Then the event "level/failed" is emitted for "vancouver"
     And the element "level-error" is visible
     And it says "We could not load Vancouver." and "Check your connection and try again."
-    And it does not name Halifax, Québec City, Ottawa, Toronto, Winnipeg, the Prairies
-      or the Alberta foothills
+    And it does not name Halifax, Peggy's Cove, Québec City, Ottawa, Toronto, Winnipeg,
+      the Prairies, the Alberta foothills or the North
     And a button "Try again" is offered
     And a button "Go back" is offered
     And the element "playable" is never present
@@ -247,6 +264,7 @@ Feature: The error card names this level
     Then "level.vancouver.error.title" is a written row in both languages
     And it is not produced by dropping this level's title into a sentence
     And the level immediately before it in "unlockRules.order" would break that same template
+    And so would the level immediately after it
 
   Scenario: A stalled load can be left
     Given the Vancouver level has not become playable
@@ -393,8 +411,9 @@ Feature: This level's two sentences on the completion card
     Then "stamp.vancouver.earned" and "level.vancouver.play" each have a value in "en" and in "fr"
     And a missing row fails the content check, as TN-DONE-05 describes
     And neither is assembled from a template with this level's title dropped into it
-    And the four French forms "d'Halifax", "de la Ville de Québec", "de Toronto" and "des Prairies"
+    And the forms "d'Halifax", "de la Ville de Québec", "de Toronto" and "des Prairies"
       are each still a written row, and this level adds no fifth
+    And the fifth form in the game is "du Nord", which level 10 added and this level did not
 
   Scenario: A player who rolled past everything is not told they learned something
     Given I reached the end of Vancouver having answered no question
@@ -402,11 +421,13 @@ Feature: This level's two sentences on the completion card
     And the line about my answers is the one in TN-DONE-02
     And no sentence on the card names the building
 
-  Scenario: This is the last level a player can be offered today
+  Scenario: Finishing this level now opens the last one
     Given I finished Vancouver
-    And no level after it in "unlockRules.order" has a document
-    Then no "quest-complete-next" control is present, as TN-DONE-05 requires
-    And nothing on the card says a level is coming, locked or unavailable
+    And "the-north" follows it in "unlockRules.order" and has a document
+    Then "quest-complete-next" is present and reads "Play the North"
+    And in French it reads "Jouer dans le Nord"
+    And this scenario replaces the one that asserted no level could be offered here,
+      which was true only while level 10 was unbuilt
 ```
 
 ---
@@ -428,7 +449,9 @@ Feature: This level's two sentences on the completion card
   `content/levels/vancouver.json` carries `verification.status: "unverified"` on the point of interest's
   fact, on the territorial statement **and on the `nationSource`**, and `TN-LEVELS-03` requires every factual
   sentence a level puts on screen to be verified like a question. Nothing in this file's four rows states a
-  fact, so none of them is blocked; the card and the panel are. Routed to the content verifier.
+  fact, so none of them is blocked; the card and the panel are. **Every level shipped since has the same
+  shape**, so this is now a ten-level backlog rather than one level's problem. Routed to the content
+  verifier.
 - **`OQ-VANCOUVER-3` — the territorial statement is `volatile` and the panel can lose it without warning.**
   `content/levels/vancouver.json` marks its `fact.source` `"volatile": true`, correctly: it is quoted from a
   living nation's own website rather than from a fixed publication, so `CLAUDE.md` re-verifies it every run
@@ -437,7 +460,9 @@ Feature: This level's two sentences on the completion card
   as a level with no territory, and it must not be replaced by an agent's paraphrase. *Recommendation:* the
   panel says plainly that the source is being checked and keeps its citation, in the shape `TN-MAP-04` uses
   for a level that is not made yet — a true sentence about the state it is in. None of this file's four rows
-  changes either way, which is the point of keeping the statement out of them. Routed to
+  changes either way, which is the point of keeping the statement out of them. **`TN-PEGGYS-06` and
+  `TN-NORTH-06` now write that behaviour as acceptance**, on a level whose statement is `volatile` for half a
+  sentence — so the recommendation has scenarios behind it rather than only a note. Routed to
   `docs/content-review.md`'s owner and to the verifier.
 - **`OQ-VANCOUVER-4` — one `nationSource`, three nations, and two documents behind one sentence.**
   `assets/style/vancouver-level.md` §8 records it and it is repeated here because it is a copy-adjacent
@@ -447,9 +472,9 @@ Feature: This level's two sentences on the completion card
   engaged. **Narrowing it to one nation is refused** and this file does not reopen that. *Recommendation:*
   the schema gains a second `nationSource`, or the panel carries two citations; either way the statement
   stays as it is. **No copy in this file changes whichever way it lands**, because none of it names a nation,
-  and that is by design (`TN-WAIT`'s rule 3). This is the same shape as `OQ-WINNIPEG-3` and
-  `OQ-ALBERTA-4`, and three levels asking one question is usually one question. Routed to the architect and
-  to the content verifier.
+  and that is by design (`TN-WAIT`'s rule 3). This is the same shape as `OQ-WINNIPEG-3`, `OQ-ALBERTA-4` and
+  now `OQ-NORTH-2`, whose statement rests on three passages of one page — **four levels asking one question
+  is one question** (`OQ-SCHEMA-1`). Routed to the architect and to the content verifier.
 - **`OQ-VANCOUVER-5` — « Planche à roulettes » is three words where every other label is one.**
   `TN-MOVE-06` asserted that every value is a single noun, which was written before a level declared a mode
   whose French name is a compound. The scenario is amended in `TN-MOVE` to forbid what it was actually aimed

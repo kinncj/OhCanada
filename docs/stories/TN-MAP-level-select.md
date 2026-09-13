@@ -1,7 +1,8 @@
 # TN-MAP — Level select: ten places, three states
 
 **Intent.** A player sees the whole journey across Canada, knows which level they can open now, knows what
-would open the next one, and is never left thinking the game is broken because most of it is not built yet.
+would open the next one, and is never left thinking the game is broken because part of it is not built yet —
+or that more is coming when it is not.
 
 Read `README.md` in this directory first. `TN-TITLE-title-screen.md` owns the screen that opens this one;
 `TN-FLOW-first-run-and-return.md` owns the route in and out; `TN-LEVELS-2-to-10-spine.md` owns each level's
@@ -15,10 +16,26 @@ string that moved; three of them are in the table below. The noun is masculine i
 else about the strings changed. This screen also gained one control, "See my passport", beside the stamp
 count — `TN-PASSPORT-01` says why it lands here and not on the title screen.
 
+**Amended again 2026-09-13 — the journey is complete, and one sentence on this screen stopped being true
+because the work finished.** `content/levels/` holds ten documents and `content/game.config.json` names the
+same ten in `levels`, in `unlockRules.order` and in a `journey` with no nulls, so **every card on the shipped
+map is "Open" or "Locked" and none is "Not made yet"**. Three consequences, and the second is the one that
+needed a rule rather than an amendment:
+
+- **The three states stay**, all of them, because they are about what a *build* contains and not about what
+  this plan contains. `TN-MAP-04` now names its own premise instead of borrowing it from the config.
+- **`map.moreComing` is drawn only while `ready` is less than `total`.** "More are coming." on a complete map
+  tells a player to wait for something nobody is building. The rule is below, with scenarios, and
+  `OQ-PASSPORT-7` is where it was found.
+- **`OQ-MAP-1` is closed.** The config's ten ids are the ten this directory names.
+
 ## The problem this story is mostly about
 
-Nine of the ten levels do not exist. The tenth does. A screen listing ten things where nine of them cannot be
-opened has to say *why* each one cannot be opened, and there are two different whys:
+For most of this project's life, most of the ten levels did not exist; today all ten do, and a future build
+may again contain fewer — a partial checkout, a branch mid-migration, or a level pulled after a
+cultural-accuracy report, which `docs/content-review.md` §7 requires to happen *before* the discussion. A
+screen listing ten things where some of them cannot be opened has to say *why* each one cannot be opened, and
+there are two different whys:
 
 | State | Means | The player's reading of it |
 |---|---|---|
@@ -30,6 +47,11 @@ The two locked states must be told apart by a player at a glance, by a screen re
 **neither may read as a defect**. A level the player has not earned is a goal. A level nobody has built is a
 statement about the project, not about the player, and saying "Locked" over it invites them to look for a
 key that does not exist.
+
+**The third state is unreachable on the shipped build and none of its scenarios is deleted.** A guard whose
+only input has been deleted is ADR-0024's vacuity wearing a green tick: it reports exactly what a working
+guard reports, and nothing can make it fail. `TN-MAP-04` therefore supplies its own unbuilt entry rather than
+relying on the shipped config to contain one, and the same is true of `TN-PASSPORT-04`.
 
 ### The rule that decides which state a level is in
 
@@ -45,12 +67,45 @@ Written here once, because deciding it per card produces three answers:
 the stamps earned. Whether a *document* exists is the level catalogue's answer
 (`app/adapters/phaser/level-catalog.ts`, which derives it from `content/levels/*.json` rather than from a
 list anybody maintains). Two sources, two different questions, and the bug this rule prevents is the screen
-answering one of them with the other. See `OQ-MAP-1`: the two sources do not agree today and one of them is
-empty.
+answering one of them with the other. **The two sources agree today** and `OQ-MAP-1` records what it took.
 
 **The passport reuses this rule and differs from it in exactly one place**, which is written down in
 `TN-PASSPORT`: an earned stamp is shown as earned even when this build has no document for that level,
 because the map says what a player can do now and the passport says what they did.
+
+### `map.moreComing` — the rule, because the string outlived the state it described
+
+> **"More are coming." is drawn only while `ready` is less than `total`. When they are equal, the screen
+> says nothing in that slot.**
+
+Every build this project has had until 2026-09-13 had fewer levels than the journey names, so the sentence
+was true every time anybody looked at it. It is false on a complete map, and a screen that promises content
+nobody is building is `README.md`'s "a screen never describes a state it is not in" arriving from the one
+direction nobody watches: **a sentence that stopped being true because the work finished.** Four things this
+rule does and does not say:
+
+1. **The string is not deleted.** A build with fewer than ten documents still needs it, and
+   `TN-MAP-04`'s "a build with one level is a normal state of this game" still asserts it.
+2. **Nothing replaces it.** The slot is empty when the journey is complete — no "That's all of them!", no
+   "You have the whole map", no tick. This screen reports state; a congratulation is a result, and
+   `TN-RESULT` owns the only screen in this game that reports one.
+3. **It is one key with two subjects, and that is why it belongs to the key rather than to a screen.** The
+   level select and the passport draw it beside `map.levelsReady`, counting **levels with a document**. The
+   exam's start screen and its result screen draw the same row beside `exam.subjectsReady`, counting
+   **subjects with a bank** (`TN-EXAM-01`, `TN-RESULT-03`). The two counts can disagree inside one build — a
+   level can ship before its subject clears a bank, and a subject can have a bank before its level is built —
+   so the sentence can be correct on one screen and wrong on another **at the same time**, which is exactly
+   the case a per-screen rule would get wrong. **The test is always the count that sits beside it**, and
+   `TN-MAP-01`'s complete-journey scenario asserts it across every screen that draws the key, so a screen
+   that has no scenario of its own is still covered by the rule rather than by nobody.
+4. **Four screens implement it and every one of them tests `ready < total` first.** That was true before this
+   rule was written down: `app/ui/exam-start.ts` carries the comment *"Only while it is true, exactly as the
+   map draws it (`TN-MAP`)"*, pointing at a rule this file did not yet state, and `app/ui/level-select.ts`,
+   `app/ui/passport.ts` and `app/ui/exam-result.ts` each carry the same condition. **A correct implementation
+   of an unwritten rule is one refactor away from being an unexplained condition somebody simplifies**, which
+   is the whole reason it is here now. `TN-MAP-01`, `TN-MAP-11` and `TN-PASSPORT-01` assert both halves;
+   `TN-EXAM-01` and `TN-RESULT-03` assert the partial half against a subject count, which is the half those
+   two screens can still reach today.
 
 ## Accessibility and bilingual coverage map
 
@@ -84,14 +139,18 @@ because the map says what a player can do now and the passport says what they di
 | `map.number` | Level {{n}} | Niveau {{n}} |
 
 The level names and subject lines are owned by `TN-LEVELS-2-to-10-spine.md` (`level.<id>.title` and
-`level.<id>.subtitle` for levels 1, 2 and 5 to 10) and by `TN-LEVEL-ottawa.md` (`level.ottawa.title`,
+`level.<id>.subtitle`, for **every level but Ottawa**) and by `TN-LEVEL-ottawa.md` (`level.ottawa.title`,
 `level.ottawa.subtitle`). This screen names the keys and does not carry the words: a place name written in
-two tables is a place name that will eventually differ between two screens. `common.back` is owned by
-`TN-FLOW-first-run-and-return.md`; `storage.warning` by `TN-SAVE-save-and-reload.md`; `passport.open` by
+two tables is a place name that will eventually differ between two screens. **Every one of those keys is
+spelled with the level's id**; `level.2.subtitle`, `level.10.title` and `level.10.subtitle` were retired when
+levels 2 and 10 got ids, and `TN-WAIT-03` refuses a key numbered by journey position. `common.back` is owned
+by `TN-FLOW-first-run-and-return.md`; `storage.warning` by `TN-SAVE-save-and-reload.md`; `passport.open` by
 `TN-PASSPORT-my-passport.md`.
 
 `map.stamps`, `map.levelsReady`, `map.moreComing`, `map.state.notBuilt` and `map.notBuilt.help` are drawn by
-the passport too, by key. Five strings, one home, two screens that cannot drift apart.
+the passport too, by key. Five strings, one home, two screens that cannot drift apart. **`map.moreComing` is
+drawn by two more** — the exam's start and result screens — against a count of subjects rather than levels;
+the rule above covers all four and the reason it is one key is that it is one sentence about one fact.
 
 **Why `map.stamps` and `map.levelsReady` are labels with a preposition after the number.** `TN-COPY`'s
 counting rule 1: a noun before the number and « sur » after it has no plural form to get wrong in either
@@ -103,7 +162,9 @@ locale and never by `n === 1` (rule 3: at zero, French is singular and English i
 **Why "Not made yet" and not "Coming soon".** "Soon" is a promise with a date in it, and this project has no
 date. "Not made yet" is true, it is grade-6 plain, and paired with "We are still making this level." it reads
 as work in progress rather than as breakage. « Pas encore créé » and « Ce niveau est encore en préparation. »
-carry the same two halves. Neither string may acquire a date, a version number or a percentage.
+carry the same two halves. Neither string may acquire a date, a version number or a percentage — and
+`map.moreComing` may not either, which is half of why it is dropped rather than reworded when the journey is
+complete: the honest wording for "everything that is planned exists" is silence.
 
 ---
 
@@ -117,6 +178,7 @@ Feature: The level select screen
 
   Background:
     Given I have a saved game with a character
+    And this build contains ten level documents
     When I open the level select
 
   Scenario: The screen is there and says what it is
@@ -132,6 +194,13 @@ Feature: The level select screen
     And each card shows "Level {{n}}" with its number
     And each card shows its place name and its subject line
 
+  Scenario: The ten are the ten this directory names
+    Then the cards are "halifax", "peggys-cove", "quebec-city", "ottawa", "toronto",
+      "winnipeg", "prairie-rail", "alberta-foothills", "vancouver" and "the-north", in that order
+    And each id is the one "content/game.config.json" lists in "journey" and in "unlockRules.order"
+    And each id has a document under "content/levels"
+    And no card is drawn for an id no story names
+
   Scenario: Every card carries exactly one state, in words
     Then each card shows one of "Open", "Locked" or "Not made yet" as text
     And no card shows two state words
@@ -139,9 +208,27 @@ Feature: The level select screen
     And each card reports "data-state" equal to "open", "locked" or "not-built"
 
   Scenario: The screen says how much of the game exists
-    Then it shows "Levels ready: 1 of 10"
-    And it shows "More are coming."
+    Then it shows "Levels ready: 10 of 10"
     And it shows "Stamps: 0 of 10"
+
+  Scenario: A complete journey promises nothing more
+    Given every level in the journey has a document
+    Then the screen does not show "More are coming."
+    And the slot it would occupy is empty, not filled with another sentence
+    And nothing on the screen congratulates me for the game being finished
+    And nothing on the screen says a level is coming, planned or in progress
+
+  Scenario: No screen draws the promise once its own count is complete
+    Then no screen in this game draws "More are coming." while the count beside it equals its total
+    And that is checked on the level select and the passport against levels with a document
+    And on the exam's start screen and its result screen against subjects with a bank
+    And a screen that draws it unconditionally fails this scenario, whichever count it sits beside
+
+  Scenario: An incomplete journey still says so
+    Given exactly one level document exists
+    Then the screen shows "Levels ready: 1 of 10"
+    And it shows "More are coming."
+    And the sentence is drawn whenever the ready count is lower than the total, and never otherwise
 
   Scenario: The stamp count is a route as well as a number
     Then a control "See my passport" is offered as "passport-open"
@@ -241,10 +328,16 @@ Feature: A locked level says what would open it
 
 ## TN-MAP-04 — A level that is not built yet
 
+**No card is in this state on the shipped build**, because all ten documents exist. These scenarios supply
+their own unbuilt entry rather than borrowing one from the config, for the reason ADR-0024 gives: a guard
+whose only input has been deleted passes exactly as a working guard passes, and nothing can make it fail.
+`tests/unit/ui/level-select.test.ts` does the same thing on purpose — the shipped ten are asserted by name,
+and the no-placeholder guard is handed a synthetic entry.
+
 ```gherkin
 Feature: A level the game does not contain
   Background:
-    Given no level document exists for level 7
+    Given this build contains no level document for level 7
     And the level select is visible
 
   Scenario: It says the game is still being made, not that the player is missing something
@@ -268,15 +361,22 @@ Feature: A level the game does not contain
 
   Scenario: It still says what it will teach
     Then the card shows its subject line
-    And where the place is not decided yet, no place name is shown and no placeholder text is drawn
+    And where a level has no title row in the active language, no place name is shown
+      and no placeholder text is drawn
     And nothing reads as "TBD", "coming soon", "???" or an empty box
+    And levels 2 and 10 were this scenario's worked example until they shipped with ids and titles
+
+  Scenario: The guard is fed an entry on purpose, not by the shipped config
+    Given every level in the shipped journey has a document
+    Then this scenario's unbuilt entry is supplied by the test, not read from "content/game.config.json"
+    And a change that deletes the entry rather than the state fails this suite
+    And a state no input can reach is not evidence that the state is handled
 
   Scenario: A build with one level is a normal state of this game
     Given exactly one level document exists
     Then nine cards report "data-state" equal to "not-built"
     And the screen shows "Levels ready: 1 of 10"
     And the screen shows "More are coming."
-    And no scenario in this file requires a level document that does not exist
 ```
 
 ## TN-MAP-05 — The two locked states are told apart (failure path)
@@ -339,6 +439,12 @@ Feature: A map built on data that does not agree with itself
     Then the build fails, naming the id
     And the message says the level would be unreachable from the map
 
+  Scenario: The two lists agree today, and the check is what keeps them agreeing
+    Then every id in "unlockRules.order" has a document under "content/levels"
+    And every document under "content/levels" is named in "unlockRules.order"
+    And every one of them is named by a story in this directory
+    And a change that adds an id to one list and not the other is reported
+
   Scenario: A level chosen from the map that fails to load
     Given the Ottawa assets cannot be fetched
     When I choose "level-card-ottawa"
@@ -358,6 +464,7 @@ Feature: A map built on data that does not agree with itself
     When I open the level select
     Then ten cards are shown, all reporting "data-state" equal to "not-built"
     And the screen shows "Levels ready: 0 of 10"
+    And the screen shows "More are coming."
     And no error screen is shown
 ```
 
@@ -448,6 +555,11 @@ Feature: Announcing the map
     And the accessible name of a card that is not built contains "Not made yet"
     And no card's state has to be inferred from styling
 
+  Scenario: A place name with an apostrophe or an accent is read as a place
+    Then the second card's name contains "Peggy's Cove" and is not spelled out
+    And the third card's name contains "Québec City", or "Ville de Québec" in French
+    And the tenth card's name contains "The North", or "Le Nord" in French
+
   Scenario: The reason is a description, not a tooltip
     Then each card's help sentence is its accessible description
     And it is read after the name, not instead of it
@@ -455,6 +567,7 @@ Feature: Announcing the map
   Scenario: Arriving and choosing are announced once
     When the level select opens
     Then "#tn-live-region" reads the screen's name and how many levels are ready, once
+    And it does not announce a promise of more when every level is ready
     When I choose a level
     Then the arrival is announced by the level, as TN-LEVEL-08 describes
 
@@ -491,11 +604,12 @@ Feature: The map honours the accessibility settings
     Then each card's state is distinguishable without colour
     And every state word meets the contrast requirement against its background
 
-  Scenario: The longest state sentence still fits
+  Scenario: The longest strings on a card still fit
     Given text scaling is 200 %
     And the language is French
     Then the whole of "Ce niveau est encore en préparation." is visible on its card
     And the whole of "Gagnez encore 2 tampons pour ouvrir ce niveau." is visible on its card
+    And the whole of "Les contreforts de l'Alberta" is visible as a place name
 ```
 
 ## TN-MAP-11 — The map in French
@@ -504,15 +618,23 @@ Feature: The map honours the accessibility settings
 Feature: The level select in French
   Background:
     Given the language is French
+    And this build contains ten level documents
     And the level select is visible
 
   Scenario: The screen is French
     Then the heading reads "Choisir un niveau"
     And the back control reads "Retour"
-    And the counts read "Niveaux prêts : 1 sur 10" and "Tampons : 0 sur 10"
-    And it shows "D'autres arrivent."
+    And the counts read "Niveaux prêts : 10 sur 10" and "Tampons : 0 sur 10"
     And there is a space before each colon
     And no English word appears in "level-select"
+
+  Scenario: The French promise is dropped on the same condition as the English one
+    Then the screen does not show "D'autres arrivent."
+    And no other French sentence is drawn in its place
+    Given exactly one level document exists
+    Then the screen reads "Niveaux prêts : 1 sur 10"
+    And it shows "D'autres arrivent."
+    And the condition is the same in both languages, because it is one row and one rule
 
   Scenario: Every state word is French
     Then the state words used are only "Ouvert", "Verrouillé" and "Pas encore créé"
@@ -540,6 +662,8 @@ Feature: The level select in French
   Scenario: Place names are what each language calls the place
     Then level 4 reads "Ottawa" in both languages
     And level 3 reads "Québec City" in English and "Ville de Québec" in French
+    And level 2 reads "Peggy's Cove" in both, with the same apostrophe
+    And level 10 reads "The North" in English and "Le Nord" in French, each with its own capitals
     And every place name has a value in both "en" and "fr"
 
   Scenario: No French string on this screen needs gender agreement
@@ -557,16 +681,19 @@ Feature: The level select in French
 
 ## Open questions
 
-- **`OQ-MAP-1` — the map has no data source today, and the one it should have is empty.**
-  `content/game.config.json` carried `"levels": []` and `unlockRules` with `initialLevels: []` and
-  `order: []`, while `content/levels/ottawa.json` existed. `unlockedLevelIds` on that config returned
-  nothing, so **every level was locked, including the only one that was built**, and the map would have been
-  a wall. `TN-MAP-06`'s first scenario is written to fail on exactly that.
-  *Recommendation, partly taken:* the config now carries `initialLevels: ["ottawa"]` and ten ids in
-  `unlockRules.order`, and `levels` names the one level that exists. **The remaining gap is which ten ids**:
-  four of them (`mikmaki`, `alberta`, `rockies`, `the-north`) do not match `TN-LEVELS`, and two of those are
-  ids `TN-LEVELS` deliberately declines to write. `OQ-PASSPORT-2` carries it, because the passport counts to
-  ten from the same list. Routed to the architect and the plan owner; `content/` is not this file's to edit.
+- ~~**`OQ-MAP-1` — the map has no data source today, and the one it should have is empty.**~~
+  **Answered 2026-09-13, in both halves.** When this was written, `content/game.config.json` carried
+  `"levels": []` and `unlockRules` with `initialLevels: []` and `order: []` while `content/levels/ottawa.json`
+  existed, so **every level was locked, including the only one that was built**, and the map would have been a
+  wall; `TN-MAP-06`'s first scenario is written to fail on exactly that and stays as the guard. The config
+  then carried ten ids, four of which (`mikmaki`, `alberta`, `rockies`, `the-north`) did not match
+  `TN-LEVELS`, and that was the remaining gap this question named. **It names the ten this directory names:**
+  `halifax`, `peggys-cove`, `quebec-city`, `ottawa`, `toronto`, `winnipeg`, `prairie-rail`,
+  `alberta-foothills`, `vancouver`, `the-north` — in `levels`, in `unlockRules.order` and in a `journey` with
+  no nulls, with `initialLevels: ["halifax"]` and a document for each. `TN-MAP-06`'s fourth scenario is the
+  check that keeps the two lists agreeing, because agreement reached once is not agreement maintained.
+  `OQ-PASSPORT-2` is closed by the same fact; `OQ-EXAM-5` and `OQ-RESULT-2` are **not**, because they count
+  *subjects* and nothing in `content/` declares those (`OQ-SUBJECTS-1`).
 - **`OQ-MAP-2` — is the map a map, or a list?** These scenarios require an ordered, vertically scrollable
   set of cards, because ten places east to west across a 1080×1920 portrait screen is a horizontal shape in a
   vertical window, and a horizontally panned map fails "the page does not scroll sideways" and needs a drag.
@@ -577,7 +704,9 @@ Feature: The level select in French
   Vancouver; level 10 is The North, which is not west of Vancouver. *Recommendation:* keep it last in the
   order — it is last in the plan and last in the unlock chain — and do not print a sentence claiming the
   journey runs east to west, because level 10 makes that sentence false. No copy in this file makes that
-  claim, deliberately.
+  claim, deliberately. **Level 10 has now shipped and the card draws "The North" / « Le Nord »**, so the
+  question is live rather than hypothetical and the answer is unchanged: the order is the journey's, and no
+  sentence describes its direction.
 - **`OQ-MAP-4` — is `stampsToUnlockNext` one stamp or several, and does the map say which?** The copy table
   carries both shapes: `map.locked.after` names the level to finish (right when the answer is one), and
   `map.locked.stamps.*` counts stamps (right when it is more than one). *Recommendation:* keep
@@ -588,8 +717,7 @@ Feature: The level select in French
   « tampon ».** Settled in `TN-PASSPORT-my-passport.md`, which is the screen the word is about, and applied
   in the same pass to `map.stamps`, `map.locked.stamps.one`, `map.locked.stamps.other` and
   `stamp.ottawa.earned` — which is what this question required. « Cachet » was the other candidate and is
-  recorded as `OQ-PASSPORT-5` for the first French reviewer. `app/ui/copy.ts` still carries the old French
-  and is not this directory's to edit; the change is reported to the UI agent.
+  recorded as `OQ-PASSPORT-5` for the first French reviewer.
 - **`OQ-MAP-6` — does the map show a level's questions or best score?** `progress.schema.json` carries
   `bestScore` per level. *Recommendation:* still no. A score on a locked or unbuilt card is noise, and a
   score on an open card invites a leaderboard, which this game does not have. Exam mode has now landed and
@@ -599,3 +727,12 @@ Feature: The level select in French
   prevents it and a learning tool that locks its own content behind having seen it once is working against
   itself. *Recommendation:* keep it; if replay ever needs to differ from a first visit, that is a level
   story's problem, not the map's.
+- **`OQ-MAP-8` — `map.levelsReady` counts documents, and one of the ten should arguably not be counted.**
+  "Levels ready: 10 of 10" is true of what a player can open, and level 8 ships with eighteen verified
+  `economy` questions against `CLAUDE.md`'s floor of thirty (`OQ-ALBERTA-2`), so one of those ten is *built*
+  and not *shippable*. The map has no word for that and should not invent one: a card reading "Nearly ready"
+  would be a fourth state, a fourth string, and a statement about the project in a place the player reads for
+  a statement about themselves. *Recommendation:* leave the count as documents, and fix the fact rather than
+  the sentence — twelve more verified questions, or the level comes out of `unlockRules.order`, which is
+  `OQ-SPINE-8`'s second option and would make this count correct by construction. Recorded here because "ten
+  of ten" is the most confident sentence on this screen and it is one bank short of being wholly true.
