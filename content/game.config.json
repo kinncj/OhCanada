@@ -12,13 +12,15 @@
   "designHeight": 1920,
   "levels": [
     "halifax",
+    "peggys-cove",
     "quebec-city",
     "ottawa",
     "toronto",
     "winnipeg",
     "prairie-rail",
     "alberta-foothills",
-    "vancouver"
+    "vancouver",
+    "the-north"
   ],
   "locomotionModes": [
     "walk",
@@ -33,7 +35,7 @@
   ],
   "journey": [
     "halifax",
-    null,
+    "peggys-cove",
     "quebec-city",
     "ottawa",
     "toronto",
@@ -41,7 +43,7 @@
     "prairie-rail",
     "alberta-foothills",
     "vancouver",
-    null
+    "the-north"
   ],
   "unlockRules": {
     "initialLevels": [
@@ -49,13 +51,15 @@
     ],
     "order": [
       "halifax",
+      "peggys-cove",
       "quebec-city",
       "ottawa",
       "toronto",
       "winnipeg",
       "prairie-rail",
       "alberta-foothills",
-      "vancouver"
+      "vancouver",
+      "the-north"
     ],
     "stampsToUnlockNext": 1
   },

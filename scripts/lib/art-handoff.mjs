@@ -1741,10 +1741,17 @@ const RECIPES = {
    * `levelOffsetDrift`: eight of these entries assert in a comment that they
    * were confirmed against a level document, and a comment is not re-read.
    */
+  'paddlewheel-riverboat': singleSource(),
+  'northern-river-bar': twoParallaxTiles({
+    farMatch: 'bank',
+    nearMatch: 'bar',
+    nearTop: 140,
+    what: 'a spruce bank and a river bar',
+  }),
   'peggys-cove-barrens': twoParallaxTiles({
     farMatch: 'cove',
     nearMatch: 'barrens',
-    nearTop: 80,
+    nearTop: 160,
     what: 'a cove tile and a granite barrens tile',
   }),
 
