@@ -45,9 +45,9 @@
       "verification": {
         "status": "verified",
         "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T19:13:39Z",
+        "checkedAt": "2026-09-13T20:05:31Z",
         "sourceHash": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
-        "evidence": "the strategy of the Cree and Saulteaux was to gain full compensation for their lands … The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba. Canada sent the Hon. Alexander Morris, Lieutenant-Governor of the North-West Territory, David Laird, Minister of the Interior, and William Christie, retired HBC factor, with an escort of 105 militia to Fort Qu’Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown."
+        "evidence": "While negotiators for the British Crown struggled to contain First Nations’ demands, the strategy of the Cree and Saulteaux was to gain full compensation for their lands. […] The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba. Canada sent the Hon. Alexander Morris, Lieutenant-Governor of the North-West Territory […] with an escort of 105 militia to Fort Qu’Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown."
       }
     },
     "nationSource": {
@@ -239,11 +239,11 @@
           "quote": "is the country's largest producer of grains and oilseeds"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "checkedAt": "2026-09-13T20:05:31Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” has 40% of the arable land in Canada and is the country’s largest producer of grains and oilseeds."
+          "evidence": "Saskatchewan […] is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash, used in fertilizer, and produces oil and natural gas."
         }
       },
       "position": {
@@ -278,9 +278,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "checkedAt": "2026-09-13T20:05:31Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "TRADE AND ECONOMIC GROWTH Postwar Canada enjoyed record prosperity and material progress. … Between 1945 and 1970, as Canada drew closer to the United States and other trading partners, the country enjoyed one of the strongest economies among industrialized nations. Today, Canadians enjoy one of the world’s highest standards of living— maintained by the hard work of Canadians and by trade with other nations, in particular the United States."
+          "evidence": "Between 1945 and 1970, as Canada drew closer to the United States and other trading partners, the country enjoyed one of the strongest economies among industrialized nations. Today, Canadians enjoy one of the world’s highest standards of living— maintained by the hard work of Canadians and by trade with other nations, in particular the United States."
         }
       },
       "position": {
@@ -316,9 +316,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "checkedAt": "2026-09-13T20:05:31Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces, rich in energy resources and some of the most fertile farmland in the world."
+          "evidence": "THE PRAIRIE PROVINCES Manitoba, Saskatchewan and Alberta are the Prairie Provinces, rich in energy resources and some of the most fertile farmland in the world."
         }
       },
       "position": {
@@ -353,9 +353,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "checkedAt": "2026-09-13T20:05:31Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Canada has always been a trading nation and commerce remains the engine of economic growth."
+          "evidence": "A TRADING NATION Canada has always been a trading nation and commerce remains the engine of economic growth. As Canadians, we could not maintain our standard of living without engaging in trade with other nations."
         }
       },
       "position": {
