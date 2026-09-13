@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="420" viewBox="0 0 820 420" shape-rendering="geometricPrecision">
+  <title>A bulk carrier lying in a harbour: a long dark red hull with a black boot stripe at the waterline and a flared bow, a line of raised hatch covers down the weather deck, four pedestal deck cranes with their jibs stowed, and a white superstructure aft under a red funnel with a black cap and a mast. A TYPE, not a named ship: no name, no port of registry, no draught marks, no funnel device, no house flag, no ensign and no lettering of any kind. Drawn from the ships in assets/refs/vancouver/canada-place-and-the-north-shore.jpg and coal-harbour-and-the-north-shore.jpg; see assets/refs/references.json, subject bulk-carrier. POI hero, present at every visual tier.</title>
+
+  <rect x="0" y="196" width="820" height="176" fill="#6799d6"/>
+  <rect x="0" y="196" width="820" height="12" fill="#5cbfd6"/>
+  <rect x="0" y="336" width="820" height="36" fill="#2c8cba"/>
+  <rect x="60" y="228" width="150" height="6" fill="#5cbfd6"/>
+  <rect x="520" y="216" width="190" height="6" fill="#5cbfd6"/>
+
+  <path d="M 28 252 L 690 252 Q 790 258 812 300 L 802 330 L 60 330 Q 24 300 28 252 Z" fill="#4e0e10"/>
+  <path d="M 28 252 L 690 252 Q 790 258 812 300 L 808 312 Q 770 268 686 264 L 30 264 Z" fill="#91301c"/>
+  <rect x="34" y="312" width="768" height="14" fill="#242b33"/>
+
+  <rect x="232" y="226" width="98" height="28" rx="4" fill="#57647a"/>
+  <rect x="232" y="226" width="98" height="9" rx="3" fill="#7d8fa0"/>
+  <rect x="350" y="226" width="98" height="28" rx="4" fill="#57647a"/>
+  <rect x="350" y="226" width="98" height="9" rx="3" fill="#7d8fa0"/>
+  <rect x="468" y="226" width="98" height="28" rx="4" fill="#57647a"/>
+  <rect x="468" y="226" width="98" height="9" rx="3" fill="#7d8fa0"/>
+  <rect x="586" y="226" width="98" height="28" rx="4" fill="#57647a"/>
+  <rect x="586" y="226" width="98" height="9" rx="3" fill="#7d8fa0"/>
+  <rect x="206" y="168" width="16" height="84" fill="#30384f"/>
+  <polygon points="206,172 222,172 284,148 284,160" fill="#30384f"/>
+  <rect x="324" y="168" width="16" height="84" fill="#30384f"/>
+  <polygon points="324,172 340,172 402,148 402,160" fill="#30384f"/>
+  <rect x="442" y="168" width="16" height="84" fill="#30384f"/>
+  <polygon points="442,172 458,172 520,148 520,160" fill="#30384f"/>
+  <rect x="560" y="168" width="16" height="84" fill="#30384f"/>
+  <polygon points="560,172 576,172 638,148 638,160" fill="#30384f"/>
+
+  <rect x="46" y="150" width="148" height="104" fill="#f0f2f5"/>
+  <rect x="46" y="150" width="148" height="14" fill="#ffffff"/>
+  <rect x="172" y="150" width="22" height="104" fill="#cbd2da"/>
+  <rect x="62" y="176" width="118" height="20" rx="4" fill="#30384f"/>
+  <rect x="62" y="208" width="118" height="20" rx="4" fill="#30384f"/>
+  <rect x="62" y="124" width="118" height="30" rx="5" fill="#cbd2da"/>
+  <rect x="62" y="124" width="118" height="9" rx="3" fill="#f0f2f5"/>
+  <rect x="74" y="130" width="94" height="18" rx="3" fill="#30384f"/>
+  <path d="M 96 122 L 104 74 Q 106 60 124 60 Q 142 60 144 74 L 152 122 Z" fill="#91301c"/>
+  <path d="M 96 122 L 104 74 Q 106 60 116 60 L 114 122 Z" fill="#cf5d2b"/>
+  <path d="M 103 80 Q 106 60 124 60 Q 142 60 145 80 Q 124 70 103 80 Z" fill="#242b33"/>
+  <rect x="186" y="96" width="13" height="58" fill="#30384f"/>
+  <rect x="160" y="96" width="66" height="12" rx="5" fill="#30384f"/>
+
+  <ellipse cx="410" cy="392" rx="386" ry="16" fill="#16203a" opacity="0.28"/>
+  <rect x="0" y="360" width="820" height="22" fill="#8a6256"/>
+  <rect x="0" y="376" width="820" height="44" fill="#a99789"/>
+  <rect x="0" y="376" width="820" height="10" fill="#c8c1b6"/>
+  <rect x="140" y="398" width="130" height="6" fill="#8a6256"/>
+  <rect x="500" y="406" width="170" height="6" fill="#8a6256"/>
+</svg>

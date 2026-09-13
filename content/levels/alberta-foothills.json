@@ -232,6 +232,43 @@
   ],
   "pois": [
     {
+      "id": "ranch-gate",
+      "name": {
+        "en": "The ranch gate",
+        "fr": "La barrière du ranch"
+      },
+      "blurb": {
+        "en": "Alberta is named after Princess Louise Caroline Alberta, a daughter of Queen Victoria. Lake Louise in the Rocky Mountains is named after her too.",
+        "fr": "L'Alberta porte le nom de la princesse Louise Caroline Alberta, une fille de la reine Victoria. Le lac Louise, dans les Rocheuses, porte aussi son nom."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The province, and the world-famous Lake Louise in the Rocky Mountains, were both named after Princess Louise Caroline Alberta, fourth daughter of Queen Victoria."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 2500,
+        "y": 1280
+      },
+      "artKey": "alberta-foothills-prop-log-rail-gate",
+      "radiusPx": 260
+    },
+    {
       "id": "ranch-barn",
       "name": {
         "en": "Working ranch",
@@ -268,6 +305,43 @@
       "artKey": "alberta-foothills-landmark-ranch-barn",
       "radiusPx": 300,
       "questId": "alberta-foothills-ranch-barn"
+    },
+    {
+      "id": "beef-cattle",
+      "name": {
+        "en": "Cattle on the range",
+        "fr": "Des bovins au pâturage"
+      },
+      "blurb": {
+        "en": "Alberta is known for farming, and above all for the big cattle ranches that make Canada one of the world's major beef producers.",
+        "fr": "L'Alberta est reconnue pour l'agriculture, et surtout pour les grands ranchs de bovins qui font du Canada l'un des grands producteurs de boeuf au monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Alberta is also renowned for agriculture, especially for the vast cattle ranches that make Canada one of the world's major beef producers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6800,
+        "y": 1280
+      },
+      "artKey": "alberta-foothills-prop-beef-cattle",
+      "radiusPx": 280
     }
   ],
   "characters": [

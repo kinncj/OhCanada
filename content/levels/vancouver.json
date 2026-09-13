@@ -224,6 +224,43 @@
   ],
   "pois": [
     {
+      "id": "marina",
+      "name": {
+        "en": "The marina",
+        "fr": "La marina"
+      },
+      "blurb": {
+        "en": "British Columbia is known for its mountains and as Canada's gateway to the Pacific.",
+        "fr": "La Colombie-Britannique est reconnue pour ses montagnes et comme la porte du Canada sur le Pacifique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "British Columbia is known for its majestic mountains and as Canada's Pacific gateway."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 1900,
+        "y": 1280
+      },
+      "artKey": "vancouver-prop-marina-boats",
+      "radiusPx": 280
+    },
+    {
       "id": "canada-place",
       "name": {
         "en": "Canada Place",
@@ -260,6 +297,43 @@
       "artKey": "vancouver-landmark-canada-place",
       "radiusPx": 320,
       "questId": "vancouver-canada-place"
+    },
+    {
+      "id": "bulk-carrier",
+      "name": {
+        "en": "A cargo ship",
+        "fr": "Un navire de charge"
+      },
+      "blurb": {
+        "en": "The Port of Vancouver is the largest and busiest in Canada. It handles billions of dollars in goods traded around the world.",
+        "fr": "Le port de Vancouver est le plus grand et le plus achalandé du Canada. Il traite des marchandises valant des milliards de dollars, échangées partout dans le monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The Port of Vancouver, Canada's largest and busiest, handles billions of dollars in goods traded around the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6000,
+        "y": 1280
+      },
+      "artKey": "vancouver-prop-bulk-carrier",
+      "radiusPx": 300
     }
   ],
   "characters": [

@@ -53,6 +53,9 @@ Five SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `prairie-rail-layer-30-fields` | `layer-30-fields.svg` | 1800 × 260 | a nearer shelterbelt in broken clumps, bales, four field bands and fourteen swaths |
 | `prairie-rail-layer-40-railbed` | `layer-40-railbed.svg` | 1920 × 520 | the right of way — ballast, forty ties, two rails, a fence, four telegraph poles, a grade crossing |
 | `prairie-rail-landmark-grain-elevator@1x` | `landmark-grain-elevator@1x.svg` | 900 × 1000 | **POI hero** |
+| `prairie-rail-prop-grain-bins` | `prop-grain-bins@1x.svg` | 640 × 560 | **POI hero, added 2026-09-13**: four hopper-bottom bins on legs, on a gravel pad |
+| `prairie-rail-prop-combine-harvester` | `prop-combine-harvester@1x.svg` | 800 × 480 | **POI hero, added 2026-09-13**: a combine with its header, reel and cutter bar, in standing grain |
+| `prairie-rail-prop-container-car` | `prop-container-car@1x.svg` | 820 × 420 | **POI hero, added 2026-09-13**: a double-stack container car at rest on the rail |
 
 **There is no character source here**, and **no POI-marker or particle source**, for the reasons Halifax
 records.
@@ -280,3 +283,81 @@ in `content/sources/usask-indigenous-sk-treaty-4.json` rather than hidden: the P
 carry no territorial statement, `treaty4.ca` did not resolve on 9 September 2026, and the Crown's own Treaty
 No. 4 text is 1874 correspondence whose language may not reach a player. A content verifier should replace it
 if a Treaty Four institution's own account becomes reachable.
+
+
+---
+
+## 12. Four points of interest on the longest level in the game
+
+**Added 2026-09-13.** At 9 600 px this is the longest level TrueNorth has, and it shipped with one POI at
+4 800 — the exact centre. It now has four. `size`, the ground line, the four layers, the theme, both
+locomotion modes, the spawn and the guide are unchanged, and the elevator keeps its `questId`.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 2 400 | `grain-bins` | `prairie-rail-prop-grain-bins`, 640 × 560 | Saskatchewan has 40 % of Canada's farmland and grows the most grain and oilseed | *Discover Canada* p. 100 |
+| 4 800 | `grain-elevator` | `prairie-rail-landmark-grain-elevator`, 900 × 1000 | the post-war economy and one of the world's highest standards of living | *Discover Canada* p. 45 |
+| 6 500 | `combine-harvester` | `prairie-rail-prop-combine-harvester`, 800 × 480 | Manitoba, Saskatchewan and Alberta are the Prairie Provinces, with some of the most fertile farmland in the world | *Discover Canada* p. 100 |
+| 8 200 | `container-car` | `prairie-rail-prop-container-car`, 820 × 420 | Canada has always been a trading nation and commerce is still the engine of growth | *Discover Canada* p. 90 |
+
+**Gaps of 2 400, 1 700 and 1 700 px**, inside the 1 500–2 500 band, with 1 400 px of run-out past the last
+point. The level is set in southern Saskatchewan — its own territory statement says so — which is why the
+first POI takes the Saskatchewan fact rather than a general prairie one.
+
+**The three facts are a chain and were chosen as one**: the grain is grown (bins), the grain is cut
+(combine), the goods go to market (container car). The elevator in the middle keeps the chapter fact the
+level is named for.
+
+**One of the three was re-sourced after it was written, and the reason is a rule worth restating.** The
+combine first carried the natural-resources sentence from *Discover Canada* p. 91 — and
+`alberta-foothills`'s `ranch-barn` already carries **that exact quote**. CLAUDE.md's content rules say two
+subjects may share a chapter but never a **proposition, identified by `source.quote`**, and a POI blurb is
+governed by ADR-0003 exactly as a question is. The combine now carries the Prairie Provinces sentence from
+p. 100 instead, which is a better fit anyway: it names the three provinces, which is a thing the test asks.
+Checked mechanically across all ten level documents afterwards: **26 POI propositions, no two the same.**
+
+**`grain-bins` took four builds and the first three are worth more than the fourth.** Builds one to three
+drew the bins sitting on the ground with a cone on top, and every one of them read as *a row of gabled
+houses* — first with trapezoid roofs, then with steeper cones, then with a reflected-light rim at each
+cylinder's far edge, which is the textbook trick for making a cylinder read. None of it worked, because the
+shading was never the problem: **a triangle on a rectangle standing on the ground is a house, and no amount
+of tone will argue with the silhouette.** Build four put the bins on legs over hopper funnels, with daylight
+underneath, which is what the reference shows and what no building has. The read changed instantly.
+`references.json` carries that as the subject's first `mustBeRight` entry and as a named failure mode, because
+the same mistake is available on every cylindrical subject this game will ever draw.
+
+**Why a container and not a grain hopper**, which is the obvious prairie choice: the level already teaches
+grain at two other points, and Canada's government grain hoppers carry a livery and a maple-leaf device this
+project does not draw while `OQ-ART-04` is open. A plain container teaches *trade* and asserts nothing about
+whose box it is. It carries **no reporting mark, number, livery or wordmark**, and its two colours are
+palette ramps.
+
+**The combine is a type, not a make.** The reference shows red machines; red is drawn, from the `oxide` ramp
+this game already uses for Peggy's Cove's fish stores and Ottawa's warming hut, and no badge, stripe, decal
+or model number goes on it. `neverAdd` refuses a green body by name, and that is a licence-shaped rule rather
+than a stylistic one: green is the other maker's colour and drawing it would assert a brand this render has
+no reference for.
+
+**One collision, looked at and left alone.** `layer-40-railbed.svg` carries a grade crossing — a crossbuck
+and a flashing-light mast — at tile-local x ≈ 1 158, and at 6 500 that lands about 420 px to the right of the
+combine, inside the same frame. The two do not overlap and the crossing is a background object behind a
+foreground machine, so it was not worth moving the POI into a 1 400 px gap to avoid it. Recorded because the
+arithmetic is not obvious: the tile repeats every 1 920 px, so the crossing is out of frame only for POIs at
+tile-local 0–458 or 1 858–1 920.
+
+**Budgets, re-measured 2026-09-13:** `prairie-rail 30.61 MiB of 36.00 MiB (85 %, 5 652 356 B spare)` over 12
+files, payload 0.46 MiB of 8. The three new heroes cost **4.15 MiB between them** — bins 1.37, combine 1.46,
+car 1.31 — and all three are `@1x`-pinned and standalone; at 2× they would have been 16.6 MiB and this level
+would be 10 MiB over its declared budget.
+
+**Scenery: none added.** `layer-40-railbed.svg` already carries forty ties, two rails, a fence, four telegraph
+poles and the grade crossing; `layer-30-fields.svg` carries a shelterbelt, bales, four field bands and
+fourteen swaths. The corridor was never short of things to look at.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'grain-bins': singleSource(),
+  'combine-harvester': singleSource(),
+  'container-car': singleSource(),
+```

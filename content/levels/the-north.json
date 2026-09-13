@@ -190,6 +190,43 @@
   ],
   "pois": [
     {
+      "id": "spruce-stand",
+      "name": {
+        "en": "A stand of spruce",
+        "fr": "Un bouquet d'épinettes"
+      },
+      "blurb": {
+        "en": "The three northern territories hold one third of Canada's land. Only about 100,000 people live in all of it.",
+        "fr": "Les trois territoires du Nord occupent le tiers du territoire canadien. Environ 100 000 personnes seulement y vivent en tout."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The Northwest Territories, Nunavut and Yukon contain one-third of Canada's land mass but have a population of only 100,000."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 1800,
+        "y": 1280
+      },
+      "artKey": "the-north-prop-spruce-stand",
+      "radiusPx": 260
+    },
+    {
       "id": "yukon-river-sternwheeler",
       "name": {
         "en": "Yukon River sternwheeler",
@@ -226,6 +263,43 @@
       "artKey": "the-north-landmark-sternwheeler",
       "radiusPx": 340,
       "questId": "the-north-sternwheeler"
+    },
+    {
+      "id": "driftwood",
+      "name": {
+        "en": "Driftwood on the bar",
+        "fr": "Du bois flotté sur le banc"
+      },
+      "blurb": {
+        "en": "Thousands of miners came to the Yukon in the Gold Rush of the 1890s. Mining is still a big part of the territory's economy.",
+        "fr": "Des milliers de mineurs sont venus au Yukon pendant la ruée vers l'or des années 1890. L'exploitation minière demeure une grande part de l'économie du territoire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Thousands of miners came to the Yukon during the Gold Rush of the 1890s, as celebrated in the poetry of Robert W. Service. Mining remains a significant part of the economy."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6000,
+        "y": 1280
+      },
+      "artKey": "the-north-prop-driftwood-pile",
+      "radiusPx": 260
     }
   ],
   "characters": [],

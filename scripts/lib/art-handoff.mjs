@@ -1618,6 +1618,57 @@ const RECIPES = {
   'grain-elevator': singleSource(),
 
   /**
+   * Winnipeg's two. `cable-stayed-bridge` is a prohibition read the right way
+   * round: `winnipeg-riverwalk`'s `neverAdd` has banned a bridge with a single
+   * inclined pylon on the repeating tiles since the level shipped, *because the
+   * real structure is recognisable* — which is a reason to draw it once as a
+   * hero, not a reason to leave it out. The tiling was the problem, never the
+   * building; Québec's kiosk was the same finding a batch earlier.
+   *
+   * `autumn-maple` is the only object in the game that can teach the maple-leaf
+   * fact without drawing the flag, which `OQ-ART-04` has kept open since slice 1.
+   * Its references make the flag and a maple-leaf logo explicit failures.
+   */
+  'cable-stayed-bridge': singleSource(),
+  'autumn-maple': singleSource(),
+
+  /**
+   * The Prairies' three, on the longest level in the game, which had one point
+   * at its exact centre. `grain-bins` took four builds and the first three are
+   * the finding: bins on the ground under a cone read as a row of gabled
+   * houses, and no amount of cel shading fixed it, because a triangle on a
+   * rectangle standing on the ground *is* a house. Build four put them on legs
+   * over hopper funnels with daylight underneath — what the reference shows and
+   * what no building has — and the read changed at once.
+   */
+  'grain-bins': singleSource(),
+  'combine-harvester': singleSource(),
+  'container-car': singleSource(),
+
+  /**
+   * The foothills' two. `beef-cattle` is the first animal drawn since the llama
+   * that was meant to be a horse, so its subject is written as guards rather
+   * than as description: body depth to clear leg 1.4 : 1, neck a fifth of body
+   * length running forward, head no higher than the withers, back level, and a
+   * llama, an alpaca, a horse, a deer and a goat named as explicit failures.
+   */
+  'log-rail-gate': singleSource(),
+  'beef-cattle': singleSource(),
+
+  /** Vancouver's two. Both carry section 0's totem-pole and inuksuk
+   * prohibition verbatim, applied before anything was drawn. */
+  'marina-boats': singleSource(),
+  'bulk-carrier': singleSource(),
+
+  /**
+   * The North's two. `driftwood-pile`'s first build drew the root wad as an even
+   * radial fan, which read at 390 px as a sunburst device — a drawn emblem, on
+   * the one level where that is worst. Four uneven roots on one side now.
+   */
+  'spruce-stand': singleSource(),
+  'driftwood-pile': singleSource(),
+
+  /**
    * THE ONE NEGATIVE OFFSET IN THE TABLE, AND IT IS NOT A TYPO.
    *
    * "In world coordinates the railbed tile's top edge is 210 px ABOVE the

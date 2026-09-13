@@ -45,6 +45,8 @@ flank view taken in evening light, which is why §6.1's plan width is a **deriva
 | `alberta-foothills-layer-30-foothills` | `layer-30-foothills.svg` | 1800 × 200 | three rolling grass ridges, aspen and spruce bluffs, coulees |
 | `alberta-foothills-layer-40-rangeland` | `layer-40-rangeland.svg` | 1920 × 410 | pasture plane, wire fence, three cattle, a two-track road |
 | `alberta-foothills-landmark-ranch-barn@1x` | `landmark-ranch-barn@1x.svg` | 880 × 636 | **POI hero** |
+| `alberta-foothills-prop-log-rail-gate` | `prop-log-rail-gate@1x.svg` | 680 × 460 | **POI hero, added 2026-09-13**: four log rails on squared posts, stopping at a braced timber gate |
+| `alberta-foothills-prop-beef-cattle` | `prop-beef-cattle@1x.svg` | 720 × 420 | **POI hero, added 2026-09-13**: three red-bodied white-faced cattle on dry pasture |
 
 No character source, no POI-marker source, no particle source, for the reasons Halifax records.
 
@@ -202,3 +204,67 @@ account, and its articles name the parties with nineteenth-century exonyms which
 game. And the statement is silent about the Métis Nation of Alberta, in whose Region 3 the Bar U sits,
 because a level carries one `fact.source` and one `nationSource` and neither cited body speaks for them.
 Both are recorded in `content/sources/cirnac-treaty-7.json`'s `knownStaleness` rather than papered over.
+
+
+---
+
+## 12. Three points of interest, and the animal that had to be measured
+
+**Added 2026-09-13.** The level shipped with one POI at 4 320 on an 8 640 px ride. It now has three.
+`size`, the ground line, the four layers, the theme, both locomotion modes, the spawn and the guide are
+unchanged, and the barn keeps its `questId`.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 2 500 | `ranch-gate` | `alberta-foothills-prop-log-rail-gate`, 680 × 460 | Alberta and Lake Louise are both named after Princess Louise Caroline Alberta, a daughter of Queen Victoria | *Discover Canada* p. 101 |
+| 4 320 | `ranch-barn` | `alberta-foothills-landmark-ranch-barn`, 880 × 636 | ranching is part of agriculture, one of Canada's natural-resource industries | *Discover Canada* p. 91 |
+| 6 800 | `beef-cattle` | `alberta-foothills-prop-beef-cattle`, 720 × 420 | Alberta's cattle ranches make Canada one of the world's major beef producers | *Discover Canada* p. 101 |
+
+**Gaps of 1 820 and 2 300 px**, inside the 1 500–2 500 band, with the guide at 1 200 before the first. The
+last point sits 1 840 px from the end of the level rather than 2 040: on a level this long the run-out after
+the last thing to stop at is the part that feels like a corridor, and the two positions were moved 100 and
+200 px to shorten it without pushing either gap out of the band.
+
+**The cattle are the first animal this project has drawn since the one that was read as a llama, and the
+subject is written as a set of guards rather than a description.** The way a cartoon quadruped goes wrong is
+always the same — the neck lengthens, the head rises, the body shallows, the legs lengthen — so
+`references.json` carries a measured number against each: **body depth : clear leg is 1.4 : 1**, measured on
+the nearest animals in `rangeland-cattle-and-wire-fence.jpg`; the neck is a fifth of the body length and runs
+*forward*; the top of the head sits no higher than the withers; the back is level with the hip as its highest
+point. `expectedBlindAnswer` makes *"a llama"*, *"an alpaca"*, *"a horse"*, *"a deer"* and *"a goat"* explicit
+failures rather than near misses.
+
+**Their colour comes from the tile, not from the photograph, and that is the one deliberate departure from a
+reference on this level.** `layer-40-rangeland.svg` already draws three small red-bodied **white-faced**
+cattle; the reference photograph shows **solid red** ones. Both patterns are common on this range, and a hero
+standing 60 px in front of three white-faced animals in a different pattern would read as a different species
+rather than as the near view of the same herd. Written into the subject so a verifier comparing the hero with
+the photograph does not report it as an error.
+
+**Two drawings that were wrong first, both fixed by structure rather than by tone.** The gate's first build
+ran the fence rails straight across the opening, so there was no gap to read and the leaf looked like
+decoration on a continuous fence; the rails now stop at the gate posts. The cattle's first build gave each
+animal two nostril dots on the muzzle, and at 390 px they read as a **second pair of eyes**. Both are in
+`simplifyAway` now.
+
+**What was refused, and it is the biggest single reference gap in this level.** **An oil pump jack.**
+*Discover Canada* p. 101 says Alberta is the largest producer of oil and gas, and p. 90 illustrates the
+economy chapter with *"Oil pump jacks in southern Alberta"* — it is the province's defining economic fact and
+the test asks it. **There is no licence-clean photograph of a pump jack anywhere in this repository**, so
+drawing one would be invention, and this level is one bad silhouette away from the llama again. One CC0 or
+CC BY photograph of a nodding-donkey pump jack in a field unlocks a fourth POI here with the best fact on the
+page. Recorded as a reference request rather than as a gap in the level.
+
+**Budgets, re-measured 2026-09-13:** `alberta-foothills 26.61 MiB of 36.00 MiB (74 %, 9 845 636 B spare)` over
+11 files, payload 0.44 MiB of 8. The two new heroes cost **2.34 MiB between them** and both are `@1x`-pinned.
+This level has the most headroom of any of the ten and would carry the pump jack comfortably.
+
+**Scenery: none added.** `layer-40-rangeland.svg` already carries a wire fence, three cattle, sage and a
+two-track road; `layer-30-foothills.svg` carries aspen and spruce bluffs and coulees.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'log-rail-gate': singleSource(),
+  'beef-cattle': singleSource(),
+```

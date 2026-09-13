@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="620" viewBox="0 0 760 620" shape-rendering="geometricPrecision">
+  <title>Three moored sailing boats in a harbour marina: white hulls with a dark boot stripe and a sheer that rises to the bow, low cabin trunks with two dark windows each, a single mast and boom on each, lying at a floating timber dock with mooring cleats, over open water, with the stone edge of a seawall walk across the bottom of the frame. TYPES, not named vessels: no name, no sail number, no class insignia, no burgee, no flag and no lettering of any kind. Drawn from the marina in assets/refs/vancouver/coal-harbour-and-the-north-shore.jpg and seawall-path-and-harbour.jpg; see assets/refs/references.json, subject marina-boats. POI hero, present at every visual tier.</title>
+
+  <rect x="0" y="404" width="760" height="162" fill="#6799d6"/>
+  <rect x="0" y="404" width="760" height="14" fill="#5cbfd6"/>
+  <rect x="0" y="528" width="760" height="38" fill="#2c8cba"/>
+  <rect x="60" y="444" width="150" height="6" fill="#5cbfd6"/>
+  <rect x="420" y="470" width="190" height="6" fill="#5cbfd6"/>
+  <rect x="230" y="546" width="170" height="6" fill="#6799d6"/>
+
+  <path d="M 40 416 L 310 397 Q 340 409 316 452 L 64 452 Q 37 438 40 416 Z" fill="#f0f2f5"/>
+  <path d="M 40 416 L 310 397 L 310 406 L 40 426 Z" fill="#ffffff"/>
+  <path d="M 58 438 L 316 431 L 316 441 L 58 448 Z" fill="#153f86"/>
+  <rect x="130" y="363" width="102" height="43" rx="13" fill="#f0f2f5"/>
+  <rect x="130" y="363" width="102" height="13" rx="6" fill="#ffffff"/>
+  <rect x="142" y="380" width="31" height="12" rx="4" fill="#30384f"/>
+  <rect x="186" y="380" width="31" height="12" rx="4" fill="#30384f"/>
+  <rect x="178" y="120" width="12" height="289" fill="#cbd2da"/>
+  <rect x="178" y="120" width="5" height="289" fill="#ffffff"/>
+  <rect x="172" y="337" width="120" height="12" rx="5" fill="#cbd2da"/>
+
+  <path d="M 470 414 L 713 396 Q 740 407 718 446 L 492 446 Q 467 433 470 414 Z" fill="#f0f2f5"/>
+  <path d="M 470 414 L 713 396 L 713 405 L 470 422 Z" fill="#ffffff"/>
+  <path d="M 486 433 L 718 427 L 718 436 L 486 443 Z" fill="#153f86"/>
+  <rect x="551" y="366" width="92" height="39" rx="12" fill="#f0f2f5"/>
+  <rect x="551" y="366" width="92" height="12" rx="6" fill="#ffffff"/>
+  <rect x="562" y="381" width="28" height="11" rx="4" fill="#30384f"/>
+  <rect x="601" y="381" width="28" height="11" rx="4" fill="#30384f"/>
+  <rect x="594" y="150" width="12" height="257" fill="#cbd2da"/>
+  <rect x="594" y="150" width="5" height="257" fill="#ffffff"/>
+  <rect x="589" y="342" width="108" height="12" rx="5" fill="#cbd2da"/>
+
+  <path d="M 150 464 L 537 437 Q 580 454 546 516 L 184 516 Q 146 495 150 464 Z" fill="#f0f2f5"/>
+  <path d="M 150 464 L 537 437 L 537 451 L 150 478 Z" fill="#ffffff"/>
+  <path d="M 176 495 L 546 486 L 546 501 L 176 510 Z" fill="#153f86"/>
+  <rect x="279" y="389" width="146" height="62" rx="19" fill="#f0f2f5"/>
+  <rect x="279" y="389" width="146" height="19" rx="9" fill="#ffffff"/>
+  <rect x="297" y="413" width="44" height="17" rx="4" fill="#30384f"/>
+  <rect x="359" y="413" width="44" height="17" rx="4" fill="#30384f"/>
+  <rect x="348" y="44" width="13" height="410" fill="#cbd2da"/>
+  <rect x="348" y="44" width="5" height="410" fill="#ffffff"/>
+  <rect x="339" y="351" width="172" height="12" rx="5" fill="#cbd2da"/>
+
+  <circle cx="96" cy="498" r="15" fill="#e1c368"/>
+  <circle cx="96" cy="498" r="7" fill="#935a18"/>
+  <circle cx="672" cy="486" r="13" fill="#e1c368"/>
+  <circle cx="672" cy="486" r="6" fill="#935a18"/>
+
+  <ellipse cx="380" cy="596" rx="356" ry="16" fill="#16203a" opacity="0.28"/>
+  <rect x="0" y="562" width="760" height="22" fill="#8a6256"/>
+  <rect x="0" y="578" width="760" height="42" fill="#a99789"/>
+  <rect x="0" y="578" width="760" height="10" fill="#c8c1b6"/>
+  <rect x="120" y="600" width="120" height="6" fill="#8a6256"/>
+  <rect x="420" y="608" width="160" height="6" fill="#8a6256"/>
+</svg>

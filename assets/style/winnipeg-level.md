@@ -31,7 +31,7 @@ identifying, the level stops being identifiable.
 
 ## 1. What was produced
 
-Five SVG sources. `scripts/assets.mjs` reads the level from the path, so everything under
+Seven SVG sources. `scripts/assets.mjs` reads the level from the path, so everything under
 `assets/src/svg/winnipeg/` gets the key `winnipeg-<filename>`:
 
 | key | source | authored px | what it is |
@@ -41,6 +41,8 @@ Five SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `winnipeg-layer-30-riverbank` | `layer-30-riverbank.svg` | 1800 × 320 | the far bank in autumn, the shore and the open water |
 | `winnipeg-layer-40-plaza` | `layer-40-plaza.svg` | 1920 × 520 | the riverside promenade — limestone slabs, parapet, lamps, benches, planters, three trees, six people |
 | `winnipeg-landmark-human-rights-museum@1x` | `landmark-human-rights-museum@1x.svg` | 1000 × 1040 | **POI hero, and the level's only place-anchor** |
+| `winnipeg-prop-cable-stayed-bridge` | `prop-cable-stayed-bridge@1x.svg` | 700 × 760 | **POI hero, added 2026-09-13**: one leaning mast, a fan of straight stays, a deck and its rail, over the river |
+| `winnipeg-prop-autumn-maple` | `prop-autumn-maple@1x.svg` | 560 × 640 | **POI hero, added 2026-09-13**: a maple in full autumn colour in a kerbed tree pit, with five fallen leaves |
 
 **There is no character source here.** Characters are `shared/` and already exist; this level places them.
 **There are no POI-marker or particle sources**, for the reason Halifax records: `level.schema.json` cannot
@@ -292,3 +294,61 @@ register.** `level.schema.json` gives a level exactly one `nationSource`, and th
 seven nations. The document points at Treaty One Nation, which speaks for the seven First Nations who signed
 Treaty No. 1 and does not speak for the other names in the sentence. A content verifier has to either find
 each name on that nation's own material or narrow the statement. It is recorded rather than quietly left.
+
+
+---
+
+## 12. Three points of interest, and the bridge that was forbidden until it had somewhere to stand
+
+**Added 2026-09-13.** The level shipped with one POI at x 3840, the dead centre of a 7 680 px walk. It now has
+three. `size`, the ground line, the four layers, the theme, the locomotion and the officer's placement are
+unchanged, and the museum keeps its `questId`.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 1 900 | `footbridge` | `winnipeg-prop-cable-stayed-bridge`, 700 × 760 | across the river is St. Boniface, Western Canada's largest Francophone community | *Discover Canada* p. 100 |
+| 3 840 | `human-rights-museum` | `winnipeg-landmark-human-rights-museum`, 1000 × 1040 | the law applies to everyone, including judges, politicians and the police | *Discover Canada* p. 75 |
+| 6 100 | `autumn-maple` | `winnipeg-prop-autumn-maple`, 560 × 640 | the maple leaf is Canada's best-known symbol, worn by Canadian soldiers since the 1850s | *Discover Canada* p. 79 |
+
+**Gaps of 1 940 and 2 260 px**, inside the 1 500–2 500 band, with the officer at 900 before the first. Three
+and not four is the **texture budget**, stated plainly: the level was at 27.41 MiB of 36 and is now at
+**30.81 MiB (86 %, 5 445 956 B spare)**. A fourth hero of the size of these two would put it at 89–90 %, and
+this level's budget was derived to fire before the ceiling rather than to be filled. The candidate that was
+dropped for it is named below.
+
+**The bridge is a prohibition read the right way round.** `winnipeg-riverwalk`'s `neverAdd` has said *"a
+bridge with a single inclined pylon: the Esplanade Riel is a real and recognisable structure and a repeating
+tile may not carry one"* since this level shipped. That is a reason to put the structure on a **hero**, not a
+reason to leave it out of the level — a POI hero is drawn once, at one world x, which is exactly where a
+recognisable structure belongs. The clause now says so and names `cable-stayed-bridge` as the place it goes;
+`verifyArtProtocol.contradictionRule` is explicit that a prohibition on one subject may not forbid a
+requirement of another. This is the second time this exact finding has landed — Québec City's terrace kiosk
+was the first — and it is the same shape both times: **the tiling was the problem, never the building.**
+
+**The bridge draws no name and no dedication.** The real structure is named for a person; reference rule 4
+forbids depicting a real, identifiable person, and a dedication would name one in lettering this project
+does not draw anyway. The POI is called *the footbridge*, and what it teaches is the neighbourhood on the
+other side of it.
+
+**The maple is the only object in this game that can teach the maple-leaf fact without drawing the flag.**
+`OQ-ART-04` — which red is the National Flag — has been open since slice 1, and every level sheet since has
+dodged it. A tree is not a flag: the five fallen leaves are 48–60 px, scattered at five angles, none centred
+and none on a panel, and `references.json` makes "the Canadian flag" or "a maple leaf logo" an explicit
+**fail** on this subject, because an identifier reading it as an emblem means the leaves were drawn as a
+device rather than as litter.
+
+**What was dropped, and why it is named.** A **steel through-truss railway bridge**, which is in
+`cmhr-from-the-forks-tower.jpg` and would have been honest, was cut on two counts: the budget above, and the
+fact that a second bridge on a level that already gains one is a repetition before it is a point of interest.
+The **Manitoba economy** fact (p. 100 — agriculture, mining and hydro-electric power) is the one that goes
+unused as a result, and it is recorded here so the next artist can see what is still on the table.
+
+**Scenery: none added.** `layer-40-plaza.svg` already carries limestone paving, a parapet, lamps, benches,
+planters, three trees and six people; the corridor was not short of things to look at.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'cable-stayed-bridge': singleSource(),
+  'autumn-maple': singleSource(),
+```

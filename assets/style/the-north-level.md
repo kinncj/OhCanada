@@ -98,7 +98,9 @@ draws four. **This level draws none, anywhere, at any scale**, for the reason
 | `the-north-layer-20-range` | `layer-20-range.svg` | 1760 × 250 | 72 | a snow-capped saw-tooth range, a rounded ridge, a spruce foot |
 | `the-north-layer-30-far-bank` | `layer-30-far-bank.svg` | 1760 × 150 | 282 | black spruce cropped at the tile's top edge, gold aspen among them, a tan cut bank, the far shoreline |
 | `the-north-layer-40-river-and-bar` | `layer-40-river-and-bar.svg` | 1920 × 320 | 759 | the glacier-fed river in three tones, then a cobble bar with driftwood, willow and sedge |
-| `the-north-landmark-sternwheeler@1x` | `landmark-sternwheeler@1x.svg` | 920 × 280 | 228 | **POI hero, and the only non-repeating render on the level** |
+| `the-north-landmark-sternwheeler@1x` | `landmark-sternwheeler@1x.svg` | 920 × 280 | 228 | **POI hero, and the level's place-anchor** |
+| `the-north-prop-spruce-stand` | `prop-spruce-stand@1x.svg` | 620 × 760 | 46 | **POI hero, added 2026-09-13**: five spire-topped spruce of uneven height on a boulder bank |
+| `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 44 | **POI hero, added 2026-09-13**: seven bleached logs lying across one another on the cobble bar |
 
 Shape counts are reported, not gated (ADR-0025). The sky is **49 shapes**, the same count as the CN Tower and
 the lowest of any layer in the game; the river-and-bar tile is **759**, the highest, and every one of them is
@@ -416,3 +418,61 @@ and these are its terms:
 
 `docs/content-review.md` §10.3 is the sentence that belongs at the end of this: naming the territory and
 depicting nobody from it *"is a half-step … It is not the thing that would be right."*
+
+
+---
+
+## 12. Three points of interest on a level with no people in it
+
+**Added 2026-09-13.** The level shipped with one POI at 3 840 on a 7 680 px walk. It now has three.
+`size`, the ground line, the four layers, the theme, the locomotion and the spawn are unchanged; there are
+still **no characters**, and the sternwheeler keeps the `questId` ADR-0029 gave it.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 1 800 | `spruce-stand` | `the-north-prop-spruce-stand`, 620 × 760 | the three northern territories hold a third of Canada's land and about 100,000 people | *Discover Canada* p. 103 |
+| 3 840 | `yukon-river-sternwheeler` | `the-north-landmark-sternwheeler`, 920 × 280 | the Land of the Midnight Sun, the winter dark, and the treeless frozen tundra | *Discover Canada* p. 103 |
+| 6 000 | `driftwood` | `the-north-prop-driftwood-pile`, 700 × 340 | thousands of miners came in the Gold Rush of the 1890s and mining is still a big part of the economy | *Discover Canada* p. 103 |
+
+**Gaps of 2 040 and 2 160 px**, inside the 1 500–2 500 band.
+
+**§0's rule held without an amendment and it shaped both drawings.** No people at any scale; no inuksuk,
+qamutiik, dogsled, dog team, kayak, canoe, fish weir or cairn in any form; nothing invented. Both new
+subjects carry that whole list in their own `neverAdd`, so all four subjects on this level now do.
+
+**The consequence is that neither new POI can DEPICT what it teaches, and that is stated rather than hidden.**
+A level that draws no people and nothing built cannot draw mining, and it cannot draw a population. So the
+objects are what the river actually put on its own bank — trees and the wood it tore out — and the facts are
+attached to the place a player stops. **Nothing in either file asserts the gold rush**: there is no sluice,
+no pan, no claim stake and no tool, and `neverAdd` forbids all of them by name.
+
+**The driftwood is one tidy arrangement away from breaking §0, which is why it is the most tightly written
+subject on this level.** A pile of logs becomes a shelter, a lean-to, a raft, a fire ring, a weir or a cairn
+the moment anything is stood up, leaned or squared, and several of those are forbidden outright by
+`docs/content-review.md`. The contract says: **every log lies**, none steeper than about 20° from horizontal,
+none vertical, no two at the same angle. `expectedBlindAnswer` makes *a shelter*, *a lean-to*, *a raft*, *a
+fish weir*, *a fence*, *a cairn* and *a marker* explicit failures.
+
+**And one of them was caught in the render rather than in the rules.** The first build drew the root wad as
+an **even radial fan**, and at 390 px it read as a **sunburst device** — an emblem, on the one level in this
+game where a drawn symbol would be worst. It is now four uneven roots on one side of the log, spread over
+less than half a turn. Invisible in the SVG; obvious in the frame.
+
+**The spruce are measured, because narrowness is the whole subject.** Crown width runs **0.28–0.36 of tree
+height** on the bank forest in `yukon-river-and-spruce.jpg`; the five drawn are 0.33–0.39. A wide conical
+tree is a fir from a warmer forest, and this level's forest is what tells a player which latitude they are at.
+
+**Budgets, re-measured 2026-09-13:** `the-north 24.37 MiB of 36.00 MiB (68 %, 12 196 356 B spare)` over 11
+files, payload 0.55 MiB of 8. The two new heroes cost **2.71 MiB between them** and both are `@1x`-pinned.
+This is still the lightest level in the game.
+
+**Scenery: none added.** `layer-40-river-and-bar.svg` is 759 shapes of river, cobble, driftwood, willow and
+sedge, and `layer-30-far-bank.svg` is 282 of spruce, aspen and cut bank. The corridor was not short of things
+to look at.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'spruce-stand': singleSource(),
+  'driftwood-pile': singleSource(),
+```

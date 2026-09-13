@@ -39,6 +39,8 @@ measurement is made on a 2048 px CC BY 3.0 view and a 4032 px CC BY 2.0 one.
 | `vancouver-layer-30-inlet` | `layer-30-inlet.svg` | 1800 × 300 | the far shore, two gantry cranes, open water, a ferry and a bulk carrier |
 | `vancouver-layer-40-seawall` | `layer-40-seawall.svg` | 1920 × 430 | balustrade, lawn, paving, benches, lamps, two cedars, gulls, four people |
 | `vancouver-landmark-canada-place@1x` | `landmark-canada-place@1x.svg` | 1000 × 800 | **POI hero, and the level's only place-anchor** |
+| `vancouver-prop-marina-boats` | `prop-marina-boats@1x.svg` | 760 × 620 | **POI hero, added 2026-09-13**: three moored sailing boats with bare masts, over open water |
+| `vancouver-prop-bulk-carrier` | `prop-bulk-carrier@1x.svg` | 820 × 420 | **POI hero, added 2026-09-13**: a bulk carrier with hatch covers, four deck cranes and an aft superstructure |
 
 ## 2. The parallax stack
 
@@ -230,3 +232,60 @@ Canadian institution uses; the cited page does not use it, so the statement does
   arithmetic a real rider's legs do.
 - **`glide` 0.62 is the highest in the game and the pose has to survive it.** `skateboard/idle` is a rolling
   stance with the arms brought in rather than a stand, because `moving` is intent and this seawall coasts.
+
+
+---
+
+## 12. Three points of interest, and the level where every addition had to pass §0 first
+
+**Added 2026-09-13.** The level shipped with one POI at 3 840 on a 7 680 px ride. It now has three.
+`size`, the ground line, the four layers, the theme, both locomotion modes, the spawn and the officer are
+unchanged, and Canada Place keeps its `questId`.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 1 900 | `marina` | `vancouver-prop-marina-boats`, 760 × 620 | British Columbia is known for its mountains and as Canada's Pacific gateway | *Discover Canada* p. 102 |
+| 3 840 | `canada-place` | `vancouver-landmark-canada-place`, 1000 × 800 | the flag flew first in 1965; the red-white-red pattern comes from the Royal Military College | *Discover Canada* p. 79 |
+| 6 000 | `bulk-carrier` | `vancouver-prop-bulk-carrier`, 820 × 420 | the Port of Vancouver is Canada's largest and busiest | *Discover Canada* p. 102 |
+
+**Gaps of 1 940 and 2 160 px**, inside the 1 500–2 500 band, with the officer at 1 150 before the first.
+
+**§0 is the reason this level got two POIs and not four, and it was applied before anything was drawn.**
+Both new subjects carry the totem-pole and inuksuk prohibition verbatim in their own `neverAdd`, so every
+subject on this level now carries it. Nothing new depicts any Indigenous content of any kind, and neither
+hero draws a figure.
+
+**Both new facts come from the same paragraph of p. 102 and they are different propositions**, which is the
+line CLAUDE.md draws: *"two subjects may share a chapter but never a proposition, identified by
+`source.quote`"*. The mountains-and-gateway sentence and the Port of Vancouver sentence are two sentences and
+two quotes. Checked mechanically across all ten level documents: **30 POI propositions, no two the same.**
+
+**Why a bulk carrier and not a container ship**, which is what the Port of Vancouver is most famous for:
+`prairie-rail` already draws a double-stack container car for the trading-nation fact, and a container ship
+here would be the same object twice in one game. The hatch covers and the deck cranes are the half of the
+port that is not drawn anywhere else, and they are also what stop the hero reading as a cruise ship — which
+is the near miss `expectedBlindAnswer` marks as a failure.
+
+**The marina's composition was wrong once and the fix was to remove something.** A first build put a floating
+dock across the front of the three boats; the nearest hull's bottom edge landed on it and the boat read as
+*sitting on the dock* rather than floating. The dock is gone, two mooring buoys took its place, and
+`simplifyAway` now names it.
+
+**One thing was re-toned after it was composited, and it is worth recording because it is invisible in the
+SVG.** Both heroes carry their own water band, and both were drawn in the `water` ramp — while
+`layer-30-inlet.svg` draws this level's harbour mostly in `water-light` and `ice-shade`. In the composite
+each hero sat in a visible rectangle of darker blue. The two files now use the tile's own two tones, and the
+seam is gone. **Judged by rendering the level frame at 390 px, not by reading the file.**
+
+**Budgets, re-measured 2026-09-13:** `vancouver 28.81 MiB of 36.00 MiB (80 %, 7 540 356 B spare)` over 11
+files, payload 0.42 MiB of 8. The two new heroes cost **3.11 MiB between them** and both are `@1x`-pinned.
+
+**Scenery: none added.** `layer-40-seawall.svg` already carries a balustrade, lawn, paving, benches, lamps,
+two cedars, gulls and four people, and `layer-30-inlet.svg` a ferry, a bulk carrier and two gantry cranes.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'marina-boats': singleSource(),
+  'bulk-carrier': singleSource(),
+```

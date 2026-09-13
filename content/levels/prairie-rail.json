@@ -217,6 +217,43 @@
   ],
   "pois": [
     {
+      "id": "grain-bins",
+      "name": {
+        "en": "Grain bins",
+        "fr": "Silos à grains"
+      },
+      "blurb": {
+        "en": "Saskatchewan has 40 percent of the farmland in Canada. It grows more grain and oilseed than any other province.",
+        "fr": "La Saskatchewan possède 40 pour cent des terres agricoles du Canada. Elle produit plus de céréales et d'oléagineux que toute autre province."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "has 40% of the arable land in Canada and is the country's largest producer of grains and oilseeds"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 2400,
+        "y": 1280
+      },
+      "artKey": "prairie-rail-prop-grain-bins",
+      "radiusPx": 260
+    },
+    {
       "id": "grain-elevator",
       "name": {
         "en": "Prairie grain elevator",
@@ -253,6 +290,80 @@
       "artKey": "prairie-rail-landmark-grain-elevator",
       "radiusPx": 300,
       "questId": "prairie-rail-grain-elevator"
+    },
+    {
+      "id": "combine-harvester",
+      "name": {
+        "en": "A combine harvester",
+        "fr": "Une moissonneuse-batteuse"
+      },
+      "blurb": {
+        "en": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces. They hold some of the most fertile farmland in the world.",
+        "fr": "Le Manitoba, la Saskatchewan et l'Alberta sont les provinces des Prairies. On y trouve certaines des terres agricoles les plus fertiles du monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces, rich in energy resources and some of the most fertile farmland in the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6500,
+        "y": 1280
+      },
+      "artKey": "prairie-rail-prop-combine-harvester",
+      "radiusPx": 280
+    },
+    {
+      "id": "container-car",
+      "name": {
+        "en": "A container car",
+        "fr": "Un wagon porte-conteneurs"
+      },
+      "blurb": {
+        "en": "Canada has always been a trading nation. Buying and selling with other countries is still the engine of the country's growth.",
+        "fr": "Le Canada a toujours été un pays commerçant. Le commerce avec d'autres pays demeure le moteur de la croissance du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 90,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada has always been a trading nation and commerce remains the engine of economic growth."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 8200,
+        "y": 1280
+      },
+      "artKey": "prairie-rail-prop-container-car",
+      "radiusPx": 280
     }
   ],
   "characters": [

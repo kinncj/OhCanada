@@ -2210,7 +2210,7 @@
         "any named or recognisable building drawn into either of these two REPEATING tiles, and the Canadian Museum for Human Rights above all: it is required on the `human-rights-museum` subject and forbidden here, and the reason is the tiling, not the building",
         "the Golden Boy or the Manitoba Legislative Building, in any form, including on the skyline",
         "any lettering, signage or wordmark, in either language",
-        "a bridge with a single inclined pylon: the Esplanade Riel is a real and recognisable structure and a repeating tile may not carry one",
+        "a bridge with a single inclined pylon: the Esplanade Riel is a real and recognisable structure and a repeating tile may not carry one. SCOPED DELIBERATELY, 2026-09-13: that structure is now REQUIRED on `cable-stayed-bridge`, a POI hero drawn once at one world x, and verifyArtProtocol.contradictionRule is explicit that a prohibition on one subject may not forbid a requirement of another. The prohibition here is about the TILING, not about the bridge",
         "snow, or bare winter trees: this level is early autumn",
         "mountains on the horizon: this city is on a river plain",
         "any depiction of a person, a pattern or an object belonging to any nation named in this level's territory statement"
@@ -2225,6 +2225,193 @@
         "NOT part of this subject or of any other: it is a repeating background band that the low preset drops,",
         "and it has no feature that could identify anything. It is drawn, credited and shipped; it is simply",
         "not asked a question."
+      ]
+    },
+    {
+      "id": "cable-stayed-bridge",
+      "subject": "The near end of a white cable-stayed footbridge over a river",
+      "renders": [
+        "src/svg/winnipeg/prop-cable-stayed-bridge@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as human-rights-museum.",
+      "expectedBlindAnswer": [
+        "a cable-stayed bridge",
+        "a suspension bridge",
+        "a footbridge",
+        "a pedestrian bridge",
+        "a leaning-mast cable bridge",
+        "a cable bridge across a river"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, AND THE ONE THAT IS NOT REQUIRED IS THE PLACE. The bridge this is drawn from is a",
+        "real and recognisable structure, and `winnipeg-riverwalk` forbids it on the two repeating tiles for",
+        "exactly that reason. Here it is a hero drawn once at one world x, so the recognisability is allowed —",
+        "but the level's place-anchor is human-rights-museum and nothing else, and a verifier who names a city",
+        "off this render is not wrong and is not required to.",
+        "\"A suspension bridge\" is accepted above and is technically the wrong family: the cables here run",
+        "STRAIGHT from the mast head to the deck, which is cable-stayed, and a suspension bridge hangs its deck",
+        "from a draped main cable. A person at 390 px will not make that distinction and the gate must not",
+        "punish it. What IS a fail is \"a crane\", \"a tent\", \"a mast\" or \"a ship\": the deck and its guard rail",
+        "running the full width are what make this a bridge."
+      ],
+      "referenceFiles": [
+        "winnipeg/cmhr-from-esplanade-riel.jpg",
+        "winnipeg/cmhr-from-the-forks-tower.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "ONE mast, leaning out over the span, not vertical and not a pair",
+          "why": "A single inclined pylon is the whole silhouette. Two vertical towers is a different bridge and a different city.",
+          "detail": "MEASURED off winnipeg/cmhr-from-esplanade-riel.jpg, in which the mast fills the left third of the frame: it leans about 12 degrees from vertical, away from the near abutment and over the span. The shipped art draws the head 126 px right of the foot over a 500 px rise, which is 14 degrees. It tapers slightly and carries a plain cap; there is no cross-beam, no second leg and no finial.",
+          "palette": "white"
+        },
+        {
+          "feature": "a fan of STRAIGHT cables from the mast head to the deck, longer on the span side and short on the other",
+          "why": "The asymmetry is what says the bridge crosses a river rather than standing in the middle of one, and straight is what separates cable-stayed from suspension.",
+          "detail": "Five long stays running down to the deck on the span side and three short back-stays on the other, all straight lines from one point near the mast head, all the same thickness, none thicker than about 8 px. They were drawn at 14 px for one build and the render read as a circus tent."
+        },
+        {
+          "feature": "a flat deck running the full width with a tubular guard rail on posts",
+          "why": "It is what a person walks on and it is what makes the object a bridge rather than a mast. It must run OFF both edges of the file: a deck that stops inside the frame reads as a pier.",
+          "detail": "A pale deck band with a lit top edge and a shaded underside, a continuous top rail on evenly spaced posts above it, and a second horizontal rail between them. Rhythm, not count.",
+          "palette": "white"
+        },
+        {
+          "feature": "a masonry pier standing in the water under the mast",
+          "detail": "A plain block in `limestone` with a lit left face and a capping course, rising out of the water to the deck. It is what carries the mast, and without it the mast appears to stand on the water.",
+          "palette": "limestone"
+        },
+        {
+          "feature": "river water under the deck and paving at the bottom edge",
+          "why": "A bridge over nothing is a walkway. The water is half the subject.",
+          "detail": "A band of `water` tones with two straight lit ripple bars, and below it a band of `limestone` paving with joint marks, which is the promenade the player is standing on. The file's bottom edge IS the level ground line.",
+          "palette": "water, limestone"
+        }
+      ],
+      "simplifyAway": [
+        "the glazed structure built into the real bridge's pylon base: it is the one feature that would name the bridge, and a POI hero does not need it to read as a bridge",
+        "the anchorages, saddles and cable sockets",
+        "the expansion joints, drainage and lighting on the deck",
+        "the far abutment and everything past the right edge: the deck runs off the frame on purpose",
+        "the far shore, the skyline and the museum, all of which are in the reference and all of which this level already draws elsewhere"
+      ],
+      "neverAdd": [
+        "a second mast, a cross-beam between legs, or a draped main cable",
+        "road traffic, a car, a bus or rails: it is a footbridge",
+        "a name, a plaque, a date, a dedication or any lettering in either language. The real bridge is named for a person and this project does not depict or name one here",
+        "a flag or a flagpole (OQ-ART-04 is open)",
+        "a figure on the deck. Scoped deliberately: this level's plaza tile draws six people and is allowed to; a POI hero standing alone at 390 px would put one figure at hero scale next to no other, and the level has an officer NPC for that",
+        "the Canadian Museum for Human Rights in the same frame. Scoped deliberately: it is REQUIRED on human-rights-museum and forbidden here, because two subjects judged in one hand-off must not be able to identify each other"
+      ],
+      "notes": [
+        "winnipeg/cmhr-from-esplanade-riel.jpg is the PRIMARY reference and it is taken FROM the bridge, looking",
+        "along it: the mast, the cables, the deck and the rail fill the left half of the frame at close range,",
+        "which settles the geometry and settles nothing about how the bridge looks from the bank.",
+        "winnipeg/cmhr-from-the-forks-tower.jpg gives the bridge from above and at a distance.",
+        "WHY THIS SUBJECT EXISTS AT ALL. `winnipeg-riverwalk`'s neverAdd has forbidden \"a bridge with a single",
+        "inclined pylon\" on the repeating tiles since this level shipped, and the reason given was that the real",
+        "structure is recognisable. That is a reason to put it on a hero, not a reason to leave it out of the",
+        "level - the same finding the Quebec City terrace kiosk produced, arrived at from the other direction,",
+        "and it is why that clause now names this subject as the place the object belongs.",
+        "PLACEMENT FLOOR: none is set; a cable fan at 120 px is still a cable fan. DRAWING OBSERVATION, not an",
+        "identification: at 180 px wide the mast, all eight cables, the rail posts, the pier and the water are",
+        "still legible; the 120 px silhouette is a leaning mast over a horizontal deck, which is the subject."
+      ]
+    },
+    {
+      "id": "autumn-maple",
+      "subject": "A maple tree in full autumn colour, with fallen leaves at its foot",
+      "renders": [
+        "src/svg/winnipeg/prop-autumn-maple@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a maple",
+        "a maple in autumn",
+        "a red maple",
+        "an autumn maple",
+        "fallen maple leaves",
+        "a maple in fall"
+      ],
+      "expectedBlindAnswerNote": [
+        "THE WORD THAT MATTERS IS MAPLE, and it is the only thing this subject is really asking. \"A tree\" alone",
+        "is a partial answer: the five fallen leaves on the paving are drawn at 48 to 60 px precisely so the",
+        "species is legible, because the fact this POI carries is about the maple leaf and a generic tree would",
+        "teach it by assertion.",
+        "IT IS NOT AN EMBLEM AND MUST NOT READ AS ONE. If an identifier says \"the Canadian flag\", \"a maple leaf",
+        "logo\" or \"a national symbol on a field\", that is a FAIL and it means the leaves have been drawn as a",
+        "device rather than as litter on the ground. They are scattered, at five different angles, none of them",
+        "centred, none of them on a panel, and there is no red-white-red field anywhere in the file.",
+        "FOUR ORDINARY ENGLISH WORDS ARE DELIBERATELY ABSENT FROM THE ANSWERS ON THIS AND THREE OTHER SUBJECTS",
+        "ADDED ON 2026-09-13: \"tree\", \"with\", \"over\" and \"small\". The hand-off's own READ-ME-FIRST.txt contains",
+        "all four as ordinary English, and scripts/verify-art.mjs's leak check - which searches every handed-over",
+        "text for any token from any accepted answer - reported them the moment these subjects were added. None of",
+        "them is a leak: the text predates the answers. The fix the gate itself names in that case is to reword the",
+        "answer, so \"a maple tree\" is \"a maple\", \"a rail fence with a gate\" is \"a gate hung in a rail fence\", and",
+        "so on. The identification each answer demands is unchanged; only the connective words are."
+      ],
+      "referenceFiles": [
+        "winnipeg/cmhr-from-the-forks-tower.jpg",
+        "winnipeg/cmhr-at-the-forks.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a broad rounded crown, wider than it is tall, on a short trunk",
+          "why": "It is the proportion of a street maple in a city park and it is what stops the subject reading as a conifer or a poplar.",
+          "detail": "MEASURED against the autumn trees in winnipeg/cmhr-from-the-forks-tower.jpg: crown width is about 1.3 times crown height and the clear trunk is about a quarter of the total. The shipped art draws a 520 px crown 400 px tall on a 640 px file with 190 px of clear trunk. The crown is built from overlapping rounded lobes rather than one ellipse, because one ellipse is what the parallax tile already draws three of."
+        },
+        {
+          "feature": "autumn colour in three tones of ONE red ramp, lit upper left",
+          "why": "Two ramps in a canopy reads as two trees behind each other. The variation that makes foliage look like foliage is the light, not the hue.",
+          "detail": "The `oxide` ramp and nothing else: the lit lobes upper left, the base through the middle, the shade lobes lower right. NOT `flag-red`, which is the flag's red and is not what a leaf is, and NOT the ochre the parallax tile's trees use - the hero has to be distinguishable from them at a glance.",
+          "palette": "oxide"
+        },
+        {
+          "feature": "fallen maple leaves on the ground, drawn as maple leaves",
+          "why": "This is the feature the subject exists for. A generic oval leaf teaches nothing and a five-lobed maple leaf teaches the fact the POI carries.",
+          "detail": "Five leaves, 48 to 60 px across, each with the five lobes and the deep sinuses of a maple, each at a different angle, scattered around the tree pit and not arranged. Two lit, two base, one shade, from the same `oxide` ramp as the crown."
+        },
+        {
+          "feature": "a kerbed tree pit of bare soil",
+          "why": "It is what a street tree stands in, it grounds the trunk on paving, and it is what says CITY rather than forest.",
+          "detail": "A shallow elliptical kerb in `limestone` with a lit top edge, filled with `wood-shade` soil. The file's bottom edge IS the level ground line and the paving around it is the plaza tile's.",
+          "palette": "limestone, wood"
+        },
+        {
+          "feature": "three heavy branches visible where the crown meets the trunk",
+          "detail": "Two spreading and one rising, thick enough to survive 25 per cent - none under 18 px - and drawn BEHIND the crown lobes so only their bases show."
+        }
+      ],
+      "simplifyAway": [
+        "individual leaves in the crown: the lobes are the foliage, and a drawn leaf pattern is the surface pattern art-bible section 1 forbids",
+        "bark texture, knots and lenticels",
+        "twigs, seed keys and anything else under 12 px",
+        "a second and third tree: the parallax tile behind already carries three",
+        "grass: this tree stands in paving, which is what the level's promenade is"
+      ],
+      "neverAdd": [
+        "a flag, a flagpole, a banner, a shield or any panel with a leaf on it",
+        "a single large centred maple leaf anywhere in the file",
+        "lettering, a dedication plaque or a tree label of any kind",
+        "snow or bare branches: this level is early autumn and it is the only autumn level in the game",
+        "a bench, a lamp or a bin: the plaza tile already draws all three and a hero that repeats them steals the tile's rhythm",
+        "a figure, for the reason cable-stayed-bridge gives"
+      ],
+      "notes": [
+        "NO PHOTOGRAPH OF ONE SPECIFIC TREE IS BEING COPIED, and that is stated rather than left to be found.",
+        "The two Winnipeg references establish the SEASON and the SETTING - a promenade of street trees in full",
+        "autumn colour beside the river - and the tree is drawn as a type to the scale those photographs give.",
+        "A tree is a type in the way a bench is a type, and this project already draws three of them into",
+        "winnipeg/layer-40-plaza.svg without a reference for any individual one.",
+        "WHY A TREE IS A POINT OF INTEREST. It carries a sourced fact - Discover Canada page 79, the maple leaf",
+        "is Canada's best-known symbol - and the brief this work is done under is explicit that a point of",
+        "interest is something a player can stop at and learn one sourced fact from, not necessarily a landmark.",
+        "It is also the only object in the game that can carry that fact without drawing the flag, which",
+        "OQ-ART-04 has kept open since slice 1.",
+        "PLACEMENT FLOOR: do not draw it below 280 px wide anywhere the player is meant to recognise the leaves.",
+        "DRAWING OBSERVATION, not an identification: at 180 px the lobed crown, the three tones, the trunk, the",
+        "pit and four of the five fallen leaves survive; at 120 px as a silhouette it is a broad crown on a",
+        "short trunk, which is a tree and is not a lamp, a kiosk or a person."
       ]
     },
     {
@@ -2429,6 +2616,251 @@
       ]
     },
     {
+      "id": "grain-bins",
+      "subject": "A row of hopper-bottom steel farm grain bins",
+      "renders": [
+        "src/svg/prairie-rail/prop-grain-bins@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as grain-elevator.",
+      "expectedBlindAnswer": [
+        "grain bins",
+        "grain silos",
+        "farm grain bins",
+        "steel grain bins",
+        "hopper bins",
+        "silos on a farm",
+        "grain storage bins"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE: these are farm bins, not a named facility, and the level's place-anchor is",
+        "grain-elevator. No answer here names a province.",
+        "THE FAILURE THIS SUBJECT WAS REDRAWN FOUR TIMES TO AVOID IS \"houses\", \"a village\", \"barns\" or \"a",
+        "farmyard\". Three builds of this render read as a row of gabled buildings, because a triangle on a",
+        "rectangle is a house whatever the shading does. What fixed it is in the first two mustBeRight entries",
+        "and it is structural rather than decorative: the bins stand OFF the ground on legs, with a funnel",
+        "under each one and daylight under that. A bin drawn sitting on the ground is a building."
+      ],
+      "referenceFiles": [
+        "prairie-rail/prairie-freight-train-at-dawn.jpg",
+        "prairie-rail/grain-elevator-govan-and-track.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "each bin stands clear of the ground on legs, over a funnel-shaped hopper, with a dark void under it",
+          "why": "It is the whole identification. Nothing else in this game is a cylinder held in the air on legs, and no house is.",
+          "detail": "MEASURED off a 280 x 130 crop of prairie-rail/prairie-freight-train-at-dawn.jpg enlarged four times, which is the only view of these bins in the repository: the hopper and the leg gap together are about a quarter of the total height. Three legs per bin, thin, dark, standing on the pad, with the funnel narrowing to a small throat between them."
+        },
+        {
+          "feature": "a STEEP conical roof, taller than a house roof and pointed, with a small peak vent",
+          "detail": "The cone is roughly 0.5 of the bin's diameter in height - much steeper than the shallow cone a first build drew - and it overhangs the body by a small eave. One small vent cap at the apex and nothing else on it: no cupola, no dormer, no chimney."
+        },
+        {
+          "feature": "tall narrow corrugated cylinders, ringed by horizontal seams",
+          "why": "A bin is taller than it is wide, which is the opposite of the proportion two builds of this drawing used. The rings are what corrugated steel looks like at this scale, and they are the only surface marking allowed.",
+          "detail": "Body height about 1.4 times the diameter. Four to six horizontal ring seams, full width, evenly spaced - rhythm, not count - and three flat vertical tone bands for the cylinder, lit on the left. NO vertical corrugation lines: that is the surface pattern art-bible section 1 forbids.",
+          "palette": "path"
+        },
+        {
+          "feature": "four bins of different heights in a row, one carrying a ladder",
+          "why": "One bin alone reads as a silo; a row of them reads as a farm's grain storage, which is what the POI teaches.",
+          "detail": "Different heights and diameters, overlapping slightly, the tallest nearest the centre. One vertical ladder of two stiles and evenly spaced rungs on the tallest."
+        },
+        {
+          "feature": "a gravel pad under them",
+          "detail": "A flat band of `path` with a lit top edge and a few darker scatter marks. The file's bottom edge IS the level ground line.",
+          "palette": "path"
+        }
+      ],
+      "simplifyAway": [
+        "the corrugation itself: the ring seams are the whole surface",
+        "augers, fill pipes, aeration fans and the electrical gear at the base",
+        "the manhole, the roof ladder and the safety cage",
+        "the fifth bin and everything behind the row"
+      ],
+      "neverAdd": [
+        "a company name, a co-operative mark, a wordmark, a number or any lettering in either language",
+        "a wooden elevator in the same frame. Scoped deliberately: the tall timber elevator with a cupola is REQUIRED on grain-elevator and forbidden here, because the two subjects are judged in the same hand-off and this one must not be able to answer for that one",
+        "a gabled roof, a door with a frame, a window or a porch: every one of those turns a bin into a building, and three builds of this render did exactly that",
+        "a figure, a truck or a tractor",
+        "snow: this level is late summer"
+      ],
+      "notes": [
+        "THIS SUBJECT TOOK FOUR BUILDS AND THE FIRST THREE ARE THE FINDING. Build one drew trapezoid roofs on",
+        "rectangles and read as a row of houses. Build two made the cones steeper and the read did not change.",
+        "Build three added a reflected-light rim at the far edge of each cylinder - the standard trick for",
+        "making a cylinder read - and it STILL read as houses, because the shading was never the problem: the",
+        "silhouette was. Build four put the bins on legs over hoppers, which is what the reference shows and",
+        "what no building has, and the read changed at once. Recorded because the same mistake is available on",
+        "every cylindrical subject this game will ever draw.",
+        "prairie-rail/prairie-freight-train-at-dawn.jpg is a DAWN exposure - the sky is orange and magenta and",
+        "everything below it is in silhouette - so it is a GEOMETRY reference only and every colour here comes",
+        "from palette.json.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide the legs, the",
+        "hoppers, the cones, the vents and the ring seams all survive; the 120 px silhouette is a row of",
+        "pointed cylinders standing on legs."
+      ]
+    },
+    {
+      "id": "combine-harvester",
+      "subject": "A combine harvester in standing grain",
+      "renders": [
+        "src/svg/prairie-rail/prop-combine-harvester@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a combine harvester",
+        "a combine",
+        "a harvester",
+        "a farm machine harvesting",
+        "a harvesting machine",
+        "a combine in a wheat field"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE: no make, no model and no maker's badge, and the level's place-anchor is",
+        "grain-elevator.",
+        "\"A tractor\" is a FAIL and it is the near miss this subject is drawn against. A tractor has no header,",
+        "no reel and no grain tank; the wide cutting front with the slatted reel turning above a pale cutter",
+        "bar is what makes this machine a combine, and it is why the header is drawn at full size on the right",
+        "of the frame with clear air around it rather than tucked behind the drive wheel, which is where a",
+        "first build put it."
+      ],
+      "referenceFiles": [
+        "prairie-rail/prairie-harvest-and-shelterbelt.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a wide header at the front, lower than the body, carrying a slatted reel above a pale cutter bar",
+          "why": "It is the identification. Everything else on the machine is shared with a truck or a tractor.",
+          "detail": "The header is about a quarter of the machine's length and sits at knee height to the body. The reel is drawn from the side as a hub with six radial bats standing clear of it, in a tan tone that is not the body red, and the cutter bar under it is a pale steel bar running the full width of the header and a little past it.",
+          "palette": "oxide, felt, white"
+        },
+        {
+          "feature": "one large drive wheel forward and one small wheel aft",
+          "why": "The wheel pair is upside down compared with every road vehicle, and that alone says farm machine.",
+          "detail": "The front wheel is about 1.5 times the diameter of the rear one and sits under the cab. Both are dark with a lighter hub. No tread pattern: art-bible section 1 forbids a surface pattern and a drawn tread at this size is noise.",
+          "palette": "hide"
+        },
+        {
+          "feature": "a high glazed cab set forward, over the drive wheel",
+          "detail": "A dark frame with one large pale glazed panel and one mullion, under a pale roof cap. NO figure inside: this level's people are on the parallax tiles and a driver drawn at hero scale would be a second canon.",
+          "palette": "slate, white"
+        },
+        {
+          "feature": "an open grain tank on top and an unloading auger folded up and out over one side",
+          "why": "The auger is the second-strongest cue after the header and it is what a person remembers about the silhouette.",
+          "detail": "A raised open-topped tank along the roof line, and a straight tube rising from it out over the left of the frame at about 20 degrees, with a square spout head at its end."
+        },
+        {
+          "feature": "it stands in grain: cut stubble in front, standing crop behind",
+          "detail": "Bands of the `felt` and `wood` ramps at the bottom of the file with a few swath lines, pale where the crop is standing and darker where it is cut. The file's bottom edge IS the level ground line.",
+          "palette": "felt, wood"
+        }
+      ],
+      "simplifyAway": [
+        "the badge, the model number, the maker's decals and the warning labels",
+        "the ladder, the handrails, the mirrors and the lights",
+        "the tread blocks on both tyres",
+        "the dust cloud behind it: it is the one thing the reference photograph is mostly made of, and a drawn dust cloud at this scale is a grey smear",
+        "the grain cart and the trucks beside it in the reference: one machine is the subject"
+      ],
+      "neverAdd": [
+        "a badge, a wordmark, a model number, a maker's stripe or any lettering in either language",
+        "a figure in the cab or on the ladder",
+        "a plough, a seed drill, a baler or a front loader: each one moves this subject to a different machine",
+        "a green body. Scoped deliberately rather than stylistically: the reference shows a red machine, and green is the other maker's colour, so drawing it green would assert a brand this render has no reference for",
+        "smoke or exhaust"
+      ],
+      "notes": [
+        "prairie-rail/prairie-harvest-and-shelterbelt.jpg is the only reference: two red machines and a grain",
+        "cart working a wheat field under a dust cloud, at a distance, with a shelterbelt on the horizon. It",
+        "settles the PROPORTIONS, the wheel arrangement, the colour and the setting, and nothing finer - the",
+        "machines in it are about 160 px wide. The drawing does not pretend past that.",
+        "THE RED IS THE REFERENCE'S, NOT A BRAND'S. It is drawn from the `oxide` ramp, which this game also",
+        "uses for Peggy's Cove's fish stores and Ottawa's warming hut; no badge, stripe or decal is drawn, so",
+        "nothing here names a manufacturer.",
+        "PLACEMENT FLOOR: do not draw it below 300 px wide anywhere the player is meant to recognise the",
+        "header. DRAWING OBSERVATION, not an identification: at 180 px the reel bats, the cutter bar, the cab,",
+        "the auger and both wheels survive; the 120 px silhouette is a tall body over two unequal wheels with a",
+        "low arm reaching forward, which is a combine and is not a truck."
+      ]
+    },
+    {
+      "id": "container-car",
+      "subject": "A double-stack container car standing on a siding",
+      "renders": [
+        "src/svg/prairie-rail/prop-container-car@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a container car",
+        "a freight car",
+        "a railway wagon carrying containers",
+        "a double-stack container car",
+        "a train car carrying shipping containers",
+        "a rail car carrying two containers"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE AND MORE STRICTLY THAN MOST. Real containers and real cars are covered in reporting",
+        "marks, numbers and owners' liveries, and every one of those would name a company. This one carries",
+        "none, and its two box colours are palette ramps chosen against the level's sky rather than any",
+        "operator's.",
+        "WHAT IT MUST CARRY: that the boxes are on a RAILWAY car. \"Shipping containers\" alone is a partial",
+        "answer and \"a truck\" is a fail - the trucks, the wheels, the rail and the ties under it are drawn at",
+        "full contrast for exactly that reason."
+      ],
+      "referenceFiles": [
+        "prairie-rail/prairie-freight-train-at-dawn.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "two containers, one seated IN a dropped well and one stacked on top of it",
+          "why": "The double stack is the whole subject: a single box on a flat car is a flat car, and the dropped well is what makes a double stack possible.",
+          "detail": "The car's deck is visibly lower between its two ends than at them, the lower box sits down inside it with the car's ends standing proud either side, and the upper box sits squarely on the lower one. The upper box is a little shorter than the lower, which is what the reference shows."
+        },
+        {
+          "feature": "each box is a plain ribbed rectangle with corner castings and a darker end",
+          "detail": "Vertical ribs on a regular period across the side - rhythm, not count - a darker band top and bottom, a darker panel at each end for the doors, and small dark blocks at the four corners. No door hardware below 12 px.",
+          "palette": "cobalt, oxide"
+        },
+        {
+          "feature": "two four-wheel trucks under the car, on rail",
+          "why": "It is what makes the object a railway vehicle and not a lorry trailer or a stack in a yard.",
+          "detail": "A dark bogie frame at each end carrying two visible wheels with lighter hubs, sitting on a rail head with ties and ballast below it. The rail head IS the file's ground line, because that is where this level's ground polyline sits.",
+          "palette": "hide, slate, path, wood"
+        },
+        {
+          "feature": "the car is at rest",
+          "detail": "No motion lines, no dust, no locomotive, no coupling to anything off-frame. The level's locomotion is `train` and the player rides one; a hero that looked like a moving train would be read as the player's own."
+        }
+      ],
+      "simplifyAway": [
+        "reporting marks, numbers, owners' liveries and every other marking, which is most of what is on a real container",
+        "the corrugation of the box skin: a few ribs are the whole surface",
+        "brake gear, air hoses, couplers and the slack adjusters",
+        "the rest of the train: the reference shows a hundred cars and this is one"
+      ],
+      "neverAdd": [
+        "any wordmark, reporting mark, number, flag or logo in either language",
+        "a locomotive, a caboose or a second car",
+        "a grain hopper in the same frame: the level already teaches grain twice and the point of this subject is TRADE",
+        "a level crossing, a crossbuck or a signal. Scoped deliberately: a grade crossing with a crossbuck and a flashing-light mast is drawn on prairie-rail/layer-40-railbed.svg, which repeats every 1920 px, and a second one on a hero would double it",
+        "a figure on or beside the car"
+      ],
+      "notes": [
+        "prairie-rail/prairie-freight-train-at-dawn.jpg shows the freight standing beside the elevator at dawn,",
+        "in near silhouette against an orange sky. It settles the ARRANGEMENT - a long string of well cars with",
+        "boxes stacked two high - and nothing about colour, so the colours are palette ramps.",
+        "WHY A CONTAINER AND NOT A GRAIN HOPPER. A hopper would have been the obvious prairie choice and it is",
+        "the wrong one twice over: this level already teaches grain at two other points, and Canada's",
+        "government grain hoppers carry a livery and a maple leaf device that this project does not draw",
+        "(OQ-ART-04). A container teaches the fact this POI carries - Canada is a trading nation - without",
+        "asserting anything about whose box it is.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide the two boxes, the",
+        "dropped well, both bogies, four wheels and the rail all survive; the 120 px silhouette is two stacked",
+        "rectangles on a low frame over four wheels."
+      ]
+    },
+    {
       "id": "ranch-barn",
       "subject": "A working cattle ranch in the Alberta foothills: a red board-sided gable barn with a louvred ridge cupola, a peeled-log corral and a work horse. Drawn from the Bar U Ranch National Historic Site at Longview, Alberta.",
       "renders": [
@@ -2615,6 +3047,168 @@
       ],
       "notes": [
         "SCOPED AS A LANDFORM AND NOT A PLACE, which is the whole reason this entry has the shape it does. See `ranch-barn`'s note for what that costs the level."
+      ]
+    },
+    {
+      "id": "log-rail-gate",
+      "subject": "A log rail ranch fence with a braced timber gate",
+      "renders": [
+        "src/svg/alberta-foothills/prop-log-rail-gate@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as ranch-barn.",
+      "expectedBlindAnswer": [
+        "a ranch gate",
+        "a farm gate",
+        "a log rail fence and gate",
+        "a wooden gate in a rail fence",
+        "a pasture gate",
+        "a gate hung in a rail fence"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. It is a fence and a gate; it names no ranch, no province and no country, and the",
+        "level's place-anchor is ranch-barn.",
+        "WHAT IT MUST CARRY IS THE GATE. \"A fence\" alone is a partial answer: the opening, the hung leaf with",
+        "its diagonal brace and the two taller posts either side are what make the object a gate, and a first",
+        "build failed exactly here - the fence rails ran straight across the opening, so there was nothing to",
+        "read as a gap and the leaf read as more fence."
+      ],
+      "referenceFiles": [
+        "alberta-foothills/log-rail-fence.jpg",
+        "alberta-foothills/ranch-yard-and-front-range.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the fence rails STOP at the gate posts and the opening is clear",
+          "why": "It is what makes a gate a gate. Rails carried across the opening make one continuous fence with a decorative diagonal on it.",
+          "detail": "Four rails run in from each side and end against the gate posts. Nothing crosses the opening except the gate leaf itself."
+        },
+        {
+          "feature": "round peeled log rails on squared timber posts, in two different woods",
+          "why": "It is the construction the reference shows and it is what separates this from a picket fence or a board fence.",
+          "detail": "The rails are ROUND in section - drawn as capsules with a lit top edge and a shaded underside - and weather grey, in the `path` ramp. The posts are SQUARE, brown, in the `wood` ramp, with a capping cut at the top. MEASURED off alberta-foothills/log-rail-fence.jpg: four rails, the lowest about a fifth of the post height above the ground, evenly spaced.",
+          "palette": "path, wood"
+        },
+        {
+          "feature": "a hung gate leaf of three rails with one diagonal brace",
+          "why": "The brace is what stops a gate sagging and it is the single most recognisable thing about a farm gate.",
+          "detail": "Three lighter rails between two stiles, one diagonal running from the bottom of the hinge side to the top of the latch side, and plain dark strap hinges and a latch. The leaf is drawn in a WARMER tone than the fence rails so it reads as a separate object.",
+          "palette": "wood"
+        },
+        {
+          "feature": "two taller posts framing the opening",
+          "detail": "Heavier and darker than the line posts, standing a head above them, capped. They are what the leaf hangs on."
+        },
+        {
+          "feature": "it stands in pasture, with grass tufts at the posts",
+          "detail": "A band of the `pasture` ramp across the bottom with a lit crest and a shaded foot, and small grass tufts where the posts meet it. The file's bottom edge IS the level ground line.",
+          "palette": "pasture"
+        }
+      ],
+      "simplifyAway": [
+        "the grain, the checks and the saw marks in the timber: art-bible section 1 forbids a surface pattern",
+        "the through-bolts, the nails and the wire wraps",
+        "the board corral and the second fence line behind it in the reference",
+        "every post beyond the five drawn: rhythm, not count"
+      ],
+      "neverAdd": [
+        "a ranch name, a brand, a sign board, a horseshoe device or any lettering in either language. A gateway is exactly where a real ranch puts its name, and this one has none",
+        "an arch or an overhead beam between the gate posts: that is a different object - a ranch entrance arch - and no photograph in this repository shows one",
+        "barbed wire. Scoped deliberately: a plain wire fence is drawn on alberta-foothills/layer-40-rangeland.svg, which repeats every 1920 px, and the two fences must not be the same fence",
+        "a figure, a horse or an animal of any kind: the cattle are their own subject on this level",
+        "snow: this level is late summer"
+      ],
+      "notes": [
+        "alberta-foothills/log-rail-fence.jpg is the PRIMARY reference and it is unusually good for this",
+        "purpose: the fence fills the frame in raking light at close range, so the round rails, the square",
+        "posts, the two timbers and the spacing are all measurable. It is a GREEN-GRASS exposure and this level",
+        "is late summer pasture, so the ground tone is the level's and not the photograph's.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide the four rails, the",
+        "gate leaf, the diagonal brace, both gate posts and the hinges survive; the 120 px silhouette is a rail",
+        "fence with a braced gate in it, which is the subject."
+      ]
+    },
+    {
+      "id": "beef-cattle",
+      "subject": "Three red-bodied white-faced beef cattle standing on rangeland",
+      "renders": [
+        "src/svg/alberta-foothills/prop-beef-cattle@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "cattle",
+        "cows",
+        "beef cattle",
+        "three cows grazing",
+        "cattle on rangeland",
+        "a herd of cattle",
+        "Hereford cattle"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE: they are cattle, not a named herd, and the level's place-anchor is ranch-barn.",
+        "THE FAILURE TO WATCH FOR IS THE ANIMAL ITSELF. \"A llama\", \"an alpaca\", \"a horse\", \"a deer\" or \"a goat\"",
+        "is a FAIL and it is the reason this subject has measurements at all: an earlier animal in this project",
+        "was read as a llama, and the way a quadruped goes wrong is always the same - the neck gets long, the",
+        "head gets high, the body gets shallow and the legs get long. Every mustBeRight entry below is a guard",
+        "on one of those four."
+      ],
+      "referenceFiles": [
+        "alberta-foothills/rangeland-cattle-and-wire-fence.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the body is DEEPER than the legs are long",
+          "why": "It is the single number that separates cattle from every other farm quadruped at cartoon scale.",
+          "detail": "MEASURED on alberta-foothills/rangeland-cattle-and-wire-fence.jpg, on the nearest animals: body depth is about 0.46 of body length and clear leg is about 0.32 of it, so DEPTH : LEG is about 1.4 : 1. The shipped art draws exactly that on all three. Anything under 1 : 1 is a horse or a camelid."
+        },
+        {
+          "feature": "a SHORT thick neck carrying the head LOW, at or below the line of the back",
+          "why": "A raised head on a long neck is what makes a drawn quadruped read as a llama, and it is the specific failure this subject is written against.",
+          "detail": "The neck is about a fifth of the body length and it runs forward rather than up. The top of the head sits no higher than the withers. NO upright neck, NO head above the back line."
+        },
+        {
+          "feature": "a level back with a high rump and a hanging tail with a dark switch",
+          "detail": "The top line is flat from the withers to the hip, the hip is the highest point of the body, and the tail hangs straight down from it with a dark tuft at its end. A tail carried out or up belongs to a different animal."
+        },
+        {
+          "feature": "red body, white face, white underline, white socks over dark hooves",
+          "why": "It is the colour pattern of the cattle ALREADY DRAWN on this level's own parallax tile, and a hero in a different pattern would read as a different herd.",
+          "detail": "Body in the `brick` ramp, lit along the back; head, neck, belly band and lower legs in `white`; hooves dark. The reference photograph shows solid red animals and the tile draws white-faced ones; the tile wins, because the hero stands 60 px from three of them.",
+          "palette": "brick, white, hide"
+        },
+        {
+          "feature": "three animals at three sizes, all facing the same way, on dry pasture",
+          "why": "One animal alone has no scale and gives the eye nothing to compare. Three receding sizes read as a herd on open ground.",
+          "detail": "Largest nearest the bottom of the frame, smallest highest and furthest, all in profile facing the same direction, overlapping slightly. Dry `pasture` under them with a lit crest and a few grass tufts.",
+          "palette": "pasture"
+        }
+      ],
+      "simplifyAway": [
+        "hair, hide texture and muscle definition: art-bible section 1 forbids a surface pattern",
+        "ear tags, brands, tattoos and collars",
+        "horns: these are drawn polled, which half of the reference's animals are",
+        "the eyelashes, the mouth and the nostrils. Two nostril dots were drawn on a first build and read as a second pair of eyes",
+        "the wire fence and the corrals of the reference photograph: the fence is on this level's tile and the gate is its own subject"
+      ],
+      "neverAdd": [
+        "a brand, an ear tag, a bell, a collar or any lettering in either language",
+        "a rider, a herder, a dog or any figure",
+        "horns, a hump, a woolly coat or a long neck: each one moves this animal to a different species, and the long neck is the one that has already gone wrong once in this project",
+        "a milking udder or a dairy black-and-white pattern: the fact this POI carries is about BEEF, and a Holstein would teach the wrong industry",
+        "snow or bare ground: this level is late summer pasture"
+      ],
+      "notes": [
+        "alberta-foothills/rangeland-cattle-and-wire-fence.jpg is the only reference: a herd on dry grass",
+        "behind a wire fence with board corrals beyond. The animals in it are 40 to 90 px long, which settles",
+        "PROPORTION and POSTURE and nothing finer, and the drawing does not pretend past that.",
+        "THE COLOUR COMES FROM THE TILE AND NOT FROM THE PHOTOGRAPH, which is the one place this subject",
+        "deliberately departs from its reference. The photograph shows solid red animals;",
+        "alberta-foothills/layer-40-rangeland.svg already draws three red-bodied white-faced ones, and a hero",
+        "standing in front of them in a different pattern would read as a different kind of animal rather than",
+        "as the near view of the same herd. Both patterns are common on this rangeland.",
+        "PLACEMENT FLOOR: do not draw the nearest animal below 200 px long anywhere the player is meant to read",
+        "the species. DRAWING OBSERVATION, not an identification: at 280 px wide all three animals, their white",
+        "faces, their socks and their tails are legible; at 180 px the smallest becomes a shape and the two",
+        "nearest still read."
       ]
     },
     {
@@ -2809,6 +3403,165 @@
       ],
       "notes": [
         "The seam closing to the pixel here is worth carrying, because it is the third arrangement this project has tried and the first that needed no hole. halifax-quayside closes at 160 by putting the near tile's first opaque row exactly on the far tile's bottom edge; toronto-trail and winnipeg-riverwalk both leave a band of matte that a third tile fills in the level. This one closes because the far tile is opaque from its own top edge, which is a property of drawing WATER rather than a skyline."
+      ]
+    },
+    {
+      "id": "marina-boats",
+      "subject": "Moored sailing boats in a harbour marina",
+      "renders": [
+        "src/svg/vancouver/prop-marina-boats@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as five-sails.",
+      "expectedBlindAnswer": [
+        "a marina",
+        "moored sailboats",
+        "sailing boats in a harbour",
+        "yachts at their moorings",
+        "boats in a marina",
+        "a harbour full of boats"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. They are boats, not a named marina or a named vessel, and this level’s",
+        "place-anchor is five-sails and nothing else.",
+        "WHAT IT MUST CARRY IS THAT THEY ARE SAILING BOATS AT REST. \"A ship\", \"a ferry\" or \"a fishing boat\" is",
+        "a partial answer; \"a regatta\" or \"boats under sail\" is a FAIL, because nothing here carries a sail.",
+        "The bare masts with their booms are the whole point: a moored boat has its sails off."
+      ],
+      "referenceFiles": [
+        "vancouver/coal-harbour-and-the-north-shore.jpg",
+        "vancouver/seawall-path-and-harbour.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "THREE boats at three sizes and three distances, not one",
+          "why": "One boat is a boat; three at different distances is a marina, which is what the fact this POI carries is about.",
+          "detail": "The nearest lowest in the frame and largest, the other two smaller and higher, overlapping. All lying the same way, none under way, no wake and no bow wave."
+        },
+        {
+          "feature": "white hulls with a dark boot stripe, and a sheer that rises to the bow",
+          "detail": "MEASURED from the marina in vancouver/coal-harbour-and-the-north-shore.jpg, where forty-odd hulls fill the middle distance and every one of them is white: freeboard is about 0.16 of hull length and the bow is about 0.15 of the freeboard higher than the stern. The boot stripe is a narrow dark band at the waterline and is the only colour on the hull.",
+          "palette": "white, cobalt"
+        },
+        {
+          "feature": "one mast and one boom on each, bare",
+          "why": "It is what makes them sailing boats. A mastless hull is a motor launch and the reference marina is mostly sailing boats.",
+          "detail": "A single vertical mast forward of amidships, tapering, with a horizontal boom at its foot running aft. No shrouds, no stays, no rigging lines: at this size a 3 px line is noise, and art-bible section 1 sets the floor at 12 px."
+        },
+        {
+          "feature": "a low cabin trunk with two dark windows",
+          "detail": "A rounded box on the deck, about a third of the hull length, with two small dark lights in its side. It is what separates a yacht from an open dinghy."
+        },
+        {
+          "feature": "open water under them and the stone edge of the seawall walk across the bottom",
+          "why": "The boats have to be IN something. The seawall edge is also what ties the hero to the ground the player is standing on.",
+          "detail": "Three flat `water` tones, darkest nearest the camera where the wall shades it, with straight lit ripple bars, two yellow mooring buoys, and a band of `limestone` paving at the bottom of the file. The file’s bottom edge IS the level ground line.",
+          "palette": "water, limestone, brass"
+        }
+      ],
+      "simplifyAway": [
+        "shrouds, stays, halyards, lifelines and every other line",
+        "sail covers, winches, cleats, fenders and rails below 12 px",
+        "the floating docks and finger piers: a first build drew one across the front and the nearest hull read as sitting ON it",
+        "the forty other boats in the reference photograph",
+        "the flower bed the reference is actually a photograph of: it is in sharp focus and the marina is the blurred background, and the marina is the subject here"
+      ],
+      "neverAdd": [
+        "a boat name, a sail number, a class insignia, a burgee, an ensign or any lettering in either language",
+        "a sail set, a spinnaker, a wake or a bow wave: these boats are moored",
+        "a totem pole or an inuksuk, in any form, including background, silhouette, icon and loading art. docs/content-review.md 5.2 and 5.4, and it is on BOTH of this level’s original subjects for the same reason: this level is the single most likely place in this game for those rules to be broken by accident",
+        "the Lions Gate Bridge or Canada Place in the same frame. Scoped deliberately: the five sails are REQUIRED on five-sails and the bridge is the recorded fallback anchor, and neither may appear on a subject judged in the same hand-off",
+        "a figure on any deck"
+      ],
+      "notes": [
+        "vancouver/coal-harbour-and-the-north-shore.jpg is the PRIMARY reference and it is an odd one: the",
+        "photograph is OF a flower bed, sharply focused, and the marina behind it is soft. That is exactly what",
+        "makes it useful here - it gives the massing, the colour and the density of forty hulls at a glance and",
+        "no detail at all, which is the level of description this drawing wants.",
+        "seawall-path-and-harbour.jpg gives the same marina from further away with the seawall in front of it,",
+        "which is the arrangement this hero draws.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide all three hulls,",
+        "their boot stripes, all three masts and booms and both buoys survive; the 120 px silhouette is three",
+        "overlapping hulls under three bare masts."
+      ]
+    },
+    {
+      "id": "bulk-carrier",
+      "subject": "A bulk carrier lying in a harbour",
+      "renders": [
+        "src/svg/vancouver/prop-bulk-carrier@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a cargo ship",
+        "a bulk carrier",
+        "a freighter",
+        "a merchant ship",
+        "a ship in a harbour",
+        "a cargo vessel"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE AND STRICTLY SO: a real ship carries a name, a port of registry, draught marks, a",
+        "funnel device and an ensign, and every one of those names an owner or a country. This one carries none.",
+        "The level’s place-anchor is five-sails.",
+        "WHAT IT MUST CARRY IS CARGO. \"A cruise ship\", \"a ferry\", \"a warship\" or \"a liner\" is a FAIL: the hatch",
+        "covers down an open weather deck, the deck cranes and the superstructure pushed right aft are what make",
+        "this a working cargo ship, and a passenger vessel has none of them."
+      ],
+      "referenceFiles": [
+        "vancouver/canada-place-and-the-north-shore.jpg",
+        "vancouver/coal-harbour-and-the-north-shore.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the superstructure is right AFT, over the stern, and there is nothing else above the deck line",
+          "why": "It is the single strongest silhouette cue for a cargo ship and the thing a passenger ship never does.",
+          "detail": "A white block of three or four storeys standing at one end of the hull with a funnel above it, and the whole of the rest of the ship flat. MEASURED loosely off the ships in the background of vancouver/canada-place-and-the-north-shore.jpg: the superstructure is about a fifth of the ship’s length.",
+          "palette": "white, slate"
+        },
+        {
+          "feature": "a line of raised hatch covers along the weather deck",
+          "why": "It is what says the cargo is IN the ship rather than stacked on it, and it is what separates this from the container car on another level of this game.",
+          "detail": "Four low rectangles on the deck at an even period, lit along the top edge. Rhythm, not count."
+        },
+        {
+          "feature": "pedestal deck cranes with their jibs stowed",
+          "detail": "Four posts standing between the hatches, each with a straight jib angled up and aft. They are the second-strongest cue and they are what makes the ship read as self-loading rather than as a barge."
+        },
+        {
+          "feature": "a long low dark hull with a black boot stripe and a flared bow",
+          "detail": "Hull length about six times its visible depth, the deck line straight, the bow flaring out to a rounded stem at one end and the stern rounded at the other. Dark red in the `oxide` ramp with the boot stripe at the waterline.",
+          "palette": "oxide, hide"
+        },
+        {
+          "feature": "it lies in open water, at rest, with the seawall edge across the bottom of the frame",
+          "detail": "Flat `water` tones with lit ripple bars, darkest nearest the camera, and a band of `limestone` paving at the file’s bottom edge, which IS the level ground line. NO wake, NO bow wave, NO smoke.",
+          "palette": "water, limestone"
+        }
+      ],
+      "simplifyAway": [
+        "the name, the port of registry, the draught marks, the load line and the IMO number",
+        "accommodation ladders, lifeboats, davits, railings and mooring lines",
+        "the anchor, the hawse pipes and the bulbous bow below the waterline",
+        "the containers: this ship carries bulk, and a container stack would make it the same object as prairie-rail’s container-car"
+      ],
+      "neverAdd": [
+        "a name, a funnel device, a house flag, an ensign, a wordmark or any lettering in either language",
+        "a container stack, a car deck, a passenger promenade or a cruise ship’s tiered balconies",
+        "smoke from the funnel: it would put the ship under way and would be an effect with no plain path (ADR-0011)",
+        "a totem pole or an inuksuk, in any form, including background, silhouette, icon and loading art. docs/content-review.md 5.2 and 5.4, and it is on BOTH of this level’s original subjects for the same reason: this level is the single most likely place in this game for those rules to be broken by accident",
+        "Canada Place’s five sails in the same frame, for the reason marina-boats gives"
+      ],
+      "notes": [
+        "THE REFERENCES FOR THIS SUBJECT ARE DISTANT AND THAT IS STATED RATHER THAN DRESSED UP. The ships in",
+        "vancouver/canada-place-and-the-north-shore.jpg and coal-harbour-and-the-north-shore.jpg are in the far",
+        "background at a few hundred pixels; what they settle is the ARRANGEMENT - aft superstructure, flat",
+        "deck, cranes - which is the level of detail a 390 px phone frame shows, and nothing finer is claimed.",
+        "WHY A BULK CARRIER AND NOT A CONTAINER SHIP. prairie-rail already draws a double-stack container car",
+        "for the trading-nation fact, and a container ship here would be the same object twice in one game. The",
+        "Port of Vancouver moves both; the hatch covers and cranes are the half that is not drawn anywhere else.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide the aft block, the",
+        "funnel, all four cranes, the hatch covers and the boot stripe survive; the 120 px silhouette is a long",
+        "low hull with a tall block at one end and four masts along it."
       ]
     },
     {
@@ -3236,7 +3989,7 @@
       ],
       "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
       "expectedBlindAnswer": [
-        "a boulder on bare rock",
+        "a boulder resting on bare rock",
         "a large rock on a rocky shore",
         "a glacial erratic",
         "boulders on rock",
@@ -3639,6 +4392,177 @@
       ],
       "notes": [
         "THIS IS WHAT THE LOW PRESET KEEPS, with the sky, so it is the whole picture on most phones. That is why the water is in the near tile rather than in a fifth layer of its own: a level about Canada's regions whose river disappeared at the lowest tier would be a gravel pit."
+      ]
+    },
+    {
+      "id": "spruce-stand",
+      "subject": "A stand of northern spruce on a river bank",
+      "renders": [
+        "src/svg/the-north/prop-spruce-stand@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as paddlewheel-riverboat.",
+      "expectedBlindAnswer": [
+        "spruce trees",
+        "a stand of spruce",
+        "conifers",
+        "evergreen trees",
+        "fir trees",
+        "a group of pine trees",
+        "boreal forest",
+        "a stand of conifers"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, AND GENEROUS ON SPECIES. \"Fir\" and \"pine\" are accepted above even though these are",
+        "spruce: nobody identifies a conifer genus from a cartoon at 390 px, and the gate must not pretend",
+        "otherwise. What it must NOT be read as is a broadleaf tree, a hedge, a bush or a mountain.",
+        "THE SHAPE THAT CARRIES IT IS NARROWNESS. A northern spruce is a spire - much taller than it is wide,",
+        "with short drooping tiers - and a wide conical Christmas-tree silhouette belongs to a different forest",
+        "and a different latitude. The width : height ratio below is the whole subject."
+      ],
+      "referenceFiles": [
+        "the-north/yukon-river-and-spruce.jpg",
+        "the-north/yukon-river-valley.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "narrow spire-topped trees: width no more than about a third of height",
+          "why": "It is what separates subarctic white and black spruce from every other conifer a cartoon draws, and it is the read at any size.",
+          "detail": "MEASURED on the bank forest in the-north/yukon-river-and-spruce.jpg, where several hundred trees stand in profile against the sky: crown width runs about 0.28 to 0.36 of tree height. The shipped art draws five trees between 0.33 and 0.39 and the tallest at 0.33. A tree at 0.5 or above is a fir from a warmer forest."
+        },
+        {
+          "feature": "stacked drooping tiers rather than one smooth cone",
+          "detail": "Four to seven overlapping triangular tiers per tree, each a little wider than the one above, with a short bare spire at the top. Rhythm, not count."
+        },
+        {
+          "feature": "five trees of five different heights, overlapping",
+          "why": "A row of equal trees is a hedge. Uneven heights are what make a stand.",
+          "detail": "Tallest near the centre, shortest at the edges, all standing on the same bank line, each with a short bare trunk showing under its lowest tier."
+        },
+        {
+          "feature": "three tones of ONE green ramp, lit from the upper left",
+          "detail": "The `pine` ramp and nothing else: shade for the body of each tier, base for the lit left face, light for a small highlight on alternate tiers. No autumn colour, no yellow, no dead trees.",
+          "palette": "pine"
+        },
+        {
+          "feature": "a gravel bank with rounded boulders under them",
+          "detail": "A flat band of `path` with a lit crest and two or three rounded boulders, which is the shore this level walks along. The file's bottom edge IS the level ground line.",
+          "palette": "path"
+        }
+      ],
+      "simplifyAway": [
+        "individual needles, branches and cones: the tiers are the whole foliage",
+        "bark texture and root flare",
+        "the hundreds of other trees in the reference: five is the subject",
+        "undergrowth, moss and fallen timber: the driftwood is its own subject on this level"
+      ],
+      "neverAdd": [
+        "an inuksuk or a totem pole, in any form, including background, silhouette and icon (docs/content-review.md 5.2)",
+        "a qamutiik, a dogsled, a dog team, a kayak, a canoe or a fish weir, as scenery or as anything else (docs/content-review.md 5.4, OQ-REVIEW-10)",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. See assets/style/the-north-level.md section 0",
+        "any lettering, sign, marker or cairn of any kind",
+        "an aurora, a midnight sun or any night sky: this level is a clear morning",
+        "a cabin, a camp, a tent, a fire, a trail, a blaze or anything built or left by anybody. This level depicts no people and no trace of them, and a stand of trees is where a cabin gets drawn without anyone deciding to",
+        "a broadleaf tree, autumn colour or a bare trunk: this is a clear-morning evergreen stand",
+        "an animal of any kind"
+      ],
+      "notes": [
+        "the-north/yukon-river-and-spruce.jpg is the PRIMARY reference: a long bank of spruce in profile above",
+        "a turquoise river, in full sun. It is the one reference in this set that shows the tree shape clearly",
+        "and at a scale where the width-to-height ratio can be measured.",
+        "WHY A STAND OF TREES IS A POINT OF INTEREST. It carries a sourced fact - Discover Canada page 103, the",
+        "three territories hold a third of Canada's land and about 100,000 people - and the object is the",
+        "emptiness that fact is about. This level has no NPC, no building and no figure by design, so the",
+        "things a player can stop at are the vessel, the forest and the river's own debris, and that is not a",
+        "shortage to be worked around: it is what the level is.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide all five trees, the",
+        "tier structure and the boulders survive; the 120 px silhouette is five narrow spires of uneven height,",
+        "which is a spruce stand and is not a hedge."
+      ]
+    },
+    {
+      "id": "driftwood-pile",
+      "subject": "A pile of bleached driftwood on a river gravel bar",
+      "renders": [
+        "src/svg/the-north/prop-driftwood-pile@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "driftwood",
+        "a pile of driftwood",
+        "logs on a river bank",
+        "fallen logs",
+        "bleached logs on a gravel bar",
+        "a log jam",
+        "dead wood on a shore"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC AND NATURAL. It is debris a river left; it names no place and the level's place-anchor is",
+        "paddlewheel-riverboat.",
+        "THE FAILURE THIS SUBJECT IS WRITTEN AGAINST IS BEING READ AS SOMETHING SOMEBODY BUILT. If an identifier",
+        "says A SHELTER, A LEAN-TO, A FIRE, A RAFT, A FISH WEIR, A FENCE, A CAIRN or A MARKER, that is a FAIL",
+        "and a serious one: docs/content-review.md forbids several of those outright on this level, and a pile",
+        "of logs is one tidy arrangement away from any of them. The logs LIE. None is stood up, leaned against",
+        "another, driven into the ground or set in a frame.",
+        "A first build's root wad was drawn as an even radial fan and read as a SUNBURST DEVICE. It is now four",
+        "uneven roots on one side. An identifier who reports a symbol here has found a defect."
+      ],
+      "referenceFiles": [
+        "the-north/yukon-river-bluff-and-aspen.jpg",
+        "the-north/yukon-river-valley.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "seven barkless logs LYING across one another at different angles",
+          "why": "Lying and crossing is what says the river put them there. Parallel logs read as stacked cordwood, which is something a person does.",
+          "detail": "Long capsules with rounded ends, no two at the same angle, none vertical, none steeper than about 20 degrees from the horizontal, overlapping into a low pile no taller than about a third of the longest log."
+        },
+        {
+          "feature": "bleached pale wood with darker ends",
+          "why": "Driftwood is grey-white, not brown. Brown logs with bark are freshly cut timber and that is a different object with a different meaning.",
+          "detail": "Bodies in the pale end of the `path` and `limestone` ramps, ends a tone darker so each log reads as a cylinder. NO bark, NO green wood, NO axe or saw cuts.",
+          "palette": "path, limestone"
+        },
+        {
+          "feature": "one short uneven root fan",
+          "why": "It is what says these were trees the river tore out, rather than milled wood.",
+          "detail": "Four roots of different lengths and thicknesses on ONE side of one log's end, spread over less than half a turn, with a small knob at the centre. Never an even radial star."
+        },
+        {
+          "feature": "a gravel bar with rounded cobbles under it",
+          "detail": "A flat band of `path` with a lit crest, a darker foot and four or five rounded cobbles. The file's bottom edge IS the level ground line, which on this level is the bar the player walks along.",
+          "palette": "path"
+        }
+      ],
+      "simplifyAway": [
+        "bark, grain, splits and knots",
+        "the branches on each log: one root fan on one log is the whole complication",
+        "the hundreds of other logs along the shore in the reference",
+        "sand ripples, weed and water: the river is a parallax tile behind this"
+      ],
+      "neverAdd": [
+        "an inuksuk or a totem pole, in any form, including background, silhouette and icon (docs/content-review.md 5.2)",
+        "a qamutiik, a dogsled, a dog team, a kayak, a canoe or a fish weir, as scenery or as anything else (docs/content-review.md 5.4, OQ-REVIEW-10)",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. See assets/style/the-north-level.md section 0",
+        "any lettering, sign, marker or cairn of any kind",
+        "an aurora, a midnight sun or any night sky: this level is a clear morning",
+        "any arrangement that reads as built: a lean-to, a shelter, a raft, a frame, a fence, a weir, a stack of cordwood, a fire ring or a tripod",
+        "a standing or leaning log. Every log lies",
+        "an axe, a saw cut, a rope or any tool mark",
+        "an even radial root wad, which reads as a sunburst device"
+      ],
+      "notes": [
+        "the-north/yukon-river-bluff-and-aspen.jpg carries the reference at its waterline: a continuous band of",
+        "pale driftwood logs along the foot of the bluff, under autumn aspen. It is a distant, hazy exposure -",
+        "the bluff is in fog - so it is a GEOMETRY AND COLOUR-FAMILY reference and nothing finer.",
+        "WHY THIS OBJECT CARRIES A GOLD RUSH FACT, which is not obvious and is stated rather than left to look",
+        "like a mistake. This level depicts no people, no buildings and no equipment by design, so no object on",
+        "it can DEPICT mining. The fact is Discover Canada page 103 - thousands of miners came to the Yukon in",
+        "the 1890s and mining is still a significant part of the economy - and it is attached to the object a",
+        "player stops at on the river the miners travelled. NOTHING IN THE FILE ASSERTS THE GOLD RUSH: there is",
+        "no sluice, no pan, no claim stake and no tool, and the neverAdd list forbids all of them.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide all seven logs, the",
+        "darker ends, the root fan and the cobbles survive; the 120 px silhouette is a low crossed pile of",
+        "cylinders, which is driftwood and is not a structure."
       ]
     }
   ],

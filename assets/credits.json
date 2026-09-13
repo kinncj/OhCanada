@@ -1478,6 +1478,24 @@
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/winnipeg/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/winnipeg-level.md; never traced."
     },
     {
+      "path": "src/svg/winnipeg/prop-cable-stayed-bridge@1x.svg",
+      "kind": "shipped",
+      "title": "The near end of a cable-stayed footbridge - a level 6 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/prop-cable-stayed-bridge@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/winnipeg/cmhr-from-esplanade-riel.jpg and cmhr-from-the-forks-tower.jpg under the rules in assets/style/art-bible.md; never traced. The glazed structure built into the real bridge's pylon base is simplified away, and no name, plaque or dedication is drawn: the real bridge is named for a person. The @1x suffix pins the source to one scale; the key winnipeg-prop-cable-stayed-bridge carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 700 x 760 and passed at both probes; at 2x it would cost 8.12 MiB of decoded texture instead of 2.03 MiB."
+    },
+    {
+      "path": "src/svg/winnipeg/prop-autumn-maple@1x.svg",
+      "kind": "shipped",
+      "title": "A maple in full autumn colour - a level 6 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/prop-autumn-maple@1x.svg",
+      "modifications": "Original work. Drawn as a TYPE to the season and scale of the street trees in assets/refs/winnipeg/cmhr-from-the-forks-tower.jpg and cmhr-at-the-forks.jpg, under the rules in assets/style/art-bible.md; never traced, and no individual tree is copied. The five fallen leaves are drawn as maple leaves because the fact this POI carries is about the maple leaf; nothing in the file is an emblem on a field and there is no flag. The @1x suffix pins the source to one scale; the key winnipeg-prop-autumn-maple carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 640 and passed at both probes; at 2x it would cost 5.47 MiB of decoded texture instead of 1.37 MiB."
+    },
+    {
       "path": "src/svg/prairie-rail/layer-10-sky.svg",
       "kind": "shipped",
       "title": "Prairie sky with flat-bottomed cumulus - parallax layer, depth 10",
@@ -1521,6 +1539,33 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/landmark-grain-elevator@1x.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/prairie-rail/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/prairie-rail-level.md; never traced."
+    },
+    {
+      "path": "src/svg/prairie-rail/prop-grain-bins@1x.svg",
+      "kind": "shipped",
+      "title": "A row of hopper-bottom farm grain bins - a level 7 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/prop-grain-bins@1x.svg",
+      "modifications": "Original work. Drawn from the bins beside the elevator in assets/refs/prairie-rail/prairie-freight-train-at-dawn.jpg and grain-elevator-govan-and-track.jpg under the rules in assets/style/art-bible.md; never traced. That photograph is a dawn silhouette, so it is a geometry reference only and every colour comes from palette.json. A TYPE, not a named farm: no company name, mark or number. The @1x suffix pins the source to one scale; the key prairie-rail-prop-grain-bins carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 640 x 560 and passed at both probes; at 2x it would cost 5.47 MiB of decoded texture instead of 1.37 MiB."
+    },
+    {
+      "path": "src/svg/prairie-rail/prop-combine-harvester@1x.svg",
+      "kind": "shipped",
+      "title": "A combine harvester in standing grain - a level 7 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/prop-combine-harvester@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/prairie-rail/prairie-harvest-and-shelterbelt.jpg under the rules in assets/style/art-bible.md; never traced. A TYPE and not a make: no badge, model number or maker's decal, and the red is the oxide ramp from palette.json rather than any manufacturer's. The @1x suffix pins the source to one scale; the key prairie-rail-prop-combine-harvester carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 800 x 480 and passed at both probes; at 2x it would cost 5.86 MiB of decoded texture instead of 1.46 MiB."
+    },
+    {
+      "path": "src/svg/prairie-rail/prop-container-car@1x.svg",
+      "kind": "shipped",
+      "title": "A double-stack container car on a siding - a level 7 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/prop-container-car@1x.svg",
+      "modifications": "Original work. Drawn from the freight standing beside the elevator in assets/refs/prairie-rail/prairie-freight-train-at-dawn.jpg under the rules in assets/style/art-bible.md; never traced. Carries no reporting mark, number, livery or wordmark of any kind, and the two container colours are palette ramps rather than any operator's. The @1x suffix pins the source to one scale; the key prairie-rail-prop-container-car carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 820 x 420 and passed at both probes; at 2x it would cost 5.26 MiB of decoded texture instead of 1.31 MiB."
     },
     {
       "path": "refs/winnipeg/cmhr-from-the-forks-tower.jpg",
@@ -1838,6 +1883,24 @@
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/alberta-foothills/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/alberta-foothills-level.md; never traced."
     },
     {
+      "path": "src/svg/alberta-foothills/prop-log-rail-gate@1x.svg",
+      "kind": "shipped",
+      "title": "A log rail ranch fence and gate - a level 8 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/prop-log-rail-gate@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/alberta-foothills/log-rail-fence.jpg and the yard fences in ranch-yard-and-front-range.jpg under the rules in assets/style/art-bible.md; never traced. A TYPE, not a named ranch: no brand, name board or sign, which is exactly what a real gateway carries. The @1x suffix pins the source to one scale; the key alberta-foothills-prop-log-rail-gate carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 680 x 460 and passed at both probes; at 2x it would cost 4.77 MiB of decoded texture instead of 1.19 MiB."
+    },
+    {
+      "path": "src/svg/alberta-foothills/prop-beef-cattle@1x.svg",
+      "kind": "shipped",
+      "title": "Three beef cattle on rangeland - a level 8 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/prop-beef-cattle@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/alberta-foothills/rangeland-cattle-and-wire-fence.jpg under the rules in assets/style/art-bible.md; never traced. The red-bodied white-faced pattern is taken from the cattle already drawn on this level's own rangeland tile rather than from the photograph, which shows solid red animals; both are common on this range. No brand, ear tag or collar. The @1x suffix pins the source to one scale; the key alberta-foothills-prop-beef-cattle carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 720 x 420 and passed at both probes; at 2x it would cost 4.61 MiB of decoded texture instead of 1.15 MiB."
+    },
+    {
       "path": "src/svg/vancouver/layer-10-sky.svg",
       "kind": "shipped",
       "title": "Vancouver clear Pacific sky with cirrus - parallax layer, depth 10",
@@ -1881,6 +1944,24 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/landmark-canada-place@1x.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/vancouver/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/vancouver-level.md; never traced."
+    },
+    {
+      "path": "src/svg/vancouver/prop-marina-boats@1x.svg",
+      "kind": "shipped",
+      "title": "Moored sailing boats in a harbour marina - a level 9 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/prop-marina-boats@1x.svg",
+      "modifications": "Original work. Drawn from the marina in assets/refs/vancouver/coal-harbour-and-the-north-shore.jpg and seawall-path-and-harbour.jpg under the rules in assets/style/art-bible.md; never traced. TYPES and not named vessels: no name, sail number, class insignia, burgee or ensign. The @1x suffix pins the source to one scale; the key vancouver-prop-marina-boats carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 760 x 620 and passed at both probes; at 2x it would cost 7.19 MiB of decoded texture instead of 1.80 MiB."
+    },
+    {
+      "path": "src/svg/vancouver/prop-bulk-carrier@1x.svg",
+      "kind": "shipped",
+      "title": "A bulk carrier in the harbour - a level 9 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/prop-bulk-carrier@1x.svg",
+      "modifications": "Original work. Drawn from the ships in the background of assets/refs/vancouver/canada-place-and-the-north-shore.jpg and coal-harbour-and-the-north-shore.jpg under the rules in assets/style/art-bible.md; never traced. A TYPE and not a named ship: no name, port of registry, draught mark, funnel device, house flag or ensign. The @1x suffix pins the source to one scale; the key vancouver-prop-bulk-carrier carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 820 x 420 and passed at both probes; at 2x it would cost 5.26 MiB of decoded texture instead of 1.31 MiB."
     },
     {
       "path": "refs/peggys-cove/lighthouse-elevation.jpg",
@@ -2142,6 +2223,24 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/landmark-sternwheeler@1x.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/the-north/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/the-north-level.md; never traced."
+    },
+    {
+      "path": "src/svg/the-north/prop-spruce-stand@1x.svg",
+      "kind": "shipped",
+      "title": "A stand of northern spruce - a level 10 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/prop-spruce-stand@1x.svg",
+      "modifications": "Original work. Drawn from the bank forest in assets/refs/the-north/yukon-river-and-spruce.jpg and yukon-river-valley.jpg under the rules in assets/style/art-bible.md; never traced. Trees only: no cabin, camp, trail, marker, cairn, inuksuk or figure at any scale, per assets/style/the-north-level.md and docs/content-review.md. The @1x suffix pins the source to one scale; the key the-north-prop-spruce-stand carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 620 x 760 and passed at both probes; at 2x it would cost 7.19 MiB of decoded texture instead of 1.80 MiB."
+    },
+    {
+      "path": "src/svg/the-north/prop-driftwood-pile@1x.svg",
+      "kind": "shipped",
+      "title": "A pile of driftwood on a river gravel bar - a level 10 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/prop-driftwood-pile@1x.svg",
+      "modifications": "Original work. Drawn from the driftwood band along the shore in assets/refs/the-north/yukon-river-bluff-and-aspen.jpg and the bars in yukon-river-valley.jpg under the rules in assets/style/art-bible.md; never traced. Natural debris only: every log lies, nothing is stacked, leaned or arranged, and there is no structure, shelter, weir, marker, cairn, inuksuk or figure at any scale, per assets/style/the-north-level.md and docs/content-review.md. The @1x suffix pins the source to one scale; the key the-north-prop-driftwood-pile carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 700 x 340 and passed at both probes; at 2x it would cost 3.63 MiB of decoded texture instead of 0.91 MiB."
     }
   ]
 }

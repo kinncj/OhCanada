@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="460" viewBox="0 0 680 460" shape-rendering="geometricPrecision">
+  <title>A ranch fence and gate of round logs: four peeled log rails running across squared timber posts and stopping at the opening, a hung gate of three lighter rails with a diagonal brace between two taller gate posts, plain strap hinges and a latch, standing in foothills pasture. A TYPE, not a named ranch: no brand, no name board, no sign, no wordmark and no lettering of any kind. Drawn from assets/refs/alberta-foothills/log-rail-fence.jpg and the yard fences in ranch-yard-and-front-range.jpg; see assets/refs/references.json, subject log-rail-gate. POI hero, present at every visual tier.</title>
+
+  <rect x="0" y="404" width="680" height="56" fill="#677b37"/>
+  <rect x="0" y="404" width="680" height="12" fill="#9dac53"/>
+  <rect x="0" y="440" width="680" height="20" fill="#30451c"/>
+
+  <ellipse cx="340" cy="418" rx="330" ry="14" fill="#16203a" opacity="0.28"/>
+
+  <rect x="0" y="150" width="348" height="26" rx="13" fill="#8b857c"/>
+  <rect x="0" y="150" width="348" height="8" rx="4" fill="#afaca5"/>
+  <rect x="0" y="169" width="348" height="7" rx="3" fill="#605a55"/>
+  <rect x="600" y="150" width="80" height="26" rx="13" fill="#8b857c"/>
+  <rect x="600" y="150" width="80" height="8" rx="4" fill="#afaca5"/>
+  <rect x="600" y="169" width="80" height="7" rx="3" fill="#605a55"/>
+  <rect x="0" y="218" width="348" height="26" rx="13" fill="#8b857c"/>
+  <rect x="0" y="218" width="348" height="8" rx="4" fill="#afaca5"/>
+  <rect x="0" y="237" width="348" height="7" rx="3" fill="#605a55"/>
+  <rect x="600" y="218" width="80" height="26" rx="13" fill="#8b857c"/>
+  <rect x="600" y="218" width="80" height="8" rx="4" fill="#afaca5"/>
+  <rect x="600" y="237" width="80" height="7" rx="3" fill="#605a55"/>
+  <rect x="0" y="288" width="348" height="26" rx="13" fill="#8b857c"/>
+  <rect x="0" y="288" width="348" height="8" rx="4" fill="#afaca5"/>
+  <rect x="0" y="307" width="348" height="7" rx="3" fill="#605a55"/>
+  <rect x="600" y="288" width="80" height="26" rx="13" fill="#8b857c"/>
+  <rect x="600" y="288" width="80" height="8" rx="4" fill="#afaca5"/>
+  <rect x="600" y="307" width="80" height="7" rx="3" fill="#605a55"/>
+  <rect x="0" y="358" width="348" height="26" rx="13" fill="#8b857c"/>
+  <rect x="0" y="358" width="348" height="8" rx="4" fill="#afaca5"/>
+  <rect x="0" y="377" width="348" height="7" rx="3" fill="#605a55"/>
+  <rect x="600" y="358" width="80" height="26" rx="13" fill="#8b857c"/>
+  <rect x="600" y="358" width="80" height="8" rx="4" fill="#afaca5"/>
+  <rect x="600" y="377" width="80" height="7" rx="3" fill="#605a55"/>
+  <rect x="46" y="118" width="30" height="292" fill="#96632f"/>
+  <rect x="46" y="118" width="11" height="292" fill="#c5994d"/>
+  <rect x="42" y="112" width="38" height="12" rx="4" fill="#c5994d"/>
+  <rect x="190" y="118" width="30" height="292" fill="#96632f"/>
+  <rect x="190" y="118" width="11" height="292" fill="#c5994d"/>
+  <rect x="186" y="112" width="38" height="12" rx="4" fill="#c5994d"/>
+  <rect x="646" y="118" width="30" height="292" fill="#96632f"/>
+  <rect x="646" y="118" width="11" height="292" fill="#c5994d"/>
+  <rect x="642" y="112" width="38" height="12" rx="4" fill="#c5994d"/>
+  <rect x="318" y="80" width="36" height="330" fill="#5a2d19"/>
+  <rect x="318" y="80" width="13" height="330" fill="#96632f"/>
+  <rect x="312" y="70" width="48" height="16" rx="6" fill="#96632f"/>
+  <rect x="578" y="80" width="36" height="330" fill="#5a2d19"/>
+  <rect x="578" y="80" width="13" height="330" fill="#96632f"/>
+  <rect x="572" y="70" width="48" height="16" rx="6" fill="#96632f"/>
+  <rect x="352" y="160" width="230" height="22" rx="11" fill="#c5994d"/>
+  <rect x="352" y="160" width="230" height="7" rx="3" fill="#d5c18e"/>
+  <rect x="352" y="176" width="230" height="6" rx="3" fill="#96632f"/>
+  <rect x="352" y="246" width="230" height="22" rx="11" fill="#c5994d"/>
+  <rect x="352" y="246" width="230" height="7" rx="3" fill="#d5c18e"/>
+  <rect x="352" y="262" width="230" height="6" rx="3" fill="#96632f"/>
+  <rect x="352" y="332" width="230" height="22" rx="11" fill="#c5994d"/>
+  <rect x="352" y="332" width="230" height="7" rx="3" fill="#d5c18e"/>
+  <rect x="352" y="348" width="230" height="6" rx="3" fill="#96632f"/>
+  <polygon points="356,346 382,346 578,172 552,172" fill="#96632f"/>
+  <rect x="350" y="150" width="22" height="216" fill="#5a2d19"/>
+  <rect x="560" y="150" width="22" height="216" fill="#5a2d19"/>
+  <rect x="336" y="176" width="30" height="14" rx="5" fill="#30384f"/>
+  <rect x="336" y="318" width="30" height="14" rx="5" fill="#30384f"/>
+  <rect x="570" y="240" width="28" height="14" rx="5" fill="#30384f"/>
+  <path d="M 40 412 Q 48 384 56 412 Z" fill="#30451c"/>
+  <path d="M 52 412 Q 62 378 72 412 Z" fill="#677b37"/>
+  <path d="M 184 412 Q 192 384 200 412 Z" fill="#30451c"/>
+  <path d="M 196 412 Q 206 378 216 412 Z" fill="#677b37"/>
+  <path d="M 312 412 Q 320 384 328 412 Z" fill="#30451c"/>
+  <path d="M 324 412 Q 334 378 344 412 Z" fill="#677b37"/>
+  <path d="M 574 412 Q 582 384 590 412 Z" fill="#30451c"/>
+  <path d="M 586 412 Q 596 378 606 412 Z" fill="#677b37"/>
+  <path d="M 640 412 Q 648 384 656 412 Z" fill="#30451c"/>
+  <path d="M 652 412 Q 662 378 672 412 Z" fill="#677b37"/>
+</svg>
