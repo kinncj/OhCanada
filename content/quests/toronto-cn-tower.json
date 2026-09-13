@@ -225,11 +225,11 @@
               "quote": "An electoral district is a geographical area represented by a member of Parliament (MP). The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
             },
             "verification": {
-              "status": "unverified",
-              "model": "",
-              "checkedAt": null,
-              "sourceHash": "",
-              "evidence": ""
+              "status": "rejected",
+              "model": "claude-opus-5[1m]",
+              "checkedAt": "2026-09-13T23:28:13Z",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "evidence": "An electoral district is a geographical area represented by a member of Parliament (MP). The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
             }
           }
         }
