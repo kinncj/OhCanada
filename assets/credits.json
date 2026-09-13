@@ -1818,6 +1818,240 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/landmark-canada-place@1x.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/vancouver/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/vancouver-level.md; never traced."
+    },
+    {
+      "path": "refs/peggys-cove/lighthouse-elevation.jpg",
+      "kind": "reference",
+      "title": "Peggy's Point Lighthouse, Nova Scotia - near-frontal elevation on the granite",
+      "author": "Michel Rathwell from Cornwall, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Peggys_Cove_Lighthouse_(39030979315).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/peggys-cove/lighthouse-on-the-granite.jpg",
+      "kind": "reference",
+      "title": "Peggy's Point Lighthouse in fog, standing on bare jointed granite",
+      "author": "sarahcstanley from Toronto, ON, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Lighthouse_at_Peggy%27s_Cove,_NS.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/peggys-cove/granite-barrens-and-sea.jpg",
+      "kind": "reference",
+      "title": "Peggy's Cove - the granite barrens, a tide pool and the open Atlantic under scattered cloud",
+      "author": "Justin Roy",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Peggy%27s_Cove_(Unsplash).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/peggys-cove/lighthouse-at-dusk.jpg",
+      "kind": "reference",
+      "title": "Peggy's Point Lighthouse at dusk, with the granite in low warm light",
+      "author": "Shawn M. Kent",
+      "licence": "CC-BY-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Peggys_Cove_Lighthouse,_NS.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/peggys-cove/harbour-and-fish-stores.jpg",
+      "kind": "reference",
+      "title": "Peggy's Cove - the government wharf, the fish stores on piles and the moored boats",
+      "author": "Michael Stokes",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Government_Wharf_in_Peggy%27s_Cove,_Nova_Scotia,_Canada.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/peggys-cove/village-houses.jpg",
+      "kind": "reference",
+      "title": "Peggy's Cove - village houses and stores standing on the granite above the water",
+      "author": "Michael Stokes",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Houses_on_Rocky_Road,_Peggy%27s_Cove,_Nova_Scotia.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/peggys-cove/red-fish-store.jpg",
+      "kind": "reference",
+      "title": "Peggy's Cove - a red-oxide board-and-batten fish store above the shore",
+      "author": "Paulo O from Halifax, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Peggy%27s_Cove,_Nova_Scotia_(47937910867).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "src/svg/peggys-cove/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Atlantic coast sky with stratocumulus rolls - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/peggys-cove/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/peggys-cove-level.md; never traced."
+    },
+    {
+      "path": "src/svg/peggys-cove/layer-20-open-sea.svg",
+      "kind": "shipped",
+      "title": "The open Atlantic, a wooded headland, skerries and inshore boats - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/layer-20-open-sea.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/peggys-cove/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/peggys-cove-level.md; never traced."
+    },
+    {
+      "path": "src/svg/peggys-cove/layer-30-cove.svg",
+      "kind": "shipped",
+      "title": "The far side of the cove: spruce, granite shore, fish stores on piles and moored boats - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/layer-30-cove.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/peggys-cove/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/peggys-cove-level.md; never traced."
+    },
+    {
+      "path": "src/svg/peggys-cove/layer-40-granite-barrens.svg",
+      "kind": "shipped",
+      "title": "The granite barrens: jointed rock, grass in the joints, erratics and tide pools - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/layer-40-granite-barrens.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/peggys-cove/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/peggys-cove-level.md; never traced."
+    },
+    {
+      "path": "src/svg/peggys-cove/landmark-lighthouse@1x.svg",
+      "kind": "shipped",
+      "title": "Peggy's Point Lighthouse - point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/landmark-lighthouse@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/peggys-cove/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/peggys-cove-level.md; never traced."
+    },
+    {
+      "path": "refs/the-north/sternwheeler-broadside.jpg",
+      "kind": "reference",
+      "title": "A Yukon River sternwheeler, the whole vessel square on from the port side in winter",
+      "author": "Dlogic",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:SS_Klondike.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/sternwheeler-stern-quarter.jpg",
+      "kind": "reference",
+      "title": "A Yukon River sternwheeler from the stern quarter, with the paddlewheel and the hog posts",
+      "author": "Anthony DeLorenzo from Whitehorse, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:SS_Klondike_(6311150214).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/sternwheeler-paddlewheel.jpg",
+      "kind": "reference",
+      "title": "A Yukon River sternwheeler - the paddlewheel, its spokes, rims and bucket boards",
+      "author": "US Mission Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Paddlewheel_of_the_SS_Klondike.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/sternwheeler-bow.jpg",
+      "kind": "reference",
+      "title": "A Yukon River sternwheeler - the bow, the guard line and the draught marks",
+      "author": "US Mission Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Bow_of_the_SS_Klondike.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/sternwheeler-pilot-house.jpg",
+      "kind": "reference",
+      "title": "A Yukon River sternwheeler - the pilot house, the smokestack and the upper deck",
+      "author": "John Johnston",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ss_klondike_(1194941001).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/yukon-river-canyon.jpg",
+      "kind": "reference",
+      "title": "The Yukon River in Miles Canyon: glacier-fed water between basalt walls, with spruce",
+      "author": "Prof Ranga Sai",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Miles_Canyon_-_Yukon_River_-_White_Horse_01.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/yukon-river-and-spruce.jpg",
+      "kind": "reference",
+      "title": "The Yukon River above Miles Canyon, with black spruce on both banks",
+      "author": "Prof Ranga Sai",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Miles_Canyon_-_Yukon_River_-_White_Horse_03.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/yukon-river-bluff-and-aspen.jpg",
+      "kind": "reference",
+      "title": "A Yukon River cut bank with autumn aspen at its foot, under a fog bank",
+      "author": "Mary Brennann from Vancouver, Canada",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Yukon_River_cliff.jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "refs/the-north/yukon-river-valley.jpg",
+      "kind": "reference",
+      "title": "The Yukon River valley near Carmacks: a braided channel, a spruce island and a dry bluff",
+      "author": "Arthur Chapman from Australia",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Yukon_River_near_Carmacks,_Yukon_(3893028706).jpg",
+      "modifications": "Downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
+      "path": "src/svg/the-north/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "A deep northern sky with lenticular cloud stacks - parallax layer, depth 10",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/layer-10-sky.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/the-north/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/the-north-level.md; never traced."
+    },
+    {
+      "path": "src/svg/the-north/layer-20-range.svg",
+      "kind": "shipped",
+      "title": "A snow-capped saw-tooth range across the valley - parallax layer, depth 20",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/layer-20-range.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/the-north/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/the-north-level.md; never traced."
+    },
+    {
+      "path": "src/svg/the-north/layer-30-far-bank.svg",
+      "kind": "shipped",
+      "title": "The far bank: black spruce, autumn gold and a tan cut bank - parallax layer, depth 30",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/layer-30-far-bank.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/the-north/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/the-north-level.md; never traced."
+    },
+    {
+      "path": "src/svg/the-north/layer-40-river-and-bar.svg",
+      "kind": "shipped",
+      "title": "The Yukon River and its gravel bar - parallax layer, depth 40",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/layer-40-river-and-bar.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/the-north/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/the-north-level.md; never traced."
+    },
+    {
+      "path": "src/svg/the-north/landmark-sternwheeler@1x.svg",
+      "kind": "shipped",
+      "title": "A Yukon River sternwheeler - point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/landmark-sternwheeler@1x.svg",
+      "modifications": "Original work. Drawn from the reference photographs in assets/refs/the-north/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/the-north-level.md; never traced."
     }
   ]
 }

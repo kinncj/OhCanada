@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="900" viewBox="0 0 480 900" shape-rendering="geometricPrecision">
+  <title>Peggy's Point Lighthouse: a squat, white, tapered octagonal concrete tower carrying a RED lantern room with a red conical roof and a red ball finial, a wide white gallery deck on a concave corbel with a dark railing, three narrow windows up the left face, and a small white entry porch at the foot. POI hero, non-repeating, 1x pinned, drawn at 480x900 with the tower 840 tall from finial tip to base. EVERY RATIO IS MEASURED on refs/peggys-cove/lighthouse-elevation.jpg, in the column through the tower's axis, with H = the finial tip at y150 to the foot at y690 = 540 px. The identification lives in TWO proportions and they are the ones a cartoon lighthouse always gets wrong: the tower is only 2.37 base widths tall (540/228), where the default drawing is four to six; and the red top is 0.30 of the whole height (164/540), so nearly a third of this lighthouse is its lantern. Get either wrong and this is a generic lighthouse. NO LETTERING, NO PLAQUE, NO SIGN and no light beam is drawn. The red is the `flag-red` ramp: the lit decile of the roof cone on the reference measures hsl(344,92%,32%) against flag-red-shade's hsl(346,72%,34%) - two degrees of hue and two points of lightness, the saturation gap being that photograph's own edit - so no lantern-red ramp was added.</title>
+  <ellipse cx="246" cy="872" rx="198.2" ry="20" fill="#16203a" opacity="0.28"/>
+  <polygon points="129.5,314 350.5,314 417,866 63,866" fill="#f0f2f5"/>
+  <polygon points="129.5,314 173.7,314 133.8,866 63,866" fill="#ffffff"/>
+  <polygon points="293,314 350.5,314 417,866 325,866" fill="#cbd2da"/>
+  <rect x="146.9" y="339" width="26" height="80" rx="5" fill="#cbd2da"/>
+  <rect x="150.9" y="343" width="18" height="72" rx="4" fill="#30384f"/>
+  <rect x="151.9" y="345" width="7" height="31.1" rx="3" fill="#a9d0e5"/>
+  <rect x="127.2" y="521" width="26" height="80" rx="5" fill="#cbd2da"/>
+  <rect x="131.2" y="525" width="18" height="72" rx="4" fill="#30384f"/>
+  <rect x="132.2" y="527" width="7" height="31.1" rx="3" fill="#a9d0e5"/>
+  <rect x="104.4" y="726" width="26" height="80" rx="5" fill="#cbd2da"/>
+  <rect x="108.4" y="730" width="18" height="72" rx="4" fill="#30384f"/>
+  <rect x="109.4" y="732" width="7" height="31.1" rx="3" fill="#a9d0e5"/>
+  <rect x="54" y="840" width="372" height="26" rx="4" fill="#f0f2f5"/>
+  <rect x="54" y="840" width="81.8" height="26" rx="4" fill="#ffffff"/>
+  <rect x="346.2" y="840" width="79.8" height="26" rx="4" fill="#cbd2da"/>
+  <ellipse cx="321.5" cy="870" rx="70.1" ry="15" fill="#16203a" opacity="0.28"/>
+  <polygon points="386,723 412,723 412,866 386,866" fill="#16203a" opacity="0.18"/>
+  <polygon points="247,729 315,690 384,729" fill="#cbd2da"/>
+  <polygon points="247,729 315,690 315,729" fill="#f0f2f5"/>
+  <rect x="247" y="725" width="137" height="9" rx="4" fill="#7d8fa0"/>
+  <rect x="259" y="734" width="113" height="132" fill="#f0f2f5"/>
+  <rect x="259" y="734" width="113" height="10" fill="#16203a" opacity="0.18"/>
+  <rect x="259" y="734" width="27.1" height="132" fill="#ffffff"/>
+  <rect x="347.1" y="734" width="24.9" height="132" fill="#cbd2da"/>
+  <rect x="302" y="786" width="46" height="80" rx="4" fill="#30384f"/>
+  <rect x="307" y="791" width="17" height="42" rx="3" fill="#7d8fa0"/>
+  <path d="M 76.5 281 L 403.5 281 Q 387.5 299 350.5 314 L 129.5 314 Q 92.5 299 76.5 281 Z" fill="#f0f2f5"/>
+  <path d="M 76.5 281 L 158.5 281 L 163.5 314 Q 129.5 314 92.5 299 Z" fill="#ffffff"/>
+  <ellipse cx="240" cy="318" rx="114.9" ry="12" fill="#16203a" opacity="0.18"/>
+  <rect x="76.5" y="256" width="327" height="8" rx="3" fill="#ffffff"/>
+  <rect x="76.5" y="264" width="327" height="13" fill="#f0f2f5"/>
+  <rect x="76.5" y="277" width="327" height="4" fill="#cbd2da"/>
+  <rect x="150.5" y="198" width="179" height="58" fill="#d8262c"/>
+  <rect x="150.5" y="198" width="25.1" height="58" fill="#e27468"/>
+  <rect x="290.1" y="198" width="39.4" height="58" fill="#941835"/>
+  <rect x="150.5" y="122" width="179" height="76" fill="#30384f"/>
+  <rect x="210" y="140" width="60" height="44" rx="6" fill="#ffffff"/>
+  <rect x="210" y="152" width="60" height="12" fill="#cbd2da"/>
+  <rect x="210" y="168" width="60" height="10" fill="#cbd2da"/>
+  <rect x="150.5" y="122" width="9" height="76" fill="#941835"/>
+  <rect x="184.5" y="122" width="9" height="76" fill="#941835"/>
+  <rect x="218.5" y="122" width="9" height="76" fill="#941835"/>
+  <rect x="252.5" y="122" width="9" height="76" fill="#941835"/>
+  <rect x="286.5" y="122" width="9" height="76" fill="#941835"/>
+  <rect x="320.5" y="122" width="9" height="76" fill="#941835"/>
+  <rect x="150.5" y="122" width="179" height="7" fill="#941835"/>
+  <path d="M 240 63 Q 188 91 140.5 122 L 240 122 Z" fill="#d8262c"/>
+  <path d="M 240 63 Q 292 91 339.5 122 L 240 122 Z" fill="#941835"/>
+  <path d="M 234 65 Q 196 93 154.5 122 L 190.5 122 Z" fill="#e27468"/>
+  <rect x="133.5" y="115" width="213" height="13" rx="5" fill="#941835"/>
+  <rect x="78.5" y="196" width="8" height="62" rx="3" fill="#30384f"/>
+  <rect x="131.3" y="196" width="8" height="62" rx="3" fill="#30384f"/>
+  <rect x="184.2" y="196" width="8" height="62" rx="3" fill="#30384f"/>
+  <rect x="237" y="196" width="8" height="62" rx="3" fill="#30384f"/>
+  <rect x="289.8" y="196" width="8" height="62" rx="3" fill="#30384f"/>
+  <rect x="342.7" y="196" width="8" height="62" rx="3" fill="#30384f"/>
+  <rect x="395.5" y="196" width="8" height="62" rx="3" fill="#30384f"/>
+  <rect x="76.5" y="200" width="327" height="7" rx="3" fill="#30384f"/>
+  <rect x="76.5" y="228" width="327" height="7" rx="3" fill="#30384f"/>
+  <rect x="222" y="52" width="36" height="13" rx="4" fill="#941835"/>
+  <polygon points="240,38 258,53 222,53" fill="#d8262c"/>
+  <circle cx="240" cy="34" r="8" fill="#d8262c"/>
+</svg>

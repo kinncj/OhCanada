@@ -1,0 +1,231 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "peggys-cove",
+  "subject": "who-we-are",
+  "order": 2,
+  "title": {
+    "en": "Peggy's Cove",
+    "fr": "Peggy's Cove"
+  },
+  "size": {
+    "x": 7040,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 420,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#3d8ccb",
+    "ground": "#afaca5",
+    "horizon": "#a9d0e5",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Mi'kmaq"
+    ],
+    "statement": {
+      "en": "Peggy's Cove is on the Atlantic coast of Nova Scotia. The Mi'kmaq are the people of this coast. The Assembly of Nova Scotia Mi'kmaw Chiefs says the Mi'kmaq have never surrendered, ceded or sold title to any of their lands. They never gave the land up, and they claim title to all the lands in Nova Scotia.",
+      "fr": "Peggy's Cove se trouve sur la côte atlantique de la Nouvelle-Écosse. Les Mi'kmaq sont le peuple de cette côte. Selon l'Assembly of Nova Scotia Mi'kmaw Chiefs, les Mi'kmaq n'ont jamais abandonné, cédé ni vendu le titre sur aucune de leurs terres. Ils n'y ont jamais renoncé, et ils revendiquent le titre sur toutes les terres de la Nouvelle-Écosse."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "kmk-about-consultation",
+        "chapter": "About Consultation",
+        "url": "https://mikmaqrights.com/?page_id=53",
+        "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
+        "asOf": "2026-09-13T00:00:00Z",
+        "volatile": true,
+        "quote": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs — the same body whose own words the statement quotes. This is the first level whose fact.source and nationSource are one body, speaking for itself about its own lands.",
+      "url": "https://mikmaqrights.com/?page_id=53",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.12,
+    "deadZone": {
+      "x": 60,
+      "y": 120
+    },
+    "offset": {
+      "x": 150,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1760,
+      "y": 1280
+    },
+    {
+      "x": 3520,
+      "y": 1280
+    },
+    {
+      "x": 5280,
+      "y": 1280
+    },
+    {
+      "x": 7040,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "peggys-cove-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "peggys-cove-layer-20-open-sea",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.13,
+        "y": 0.05
+      },
+      "offset": {
+        "x": 0,
+        "y": 700
+      },
+      "repeatX": true
+    },
+    {
+      "key": "peggys-cove-layer-30-cove",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.3,
+        "y": 0.13
+      },
+      "offset": {
+        "x": 0,
+        "y": 840
+      },
+      "repeatX": true
+    },
+    {
+      "key": "peggys-cove-layer-40-granite-barrens",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 1000
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "peggys-point-light",
+      "name": {
+        "en": "Peggy's Point Lighthouse",
+        "fr": "Le phare de Peggy's Point"
+      },
+      "blurb": {
+        "en": "This coast is part of the Maritimes. The Acadians are the descendants of French colonists who began to settle here in 1604. Between 1755 and 1763, more than two thirds of the Acadians were deported from their homeland. Acadian culture survived, and it is a lively part of French-speaking Canada today.",
+        "fr": "Cette côte fait partie des Maritimes. Les Acadiens sont les descendants de colons français qui ont commencé à s'y établir en 1604. Entre 1755 et 1763, plus des deux tiers des Acadiens ont été déportés de leur terre natale. La culture acadienne a survécu, et elle est aujourd'hui une part bien vivante du Canada francophone."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-13T00:00:00Z",
+          "volatile": false,
+          "quote": "The Acadians are the descendants of French colonists who began settling in what are now the Maritime provinces in 1604. Between 1755 and 1763, during the war between Britain and France, more than two-thirds of the Acadians were deported from their homeland. Despite this ordeal, known as the “Great Upheaval,” the Acadians survived and maintained their unique identity. Today, Acadian culture is flourishing and is a lively part of French-speaking Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3520,
+        "y": 1280
+      },
+      "artKey": "peggys-cove-landmark-lighthouse",
+      "radiusPx": 300
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 37748736
+}

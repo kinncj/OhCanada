@@ -1,0 +1,57 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "kdfn-about-us",
+  "title": "About us - Kwanlin Dün First Nation",
+  "publisher": "Kwanlin Dün First Nation",
+  "edition": "Nation website, About us page, fetched 13 September 2026",
+  "url": "https://www.kwanlindun.com/about/",
+  "file": "kdfn-about-us.html",
+  "extractedText": "kdfn-about-us.txt",
+  "sha256": "455bc9eb1762549ca55dbddc0cc0e61fc781ad196e9a8ee7a168b20b9f02b786",
+  "extractedTextSha256": "d4d43d845d97752fa058e658598d7a2ccfd9dc3d4e4deb0a8992a334e3d91415",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/kdfn-about-us.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 157548,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Kwanlin Dün First Nation. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "About us"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "The statement draws on three passages of one page, and only one of them is the recorded quote",
+      "problem": "content/levels/the-north.json quotes `We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Ni'ikwan (today, the Yukon River). Our people have been here for millennia.` Its clause about the City of Whitehorse comes from a second passage on the SAME page - `KDFN's Traditional Territory encompasses the Yukon's capital and economic heartland, the City of Whitehorse` - and the meaning of `Kwanlin` comes from a third - `Our ancestors called the area Kwanlin, which means \"running water through canyon\" in Southern Tutchone`. A FactSource carries one quote, so two of the three are here rather than in the level document. THIS IS STILL BETTER THAN EVERY LEVEL BEFORE IT: content/levels/vancouver.json's statement rests on two DOCUMENTS from two different bodies and only one can be registered (OQ-VANCOUVER-4). Here all three passages are one page published by the one nation the statement names.",
+      "affects": [
+        "About us"
+      ],
+      "grain": "chapter",
+      "action": "verify all three passages against this cache, not only the recorded quote."
+    },
+    {
+      "topic": "The Ta'an Kwach'an Council is not named, and the silence is deliberate",
+      "problem": "The Ta'an Kwach'an Council is a self-governing Yukon First Nation with its headquarters in Whitehorse and a traditional territory of about 12,079 sq km reaching west to the confluence of the Takhini, and roughly half its citizens live in Whitehorse. THIS PAGE DOES NOT SAY THAT WHITEHORSE IS INSIDE THAT TERRITORY - it names the Ta'an Kwach'an only in the history of Chief Jim Boss - and the Council's own history page at https://taan.ca/history/ does not say it either: it names Taa'an Man (Lake Laberge) as the heart of the territory and gives its bounds by four place names rather than by the city. A level carries ONE nationSource, and naming a second nation's territory on a page that does not state it would be the invention this register exists to prevent. So the level names one nation and is silent about the other. That is the same shape as content/levels/alberta-foothills.json's silence about the Metis Nation of Alberta, and it is recorded here for the same reason.",
+      "affects": [
+        "About us"
+      ],
+      "grain": "chapter",
+      "action": "do not resolve the silence in either direction from this cache. If a page published by the Ta'an Kwach'an Council states that its traditional territory takes in Whitehorse, the statement is widened and this flag is closed; until then no copy on this level says or implies that one nation's territory is the only one here."
+    },
+    {
+      "topic": "A live nation website",
+      "problem": "The page carries governance, land-claim and service content beside the passages quoted, so extractedTextSha256 will move for reasons that have nothing to do with them. The claims themselves - that the nation's traditional territory encompasses Whitehorse, that its people have been here for millennia, and what Kwanlin means - are standing statements and do not expire, which is why the level's fact is NOT marked volatile.",
+      "affects": [
+        "About us"
+      ],
+      "grain": "chapter",
+      "action": "when the hash stops matching, re-read the three passages named in the first flag before assuming a claim moved."
+    }
+  ],
+  "grainNote": "One web page, one heading, no pagination, so `pages` is absent and the chapter carries a title alone. Three flags: which passages the statement rests on, which nation it does not name and why, and how often the bytes move."
+}

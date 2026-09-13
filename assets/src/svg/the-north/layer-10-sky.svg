@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="900" viewBox="0 0 1080 900" shape-rendering="geometricPrecision">
+  <title>A deep, clear, cold high-latitude sky over the Yukon River valley: ONE FLAT sky-shade field with five groups of LENTICULAR cloud stacks - smooth stacked lens shapes with pointed ends, the mountain-wave cloud a high range makes, largest low and near the peaks and smaller higher up. Lenticular rather than cumulus, cirrus, banks or rolls, because the other six skies in this game have taken those and a seventh cumulus would be unreadable against three of them. World y 0..900. FLAT, NOT BANDED: at the low preset this level keeps the sky and the river-and-bar tile, whose first opaque row is world 960, so a band step anywhere in this tile would show against open sky. The flat field IS content/levels/the-north.json theme.sky. No stack touches x 0 or x 1080, so the desktop side-panel seam is flat sky-shade.</title>
+  <rect x="0" y="0" width="1080" height="900" fill="#1f5fa8"/>
+  <path d="M -45.4 615 Q 81.1 569 414.6 615 Q 288.1 651.8 -45.4 615 Z" fill="#dce9f3"/>
+  <path d="M -6 601.2 Q 92.7 575.9 352.8 601.2 Q 254.1 621.4 -6 601.2 Z" fill="#fbfdfe"/>
+  <path d="M 40.1 630.6 Q 128.7 614.1 362.1 630.6 Q 273.6 643.9 40.1 630.6 Z" fill="#b9cfe2"/>
+  <path d="M -6 528.1 Q 92.7 492.2 352.8 528.1 Q 254.2 556.8 -6 528.1 Z" fill="#dce9f3"/>
+  <path d="M 44.5 517.3 Q 121.5 497.6 324.4 517.3 Q 247.4 533.1 44.5 517.3 Z" fill="#fbfdfe"/>
+  <path d="M 84.7 540.3 Q 153.7 527.3 335.8 540.3 Q 266.8 550.6 84.7 540.3 Z" fill="#b9cfe2"/>
+  <path d="M 66.4 458.6 Q 137.2 432.9 324 458.6 Q 253.1 479.2 66.4 458.6 Z" fill="#dce9f3"/>
+  <path d="M 67.5 450.9 Q 122.8 436.7 268.5 450.9 Q 213.2 462.2 67.5 450.9 Z" fill="#fbfdfe"/>
+  <path d="M 96.5 467.4 Q 146.1 458.1 276.9 467.4 Q 227.3 474.8 96.5 467.4 Z" fill="#b9cfe2"/>
+  <path d="M 146.8 525 Q 311.8 471 746.8 525 Q 581.8 568.2 146.8 525 Z" fill="#dce9f3"/>
+  <path d="M 179.9 508.8 Q 308.6 479.1 647.9 508.8 Q 519.2 532.6 179.9 508.8 Z" fill="#fbfdfe"/>
+  <path d="M 236.5 543.4 Q 352 523.9 656.5 543.4 Q 541 558.9 236.5 543.4 Z" fill="#b9cfe2"/>
+  <path d="M 196.9 416 Q 325.6 373.9 664.9 416 Q 536.2 449.7 196.9 416 Z" fill="#dce9f3"/>
+  <path d="M 240.7 403.4 Q 341.1 380.2 605.8 403.4 Q 505.4 421.9 240.7 403.4 Z" fill="#fbfdfe"/>
+  <path d="M 286.9 430.3 Q 377 415.2 614.5 430.3 Q 524.4 442.4 286.9 430.3 Z" fill="#b9cfe2"/>
+  <path d="M 283.1 334.1 Q 375.5 303.8 619.1 334.1 Q 526.7 358.3 283.1 334.1 Z" fill="#dce9f3"/>
+  <path d="M 302.8 325 Q 374.9 308.4 564.9 325 Q 492.8 338.3 302.8 325 Z" fill="#fbfdfe"/>
+  <path d="M 330.8 344.4 Q 395.5 333.5 566 344.4 Q 501.3 353.1 330.8 344.4 Z" fill="#b9cfe2"/>
+  <path d="M 355.9 273.1 Q 412 254.7 559.9 273.1 Q 503.8 287.7 355.9 273.1 Z" fill="#dce9f3"/>
+  <path d="M 357 267.5 Q 400.8 257.4 516.2 267.5 Q 472.4 275.6 357 267.5 Z" fill="#fbfdfe"/>
+  <path d="M 373.4 279.3 Q 412.7 272.7 516.2 279.3 Q 476.9 284.6 373.4 279.3 Z" fill="#b9cfe2"/>
+  <path d="M 487.2 590 Q 624.7 542 987.2 590 Q 849.7 628.4 487.2 590 Z" fill="#dce9f3"/>
+  <path d="M 505.8 575.6 Q 613.1 549.2 895.8 575.6 Q 788.6 596.7 505.8 575.6 Z" fill="#fbfdfe"/>
+  <path d="M 562.7 606.3 Q 659 589 912.7 606.3 Q 816.5 620.1 562.7 606.3 Z" fill="#b9cfe2"/>
+  <path d="M 526.4 492 Q 633.7 454.6 916.4 492 Q 809.2 522 526.4 492 Z" fill="#dce9f3"/>
+  <path d="M 544.3 480.8 Q 628 460.2 848.5 480.8 Q 764.9 497.3 544.3 480.8 Z" fill="#fbfdfe"/>
+  <path d="M 594.8 504.8 Q 669.9 491.3 867.8 504.8 Q 792.7 515.6 594.8 504.8 Z" fill="#b9cfe2"/>
+  <path d="M 600.4 412.8 Q 677.4 385.9 880.4 412.8 Q 803.4 434.3 600.4 412.8 Z" fill="#dce9f3"/>
+  <path d="M 603.8 404.7 Q 663.9 389.9 822.2 404.7 Q 762.2 416.5 603.8 404.7 Z" fill="#fbfdfe"/>
+  <path d="M 645.1 421.9 Q 699 412.2 841.1 421.9 Q 787.2 429.6 645.1 421.9 Z" fill="#b9cfe2"/>
+  <path d="M 710.3 450 Q 814.8 416 1090.3 450 Q 985.8 477.2 710.3 450 Z" fill="#dce9f3"/>
+  <path d="M 733.9 439.8 Q 815.4 421.1 1030.3 439.8 Q 948.8 454.8 733.9 439.8 Z" fill="#fbfdfe"/>
+  <path d="M 789.8 461.6 Q 863 449.3 1055.8 461.6 Q 982.7 471.4 789.8 461.6 Z" fill="#b9cfe2"/>
+  <path d="M 760 375.8 Q 841.5 349.2 1056.4 375.8 Q 974.9 397 760 375.8 Z" fill="#dce9f3"/>
+  <path d="M 768.1 367.8 Q 831.7 353.2 999.3 367.8 Q 935.7 379.5 768.1 367.8 Z" fill="#fbfdfe"/>
+  <path d="M 804.2 384.8 Q 861.3 375.2 1011.7 384.8 Q 954.6 392.4 804.2 384.8 Z" fill="#b9cfe2"/>
+  <path d="M 85.8 355 Q 204 317 515.8 355 Q 397.5 385.4 85.8 355 Z" fill="#dce9f3"/>
+  <path d="M 142.3 343.6 Q 234.6 322.7 477.7 343.6 Q 385.5 360.3 142.3 343.6 Z" fill="#fbfdfe"/>
+  <path d="M 175.1 367.9 Q 257.9 354.2 476.1 367.9 Q 393.3 378.9 175.1 367.9 Z" fill="#b9cfe2"/>
+  <path d="M 136.2 282.1 Q 228.4 252.5 471.6 282.1 Q 379.4 305.8 136.2 282.1 Z" fill="#dce9f3"/>
+  <path d="M 180.7 273.2 Q 252.7 256.9 442.3 273.2 Q 370.4 286.2 180.7 273.2 Z" fill="#fbfdfe"/>
+  <path d="M 208.9 292.2 Q 273.5 281.5 443.7 292.2 Q 379.1 300.7 208.9 292.2 Z" fill="#b9cfe2"/>
+  <path d="M 485.1 295 Q 578.6 265 825.1 295 Q 731.6 319 485.1 295 Z" fill="#dce9f3"/>
+  <path d="M 493.7 286 Q 566.6 269.5 758.9 286 Q 686 299.2 493.7 286 Z" fill="#fbfdfe"/>
+  <path d="M 543.6 305.2 Q 609 294.4 781.6 305.2 Q 716.1 313.8 543.6 305.2 Z" fill="#b9cfe2"/>
+  <path d="M 512.8 235.3 Q 585.7 211.9 778 235.3 Q 705 254.1 512.8 235.3 Z" fill="#dce9f3"/>
+  <path d="M 527.2 228.3 Q 584.1 215.5 734.1 228.3 Q 677.2 238.6 527.2 228.3 Z" fill="#fbfdfe"/>
+  <path d="M 554.1 243.3 Q 605.1 234.9 739.7 243.3 Q 688.7 250 554.1 243.3 Z" fill="#b9cfe2"/>
+</svg>

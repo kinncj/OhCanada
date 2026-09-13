@@ -1,0 +1,66 @@
+{
+  "$schema": "./../schemas/source.schema.json",
+  "id": "kmk-about-consultation",
+  "title": "About Consultation - Kwilmu'kw Maw-klusuaqn (Mi'kmaq Rights Initiative)",
+  "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
+  "edition": "Organisation website, About Consultation page (?page_id=53), fetched 13 September 2026",
+  "url": "https://mikmaqrights.com/?page_id=53",
+  "file": "kmk-about-consultation.html",
+  "extractedText": "kmk-about-consultation.txt",
+  "sha256": "5c8819f711421bc7de4db785c8b2351e0f28d7868a5e431ad133fa4e3a479da4",
+  "extractedTextSha256": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
+  "extraction": {
+    "tool": "python3 (CPython)",
+    "version": "3.14.7",
+    "command": "python3 -c 'import re,html,sys\np=sys.argv[1]\nt=open(p,encoding=\"utf-8\",errors=\"replace\").read()\nt=re.sub(r\"(?is)\\x3c(script|style|noscript)[^\\x3e]*\\x3e.*?\\x3c/\\1\\x3e\",\" \",t)\nt=re.sub(r\"(?i)\\x3cbr\\s*/?\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?i)\\x3c/(p|div|li|h[1-6]|tr|section|article)\\x3e\",\"\\n\",t)\nt=re.sub(r\"(?s)\\x3c[^\\x3e]+\\x3e\",\" \",t)\nt=html.unescape(t)\nt=\"\\n\".join(re.sub(r\"[ \\t\\xa0]+\",\" \",l).strip() for l in t.split(\"\\n\"))\nt=re.sub(r\"\\n{3,}\",\"\\n\\n\",t).strip()+\"\\n\"\nsys.stdout.write(t)' content/sources/kmk-about-consultation.html",
+    "reproducedAt": "2026-09-13"
+  },
+  "bytes": 71209,
+  "retrievedAt": "2026-09-13",
+  "licence": "Copyright Kwilmu'kw Maw-klusuaqn / Assembly of Nova Scotia Mi'kmaw Chiefs. Cited and quoted; not redistributed.",
+  "committed": false,
+  "chapters": [
+    {
+      "title": "About Consultation"
+    }
+  ],
+  "knownStaleness": [
+    {
+      "topic": "One body speaks for the fact AND for the name, and that is new",
+      "problem": "Every level before this one splits the two. content/levels/halifax.json takes its Mi'kmaq territorial fact from the CROWN (cirnac-peace-and-friendship-treaties) and names the nation from this organisation's home page. content/levels/winnipeg.json has one nationSource and a sentence naming seven nations (OQ-WINNIPEG-3). content/levels/vancouver.json quotes the Tsleil-Waututh for one of the three nations it names and gets the other two from a development corporation. content/levels/peggys-cove.json is the first whose fact.source and nationSource are the SAME body, and that body is the Assembly of Nova Scotia Mi'kmaw Chiefs speaking in the first person about its own lands. That is what docs/content-review.md 3.2 asks for and it is recorded here as an outcome rather than left to be noticed.",
+      "affects": [
+        "About Consultation"
+      ],
+      "grain": "chapter",
+      "action": "when the Halifax statement is next revisited, move it onto this register: a Crown page describing eighteenth-century treaties is a weaker source for the same fact than the Assembly's own words, and this cache makes the better one available."
+    },
+    {
+      "topic": "A live WordPress page with a Recent Articles sidebar",
+      "problem": "The page's own text - the five sentences under the heading About Consultation - is a standing statement of position and does not move. The sidebar beside it lists the five most recent posts and changes whenever the organisation publishes, so extractedTextSha256 will stop matching for reasons that have nothing to do with the quoted sentence. At the time of caching the sidebar carried posts dated July and August 2026.",
+      "affects": [
+        "About Consultation"
+      ],
+      "grain": "chapter",
+      "action": "when the hash stops matching, re-read the paragraph beginning `he Mi'kmaq have never surrendered` before assuming the claim moved. A sidebar-only change is not a change to the claim; a change to that paragraph is."
+    },
+    {
+      "topic": "The extraction drops the first letter of the quoted paragraph into its own token",
+      "problem": "The paragraph opens with a CSS drop cap, so the T of `The` sits in its own element and the extraction renders the opening as `T he Mi'kmaq have never surrendered`. The quote recorded in content/levels/peggys-cove.json therefore begins at `Mi'kmaq have never surrendered` rather than at `The`, so that it is a contiguous substring of these bytes as ADR-0003 requires. This is stated rather than left for whoever next wonders why the quote starts mid-sentence.",
+      "affects": [
+        "About Consultation"
+      ],
+      "grain": "chapter",
+      "action": "do not `fix` the quote by adding the word `The`; it would stop being contiguous and the verbatim check would fail."
+    },
+    {
+      "topic": "A title claim is a live position, not a closed historical fact",
+      "problem": "`The Mi'kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands` is a statement about the absence of a historical cession and does not expire. `We have a Title claim to all lands in Nova Scotia` describes a claim inside a running negotiation - the Made-in-Nova-Scotia Process, whose history this site's About Us page sets out - and it can be overtaken by an agreement without this page being rewritten. The level's fact is marked volatile for that half of the sentence.",
+      "affects": [
+        "About Consultation"
+      ],
+      "grain": "chapter",
+      "action": "re-fetch before re-verifying. Do not draw any claim about the CURRENT state of those negotiations from this cache."
+    }
+  ],
+  "grainNote": "One web page, one heading, no pagination, so `pages` is absent and the chapter carries a title alone. Four flags: what this document is entitled to cover (and it is entitled to cover all of it, which is the point), how often its bytes move, why the quote starts mid-sentence, and which half of the quoted sentence can go stale."
+}

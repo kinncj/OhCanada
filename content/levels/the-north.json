@@ -1,0 +1,231 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "the-north",
+  "subject": "regions",
+  "order": 10,
+  "title": {
+    "en": "The North",
+    "fr": "Le Nord"
+  },
+  "size": {
+    "x": 7680,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 440,
+    "y": 1280
+  },
+  "theme": {
+    "sky": "#1f5fa8",
+    "ground": "#8b857c",
+    "horizon": "#c2d6e8",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [
+      "Kwanlin Dün First Nation"
+    ],
+    "statement": {
+      "en": "This level is set on the Yukon River at Whitehorse. Kwanlin Dün First Nation says its traditional territory takes in the City of Whitehorse, and that its people have been here for millennia. It acknowledges the Tagish Kwan as the original people who live on the lands that define that territory, alongside the headwaters of Chu Níikwän — the Yukon River.",
+      "fr": "Ce niveau se déroule au bord du fleuve Yukon, à Whitehorse. Kwanlin Dün First Nation affirme que son territoire traditionnel comprend la ville de Whitehorse, et que son peuple est ici depuis des millénaires. Elle reconnaît les Tagish Kwan comme le peuple d'origine qui vit sur les terres qui définissent ce territoire, le long des sources du Chu Níikwän — le fleuve Yukon."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "kdfn-about-us",
+        "chapter": "About us",
+        "url": "https://www.kwanlindun.com/about/",
+        "sourceHash": "d4d43d845d97752fa058e658598d7a2ccfd9dc3d4e4deb0a8992a334e3d91415",
+        "asOf": "2026-09-13T00:00:00Z",
+        "volatile": false,
+        "quote": "We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Níikwän (today, the Yukon River). Our people have been here for millennia."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "nationSource": {
+      "publisher": "Kwanlin Dün First Nation — the same body whose own words the statement quotes, on the same page. The clause about the City of Whitehorse and the meaning of Kwanlin are two further passages of that one page; content/sources/kdfn-about-us.json records which, and records the one nation this statement does not name and why.",
+      "url": "https://www.kwanlindun.com/about/",
+      "sourceHash": "",
+      "asOf": null,
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "camera": {
+    "followLerp": 0.12,
+    "deadZone": {
+      "x": 60,
+      "y": 120
+    },
+    "offset": {
+      "x": 150,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1920,
+      "y": 1280
+    },
+    {
+      "x": 3840,
+      "y": 1280
+    },
+    {
+      "x": 5760,
+      "y": 1280
+    },
+    {
+      "x": 7680,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "the-north-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "the-north-layer-20-range",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.11,
+        "y": 0.04
+      },
+      "offset": {
+        "x": 0,
+        "y": 620
+      },
+      "repeatX": true
+    },
+    {
+      "key": "the-north-layer-30-far-bank",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.28,
+        "y": 0.12
+      },
+      "offset": {
+        "x": 0,
+        "y": 820
+      },
+      "repeatX": true
+    },
+    {
+      "key": "the-north-layer-40-river-and-bar",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 960
+      },
+      "repeatX": true
+    }
+  ],
+  "locomotion": [
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "airborneInput": "airborne",
+        "jumpTrigger": "jump",
+        "landTrigger": "land",
+        "brakeTrigger": "brake"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [],
+  "pois": [
+    {
+      "id": "yukon-river-sternwheeler",
+      "name": {
+        "en": "Yukon River sternwheeler",
+        "fr": "Vapeur à roue arrière du Yukon"
+      },
+      "blurb": {
+        "en": "The Northwest Territories, Nunavut and Yukon are Canada's three northern territories. The North is often called the Land of the Midnight Sun, because at the height of summer daylight can last up to 24 hours. In winter the sun disappears and it is dark for three months. Much of the North is tundra, the vast rocky Arctic plain, where the soil stays frozen and no trees grow.",
+        "fr": "Les Territoires du Nord-Ouest, le Nunavut et le Yukon sont les trois territoires du Nord canadien. On appelle souvent le Nord le pays du soleil de minuit, parce qu'au cœur de l'été la lumière du jour peut durer jusqu'à 24 heures. En hiver, le soleil disparaît et il fait nuit pendant trois mois. Une grande partie du Nord est de la toundra, la vaste plaine rocheuse de l'Arctique, où le sol reste gelé et où aucun arbre ne pousse."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-13T00:00:00Z",
+          "volatile": false,
+          "quote": "The North is often referred to as the “Land of the Midnight Sun” because at the height of summer, daylight can last up to 24 hours. In winter, the sun disappears and darkness sets in for three months. The Northern territories have long cold winters and short cool summers. Much of the North is made up of tundra, the vast rocky Arctic plain. Because of the cold Arctic climate, there are no trees on the tundra and the soil is permanently frozen."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3840,
+        "y": 1280
+      },
+      "artKey": "the-north-landmark-sternwheeler",
+      "radiusPx": 340
+    }
+  ],
+  "characters": [],
+  "assets": [],
+  "textureBudgetBytes": 37748736
+}

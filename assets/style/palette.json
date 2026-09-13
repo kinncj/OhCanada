@@ -136,6 +136,9 @@
     "water-light": "#5cbfd6",
     "water-base": "#2c8cba",
     "water-shade": "#1a487a",
+    "glacier-light": "#b4d5cc",
+    "glacier-base": "#81bbb3",
+    "glacier-shade": "#4b9aa0",
     "pine-light": "#41b76b",
     "pine-base": "#2c8055",
     "pine-shade": "#154536",
@@ -245,7 +248,7 @@
       "base": "stone-base",
       "shade": "stone-shade",
       "derived": true,
-      "material": "Nepean sandstone. Parliament Hill walls and the Peace Tower shaft."
+      "material": "Nepean sandstone. Parliament Hill walls and the Peace Tower shaft. Also the cut banks of the Yukon River valley on the-north level, MEASURED at hsl(43,23%,45%) on a 500x150 of assets/refs/the-north/yukon-river-bluff-and-aspen.jpg at (400,400) against stone-base's hsl(36,37%,58%): seven degrees of hue, but fourteen points less saturated and thirteen points darker, because that bank is in haze and in its own shadow. Recorded as the widest gap this ramp is asked to carry rather than rounded away."
     },
     "limestone": {
       "light": "limestone-light",
@@ -266,7 +269,7 @@
       "base": "oxide-base",
       "shade": "oxide-shade",
       "derived": true,
-      "material": "Red-oxide paint on board-and-batten timber: the prairie grain elevator. Base authored from assets/refs/prairie-rail/grain-elevator-chamberlain.jpg as the HSL midpoint of the two large measured faces - the sunlit driveway annex, median of 300x120 at (120,1080) = hsl(8,73%,36%), and the shaded crib gable, median of 320x560 at (740,620) = hsl(13,63%,32%) - giving hsl(11,68%,34%) = #91301c. NOT `brick`, whose base is hsl(17,52%,44%): eight degrees more orange, sixteen points less saturated and ten points lighter, which under this palette's own three-tone rule turns a painted elevator into a masonry wall. Light and shade are the published formula. MEASURED AGAIN 2026-09-09 for the Bar U Ranch barn on the alberta-foothills level, and NO RAMP WAS ADDED, which is the finding. Six medians on three CC BY 2.0 references - work-horse-barn-elevation.jpg at (500,715) hsl(4,56%,21%) and (900,760) hsl(4,50%,21%); work-horse-barn-gable-end.jpg at (1080,430) hsl(7,54%,18%) and (1250,430) hsl(3,52%,22%); percheron-at-the-barn-wall.jpg at (60,250) hsl(8,51%,26%) and (360,230) hsl(5,37%,23%) - median hsl(5,51%,21%). All three photographs are late-evening or overcast, so the sample is about 13 points of lightness below the material; corrected for the photograph's own light it lands near hsl(6,60%,34%), which is five degrees and eight points of saturation from this ramp's own base at the same lightness. Barn red and elevator red are the same red-oxide paint on the same painted timber, and a second ramp would have been this palette's first duplicate."
+      "material": "Red-oxide paint on board-and-batten timber: the prairie grain elevator. Base authored from assets/refs/prairie-rail/grain-elevator-chamberlain.jpg as the HSL midpoint of the two large measured faces - the sunlit driveway annex, median of 300x120 at (120,1080) = hsl(8,73%,36%), and the shaded crib gable, median of 320x560 at (740,620) = hsl(13,63%,32%) - giving hsl(11,68%,34%) = #91301c. NOT `brick`, whose base is hsl(17,52%,44%): eight degrees more orange, sixteen points less saturated and ten points lighter, which under this palette's own three-tone rule turns a painted elevator into a masonry wall. Light and shade are the published formula. MEASURED AGAIN 2026-09-09 for the Bar U Ranch barn on the alberta-foothills level, and NO RAMP WAS ADDED, which is the finding. Six medians on three CC BY 2.0 references - work-horse-barn-elevation.jpg at (500,715) hsl(4,56%,21%) and (900,760) hsl(4,50%,21%); work-horse-barn-gable-end.jpg at (1080,430) hsl(7,54%,18%) and (1250,430) hsl(3,52%,22%); percheron-at-the-barn-wall.jpg at (60,250) hsl(8,51%,26%) and (360,230) hsl(5,37%,23%) - median hsl(5,51%,21%). All three photographs are late-evening or overcast, so the sample is about 13 points of lightness below the material; corrected for the photograph's own light it lands near hsl(6,60%,34%), which is five degrees and eight points of saturation from this ramp's own base at the same lightness. Barn red and elevator red are the same red-oxide paint on the same painted timber, and a second ramp would have been this palette's first duplicate. USED A THIRD TIME 2026-09-13, on the fish stores of the peggys-cove level, with no new measurement and none needed: they are red-oxide paint on board-and-batten timber, which is what this ramp was authored from, on the same construction."
     },
     "cobalt": {
       "light": "cobalt-light",
@@ -294,7 +297,7 @@
       "base": "ice-base",
       "shade": "ice-shade",
       "derived": true,
-      "material": "Rideau Canal skateway ice. Also architectural curtain-wall glazing: the Canadian Museum for Human Rights' glass cloud, measured at hsl(203,41%,80%) sunlit on winnipeg/cmhr-elevation-from-the-river.jpg against ice-base's hsl(202,52%,78%) - one degree of hue apart, which is why no glass ramp was added. Also the North Shore mountains across Burrard Inlet on the vancouver level, measured at hsl(210,48%,65%) and hsl(210,45%,63%) on assets/refs/vancouver/canada-place-and-the-north-shore.jpg against ice-shade's hsl(212,60%,62%) - two degrees of hue and two points of lightness apart - which is the same test that kept the museum's glass out of a ramp of its own."
+      "material": "Rideau Canal skateway ice. Also architectural curtain-wall glazing: the Canadian Museum for Human Rights' glass cloud, measured at hsl(203,41%,80%) sunlit on winnipeg/cmhr-elevation-from-the-river.jpg against ice-base's hsl(202,52%,78%) - one degree of hue apart, which is why no glass ramp was added. Also the North Shore mountains across Burrard Inlet on the vancouver level, measured at hsl(210,48%,65%) and hsl(210,45%,63%) on assets/refs/vancouver/canada-place-and-the-north-shore.jpg against ice-shade's hsl(212,60%,62%) - two degrees of hue and two points of lightness apart - which is the same test that kept the museum's glass out of a ramp of its own. Also the hazy distant headland and the horizon band on the open Atlantic on the peggys-cove level, which is the same use as the North Shore's and needs no new number."
     },
     "water": {
       "light": "water-light",
@@ -303,19 +306,26 @@
       "derived": true,
       "material": "Open canal and river water."
     },
+    "glacier": {
+      "light": "glacier-light",
+      "base": "glacier-base",
+      "shade": "glacier-shade",
+      "derived": true,
+      "material": "Glacier-fed river water: the Yukon River on the-north level, and the level's second largest colour area after the sky. Base authored 2026-09-13 from two medians on one CC0 reference, assets/refs/the-north/yukon-river-canyon.jpg - 500x150 of mid-channel water at (700,620) = hsl(176,30%,75%) and 400x110 of near water at (200,760) = hsl(169,23%,59%) - giving hsl(172,30%,62%) = #81bbb3. Light and shade are the published formula. IT IS NOT `water`, AND IT IS NOT `copper`, and both were checked rather than argued. `water-base` is hsl(199,62%,45%): twenty-seven degrees of hue, thirty-two points of saturation and seventeen points of lightness away, which is open blue river and lake water and is what four other levels draw. `copper-base` is hsl(162,45%,50%) - ten degrees of hue, fifteen of saturation and twelve of lightness - which is the closest existing tone and is oxidised copper roofing; a river in it would be the Peace Tower's spire spread across a level. The separation from `copper` here is wider than the separation this palette already accepts between `limestone` and `stone` (ten degrees of hue and twenty-one points of saturation), so this ramp is not a duplicate by the palette's own standard. A glacier-fed river is pale, desaturated and green-cyan because it carries rock flour, and no ramp in this palette was that."
+    },
     "pine": {
       "light": "pine-light",
       "base": "pine-base",
       "shade": "pine-shade",
       "derived": true,
-      "material": "Conifers, the Christmas-tree lane markers on the skateway."
+      "material": "Conifers, the Christmas-tree lane markers on the skateway. Also black spruce, the boreal forest on the-north level. The measurement is recorded WITH ITS DEFECT: a 600x180 canopy sample on assets/refs/the-north/yukon-river-canyon.jpg at (250,60) reads hsl(70,17%,25%) and a 400x120 on yukon-river-and-spruce.jpg reads hsl(68,25%,32%), which is eighty degrees to the yellow of pine-base's hsl(149,49%,34%) - and both samples contain sunlit deciduous understorey and dry grass between the trunks, which is what a canopy sample of a mixed boreal stand contains. No conifer ramp was added on the strength of a contaminated sample: `pine` is the game's conifer ramp on five levels and a sixth conifer green would be the duplicate this palette refuses."
     },
     "grass": {
       "light": "grass-light",
       "base": "grass-base",
       "shade": "grass-shade",
       "derived": true,
-      "material": "Summer lawn on the Hill."
+      "material": "Summer lawn on the Hill. Also the grass that grows in the joints of the granite barrens on the peggys-cove level, where it is the only green and appears only along a joint line, never as a patch on open rock."
     },
     "pasture": {
       "light": "pasture-light",
@@ -329,21 +339,21 @@
       "base": "wood-base",
       "shade": "wood-shade",
       "derived": true,
-      "material": "Warming huts, benches, lock gates, park signage."
+      "material": "Warming huts, benches, lock gates, park signage. Also the paddlewheel, the smokestack and the deck fittings of the sternwheeler on the-north level - a wooden wheel painted ochre, which is what this ramp is. MEASURED on assets/refs/the-north/sternwheeler-paddlewheel.jpg over every pixel with saturation above 35 per cent, hue between 10 and 55 and lightness above 35: median hsl(26,63%,42%) against wood-base's hsl(30,52%,39%) - four degrees of hue and three points of lightness, and eleven points of saturation, the paint being brighter than bare timber. `oxide` was the other candidate and is rejected the same way it was for `brick`: oxide is a red-oxide paint at hsl(11,68%,34%), fifteen degrees to the red and eight points darker, and the wheel is yellow-ochre and not barn red."
     },
     "path": {
       "light": "path-light",
       "base": "path-base",
       "shade": "path-shade",
       "derived": true,
-      "material": "Stone paving, asphalt, concrete. The only near-neutral ramp. Also weathered cedar shingle: the Bar U barn roof medians hsl(20,5%,50%), hsl(26,3%,44%) and hsl(0,1%,50%) across three references against this ramp's base at hsl(31,7%,51%), so the roof is drawn in `path` and no grey was added."
+      "material": "Stone paving, asphalt, concrete. The only near-neutral ramp. Also weathered cedar shingle: the Bar U barn roof medians hsl(20,5%,50%), hsl(26,3%,44%) and hsl(0,1%,50%) across three references against this ramp's base at hsl(31,7%,51%), so the roof is drawn in `path` and no grey was added. AND AGAIN 2026-09-13 for the granite barrens at Peggy's Cove, where the whole walking surface of a level is this ramp, and again NO RAMP WAS ADDED - because four references bracket it. Two clear-day medians on assets/refs/peggys-cove/granite-barrens-and-sea.jpg, 520x60 at (420,470) = hsl(40,23%,71%) and 300x40 at (620,500) = hsl(33,17%,50%), sit two to six degrees of hue and two to four points of lightness from path-light's hsl(42,6%,67%) and path-base's hsl(36,6%,52%) but eleven to seventeen points MORE saturated, which is warm bounce off dry rock in full sun. Two flat-light medians on the same rock - lighthouse-elevation.jpg 400x120 at (600,860) = hsl(0,5%,49%) and lighthouse-on-the-granite.jpg 600x150 at (400,900) = hsl(50,2%,46%) - are one to four points LESS saturated. The ramp sits inside the bracket, and a granite ramp would have been a second near-neutral in a palette whose whole claim is that it has one."
     },
     "flag-red": {
       "light": "flag-red-light",
       "base": "flag-red-base",
       "shade": "flag-red-shade",
       "derived": true,
-      "material": "The National Flag of Canada. See OQ-ART-04."
+      "material": "The National Flag of Canada. See OQ-ART-04. ALSO the lantern room, conical roof and ball finial of Peggy's Point Lighthouse on the peggys-cove level, and the reason is recorded because a red painted on steel and a red on a national flag are not obviously the same red. The reddest decile of the roof cone on assets/refs/peggys-cove/lighthouse-elevation.jpg, 200x36 at (420,176), has median hsl(342,97%,22%) and the lantern's solid panel, 115x34 at (419,262), has median hsl(350,98%,18%). Both are four to eight degrees of hue from flag-red-shade's hsl(346,72%,34%); their saturation at 97 and 98 per cent is that photograph's own edit and not the paint, and it is stated rather than used. `serge`, the palette's other red, is hsl(4,65%,47%) - twenty-two degrees away - so flag-red is the nearer of the two existing reds and a lantern-red ramp would have duplicated it."
     },
     "navy": {
       "light": "navy-light",
@@ -357,7 +367,7 @@
       "base": "brass-base",
       "shade": "brass-shade",
       "derived": true,
-      "material": "Buckles, buttons, brass hardware, the skateway's amber hazard marks."
+      "material": "Buckles, buttons, brass hardware, the skateway's amber hazard marks. Also autumn aspen and willow on the-north level. MEASURED on assets/refs/the-north/yukon-river-bluff-and-aspen.jpg: 400x60 at (200,760) = hsl(44,34%,49%) and 300x50 at (1100,750) = hsl(41,30%,49%) against brass-base's hsl(44,69%,50%) - the hue and the lightness match to within three and one, and the saturation gap of thirty-five points is that photograph's own fog bank, which is in frame and is stated rather than corrected away. No gold ramp was added; `felt` is cut straw at hsl(35,47%,55%) and `hair-blond` is hair."
     },
     "leather": {
       "light": "leather-light",
@@ -544,6 +554,24 @@
       "why": "A clear marine afternoon over Burrard Inlet, paling toward a bright horizon over the water. The zenith is authored BETWEEN two references that disagree and both are recorded: 600x40 of open sky at (600,15) on assets/refs/vancouver/canada-place-from-the-west.jpg reads hsl(218,49%,30%) and 700x40 at (400,40) on seawall-path-and-harbour.jpg reads hsl(204,99%,47%); sky-base is hsl(206,58%,52%) and is taken toward the brighter because this level is an afternoon on the water. The horizon is sky-light against the second reference's low sky at hsl(208,91%,70%). THE GROUND IS TORONTO'S, and that is allowed rather than overlooked: the rule this palette keeps is that no two triples are equal and no triple differs from another in only ONE of its three, and (sky-base, sky-light) differs from Toronto's (sky-light, cloud-base) in both of the other two. Both levels are city waterfront paving and both grounds are that paving in shadow.",
       "skyBandStops": {
         "note": "NONE. vancouver/layer-10-sky.svg is ONE FLAT sky-base field, for the same reason as the three levels above it. Its clouds are high CIRRUS rather than cumulus, which is what refs/vancouver/seawall-path-and-harbour.jpg shows and is the only sky of its kind in the game."
+      }
+    },
+    "peggys-cove-atlantic-morning": {
+      "sky": "sky-base",
+      "ground": "path-light",
+      "horizon": "ice-base",
+      "why": "A clear morning on the Atlantic coast over pale granite. The zenith is MEASURED: 400x60 of open sky at (60,60) on assets/refs/peggys-cove/granite-barrens-and-sea.jpg has median hsl(204,47%,54%) against sky-base's hsl(207,58%,52%) - three degrees of hue and two points of lightness. THE GROUND IS PATH-LIGHT AND NO OTHER LEVEL USES IT: Halifax's ground is path-base, Toronto's and Vancouver's are path-shade, and this one is the palest of the three because the surface the player walks on is sunlit bare granite, measured at hsl(40,23%,71%) against path-light's hsl(42,6%,67%). The horizon is ice-base against the sea haze rather than a cloud tone, which is the only unused pale band left: sky-light would have made this triple differ from Vancouver's in only one of its three, cloud-light from Halifax's in only one, and cloud-base from Quebec City's in only one. That rule is why the ninth triple took three attempts and it is recorded so the tenth does not repeat them. MEASURED ACROSS ALL TEN TRIPLES ON 2026-09-13, AND THE RULE IS ALREADY BROKEN TWICE — by two levels that shipped before either of today's. `ottawa` (sky-base, snow-base, sky-light) differs from `quebec-city` (sky-base, snow-base, cloud-base) in ONE of its three, and from `vancouver` (sky-base, path-shade, sky-light) in ONE. Neither of today's two triples violates it against any of the other nine. The finding is recorded here rather than quietly satisfied: a rule that two shipped levels fail is either the wrong rule or two levels needing a theme edit, and that is the project owner's to settle, not an artist drawing the tenth level.",
+      "skyBandStops": {
+        "note": "NONE. peggys-cove/layer-10-sky.svg is ONE FLAT sky-base field, for the same reason as Winnipeg's, the Prairies', the Alberta foothills' and Vancouver's: at the LOW preset this level keeps the sky and the granite barrens, and the barrens tile is transparent everywhere above its own crest line at world 1024, so there is no nearer opaque layer inside this band to hide a band step behind. The flat field IS the level document's theme.sky. Its clouds are STRATOCUMULUS ROLLS - lumpy-topped, flat-based bars in rows - which is the sixth distinct cloud treatment in the game and the only one of its kind."
+      }
+    },
+    "the-north-late-summer": {
+      "sky": "sky-shade",
+      "ground": "path-base",
+      "horizon": "snow-shade",
+      "why": "A deep, clear, cold high-latitude sky over a glacier-fed river and a gravel bar. The zenith is sky-shade, which Winnipeg and the Alberta foothills also take, and the triple is kept apart by the other two: the ground is the gravel bar's own cobble, which is path-base - Halifax's ground, over a different sky and a different horizon - and the horizon is snow-shade, which no other level uses at all. That is two of three different from every one of the other nine, which is the rule. The horizon is a cold pale haze rather than a cloud tone because at this latitude the band above the far ridge is ice-blue and not white. The same all-ten check that cleared this triple found two PRE-EXISTING violations of the rule, between `ottawa` and `quebec-city` and between `ottawa` and `vancouver`; they are written out in levelTheme.peggys-cove-atlantic-morning and neither is today's to fix.",
+      "skyBandStops": {
+        "note": "NONE. the-north/layer-10-sky.svg is ONE FLAT sky-shade field, for the reason Winnipeg's, the Prairies', the Alberta foothills', Vancouver's and Peggy's Cove's are: at the LOW preset this level keeps the sky and the river-and-bar tile, and that tile's first opaque row is world 960, so a band step anywhere above it would show against open sky. Its clouds are LENTICULAR STACKS - smooth stacked lens shapes, the mountain-wave cloud of a high range - which is the seventh distinct cloud treatment in the game and the only one with a vertical stack in it."
       }
     }
   },

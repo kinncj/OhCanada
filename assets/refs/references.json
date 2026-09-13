@@ -34,7 +34,9 @@
     "AMENDED AGAIN 2026-09-09, the same day, after the first correction was rendered at 390 px beside the other two figures. The body turn had landed and THE HEAD TURN HAD NOT: the guide read as travelling and both humans read as standing still, facing the viewer, which is the defect the amendment above was written for. The heads now turn further than the bodies - about 25 degrees off profile against 40 - and are built as an ASYMMETRIC OUTLINE rather than as a symmetric egg with cues drawn on it. THE LESSON IS ABOUT THIS FILE AS MUCH AS ABOUT THE ART: the first correction satisfied every word of the entry as it was then written, because the entry listed cues and the cues were all present and all sub-pixel. An entry listing features a verifier can tick off at 1x does not test what a player sees. It now says WHICH cue carries the read at phone size, and it says to judge at 390 px.",
     "AMENDED 2026-09-09 while drawing Winnipeg (level 6) and The Prairies (level 7). Four subjects added, and the PAIR of them is the point again. `human-rights-museum` IS allowed to demand a place name and `grain-elevator` IS NOT, on the same test that separated town-clock from pier-21: the museum is one specific building whose stack - a stepped Tyndall limestone mountain, a curved blue-green glass shell and a glazed spire with an open steel lattice - nothing else in this game will ever share, and the elevator is a TYPE. Every prairie elevator carries its company's name and its town's name painted across the crib, this project draws no lettering anywhere, and what is left without them is the standard plan that stood in a thousand prairie towns. Its list asks for a grain elevator and never for Saskatchewan. The consequence is stated rather than left to be discovered: The Prairies as a PLACE rests on nothing in this level's art, by design, because the level is a region rather than a town and its identity is the type and not a landmark.",
     "AMENDED 2026-09-09 while drawing The Alberta foothills (level 8) and Vancouver (level 9). Four subjects added, and the PAIR of levels is the point once more. `five-sails` IS allowed to demand a place name and `ranch-barn` IS NOT, on the test that separated town-clock from pier-21 and human-rights-museum from grain-elevator: Canada Place is one specific building whose five white fabric sails over a long low pier are shared by nothing else this game will draw, and a ranch barn with a corral is a TYPE - the candidates that would have identified the place, Head-Smashed-In Buffalo Jump above all, are a docs/content-review.md section 1 depiction question and not an art question, so they are not here. Level 8's list asks for a RANCH and never for Alberta, and the consequence is stated rather than left to be discovered: THE ALBERTA FOOTHILLS AS A PLACE REST ON NOTHING IN THAT LEVEL'S ART, exactly as the Prairies do, because the level is a region and its honest anchor is the type. The Rocky Mountain front IS drawn, on layer 20, and is deliberately not a graded subject: it repeats, the low preset drops it, and a landform spanning two countries identifies a landform and not a province.",
-    "AND ONE ANSWER CANNOT BE WRITTEN DOWN, WHICH IS THE OTHER FINDING OF THIS AMENDMENT. The correct unprompted answer to `five-sails` is the building's own name, and it contains a common noun that the hand-off's own briefing also contains. `leakTokens` takes every word of four letters or more out of `id` and `expectedBlindAnswer` and refuses any handed-over text containing one, so listing the name would turn make verify-art red on a hand-off that leaks nothing - and the subject id is `five-sails` rather than the building's name for the same reason. The answer is scored on `Vancouver` and on `five sails`, both of which the same sentence almost always carries, and the one-line fix is routed rather than worked around. Every list below was checked MECHANICALLY against the real `leakTokens` and the real BRIEFING before shipping, which is how `open`, `part`, `size` and `paint` were kept out of them as well."
+    "AND ONE ANSWER CANNOT BE WRITTEN DOWN, WHICH IS THE OTHER FINDING OF THIS AMENDMENT. The correct unprompted answer to `five-sails` is the building's own name, and it contains a common noun that the hand-off's own briefing also contains. `leakTokens` takes every word of four letters or more out of `id` and `expectedBlindAnswer` and refuses any handed-over text containing one, so listing the name would turn make verify-art red on a hand-off that leaks nothing - and the subject id is `five-sails` rather than the building's name for the same reason. The answer is scored on `Vancouver` and on `five sails`, both of which the same sentence almost always carries, and the one-line fix is routed rather than worked around. Every list below was checked MECHANICALLY against the real `leakTokens` and the real BRIEFING before shipping, which is how `open`, `part`, `size` and `paint` were kept out of them as well.",
+    "AMENDED 2026-09-13 while drawing Peggy's Cove (level 2). Two subjects added, and one entry in this file records a decision that is not an art decision: `peggys-cove-light` is the first hero on a level whose place sits on a named nation's territory, the level depicts no nation and no person, and the Tier 3 review that docs/content-review.md 1 leaves open is written as a dated obligation in assets/style/peggys-cove-level.md section 0. Licence was established through the Commons API before anything was downloaded, as on every level since slice 2.",
+    "AMENDED AGAIN 2026-09-13 while drawing The North (level 10), which is the tenth and last level. Two more subjects, and the same shape as Peggy's Cove's: a non-repeating POI hero and a two-tile traversal composite, with `neverAdd` on BOTH carrying the docs/content-review.md 5.2 and 5.4 prohibitions and a ban on drawing any figure at all. THE HERO IS ASKED FOR A TYPE AND NEVER FOR A PLACE, because the vessel carries its own name in paint and this project draws no text; that makes this the third region in a row whose place rests on nothing in its art, which is OQ-SPINE-6's finding confirmed rather than a surprise."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -2423,6 +2425,369 @@
       "notes": [
         "assets/style/rig-contract.md section 11 is the contract.",
         "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-skateboard.svg."
+      ]
+    },
+    {
+      "id": "peggys-cove-light",
+      "subject": "Peggy's Point Lighthouse, Nova Scotia: a short, heavily tapered, octagonal white concrete tower carrying a red lantern room with a red conical roof and a ball finial, on a wide white gallery deck with a dark railing, standing on bare granite.",
+      "renders": [
+        "src/svg/peggys-cove/landmark-lighthouse@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. `singleSource()`. The file is 480 x 900; the tower occupies rows 26 to 866 and the 34 rows below it carry only the ground-contact AO, so the subject sits almost on the foot of the frame. There is NO deliberate empty band here, unlike five-sails: this building stands on rock and not on piles, so it is drawn tight to its own base and the barrens tile passes behind it rather than in front.",
+      "expectedBlindAnswer": [
+        "Peggy's Cove",
+        "Peggys Cove",
+        "Peggy's Point",
+        "Peggys Point",
+        "Nova Scotia"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS ALLOWED TO DEMAND A PLACE NAME AND IT IS THE ONLY RENDER ON THIS LEVEL THAT MAY.",
+        "It is a single non-repeating POI hero drawing one specific building. `peggys-cove-barrens` is two",
+        "repeating tiles and is asked for a rocky fishing harbour and never for a place, so this level's PLACE",
+        "rests on this render alone - the same arrangement as five-sails on the vancouver level.",
+        "AND IT IS A HARDER ASK THAN FIVE-SAILS, WHICH IS STATED RATHER THAN HOPED AWAY. Canada Place is one",
+        "building of its kind in the world; there are several hundred lighthouses in Nova Scotia alone, and a",
+        "verifier who answers `a lighthouse on the Atlantic coast` is not wrong, only unhelpful, and is scored a",
+        "miss. The claim this entry makes is that the PROPORTIONS identify it: a tower 2.37 base widths tall",
+        "whose top three tenths are red is a specific, measured, unusual shape, and it is the most photographed",
+        "lighthouse in Canada. If a real blind pass returns only a type and never the place, the finding is that",
+        "this level has no place anchor, and the honest fix is a second cited POI and not a longer answer list.",
+        "The word `lighthouse` is deliberately NOT an accepted answer, for that reason and for one more: every",
+        "word of four letters or more in this list becomes a leak token the hand-off refuses in its own briefing",
+        "text, and `light` is a word a briefing can plausibly use."
+      ],
+      "referenceFiles": [
+        "peggys-cove/lighthouse-elevation.jpg",
+        "peggys-cove/lighthouse-on-the-granite.jpg",
+        "peggys-cove/granite-barrens-and-sea.jpg",
+        "peggys-cove/lighthouse-at-dusk.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the tower is SHORT: 2.4 base widths tall, not four to six",
+          "why": "This is the identification and it is the thing every cartoon lighthouse gets wrong. Drawn tall, this is a generic lighthouse no matter how good the lantern is.",
+          "detail": "MEASURED on refs/peggys-cove/lighthouse-elevation.jpg in the column through the tower's axis: the finial tip is at y150, the foot at y690, so H = 540; the foot spans x362..x588 = 226 px. 540/226 = 2.39. Drawn at H = 840 with a base of 354: 2.37. Art-bible section 5 rule 1 allows plus or minus ten per cent and this ratio should not use it."
+        },
+        {
+          "feature": "the red top is three tenths of the whole height",
+          "why": "The second identifying proportion. A small red cap on a tall white tower is a different building.",
+          "detail": "MEASURED on the same file: the red assembly runs from the finial tip at y150 to the underside of the gallery deck at y314 = 164 px of 540 = 0.304. Drawn 26 to 281 of 840 = 0.304. The stack inside it, in order and as fractions of H: ball finial and its conical cap 0.044, red conical roof 0.070, glazed lantern 0.091, solid red panel 0.069, gallery deck 0.030."
+        },
+        {
+          "feature": "a RED conical roof over a RED lantern room, with a ball finial on top",
+          "detail": "One cone with slightly concave sides and a projecting eave lip, in the `flag-red` ramp, over a glazed band and then a solid red panel. The finial is a small ball on a short cone on a collar. Never a flat roof, never a dome, never a weather vane."
+        },
+        {
+          "feature": "the gallery deck oversails the shaft by half again, on a CONCAVE corbel",
+          "why": "The flare is what makes the silhouette read as a lighthouse at 120 px rather than as a chimney.",
+          "detail": "MEASURED: the deck is 210 px wide against a shaft top of 142 px = 1.48x, at H = 540. Drawn 327 against 221 = 1.48x. The corbel between them is a concave sweep over 0.039 H, not a straight chamfer and not a bracketed cornice."
+        },
+        {
+          "feature": "a dark railing standing on the deck, in front of the lantern's solid panel",
+          "detail": "Seven posts and two horizontal rails in the `slate` ramp, spanning the full width of the deck, so the two outermost posts stand against open sky beyond the lantern. That overhang is what the reference shows and it is what stops the deck reading as a plain slab."
+        },
+        {
+          "feature": "the white shaft tapers, and reads as an octagon in three vertical facets",
+          "detail": "MEASURED: 142 px at the top of the shaft to 226 px at the foot = 1.59x over 0.657 H. Drawn 221 to 354 = 1.60x. Three flat facets of the `white` ramp, light on the left where the key light is, base across the front, shade on the right. No outline: art-bible section 3, characters only."
+        },
+        {
+          "feature": "three narrow tall windows up the LEFT face, and a small white entry porch at the foot",
+          "detail": "Windows at 0.38, 0.59 and 0.84 of H from the tip, each about 0.09 H tall and drawn 26 px wide against a measured 12 - widened under art-bible section 5 rule 2 because 12 px at the low tier is not a window. The porch is a low gabled box against the right of the shaft with a dark door, and it carries its own AO because a white box on a white tower is invisible without one."
+        }
+      ],
+      "simplifyAway": [
+        "the octagon's other five facets: three flat vertical tones carry the form and the rest are under 12 px at any tier",
+        "the lantern's full set of glazing bars, its vent hoods and its lightning conductor: six astragals carry the rhythm",
+        "the concrete's patching, staining, crack repairs and lift lines",
+        "the cast-iron heritage plaque on the shaft and the circular fitting on the porch: both carry lettering or a mark",
+        "the handrail, the steps and the ramp cut into the rock beside the tower",
+        "every visitor in every reference photograph: this level draws no figures at all"
+      ],
+      "neverAdd": [
+        "a red and white spiral, or any band or stripe on the shaft. The tower is plain white and the candy stripe is the single most common invention in a drawn lighthouse",
+        "a light beam, a lens flare, a glow, a halo or a rotating light of any kind",
+        "any lettering, number, plaque, sign or date stone. make verify-art refuses a text element in a render source and this building carries two marks in the references",
+        "a keeper's cottage, a dwelling, a fog-horn house or any outbuilding beyond the one porch that is there",
+        "a second gallery, a bracketed cornice, a dome, a weather vane or a finial that is not the ball that is there",
+        "a canoe, a kayak or any Indigenous watercraft, as a vehicle or as scenery (docs/content-review.md 5.4, OQ-REVIEW-10)",
+        "an inuksuk or a totem pole, in any form, including background, silhouette and icon (docs/content-review.md 5.2)",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. See assets/style/peggys-cove-level.md section 0"
+      ],
+      "notes": [
+        "LICENCE FIRST, and for once it cost nothing. Peggy's Cove is one of the most photographed places in Canada and the Commons API returned CC0, CC BY 1.0, CC BY 2.0 and CC BY 3.0 files of every view this level needed, checked before anything was downloaded. Seven files were taken: one CC0, one CC BY 1.0 and five CC BY 2.0. No ShareAlike file was used (ADR-0004).",
+        "THIS LEVEL IS THE FIRST WHOSE SUBJECT SITS ON A NAMED NATION'S TERRITORY AND WHOSE OWN TERRITORIAL FACT IS QUOTED FROM THAT NATION'S OWN BODY. It depicts no nation and no person. docs/content-review.md 1 shipping rule item 5 is about a level whose SUBJECT is a nation's territory or history; this level's subject is Discover Canada's `Who We Are` chapter and its place is a fishing village, which is the same shape as halifax. The Tier 3 obligation this leaves open is written out in assets/style/peggys-cove-level.md section 0 and it is an obligation, not a caveat."
+      ]
+    },
+    {
+      "id": "peggys-cove-barrens",
+      "subject": "A small fishing harbour of board-and-batten stores on spruce piles seen across sheltered water from a foreground of bare, rounded, jointed granite with grass in its cracks and tide pools in its hollows.",
+      "renders": [
+        "src/svg/peggys-cove/layer-30-cove.svg",
+        "src/svg/peggys-cove/layer-40-granite-barrens.svg"
+      ],
+      "renderRecipe": "Composite the two, the barrens drawn OVER the cove, which is the order the level uses. The barrens tile's top edge is 160 px BELOW the cove tile's top edge (world y 1000 against 840): `twoParallaxTiles({ farMatch: 'cove', nearMatch: 'barrens', nearTop: 160 })`. Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1760 and 1920). The composite is 440 rows: the cove occupies 0..270 and the barrens 160..440, overlapping by 110. THE SEAM CLOSES TO THE PIXEL and the number is measured rather than asserted: the cove tile's last row is world 1110 and the barrens tile's FIRST FULLY OPAQUE row is world 1110 (its own row 110), so nothing shows between them at any x. Above that line the barrens carries rock crest against transparency from world 1024 down, and the cove's wharf, stores and water are MEANT to show between the crests: that is the view from the barrens and it is why the two tiles are one subject. AN EARLIER VERSION OF THIS ENTRY SAID 80 AND THE LEVEL DOCUMENT SAID 120, AND BOTH WERE WRONG. The tiles were redrawn on 2026-09-13 after the composite showed the rock walling off the harbour; the cove tile went from 280 rows at world 880 to 270 at world 840 and the barrens from 320 at world 960 to 280 at world 1000, and 160 is the measured offset between what shipped. Anything reading this file for a number should take it from here and from content/levels/peggys-cove.json, which now agree.",
+      "expectedBlindAnswer": [
+        "a fishing village",
+        "a fishing harbour",
+        "a fishing cove",
+        "an outport",
+        "fishing sheds on a wharf",
+        "fishing huts on a wharf",
+        "a granite shore",
+        "bare rock by the sea",
+        "a rocky coast",
+        "a rocky shoreline",
+        "bare rock and tide pools"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. Both tiles repeat - 1760 and 1920 - so neither may carry a recognisable building:",
+        "every store, boat, wharf and headland on them is a TYPE, and there is no lettering, hull name, number",
+        "or livery anywhere. A verifier who names a place from these two tiles is reporting a defect.",
+        "EVERY ACCEPTED PHRASE NAMES EITHER THE FISHING OR THE ROCK, and that is a line this list draws rather",
+        "than a preference. `a working waterfront`, `a harbour boardwalk` and `a wharf promenade` are accepted",
+        "answers of halifax-quayside, whose picture is a timber boardwalk in front of a town, and a list that",
+        "accepted them here would stop being able to tell the two subjects apart. This one has bare rock across",
+        "its whole foreground and sheds standing on piles over open water, and Halifax has neither.",
+        "WHERE THE PLACE ACTUALLY COMES FROM: `peggys-cove-light`, a separate non-repeating POI hero.",
+        "THREE PHRASES WERE REMOVED FROM THIS LIST BY THE GATE AND NOT BY TASTE. `fish sheds over the",
+        "water`, `a small harbour with fishing boats` and `a rocky shore with a fishing harbour` each",
+        "contributed an ordinary English word - over, small, with - that the hand-off's own briefing",
+        "already contains, and `leakTokens` refuses any handed-over text holding a token from an accepted",
+        "answer. pier-21's note states the rule and five-sails is its most expensive instance; this is the",
+        "cheapest, because every phrase dropped has a synonym in the list that survives."
+      ],
+      "referenceFiles": [
+        "peggys-cove/harbour-and-fish-stores.jpg",
+        "peggys-cove/village-houses.jpg",
+        "peggys-cove/red-fish-store.jpg",
+        "peggys-cove/granite-barrens-and-sea.jpg",
+        "peggys-cove/lighthouse-elevation.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "bare, rounded, jointed granite across the whole foreground, in near-neutral warm grey",
+          "why": "It is the surface the player walks on and it is the one landform that says this coast rather than any coast.",
+          "detail": "MEASURED on refs/peggys-cove/granite-barrens-and-sea.jpg: 520x60 at (420,470) has median hsl(40,23%,71%) and 300x40 at (620,500) has median hsl(33,17%,50%), against path-light's hsl(42,6%,67%) and path-base's hsl(36,6%,52%). Two flat-light references of the same rock read LESS saturated than the ramp, so the ramp sits inside the bracket and no granite ramp was added. Rounded whaleback masses divided by long curving joints, never angular scree and never a cliff."
+        },
+        {
+          "feature": "grass ONLY in the joints",
+          "why": "Grass spread over the rock turns barrens into a meadow, and that was the first build's defect.",
+          "detail": "Nine broken runs of low tufts per tile, each following a joint line and tapering at both ends, in `grass-shade` with a little `grass-base` on top. Never a patch on open rock, never a lawn."
+        },
+        {
+          "feature": "tide pools set into the rock, with an irregular rim",
+          "why": "At the low preset this level keeps two layers and they are the sky and this one, so without the pools a coastal level would show no water at the tier most phones get.",
+          "detail": "Two per tile, irregular rings rather than ellipses, `path-shade` rim, a darker weed ring inside it, then `water-shade` and `water-base` with two flat glint bars. refs/peggys-cove/granite-barrens-and-sea.jpg is a photograph of exactly this."
+        },
+        {
+          "feature": "glacial erratics sitting ON the pavement, with ground-contact AO",
+          "detail": "Four per tile, rounded, in `path-base` with a `path-light` cap and a `path-shade` flank, each on a flat `ao-shadow` ellipse at 0.28. They sit on the rock; they are not part of it."
+        },
+        {
+          "feature": "board-and-batten fish stores standing on spruce piles OVER the water, with pitched roofs",
+          "why": "Sheds on piles over water is what makes this a fishing cove rather than a village beside one.",
+          "detail": "Seven per tile in red-oxide, weathered grey and white, each with vertical battens, a gable roof in `slate`, a plank deck and a run of piles below it standing in the water. The red is the `oxide` ramp: red-oxide paint on board-and-batten timber, the same material and the same ramp as the prairie grain elevator's."
+        },
+        {
+          "feature": "flat mirror reflections of the stores in the cove water",
+          "why": "Every reference photograph of this harbour has them and they are what says the water is sheltered.",
+          "detail": "Flat vertical bars in each store's own tones, broken by horizontal `water-base` and `water-light` ripple bars. Never a gradient, never a blur (ADR-0011)."
+        },
+        {
+          "feature": "a spruce treeline above the shore, cropped by the tile's own top edge",
+          "detail": "Ragged `pine-shade` crowns with `pine-base` catching the key light on the upper left, standing on an opaque band. The crop is deliberate: this tile has to be opaque from its top edge downward, and a treeline whose tops are cut is what a 280 px band of a wooded shore looks like."
+        }
+      ],
+      "simplifyAway": [
+        "every crystal, vein, lichen patch and glacial striation in the granite: rounded masses, long joints and three tones",
+        "the wave texture, foam, weed and reflections of the open sea beyond the cove",
+        "every needle and branch: a spruce is a triangle with one lit face",
+        "the stores' shingles, hinges, ladders, buoys, traps, ropes and stacked gear",
+        "the boats' rigging, aerials, hauling gear, registration numbers and hull names"
+      ],
+      "neverAdd": [
+        "any recognisable building on either tile. Both repeat, and this level's only place anchor is `peggys-cove-light`",
+        "any lettering, sign, hull name, registration number, company name or funnel mark. Every wooden store in the references carries one and this project draws none",
+        "a canoe, a kayak or any Indigenous watercraft, as scenery or as anything else (docs/content-review.md 5.4, OQ-REVIEW-10)",
+        "an inuksuk or a totem pole, in any form, including background, silhouette and icon (docs/content-review.md 5.2)",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. The vancouver seawall draws four unmarked people under section 3.3 outcome 2 and this level deliberately draws none. See assets/style/peggys-cove-level.md section 0",
+        "a lighthouse on either tile: it is the POI hero and it may not repeat",
+        "snow: this level is a clear Atlantic morning and two of the game's levels are winter already"
+      ],
+      "notes": [
+        "TWO WATERS ON ONE LEVEL, AND IT IS NOT A MISTAKE. layer-20 is the open Atlantic beyond the mouth of the cove and layer-30 is the sheltered water inside it, which is what Peggy's Cove is: a notch of calm water inside a granite headland, with the ocean on the other side of the rock. The compression is that the two are stacked in one view; the sheet records it rather than leaving it to be found.",
+        "The composite is the level's traversal picture and it is where the player spends the whole level. It is never asked for a place."
+      ]
+    },
+    {
+      "id": "paddlewheel-riverboat",
+      "subject": "A Yukon River sternwheeler: a long, low, white, three-deck river freighter with a large ochre paddlewheel at the stern, four tall black hog posts and their truss rods, one tall ochre smokestack and a small white pilot house forward, standing on a gravel bar.",
+      "renders": [
+        "src/svg/the-north/landmark-sternwheeler@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. `singleSource()`. The file is 920 x 280 and the vessel's keel is its bottom edge, so there is no empty band: it stands on the ground rather than floating like five-sails' pier.",
+      "expectedBlindAnswer": [
+        "a sternwheeler",
+        "a stern-wheeler",
+        "a stern wheeler",
+        "a paddle steamer",
+        "a paddlewheel steamer",
+        "a paddle-steamer",
+        "a riverboat",
+        "a river steamer",
+        "a paddle boat",
+        "a steamboat"
+      ],
+      "expectedBlindAnswerNote": [
+        "A TYPE, NOT A PLACE, AND THAT IS THE FINDING RATHER THAN THE DESIGN. This is a specific, cited, existing",
+        "National Historic Site vessel, and it is asked only for what it is. The reason is the reason the prairie",
+        "grain elevator ships blank: the vessel carries its OWN NAME in large black letters across the bow and",
+        "again across the pilot house in every one of the five references, that name is the single most",
+        "identifying thing in those photographs, and make verify-art refuses a text element in a render source.",
+        "So it ships nameless, and a verifier cannot be asked for a name that is not drawn.",
+        "THE CONSEQUENCE IS STATED IN FULL: the North as a PLACE rests on nothing in this level's art. That is",
+        "the third region in a row to land there - prairie-rail and alberta-foothills are the first two - and it",
+        "is OQ-SPINE-6's finding confirmed a third time rather than a new surprise. The level's answer to `where`",
+        "is its territorial statement, its title and its question bank, none of which is a picture.",
+        "WHAT THIS RENDER DOES CLAIM is that a paddle steamer is unmistakable as a paddle steamer: a stern wheel",
+        "1.8 hull depths across, hog posts taller than the funnel, and a hull 9.7 hull depths long are a shape",
+        "nothing else in this game will draw. A verifier who cannot name the TYPE is reporting a defect."
+      ],
+      "referenceFiles": [
+        "the-north/sternwheeler-broadside.jpg",
+        "the-north/sternwheeler-stern-quarter.jpg",
+        "the-north/sternwheeler-paddlewheel.jpg",
+        "the-north/sternwheeler-bow.jpg",
+        "the-north/sternwheeler-pilot-house.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the paddlewheel is at the STERN and is 1.8 hull depths across",
+          "why": "A wheel at the side is a different vessel and a small wheel is a toy. The size of this wheel is the identification.",
+          "detail": "MEASURED on refs/the-north/sternwheeler-broadside.jpg with the hull depth - main deck y495 to keel y600 - as the denominator: the wheel spans about 190 px against 105 = 1.80. Drawn 154 across against a hull depth of 86 = 1.79. It is an OPEN wheel - a rim, eight spokes, eight bucket boards and a hub - never a solid disc and never a boxed housing."
+        },
+        {
+          "feature": "four tall black hog posts, taller than the funnel, with truss rods running to the hull ends",
+          "why": "This is what makes it a shallow-draught RIVER boat rather than a coastal steamer, and it is the most graphic thing on the vessel after the wheel.",
+          "detail": "MEASURED: the tallest posts stand about 203 px above the deck against a hull depth of 105 = 1.93, and the funnel reaches 1.81. Drawn 166 against 86 = 1.93. The rods are straight lines from the post heads down to the bow and the stern, drawn OVER the deckhouse because on the vessel they run outboard of it."
+        },
+        {
+          "feature": "one funnel, not two",
+          "why": "Two funnels is the Mississippi showboat this vessel is constantly mistaken for.",
+          "detail": "A single ochre stack with a dark cap, aft of the pilot house, in the `wood` ramp. MEASURED at hsl(26,63%,42%) over the reference's saturated ochre against wood-base's hsl(30,52%,39%)."
+        },
+        {
+          "feature": "a long, low, white hull carrying two rows of openings",
+          "detail": "MEASURED: the whole vessel is about 9.7 hull depths long. A row of small square windows high on the hull and a row of larger freight ports below it, both in the `slate` ramp. The hull is `white`; no outline, per art-bible section 3."
+        },
+        {
+          "feature": "three white decks stepping inward, with a small pilot house highest and FORWARD",
+          "detail": "Main deck house, a shorter saloon deck inset from it, then the pilot house near the bow with a dark roof cap and a short mast. Each deck edge carries a flat ao-shadow band at 0.18 so the stack of white on white separates; the first build had none and the decks merged."
+        }
+      ],
+      "simplifyAway": [
+        "every stanchion, davit, ladder, capstan, hatch and ventilator on three decks",
+        "the wheel's individual bucket fastenings, its cranks, its pitman arms and its shaft bearings",
+        "the rigging beyond four truss rods and two stays: the references carry several dozen wires",
+        "the cradle, the chocks and the dry berth the vessel actually stands in",
+        "the draught marks on the bow and the trim scale on the stern"
+      ],
+      "neverAdd": [
+        "any lettering, name board, number or draught mark. The vessel carries its own name twice in every reference and this project draws no text anywhere",
+        "a second funnel, a side wheel, a bowsprit or a gilded pilot-house crown: this is a working freighter, not a showboat",
+        "smoke, steam or a wake: the vessel is on land and nothing in this game draws particles into a render source",
+        "a flag: one flies on a POLE ON THE SHORE in the primary reference and it is not part of the vessel",
+        "an inuksuk or a totem pole, in any form, including background, silhouette and icon (docs/content-review.md 5.2)",
+        "a qamutiik, a dogsled, a dog team, a kayak or a canoe, as scenery, as cargo or as anything else (docs/content-review.md 5.4, OQ-REVIEW-10)",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. See assets/style/the-north-level.md section 0"
+      ],
+      "notes": [
+        "LICENCE FIRST. The Commons API was queried before anything was downloaded and returned CC0, CC BY 2.0 and CC BY 3.0 files of the broadside, the stern quarter, the wheel, the bow and the pilot house. Nine files were taken for this level: two CC0, one CC BY 3.0 and six CC BY 2.0. No ShareAlike file was used (ADR-0004).",
+        "THIS LEVEL DEPICTS NO NATION AND NO PERSON, and its territorial fact is quoted from the published words of the one nation it names. The Tier 3 obligation that leaves open is written as a dated obligation in assets/style/the-north-level.md section 0."
+      ]
+    },
+    {
+      "id": "northern-river-bar",
+      "subject": "A pale glacier-fed river running between a wall of black spruce on a tan cut bank and a near cobble bar carrying driftwood, willow and sedge.",
+      "renders": [
+        "src/svg/the-north/layer-30-far-bank.svg",
+        "src/svg/the-north/layer-40-river-and-bar.svg"
+      ],
+      "renderRecipe": "Composite the two, the bar drawn OVER the far bank, which is the order the level uses. The bar tile's top edge is 140 px BELOW the far-bank tile's top edge (world y 960 against 820): `twoParallaxTiles({ farMatch: 'bank', nearMatch: 'bar', nearTop: 140 })`. Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1760 and 1920). The composite is 460 rows: the far bank occupies 0..150 and the bar 140..460, overlapping by 10. THE SEAM CLOSES TO THE PIXEL: the bar tile is opaque from its own top edge, because its top rows are water, which is the same property that closes vancouver-seawall's seam and for the same reason.",
+      "expectedBlindAnswer": [
+        "a boreal river",
+        "a northern river",
+        "a taiga river",
+        "a subarctic river",
+        "a glacial river",
+        "a river through spruce forest",
+        "a spruce forest above a river",
+        "a gravel bar on a river",
+        "a river bar",
+        "a river in the boreal forest",
+        "a river through conifer forest"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. Both tiles repeat - 1760 and 1920 - so neither may carry anything recognisable: the",
+        "spruce, the aspen, the cut bank, the driftwood, the willow and the cobbles are all types. A verifier who",
+        "names a place from these two tiles is reporting a defect.",
+        "EVERY ACCEPTED PHRASE NAMES THE RIVER, and most of them name the forest as well. That is the line this",
+        "list draws rather than a preference: without the river this is a gravel pit, and `a rocky shore` and `a",
+        "granite shore` are accepted answers of peggys-cove-barrens, whose picture is bare rock and tide pools",
+        "with no running water in it. A list that accepted both would stop being able to tell the two apart.",
+        "WHAT THE PLACE RESTS ON: nothing. `paddlewheel-riverboat` is asked for a TYPE and never for a place, and",
+        "the reason is in its own note. This level's picture answers `what is this` and not `where is this`."
+      ],
+      "referenceFiles": [
+        "the-north/yukon-river-canyon.jpg",
+        "the-north/yukon-river-and-spruce.jpg",
+        "the-north/yukon-river-bluff-and-aspen.jpg",
+        "the-north/yukon-river-valley.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the water is PALE, desaturated and green-cyan, not blue",
+          "why": "A glacier-fed river carrying rock flour is the one colour that separates this river from the four other waters in this game, and it is why this level added the only new ramp of the day.",
+          "detail": "MEASURED on refs/the-north/yukon-river-canyon.jpg: 500x150 of mid-channel at (700,620) has median hsl(176,30%,75%) and 400x110 of near water at (200,760) has median hsl(169,23%,59%). Drawn in the `glacier` ramp, whose base is hsl(172,30%,62%). Three flat tones and straight ripple bars, never a gradient (ADR-0011)."
+        },
+        {
+          "feature": "a WALL of black spruce, narrow and spired, cropped by the tile's own top edge",
+          "detail": "Narrow triangles of varying height packed shoulder to shoulder, `pine-base` on the lit left face and `pine-shade` on the right, over an opaque `pine-shade` band. Never rounded broadleaf crowns: a boreal spruce is a spire, and a forest of round trees is a different biome."
+        },
+        {
+          "feature": "the first gold of autumn in the aspen and willow, and only there",
+          "why": "It is what puts the picture in the sub-Arctic in August rather than anywhere in Canada in July, and spread any wider it would turn the boreal forest deciduous.",
+          "detail": "Small `brass` crowns tucked among the spruce and one or two lobes on a willow mound. MEASURED at hsl(44,34%,49%) on refs/the-north/yukon-river-bluff-and-aspen.jpg against brass-base's hsl(44,69%,50%); that photograph carries its own fog bank, which is where the saturation went."
+        },
+        {
+          "feature": "a tan cut bank between the forest and the water",
+          "detail": "A `stone` band with vertical gully streaks and a lit crest, and a dark shadow line at the waterline. MEASURED at hsl(43,23%,45%) against stone-base's hsl(36,37%,58%), which is the widest gap that ramp is asked to carry and is recorded in palette.json."
+        },
+        {
+          "feature": "a cobble bar, with driftwood lying on it",
+          "why": "It is the surface the player walks on, and driftwood is what says river rather than beach.",
+          "detail": "Flat `path` cobbles getting larger toward the viewer, four bleached driftwood logs each on a flat ao-shadow ellipse at 0.28, willow mounds built from overlapping lobes and clusters of sedge blades. Never sand and never a single flat tone."
+        }
+      ],
+      "simplifyAway": [
+        "every needle, branch and trunk: a spruce is a triangle with one lit face",
+        "the surface texture, foam, standing waves and reflections on the water",
+        "the individual stones of the bank beyond a rhythm of cobbles",
+        "the willow's leaves and stems: a mound of lobes",
+        "the far bank's individual trees beyond the tile's own top edge, which crops them"
+      ],
+      "neverAdd": [
+        "any recognisable building, vessel or structure on either tile. Both repeat, and the hero is the only non-repeating render on this level",
+        "a suspension bridge. One stands in the primary river reference, a hundred metres out of frame of what this level draws, and vancouver-seawall's neverAdd bans the same shape for the same reason",
+        "an inuksuk or a totem pole, in any form, including background, silhouette and icon (docs/content-review.md 5.2)",
+        "a qamutiik, a dogsled, a dog team, a kayak, a canoe or a fish weir, as scenery or as anything else (docs/content-review.md 5.4, OQ-REVIEW-10)",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. See assets/style/the-north-level.md section 0",
+        "an aurora, a midnight sun or any night sky: this level is a clear morning and a dark level would need its own ramp set and its own key light",
+        "any lettering, sign, marker or cairn of any kind"
+      ],
+      "notes": [
+        "THIS IS WHAT THE LOW PRESET KEEPS, with the sky, so it is the whole picture on most phones. That is why the water is in the near tile rather than in a fifth layer of its own: a level about Canada's regions whose river disappeared at the lowest tier would be a gravel pit."
       ]
     }
   ],

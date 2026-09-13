@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="900" viewBox="0 0 1080 900" shape-rendering="geometricPrecision">
+  <title>Atlantic coast sky over Peggy's Cove: ONE FLAT sky-base field with five rows of stratocumulus ROLLS - lumpy-topped, flat-based cloud bars in regular rows, smaller and closer together toward the horizon. Rolls rather than cumulus, cirrus or cloud banks, because Halifax, the Alberta foothills and the Prairies have taken cumulus, Vancouver has cirrus and Winnipeg and Toronto have banks, and this sky has to be tellable from all six at a glance. MEASURED off refs/peggys-cove/lighthouse-elevation.jpg, which is a rippled stratocumulus deck, and lightened to a bright day because that photograph is fully overcast and refs/peggys-cove/granite-barrens-and-sea.jpg is the weather this level is set in. FLAT, NOT BANDED: at the low preset this level keeps the sky and the granite barrens, and the barrens tile is transparent everywhere above world 1024, so there is no nearer opaque layer anywhere inside this band to hide a band step behind. The flat field IS content/levels/peggys-cove.json theme.sky. World y 0..900. No roll touches x 0 or x 1080, so the desktop side-panel seam is flat sky-base.</title>
+  <rect x="0" y="0" width="1080" height="900" fill="#3d8ccb"/>
+  <rect x="218" y="123.1" width="239" height="34.9" rx="15.4" fill="#dce9f3"/>
+  <ellipse cx="247.9" cy="125.5" rx="61.4" ry="41.4" fill="#dce9f3"/>
+  <ellipse cx="307.6" cy="125.5" rx="67.8" ry="35.9" fill="#dce9f3"/>
+  <ellipse cx="367.4" cy="124.1" rx="71.6" ry="40.9" fill="#dce9f3"/>
+  <ellipse cx="427.1" cy="116.4" rx="71.7" ry="37.1" fill="#dce9f3"/>
+  <ellipse cx="241.7" cy="117.2" rx="56.5" ry="33.1" fill="#fbfdfe"/>
+  <ellipse cx="300.8" cy="118.3" rx="62.4" ry="28.7" fill="#fbfdfe"/>
+  <ellipse cx="360.2" cy="115.9" rx="65.9" ry="32.7" fill="#fbfdfe"/>
+  <ellipse cx="420" cy="108.9" rx="66" ry="29.7" fill="#fbfdfe"/>
+  <rect x="229.9" y="142.6" width="215.1" height="15.4" rx="7.7" fill="#b9cfe2"/>
+  <rect x="613" y="99.5" width="253" height="36.5" rx="16.1" fill="#dce9f3"/>
+  <ellipse cx="644.6" cy="92.5" rx="70" ry="43.1" fill="#dce9f3"/>
+  <ellipse cx="707.9" cy="92.6" rx="63.8" ry="40.2" fill="#dce9f3"/>
+  <ellipse cx="771.1" cy="97.2" rx="72" ry="44.9" fill="#dce9f3"/>
+  <ellipse cx="834.4" cy="95.7" rx="66.9" ry="39.3" fill="#dce9f3"/>
+  <ellipse cx="637.6" cy="83.9" rx="64.4" ry="34.5" fill="#fbfdfe"/>
+  <ellipse cx="701.5" cy="84.5" rx="58.7" ry="32.1" fill="#fbfdfe"/>
+  <ellipse cx="763.9" cy="88.2" rx="66.2" ry="35.9" fill="#fbfdfe"/>
+  <ellipse cx="827.7" cy="87.8" rx="61.6" ry="31.4" fill="#fbfdfe"/>
+  <rect x="625.6" y="119.9" width="227.7" height="16.1" rx="8" fill="#b9cfe2"/>
+  <rect x="38" y="238.1" width="273" height="29.9" rx="13.2" fill="#dce9f3"/>
+  <ellipse cx="72.1" cy="236.5" rx="82.9" ry="31.6" fill="#dce9f3"/>
+  <ellipse cx="140.4" cy="231.8" rx="70.7" ry="39.2" fill="#dce9f3"/>
+  <ellipse cx="208.6" cy="233.8" rx="79.8" ry="34.6" fill="#dce9f3"/>
+  <ellipse cx="276.9" cy="236.2" rx="69.7" ry="37.5" fill="#dce9f3"/>
+  <ellipse cx="63.8" cy="230.2" rx="76.3" ry="25.3" fill="#fbfdfe"/>
+  <ellipse cx="133.3" cy="223.9" rx="65" ry="31.4" fill="#fbfdfe"/>
+  <ellipse cx="200.6" cy="226.9" rx="73.4" ry="27.7" fill="#fbfdfe"/>
+  <ellipse cx="269.9" cy="228.7" rx="64.2" ry="30" fill="#fbfdfe"/>
+  <rect x="51.6" y="254.8" width="245.7" height="13.2" rx="6.6" fill="#b9cfe2"/>
+  <rect x="420" y="236.2" width="227" height="21.8" rx="9.6" fill="#dce9f3"/>
+  <ellipse cx="457.8" cy="236.6" rx="85.8" ry="28.4" fill="#dce9f3"/>
+  <ellipse cx="533.5" cy="233.6" rx="77.1" ry="24.4" fill="#dce9f3"/>
+  <ellipse cx="609.2" cy="234.2" rx="88.1" ry="27.2" fill="#dce9f3"/>
+  <ellipse cx="449.2" cy="230.9" rx="79" ry="22.7" fill="#fbfdfe"/>
+  <ellipse cx="525.8" cy="228.7" rx="71" ry="19.5" fill="#fbfdfe"/>
+  <ellipse cx="600.4" cy="228.7" rx="81.1" ry="21.7" fill="#fbfdfe"/>
+  <rect x="431.4" y="248.4" width="204.3" height="9.6" rx="4.8" fill="#b9cfe2"/>
+  <rect x="779" y="217.2" width="238" height="30.8" rx="13.6" fill="#dce9f3"/>
+  <ellipse cx="808.8" cy="216.6" rx="71.2" ry="33.7" fill="#dce9f3"/>
+  <ellipse cx="868.2" cy="214.9" rx="66.1" ry="33.9" fill="#dce9f3"/>
+  <ellipse cx="927.8" cy="208.8" rx="70" ry="35.7" fill="#dce9f3"/>
+  <ellipse cx="987.2" cy="215.3" rx="63.3" ry="31.9" fill="#dce9f3"/>
+  <ellipse cx="801.6" cy="209.9" rx="65.5" ry="26.9" fill="#fbfdfe"/>
+  <ellipse cx="861.6" cy="208.1" rx="60.8" ry="27.1" fill="#fbfdfe"/>
+  <ellipse cx="920.8" cy="201.6" rx="64.4" ry="28.6" fill="#fbfdfe"/>
+  <ellipse cx="980.9" cy="209" rx="58.2" ry="25.5" fill="#fbfdfe"/>
+  <rect x="790.9" y="234.4" width="214.2" height="13.6" rx="6.8" fill="#b9cfe2"/>
+  <rect x="70" y="344.8" width="205" height="18.2" rx="8" fill="#dce9f3"/>
+  <ellipse cx="104.2" cy="339.3" rx="70.6" ry="23.8" fill="#dce9f3"/>
+  <ellipse cx="172.5" cy="339.7" rx="69.7" ry="19.1" fill="#dce9f3"/>
+  <ellipse cx="240.8" cy="339.4" rx="81.6" ry="18.8" fill="#dce9f3"/>
+  <ellipse cx="97.1" cy="334.6" rx="64.9" ry="19" fill="#fbfdfe"/>
+  <ellipse cx="165.5" cy="335.9" rx="64.1" ry="15.3" fill="#fbfdfe"/>
+  <ellipse cx="232.7" cy="335.7" rx="75" ry="15" fill="#fbfdfe"/>
+  <rect x="80.2" y="355" width="184.5" height="8" rx="4" fill="#b9cfe2"/>
+  <rect x="403" y="355" width="252" height="23" rx="10.1" fill="#dce9f3"/>
+  <ellipse cx="434.5" cy="355.1" rx="68.3" ry="24.9" fill="#dce9f3"/>
+  <ellipse cx="497.5" cy="355.5" rx="71.3" ry="25.2" fill="#dce9f3"/>
+  <ellipse cx="560.5" cy="352.8" rx="67.7" ry="23.1" fill="#dce9f3"/>
+  <ellipse cx="623.5" cy="354.3" rx="68.4" ry="23.1" fill="#dce9f3"/>
+  <ellipse cx="427.7" cy="350.2" rx="62.9" ry="19.9" fill="#fbfdfe"/>
+  <ellipse cx="490.4" cy="350.4" rx="65.6" ry="20.2" fill="#fbfdfe"/>
+  <ellipse cx="553.7" cy="348.2" rx="62.3" ry="18.5" fill="#fbfdfe"/>
+  <ellipse cx="616.7" cy="349.7" rx="62.9" ry="18.5" fill="#fbfdfe"/>
+  <rect x="415.6" y="367.9" width="226.8" height="10.1" rx="5.1" fill="#b9cfe2"/>
+  <rect x="778" y="352.9" width="240" height="24.1" rx="10.6" fill="#dce9f3"/>
+  <ellipse cx="808" cy="350.5" rx="65.6" ry="27.9" fill="#dce9f3"/>
+  <ellipse cx="868" cy="354.2" rx="61.8" ry="24" fill="#dce9f3"/>
+  <ellipse cx="928" cy="351" rx="65.6" ry="29.3" fill="#dce9f3"/>
+  <ellipse cx="988" cy="347.6" rx="69.4" ry="27.4" fill="#dce9f3"/>
+  <ellipse cx="801.4" cy="344.9" rx="60.4" ry="22.3" fill="#fbfdfe"/>
+  <ellipse cx="861.8" cy="349.4" rx="56.9" ry="19.2" fill="#fbfdfe"/>
+  <ellipse cx="921.4" cy="345.1" rx="60.4" ry="23.4" fill="#fbfdfe"/>
+  <ellipse cx="981.1" cy="342.2" rx="63.8" ry="21.9" fill="#fbfdfe"/>
+  <rect x="790" y="366.4" width="216" height="10.6" rx="5.3" fill="#b9cfe2"/>
+  <rect x="66" y="437.5" width="170" height="20.5" rx="9" fill="#dce9f3"/>
+  <ellipse cx="94.3" cy="436.6" rx="59.5" ry="20.1" fill="#dce9f3"/>
+  <ellipse cx="151" cy="438.8" rx="68.1" ry="21.4" fill="#dce9f3"/>
+  <ellipse cx="207.7" cy="438" rx="56.6" ry="23" fill="#dce9f3"/>
+  <ellipse cx="88.4" cy="432.6" rx="54.8" ry="16.1" fill="#fbfdfe"/>
+  <ellipse cx="144.2" cy="434.5" rx="62.7" ry="17.1" fill="#fbfdfe"/>
+  <ellipse cx="202" cy="433.4" rx="52.1" ry="18.4" fill="#fbfdfe"/>
+  <rect x="74.5" y="449" width="153" height="9" rx="4.5" fill="#b9cfe2"/>
+  <rect x="344" y="442.6" width="205" height="19.4" rx="8.5" fill="#dce9f3"/>
+  <ellipse cx="378.2" cy="438.7" rx="75" ry="20.4" fill="#dce9f3"/>
+  <ellipse cx="446.5" cy="439.2" rx="78.1" ry="24.8" fill="#dce9f3"/>
+  <ellipse cx="514.8" cy="444.2" rx="78.8" ry="22.5" fill="#dce9f3"/>
+  <ellipse cx="370.7" cy="434.6" rx="69" ry="16.3" fill="#fbfdfe"/>
+  <ellipse cx="438.7" cy="434.2" rx="71.8" ry="19.9" fill="#fbfdfe"/>
+  <ellipse cx="506.9" cy="439.7" rx="72.5" ry="18" fill="#fbfdfe"/>
+  <rect x="354.2" y="453.5" width="184.5" height="8.5" rx="4.3" fill="#b9cfe2"/>
+  <rect x="628" y="449.9" width="169" height="14.1" rx="6.2" fill="#dce9f3"/>
+  <ellipse cx="656.2" cy="448.2" rx="55.2" ry="18.2" fill="#dce9f3"/>
+  <ellipse cx="712.5" cy="448.5" rx="61.9" ry="15.5" fill="#dce9f3"/>
+  <ellipse cx="768.8" cy="447.2" rx="57.2" ry="18.2" fill="#dce9f3"/>
+  <ellipse cx="650.6" cy="444.6" rx="50.8" ry="14.6" fill="#fbfdfe"/>
+  <ellipse cx="706.3" cy="445.4" rx="57" ry="12.4" fill="#fbfdfe"/>
+  <ellipse cx="763.1" cy="443.6" rx="52.6" ry="14.6" fill="#fbfdfe"/>
+  <rect x="636.5" y="457.8" width="152.1" height="6.2" rx="3.1" fill="#b9cfe2"/>
+  <rect x="883" y="452.9" width="172" height="15.1" rx="6.7" fill="#dce9f3"/>
+  <ellipse cx="911.7" cy="451.3" rx="57.1" ry="14.8" fill="#dce9f3"/>
+  <ellipse cx="969" cy="453.5" rx="66.9" ry="18.8" fill="#dce9f3"/>
+  <ellipse cx="1026.3" cy="451.4" rx="57.9" ry="14.9" fill="#dce9f3"/>
+  <ellipse cx="906" cy="448.3" rx="52.5" ry="11.8" fill="#fbfdfe"/>
+  <ellipse cx="962.3" cy="449.7" rx="61.5" ry="15.1" fill="#fbfdfe"/>
+  <ellipse cx="1020.5" cy="448.4" rx="53.3" ry="11.9" fill="#fbfdfe"/>
+  <rect x="891.6" y="461.3" width="154.8" height="6.7" rx="3.3" fill="#b9cfe2"/>
+  <rect x="209" y="527.4" width="122" height="11.6" rx="5.1" fill="#dce9f3"/>
+  <ellipse cx="229.3" cy="525.1" rx="44.3" ry="12.5" fill="#dce9f3"/>
+  <ellipse cx="270" cy="526.8" rx="44.6" ry="13.3" fill="#dce9f3"/>
+  <ellipse cx="310.7" cy="524.8" rx="48.8" ry="12.2" fill="#dce9f3"/>
+  <ellipse cx="224.9" cy="522.6" rx="40.7" ry="10" fill="#fbfdfe"/>
+  <ellipse cx="265.5" cy="524.2" rx="41.1" ry="10.6" fill="#fbfdfe"/>
+  <ellipse cx="305.8" cy="522.4" rx="44.9" ry="9.7" fill="#fbfdfe"/>
+  <rect x="215.1" y="533.9" width="109.8" height="5.1" rx="2.6" fill="#b9cfe2"/>
+  <rect x="419" y="539.8" width="158" height="14.2" rx="6.2" fill="#dce9f3"/>
+  <ellipse cx="445.3" cy="540.9" rx="54.5" ry="18.2" fill="#dce9f3"/>
+  <ellipse cx="498" cy="537.9" rx="58.9" ry="14.3" fill="#dce9f3"/>
+  <ellipse cx="550.7" cy="540" rx="53.4" ry="15" fill="#dce9f3"/>
+  <ellipse cx="439.9" cy="537.2" rx="50.2" ry="14.5" fill="#fbfdfe"/>
+  <ellipse cx="492.1" cy="535" rx="54.2" ry="11.4" fill="#fbfdfe"/>
+  <ellipse cx="545.3" cy="537" rx="49.1" ry="12" fill="#fbfdfe"/>
+  <rect x="426.9" y="547.8" width="142.2" height="6.2" rx="3.1" fill="#b9cfe2"/>
+  <rect x="668" y="544.2" width="169" height="10.8" rx="4.8" fill="#dce9f3"/>
+  <ellipse cx="696.2" cy="544.5" rx="66.6" ry="10.8" fill="#dce9f3"/>
+  <ellipse cx="752.5" cy="541.5" rx="67" ry="12.2" fill="#dce9f3"/>
+  <ellipse cx="808.8" cy="544.6" rx="62.5" ry="11.9" fill="#dce9f3"/>
+  <ellipse cx="689.5" cy="542.3" rx="61.3" ry="8.6" fill="#fbfdfe"/>
+  <ellipse cx="745.8" cy="539.1" rx="61.6" ry="9.8" fill="#fbfdfe"/>
+  <ellipse cx="802.6" cy="542.3" rx="57.5" ry="9.5" fill="#fbfdfe"/>
+  <rect x="676.5" y="550.2" width="152.1" height="4.8" rx="2.4" fill="#b9cfe2"/>
+  <rect x="896" y="534.1" width="114" height="12.9" rx="5.7" fill="#dce9f3"/>
+  <ellipse cx="915" cy="532.8" rx="40" ry="14" fill="#dce9f3"/>
+  <ellipse cx="953" cy="532.8" rx="43" ry="15.1" fill="#dce9f3"/>
+  <ellipse cx="991" cy="531.4" rx="41.7" ry="13.9" fill="#dce9f3"/>
+  <ellipse cx="911" cy="530" rx="36.8" ry="11.2" fill="#fbfdfe"/>
+  <ellipse cx="948.7" cy="529.8" rx="39.6" ry="12.1" fill="#fbfdfe"/>
+  <ellipse cx="986.8" cy="528.7" rx="38.4" ry="11.1" fill="#fbfdfe"/>
+  <rect x="901.7" y="541.3" width="102.6" height="5.7" rx="2.8" fill="#b9cfe2"/>
+</svg>
