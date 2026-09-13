@@ -21,6 +21,15 @@ import { NEXT_LEVEL_PLAY_LABEL, START_LEVEL } from './start-level';
  * `app/bootstrap/quest.ts` refused the offer, wrote a line to the console, and
  * the player walked past a beaver whose only prompt read "Talk to this person".
  *
+ * **The name is no longer a copy row.** ADR-0029 widened a giver from a
+ * character to anything a level places, and moved a character giver's name to
+ * `content/characters/<id>.json#/name` — content, bilingual and schema-validated
+ * — because a lighthouse needs a name too and no `npc.<id>.name` row may be
+ * invented for one (`TN-LEVEL-peggys-cove.md`). `npc.guide.name` and
+ * `npc.officer.name` are deleted, so this file reads the document the game
+ * reads. The relationship asserted is unchanged: the dialog is named by whatever
+ * names the giver, and the prompt never is.
+ *
  * `tests/e2e/level-end-to-next.spec.ts` walks the *other* way a level ends — to
  * the exit line, with no task accepted — and it passed throughout. The two are
  * different routes to the same card and only one of them was broken, which is
@@ -34,7 +43,7 @@ import { NEXT_LEVEL_PLAY_LABEL, START_LEVEL } from './start-level';
  * to be edited when `content/game.config.json` opens somewhere else, and would
  * prove nothing this does not. What is asserted is the **relationship**: the
  * prompt is the row keyed on the giver's id, the dialog is named by the giver's
- * name row, and neither is the generic row for a person.
+ * own document, and neither is the generic row for a person.
  *
  * ## Why it is serial and slow
  *
@@ -82,24 +91,45 @@ const QUEST = JSON.parse(
   readFileSync(`${REPO_ROOT}content/quests/${GIVER_IN_THE_LEVEL.questId ?? ''}.json`, 'utf8'),
 ) as QuestFile;
 
-/** `hud.interact.<id>` and `npc.<id>.name`, the two rows the giver needs. */
+/** `hud.interact.<id>`: the one row a character giver still needs. */
 const PROMPT_KEY = `hud.interact.${QUEST.giver}`;
-const NAME_KEY = `npc.${QUEST.giver}.name`;
 
-for (const key of [PROMPT_KEY, NAME_KEY]) {
-  if (!hasCopyRow(key)) {
+if (!hasCopyRow(PROMPT_KEY)) {
+  throw new Error(
+    `content/quests/${QUEST.id}.json is given by "${QUEST.giver}" and app/ui/copy.ts has ` +
+      `no ${PROMPT_KEY}, so the HUD calls the character "this person". Transcribe the row ` +
+      'from docs/stories/TN-GUIDE-the-guide.md.',
+  );
+}
+
+/**
+ * What the dialog must be called, read from the document ADR-0029 put it in.
+ *
+ * It was `npc.<giver>.name` in `app/ui/copy.ts` until that row was deleted. The
+ * name is the dialog's accessible name and its speaker label (`TN-QUEST-08`), so
+ * a giver this build cannot name is refused outright — which is why this throws
+ * here, with the file that is missing, rather than failing inside a walk.
+ */
+function giverName(giver: string): { readonly en: string; readonly fr: string } {
+  const path = `${REPO_ROOT}content/characters/${giver}.json`;
+  const document = JSON.parse(readFileSync(path, 'utf8')) as {
+    readonly name?: { readonly en?: string; readonly fr?: string };
+  };
+  const en = document.name?.en ?? '';
+  const fr = document.name?.fr ?? '';
+  if (en.trim() === '' || fr.trim() === '') {
     throw new Error(
-      `content/quests/${QUEST.id}.json is given by "${QUEST.giver}" and app/ui/copy.ts has ` +
-        `no ${key}. Without ${NAME_KEY} the offer is refused outright (TN-QUEST-08), and ` +
-        `without ${PROMPT_KEY} the HUD calls the character "this person". Transcribe the ` +
-        'rows from docs/stories/TN-GUIDE-the-guide.md.',
+      `content/characters/${giver}.json names the giver of a shipped quest in neither or ` +
+        'only one language, so the dialog it opens has no accessible name and ' +
+        'app/bootstrap/quest.ts refuses the offer outright (TN-QUEST-08, ADR-0029).',
     );
   }
+  return { en, fr };
 }
 
 const GIVER_PROMPT = text('en', PROMPT_KEY as Parameters<typeof text>[1]);
-const GIVER_NAME = text('en', NAME_KEY as Parameters<typeof text>[1]);
-const GIVER_NAME_FR = text('fr', NAME_KEY as Parameters<typeof text>[1]);
+const GIVER_NAME = giverName(QUEST.giver).en;
+const GIVER_NAME_FR = giverName(QUEST.giver).fr;
 const GIVER_PROMPT_FR = text('fr', PROMPT_KEY as Parameters<typeof text>[1]);
 const STAMP_SENTENCE = text('en', `stamp.${START_LEVEL}.earned` as Parameters<typeof text>[1]);
 
@@ -130,6 +160,38 @@ async function walkUntilSomethingIsInReach(page: Page, tries = 140): Promise<str
   for (let attempt = 0; attempt < tries; attempt += 1) {
     if (await card.isVisible()) return 'card';
     if (await prompt.isVisible()) return (await prompt.textContent()) ?? '';
+    await page.keyboard.down('ArrowRight');
+    await page.waitForTimeout(150);
+    await page.keyboard.up('ArrowRight');
+  }
+  return null;
+}
+
+/**
+ * Walk right until the HUD offers **this** prompt, passing anything else.
+ *
+ * `walkUntilSomethingIsInReach` stops at the first mark, which is right for the
+ * level the game opens on — Halifax places its giver first — and wrong for a
+ * level that places scenery before its giver. Ottawa places the canal locks at
+ * x 1800 and the officer at x 2400, so a walk that stopped at the first thing
+ * opened a landmark's card and then failed for want of a dialogue, naming the
+ * officer. **The level was right and the walk was short**, which is why this
+ * takes the prompt it is looking for rather than the first one it meets.
+ *
+ * Returns the prompt when it is found, `'card'` when the walk reached the end of
+ * the level instead — a real outcome, not a timeout — and `null` when the walk
+ * ran out.
+ */
+async function walkUntilThePromptReads(
+  page: Page,
+  wanted: string,
+  tries = 200,
+): Promise<string | null> {
+  const prompt = page.getByTestId('interact-prompt');
+  const card = page.getByTestId('quest-complete-card');
+  for (let attempt = 0; attempt < tries; attempt += 1) {
+    if (await card.isVisible()) return 'card';
+    if (await prompt.isVisible() && (await prompt.textContent()) === wanted) return wanted;
     await page.keyboard.down('ArrowRight');
     await page.waitForTimeout(150);
     await page.keyboard.up('ArrowRight');
@@ -278,8 +340,13 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(page.getByTestId('dialogue-accept')).toBeVisible();
     await expect(page.getByTestId('dialogue-decline')).toBeVisible();
 
+    /* The sentence `app/bootstrap/quest.ts` prints when it refuses an offer for
+       want of an accessible name, by the words it uses **now**: the old sentinel
+       was `npc.<id>.name`, and no message contains that since ADR-0029 moved the
+       name into `content/characters/`, so filtering on it would have been a
+       check about nothing. */
     expect(
-      refusals.filter((line) => line.includes('npc.<id>.name')),
+      refusals.filter((line) => line.includes('cannot name it')),
       'the offer was refused for want of a speaker’s name',
     ).toEqual([]);
 
@@ -456,17 +523,35 @@ test.describe('every level that places a quest giver can give its quest', () => 
        * dialogue that opens are different facts — the first was true for the
        * officer while the second was false for everybody else.
        */
-      const nameKey = `npc.${level.giver}.name`;
-      expect(hasCopyRow(nameKey), `${level.quest} is given by "${level.giver}" with no row`)
-        .toBe(true);
-      const name = text('en', nameKey as Parameters<typeof text>[1]);
+      /* The giver's name, from `content/characters/<id>.json#/name` — every
+         level in this list places a *character* with a `questId`, so every one
+         of them has a document there. A landmark giver is named by its level's
+         own `pois[].name` and is walked by
+         `tests/unit/bootstrap/a-landmark-giver-opens-a-dialog.test.ts`. */
+      const name = giverName(level.giver).en;
+
+      /* The giver's own prompt row, which is what says the walk has arrived at
+         the giver rather than at something else this level places. */
+      const promptKey = `hud.interact.${level.giver}`;
+      expect(
+        hasCopyRow(promptKey),
+        `${level.quest} is given by "${level.giver}" and app/ui/copy.ts has no ${promptKey}, ` +
+          'so the HUD calls the character "this person"',
+      ).toBe(true);
+      const giverPrompt = text('en', promptKey as Parameters<typeof text>[1]);
 
       await openLevel(page, '', level.id);
-      const offered = await walkUntilSomethingIsInReach(page);
-      expect(offered, `nothing came into reach in ${level.id}`).not.toBeNull();
+      const offered = await walkUntilThePromptReads(page, giverPrompt);
+      expect(
+        offered,
+        `walking right in ${level.id} never came within reach of "${level.giver}", who gives ` +
+          `${level.quest}. "card" means the walk reached the end of the level first; null ` +
+          'means it ran out of attempts.',
+      ).toBe(giverPrompt);
 
-      /* Whatever came into reach first, the giver is reachable and speaks. The
-         prompt is a verb phrase from the table, never the character's name. */
+      /* The prompt is a verb phrase from the table, never the character's name
+         — which is now `content/characters/<id>.json#/name` and is drawn one
+         press later, as the dialog's accessible name. */
       expect(offered).not.toBe(name);
 
       await page.getByTestId('interact-prompt').click();

@@ -399,18 +399,17 @@ const EN = {
   'quest.noQuestions': 'The questions are not ready right now. Try again later.',
   'quest.done.title': 'Task done!',
   'common.keepPlaying': 'Keep playing',
-  /* docs/stories/TN-LEVEL-ottawa.md — the officer's name, which is what the
-     dialogue is called for a screen reader (`TN-QUEST-08`) and what a player
-     reads above his lines. A character with no row cannot be given an unnamed
-     dialog, so the offer is refused and reported instead. */
-  'npc.officer.name': 'The officer',
-  /* docs/stories/TN-GUIDE-the-guide.md — the same string for the other
-     character, and one row for the three levels it stands on. Named by its role
-     exactly as the officer is: never a proper name, never a species, never a
-     word borrowed from a nation's language (`docs/content-review.md` §3.1).
-     Without this row `app/bootstrap/quest.ts` refuses all three offers, Halifax
-     included, and Halifax is the level `content/game.config.json` opens on. */
-  'npc.guide.name': 'The guide',
+  /* **`npc.officer.name` and `npc.guide.name` were here and are deleted.** They
+     were a quest giver's speaker label — the dialog's accessible name
+     (`TN-QUEST-08`) — written when `content/characters/` was empty. ADR-0029
+     moved that name to `content/characters/<id>.json#/name`, where it is
+     content, bilingual, schema-validated and in the same document as the rig the
+     character plays, and made a landmark giver's name the level's own
+     `pois[].name`. Nothing reads the rows now, and a row nothing reads is one
+     that can quietly start disagreeing with the document that replaced it, so a
+     maintainer editing it edits nothing while believing otherwise. **No
+     `npc.<id>.name` row is written again**: a lighthouse would need one, and
+     `TN-LEVEL-peggys-cove.md` refuses to invent it. */
 
   /* docs/stories/TN-DONE-finishing-a-level.md */
   /* The heading follows **what finished**. A quest completing draws
@@ -496,7 +495,7 @@ const EN = {
      copy string when it is interpolated at runtime, which is exactly how it got
      past a check written against copy tables.
 
-     Three generic rows and one per-target row per target a level writes one for,
+     Four generic rows and one per-target row per target a level writes one for,
      resolved in one order by `app/ui/interact.ts`: **done** beats a level's own
      row, which beats the kind. A target with no row offers no prompt at all —
      never "Interact", never a name, never an empty string.
@@ -505,6 +504,27 @@ const EN = {
      hint that names one input is wrong for the other three, and "choose it" is
      true for a thumb, a keyboard and one switch. */
   'hud.interact.poi': 'Look at this place',
+  /* The fourth generic row, and the only one whose kind word keeps a dot: it is
+     a **kind** and not a target, which is the distinction `OQ-REACH-1` drew when
+     every per-target row was respelled to `hud.interact.<id>`.
+
+     ADR-0029 let a point of interest offer a quest, so Peggy's Point Lighthouse
+     and the Yukon River sternwheeler open a **dialogue with a task in it** and
+     not a card. "Look at this place" promises the card, and this file's founding
+     rule is that the prompt says what pressing does — a prompt that
+     under-promises is the same defect as one that names the target, arriving
+     from the other side. Neither level writes a per-target row, because their
+     own stories forbid the landmark's name inside the HUD (`TN-PEGGYS-01`,
+     `TN-NORTH-01`).
+
+     Not "Talk to this place", which personifies a landmark one screen before
+     ADR-0029 §5's voice rule would have caught it; not "Read what is written
+     here", which promises lettering `make verify-art` refuses to draw; not "Stop
+     here and read", which is the quest tracker's own step prompt said twice.
+     "Task" is the game's own word for a quest (`quest.done.title`), and "here"
+     does the demonstrative's work the other generic rows give to "this place"
+     and "this person". */
+  'hud.interact.poi.offer': 'See what there is to do here',
   'hud.interact.npc': 'Talk to this person',
   'hud.interact.done': 'Done. See this one again',
   'hud.interact.hint': 'A mark shows something to see. Get close to it, then choose it.',
@@ -984,13 +1004,10 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'quest.noQuestions': "Les questions ne sont pas prêtes pour l'instant. Réessayez plus tard.",
   'quest.done.title': 'Mission accomplie!',
   'common.keepPlaying': 'Continuer à jouer',
-  'npc.officer.name': "L'agent",
-  /* « Guide » is epicene — only the article changes — so this row needs no
-     bracketed ending and may never acquire one (`docs/content-review.md` §8.6).
-     The article is masculine because the character is a beaver, « un castor »,
-     and no statement about a person's gender is being made. Never « Le
-     castor »: the label names what the character is for, not what it is. */
-  'npc.guide.name': 'Le guide',
+  /* `npc.officer.name` and `npc.guide.name` were here — see the English table for
+     why both are gone. « L'agent » and « Le guide » are in
+     `content/characters/officer.json` and `content/characters/guide.json`, in
+     both languages, which is where the game reads them. */
 
   'level.complete.title': 'Niveau terminé!',
   'level.complete.none':
@@ -1042,6 +1059,11 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'hud.task': 'Mission',
 
   'hud.interact.poi': 'Regarder ce lieu',
+  /* « Ce qu'il y a à faire » rather than « vos missions » or « les tâches ici »:
+     the phrase names no task the player has not been offered yet and claims no
+     count. Impersonal throughout, so the landmark acquires no voice
+     (ADR-0029 §5). */
+  'hud.interact.poi.offer': "Voir ce qu'il y a à faire ici",
   /* « Cette personne » is feminine whoever it names, so the row is written about
      the person in reach and never about the player: no agreement, no bracketed
      ending (`docs/content-review.md` §8.6). */

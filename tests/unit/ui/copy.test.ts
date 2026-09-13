@@ -442,11 +442,20 @@ describe('the copy table', () => {
     }
   });
 
-  it('carries the four generic interact rows, in both languages', () => {
-    /* `TN-REACH-05`: "a copy table is missing hud.interact.poi, .npc, .done or
-       .hint in either language … the build fails, naming the key and the
-       language". */
-    for (const key of ['hud.interact.poi', 'hud.interact.npc', 'hud.interact.done', 'hud.interact.hint']) {
+  it('carries the five generic interact rows, in both languages', () => {
+    /* `TN-REACH-05`: "a copy table is missing hud.interact.poi,
+       hud.interact.poi.offer, hud.interact.npc, hud.interact.done or .hint in
+       either language … the build fails, naming the key and the language".
+       `poi.offer` joined the list when ADR-0029 let a landmark give a quest, and
+       a level whose giver is a place has **no** fallback to `poi`: without the
+       row the prompt is not drawn at all. */
+    for (const key of [
+      'hud.interact.poi',
+      'hud.interact.poi.offer',
+      'hud.interact.npc',
+      'hud.interact.done',
+      'hud.interact.hint',
+    ]) {
       expect(KEYS, `no ${key}`).toContain(key);
       for (const locale of UI_LOCALES) {
         expect(text(locale, key as Parameters<typeof text>[1]), `${key} (${locale})`).not.toBe('');
@@ -621,40 +630,60 @@ describe('the copy table', () => {
     }
   });
 
-  it('names the guide by its role, and tells a player what talking to it does', () => {
+  it('tells a player what talking to the guide does, without naming it here', () => {
     /*
-     * `docs/stories/TN-GUIDE-the-guide.md`, both rows, literally — the whole of
-     * what unblocked three of the four authored quests.
+     * `docs/stories/TN-GUIDE-the-guide.md`'s prompt row, literally. Without it
+     * the HUD drew the kind row, "Talk to this person", about a beaver.
      *
-     * `npc.guide.name` is the speaker's label and the dialog's accessible name
-     * (`TN-QUEST-08`), and its absence refused every offer the guide makes,
-     * Halifax's included. `hud.interact.guide` is the per-target prompt; without
-     * it the HUD drew the kind row, "Talk to this person", about a beaver.
-     *
-     * The name is a **role**: never a proper name, never a species, and never a
-     * word borrowed from a nation's language or imagery — `docs/content-review.md`
-     * §1 lets no agent grant the review a borrowed name would need, and a role
-     * noun cannot borrow anything.
+     * **The other half of this scenario is deleted with the row it asserted.**
+     * `npc.guide.name` — the speaker's label and the dialog's accessible name
+     * (`TN-QUEST-08`) — is `content/characters/guide.json#/name` since ADR-0029,
+     * where it is content, bilingual and schema-validated, and no copy row
+     * carries it any more. A test kept here would assert a table this game no
+     * longer reads; the assertions that matter moved to
+     * `tests/unit/bootstrap/quest-giver-is-named.test.ts`, which runs the real
+     * resolver over the real documents.
      */
-    expect(text('en', 'npc.guide.name')).toBe('The guide');
-    expect(text('fr', 'npc.guide.name')).toBe('Le guide');
     expect(text('en', 'hud.interact.guide')).toBe('Talk to the guide');
     expect(text('fr', 'hud.interact.guide')).toBe('Parler au guide');
 
     for (const locale of UI_LOCALES) {
-      const name = text(locale, 'npc.guide.name');
-      /* Not the species, not the id, not a placeholder. */
-      for (const wrong of ['beaver', 'castor', 'guide.name', 'Speaker', 'NPC']) {
-        expect(name.toLowerCase().includes(wrong.toLowerCase()), `${locale}: ${name}`).toBe(false);
-      }
-      /* A name is a label, and a prompt is a verb phrase: never the same string. */
-      expect(text(locale, 'hud.interact.guide')).not.toBe(name);
+      /* A prompt is a verb phrase, never a label and never the kind row: "Talk
+         to this person" is what it exists to stop being drawn about a beaver. */
       expect(text(locale, 'hud.interact.guide')).not.toBe(text(locale, 'hud.interact.npc'));
+      for (const wrong of ['beaver', 'castor', 'Speaker', 'NPC']) {
+        const prompt = text(locale, 'hud.interact.guide');
+        expect(prompt.toLowerCase().includes(wrong.toLowerCase()), `${locale}: ${prompt}`).toBe(
+          false,
+        );
+      }
     }
-    /* Epicene, so it needs no bracketed ending and may never acquire one
-       (`docs/content-review.md` §8.6) — checked over the whole table above, and
-       named here because this is the row a reviewer would reach for. */
-    expect(/\(e\)|·e/.test(text('fr', 'npc.guide.name'))).toBe(false);
+  });
+
+  it('offers a place that gives a task a row of its own, in both languages', () => {
+    /*
+     * `TN-REACH`, amended 2026-09-13 for ADR-0029: a landmark can offer a quest,
+     * and pressing it opens a dialogue rather than a card. The three candidates
+     * the story rejected are refused here by name, because each is a different
+     * way of describing a state the screen is not in: "Talk to this place"
+     * personifies a landmark (ADR-0029 §5), "Read what is written here" promises
+     * lettering `make verify-art` refuses to draw, and "Stop here and read" is
+     * the quest tracker's own step prompt said twice.
+     */
+    expect(text('en', 'hud.interact.poi.offer')).toBe('See what there is to do here');
+    expect(text('fr', 'hud.interact.poi.offer')).toBe("Voir ce qu'il y a à faire ici");
+
+    for (const locale of UI_LOCALES) {
+      const row = text(locale, 'hud.interact.poi.offer');
+      expect(row).not.toBe(text(locale, 'hud.interact.poi'));
+      expect(row).not.toBe(text(locale, 'hud.interact.npc'));
+      /* It is a verb phrase, it names nothing, and it personifies nothing. */
+      expect(row.split(' ').length, `${locale}: ${row}`).toBeGreaterThan(1);
+      expect(row.endsWith('.'), `${locale}: ${row}`).toBe(false);
+      for (const wrong of ['talk', 'parler', 'read', 'lire', 'lisez', 'lighthouse', 'phare']) {
+        expect(row.toLowerCase().includes(wrong), `${locale}: ${row}`).toBe(false);
+      }
+    }
   });
 
   it('never names a landmark or states a territorial fact on a waiting screen', () => {

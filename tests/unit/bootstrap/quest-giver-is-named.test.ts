@@ -30,17 +30,22 @@
  * suite runs. The copy row `npc.<id>.name` was never a design: it was written
  * when `content/characters/` was **empty**, and it holds two documents now.
  *
- * Three halves, failing for three different reasons:
+ * Two halves, failing for two different reasons:
  *
  *  1. **the corpus** — every shipped quest's giver resolves against its own
  *     level document and is named in English *and* in French, through the real
  *     resolver, over the real content;
  *  2. **the refusal** — a giver this build cannot name is refused at run time,
  *     loudly, rather than opened in a dialog a screen reader announces as
- *     nothing;
- *  3. **the leftover** — while `npc.<id>.name` rows still exist in
- *     `app/ui/copy.ts`, they must agree with the documents that replaced them,
- *     so a stale row cannot sit there telling a maintainer something untrue.
+ *     nothing.
+ *
+ * There was a third — **the leftover**: while `npc.guide.name` and
+ * `npc.officer.name` still existed in `app/ui/copy.ts`, they had to agree with
+ * the documents that replaced them, so a stale row could not sit there telling a
+ * maintainer something untrue. Both rows are deleted now and the guard went with
+ * them: a check whose subject no longer exists passes for the wrong reason, and
+ * scaffolding kept after the thing it held up is standing is a test nobody can
+ * read the purpose of.
  *
  * The landmark half of the same rule is
  * `tests/unit/bootstrap/a-landmark-giver-opens-a-dialog.test.ts`; the
@@ -62,7 +67,7 @@ import {
   type EngageableResolution,
 } from '../../../app/bootstrap/engageables';
 import { createSettingsStore } from '@ui/settings';
-import { hasCopyRow, text, UI_LOCALES, type UiLocale } from '@ui/copy';
+import { hasCopyRow, UI_LOCALES, type UiLocale } from '@ui/copy';
 import type { QuestDocument } from '@application/ports';
 import type { LocalizedText } from '@domain/entities/values';
 
@@ -214,22 +219,22 @@ describe('every quest this build ships can name whatever offers it', () => {
   });
 });
 
-describe('the copy rows the character documents replaced', () => {
+describe('the documents that name a character, which the copy rows used to', () => {
   /*
-   * `npc.guide.name` and `npc.officer.name` are **no longer read by the
-   * runtime**: ADR-0029's obligation moved a character giver's name to
-   * `content/characters/<id>.json#/name`, which is content, bilingual, schema-
-   * validated and in the same document as the rig the character plays.
+   * `npc.guide.name` and `npc.officer.name` were the speaker's label until
+   * ADR-0029 moved it to `content/characters/<id>.json#/name` — content,
+   * bilingual, schema-validated, and in the same document as the rig the
+   * character plays. Both rows are deleted, and the guard that held them to the
+   * documents while they lingered is deleted with them: it had no subject left.
    *
-   * The rows still exist, because `app/ui/copy.ts` is not this change's to edit,
-   * and a row nothing reads is a row that can quietly start disagreeing with the
-   * document that replaced it — at which point a maintainer editing the row
-   * would be editing nothing while believing otherwise. Until the rows are
-   * deleted, they must agree. Delete this block with them.
+   * What stays is the reader those documents are loaded by, because that is live
+   * code with two rules a reviewer would not guess — what it refuses to call a
+   * character, and what it does with a name it can only half read.
    */
   const documents = readCharacterNames();
 
-  it('has a document for every character the copy table still names', () => {
+  it('reads a character document at all, so nothing below passes vacuously', () => {
+    /* ADR-0024: an empty map makes every loop under it succeed by not running. */
     expect(documents.size, 'content/characters/ named nobody').toBeGreaterThan(0);
   });
 
@@ -266,24 +271,17 @@ describe('the copy rows the character documents replaced', () => {
     expect([...read.keys()]).toEqual(['a']);
   });
 
-  it('says the same thing as the document, in both languages, or is deleted', () => {
-    const drifted: string[] = [];
-    for (const [id, name] of documents) {
-      const key = `npc.${id}.name`;
-      if (!hasCopyRow(key)) continue;
-      for (const locale of UI_LOCALES) {
-        const row = text(locale, key as Parameters<typeof text>[1]);
-        const document = localisedName(name, locale);
-        if (row !== document) {
-          drifted.push(
-            `${key} (${locale}) is "${row}" and content/characters/${id}.json#/name is ` +
-              `"${document}". The document is what the game reads (ADR-0029); the row is a ` +
-              `leftover and should be deleted rather than edited.`,
-          );
-        }
-      }
+  it('is the only place a giver’s name is written, now that the rows are gone', () => {
+    /*
+     * The guard that used to stand here compared `npc.<id>.name` against the
+     * document while both existed. The rows are deleted, so what is worth
+     * asserting is that they stay deleted: a new `npc.<id>.name` row would be a
+     * second home for a string that has one, and `TN-LEVEL-peggys-cove.md`
+     * refuses to invent one even for the landmark giver that would need it.
+     */
+    for (const id of [...documents.keys(), 'peggys-point-light', 'yukon-river-sternwheeler']) {
+      expect(hasCopyRow(`npc.${id}.name`), `npc.${id}.name is back in app/ui/copy.ts`).toBe(false);
     }
-    expect(drifted, drifted.join('\n')).toEqual([]);
   });
 });
 

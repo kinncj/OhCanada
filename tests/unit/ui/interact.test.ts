@@ -106,11 +106,81 @@ describe('what the prompt says', () => {
       expect(interactPrompt(locale, { id: 'guide', kind: 'npc' })).not.toBe(
         text(locale, 'hud.interact.npc'),
       );
-      /* A name is not a verb phrase: the prompt is never the speaker's label. */
-      expect(interactPrompt(locale, { id: 'guide', kind: 'npc' })).not.toBe(
-        text(locale, 'npc.guide.name'),
+    }
+    /* A name is not a verb phrase: the prompt is never the speaker's label. The
+       label used to be the `npc.guide.name` copy row and is
+       `content/characters/guide.json#/name` since ADR-0029, so it is written out
+       here rather than read from a table this module no longer has. */
+    for (const name of ['The guide', 'Le guide']) {
+      for (const locale of UI_LOCALES) {
+        expect(interactPrompt(locale, { id: 'guide', kind: 'npc' })).not.toBe(name);
+      }
+    }
+  });
+
+  it('says what pressing does for a place that offers this level’s quest', () => {
+    /*
+     * `TN-REACH-02`, the scenario ADR-0029 added: a landmark that gives a quest
+     * opens a **dialogue with a task in it**, so "Look at this place" promises
+     * the wrong thing. Neither of the two levels this happens on writes a
+     * per-target row — their own stories forbid the landmark's name in the HUD —
+     * so the generic row is what is drawn, and it has to be the right one.
+     */
+    const light = { id: 'peggys-point-light', kind: 'poi' as const, offersQuest: true };
+    expect(interactPrompt('en', light)).toBe('See what there is to do here');
+    expect(interactPrompt('fr', light)).toBe("Voir ce qu'il y a à faire ici");
+
+    for (const locale of UI_LOCALES) {
+      const prompt = interactPrompt(locale, light) ?? '';
+      /* Not the row for a place that only opens a card, and never the row for a
+         person: a lighthouse read as "Talk to this person" is the defect that
+         had just been removed from the composition root. */
+      expect(prompt).not.toBe(text(locale, 'hud.interact.poi'));
+      expect(prompt).not.toBe(text(locale, 'hud.interact.npc'));
+      /* It names nothing, personifies nothing and claims no lettering. */
+      expect(prompt.toLowerCase()).not.toContain('peggy');
+      for (const word of ['talk', 'read', 'parler', 'lire', 'lisez']) {
+        expect(prompt.toLowerCase().includes(word), `${locale}: ${prompt}`).toBe(false);
+      }
+    }
+  });
+
+  it('offers nothing different to a person who has a task, or to a place without one', () => {
+    /*
+     * The two halves of the precedence that must **not** move. A person's prompt
+     * already says what pressing does whether or not they have something to
+     * give, so `offersQuest` is not read for a character at all; and a place
+     * that offers nothing still says "Look at this place".
+     */
+    for (const locale of UI_LOCALES) {
+      expect(interactPrompt(locale, { id: 'archivist', kind: 'npc', offersQuest: true })).toBe(
+        text(locale, 'hud.interact.npc'),
+      );
+      expect(interactPrompt(locale, { id: 'cn-tower', kind: 'poi', offersQuest: false })).toBe(
+        text(locale, 'hud.interact.poi'),
+      );
+      expect(interactPrompt(locale, { id: 'cn-tower', kind: 'poi' })).toBe(
+        text(locale, 'hud.interact.poi'),
       );
     }
+  });
+
+  it('lets the target’s own row and "done" both beat the offer', () => {
+    /*
+     * Rules 1 and 2 are unchanged by the new case, and the order is what decides
+     * the two places they overlap: a level that writes a row for a landmark that
+     * gives a quest draws that row, and a task already finished says so rather
+     * than inviting the player to a task that is over (`TN-REACH-03`).
+     */
+    expect(
+      interactPrompt('en', { id: 'parliament-hill', kind: 'poi', offersQuest: true }),
+    ).toBe('Look at Parliament Hill');
+    expect(
+      interactPrompt('en', { id: 'peggys-point-light', kind: 'poi', offersQuest: true, done: true }),
+    ).toBe('Done. See this one again');
+    expect(
+      interactPrompt('fr', { id: 'peggys-point-light', kind: 'poi', offersQuest: true, done: true }),
+    ).toBe('Terminé. Revoir');
   });
 
   it('lets done beat the level’s own row and the kind', () => {

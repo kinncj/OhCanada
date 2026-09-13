@@ -30,8 +30,29 @@
  *     they have finished with walks back for nothing.
  *  2. **The level wrote a row for this target** → `hud.interact.<id>`, keyed on
  *     the id the level document gives it. Ottawa writes two.
- *  3. **Otherwise, by kind** → `hud.interact.npc` for a person,
- *     `hud.interact.poi` for a place.
+ *  3. **Otherwise, by kind** → `hud.interact.npc` for a person;
+ *     `hud.interact.poi.offer` for a place that offers this level's quest;
+ *     `hud.interact.poi` for any other place.
+ *
+ * ## Why a place that offers a quest has a row of its own
+ *
+ * ADR-0029 let a point of interest be a quest giver, so choosing Peggy's Point
+ * Lighthouse opens a **dialogue with a task in it** rather than a card. "Look at
+ * this place" is then the wrong promise, and a prompt that under-promises what
+ * pressing does is this file's defect arriving from the other side.
+ *
+ * Two things the flag deliberately does **not** do, both of them defects that
+ * were live in the composition root the day before this row existed:
+ *
+ *  - **It does not change the target's kind.** A place that offers something is
+ *    still a place. `promptTargets` used to answer `canEngage(poi.id) ? 'npc' :
+ *    'poi'`, so a lighthouse offered "Talk to this person" on a level whose art
+ *    document forbids a figure at any scale precisely so nobody is read as being
+ *    there — and it also broke the `poi.<id>` spelling the scene sends.
+ *  - **It says nothing about a person.** A character who offers a quest draws no
+ *    new row: "Talk to the officer" already says what pressing does, because
+ *    talking is what a person does whether or not they have a task
+ *    (`TN-REACH-02`).
  *
  * DOM only, and in fact no DOM at all: every function here is pure, so the rule
  * is assertable without a browser and the HUD cannot hold a second copy of it.
@@ -55,6 +76,15 @@ export interface ReachableTarget {
   readonly kind: InteractKind;
   /** Engaged already in this sitting. `TN-REACH-03`: this beats everything. */
   readonly done?: boolean;
+  /**
+   * Choosing this target opens a dialogue with a task in it: it is this level's
+   * quest giver (ADR-0029).
+   *
+   * Read **only for a place**, and only when no row was written for the target
+   * itself. It picks a different generic row; it never makes a place a person.
+   * Absent means "no", which is what every landmark that opens a card is.
+   */
+  readonly offersQuest?: boolean;
 }
 
 /**
@@ -91,7 +121,19 @@ export function interactPrompt(locale: UiLocale, target: ReachableTarget): strin
   const own = `hud.interact.${bareTargetId(target.id)}`;
   if (hasCopyRow(own)) return text(locale, own);
 
-  const generic = `hud.interact.${target.kind}`;
+  /*
+   * The kind, and the one case where a kind has two rows.
+   *
+   * `poi.offer` is asked for **only** when this build wrote it: `TN-REACH-05`
+   * requires a missing generic row to fail the build and says the prompt is
+   * "never drawn as 'Look at this place' in its place", so there is no fallback
+   * from the offer row to the plain one. A place whose offer row is missing
+   * offers no prompt at all, exactly as any other missing row does — a HUD that
+   * quietly substitutes a weaker promise is how nobody finds out the row is
+   * gone.
+   */
+  const offering = target.kind === 'poi' && target.offersQuest === true;
+  const generic = offering ? 'hud.interact.poi.offer' : `hud.interact.${target.kind}`;
   return hasCopyRow(generic) ? text(locale, generic) : null;
 }
 
