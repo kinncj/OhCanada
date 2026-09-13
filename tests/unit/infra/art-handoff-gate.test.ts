@@ -39,6 +39,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  statSync,
   symlinkSync,
   writeFileSync,
 } from 'node:fs';
@@ -296,6 +297,13 @@ const artOf = (root: string, rels: readonly string[]) => {
  * reads the keymap can use it. Cases that are about the ladder itself must not.
  */
 const CHEAP = ['--variants', '1', '--no-ladder'] as const;
+
+/**
+ * The harness's own name for the length padding, spelled once. Not imported: the
+ * module is an .mjs build script that these cases drive as a PROCESS, and a type
+ * for one four-character string is not worth making it importable for.
+ */
+const PAD_CHUNK = 'paDx';
 
 const handoff = (root: string, extra: readonly string[] = [], seed: string | null = 'test-seed') => {
   const out = scratch('out');
@@ -1178,41 +1186,169 @@ describe('the anonymisation', () => {
     ).toContain("inside the identifier's working directory");
   });
 
-  it('is unlinkable across runs: the same picture gets a different name AND a different size', () => {
-    // The second real run was caught relinking by FILE SIZE. Content addressing
-    // had unlinked the names and byte length quietly put the mapping back: the
-    // same picture encodes to the same number of bytes every time, so a run whose
-    // mapping was once revealed hands it to every later run. Both halves are
-    // asserted here, because fixing only the name fixes only half.
+  /**
+   * WHAT THIS USED TO ASSERT, AND WHY EXACT EQUALITY WAS THE WRONG QUESTION.
+   *
+   * It used to say: the same picture must get a different name AND a different
+   * BYTE LENGTH in the next run. The name half is right and is still here. The
+   * length half asserted a property the mechanism did not have and could not be
+   * given, and it failed deterministically on both pinned seeds once the
+   * contract reached 113 comparable renders:
+   *
+   *   - the pad was `Math.floor(rng() * 4096)` zero bytes, so two runs agree on
+   *     one render's length with probability 1/4096 each, about 2.7% per seed
+   *     pair at 113 renders. An assertion that it NEVER happens is a coin that
+   *     had been landing heads, not a property; and the odds only get worse as
+   *     the game gains subjects.
+   *   - and the case it forbade is the HARMLESS one. An identifier holding one
+   *     length that matches cannot tell which of 113 renders it belongs to. What
+   *     relinks a picture is SEPARATION: nobody else's possible length is near
+   *     enough to be confused with it. Measured on the jittered pad, 5 of 113
+   *     renders (4.4%) had exactly one candidate in the other run -- relinked
+   *     with certainty, out of `ls -l` -- and picking the nearest size was right
+   *     14.2% of the time against 0.8% by chance. The channel the pad existed to
+   *     close was open on every render more than 4 KB from its neighbour.
+   *
+   * So the mechanism changed and this follows it. Every render in a run is now
+   * padded to ONE length, exactly as every render is composited onto one canvas
+   * two describes up. The property is stated below as the attack: after the
+   * hand-off, the set of renders a given length could belong to is the WHOLE
+   * RUN, in both runs, for every render.
+   */
+  describe('is unlinkable across runs', () => {
     const a = readKeymap(handoff(REPO, ['--variants', '1'], 'run-a').keymapPath);
     const b = readKeymap(handoff(REPO, ['--variants', '1'], 'run-b').keymapPath);
 
-    type Entry = { render: string; bytes: number; subjectId: string; probe: string };
-    const key = (e: Entry): string => `${e.subjectId}::${e.probe}`;
-    // Joined on subject and probe rather than on content hash: the padding means
-    // the same picture no longer HAS the same hash across runs, which is the
-    // property under test.
-    const byKey = new Map<string, Entry>((a.entries as Entry[]).map((e) => [key(e), e]));
-
-    let compared = 0;
-    for (const entry of b.entries as Entry[]) {
-      // Character figures draw different skin and hair each run, so they are not
-      // the same picture and prove nothing here.
-      if (entry.subjectId === 'officer') continue;
-      const other = byKey.get(key(entry));
-      if (!other) continue;
-      compared += 1;
-      expect(entry.render, 'same picture, same opaque name across two runs').not.toBe(other.render);
-      expect(entry.bytes, 'same picture, same byte length across two runs').not.toBe(other.bytes);
+    interface Entry {
+      render: string;
+      bytes: number;
+      subjectId: string;
+      probe: string;
     }
-    expect(compared, 'nothing comparable across the two runs').toBeGreaterThan(2);
+    const key = (e: Entry): string => `${e.subjectId}::${e.probe}`;
+    const entriesOf = (keymap: unknown): Entry[] => (keymap as { entries: Entry[] }).entries;
+
+    /**
+     * The same picture in both runs, joined on subject and probe rather than on
+     * content hash - the pad means the same picture no longer HAS the same hash
+     * across runs, which is the property under test. Character figures draw
+     * different skin and hair each run, so they are not the same picture and
+     * prove nothing here.
+     */
+    const pairs = ((): { a: Entry; b: Entry }[] => {
+      const byKey = new Map(entriesOf(a).map((e) => [key(e), e]));
+      const out: { a: Entry; b: Entry }[] = [];
+      for (const entry of entriesOf(b)) {
+        if (entry.subjectId === 'officer') continue;
+        const other = byKey.get(key(entry));
+        if (other) out.push({ a: other, b: entry });
+      }
+      return out;
+    })();
+
+    it('compares enough renders to be worth believing', () => {
+      // ADR-0024. Every case below is a loop, and a loop over nothing passes.
+      // The floor is stated once, here, so that a hand-off which stopped
+      // building renders fails LOUDLY instead of going quietly green.
+      expect(pairs.length, 'nothing comparable across the two runs').toBeGreaterThan(2);
+      expect(entriesOf(a).length).toBeGreaterThan(2);
+      expect(entriesOf(b).length).toBeGreaterThan(2);
+    });
+
+    it('gives the same picture a different opaque name in the next run', () => {
+      // The salt half, unchanged. A bare content hash would be stable, so an
+      // identifier that once saw the mapping could recover it next time.
+      for (const pair of pairs) {
+        expect(pair.b.render, 'same picture, same opaque name across two runs').not.toBe(
+          pair.a.render,
+        );
+      }
+    });
+
+    it('hands every render over at one byte length, so size partitions nothing', () => {
+      // The constant, in the keymap and on the disk, both runs. Stated as a set
+      // rather than as "all equal to the first" so the failure message says how
+      // many lengths there are.
+      for (const [name, keymap] of [
+        ['run-a', a],
+        ['run-b', b],
+      ] as const) {
+        const lengths = new Set(entriesOf(keymap).map((e) => e.bytes));
+        expect(
+          lengths.size,
+          `${name} hands over ${String(lengths.size)} distinct byte lengths`,
+        ).toBe(1);
+      }
+      const onDisk = new Set(
+        readdirSync(built.handoffDir)
+          .filter((n) => n.endsWith('.png'))
+          .map((n) => statSync(join(built.handoffDir, n)).size),
+      );
+      expect(onDisk.size, 'the keymap and the directory disagree about file size').toBe(1);
+    });
+
+    it('leaves every render with the whole run as its anonymity set', () => {
+      /*
+       * THE ATTACK, RUN. For each picture in run b, how many renders of run a
+       * could its file length belong to? One means relinked with certainty.
+       * Under the old jittered pad this was 1 for five of these renders and had
+       * a median of 24; the assertion is that it is now the size of the run for
+       * every single one, which is the same as saying length says nothing.
+       */
+      const aLengths = entriesOf(a).map((e) => e.bytes);
+      const candidates = pairs.map((pair) => aLengths.filter((n) => n === pair.b.bytes).length);
+      expect(Math.min(...candidates), 'a render is relinked across runs by its size').toBe(
+        aLengths.length,
+      );
+    });
+
+    it('does not relink by nearest size either, because there is no nearest', () => {
+      /*
+       * The weaker attack the old assertion could not see: never mind an exact
+       * match, GUESS the closest length. That was right 14.2% of the time
+       * against 0.8% by chance. With one length in the run there is no closest,
+       * so the guess is a coin toss over the whole set - asserted as "every
+       * render is tied for nearest", which is the thing that makes it one.
+       */
+      for (const pair of pairs) {
+        const distances = entriesOf(a).map((e) => Math.abs(e.bytes - pair.b.bytes));
+        expect(new Set(distances).size, 'one render is nearer in size than the rest').toBe(1);
+        expect([...new Set(distances)][0]).toBe(0);
+      }
+    });
+  });
+
+  it('leaves every render carrying pad bytes there are some of, not a header and nothing', () => {
+    /*
+     * THE LARGEST RENDER IN THE RUN IS THE ONE AT RISK. Padding everything up to
+     * it means it is padded by the least, and "the least" must not be zero: a
+     * `paDx` of length 0 is a chunk the scanner can SEE and cannot CHECK, since
+     * there are no bytes in it to prove are zeros. One render handed over with
+     * an unverifiable pad is one render the zero-ness rule does not cover, and
+     * which render that is changes with the art.
+     *
+     * Asserted as "at least one byte" rather than against the constant in the
+     * harness, because repeating the constant here would make this pass by
+     * agreeing with the code rather than by checking the property.
+     */
+    const chunk = Buffer.from(PAD_CHUNK);
+    expect(renders.length, 'no render to read a pad out of').toBeGreaterThan(2);
+    for (const name of renders) {
+      const png = readFileSync(join(built.handoffDir, name));
+      const at = png.indexOf(chunk);
+      expect(at, `${name} carries no ${PAD_CHUNK} chunk`).toBeGreaterThan(0);
+      expect(
+        png.readUInt32BE(at - 4),
+        `${name} carries a zero-length pad, which nothing can check`,
+      ).toBeGreaterThan(0);
+    }
   });
 
   it('pads with zeros, so the thing that breaks the size channel cannot itself say anything', () => {
     // The padding is only defensible while it provably carries nothing. The
     // scanner checks it rather than trusting the code that writes it, so this
     // asserts through the scanner.
-    const chunk = Buffer.from('paDx');
+    const chunk = Buffer.from(PAD_CHUNK);
     const path = join(built.handoffDir, renders[0]!);
     const png = readFileSync(path);
     expect(png.includes(chunk), 'no length padding was written').toBe(true);
@@ -1230,6 +1366,70 @@ describe('the anonymisation', () => {
         tokens: [],
       }).join(' '),
     ).toContain('length padding is not all zeros');
+  });
+
+  it('fails when one render is a different length, which is the protocol regressing', () => {
+    /*
+     * THE SENTENCE THE GATE PRINTS, PROVED TO FIRE. `verify-art` says "every
+     * render is length-padded so file size cannot relink it" on every run, and
+     * until the pad became a constant nothing checked it - the claim was true of
+     * the code and false of the property, and a run where it stopped holding
+     * would have printed the same line.
+     *
+     * Planted as the thing that actually happens: a file from ANOTHER run
+     * sitting in this one's directory. Two hand-offs of different art pad to
+     * different lengths, so one copied render is enough to make this run's sizes
+     * say something, and it is the shape the `already holds` refusal further
+     * down exists to prevent from the other direction.
+     */
+    const mine = handoff(fixture('length-mine'), [...CHEAP]);
+    const theirs = handoff(
+      fixture('length-theirs', {
+        sources: { 'src/svg/ottawa/landmark-parliament-hill.svg': svg(760, 520, '#3a6ea5') },
+      }),
+      [...CHEAP],
+    );
+    expect(mine.result.status, mine.result.output).toBe(0);
+    expect(theirs.result.status, theirs.result.output).toBe(0);
+
+    const clean = scanForLeaks({
+      handoffDir: mine.handoffDir,
+      keymapPath: mine.keymapPath,
+      tokens: [],
+    });
+    expect(clean, 'a hand-off must scan clean before the plant proves anything').toEqual([]);
+
+    const alien = readdirSync(theirs.handoffDir).find((n) => n.endsWith('.png'))!;
+    const ours = readdirSync(mine.handoffDir).find((n) => n.endsWith('.png'))!;
+    // Stated, so this case cannot pass because the two runs happened to agree on
+    // a length - which would make the plant invisible and the green meaningless.
+    expect(
+      statSync(join(theirs.handoffDir, alien)).size,
+      'the two runs padded to the same length; this case proves nothing',
+    ).not.toBe(statSync(join(mine.handoffDir, ours)).size);
+    copyFileSync(join(theirs.handoffDir, alien), join(mine.handoffDir, alien));
+
+    const failures = scanForLeaks({
+      handoffDir: mine.handoffDir,
+      keymapPath: mine.keymapPath,
+      tokens: [],
+    }).join(' ');
+    expect(failures).toContain('different byte lengths');
+    expect(failures).toContain('relinks the picture');
+  });
+
+  it('fails on a hand-off with no renders at all, rather than reporting it clean', () => {
+    // ADR-0024. Every check in the scan is a loop over the files it finds, and a
+    // loop over no files reports exactly what a clean run reports. The one thing
+    // a leak scan must never do is go green without having looked at anything.
+    const empty = scratch('empty-handoff');
+    expect(
+      scanForLeaks({
+        handoffDir: empty,
+        keymapPath: join(scratch('empty-key'), 'keymap.json'),
+        tokens: [],
+      }).join(' '),
+    ).toContain('holds no renders');
   });
 
   it('refuses to write beside an older hand-off, and clears it only when told to', () => {

@@ -132,26 +132,88 @@ const LADDER_WIDTHS = [300, 140];
 const OPAQUE_NAME = /^[0-9a-f]{16}\.png$/;
 
 /**
- * A private ancillary PNG chunk of N ZERO bytes, N drawn from the run salt.
+ * A private ancillary PNG chunk of ZERO bytes, enough of them that EVERY RENDER
+ * IN THE RUN IS EXACTLY THE SAME NUMBER OF BYTES.
  *
- * WHY: on the second real run the verifier found that FILE SIZE relinks what
- * content-addressed naming was meant to unlink. The same picture encodes to the
- * same number of bytes every time, so a run whose mapping was once revealed
- * hands that mapping to every later run, by size alone. The salt renames the
- * file and does nothing about its length.
+ * WHY THERE IS PADDING AT ALL: on the second real run the verifier found that
+ * FILE SIZE relinks what content-addressed naming was meant to unlink. The same
+ * picture encodes to the same number of bytes every time, so a run whose mapping
+ * was once revealed hands that mapping to every later run, by size alone. The
+ * salt renames the file and does nothing about its length.
  *
- * WHY ZEROS: the alternative was to vary the PNG compression level, which gives
- * about fourteen distinct sizes -- a one-in-fourteen chance per render that two
- * runs collide, which is not a property, it is a hope. This gives exact control.
- * And the padding is ALL ZEROS rather than random bytes on purpose: a chunk of
- * zeros provably carries no information, so it cannot become the metadata leak
- * that `scanForLeaks` refuses two functions below. The scanner checks that it is
- * zeros, so "provably" is asserted rather than asserted-in-a-comment.
+ * WHY THE LENGTH IS A CONSTANT AND NOT A RANDOM DRAW, which is what it was until
+ * this was measured. The pad used to be `Math.floor(rng() * 4096)` zero bytes,
+ * and the property claimed for it was "the same picture is a different length in
+ * the next run". That is not the property that matters and it was not even true:
+ *
+ *   - 4096 possible lengths over 113 comparable renders gives a 2.7% chance PER
+ *     SEED PAIR that some render is the same length twice, and the gate asserted
+ *     it never happens. It grew a deterministic failure the day the contract
+ *     reached 113 renders, and it would have grown one eventually whatever the
+ *     range was.
+ *   - and exact equality was the wrong question. Two runs agreeing on one length
+ *     out of 113 is the HARMLESS case: an identifier holding that number cannot
+ *     tell which of the 113 it belongs to. What leaks is SEPARATION. A render is
+ *     relinked when no other render's possible-length interval overlaps its own,
+ *     and the interval was 4096 bytes wide on files of 57 KB to 238 KB.
+ *
+ * Measured on this repository at 118 renders, jittered: 5 of 113 comparable
+ * renders (4.4%) had a UNIQUE candidate across the two seeds -- relinked with
+ * certainty, from `ls -l` -- and guessing by nearest size was right 14.2% of the
+ * time against a 0.8% chance rate, an eighteen-fold lift. The channel the pad
+ * was added to close was open on every render more than 4 KB from its nearest
+ * neighbour, which is most of the biggest ones.
+ *
+ * Widening the jitter is not the fix: making the intervals overlap everywhere
+ * needs a range of about 113 000 000 bytes, a hundred megabytes per render. The
+ * fix is the move this run ALREADY MAKES FOR PIXEL DIMENSIONS one screen down --
+ * every render onto one canvas, so the number is a constant and carries no
+ * information at all. Same argument, same shape: CONSTANTS BEAT JITTER, because
+ * a constant has no distribution to be unlucky in. Every render is padded up to
+ * the largest render in the run, so file length partitions nothing, relinks
+ * nothing across runs, and needs no probability to describe.
+ *
+ * WHAT IT COSTS, stated because it is not free: at 118 renders the hand-off goes
+ * from 9.8 MB to 28.1 MB, and `make verify-art`'s own 128-render build from
+ * 10.6 MB to 30.5 MB -- 2.9x, which is what the largest render is over the mean.
+ * That is zeros in a temporary directory and not payload, and it buys the only
+ * version of this property that IS a property. If it ever has to come down, the
+ * lever is the spread of the encoded sizes, not the pad: nothing narrower than
+ * one length closes the channel for the renders at the ends of the range.
+ *
+ * WHAT IT DOES NOT FIX: the drawing's own extent is still measurable by anyone
+ * who OPENS a render and looks at where the matte stops, exactly as the canvas
+ * comment says. This closes the channel that is readable WITHOUT opening the
+ * file, and no more.
+ *
+ * WHY ZEROS: the padding is all zeros rather than random bytes on purpose -- a
+ * chunk of zeros provably carries no information, so it cannot become the
+ * metadata leak that `scanForLeaks` refuses two functions below. The scanner
+ * checks that it is zeros AND that every render is the same length, so both
+ * halves are asserted rather than asserted-in-a-comment.
  *
  * `paDx`: ancillary (p), private (a), reserved bit clear (D), safe to copy (x).
  * Every decoder skips it; sharp and every browser read the image unchanged.
  */
 export const PAD_CHUNK = 'paDx';
+
+/**
+ * The smallest pad any render carries, on top of the 12-byte chunk header.
+ *
+ * The largest render in the run would otherwise be padded with nothing, and a
+ * zero-length `paDx` is a chunk the scanner can see but cannot check -- there
+ * are no bytes in it to prove are zeros. Cheap insurance that every render in
+ * the hand-off is carrying a pad the scan can actually read.
+ */
+const MIN_PAD = 64;
+
+/**
+ * The one length every render in a run is padded to, from the encoded lengths.
+ *
+ * `+ 12` is the chunk header `padPng` writes around the zeros, so the longest
+ * render still clears its own encoded size by `MIN_PAD` bytes of pad.
+ */
+const uniformByteLength = (encodedLengths) => Math.max(...encodedLengths) + 12 + MIN_PAD;
 
 function padPng(png, length) {
   const body = Buffer.alloc(length); // zeros
@@ -2536,15 +2598,16 @@ const TEXT_CHUNKS = new Set(['tEXt', 'iTXt', 'zTXt']);
  * What a PNG carries besides pixels. Exact; no guessing.
  *
  * `text` is any tEXt/iTXt/zTXt, which is a filename that survived rasterisation
- * and is refused outright. `padNonZero` checks the one chunk this pipeline adds
- * on purpose: the `paDx` length padding that breaks the file-size side channel.
- * The padding is only defensible if it provably carries nothing, so its
- * zero-ness is CHECKED rather than asserted in a comment above the code that
- * writes it.
+ * and is refused outright. `padded` and `padNonZero` check the one chunk this
+ * pipeline adds on purpose: the `paDx` length padding that breaks the file-size
+ * side channel. The padding is only defensible if it is THERE and if it provably
+ * carries nothing, so both are CHECKED rather than asserted in a comment above
+ * the code that writes it.
  */
 function pngChunks(buf) {
   if (!buf.subarray(0, 8).equals(PNG_MAGIC)) return null;
   const text = [];
+  let padded = false;
   let padNonZero = false;
   let at = 8;
   while (at + 8 <= buf.length) {
@@ -2552,6 +2615,7 @@ function pngChunks(buf) {
     const type = buf.toString('ascii', at + 4, at + 8);
     if (TEXT_CHUNKS.has(type)) text.push(type);
     if (type === PAD_CHUNK) {
+      padded = true;
       for (const byte of buf.subarray(at + 8, at + 8 + length)) {
         if (byte !== 0) {
           padNonZero = true;
@@ -2562,7 +2626,7 @@ function pngChunks(buf) {
     if (type === 'IEND') break;
     at += 12 + length;
   }
-  return { text, padNonZero };
+  return { text, padded, padNonZero };
 }
 
 /**
@@ -2600,6 +2664,8 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
   }
 
   const lowered = tokens.map((t) => t.toLowerCase());
+  /** Filled per render below; read after the walk, where the sizes are compared. */
+  const renderLengths = new Map();
 
   for (const path of walk(dir)) {
     const name = basename(path);
@@ -2645,12 +2711,20 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
             `over as pixels; metadata is a filename that survived.`,
         );
       }
+      if (!chunks.padded) {
+        failures.push(
+          `${name}: carries no ${PAD_CHUNK} length padding. Without it the render is handed ` +
+            `over at its natural encoded length, which is the same number in every run and ` +
+            `relinks the picture by file size alone.`,
+        );
+      }
       if (chunks.padNonZero) {
         failures.push(
           `${name}: its ${PAD_CHUNK} length padding is not all zeros. The padding exists ` +
             `to break the file-size side channel and is only harmless while it says nothing.`,
         );
       }
+      renderLengths.set(name, buf.length);
       continue;
     }
 
@@ -2668,6 +2742,47 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
             `\`leakTokens\` for why there is no list of words it declines to look for.`,
         );
       }
+    }
+  }
+
+  /* ---------------------------------------------------------------- *
+   * EVERY RENDER IS THE SAME NUMBER OF BYTES
+   * ---------------------------------------------------------------- */
+  /*
+   * THE SENTENCE THE GATE PRINTS, TURNED INTO A CHECK. `verify-art` has always
+   * said "every render is length-padded so file size cannot relink it" and
+   * nothing here looked. It was not true when it was written: the pad was a
+   * random 0-4096 bytes, so a render more than 4 KB from its nearest neighbour
+   * in encoded size was still relinked across runs by `ls -l`, which measured
+   * out at 5 of 113 with certainty and a 14% hit rate by nearest-size guessing.
+   *
+   * The rule now is one length for the whole run, and this is where a regression
+   * to anything else is caught -- a per-file pad, a pad that gets skipped on one
+   * branch, a second run's file copied in beside this one. Reported as ONE
+   * failure naming the spread rather than one per file, because the interesting
+   * number is how many distinct lengths there are, not which file has which.
+   *
+   * NOT VACUOUS ON A SMALL RUN, and that matters (ADR-0024): a directory with no
+   * renders at all would satisfy "all lengths equal" by holding no lengths, so
+   * the empty case is a failure in its own right. One render passes, correctly:
+   * there is nothing to tell it apart FROM.
+   */
+  if (renderLengths.size === 0) {
+    failures.push(
+      `${dir} holds no renders. An empty hand-off satisfies every check in this scan by ` +
+        `having nothing to check, which is the one way a leak scan can report a clean run ` +
+        `without having looked at anything.`,
+    );
+  } else {
+    const lengths = new Set(renderLengths.values());
+    if (lengths.size > 1) {
+      const sorted = [...lengths].sort((a, b) => a - b);
+      failures.push(
+        `the ${renderLengths.size} renders come in ${lengths.size} different byte lengths ` +
+          `(${sorted[0]} to ${sorted[sorted.length - 1]}). Every render in a hand-off must be ` +
+          `padded to one length: a length that varies is the same number in the next run too, ` +
+          `and it relinks the picture without the identifier opening a single file.`,
+      );
     }
   }
 
@@ -2987,28 +3102,54 @@ export async function buildHandoff({
   const canvasWidth = Math.max(...natural.map((n) => n.width));
   const canvasHeight = Math.max(...natural.map((n) => n.height));
 
+  /* ------------------------------------------------------------------ *
+   * ONE FILE LENGTH FOR THE WHOLE RUN
+   * ------------------------------------------------------------------ */
+  /*
+   * TWO PASSES, AND THE SECOND ONE CANNOT START EARLY. How much the first render
+   * is padded by depends on how long the LAST one encoded to, so everything is
+   * composited and encoded first and nothing is named or written until the
+   * longest is known. See `PAD_CHUNK` for the measurement that replaced a random
+   * pad with a constant one, and for what the constant costs.
+   */
+  const encoded = [];
+  for (const [index, item] of ordered.entries()) {
+    encoded.push(
+      await flatten(
+        canvas(canvasWidth, canvasHeight).composite([
+          {
+            input: item.png,
+            left: Math.floor((canvasWidth - natural[index].width) / 2),
+            top: Math.floor((canvasHeight - natural[index].height) / 2),
+          },
+        ]),
+      ),
+    );
+  }
+  const target = uniformByteLength(encoded.map((png) => png.length));
+
   const entries = [];
   const seen = new Set();
   const readDigest = sourceDigestReader({ assets });
   for (const [index, item] of ordered.entries()) {
-    const uniform = await flatten(
-      canvas(canvasWidth, canvasHeight).composite([
-        {
-          input: item.png,
-          left: Math.floor((canvasWidth - natural[index].width) / 2),
-          top: Math.floor((canvasHeight - natural[index].height) / 2),
-        },
-      ]),
-    );
+    const uniform = encoded[index];
     // Padded BEFORE naming, so the name is the hash of the bytes that are
     // written and the two cannot drift apart.
-    const png = padPng(uniform, Math.floor(rng() * 4096));
+    const png = padPng(uniform, target - uniform.length - 12);
     const meta = await sharp(png).metadata();
     const name = `${createHash('sha256')
       .update(salt)
       .update(png)
       .digest('hex')
       .slice(0, 16)}.png`;
+    /*
+     * AND THIS CHECK ONLY STARTED WORKING WHEN THE PAD BECAME A CONSTANT. Two
+     * identical pictures used to be handed over as two different lengths and
+     * therefore two different names, so the duplicate they are was invisible
+     * here; the jitter that was meant to hide the size channel was hiding this
+     * too. Now identical pixels give identical bytes and identical bytes give
+     * one name, which is the condition this refuses.
+     */
     if (seen.has(name)) {
       failures.push(
         `two renders hashed to the same opaque name (${name}); they are byte-identical ` +
