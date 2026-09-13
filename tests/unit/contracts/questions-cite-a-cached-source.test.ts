@@ -73,6 +73,19 @@
  * the link between a flag and the questions under it; noticing that a source has
  * gone stale in a region nobody flagged is the verifier's judgement against the
  * live page, and no check here substitutes for it.
+ *
+ * **The corpus is every claim under `content/`, and the file name is older than
+ * that.** Until this was widened, both this file and `scripts/verify-content.mjs`
+ * walked `content/questions/` — while ADR-0003's second amendment had already
+ * said "verification now follows the claim rather than the screen it appears
+ * on", and `content/quests/` and `content/levels/` had been carrying 60 factual
+ * `factClaim` blocks for a slice. Every check below now runs over a normalised
+ * CLAIM from `scripts/lib/claims.mjs`, so a landmark blurb's `fact.source` and a
+ * question's `source` are the same thing to read, and the sourceId, chapter,
+ * hash, page-range, staleness, banned-term and quote-contiguity rules apply
+ * wherever the sentence is. The file keeps its name because `source.schema.json`,
+ * ADR-0003, ADR-0016 and ADR-0028 all cite it by path, and a rename would trade
+ * one dangling reference for four.
  */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -87,8 +100,17 @@ import { describe, expect, it } from 'vitest';
  * under `strict`, and it fails `make typecheck` if a signature moves.
  */
 import {
+  CLAIM_COLLECTIONS,
+  claimsIn,
+  containsRun,
+  indexText,
+  isSchemaDocument,
+  questionClaim,
+  type Claim,
+} from '../../../scripts/lib/claims.mjs';
+import {
   applicableFlags,
-  bannedTermFaults,
+  bannedTermFaultsIn,
   dispositionRow,
   mentionsTerm,
   STALE_AFTER_DAYS,
@@ -98,7 +120,7 @@ import {
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const SOURCES_DIR = `${REPO_ROOT}content/sources`;
-const QUESTIONS_DIR = `${REPO_ROOT}content/questions`;
+const CONTENT_DIR = `${REPO_ROOT}content`;
 
 interface SourceChapter {
   readonly title?: unknown;
@@ -151,20 +173,27 @@ const ageInDays = (from: string, to: string): number | null => {
 };
 
 /**
- * The whole check as one pure function over already-parsed documents, so the
+ * The whole check as one pure function over an already-normalised CLAIM, so the
  * fixtures below exercise the same code the corpus does. A predicate proved on
- * fixtures and a predicate run over content must not be two predicates.
+ * fixtures and a predicate run over content must not be two predicates — and
+ * from slice 1 until this file was widened they were not two predicates, they
+ * were one predicate run over one third of the corpus. The walk below covers
+ * every claim under `content/`, and `scripts/lib/claims.mjs` is what makes a
+ * question's `source` and a dialogue line's `fact.source` the same thing to read.
  */
-export const citationFaults = (
-  question: QuestionLike,
-  where: string,
+export const claimFaults = (
+  claim: Claim,
   manifests: ReadonlyMap<string, SourceManifest>,
   // The real clock by default. Row 2's exemption expires against this, so the
   // corpus check below is deliberately date-dependent; the fixtures pin it.
   today: string = new Date().toISOString().slice(0, 10),
 ): readonly string[] => {
-  const source = question.source;
-  if (source === undefined) return [];
+  const where = claim.at;
+  const source = claim.source;
+  // `factual: false` is the author's recorded judgement that a line states no
+  // fact, and the schema then forbids it a source. Nothing to cite, nothing to
+  // check.
+  if (source === null) return [];
   const sourceId = str(source.sourceId);
   const chapter = str(source.chapter);
   const sourceHash = str(source.sourceHash);
@@ -258,7 +287,11 @@ export const citationFaults = (
   // else, so a banned term in a shipped option demoted the question from row 2
   // to row 1 and produced no failure there at all. This file was the only gate
   // that failed it.
-  const banFaults = [...bannedTermFaults(question, sourceId, flags, where)];
+  //
+  // `claim.asserted` is what a player is told is TRUE — a question's options and
+  // explanation, and every word of a blurb or a dialogue line, which have no
+  // prompt to hold apart from their answers.
+  const banFaults = [...bannedTermFaultsIn(claim.asserted, sourceId, flags, where, claim.surface)];
 
   // --- volatile, demanded on the rows where volatile is what arms the clock ---
   //
@@ -285,19 +318,19 @@ export const citationFaults = (
       const because =
         disposition.row === 3
           ? `the latest live check for "${chapter}" found the page source-withdrawn, so every ` +
-            `question citing it quarantines (ADR-0016 §2 row 3) and volatile is the least of it`
+            `claim citing it quarantines (ADR-0016 §2 row 3) and volatile is the least of it`
           : disposition.row === 2
             ? `"${chapter}" is on ADR-0016 §2 row 2, but the live check that put it there ` +
               `${age === null ? `has no readable checkedAt (${checkedAt ?? 'absent'})` : `was ${String(age)} days ago, over ${String(STALE_AFTER_DAYS)}`}. ` +
               `Row 2's exemption from this demand rests entirely on that date, so it has lapsed and ` +
-              `the clock falls back onto the question. The real fix is ONE live check appended to ` +
+              `the clock falls back onto the claim. The real fix is ONE live check appended to ` +
               `${sourceId}'s liveChecks[] for this chapter, not N re-verifications`
             : `"${chapter}" is on ADR-0016 §2 row 1 (${disposition.why}), and on row 1 volatile is ` +
-              `what arms the only clock the question has: verify-content quarantines a volatile ` +
+              `what arms the only clock the claim has: verify-content quarantines a volatile ` +
               `claim once source.asOf passes ${String(STALE_AFTER_DAYS)} days, and a non-volatile ` +
               `row-1 claim is on no clock at all`;
       found.push(
-        `${where}: ${sourceId} flags this claim as known-stale - ${grains} - and the question is not ` +
+        `${where}: ${sourceId} flags this claim as known-stale - ${grains} - and the claim is not ` +
           `marked volatile. ${because}. Set source.volatile to true, or move the claim off the ` +
           `flagged page.`,
       );
@@ -316,6 +349,18 @@ export const citationFaults = (
   return found;
 };
 
+/**
+ * The same check, entered from a question literal. Every fixture below is a
+ * question shaped by hand, and they go through the same normalisation the corpus
+ * does rather than through a second door into the predicate.
+ */
+export const citationFaults = (
+  question: QuestionLike,
+  where: string,
+  manifests: ReadonlyMap<string, SourceManifest>,
+  today: string = new Date().toISOString().slice(0, 10),
+): readonly string[] => claimFaults(questionClaim(question, where), manifests, today);
+
 const jsonFilesUnder = (dir: string): readonly string[] =>
   existsSync(dir)
     ? readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -324,6 +369,25 @@ const jsonFilesUnder = (dir: string): readonly string[] =>
         return entry.isFile() && path.endsWith('.json') ? [path] : [];
       })
     : [];
+
+/**
+ * EVERY CLAIM UNDER content/, found by shape — the corpus this file judges.
+ *
+ * It used to be `jsonFilesUnder(QUESTIONS_DIR)`, in both of the places below,
+ * and that one expression was this gate's entire scope. ADR-0018 and ADR-0019
+ * both name the shape of that mistake: a gate that checks claims is scoped by
+ * the set of places a claim can be made, not by a directory of a convenient
+ * name. The schemas are the one exclusion, because they DEFINE the two shapes
+ * rather than instantiating them.
+ */
+const CORPUS: readonly Claim[] = jsonFilesUnder(CONTENT_DIR).flatMap((path) => {
+  const where = path.slice(REPO_ROOT.length);
+  if (isSchemaDocument(where)) return [];
+  return claimsIn(JSON.parse(readFileSync(path, 'utf8')), where);
+});
+
+/** The claims that state a fact, which are the ones every rule below is about. */
+const FACTUAL: readonly Claim[] = CORPUS.filter((claim) => claim.factual);
 
 const manifests = new Map<string, SourceManifest>(
   jsonFilesUnder(SOURCES_DIR).flatMap((path) => {
@@ -722,53 +786,99 @@ describe('the exemption does real work on the real register, and really expires 
   // reach, is the vacuum ADR-0024 names — and it would be this amendment
   // committing the defect it was written to remove.
   //
-  // Only the row-2 direction is exercised by the corpus today: no authored
-  // question sits under a flag on row 1. That asymmetry is in the safe
-  // direction — row 1 is the STRICT branch, so leaving it to fixtures cannot let
-  // anything through — and it is stated rather than left to be inferred from a
-  // passing suite.
-  const questions = jsonFilesUnder(QUESTIONS_DIR).map(
-    (path) => [path.slice(REPO_ROOT.length), JSON.parse(readFileSync(path, 'utf8')) as QuestionLike] as const,
-  );
+  // BOTH directions are now exercised by the corpus. Until this file walked
+  // `content/levels/`, only row 2 was: no authored QUESTION sat under a row-1
+  // flag, and that asymmetry was recorded here as safe because row 1 is the
+  // strict branch. Widening the walk found six territory acknowledgements citing
+  // nation and Crown sources whose registers carry `knownStaleness` flags and no
+  // live check at all — row 1, non-volatile, on no clock. Those are content
+  // defects and they are reported by the corpus-wide check at the bottom of this
+  // file, which is the one place a defect belongs; the two cases here are about
+  // whether the row-2 EXEMPTION works, so they are scoped to the claims it
+  // exempts rather than asserting the whole corpus is clean.
   const TODAY = new Date().toISOString().slice(0, 10);
   const LATER = new Date(Date.now() + 400 * 86_400_000).toISOString().slice(0, 10);
 
   const volatileDemands = (today: string): readonly string[] =>
-    questions.flatMap(([where, question]) =>
-      citationFaults(question, where, manifests, today).filter((fault) =>
-        fault.includes('not marked volatile'),
-      ),
+    FACTUAL.flatMap((claim) =>
+      claimFaults(claim, manifests, today).filter((fault) => fault.includes('not marked volatile')),
     );
 
   it('read the corpus it judges', () => {
-    expect(questions.length, 'no content/questions/**/*.json parsed').toBeGreaterThan(0);
+    expect(FACTUAL.length, 'no factual claim parsed out of content/').toBeGreaterThan(0);
   });
 
-  it('exempts questions today that a flag-only rule would have failed', () => {
+  /** The claims ADR-0016's amendment exempts: flagged, and on row 2 today. */
+  const exemptToday = FACTUAL.filter((claim) => {
+    const source = claim.source;
+    if (source === null || source.volatile === true) return false;
+    const chapter = str(source.chapter);
+    const manifest = manifests.get(str(source.sourceId) ?? '');
+    if (chapter === null || manifest === undefined) return false;
+    const flags = applicableFlags(manifest, chapter, int(source.page));
+    return flags.length > 0 && dispositionRow(manifest, chapter, flags, true).row === 2;
+  });
+
+  it('exempts claims today that a flag-only rule would have failed', () => {
     // These are the questions the amendment is about: they sit on a flagged page
     // and carry a fact that cannot move — treaty rights, the Royal Proclamation,
     // residential schools, the 2008 apology, what "Inuit" means, Michif.
-    const exempt = questions.filter(([, question]) => {
-      const source = question.source;
-      if (source === undefined || source.volatile === true) return false;
-      const chapter = str(source.chapter);
-      const manifest = manifests.get(str(source.sourceId) ?? '');
-      if (chapter === null || manifest === undefined) return false;
-      const flags = applicableFlags(manifest, chapter, int(source.page));
-      return flags.length > 0 && dispositionRow(manifest, chapter, flags, true).row === 2;
-    });
-    expect(exempt.length, 'no shipped question is exempted by row 2').toBeGreaterThan(0);
-    expect(volatileDemands(TODAY)).toEqual([]);
+    expect(exemptToday.length, 'no shipped claim is exempted by row 2').toBeGreaterThan(0);
+    const demanded = exemptToday.flatMap((claim) =>
+      claimFaults(claim, manifests, TODAY).filter((fault) => fault.includes('not marked volatile')),
+    );
+    expect(demanded, demanded.join('\n')).toEqual([]);
   });
 
-  it('fails those same questions once the governing live check ages out', () => {
+  it('fails those same claims once the governing live check ages out', () => {
     // The expiry proved against the register that ships, not a fixture. If this
     // ever returns nothing, the exemption has become unexpirable in practice and
     // the amendment has traded a vacuous gate for a silent one.
-    const lapsed = volatileDemands(LATER);
-    expect(lapsed.length, `no question expires by ${LATER}`).toBeGreaterThan(0);
-    expect(lapsed.every((fault) => fault.includes('has lapsed'))).toBe(true);
-    expect(lapsed.some((fault) => fault.includes("liveChecks[]"))).toBe(true);
+    //
+    // Stated as the DIFFERENCE between the two clocks rather than as "everything
+    // fails later", because some claims are already failing today for a reason
+    // that has nothing to do with the exemption. What must be true of the
+    // exemption is that running the clock forward adds demands, and that every
+    // demand it adds is a lapse.
+    const today = new Set(volatileDemands(TODAY));
+    const newlyDemanded = volatileDemands(LATER).filter((fault) => !today.has(fault));
+    expect(newlyDemanded.length, `no claim expires by ${LATER}`).toBeGreaterThan(0);
+    expect(newlyDemanded.every((fault) => fault.includes('has lapsed'))).toBe(true);
+    expect(newlyDemanded.some((fault) => fault.includes('liveChecks[]'))).toBe(true);
+  });
+});
+
+describe('contiguity is one implementation, and it survives a PDF line break', () => {
+  // TWO GATES, ONE RULE. `verify-content` and this file each used to decide for
+  // themselves what "a contiguous passage of the source" meant, and they
+  // disagreed once: this one compared strings, so a word the extractor broke at
+  // a hyphen read as "three- quarters" and two correctly cited economy questions
+  // were red here and green there. The fix at the time was to rejoin the hyphen
+  // HERE, which made the two agree — and they still agree on every quote in the
+  // corpus — but agreement maintained by hand across two files is the state the
+  // defect started from. Both now import `containsRun` from
+  // scripts/lib/claims.mjs.
+  //
+  // These cases are why the tokenising rule is the one that survived. The
+  // extraction wraps at the column width, so both spellings below occur in it,
+  // and a string rule has to decide whether a trailing hyphen is a real one —
+  // rejoin and you reject a quote that spells the pair as two words, do not and
+  // you reject one that spells it hyphenated. Nothing in the extraction says
+  // which it was. Tokens do not have to decide.
+  const extraction = indexText(
+    ['Forestry, mining and energy are three-', 'quarters of it, and one-', 'third of the total.'].join(
+      '\n',
+    ),
+  );
+
+  it.each([
+    ['a hyphenated word the author wrote hyphenated', 'three-quarters of it', true],
+    ['a two-word phrase the extractor hyphenated at the wrap', 'one third of the total', true],
+    ['the same phrase written with the hyphen', 'one-third of the total', true],
+    ['a passage that is simply not there', 'four fifths of the total', false],
+    ['words of the source in an order it does not use', 'quarters three of it', false],
+  ])('%s', (_label, quote, expected) => {
+    expect(containsRun(extraction, quote)).toBe(expected);
   });
 });
 
@@ -971,6 +1081,29 @@ describe('a question cites a cached source that exists, and says so (ADR-0003)',
     });
   });
 
+  it('reads every collection of claims, and none of them is empty', () => {
+    // ADR-0024, and the reason this file's scope is now a shape rather than a
+    // directory. The check below walks whatever it finds; if `content/quests/`
+    // were renamed, moved, or emptied of `factClaim` blocks, every assertion
+    // here would still pass over the two collections left — which is exactly how
+    // 60 player-facing claims went unchecked for a slice while the suite was
+    // green. So the collections that carry claims are named, and a named one
+    // that yields nothing fails.
+    const perCollection = new Map<string, number>();
+    for (const claim of FACTUAL) {
+      perCollection.set(claim.collection, (perCollection.get(claim.collection) ?? 0) + 1);
+    }
+    const found = [...perCollection.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, count]) => `content/${name}/ ${String(count)}`)
+      .join(', ');
+    const empty = CLAIM_COLLECTIONS.filter((name) => (perCollection.get(name) ?? 0) === 0);
+    expect(
+      empty,
+      `${empty.map((name) => `content/${name}/`).join(', ')} yielded no factual claim. Found: ${found}`,
+    ).toEqual([]);
+  });
+
   it("holds every author's quote to being a real passage of the cached source", () => {
     // The one check here that reads the source text rather than the manifest,
     // and the one that catches a *fabricated* citation before any verifier runs:
@@ -985,6 +1118,7 @@ describe('a question cites a cached source that exists, and says so (ADR-0003)',
     // (task 1.17), which re-fetches.
     const failures: string[] = [];
     const extractions = new Map<string, string>();
+    let checked = 0;
 
     for (const [id, manifest] of manifests) {
       const name = str(manifest.extractedText);
@@ -1001,44 +1135,37 @@ describe('a question cites a cached source that exists, and says so (ADR-0003)',
       }
     }
 
-    // Whitespace is normalised on both sides: a PDF extraction wraps lines
-    // wherever the page did, and a quote copied out of it is one paragraph.
     /*
-     * Rejoin words the extraction broke at a real hyphen before collapsing
-     * whitespace.
+     * CONTIGUITY IS NOW ONE IMPLEMENTATION, imported from
+     * scripts/lib/claims.mjs, and this comment is what it replaced.
      *
-     * `pdftotext -layout` wraps "three-quarters" and "hydro-electric" as
-     * "three-\nquarters", so collapsing whitespace alone leaves "three- quarters"
-     * and a correctly cited quote reads as fabricated. Two economy questions were
-     * red on exactly that while `verify-content` reported all 404 quotes
-     * contiguous -- two implementations of one rule disagreeing about what
-     * "contiguous" means.
+     * This file used to carry a `flat()` that rejoined words the extraction
+     * broke at a real hyphen and then compared strings: `pdftotext -layout`
+     * wraps "three-quarters" as "three-\nquarters", so collapsing whitespace
+     * alone left "three- quarters" and a correctly cited quote read as
+     * fabricated. Two economy questions were red on exactly that while
+     * `verify-content` reported all 404 quotes contiguous — two implementations
+     * of one rule disagreeing about what "contiguous" means, reconciled by hand.
      *
-     * The lenient one is right here, and that matters more than the fix: it is
-     * also the one that caught two genuinely fabricated citations. The project
-     * was relying on the weaker check while the stricter sat red for a reason
-     * nobody was watching.
+     * A reconciliation held in place by care has a date on it, and this one's
+     * came due: the extraction wraps "one third" as "one-\nthird", where the
+     * rejoining rule produces "one-third" and calls a correct quote fabricated,
+     * and the tokenising rule does not. The token rule survived — it is also the
+     * one that caught both genuinely fabricated citations this project has
+     * shipped — and both gates now import it rather than agreeing to have it.
      */
-    const flat = (text: string): string =>
-      text
-        .normalize('NFKC')
-        .replace(/(\p{L})-\s*\n\s*(\p{L})/gu, '$1-$2')
-        .replace(/[\u2018\u2019\u02BC]/gu, "'")
-        .replace(/[\u201C\u201D]/gu, '"')
-        .replace(/[\u2010-\u2015]/gu, '-')
-        .replace(/\s+/gu, ' ')
-        .trim();
+    const indexed = new Map([...extractions].map(([id, text]) => [id, indexText(text)] as const));
 
-    for (const path of jsonFilesUnder(QUESTIONS_DIR)) {
-      const question = JSON.parse(readFileSync(path, 'utf8')) as QuestionLike;
-      const quote = str(question.source?.quote);
-      const sourceId = str(question.source?.sourceId);
+    for (const claim of FACTUAL) {
+      const quote = str(claim.source?.quote);
+      const sourceId = str(claim.source?.sourceId);
       if (quote === null || sourceId === null) continue;
-      const extraction = extractions.get(sourceId);
+      const extraction = indexed.get(sourceId);
       if (extraction === undefined) continue;
-      if (!flat(extraction).includes(flat(quote))) {
+      checked += 1;
+      if (!containsRun(extraction, quote)) {
         failures.push(
-          `${path.slice(REPO_ROOT.length)}: source.quote is not a passage of ${sourceId}. It must be ` +
+          `${claim.at}: source.quote is not a passage of ${sourceId}. It must be ` +
             `copied exactly from the extraction the recorded hash covers, whitespace aside. A quote ` +
             `that is not in the source is a citation of something nobody can check.`,
         );
@@ -1046,15 +1173,22 @@ describe('a question cites a cached source that exists, and says so (ADR-0003)',
     }
 
     expect(failures, failures.join('\n')).toEqual([]);
+    // ADR-0024, restated for the check that matters most here: with every
+    // extraction git-ignored this loop can legally compare nothing, and an empty
+    // loop passes. The count says which of the two happened.
+    expect(
+      checked > 0 || extractions.size === 0,
+      'every extraction was present and yet no quote was compared against one',
+    ).toBe(true);
   });
 
-  it('holds for every authored question', () => {
-    // Derived, not listed. `content/questions/` is empty until task 1.7; the
-    // suite above is what carries the check until there is a corpus.
-    const failures = jsonFilesUnder(QUESTIONS_DIR).flatMap((path) => {
-      const question = JSON.parse(readFileSync(path, 'utf8')) as QuestionLike;
-      return citationFaults(question, path.slice(REPO_ROOT.length), manifests);
-    });
+  it('holds for every authored claim, wherever a player reads it', () => {
+    // Derived, not listed, and no longer derived from one directory. A landmark
+    // blurb citing a page outside its chapter's range is the same defect as a
+    // question doing it — one wrong `endPage` in the register once put 13 of 14
+    // economy page numbers outside their chapter — and until this walked
+    // `content/` nothing would have said so.
+    const failures = FACTUAL.flatMap((claim) => claimFaults(claim, manifests));
     expect(failures, failures.join('\n')).toEqual([]);
   });
 });

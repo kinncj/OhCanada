@@ -13,16 +13,30 @@
  *      BEFORE TRUSTING THIS GATE. It does not do what its name suggests, and
  *      the difference is written down rather than implied.
  *
- *   B. ADR-0003's CI clause, per document. A shipped question must be
- *      `verified` for the CURRENT `sourceHash`, carry four options, EN and FR
- *      throughout, a non-empty `evidence` when verified, and wording that is
- *      not lifted from the source.
+ *   B. ADR-0003's CI clause, PER CLAIM. A shipped claim must be `verified` for
+ *      the CURRENT `sourceHash`, quote a passage the cached extraction actually
+ *      contains, carry a non-empty `evidence` when verified, and be worded so it
+ *      is not lifted from the source. Where the claim is a question it must also
+ *      carry four options and EN and FR throughout.
+ *
+ *      A CLAIM IS NOT A FILE IN content/questions/. That is what it used to be,
+ *      and ADR-0003's second amendment had already said otherwise —
+ *      "verification now follows the claim rather than the screen it appears
+ *      on". A landmark blurb, a territory acknowledgement and a line of NPC
+ *      dialogue carry `common.schema.json#/$defs/factClaim` and state facts
+ *      about Canada in exactly the same way; 60 of them shipped past this gate
+ *      because this gate walked a directory. `scripts/lib/claims.mjs` finds a
+ *      claim by SHAPE, wherever under content/ it lives, and normalises the two
+ *      shapes into one record so no check below has to branch per collection.
+ *      ADR-0018 and ADR-0019 are the decisions behind that; ADR-0024 is the
+ *      reason the summary prints per-collection counts and a floor fails a
+ *      collection that goes quiet.
  *
  *   C. ADR-0016 §2's four-row re-check table, and §3's banned terms. Which
- *      clock a question is under depends on what the source register's
- *      `liveChecks[]` establishes about the source, not on the question alone;
- *      and where a flag says the publisher will never correct a fact, no option
- *      or explanation may name it. Both rules come from
+ *      clock a claim is under depends on what the source register's
+ *      `liveChecks[]` establishes about the source, not on the claim alone;
+ *      and where a flag says the publisher will never correct a fact, nothing a
+ *      player is told is true may name it. Both rules come from
  *      `scripts/lib/staleness.mjs`, which is the single implementation the
  *      contract test imports too.
  *
@@ -156,8 +170,20 @@ import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
+  CLAIM_COLLECTIONS,
+  claimCountFault,
+  claimsIn,
+  collectionOf,
+  containsRun,
+  indexText,
+  isSchemaDocument,
+  longestSharedRun,
+  recogniserFaults,
+  unknownWords,
+} from './lib/claims.mjs';
+import {
   applicableFlags,
-  bannedTermFaults,
+  bannedTermFaultsIn,
   dispositionRow,
   STALE_AFTER_DAYS,
 } from './lib/staleness.mjs';
@@ -196,16 +222,15 @@ import {
  */
 const VERBATIM_RUN_WORDS = 14;
 
-/**
- * Options are NOT checked for verbatim wording, and the reason is a
- * measurement rather than an omission. Four of the corpus's options are 100%
- * verbatim — "The House of Commons.", "Band chiefs and councillors.", "The
- * province or territory." — because a four-word institutional noun phrase has
- * no paraphrase that is not a distortion. Any threshold loose enough to admit
- * those admits everything. The obligation to paraphrase falls on the prose the
- * author actually wrote: the prompt and the explanation.
+/*
+ * WHICH TEXT THE THRESHOLD APPLIES TO is `claim.prose`, decided in
+ * scripts/lib/claims.mjs: for a question, the prompt and the explanation; for a
+ * fact claim, every localised sibling of the block — a dialogue line's `text`, a
+ * landmark's `blurb`, a territory acknowledgement's `statement`. Options are
+ * exempt for a measured reason recorded there. The list used to live here as
+ * `VERBATIM_FIELDS`, and a list of two question field names is precisely what
+ * could not describe the surfaces a level and a quest put in front of a player.
  */
-const VERBATIM_FIELDS = ['prompt', 'explanation'];
 
 /**
  * ADR-0003, "Two quotes, one per side of the separation": `source.quote` "must
@@ -233,7 +258,7 @@ const EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 /* CLI                                                                        */
 /* -------------------------------------------------------------------------- */
 
-const HELP = `verify-content — verify question data against Discover Canada sources (ADR-0003, ADR-0016)
+const HELP = `verify-content — verify every claim in content/ against its cached source (ADR-0003, ADR-0016)
 
 Usage: node scripts/verify-content.mjs [options]
 
@@ -242,6 +267,11 @@ Usage: node scripts/verify-content.mjs [options]
   --now <iso>       override the clock used by the 180-day rules
   --require-source  fail when a cached extraction is missing rather than
                     reporting which checks it disables
+  --collections <a,b>
+                    the collections under content/ that MUST yield a factual
+                    claim. Default questions,quests,levels. This is an
+                    anti-vacuum floor and NOT the scope: every claim under
+                    content/ is checked wherever it lives.
   --no-history      skip the git separation-of-duties gate
   --roles <file>    a git-author-email to role map, enabling ADR-0003's rule as
                     worded. Default scripts/content-roles.json, which does not
@@ -253,10 +283,12 @@ Gate A  separation of duties, from git history
         the same document; no commit may move communityReview off "not-sought".
         Read the header: authorship itself is NOT establishable in this
         repository, and the header specifies what would make it so.
-Gate B  ADR-0003's CI clause, per document
-        verified for the current sourceHash; four options; EN and FR; non-empty
-        evidence when verified; source.quote contiguous in the extraction;
-        wording not lifted from the source.
+Gate B  ADR-0003's CI clause, per CLAIM - a question, a line of NPC dialogue, a
+        landmark blurb, a territory acknowledgement, wherever under content/ it
+        lives - verified for the current sourceHash; four options and EN/FR
+        where the claim is a question; non-empty evidence when verified;
+        source.quote contiguous in the extraction; wording not lifted from the
+        source.
 Gate C  ADR-0016 §2's re-check table and §3's banned terms
         which 180-day clock binds — the question's source.asOf or the register's
         liveChecks[].checkedAt — depends on what the register establishes about
@@ -288,6 +320,24 @@ const SINCE = flagValue('--since');
 const NOW = flagValue('--now') === null ? new Date() : new Date(flagValue('--now'));
 const REQUIRE_SOURCE = argv.includes('--require-source');
 const NO_HISTORY = argv.includes('--no-history');
+
+/**
+ * The ANTI-VACUUM FLOOR, not the scope of the walk. See the floors at the bottom
+ * of this file: gate B checks every claim it finds anywhere under content/, and
+ * this list is only the set of collections whose silence is a failure rather
+ * than a smaller number. `--collections questions` is what a tree that
+ * legitimately holds only questions — every fixture in
+ * tests/unit/infra/verify-content-gate.test.ts — says on the command line, so
+ * that "this tree has no quests" is a statement somebody made and not an
+ * omission nobody saw.
+ */
+const REQUIRED_COLLECTIONS =
+  flagValue('--collections') === null
+    ? CLAIM_COLLECTIONS
+    : flagValue('--collections')
+        .split(',')
+        .map((name) => name.trim())
+        .filter((name) => name !== '');
 
 if (Number.isNaN(NOW.getTime())) {
   console.error('verify-content: --now is not a date');
@@ -333,7 +383,6 @@ const roleOf = (email) => {
  */
 
 const CONTENT_DIR = join(ROOT, 'content');
-const QUESTIONS_DIR = join(CONTENT_DIR, 'questions');
 const SOURCES_DIR = join(CONTENT_DIR, 'sources');
 
 const failures = [];
@@ -373,39 +422,20 @@ const ageInDays = (iso) => {
   return Math.floor((NOW.getTime() - then.getTime()) / 86_400_000);
 };
 
-/**
- * Words, for every text comparison in gate B.
- *
- * NFKC first so a PDF's ligatures and non-breaking spaces do not read as
- * different characters from a keyboard's. Curly punctuation is folded to ASCII
- * because the extraction and the authored JSON disagree about it constantly and
- * that disagreement is typography, not wording. Then everything that is not a
- * letter or a digit is a separator, so the apostrophe splits — the same
- * decision, for the same reason, as the banned-terms matcher in
- * tests/unit/contracts/questions-cite-a-cached-source.test.ts.
+/*
+ * `words`, `indexText`, `containsRun`, `longestSharedRun` and `unknownWords`
+ * live in scripts/lib/claims.mjs and are imported at the top of this file. They
+ * used to live here, in one of TWO implementations of "is this quote a passage
+ * of the source" — this one tokenising, and
+ * tests/unit/contracts/questions-cite-a-cached-source.test.ts rejoining
+ * line-broken hyphens and comparing strings. The two were reconciled by hand
+ * once, after two correctly cited economy questions read as fabricated in one
+ * gate and contiguous in the other. They agree on every quote in the corpus
+ * today — which is what a reconciliation held in place by care looks like right
+ * up until it does not. There is now one implementation and both gates import
+ * it; see that module's header for which of the two rules survived, why, and the
+ * measurement behind it.
  */
-const words = (text) =>
-  text
-    .normalize('NFKC')
-    .replace(/[‘’ʼ]/gu, "'")
-    .replace(/[“”]/gu, '"')
-    .replace(/[–—]/gu, '-')
-    .toLocaleLowerCase()
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter((word) => word !== '');
-
-/** The longest run of consecutive words of `text` that appears in `haystack`. */
-const longestSharedRun = (haystack, text) => {
-  const needle = words(text);
-  if (needle.length === 0) return 0;
-  const hay = ` ${haystack.join(' ')} `;
-  for (let n = needle.length; n > 0; n -= 1) {
-    for (let i = 0; i + n <= needle.length; i += 1) {
-      if (hay.includes(` ${needle.slice(i, i + n).join(' ')} `)) return n;
-    }
-  }
-  return 0;
-};
 
 /* -------------------------------------------------------------------------- */
 /* Structural recognition of the two blocks the separation of duties governs    */
@@ -481,16 +511,30 @@ const isCommunityReview = (value) => looksLike(value, REVIEW_KEYS, REVIEW_STATUS
  */
 const assertRecogniserIsLive = () => {
   const path = join(CONTENT_DIR, 'schemas', 'common.schema.json');
+  const questionPath = join(CONTENT_DIR, 'schemas', 'question.schema.json');
   if (!existsSync(path)) {
     note(
       `content/schemas/common.schema.json is absent, so the recogniser self-test did not run. ` +
-        `Gate A's rules are only as wide as isVerification()/isCommunityReview(), and nothing here ` +
-        `checked them against the schema that defines the blocks.`,
+        `Gate A's rules are only as wide as isVerification()/isCommunityReview(), and gate B's are ` +
+        `only as wide as isFactClaim(); nothing here checked either against the schema that ` +
+        `defines the blocks.`,
     );
     return;
   }
   const schema = readJson(path);
   const defs = isObject(schema?.$defs) ? schema.$defs : {};
+
+  // The same three assertions, for the two shapes GATE B is scoped by, from the
+  // module that defines them. isFactClaim() decides whether a quest line or a
+  // landmark blurb is checked at all, so it is held to exactly what
+  // isVerification() is held to and for exactly the reason: a recogniser that
+  // quietly narrows turns a corpus into a silent pass.
+  const recogniser = recogniserFaults(
+    schema,
+    existsSync(questionPath) ? readJson(questionPath) : null,
+  );
+  for (const fault of recogniser.faults) fail(fault);
+  for (const message of recogniser.notes) note(message);
   const cases = [
     ['factVerification', VERIFICATION_KEYS, VERIFICATION_STATUSES, isVerification],
     ['communityReview', REVIEW_KEYS, REVIEW_STATUSES, isCommunityReview],
@@ -699,11 +743,8 @@ for (const [id, { manifest }] of sources) {
     );
     continue;
   }
-  const text = bytes.toString('utf8');
-  extractions.set(id, { words: words(text), joined: ` ${words(text).join(' ')} ` });
+  extractions.set(id, indexText(bytes.toString('utf8')));
 }
-
-const containsRun = (extraction, text) => extraction.joined.includes(` ${words(text).join(' ')} `);
 
 /* -------------------------------------------------------------------------- */
 /* ADR-0016 §2 and §3 — the row, and the ban, from one shared module            */
@@ -725,10 +766,49 @@ const containsRun = (extraction, text) => extraction.joined.includes(` ${words(t
 /* Gates B and C, over the working tree                                        */
 /* -------------------------------------------------------------------------- */
 
-const questionFiles = jsonFilesUnder(QUESTIONS_DIR);
+/*
+ * THE CORPUS IS EVERY CLAIM IN content/, NOT EVERY FILE IN content/questions/.
+ *
+ * This loop used to be `for (const path of jsonFilesUnder(content/questions))`, and
+ * that one line was the whole of gate B's scope. ADR-0003's second amendment had
+ * already said verification follows the CLAIM rather than the screen it appears
+ * on, and `content/quests/` and `content/levels/` had been carrying
+ * `factClaim` blocks for a slice: 29 dialogue claims and 31 blurbs and territory
+ * statements that got the schema's "sourced and verified when factual"
+ * conditional and none of the six checks below. The commit that granted the
+ * quest bank its statuses says so in its own message — "verify-content walks
+ * content/questions and nothing else … they were run by hand this time".
+ *
+ * ADR-0019: a rule drawn round a container measures the container. So the walk
+ * is over every document under content/ that is not a schema, and what makes
+ * something a claim is its SHAPE — `scripts/lib/claims.mjs` decides that, once,
+ * for this gate and for the contract test. Adding `content/quests` and
+ * `content/levels` as two more directory constants would have closed today's
+ * hole and left the next collection to find its own way in.
+ */
+
+const CLAIM_FIELDS = ['source', 'verification'];
+
+const collections = new Map();
+const collectionTally = (name) => {
+  const existing = collections.get(name);
+  if (existing !== undefined) return existing;
+  const fresh = {
+    documents: 0,
+    claims: 0,
+    factual: 0,
+    flavour: 0,
+    checked: 0,
+    unchecked: 0,
+    byStatus: new Map(),
+  };
+  collections.set(name, fresh);
+  return fresh;
+};
 
 const tally = {
   questions: 0,
+  claims: 0,
   byStatus: new Map(),
   shipped: 0,
   rows: new Map(),
@@ -739,28 +819,88 @@ const tally = {
   minEvidenceRun: Number.POSITIVE_INFINITY,
   minEvidenceWhere: '(none)',
   banFaults: 0,
-  banQuestions: 0,
+  banClaims: 0,
   banTermChecks: 0,
   unknownEvidenceWords: 0,
   quoteChecked: 0,
 };
 
-for (const path of questionFiles) {
-  const where = relative(ROOT, path);
-  const question = readJson(path);
-  if (question === null) continue;
-  tally.questions += 1;
-
-  const verification = isObject(question.verification) ? question.verification : null;
-  const source = isObject(question.source) ? question.source : null;
-  if (verification === null || source === null) {
-    fail(`${where}: has no verification or no source block. make validate-content owns the shape; ` +
-      `this gate cannot check a claim it cannot find.`);
+const claims = [];
+for (const path of jsonFilesUnder(CONTENT_DIR)) {
+  const where = relative(ROOT, path).replaceAll('\\', '/');
+  // The schemas DEFINE the two shapes this gate recognises, so they are the one
+  // exclusion. `claims.mjs`'s recogniser self-test proves the type tests refuse
+  // them anyway; this keeps the belt on as well as the braces.
+  if (isSchemaDocument(where)) continue;
+  let raw;
+  try {
+    raw = readFileSync(path, 'utf8');
+  } catch (error) {
+    fail(`${where}: cannot be read — ${String(error)}`);
     continue;
+  }
+  let document;
+  try {
+    document = JSON.parse(raw);
+  } catch (error) {
+    fail(`${where}: is not parseable JSON — ${String(error)}`);
+    continue;
+  }
+  const found = claimsIn(document, where);
+  const collection = collectionTally(collectionOf(where));
+  collection.documents += 1;
+  collection.claims += found.length;
+  // ADR-0024, per document: every `"factual"` key in the bytes must have become
+  // a recognised claim. The recogniser is what scopes every check below, and a
+  // recogniser that quietly stops matching produces a run identical to a clean
+  // one. Gate A has already had that failure once.
+  const drift = claimCountFault(raw, found, where);
+  if (drift !== null) fail(drift);
+  claims.push(...found);
+}
+
+for (const claim of claims) {
+  const where = claim.at;
+  const collection = collectionTally(claim.collection);
+  if (claim.kind === 'question') tally.questions += 1;
+
+  /* --- A claim the author says states no fact is not verified ------------ */
+  //
+  // `factual: false` is the author's recorded judgement that a line is a
+  // greeting, an instruction or flavour. ADR-0003 makes it a required field for
+  // exactly this reason — a greeting and a claim look identical to a machine —
+  // and the schema already forbids it carrying a source. Counted rather than
+  // skipped silently, so the split between checked prose and exempt prose is
+  // visible in the summary.
+  if (!claim.factual) {
+    collection.flavour += 1;
+    continue;
+  }
+  tally.claims += 1;
+  collection.factual += 1;
+
+  const verification = claim.verification;
+  const source = claim.source;
+  if (verification === null || source === null) {
+    const missing = CLAIM_FIELDS.filter((field) => claim[field] === null).join(' and no ');
+    fail(
+      `${where}: states a fact and has no ${missing} block. make validate-content owns the shape; ` +
+        `this gate cannot check a claim it cannot find.`,
+    );
+    continue;
+  }
+
+  if (claim.prose.length === 0) {
+    fail(
+      `${where}: states a fact and there is no localised text beside it for the claim to be ABOUT. ` +
+        `A factClaim governs the sibling prose a player reads; with none, either the recogniser has ` +
+        `matched something that is not a claim, or a sentence has been verified that is not there.`,
+    );
   }
 
   const status = str(verification.status) ?? '(missing)';
   tally.byStatus.set(status, (tally.byStatus.get(status) ?? 0) + 1);
+  collection.byStatus.set(status, (collection.byStatus.get(status) ?? 0) + 1);
 
   const excluded = status === 'rejected' || status === 'quarantined';
   if (!excluded) tally.shipped += 1;
@@ -768,9 +908,16 @@ for (const path of questionFiles) {
   /* --- B1: a shipped claim is verified ---------------------------------- */
   if (!excluded && status !== 'verified') {
     fail(
-      `${where}: status is "${status}" and the question is in the shipped bank. ADR-0003: CI fails ` +
-        `if any shipped claim lacks "verified". Only "rejected" and "quarantined" are excluded from ` +
-        `the build; "unverified" means no check has run, and a question nobody checked may not ship.`,
+      claim.kind === 'question'
+        ? `${where}: status is "${status}" and the question is in the shipped bank. ADR-0003: CI ` +
+            `fails if any shipped claim lacks "verified". Only "rejected" and "quarantined" are ` +
+            `excluded from the build; "unverified" means no check has run, and a question nobody ` +
+            `checked may not ship.`
+        : `${where}: status is "${status}" and this sentence ships — a player reads it on the ` +
+            `level. ADR-0003: CI fails if any shipped claim lacks "verified", and its scope is the ` +
+            `claim rather than the screen it appears on, so a landmark blurb and a line of dialogue ` +
+            `are held exactly as a question is. "unverified" means no check has run. The verifier ` +
+            `owns the next move; this gate does not write verification blocks.`,
     );
   }
 
@@ -822,42 +969,56 @@ for (const path of questionFiles) {
     }
   }
 
-  /* --- B3: four options, three of them distractors ----------------------- */
-  const options = Array.isArray(question.options) ? question.options : [];
-  const correctIndex = int(question.correctIndex);
-  if (options.length !== 4) {
-    fail(
-      `${where}: has ${String(options.length)} option(s). ADR-0003 and CLAUDE.md require one ` +
-        `correct answer and three distractors.`,
-    );
-  } else if (correctIndex === null || correctIndex < 0 || correctIndex > 3) {
-    fail(`${where}: correctIndex is ${JSON.stringify(question.correctIndex)}, which indexes no option.`);
-  } else {
-    const distractors = options.filter((_, index) => index !== correctIndex);
-    const seen = new Set(distractors.map((option) => str(option?.en) ?? ''));
-    if (seen.size !== 3 || seen.has('')) {
-      fail(
-        `${where}: the three distractors are not three distinct non-empty options ` +
-          `(${String(seen.size)} distinct). A repeated distractor is a two-option question wearing ` +
-          `four.`,
-      );
-    }
-  }
+  /* --- B3/B4: the two rules that are about a QUESTION and not a claim ----- */
+  //
+  // Four options with three distinct distractors, and both languages on every
+  // one of them. These are scoped to the question shape because that is the
+  // shape they are about: a dialogue line has no distractors to count, and its
+  // French is held by `localizedText` requiring both locales on the file. That
+  // is a scope drawn round a SHAPE, not round a directory — a question in some
+  // other collection would still be held to both.
+  if (claim.kind === 'question') {
+    const question = claim.document;
 
-  /* --- B4: EN and FR everywhere ------------------------------------------ */
-  const localised = [
-    ['prompt', question.prompt],
-    ['explanation', question.explanation],
-    ...options.map((option, index) => [`options[${String(index)}]`, option]),
-  ];
-  for (const [field, value] of localised) {
-    for (const locale of ['en', 'fr']) {
-      const text = isObject(value) ? str(value[locale]) : null;
-      if (text === null || text.trim() === '') {
+    /* --- B3: four options, three of them distractors --------------------- */
+    const options = Array.isArray(question.options) ? question.options : [];
+    const correctIndex = int(question.correctIndex);
+    if (options.length !== 4) {
+      fail(
+        `${where}: has ${String(options.length)} option(s). ADR-0003 and CLAUDE.md require one ` +
+          `correct answer and three distractors.`,
+      );
+    } else if (correctIndex === null || correctIndex < 0 || correctIndex > 3) {
+      fail(
+        `${where}: correctIndex is ${JSON.stringify(question.correctIndex)}, which indexes no option.`,
+      );
+    } else {
+      const distractors = options.filter((_, index) => index !== correctIndex);
+      const seen = new Set(distractors.map((option) => str(option?.en) ?? ''));
+      if (seen.size !== 3 || seen.has('')) {
         fail(
-          `${where}: ${field}.${locale} is missing or empty. EN and FR ship from the first commit ` +
-            `(CLAUDE.md); a monolingual question is half a question.`,
+          `${where}: the three distractors are not three distinct non-empty options ` +
+            `(${String(seen.size)} distinct). A repeated distractor is a two-option question wearing ` +
+            `four.`,
         );
+      }
+    }
+
+    /* --- B4: EN and FR everywhere ---------------------------------------- */
+    const localised = [
+      ['prompt', question.prompt],
+      ['explanation', question.explanation],
+      ...options.map((option, index) => [`options[${String(index)}]`, option]),
+    ];
+    for (const [field, value] of localised) {
+      for (const locale of ['en', 'fr']) {
+        const text = isObject(value) ? str(value[locale]) : null;
+        if (text === null || text.trim() === '') {
+          fail(
+            `${where}: ${field}.${locale} is missing or empty. EN and FR ship from the first commit ` +
+              `(CLAUDE.md); a monolingual question is half a question.`,
+          );
+        }
       }
     }
   }
@@ -866,8 +1027,10 @@ for (const path of questionFiles) {
   const extraction = sourceId === null ? undefined : extractions.get(sourceId);
   if (extraction === undefined) {
     tally.verbatimUnchecked += 1;
+    collection.unchecked += 1;
   } else {
     tally.verbatimChecked += 1;
+    collection.checked += 1;
 
     const quote = str(source.quote);
     if (quote !== null) {
@@ -883,13 +1046,12 @@ for (const path of questionFiles) {
 
     const evidence = str(verification.evidence);
     if (evidence !== null && evidence !== '') {
-      const run = longestSharedRun(extraction.words, evidence);
+      const run = longestSharedRun(extraction, evidence);
       if (run < tally.minEvidenceRun) {
         tally.minEvidenceRun = run;
         tally.minEvidenceWhere = where;
       }
-      const vocabulary = new Set(extraction.words);
-      const unknown = words(evidence).filter((word) => !vocabulary.has(word));
+      const unknown = unknownWords(extraction, evidence);
       tally.unknownEvidenceWords += unknown.length;
       if (unknown.length > 0) {
         fail(
@@ -910,25 +1072,25 @@ for (const path of questionFiles) {
       }
     }
 
-    for (const field of VERBATIM_FIELDS) {
-      const value = question[field];
-      if (!isObject(value)) continue;
-      for (const locale of ['en', 'fr']) {
-        const text = str(value[locale]);
-        if (text === null) continue;
-        const run = longestSharedRun(extraction.words, text);
-        if (run > tally.maxVerbatimRun) {
-          tally.maxVerbatimRun = run;
-          tally.maxVerbatimWhere = `${where} ${field}.${locale}`;
-        }
-        if (run >= VERBATIM_RUN_WORDS) {
-          fail(
-            `${where}: ${field}.${locale} shares a run of ${String(run)} consecutive words with ` +
-              `${String(sourceId)}'s text, at or over the threshold of ` +
-              `${String(VERBATIM_RUN_WORDS)}. ADR-0003 check 5: the wording must not be verbatim. ` +
-              `Paraphrase it. Options are exempt and prose is not — see the header for why.`,
-          );
-        }
+    /* --- B8: the author's own prose is not lifted from the source --------- */
+    //
+    // `claim.prose` is what the author WROTE, whichever surface it is on: a
+    // question's prompt and explanation, a dialogue line's `text`, a landmark's
+    // `blurb`, a territory acknowledgement's `statement`. Options are exempt and
+    // the reason is measured — see scripts/lib/claims.mjs's `questionClaim`.
+    for (const { field, locale, text } of claim.prose) {
+      const run = longestSharedRun(extraction, text);
+      if (run > tally.maxVerbatimRun) {
+        tally.maxVerbatimRun = run;
+        tally.maxVerbatimWhere = `${where} ${field}.${locale}`;
+      }
+      if (run >= VERBATIM_RUN_WORDS) {
+        fail(
+          `${where}: ${field}.${locale} shares a run of ${String(run)} consecutive words with ` +
+            `${String(sourceId)}'s text, at or over the threshold of ` +
+            `${String(VERBATIM_RUN_WORDS)}. ADR-0003 check 5: the wording must not be verbatim. ` +
+            `Paraphrase it. Options are exempt and prose is not — see the header for why.`,
+        );
       }
     }
   }
@@ -957,17 +1119,30 @@ for (const path of questionFiles) {
   // only by the contract test, so the two commands the content guidelines name
   // agreed that a wrong fact was fine.
   //
-  // It is checked for EVERY question, not only the shipped ones. A banned term
+  // It is checked for EVERY claim, not only the shipped ones. A banned term
   // is a defect in the answer, and `rejected` or `quarantined` is where a
   // defective answer waits to be fixed, not a licence for it — which is also
   // exactly what the contract gate does over the same corpus. Nothing here may
   // be weaker than the file it was extracted from.
+  //
+  // `claim.asserted` is what a player is told is TRUE. For a question that is
+  // its options and explanation and deliberately not its prompt, which may name
+  // a stale topic without asserting a stale value. A blurb has no such
+  // separation — every word of it is the assertion — so the claim record carries
+  // the texts and the surface to name them by, and §3 reads them the same way
+  // for both.
   const bannedHere = flags.flatMap((flag) => flag.bannedFromAnswers ?? []);
   if (bannedHere.length > 0) {
-    tally.banQuestions += 1;
+    tally.banClaims += 1;
     tally.banTermChecks += bannedHere.length;
   }
-  const banFaults = bannedTermFaults(question, String(sourceId), flags, where);
+  const banFaults = bannedTermFaultsIn(
+    claim.asserted,
+    String(sourceId),
+    flags,
+    where,
+    claim.surface,
+  );
   for (const fault of banFaults) fail(fault);
   tally.banFaults += banFaults.length;
 
@@ -1398,6 +1573,48 @@ if (tally.questions === 0) {
       `evidence of anything, and reporting it as a pass is how a gate becomes decorative.`,
   );
 }
+
+/*
+ * THE SAME FLOOR, PER COLLECTION. ADR-0024.
+ *
+ * The walk above is scoped by the shape of a claim, so a collection that
+ * disappears, gets renamed, or stops carrying `factClaim` blocks produces output
+ * IDENTICAL to one that was checked and was clean — the summary's counts go down
+ * and nothing fails. That is the exact defect this whole task was raised to fix,
+ * reintroduced one level up: gate B did not fail over `content/quests/`, it
+ * simply never looked there.
+ *
+ * So the three collections that carry claims today are named ONCE, in
+ * scripts/lib/claims.mjs, and each must yield at least one FACTUAL claim. The
+ * list is a floor and not a scope: a fourth collection is walked and checked
+ * without appearing here, and the per-collection line printed below is what
+ * makes it visible. `--collections` restates the floor for a tree that
+ * legitimately has fewer — the fixture trees in
+ * tests/unit/infra/verify-content-gate.test.ts are questions-only by design, and
+ * stating that on the command line is a decision somebody made rather than an
+ * absence nobody noticed.
+ */
+for (const name of REQUIRED_COLLECTIONS) {
+  const collection = collections.get(name);
+  if (collection === undefined) {
+    fail(
+      `content/${name}/ does not exist, and it is one of the collections this gate requires claims ` +
+        `from (${REQUIRED_COLLECTIONS.join(', ')}). A missing directory and a clean one produce the ` +
+        `same silence, so this is a failure rather than a smaller number in the summary. If the ` +
+        `collection genuinely moved, say so with --collections.`,
+    );
+    continue;
+  }
+  if (collection.factual === 0) {
+    fail(
+      `content/${name}/ holds ${String(collection.documents)} document(s) and ${String(collection.claims)} ` +
+        `claim(s), of which ZERO state a fact. This gate would report green over it either way, so ` +
+        `zero is a failure: either the recogniser has stopped matching the blocks in those files, ` +
+        `or every claim in the collection has been marked "factual": false, which is an authoring ` +
+        `decision and not something a gate should discover by going quiet.`,
+    );
+  }
+}
 if (!NO_HISTORY && history.ran) {
   if (history.commits === 0) {
     fail(
@@ -1425,13 +1642,13 @@ const statusLine = [...tally.byStatus.entries()]
   .join(', ');
 
 const rowNames = {
-  1: 'row 1 per-question re-verification, asOf clock',
+  1: 'row 1 per-claim re-verification, asOf clock',
   2: 'row 2 source-unrevised, liveChecks clock',
   3: 'row 3 source-withdrawn',
 };
 const rowLine =
   tally.rows.size === 0
-    ? '(none — no question resolved to a source)'
+    ? '(none — no claim resolved to a source)'
     : [...tally.rows.entries()]
         .sort(([a], [b]) => a - b)
         .map(([row, count]) => `${String(count)} on ${rowNames[row] ?? `row ${String(row)}`}`)
@@ -1440,9 +1657,50 @@ const rowLine =
 for (const message of notes) console.log(`verify-content: note: ${message}`);
 
 console.log(
-  `verify-content: ${String(tally.questions)} question(s) in ${String(sourceFiles.length)} ` +
+  `verify-content: ${String(tally.claims)} claim(s) in ${String(sourceFiles.length)} ` +
     `source register(s) — ${statusLine || 'no statuses'}; ${String(tally.shipped)} shipped, ` +
-    `${String(tally.questions - tally.shipped)} excluded from the build.`,
+    `${String(tally.claims - tally.shipped)} excluded from the build.`,
+);
+/*
+ * WHERE THE CLAIMS WERE, per collection, on every run. ADR-0024.
+ *
+ * This line is the one that would have shown the hole this gate had: it walked
+ * content/questions/ and nothing else, and printed a count of questions, so a
+ * green run said "462 questions checked" while 60 claims a player reads on every
+ * level were not checked at all — and there was nothing in the output to notice
+ * the absence of. A per-collection breakdown cannot be read as coverage of a
+ * collection that is not in it.
+ */
+const silent = [...collections.entries()]
+  .filter(([, collection]) => collection.claims === 0)
+  .map(
+    ([name, collection]) =>
+      `${name === '(root)' ? 'content/ itself' : `content/${name}/`} ` +
+      `(${String(collection.documents)} document(s))`,
+  )
+  .sort((a, b) => a.localeCompare(b));
+for (const [name, collection] of [...collections.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+  if (collection.claims === 0) continue;
+  const statuses = [...collection.byStatus.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([status, count]) => `${String(count)} ${status}`)
+    .join(', ');
+  console.log(
+    `verify-content:   content/${name}/ — ${String(collection.documents)} document(s), ` +
+      `${String(collection.claims)} claim(s): ${String(collection.factual)} state a fact and were ` +
+      `checked, ${String(collection.flavour)} are declared factual: false and were not` +
+      `${collection.unchecked > 0 ? `, ${String(collection.unchecked)} could not be text-checked` : ''}` +
+      `${statuses === '' ? '' : ` — ${statuses}`}` +
+      `${REQUIRED_COLLECTIONS.includes(name) ? '' : ' (not named in --collections, so an empty run of it would not fail)'}.`,
+  );
+}
+// The rest of the walk, named rather than omitted. A collection carrying no
+// claim is the expected state for a source register or a locale bundle — and it
+// is also what a collection whose claims stopped being recognised looks like, so
+// the extent of the walk is printed rather than inferred from what is missing.
+console.log(
+  `verify-content: walked and found no claim in ${silent.length === 0 ? '(nothing else)' : silent.join(', ')}. ` +
+    `The floor that makes an empty collection a failure covers ${REQUIRED_COLLECTIONS.join(', ')}.`,
 );
 console.log(`verify-content: ADR-0016 re-check disposition — ${rowLine}.`);
 // Printed on every run, including when it is zero, and with the SIZE of what was
@@ -1451,16 +1709,16 @@ console.log(`verify-content: ADR-0016 re-check disposition — ${rowLine}.`);
 // (ADR-0024), and this gate was silent about a real violation for long enough
 // that the difference is not hypothetical.
 console.log(
-  `verify-content: ADR-0016 §3 banned terms — ${String(tally.banQuestions)} question(s) sat under ` +
+  `verify-content: ADR-0016 §3 banned terms — ${String(tally.banClaims)} claim(s) sat under ` +
     `a staleness flag naming ${String(tally.banTermChecks)} term(s) to search for; ` +
     `${String(tally.banFaults)} violation(s)` +
-    `${tally.banQuestions === 0 ? '. NOTHING WAS SEARCHED: no question resolved to a flag with a bannedFromAnswers list, so this line is not evidence of anything' : ''}.`,
+    `${tally.banClaims === 0 ? '. NOTHING WAS SEARCHED: no claim resolved to a flag with a bannedFromAnswers list, so this line is not evidence of anything' : ''}.`,
 );
 console.log(
   `verify-content: text checks ran against a cached extraction for ` +
-    `${String(tally.verbatimChecked)} question(s); ${String(tally.verbatimUnchecked)} could NOT be ` +
+    `${String(tally.verbatimChecked)} claim(s); ${String(tally.verbatimUnchecked)} could NOT be ` +
     `checked because the extraction is absent` +
-    `${tally.verbatimUnchecked > 0 ? ' (this is the CI case — those questions are unchecked, not passing)' : ''}.`,
+    `${tally.verbatimUnchecked > 0 ? ' (this is the CI case — those claims are unchecked, not passing)' : ''}.`,
 );
 if (tally.verbatimChecked > 0) {
   console.log(

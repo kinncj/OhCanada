@@ -149,8 +149,7 @@ export const applicableFlags = (manifest, chapter, page) =>
  * breaking) and it is still applied by `dispositionRow`; it was never the
  * failure.
  */
-export const bannedTermFaults = (question, sourceId, flags, where) => {
-  const texts = answerText(question);
+export const bannedTermFaultsIn = (texts, sourceId, flags, where, surface) => {
   const faults = [];
   for (const flag of flags) {
     const banned = (flag.bannedFromAnswers ?? []).flatMap((value) => {
@@ -161,7 +160,7 @@ export const bannedTermFaults = (question, sourceId, flags, where) => {
     const hits = banned.filter((term) => texts.some((text) => mentionsTerm(text, term)));
     if (hits.length === 0) continue;
     faults.push(
-      `${where}: an option or explanation contains ${hits.map((term) => `"${term}"`).join(', ')}, ` +
+      `${where}: ${surface} contains ${hits.map((term) => `"${term}"`).join(', ')}, ` +
         `which ${sourceId} bans from answers under the staleness flag "${str(flag.topic) ?? '?'}". ` +
         `That flag declares upstream: "does-not-revise" - the official source states the same ` +
         `out-of-date thing the cache does, so re-verifying can never correct this and marking the ` +
@@ -172,6 +171,21 @@ export const bannedTermFaults = (question, sourceId, flags, where) => {
   }
   return faults;
 };
+
+/**
+ * The same rule over a question, which is where it started and still the shape
+ * most of the corpus is in.
+ *
+ * The split exists because §3 is about ASSERTIONS, and a question is not the
+ * only thing that makes one. A quest's dialogue line and a level's landmark
+ * blurb say something is true to the same player for the same purpose, and they
+ * have no options and no explanation to read — so the surface a message names is
+ * a parameter and the rule is not. Passing a blurb in disguised as an `options`
+ * array would work and would print "an option or explanation contains" about a
+ * sentence that is neither, which is how a report stops being actionable.
+ */
+export const bannedTermFaults = (question, sourceId, flags, where) =>
+  bannedTermFaultsIn(answerText(question), sourceId, flags, where, 'an option or explanation');
 
 /**
  * The live checks naming a chapter, oldest first. Per chapter and not per

@@ -131,6 +131,135 @@ const question = (overrides: Json = {}): Json => ({
 const NULL_FORM = { status: 'unverified', model: '', checkedAt: null, sourceHash: '', evidence: '' };
 
 /* -------------------------------------------------------------------------- */
+/* The other two shapes a claim arrives in                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * `common.schema.json#/$defs/factClaim`, the block a quest line and a landmark
+ * blurb carry. Everything below it is the same apparatus a question has at its
+ * root — which is the whole point, and was exactly why walking one directory
+ * looked like walking the corpus.
+ */
+const factOf = (overrides: Json = {}): Json => ({
+  factual: true,
+  source: {
+    sourceId: 'fixture-source',
+    chapter: CHAPTER,
+    page: 55,
+    quote: 'Parliament has three parts: the Sovereign, the Senate and the House of Commons.',
+    url: 'https://example.invalid/fixture',
+    sourceHash: SOURCE_SHA,
+    asOf: daysAgo(3),
+    volatile: false,
+  },
+  verification: {
+    status: 'verified',
+    model: 'fixture-model',
+    checkedAt: daysAgo(2),
+    sourceHash: SOURCE_SHA,
+    evidence: 'Parliament has three parts: the Sovereign',
+  },
+  ...overrides,
+});
+
+/** A quest whose one factual dialogue line passes every rule. */
+const quest = (line: Json = {}): Json => ({
+  $schema: '../schemas/quest.schema.json',
+  id: 'fix-quest',
+  levelId: 'fix-level',
+  giver: 'guide',
+  title: { en: 'A fixture quest', fr: 'Une quete de fixture' },
+  summary: { en: 'Walk and talk.', fr: 'Marchez et parlez.' },
+  steps: [
+    {
+      id: 'talk',
+      kind: 'talk',
+      targetId: 'guide',
+      prompt: { en: 'Talk to the guide', fr: 'Parlez au guide' },
+      dialogue: [
+        {
+          speaker: 'guide',
+          expression: 'happy',
+          text: { en: 'Hello again!', fr: 'Rebonjour!' },
+          fact: { factual: false, source: null, verification: null },
+        },
+        {
+          speaker: 'guide',
+          expression: 'neutral',
+          text: {
+            en: 'Our Parliament has a Crown, an elected chamber and an appointed one.',
+            fr: 'Notre Parlement a une Couronne, une chambre elue et une chambre nommee.',
+          },
+          fact: factOf(),
+          ...line,
+        },
+      ],
+    },
+  ],
+});
+
+/** A level whose territory statement and one landmark blurb pass every rule. */
+const level = (poi: Json = {}): Json => ({
+  $schema: '../schemas/level.schema.json',
+  id: 'fix-level',
+  pois: [
+    {
+      id: 'a-landmark',
+      name: { en: 'A landmark', fr: 'Un point de repere' },
+      blurb: {
+        en: 'A bill becomes law only after both chambers agree and the Crown assents.',
+        fr: 'Un projet de loi devient loi seulement apres accord des deux chambres.',
+      },
+      fact: factOf({
+        source: {
+          ...(factOf().source as Json),
+          quote: 'A bill must pass both Houses before it receives royal assent and becomes law.',
+        },
+        verification: {
+          ...(factOf().verification as Json),
+          evidence: 'A bill must pass both Houses before it receives royal assent',
+        },
+      }),
+      ...poi,
+    },
+  ],
+});
+
+/**
+ * A tree carrying all three collections, for the cases about the widened walk.
+ * `tree()` above stays questions-only on purpose: the cases that use it are each
+ * about one rule, and extra documents would put other documents' output in them.
+ */
+const treeWithClaims = (
+  label: string,
+  parts: { questions?: readonly Json[]; quests?: readonly Json[]; levels?: readonly Json[] },
+  source: Json = manifest(),
+): string => {
+  const root = tree(label, parts.questions ?? [question()], source);
+  (parts.quests ?? [quest()]).forEach((doc, index) => {
+    write(root, `content/quests/fix-quest-${String(index)}.json`, doc);
+  });
+  (parts.levels ?? [level()]).forEach((doc, index) => {
+    write(root, `content/levels/fix-level-${String(index)}.json`, doc);
+  });
+  return root;
+};
+
+/** Gates B and C over a tree with all three collections, at the real floor. */
+const runClaims = (root: string): Run =>
+  run(root, ['--no-history', '--collections', 'questions,quests,levels']);
+
+/** The CLI with no `--collections` at all, so the DEFAULT floor is exercised. */
+const runRaw = (root: string, extra: readonly string[] = []): Run => {
+  const result = spawnSync(
+    process.execPath,
+    [SCRIPT, '--root', root, '--now', TODAY, '--require-source', '--no-history', ...extra],
+    { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: GIT_ENV },
+  );
+  return { status: result.status ?? -1, out: `${result.stdout}${result.stderr}` };
+};
+
+/* -------------------------------------------------------------------------- */
 /* Scratch trees and scratch repositories                                      */
 /* -------------------------------------------------------------------------- */
 
@@ -189,10 +318,33 @@ interface Run {
   readonly out: string;
 }
 
+/**
+ * `--collections questions` on every fixture run, deliberately and visibly.
+ *
+ * The gate's anti-vacuum floor requires `content/questions`, `content/quests`
+ * and `content/levels` each to yield a factual claim, because a collection that
+ * silently yields none produces output identical to a clean one — which is the
+ * defect the widened gate exists to close, and it would be a poor joke to
+ * reintroduce it one level up. These fixture trees are questions-only by design:
+ * every case below is about one rule, and adding a quest and a level to all of
+ * them would make each case's output depend on documents it is not about. So the
+ * narrower floor is STATED here rather than being an absence nobody noticed, and
+ * the cases at the bottom of this file drive the real default over trees that do
+ * carry quests and levels.
+ */
 const run = (root: string, extra: readonly string[] = []): Run => {
   const result = spawnSync(
     process.execPath,
-    [SCRIPT, '--root', root, '--now', TODAY, '--require-source', ...extra],
+    [
+      SCRIPT,
+      '--root',
+      root,
+      '--now',
+      TODAY,
+      '--require-source',
+      ...(extra.includes('--collections') ? [] : ['--collections', 'questions']),
+      ...extra,
+    ],
     { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: GIT_ENV },
   );
   return { status: result.status ?? -1, out: `${result.stdout}${result.stderr}` };
@@ -675,7 +827,14 @@ describe('separation of duties, over git history (ADR-0003)', () => {
  * previous recogniser matched on an EXACT key set and stopped recognising a
  * block the moment the schema grew a field.
  */
-const commonSchema = (extra: { verification?: readonly string[]; review?: readonly string[] } = {}): Json => ({
+const commonSchema = (
+  extra: {
+    verification?: readonly string[];
+    review?: readonly string[];
+    /** Rename `factual` to this, to drive the claim recogniser's drift case. */
+    claim?: string;
+  } = {},
+): Json => ({
   $schema: 'https://json-schema.org/draft/2020-12/schema',
   $id: 'https://truenorth.app/schemas/common.schema.json',
   $defs: {
@@ -686,6 +845,10 @@ const commonSchema = (extra: { verification?: readonly string[]; review?: readon
     communityReview: {
       type: 'object',
       required: ['status', 'reviewer', 'organisation', 'date', 'scope', 'note', ...(extra.review ?? [])],
+    },
+    factClaim: {
+      type: 'object',
+      required: [extra.claim ?? 'factual', 'source', 'verification'],
     },
   },
 });
@@ -1124,12 +1287,12 @@ describe("ADR-0003's CI clause, per document", () => {
 
     const reported = spawnSync(
       process.execPath,
-      [SCRIPT, '--root', root, '--now', TODAY, '--no-history'],
+      [SCRIPT, '--root', root, '--now', TODAY, '--no-history', '--collections', 'questions'],
       { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: GIT_ENV },
     );
     expect(reported.status).toBe(0);
     expect(reported.stdout).toContain('1 could NOT be checked because the extraction is absent');
-    expect(reported.stdout).toContain('those questions are unchecked, not passing');
+    expect(reported.stdout).toContain('those claims are unchecked, not passing');
 
     // and it says how to get the file back, out of the register rather than out
     // of folklore. This note used to tell a contributor to "re-fetch" the
@@ -1159,7 +1322,7 @@ describe("ADR-0003's CI clause, per document", () => {
 
     const reported = spawnSync(
       process.execPath,
-      [SCRIPT, '--root', root, '--now', TODAY, '--no-history'],
+      [SCRIPT, '--root', root, '--now', TODAY, '--no-history', '--collections', 'questions'],
       { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: GIT_ENV },
     );
     expect(reported.status).toBe(0);
@@ -1215,7 +1378,7 @@ describe("ADR-0016 §2's re-check table", () => {
       ]),
     );
     expect(result.status).toBe(1);
-    expect(result.out).toContain('row 1 per-question re-verification');
+    expect(result.out).toContain('row 1 per-claim re-verification');
     expect(result.out).toContain("Row 1's clock is on the question");
   });
 
@@ -1278,7 +1441,7 @@ describe("ADR-0016 §2's re-check table", () => {
       ),
     );
     expect(result.status).toBe(1);
-    expect(result.out).toContain('row 1 per-question re-verification');
+    expect(result.out).toContain('row 1 per-claim re-verification');
     expect(result.out).toContain('absent and "unknown" are treated exactly as "revises"');
   });
 
@@ -1407,7 +1570,7 @@ describe("ADR-0016 section 3: an answer may not depend on a fact nobody will cor
     expect(result.out).toContain('bans from answers under the staleness flag');
     // The demotion is still made - nothing is excused by a rule it is currently
     // breaking - and it is still not the failure.
-    expect(result.out).toContain('1 on row 1 per-question re-verification');
+    expect(result.out).toContain('1 on row 1 per-claim re-verification');
   });
 
   it('fails the same way when the term is in the explanation and only in French', () => {
@@ -1476,13 +1639,193 @@ describe("ADR-0016 section 3: an answer may not depend on a fact nobody will cor
       tree('c0-ban-counted', [question()], withLiveCheck('source-unrevised', dateAgo(1))),
     );
     expect(searched.out).toContain(
-      'banned terms — 1 question(s) sat under a staleness flag naming 2 term(s) to search for; ' +
+      'banned terms — 1 claim(s) sat under a staleness flag naming 2 term(s) to search for; ' +
         '0 violation(s)',
     );
 
     const nothing = runFlat(tree('c0-ban-nothing', [question()]));
     expect(nothing.out).toContain('NOTHING WAS SEARCHED');
     expect(nothing.status).toBe(0);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/* The widened walk - a claim is a claim wherever a player reads it             */
+/* -------------------------------------------------------------------------- */
+
+describe('gate B walks every claim in content/, not every file in content/questions/', () => {
+  it('checks a quest line and a landmark blurb, and says how many of each', () => {
+    // The baseline the cases below break one at a time, and the line that would
+    // have shown the hole: before this, a green run printed "462 question(s)"
+    // over a corpus that also held 60 unchecked claims, and there was nothing in
+    // the output to notice the absence of.
+    const result = runClaims(treeWithClaims('w-baseline', {}));
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+    expect(result.out).toContain('content/questions/ — 1 document(s), 1 claim(s)');
+    expect(result.out).toContain(
+      'content/quests/ — 1 document(s), 2 claim(s): 1 state a fact and were checked, 1 are ' +
+        'declared factual: false and were not',
+    );
+    expect(result.out).toContain('content/levels/ — 1 document(s), 1 claim(s)');
+  });
+
+  it('fails a fabricated quote in a line of NPC dialogue', () => {
+    // The check ADR-0003 calls the one that catches a fabricated citation before
+    // any verifier runs. This repository has shipped two of those, in questions,
+    // where the check was running. Nothing was looking at dialogue.
+    const fabricated = quest({
+      fact: factOf({
+        source: {
+          ...(factOf().source as Json),
+          quote: 'Parliament has four parts: the Sovereign and the Senate.',
+        },
+      }),
+    });
+    const result = runClaims(treeWithClaims('w-quest-quote', { quests: [fabricated] }));
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('is not a contiguous passage');
+    expect(result.out).toContain('/steps/0/dialogue/1/fact');
+  });
+
+  it('fails a landmark blurb lifted verbatim from the source', () => {
+    const lifted = level({
+      blurb: {
+        en: 'The Governor General is appointed by the Sovereign on the advice of the Prime Minister.',
+        fr: 'Le gouverneur general est nomme sur avis du premier ministre.',
+      },
+    });
+    const result = runClaims(treeWithClaims('w-level-verbatim', { levels: [lifted] }));
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('blurb.en shares a run of 15 consecutive words');
+    expect(result.out).toContain('the wording must not be verbatim');
+  });
+
+  it('fails an unverified claim on a level, exactly as it fails an unverified question', () => {
+    const unchecked = level({ fact: factOf({ verification: NULL_FORM }) });
+    const result = runClaims(treeWithClaims('w-level-unverified', { levels: [unchecked] }));
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('this sentence ships — a player reads it on the level');
+  });
+
+  it('leaves a line the author declared states no fact alone', () => {
+    // The negative case, and it carries the weight: `factual: false` is the
+    // author's recorded judgement about a greeting, and a gate that demanded a
+    // citation for "Hello again!" would be turned off within a day.
+    const result = runClaims(treeWithClaims('w-flavour', {}));
+    expect(result.out).toContain('1 are declared factual: false and were not');
+    expect(result.status).toBe(0);
+  });
+
+  it('fails a banned term in a blurb, and names the blurb rather than an option', () => {
+    const stale = level({
+      blurb: {
+        en: 'The chamber sits under a portrait of Her Majesty.',
+        fr: 'La chambre siege sous un portrait de Sa Majeste.',
+      },
+    });
+    const result = runClaims(
+      treeWithClaims(
+        'w-level-banned',
+        { levels: [stale] },
+        withLiveCheck('source-unrevised', dateAgo(1)),
+      ),
+    );
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('contains "Her Majesty"');
+    // ADR-0016 §3's message used to be hard-coded to "an option or explanation",
+    // which is a sentence about a surface a blurb does not have. A report that
+    // names the wrong field is a report somebody has to decode.
+    expect(result.out).toContain('the name and blurb this claim is attached to');
+  });
+
+  it('fails a factClaim the recogniser cannot match, rather than passing over it', () => {
+    // THE TRIPWIRE. `isFactClaim` is what scopes every check a non-question claim
+    // gets, and a recogniser that quietly stops matching produces a run identical
+    // to a clean one - which is precisely what ADR-0003's `record` amendment did
+    // to gate A's communityReview rule, where the only signal was a count in the
+    // summary going down. Here the block has lost its `verification` key, so the
+    // document's bytes and the recogniser disagree.
+    const malformed = level({
+      fact: { factual: true, source: (factOf().source as Json) },
+    });
+    const result = runClaims(treeWithClaims('w-tripwire', { levels: [malformed] }));
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('"factual" key(s) and the claim recogniser found');
+    expect(result.out).toContain('silently stopped inspecting');
+  });
+
+  it('fails a collection that exists and yields no factual claim', () => {
+    // ADR-0024, one level up from the gate it is about. A quests directory whose
+    // claims are all flavour produces output identical to one that was checked
+    // and was clean.
+    const allFlavour = quest({ fact: { factual: false, source: null, verification: null } });
+    const result = runClaims(treeWithClaims('w-empty-collection', { quests: [allFlavour] }));
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('of which ZERO state a fact');
+    expect(result.out).toContain('not something a gate should discover by going quiet');
+  });
+
+  it('fails a collection that has gone missing entirely, by the DEFAULT floor', () => {
+    // No `--collections` here, so this is the floor the Makefile target runs
+    // under. A directory that is renamed or deleted must not lift the
+    // requirement by disappearing.
+    const result = runRaw(tree('w-missing-collection', [question()]));
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('content/quests/ does not exist');
+    expect(result.out).toContain('content/levels/ does not exist');
+    expect(result.out).toContain('A missing directory and a clean one produce the same silence');
+  });
+
+  it('names a collection nobody declared a floor for, rather than counting it silently', () => {
+    const root = treeWithClaims('w-unlisted', {});
+    write(root, 'content/vignettes/fix-0.json', level());
+    const result = runClaims(root);
+    expect(result.out).toContain('content/vignettes/ — 1 document(s), 1 claim(s)');
+    expect(result.out).toContain('not named in --collections');
+    expect(result.status).toBe(0);
+  });
+
+  it('does not read the schemas that DEFINE a claim as claims', () => {
+    const root = treeWithClaims('w-schema-not-claim', {});
+    write(root, 'content/schemas/common.schema.json', commonSchema());
+    write(root, 'content/schemas/question.schema.json', {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      properties: {
+        prompt: { type: 'object' },
+        options: { type: 'array' },
+        correctIndex: { type: 'integer' },
+      },
+    });
+    const result = runClaims(root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.out).toContain('content/questions/ — 1 document(s), 1 claim(s)');
+    expect(result.out).not.toContain('content/schemas/');
+  });
+
+  it('fails when the schema defines a factClaim the recogniser would not match', () => {
+    const root = treeWithClaims('w-claim-schema-drift', {});
+    write(root, 'content/schemas/common.schema.json', commonSchema({ claim: 'drift' }));
+    const result = runClaims(root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('this gate identifies a claim by "factual"');
+    expect(result.out).toContain('would skip it silently');
+  });
+
+  it('says out loud when the schemas here define no claim to check the recogniser against', () => {
+    // ABSENT AND DIVERGED ARE DIFFERENT ANSWERS. A schema that does not define
+    // the shape cannot be compared with a recogniser of it, and reporting that
+    // as a failure would make every scratch tree carrying a partial schema red
+    // for a reason that has nothing to do with the tree. Reporting it as nothing
+    // at all is what makes a gap read as coverage, so it is a note.
+    const root = treeWithClaims('w-no-claim-schema', {});
+    const { $defs, ...rest } = commonSchema() as { $defs: Json };
+    const { factClaim: _factClaim, ...withoutClaim } = $defs;
+    write(root, 'content/schemas/common.schema.json', { ...rest, $defs: withoutClaim });
+    const result = runClaims(root);
+    expect(result.out).toContain('defines no factClaim');
+    expect(result.out).toContain('nothing here confirmed it matches the schema');
+    expect(result.status).toBe(0);
   });
 });
 
@@ -1517,9 +1860,9 @@ describe('the gate refuses to pass by having nothing to check', () => {
 
   it('reports real counts rather than a bare tick', () => {
     const result = runFlat(tree('d-counts', [question(), question({ id: 'fix-02' })]));
-    expect(result.out).toContain('2 question(s) in 1 source register(s)');
+    expect(result.out).toContain('2 claim(s) in 1 source register(s)');
     expect(result.out).toContain('2 verified; 2 shipped, 0 excluded');
-    expect(result.out).toContain('text checks ran against a cached extraction for 2 question(s)');
+    expect(result.out).toContain('text checks ran against a cached extraction for 2 claim(s)');
     expect(result.out).toContain('longest verbatim run in authored prose');
     expect(result.status).toBe(0);
   });

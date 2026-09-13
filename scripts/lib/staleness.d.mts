@@ -78,6 +78,15 @@ export declare const applicableFlags: (
   page: number | null,
 ) => readonly StalenessFlag[];
 
+export declare const bannedTermFaultsIn: (
+  texts: readonly string[],
+  sourceId: string,
+  flags: readonly StalenessFlag[],
+  where: string,
+  /** How to name `texts` in a message: "an option or explanation", "the blurb". */
+  surface: string,
+) => readonly string[];
+
 export declare const bannedTermFaults: (
   question: AnswerBearing,
   sourceId: string,
