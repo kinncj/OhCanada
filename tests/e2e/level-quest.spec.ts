@@ -69,6 +69,19 @@ interface QuestFile {
     readonly id: string;
     readonly kind: string;
     readonly prompt: { readonly en: string; readonly fr: string };
+    /**
+     * What the step says when the player reaches its target.
+     *
+     * On a `talk` step this is the offer. On a `visit` step it is the teaching
+     * this suite exists to keep on screen: the quests were rebuilt so that a
+     * player is told why a landmark matters and asked about it standing there,
+     * and for a while the runtime read the field on `steps[0]` only, so 27
+     * authored lines validated, shipped and were drawn nowhere.
+     */
+    readonly dialogue?: readonly {
+      readonly speaker: string;
+      readonly text: { readonly en: string; readonly fr: string };
+    }[];
   }[];
 }
 
@@ -136,6 +149,10 @@ const STAMP_SENTENCE = text('en', `stamp.${START_LEVEL}.earned` as Parameters<ty
 /** The step after the opening `talk`, which is what the tracker shows first. */
 const SECOND_STEP = QUEST.steps[1];
 
+/** The first landmark the task sends the player to, and what it teaches there. */
+const FIRST_VISIT = QUEST.steps.find((step) => step.kind === 'visit');
+const FIRST_VISIT_LINES = (FIRST_VISIT?.dialogue ?? []).map((entry) => entry.text.en);
+
 test.describe.configure({ mode: 'serial', timeout: 300_000 });
 
 async function openLevel(page: Page, query = '', level: string = START_LEVEL): Promise<void> {
@@ -144,28 +161,80 @@ async function openLevel(page: Page, query = '', level: string = START_LEVEL): P
 }
 
 /**
- * Walk right in short holds until something is in reach.
+ * Walk right, watching the HUD **in the page**, and stop the moment it offers
+ * something this walk is looking for.
  *
- * Held rather than tapped, because holding is how the game is played, and in
- * bursts rather than continuously because reach is a window a few hundred world
- * pixels wide: a single long hold walks straight through it.
+ * ## Why the watching is in the page and not here
+ *
+ * Every check from the test process costs a round trip, so a walk written as
+ * "hold 150 ms, ask, hold again" samples the world about every 45 world pixels
+ * however short the hold is — the movement is dominated by the round trip, not
+ * by the key. That is fine for a landmark in the middle of a level, whose reach
+ * is hundreds of pixels wide, and it is **not** fine for the last landmark in
+ * Halifax: `harbour-tug` sits at x 6806 and the level's arrival line is at
+ * x 6660 (`app/adapters/phaser/level-exit.ts`: half a view back from the right
+ * bound), so the band where the tug is in reach and the level has not yet ended
+ * is about fifty pixels wide. A walk sampling every forty-five lands in it about
+ * half the time, which is a coin toss dressed as a test.
+ *
+ * Polling inside the page on `requestAnimationFrame` sees the prompt on the
+ * frame it appears, and the key is released one round trip later instead of one
+ * *sample* later. **Reported, and not worked around further than this**: a
+ * required quest landmark placed past its level's arrival line is a content
+ * defect — the player who holds to move is told "Level finished!" as they walk
+ * up to the last thing their task names, and the completion card draws once per
+ * sitting, so finishing the task afterwards says nothing at all. Halifax's
+ * `harbour-tug` and Peggy's Cove's `village-house` are both past their lines.
+ *
+ * Returns the prompt it stopped at, `'card'` when the level ended first — a real
+ * outcome, not a timeout — and `null` when the walk ran out of time.
+ */
+async function walkRightWatching(
+  page: Page,
+  want: { readonly ignore?: readonly string[]; readonly wanted?: string },
+  budgetMs = 40_000,
+): Promise<string | null> {
+  await page.keyboard.down('ArrowRight');
+  try {
+    return await page.evaluate(
+      async ({ ignore, wanted, budget }) => {
+        const visible = (testId: string): Element | null => {
+          const found = document.querySelector(`[data-testid="${testId}"]`);
+          return found !== null && (found as HTMLElement).checkVisibility() ? found : null;
+        };
+        const deadline = performance.now() + budget;
+        while (performance.now() < deadline) {
+          if (visible('quest-complete-card') !== null) return 'card';
+          const offered = visible('interact-prompt')?.textContent ?? null;
+          if (offered !== null) {
+            if (wanted === undefined ? !ignore.includes(offered) : offered === wanted) {
+              return offered;
+            }
+          }
+          await new Promise((resolve) => {
+            requestAnimationFrame(() => {
+              resolve(null);
+            });
+          });
+        }
+        return null;
+      },
+      { ignore: [...(want.ignore ?? [])], wanted: want.wanted, budget: budgetMs },
+    );
+  } finally {
+    await page.keyboard.up('ArrowRight');
+  }
+}
+
+/**
+ * Walk right until something — anything — is in reach.
  *
  * Returns what the HUD offered, or `null` when the walk ran out — and `'card'`
  * when the player reached the end of the level instead, which is a real outcome
  * and not a timeout.
  */
-async function walkUntilSomethingIsInReach(page: Page, tries = 140): Promise<string | null> {
-  const prompt = page.getByTestId('interact-prompt');
-  const card = page.getByTestId('quest-complete-card');
-  for (let attempt = 0; attempt < tries; attempt += 1) {
-    if (await card.isVisible()) return 'card';
-    if (await prompt.isVisible()) return (await prompt.textContent()) ?? '';
-    await page.keyboard.down('ArrowRight');
-    await page.waitForTimeout(150);
-    await page.keyboard.up('ArrowRight');
-  }
-  return null;
-}
+const walkUntilSomethingIsInReach = (page: Page): Promise<string | null> =>
+  walkRightWatching(page, { ignore: [] });
 
 /**
  * Walk right until the HUD offers **this** prompt, passing anything else.
@@ -177,27 +246,22 @@ async function walkUntilSomethingIsInReach(page: Page, tries = 140): Promise<str
  * opened a landmark's card and then failed for want of a dialogue, naming the
  * officer. **The level was right and the walk was short**, which is why this
  * takes the prompt it is looking for rather than the first one it meets.
- *
- * Returns the prompt when it is found, `'card'` when the walk reached the end of
- * the level instead — a real outcome, not a timeout — and `null` when the walk
- * ran out.
  */
-async function walkUntilThePromptReads(
-  page: Page,
-  wanted: string,
-  tries = 200,
-): Promise<string | null> {
-  const prompt = page.getByTestId('interact-prompt');
-  const card = page.getByTestId('quest-complete-card');
-  for (let attempt = 0; attempt < tries; attempt += 1) {
-    if (await card.isVisible()) return 'card';
-    if (await prompt.isVisible() && (await prompt.textContent()) === wanted) return wanted;
-    await page.keyboard.down('ArrowRight');
-    await page.waitForTimeout(150);
-    await page.keyboard.up('ArrowRight');
-  }
-  return null;
-}
+const walkUntilThePromptReads = (page: Page, wanted: string): Promise<string | null> =>
+  walkRightWatching(page, { wanted });
+
+/**
+ * Walk right until the HUD offers something that is **not** one of these.
+ *
+ * The giver stands between the spawn and the first landmark, and once they have
+ * been talked to their prompt reads "Done. See this one again" — so a walk that
+ * stopped at the first mark stopped at the guide again, and engaging it opened
+ * the reminder rather than the landmark. Saying what to ignore is how a walk
+ * asks for "the next thing, not this one" without naming a landmark the level
+ * document is free to move.
+ */
+const walkPastAndOnTo = (page: Page, ignore: readonly string[]): Promise<string | null> =>
+  walkRightWatching(page, { ignore });
 
 /** Walk to the giver and open what they have to say. */
 async function talkToTheGiver(page: Page): Promise<void> {
@@ -276,6 +340,25 @@ async function engageOnce(page: Page): Promise<'answered' | 'talked' | 'nothing'
   if (opened === 'poi') {
     await page.getByTestId('poi-card-close').click();
     await expect(poi).toBeHidden();
+
+    /*
+     * The quest's own line about this place, when the player is standing on the
+     * `visit` step that names it. The card is the place in its own words; this
+     * is a named speaker commenting on it, and on two levels that speaker is the
+     * landmark rather than a person. It is dismissed here rather than asserted:
+     * `teaches at each landmark it sends the player to` below is where the words
+     * are read.
+     */
+    const spoke = await Promise.race([
+      dialogue.waitFor({ state: 'visible', timeout: 10_000 }).then(() => true),
+      question.waitFor({ state: 'visible', timeout: 10_000 }).then(() => false),
+    ]).catch(() => null);
+    if (spoke === null) return 'talked';
+    if (spoke) {
+      await page.getByTestId('dialogue-next').click();
+      await expect(dialogue).toBeHidden();
+    }
+
     /* The card's questions follow it, when this level's subject has any. */
     const asked = await question
       .waitFor({ state: 'visible', timeout: 10_000 })
@@ -299,6 +382,35 @@ async function engageOnce(page: Page): Promise<'answered' | 'talked' | 'nothing'
     return 'talked';
   }
   return 'nothing';
+}
+
+/** What the HUD offers for something already engaged in this sitting. */
+const DONE_PROMPT = text('en', 'hud.interact.done');
+
+/**
+ * A prompt without its count: "Answer 3 questions ({{done}} of 3)" filled in by
+ * the tracker is still the same step as the document's `prompt`.
+ */
+const stem = (line: string): string => (line.split('(')[0] ?? line).trim();
+
+/**
+ * Which step of the quest the tracker is showing, or `null`.
+ *
+ * The tracker draws the current step's own `prompt` (`TN-QUEST-02`: what to do
+ * now, not what the quest is called), so the document can be asked what the
+ * player is standing on. That is what lets the walk below tell "go somewhere"
+ * from "answer here" — and a walk that cannot tell them apart strolls past the
+ * landmark it was sent to, which is how this suite came to answer five of nine
+ * questions and finish the level instead of the task.
+ */
+function stepShowing(line: string | null): QuestFile['steps'][number] | null {
+  if (line === null || line.trim() === '') return null;
+  /* `endsWith`, because the HUD labels the strip — "Task: Find the Town Clock" —
+     and the label is `app/ui/copy.ts`'s while the sentence after it is the
+     document's. Matching on equality silently found nothing, which is how the
+     first draft of this walk went on strolling past the landmark it was sent
+     to and answered five of nine questions. */
+  return QUEST.steps.find((step) => stem(line).endsWith(stem(step.prompt.en))) ?? null;
 }
 
 /** Keep walking until this target is out of reach, so the next one can be. */
@@ -405,14 +517,117 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(page.getByTestId('dialogue-speaker')).toHaveText(GIVER_NAME_FR);
   });
 
-  test('runs to the end: every step, the stamp, the card and the way on', async ({ page }) => {
+  test('teaches at the landmark it sends the player to, before asking about it', async ({
+    page,
+  }) => {
+    /*
+     * The learning moment, on the shipped build, in the order it is meant to
+     * happen:
+     *
+     *   the landmark's card — the level document's own verified blurb, the place
+     *   in its own words, with no speaker;
+     *   then the `visit` step's line — a **named** speaker saying why it matters;
+     *   then the question.
+     *
+     * Two surfaces because they are two voices. The card is the place; the line
+     * has somebody behind it, and on Peggy's Cove and in the North that somebody
+     * is the landmark itself (ADR-0029), which is why the name is resolved from
+     * what the level placed rather than from a copy row.
+     *
+     * This is the test that fails if visit dialogue stops rendering. It reads
+     * the words out of `content/quests/` rather than typing them, so it goes red
+     * for the runtime dropping them and not for an author rewording them.
+     */
+    test.setTimeout(180_000);
+
+    expect(
+      FIRST_VISIT,
+      `content/quests/${QUEST.id}.json sends the player nowhere, so there is no landmark ` +
+        'for it to teach at.',
+    ).toBeDefined();
+    expect(
+      FIRST_VISIT_LINES.length,
+      `content/quests/${QUEST.id}.json step "${FIRST_VISIT?.id ?? ''}" carries no dialogue, ` +
+        'so this scenario would pass over a landmark that teaches nothing — which is exactly ' +
+        'the defect it was written for (ADR-0024).',
+    ).toBeGreaterThan(0);
+
+    await openLevel(page);
+    await talkToTheGiver(page);
+    await page.getByTestId('dialogue-accept').click();
+    await expect(page.getByTestId('dialogue')).toBeHidden();
+
+    const tracker = page.getByTestId('hud-quest-tracker');
+    await expect(tracker).toContainText(FIRST_VISIT?.prompt.en ?? '');
+
+    /* On past the giver — whose prompt now reads "Done. See this one again" —
+       and up to the first landmark the tracker names. */
+    const offered = await walkPastAndOnTo(page, [GIVER_PROMPT, text('en', 'hud.interact.done')]);
+    expect(
+      offered,
+      `walking on from the giver in ${START_LEVEL} never reached the landmark ` +
+        `"${FIRST_VISIT?.id ?? ''}" names. "card" means the walk reached the end of the level.`,
+    ).not.toBe(null);
+    expect(offered).not.toBe('card');
+    await page.getByTestId('interact-prompt').click();
+
+    /* The place first. */
+    const poi = page.getByTestId('poi-card');
+    await expect(poi).toBeVisible();
+    await page.getByTestId('poi-card-close').click();
+    await expect(poi).toBeHidden();
+
+    /* Then the speaker, in their own name — the same name the offer was made
+       in, resolved the same way (`TN-QUEST-08`). */
+    const dialogue = page.getByTestId('dialogue');
+    await expect(
+      dialogue,
+      `content/quests/${QUEST.id}.json step "${FIRST_VISIT?.id ?? ''}" carries ` +
+        `${String(FIRST_VISIT_LINES.length)} lines and the player was told none of them.`,
+    ).toBeVisible();
+    await expect(dialogue).toHaveAttribute('aria-modal', 'true');
+    await expect(dialogue).toHaveAccessibleName(GIVER_NAME);
+    await expect(page.getByTestId('dialogue-speaker')).toHaveText(GIVER_NAME);
+    for (const said of FIRST_VISIT_LINES) {
+      await expect(page.getByTestId('dialogue-text')).toContainText(said);
+    }
+    /* Nothing to decide: the task was accepted two landmarks ago. */
+    await expect(page.getByTestId('dialogue-accept')).toBeHidden();
+
+    /* The question waits behind the line rather than opening over it, and the
+       level stays stopped for the whole chain. */
+    await expect(page.getByTestId('question-card')).toBeHidden();
+    await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'true');
+
+    await page.getByTestId('dialogue-next').click();
+    await expect(dialogue).toBeHidden();
+    await expect(page.getByTestId('question-card')).toBeVisible();
+
+    /* And the canvas is still out of the accessibility tree behind all three. */
+    await expect(page.locator('main canvas')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  test('stops at every landmark the task names, and finishes the task', async ({ page }) => {
     /*
      * The whole route in one walk, because it is one walk: accept, follow the
      * tracker through each step, and finish. What proves the quest finished
      * rather than the level running out is the card's heading — `quest.done.title`
      * for a task, `level.complete.title` for a walk to the exit — and `TN-DONE`
      * calls drawing the wrong one a claim about something the player never did.
+     *
+     * **The walk follows the tracker rather than the first thing in reach.** It
+     * used to take whatever the HUD offered and then walk on, which worked while
+     * Halifax had one landmark to visit and one step to answer. The quest now
+     * sends the player to four landmarks and asks nine questions, and a walk
+     * that moved on after each engagement drifted a landmark behind the step it
+     * was on: it answered five, ran out of level and drew "Level finished!" —
+     * the *other* completion card, correctly, for a task it had not finished.
+     * The test had expired; the game had not. `stepShowing` is the fix, and the
+     * scenario it now proves is `TN-DONE`'s first: a player who stops at every
+     * landmark finishes the task.
      */
+    test.setTimeout(420_000);
+
     await openLevel(page);
     await talkToTheGiver(page);
     await page.getByTestId('dialogue-accept').click();
@@ -421,30 +636,53 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     const tracker = page.getByTestId('hud-quest-tracker');
     const seen: string[] = [];
 
-    for (let round = 0; round < 24 && !(await card.isVisible()); round += 1) {
-      const current = (await tracker.textContent()) ?? '';
-      if (current !== '' && !seen.includes(current)) seen.push(current);
+    for (let round = 0; round < 40 && !(await card.isVisible()); round += 1) {
+      const line = ((await tracker.textContent()) ?? '').trim();
+      if (line !== '' && !seen.includes(line)) seen.push(line);
 
-      const offered = await walkUntilSomethingIsInReach(page);
-      if (offered === 'card' || offered === null) break;
+      /*
+       * What the player is being asked to do decides what they do next, and
+       * that is the whole of this walk:
+       *
+       *  - an **`answer`** step counts a question wherever it is asked, so the
+       *    player stays where they are and engages the landmark again — even
+       *    though its prompt now reads "Done. See this one again", which is
+       *    about this sitting and not about the task. A three-answer step needs
+       *    exactly that;
+       *  - a **`visit`** step finishes only at the landmark it names, and one
+       *    already dealt with is behind the player — so they walk on to
+       *    something they have not seen rather than spending a question on a
+       *    place that cannot advance the step.
+       *
+       * Walking on after every engagement is what put the count a landmark
+       * behind the step it was on; engaging whatever was in reach regardless is
+       * what spent four questions on landmarks the step was not about and ran
+       * the player out of level with the task unfinished.
+       */
+      const onAnswerStep = stepShowing(line)?.kind === 'answer';
+      const prompt = page.getByTestId('interact-prompt');
+      const inReach = (await prompt.isVisible()) ? ((await prompt.textContent()) ?? '') : null;
 
-      /* Engage this target until it stops moving the quest on. An `answer` step
-         asks one question per engagement, so a step that wants three takes
-         three — which is the game, not a workaround. A character has one thing
-         to say per visit, so talking ends the visit either way. */
-      for (let engagement = 0; engagement < 8; engagement += 1) {
-        const before = await tracker.textContent();
-        const did = await engageOnce(page);
-        if (await card.isVisible()) break;
-        if (did !== 'answered') break;
-        if (!(await page.getByTestId('interact-prompt').isVisible())) break;
-        if ((await tracker.textContent()) !== before) break;
+      if (onAnswerStep) {
+        if (inReach === null) {
+          const offered = await walkUntilSomethingIsInReach(page);
+          if (offered === 'card' || offered === null) break;
+        }
+      } else if (inReach === null || inReach === DONE_PROMPT) {
+        const offered = await walkPastAndOnTo(page, [DONE_PROMPT]);
+        if (offered === 'card' || offered === null) break;
       }
 
-      /* Then walk on. Standing in reach of something already dealt with is how
-         a player gets stuck reading the same reminder, and how this loop would
-         spend every round on the first target. */
-      if (!(await card.isVisible())) await walkOnPast(page);
+      const did = await engageOnce(page);
+      if (await card.isVisible()) break;
+      if (onAnswerStep && did === 'answered') continue;
+
+      /*
+       * The interact prompt does not say *which* landmark it is offering — it is
+       * a copy row about a kind of thing (`TN-REACH`) — so the tracker is what
+       * knows whether this was the place. If it did not move, walk on.
+       */
+      if (((await tracker.textContent()) ?? '').trim() === line) await walkOnPast(page);
     }
 
     await expect(
@@ -457,6 +695,14 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
        player's feet. */
     await expect(card).toHaveAccessibleName(text('en', 'quest.done.title'));
     await expect(card).not.toHaveAccessibleName(text('en', 'level.complete.title'));
+
+    /* Every step of it was walked, not just the ones before the level ran out. */
+    const visits = QUEST.steps.filter((step) => step.kind === 'visit');
+    expect(
+      seen.length,
+      `the tracker only ever showed ${String(seen.length)} of ${String(QUEST.steps.length - 1)} ` +
+        `steps: ${seen.join(' | ')}`,
+    ).toBeGreaterThanOrEqual(visits.length);
 
     /* The stamp is this level's own sentence, written out and not composed. */
     await expect(card.getByTestId('quest-complete-stamp')).toHaveText(STAMP_SENTENCE);
@@ -484,6 +730,71 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     const passport = page.getByTestId('passport');
     await expect(passport).toBeVisible();
     await expect(passport.getByTestId('passport-counts')).toContainText('1 of 10');
+  });
+
+  test('walks past every landmark, and still finishes the level', async ({ page }) => {
+    /*
+     * The other way a level ends, and until now it had no test of its own on
+     * this level — it was being exercised by accident, by a walk that meant to
+     * finish the task and ran out of level instead.
+     *
+     * `docs/stories/TN-DONE-finishing-a-level.md`: **both cards are real.**
+     * Finishing the task draws "Task done!" and reaching the end draws "Level
+     * finished!"; both earn the one stamp, both carry the same two rows, and
+     * neither ranks above the other. A player who walks the length of Halifax
+     * without tapping anything has finished the level, and the game says so
+     * without claiming they did a task they never accepted.
+     *
+     * Nothing is engaged here: no dialogue, no card, no question. The tracker
+     * must stay away for the whole walk, because there is no task.
+     */
+    test.setTimeout(300_000);
+
+    await openLevel(page);
+    const card = page.getByTestId('quest-complete-card');
+    const tracker = page.getByTestId('hud-quest-tracker');
+
+    for (let attempt = 0; attempt < 300 && !(await card.isVisible()); attempt += 1) {
+      await page.keyboard.down('ArrowRight');
+      await page.waitForTimeout(150);
+      await page.keyboard.up('ArrowRight');
+    }
+
+    await expect(
+      card,
+      `walking the whole of ${START_LEVEL} without stopping never reached the end of it.`,
+    ).toBeVisible({ timeout: 30_000 });
+
+    /* The level finished, and the card says that and not "Task done!" — the
+       player accepted nothing and answered nothing. */
+    await expect(card).toHaveAccessibleName(text('en', 'level.complete.title'));
+    await expect(card).not.toHaveAccessibleName(text('en', 'quest.done.title'));
+
+    /* One stamp, the same one: reaching the end earns it too (`TN-DONE`). */
+    await expect(card.getByTestId('quest-complete-stamp')).toHaveText(STAMP_SENTENCE);
+
+    /*
+     * And the score row is honest about a walk that answered nothing: the card
+     * draws `level.complete.none` rather than "0 out of 0", which is a mark out
+     * of nothing (`TN-DONE-02`).
+     */
+    await expect(card.getByTestId('quest-complete-progress')).toHaveText(
+      text('en', 'level.complete.none'),
+    );
+
+    /* No task was ever accepted, so nothing tracked one. */
+    await expect(tracker).toBeHidden();
+    await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'true');
+
+    /*
+     * The stamp is in the passport either way — reached through the card's own
+     * way there, because the card is modal and the HUD's menu button is behind
+     * it. That is the point of the card carrying the route.
+     */
+    await card.getByTestId('quest-complete-passport').click();
+    await expect(page.getByTestId('passport').getByTestId('passport-counts')).toContainText(
+      '1 of 10',
+    );
   });
 });
 

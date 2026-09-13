@@ -82,6 +82,7 @@ import {
   type Progress,
 } from '@domain/entities/progress';
 import type { EpochMillis, LevelId, LocaleCode } from '@domain/ids';
+import { createAboutThisPlace, type AboutThisPlace as AboutPanel } from '@ui/about-this-place';
 import { hasCopyRow, text, type UiLocale } from '@ui/copy';
 import { createHud, type Hud } from '@ui/hud';
 import { bareTargetId, interactHint } from '@ui/interact';
@@ -115,6 +116,7 @@ import {
   toPlayerCharacter,
   toSelection,
 } from './character-slots';
+import { aboutThisPlaceView } from './about-this-place';
 import { readGameRules, type GameRules } from './game-rules';
 import {
   createGameEventBus,
@@ -131,7 +133,11 @@ import { createExamController, type ExamController } from './exam';
 import { createExamEventLog } from './exam-events';
 import { promptTargets } from './prompt-targets';
 import type { LevelPlacements } from './engageables';
-import { createQuestController, type QuestController } from './quest';
+import {
+  createQuestController,
+  type QuestController,
+  type VisitedOutcome,
+} from './quest';
 import { readQuests, questsForLevel, type QuestCatalogue } from './quests';
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
@@ -1497,14 +1503,25 @@ interface LevelWiring {
  *   tap the prompt, or tap the landmark (poi/engaged)
  *        │
  *        ▼
- *   poi-card ──── the level's own sourced blurb: the learning
+ *   poi-card ──── the level's own sourced blurb: the place, in its own words
  *        │  close
  *        ▼
+ *   dialogue ───── the current `visit` step's lines, in the speaker's name.
+ *        │         Only while a quest is standing on this landmark, and only
+ *        │  close  when that step carries any: silence here is a document's
+ *        ▼         choice, never a field nobody read.
  *   question-card ─ one question, four options, the answer explained
  *        │  answered and recorded
  *        ▼
  *   back to the level, focus on the prompt
  * ```
+ *
+ * The card and the dialogue are two surfaces because they are **two voices**. A
+ * blurb is the place; a line has a speaker, and on Peggy's Cove and in the North
+ * that speaker is the landmark itself (ADR-0029), named from the level's own
+ * `pois[].name` by the same resolution the offer used, with no rig, no portrait
+ * and no pose anywhere on the path. One surface would give the pair a single
+ * accessible name and a single voice.
  *
  * `TN-CARD-01` writes the second half of that in as many words — "the card opens
  * when I engage the landmark" — and `TN-LEVEL-05` writes the first. The level
@@ -1587,6 +1604,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
     },
     onOpenPassport: () => {
       openPassport();
+    },
+    onOpenAbout: () => {
+      openAbout();
     },
     onLeaveLevel: wiring.onLeave,
     onExportSave: wiring.onExportSave,
@@ -1712,6 +1732,63 @@ function openLevel(wiring: LevelWiring): LevelSession {
     passport.show();
   }
 
+  /**
+   * "About this place": whose land this level stands on
+   * (`docs/content-review.md` §10.2).
+   *
+   * Ten level documents have carried a territorial statement, verified and
+   * sourced, since before this file drew a HUD, and until now **not one of them
+   * rendered anywhere**. This is the screen §10.2 mandates and the only screen
+   * that states one.
+   *
+   * Three things about the wiring, each of which is the decision rather than the
+   * plumbing:
+   *
+   *  1. **It reads `SceneLevel.about`, never `LevelDocument.territory`.** The
+   *     adapter has already run ADR-0003's three conditions over the claim, and
+   *     `about` is the verdict: a statement that may be drawn, or a refusal that
+   *     carries no nation and no publisher. `./about-this-place.ts` is the whole
+   *     mapping and says why each field is dropped.
+   *  2. **It is reachable from the pause menu and from nowhere on the way in.**
+   *     §10.2 rules out the shape where a player dismisses a card to reach the
+   *     game; nothing constructs this panel on level entry, and the item is
+   *     absent from every menu that is not over a level, because
+   *     `MenuOptions.onOpenAbout` is only wired here.
+   *  3. **It holds the level like every other screen the menu opens.** The menu
+   *     hands over (`takeOverFromMenu`), the panel takes its own reason, and
+   *     closing releases it — the discipline the passport records, and the one
+   *     that stops a level being left frozen behind a screen that has gone.
+   *
+   * Rebuilt on each opening rather than kept: it holds nothing the player would
+   * lose, and `renderer.level` is the level that is actually loaded *now*, which
+   * a panel built once at `openLevel` time would not be.
+   */
+  let about: AboutPanel | null = null;
+  function openAbout(): void {
+    const level = renderer.level;
+    /* No level, no place to be about. `takeOverFromMenu` still runs, because the
+       menu has already closed itself and something has to give the level back —
+       otherwise asking for the panel before the level loaded would leave a
+       paused level with nothing on screen to say so. */
+    takeOverFromMenu();
+    if (level === null) return;
+
+    about?.destroy();
+    about = createAboutThisPlace(hud.main, {
+      locale,
+      announce: wiring.announce,
+      singleSwitch: store.current.singleSwitch,
+      holdMs: store.current.holdToChooseMs,
+      onClose: () => {
+        pause.release('about');
+        /* Focus is the panel's own: its trap restores to the menu button the
+           menu restored to on its way out. Moving it here would take that away. */
+      },
+    });
+    pause.hold('about');
+    about.show(aboutThisPlaceView(level.about, locale, localised));
+  }
+
   /* Study, over a level (`TN-STUDY`, `OQ-STUDY-3`: the same control, from the
      menu here and from the title screen on the front door). Its own controller,
      mounted into this level's `<main>`, over the same session the landmarks draw
@@ -1751,6 +1828,21 @@ function openLevel(wiring: LevelWiring): LevelSession {
    */
   let learning: string | null = null;
 
+  /**
+   * What the quest step the player has just finished has to say, waiting for the
+   * landmark's card to close.
+   *
+   * Held for the same reason {@link learning} is: the lines belong to the step
+   * that was current when the landmark was engaged, and by the time the card is
+   * closed the quest has moved on to the `answer` step, which carries none. The
+   * value captured them at the right moment; this is where it waits.
+   *
+   * `null` means there is nothing owed — no quest running, or a landmark that is
+   * not this step's target — and the card closes straight into the question, as
+   * it always has.
+   */
+  let pendingVisit: VisitedOutcome | null = null;
+
   /* A modal over a level pauses it, and closing resumes. The card takes focus
      and is read on arrival, which is why `SPEAKS['poi/engaged']` is `false` —
      announcing it as well would say everything twice. */
@@ -1762,10 +1854,39 @@ function openLevel(wiring: LevelWiring): LevelSession {
        next and the hold carries across both. `askAbout` releases it, on every
        path including the one where there is no question to ask. */
     onClose: () => {
-      void askAbout();
+      afterTheCard();
     },
     restoreFocusTo: () => hud.prompt,
   });
+
+  /**
+   * The card is closed: the quest's line about this place, and then the question.
+   *
+   * The order is the argument. The **card** is the place introducing itself —
+   * the level document's own verified blurb, with no speaker, and a fact the
+   * player can come back for at any time. The **line** is somebody commenting on
+   * it: a named speaker, which on Peggy's Cove and in the North is the landmark
+   * that offered the task rather than a person, because those levels may draw no
+   * figure at any scale. The **question** follows immediately, so the player is
+   * taught and asked in one breath, standing in front of the thing.
+   *
+   * One continuation and no branch here. `speak` calls it back on every path —
+   * when the player dismisses the line, and immediately when the step had none —
+   * so the question cannot be owed down one route and forgotten down the other.
+   * `pause.hold('poi')` covers all three surfaces: the level never runs for a
+   * frame in between.
+   */
+  function afterTheCard(): void {
+    const visit = pendingVisit;
+    pendingVisit = null;
+    if (visit === null) {
+      void askAbout();
+      return;
+    }
+    visit.speak(() => {
+      void askAbout();
+    });
+  }
 
   /*
    * One question about the landmark just read, then back to the level.
@@ -2161,9 +2282,13 @@ function openLevel(wiring: LevelWiring): LevelSession {
     /* One hold for the whole chain: the landmark card, and the question after
        it. Released by `askAbout` or by the runner finishing. */
     pause.hold('poi');
-    /* The `visit` step, when this is the step the player is on. Before the card,
-       so the tracker behind it is already right when the card closes. */
-    quests.visited(detail);
+    /*
+     * The `visit` step, when this is the step the player is on. Before the card,
+     * so the tracker behind it is already right when the card closes — and the
+     * step's own lines come back with it, because by the time the card closes
+     * the quest is on the `answer` step and that step has nothing to say.
+     */
+    pendingVisit = quests.visited(detail);
     card.show({ title: localised(poi.name, locale), body: [localised(poi.blurb, locale)] });
   }
 
@@ -2460,6 +2585,14 @@ function openLevel(wiring: LevelWiring): LevelSession {
       completed.setLocale(next);
       quests.setLocale(next);
       passport?.setLocale(next);
+      /* The panel cannot re-resolve its own content: the statement is a
+         `LocalizedText` on the level document and the refusal is a reason code,
+         so both are handed back with the language. A level that has gone leaves
+         the panel as it was rather than redrawing it empty. */
+      if (about !== null) {
+        const level = renderer.level;
+        if (level !== null) about.setLocale(next, aboutThisPlaceView(level.about, next, localised));
+      }
       /* The prompt is a copy row, so it is drawn again in the new language rather
          than left in the old one. `announcer.inReach` is what is actually in
          reach, so nothing is invented and nothing is offered that is not there. */
@@ -2486,6 +2619,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       completed.setSingleSwitch(enabled, holdMs);
       quests.setSingleSwitch(enabled, holdMs);
       passport?.setSingleSwitch(enabled, holdMs);
+      about?.setSingleSwitch(enabled, holdMs);
     },
     close(): void {
       offFailure();
@@ -2497,11 +2631,16 @@ function openLevel(wiring: LevelWiring): LevelSession {
       /* `learning` first: a landmark card destroyed with a question still owed
          would otherwise draw one over a level that no longer exists. */
       learning = null;
+      /* And what a card that will never be closed owed: a line about a landmark
+         on a level that is going. */
+      pendingVisit = null;
       runner.destroy();
       completed.destroy();
       quests.destroy();
       passport?.destroy();
       passport = null;
+      about?.destroy();
+      about = null;
       study?.destroy();
       study = null;
       card.destroy();
@@ -2621,6 +2760,17 @@ type PauseReason =
   | 'quest'
   /** The passport, opened over a level from the menu. */
   | 'passport'
+  /**
+   * "About this place", opened over a level from the menu.
+   *
+   * Its own reason, like every other screen the menu can open. The panel is what
+   * `docs/content-review.md` §10.2 calls "always available, never blocking": it
+   * blocks nothing because it is never on a route the player has to take, and
+   * the level it was opened over is given back untouched when it closes. Nothing
+   * in this game counts down outside Exam mode, so a paused level costs a reader
+   * nothing at all.
+   */
+  | 'about'
   | 'settings'
   | 'study'
   | 'shell';

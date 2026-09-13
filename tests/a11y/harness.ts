@@ -31,6 +31,7 @@ import { createLevelError, createLevelLoading } from '../../app/ui/level-screens
 import { interactHint, interactPrompt } from '../../app/ui/interact';
 import { mountLiveRegion, announce } from '../../app/ui/live-region';
 import { createPassport } from '../../app/ui/passport';
+import { createAboutThisPlace, type AboutThisPlaceView } from '../../app/ui/about-this-place';
 import { createPoiCard } from '../../app/ui/poi-card';
 import { createExamResult, type ExamReviewItem } from '../../app/ui/exam-result';
 import { createExamScreen, type ExamTimerView } from '../../app/ui/exam-screen';
@@ -264,6 +265,68 @@ const mapEntries = (built: readonly string[]): readonly MapEntry[] =>
 const FIXED_CHARACTER = repairSelection(undefined, () => 0.5).selection;
 
 const level = LEVEL[locale];
+
+/**
+ * The "About this place" panel's two branches (`docs/content-review.md` §10.2).
+ *
+ * **Fixtures, not content, and deliberately obvious about it.** A real
+ * territorial statement, the nations it names and the body that published it
+ * come from `content/levels/*.json` through `SceneLevel.about`, are verified
+ * like any other claim, and may not be transcribed into a test page — a scan
+ * that hardcoded one would put a nation's own words in `tests/` where nothing
+ * re-verifies them. What a scan needs is *shape*: a sentence about as long as a
+ * real one, a name that is not a dictionary word, and a publisher long enough to
+ * wrap at 200 % text, which is where a link that cannot break is found.
+ *
+ * `?about=` picks the branch: `statement` by default, `not-checked` and
+ * `being-checked` for the two refusals. Both refusals are reachable because
+ * neither is reachable by clicking, and a branch axe never renders is a branch
+ * nothing has measured.
+ *
+ * `?about=long-source` is the fourth, and it is measuring a real shape rather
+ * than an imagined worst case. `nationSource.publisher` on four shipped levels
+ * is a **paragraph** — `the-north`'s is 321 characters — so the source link's
+ * text really is that long, and a link that cannot wrap is how a page scrolls
+ * sideways at 200 %. The fixture is the same *length* as the longest real one
+ * and none of its words.
+ */
+const ABOUT_STATEMENT: Readonly<Record<UiLocale, string>> = {
+  en:
+    'Fixture Town stands on the traditional and unsurrendered territory of the ' +
+    'Fixture Nation, whose people have lived along this river for many generations ' +
+    'and live here today.',
+  fr:
+    'Fixture Town se trouve sur le territoire traditionnel et non cédé de la ' +
+    'Fixture Nation, dont le peuple vit le long de cette rivière depuis de ' +
+    "nombreuses générations et y vit encore aujourd'hui.",
+};
+
+const LONG_PUBLISHER =
+  'Assembly of the Fixture Nation Councils (the political body for the eleven ' +
+  'councils this fixture stands in for, whose own About page names each of them ' +
+  'and speaks for all of them together about the lands they share, which is what ' +
+  'makes it one body speaking for itself rather than a third party summarising)';
+
+const aboutView = (): AboutThisPlaceView => {
+  switch (params.get('about')) {
+    case 'not-checked':
+      return { kind: 'unavailable', reason: 'not-checked' };
+    case 'being-checked':
+      return { kind: 'unavailable', reason: 'being-checked' };
+    default:
+      return {
+        kind: 'statement',
+        statement: ABOUT_STATEMENT[locale],
+        /* Identical in both languages, as an endonym is (§9.3). */
+        nations: ['Fixture Nation'],
+        publisher:
+          params.get('about') === 'long-source'
+            ? LONG_PUBLISHER
+            : 'Assembly of the Fixture Nation Councils',
+        sourceUrl: 'https://example.invalid/about-us',
+      };
+  }
+};
 
 const screen = params.get('screen') ?? 'settings';
 
@@ -542,6 +605,9 @@ switch (screen) {
       onOpenSettings: () => undefined,
       onOpenStudy: () => undefined,
       onOpenPassport: () => undefined,
+      /* The route §10.2 fixes: the pause menu. Wired here so `?over=menu`
+         scans the menu the game draws over a level, with the item in it. */
+      onOpenAbout: () => undefined,
       onInteract: () => undefined,
       onExportSave: () => undefined,
       singleSwitch: store.current.singleSwitch,
@@ -656,6 +722,21 @@ switch (screen) {
           restoreFocusTo: () => hud.prompt,
         }).show(level.poi);
         break;
+      /*
+       * `docs/content-review.md` §10.2. Scanned over the running level rather
+       * than alone, because that is where a player meets it: reached from the
+       * pause menu, over a level that is still there behind it, inside the one
+       * `<main>` so its content is in a landmark.
+       */
+      case 'about': {
+        createAboutThisPlace(hud.main, {
+          locale,
+          announce,
+          onClose: () => undefined,
+          singleSwitch: store.current.singleSwitch,
+        }).show(aboutView());
+        break;
+      }
       case 'passport': {
         createPassport(hud.main, {
           locale,

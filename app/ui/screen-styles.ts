@@ -501,6 +501,57 @@ const CSS = `
 }
 
 /* ------------------------------------------------------------------ *
+ * "About this place": the territorial statement panel.
+ *
+ * docs/content-review.md 10.2. Two things here are acceptance criteria.
+ *
+ *  1. The statement is the first line and reads as the first line. It is set
+ *     one step up from body text, with a leading brass rule, so that a sighted
+ *     reader's eye lands where a screen-reader user's ear does -- the heading,
+ *     then the fact. The rule is a border on the paragraph's own box, never a
+ *     pseudo-element, for the contrast reason the sheet's brass rule records.
+ *  2. The source is a link, and a link is a touch target. 3rem min-block-size
+ *     is 48 px at 100 % and 96 at 200 %, the same arithmetic every control in
+ *     this sheet uses, and the underline stays: removing it would leave colour
+ *     as the only thing saying this is a link, which CLAUDE.md forbids and
+ *     which forced-colours mode would take away anyway.
+ * ------------------------------------------------------------------ */
+
+.tn-about__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tn-about__statement {
+  font-size: 1.1875rem;
+  line-height: 1.55;
+  border-inline-start: 0.375rem solid var(--tn-accent);
+  padding-inline-start: 0.875rem;
+}
+
+.tn-about__source { margin: 0; }
+
+.tn-about a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 3rem;
+  padding-block: 0.5rem;
+  color: var(--tn-ink);
+  /* Never colour alone. */
+  text-decoration: underline;
+  text-decoration-thickness: 0.125rem;
+  text-underline-offset: 0.25rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+@media (forced-colors: active) {
+  .tn-about__statement { border-inline-start-color: CanvasText; }
+  .tn-about a { color: LinkText; }
+}
+
+/* ------------------------------------------------------------------ *
  * The shell: the title screen and the level select.
  *
  * The shell's root is the page's <main>. It carries .tn-screen for the

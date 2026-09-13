@@ -2105,16 +2105,59 @@ describe('the passport is reachable, and gives the level back', () => {
  * two choices did to the save, and whether the level was given back.
  */
 describe('a quest is offered, accepted and tracked', () => {
+  /**
+   * Ottawa's own quest, read through the same glob the deploy uses.
+   *
+   * Derived rather than typed, because this fixture went stale exactly once
+   * already. The quest was rebuilt to teach at every landmark — talk → visit →
+   * answer → visit → answer — and its first `visit` step stopped being
+   * `parliament-hill`. A test that named that landmark went on engaging a target
+   * the player is not standing on, which advanced nothing and read as a pass
+   * until the assertion below happened to be about the tracker.
+   */
+  const OTTAWA_QUEST = readQuests().quests.find((quest) => String(quest.levelId) === 'ottawa');
+  if (OTTAWA_QUEST === undefined) {
+    throw new Error(
+      'content/quests/ holds no quest for Ottawa, so this scenario has nothing to offer, ' +
+        'accept or track.',
+    );
+  }
+
+  /** Every landmark this quest sends the player to, in the order it does. */
+  const VISITS = OTTAWA_QUEST.steps.filter((step) => step.kind === 'visit');
+  const FIRST_VISIT = VISITS[0];
+  if (FIRST_VISIT === undefined) {
+    throw new Error(
+      `${String(OTTAWA_QUEST.id)} asks the player to go nowhere, so the visit step cannot be ` +
+        'walked here. Point this scenario at a quest that has one.',
+    );
+  }
+  /** A landmark the player will be sent to *later*, which is not this step. */
+  const LATER_VISIT = VISITS[1];
+
+  /** What that step teaches, in English. The lines this whole task is about. */
+  const FIRST_VISIT_LINES = (FIRST_VISIT.dialogue ?? []).map((line) => line.text.en);
+
+  const poiName = (id: string): { readonly en: string; readonly fr: string } => ({
+    en: `The ${id}`,
+    fr: `Le ${id}`,
+  });
+
+  /**
+   * The level, placing every landmark the quest names.
+   *
+   * Built from the quest rather than listed, so the pair cannot drift apart
+   * again: a step whose target the level does not place is a step the player can
+   * never finish, and the fixture would have said the game was fine.
+   */
   const OTTAWA_LEVEL = levelFixture({
     title: { en: 'Ottawa', fr: 'Ottawa' },
     locomotion: [{ labelKey: 'locomotion.skate.label' }],
-    pois: [
-      {
-        id: 'parliament-hill',
-        name: { en: 'Parliament Hill', fr: 'La Colline du Parlement' },
-        blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
-      },
-    ],
+    pois: VISITS.map((step) => ({
+      id: step.targetId,
+      name: poiName(step.targetId),
+      blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
+    })),
     characters: [{ characterId: 'officer' }],
   });
 
@@ -2218,11 +2261,104 @@ describe('a quest is offered, accepted and tracked', () => {
     (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
     const afterAccepting = hoisted.state.tasks.at(-1);
 
-    emit('poi/engaged', 'parliament-hill');
+    /* The landmark the *current* step names, read from the document. */
+    emit('poi/engaged', FIRST_VISIT.targetId);
     expect(
       hoisted.state.tasks.at(-1),
-      'engaging the landmark the step names changed nothing',
+      `engaging "${FIRST_VISIT.targetId}", which ${String(OTTAWA_QUEST.id)} step ` +
+        `"${FIRST_VISIT.id}" names, changed nothing`,
     ).not.toBe(afterAccepting);
+  });
+
+  it('ships a first landmark with something to teach, or this is about nothing', () => {
+    /*
+     * ADR-0024's floor for the two scenarios below. Both of them assert that a
+     * `visit` step's lines reach the player, and both would pass in silence over
+     * a step that had none — which is precisely the defect they were written
+     * for: 27 authored lines that nothing drew, indistinguishable from a quest
+     * that had chosen to be quiet.
+     */
+    expect(
+      FIRST_VISIT_LINES.length,
+      `${String(OTTAWA_QUEST.id)} step "${FIRST_VISIT.id}" carries no dialogue, so the ` +
+        'scenarios below would prove nothing. Point them at a step that teaches.',
+    ).toBeGreaterThan(0);
+  });
+
+  it('teaches at the landmark: the card, then the step’s line, then the question', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    const afterTheOffer = hoisted.state.dialoguesShown.length;
+
+    emit('poi/engaged', FIRST_VISIT.targetId);
+
+    /* The place first, in its own words: the level document's blurb, with no
+       speaker. A line arriving over it would talk across the card. */
+    expect(hoisted.state.poiShown.at(-1)).toEqual({
+      title: poiName(FIRST_VISIT.targetId).en,
+      body: ['A true, short thing.'],
+    });
+    expect(
+      hoisted.state.dialoguesShown.length,
+      'the quest spoke over the landmark’s own card',
+    ).toBe(afterTheOffer);
+
+    /* Then the speaker, on the way out of the card. */
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    const line = hoisted.state.dialoguesShown.at(-1) as {
+      lines?: readonly string[];
+      next?: { onSelect: () => void };
+      accept?: unknown;
+    };
+    expect(
+      hoisted.state.dialoguesShown.length,
+      `${String(OTTAWA_QUEST.id)} step "${FIRST_VISIT.id}" carries ` +
+        `${String(FIRST_VISIT_LINES.length)} lines and the player was told none of them`,
+    ).toBe(afterTheOffer + 1);
+    expect(line.lines).toEqual(FIRST_VISIT_LINES);
+    /* Nothing to decide: the offer was accepted three moves ago. */
+    expect(line.accept).toBeUndefined();
+    expect(line.next, 'a line with no way onward strands the player').toBeDefined();
+
+    /* And the question waits behind it, so the player is taught before being
+       asked rather than over the top of it. */
+    expect(hoisted.state.questionsAsked, 'the question arrived over the line').toEqual([]);
+
+    line.next?.onSelect();
+    await flush();
+    expect(
+      hoisted.state.questionsAsked,
+      'the landmark’s question was owed after the line and never came',
+    ).toHaveLength(1);
+  });
+
+  it('says nothing at a landmark the current step is not about', async () => {
+    if (LATER_VISIT === undefined) return;
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    const afterTheOffer = hoisted.state.dialoguesShown.length;
+
+    /* A landmark from a later step. It teaches its own blurb, because that is
+       what a landmark does, and it borrows nobody's lines. */
+    emit('poi/engaged', LATER_VISIT.targetId);
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.poiShown.at(-1)).toEqual({
+      title: poiName(LATER_VISIT.targetId).en,
+      body: ['A true, short thing.'],
+    });
+    expect(
+      hoisted.state.dialoguesShown.length,
+      'a landmark spoke a step the player has not reached',
+    ).toBe(afterTheOffer);
+    /* Straight through to the question, exactly as it was before quests taught
+       anything at all. */
+    expect(hoisted.state.questionsAsked).toHaveLength(1);
   });
 
   it('hands the quest to answerQuestion only while an answer step is open', async () => {

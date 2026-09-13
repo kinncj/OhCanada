@@ -55,6 +55,11 @@ export interface HudOptions {
   readonly onOpenPassport?: () => void;
   /** `flow.leaveLevel`: the route out of the level (`TN-FLOW-03`, `TN-HUD-02`). */
   readonly onLeaveLevel?: () => void;
+  /**
+   * `about.open`: the "About this place" panel (`docs/content-review.md` §10.2).
+   * Absent draws no item — see {@link MenuOptions.onOpenAbout}.
+   */
+  readonly onOpenAbout?: () => void;
   /** Tapping `interact-prompt` does what tapping the target does (`TN-LEVEL-05`). */
   readonly onInteract?: () => void;
   /** `TN-HUD-03`: the way out the warning has to offer. */
@@ -248,6 +253,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     ...(options.onOpenStudy === undefined ? {} : { onOpenStudy: options.onOpenStudy }),
     ...(options.onOpenPassport === undefined ? {} : { onOpenPassport: options.onOpenPassport }),
     ...(options.onLeaveLevel === undefined ? {} : { onLeaveLevel: options.onLeaveLevel }),
+    ...(options.onOpenAbout === undefined ? {} : { onOpenAbout: options.onOpenAbout }),
     onDismiss: () => {
       options.onResume?.();
     },

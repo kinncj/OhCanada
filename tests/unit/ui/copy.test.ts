@@ -114,18 +114,47 @@ describe('the copy table', () => {
     }
   });
 
-  it('invents nothing: the gap list is empty and its marker is gone', () => {
+  it('invents nothing unlisted: the gap list is exactly the panel, and its marker is gone', () => {
     /*
-     * `TN-COPY-06`, "the gap list is empty when the tables are complete".
-     * `settings.state.on` / `.off` used to be the two entries and are now
-     * written down in `TN-COPY-strings-and-counts.md`, so nothing here is
-     * authored by this directory. The marker is built rather than written so
-     * this file is not itself a hit for the search.
+     * `TN-COPY-06`, "the gap list is empty when the tables are complete", held
+     * as an equality rather than as an emptiness — because the tables are *not*
+     * complete and saying so is the whole job of `COPY_GAPS`.
+     *
+     * `docs/content-review.md` §10.2 mandates an "About this place" panel and
+     * specifies no wording for its chrome, and no file in `docs/stories/` owns
+     * that wording: `TN-REACH-what-is-in-reach.md` owns what the HUD says is in
+     * reach and never mentions the panel, and the ten level stories own the
+     * territorial *statement*, which is content on the level document and never
+     * a row in this table. So the eight rows below were written by `app/ui` and
+     * are declared, to be ratified or replaced by whoever owns the words.
+     *
+     * The list is pinned rather than merely non-empty, which is what keeps the
+     * gate: a ninth invented row, anywhere, fails here instead of joining a list
+     * that has already been allowed to grow once. Removing an entry is what a
+     * story file writing the row down looks like, and that is a green change.
      */
     const marker = ['NEEDS', 'COPY'].join('_');
     const source = readFileSync(new URL('../../../app/ui/copy.ts', import.meta.url), 'utf8');
 
-    expect([...COPY_GAPS]).toEqual([]);
+    expect([...COPY_GAPS]).toEqual([
+      'about.open',
+      'about.title',
+      'about.nations',
+      'about.source',
+      'about.source.outside',
+      'about.unavailable.notShown',
+      'about.unavailable.checking',
+      'about.unavailable.ours',
+    ]);
+    /* Every declared gap is a row that exists and can be drawn: a gap list
+       naming a key nobody wrote reports a string the player never sees. */
+    for (const key of COPY_GAPS) {
+      for (const locale of UI_LOCALES) {
+        expect(text(locale, key), `${key} (${locale}) is declared as a gap and is empty`).not.toBe(
+          '',
+        );
+      }
+    }
     expect(source.includes(marker), `${marker} survives in copy.ts`).toBe(false);
   });
 

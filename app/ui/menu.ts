@@ -1,5 +1,6 @@
 /**
- * The menu the HUD's Menu button opens: Settings, Study, the passport, Close.
+ * The menu the HUD's Menu button opens: Settings, Study, the passport,
+ * "About this place", leaving, and Close.
  *
  * `TN-HUD-02` is the acceptance criteria. Two of its scenarios decide the shape
  * of this file:
@@ -45,6 +46,20 @@ export interface MenuOptions {
    */
   readonly onLeaveLevel?: () => void;
   /**
+   * `about.open` — the "About this place" panel (`docs/content-review.md`
+   * §10.2), which states whose land this level stands on.
+   *
+   * §10.2 fixes the panel as reachable "from the pause menu and from the credits
+   * screen", and the pause menu is this. Absent draws no item, on the same rule
+   * as {@link MenuOptions.onLeaveLevel}: a menu opened anywhere but over a level
+   * has no place to be about, and an item that opened an empty panel would be
+   * worse than no item.
+   *
+   * It sits **after** the passport and **before** leaving, because it is about
+   * the place the player is standing in and the way out belongs last.
+   */
+  readonly onOpenAbout?: () => void;
+  /**
    * Close, or Escape: the player asked for nothing and the level resumes.
    * Never called when an item was chosen — the screen that opened owns the
    * resume from then on.
@@ -69,6 +84,15 @@ interface Item {
   readonly key: CopyKey;
   readonly testId: string;
   readonly handler: (() => void) | undefined;
+  /**
+   * Drawn only when the caller wired it.
+   *
+   * Settings, Study and the passport are true wherever the menu is opened, so
+   * they are drawn whatever the caller passed. "Leave the level" and "About this
+   * place" are only true over a level — `TN-HUD-02`'s "leaving is not offered
+   * where there is nothing to leave", and §10.2's panel is per level.
+   */
+  readonly onlyWithHandler?: true;
 }
 
 export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
@@ -100,14 +124,30 @@ export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
   screen.card.append(title, actions);
 
   const items = (): readonly Item[] =>
-    [
-      { key: 'common.settings', testId: 'menu-settings', handler: options.onOpenSettings },
-      { key: 'study.open', testId: 'menu-study', handler: options.onOpenStudy },
-      { key: 'passport.open', testId: 'menu-passport', handler: options.onOpenPassport },
-      { key: 'flow.leaveLevel', testId: 'menu-leave', handler: options.onLeaveLevel },
-      /* An item with no handler is not drawn. Three of the four are always
-         wired by the HUD's caller; the fourth is only true over a level. */
-    ].filter((item) => item.testId !== 'menu-leave' || item.handler !== undefined) as Item[];
+    (
+      [
+        { key: 'common.settings', testId: 'menu-settings', handler: options.onOpenSettings },
+        { key: 'study.open', testId: 'menu-study', handler: options.onOpenStudy },
+        { key: 'passport.open', testId: 'menu-passport', handler: options.onOpenPassport },
+        /* `about-this-place-open`, not `menu-about`: `docs/stories/README.md`
+           names this control in the shared vocabulary, and the id is the
+           contract a scenario references. */
+        {
+          key: 'about.open',
+          testId: 'about-this-place-open',
+          handler: options.onOpenAbout,
+          onlyWithHandler: true,
+        },
+        {
+          key: 'flow.leaveLevel',
+          testId: 'menu-leave',
+          handler: options.onLeaveLevel,
+          onlyWithHandler: true,
+        },
+      ] as Item[]
+      /* Three of the five are always wired by the HUD's caller; two are only
+         true over a level, and an unwired one of those is not drawn. */
+    ).filter((item) => item.onlyWithHandler !== true || item.handler !== undefined);
 
   const render = (): void => {
     title.textContent = text(locale, 'hud.menu.title');

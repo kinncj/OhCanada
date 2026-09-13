@@ -105,7 +105,7 @@
           "uniqueItems": true
         },
         "dialogue": {
-          "description": "Lines spoken when the step starts. Present on `talk` steps; absent elsewhere. Subtitles are on by default, so this is the subtitle text as well as the dialogue text.",
+          "description": "Lines spoken when the step starts, and the whole of the quest's voice. REQUIRED on a `talk` step: it is what the giver says when the offer opens, and `app/bootstrap/quests.ts` refuses a `talk` step without it, because a giver who opens a dialog and says nothing is worse than a giver who is not offered. OPTIONAL on `visit` and `collect`, where it is what the player is told on ARRIVING at the target - drawn after that landmark's own card and before the question, under the speaker's name, so the place and whoever is commenting on it are never one voice. Absent there means that step is silent, and silence is the document's choice rather than a field nobody read (ADR-0024). NOT READ on an `answer` step: `readStep` does not look, so lines written there would validate and never be spoken. Subtitles are on by default, so this is the subtitle text as well as the dialogue text.",
           "type": "array",
           "items": {
             "$ref": "#/$defs/dialogueLine"

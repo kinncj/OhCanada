@@ -41,6 +41,22 @@
  * — the `level.loading` defect, one story later — declining closes the dialogue,
  * and coming back reads the step's own prompt. Reported with the task.
  *
+ * ## Teaching at the landmark, which is what a `visit` step is for
+ *
+ * A quest runs talk → visit → answer → visit → answer, and **a `visit` step
+ * carries lines of its own**: the player is told why this place matters and is
+ * asked about it while they are standing there. `readStep` has always carried
+ * them and the schema has always permitted them; nothing drew them, so 27
+ * authored lines existed in the tree and never reached a screen.
+ *
+ * They are spoken by {@link VisitedOutcome.speak}, after the landmark's own card
+ * and before the question — the place introduces itself in its own card, then a
+ * named speaker says what it means. Two surfaces, because they are two voices: a
+ * blurb is the level document's claim about a place and has no speaker, and a
+ * line has one, which on two levels is a **plaque**. Folding them together would
+ * give the pair one accessible name and one voice, and a screen-reader user
+ * would have no way to tell the place from whoever is commenting on it.
+ *
  * ## The pause, which is the trap this file was written around
  *
  * A dialogue over a live level is the same trap the menu was: whoever takes the
@@ -120,6 +136,71 @@ export interface QuestWiring {
   readonly restoreFocusTo: () => HTMLElement | null;
 }
 
+/**
+ * Why a step said nothing, or that it did.
+ *
+ * ADR-0024, and the reason this is a word rather than a boolean: **silence has
+ * to say which silence it is.** A `visit` step with no `dialogue` is a document
+ * choosing to be quiet, and a step whose lines were dropped because something
+ * read the wrong field looks exactly the same on screen. It does not look the
+ * same here: `no-dialogue` is the document's choice, `unnamed` and
+ * `many-speakers` are refusals this file made and wrote to the console, and
+ * `no-step` means the player engaged something the current step is not about.
+ * Only `spoken` puts words on screen.
+ */
+export type VisitSpeech =
+  /** A dialogue opened, named after the speaker, and holds the step's lines. */
+  | 'spoken'
+  /** The current step was not this target's `visit`/`collect` step. */
+  | 'no-step'
+  /** The step carried no `dialogue`. The document is quiet, and so is the game. */
+  | 'no-dialogue'
+  /** The speaker is not placed on this level, or this build cannot name it. */
+  | 'unnamed'
+  /**
+   * The step's lines name more than one speaker.
+   *
+   * `app/ui/dialogue.ts` has one speaker per dialog, because the name is the
+   * dialog's accessible name (`TN-QUEST-08`). Two speakers in one surface would
+   * put one of them behind the other's name, which is a screen reader told the
+   * wrong thing rather than a layout compromise — so the step is refused and the
+   * console names the document. No shipped quest is shaped this way.
+   */
+  | 'many-speakers';
+
+/**
+ * What reaching a step's target did, and what that step has to say about it.
+ *
+ * `speak` is a thunk rather than a list of strings for the reason ADR-0029
+ * exists: turning a line into a dialog needs the speaker resolved against what
+ * the level **placed** and named from the document that names it, and that is
+ * this file's job, not its caller's. Handing back raw text would invite a second
+ * naming path beside the one the `talk` step already uses — the path that would
+ * eventually reach for a pose on a lighthouse.
+ */
+export interface VisitedOutcome {
+  /** The current step was this target's, and the quest moved on. */
+  readonly advanced: boolean;
+  /**
+   * Say the finished step's lines, then call `onClosed`.
+   *
+   * `onClosed` is called **exactly once on every path**: when the player
+   * dismisses the dialogue, and immediately when there is nothing to open. The
+   * caller therefore has one continuation and no branch, which is what stops the
+   * landmark's question from being owed down one route and not the other.
+   */
+  speak(onClosed: () => void): VisitSpeech;
+}
+
+/** Nothing happened here: not this step's target, or no quest is running. */
+const NOT_THIS_STEP: VisitedOutcome = {
+  advanced: false,
+  speak(onClosed): VisitSpeech {
+    onClosed();
+    return 'no-step';
+  },
+};
+
 export interface QuestController {
   /**
    * The quest an answer would count toward right now, or `undefined`.
@@ -138,8 +219,19 @@ export interface QuestController {
    * the caller knows not to treat it as a landmark as well.
    */
   engage(targetId: string): boolean;
-  /** A landmark was engaged: advance a `visit` step if that is the current one. */
-  visited(targetId: string): void;
+  /**
+   * A landmark was engaged: advance a `visit` step if that is the current one,
+   * and hand back what that step had to say about the place.
+   *
+   * One call rather than two, and that is the whole of why it returns something.
+   * A step's lines have to be read **before** the step advances — `currentStep`
+   * is the next one the instant `progressQuest` succeeds — so a caller that
+   * asked "did it advance?" and then "what did it say?" would always be asking
+   * the second question of the wrong step. The lines are captured here, in the
+   * closure {@link VisitedOutcome.speak} carries, and the caller decides *when*
+   * they are spoken without being able to change *which* they are.
+   */
+  visited(targetId: string): VisitedOutcome;
   /**
    * Would engaging this target open a dialogue?
    *
@@ -195,6 +287,16 @@ export function createQuestController(wiring: QuestWiring): QuestController {
   let dialogue: Dialogue | null = null;
   /** The quest whose dialogue is open, so closing knows what it was about. */
   let talking: QuestDocument | null = null;
+  /**
+   * What the caller is owed when the open dialogue closes, or `null`.
+   *
+   * The landmark chain is one hold across two dialogs and a question
+   * (`app/bootstrap/main.ts`), so the thing that follows a `visit` step's lines
+   * has to be run by whichever way the player left them — the button, Escape, or
+   * the close that a second engagement would cause. Holding it here rather than
+   * passing it to `Dialogue` keeps `app/ui` unaware that a quest exists.
+   */
+  let afterClose: (() => void) | null = null;
 
   const stateOf = (quest: QuestDocument): QuestState | undefined =>
     questStateFor(wiring.progress(), wiring.levelId, quest.id);
@@ -303,16 +405,39 @@ export function createQuestController(wiring: QuestWiring): QuestController {
   function close(): void {
     if (talking === null) return;
     talking = null;
+    /* Taken before anything else runs, so a continuation that opened something
+       of its own cannot be run twice by the close that follows it. */
+    const owed = afterClose;
+    afterClose = null;
     dialogue?.hide();
     wiring.onClose();
     const destination = wiring.restoreFocusTo();
     if (destination !== null && destination.isConnected) {
       destination.focus({ preventScroll: true });
     }
+    /* Last, and after the level has been given back: what the caller is owed
+       when this dialogue ends — the landmark's question, today. */
+    owed?.();
   }
 
-  function open(quest: QuestDocument, lines: readonly string[], offer: boolean): boolean {
-    const name = speakerName(quest);
+  /**
+   * Put words on screen in somebody's — or something's — name.
+   *
+   * `speaker` is the resolved name when the caller has already worked out whose
+   * words these are; absent, it is the quest's giver. Both come out of
+   * `./engageables.ts`, which is the point: there is one place an id becomes a
+   * name, and it reads the level's own placement to decide whether that id is a
+   * character or a landmark. Nothing here looks at a rig, a portrait or a pose,
+   * and a landmark line has no `expression` key to look at even if it did
+   * (ADR-0029 §4).
+   */
+  function open(
+    quest: QuestDocument,
+    lines: readonly string[],
+    offer: boolean,
+    speaker?: string,
+  ): boolean {
+    const name = speaker ?? speakerName(quest);
     if (name === null) {
       refuse(quest);
       return false;
@@ -404,6 +529,83 @@ export function createQuestController(wiring: QuestWiring): QuestController {
     wiring.onCompleted(quest);
   }
 
+  /**
+   * What a step the player has just reached the target of has to say.
+   *
+   * The lines are read **here**, while `step` is still the step that was
+   * finished, and everything that turns them into a dialog is deferred to
+   * {@link VisitedOutcome.speak} — so the caller owns the *moment* and this file
+   * owns the *voice*. Call `speak` once.
+   *
+   * Three things this deliberately does not do:
+   *
+   *  - **It does not assume the giver is speaking.** The name is resolved from
+   *    the lines' own `speaker` through `./engageables.ts`, which is the same
+   *    resolution the `talk` step uses and the only one there is. On Peggy's
+   *    Cove and in the North that id is a **point of interest**, and it is named
+   *    from the level's own `pois[].name` exactly as the offer was.
+   *  - **It does not read `expression`.** Only `text` is taken off a line. A
+   *    landmark line has no `expression` key at all (ADR-0029 §4, and
+   *    `tests/unit/contracts/a-quest-giver-is-placed-on-its-level.test.ts`
+   *    holds it), and the way that stays true is that nothing on this path asks.
+   *    `app/ui/dialogue.ts` has no portrait and takes no pose.
+   *  - **It does not invent a line.** A step with no `dialogue` is silent, and
+   *    says which silence it is (ADR-0024): `no-dialogue` for a quiet document,
+   *    a console sentence naming the file for anything else.
+   */
+  function speechFor(quest: QuestDocument, step: QuestStepDocument): VisitedOutcome {
+    const lines = step.dialogue;
+    const where = `"${String(quest.id)}" step "${step.id}"`;
+
+    return {
+      advanced: true,
+      speak(onClosed): VisitSpeech {
+        if (lines === undefined || lines.length === 0) {
+          /* The document chose to be quiet. Nothing opens, and the caller is
+             owed its continuation just the same. */
+          onClosed();
+          return 'no-dialogue';
+        }
+
+        /* One speaker per surface: the name is the dialog's accessible name, so
+           two of them would put one speaker's words behind the other's name. */
+        const speakers = [...new Set(lines.map((line) => bareTargetId(String(line.speaker))))];
+        const only = speakers.length === 1 ? speakers[0] : undefined;
+        if (only === undefined) {
+          console.error(
+            `[bootstrap] ${where} is spoken by ${String(speakers.length)} different speakers ` +
+              `(${speakers.join(', ')}), and a dialog has one accessible name. The step is ` +
+              `left unsaid rather than attributed to whichever was listed first ` +
+              `(TN-QUEST-08). Split it into one step per speaker.`,
+          );
+          onClosed();
+          return 'many-speakers';
+        }
+
+        const resolution = resolveEngageable(wiring.placements(), only);
+        if (!resolution.ok) {
+          console.error(
+            `[bootstrap] ${where} is spoken by "${only}", and this build cannot name it, so ` +
+              `the line is left unsaid rather than announced as nothing (TN-QUEST-08, ` +
+              `ADR-0029). ` +
+              whyNotEngageable(only, String(wiring.levelId), resolution),
+          );
+          onClosed();
+          return 'unnamed';
+        }
+
+        /* `line.text`, and nothing else off the line. See above. */
+        const said = lines.map((line) => localised(line.text, locale));
+        if (!open(quest, said, false, localised(resolution.engageable.name, locale))) {
+          onClosed();
+          return 'unnamed';
+        }
+        afterClose = onClosed;
+        return 'spoken';
+      },
+    };
+  }
+
   return {
     get answering(): QuestDocument | undefined {
       const quest = active();
@@ -490,18 +692,27 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       return false;
     },
 
-    visited(targetId): void {
+    visited(targetId): VisitedOutcome {
       const quest = active();
-      if (quest === null) return;
+      if (quest === null) return NOT_THIS_STEP;
       const state = stateOf(quest);
-      if (state === undefined) return;
+      if (state === undefined) return NOT_THIS_STEP;
       const step = currentStep(quest, state);
       /* Only the step the player is actually on, and only when the thing they
          engaged is the thing it names. Steps cannot be skipped (`TN-QUEST-04`),
          and a landmark on the far side of the level cannot close this one. */
-      if (step === undefined) return;
-      if (step.kind !== 'visit' && step.kind !== 'collect') return;
-      if (bareTargetId(step.targetId) !== bareTargetId(targetId)) return;
+      if (step === undefined) return NOT_THIS_STEP;
+      if (step.kind !== 'visit' && step.kind !== 'collect') return NOT_THIS_STEP;
+      if (bareTargetId(step.targetId) !== bareTargetId(targetId)) return NOT_THIS_STEP;
+
+      /*
+       * Read before the step moves. `currentStep` answers with the *next* step
+       * the moment `progressQuest` succeeds, so a caller that came back for the
+       * lines afterwards would be handed the `answer` step's — which carries
+       * none, and the 27 lines authored to teach at a landmark would be dropped
+       * on the floor while everything went on passing.
+       */
+      const speech = speechFor(quest, step);
 
       const advance = progressQuest(
         quest,
@@ -514,11 +725,12 @@ export function createQuestController(wiring: QuestWiring): QuestController {
           `[bootstrap] "${String(quest.id)}" refused a ${step.kind} step. ` +
             `${advance.error.code}: ${advance.error.message}`,
         );
-        return;
+        return NOT_THIS_STEP;
       }
       wiring.commit(withQuestState(wiring.progress(), quest.levelId, advance.value.state));
       refresh();
       if (advance.value.questCompleted) earn(quest);
+      return speech;
     },
 
     refresh,
@@ -541,6 +753,9 @@ export function createQuestController(wiring: QuestWiring): QuestController {
          caller's teardown, and the dialogue is destroyed rather than left as a
          modal over a level that no longer exists. */
       talking = null;
+      /* Dropped, not run: what a closing dialogue owes is a question about a
+         landmark on a level that is being torn down. */
+      afterClose = null;
       dialogue?.destroy();
       dialogue = null;
     },

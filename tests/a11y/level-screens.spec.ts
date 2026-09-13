@@ -68,7 +68,15 @@ interface HarnessOptions {
   /** Something the game cannot do right now, said in the strip (`TN-QUEST-05`). */
   readonly notice?: boolean;
   /** A modal open over the running level. */
-  readonly over?: 'menu' | 'settings' | 'card' | 'poi' | 'passport';
+  readonly over?: 'menu' | 'settings' | 'card' | 'poi' | 'passport' | 'about';
+  /**
+   * Which branch the "About this place" panel draws
+   * (`docs/content-review.md` §10.2). A verified statement by default; the two
+   * refusals are only reachable as a parameter, because a claim a verifier
+   * declined cannot be produced by clicking, and a branch axe never renders is
+   * a branch nothing has measured.
+   */
+  readonly about?: 'statement' | 'not-checked' | 'being-checked' | 'long-source';
   /**
    * Which level the two level screens are about. The waiting sentence and the
    * failure title are per level now (`TN-WAIT`), so a scan has to say which one
@@ -181,6 +189,7 @@ async function open(
   if (options.done === true) params.set('done', '1');
   if (options.notice === true) params.set('notice', '1');
   if (options.over !== undefined) params.set('over', options.over);
+  if (options.about !== undefined) params.set('about', options.about);
   if (options.place !== undefined) params.set('place', options.place);
   if (options.who !== undefined) params.set('who', options.who);
 
@@ -347,7 +356,7 @@ test.describe('the page the HUD builds', () => {
     ).not.toContain('landmark-one-main');
   });
 
-  for (const over of ['menu', 'settings', 'card', 'poi', 'passport'] as const) {
+  for (const over of ['menu', 'settings', 'card', 'poi', 'passport', 'about'] as const) {
     test(`stays clean with ${over} open over the level`, async ({ page }) => {
       await open(page, 'level', { task: true, prompt: true, warning: true, over });
 
@@ -1111,5 +1120,213 @@ test.describe('what is in reach', () => {
       'Un repère indique quelque chose à voir. Approchez-vous, puis choisissez.',
     );
     expect(await scrollsSideways(page)).toBe(false);
+  });
+});
+
+/**
+ * "About this place" — the territorial statement panel
+ * (`docs/content-review.md` §10.2).
+ *
+ * A new DOM screen, so a new scan, and `CLAUDE.md` requires axe on every one.
+ * Three things here are not boilerplate:
+ *
+ *  - **Both branches are scanned.** A verified statement and a claim that was
+ *    not verified are two different pages, and the second cannot be reached by
+ *    clicking — it is what a level whose statement a verifier declined draws.
+ *    `?about=` is how a scan reaches it.
+ *  - **The link is measured as a touch target.** It is the only `a[href]` in
+ *    this game's chrome, and `undersizedTargets` collects links as well as
+ *    buttons, so 44 CSS px at 100 % and at 200 % is checked rather than assumed.
+ *  - **The refusal is checked for what it does not say**, in both languages,
+ *    over the rendered page: a refused territorial claim may not come back as a
+ *    nation list or a publisher, and the DOM is where a future "helpful"
+ *    addition would appear.
+ */
+test.describe('"About this place"', () => {
+  test('states the fact, names the source, and is clean over the level', async ({ page }) => {
+    await open(page, 'level', { over: 'about' });
+
+    const panel = page.locator('[data-testid="about-this-place"]');
+    await expect(panel).toBeVisible();
+    await expect(panel).toHaveAccessibleName('About this place');
+    await expect(panel.locator('[data-testid="about-this-place-statement"]')).toContainText(
+      'traditional and unsurrendered territory',
+    );
+    await expect(panel.locator('[data-testid="about-this-place-nations"]')).toContainText(
+      'Fixture Nation',
+    );
+
+    const results = await pageScan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('names the source by its publisher and says the link leaves the game', async ({ page }) => {
+    await open(page, 'level', { over: 'about' });
+    const link = page.locator('[data-testid="about-this-place-source"]');
+
+    await expect(link).toHaveAccessibleName('Assembly of the Fixture Nation Councils');
+    await expect(link).toHaveAccessibleDescription('This link opens the source outside the game.');
+    await expect(link).toHaveAttribute('href', 'https://example.invalid/about-us');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+
+    /* Colour is never the only signal, so the link is underlined as well. */
+    const underlined = await link.evaluate(
+      (node) => getComputedStyle(node).textDecorationLine.includes('underline'),
+    );
+    expect(underlined, 'the source link is a colour and nothing else').toBe(true);
+  });
+
+  test('keeps every target at 44 CSS px, the link included, at 100 % and 200 %', async ({
+    page,
+  }) => {
+    await open(page, 'level', { over: 'about' });
+    expect(await undersizedTargets(page)).toEqual([]);
+
+    await open(page, 'level', { over: 'about', textScale: 200 });
+    expect(await undersizedTargets(page), 'at 200 % text').toEqual([]);
+    expect(await scrollsSideways(page), 'at 200 % text').toBe(false);
+  });
+
+  for (const about of ['not-checked', 'being-checked'] as const) {
+    test(`draws "${about}" without making the claim in another form`, async ({ page }) => {
+      await open(page, 'level', { over: 'about', about });
+
+      const panel = page.locator('[data-testid="about-this-place"]');
+      await expect(panel).toBeVisible();
+      await expect(panel).toHaveAccessibleName('About this place');
+      await expect(panel.locator('[data-testid="about-this-place-unavailable"]')).toHaveAttribute(
+        'data-tn-reason',
+        about,
+      );
+      /* The sentence that keeps the refusal from reading as the player's fault
+         or as a defect in the source. */
+      await expect(panel.locator('[data-testid="about-this-place-ours"]')).toContainText(
+        'our own checking',
+      );
+
+      /* Nothing of the statement survives: no nation, no publisher, no link. */
+      await expect(panel.locator('[data-testid="about-this-place-nations"]')).toHaveCount(0);
+      await expect(panel.locator('[data-testid="about-this-place-source"]')).toHaveCount(0);
+      await expect(panel).not.toContainText('Fixture Nation');
+
+      const results = await pageScan(page).analyze();
+      expect(results.violations, violationsOf(results)).toEqual([]);
+    });
+  }
+
+  test('wraps a publisher that is a paragraph, rather than pushing the page sideways', async ({
+    page,
+  }) => {
+    /*
+     * Not a hypothetical. §10.2 asks the panel to name the publisher, the panel
+     * draws `nationSource.publisher` as the source link's text, and that field
+     * on four shipped levels is a paragraph rather than a name —
+     * `content/levels/the-north.json`'s is 321 characters. So a link 300
+     * characters long is a state the shipped game reaches, and the two ways it
+     * breaks are a page that scrolls sideways and a target that has stopped
+     * being one.
+     *
+     * Reported upward as a content finding as well: a link whose accessible name
+     * is four clauses is a worse link than one named after a body, and the fix
+     * is a field the panel does not draw, not a shorter panel.
+     */
+    for (const options of [{}, { textScale: 200 }, { locale: 'fr' as const, textScale: 200 }]) {
+      await open(page, 'level', { over: 'about', about: 'long-source', ...options });
+      await expect(page.locator('[data-testid="about-this-place-source"]')).toBeVisible();
+      expect(await scrollsSideways(page), JSON.stringify(options)).toBe(false);
+      expect(await undersizedTargets(page), JSON.stringify(options)).toEqual([]);
+
+      const results = await pageScan(page).analyze();
+      expect(results.violations, `${JSON.stringify(options)}: ${violationsOf(results)}`).toEqual([]);
+    }
+  });
+
+  test('is clean in French, at 200 % text, in high contrast and with the dyslexia font', async ({
+    page,
+  }) => {
+    for (const about of ['statement', 'not-checked'] as const) {
+      for (const options of [
+        { locale: 'fr' as const },
+        { locale: 'fr' as const, textScale: 200 },
+        { contrast: 'high' as const },
+        { font: 'dyslexia' as const },
+      ]) {
+        await open(page, 'level', { over: 'about', about, ...options });
+        await expect(page.locator('[data-testid="about-this-place"]')).toBeVisible();
+        const results = await pageScan(page).analyze();
+        expect(
+          results.violations,
+          `${about} ${JSON.stringify(options)}: ${violationsOf(results)}`,
+        ).toEqual([]);
+        expect(await scrollsSideways(page), `${about} ${JSON.stringify(options)}`).toBe(false);
+      }
+    }
+  });
+
+  test('is French end to end, chrome and statement together', async ({ page }) => {
+    await open(page, 'level', { over: 'about', locale: 'fr' });
+    const panel = page.locator('[data-testid="about-this-place"]');
+
+    await expect(panel).toHaveAccessibleName('À propos de ce lieu');
+    await expect(panel).toHaveAttribute('lang', 'fr');
+    await expect(panel.locator('[data-testid="about-this-place-statement"]')).toContainText(
+      'territoire traditionnel',
+    );
+    /* The endonym is the same string in both panels: a nation's own name for
+       itself is not translated (`docs/content-review.md` §9.3). */
+    await expect(panel.locator('[data-testid="about-this-place-nations"]')).toContainText(
+      'Fixture Nation',
+    );
+    await expect(panel.locator('[data-testid="about-this-place-close"]')).toHaveText('Fermer');
+  });
+
+  test('is reachable from the pause menu, by keyboard alone, and gives focus back', async ({
+    page,
+  }) => {
+    /*
+     * §10.2: "opened from the pause menu". The whole route, with a keyboard and
+     * nothing else — open the menu, reach the item, take it — because a panel
+     * that is accessible and unreachable is not a screen.
+     */
+    await open(page, 'level', { over: 'menu' });
+    const item = page.locator('[data-testid="about-this-place-open"]');
+    await expect(item).toBeVisible();
+    await expect(item).toHaveText('About this place');
+
+    /*
+     * It sits after the passport and before the way out, which stays last.
+     * Relative rather than absolute, because "Leave the level" is itself drawn
+     * only where there is something to leave and this page does not wire it —
+     * an exact list here would be asserting the harness rather than the rule.
+     * `tests/unit/ui/about-this-place.test.ts` pins the full order.
+     */
+    const order = await page
+      .locator('[data-testid="menu"] button')
+      .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-testid')));
+    expect(order).toContain('about-this-place-open');
+    expect(order.indexOf('about-this-place-open')).toBeGreaterThan(order.indexOf('menu-passport'));
+    expect(order.indexOf('about-this-place-open')).toBeLessThan(order.indexOf('menu-close'));
+
+    for (let index = 0; index < 10; index += 1) {
+      if ((await focusedTestId(page)) === 'about-this-place-open') break;
+      await page.keyboard.press('Tab');
+    }
+    expect(await focusedTestId(page)).toBe('about-this-place-open');
+  });
+
+  test('is the only screen on this page that states a territorial fact', async ({ page }) => {
+    /*
+     * `TN-PEGGYS-01` and `TN-NORTH-01`: "the territorial statement is drawn only
+     * by about-this-place". The level running behind the panel carries a mode
+     * label, a task, a prompt and a hint, and none of them is about whose land
+     * this is — asserted over the strip rather than trusted, because the strip
+     * is the surface a sentence would most plausibly leak into.
+     */
+    await open(page, 'level', { task: true, prompt: true, hint: true, notice: true });
+    const strip = await page.locator('[data-testid="hud"]').innerText();
+    for (const word of ['territory', 'traditional', 'unsurrendered', 'Fixture Nation']) {
+      expect(strip, `the HUD says "${word}"`).not.toContain(word);
+    }
+    await expect(page.locator('[data-testid="about-this-place"]')).toHaveCount(0);
   });
 });

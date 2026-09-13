@@ -718,6 +718,57 @@ const EN = {
   'common.back': 'Back',
   'flow.leaveLevel': 'Leave the level',
 
+  /* The "About this place" panel (`docs/content-review.md` §10.2): the one
+     screen in this game that states whose land a level stands on, the one
+     control that opens it, and the words for the case where the claim was not
+     verified and is therefore not drawn.
+
+     **Every row here is invented and every row here is listed in
+     {@link COPY_GAPS}.** No file in `docs/stories/` carries a copy table for
+     this panel — `TN-REACH-what-is-in-reach.md` owns what the HUD says is in
+     reach and says nothing about the menu, and the ten level stories own the
+     *statement*, which is content on the level document and is never a row
+     here. So these eleven strings are reported upward to be ratified or
+     replaced, exactly as `docs/stories/README.md` requires, rather than written
+     and left looking reviewed.
+
+     **`about.title` and `about.open` are the same words on purpose**, which is
+     the discipline `hud.menu` and `hud.menu.title` already follow: the dialog's
+     accessible name is the phrase the player pressed, so what they see and what
+     they hear are one thing. They stay two rows because one is a control and
+     one is a heading, and a future reviewer may want to change one without the
+     other.
+
+     **Nothing here names a nation, a place or a publisher.** Every such word on
+     this screen arrives from the level document, already localised and already
+     verified, and an endonym is spelled identically in both languages
+     (`docs/content-review.md` §9.3) precisely because it is never translated
+     through a table like this one.
+
+     **The two unavailable rows are the panel's hardest sentences**, and the
+     rule they are written to is `docs/content-review.md` §10.2's honesty: a
+     wrong attribution is worse than an absent one, and an absent one that says
+     nothing about its absence is worse than one that does. So the panel says
+     the statement is not shown, says which of the two reasons applies, and says
+     — in `about.unavailable.ours` — that this is the project's own checking and
+     neither a fault in the source nor anything the player did. Neither row
+     names a nation or a publisher, because the refused claim *is* a territorial
+     attribution and a list of names would be the same claim in a form a reader
+     cannot disagree with. */
+  'about.open': 'About this place',
+  'about.title': 'About this place',
+  'about.nations': 'Named in this statement',
+  'about.source': 'Where this comes from',
+  'about.source.outside': 'This link opens the source outside the game.',
+  'about.unavailable.notShown':
+    'We show this statement only after someone checks it against its source. ' +
+    'This one has not passed that check, so it is not shown.',
+  'about.unavailable.checking':
+    'The source for this place has changed. Someone is checking the statement again. ' +
+    'It comes back when that check is done.',
+  'about.unavailable.ours':
+    'This is about our own checking. It is not a fault in the source, and it is not something you did.',
+
   /* docs/stories/TN-LEVELS-2-to-10-spine.md owns the place name and the subject
      line for the nine levels that are not Ottawa; `TN-LEVEL-ottawa.md` owns
      Ottawa's pair. They are rows here because the map draws all ten and nine of
@@ -1178,6 +1229,25 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'common.back': 'Retour',
   'flow.leaveLevel': 'Quitter le niveau',
 
+  /* Le panneau « À propos de ce lieu ». Voir le bloc anglais pour la raison
+     de chaque ligne. Aucune de ces lignes ne nomme une nation, un lieu ou un
+     éditeur : ces mots arrivent du document du niveau, dans les deux langues,
+     et un endonyme s'écrit de la même façon dans les deux
+     (`docs/content-review.md` §9.3). */
+  'about.open': 'À propos de ce lieu',
+  'about.title': 'À propos de ce lieu',
+  'about.nations': 'Noms cités dans cet énoncé',
+  'about.source': "D'où cela vient",
+  'about.source.outside': "Ce lien ouvre la source à l'extérieur du jeu.",
+  'about.unavailable.notShown':
+    "Nous montrons cet énoncé seulement après que quelqu'un l'a vérifié auprès de sa source. " +
+    "Celui-ci n'a pas passé cette vérification. Nous ne le montrons donc pas.",
+  'about.unavailable.checking':
+    "La source de ce lieu a changé. Quelqu'un vérifie l'énoncé de nouveau. " +
+    'Il reviendra une fois cette vérification terminée.',
+  'about.unavailable.ours':
+    "Cela concerne nos propres vérifications. Ce n'est pas une erreur de la source, et ce n'est pas de votre faute.",
+
   'level.halifax.title': 'Halifax',
   'level.halifax.subtitle': 'Droits et responsabilités',
   'level.peggys-cove.title': "Peggy's Cove",
@@ -1203,7 +1273,22 @@ const FR: Readonly<Record<CopyRow, string>> = {
 /**
  * Strings this module had to write because no story table carries them.
  *
- * Empty, and it is meant to stay empty. `settings.state.on` / `.off`,
+ * **It was empty, and the "About this place" panel is why it is not.** Eight
+ * rows are listed below, and listing them is the point: `docs/stories/README.md`
+ * says the UI invents no copy, so a string this directory had to write is
+ * declared here and reported upward to be ratified or replaced in a story file.
+ * A row written and left off this list would be a string that *looks* reviewed,
+ * which is the one outcome this constant exists to prevent. The unit suite
+ * pins the list to exactly these eight, so a ninth invented row anywhere else
+ * fails the build rather than joining them quietly.
+ *
+ * Why there was no table to transcribe from: `docs/content-review.md` §10.2
+ * specifies the panel — where it is reachable from, what it states, that it is
+ * sourced — and specifies no wording, and no file in `docs/stories/` has ever
+ * owned its chrome. The ten level stories own the *statement*, which is content
+ * on the level document and never a row here.
+ *
+ * The rest were reported and are written down now. `settings.state.on` / `.off`,
  * `hud.label`, the four mode labels and the eight per-level waiting and failure
  * rows were each reported as a gap and are each written down now — in
  * `TN-COPY-strings-and-counts.md`, `TN-HUD`, `TN-MOVE-locomotion-labels.md`,
@@ -1233,11 +1318,20 @@ const FR: Readonly<Record<CopyRow, string>> = {
  *    The level says which key; this table says what the key means; neither says
  *    the other's half.
  *
- * The unit suite asserts this list is empty *and* that the marker this module
- * used to carry beside an invented string survives nowhere in the source, so a
- * new one cannot slip in unlisted.
+ * The unit suite asserts this list holds exactly the panel's rows *and* that
+ * the marker this module used to carry beside an invented string survives
+ * nowhere in the source, so a new one cannot slip in unlisted.
  */
-export const COPY_GAPS: readonly CopyKey[] = [];
+export const COPY_GAPS: readonly CopyKey[] = [
+  'about.open',
+  'about.title',
+  'about.nations',
+  'about.source',
+  'about.source.outside',
+  'about.unavailable.notShown',
+  'about.unavailable.checking',
+  'about.unavailable.ours',
+];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {
   en: EN,
