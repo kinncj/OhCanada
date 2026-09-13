@@ -319,7 +319,8 @@
         98,
         99,
         100,
-        102
+        102,
+        104
       ],
       "upstream": "does-not-revise",
       "bannedFromAnswers": [
@@ -336,9 +337,11 @@
         "600 provincial parks",
         "600 parcs provinciaux",
         "fourth largest metropolitan area",
-        "quatrième région métropolitaine"
+        "quatrième région métropolitaine",
+        "85%",
+        "85 %"
       ],
-      "action": "Ask which province produces a thing, never what share of it. \"Ontario and Quebec make most of Canada's manufactured goods\" is durable and is what eco-25 grades; \"more than three-quarters\" is not, and sits in that question's source.quote only, where nothing a player reads can inherit it. Two entries here are deliberately narrower than the stale fact and this says so rather than letting the list imply coverage: \"one-third\" is NOT banned, because the territories holding one-third of Canada's land mass is geography and cannot move, and Ontario at more than one-third of Canadians is still true; and bare \"half\" and \"moitié\" are not banned because they are ordinary words whose every use would fire. A share that slips through in those spellings is caught by the verifier reading the chapter, not here."
+      "action": "Ask which province produces a thing, never what share of it. \"Ontario and Quebec make most of Canada's manufactured goods\" is durable and is what eco-25 grades; \"more than three-quarters\" is not, and sits in that question's source.quote only, where nothing a player reads can inherit it. Two entries here are deliberately narrower than the stale fact and this says so rather than letting the list imply coverage: \"one-third\" is NOT banned, because the territories holding one-third of Canada's land mass is geography and cannot move, and Ontario at more than one-third of Canadians is still true; and bare \"half\" and \"moitié\" are not banned because they are ordinary words whose every use would fire. A share that slips through in those spellings is caught by the verifier reading the chapter, not here. Page 104 added 2026-09-13. It carries Nunavut's \"about 85% Inuit\" and the Northwest Territories' \"more than half the population is Aboriginal\", which are exactly this flag's shape and were outside it. Nothing ships on either -- an author dropped both on content-review grounds -- but that was judgement rather than the gate, and the next author on that page would have had no warning. Page 103 stays out deliberately: its one-third of Canada's land mass is geography this register declines to ban."
     },
     {
       "topic": "The pre-accession monarch in Canada's Regions",
