@@ -4,9 +4,17 @@
  * `docs/stories/TN-QUEST-parliament-hill.md` is the acceptance criteria, and the
  * shape of this file follows the one sentence in `content/schemas/quest.schema.json`
  * that decides everything: a quest has a **giver**, and a step may carry
- * **dialogue**. This is a character talking to the player, not a checklist — so
+ * **dialogue**. This is something talking to the player, not a checklist — so
  * the surface is `app/ui/dialogue.ts` with the tracker in the HUD behind it, and
  * not a list of objectives nobody would read.
+ *
+ * *Something*, not somebody: ADR-0029. A giver is whatever the level **places**
+ * under that id — a character, or a point of interest. Peggy's Cove and the
+ * North may draw no figure of any kind at any scale, so on those two levels the
+ * offerer is a landmark, and `./engageables.ts` is where an id becomes a kind
+ * and a name. Nothing in this file branches on which of the two it got: a plaque
+ * is the named source of words on screen, and it acquires no mouth, no rig and
+ * no mood by being one.
  *
  * ## Why it is here and not in `app/ui`
  *
@@ -60,15 +68,37 @@ import {
 } from '@domain/entities/progress';
 import type { LevelId } from '@domain/ids';
 import type { LocalizedText } from '@domain/entities/values';
-import { hasCopyRow, text, type UiLocale } from '@ui/copy';
+import { text, type UiLocale } from '@ui/copy';
 import { createDialogue, type Dialogue } from '@ui/dialogue';
 import { bareTargetId } from '@ui/interact';
 import type { SettingsStore } from '@ui/settings';
+
+import {
+  resolveEngageable,
+  whyNotEngageable,
+  type EngageableResolution,
+  type LevelPlacements,
+} from './engageables';
 
 export interface QuestWiring {
   readonly levelId: LevelId;
   /** This level's quests, in a stable order. Empty is the normal case today. */
   readonly quests: readonly QuestDocument[];
+  /**
+   * What the level places, read when it is asked rather than when this
+   * controller is built.
+   *
+   * A thunk, and that is not a style choice: the controller is constructed
+   * before `loadLevel` resolves, so a value read here would be `null` for the
+   * whole sitting and every giver would be refused as unplaced. `null` is the
+   * honest answer until the document arrives.
+   *
+   * This is the whole of ADR-0029 at run time. A giver is named from what the
+   * level placed it as — `pois[].name` for a landmark, `content/characters/<id>.json`
+   * for a character — so the quest document never has to say which kind it is and
+   * cannot contradict the document that does.
+   */
+  readonly placements: () => LevelPlacements | null;
   /** `hud.main`: a dialog is not a landmark, so a modal goes inside `<main>`. */
   readonly host: HTMLElement;
   readonly store: SettingsStore;
@@ -113,12 +143,15 @@ export interface QuestController {
   /**
    * Would engaging this target open a dialogue?
    *
-   * Asked by the composition root **before** it offers a prompt for a character,
-   * because a character who is not a giver — or whose name this build has no row
-   * for — cannot be spoken to, and a prompt that opens nothing is the dead
-   * control this project keeps finding. It is not the same question as
+   * Asked by the composition root **before** it offers a prompt, because a
+   * target that is not a giver — or that this build cannot name — cannot be
+   * spoken to, and a prompt that opens nothing is the dead control this project
+   * keeps finding. It is not the same question as
    * {@link QuestController.isGiver}: a giver this build cannot name is a giver
-   * who cannot be engaged.
+   * that cannot be engaged.
+   *
+   * True for a **landmark** giver as well as a character one (ADR-0029): the
+   * lighthouse at Peggy's Cove offers a quest and no figure is drawn to hold it.
    */
   canEngage(targetId: string): boolean;
   /** Is this target a quest giver in this level? */
@@ -207,17 +240,42 @@ export function createQuestController(wiring: QuestWiring): QuestController {
   }
 
   /**
-   * The giver's name, or `null` when this build has none for him.
+   * The giver, resolved against what the level placed — or a refusal.
+   *
+   * ADR-0029: a quest is offered by an **engageable**, which is a character the
+   * level places *or a point of interest it places*, and the name comes from
+   * whichever of the two it turned out to be. Nothing here asks the quest
+   * document which kind its giver is; the quest does not know, and a field for
+   * it would be a second declaration that can disagree with the level's.
+   */
+  const giverOf = (quest: QuestDocument): EngageableResolution =>
+    resolveEngageable(wiring.placements(), bareTargetId(`${quest.giver}`));
+
+  /**
+   * The giver's name in the language in force, or `null` when this build has
+   * none for it.
    *
    * `TN-QUEST-08` requires the dialog's accessible name to be the speaker's, and
    * `app/ui/dialogue.ts` takes it as a **required** option so that an unnamed
-   * dialog cannot be built. `content/characters/` has no documents yet, so the
-   * name comes from `npc.<id>.name` in the copy table — and a giver with no row
-   * is refused rather than given a dialog called nothing.
+   * dialog cannot be built. A giver that cannot be named is refused rather than
+   * announced as nothing, or — worse for the one user this matters most to —
+   * announced as a kebab-case id read out one hyphen at a time.
    */
   function speakerName(quest: QuestDocument): string | null {
-    const key = `npc.${bareTargetId(`${quest.giver}`)}.name`;
-    return hasCopyRow(key) ? text(locale, key) : null;
+    const resolution = giverOf(quest);
+    return resolution.ok ? localised(resolution.engageable.name, locale) : null;
+  }
+
+  /** The refusal, as one sentence naming the document a maintainer must fix. */
+  function refuse(quest: QuestDocument): void {
+    const resolution = giverOf(quest);
+    if (resolution.ok) return;
+    console.error(
+      `[bootstrap] "${String(quest.id)}" is offered by "${String(quest.giver)}", and this ` +
+        `build cannot name it, so the offer is refused rather than opened in a dialog with no ` +
+        `accessible name (TN-QUEST-08, ADR-0029). ` +
+        whyNotEngageable(bareTargetId(`${quest.giver}`), String(wiring.levelId), resolution),
+    );
   }
 
   function ensureDialogue(name: string): Dialogue {
@@ -256,11 +314,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
   function open(quest: QuestDocument, lines: readonly string[], offer: boolean): boolean {
     const name = speakerName(quest);
     if (name === null) {
-      console.error(
-        `[bootstrap] "${String(quest.id)}" is given by "${String(quest.giver)}", and this ` +
-          'build has no npc.<id>.name row for him. The offer is refused rather than ' +
-          'opened in a dialog with no accessible name (TN-QUEST-08).',
-      );
+      refuse(quest);
       return false;
     }
     if (lines.length === 0) return false;
@@ -372,8 +426,8 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       if (quest === null) return false;
       /* An unnameable giver cannot be offered: `app/ui/dialogue.ts` requires the
          speaker's name, and a dialog with no accessible name is the defect
-         `TN-QUEST-08` exists to catch. Reported on the console the first time
-         anything tries. */
+         `TN-QUEST-08` exists to catch. Silent here — this runs on every prompt
+         refresh, and `open` says why once, where a developer will see it. */
       if (speakerName(quest) === null) return false;
 
       const state = questStateFor(wiring.progress(), wiring.levelId, quest.id);

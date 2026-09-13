@@ -1,10 +1,70 @@
+/**
+ * Every quest this build ships can name whoever — or whatever — offers it.
+ *
+ * `docs/stories/TN-GUIDE-02` — "a character with no name gives no quest".
+ *
+ * The defect this file exists to make impossible was live in the shipped build:
+ * three authored quests declared `"giver": "guide"`, and no `npc.guide.name`
+ * copy row existed. `app/ui/dialogue.ts` takes the speaker's name as a
+ * **required** option — `TN-QUEST-08` refuses a dialog whose accessible name is
+ * "Speaker", "NPC" or nothing — so `app/bootstrap/quest.ts` refused all three
+ * offers. Three quarters of the authored quests could not be given, on a build
+ * where every suite was green, and one of the three is **Halifax, the level
+ * `content/game.config.json` opens on**. Nothing joined a quest's `giver` to the
+ * name; only the console went red.
+ *
+ * ## What changed, and why this file changed with it
+ *
+ * ADR-0029 widened `giver` to anything the level **places** — a character, or a
+ * point of interest — and the obligation it left was that a giver's name must
+ * come from where the name actually lives:
+ *
+ * | Giver | Name |
+ * |---|---|
+ * | a character | `content/characters/<id>.json#/name` |
+ * | a landmark | the level's own `pois[].name` |
+ *
+ * So the join this file asserts is no longer *quest → copy table*. It is *quest
+ * → its level's placements → the document that names them*, which is exactly
+ * what `app/bootstrap/engageables.ts` does at run time and exactly what this
+ * suite runs. The copy row `npc.<id>.name` was never a design: it was written
+ * when `content/characters/` was **empty**, and it holds two documents now.
+ *
+ * Three halves, failing for three different reasons:
+ *
+ *  1. **the corpus** — every shipped quest's giver resolves against its own
+ *     level document and is named in English *and* in French, through the real
+ *     resolver, over the real content;
+ *  2. **the refusal** — a giver this build cannot name is refused at run time,
+ *     loudly, rather than opened in a dialog a screen reader announces as
+ *     nothing;
+ *  3. **the leftover** — while `npc.<id>.name` rows still exist in
+ *     `app/ui/copy.ts`, they must agree with the documents that replaced them,
+ *     so a stale row cannot sit there telling a maintainer something untrue.
+ *
+ * The landmark half of the same rule is
+ * `tests/unit/bootstrap/a-landmark-giver-opens-a-dialog.test.ts`; the
+ * document-side rule — a giver resolves to exactly one placement that claims the
+ * quest back — is `tests/unit/contracts/a-quest-giver-is-placed-on-its-level.test.ts`.
+ */
+
+import { readFileSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it, vi } from 'vitest';
 
-import { createQuestController } from '../../../app/bootstrap/quest';
+import { createQuestController, type QuestWiring } from '../../../app/bootstrap/quest';
 import { readQuests } from '../../../app/bootstrap/quests';
+import { readCharacterNames } from '../../../app/bootstrap/characters';
+import {
+  resolveEngageable,
+  type LevelPlacements,
+  type EngageableResolution,
+} from '../../../app/bootstrap/engageables';
 import { createSettingsStore } from '@ui/settings';
 import { hasCopyRow, text, UI_LOCALES, type UiLocale } from '@ui/copy';
 import type { QuestDocument } from '@application/ports';
+import type { LocalizedText } from '@domain/entities/values';
 
 import { buildPage, type FakePage } from '../ui/support/fake-dom';
 import {
@@ -18,97 +78,89 @@ import {
 } from '../support/fixtures';
 import type { CharacterId, LevelId } from '@domain/ids';
 
-/**
- * `docs/stories/TN-GUIDE-02` — "a character with no name gives no quest".
- *
- * The defect this file exists to make impossible was live in the shipped build:
- * `content/quests/halifax-clock-and-pier.json`,
- * `content/quests/quebec-city-chateau-frontenac.json` and
- * `content/quests/toronto-cn-tower.json` all declare `"giver": "guide"`, and no
- * `npc.guide.name` row existed. `app/ui/dialogue.ts` takes the speaker's name as
- * a **required** option — `TN-QUEST-08` refuses a dialog whose accessible name
- * is "Speaker", "NPC" or nothing — so `app/bootstrap/quest.ts` refused all three
- * offers. Three quarters of the authored quests could not be given, on a build
- * where every suite was green, and one of the three is **Halifax, the level
- * `content/game.config.json` opens on**.
- *
- * Nothing joined a quest's `giver` to the copy table, so the only thing that
- * went red was the console. This is that join, in two halves that fail for
- * different reasons:
- *
- *  1. **the build check** — every shipped quest's giver has a name row in
- *     English *and* in French, proven against a fixture giver that has neither,
- *     so the rule cannot pass vacuously;
- *  2. **the refusal** — a giver this build cannot name is refused at runtime,
- *     loudly, rather than opened in a dialog a screen reader announces as
- *     nothing. That path stays covered now that no shipped quest takes it.
- *
- * No wording is asserted here beyond the two rows `TN-GUIDE` writes down:
- * `tests/unit/ui/copy.test.ts` owns the table.
- */
+/* ------------------------------------------------------------- the documents */
 
-/** `npc.<giver>.name`, the key `app/bootstrap/quest.ts` looks a speaker up by. */
-const nameKeyFor = (quest: QuestDocument): string => `npc.${String(quest.giver)}.name`;
+const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
+
+/** A level document, as placements. The two lists apart, which is ADR-0029 §2. */
+function placementsOf(id: string): LevelPlacements | null {
+  const path = `${REPO_ROOT}content/levels/${id}.json`;
+  if (!existsSync(path)) return null;
+  const document = JSON.parse(readFileSync(path, 'utf8')) as {
+    pois?: { id: string; name: LocalizedText }[];
+    characters?: { characterId: string }[];
+  };
+  return { pois: document.pois ?? [], characters: document.characters ?? [] };
+}
+
+const localisedName = (name: LocalizedText, locale: UiLocale): string =>
+  locale === 'fr' ? name.fr : name.en;
 
 /**
- * What a giver's name looks like in one language: the string, or `null` when
- * this build has no row at all.
+ * The languages a giver's name is missing in, or `[]`.
  *
- * A parameter rather than a direct call so the rule below can be run against a
- * table that is missing a French row — which the real one cannot be, because
- * `app/ui/copy.ts` types `FR` against `keyof typeof EN` and a missing French
- * string is a compile error. A rule that can only be run against a table that
- * cannot break is a rule nobody has tested.
- */
-type NameLookup = (locale: UiLocale, key: string) => string | null;
-
-const FROM_THE_COPY_TABLE: NameLookup = (locale, key) =>
-  hasCopyRow(key) ? text(locale, key as Parameters<typeof text>[1]) : null;
-
-/**
- * The languages a giver's name is missing in, or `[]` when the build can name
- * them. One function, used by the check and by the two fixtures that prove it.
+ * One function, run by the corpus check and by the fixtures that prove it can
+ * fail. It asks the **real resolver**, so a rule that passes here is a rule the
+ * game obeys, not a second implementation that happens to agree.
  */
 function missingNameLocales(
   quest: QuestDocument,
-  lookup: NameLookup = FROM_THE_COPY_TABLE,
+  placements: LevelPlacements | null,
 ): readonly UiLocale[] {
-  const key = nameKeyFor(quest);
-  return UI_LOCALES.filter((locale) => (lookup(locale, key) ?? '').trim() === '');
+  const resolution: EngageableResolution = resolveEngageable(placements, String(quest.giver));
+  if (!resolution.ok) return [...UI_LOCALES];
+  return UI_LOCALES.filter(
+    (locale) => localisedName(resolution.engageable.name, locale).trim() === '',
+  );
 }
 
-describe('every quest this build ships can name the character who gives it', () => {
+/** Why a resolution failed, as one word, for a message that names the cause. */
+const why = (resolution: EngageableResolution): string =>
+  resolution.ok ? 'resolved' : resolution.why;
+
+describe('every quest this build ships can name whatever offers it', () => {
   const catalogue = readQuests();
 
-  it('has a name row for every giver, in English and in French', () => {
-    /*
-     * Read from the glob, not from a list anybody maintains, so a fifth quest
-     * lands with this covering it. The message names the quest, the giver and
-     * the key, which is what `TN-GUIDE-02` asks the failure to say.
-     */
-    expect(catalogue.quests.length, 'no quest was read — this rule must not pass vacuously')
+  it('reads a corpus that is not empty', () => {
+    /* ADR-0024's floor, first rather than last, because everything below it
+       would pass over nothing. */
+    expect(catalogue.quests.length, 'no quest was read — this suite would pass vacuously')
       .toBeGreaterThan(0);
+    expect(catalogue.refused, catalogue.refused.join('\n')).toEqual([]);
+  });
 
+  it('names every giver, in English and in French, from the document that places it', () => {
+    /*
+     * Read from the glob, not from a list anybody maintains, so quest number
+     * nine lands with this covering it — including the two landmark quests
+     * ADR-0029 unblocked, which need no copy row and will pass here the day they
+     * are authored.
+     */
     const unnameable = catalogue.quests
-      .filter((quest) => missingNameLocales(quest).length > 0)
-      .map(
-        (quest) =>
-          `${String(quest.id)} is given by "${String(quest.giver)}" and app/ui/copy.ts has ` +
-          `no ${nameKeyFor(quest)} in ${missingNameLocales(quest).join(' and ')}`,
-      );
+      .filter((quest) => missingNameLocales(quest, placementsOf(String(quest.levelId))).length > 0)
+      .map((quest) => {
+        const placements = placementsOf(String(quest.levelId));
+        const resolution = resolveEngageable(placements, String(quest.giver));
+        return (
+          `${String(quest.id)} is offered by "${String(quest.giver)}" on ` +
+          `${String(quest.levelId)}, and this build cannot name it: ${why(resolution)}. ` +
+          `A character is named by content/characters/<id>.json#/name and a landmark by ` +
+          `the level's own pois[].name.`
+        );
+      });
 
     expect(unnameable, unnameable.join('\n')).toEqual([]);
   });
 
-  it('names the guide, whoever it happens to give a quest for', () => {
+  it('names the guide from its own document, whatever it happens to give', () => {
     /*
-     * Not a re-statement of the row -- `tests/unit/ui/copy.test.ts` owns the
-     * words -- but of the join: every document that declares `guide` is asked,
-     * by its own `giver` field, whether this build can name it.
+     * Not a re-statement of the name — `tests/unit/ui/copy.test.ts` and the
+     * character document own the words — but of the join: every quest that
+     * declares `guide` is asked, by its own `giver` field, whether this build
+     * can name it.
      *
-     * The membership is deliberately NOT pinned. It used to be, as the guard
-     * against this scenario becoming about nothing, and it broke the day a
-     * sixth quest chose the same giver -- which is the case it exists to
+     * The membership is deliberately NOT pinned. It used to be, and it broke the
+     * day a sixth quest chose the same giver — which is the case it existed to
      * protect, arriving and failing. The floor is that at least one quest is
      * given by the guide; which ones is the content's business.
      */
@@ -118,37 +170,120 @@ describe('every quest this build ships can name the character who gives it', () 
       'no quest is given by the guide any more, so this scenario is about nothing',
     ).toBeGreaterThan(0);
 
-    const unnameable = byGuide
-      .filter((quest) => missingNameLocales(quest).length > 0)
-      .map(
-        (quest) =>
-          `${String(quest.id)} is given by the guide and app/ui/copy.ts has no ` +
-          `${nameKeyFor(quest)} in ${missingNameLocales(quest).join(' and ')}`,
-      );
-    expect(unnameable, unnameable.join('\n')).toEqual([]);
+    for (const quest of byGuide) {
+      expect(
+        missingNameLocales(quest, placementsOf(String(quest.levelId))),
+        `${String(quest.id)} cannot name the guide`,
+      ).toEqual([]);
+    }
   });
 
   it('is proven by a giver nothing has a word for', () => {
-    /* A check that cannot go red certifies nothing. The fixture is refused in
-       both languages, and a build that gave it a row would fail this line. */
+    /* A check that cannot go red certifies nothing. `nobody` is placed as a
+       character on the level and has no content/characters/nobody.json, so the
+       name resolution fails in both languages. */
     const nameless = makeQuest({ giver: characterId('nobody') });
-    expect(missingNameLocales(nameless)).toEqual([...UI_LOCALES]);
-    expect(hasCopyRow(nameKeyFor(nameless))).toBe(false);
+    expect(
+      missingNameLocales(nameless, { characters: [{ characterId: 'nobody' }], pois: [] }),
+    ).toEqual([...UI_LOCALES]);
+    expect(existsSync(`${REPO_ROOT}content/characters/nobody.json`)).toBe(false);
   });
 
   it('fails a giver named in one language only', () => {
     /*
      * `TN-GUIDE-02`, second scenario: "a row present in one language only fails
-     * the same check". Run against a table that has the English and not the
-     * French, because the real table cannot be in that state — and a rule that
-     * has never seen the state it is written for is a rule nobody has tested.
+     * the same check". Run against a placement whose French is blank, because
+     * the shipped documents cannot be in that state —
+     * `character.schema.json` requires both — and a rule that has never seen the
+     * state it is written for is a rule nobody has tested.
      */
-    const englishOnly: NameLookup = (locale, key) =>
-      locale === 'en' ? FROM_THE_COPY_TABLE('en', key) : '';
+    const quest = makeQuest({ giver: characterId('a-plaque') });
+    const halfNamed: LevelPlacements = {
+      characters: [],
+      pois: [{ id: 'a-plaque', name: { en: 'A plaque', fr: '' } }],
+    };
+    /* `unnamed` is refused outright rather than half-answered: an English label
+       announced to a French screen-reader user is `TN-CREATOR-09`'s defect. */
+    expect(missingNameLocales(quest, halfNamed)).toEqual([...UI_LOCALES]);
 
-    expect(missingNameLocales(questGivenBy(characterId('guide')), englishOnly)).toEqual(['fr']);
-    /* And the same giver passes against the table this build actually ships. */
-    expect(missingNameLocales(questGivenBy(characterId('guide')))).toEqual([]);
+    const named: LevelPlacements = {
+      characters: [],
+      pois: [{ id: 'a-plaque', name: localised('A plaque', 'Une plaque') }],
+    };
+    expect(missingNameLocales(quest, named)).toEqual([]);
+  });
+});
+
+describe('the copy rows the character documents replaced', () => {
+  /*
+   * `npc.guide.name` and `npc.officer.name` are **no longer read by the
+   * runtime**: ADR-0029's obligation moved a character giver's name to
+   * `content/characters/<id>.json#/name`, which is content, bilingual, schema-
+   * validated and in the same document as the rig the character plays.
+   *
+   * The rows still exist, because `app/ui/copy.ts` is not this change's to edit,
+   * and a row nothing reads is a row that can quietly start disagreeing with the
+   * document that replaced it — at which point a maintainer editing the row
+   * would be editing nothing while believing otherwise. Until the rows are
+   * deleted, they must agree. Delete this block with them.
+   */
+  const documents = readCharacterNames();
+
+  it('has a document for every character the copy table still names', () => {
+    expect(documents.size, 'content/characters/ named nobody').toBeGreaterThan(0);
+  });
+
+  it('reads the characters in that directory and nothing else in it', () => {
+    /*
+     * `content/characters/rig.json` lives there and is not a character — it is
+     * the shared rig every character plays (ADR-0022). It is told apart by its
+     * `$schema`, which every content file declares, rather than by its filename
+     * or by "has a name", both of which are guesses that go stale.
+     */
+    expect(documents.has('rig')).toBe(false);
+    expect(documents.has('truenorth-rig')).toBe(false);
+    for (const [id, name] of documents) {
+      expect(existsSync(`${REPO_ROOT}content/characters/${id}.json`), id).toBe(true);
+      expect(name.en.trim()).not.toBe('');
+      expect(name.fr.trim()).not.toBe('');
+    }
+  });
+
+  it('drops a character it could only half name, rather than half naming it', () => {
+    /*
+     * Proved by documents that break it, because the shipped ones cannot:
+     * `character.schema.json` requires both languages. A name in English only
+     * would announce an English label to a French screen-reader user, so the
+     * document is dropped and the giver is refused — the same fail-closed answer
+     * as no document at all.
+     */
+    const read = readCharacterNames({
+      '/a.json': { default: { $schema: '../schemas/character.schema.json', id: 'a', name: { en: 'A', fr: 'A' } } },
+      '/half.json': { default: { $schema: '../schemas/character.schema.json', id: 'half', name: { en: 'Half', fr: '   ' } } },
+      '/none.json': { default: { $schema: '../schemas/character.schema.json', id: 'none' } },
+      '/rig.json': { default: { $schema: '../schemas/rig.schema.json', id: 'rig', name: { en: 'Rig', fr: 'Rig' } } },
+    });
+    expect([...read.keys()]).toEqual(['a']);
+  });
+
+  it('says the same thing as the document, in both languages, or is deleted', () => {
+    const drifted: string[] = [];
+    for (const [id, name] of documents) {
+      const key = `npc.${id}.name`;
+      if (!hasCopyRow(key)) continue;
+      for (const locale of UI_LOCALES) {
+        const row = text(locale, key as Parameters<typeof text>[1]);
+        const document = localisedName(name, locale);
+        if (row !== document) {
+          drifted.push(
+            `${key} (${locale}) is "${row}" and content/characters/${id}.json#/name is ` +
+              `"${document}". The document is what the game reads (ADR-0029); the row is a ` +
+              `leftover and should be deleted rather than edited.`,
+          );
+        }
+      }
+    }
+    expect(drifted, drifted.join('\n')).toEqual([]);
   });
 });
 
@@ -160,14 +295,19 @@ interface Harness {
   readonly opened: () => number;
 }
 
-function harnessFor(quests: readonly QuestDocument[], level = 'halifax'): Harness {
+function harnessFor(
+  quests: readonly QuestDocument[],
+  placements: LevelPlacements | null,
+  level = 'halifax',
+): Harness {
   const page = buildPage();
   let opens = 0;
   let progress = emptyProgress();
 
-  const controller = createQuestController({
+  const wiring: QuestWiring = {
     levelId: brandId<LevelId>(level),
     quests,
+    placements: () => placements,
     host: page.host,
     store: createSettingsStore(),
     clock: testClock(),
@@ -183,12 +323,12 @@ function harnessFor(quests: readonly QuestDocument[], level = 'halifax'): Harnes
     onClose: vi.fn(),
     onCompleted: vi.fn(),
     restoreFocusTo: () => null,
-  });
+  };
 
-  return { page, controller, opened: () => opens };
+  return { page, controller: createQuestController(wiring), opened: () => opens };
 }
 
-/** A quest whose giver has a name row, and one whose giver has none. */
+/** A quest given by one character, placed as a character on the level. */
 const questGivenBy = (giver: CharacterId): QuestDocument =>
   makeQuest({
     id: brandId('a-quest'),
@@ -212,37 +352,55 @@ const questGivenBy = (giver: CharacterId): QuestDocument =>
     ] as QuestDocument['steps'],
   });
 
+/** That character, standing on the level. */
+const placedAs = (giver: string): LevelPlacements => ({
+  characters: [{ characterId: giver }],
+  pois: [],
+});
+
 describe('a giver this build cannot name', () => {
   it('is not offered a prompt, because the prompt would open nothing', () => {
     /* `canEngage` is what the composition root asks **before** it draws a
        prompt, and a control that opens nothing is the dead button this project
        keeps finding. */
-    const { controller } = harnessFor([questGivenBy(characterId('nobody'))]);
+    const { controller } = harnessFor([questGivenBy(characterId('nobody'))], placedAs('nobody'));
     expect(controller.isGiver('nobody'), 'the fixture is not a giver at all').toBe(true);
     expect(controller.canEngage('nobody')).toBe(false);
   });
 
-  it('opens no dialog, and says so where a developer will see it', () => {
+  it('opens no dialog, and says which document is missing', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     try {
-      const { controller, page, opened } = harnessFor([questGivenBy(characterId('nobody'))]);
+      const { controller, page, opened } = harnessFor(
+        [questGivenBy(characterId('nobody'))],
+        placedAs('nobody'),
+      );
 
       expect(controller.engage('nobody'), 'an unnamed dialog was opened').toBe(false);
       expect(page.doc.byTestId('dialogue'), 'a dialog with no accessible name mounted').toBe(null);
       expect(opened(), 'the level was taken for a dialogue that never opened').toBe(0);
 
       const said = error.mock.calls.flat().join(' ');
-      expect(said).toContain('npc.<id>.name');
       expect(said).toContain('nobody');
+      /* The sentence names the file to write, which is the half the old message
+         got wrong: it sent a maintainer to a copy table. */
+      expect(said).toContain('content/characters/nobody.json');
+      expect(said).not.toContain('npc.<id>.name');
     } finally {
       error.mockRestore();
     }
   });
 });
 
-describe('the guide, now that it has a name', () => {
+describe('the guide, named by its own document', () => {
+  const GUIDE_NAME = readCharacterNames().get('guide');
+
+  it('has a document to be named by', () => {
+    expect(GUIDE_NAME, 'content/characters/guide.json names nobody').toBeDefined();
+  });
+
   it('opens a dialog named after it, and offers the quest', () => {
-    const { controller, page } = harnessFor([questGivenBy(characterId('guide'))]);
+    const { controller, page } = harnessFor([questGivenBy(characterId('guide'))], placedAs('guide'));
 
     expect(controller.canEngage('guide')).toBe(true);
     expect(controller.engage('guide'), 'the guide still says nothing').toBe(true);
@@ -252,19 +410,33 @@ describe('the guide, now that it has a name', () => {
     /* `TN-QUEST-08`: the dialog's accessible name is the speaker's, and the
        same string is drawn, so it is seen as well as heard. */
     const speaker = page.doc.byTestId('dialogue-speaker');
-    expect(speaker?.textContent).toBe(text('en', 'npc.guide.name'));
+    expect(speaker?.textContent).toBe(GUIDE_NAME?.en);
     expect(
       page.doc.getElementById(dialog?.getAttribute('aria-labelledby') ?? '')?.textContent,
-    ).toBe(text('en', 'npc.guide.name'));
+    ).toBe(GUIDE_NAME?.en);
     expect(page.doc.byTestId('dialogue-accept'), 'the offer had no way to say yes').not.toBe(null);
     expect(page.doc.byTestId('dialogue-decline'), 'the offer had no way to say no').not.toBe(null);
   });
 
   it('says it in French when the game is in French', () => {
-    const { controller, page } = harnessFor([questGivenBy(characterId('guide'))]);
+    const { controller, page } = harnessFor([questGivenBy(characterId('guide'))], placedAs('guide'));
     controller.setLocale('fr');
     controller.engage('guide');
 
-    expect(page.doc.byTestId('dialogue-speaker')?.textContent).toBe(text('fr', 'npc.guide.name'));
+    expect(page.doc.byTestId('dialogue-speaker')?.textContent).toBe(GUIDE_NAME?.fr);
+  });
+
+  it('is refused when the level does not place it, however well named it is', () => {
+    /*
+     * The name existing is not the question ADR-0029 asks. A giver is something
+     * the level **places**, and a quest whose giver stands on another level
+     * opens nothing — which is the runtime half of the contract gate's
+     * "dangling".
+     */
+    const { controller } = harnessFor([questGivenBy(characterId('guide'))], {
+      characters: [],
+      pois: [],
+    });
+    expect(controller.canEngage('guide')).toBe(false);
   });
 });

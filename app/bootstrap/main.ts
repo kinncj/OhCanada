@@ -84,12 +84,7 @@ import {
 import type { EpochMillis, LevelId, LocaleCode } from '@domain/ids';
 import { hasCopyRow, text, type UiLocale } from '@ui/copy';
 import { createHud, type Hud } from '@ui/hud';
-import {
-  bareTargetId,
-  interactHint,
-  interactPrompt,
-  type InteractKind,
-} from '@ui/interact';
+import { bareTargetId, interactHint } from '@ui/interact';
 import { createLevelAnnouncer, type LevelTarget } from '@ui/level-events';
 import {
   createLevelComplete,
@@ -134,6 +129,7 @@ import {
 import { isPlayable, journeyEntries } from './journey';
 import { createExamController, type ExamController } from './exam';
 import { createExamEventLog } from './exam-events';
+import { promptTargets } from './prompt-targets';
 import { createQuestController, type QuestController } from './quest';
 import { readQuests, questsForLevel, type QuestCatalogue } from './quests';
 import { createDrillRunner, type DrillRunner } from './quiz';
@@ -2051,6 +2047,11 @@ function openLevel(wiring: LevelWiring): LevelSession {
   const quests: QuestController = createQuestController({
     levelId: id,
     quests: wiring.quests,
+    /* ADR-0029: a giver is named from what the level placed it as — a character
+       (`content/characters/<id>.json#/name`) or a point of interest
+       (`pois[].name`). A thunk, not a value: this controller is built before
+       `loadLevel` resolves, and a level read here would be the one just left. */
+    placements: () => renderer.level,
     host: hud.main,
     store,
     clock: wiring.clock,
@@ -2671,83 +2672,6 @@ function toDomainSettings(
 }
 
 /* -------------------------------------------------------------------- shared */
-
-/**
- * What the interact prompt says about everything a level can put in reach.
- *
- * **This function is where the defect was.** It used to answer with the
- * landmark's own localised name from the level document, because
- * `app/ui/copy.ts` had no `hud.interact.*` row — so a player riding through
- * Toronto read "CN Tower" in the HUD. Two things were wrong with that: a noun
- * says what is *there* rather than what choosing it will do, and `TN-NAMES-04`
- * fails the build for a name from its list drawn by the HUD. It got past that
- * check because the name was never a copy string; it was content, interpolated
- * here, at runtime.
- *
- * Every string it can now produce comes from the copy table, through
- * `app/ui/interact.ts`, which holds the whole precedence: **done** beats a
- * level's own per-target row, which beats the kind. A target with no row at all
- * offers `null`, and the announcer draws no prompt for it — never "Interact",
- * never a name, never an empty string (`TN-REACH-05`).
- *
- * ## Both spellings of an id, on purpose
- *
- * The stories write a subject two ways — `poi/entered` for `npc.officer`, and a
- * level document that calls the same character `officer` — and a copy row is
- * keyed on the document's id. Both are registered, so whichever spelling the
- * scene sends finds the same target rather than silently offering nothing.
- *
- * A level that has not loaded has nothing in reach, which is the correct answer
- * rather than a special case.
- */
-function promptTargets(
-  level: SceneLevel | null,
-  locale: UiLocale,
-  state: {
-    /** Bare ids engaged in this sitting. */
-    readonly done: ReadonlySet<string>;
-    /**
-     * Would choosing this target open a dialogue?
-     *
-     * Two things at once, and both matter: it says a character is a person to
-     * *talk to* rather than a place to look at, and it says whether talking to
-     * them can happen at all. A character who is not a quest giver, or whose
-     * name this build has no row for, cannot be spoken to — and a prompt that
-     * opens nothing is the dead control this project keeps finding.
-     */
-    readonly canEngage: (targetId: string) => boolean;
-  },
-): Readonly<Record<string, LevelTarget>> {
-  if (level === null) return {};
-
-  const targets: Record<string, LevelTarget> = {};
-
-  const offer = (rawId: string, kind: InteractKind): void => {
-    const bare = bareTargetId(rawId);
-    const prompt = interactPrompt(locale, { id: bare, kind, done: state.done.has(bare) });
-    /* No row, no offer. The alternative is a button whose label this file would
-       have had to make up, which is the whole of `TN-REACH`'s defect. */
-    if (prompt === null) return;
-    const target: LevelTarget = { prompt };
-    targets[bare] = target;
-    targets[`${kind}.${bare}`] = target;
-  };
-
-  /*
-   * A character is offered only while there is something for them to say, and a
-   * point of interest is always offered because it always has a card. A
-   * character who stands on a point of interest is a person: being spoken to is
-   * the more specific thing choosing them does.
-   */
-  for (const character of level.characters) {
-    if (state.canEngage(`${character.characterId}`)) offer(`${character.characterId}`, 'npc');
-  }
-  for (const poi of level.pois) {
-    offer(poi.id, state.canEngage(poi.id) ? 'npc' : 'poi');
-  }
-
-  return targets;
-}
 
 /** A `LocalizedText` in the player's language, falling back to English. */
 function localised(value: LocalizedText | undefined, locale: UiLocale): string {

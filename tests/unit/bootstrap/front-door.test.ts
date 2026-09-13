@@ -1,9 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import gameConfigDocument from '@content/game.config.json';
+/* The two character documents this suite names a dialog after. Imported rather
+   than retyped: `content/characters/<id>.json#/name` is the source ADR-0029
+   moved a giver's name to, and a test that restated the string would pass while
+   the runtime read something else. */
+import guideDocument from '@content/characters/guide.json';
+import officerDocument from '@content/characters/officer.json';
 /* Relative, not aliased: there is no `@bootstrap` alias and adding one means
    editing three configs that have to agree (tsconfig, vite, vitest). */
 import { readGameRules } from '../../../app/bootstrap/game-rules';
+import { readQuests } from '../../../app/bootstrap/quests';
 import { unlockedLevelIds } from '@domain/entities/level';
 import { hasCopyRow, text } from '@ui/copy';
 import type { LevelId } from '@domain/ids';
@@ -2114,7 +2121,10 @@ describe('a quest is offered, accepted and tracked', () => {
   it('names the dialog after the character, never "Speaker" or nothing', async () => {
     await arriveInOttawa();
     emit('npc/engaged', 'officer');
-    expect(hoisted.state.dialogueOptions?.['speakerName']).toBe(text('en', 'npc.officer.name'));
+    /* From `content/characters/officer.json#/name`, which is where a character's
+       name lives (ADR-0029) — not from the `npc.officer.name` copy row, which was
+       written when `content/characters/` was empty and is now a leftover. */
+    expect(hoisted.state.dialogueOptions?.['speakerName']).toBe(officerDocument.name.en);
   });
 
   it('holds the level while the officer is talking and gives it back on accept', async () => {
@@ -2259,10 +2269,11 @@ describe('a quest is offered, accepted and tracked', () => {
      * The defect that was live in the shipped build, from the front door: three
      * of the four authored quests declare `"giver": "guide"`, `app/ui/dialogue.ts`
      * takes the speaker's name as a **required** option (`TN-QUEST-08`), and no
-     * `npc.guide.name` row existed — so all three offers were refused, Halifax
+     * no name for the guide existed — so all three offers were refused, Halifax
      * included, and Halifax is the level `content/game.config.json` opens on.
-     * One copy row unblocked all three, and this is the one that matters most:
-     * it is the first character most players meet.
+     * The name now comes from `content/characters/guide.json#/name` (ADR-0029),
+     * and this is the case that matters most: the guide is the first character
+     * most players meet.
      */
     hoisted.state.level = {
       ...LOADED_LEVEL,
@@ -2289,9 +2300,13 @@ describe('a quest is offered, accepted and tracked', () => {
     expect(offer.accept?.label).toBe(text('en', 'quest.accept'));
     expect(offer.decline?.label).toBe(text('en', 'quest.decline'));
     /* Named after the speaker, which is what a screen reader announces. */
-    expect(hoisted.state.dialogueOptions?.['speakerName']).toBe(text('en', 'npc.guide.name'));
+    expect(hoisted.state.dialogueOptions?.['speakerName']).toBe(guideDocument.name.en);
+    /* The sentence `app/bootstrap/quest.ts` prints when it refuses an offer for
+       want of an accessible name. Asserted by the words it actually uses now:
+       the old sentinel was `npc.<id>.name`, which no message contains any more,
+       so leaving it here would have been a check about nothing. */
     expect(consoleText(), 'an offer was still refused for want of a name').not.toContain(
-      'npc.<id>.name',
+      'cannot name it',
     );
 
     /* And accepting gives the level back and puts the task in the HUD. */
@@ -2301,5 +2316,115 @@ describe('a quest is offered, accepted and tracked', () => {
       'the level was left frozen behind a dialogue that has gone',
     ).toBe('false');
     expect(hoisted.state.tasks.filter((task) => task !== null).length).toBeGreaterThan(0);
+  });
+});
+
+/* ----------------------------------------------------------- the landmark quest */
+
+/**
+ * A quest offered by a landmark, composed end to end — ADR-0029.
+ *
+ * Two of the ten levels may draw no figure of any kind at any scale
+ * (`assets/style/peggys-cove-level.md` §0, `assets/style/the-north-level.md` §0),
+ * so for as long as a quest required a person those two levels were a walk to
+ * the end with one card. ADR-0029 widened `giver` to anything the level
+ * **places**, and left one obligation: `app/bootstrap/quest.ts` built the copy
+ * key `npc.<giver>.name`, there is no such row for a lighthouse, and the quest
+ * would validate, pass every gate and refuse to open.
+ *
+ * This is that path through the composition root: the scene reports a tap on a
+ * point of interest, the quest controller resolves the giver against the level
+ * the renderer is holding, and the dialog is named from the level's own
+ * `pois[].name`.
+ *
+ * The quest is **found**, not named: the level and the quest come from the
+ * catalogue this build ships, so the scenario follows the content rather than
+ * pinning a filename. If no landmark offers a quest any more, the floor below
+ * says so instead of passing quietly.
+ */
+describe('a landmark offers a quest, and it opens', () => {
+  const LEVEL_DOCUMENTS = import.meta.glob('../../../content/levels/*.json', {
+    eager: true,
+  }) as Record<string, { default: LevelFixtureDocument }>;
+
+  interface LevelFixtureDocument {
+    readonly id: string;
+    readonly title: { readonly en: string; readonly fr: string };
+    readonly locomotion: readonly { readonly labelKey: string }[];
+    readonly pois: readonly {
+      readonly id: string;
+      readonly name: { readonly en: string; readonly fr: string };
+      readonly blurb: { readonly en: string; readonly fr: string };
+    }[];
+    readonly characters: readonly { readonly characterId: string }[];
+  }
+
+  const levels = new Map(
+    Object.values(LEVEL_DOCUMENTS).map((module) => [module.default.id, module.default] as const),
+  );
+
+  /** The first shipped quest whose giver is a point of interest on its own level. */
+  const landmark = readQuests()
+    .quests.map((quest) => {
+      const level = levels.get(String(quest.levelId));
+      const poi = level?.pois.find((candidate) => candidate.id === String(quest.giver));
+      return level !== undefined && poi !== undefined ? { quest, level, poi } : null;
+    })
+    .find((candidate) => candidate !== null);
+
+  it('ships at least one, so this scenario is about something', () => {
+    expect(
+      landmark,
+      'no quest in content/quests/ is offered by a point of interest. ADR-0029 exists so that ' +
+        'Peggy’s Cove and the North can hold a quest without drawing anybody; if that has ' +
+        'been undone, it was undone somewhere this test cannot see.',
+    ).toBeDefined();
+  });
+
+  it('opens a dialog named after the landmark, from the level document', async () => {
+    if (landmark === undefined || landmark === null) return;
+    const { quest, level, poi } = landmark;
+
+    hoisted.state.level = {
+      title: level.title,
+      locomotion: level.locomotion,
+      pois: level.pois,
+      /* Empty, and that is the reason the ADR was written: there is nobody on
+         this level to hold a quest and there never will be. */
+      characters: [],
+    };
+    await boot(`?level=${level.id}`);
+    emit('level/ready');
+
+    /* The HUD first: a landmark is a place to look at, never a person to talk
+       to, whether or not it offers a quest. */
+    emit('poi/entered', poi.id);
+    expect(
+      hoisted.state.prompts,
+      'the HUD invited a player to talk to a person who is not there',
+    ).not.toContain(text('en', 'hud.interact.npc'));
+
+    emit('poi/engaged', poi.id);
+
+    expect(
+      hoisted.state.dialoguesShown,
+      `${String(quest.id)} is offered by "${String(quest.giver)}" and the landmark said nothing`,
+    ).toHaveLength(1);
+    /* The accessible name a screen reader is handed before a word of prose:
+       the landmark's own name, in the player's language, and never the id. */
+    expect(hoisted.state.dialogueOptions?.['speakerName']).toBe(poi.name.en);
+    expect(hoisted.state.dialogueOptions?.['speakerName']).not.toBe(poi.id);
+    expect(consoleText(), 'the offer was refused for want of a name').not.toContain(
+      'cannot name it',
+    );
+
+    const offer = hoisted.state.dialoguesShown[0] as {
+      lines: string[];
+      accept?: { label: string };
+      decline?: { label: string };
+    };
+    expect(offer.lines.length, 'the offer had no lines to read').toBeGreaterThan(0);
+    expect(offer.accept?.label).toBe(text('en', 'quest.accept'));
+    expect(offer.decline?.label).toBe(text('en', 'quest.decline'));
   });
 });

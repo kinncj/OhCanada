@@ -272,6 +272,11 @@ gate documented as unheld.
   Until this lands, a quest given by a landmark validates, passes every gate and **cannot be played**: the
   dialog is refused for want of an accessible name. The copy-row path was written when `content/characters/`
   held no documents; it holds two.
+  **DISCHARGED 2026-09-13** — `app/bootstrap/engageables.ts` resolves a giver to exactly one placement and
+  names it from `pois[].name` or from `content/characters/<id>.json#/name` (`app/bootstrap/characters.ts`);
+  `canEngage` is true for a landmark giver and the dialog's accessible name is the landmark's own, in the
+  player's language. Held by `tests/unit/bootstrap/a-landmark-giver-opens-a-dialog.test.ts` on a synthesised
+  lighthouse and by `front-door.test.ts` end to end on the shipped one. `npc.<id>.name` is read by nothing.
 - **OBLIGATION due=2026-11-13 owner=content** — `docs/stories/TN-DIALOGUE-what-a-quest-giver-says.md` is
   written throughout as *what a character says*. Add the landmark case, or record that the story's existing
   scenarios are read as applying to both. A story that names only one kind of giver is the sentence this ADR
