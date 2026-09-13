@@ -270,8 +270,8 @@
           "speaker": "officer",
           "expression": "happy",
           "text": {
-            "en": "Get out of the wind for a minute. One last thing, and it is the one you will meet most often.",
-            "fr": "Mettez-vous à l'abri du vent une minute. Une dernière chose, et c'est celle que vous rencontrerez le plus souvent."
+            "en": "Get out of the wind for a minute. One last thing, about the work no single government does on its own.",
+            "fr": "Mettez-vous à l'abri du vent une minute. Une dernière chose, sur le travail qu'aucun gouvernement ne fait tout seul."
           },
           "fact": {
             "factual": false,
@@ -283,8 +283,8 @@
           "speaker": "officer",
           "expression": "neutral",
           "text": {
-            "en": "There is not one government here. There are four kinds: federal, provincial, territorial and municipal.",
-            "fr": "Il n'y a pas un seul gouvernement ici. Il y en a quatre ordres : fédéral, provincial, territorial et municipal."
+            "en": "Not every job here belongs to one government alone. Farming and immigration are looked after by the federal government and by the provinces together.",
+            "fr": "Ici, tous les domaines ne relèvent pas d'un seul gouvernement. L'agriculture et l'immigration sont pris en charge à la fois par le gouvernement fédéral et par les provinces."
           },
           "fact": {
             "factual": true,
@@ -296,7 +296,7 @@
               "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
               "asOf": "2026-09-08T00:00:00Z",
               "volatile": false,
-              "quote": "There are federal, provincial, territorial and municipal governments in Canada."
+              "quote": "The federal government and the provinces share jurisdiction over agriculture and immigration."
             },
             "verification": {
               "status": "rejected",
@@ -316,8 +316,8 @@
       "subject": "government",
       "count": 2,
       "prompt": {
-        "en": "Answer 2 questions about the levels of government",
-        "fr": "Répondez à 2 questions sur les ordres de gouvernement"
+        "en": "Answer 2 questions about who looks after what",
+        "fr": "Répondez à 2 questions sur qui s'occupe de quoi"
       }
     }
   ]

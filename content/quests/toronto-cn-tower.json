@@ -209,8 +209,8 @@
           "speaker": "guide",
           "expression": "neutral",
           "text": {
-            "en": "An electoral district is an area of the map with one member of Parliament. The people living in it elect that one MP, who speaks for them and for the whole country.",
-            "fr": "Une circonscription électorale est un secteur de la carte avec un seul député. Les gens qui y habitent élisent ce député, qui parle pour eux et pour l'ensemble du pays."
+            "en": "An electoral district is an area of the map with one member of Parliament. The citizens who live there elect that one MP, who speaks for them and for everyone in Canada.",
+            "fr": "Une circonscription électorale est un secteur de la carte avec un seul député. Les citoyens qui y habitent élisent ce député, qui parle pour eux et pour l'ensemble des Canadiens."
           },
           "fact": {
             "factual": true,

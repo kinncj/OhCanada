@@ -324,8 +324,8 @@
           "speaker": "officer",
           "expression": "happy",
           "text": {
-            "en": "The two official languages, English and French, are counted among this country's symbols. To become a citizen you must show that you know enough of one of them.",
-            "fr": "Les deux langues officielles, l'anglais et le français, comptent parmi les symboles du pays. Pour devenir citoyen, vous devez démontrer que vous en maîtrisez suffisamment une des deux."
+            "en": "The two official languages, English and French, are counted among this country's symbols. Most adults must show they know enough of one of them to become a citizen. People who apply at 55 or older do not have to.",
+            "fr": "Les deux langues officielles, l'anglais et le français, comptent parmi les symboles du pays. La plupart des adultes doivent démontrer qu'ils en maîtrisent suffisamment une pour devenir citoyens. Les personnes qui font leur demande à 55 ans ou plus n'ont pas à le faire."
           },
           "fact": {
             "factual": true,
@@ -337,7 +337,7 @@
               "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
               "asOf": "2026-09-08T00:00:00Z",
               "volatile": true,
-              "quote": "English and French are the two official languages and are important symbols of identity. English speakers (Anglophones) and French speakers (Francophones) have lived together in partnership and creative tension for more than 300 years. You must have adequate knowledge of English or French to become a Canadian citizen."
+              "quote": "English and French are the two official languages and are important symbols of identity. English speakers (Anglophones) and French speakers (Francophones) have lived together in partnership and creative tension for more than 300 years. You must have adequate knowledge of English or French to become a Canadian citizen. Adult applicants 55 years of age or over are exempted from this requirement."
             },
             "verification": {
               "status": "verified",

@@ -261,8 +261,8 @@
           "speaker": "guide",
           "expression": "neutral",
           "text": {
-            "en": "Obeying the law is one of the things citizenship asks of you. People and governments alike are held to written law and not to somebody's mood. Nobody stands above it.",
-            "fr": "Respecter la loi fait partie de ce que la citoyenneté vous demande. Les personnes comme les gouvernements sont tenus par des lois écrites, et non par l'humeur de quelqu'un. Personne n'est au-dessus d'elles."
+            "en": "Obeying the law is one of the things citizenship asks of you. People and governments alike are held to the law itself, and not to anyone's say-so. No person and no group stands above it.",
+            "fr": "Respecter la loi fait partie de ce que la citoyenneté vous demande. Les personnes comme les gouvernements sont tenus par la loi elle-même, et non par le bon vouloir de quelqu'un. Aucune personne ni aucun groupe n'est au-dessus d'elle."
           },
           "fact": {
             "factual": true,
