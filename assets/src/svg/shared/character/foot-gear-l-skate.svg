@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="78" height="25" viewBox="111 445 78 25" shape-rendering="geometricPrecision">
+  <title>Ice skate under the wearer’s left boot - the FAR side of the three-quarter pose, drawn 20 px shorter than the near one so the pair reads as depth, exactly as the two boots do. Same two holder posts and one runner, and the runner sits at the near skate’s height rather than the far boot’s, so both blades ride one ice line.</title>
+  <path d="M 123,449 L 137,449 L 135,459 L 125,459 Z" fill="#57647a" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 155,449 L 169,449 L 167,459 L 157,459 Z" fill="#57647a" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 120,455 L 180,455 C 186,455 186,467 180,467 L 120,467 C 114,467 114,455 120,455 Z" fill="#7d8fa0" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="sk-l"><path d="M 120,455 L 180,455 C 186,455 186,467 180,467 L 120,467 C 114,467 114,455 120,455 Z"/></clipPath></defs>
+  <g clip-path="url(#sk-l)">
+    <path d="M 111,462 L 189,462 L 189,470 L 111,470 Z" fill="#30384f"/>
+  </g>
+</svg>

@@ -559,3 +559,21 @@ Same warning as Ottawa's page, and it bites harder here: `level.schema.json` say
 the highest-depth layers and drops the rest", so the **sky is the first layer dropped, not the last**. This
 level has *five* layers against a `high` budget of six, which is a deliberate choice recorded in §2 and not a
 missing file — a reader who counts six slots and finds five should read that section before drawing a sixth.
+
+---
+
+## 11. The rider on the Dufferin run is rig art, not a tile
+
+`locomotion` is `toboggan`. The sled and the seated posture live in the shared rig as `{mode}` equipment —
+`mount-deck-toboggan.svg` for the plank and `mount-fore-toboggan.svg` for the curled prow — and this level
+adds no source for them. `rig-contract.md` §11 is the contract; the three things it is worth knowing here:
+
+- **The mode string IS the frame key**: `locomotion[].mode` is `toboggan`, so `mount-deck-{mode}` resolves to
+  `character-mount-deck-toboggan`. The level's second mode, `walk`, resolves to nothing and draws nothing.
+- **The player matches the two riders already drawn into `layer-60-slope.svg`**: seated, reclined, knees up,
+  on a flat plank with an upturned prow, which is §7's whole argument about a toboggan not being a sled on
+  runners applied to the character instead of to the lane.
+- **A seated mount cannot talk.** The shared `talk` and `interact` states are authored standing and the
+  selector reaches them before any mount rule, so a level offering `toboggan` should set `interaction: null`
+  on that mode and let the player dismount — which returns the mode to `walk` and the figure to its feet.
+  The same holds for `jump`.

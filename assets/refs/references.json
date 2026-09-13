@@ -2200,6 +2200,230 @@
       "notes": [
         "The seam closing to the pixel here is worth carrying, because it is the third arrangement this project has tried and the first that needed no hole. halifax-quayside closes at 160 by putting the near tile's first opaque row exactly on the far tile's bottom edge; toronto-trail and winnipeg-riverwalk both leave a band of matte that a third tile fills in the level. This one closes because the far tile is opaque from its own top edge, which is a property of drawing WATER rather than a skyline."
       ]
+    },
+    {
+      "id": "player-on-skates",
+      "renders": [],
+      "renderRecipe": "UNBUILT, AND NOT BY DECISION - THE HARNESS CANNOT BUILD IT YET. scripts/lib/art-handoff.mjs has no builder for a character composited with a mount and posed on a state, so `renders` is empty and this subject is carried for its mustBeRight list rather than for a picture. A subject with sources and no builder FAILS the hand-off build, which is why it is not listed with them; the sources are in `notes`. What a builder has to do: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Set the `mount` slot to `skate`, which is what makes the two skates resolve. And pose it: take `skate-move` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. The skate poses lift the figure, so the toque crown reaches y ~-8 and the trailing blade tip x ~-8 in character space: anchor the canvas at (-12, -12) or the render crops the pom and the tip. See assets/style/rig-contract.md 11.4. JUDGE IT AT 390 px OVER THE OTTAWA CANAL (src/svg/ottawa/layer-50-canalwall.svg above src/svg/ottawa/layer-60-ice.svg, ice at world 1280, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "subject": "A person in winter clothes skating on canal ice",
+      "expectedBlindAnswer": [
+        "someone ice skating",
+        "a person on skates",
+        "a kid skating on a frozen canal",
+        "a skater gliding",
+        "someone skating outdoors in winter"
+      ],
+      "designSheet": "assets/style/rig-contract.md",
+      "referenceFiles": [
+        "ottawa/rideau-canal-skateway-ice.jpg",
+        "ottawa/rideau-canal-skateway-portrait.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a blade under each boot, longer than the boot",
+          "why": "This is the entry the subject exists for. A player reported from the live site that the character walks on a level whose HUD says skating. If a verifier answers \"a person walking\" or cannot say the figure is on skates, this fails however good the pose is.",
+          "detail": "A runner 12 px deep and 92 px long under the near boot, 78 under the far one, overhanging the toe by about 15 px and the heel by 13, on two holder posts. Deliberately oversized: a scale blade is 3 px at design resolution and 1.1 px at 390 px. Steel, not black.",
+          "palette": "slate, ink-warm"
+        },
+        {
+          "feature": "the body is pitched forward into the direction of travel",
+          "why": "Equipment alone is not a mode. A figure standing upright with skates on reads as a person standing on ice, which is a different thing from skating and is what the background figures on this level are NOT doing.",
+          "detail": "About 24 degrees off vertical at the torso, head carried forward with it and held nearer level, supporting knee deeply folded."
+        },
+        {
+          "feature": "one skate off the ice, swung back",
+          "why": "The stroke is what separates skating from standing. It is also the cue that survives being made small: a diagonal limb clear of the body at 390 px is about 12 px of clear space.",
+          "detail": "The trailing leg swings back about 98 px and up about 40, knee bent, toe down. The two blades must not overlap into one mass - that was the first failure of this pose."
+        },
+        {
+          "feature": "the player matches the skaters already on the level",
+          "why": "Four background skaters in layer-50-canalwall.svg have been in glide stance since the level shipped. A player arriving in a walk cycle is a seam inside one screen.",
+          "detail": "Same pitch, same trailing leg, same dark blade under the boot."
+        }
+      ],
+      "simplifyAway": [
+        "laces, eyelets and the tongue of the skate",
+        "toe picks",
+        "blade sharpening hollow",
+        "ice spray"
+      ],
+      "neverAdd": [
+        "a hockey stick, puck or net - this is a canal, not a rink",
+        "a helmet: no level in this game asserts a safety rule it cannot source",
+        "lettering of any kind"
+      ],
+      "whyTheOmissions": "The Rideau Canal Skateway is transport and recreation, not sport. Adding rink equipment would say the level is about hockey, which is not the subject it teaches.",
+      "openQuestions": null,
+      "notes": [
+        "The skates are `mount` slot art, shared by every character, and the pose is a state in the rig contract.",
+        "assets/style/rig-contract.md section 11 is the contract for both.",
+        "Nothing here is Ottawa-owned: a second level with `locomotion: skate` gets the same art with no new source.",
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/foot-gear-r-skate.svg, src/svg/shared/character/foot-gear-l-skate.svg."
+      ]
+    },
+    {
+      "id": "player-on-a-toboggan",
+      "renders": [],
+      "renderRecipe": "UNBUILT, AND NOT BY DECISION - THE HARNESS CANNOT BUILD IT YET. scripts/lib/art-handoff.mjs has no builder for a character composited with a mount and posed on a state, so `renders` is empty and this subject is carried for its mustBeRight list rather than for a picture. A subject with sources and no builder FAILS the hand-off build, which is why it is not listed with them; the sources are in `notes`. What a builder has to do: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Set the `mount` slot to `toboggan`, which is what makes the deck and prow resolve. And pose it: take `toboggan-move` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. The sled reaches to x ~237 in character space and the seated figure sits 28 px back of centre, so composite at least 240 wide. JUDGE IT AT 390 px OVER THE DUFFERIN TERRACE RUN (src/svg/quebec-city/layer-50-terrace.svg above src/svg/quebec-city/layer-60-slope.svg, the run at world 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "subject": "A person in winter clothes sitting on a wooden toboggan",
+      "expectedBlindAnswer": [
+        "someone on a toboggan",
+        "a person sledding",
+        "a kid on a sled going down a hill",
+        "someone tobogganing",
+        "a person sitting on a wooden sled"
+      ],
+      "designSheet": "assets/style/rig-contract.md",
+      "referenceFiles": [
+        "quebec-city/toboggan-slide-riders.jpg",
+        "quebec-city/dufferin-terrace-toboggan-slide-1905.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a flat wooden plank, not a sled on runners",
+          "why": "assets/style/quebec-city-level.md section 7 already draws this distinction for the lane markings - straight runner streaks, not skate arcs - and the rider has to hold the same line. A sled on steel runners is a different object and a different place.",
+          "detail": "Boards and two battens, 18 px thick, no runners and no metal. Wood, and it must be visible past the coat: it runs 24 px behind the rider’s back for that reason.",
+          "palette": "wood, ink-warm"
+        },
+        {
+          "feature": "the prow curled up and back over itself",
+          "why": "It is the one shape that says toboggan rather than plank, and at 390 px it is the shape a verifier will name.",
+          "detail": "About a third of a turn, rising 30 px above the deck at the leading edge. It is drawn IN FRONT of the rider’s shins, which are folded over it."
+        },
+        {
+          "feature": "the rider is seated and reclined, knees up",
+          "why": "A figure sitting upright on a plank reads as a person sitting on a bench. The recline is the mode.",
+          "detail": "About 27 degrees back at the torso, hips at the deck, knees raised about 50 px above the hips, feet tucked back on the deck. The whole figure drops 131 px from the standing pose and moves 28 px back."
+        },
+        {
+          "feature": "the player matches the riders already on the level",
+          "why": "Two riders are drawn into layer-60-slope.svg seated, knees up, leaning back on flat plank toboggans. The player must be the same object in the same posture.",
+          "detail": "Same plank, same curl, same recline."
+        }
+      ],
+      "simplifyAway": [
+        "rope binding and cross-lashing",
+        "wood grain",
+        "snow spray",
+        "the hauling rope"
+      ],
+      "neverAdd": [
+        "steel runners",
+        "a steering bar or wheel",
+        "lettering of any kind"
+      ],
+      "whyTheOmissions": "The Dufferin Terrace slide is a plank on ice. Any hardware suggests a modern sled and a different place.",
+      "openQuestions": null,
+      "notes": [
+        "A seated mount has no standing states: the level dismounts the player - `mount` back to `none` - to talk or to jump.",
+        "assets/style/rig-contract.md section 11 is the contract.",
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-toboggan.svg, src/svg/shared/character/mount-fore-toboggan.svg."
+      ]
+    },
+    {
+      "id": "player-on-a-bicycle",
+      "renders": [],
+      "renderRecipe": "UNBUILT, AND NOT BY DECISION - THE HARNESS CANNOT BUILD IT YET. scripts/lib/art-handoff.mjs has no builder for a character composited with a mount and posed on a state, so `renders` is empty and this subject is carried for its mustBeRight list rather than for a picture. A subject with sources and no builder FAILS the hand-off build, which is why it is not listed with them; the sources are in `notes`. What a builder has to do: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Set the `mount` slot to `bike`, which is what makes the bicycle resolve. And pose it: take `bike-move` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. The bicycle fills character space edge to edge: composite on a 240-wide canvas anchored at x=0. JUDGE IT AT 390 px OVER THE TORONTO WATERFRONT TRAIL (src/svg/toronto/layer-40-boulevard.svg at world 900, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "subject": "A person riding a bicycle on a waterfront trail",
+      "expectedBlindAnswer": [
+        "someone riding a bike",
+        "a person on a bicycle",
+        "a cyclist",
+        "someone cycling along a path"
+      ],
+      "designSheet": "assets/style/rig-contract.md",
+      "referenceFiles": [
+        "toronto/waterfront-trail.jpg",
+        "toronto/bike-lane-street.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "two spoked wheels and a diamond frame",
+          "why": "A bicycle that reads as a shape with wheels is a scooter. The frame triangle is what names it.",
+          "detail": "Wheels 88 px across with a dark tyre, a light rim and visible spokes - the same construction as the bicycles already drawn into toronto/layer-40-boulevard.svg - and tubes 10 px wide, which is heavier than scale because a 4 px tube is a scratch at 390 px.",
+          "palette": "flag-red, hide, white, slate"
+        },
+        {
+          "feature": "hands ON the bar and feet ON the pedals",
+          "why": "This is the entry that fails silently. A hand 6 px off a handlebar at design resolution is invisible in the SVG and obvious in the render, and it makes the whole figure read as floating.",
+          "detail": "Both are solved by two-link inverse kinematics rather than by eye. The near hand is on the near grip and the far hand on the far grip, which in this three-quarter view sits forward of it."
+        },
+        {
+          "feature": "the rider is folded over the bar",
+          "why": "An upright figure with a bicycle under it reads as a person standing over a bicycle.",
+          "detail": "About 22 degrees at the torso and no more: the arms are 136 px and at 30 degrees the bar is 142 px away, which is past the end of the arm."
+        },
+        {
+          "feature": "the frame is not the colour of the level’s own bicycles",
+          "why": "layer-40-boulevard.svg already carries a navy bicycle with a rider and a rack of green and blue ones. The player must not be mistaken for level furniture.",
+          "detail": "flag-red frame, and the tyre and rim construction shared with them so it still belongs on the trail."
+        }
+      ],
+      "simplifyAway": [
+        "chain, derailleur, cassette and brake cables",
+        "individual spokes beyond a readable few",
+        "water bottle, bell, lights"
+      ],
+      "neverAdd": [
+        "a helmet: no level in this game asserts a safety rule it cannot source",
+        "a brand, logo or lettering of any kind",
+        "a motor or battery"
+      ],
+      "whyTheOmissions": "The trail is the subject. Any hardware that dates the bicycle dates the level.",
+      "openQuestions": null,
+      "notes": [
+        "assets/style/rig-contract.md section 11 is the contract.",
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-bike.svg."
+      ]
+    },
+    {
+      "id": "player-on-a-skateboard",
+      "renders": [],
+      "renderRecipe": "UNBUILT, AND NOT BY DECISION - THE HARNESS CANNOT BUILD IT YET. scripts/lib/art-handoff.mjs has no builder for a character composited with a mount and posed on a state, so `renders` is empty and this subject is carried for its mustBeRight list rather than for a picture. A subject with sources and no builder FAILS the hand-off build, which is why it is not listed with them; the sources are in `notes`. What a builder has to do: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Set the `mount` slot to `skateboard`, which is what makes the board resolve. And pose it: take `skateboard-move` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. Composite on a 240-wide canvas anchored at x=0. JUDGE IT AT 390 px OVER THE VANCOUVER SEAWALL (src/svg/vancouver/layer-40-seawall.svg at world 900, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "subject": "A person riding a skateboard along a seawall path",
+      "expectedBlindAnswer": [
+        "someone on a skateboard",
+        "a person skateboarding",
+        "a kid riding a skateboard",
+        "a skater on a board"
+      ],
+      "designSheet": "assets/style/rig-contract.md",
+      "referenceFiles": [
+        "vancouver/seawall-path-and-harbour.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a deck with a kicked nose and tail on two visible wheels",
+          "why": "Two pale discs under a dark deck is the entire read at 390 px. A flat plank with no wheels is a plank.",
+          "detail": "Wheels 22 px across against a scale 7, deck with grip tape on top and wood at the edge.",
+          "palette": "wood, hide, white, slate"
+        },
+        {
+          "feature": "both boots on the deck, apart",
+          "why": "One boot on a board reads as a person standing next to a board. The stance is the mode.",
+          "detail": "About 31 px apart, the near foot forward, both clearly on top of the deck."
+        },
+        {
+          "feature": "the knees are folded and the arms are out",
+          "why": "A stiff upright figure on a board reads as standing on it, not riding it.",
+          "detail": "Knees folded about 40 degrees - which is exactly the 32 px the deck stands off the ground, so the figure needs no body offset - torso pitched 16 degrees, near arm forward and far arm back as a counterweight."
+        }
+      ],
+      "simplifyAway": [
+        "truck hardware, bolts and bearings",
+        "grip-tape texture",
+        "deck graphics"
+      ],
+      "neverAdd": [
+        "a helmet: no level in this game asserts a safety rule it cannot source",
+        "a brand, logo, deck graphic or lettering of any kind"
+      ],
+      "whyTheOmissions": "A deck graphic is decoration the player did not choose, on a character whose whole point is that the player chose it.",
+      "openQuestions": null,
+      "notes": [
+        "assets/style/rig-contract.md section 11 is the contract.",
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-skateboard.svg."
+      ]
     }
   ],
   "licenceAudit": {

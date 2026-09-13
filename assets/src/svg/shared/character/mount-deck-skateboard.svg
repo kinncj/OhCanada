@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="152" height="42" viewBox="42 429 152 42" shape-rendering="geometricPrecision">
+  <title>Skateboard, side view, facing right. Deck with a kicked nose and tail, two trucks and two wheels; the wheels are drawn 16 px across rather than to scale, because a scale wheel is 5 px at design resolution and under 2 px on a phone. The board is one part and the rider stands ON it, so it draws behind the boots. Vancouver seawall: assets/style/vancouver-level.md.</title>
+  <ellipse cx="118" cy="466" rx="66" ry="6" fill="#16203a" opacity="0.28"/>
+  <path d="M 68,450 L 168,450" fill="none" stroke="#3a2018" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="76" cy="458" r="11" fill="#f0f2f5" stroke="#3a2018" stroke-width="6"/>
+  <circle cx="160" cy="458" r="11" fill="#f0f2f5" stroke="#3a2018" stroke-width="6"/>
+  <path d="M 57,442 C 50,442 47,436 51,433 C 55,430 62,433 68,437 L 168,437 C 174,433 181,430 185,433 C 189,436 186,442 179,442 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="sb-deck"><path d="M 57,442 C 50,442 47,436 51,433 C 55,430 62,433 68,437 L 168,437 C 174,433 181,430 185,433 C 189,436 186,442 179,442 Z"/></clipPath></defs>
+  <g clip-path="url(#sb-deck)">
+    <path d="M 42,429 L 194,429 L 194,439 L 42,439 Z" fill="#242b33"/>
+    <path d="M 42,440 L 194,440 L 194,443 L 42,443 Z" fill="#5a2d19"/>
+  </g>
+</svg>

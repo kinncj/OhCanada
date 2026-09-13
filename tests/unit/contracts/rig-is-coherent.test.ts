@@ -221,7 +221,19 @@ describe('the constraints a JSON Schema cannot state (ADR-0017)', () => {
     // The check that makes slot independence mechanical (docs/content-review.md
     // §8.2) instead of a promise: a template naming two slots that constrain each
     // other is visible right here, in the template.
-    const known = new Set([...Object.keys(rig.slots), 'expression']);
+    /*
+     * `mode` joins `expression` as a brace that is not a slot. It is filled by
+     * the LEVEL's locomotion mode, not by the player: skates on the canal, a
+     * toboggan on the slide. Imported rather than spelled, so the adapter and
+     * this check cannot drift into disagreeing about the word -- which is the
+     * shape of defect this file exists to catch.
+     *
+     * A mode with no art is meant to resolve to nothing. That is not the
+     * "silently draws nothing" hazard below: the scene counts those gaps and
+     * reports them, because a level drawing a walking figure under a label that
+     * says Skating has to say so.
+     */
+    const known = new Set([...Object.keys(rig.slots), 'expression', MODE_TEMPLATE_KEY]);
     const faults = rig.parts.flatMap((part) =>
       braceNames(part.frame)
         .filter((name) => !known.has(name))
@@ -364,3 +376,4 @@ describe('the constraints a JSON Schema cannot state (ADR-0017)', () => {
     expect(faults, faults.join('\n')).toEqual([]);
   });
 });
+import { MODE_TEMPLATE_KEY } from '@adapters/phaser/locomotion-pose';

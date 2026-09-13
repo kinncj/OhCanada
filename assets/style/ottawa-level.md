@@ -439,3 +439,28 @@ animation is required, so it survives reduced motion.
 `palette.json`'s `levelTheme` and the sky layer's bands were made to agree colour for colour. If that rule
 ever changes to drop the *nearest* layers instead, this stack inverts: the canal wall and the ice would go
 first and Ottawa would become a sky with a tower floating in it. Worth a test rather than a comment.
+
+---
+
+## 11. The player is on skates, and that is rig art rather than level art
+
+`locomotion` is `skate` and until 2026-09-13 the character walked down the canal, which is what a player
+reported from the live site. The fix is in the shared rig, not in this level's tiles:
+`content/levels/ottawa.json` sets no art key for it, and this sheet lists no new source, because the skates
+are `{mode}` equipment in `assets/src/svg/shared/character/` and the glide is a state in
+`assets/style/rig-contract.json`. `rig-contract.md` §11 is the contract.
+
+What this level owes the rig, and what the rig owes it:
+
+- **The mode string IS the frame key.** `locomotion[].mode` is `skate`, so `foot-gear-r-{mode}` resolves to
+  `character-foot-gear-r-skate`. The level's second mode, `walk`, resolves to a frame that does not exist and
+  draws no equipment, which is correct and needs no entry anywhere.
+- **The skate rides the ground line.** `skate/idle`, `skate/walk` and `skate/run` lift the whole figure 9–12 px because
+  the runner hangs below the boot sole. The shadow does not lift. `layer-60-ice`'s local y 0 is still world
+  1280 and nothing here moves.
+- **The player now matches the four background skaters in `layer-50-canalwall.svg`.** They have always been
+  in glide stance — torso pitched, one leg trailing, a dark blade under the boot — and the player arriving
+  in a walk cycle was the visible seam. The player's pitch is 24°, theirs is about 25.
+- **The one thing this level should still be given is a brake.** `content/levels/ottawa.json` binds
+  `brakeTrigger: "brake"`; the rig declares no such input and the binding is dead. A hockey stop throwing
+  snow is the most characteristic thing anyone does on that ice. `rig-contract.md` §11.6 costs it out.

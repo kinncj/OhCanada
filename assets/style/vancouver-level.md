@@ -215,3 +215,18 @@ the truth.
 
 **The word `unceded` is deliberately absent.** No treaty covers Vancouver and it is the word nearly every
 Canadian institution uses; the cited page does not use it, so the statement does not either.
+
+---
+
+## 9. The skateboard is rig art
+
+`locomotion` is `skateboard`, and the board is one frame of `{mode}` equipment in the shared rig
+(`mount-deck-skateboard.svg`). No source is added here. `rig-contract.md` §11 is the contract.
+
+- **The wheels are drawn 22 px across against a scale 7**, because two pale discs under a dark deck is the
+  entire read at 390 px and a scale wheel is under 2 px on a phone.
+- **The rider's knees fold 40°, which raises the ankles by the 32 px the deck stands off the ground.** The
+  figure does not float and does not need a body offset; the crouch is the offset, and it is the same
+  arithmetic a real rider's legs do.
+- **`glide` 0.62 is the highest in the game and the pose has to survive it.** `skateboard/idle` is a rolling
+  stance with the arms brought in rather than a stand, because `moving` is intent and this seawall coasts.

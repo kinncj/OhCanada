@@ -344,3 +344,21 @@ built on a declaration that was not true.
 
 Both composites were built by hand with the parameters above and looked at before they were declared:
 `scratch/gen/twotile.mjs` produces the same 2016 × 600 and 1800 × 740 images the harness will.
+
+---
+
+## 8. The player rides, and the bicycle is rig art
+
+`locomotion` is `bike` and the bicycle is one frame of `{mode}` equipment in the shared rig
+(`mount-deck-bike.svg`), not a source under `assets/src/svg/toronto/`. `rig-contract.md` §11 is the
+contract. Three level-specific notes:
+
+- **The frame is `flag-red`** so it cannot be confused with the navy bicycle already drawn into
+  `layer-40-boulevard.svg` at x 700, or with the green and blue ones in the rack at 980. Tyre and rim follow
+  those bicycles exactly — dark tyre, light rim, visible spokes — because the player should look like they
+  belong on this trail.
+- **The ride is level and so is the art.** §5 already says not to slope the ground line; the `bike-move`
+  pose adds a second reason. The rider's hands are solved to the handlebar by inverse kinematics and the
+  arms are 136 px long; a pose that had to reach further would not close.
+- **`walk` resolves `mount-deck-walk`, which does not exist.** Wherever the level lets the player off the
+  bicycle, the bicycle disappears with the mode, and no level document mentions it.

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="196" height="36" viewBox="12 432 196 36" shape-rendering="geometricPrecision">
+  <title>Flat wooden toboggan deck, side view, facing right. Boards and two battens, no runners: a toboggan is a flat plank and a sled on runners is a different object, which is the distinction assets/style/quebec-city-level.md 7 draws for the lane markings and this part has to draw for the rider. It runs 24 px BEHIND the rider’s back so a tail of plank is visible past the coat at phone size - without it the sled is a line under a seated person. The rider sits ON it, so it draws behind the legs; the curled prow is a separate part, `mount-fore`, because it has to draw in FRONT of the shins folded over it.</title>
+  <ellipse cx="108" cy="464" rx="90" ry="7" fill="#16203a" opacity="0.28"/>
+  <path d="M 25,444 L 191,444 C 197,444 197,462 191,462 L 25,462 C 19,462 19,444 25,444 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="tb-deck"><path d="M 25,444 L 191,444 C 197,444 197,462 191,462 L 25,462 C 19,462 19,444 25,444 Z"/></clipPath></defs>
+  <g clip-path="url(#tb-deck)">
+    <path d="M 12,444 L 208,444 L 208,450 L 12,450 Z" fill="#c5994d"/>
+    <path d="M 12,456 L 208,456 L 208,468 L 12,468 Z" fill="#5a2d19"/>
+    <path d="M 60,442 L 68,442 L 68,464 L 60,464 Z" fill="#5a2d19"/>
+    <path d="M 148,442 L 156,442 L 156,464 L 148,464 Z" fill="#5a2d19"/>
+  </g>
+</svg>

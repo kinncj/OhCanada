@@ -326,6 +326,24 @@
       "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
+      "path": "src/svg/shared/character/foot-gear-l-skate.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"foot-gear-l-skate\" — Ice skate under the wearer’s left boot - the FAR side of the three-quarter pose, drawn 20 px shorter than the near one so the pair reads as depth, exa…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/foot-gear-r-skate.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"foot-gear-r-skate\" — Ice skate under the wearer’s right boot - the NEAR side of the three-quarter pose. Two holder posts and one long runner, drawn deliberately oversized:…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
       "path": "src/svg/shared/character/foot-l-parka.svg",
       "kind": "shipped",
       "title": "TrueNorth character rig part \"foot-l-parka\" — Winter boot, the wearer's left, the near side of the canonical pose. A single rounded wedge. Feet are the one pair tha…",
@@ -671,6 +689,42 @@
       "path": "src/svg/shared/character/leg-upper-serge.svg",
       "kind": "shipped",
       "title": "TrueNorth character rig part \"leg-upper-serge\" — One frame serves both sides: the rig mirrors it about the character centre line. Midnight-blue breech: full at the thi…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/mount-deck-bike.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"mount-deck-bike\" — Bicycle, side view, facing right: two wheels, a diamond frame, a saddle, cranks and pedals, and a bar drawn wide across the three-quarter view so the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/mount-deck-skateboard.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"mount-deck-skateboard\" — Skateboard, side view, facing right. Deck with a kicked nose and tail, two trucks and two wheels; the wheels are drawn 16 px across rather than to sca…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/mount-deck-toboggan.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"mount-deck-toboggan\" — Flat wooden toboggan deck, side view, facing right. Boards and two battens, no runners: a toboggan is a flat plank and a sled on runners is a differen…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/mount-fore-toboggan.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"mount-fore-toboggan\" — The toboggan’s curled prow, and the reason the sled is two parts. It is the one shape that says toboggan rather than plank, it sits at the leading edg…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",

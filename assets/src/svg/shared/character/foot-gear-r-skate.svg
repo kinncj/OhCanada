@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="98" height="25" viewBox="73 445 98 25" shape-rendering="geometricPrecision">
+  <title>Ice skate under the wearer’s right boot - the NEAR side of the three-quarter pose. Two holder posts and one long runner, drawn deliberately oversized: a scale blade is 3 px at design resolution and 1 px on a phone, which is not a cue. The runner is 12 px deep so that six of them survive the 6 px silhouette stroke, and it overhangs the toe by 15 px and the heel by 13, because length under the boot is the part of a skate that is still there at 390 px.</title>
+  <path d="M 95,449 L 109,449 L 107,459 L 97,459 Z" fill="#57647a" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 131,449 L 147,449 L 144,459 L 134,459 Z" fill="#57647a" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 82,455 L 162,455 C 168,455 168,467 162,467 L 82,467 C 76,467 76,455 82,455 Z" fill="#7d8fa0" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="sk-r"><path d="M 82,455 L 162,455 C 168,455 168,467 162,467 L 82,467 C 76,467 76,455 82,455 Z"/></clipPath></defs>
+  <g clip-path="url(#sk-r)">
+    <path d="M 73,462 L 171,462 L 171,470 L 73,470 Z" fill="#30384f"/>
+  </g>
+</svg>

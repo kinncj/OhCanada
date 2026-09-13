@@ -120,7 +120,15 @@ selected state name.
 | 7 | `moving` | `walk` |
 | 8 | otherwise | `idle` |
 
-Eight states: `idle`, `walk`, `run`, `jump-rise`, `jump-fall`, `land`, `talk`, `interact`.
+**This table did not change when the level's locomotion mode reached the rig, and that is the design.** The
+selector still picks one of the eight names below, from the same eight rules, in the same order. What a
+mode changes is *which timeline that name plays*: `<mode>/<state>` when the rig declares one, the bare state
+when it does not. §11 is the mechanism and `app/adapters/phaser/locomotion-pose.ts` is the code; the reason
+it is a namespace rather than eight more rules is that a rule is a condition, and eight modes as eight rules
+would be eight `if (mode === …)` branches in an adapter.
+
+Eight **selected** states: `idle`, `walk`, `run`, `jump-rise`, `jump-fall`, `land`, `talk`, `interact`.
+Twenty **declared** ones: those eight, plus the twelve `<mode>/<state>` re-poses in §11.
 
 ---
 
@@ -140,8 +148,18 @@ the other.
 | `costume` | `parka`, `serge`, `beaver` | `parka` | no |
 | `presentation` | — **reserved, no options** | — | — |
 
-Plus one axis that is not a slot: **`expression`** — `neutral`, `happy`, `thinking`, `surprised` — driven
-by `setExpression`, because the port gives it its own method.
+Plus **two axes that are not slots**, and both are braces a part template can name:
+
+- **`expression`** — `neutral`, `happy`, `thinking`, `surprised` — driven by `setExpression`, because the
+  port gives it its own method.
+- **`mode`** — the level's locomotion mode, bound by `app/adapters/phaser/locomotion-pose.ts`. §11.
+
+**Equipment is deliberately NOT a slot, and the reason is `docs/content-review.md` §8.2.** Slot
+independence is a rule about what a *player chooses* — the product counts slots, and every slot has to be
+free of every other. The mode is not chosen; it is where the player is. Making skates a slot would have put
+a level's decision inside the arithmetic that exists to protect a player's, and it would have needed a
+`none` option on a slot no creator ever shows. A brace adds no coupling between two slots because it is not
+one of them.
 
 ### `fallback`, and why it is not a default
 
@@ -182,16 +200,21 @@ would have been simpler to author and would have made "the coily one is only off
 change nobody would notice. Two independent slots make the product structural: 4 × 5, always.
 
 The check is arithmetic and a test can run it: **the number of reachable part frames must equal what the
-slot product implies, and every declared frame must be reachable.** As shipped: 6 × 4 × 5 × 2 × 2 × 2 × 4 =
-**5 760 combinations, 66 frames declared, 66 reachable, 0 unreachable** — 24 costume frames (8 templates ×
-3 costumes), 36 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + 4 expression + 4 × 5 hair),
-5 optional singletons (`toque`, `glasses`, `hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground
-shadow.
+slot product implies, and every declared frame must be reachable.** As shipped: 6 skin × 4 hair shapes ×
+5 hair colours × 2 head coverings × 2 features × 3 costumes × 4 expressions = **5 760 combinations, 66 of
+the 72 frames declared, 66 reachable, 0 unreachable** — 24 costume frames (8 templates × 3 costumes),
+36 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + 4 expression + 4 × 5 hair), 5 optional
+singletons (`toque`, `glasses`, `hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground shadow.
 
-The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 = **480 appearances**, and `costume` is not
-in it: `costume` says which character an artboard is, not how somebody customised one. Adding the guide
-therefore added nothing to the creator and took nothing away from it, which was the constraint the beaver
-had to satisfy before it was allowed to exist.
+**The remaining 6 frames are the `{mode}` equipment (§11) and they are outside this product on purpose.**
+They are reached by a level's locomotion mode, not by a slot combination, which is the arithmetic
+consequence of the previous paragraph: a level's decision is not in the product a player turns.
+
+The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 = **480 appearances**, and neither `costume`
+nor the mode is in it: `costume` says which character an artboard is, the mode says what the level put under
+them, and neither says how somebody customised one. Adding the guide therefore added nothing to the creator
+and took nothing away from it, which was the constraint the beaver had to satisfy before it was allowed to
+exist, and adding skates satisfied the same one.
 
 ### `presentation` is reserved and empty, out loud
 
@@ -207,34 +230,47 @@ artboard, never a second rig, never a different height.
 
 ## 4. Parts, draw order and mirroring
 
-Twenty-three parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
-names, and a **pivot** — the joint it rotates about, in character space.
+Twenty-seven parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
+names, and a **pivot** — the joint it rotates about, in character space. **Four of them are equipment and are
+marked ▲; every one of them draws nothing on a level whose mode authors no frame, which is every level
+that walks.**
 
 | z | part | frame template | pivot | mirrored |
 |---|---|---|---|---|
 | 1 | `ground-shadow` | `ground-shadow` | 120, 457 | |
-| 2 | `tail` | `tail-{costume}` | 100, 296 | |
-| 3 | `arm-upper-l` | `arm-upper-{costume}` | 137, 146 | |
-| 4 | `arm-lower-l` | `arm-lower-{costume}` | 137, 214 | |
-| 5 | `hand-l` | `hand-{costume}` | 137, 282 | |
-| 6 | `leg-upper-l` | `leg-upper-{costume}` | 132, 264 | |
-| 7 | `leg-lower-l` | `leg-lower-{costume}` | 132, 362 | |
-| 8 | `foot-l` | `foot-l-{costume}` | 132, 436 | |
-| 9 | `leg-upper-r` | `leg-upper-{costume}` | 108, 264 | ✔ |
-| 10 | `leg-lower-r` | `leg-lower-{costume}` | 108, 362 | ✔ |
-| 11 | `foot-r` | `foot-r-{costume}` | 108, 436 | |
-| 12 | `neck` | `neck-{skin}` | 120, 148 | |
-| 13 | `torso` | `torso-{costume}` | 120, 264 | |
-| 14 | `head` | `head-{skin}` | 120, 112 | |
-| 15 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
-| 16 | `head-shell` | `head-shell-{costume}` | 120, 112 | |
-| 17 | `face` | `face-{expression}` | 120, 112 | |
-| 18 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
-| 19 | `hat` | `hat-{costume}` | 120, 112 | |
-| 20 | `feature` | `feature-{feature}` | 120, 112 | |
-| 21 | `arm-upper-r` | `arm-upper-{costume}` | 103, 146 | ✔ |
-| 22 | `arm-lower-r` | `arm-lower-{costume}` | 103, 214 | ✔ |
-| 23 | `hand-r` | `hand-{costume}` | 103, 282 | ✔ |
+| 2 | ▲ `mount-deck` | `mount-deck-{mode}` | 120, 440 | |
+| 3 | `tail` | `tail-{costume}` | 100, 296 | |
+| 4 | `arm-upper-l` | `arm-upper-{costume}` | 137, 146 | |
+| 5 | `arm-lower-l` | `arm-lower-{costume}` | 137, 214 | |
+| 6 | `hand-l` | `hand-{costume}` | 137, 282 | |
+| 7 | `leg-upper-l` | `leg-upper-{costume}` | 132, 264 | |
+| 8 | `leg-lower-l` | `leg-lower-{costume}` | 132, 362 | |
+| 9 | `foot-l` | `foot-l-{costume}` | 132, 436 | |
+| 10 | ▲ `foot-gear-l` | `foot-gear-l-{mode}` | 132, 436 | |
+| 11 | `leg-upper-r` | `leg-upper-{costume}` | 108, 264 | ✔ |
+| 12 | `leg-lower-r` | `leg-lower-{costume}` | 108, 362 | ✔ |
+| 13 | `foot-r` | `foot-r-{costume}` | 108, 436 | |
+| 14 | ▲ `foot-gear-r` | `foot-gear-r-{mode}` | 108, 436 | |
+| 15 | `neck` | `neck-{skin}` | 120, 148 | |
+| 16 | `torso` | `torso-{costume}` | 120, 264 | |
+| 17 | `head` | `head-{skin}` | 120, 112 | |
+| 18 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
+| 19 | `head-shell` | `head-shell-{costume}` | 120, 112 | |
+| 20 | `face` | `face-{expression}` | 120, 112 | |
+| 21 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
+| 22 | `hat` | `hat-{costume}` | 120, 112 | |
+| 23 | `feature` | `feature-{feature}` | 120, 112 | |
+| 24 | `arm-upper-r` | `arm-upper-{costume}` | 103, 146 | ✔ |
+| 25 | `arm-lower-r` | `arm-lower-{costume}` | 103, 214 | ✔ |
+| 26 | `hand-r` | `hand-{costume}` | 103, 282 | ✔ |
+| 27 | ▲ `mount-fore` | `mount-fore-{mode}` | 120, 440 | |
+
+**The two equipment z's that are not at the ends are the whole reason there are four parts and not one.**
+`foot-gear-*` sits immediately after its own boot, because a skate holder closes over a sole and a boot
+drawn over a holder is a boot with a grey smudge under it. `mount-deck` is at the back because a rider sits
+ON a sled and stands ON a board, and `mount-fore` is at the front because the end of the object that
+identifies it — a toboggan's curled prow — is the end the rider's folded shins are on top of. A single
+equipment part at either end of the stack cannot be both.
 
 **`neck` is a part, and the z it sits at is the whole reason it is one.** It has to be occluded from BOTH
 ends — the coat collar closes over its base, the jaw closes over its top — and only a part between the torso
@@ -333,7 +369,7 @@ The fallback is **not** a flipbook of pre-composed frames. A flipbook would mult
 `5 760 combinations × 8 states × frames` and could never ship; more to the point, it would be a *different*
 character, and "the fallback nobody wants to look at" is how a seam quietly stops being a seam.
 
-Instead the atlas holds the **same twenty-two parts**, and the sprite adapter composites them with the **same
+Instead the atlas holds the **same twenty-seven parts**, and the sprite adapter composites them with the **same
 per-part transforms** from `states` in the contract JSON. What the two backends actually differ in is
 interpolation and where the compositing happens — not in the art, the proportions, the poses or the names.
 
@@ -373,6 +409,15 @@ state distinguished only by a glow does not exist on the plain path**, and colou
 | `land` | one-shot compression of legs and torso | shape motion |
 | `talk` | the near hand opens and the head tilts | shape difference |
 | `interact` | the near arm reaches | shape difference |
+| `skate/*` | the body pitches 24°, one skate leaves the ice, the supporting knee folds | shape difference |
+| `toboggan/*` | the whole figure is seated and 131 px lower, knees up | shape difference |
+| `skateboard/*` | both boots 31 px apart on one deck, knees folded 40° | shape difference |
+| `bike/*` | hands solved to the bar, feet to the pedals, torso folded 22° | shape difference |
+
+**None of the locomotion states is distinguished by its equipment alone**, and that is the rule this row
+group exists to record. Equipment is a slot and a slot can be `none`; a pose that only reads because a
+skate is drawn under it would go back to reading as a walk the moment a level offered the mode without the
+art. Every one of them changes the FIGURE.
 
 **No state anywhere in this rig uses a filter, a glow, a blur, a tint or an opacity ramp**, and no state is
 distinguished from another by colour alone. There is not a single `<filter>` element in any of the sixty
@@ -425,7 +470,11 @@ agree. Every check below is mechanical.
 
 12. For every one of the 5 760 slot combinations, each part's resolved template is either a key in `frames`
     or absent from it; nothing resolves to a name that is neither.
-13. Every key in `frames` is reachable from some combination — 60 declared, 60 reachable.
+13. Every key in `frames` is reachable from some combination, or from a declared locomotion mode — 72
+    declared, 66 from the slot product and 6 from the four `{mode}` templates.
+13a. Every `<mode>/<state>` in `states` names a `<state>` the selector can select. `locomotion-pose.ts`'s
+    `strandedPoses` is that check at runtime: a pose named for a state that does not exist is a timeline
+    nobody ever sees, and it looks exactly like one that plays.
 14. Every key in `frames` exists as a frame in `assets/dist/manifest.json` under the `shared` atlas.
 
 Check 14 is the one that catches the failure this contract exists to prevent: art renamed on one side only.
@@ -614,4 +663,208 @@ Two smaller notes for the architect, recorded rather than assumed:
 | `OQ-ART-10` | Visible sidearm on the officer? Currently absent. If it lands it is a part on the `costume` axis. | PO |
 | `OQ-REVIEW-6` | The names of the six skin ramps and five hair colours. The rig carries ids only until this is settled. | routed to `ui-a11y` / PO |
 | `OQ-REVIEW-8` | Body-mass slot, and whether a wheelchair is a locomotion mode. Neither exists here. A body-mass slot would be a new independent slot; a wheelchair would **not** be a cosmetic slot at all. | PO |
-| `OQ-RIG-1` | A character's whole option library is charged to **every** level's decoded-texture budget, because the atlas is one texture. The player wears one combination and pays for 3 840. Fixing it is a pipeline change — per-option standalone images loaded on demand — and it is the single biggest lever on this budget after the landmark. | infra |
+| `OQ-RIG-1` | A character's whole option library is charged to **every** level's decoded-texture budget, because the atlas is one texture. The player wears one combination and pays for 5 760 of them and for four levels' equipment. Fixing it is a pipeline change — per-option standalone images loaded on demand — and it is the single biggest lever on this budget after the landmark. **The `{mode}` equipment made this worse and made it measurable**: Halifax walks and pays 2.47 MiB for a canal skate, a Dufferin toboggan, a seawall board and a waterfront bicycle it will never draw. | infra |
+| `OQ-RIG-2` | **A horse is not drawn.** §11.5 has the reasoning and the numbers. It is the one locomotion mode in `game.config.json` whose art this contract cannot hold. | PO / infra |
+| `OQ-RIG-3` | **`train` has no equipment and no pose.** §11.5. A seated passenger needs a bench under them, and a bench is level furniture, not rig equipment. | PO |
+| `OQ-RIG-4` | `locomotion[].animation.brakeTrigger` and `.airborneInput` name `brake` and `airborne`; the rig declares neither, so both bindings are dead. §11.6 says exactly what each would cost. | engine / art |
+
+---
+
+## 11. Locomotion modes — what the level puts under the character, and how it is posed
+
+A player reported the defect this section exists for: *"when it says 'skating', I see no skates, she's
+walking… when it says sledding? same thing."* Every level declares a locomotion mode, the HUD names it, the
+tuning numbers obey it — and the character played one of eight states that were all authored for a figure on
+its feet.
+
+### 11.1 The shape, and why it is not a slot
+
+`app/adapters/phaser/locomotion-pose.ts` is committed and decides this; what follows is the art side of the
+same two sentences.
+
+- **A pose is a state named `<mode>/<state>`.** The selector is untouched (§2): it still selects one of the
+  eight base names from the same prose rules. What a mode changes is which timeline that name plays —
+  `skate/walk` when the rig declares it, bare `walk` when it does not. A mode that is happy with the
+  standing `talk` simply does not declare `<mode>/talk` and gets it.
+- **Equipment is a `{mode}` brace on a part.** `foot-gear-r-{mode}` resolves to
+  `character-foot-gear-r-skate` on the canal and to `character-foot-gear-r-walk` in Halifax, which is not in
+  `frames`, so the part draws nothing. That is the rule every `none` option already uses and it needs no
+  branch in either backend.
+
+**Neither is a slot, and that is the load-bearing decision.** Slot independence
+(`docs/content-review.md` §8.2) is a rule about what a *player chooses*, and the product exists to keep one
+player's choice free of another's. The mode is not chosen — it is where they are. A `mount` slot was
+authored first and thrown away for exactly this: it put a level's decision inside the arithmetic that
+protects a player's, and it needed a `none` option on a slot no creator will ever show. It also could not be
+read by `modeArtGaps`, which looks for `{mode}`-templated parts and finds a slot invisible.
+
+**The mode name in the frame key IS the level's mode string**, unaltered. Five of the nine modes in
+`game.config.json` therefore resolve to nothing today, and two of those are correct:
+
+| level mode | equipment frames | poses declared | drawn? |
+|---|---|---|---|
+| `walk` | none, by design | none — it **is** the base cycle | yes |
+| `skate` | `foot-gear-l/r-skate` | `skate/idle`, `skate/walk`, `skate/run` | **yes** |
+| `toboggan` | `mount-deck-toboggan`, `mount-fore-toboggan` | `toboggan/idle`, `/walk`, `/run` | **yes** |
+| `skateboard` | `mount-deck-skateboard` | `skateboard/idle`, `/walk`, `/run` | **yes** |
+| `bike` | `mount-deck-bike` | `bike/idle`, `/walk`, `/run` | **yes** |
+| `train` | none | none | **no — §11.5** |
+| `horse` | none | none | **no — §11.5** |
+| `canoe`, `dogsled` | none | none | no, and no level asks yet |
+
+`modeArt().covered` is `base || poses || equipment`, so `walk` is covered by the state that carries its own
+name and the last three report as gaps. **That is the honest answer and it is why no frame was authored for
+them:** a mode declared with no art draws a walking figure and says nothing, which is the whole defect. An
+empty declaration would have made `data-mode-gaps` read 0 while the screen was still wrong.
+
+**Every `<mode>/<state>` names a base state**, never a new verb. `skate/glide` would be a timeline the
+selector can never select — a `once` state that is never entered looks exactly like one that is, which is
+why `locomotion-pose.ts` reports `strandedPoses` at level open. Each mode declares `idle`, `walk` and
+`run`; `run` matters because the selector picks it above `speed` 0.55 and a mounted figure that popped to a
+standing sprint at speed is the same defect in a new place. For `toboggan` the two cycles are identical
+keys under two names, because a sled does not change posture when it goes faster and the alternative is a
+seated rider standing up at 0.55.
+
+### 11.2 The four parts
+
+`mount-deck`, `foot-gear-l`, `foot-gear-r`, `mount-fore` — §4 has the z's and the reason each one sits where
+it does. Which parts a mode uses is a property of the mode, and most use one or two:
+
+| mode | `mount-deck` | `foot-gear-l` / `-r` | `mount-fore` |
+|---|---|---|---|
+| `skate` | — | **the skates** | — |
+| `toboggan` | the deck | — | the curled prow |
+| `skateboard` | the board | — | — |
+| `bike` | the whole bicycle | — | — |
+| `walk` | — | — | — |
+
+`foot-gear-*` carries **its own boot's transform, component for component, in every key of every state** —
+including `talk`, `interact`, `jump-rise` and `land`, which is what stops a skate detaching from a boot
+while its wearer is standing at a point of interest. Both share the ankle pivot, so one number moved in a
+keyframe moves boot and blade together or the rig is wrong in a way a render will show.
+
+### 11.3 Equipment is drawn oversized, on purpose
+
+**A scale skate blade is 3 px at design resolution and 1.1 px on a 390 px phone.** That is the whole of the
+small-tier rule in one number. Every dimension below is a deliberate exaggeration and the render at phone
+width is what set it:
+
+| drawn | scale would be | why |
+|---|---|---|
+| runner 12 px deep | 3 | the 6 px silhouette stroke eats 6 of any depth; an 8 px runner rendered as solid ink and the first phone render showed it |
+| runner 92 px long (near), 78 (far) | ~68 | the overhang past toe and heel is the part of a skate that survives being made small, and it makes the foot silhouette GROW when the skates go on |
+| skateboard wheels 22 px across | ~7 | two pale discs under a dark deck is the entire read |
+| bicycle tubes 10 px, wheels 88 px | 4 / 80 | a 4 px tube is a scratch |
+| toboggan deck 18 px thick, 24 px of it behind the rider | ~8, 0 | at 8 the plank vanishes under the coat hem, and with no tail behind the back the sled is a line under a seated person |
+
+The far-side skate is drawn **20 px shorter than the near one**, which is the same convention the two boots
+already use: the pair reads as depth rather than as a mistake. Its runner sits at the near skate's height
+rather than the far boot's, so both blades ride one ice line.
+
+### 11.4 Poses, and the two numbers that are not style
+
+Every mode pose was authored in joint angles and solved by forward kinematics from the hip and the shoulder,
+exactly as `walk` was — the rig is flat, so `dx, dy` is where the joint ended up and the rotation is
+absolute (§5). Hands on a handlebar and feet on pedals are solved by two-link inverse kinematics instead,
+because a hand 6 px off a bar is invisible in the SVG and obvious in the render. Two constraints are
+arithmetic, not taste, and both changed a pose:
+
+- **A leaning torso carries the shoulders and the head with it, and this rig's existing states do not.**
+  At `run`'s 7° that is 14 px of shoulder and nobody noticed. At a skater's 24° it is 48 px, and a head left
+  where it was is a head detached from its collar — which is exactly what the first skate render showed.
+  Every mode pose therefore adds `R(torso) · (joint − waist) − (joint − waist)` to the arm chains and to the
+  head-and-neck group. That is why `head` and the six parts that share its pivot carry a `dx` for the first
+  time in this rig.
+- **The arms are 136 px and the legs 172, and both run out.** The cyclist folds 22° over the bar and not
+  further, because at 22° the bar is 132 px from the carried shoulder and at 30° it is 142 — past the end of
+  the arm. The tobogganer's knees are up rather than out, because 172 px of leg from a hip 19 px above the
+  deck reaches about 70 px forward and no more. Neither number is a drawing decision that could have gone
+  another way.
+
+Three more rules that a later editor will otherwise undo:
+
+- **The skate poses lift the whole figure by 9–12 px and leave `ground-shadow` at zero.** The runner hangs
+  10 px below the boot sole, so without the lift the blade rides under the ice. The shadow stays on the
+  ground line because that is what it is. In the base states a skater falls back to — `talk`, `interact`,
+  `land` — there is no lift and the runner sits proud of the line, which reads as a blade biting the ice.
+- **`toboggan/*` moves the figure 28 px BACK as well as 131 px down.** A sled reaches further forward than
+  its rider does; anchored on the rider, the prow would be off the front of character space.
+- **The skate poses cross y = 0 and x = 0, and a composite has to allow for it.** The lift puts the toque's
+  crown at about **y −8** in `skate/idle` and `skate/walk`, and the trailing skate's tail reaches about
+  **x −8** at full extension. Neither clips at runtime — the sprite backend places each part from its own
+  pivot in world space and nothing is drawn into a 240 × 470 buffer — but anything that composites the rig
+  into character space, including the art hand-off, must anchor at (−12, −12) or it will crop the pom and
+  the blade tip. The rig already did this once: `jump-rise` reaches y −6 and has since it shipped.
+- **A seated mode falls back to a standing `talk`.** The selector reaches `talk` before anything a mode can
+  re-pose, so a level offering `toboggan` should set `interaction: null` and `jump: null` on that mode and
+  dismount the player, which returns the mode to `walk` and the figure to its feet. Declaring
+  `toboggan/talk` is the alternative and is one more pose, not a mechanism change.
+
+### 11.5 What is NOT drawn, and why
+
+**A horse is not drawn.** It was drawn three times and thrown away three times, and the reasons are worth
+keeping because they are structural rather than "it looked wrong":
+
+1. **A rider sits INSIDE a horse's silhouette, not on top of it.** The far leg belongs behind the barrel and
+   the near leg in front of it. The four equipment parts offer the back of the stack and the front of it and
+   nothing in between, so a horse needs a fifth z — between `foot-gear-l` and `leg-upper-r` — that no other
+   mode has any use for.
+2. **It needs its own gait.** A skate follows a boot; a horse's legs cycle on their own skeleton. That is at
+   least two more parts and a second animation authored on a non-human figure, which is a different job from
+   posing this rig, and a horse whose legs do not move while the ground scrolls reads as a toy.
+3. **It is ~300 × 200 px of art charged to every level.** At 2× that is about 0.96 MiB of decoded texture on
+   Halifax, which walks, for one level's animal. The five frames that DID land already cost every level
+   2.47 MiB (§11.7) and Halifax is at 80 % of its budget.
+
+The recommendation is the one the size argument points at: **a ridden animal is a level entity with a ride
+anchor, not equipment on the rider** — the level places and animates it, and the rider plays a `horse/*`
+pose over it. That needs `level.schema.json` and the engine, which is why it is `OQ-RIG-2` and not a row in
+the table above. Authoring the astride pose on its own was considered and rejected: a figure sitting in
+mid-air is a worse defect than a figure walking, and `modeArtGaps` would have reported `horse` as covered.
+
+**`train` gets no equipment and no pose, and that is a judgement rather than an omission.** The player is a
+passenger, the camera does the moving, and what a seated passenger needs is a bench and a carriage wall —
+level furniture, not rig equipment. `prairie-rail` is drawn as an exterior line with a railbed and has
+neither, so until it has an interior the honest answer is a figure standing beside the track and a gap
+printed at level open. Reconsider it when the level has something to sit on.
+
+**`canoe` and `dogsled` are in `game.config.json` and no level uses them.** A canoe is a `mount-deck` and a
+`mount-fore` and would work; a dog team is a horse-shaped problem.
+
+### 11.6 `airborne` and `brake` — the two bindings that name nothing
+
+`level.schema.json`'s `locomotionAnimationBinding` lets a level name `airborneInput` and `brakeTrigger`, and
+the levels name `airborne` and `brake`. **The rig declares neither**, so both bindings are dead, which
+`character-cast.ts#unboundAnimationInputs` already reports at every level open.
+
+- **`airborne` should not be added.** It is `grounded` inverted, and two bool inputs that are each other's
+  negation is a defect waiting for the one frame they disagree. The fix belongs on the other side: the level
+  binding should name `grounded`, or the engine should map `airborneInput` to `grounded` and invert. Adding
+  it here would make the contract wrong in a way no test can see.
+- **`brake` should be added, and it is a real pose.** A hockey stop on the canal and a foot-drag on the
+  seawall are the two most characteristic things either mode does, and both die with the trigger. It costs:
+  one `trigger` input on the state machine, one selector rule above `jump-rise` naming a new base state
+  `brake`, a `<mode>/brake` pose per mode that has one, and **a rebuilt `rig-contract.riv`** — §8's fixture
+  carries exactly the nine inputs of §2 and a tenth declared input would fail check 3 against it. The format
+  is documented in §8 and the fixture is 363 bytes; this is an afternoon, not a project. It was left out of
+  this pass because the reported defect was the walk cycle, and a half-drawn brake on four modes would have
+  been the same mistake in a new place.
+
+### 11.7 What it cost
+
+Six frames, five source files, four parts, twelve poses. No slot, no schema change, no new input.
+
+| | before | after |
+|---|---|---|
+| `shared@1x` | 750 × 1440, 4.12 MiB decoded | 995 × 976, **3.70 MiB** |
+| `shared@2x` | 1214 × 2046, 9.48 MiB decoded | 2045 × 1531, **11.94 MiB** |
+| Halifax texture | 24.58 MiB of 34 | **27.05 MiB of 34 (80 %)** |
+| Halifax payload | 0.36 MiB of 8 | **0.39 MiB of 8** |
+| Ottawa texture | 32.87 MiB of 48 | **35.34 MiB of 48 (74 %)** |
+
+**The 1× page got smaller while the 2× page grew by 2.47 MiB**, and the two numbers are not a contradiction:
+the packer re-laid both pages and flipped the 2× page from portrait to landscape. Area predicts nothing
+here — one 2 px change to a skate runner moved the page by hundreds of pixels and MiB in both directions.
+The only safe procedure is to run `npm run assets` after every frame added or resized and read the two
+gates, which is what produced this table. Halifax is the level to watch: it walks, it has the smallest
+budget, and it pays for all of this.

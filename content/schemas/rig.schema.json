@@ -499,7 +499,7 @@
     },
     "rigSlots": {
       "title": "Rig slots",
-      "description": "The runtime-swappable slots, keyed by slot name. The names are FIXED by this schema, and that is the anti-caricature mechanism rather than tidiness: `hairShape` and `hairColour` are two slots precisely so that a coupling - \"the coily one only in black\" - cannot hide inside a single combined list of twenty options. Merging them would be a schema change and a visible one. `presentation` is likewise named here while reserved, so the slot cannot be quietly filled in without touching this contract while OQ-ART-08 is open (docs/content-review.md 8.2).",
+      "description": "The runtime-swappable slots, keyed by slot name. The names are FIXED by this schema, and that is the anti-caricature mechanism rather than tidiness: `hairShape` and `hairColour` are two slots precisely so that a coupling - \"the coily one only in black\" - cannot hide inside a single combined list of twenty options. Merging them would be a schema change and a visible one. `presentation` is likewise named here while reserved, so the slot cannot be quietly filled in without touching this contract while OQ-ART-08 is open (docs/content-review.md 8.2). A `mount` slot was added here on 2026-09-13 and removed the same day: the level's locomotion mode reaches the rig as a `{mode}` BRACE on a part and a `<mode>/<state>` pose namespace, never as a slot, because slot independence is a rule about what a PLAYER chooses and the mode is where they are. app/adapters/phaser/locomotion-pose.ts is the committed mechanism and says the same thing - \"no new port field, no new slot, no schema change\" - and assets/style/rig-contract.md 11 is the art side of it.",
       "type": "object",
       "properties": {
         "skin": {
@@ -519,10 +519,6 @@
         },
         "costume": {
           "$ref": "#/$defs/rigSlot"
-        },
-        "mount": {
-          "$ref": "#/$defs/rigSlot",
-          "description": "What the character is riding, wearing on their feet or sitting on, decided by the LEVEL'S locomotion mode rather than by the player. Skates on the canal, a toboggan on the slide, a bicycle on the trail. It is a slot rather than a separate drawing so equipment goes through the one mechanism the rig already has for a part that varies -- and it is not player-selectable, because a player does not choose to bring skates to a bike path. Added when the HUD was naming a mode the character did not play."
         },
         "presentation": {
           "$ref": "#/$defs/rigSlot"

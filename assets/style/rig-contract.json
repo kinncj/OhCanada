@@ -9,7 +9,8 @@
     "file except for its $schema, which is relative to content/. The two are edited together, in the same",
     "commit, or the rig has two live copies and no gate can tell you which one is stale.",
     "Every name here appears IDENTICALLY in the Rive file and in the sprite atlas. That identity is the",
-    "whole point of ICharacterRenderer: gameplay code must not be able to tell which backend it got."
+    "whole point of ICharacterRenderer: gameplay code must not be able to tell which backend it got.",
+    "The `{mode}` brace on four parts, and every state named `<mode>/<state>`, are the LEVEL's locomotion mode made visible. `mode` is NOT a slot: it joins `expression` as a brace naming something the character does not choose, which is what app/adapters/phaser/locomotion-pose.ts binds and what keeps the slot-independence product a statement about player choices. rig-contract.md 11 is the prose and carries what is deliberately not here - a horse, a train seat, a brake."
   ],
   "version": 1,
   "licence": "CC-BY-4.0",
@@ -282,8 +283,19 @@
       "note": "Baked contact shadow. Never rotates."
     },
     {
-      "name": "tail",
+      "name": "mount-deck",
       "z": 2,
+      "frame": "mount-deck-{mode}",
+      "pivot": [
+        120,
+        440
+      ],
+      "mirrorX": false,
+      "note": "The body of whatever the level's locomotion mode put under the character, drawn BEHIND the figure and in front of the contact shadow: a toboggan under a seated rider, a board under two boots, a bicycle under both. It carries its own transform rather than a foot's, because a deck stays flat on the ground while the feet move on it. `{mode}` is the brace app/adapters/phaser/locomotion-pose.ts binds; a mode that authors no frame draws nothing here, which is the same rule every \"none\" option already uses and needs no branch in either backend."
+    },
+    {
+      "name": "tail",
+      "z": 3,
       "frame": "tail-{costume}",
       "pivot": [
         100,
@@ -294,7 +306,7 @@
     },
     {
       "name": "arm-upper-l",
-      "z": 3,
+      "z": 4,
       "frame": "arm-upper-{costume}",
       "pivot": [
         137,
@@ -304,7 +316,7 @@
     },
     {
       "name": "arm-lower-l",
-      "z": 4,
+      "z": 5,
       "frame": "arm-lower-{costume}",
       "pivot": [
         137,
@@ -314,7 +326,7 @@
     },
     {
       "name": "hand-l",
-      "z": 5,
+      "z": 6,
       "frame": "hand-{costume}",
       "pivot": [
         137,
@@ -324,7 +336,7 @@
     },
     {
       "name": "leg-upper-l",
-      "z": 6,
+      "z": 7,
       "frame": "leg-upper-{costume}",
       "pivot": [
         132,
@@ -334,7 +346,7 @@
     },
     {
       "name": "leg-lower-l",
-      "z": 7,
+      "z": 8,
       "frame": "leg-lower-{costume}",
       "pivot": [
         132,
@@ -344,7 +356,7 @@
     },
     {
       "name": "foot-l",
-      "z": 8,
+      "z": 9,
       "frame": "foot-l-{costume}",
       "pivot": [
         132,
@@ -353,8 +365,19 @@
       "mirrorX": false
     },
     {
+      "name": "foot-gear-l",
+      "z": 10,
+      "frame": "foot-gear-l-{mode}",
+      "pivot": [
+        132,
+        436
+      ],
+      "mirrorX": false,
+      "note": "Equipment strapped to the wearer's left boot - the FAR one. It shares `foot-l`'s pivot and carries `foot-l`'s transform in every key of every state, which is what makes it rigid with the boot on a rig that parents nothing. Drawn AFTER the boot so a skate holder closes over the sole, which is where a holder actually sits."
+    },
+    {
       "name": "leg-upper-r",
-      "z": 9,
+      "z": 11,
       "frame": "leg-upper-{costume}",
       "pivot": [
         108,
@@ -364,7 +387,7 @@
     },
     {
       "name": "leg-lower-r",
-      "z": 10,
+      "z": 12,
       "frame": "leg-lower-{costume}",
       "pivot": [
         108,
@@ -374,7 +397,7 @@
     },
     {
       "name": "foot-r",
-      "z": 11,
+      "z": 13,
       "frame": "foot-r-{costume}",
       "pivot": [
         108,
@@ -383,8 +406,19 @@
       "mirrorX": false
     },
     {
+      "name": "foot-gear-r",
+      "z": 14,
+      "frame": "foot-gear-r-{mode}",
+      "pivot": [
+        108,
+        436
+      ],
+      "mirrorX": false,
+      "note": "Equipment strapped to the wearer's right boot - the NEAR one. Same rule as `foot-gear-l`: `foot-r`'s pivot, `foot-r`'s transform, drawn after the boot."
+    },
+    {
       "name": "neck",
-      "z": 12,
+      "z": 15,
       "frame": "neck-{skin}",
       "pivot": [
         120,
@@ -395,7 +429,7 @@
     },
     {
       "name": "torso",
-      "z": 13,
+      "z": 16,
       "frame": "torso-{costume}",
       "pivot": [
         120,
@@ -405,7 +439,7 @@
     },
     {
       "name": "head",
-      "z": 14,
+      "z": 17,
       "frame": "head-{skin}",
       "pivot": [
         120,
@@ -415,7 +449,7 @@
     },
     {
       "name": "hair",
-      "z": 15,
+      "z": 18,
       "frame": "hair-{hairShape}-{hairColour}",
       "pivot": [
         120,
@@ -425,7 +459,7 @@
     },
     {
       "name": "head-shell",
-      "z": 16,
+      "z": 19,
       "frame": "head-shell-{costume}",
       "pivot": [
         120,
@@ -435,7 +469,7 @@
     },
     {
       "name": "face",
-      "z": 17,
+      "z": 20,
       "frame": "face-{expression}",
       "pivot": [
         120,
@@ -445,7 +479,7 @@
     },
     {
       "name": "head-covering",
-      "z": 18,
+      "z": 21,
       "frame": "head-covering-{headCovering}",
       "pivot": [
         120,
@@ -455,7 +489,7 @@
     },
     {
       "name": "hat",
-      "z": 19,
+      "z": 22,
       "frame": "hat-{costume}",
       "pivot": [
         120,
@@ -465,7 +499,7 @@
     },
     {
       "name": "feature",
-      "z": 20,
+      "z": 23,
       "frame": "feature-{feature}",
       "pivot": [
         120,
@@ -475,7 +509,7 @@
     },
     {
       "name": "arm-upper-r",
-      "z": 21,
+      "z": 24,
       "frame": "arm-upper-{costume}",
       "pivot": [
         103,
@@ -485,7 +519,7 @@
     },
     {
       "name": "arm-lower-r",
-      "z": 22,
+      "z": 25,
       "frame": "arm-lower-{costume}",
       "pivot": [
         103,
@@ -495,13 +529,24 @@
     },
     {
       "name": "hand-r",
-      "z": 23,
+      "z": 26,
       "frame": "hand-{costume}",
       "pivot": [
         103,
         282
       ],
       "mirrorX": true
+    },
+    {
+      "name": "mount-fore",
+      "z": 27,
+      "frame": "mount-fore-{mode}",
+      "pivot": [
+        120,
+        440
+      ],
+      "mirrorX": false,
+      "note": "The part of the equipment that is NEARER the camera than the rider: a toboggan's curled prow, and the hauling end of anything else that has one. Last in z for that reason. Without it the identifying end of a sled is behind the shins that are folded over it, which is the whole read at phone size."
     }
   ],
   "atlas": {
@@ -519,6 +564,11 @@
           "t": 0,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -558,6 +608,11 @@
               0,
               0
             ],
+            "foot-gear-l": [
+              0,
+              0,
+              0
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -569,6 +624,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-gear-r": [
               0,
               0,
               0
@@ -632,6 +692,11 @@
               -11.85,
               -0.6,
               7
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -639,6 +704,11 @@
           "t": 0.5,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -678,6 +748,11 @@
               -1.6,
               0
             ],
+            "foot-gear-l": [
+              0,
+              -1.6,
+              0
+            ],
             "leg-upper-r": [
               0,
               -1.6,
@@ -689,6 +764,11 @@
               0
             ],
             "foot-r": [
+              0,
+              -1.6,
+              0
+            ],
+            "foot-gear-r": [
               0,
               -1.6,
               0
@@ -752,6 +832,11 @@
               -11.85,
               -2.2,
               7
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -759,6 +844,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -798,6 +888,11 @@
               0,
               0
             ],
+            "foot-gear-l": [
+              0,
+              0,
+              0
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -809,6 +904,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-gear-r": [
               0,
               0,
               0
@@ -872,6 +972,11 @@
               -11.85,
               -0.6,
               7
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
@@ -890,6 +995,11 @@
               0,
               0
             ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
             "tail": [
               0,
               0,
@@ -925,6 +1035,11 @@
               -5.11,
               2
             ],
+            "foot-gear-l": [
+              -39.88,
+              -5.11,
+              2
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -936,6 +1051,11 @@
               -10
             ],
             "foot-r": [
+              33.23,
+              -3.27,
+              -2
+            ],
+            "foot-gear-r": [
               33.23,
               -3.27,
               -2
@@ -999,6 +1119,11 @@
               -38.55,
               -5.84,
               20
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1006,6 +1131,11 @@
           "t": 0.25,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -1045,6 +1175,11 @@
               -11.44,
               31
             ],
+            "foot-gear-l": [
+              -25.05,
+              -11.44,
+              31
+            ],
             "leg-upper-r": [
               0,
               -3,
@@ -1056,6 +1191,11 @@
               2
             ],
             "foot-r": [
+              -2.58,
+              -3.05,
+              2
+            ],
+            "foot-gear-r": [
               -2.58,
               -3.05,
               2
@@ -1119,6 +1259,11 @@
               -21.19,
               -5.19,
               14
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1126,6 +1271,11 @@
           "t": 0.5,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -1165,6 +1315,11 @@
               -3.27,
               -2
             ],
+            "foot-gear-l": [
+              33.23,
+              -3.27,
+              -2
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -1176,6 +1331,11 @@
               18
             ],
             "foot-r": [
+              -39.88,
+              -5.11,
+              2
+            ],
+            "foot-gear-r": [
               -39.88,
               -5.11,
               2
@@ -1239,6 +1399,11 @@
               8.23,
               -1.41,
               4
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1246,6 +1411,11 @@
           "t": 0.75,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -1285,6 +1455,11 @@
               -3.05,
               2
             ],
+            "foot-gear-l": [
+              -2.58,
+              -3.05,
+              2
+            ],
             "leg-upper-r": [
               0,
               -3,
@@ -1296,6 +1471,11 @@
               27
             ],
             "foot-r": [
+              -25.05,
+              -11.44,
+              31
+            ],
+            "foot-gear-r": [
               -25.05,
               -11.44,
               31
@@ -1359,6 +1539,11 @@
               -7.09,
               -3.7,
               8
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1366,6 +1551,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -1405,6 +1595,11 @@
               -5.11,
               2
             ],
+            "foot-gear-l": [
+              -39.88,
+              -5.11,
+              2
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -1416,6 +1611,11 @@
               -10
             ],
             "foot-r": [
+              33.23,
+              -3.27,
+              -2
+            ],
+            "foot-gear-r": [
               33.23,
               -3.27,
               -2
@@ -1479,6 +1679,11 @@
               -38.55,
               -5.84,
               20
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
@@ -1497,6 +1702,11 @@
               0,
               0
             ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
             "tail": [
               0,
               0,
@@ -1532,6 +1742,11 @@
               -10.67,
               2.9
             ],
+            "foot-gear-l": [
+              -57.09,
+              -10.67,
+              2.9
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -1543,6 +1758,11 @@
               -14.5
             ],
             "foot-r": [
+              47.83,
+              -6.84,
+              -2.9
+            ],
+            "foot-gear-r": [
               47.83,
               -6.84,
               -2.9
@@ -1606,6 +1826,11 @@
               -54.94,
               -12.17,
               29
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1613,6 +1838,11 @@
           "t": 0.25,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -1652,6 +1882,11 @@
               -21.75,
               44.95
             ],
+            "foot-gear-l": [
+              -34.35,
+              -21.75,
+              44.95
+            ],
             "leg-upper-r": [
               0,
               -4.35,
@@ -1663,6 +1898,11 @@
               2.9
             ],
             "foot-r": [
+              -3.74,
+              -4.44,
+              2.9
+            ],
+            "foot-gear-r": [
               -3.74,
               -4.44,
               2.9
@@ -1726,6 +1966,11 @@
               -30.46,
               -8.92,
               20.3
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1733,6 +1978,11 @@
           "t": 0.5,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -1772,6 +2022,11 @@
               -6.84,
               -2.9
             ],
+            "foot-gear-l": [
+              47.83,
+              -6.84,
+              -2.9
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -1783,6 +2038,11 @@
               26.1
             ],
             "foot-r": [
+              -57.09,
+              -10.67,
+              2.9
+            ],
+            "foot-gear-r": [
               -57.09,
               -10.67,
               2.9
@@ -1846,6 +2106,11 @@
               11.81,
               -2.97,
               5.8
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1853,6 +2118,11 @@
           "t": 0.75,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -1892,6 +2162,11 @@
               -4.44,
               2.9
             ],
+            "foot-gear-l": [
+              -3.74,
+              -4.44,
+              2.9
+            ],
             "leg-upper-r": [
               0,
               -4.35,
@@ -1903,6 +2178,11 @@
               39.15
             ],
             "foot-r": [
+              -34.35,
+              -21.75,
+              44.95
+            ],
+            "foot-gear-r": [
               -34.35,
               -21.75,
               44.95
@@ -1966,6 +2246,11 @@
               -10.23,
               -5.83,
               11.6
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -1973,6 +2258,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2012,6 +2302,11 @@
               -10.67,
               2.9
             ],
+            "foot-gear-l": [
+              -57.09,
+              -10.67,
+              2.9
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -2023,6 +2318,11 @@
               -14.5
             ],
             "foot-r": [
+              47.83,
+              -6.84,
+              -2.9
+            ],
+            "foot-gear-r": [
               47.83,
               -6.84,
               -2.9
@@ -2086,6 +2386,11 @@
               -54.94,
               -12.17,
               29
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
@@ -2100,6 +2405,11 @@
           "t": 0,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2139,6 +2449,11 @@
               -11.35,
               14
             ],
+            "foot-gear-l": [
+              -43.74,
+              -11.35,
+              14
+            ],
             "leg-upper-r": [
               0,
               -4,
@@ -2150,6 +2465,11 @@
               33
             ],
             "foot-r": [
+              -24.97,
+              -17.14,
+              45
+            ],
+            "foot-gear-r": [
               -24.97,
               -17.14,
               45
@@ -2213,6 +2533,11 @@
               32.4,
               -10.04,
               -4
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -2220,6 +2545,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2259,6 +2589,11 @@
               -18.08,
               17
             ],
+            "foot-gear-l": [
+              -54.58,
+              -18.08,
+              17
+            ],
             "leg-upper-r": [
               0,
               -7,
@@ -2270,6 +2605,11 @@
               44
             ],
             "foot-r": [
+              -31.03,
+              -29.91,
+              58
+            ],
+            "foot-gear-r": [
               -31.03,
               -29.91,
               58
@@ -2333,6 +2673,11 @@
               43.14,
               -17.71,
               -6
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
@@ -2347,6 +2692,11 @@
           "t": 0,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2386,6 +2736,11 @@
               -5.49,
               15
             ],
+            "foot-gear-l": [
+              8.88,
+              -5.49,
+              15
+            ],
             "leg-upper-r": [
               0,
               -4,
@@ -2397,6 +2752,11 @@
               34
             ],
             "foot-r": [
+              -55.02,
+              -17.6,
+              28
+            ],
+            "foot-gear-r": [
               -55.02,
               -17.6,
               28
@@ -2460,6 +2820,11 @@
               -69.52,
               -24.29,
               38
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -2467,6 +2832,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2506,6 +2876,11 @@
               -4.79,
               7
             ],
+            "foot-gear-l": [
+              28.49,
+              -4.79,
+              7
+            ],
             "leg-upper-r": [
               0,
               -2,
@@ -2517,6 +2892,11 @@
               28
             ],
             "foot-r": [
+              -55.12,
+              -12.8,
+              20
+            ],
+            "foot-gear-r": [
               -55.12,
               -12.8,
               20
@@ -2580,6 +2960,11 @@
               -77.71,
               -27.02,
               40
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
@@ -2594,6 +2979,11 @@
           "t": 0,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2633,6 +3023,11 @@
               -5.93,
               16
             ],
+            "foot-gear-l": [
+              -37.96,
+              -5.93,
+              16
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -2644,6 +3039,11 @@
               9
             ],
             "foot-r": [
+              0.37,
+              -1.64,
+              15
+            ],
+            "foot-gear-r": [
               0.37,
               -1.64,
               15
@@ -2707,6 +3107,11 @@
               -65.12,
               -18.52,
               38
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -2714,6 +3119,11 @@
           "t": 0.55,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2753,6 +3163,11 @@
               -18.67,
               43
             ],
+            "foot-gear-l": [
+              -74.43,
+              -18.67,
+              43
+            ],
             "leg-upper-r": [
               0,
               12,
@@ -2764,6 +3179,11 @@
               34
             ],
             "foot-r": [
+              -24.36,
+              -2.14,
+              46
+            ],
+            "foot-gear-r": [
               -24.36,
               -2.14,
               46
@@ -2827,6 +3247,11 @@
               -89.59,
               -27.93,
               58
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -2834,6 +3259,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -2873,6 +3303,11 @@
               0,
               0
             ],
+            "foot-gear-l": [
+              0,
+              0,
+              0
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -2884,6 +3319,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-gear-r": [
               0,
               0,
               0
@@ -2947,6 +3387,11 @@
               -11.85,
               -0.6,
               7
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
@@ -2961,6 +3406,11 @@
           "t": 0,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -3000,6 +3450,11 @@
               0,
               0
             ],
+            "foot-gear-l": [
+              0,
+              0,
+              0
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -3011,6 +3466,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-gear-r": [
               0,
               0,
               0
@@ -3074,6 +3534,11 @@
               -4.46,
               -8.28,
               22
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -3081,6 +3546,11 @@
           "t": 0.5,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -3120,6 +3590,11 @@
               -1.2,
               0
             ],
+            "foot-gear-l": [
+              0,
+              -1.2,
+              0
+            ],
             "leg-upper-r": [
               0,
               -1.2,
@@ -3131,6 +3606,11 @@
               0
             ],
             "foot-r": [
+              0,
+              -1.2,
+              0
+            ],
+            "foot-gear-r": [
               0,
               -1.2,
               0
@@ -3194,6 +3674,11 @@
               6.34,
               -16.19,
               24
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -3201,6 +3686,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -3240,6 +3730,11 @@
               0,
               0
             ],
+            "foot-gear-l": [
+              0,
+              0,
+              0
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -3251,6 +3746,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-gear-r": [
               0,
               0,
               0
@@ -3314,6 +3814,11 @@
               -4.46,
               -8.28,
               22
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
@@ -3328,6 +3833,11 @@
           "t": 0,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -3367,6 +3877,11 @@
               0,
               0
             ],
+            "foot-gear-l": [
+              0,
+              0,
+              0
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -3378,6 +3893,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-gear-r": [
               0,
               0,
               0
@@ -3441,6 +3961,11 @@
               -11.85,
               -0.6,
               7
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -3448,6 +3973,11 @@
           "t": 0.4,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -3487,6 +4017,11 @@
               -2.73,
               9
             ],
+            "foot-gear-l": [
+              -22.66,
+              -2.73,
+              9
+            ],
             "leg-upper-r": [
               0,
               -1,
@@ -3498,6 +4033,11 @@
               0
             ],
             "foot-r": [
+              10.24,
+              -1.54,
+              2
+            ],
+            "foot-gear-r": [
               10.24,
               -1.54,
               2
@@ -3561,6 +4101,11 @@
               79.16,
               -28.04,
               -28
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -3568,6 +4113,11 @@
           "t": 0.75,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -3607,6 +4157,11 @@
               -4.25,
               13
             ],
+            "foot-gear-l": [
+              -31.1,
+              -4.25,
+              13
+            ],
             "leg-upper-r": [
               0,
               -1,
@@ -3618,6 +4173,11 @@
               0
             ],
             "foot-r": [
+              13.64,
+              -1.95,
+              2
+            ],
+            "foot-gear-r": [
               13.64,
               -1.95,
               2
@@ -3681,6 +4241,11 @@
               92.24,
               -38.08,
               -37
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         },
@@ -3688,6 +4253,11 @@
           "t": 1,
           "parts": {
             "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
               0,
               0,
               0
@@ -3727,6 +4297,11 @@
               0,
               0
             ],
+            "foot-gear-l": [
+              0,
+              0,
+              0
+            ],
             "leg-upper-r": [
               0,
               0,
@@ -3738,6 +4313,11 @@
               0
             ],
             "foot-r": [
+              0,
+              0,
+              0
+            ],
+            "foot-gear-r": [
               0,
               0,
               0
@@ -3801,11 +4381,6260 @@
               -11.85,
               -0.6,
               7
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
             ]
           }
         }
       ],
       "note": "The near arm reaches forward, along the direction of travel, so the gesture points at what was tapped."
+    },
+    "skate/idle": {
+      "loop": "loop",
+      "durationMs": 2000,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              28.04,
+              -1.38,
+              14
+            ],
+            "arm-lower-l": [
+              11.59,
+              -3.4,
+              10
+            ],
+            "hand-l": [
+              -0.22,
+              -4.44,
+              10
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              10
+            ],
+            "leg-lower-l": [
+              -17.02,
+              -10.49,
+              4
+            ],
+            "foot-l": [
+              -22.18,
+              -10.67,
+              0
+            ],
+            "foot-gear-l": [
+              -22.18,
+              -10.67,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-r": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "neck": [
+              18.39,
+              -6.74,
+              11.5
+            ],
+            "torso": [
+              0,
+              -9,
+              14
+            ],
+            "head": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "hair": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "head-shell": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "face": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "head-covering": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "hat": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "feature": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "arm-upper-r": [
+              29.05,
+              -9.61,
+              -18
+            ],
+            "arm-lower-r": [
+              50.06,
+              -12.94,
+              -12
+            ],
+            "hand-r": [
+              64.2,
+              -14.42,
+              -12
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -10.6,
+              0
+            ],
+            "arm-upper-l": [
+              29.96,
+              -2.18,
+              15
+            ],
+            "arm-lower-l": [
+              12.36,
+              -4.5,
+              11
+            ],
+            "hand-l": [
+              -0.61,
+              -5.75,
+              11
+            ],
+            "leg-upper-l": [
+              0,
+              -10.6,
+              11
+            ],
+            "leg-lower-l": [
+              -18.7,
+              -12.4,
+              5
+            ],
+            "foot-l": [
+              -25.15,
+              -12.68,
+              0
+            ],
+            "foot-gear-l": [
+              -25.15,
+              -12.68,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -10.6,
+              -17
+            ],
+            "leg-lower-r": [
+              28.65,
+              -14.88,
+              21
+            ],
+            "foot-r": [
+              2.13,
+              -19.8,
+              0
+            ],
+            "foot-gear-r": [
+              2.13,
+              -19.8,
+              0
+            ],
+            "neck": [
+              19.67,
+              -8.01,
+              12.5
+            ],
+            "torso": [
+              0,
+              -10.6,
+              15
+            ],
+            "head": [
+              39.34,
+              -5.42,
+              10
+            ],
+            "hair": [
+              39.34,
+              -5.42,
+              10
+            ],
+            "head-shell": [
+              39.34,
+              -5.42,
+              10
+            ],
+            "face": [
+              39.34,
+              -5.42,
+              10
+            ],
+            "head-covering": [
+              39.34,
+              -5.42,
+              10
+            ],
+            "hat": [
+              39.34,
+              -5.42,
+              10
+            ],
+            "feature": [
+              39.34,
+              -5.42,
+              10
+            ],
+            "arm-upper-r": [
+              31.12,
+              -10.98,
+              -20
+            ],
+            "arm-lower-r": [
+              54.38,
+              -15.08,
+              -13
+            ],
+            "hand-r": [
+              69.67,
+              -16.82,
+              -13
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              28.04,
+              -1.38,
+              14
+            ],
+            "arm-lower-l": [
+              11.59,
+              -3.4,
+              10
+            ],
+            "hand-l": [
+              -0.22,
+              -4.44,
+              10
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              10
+            ],
+            "leg-lower-l": [
+              -17.02,
+              -10.49,
+              4
+            ],
+            "foot-l": [
+              -22.18,
+              -10.67,
+              0
+            ],
+            "foot-gear-l": [
+              -22.18,
+              -10.67,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-r": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "neck": [
+              18.39,
+              -6.74,
+              11.5
+            ],
+            "torso": [
+              0,
+              -9,
+              14
+            ],
+            "head": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "hair": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "head-shell": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "face": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "head-covering": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "hat": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "feature": [
+              36.77,
+              -4.48,
+              9
+            ],
+            "arm-upper-r": [
+              29.05,
+              -9.61,
+              -18
+            ],
+            "arm-lower-r": [
+              50.06,
+              -12.94,
+              -12
+            ],
+            "hand-r": [
+              64.2,
+              -14.42,
+              -12
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "A two-foot glide, and it is deliberately NOT a stand. `moving` is the traversal system's INTENT, not the skater's velocity, and Ottawa's ice returns 0.9 of the momentum on release - so this is the state a coasting skater is in for most of a crossing. Knees soft, weight over the near skate, torso 14 degrees into the direction of travel. It reads correctly stopped as well, which is what a ready stance is."
+    },
+    "skate/walk": {
+      "loop": "loop",
+      "durationMs": 1100,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              46.53,
+              8.12,
+              34
+            ],
+            "arm-lower-l": [
+              8.5,
+              -3.51,
+              28
+            ],
+            "hand-l": [
+              -23.42,
+              -11.47,
+              28
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              52
+            ],
+            "leg-lower-l": [
+              -77.23,
+              -46.67,
+              16
+            ],
+            "foot-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "foot-gear-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-r": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "neck": [
+              30.91,
+              -2.43,
+              19.5
+            ],
+            "torso": [
+              0,
+              -9,
+              24
+            ],
+            "head": [
+              61.82,
+              4.14,
+              15
+            ],
+            "hair": [
+              61.82,
+              4.14,
+              15
+            ],
+            "head-shell": [
+              61.82,
+              4.14,
+              15
+            ],
+            "face": [
+              61.82,
+              4.14,
+              15
+            ],
+            "head-covering": [
+              61.82,
+              4.14,
+              15
+            ],
+            "hat": [
+              61.82,
+              4.14,
+              15
+            ],
+            "feature": [
+              61.82,
+              4.14,
+              15
+            ],
+            "arm-upper-r": [
+              49.46,
+              -5.71,
+              -40
+            ],
+            "arm-lower-r": [
+              93.17,
+              -21.62,
+              -34
+            ],
+            "hand-r": [
+              131.2,
+              -33.25,
+              -34
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.25,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -12,
+              0
+            ],
+            "arm-upper-l": [
+              44.75,
+              4.02,
+              18
+            ],
+            "arm-lower-l": [
+              23.74,
+              0.69,
+              14
+            ],
+            "hand-l": [
+              7.29,
+              -1.33,
+              14
+            ],
+            "leg-upper-l": [
+              0,
+              -12,
+              18
+            ],
+            "leg-lower-l": [
+              -30.28,
+              -16.8,
+              20
+            ],
+            "foot-l": [
+              -55.59,
+              -21.26,
+              8
+            ],
+            "foot-gear-l": [
+              -55.59,
+              -21.26,
+              8
+            ],
+            "leg-upper-r": [
+              0,
+              -12,
+              -12
+            ],
+            "leg-lower-r": [
+              20.38,
+              -14.14,
+              17
+            ],
+            "foot-r": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "foot-gear-r": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "neck": [
+              29.7,
+              -5.96,
+              18.5
+            ],
+            "torso": [
+              0,
+              -12,
+              23
+            ],
+            "head": [
+              59.39,
+              0.08,
+              14
+            ],
+            "hair": [
+              59.39,
+              0.08,
+              14
+            ],
+            "head-shell": [
+              59.39,
+              0.08,
+              14
+            ],
+            "face": [
+              59.39,
+              0.08,
+              14
+            ],
+            "head-covering": [
+              59.39,
+              0.08,
+              14
+            ],
+            "hat": [
+              59.39,
+              0.08,
+              14
+            ],
+            "feature": [
+              59.39,
+              0.08,
+              14
+            ],
+            "arm-upper-r": [
+              47.46,
+              -9.26,
+              -20
+            ],
+            "arm-lower-r": [
+              70.72,
+              -13.36,
+              -16
+            ],
+            "hand-r": [
+              89.46,
+              -16,
+              -16
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              46.53,
+              8.12,
+              -40
+            ],
+            "arm-lower-l": [
+              90.23,
+              -7.79,
+              -34
+            ],
+            "hand-l": [
+              128.26,
+              -19.42,
+              -34
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-l": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-l": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-l": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              44
+            ],
+            "leg-lower-r": [
+              -68.08,
+              -36.5,
+              10
+            ],
+            "foot-r": [
+              -80.93,
+              -37.63,
+              22
+            ],
+            "foot-gear-r": [
+              -80.93,
+              -37.63,
+              22
+            ],
+            "neck": [
+              30.91,
+              -2.43,
+              19.5
+            ],
+            "torso": [
+              0,
+              -9,
+              24
+            ],
+            "head": [
+              61.82,
+              4.14,
+              15
+            ],
+            "hair": [
+              61.82,
+              4.14,
+              15
+            ],
+            "head-shell": [
+              61.82,
+              4.14,
+              15
+            ],
+            "face": [
+              61.82,
+              4.14,
+              15
+            ],
+            "head-covering": [
+              61.82,
+              4.14,
+              15
+            ],
+            "hat": [
+              61.82,
+              4.14,
+              15
+            ],
+            "feature": [
+              61.82,
+              4.14,
+              15
+            ],
+            "arm-upper-r": [
+              49.46,
+              -5.71,
+              34
+            ],
+            "arm-lower-r": [
+              11.44,
+              -17.34,
+              28
+            ],
+            "hand-r": [
+              -20.48,
+              -25.3,
+              28
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.75,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -12,
+              0
+            ],
+            "arm-upper-l": [
+              44.75,
+              4.02,
+              -20
+            ],
+            "arm-lower-l": [
+              68.01,
+              -0.08,
+              -16
+            ],
+            "hand-l": [
+              86.76,
+              -2.71,
+              -16
+            ],
+            "leg-upper-l": [
+              0,
+              -12,
+              -12
+            ],
+            "leg-lower-l": [
+              20.38,
+              -14.14,
+              17
+            ],
+            "foot-l": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "foot-gear-l": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -12,
+              14
+            ],
+            "leg-lower-r": [
+              -23.71,
+              -14.91,
+              18
+            ],
+            "foot-r": [
+              -46.58,
+              -18.53,
+              8
+            ],
+            "foot-gear-r": [
+              -46.58,
+              -18.53,
+              8
+            ],
+            "neck": [
+              29.7,
+              -5.96,
+              18.5
+            ],
+            "torso": [
+              0,
+              -12,
+              23
+            ],
+            "head": [
+              59.39,
+              0.08,
+              14
+            ],
+            "hair": [
+              59.39,
+              0.08,
+              14
+            ],
+            "head-shell": [
+              59.39,
+              0.08,
+              14
+            ],
+            "face": [
+              59.39,
+              0.08,
+              14
+            ],
+            "head-covering": [
+              59.39,
+              0.08,
+              14
+            ],
+            "hat": [
+              59.39,
+              0.08,
+              14
+            ],
+            "feature": [
+              59.39,
+              0.08,
+              14
+            ],
+            "arm-upper-r": [
+              47.46,
+              -9.26,
+              18
+            ],
+            "arm-lower-r": [
+              26.44,
+              -12.59,
+              14
+            ],
+            "hand-r": [
+              9.99,
+              -14.61,
+              14
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              46.53,
+              8.12,
+              34
+            ],
+            "arm-lower-l": [
+              8.5,
+              -3.51,
+              28
+            ],
+            "hand-l": [
+              -23.42,
+              -11.47,
+              28
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              52
+            ],
+            "leg-lower-l": [
+              -77.23,
+              -46.67,
+              16
+            ],
+            "foot-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "foot-gear-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-r": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "neck": [
+              30.91,
+              -2.43,
+              19.5
+            ],
+            "torso": [
+              0,
+              -9,
+              24
+            ],
+            "head": [
+              61.82,
+              4.14,
+              15
+            ],
+            "hair": [
+              61.82,
+              4.14,
+              15
+            ],
+            "head-shell": [
+              61.82,
+              4.14,
+              15
+            ],
+            "face": [
+              61.82,
+              4.14,
+              15
+            ],
+            "head-covering": [
+              61.82,
+              4.14,
+              15
+            ],
+            "hat": [
+              61.82,
+              4.14,
+              15
+            ],
+            "feature": [
+              61.82,
+              4.14,
+              15
+            ],
+            "arm-upper-r": [
+              49.46,
+              -5.71,
+              -40
+            ],
+            "arm-lower-r": [
+              93.17,
+              -21.62,
+              -34
+            ],
+            "hand-r": [
+              131.2,
+              -33.25,
+              -34
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "Two strokes per cycle, 1100 ms, and this state exists because a walk cycle on a canal is the defect a player reported from the live site. What carries it at 390 px, in the order the cues survive being made small: the trailing skate LIFTED clear of the ice and swung back, the 24-degree body pitch, the deep bend in the supporting knee, and the arms swinging fore and aft at full length. Contact is at t 0 and t 0.5, where `footfall` fires - one push per half cycle. The far leg's push extends further than the near leg's (52 degrees against 44) because the far hip sits 24 px forward in this three-quarter view, so an identical angle would swing the near skate off the left edge of character space."
+    },
+    "skate/run": {
+      "loop": "loop",
+      "durationMs": 792,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              53.41,
+              12.79,
+              34
+            ],
+            "arm-lower-l": [
+              15.38,
+              1.17,
+              28
+            ],
+            "hand-l": [
+              -16.54,
+              -6.79,
+              28
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              52
+            ],
+            "leg-lower-l": [
+              -77.23,
+              -46.67,
+              16
+            ],
+            "foot-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "foot-gear-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-r": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "neck": [
+              35.68,
+              -0.1,
+              22.3
+            ],
+            "torso": [
+              0,
+              -9,
+              28
+            ],
+            "head": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "hair": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "head-shell": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "face": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "head-covering": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "hat": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "feature": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "arm-upper-r": [
+              57.39,
+              -3.17,
+              -40
+            ],
+            "arm-lower-r": [
+              101.1,
+              -19.08,
+              -34
+            ],
+            "hand-r": [
+              139.12,
+              -30.7,
+              -34
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.25,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -12,
+              0
+            ],
+            "arm-upper-l": [
+              51.72,
+              8.58,
+              18
+            ],
+            "arm-lower-l": [
+              30.7,
+              5.25,
+              14
+            ],
+            "hand-l": [
+              14.25,
+              3.23,
+              14
+            ],
+            "leg-upper-l": [
+              0,
+              -12,
+              18
+            ],
+            "leg-lower-l": [
+              -30.28,
+              -16.8,
+              20
+            ],
+            "foot-l": [
+              -55.59,
+              -21.26,
+              8
+            ],
+            "foot-gear-l": [
+              -55.59,
+              -21.26,
+              8
+            ],
+            "leg-upper-r": [
+              0,
+              -12,
+              -12
+            ],
+            "leg-lower-r": [
+              20.38,
+              -14.14,
+              17
+            ],
+            "foot-r": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "foot-gear-r": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "neck": [
+              34.5,
+              -3.72,
+              21.3
+            ],
+            "torso": [
+              0,
+              -12,
+              27
+            ],
+            "head": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "hair": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "head-shell": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "face": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "head-covering": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "hat": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "feature": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "arm-upper-r": [
+              55.42,
+              -6.86,
+              -20
+            ],
+            "arm-lower-r": [
+              78.68,
+              -10.96,
+              -16
+            ],
+            "hand-r": [
+              97.42,
+              -13.59,
+              -16
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              53.41,
+              12.79,
+              -40
+            ],
+            "arm-lower-l": [
+              97.12,
+              -3.12,
+              -34
+            ],
+            "hand-l": [
+              135.14,
+              -14.74,
+              -34
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-l": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-l": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-l": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              44
+            ],
+            "leg-lower-r": [
+              -68.08,
+              -36.5,
+              10
+            ],
+            "foot-r": [
+              -80.93,
+              -37.63,
+              22
+            ],
+            "foot-gear-r": [
+              -80.93,
+              -37.63,
+              22
+            ],
+            "neck": [
+              35.68,
+              -0.1,
+              22.3
+            ],
+            "torso": [
+              0,
+              -9,
+              28
+            ],
+            "head": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "hair": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "head-shell": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "face": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "head-covering": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "hat": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "feature": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "arm-upper-r": [
+              57.39,
+              -3.17,
+              34
+            ],
+            "arm-lower-r": [
+              19.36,
+              -14.79,
+              28
+            ],
+            "hand-r": [
+              -12.56,
+              -22.75,
+              28
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.75,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -12,
+              0
+            ],
+            "arm-upper-l": [
+              51.72,
+              8.58,
+              -20
+            ],
+            "arm-lower-l": [
+              74.98,
+              4.48,
+              -16
+            ],
+            "hand-l": [
+              93.72,
+              1.84,
+              -16
+            ],
+            "leg-upper-l": [
+              0,
+              -12,
+              -12
+            ],
+            "leg-lower-l": [
+              20.38,
+              -14.14,
+              17
+            ],
+            "foot-l": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "foot-gear-l": [
+              -1.26,
+              -17.37,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -12,
+              14
+            ],
+            "leg-lower-r": [
+              -23.71,
+              -14.91,
+              18
+            ],
+            "foot-r": [
+              -46.58,
+              -18.53,
+              8
+            ],
+            "foot-gear-r": [
+              -46.58,
+              -18.53,
+              8
+            ],
+            "neck": [
+              34.5,
+              -3.72,
+              21.3
+            ],
+            "torso": [
+              0,
+              -12,
+              27
+            ],
+            "head": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "hair": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "head-shell": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "face": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "head-covering": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "hat": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "feature": [
+              69.01,
+              4.57,
+              15.6
+            ],
+            "arm-upper-r": [
+              55.42,
+              -6.86,
+              18
+            ],
+            "arm-lower-r": [
+              34.41,
+              -10.18,
+              14
+            ],
+            "hand-r": [
+              17.96,
+              -12.2,
+              14
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              -9,
+              0
+            ],
+            "arm-upper-l": [
+              53.41,
+              12.79,
+              34
+            ],
+            "arm-lower-l": [
+              15.38,
+              1.17,
+              28
+            ],
+            "hand-l": [
+              -16.54,
+              -6.79,
+              28
+            ],
+            "leg-upper-l": [
+              0,
+              -9,
+              52
+            ],
+            "leg-lower-l": [
+              -77.23,
+              -46.67,
+              16
+            ],
+            "foot-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "foot-gear-l": [
+              -97.62,
+              -49.53,
+              26
+            ],
+            "leg-upper-r": [
+              0,
+              -9,
+              -16
+            ],
+            "leg-lower-r": [
+              27.01,
+              -12.8,
+              20
+            ],
+            "foot-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "foot-gear-r": [
+              1.7,
+              -17.26,
+              0
+            ],
+            "neck": [
+              35.68,
+              -0.1,
+              22.3
+            ],
+            "torso": [
+              0,
+              -9,
+              28
+            ],
+            "head": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "hair": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "head-shell": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "face": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "head-covering": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "hat": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "feature": [
+              71.36,
+              8.79,
+              16.6
+            ],
+            "arm-upper-r": [
+              57.39,
+              -3.17,
+              -40
+            ],
+            "arm-lower-r": [
+              101.1,
+              -19.08,
+              -34
+            ],
+            "hand-r": [
+              139.12,
+              -30.7,
+              -34
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "The same cycle at 0.72x duration with three more degrees of pitch. It is a separate declaration and not a fallback: the selector picks `run` above `speed` 0.55, and a skater who reverted to the rig's own running cycle at speed would be the reported defect returning at the exact moment the player is going fastest."
+    },
+    "toboggan/idle": {
+      "loop": "loop",
+      "durationMs": 2400,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              131,
+              0
+            ],
+            "arm-upper-l": [
+              -65.3,
+              131.52,
+              14
+            ],
+            "arm-lower-l": [
+              -81.75,
+              129.5,
+              30
+            ],
+            "hand-l": [
+              -115.75,
+              120.39,
+              30
+            ],
+            "leg-upper-l": [
+              -28,
+              131,
+              -116
+            ],
+            "leg-lower-l": [
+              60.08,
+              -9.96,
+              52
+            ],
+            "foot-l": [
+              1.77,
+              -38.4,
+              -8
+            ],
+            "foot-gear-l": [
+              1.77,
+              -38.4,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              131,
+              -106
+            ],
+            "leg-lower-r": [
+              66.2,
+              5.99,
+              42
+            ],
+            "foot-r": [
+              16.69,
+              -13.02,
+              -4
+            ],
+            "foot-gear-r": [
+              16.69,
+              -13.02,
+              -4
+            ],
+            "neck": [
+              -51.49,
+              134.72,
+              -9
+            ],
+            "torso": [
+              -28,
+              131,
+              -18
+            ],
+            "head": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "hair": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "head-shell": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "face": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "head-covering": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "hat": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "feature": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "arm-upper-r": [
+              -63.63,
+              142.03,
+              10
+            ],
+            "arm-lower-r": [
+              -75.44,
+              141,
+              26
+            ],
+            "hand-r": [
+              -105.25,
+              134.11,
+              26
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              129.4,
+              0
+            ],
+            "arm-upper-l": [
+              -67.34,
+              130.29,
+              15
+            ],
+            "arm-lower-l": [
+              -84.94,
+              127.98,
+              31
+            ],
+            "hand-l": [
+              -119.97,
+              118.26,
+              31
+            ],
+            "leg-upper-l": [
+              -28,
+              129.4,
+              -117
+            ],
+            "leg-lower-l": [
+              59.32,
+              -13.09,
+              53
+            ],
+            "foot-l": [
+              0.22,
+              -42.56,
+              -8
+            ],
+            "foot-gear-l": [
+              0.22,
+              -42.56,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              129.4,
+              -107
+            ],
+            "leg-lower-r": [
+              65.72,
+              2.75,
+              43
+            ],
+            "foot-r": [
+              15.25,
+              -17.13,
+              -4
+            ],
+            "foot-gear-r": [
+              15.25,
+              -17.13,
+              -4
+            ],
+            "neck": [
+              -52.74,
+              133.54,
+              -9
+            ],
+            "torso": [
+              -28,
+              129.4,
+              -19
+            ],
+            "head": [
+              -77.49,
+              137.68,
+              1
+            ],
+            "hair": [
+              -77.49,
+              137.68,
+              1
+            ],
+            "head-shell": [
+              -77.49,
+              137.68,
+              1
+            ],
+            "face": [
+              -77.49,
+              137.68,
+              1
+            ],
+            "head-covering": [
+              -77.49,
+              137.68,
+              1
+            ],
+            "hat": [
+              -77.49,
+              137.68,
+              1
+            ],
+            "feature": [
+              -77.49,
+              137.68,
+              1
+            ],
+            "arm-upper-r": [
+              -65.49,
+              141.36,
+              11
+            ],
+            "arm-lower-r": [
+              -78.47,
+              140.11,
+              27
+            ],
+            "hand-r": [
+              -109.34,
+              132.7,
+              27
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              131,
+              0
+            ],
+            "arm-upper-l": [
+              -65.3,
+              131.52,
+              14
+            ],
+            "arm-lower-l": [
+              -81.75,
+              129.5,
+              30
+            ],
+            "hand-l": [
+              -115.75,
+              120.39,
+              30
+            ],
+            "leg-upper-l": [
+              -28,
+              131,
+              -116
+            ],
+            "leg-lower-l": [
+              60.08,
+              -9.96,
+              52
+            ],
+            "foot-l": [
+              1.77,
+              -38.4,
+              -8
+            ],
+            "foot-gear-l": [
+              1.77,
+              -38.4,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              131,
+              -106
+            ],
+            "leg-lower-r": [
+              66.2,
+              5.99,
+              42
+            ],
+            "foot-r": [
+              16.69,
+              -13.02,
+              -4
+            ],
+            "foot-gear-r": [
+              16.69,
+              -13.02,
+              -4
+            ],
+            "neck": [
+              -51.49,
+              134.72,
+              -9
+            ],
+            "torso": [
+              -28,
+              131,
+              -18
+            ],
+            "head": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "hair": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "head-shell": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "face": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "head-covering": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "hat": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "feature": [
+              -74.97,
+              138.44,
+              0
+            ],
+            "arm-upper-r": [
+              -63.63,
+              142.03,
+              10
+            ],
+            "arm-lower-r": [
+              -75.44,
+              141,
+              26
+            ],
+            "hand-r": [
+              -105.25,
+              134.11,
+              26
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "The same seated posture as `toboggan/walk` with the recline taken out - 18 degrees instead of 27 - because a stopped sled at the top of the run still has a rider sitting on it. There is no standing idle for this mode: a tobogganer who stops does not stand up through the sled, and a level that wants the player on their feet sets the mode back to `walk`."
+    },
+    "toboggan/walk": {
+      "loop": "loop",
+      "durationMs": 1300,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              131,
+              0
+            ],
+            "arm-upper-l": [
+              -83.42,
+              136.14,
+              22
+            ],
+            "arm-lower-l": [
+              -108.9,
+              131.19,
+              36
+            ],
+            "hand-l": [
+              -148.87,
+              118.21,
+              36
+            ],
+            "leg-upper-l": [
+              -28,
+              131,
+              -123
+            ],
+            "leg-lower-l": [
+              54.19,
+              -20.37,
+              57
+            ],
+            "foot-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "foot-gear-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              131,
+              -113
+            ],
+            "leg-lower-r": [
+              62.21,
+              -5.29,
+              47
+            ],
+            "foot-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "foot-gear-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "neck": [
+              -62.5,
+              139.28,
+              -11
+            ],
+            "torso": [
+              -28,
+              131,
+              -27
+            ],
+            "head": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hair": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-shell": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "face": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-covering": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hat": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "feature": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "arm-upper-r": [
+              -79.72,
+              151.58,
+              18
+            ],
+            "arm-lower-r": [
+              -100.73,
+              148.25,
+              32
+            ],
+            "hand-r": [
+              -136.77,
+              137.92,
+              32
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              133,
+              0
+            ],
+            "arm-upper-l": [
+              -89.28,
+              140.31,
+              25
+            ],
+            "arm-lower-l": [
+              -118.02,
+              133.94,
+              39
+            ],
+            "hand-l": [
+              -160.81,
+              118.78,
+              39
+            ],
+            "leg-upper-l": [
+              -28,
+              133,
+              -126
+            ],
+            "leg-lower-l": [
+              51.28,
+              -22.6,
+              60
+            ],
+            "foot-l": [
+              -12.8,
+              -59.6,
+              -8
+            ],
+            "foot-gear-l": [
+              -12.8,
+              -59.6,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              133,
+              -116
+            ],
+            "leg-lower-r": [
+              60.08,
+              -7.96,
+              50
+            ],
+            "foot-r": [
+              3.39,
+              -34.39,
+              -4
+            ],
+            "foot-gear-r": [
+              3.39,
+              -34.39,
+              -4
+            ],
+            "neck": [
+              -66,
+              143.18,
+              -11.5
+            ],
+            "torso": [
+              -28,
+              133,
+              -30
+            ],
+            "head": [
+              -104,
+              153.36,
+              7
+            ],
+            "hair": [
+              -104,
+              153.36,
+              7
+            ],
+            "head-shell": [
+              -104,
+              153.36,
+              7
+            ],
+            "face": [
+              -104,
+              153.36,
+              7
+            ],
+            "head-covering": [
+              -104,
+              153.36,
+              7
+            ],
+            "hat": [
+              -104,
+              153.36,
+              7
+            ],
+            "feature": [
+              -104,
+              153.36,
+              7
+            ],
+            "arm-upper-r": [
+              -84.72,
+              157.31,
+              21
+            ],
+            "arm-lower-r": [
+              -109.09,
+              152.79,
+              35
+            ],
+            "hand-r": [
+              -148.09,
+              140.49,
+              35
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              131,
+              0
+            ],
+            "arm-upper-l": [
+              -83.42,
+              136.14,
+              22
+            ],
+            "arm-lower-l": [
+              -108.9,
+              131.19,
+              36
+            ],
+            "hand-l": [
+              -148.87,
+              118.21,
+              36
+            ],
+            "leg-upper-l": [
+              -28,
+              131,
+              -123
+            ],
+            "leg-lower-l": [
+              54.19,
+              -20.37,
+              57
+            ],
+            "foot-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "foot-gear-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              131,
+              -113
+            ],
+            "leg-lower-r": [
+              62.21,
+              -5.29,
+              47
+            ],
+            "foot-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "foot-gear-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "neck": [
+              -62.5,
+              139.28,
+              -11
+            ],
+            "torso": [
+              -28,
+              131,
+              -27
+            ],
+            "head": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hair": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-shell": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "face": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-covering": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hat": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "feature": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "arm-upper-r": [
+              -79.72,
+              151.58,
+              18
+            ],
+            "arm-lower-r": [
+              -100.73,
+              148.25,
+              32
+            ],
+            "hand-r": [
+              -136.77,
+              137.92,
+              32
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "Seated, reclined 27 degrees, knees folded up, feet tucked back on the deck - the posture in `refs/quebec-city/toboggan-slide-riders.jpg` and the same one the two background riders in `quebec-city/layer-60-slope.svg` hold, so the player matches the level rather than arriving from a different game. The whole figure drops 131 px and moves 28 px back: a seated rider's hips are at the deck, and the sled reaches further forward than the rider does. THE LEGS CANNOT REACH FURTHER FORWARD THAN THIS. 98 + 74 px of leg from a hip 19 px above the deck folds to about 70 px of forward reach, which is why the knees are up rather than out, and it is also why the prow is a separate part: at full extension the shins cross the front of the sled."
+    },
+    "toboggan/run": {
+      "loop": "loop",
+      "durationMs": 1300,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              131,
+              0
+            ],
+            "arm-upper-l": [
+              -83.42,
+              136.14,
+              22
+            ],
+            "arm-lower-l": [
+              -108.9,
+              131.19,
+              36
+            ],
+            "hand-l": [
+              -148.87,
+              118.21,
+              36
+            ],
+            "leg-upper-l": [
+              -28,
+              131,
+              -123
+            ],
+            "leg-lower-l": [
+              54.19,
+              -20.37,
+              57
+            ],
+            "foot-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "foot-gear-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              131,
+              -113
+            ],
+            "leg-lower-r": [
+              62.21,
+              -5.29,
+              47
+            ],
+            "foot-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "foot-gear-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "neck": [
+              -62.5,
+              139.28,
+              -11
+            ],
+            "torso": [
+              -28,
+              131,
+              -27
+            ],
+            "head": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hair": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-shell": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "face": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-covering": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hat": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "feature": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "arm-upper-r": [
+              -79.72,
+              151.58,
+              18
+            ],
+            "arm-lower-r": [
+              -100.73,
+              148.25,
+              32
+            ],
+            "hand-r": [
+              -136.77,
+              137.92,
+              32
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              133,
+              0
+            ],
+            "arm-upper-l": [
+              -89.28,
+              140.31,
+              25
+            ],
+            "arm-lower-l": [
+              -118.02,
+              133.94,
+              39
+            ],
+            "hand-l": [
+              -160.81,
+              118.78,
+              39
+            ],
+            "leg-upper-l": [
+              -28,
+              133,
+              -126
+            ],
+            "leg-lower-l": [
+              51.28,
+              -22.6,
+              60
+            ],
+            "foot-l": [
+              -12.8,
+              -59.6,
+              -8
+            ],
+            "foot-gear-l": [
+              -12.8,
+              -59.6,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              133,
+              -116
+            ],
+            "leg-lower-r": [
+              60.08,
+              -7.96,
+              50
+            ],
+            "foot-r": [
+              3.39,
+              -34.39,
+              -4
+            ],
+            "foot-gear-r": [
+              3.39,
+              -34.39,
+              -4
+            ],
+            "neck": [
+              -66,
+              143.18,
+              -11.5
+            ],
+            "torso": [
+              -28,
+              133,
+              -30
+            ],
+            "head": [
+              -104,
+              153.36,
+              7
+            ],
+            "hair": [
+              -104,
+              153.36,
+              7
+            ],
+            "head-shell": [
+              -104,
+              153.36,
+              7
+            ],
+            "face": [
+              -104,
+              153.36,
+              7
+            ],
+            "head-covering": [
+              -104,
+              153.36,
+              7
+            ],
+            "hat": [
+              -104,
+              153.36,
+              7
+            ],
+            "feature": [
+              -104,
+              153.36,
+              7
+            ],
+            "arm-upper-r": [
+              -84.72,
+              157.31,
+              21
+            ],
+            "arm-lower-r": [
+              -109.09,
+              152.79,
+              35
+            ],
+            "hand-r": [
+              -148.09,
+              140.49,
+              35
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              -28,
+              131,
+              0
+            ],
+            "arm-upper-l": [
+              -83.42,
+              136.14,
+              22
+            ],
+            "arm-lower-l": [
+              -108.9,
+              131.19,
+              36
+            ],
+            "hand-l": [
+              -148.87,
+              118.21,
+              36
+            ],
+            "leg-upper-l": [
+              -28,
+              131,
+              -123
+            ],
+            "leg-lower-l": [
+              54.19,
+              -20.37,
+              57
+            ],
+            "foot-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "foot-gear-l": [
+              -7.87,
+              -54.07,
+              -8
+            ],
+            "leg-upper-r": [
+              -28,
+              131,
+              -113
+            ],
+            "leg-lower-r": [
+              62.21,
+              -5.29,
+              47
+            ],
+            "foot-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "foot-gear-r": [
+              8.09,
+              -28.82,
+              -4
+            ],
+            "neck": [
+              -62.5,
+              139.28,
+              -11
+            ],
+            "torso": [
+              -28,
+              131,
+              -27
+            ],
+            "head": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hair": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-shell": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "face": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "head-covering": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "hat": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "feature": [
+              -97.01,
+              147.57,
+              5
+            ],
+            "arm-upper-r": [
+              -79.72,
+              151.58,
+              18
+            ],
+            "arm-lower-r": [
+              -100.73,
+              148.25,
+              32
+            ],
+            "hand-r": [
+              -136.77,
+              137.92,
+              32
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "IDENTICAL KEYS TO `toboggan/walk`, under a second name, and that is the point rather than an oversight. A sled does not change posture when it goes faster, and without this declaration the selector would stand a seated rider up the moment `speed` passed 0.55."
+    },
+    "skateboard/idle": {
+      "loop": "loop",
+      "durationMs": 2200,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              1,
+              0
+            ],
+            "arm-upper-l": [
+              20.23,
+              5.74,
+              18
+            ],
+            "arm-lower-l": [
+              -0.78,
+              2.42,
+              22
+            ],
+            "hand-l": [
+              -26.25,
+              -2.53,
+              22
+            ],
+            "leg-upper-l": [
+              0,
+              1,
+              40
+            ],
+            "leg-lower-l": [
+              -62.99,
+              -21.93,
+              -28
+            ],
+            "foot-l": [
+              -28.25,
+              -30.59,
+              0
+            ],
+            "foot-gear-l": [
+              -28.25,
+              -30.59,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              1,
+              -38
+            ],
+            "leg-lower-r": [
+              60.33,
+              -19.77,
+              28
+            ],
+            "foot-r": [
+              25.59,
+              -28.44,
+              0
+            ],
+            "foot-gear-r": [
+              25.59,
+              -28.44,
+              0
+            ],
+            "neck": [
+              13.2,
+              2.15,
+              7.5
+            ],
+            "torso": [
+              0,
+              1,
+              10
+            ],
+            "head": [
+              26.39,
+              3.31,
+              5
+            ],
+            "hair": [
+              26.39,
+              3.31,
+              5
+            ],
+            "head-shell": [
+              26.39,
+              3.31,
+              5
+            ],
+            "face": [
+              26.39,
+              3.31,
+              5
+            ],
+            "head-covering": [
+              26.39,
+              3.31,
+              5
+            ],
+            "hat": [
+              26.39,
+              3.31,
+              5
+            ],
+            "feature": [
+              26.39,
+              3.31,
+              5
+            ],
+            "arm-upper-r": [
+              20.75,
+              -0.16,
+              -20
+            ],
+            "arm-lower-r": [
+              44.01,
+              -4.26,
+              -26
+            ],
+            "hand-r": [
+              73.82,
+              -11.14,
+              -26
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              -0.6,
+              0
+            ],
+            "arm-upper-l": [
+              22.2,
+              4.81,
+              19
+            ],
+            "arm-lower-l": [
+              0.06,
+              1.11,
+              23
+            ],
+            "hand-l": [
+              -26.51,
+              -4.3,
+              23
+            ],
+            "leg-upper-l": [
+              0,
+              -0.6,
+              41
+            ],
+            "leg-lower-l": [
+              -64.29,
+              -24.64,
+              -29
+            ],
+            "foot-l": [
+              -28.42,
+              -33.92,
+              0
+            ],
+            "foot-gear-l": [
+              -28.42,
+              -33.92,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -0.6,
+              -39
+            ],
+            "leg-lower-r": [
+              61.67,
+              -22.44,
+              29
+            ],
+            "foot-r": [
+              25.8,
+              -31.72,
+              0
+            ],
+            "foot-gear-r": [
+              25.8,
+              -31.72,
+              0
+            ],
+            "neck": [
+              14.5,
+              0.8,
+              8.5
+            ],
+            "torso": [
+              0,
+              -0.6,
+              11
+            ],
+            "head": [
+              29,
+              2.19,
+              6
+            ],
+            "hair": [
+              29,
+              2.19,
+              6
+            ],
+            "head-shell": [
+              29,
+              2.19,
+              6
+            ],
+            "face": [
+              29,
+              2.19,
+              6
+            ],
+            "head-covering": [
+              29,
+              2.19,
+              6
+            ],
+            "hat": [
+              29,
+              2.19,
+              6
+            ],
+            "feature": [
+              29,
+              2.19,
+              6
+            ],
+            "arm-upper-r": [
+              22.83,
+              -1.68,
+              -21
+            ],
+            "arm-lower-r": [
+              47.2,
+              -6.19,
+              -27
+            ],
+            "hand-r": [
+              78.07,
+              -13.6,
+              -27
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              1,
+              0
+            ],
+            "arm-upper-l": [
+              20.23,
+              5.74,
+              18
+            ],
+            "arm-lower-l": [
+              -0.78,
+              2.42,
+              22
+            ],
+            "hand-l": [
+              -26.25,
+              -2.53,
+              22
+            ],
+            "leg-upper-l": [
+              0,
+              1,
+              40
+            ],
+            "leg-lower-l": [
+              -62.99,
+              -21.93,
+              -28
+            ],
+            "foot-l": [
+              -28.25,
+              -30.59,
+              0
+            ],
+            "foot-gear-l": [
+              -28.25,
+              -30.59,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              1,
+              -38
+            ],
+            "leg-lower-r": [
+              60.33,
+              -19.77,
+              28
+            ],
+            "foot-r": [
+              25.59,
+              -28.44,
+              0
+            ],
+            "foot-gear-r": [
+              25.59,
+              -28.44,
+              0
+            ],
+            "neck": [
+              13.2,
+              2.15,
+              7.5
+            ],
+            "torso": [
+              0,
+              1,
+              10
+            ],
+            "head": [
+              26.39,
+              3.31,
+              5
+            ],
+            "hair": [
+              26.39,
+              3.31,
+              5
+            ],
+            "head-shell": [
+              26.39,
+              3.31,
+              5
+            ],
+            "face": [
+              26.39,
+              3.31,
+              5
+            ],
+            "head-covering": [
+              26.39,
+              3.31,
+              5
+            ],
+            "hat": [
+              26.39,
+              3.31,
+              5
+            ],
+            "feature": [
+              26.39,
+              3.31,
+              5
+            ],
+            "arm-upper-r": [
+              20.75,
+              -0.16,
+              -20
+            ],
+            "arm-lower-r": [
+              44.01,
+              -4.26,
+              -26
+            ],
+            "hand-r": [
+              73.82,
+              -11.14,
+              -26
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "The rolling stance with the arms brought in. Same feet, same board, less counterweight - and not a stand, because this seawall's `glide` is 0.62, the highest in the game, and a released input coasts."
+    },
+    "skateboard/walk": {
+      "loop": "loop",
+      "durationMs": 1500,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              1,
+              0
+            ],
+            "arm-upper-l": [
+              31.87,
+              10.26,
+              28
+            ],
+            "arm-lower-l": [
+              -0.06,
+              2.3,
+              34
+            ],
+            "hand-l": [
+              -38.08,
+              -9.33,
+              34
+            ],
+            "leg-upper-l": [
+              0,
+              1,
+              42
+            ],
+            "leg-lower-l": [
+              -65.57,
+              -24.17,
+              -30
+            ],
+            "foot-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "foot-gear-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              1,
+              -40
+            ],
+            "leg-lower-r": [
+              62.99,
+              -21.93,
+              30
+            ],
+            "foot-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "foot-gear-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "neck": [
+              20.95,
+              3.94,
+              12
+            ],
+            "torso": [
+              0,
+              1,
+              16
+            ],
+            "head": [
+              41.9,
+              6.89,
+              8
+            ],
+            "hair": [
+              41.9,
+              6.89,
+              8
+            ],
+            "head-shell": [
+              41.9,
+              6.89,
+              8
+            ],
+            "face": [
+              41.9,
+              6.89,
+              8
+            ],
+            "head-covering": [
+              41.9,
+              6.89,
+              8
+            ],
+            "hat": [
+              41.9,
+              6.89,
+              8
+            ],
+            "feature": [
+              41.9,
+              6.89,
+              8
+            ],
+            "arm-upper-r": [
+              33.18,
+              0.89,
+              -32
+            ],
+            "arm-lower-r": [
+              69.22,
+              -9.45,
+              -42
+            ],
+            "hand-r": [
+              114.72,
+              -26.91,
+              -42
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              -2,
+              0
+            ],
+            "arm-upper-l": [
+              35.63,
+              9.03,
+              32
+            ],
+            "arm-lower-l": [
+              -0.4,
+              -1.3,
+              38
+            ],
+            "hand-l": [
+              -42.27,
+              -15.72,
+              38
+            ],
+            "leg-upper-l": [
+              0,
+              -2,
+              44
+            ],
+            "leg-lower-l": [
+              -68.08,
+              -29.5,
+              -32
+            ],
+            "foot-l": [
+              -28.86,
+              -40.75,
+              0
+            ],
+            "foot-gear-l": [
+              -28.86,
+              -40.75,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -2,
+              -43
+            ],
+            "leg-lower-r": [
+              66.84,
+              -28.33,
+              33
+            ],
+            "foot-r": [
+              26.53,
+              -40.27,
+              0
+            ],
+            "foot-gear-r": [
+              26.53,
+              -40.27,
+              0
+            ],
+            "neck": [
+              23.49,
+              1.72,
+              13.5
+            ],
+            "torso": [
+              0,
+              -2,
+              18
+            ],
+            "head": [
+              46.97,
+              5.44,
+              9
+            ],
+            "hair": [
+              46.97,
+              5.44,
+              9
+            ],
+            "head-shell": [
+              46.97,
+              5.44,
+              9
+            ],
+            "face": [
+              46.97,
+              5.44,
+              9
+            ],
+            "head-covering": [
+              46.97,
+              5.44,
+              9
+            ],
+            "hat": [
+              46.97,
+              5.44,
+              9
+            ],
+            "feature": [
+              46.97,
+              5.44,
+              9
+            ],
+            "arm-upper-r": [
+              37.3,
+              -1.48,
+              -36
+            ],
+            "arm-lower-r": [
+              77.27,
+              -14.46,
+              -46
+            ],
+            "hand-r": [
+              126.18,
+              -35.23,
+              -46
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              1,
+              0
+            ],
+            "arm-upper-l": [
+              31.87,
+              10.26,
+              28
+            ],
+            "arm-lower-l": [
+              -0.06,
+              2.3,
+              34
+            ],
+            "hand-l": [
+              -38.08,
+              -9.33,
+              34
+            ],
+            "leg-upper-l": [
+              0,
+              1,
+              42
+            ],
+            "leg-lower-l": [
+              -65.57,
+              -24.17,
+              -30
+            ],
+            "foot-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "foot-gear-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              1,
+              -40
+            ],
+            "leg-lower-r": [
+              62.99,
+              -21.93,
+              30
+            ],
+            "foot-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "foot-gear-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "neck": [
+              20.95,
+              3.94,
+              12
+            ],
+            "torso": [
+              0,
+              1,
+              16
+            ],
+            "head": [
+              41.9,
+              6.89,
+              8
+            ],
+            "hair": [
+              41.9,
+              6.89,
+              8
+            ],
+            "head-shell": [
+              41.9,
+              6.89,
+              8
+            ],
+            "face": [
+              41.9,
+              6.89,
+              8
+            ],
+            "head-covering": [
+              41.9,
+              6.89,
+              8
+            ],
+            "hat": [
+              41.9,
+              6.89,
+              8
+            ],
+            "feature": [
+              41.9,
+              6.89,
+              8
+            ],
+            "arm-upper-r": [
+              33.18,
+              0.89,
+              -32
+            ],
+            "arm-lower-r": [
+              69.22,
+              -9.45,
+              -42
+            ],
+            "hand-r": [
+              114.72,
+              -26.91,
+              -42
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "Both boots on the deck, 31 px apart, knees bent 40 degrees - the crouch is what makes a board read as ridden rather than stood on - and the arms held out fore and aft as a counterweight. The body does not drop even though the deck is 32 px above the ground: the knee bend raises the ankles by exactly that, which is the same arithmetic a real rider's legs do."
+    },
+    "skateboard/run": {
+      "loop": "loop",
+      "durationMs": 1125,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              1,
+              0
+            ],
+            "arm-upper-l": [
+              39.33,
+              13.93,
+              28
+            ],
+            "arm-lower-l": [
+              7.41,
+              5.97,
+              34
+            ],
+            "hand-l": [
+              -30.62,
+              -5.65,
+              34
+            ],
+            "leg-upper-l": [
+              0,
+              1,
+              42
+            ],
+            "leg-lower-l": [
+              -65.57,
+              -24.17,
+              -30
+            ],
+            "foot-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "foot-gear-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              1,
+              -40
+            ],
+            "leg-lower-r": [
+              62.99,
+              -21.93,
+              30
+            ],
+            "foot-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "foot-gear-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "neck": [
+              25.99,
+              5.58,
+              14.8
+            ],
+            "torso": [
+              0,
+              1,
+              20
+            ],
+            "head": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "hair": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "head-shell": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "face": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "head-covering": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "hat": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "feature": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "arm-upper-r": [
+              41.38,
+              2.3,
+              -32
+            ],
+            "arm-lower-r": [
+              77.42,
+              -8.03,
+              -42
+            ],
+            "hand-r": [
+              122.92,
+              -25.5,
+              -42
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              -2,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              12.96,
+              32
+            ],
+            "arm-lower-l": [
+              6.93,
+              2.63,
+              38
+            ],
+            "hand-l": [
+              -34.93,
+              -11.79,
+              38
+            ],
+            "leg-upper-l": [
+              0,
+              -2,
+              44
+            ],
+            "leg-lower-l": [
+              -68.08,
+              -29.5,
+              -32
+            ],
+            "foot-l": [
+              -28.86,
+              -40.75,
+              0
+            ],
+            "foot-gear-l": [
+              -28.86,
+              -40.75,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              -2,
+              -43
+            ],
+            "leg-lower-r": [
+              66.84,
+              -28.33,
+              33
+            ],
+            "foot-r": [
+              26.53,
+              -40.27,
+              0
+            ],
+            "foot-gear-r": [
+              26.53,
+              -40.27,
+              0
+            ],
+            "neck": [
+              28.47,
+              3.53,
+              16.3
+            ],
+            "torso": [
+              0,
+              -2,
+              22
+            ],
+            "head": [
+              56.94,
+              9.07,
+              10.6
+            ],
+            "hair": [
+              56.94,
+              9.07,
+              10.6
+            ],
+            "head-shell": [
+              56.94,
+              9.07,
+              10.6
+            ],
+            "face": [
+              56.94,
+              9.07,
+              10.6
+            ],
+            "head-covering": [
+              56.94,
+              9.07,
+              10.6
+            ],
+            "hat": [
+              56.94,
+              9.07,
+              10.6
+            ],
+            "feature": [
+              56.94,
+              9.07,
+              10.6
+            ],
+            "arm-upper-r": [
+              45.44,
+              0.22,
+              -36
+            ],
+            "arm-lower-r": [
+              85.41,
+              -12.76,
+              -46
+            ],
+            "hand-r": [
+              134.33,
+              -33.53,
+              -46
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              -9,
+              0
+            ],
+            "tail": [
+              0,
+              1,
+              0
+            ],
+            "arm-upper-l": [
+              39.33,
+              13.93,
+              28
+            ],
+            "arm-lower-l": [
+              7.41,
+              5.97,
+              34
+            ],
+            "hand-l": [
+              -30.62,
+              -5.65,
+              34
+            ],
+            "leg-upper-l": [
+              0,
+              1,
+              42
+            ],
+            "leg-lower-l": [
+              -65.57,
+              -24.17,
+              -30
+            ],
+            "foot-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "foot-gear-l": [
+              -28.57,
+              -34.09,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              1,
+              -40
+            ],
+            "leg-lower-r": [
+              62.99,
+              -21.93,
+              30
+            ],
+            "foot-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "foot-gear-r": [
+              25.99,
+              -31.84,
+              0
+            ],
+            "neck": [
+              25.99,
+              5.58,
+              14.8
+            ],
+            "torso": [
+              0,
+              1,
+              20
+            ],
+            "head": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "hair": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "head-shell": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "face": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "head-covering": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "hat": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "feature": [
+              51.99,
+              10.17,
+              9.6
+            ],
+            "arm-upper-r": [
+              41.38,
+              2.3,
+              -32
+            ],
+            "arm-lower-r": [
+              77.42,
+              -8.03,
+              -42
+            ],
+            "hand-r": [
+              122.92,
+              -25.5,
+              -42
+            ],
+            "mount-fore": [
+              0,
+              -9,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "The same stance at 0.75x duration, four degrees lower over the board."
+    },
+    "bike/idle": {
+      "loop": "loop",
+      "durationMs": 2400,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              38.96,
+              10.2
+            ],
+            "arm-lower-l": [
+              30.92,
+              37.89,
+              -45
+            ],
+            "hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -20.4
+            ],
+            "leg-lower-l": [
+              34.16,
+              17.85,
+              77.4
+            ],
+            "foot-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "foot-gear-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -57.3
+            ],
+            "leg-lower-r": [
+              82.47,
+              -21.06,
+              37
+            ],
+            "foot-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "foot-gear-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "neck": [
+              28.47,
+              29.53,
+              15
+            ],
+            "torso": [
+              0,
+              24,
+              22
+            ],
+            "head": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hair": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              35.07,
+              8
+            ],
+            "face": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hat": [
+              56.94,
+              35.07,
+              8
+            ],
+            "feature": [
+              56.94,
+              35.07,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              26.22,
+              -1
+            ],
+            "arm-lower-r": [
+              46.63,
+              26.21,
+              -28.5
+            ],
+            "hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              22.4,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              37.36,
+              9
+            ],
+            "arm-lower-l": [
+              32.33,
+              36.52,
+              -43.3
+            ],
+            "hand-l": [
+              78.96,
+              18.01,
+              -43.3
+            ],
+            "leg-upper-l": [
+              0,
+              22.4,
+              -20.2
+            ],
+            "leg-lower-l": [
+              33.84,
+              16.37,
+              76.2
+            ],
+            "foot-l": [
+              -38.02,
+              -39.98,
+              0
+            ],
+            "foot-gear-l": [
+              -38.02,
+              -39.98,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              22.4,
+              -56.6
+            ],
+            "leg-lower-r": [
+              81.82,
+              -21.65,
+              36.3
+            ],
+            "foot-r": [
+              38.01,
+              -36.01,
+              0
+            ],
+            "foot-gear-r": [
+              38.01,
+              -36.01,
+              0
+            ],
+            "neck": [
+              28.47,
+              27.93,
+              15
+            ],
+            "torso": [
+              0,
+              22.4,
+              22
+            ],
+            "head": [
+              56.94,
+              33.47,
+              8
+            ],
+            "hair": [
+              56.94,
+              33.47,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              33.47,
+              8
+            ],
+            "face": [
+              56.94,
+              33.47,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              33.47,
+              8
+            ],
+            "hat": [
+              56.94,
+              33.47,
+              8
+            ],
+            "feature": [
+              56.94,
+              33.47,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              24.62,
+              -3.9
+            ],
+            "arm-lower-r": [
+              50.07,
+              24.47,
+              -25.2
+            ],
+            "hand-r": [
+              79.02,
+              17.99,
+              -25.2
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              38.96,
+              10.2
+            ],
+            "arm-lower-l": [
+              30.92,
+              37.89,
+              -45
+            ],
+            "hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -20.4
+            ],
+            "leg-lower-l": [
+              34.16,
+              17.85,
+              77.4
+            ],
+            "foot-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "foot-gear-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -57.3
+            ],
+            "leg-lower-r": [
+              82.47,
+              -21.06,
+              37
+            ],
+            "foot-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "foot-gear-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "neck": [
+              28.47,
+              29.53,
+              15
+            ],
+            "torso": [
+              0,
+              24,
+              22
+            ],
+            "head": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hair": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              35.07,
+              8
+            ],
+            "face": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hat": [
+              56.94,
+              35.07,
+              8
+            ],
+            "feature": [
+              56.94,
+              35.07,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              26.22,
+              -1
+            ],
+            "arm-lower-r": [
+              46.63,
+              26.21,
+              -28.5
+            ],
+            "hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "Stopped, still astride, feet still on the pedals. A cyclist who stops does not stand beside the bicycle unless the level dismounts them, which is what setting the mode back to `walk` does."
+    },
+    "bike/walk": {
+      "loop": "loop",
+      "durationMs": 900,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              38.96,
+              10.2
+            ],
+            "arm-lower-l": [
+              30.92,
+              37.89,
+              -45
+            ],
+            "hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -20.4
+            ],
+            "leg-lower-l": [
+              34.16,
+              17.85,
+              77.4
+            ],
+            "foot-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "foot-gear-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -57.3
+            ],
+            "leg-lower-r": [
+              82.47,
+              -21.06,
+              37
+            ],
+            "foot-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "foot-gear-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "neck": [
+              28.47,
+              29.53,
+              15
+            ],
+            "torso": [
+              0,
+              24,
+              22
+            ],
+            "head": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hair": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              35.07,
+              8
+            ],
+            "face": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hat": [
+              56.94,
+              35.07,
+              8
+            ],
+            "feature": [
+              56.94,
+              35.07,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              26.22,
+              -1
+            ],
+            "arm-lower-r": [
+              46.63,
+              26.21,
+              -28.5
+            ],
+            "hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.25,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              38.96,
+              10.2
+            ],
+            "arm-lower-l": [
+              30.92,
+              37.89,
+              -45
+            ],
+            "hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -27.4
+            ],
+            "leg-lower-l": [
+              45.1,
+              13.01,
+              50.6
+            ],
+            "foot-l": [
+              -12.08,
+              -14.02,
+              0
+            ],
+            "foot-gear-l": [
+              -12.08,
+              -14.02,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -54.7
+            ],
+            "leg-lower-r": [
+              79.98,
+              -17.37,
+              66.7
+            ],
+            "foot-r": [
+              12.02,
+              -62.1,
+              0
+            ],
+            "foot-gear-r": [
+              12.02,
+              -62.1,
+              0
+            ],
+            "neck": [
+              28.47,
+              29.53,
+              15
+            ],
+            "torso": [
+              0,
+              24,
+              22
+            ],
+            "head": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hair": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              35.07,
+              8
+            ],
+            "face": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hat": [
+              56.94,
+              35.07,
+              8
+            ],
+            "feature": [
+              56.94,
+              35.07,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              26.22,
+              -1
+            ],
+            "arm-lower-r": [
+              46.63,
+              26.21,
+              -28.5
+            ],
+            "hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              38.96,
+              10.2
+            ],
+            "arm-lower-l": [
+              30.92,
+              37.89,
+              -45
+            ],
+            "hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -48.9
+            ],
+            "leg-lower-l": [
+              73.85,
+              -9.58,
+              53.9
+            ],
+            "foot-l": [
+              14.06,
+              -39.98,
+              0
+            ],
+            "foot-gear-l": [
+              14.06,
+              -39.98,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -33.2
+            ],
+            "leg-lower-r": [
+              53.66,
+              8,
+              66.1
+            ],
+            "foot-r": [
+              -13.99,
+              -36.02,
+              0
+            ],
+            "foot-gear-r": [
+              -13.99,
+              -36.02,
+              0
+            ],
+            "neck": [
+              28.47,
+              29.53,
+              15
+            ],
+            "torso": [
+              0,
+              24,
+              22
+            ],
+            "head": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hair": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              35.07,
+              8
+            ],
+            "face": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hat": [
+              56.94,
+              35.07,
+              8
+            ],
+            "feature": [
+              56.94,
+              35.07,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              26.22,
+              -1
+            ],
+            "arm-lower-r": [
+              46.63,
+              26.21,
+              -28.5
+            ],
+            "hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.75,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              38.96,
+              10.2
+            ],
+            "arm-lower-l": [
+              30.92,
+              37.89,
+              -45
+            ],
+            "hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -38.8
+            ],
+            "leg-lower-l": [
+              61.41,
+              2.38,
+              82.5
+            ],
+            "foot-l": [
+              -11.96,
+              -61.97,
+              0
+            ],
+            "foot-gear-l": [
+              -11.96,
+              -61.97,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -37.7
+            ],
+            "leg-lower-r": [
+              59.93,
+              3.54,
+              40.3
+            ],
+            "foot-r": [
+              12.07,
+              -14.02,
+              0
+            ],
+            "foot-gear-r": [
+              12.07,
+              -14.02,
+              0
+            ],
+            "neck": [
+              28.47,
+              29.53,
+              15
+            ],
+            "torso": [
+              0,
+              24,
+              22
+            ],
+            "head": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hair": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              35.07,
+              8
+            ],
+            "face": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hat": [
+              56.94,
+              35.07,
+              8
+            ],
+            "feature": [
+              56.94,
+              35.07,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              26.22,
+              -1
+            ],
+            "arm-lower-r": [
+              46.63,
+              26.21,
+              -28.5
+            ],
+            "hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              42.97,
+              38.96,
+              10.2
+            ],
+            "arm-lower-l": [
+              30.92,
+              37.89,
+              -45
+            ],
+            "hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -20.4
+            ],
+            "leg-lower-l": [
+              34.16,
+              17.85,
+              77.4
+            ],
+            "foot-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "foot-gear-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -57.3
+            ],
+            "leg-lower-r": [
+              82.47,
+              -21.06,
+              37
+            ],
+            "foot-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "foot-gear-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "neck": [
+              28.47,
+              29.53,
+              15
+            ],
+            "torso": [
+              0,
+              24,
+              22
+            ],
+            "head": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hair": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-shell": [
+              56.94,
+              35.07,
+              8
+            ],
+            "face": [
+              56.94,
+              35.07,
+              8
+            ],
+            "head-covering": [
+              56.94,
+              35.07,
+              8
+            ],
+            "hat": [
+              56.94,
+              35.07,
+              8
+            ],
+            "feature": [
+              56.94,
+              35.07,
+              8
+            ],
+            "arm-upper-r": [
+              45.44,
+              26.22,
+              -1
+            ],
+            "arm-lower-r": [
+              46.63,
+              26.21,
+              -28.5
+            ],
+            "hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "One pedal revolution per 900 ms cycle, the four keys at the quarter positions. Hands are solved to the bar and feet to the pedals by two-link inverse kinematics rather than by eye, because a hand 6 px off a handlebar is the one error this pose cannot survive - invisible in the SVG, obvious in the render. The torso folds 22 degrees over the bar; more than that and the arms cannot reach it - 68 + 68 px of arm from a shoulder carried forward by the fold is 136 px, and the bar is 132 px away at this angle. That number is the reason this rider is not drawn in a racing crouch."
+    },
+    "bike/run": {
+      "loop": "loop",
+      "durationMs": 612,
+      "keys": [
+        {
+          "t": 0,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              48.28,
+              42.24,
+              16.2
+            ],
+            "arm-lower-l": [
+              29.3,
+              39.54,
+              -46.9
+            ],
+            "hand-l": [
+              78.96,
+              18,
+              -46.9
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -20.4
+            ],
+            "leg-lower-l": [
+              34.16,
+              17.85,
+              77.4
+            ],
+            "foot-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "foot-gear-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -57.3
+            ],
+            "leg-lower-r": [
+              82.47,
+              -21.06,
+              37
+            ],
+            "foot-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "foot-gear-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "neck": [
+              32.12,
+              31.12,
+              17.1
+            ],
+            "torso": [
+              0,
+              24,
+              25
+            ],
+            "head": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hair": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-shell": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "face": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-covering": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hat": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "feature": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "arm-upper-r": [
+              51.46,
+              27.87,
+              6
+            ],
+            "arm-lower-r": [
+              44.35,
+              27.5,
+              -30.6
+            ],
+            "hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.25,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              48.28,
+              42.24,
+              16.2
+            ],
+            "arm-lower-l": [
+              29.3,
+              39.54,
+              -46.9
+            ],
+            "hand-l": [
+              78.96,
+              18,
+              -46.9
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -27.4
+            ],
+            "leg-lower-l": [
+              45.1,
+              13.01,
+              50.6
+            ],
+            "foot-l": [
+              -12.08,
+              -14.02,
+              0
+            ],
+            "foot-gear-l": [
+              -12.08,
+              -14.02,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -54.7
+            ],
+            "leg-lower-r": [
+              79.98,
+              -17.37,
+              66.7
+            ],
+            "foot-r": [
+              12.02,
+              -62.1,
+              0
+            ],
+            "foot-gear-r": [
+              12.02,
+              -62.1,
+              0
+            ],
+            "neck": [
+              32.12,
+              31.12,
+              17.1
+            ],
+            "torso": [
+              0,
+              24,
+              25
+            ],
+            "head": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hair": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-shell": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "face": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-covering": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hat": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "feature": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "arm-upper-r": [
+              51.46,
+              27.87,
+              6
+            ],
+            "arm-lower-r": [
+              44.35,
+              27.5,
+              -30.6
+            ],
+            "hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.5,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              48.28,
+              42.24,
+              16.2
+            ],
+            "arm-lower-l": [
+              29.3,
+              39.54,
+              -46.9
+            ],
+            "hand-l": [
+              78.96,
+              18,
+              -46.9
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -48.9
+            ],
+            "leg-lower-l": [
+              73.85,
+              -9.58,
+              53.9
+            ],
+            "foot-l": [
+              14.06,
+              -39.98,
+              0
+            ],
+            "foot-gear-l": [
+              14.06,
+              -39.98,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -33.2
+            ],
+            "leg-lower-r": [
+              53.66,
+              8,
+              66.1
+            ],
+            "foot-r": [
+              -13.99,
+              -36.02,
+              0
+            ],
+            "foot-gear-r": [
+              -13.99,
+              -36.02,
+              0
+            ],
+            "neck": [
+              32.12,
+              31.12,
+              17.1
+            ],
+            "torso": [
+              0,
+              24,
+              25
+            ],
+            "head": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hair": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-shell": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "face": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-covering": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hat": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "feature": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "arm-upper-r": [
+              51.46,
+              27.87,
+              6
+            ],
+            "arm-lower-r": [
+              44.35,
+              27.5,
+              -30.6
+            ],
+            "hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0.75,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              48.28,
+              42.24,
+              16.2
+            ],
+            "arm-lower-l": [
+              29.3,
+              39.54,
+              -46.9
+            ],
+            "hand-l": [
+              78.96,
+              18,
+              -46.9
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -38.8
+            ],
+            "leg-lower-l": [
+              61.41,
+              2.38,
+              82.5
+            ],
+            "foot-l": [
+              -11.96,
+              -61.97,
+              0
+            ],
+            "foot-gear-l": [
+              -11.96,
+              -61.97,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -37.7
+            ],
+            "leg-lower-r": [
+              59.93,
+              3.54,
+              40.3
+            ],
+            "foot-r": [
+              12.07,
+              -14.02,
+              0
+            ],
+            "foot-gear-r": [
+              12.07,
+              -14.02,
+              0
+            ],
+            "neck": [
+              32.12,
+              31.12,
+              17.1
+            ],
+            "torso": [
+              0,
+              24,
+              25
+            ],
+            "head": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hair": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-shell": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "face": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-covering": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hat": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "feature": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "arm-upper-r": [
+              51.46,
+              27.87,
+              6
+            ],
+            "arm-lower-r": [
+              44.35,
+              27.5,
+              -30.6
+            ],
+            "hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "t": 1,
+          "parts": {
+            "ground-shadow": [
+              0,
+              0,
+              0
+            ],
+            "mount-deck": [
+              0,
+              0,
+              0
+            ],
+            "tail": [
+              0,
+              24,
+              0
+            ],
+            "arm-upper-l": [
+              48.28,
+              42.24,
+              16.2
+            ],
+            "arm-lower-l": [
+              29.3,
+              39.54,
+              -46.9
+            ],
+            "hand-l": [
+              78.96,
+              18,
+              -46.9
+            ],
+            "leg-upper-l": [
+              0,
+              24,
+              -20.4
+            ],
+            "leg-lower-l": [
+              34.16,
+              17.85,
+              77.4
+            ],
+            "foot-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "foot-gear-l": [
+              -38.06,
+              -40,
+              0
+            ],
+            "leg-upper-r": [
+              0,
+              24,
+              -57.3
+            ],
+            "leg-lower-r": [
+              82.47,
+              -21.06,
+              37
+            ],
+            "foot-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "foot-gear-r": [
+              37.93,
+              -35.96,
+              0
+            ],
+            "neck": [
+              32.12,
+              31.12,
+              17.1
+            ],
+            "torso": [
+              0,
+              24,
+              25
+            ],
+            "head": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hair": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-shell": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "face": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "head-covering": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "hat": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "feature": [
+              64.24,
+              38.24,
+              9.2
+            ],
+            "arm-upper-r": [
+              51.46,
+              27.87,
+              6
+            ],
+            "arm-lower-r": [
+              44.35,
+              27.5,
+              -30.6
+            ],
+            "hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
+            "mount-fore": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "note": "The same revolution at 0.68x duration and three more degrees of fold, which is still inside the arm's reach."
     }
   },
   "frames": {
@@ -3885,6 +10714,20 @@
       "y": 64,
       "w": 66,
       "h": 23
+    },
+    "character-foot-gear-l-skate": {
+      "source": "src/svg/shared/character/foot-gear-l-skate.svg",
+      "x": 111,
+      "y": 445,
+      "w": 78,
+      "h": 25
+    },
+    "character-foot-gear-r-skate": {
+      "source": "src/svg/shared/character/foot-gear-r-skate.svg",
+      "x": 73,
+      "y": 445,
+      "w": 98,
+      "h": 25
     },
     "character-foot-l-beaver": {
       "source": "src/svg/shared/character/foot-l-beaver.svg",
@@ -4200,6 +11043,34 @@
       "y": 247,
       "w": 46,
       "h": 140
+    },
+    "character-mount-deck-bike": {
+      "source": "src/svg/shared/character/mount-deck-bike.svg",
+      "x": 0,
+      "y": 296,
+      "w": 240,
+      "h": 176
+    },
+    "character-mount-deck-skateboard": {
+      "source": "src/svg/shared/character/mount-deck-skateboard.svg",
+      "x": 42,
+      "y": 429,
+      "w": 152,
+      "h": 42
+    },
+    "character-mount-deck-toboggan": {
+      "source": "src/svg/shared/character/mount-deck-toboggan.svg",
+      "x": 12,
+      "y": 432,
+      "w": 196,
+      "h": 36
+    },
+    "character-mount-fore-toboggan": {
+      "source": "src/svg/shared/character/mount-fore-toboggan.svg",
+      "x": 171,
+      "y": 400,
+      "w": 66,
+      "h": 66
     },
     "character-neck-skin-1": {
       "source": "src/svg/shared/character/neck-skin-1.svg",
