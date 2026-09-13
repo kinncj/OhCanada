@@ -1,0 +1,179 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "the-north-sternwheeler",
+  "levelId": "the-north",
+  "giver": "yukon-river-sternwheeler",
+  "title": {
+    "en": "A Stop on the Gravel Bar",
+    "fr": "Une halte sur la plage de galets"
+  },
+  "summary": {
+    "en": "Stop at the vessel on the stones and read what this place has to say. Then answer three questions about Canada's regions.",
+    "fr": "Arrêtez-vous au bateau posé sur les galets et lisez ce que ce lieu a à vous apprendre. Répondez ensuite à trois questions sur les régions du Canada."
+  },
+  "declinedLine": {
+    "speaker": "yukon-river-sternwheeler",
+    "text": {
+      "en": "The vessel is staying put on the stones. Come back to it when you like.",
+      "fr": "Le bateau reste posé sur les galets. Revenez-y quand vous voudrez."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "yukon-river-sternwheeler",
+    "text": {
+      "en": "Three questions about Canada's regions are still unanswered here.",
+      "fr": "Trois questions sur les régions du Canada attendent encore ici."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "yukon-river-sternwheeler",
+    "text": {
+      "en": "No mountain in Canada rises higher than Mount Logan, which stands in Yukon.",
+      "fr": "Aucune montagne du Canada ne s'élève plus haut que le mont Logan, qui se dresse au Yukon."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 104,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-13T00:00:00Z",
+        "volatile": false,
+        "quote": "Mount Logan, located in the Yukon, is the highest mountain in Canada."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "yukon-river-sternwheeler",
+    "text": {
+      "en": "You walked the gravel bar and answered three questions about Canada's regions.",
+      "fr": "Vous avez marché sur la plage de galets et répondu à trois questions sur les régions du Canada."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "steps": [
+    {
+      "id": "stop-at-the-vessel",
+      "kind": "talk",
+      "targetId": "yukon-river-sternwheeler",
+      "prompt": {
+        "en": "Stop at the vessel",
+        "fr": "Arrêtez-vous au bateau"
+      },
+      "dialogue": [
+        {
+          "speaker": "yukon-river-sternwheeler",
+          "text": {
+            "en": "This vessel rests on the stones of the bar, above the water. Two things about this part of the country come first, then three questions.",
+            "fr": "Ce bateau repose sur les galets, au-dessus de l'eau. D'abord deux choses sur cette partie du pays, puis trois questions."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "yukon-river-sternwheeler",
+          "text": {
+            "en": "The territories of Canada's north hold one third of all the land in the country.",
+            "fr": "Les territoires du Nord canadien occupent le tiers de toutes les terres du pays."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 103,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-13T00:00:00Z",
+              "volatile": false,
+              "quote": "The Northwest Territories, Nunavut and Yukon contain one-third of Canada’s land mass"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "yukon-river-sternwheeler",
+          "text": {
+            "en": "A railway from the Alaska coast reached Whitehorse, the capital of this territory, in 1900.",
+            "fr": "Un chemin de fer venu de la côte de l'Alaska a atteint Whitehorse, la capitale de ce territoire, en 1900."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 103,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-13T00:00:00Z",
+              "volatile": false,
+              "quote": "The White Pass and Yukon Railway opened from Skagway in neighbouring Alaska to the territorial capital, Whitehorse in 1900"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "yukon-river-sternwheeler",
+          "text": {
+            "en": "Three questions about Canada's regions come next. Nothing here is timed.",
+            "fr": "Trois questions sur les régions du Canada viennent ensuite. Rien ici n'est chronométré."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-bar",
+      "kind": "answer",
+      "targetId": "regions",
+      "subject": "regions",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions",
+        "fr": "Répondez à 3 questions"
+      }
+    }
+  ]
+}

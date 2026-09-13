@@ -1,0 +1,179 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "peggys-cove-point-light",
+  "levelId": "peggys-cove",
+  "giver": "peggys-point-light",
+  "title": {
+    "en": "A Stop on the Bare Rock",
+    "fr": "Une halte sur la roche nue"
+  },
+  "summary": {
+    "en": "This place has something to tell you. Stop, read it, then answer three questions about who Canadians are.",
+    "fr": "Ce lieu a quelque chose à vous apprendre. Arrêtez-vous, lisez, puis répondez à trois questions sur qui sont les Canadiens."
+  },
+  "declinedLine": {
+    "speaker": "peggys-point-light",
+    "text": {
+      "en": "This place is not going anywhere. Come back whenever you like.",
+      "fr": "Ce lieu ne bouge pas d'ici. Revenez quand vous voudrez."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "peggys-point-light",
+    "text": {
+      "en": "There are still three questions here, about who Canadians are.",
+      "fr": "Il reste ici trois questions sur qui sont les Canadiens."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "peggys-point-light",
+    "text": {
+      "en": "Across Canada, people of many backgrounds and many faiths live and work peacefully side by side, proud to be Canadians.",
+      "fr": "Partout au Canada, des personnes d'origines et de croyances diverses vivent et travaillent paisiblement côte à côte, fières d'être canadiennes."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "Who We Are",
+        "page": 21,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-13T00:00:00Z",
+        "volatile": false,
+        "quote": "Many ethnic and religious groups live and work in peace as proud Canadians."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    }
+  },
+  "doneLine": {
+    "speaker": "peggys-point-light",
+    "text": {
+      "en": "You walked the bare rock and answered three questions about who Canadians are.",
+      "fr": "Vous avez marché sur la roche nue et répondu à trois questions sur qui sont les Canadiens."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "steps": [
+    {
+      "id": "stop-at-the-light",
+      "kind": "talk",
+      "targetId": "peggys-point-light",
+      "prompt": {
+        "en": "Stop here and read",
+        "fr": "Arrêtez-vous ici et lisez"
+      },
+      "dialogue": [
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "You have reached the light on the bare rock. Two things about this country come first, then three questions.",
+            "fr": "Vous voici au phare, sur la roche nue. D'abord deux choses sur ce pays, puis trois questions."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "Canada has two official languages, English and French. The law says the federal government must serve you in either one, anywhere in the country.",
+            "fr": "Le Canada a deux langues officielles, l'anglais et le français. La loi oblige le gouvernement fédéral à vous servir dans l'une ou l'autre, partout au pays."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Who We Are",
+              "page": 19,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-13T00:00:00Z",
+              "volatile": false,
+              "quote": "English and French define the reality of day-to-day life for most people and are the country’s official languages. The federal government is required by law to provide services throughout Canada in English and French."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "Just one province has both of them as its own official languages. That province is New Brunswick.",
+            "fr": "Une seule province a les deux comme langues officielles. Cette province, c'est le Nouveau-Brunswick."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Who We Are",
+              "page": 19,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-13T00:00:00Z",
+              "volatile": false,
+              "quote": "New Brunswick is the only officially bilingual province."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        },
+        {
+          "speaker": "peggys-point-light",
+          "text": {
+            "en": "Three questions follow, about who Canadians are. Take as long as you need.",
+            "fr": "Trois questions suivent, sur qui sont les Canadiens. Prenez tout le temps qu'il vous faut."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-light",
+      "kind": "answer",
+      "targetId": "who-we-are",
+      "subject": "who-we-are",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions",
+        "fr": "Répondez à 3 questions"
+      }
+    }
+  ]
+}

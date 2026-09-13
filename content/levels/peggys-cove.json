@@ -185,7 +185,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "peggys-cove-point-light"
+  ],
   "pois": [
     {
       "id": "granite-shore",
@@ -259,7 +261,8 @@
         "y": 1280
       },
       "artKey": "peggys-cove-landmark-lighthouse",
-      "radiusPx": 300
+      "radiusPx": 300,
+      "questId": "peggys-cove-point-light"
     },
     {
       "id": "fish-store",

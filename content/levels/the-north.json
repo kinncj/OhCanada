@@ -185,7 +185,9 @@
       "labelKey": "locomotion.walk.label"
     }
   ],
-  "quests": [],
+  "quests": [
+    "the-north-sternwheeler"
+  ],
   "pois": [
     {
       "id": "yukon-river-sternwheeler",
@@ -222,7 +224,8 @@
         "y": 1280
       },
       "artKey": "the-north-landmark-sternwheeler",
-      "radiusPx": 340
+      "radiusPx": 340,
+      "questId": "the-north-sternwheeler"
     }
   ],
   "characters": [],
