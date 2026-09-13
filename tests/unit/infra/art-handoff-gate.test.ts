@@ -191,6 +191,10 @@ const RIG = {
 interface FixtureOptions {
   readonly subjects?: unknown[];
   readonly sources?: Readonly<Record<string, string>>;
+  /** A rig other than the minimum one, for cases about what the rig declares. */
+  readonly rig?: unknown;
+  /** `content/levels/<name>.json`, for cases about what a level document says. */
+  readonly levels?: Readonly<Record<string, unknown>>;
 }
 
 const PEACE_TOWER = {
@@ -233,7 +237,14 @@ const fixture = (name: string, options: FixtureOptions = {}): string => {
     join(root, 'assets', 'refs', 'references.json'),
     JSON.stringify({ subjects: options.subjects ?? [PEACE_TOWER, UNRENDERED] }, null, 2),
   );
-  writeFileSync(join(root, 'assets', 'style', 'rig-contract.json'), JSON.stringify(RIG, null, 2));
+  writeFileSync(
+    join(root, 'assets', 'style', 'rig-contract.json'),
+    JSON.stringify(options.rig ?? RIG, null, 2),
+  );
+  for (const [name, document] of Object.entries(options.levels ?? {})) {
+    mkdirSync(join(root, 'content', 'levels'), { recursive: true });
+    writeFileSync(join(root, 'content', 'levels', `${name}.json`), JSON.stringify(document, null, 2));
+  }
   return root;
 };
 
@@ -314,7 +325,32 @@ interface ReferenceSubject {
   readonly id: string;
   readonly renders: readonly string[];
   readonly expectedBlindAnswer: readonly string[];
+  readonly designSheet?: string;
+  readonly mustBeRight?: readonly { feature: string }[];
 }
+
+/**
+ * A subject whose picture is composed from the RIG rather than from files.
+ *
+ * DERIVED FROM THE CONTRACT AND NOT FROM THE HARNESS, which is the whole value
+ * of it: asking `scripts/lib/art-handoff.mjs` which subjects it treats as
+ * rig-driven would be asking the implementation to confirm itself. The contract
+ * says it independently - every character subject, and only a character
+ * subject, names the rig contract as its `designSheet` - and that is a fact
+ * about the art, recorded by the art agent, that happens to be exactly the
+ * discriminator the builder needs.
+ *
+ * It matters because `renders: []` means two different things depending on this.
+ * On a file-driven subject it is a decision: there is deliberately nothing to
+ * hand over. On a rig-driven one the array is documentation and the picture
+ * comes out of `rig-contract.json` regardless, so an empty one is not a decision
+ * not to render - and for four subjects it was a deadlock, spelled out in their
+ * own recipes: the sources could not be declared until a builder existed and the
+ * builder could not be reached until they were.
+ */
+const RIG_DESIGN_SHEET = 'assets/style/rig-contract.md';
+const isRigDriven = (subject: ReferenceSubject) => subject.designSheet === RIG_DESIGN_SHEET;
+const isRendered = (subject: ReferenceSubject) => subject.renders.length > 0 || isRigDriven(subject);
 
 /**
  * The subjects the contract declares, read at run time. Every case that needs
@@ -406,10 +442,10 @@ describe('the gate over the repository as it stands', () => {
   });
 
   it('names EVERY unrendered subject as neither a pass nor a failure', () => {
-    // A subject with no renders is unrendered ON PURPOSE: its only sources are
-    // droppable repeating parallax layers, and a verifier able to name the city
-    // from one would be reporting a defect, not a pass. It must not read as a
-    // failure and it must not read as a pass.
+    // A FILE-DRIVEN subject with no renders is unrendered ON PURPOSE: its only
+    // sources are droppable repeating parallax layers, and a verifier able to
+    // name the city from one would be reporting a defect, not a pass. It must
+    // not read as a failure and it must not read as a pass.
     //
     // DERIVED FROM THE CONTRACT, not listed. This case named
     // `parliament-hill-skyline` and nothing else, so when Quebec City arrived
@@ -417,7 +453,15 @@ describe('the gate over the repository as it stands', () => {
     // the case still passed while asserting nothing about it. An assertion that
     // covers the member that prompted it and not the next one is the shape this
     // repository keeps finding (ADR-0019).
-    const unrendered = subjectsOf(REPO).filter((s) => s.renders.length === 0);
+    //
+    // AND THE PREDICATE IS `isRendered`, NOT `renders.length === 0`, which is
+    // the correction the mounted subjects forced. Four subjects arrived with an
+    // empty `renders` and a full `mustBeRight`, and this case asserted that the
+    // harness called each of them "UNRENDERED by decision" - which is to say it
+    // asserted the one sentence about them that was false. Nobody decided not to
+    // render them; the harness could not build them. An assertion can hold a
+    // wrong answer in place, and this one did.
+    const unrendered = subjectsOf(REPO).filter((s) => !isRendered(s));
     expect(unrendered.length, 'no subject is unrendered; this case has nothing to check').toBeGreaterThan(0);
     for (const subject of unrendered) {
       expect(gate.stdout).toContain(
@@ -425,6 +469,71 @@ describe('the gate over the repository as it stands', () => {
       );
       expect(gate.stdout).not.toMatch(new RegExp(`PASS ${subject.id}`));
       expect(gate.stdout).not.toMatch(new RegExp(`FAIL ${subject.id}`));
+    }
+  });
+
+  it('renders a rig-driven subject whose `renders` is empty, and calls it no decision', () => {
+    // THE DEADLOCK, AS AN ASSERTION. A subject built from the rig needs no file
+    // list, so an empty `renders` cannot mean "nothing to hand over" for one --
+    // and until it was built, the harness reported four of them under the one
+    // word that was wrong about them.
+    //
+    // Both halves, because either alone is satisfiable by the bug: the subject
+    // must be HANDED OVER with a gating render, and it must NOT be printed as a
+    // decision. A build that produced the renders and went on calling them
+    // unrendered would still be lying in the report, and a report that dropped
+    // the line while building nothing would be lying by silence.
+    const deadlocked = subjectsOf(REPO).filter((s) => isRigDriven(s) && s.renders.length === 0);
+    expect(
+      deadlocked.length,
+      'no rig-driven subject has an empty `renders`; this case has nothing to check',
+    ).toBeGreaterThan(0);
+
+    const built = handoff(REPO, [...CHEAP], null);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath) as {
+      entries: KeymapEntry[];
+      unrendered: { subjectId: string }[];
+    };
+
+    for (const subject of deadlocked) {
+      const gating = keymap.entries.filter((e) => e.subjectId === subject.id && e.gating);
+      expect(
+        gating.length,
+        `${subject.id} is built from the rig and nothing was handed over for it`,
+      ).toBeGreaterThan(0);
+      expect(keymap.unrendered.map((u) => u.subjectId)).not.toContain(subject.id);
+      expect(gate.stdout).not.toContain(`${subject.id} is UNRENDERED by decision`);
+    }
+  });
+
+  it('accounts for every subject exactly once: handed over, or unrendered', () => {
+    // THE ANTI-VACUUM FLOOR AT THE LEVEL OF THE SET, and the one that does not
+    // depend on knowing why any particular subject is in which half. A subject
+    // that is neither handed over nor declared unrendered has been SKIPPED, and
+    // a skipped subject is invisible in output that otherwise looks identical --
+    // which is the failure `checkContract` refuses one layer down ("skipping an
+    // unknown subject would verify four fifths of the set and print the same
+    // OK") stated over the whole contract.
+    //
+    // Neither half is derived from the harness: the contract lists the subjects
+    // and the keymap records what happened to each.
+    const built = handoff(REPO, [...CHEAP], null);
+    const keymap = readKeymap(built.keymapPath) as {
+      entries: KeymapEntry[];
+      unrendered: { subjectId: string }[];
+    };
+    const handedOver = new Set(keymap.entries.map((e) => e.subjectId));
+    const declared = new Set(keymap.unrendered.map((u) => u.subjectId));
+
+    for (const subject of subjectsOf(REPO)) {
+      const inBoth = handedOver.has(subject.id) && declared.has(subject.id);
+      const inNeither = !handedOver.has(subject.id) && !declared.has(subject.id);
+      expect(inBoth, `${subject.id} was both handed over and declared unrendered`).toBe(false);
+      expect(
+        inNeither,
+        `${subject.id} is in the contract and this run neither handed it over nor said why not`,
+      ).toBe(false);
     }
   });
 
@@ -455,7 +564,7 @@ describe('the gate over the repository as it stands', () => {
       entries: { subjectId: string; gating: boolean; sources: string[]; slots: Record<string, unknown> }[];
     };
 
-    const rendered = subjectsOf(REPO).filter((s) => s.renders.length > 0);
+    const rendered = subjectsOf(REPO).filter(isRendered);
     expect(rendered.length, 'no subject has renders; this case has nothing to check').toBeGreaterThan(0);
 
     for (const subject of rendered) {
@@ -463,8 +572,8 @@ describe('the gate over the repository as it stands', () => {
       const gating = mine.filter((e) => e.gating);
       expect(
         gating.length,
-        `${subject.id} declares ${subject.renders.length} render source(s) and no gating render ` +
-          `was handed over for it`,
+        `${subject.id} is rendered by the contract (${subject.renders.length} declared render ` +
+          `source(s)) and no gating render was handed over for it`,
       ).toBeGreaterThan(0);
 
       if (mine.some((e) => e.slots?.skin !== undefined)) continue;
@@ -1343,6 +1452,56 @@ describe('a parallax composite places both tiles by the level\'s own offsets', (
     expect(at(300)).toEqual(NEAR_FILL);
     expect(at(450)).toEqual(FAR_FILL);
     expect(at(700)).toEqual(FAR_FILL);
+  });
+
+  const levelDoc = (farY: number, nearY: number) => ({
+    'prairie-rail': {
+      layers: [
+        { key: 'prairie-rail-layer-30-fields', offset: { x: 0, y: farY } },
+        { key: 'prairie-rail-layer-40-railbed', offset: { x: 0, y: nearY } },
+      ],
+    },
+  });
+
+  it('says when a composite is built to an offset its level document disputes', () => {
+    // EIGHT ENTRIES IN THE RECIPE TABLE CLAIM, IN A COMMENT, THAT THEY WERE
+    // CONFIRMED AGAINST A LEVEL DOCUMENT. A comment is not re-read: move a layer
+    // and the composite goes on being built to the old separation, the render
+    // describes an arrangement the game does not use, and the summary prints
+    // exactly what it printed yesterday. The first run that derived this instead
+    // of trusting it found two live disagreements in the repository.
+    //
+    // Both numbers are printed because neither file is authoritative from here:
+    // a composite that has drifted from its level may be a stale recipe or a
+    // mistyped offset, and this can say that they differ and by how much.
+    const drifted = fixture('offset-drift', {
+      subjects: [SUBJECT, UNRENDERED],
+      sources: { [FAR]: solid(400, 500, '#c8a05a'), [NEAR]: openTopped(400, 400, 250, '#2a6ebb') },
+      levels: levelDoc(1010, 900),
+    });
+    const result = run(['--root', drifted, ...CHEAP]);
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain('LEVEL DOCUMENT DOES NOT AGREE WITH');
+    expect(result.stdout).toContain('OFFSET DRIFT prairie-rail-line - built at -210, -110');
+  });
+
+  it('says nothing when the level document still agrees, or has nothing to say', () => {
+    // The control, and the second half of it matters as much as the first: the
+    // fixtures in this file are `assets/`-only trees, and a check that reported
+    // drift wherever it could not find a level document would print a line on
+    // every case here and teach a reader to skip it.
+    const agrees = fixture('offset-agrees', {
+      subjects: [SUBJECT, UNRENDERED],
+      sources: { [FAR]: solid(400, 500, '#c8a05a'), [NEAR]: openTopped(400, 400, 250, '#2a6ebb') },
+      levels: levelDoc(1010, 800),
+    });
+    expect(run(['--root', agrees, ...CHEAP]).stdout).not.toContain('OFFSET DRIFT');
+
+    const silent = fixture('offset-no-level', {
+      subjects: [SUBJECT, UNRENDERED],
+      sources: { [FAR]: solid(400, 500, '#c8a05a'), [NEAR]: openTopped(400, 400, 250, '#2a6ebb') },
+    });
+    expect(run(['--root', silent, ...CHEAP]).stdout).not.toContain('OFFSET DRIFT');
   });
 
   it('separates the two tiles by exactly `nearTop`, whichever way it points', () => {
@@ -2683,6 +2842,280 @@ describe('the commitment, which is the one sliver of blindness this can prove', 
 /* ================================================================== *
  * 7. Probes
  * ================================================================== */
+
+/* ================================================================== *
+ * A character in motion
+ * ================================================================== */
+
+interface MountedRig extends Rig {
+  states: Record<string, { keys: { t: number; parts: Record<string, number[]> }[] }>;
+  characterSpace: { width: number; height: number };
+  designResolution: { width: number };
+}
+
+interface PosedEntry extends KeymapEntry {
+  readonly naturalWidth: number;
+  readonly naturalHeight: number;
+  readonly width: number;
+  readonly height: number;
+  readonly sourceSha256: Record<string, string | null>;
+  readonly slots: {
+    mode?: string;
+    pose?: { state: string; t: number };
+    window?: { x: number; y: number; width: number; height: number };
+  } & Record<string, unknown>;
+}
+
+/** The natural render, cut back out of the uniform canvas the run pads it onto. */
+const drawnPart = async (dir: string, entry: PosedEntry) =>
+  sharp(join(dir, entry.render))
+    .extract({
+      left: Math.floor((entry.width - entry.naturalWidth) / 2),
+      top: Math.floor((entry.height - entry.naturalHeight) / 2),
+      width: entry.naturalWidth,
+      height: entry.naturalHeight,
+    })
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+/** The bounding box of everything that is not the neutral matte. */
+const inkBox = ({ data, info }: { data: Buffer; info: { width: number; height: number; channels: number } }) => {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (let y = 0; y < info.height; y += 1) {
+    for (let x = 0; x < info.width; x += 1) {
+      const at = (y * info.width + x) * info.channels;
+      if (data[at] === 204 && data[at + 1] === 204 && data[at + 2] === 204) continue;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  return { minX, minY, maxX, maxY };
+};
+
+describe('a mounted subject is a person DOING something', () => {
+  const built = handoff(REPO, ['--variants', '1'], 'mounted-seed');
+  const keymap = readKeymap(built.keymapPath) as { entries: PosedEntry[] };
+  const rig = rigOf(REPO) as MountedRig;
+
+  /**
+   * The subjects this block is about, derived rather than listed: a rig-driven
+   * subject whose hand-off recorded a locomotion mode. Nothing here names one.
+   */
+  const posed = keymap.entries.filter((e) => e.slots.pose !== undefined);
+
+  it('builds every one of them', () => {
+    expect(built.result.status, built.result.output).toBe(0);
+    expect(posed.length, 'no posed subject was handed over; this block checks nothing').toBeGreaterThan(0);
+  });
+
+  it('plays a state OF ITS MODE, never the base state that put a walk on the canal', () => {
+    // THE LIE THIS BUILDER EXISTS NOT TO TELL. Setting `{mode}` and playing the
+    // base `walk` renders a walking figure wearing skates - which is not a
+    // weaker render than none, it is a picture of the defect the mounted states
+    // were authored to fix, handed to a verifier as the fix. `skate/walk`'s own
+    // note in the rig says so: "this state exists because a walk cycle on a
+    // canal is the defect a player reported from the live site".
+    //
+    // So: the state must exist in the rig, and it must be one of that mode's.
+    // The second half is what fails if a builder sets the mode and forgets the
+    // pose, and it is derived from the rig's naming scheme rather than from a
+    // list of state names.
+    for (const entry of posed) {
+      const mode = entry.slots.mode;
+      const state = entry.slots.pose?.state ?? '';
+      expect(typeof mode, `${entry.subjectId} was posed with no mode set`).toBe('string');
+      expect(Object.keys(rig.states), `${entry.subjectId}: rig has no state "${state}"`).toContain(state);
+      expect(
+        state.startsWith(`${mode}/`),
+        `${entry.subjectId} set mode "${mode}" and played "${state}", which is not one of that ` +
+          `mode's states. A figure in the equipment holding the base pose is the reported defect.`,
+      ).toBe(true);
+    }
+  });
+
+  it('poses it mid-motion rather than handing over the rest pose', () => {
+    // "A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST",
+    // which is the contract's own wording for all four. A rest pose composed
+    // with the equipment attached renders perfectly and says nothing about
+    // whether the figure is doing the thing it is named for.
+    for (const entry of posed) {
+      const { state, t } = entry.slots.pose!;
+      const keys = rig.states[state]?.keys ?? [];
+      const key = keys.find((k) => k.t === t) ?? keys[0];
+      expect(key, `${entry.subjectId}: rig state "${state}" has no keys`).toBeDefined();
+      const moved = Object.values(key!.parts).some((p) => p.some((n) => Math.abs(n) > 0.001));
+      expect(moved, `${entry.subjectId}: the key it plays is the identity transform`).toBe(true);
+    }
+  });
+
+  it('draws the equipment its mode resolves, which is what makes it that subject', () => {
+    // `mount-deck`, `mount-fore`, `foot-gear-l` and `foot-gear-r` resolve on
+    // `{mode}`. A mode that authors no frame for one of them draws nothing there
+    // - the bicycle has a deck and no prow - so this asserts the frames that DO
+    // exist for the mode were composited, not that all four were.
+    const braced = rig.parts.filter((part) => part.frame.includes('{mode}'));
+    expect(braced.length, 'no part of the rig reads {mode}').toBeGreaterThan(0);
+
+    for (const entry of posed) {
+      const wanted = braced
+        .map((part) => rig.frames[`${rig.atlas.framePrefix}${part.frame.replace('{mode}', entry.slots.mode!)}`])
+        .filter((frame) => frame !== undefined);
+      expect(
+        wanted.length,
+        `${entry.subjectId}: mode "${entry.slots.mode}" resolves no equipment frame at all`,
+      ).toBeGreaterThan(0);
+      for (const frame of wanted) {
+        expect(
+          entry.sources,
+          `${entry.subjectId} is a figure on a mount and "${frame.source}" was not drawn into it`,
+        ).toContain(frame.source);
+      }
+    }
+  });
+
+  it('anchors a canvas that contains the pose, on all four edges', async () => {
+    // THE ANCHOR, CHECKED AGAINST THE PIXELS RATHER THAN AGAINST THE PROPOSAL.
+    // A pose leaves character space in every direction at once: a lifted toque
+    // above the top edge, a trailing hand 78 px left of it, a leading hand 49 px
+    // right of it. A canvas anchored where a REST pose fits crops those quietly
+    // - the render is still a person and the missing pixels read as framing.
+    //
+    // So: ink on every render, and ink that touches no edge of it. A part that
+    // was cropped ends flush against the border, which is the one thing this can
+    // see without knowing what the picture is of.
+    for (const entry of posed.filter((e) => e.probe === 'full')) {
+      const box = inkBox(await drawnPart(built.handoffDir, entry));
+      expect(box.minX, `${entry.subjectId} rendered nothing`).toBeLessThan(Infinity);
+      expect(box.minX, `${entry.subjectId} is cropped at the left edge`).toBeGreaterThan(0);
+      expect(box.minY, `${entry.subjectId} is cropped at the top edge`).toBeGreaterThan(0);
+      expect(box.maxX, `${entry.subjectId} is cropped at the right edge`).toBeLessThan(entry.naturalWidth - 1);
+      expect(box.maxY, `${entry.subjectId} is cropped at the bottom edge`).toBeLessThan(entry.naturalHeight - 1);
+    }
+  });
+
+  it('needed that canvas: the pose really does leave character space', () => {
+    // The control for the case above, and the reason the window is not just
+    // `characterSpace`. If every posed render fitted the 240 x 470 box, the
+    // anchoring would be untested machinery and the case above would pass over a
+    // builder that never moved anything.
+    const space = rig.characterSpace;
+    const outside = posed
+      .filter((e) => e.probe === 'full')
+      .filter((e) => {
+        const w = e.slots.window!;
+        return w.x < 0 || w.y < 0 || w.width > space.width || w.height > space.height;
+      });
+    expect(
+      outside.length,
+      'every posed render fitted character space, so the anchoring is never exercised',
+    ).toBeGreaterThan(0);
+  });
+
+  it('records the rig contract as a source, so a re-timed pose goes stale', () => {
+    // Every other render's staleness rests on the digests of the SVGs it was
+    // drawn from, and that is enough while the SVGs decide the picture. Here
+    // they do not: the pose is in `rig-contract.json`, so re-timing a state
+    // changes what the verifier is looking at while every SVG digest holds -
+    // the silent green this harness exists to refuse, one file further up.
+    for (const entry of posed) {
+      expect(entry.sources).toContain('style/rig-contract.json');
+      expect(entry.sourceSha256['style/rig-contract.json']).toMatch(/^[0-9a-f]{64}$/);
+    }
+  });
+
+  it('reduces to the size a player sees, not to the landmark ladder', () => {
+    // THE LADDER IS NOT INHERITED. The blind pass measured that the landmark
+    // silhouettes survive [300, 140] and the ACTIVITY subjects do not - 0/2 on
+    // both of them - and concluded that "a subject whose identity is a VERB
+    // cannot inherit a landmark's placement floor". These four subjects are that
+    // case: every one of their `expectedBlindAnswer` entries is a verb.
+    //
+    // And the rungs are ABSOLUTE WIDTHS, so inheriting them inherits a SCALE by
+    // way of a WIDTH: 300 px is a sixth of an 1800 px parallax tile and about
+    // four fifths of this window. What replaces them is a RATIO the project owns
+    // - the portrait phone is 390 CSS px across a 1080 px design resolution - so
+    // the rung follows the window instead of the other way round.
+    const smaller = posed.filter((e) => e.probe !== 'full' && e.probe !== 'comparison');
+    expect(smaller.length, 'no reduced probe was emitted for a posed subject').toBeGreaterThan(0);
+    for (const entry of smaller) {
+      expect(
+        /^w\d+$/.test(entry.probe),
+        `${entry.subjectId} was handed a landmark ladder rung (${entry.probe})`,
+      ).toBe(false);
+      const scale = 390 / rig.designResolution.width;
+      expect(entry.naturalWidth).toBe(Math.round(entry.slots.window!.width * scale));
+    }
+  });
+
+  it('says out loud that the contract still calls them unbuildable', () => {
+    // A subject whose `renders` is empty and whose picture the harness builds
+    // anyway is a disagreement between two files, and the quiet version of this
+    // fix is the one that would rot: the contract goes on saying "THE HARNESS
+    // CANNOT BUILD IT YET" while identifiers are handed the renders every run,
+    // and nothing anywhere connects the two. So the run states it.
+    //
+    // AND IT STATES IT WITHOUT NAMING ANYBODY IN QUIET MODE, which is the rule
+    // the whole harness is under: `art-handoff-blind` is safe to run AS the
+    // identifier, and a new line that named four subjects in it would be the
+    // third leak through operator-facing text.
+    const loud = run(['--root', REPO, ...CHEAP]);
+    expect(loud.stdout).toContain('BUILT FROM THE RIG CONTRACT');
+    const deadlocked = subjectsOf(REPO).filter((x) => isRigDriven(x) && x.renders.length === 0);
+    for (const subject of deadlocked) expect(loud.stdout).toContain(subject.id);
+
+    const out = scratch('quiet-rig');
+    const hushed = run([
+      'handoff',
+      '--quiet',
+      '--root',
+      REPO,
+      '--out',
+      out,
+      '--seed',
+      'quiet-rig',
+      ...CHEAP,
+    ]);
+    expect(hushed.status, hushed.output).toBe(0);
+    expect(hushed.stdout).toContain('BUILT FROM THE RIG CONTRACT');
+    for (const subject of subjectsOf(REPO)) expect(hushed.stdout).not.toContain(subject.id);
+  });
+
+  it('says when the rig poses a mode no subject claims, and does not fail on it', () => {
+    // THE VACUUM ALONG THE NEW AXIS. This harness refuses a SUBJECT it has no
+    // builder for, loudly; the set can now also grow by MODE, and a rig that
+    // poses five while the table claims four builds four and prints the same
+    // summary. So the gap is stated.
+    //
+    // AND IT IS NOT A FAILURE, which is the part worth keeping. The hard refusal
+    // one layer down is what produced the deadlock this whole builder exists to
+    // close: a build that goes red on art's work in progress gets routed around,
+    // and four subjects were left declaring no sources for exactly that reason.
+    // A mode with no subject is a gap in `references.json`, which is art's file.
+    const rig = rigOf(REPO) as MountedRig;
+    const grown = {
+      ...rig,
+      states: { ...rig.states, 'canoe/idle': { keys: [{ t: 0, parts: {} }] } },
+    };
+    const result = run(['--root', fixture('rig-grew-a-mode', { rig: grown }), ...CHEAP]);
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain('locomotion mode(s) have poses in the rig contract');
+    expect(result.stdout).toContain('NO SUBJECT in references.json');
+  });
+
+  it('drops that rung under --no-ladder, because it is still a size probe', () => {
+    const bare = readKeymap(handoff(REPO, [...CHEAP], 'mounted-bare').keymapPath) as {
+      entries: PosedEntry[];
+    };
+    const posedBare = bare.entries.filter((e) => e.slots.pose !== undefined);
+    expect(posedBare.length).toBeGreaterThan(0);
+    for (const entry of posedBare) expect(entry.probe).toBe('full');
+  });
+});
 
 describe('probes', () => {
   it('emits a size ladder, and marks every derived probe diagnostic rather than gating', () => {

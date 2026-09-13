@@ -278,6 +278,67 @@ function printHandoffSummary(keymap, { where = null } = {}) {
       );
     }
   }
+  /*
+   * THE HARNESS AND THE CONTRACT DISAGREE, AND THE HARNESS IS RIGHT.
+   *
+   * A subject composed from the rig needs no file list, so an empty `renders`
+   * does not stop it being built. Four subjects in the contract say the
+   * opposite in their own `renderRecipe` -- "UNBUILT, AND NOT BY DECISION - THE
+   * HARNESS CANNOT BUILD IT YET" -- because when it was written the harness had
+   * no builder for a posed, mounted figure, and the art agent left them
+   * provably incomplete rather than declare sources that would turn the build
+   * red. That deadlock is closed. Printed rather than left silent, because an
+   * art agent reading the contract would otherwise still find four subjects
+   * described as unbuildable and no sign anywhere that they are being handed to
+   * identifiers every run.
+   */
+  const builtFromRig = keymap.builtFromRig ?? [];
+  if (builtFromRig.length > 0) {
+    console.log(
+      `verify-art: ${builtFromRig.length} subject(s) were BUILT FROM THE RIG CONTRACT with an ` +
+        `empty \`renders\` - the picture is composed from assets/style/rig-contract.json, so ` +
+        `the file list is documentation and not an input. Their \`renderRecipe\` still says the ` +
+        `harness cannot build them, which was true when it was written and is not now. The ` +
+        `contract has not caught up; the renders are real and were handed over.` +
+        (quiet ? '' : ` (${builtFromRig.join(', ')})`),
+    );
+  }
+  /*
+   * A COMPOSITE BUILT TO AN OFFSET ITS LEVEL NO LONGER USES.
+   *
+   * Eight entries in the recipe table say in a comment that they were confirmed
+   * against a level document. A comment is not re-read, and on the run this was
+   * first derived it found two: one composite whose level had never matched the
+   * number it was built to, and one that landed with the level and the contract
+   * disagreeing by 40 px. Advisory, because which of the two files is wrong is
+   * not knowable from here - only that they disagree, and by how much.
+   */
+  const drift = keymap.levelOffsetDrift ?? [];
+  if (drift.length > 0) {
+    console.log(
+      `verify-art: ${drift.length} parallax composite(s) are built to an offset their LEVEL ` +
+        `DOCUMENT DOES NOT AGREE WITH. The render is then a picture of an arrangement the game ` +
+        `does not use, and no verdict about it can say so. Not a build failure: which of the two ` +
+        `files moved is not knowable here. Reconcile content/levels/*.json with the ` +
+        `renderRecipe, then re-record.`,
+    );
+    for (const row of quiet ? [] : drift) {
+      console.log(
+        `verify-art:   OFFSET DRIFT ${row.subjectId} - built at ${row.built}, ` +
+          `${row.level} in the level document (${row.detail}).`,
+      );
+    }
+  }
+  const orphanModes = keymap.posedModesWithoutSubject ?? [];
+  if (orphanModes.length > 0) {
+    console.log(
+      `verify-art: ${orphanModes.length} locomotion mode(s) have poses in the rig contract and ` +
+        `NO SUBJECT in references.json. Nothing is handed over for them and no verdict can ` +
+        `cover them, so this run verifies the modes it knows about and would print the same ` +
+        `summary if it knew about fewer. Not a build failure - the gap is in the contract, ` +
+        `which is art's file - but it is not nothing either.`,
+    );
+  }
   console.log(
     'verify-art: anonymisation held - every render name is 16 hex characters, no ' +
       'handed-over file carries a leaking token, no PNG carries metadata, every ' +

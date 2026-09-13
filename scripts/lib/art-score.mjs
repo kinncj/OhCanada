@@ -100,7 +100,7 @@
  * as unresolved, and the report says "was failing, and is now unverified".
  */
 
-import { normalise } from './art-handoff.mjs';
+import { isRendered, normalise } from './art-handoff.mjs';
 
 /** ` foo ` padding so "canal" does not match inside "canalisation". */
 const padded = (value) => ` ${normalise(value)} `;
@@ -707,9 +707,17 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
    * ADVISORY AND NOT `failures`, deliberately, and the line is the one this file
    * already draws: A MISSING RECORD MAKES NO CLAIM. Nobody has looked at these
    * subjects and the record does not pretend otherwise, so it is advisory by
-   * default and fatal exactly where a claim is required. A subject with
-   * `renders: []` is skipped, because it is unrendered by decision and there was
-   * never anything to hand over.
+   * default and fatal exactly where a claim is required. A subject that is not
+   * rendered at all is skipped, because there was never anything to hand over.
+   *
+   * "NOT RENDERED" IS `isRendered`, AND IT IS NOT `renders.length > 0`. This
+   * loop had that test written out, and `checkContract` had it written out, and
+   * they meant the same thing until the day a subject's picture came from the
+   * rig contract instead of from a list of files. At that moment the hand-off
+   * started building four subjects that this loop still classified as "nothing
+   * to hand over", so they would have been handed to an identifier and then left
+   * out of the list of subjects no record covers -- verified by nobody and
+   * reported by nothing. One predicate, imported, for exactly that reason.
    *
    * ONE FACT PER SUBJECT AND THE EXPLANATION ONCE, which is a decision the count
    * forced. Each line carried a fifty-word paragraph when there were two of
@@ -720,11 +728,14 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
    */
   const covered = new Set(wanted);
   for (const subject of references.subjects ?? []) {
-    if (!Array.isArray(subject.renders) || subject.renders.length === 0) continue;
+    if (!isRendered(subject)) continue;
     if (covered.has(subject.id)) continue;
     uncovered.push(
-      `${subject.id}: ${subject.renders.length} render source(s) in the contract, and this ` +
-        `record covers it with NONE.`,
+      `${subject.id}: ${
+        subject.renders?.length > 0
+          ? `${subject.renders.length} render source(s) in the contract`
+          : 'built from the rig contract, its `renders` being empty'
+      }, and this record covers it with NONE.`,
     );
   }
 
@@ -762,10 +773,7 @@ export function scoreRun({ references, keymap, answers, audit, currentDigest = n
       // score every subject it holds and still be a record about most of the
       // art.
       subjectsNotInRecord: (references.subjects ?? []).filter(
-        (subject) =>
-          Array.isArray(subject.renders) &&
-          subject.renders.length > 0 &&
-          !covered.has(subject.id),
+        (subject) => isRendered(subject) && !covered.has(subject.id),
       ).length,
       featuresChecked,
       featuresUncheckable: scored.reduce((sum, row) => sum + row.featuresUncheckable, 0),

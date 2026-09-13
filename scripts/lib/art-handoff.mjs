@@ -119,7 +119,14 @@ export const KEYMAP_VERSION = 1;
  */
 const MATTE = { r: 204, g: 204, b: 204, alpha: 1 };
 
-/** The size ladder from docs/art-verification-method.md, "Probes". */
+/**
+ * The size ladder from docs/art-verification-method.md, "Probes".
+ *
+ * A LANDMARK'S LADDER. These are ABSOLUTE WIDTHS, derived on 1800 px parallax
+ * tiles, and a builder may supply its own rungs instead (`sizeProbes`) when its
+ * subject is not a landmark. See `onScreenProbe`, which is where the reason is
+ * written down and where the measurement that forced it is quoted.
+ */
 const LADDER_WIDTHS = [300, 140];
 
 const OPAQUE_NAME = /^[0-9a-f]{16}\.png$/;
@@ -358,17 +365,35 @@ async function rasterise(assets, rel, failures) {
 }
 
 /**
- * One part of a composite, placed at its own window origin.
+ * One part of a composite, placed at an already-computed canvas origin.
  *
- * Negative origins are cropped rather than clamped (the toque frame sits at
- * y = -1) and an overrun is a hard error: silently cropping a part that does not
- * fit would quietly change the picture the verdict is about.
+ * Negative origins are cropped rather than clamped (the toque frame sits within
+ * a pixel of y = 0 and a posed one rises above it) and an overrun is a hard
+ * error: silently cropping a part that does not fit would quietly change the
+ * picture the verdict is about.
+ *
+ * `crop: false` MAKES THE OTHER EDGE A HARD ERROR TOO, and it exists because
+ * the asymmetry above is safe for exactly one kind of caller. A parallax tile
+ * laid at its own window origin is meant to run off the top; a POSED FIGURE is
+ * not, and the difference is that a pose moves. A canvas anchored where a rest
+ * pose fits crops a lifted toque and a trailing blade quietly -- the render is
+ * still a person, the missing 8 px look like a framing choice, and nothing in
+ * the output says the picture lost the cue. So the mounted builder anchors its
+ * canvas from the rig's own numbers and then asserts, on both edges, that
+ * nothing fell off it.
  */
-async function placement(buf, { x, y, w, mirrorX = false, canvasW, canvasH }) {
-  let image = mirrorX ? await sharp(buf).flop().toBuffer() : buf;
-  let left = mirrorX ? canvasW - x - w : x;
-  let top = y;
+async function place(buf, { left: leftIn, top: topIn, canvasW, canvasH, crop = true }) {
+  let image = buf;
+  let left = leftIn;
+  let top = topIn;
 
+  if ((left < 0 || top < 0) && !crop) {
+    const meta = await sharp(image).metadata();
+    throw new Error(
+      `part at (${left},${top}) size ${meta.width}x${meta.height} runs off the top or left ` +
+        `of the ${canvasW}x${canvasH} canvas, which is anchored to contain it`,
+    );
+  }
   if (left < 0 || top < 0) {
     const meta = await sharp(image).metadata();
     const cropL = Math.max(0, -left);
@@ -533,8 +558,8 @@ const singleSource = () => async ({ assets, subject, failures }) => {
  * tops is `nearTop` in both directions, nothing is cropped, and the composite is
  * the level's geometry translated rather than clipped.
  */
-const twoParallaxTiles = ({ farMatch, nearMatch, nearTop, what }) =>
-  async ({ assets, subject, failures }) => {
+const twoParallaxTiles = ({ farMatch, nearMatch, nearTop, what }) => {
+  const build = async ({ assets, subject, failures }) => {
     const farRel = subject.renders.find((r) => r.includes(farMatch));
     const nearRel = subject.renders.find((r) => r.includes(nearMatch));
     if (!farRel || !nearRel) {
@@ -567,6 +592,14 @@ const twoParallaxTiles = ({ farMatch, nearMatch, nearTop, what }) =>
     // would leave a reader of the keymap unable to place anything in the picture.
     return { png, sources: [farRel, nearRel], slots: { nearTop, farAt, nearAt } };
   };
+  // The parameters, readable from outside, so `levelOffsetDrift` can ask the
+  // level documents whether this separation is still the level's. Eight entries
+  // in the table below claim "Confirmed against content/levels/X.json" in a
+  // COMMENT, which was true on the day each was written and is a sentence no
+  // build re-reads. See `levelOffsetDrift`.
+  build.parallax = { farMatch, nearMatch, nearTop };
+  return build;
+};
 
 /* ------------------------------------------------------------------ *
  * Character figures: which slot got what, and why
@@ -849,6 +882,10 @@ const characterFigure = (plan) => {
     };
   };
   build.distinctFigures = (rig) => distinctFigures(rig, plan);
+  // The picture comes out of `rig-contract.json`, not out of `subject.renders`.
+  // See `checkContract`: that is what lets a subject whose `renders` is empty
+  // still be built, and what keeps a FILE-driven builder refusing to.
+  build.rigDriven = true;
   return build;
 };
 
@@ -939,6 +976,407 @@ const GUIDE_PLAN = {
     "this subject's `neverAdd` forbids clothing, a hat, a scarf or an accessory of any kind",
   ),
   feature: pinned('none', 'same clause: it is an animal companion, not a person in a suit'),
+};
+
+/* ------------------------------------------------------------------ *
+ * A CHARACTER IN MOTION
+ * ------------------------------------------------------------------ */
+
+/**
+ * THE FOUR MOUNTED SUBJECTS, AND WHY THEY ARE NOT FOUR MORE CHARACTER FIGURES.
+ *
+ * `characterFigure` builds a person. These four subjects are a person DOING
+ * SOMETHING, and the contract's `expectedBlindAnswer` for every one of them is a
+ * verb: "someone ice skating", "a person sledding", "a cyclist", "someone
+ * skateboarding". Two things follow that a rest-pose builder gets wrong, and
+ * one of them is worse than not building the subject at all.
+ *
+ *   THE EQUIPMENT IS A BRACE, NOT A SLOT. Four parts resolve on `{mode}`:
+ *   `mount-deck`, `mount-fore`, `foot-gear-l` and `foot-gear-r`. `mode` is not
+ *   in `rig.slots` -- the rig's own `$comment` says so, "`mode` is NOT a slot:
+ *   it joins `expression` as a brace naming something the character does not
+ *   choose" -- so it is pinned by the plan rather than varied, and a mode that
+ *   authors no frame for a part draws nothing there, which is why the bicycle
+ *   has a deck and no prow and the skates have neither.
+ *
+ *   THE POSE IS A NAMED STATE. Every mounted state in the rig is
+ *   `<mode>/<state>`: `skate/idle`, `skate/walk`, `skate/run`, and the same
+ *   three for `toboggan`, `bike` and `skateboard`. Setting the mode and playing
+ *   the base `walk` renders A WALKING FIGURE WEARING SKATES. That is not a
+ *   weaker render than none; it is a picture of the exact defect this art was
+ *   drawn to fix -- `skate/walk`'s own note says "this state exists because a
+ *   walk cycle on a canal is the defect a player reported from the live site" --
+ *   handed to a verifier as the fix.
+ *
+ * THE STATE NAMES IN `references.json` DO NOT EXIST AND ARE NOT USED HERE. Each
+ * of the four recipes says to play `skate-move`, `toboggan-move`, `bike-move` or
+ * `skateboard-move`; the rig has no state by any of those names. That prose
+ * predates the `<mode>/<state>` scheme the rig and the engine settled on, and a
+ * builder that took it literally would fail on a missing key -- loudly, which is
+ * the good case. What it must not do is guess. So the table below names the
+ * state it plays, and `mountedCharacter` refuses a name the rig does not carry.
+ *
+ * WHICH STATE, AND WHY `walk` AT t = 0 RATHER THAN `idle` OR `run`.
+ * `idle` is a coasting or stopped pose ("a two-foot glide ... It reads correctly
+ * stopped as well"), and the contract asks for mid-motion. `run` is the same
+ * cycle at 0.72x duration with a few more degrees of pitch -- a variation on
+ * `walk`, and the selector only reaches it above speed 0.55. `walk` at t = 0 is
+ * the pose the contract's own `mustBeRight` entries MEASURE, which is the check
+ * that settles it rather than an argument about which word means "moving":
+ *
+ *     skate/walk t 0       torso 24 deg   =  "About 24 degrees off vertical at
+ *                                             the torso"
+ *                          foot-l (-97.62, -49.53)
+ *                                        =  "swings back about 98 px and up
+ *                                             about 40"
+ *     toboggan/walk t 0    torso -27 deg, (-28, +131)
+ *                                        =  "reclined 27 degrees ... drops 131
+ *                                             px and moves 28 px back"
+ *     bike/walk t 0        torso 22 deg   =  "The torso folds 22 degrees over
+ *                                             the bar"
+ *     skateboard/walk t 0  feet 30.6 px apart
+ *                                        =  "Both boots on the deck, 31 px
+ *                                             apart"
+ *
+ * Four subjects, four independent numbers, all from the state named here at the
+ * frame named here. No other state or t reproduces them.
+ */
+const MOUNTS = {
+  'player-on-skates': { mode: 'skate', state: 'skate/walk', t: 0 },
+  'player-on-a-toboggan': { mode: 'toboggan', state: 'toboggan/walk', t: 0 },
+  'player-on-a-bicycle': { mode: 'bike', state: 'bike/walk', t: 0 },
+  'player-on-a-skateboard': { mode: 'skateboard', state: 'skateboard/walk', t: 0 },
+};
+
+/**
+ * A LOCOMOTION MODE THE RIG POSES AND NO SUBJECT CLAIMS.
+ *
+ * `MOUNTS` covers four modes and the rig declares states for four. The day it
+ * declares a fifth, this harness builds four of them and its summary reads
+ * exactly the same -- which is the vacuum the RECIPES table refuses one axis
+ * over ("art adds a subject, the harness silently verifies four fifths of the
+ * set"), arriving along a new axis.
+ *
+ * REPORTED, NOT FAILED, AND THAT IS THE LESSON OF THE FOUR SUBJECTS THIS BUILDER
+ * WAS WRITTEN FOR. The refusal one layer down is a hard failure -- a subject
+ * with renders and no builder is a build error -- and it worked exactly as
+ * designed and produced a deadlock: the art agent could not declare the sources
+ * for four subjects without turning the build red, so it declared none, and the
+ * harness then described all four as a decision nobody had made. A gate that
+ * fails on art's work in progress gets routed around, and a routed-around gate
+ * reports the wrong thing in a voice that sounds right. A mode with no subject
+ * is a gap in the CONTRACT, which is art's file to fill; the useful thing this
+ * can do is say so on the run that first sees it.
+ */
+export function posedModesWithoutSubject(rig, references) {
+  // A mode is covered when this table names it AND the contract still carries
+  // the subject that named it. Either half alone is a claim about the other
+  // file: the table without the contract says "there is art for this" about a
+  // subject nobody is asking for, and the contract without the table is the
+  // refusal one layer down.
+  const declared = new Set((references?.subjects ?? []).map((subject) => subject.id));
+  const claimed = new Set(
+    Object.entries(MOUNTS)
+      .filter(([subjectId]) => declared.has(subjectId))
+      .map(([, mount]) => mount.mode),
+  );
+  const posed = new Set(
+    Object.keys(rig.states ?? {})
+      .filter((name) => name.includes('/'))
+      .map((name) => name.slice(0, name.indexOf('/'))),
+  );
+  return [...posed].filter((mode) => !claimed.has(mode)).sort();
+}
+
+/** Every frame a part can resolve to under a plan, over all its slots' options. */
+function candidateFrames(rig, plan, part, pinned) {
+  const braces = [...new Set([...part.frame.matchAll(/\{(\w+)\}/g)].map((m) => m[1]))];
+  let combinations = [{ ...pinned }];
+  for (const slot of braces) {
+    if (pinned[slot] !== undefined) continue;
+    const choice = plan[slot];
+    const options =
+      choice?.how === 'pinned'
+        ? [choice.value]
+        : choice?.how === 'covered'
+          ? [slotFallback(rig, slot)]
+          : slotOptions(rig, slot);
+    if (options.length === 0) continue;
+    combinations = combinations.flatMap((base) => options.map((value) => ({ ...base, [slot]: value })));
+  }
+  const frames = [];
+  for (const slots of combinations) {
+    const frame = resolveFrame(rig, part, slots);
+    if (frame) frames.push(frame);
+  }
+  return frames;
+}
+
+/**
+ * THE CANVAS A POSED FIGURE NEEDS, MEASURED FROM THE RIG RATHER THAN DECLARED.
+ *
+ * Character space is 240 x 470 and a rest pose fits it. A POSE DOES NOT, and it
+ * misses in every direction at once. Every part's window is rotated about its
+ * pivot and moved by the key, so the union of the four poses this table builds
+ * is the canvas, and it is computed here from `parts`, `frames` and `states` --
+ * the same three tables the picture is drawn from.
+ *
+ * WHAT WAS PROPOSED AND WHAT MEASURES. The hand-off spec for this builder asked
+ * for the canvas to be "anchored at (-12, -12)", because "the skate lift puts
+ * the toque crown at y ~ -8 and the trailing blade tip at x ~ -8". Half of that
+ * is right, and it is not the half that decides the canvas. Measured on the
+ * poses this table actually plays, as the union of the rotated part windows in
+ * character space:
+ *
+ *     skate/walk       t 0     x    0.1 .. 288.7    y   -5.3 .. 468.0
+ *     toboggan/walk    t 0     x  -78.2 .. 237.0    y  144.2 .. 477.8
+ *     bike/walk        t 0     x    0.0 .. 265.5    y   29.5 .. 472.0
+ *     skateboard/walk  t 0     x   32.6 .. 274.4    y    1.3 .. 468.0
+ *
+ *   - THE CROWN. Right, and for the reason given: the toque is the topmost part
+ *     of the skating figure and the pitch does lift it off the top edge. -5.3 as
+ *     the window and -2 as the first non-transparent pixel, so "~ -8" is a
+ *     rounding of a real number in the right direction.
+ *   - THE TRAILING BLADE. Wrong at this frame, and right about a different one.
+ *     At `skate/walk` t 0 the trailing skate is the FAR one and its blade tip
+ *     reaches x = +4 -- inside character space, with 4 px to spare. The blade
+ *     that reaches x = -15 is the NEAR one at t 0.5, the other half of the
+ *     stroke cycle, which is not the pose the contract measures and not the pose
+ *     this builds. So -8 is neither the number nor the frame; +4 is.
+ *   - AND NEITHER IS THE BINDING EDGE. A canvas 240 wide anchored at x = -12
+ *     ends at 228, and the skater's leading hand is at 289 and the toboggan's
+ *     prow at 237. The anchor that matters most is the one nobody proposed: the
+ *     toboggan's trailing hands reach x = -78, six times the -12 that was asked
+ *     for, because a reclined rider's arms trail 148 px behind the hips.
+ *
+ * AND IT MATTERS ONLY HERE. A negative character-space coordinate is not a
+ * defect and does not clip at runtime: the engine draws each part at
+ * `(worldX - 120 + frame.x, worldY - 460 + frame.y)`, which has no left edge to
+ * fall off. The 240 x 470 box is a COMPOSITE's canvas, and this file is the only
+ * thing in the project that makes one. That is the whole reason the number had
+ * to be checked here and the whole reason it is not a finding against the art.
+ *
+ * ONE WINDOW FOR ALL FOUR, not one each. They are the same character in four
+ * modes; a shared window puts the sole line, the crown and the shadow on the
+ * same rows in all four renders, so a verifier comparing them is comparing the
+ * figures and not the framing. It costs the skateboard render some empty matte
+ * on the left, which the uniform run canvas would have added anyway.
+ */
+const poseWindows = new WeakMap();
+function mountedWindow(rig, plan) {
+  // Memoised on the RIG alone, which is safe only while every mounted subject
+  // uses one plan - they all use `PLAYER_PLAN`, because their recipes all say to
+  // build the player composite exactly as the player's recipe does. A second
+  // plan here would need a second key, and would also mean two framings, which
+  // is the thing the shared window exists to avoid.
+  if (poseWindows.has(rig)) return poseWindows.get(rig);
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const { mode, state, t } of Object.values(MOUNTS)) {
+    const pose = poseAt(rig.states[state], t);
+    for (const part of rig.parts) {
+      const [dx, dy, degrees] = pose[part.name] ?? [0, 0, 0];
+      for (const frame of candidateFrames(rig, plan, part, { mode })) {
+        const x = part.mirrorX === true ? rig.characterSpace.width - frame.x - frame.w : frame.x;
+        const y = frame.y;
+        for (const [cx, cy] of [
+          [x, y],
+          [x + frame.w, y],
+          [x, y + frame.h],
+          [x + frame.w, y + frame.h],
+        ]) {
+          const [rx, ry] = rotateVector(cx - part.pivot[0], cy - part.pivot[1], degrees);
+          minX = Math.min(minX, part.pivot[0] + rx + dx);
+          maxX = Math.max(maxX, part.pivot[0] + rx + dx);
+          minY = Math.min(minY, part.pivot[1] + ry + dy);
+          maxY = Math.max(maxY, part.pivot[1] + ry + dy);
+        }
+      }
+    }
+  }
+  // MARGIN, and it is not decoration. sharp's rotated canvas is the CEILING of
+  // the rotated bounding box and the composite takes integer offsets, so a part
+  // can land up to a pixel outside the arithmetic above. 4 px absorbs that and
+  // leaves the assertion in `place` (crop: false) doing its job rather than
+  // firing on a rounding.
+  const margin = 4;
+  const window = {
+    x: Math.floor(minX) - margin,
+    y: Math.floor(minY) - margin,
+    width: Math.ceil(maxX) - Math.floor(minX) + 2 * margin,
+    height: Math.ceil(maxY) - Math.floor(minY) + 2 * margin,
+  };
+  poseWindows.set(rig, window);
+  return window;
+}
+
+/**
+ * THE SIZE LADDER DOES NOT APPLY TO A POSE, AND THIS IS WHERE THAT IS DECIDED.
+ *
+ * `LADDER_WIDTHS` is [300, 140], and it was derived on a landmark. The verifier
+ * that ran it wrote down what it measured and what it did not
+ * (docs/art-verification.json, `findings.sizeLadderMeasuresRetentionNotRecognition`):
+ *
+ *     "The landmark silhouettes survive the ladder and the ACTIVITY does not. At
+ *     140 px the Peace Tower, the Chateau, the CN Tower, the Town Clock and the
+ *     officer were all still named. At the same rung the skaters are 6-8 px
+ *     ticks whose glide pose has gone ... 0/2 diagnostic probes matched for
+ *     dufferin-terrace-toboggan-run and 0/2 for halifax-quayside"
+ *
+ * and the conclusion, in its own words: "A subject whose identity is a VERB
+ * cannot inherit a landmark's placement floor ... the 300 px floor that
+ * peace-tower measured and that town-clock, pier-21 and cn-tower ADOPTED without
+ * re-deriving is a floor for landmarks only."
+ *
+ * These four subjects are that case exactly. So the ladder is not inherited, for
+ * two reasons and the second is the one that would have been missed:
+ *
+ *   1. THE ANSWER IS ALREADY KNOWN. A pose is limb angles a few pixels wide and
+ *      it is the first thing a reduction destroys. Emitting a rung whose result
+ *      was measured a level ago spends a verifier's judgement re-confirming it.
+ *   2. THE RUNGS ARE ABSOLUTE WIDTHS AND THE SUBJECTS ARE NOT THE SAME SIZE. On
+ *      an 1800 px parallax tile, `w300` is a sixth of full size. On this
+ *      builder's window it is about four fifths -- a rung that reduces almost
+ *      nothing and measures nothing -- and `w140` is about a third, a ratio
+ *      nobody chose for this subject. Inheriting the numbers would have been
+ *      inheriting a SCALE by way of a WIDTH, which is not the same quantity.
+ *
+ * WHAT REPLACES IT: ONE RUNG, AT THE SIZE A PLAYER SEES. The question worth
+ * asking about a pose is not where it dies, which is known, but whether it
+ * survives to the phone. That size is derivable from numbers this project owns
+ * and not from any prose: `designResolution.width` is 1080 in the rig contract
+ * and the portrait phone is 390 CSS px wide (tests/e2e/playwright.config.ts,
+ * tests/unit/ui/viewport-mode.test.ts -- iPhone 13 portrait). So the whole
+ * window is reduced by 390/1080 and handed over at that.
+ *
+ * IT LANDS NEAR 140 AND IT IS NOT 140. On today's window that is about 136 px,
+ * four pixels from the rung this deliberately does not inherit. Worth stating
+ * plainly, because the coincidence is exactly what a later reader would take as
+ * evidence that the re-derivation was unnecessary: 140 is a fixed width that
+ * means a different reduction on every subject it is applied to, and this is a
+ * fixed RATIO that follows the window. They agree on one subject by accident and
+ * will not agree on the next.
+ *
+ * STILL DIAGNOSTIC, NOT GATING. The contract's recipes ask for these to be
+ * judged at 390 px, and that is an argument for handing the rung over, not for
+ * letting it decide: "DERIVED PROBES ARE DIAGNOSTIC, NEVER GATING" is a property
+ * of this harness, and a device-scale artefact must not be able to fail an art
+ * verdict. If the art agent wants the reduced render to gate, that is a change
+ * to `references.json`, made by the contract's owner, and not a decision for the
+ * thing being verified.
+ *
+ * WORST CASE ON PURPOSE: 390 CSS px at one device pixel per CSS pixel. A phone
+ * at DPR 3 shows the same figure with three times the samples. The conservative
+ * number is the one the art's own reasoning uses ("a scale blade is 3 px at
+ * design resolution and 1.1 px at 390 px").
+ */
+const PHONE_CSS_WIDTH = 390;
+const onScreenProbe = (rig, window) => {
+  const scale = PHONE_CSS_WIDTH / rig.designResolution.width;
+  return [{ probe: `onscreen${PHONE_CSS_WIDTH}`, width: Math.max(1, Math.round(window.width * scale)) }];
+};
+
+/**
+ * The player artboard, with a locomotion mode pinned and a state played.
+ *
+ * The plan is `PLAYER_PLAN` verbatim, because the contract's recipes for all
+ * four say to "build the player composite exactly as the `player` subject's
+ * recipe says". What differs is the mode and the pose, and reusing the plan is
+ * what makes that true rather than claimed.
+ *
+ * ONE FIGURE PER SUBJECT, NOT `--variants` OF THEM. `characterFigure` renders
+ * several because its recipes demand that the skin ramp and the hair options be
+ * exercised -- "a subject that only ever renders with one tone is a subject
+ * nobody checked the others of". That demand belongs to the `player` subject and
+ * `player` still carries it, on the same artboard, the same costume and the same
+ * parts. What is new HERE is a mount and a pose, and a second skin tone checks
+ * neither. So the slots are still drawn from the run salt -- a different figure
+ * every run, recorded in the keymap -- and the run hands over one of them.
+ *
+ * THE RIG CONTRACT IS A SOURCE OF THIS PICTURE, and it is recorded as one. Every
+ * other render's `sourceSha256` covers the SVG bytes it was drawn from, which is
+ * enough when the SVGs decide the picture. Here they do not: the pose lives in
+ * `rig-contract.json`, and re-timing `skate/walk` changes what the verifier is
+ * looking at while every SVG digest holds. So the contract file is listed beside
+ * the parts, and a verdict about a pose goes stale when the pose moves. It also
+ * goes stale when anything else in that file moves, which is a false stale in
+ * the safe direction -- "go and look again" -- and the same trade `sourceSha256`
+ * already documents.
+ *
+ * THE SAME GAP IS STILL OPEN FOR THE REST-POSE FIGURES and is deliberately not
+ * closed here: `characterFigure` reads `parts`, `frames` and `atlas` out of the
+ * same file, so a z-order or window change moves those pictures with no digest
+ * moving either. It is a smaller hole -- those tables change far less often than
+ * a pose -- and closing it touches three subjects that already have verdicts on
+ * file. Written down rather than fixed quietly.
+ */
+const RIG_CONTRACT_SOURCE = 'style/rig-contract.json';
+
+const mountedCharacter = (subjectId) => {
+  const build = async ({ assets, rig, subject, failures, rng, memo }) => {
+    const mount = MOUNTS[subjectId];
+    const state = rig.states?.[mount.state];
+    if (!state) {
+      failures.push(
+        `${subject.id}: this harness plays rig state "${mount.state}" and the rig contract has ` +
+          `no state by that name. A mounted subject posed on a state the rig does not carry ` +
+          `cannot be built, and building it on the base state instead would hand over a ` +
+          `walking figure wearing the equipment - the defect the state exists to fix.`,
+      );
+      return null;
+    }
+    const plan = {
+      ...PLAYER_PLAN,
+      mode: pinned(
+        mount.mode,
+        "the level's locomotion mode. Not a slot: the rig's own comment puts `mode` beside " +
+          '`expression` as "a brace naming something the character does not choose", which is ' +
+          'what keeps the slot-independence product a statement about player choices.',
+      ),
+    };
+    const sequences = memo.has(subject.id)
+      ? memo.get(subject.id)
+      : memo.set(subject.id, sequencesFor(rig, plan, rng)).get(subject.id);
+    const { slots, notApplicable, coveredBy } = slotsForVariant({
+      rig,
+      plan,
+      variantIndex: 0,
+      sequences,
+    });
+    checkCoveredSlots({ rig, subjectId: subject.id, plan, slots, failures });
+
+    const window = mountedWindow(rig, plan);
+    const made = await composeFigure({
+      assets,
+      rig,
+      slots,
+      failures,
+      pose: poseAt(state, mount.t),
+      window,
+    });
+    if (!made) return null;
+    return {
+      png: await flatten(sharp(made.png)),
+      sources: [...made.sources, RIG_CONTRACT_SOURCE],
+      sizeProbes: onScreenProbe(rig, window),
+      slots: {
+        ...slots,
+        variantIndex: 0,
+        inertSlots: notApplicable,
+        coveredBy,
+        // What the verdict is about, in the keymap the identifier never reads:
+        // which state was played, at which frame, on which canvas.
+        pose: { state: mount.state, t: mount.t },
+        window,
+      },
+    };
+  };
+  // `renders: []` on these subjects is NOT "unrendered by decision": it is the
+  // deadlock this builder breaks. See `checkContract`.
+  build.rigDriven = true;
+  return build;
 };
 
 const RECIPES = {
@@ -1252,6 +1690,64 @@ const RECIPES = {
     what: 'an inlet tile and a seawall tile',
   }),
 
+  /** A single source, rasterised on its own at 1x. Its recipe's one distinction
+   * from `five-sails` is measured and holds: that file is 1000x800 with its last
+   * ink on row 519, because the building stands on piles over open water; this
+   * one is 480x900 with the tower on rows 26..866 and only ground-contact shading
+   * below, because it stands on rock. `singleSource()` never trims to the ink, so
+   * both arrive framed the way their own contracts describe. */
+  'peggys-cove-light': singleSource(),
+
+  /**
+   * THE FIRST COMPOSITE WHOSE OFFSET THE LEVEL DOCUMENT DISPUTES, and the number
+   * here is the contract's rather than the level's. Both are written down
+   * because the disagreement is the finding.
+   *
+   * The recipe: "The barrens tile's top edge is 80 px BELOW the cove tile's top
+   * edge (world y 960 against 880)". content/levels/peggys-cove.json puts
+   * `peggys-cove-layer-30-cove` at y 880 and `peggys-cove-layer-40-granite-barrens`
+   * at y 1000, which is 120. Somebody's 40 px is wrong and it is not this file's
+   * to settle; what this file can do is measure which number draws the picture
+   * the contract describes, and say so. Measured on today's tiles:
+   *
+   *     cove     1760x280. Ink from row 0, opaque full width from row 26 down.
+   *     barrens  1920x320. Rows 0-131 ENTIRELY EMPTY, rock crest against
+   *              transparency from 132 at 11-60% coverage, opaque full width
+   *              from row 190 - exactly the number the recipe states.
+   *
+   *   at 80   the composite is 400 rows, the cove occupies 0-279 and the barrens
+   *           80-399, and the barrens goes solid at 270 - ten rows above the
+   *           cove's last. The seam closes. Every number in the recipe's own
+   *           description ("400 rows ... cove 0..280 and the barrens 80..400,
+   *           overlapping by 200") is reproduced.
+   *   at 120  the composite is 440 rows and the barrens goes solid at 310, which
+   *           is 30 rows BELOW the cove's last. A band opens where neither tile
+   *           is opaque, showing matte through the crests.
+   *
+   * Counted on the built pixels rather than argued: rows containing ANY matte
+   * come to 26 at nearTop 80 and 56 at 120. The 26 are the cove tile's own top
+   * edge - sky above the far tile, which every composite in this table has - and
+   * the extra 30 are the band.
+   *
+   * The 30-row band is not an artefact of this composite: the same arithmetic
+   * over the level document puts it at world y 1160-1190, where no other layer
+   * of that level reaches - the open sea ends at 960 and the sky at 900. If the
+   * level's 1000 is right, the level has a hole in it. That is a level defect
+   * rather than a render choice, which is the other reason this builds the
+   * contract's number: a render drawn to match a suspected defect would hand a
+   * verifier the defect and ask them to identify it.
+   *
+   * THE DISAGREEMENT IS PRINTED ON EVERY RUN, not just here. See
+   * `levelOffsetDrift`: eight of these entries assert in a comment that they
+   * were confirmed against a level document, and a comment is not re-read.
+   */
+  'peggys-cove-barrens': twoParallaxTiles({
+    farMatch: 'cove',
+    nearMatch: 'barrens',
+    nearTop: 80,
+    what: 'a cove tile and a granite barrens tile',
+  }),
+
   /**
    * THE THREE CHARACTER ARTBOARDS, one builder, three plans.
    *
@@ -1269,6 +1765,36 @@ const RECIPES = {
   officer: characterFigure(OFFICER_PLAN),
   player: characterFigure(PLAYER_PLAN),
   guide: characterFigure(GUIDE_PLAN),
+
+  /**
+   * THE FOUR MOUNTED SUBJECTS. One builder, four entries in `MOUNTS`, and the
+   * per-subject decision -- which mode, which state, which frame -- lives there
+   * beside the measurement that settles it.
+   *
+   * WHAT THIS BUILDER CANNOT ANSWER, and it is on the record rather than in the
+   * picture. Three of the four carry a `mustBeRight` entry that compares the
+   * figure to the LEVEL it stands on: "the player matches the skaters already on
+   * the level", "the riders already on the level", "the frame is not the colour
+   * of the level's own bicycles". A figure on a matte cannot answer any of them,
+   * for exactly the reason the proportions entry could not be answered from one
+   * figure. The contract already has the mechanism -- `requiresComparisonFigure`
+   * makes an entry UNCHECKABLE until the hand-off carries the picture that
+   * answers it -- and none of these three entries sets it, so today they will be
+   * audited against a render that cannot show them.
+   *
+   * THIS HARNESS DOES NOT CLOSE THAT BY COMPOSITING THE LEVEL IN. The backdrop
+   * tiles it would need are named only in `renderRecipe` prose -- the same prose
+   * that names four rig states which do not exist -- and `renders[]`, which is
+   * the art agent's statement of which files a subject IS, does not list them.
+   * Choosing a tile out of stale prose and drawing the figure on it would be
+   * this harness deciding what the verdict is about, which is the one thing the
+   * table above refuses at every other seam. It is a contract change: name the
+   * backdrop in `renders[]` and flag the entry.
+   */
+  'player-on-skates': mountedCharacter('player-on-skates'),
+  'player-on-a-toboggan': mountedCharacter('player-on-a-toboggan'),
+  'player-on-a-bicycle': mountedCharacter('player-on-a-bicycle'),
+  'player-on-a-skateboard': mountedCharacter('player-on-a-skateboard'),
 };
 
 /**
@@ -1279,8 +1805,9 @@ const RECIPES = {
  * viewBox origin, and the `mirrorX` parts flopped about the centre line. No
  * knowledge of the rig lives here that the contract does not state.
  */
-async function composeFigure({ assets, rig, slots, failures }) {
-  const { width, height } = rig.characterSpace;
+async function composeFigure({ assets, rig, slots, failures, pose = null, window = null }) {
+  const space = rig.characterSpace;
+  const frameWindow = window ?? { x: 0, y: 0, width: space.width, height: space.height };
   const parts = [...rig.parts].sort((a, b) => a.z - b.z);
   const layers = [];
   const sources = [];
@@ -1296,14 +1823,17 @@ async function composeFigure({ assets, rig, slots, failures }) {
     const buf = await rasterise(assets, frame.source, failures);
     if (!buf) continue;
     sources.push(frame.source);
+    const posed = await poseOnePart(buf, { rig, part, frame, pose });
     layers.push(
-      await placement(buf, {
-        x: frame.x,
-        y: frame.y,
-        w: frame.w,
-        mirrorX: part.mirrorX === true,
-        canvasW: width,
-        canvasH: height,
+      await place(posed.png, {
+        left: Math.round(posed.x - frameWindow.x),
+        top: Math.round(posed.y - frameWindow.y),
+        canvasW: frameWindow.width,
+        canvasH: frameWindow.height,
+        // A rest-pose figure keeps the old asymmetry (the toque frame starts at
+        // y = 1 and its ink is allowed to be clipped by the canvas it has always
+        // been drawn on). A POSED figure does not: see `place`.
+        crop: pose === null,
       }),
     );
   }
@@ -1312,7 +1842,105 @@ async function composeFigure({ assets, rig, slots, failures }) {
     failures.push('the character rig resolved to zero parts');
     return null;
   }
-  return { png: await canvas(width, height).composite(layers).png().toBuffer(), sources };
+  return {
+    png: await canvas(frameWindow.width, frameWindow.height).composite(layers).png().toBuffer(),
+    sources,
+  };
+}
+
+/**
+ * ONE PART, MIRRORED, ROTATED ABOUT ITS PIVOT AND MOVED -- the whole of what a
+ * pose does to a part, and the only place this file knows how a keyframe is
+ * applied.
+ *
+ * THE CONVENTION, DERIVED FROM THE RIG'S OWN NUMBERS RATHER THAN ASSUMED. A key
+ * gives each part `[dx, dy, rotationDegrees]`, and neither half is what a reader
+ * first expects:
+ *
+ *   - `rotationDegrees` is the part's ABSOLUTE rotation in character space, not
+ *     a rotation relative to its parent. The rig "parents nothing"
+ *     (`foot-gear-l`'s own note), so there is no chain to accumulate.
+ *   - `dx, dy` is the ABSOLUTE displacement of the part's PIVOT, with the parent
+ *     chain already solved into it.
+ *   - positive `rotationDegrees` is CLOCKWISE on screen, which is what sharp's
+ *     `.rotate(+d)` does, in a space whose y points down.
+ *
+ * Checked against the contract instead of taken from prose, because the prose
+ * does not state it. `walk` t 0 gives `leg-upper-l` a rotation of 10 and
+ * `leg-lower-l` a displacement of (-17.02, -1.49); the knee sits 98 px below the
+ * hip pivot, and rotating (0, 98) by 10 degrees clockwise lands at
+ * (-17.02, +96.51), a displacement of (-17.02, -1.49). To the hundredth, on the
+ * part the chain runs through. `foot-l`'s (-39.88, -5.11) falls out of the same
+ * two rotations carried one joint further. A convention that reproduces the
+ * contract's own numbers is the convention the contract was authored in.
+ *
+ * SHARP ROTATES ABOUT THE IMAGE CENTRE and expands the canvas to the rotated
+ * bounding box, so the pivot has to be tracked through that: the old centre maps
+ * to the new centre, and the pivot moves with it. Sub-pixel: the expanded size is
+ * a ceiling and the composite takes integer offsets, so a part lands within a
+ * pixel of where the keyframe puts it. Said out loud because the keys are given
+ * to two decimal places and this is not that precise -- it is a picture for a
+ * person to look at, not a geometry test.
+ */
+const RAD = Math.PI / 180;
+const rotateVector = (x, y, degrees) => {
+  const cos = Math.cos(degrees * RAD);
+  const sin = Math.sin(degrees * RAD);
+  return [x * cos - y * sin, x * sin + y * cos];
+};
+
+async function poseOnePart(buf, { rig, part, frame, pose }) {
+  const mirrorX = part.mirrorX === true;
+  const png = mirrorX ? await sharp(buf).flop().toBuffer() : buf;
+  const x = mirrorX ? rig.characterSpace.width - frame.x - frame.w : frame.x;
+  const y = frame.y;
+  const key = pose?.[part.name];
+  if (!key) return { png, x, y };
+
+  const [dx, dy, degrees] = key;
+  if (Math.abs(degrees) < 1e-9) return { png, x: x + dx, y: y + dy };
+
+  const rotated = await sharp(png)
+    .rotate(degrees, { background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  const meta = await sharp(rotated).metadata();
+  const [px, py] = rotateVector(
+    part.pivot[0] - x - frame.w / 2,
+    part.pivot[1] - y - frame.h / 2,
+    degrees,
+  );
+  return {
+    png: rotated,
+    x: part.pivot[0] + dx - (meta.width / 2 + px),
+    y: part.pivot[1] + dy - (meta.height / 2 + py),
+  };
+}
+
+/** A state's per-part `[dx, dy, rotationDegrees]` at `t`, linearly between keys. */
+function poseAt(state, t) {
+  const keys = state.keys;
+  let before = keys[0];
+  let after = keys[keys.length - 1];
+  for (let i = 0; i < keys.length - 1; i += 1) {
+    if (t >= keys[i].t && t <= keys[i + 1].t) {
+      before = keys[i];
+      after = keys[i + 1];
+      break;
+    }
+  }
+  const span = after.t - before.t;
+  const f = span === 0 ? 0 : (t - before.t) / span;
+  const out = {};
+  for (const [name, from] of Object.entries(before.parts)) {
+    const to = after.parts[name] ?? from;
+    out[name] = [
+      from[0] + (to[0] - from[0]) * f,
+      from[1] + (to[1] - from[1]) * f,
+      from[2] + (to[2] - from[2]) * f,
+    ];
+  }
+  return out;
 }
 
 /**
@@ -1471,15 +2099,21 @@ const COMPARISONS = {
  * and never one chain. Chaining them reads correctly, runs without error, and
  * produces the wrong picture.
  */
-async function probesFor({ subjectId, base, sizeLadder, masks }) {
+async function probesFor({ subjectId, base, sizeLadder, masks, sizeProbes = null }) {
   const probes = [{ probe: 'full', gating: true, png: base }];
   const meta = await sharp(base).metadata();
 
+  // `sizeProbes` IS A BUILDER'S OWN LADDER, not a tweak to this one. A subject
+  // whose identity is a verb does not inherit the landmark rungs; see
+  // `onScreenProbe`. `--no-ladder` drops both, because both are size probes and
+  // a flag that dropped one of them would leave the run with a ladder it did not
+  // ask for.
+  const rungs = sizeProbes ?? LADDER_WIDTHS.map((width) => ({ probe: `w${width}`, width }));
   if (sizeLadder) {
-    for (const width of LADDER_WIDTHS) {
+    for (const { probe, width } of rungs) {
       if (width >= meta.width) continue;
       probes.push({
-        probe: `w${width}`,
+        probe,
         gating: false,
         png: await sharp(base).resize({ width }).png().toBuffer(),
       });
@@ -1516,6 +2150,119 @@ async function probesFor({ subjectId, base, sizeLadder, masks }) {
  * subjects fails, and so does a set in which nothing is renderable, because a
  * hand-off of no images scores a clean sweep of no verdicts and prints OK.
  */
+/**
+ * WHERE A SUBJECT'S PICTURE COMES FROM, and the one place the answer is "not
+ * from `renders[]`".
+ *
+ * `renders[]` is the art agent's statement of which FILES a subject is, and for
+ * a landmark or a parallax pair it is also the builder's input: `singleSource()`
+ * rasterises `renders[0]` and `twoParallaxTiles` matches two of them by name. A
+ * CHARACTER SUBJECT'S BUILDER READS NONE OF IT. `characterFigure` and
+ * `mountedCharacter` compose from `rig-contract.json` -- `parts` in z order,
+ * `{brace}` templates against the slot choices, `states` for the pose -- and the
+ * thirteen paths `player` lists have never been an input to a single pixel of
+ * it. They are documentation of what that artboard draws from.
+ *
+ * WHICH IS WHY AN EMPTY `renders` MEANS TWO DIFFERENT THINGS, and the harness
+ * had been reading both as the first:
+ *
+ *   - ON A FILE-DRIVEN SUBJECT it is a DECISION: `parliament-hill-skyline` and
+ *     `quebec-city-riverfront` have candidate sources and the art bible forbids
+ *     putting an identifying feature on the droppable repeating tile that is all
+ *     they could be built from, so there is deliberately nothing to hand over.
+ *     Neither a pass nor a failure, and that is unchanged.
+ *
+ *   - ON A RIG-DRIVEN SUBJECT it was a DEADLOCK. The four mounted subjects
+ *     arrived with full `mustBeRight` lists and `renders: []`, and their recipes
+ *     say why in their first line: "UNBUILT, AND NOT BY DECISION - THE HARNESS
+ *     CANNOT BUILD IT YET ... A subject with sources and no builder FAILS the
+ *     hand-off build, which is why it is not listed with them". The art agent
+ *     could not declare the sources without turning the build red, and the
+ *     builder could not be reached without the sources. The harness reported the
+ *     result as "UNRENDERED by decision - not a pass and not a failure", which
+ *     was the one reading that was false: nobody decided not to render them.
+ *
+ * So the builder decides, not the array. A rig-driven builder makes its subject
+ * renderable whatever `renders` says; a file-driven one still needs its files,
+ * and a subject with renders and no builder still fails. Nothing is skipped
+ * quietly in either direction -- which is the property, not the four subjects.
+ */
+export const buildsFromRig = (id) => RECIPES[id]?.rigDriven === true;
+
+/**
+ * Does the contract render this subject at all? The predicate the hand-off, the
+ * scorer and the tests all have to agree on. They did not have to before, because
+ * `renders.length > 0` was written out three times and meant the same thing in
+ * all three; the day it stopped meaning the same thing, the scorer's
+ * NEVER CHECKED list would have quietly dropped exactly the subjects that had
+ * just started being handed over.
+ */
+export const isRendered = (subject) =>
+  (Array.isArray(subject?.renders) && subject.renders.length > 0) || buildsFromRig(subject?.id);
+
+/**
+ * IS A PARALLAX COMPOSITE'S OFFSET STILL THE LEVEL'S OFFSET?
+ *
+ * Eight entries in `RECIPES` carry a sentence of the form "Confirmed against
+ * content/levels/X.json: layer-30 offset.y 940, layer-40 offset.y 880". Every
+ * one of those sentences was true when it was written, and NO BUILD HAS EVER
+ * RE-READ ONE. A level document that moves a layer leaves the comment standing,
+ * the composite unchanged, and the render describing an arrangement the game
+ * does not use -- while the summary prints the same line it always printed. The
+ * same shape as `sourceSha256`, one file over: a claim that quietly stops being
+ * true, with nothing in the output that changes when it does.
+ *
+ * So it is derived rather than asserted, and from names the two files already
+ * share. A render source is `src/svg/<level>/<file>.svg`; a level document is
+ * `content/levels/<level>.json`; and its layer keys are `<level>-<file>`. That
+ * is the whole join, and it needed no new field in either file.
+ *
+ * REPORTED, NOT FAILED, AND THE REASON IS THE ONE THE DEADLOCK TAUGHT. A hard
+ * refusal here would go red on art's or content's work in progress, and the
+ * four mounted subjects are what that costs: faced with a gate that fails on an
+ * incomplete state, the sensible response is to withhold the thing that trips
+ * it, and the harness then reports the withholding as a decision. There is also
+ * a narrower reason: WHICH FILE IS WRONG IS NOT KNOWABLE HERE. A composite whose
+ * offset no longer matches its level may be a stale recipe or a mistyped level,
+ * and this can tell you the two numbers and not which to keep.
+ *
+ * MISSING IS NOT DRIFT. A subject with no level document, or a layer key the
+ * document does not carry, is silent: the fixtures under tests/unit/infra are
+ * `assets/`-only trees with no `content/` at all, and a check that reported drift
+ * for every one of them would be noise that teaches a reader to skip the line.
+ */
+export function levelOffsetDrift({ root, references }) {
+  const drift = [];
+  for (const subject of references.subjects ?? []) {
+    const parallax = RECIPES[subject.id]?.parallax;
+    if (!parallax || !Array.isArray(subject.renders)) continue;
+
+    const offsetOf = (match) => {
+      const rel = subject.renders.find((r) => r.includes(match));
+      if (!rel) return null;
+      const parts = rel.split('/');
+      const level = parts[parts.length - 2];
+      const doc = join(root, 'content', 'levels', `${level}.json`);
+      if (!existsSync(doc)) return null;
+      const key = `${level}-${basename(rel).replace(/(@1x)?\.[a-z0-9]+$/i, '')}`;
+      const layer = (readJson(doc).layers ?? []).find((l) => l.key === key);
+      return layer?.offset?.y ?? null;
+    };
+
+    const far = offsetOf(parallax.farMatch);
+    const near = offsetOf(parallax.nearMatch);
+    if (far === null || near === null) continue;
+    if (near - far === parallax.nearTop) continue;
+    drift.push({
+      subjectId: subject.id,
+      built: parallax.nearTop,
+      level: near - far,
+      detail: `the level puts the far tile at y ${far} and the near tile at y ${near}`,
+    });
+  }
+  return drift;
+}
+
 export function checkContract({ references, failures }) {
   const subjects = Array.isArray(references.subjects) ? references.subjects : [];
 
@@ -1569,7 +2316,7 @@ export function checkContract({ references, failures }) {
       continue;
     }
 
-    if (subject.renders.length === 0) {
+    if (subject.renders.length === 0 && !buildsFromRig(id)) {
       unrendered.push({ subjectId: id, why: subject.renderRecipe });
       continue;
     }
@@ -2112,6 +2859,7 @@ export async function buildHandoff({
         base: made.png,
         sizeLadder,
         masks,
+        sizeProbes: made.sizeProbes ?? null,
       })) {
         built.push({
           subjectId: subject.id,
@@ -2280,6 +3028,25 @@ export async function buildHandoff({
     handoffDir: resolve(handoffDir),
     entries,
     unrendered,
+    /**
+     * SUBJECTS WHOSE PICTURE THIS RUN BUILT AND WHOSE CONTRACT ENTRY STILL SAYS
+     * IT CANNOT BE BUILT.
+     *
+     * `renders: []` on a rig-driven subject is no longer read as "unrendered by
+     * decision", which is the fix. What it must not become is silence: an art
+     * agent reading `references.json` finds four recipes that open "UNBUILT, AND
+     * NOT BY DECISION - THE HARNESS CANNOT BUILD IT YET", and nothing in a
+     * successful run would tell them that sentence has stopped being true. The
+     * harness and the contract disagree, the harness is the one that is right,
+     * and the run says so out loud until the contract catches up.
+     */
+    builtFromRig: renderable
+      .filter((subject) => subject.renders.length === 0)
+      .map((subject) => subject.id),
+    /** See `posedModesWithoutSubject`: a gap in the contract, not a build error. */
+    posedModesWithoutSubject: posedModesWithoutSubject(rig, references),
+    /** See `levelOffsetDrift`: a composite built to an offset the level no longer uses. */
+    levelOffsetDrift: levelOffsetDrift({ root, references }),
     committedAnswersSha256: null,
     revealedAt: null,
   };
