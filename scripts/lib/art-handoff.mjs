@@ -2681,6 +2681,70 @@ function pngChunks(buf) {
 }
 
 /**
+ * A handed-over text file with THIS RUN'S OWN OPAQUE RENDER NAMES cut out of it,
+ * so the token scan reads prose and not sixteen random hex characters.
+ *
+ * THE FLAKE THIS EXISTS FOR, because it is the second half of a fix whose first
+ * half is fifty lines below and was not enough.
+ *
+ * The render-name check already skips a hex-spellable token on a name that
+ * `OPAQUE_NAME` has proved opaque: sha256 spells "face", "cafe", "beef" and
+ * "decade" by arithmetic and such a match carries nothing. `answers.json` is
+ * scanned by the OTHER branch - "anything else handed over is text we wrote" -
+ * and answers.json is mostly a list of those same opaque names. So the skip
+ * applied to the name in the directory listing and not to the identical string
+ * one line later in the file, and the contract only had to grow a hex-spellable
+ * word for the gate to start failing clean runs at random.
+ *
+ * It did. `beef-cattle` put "beef" in the token set and `driftwood-pile`'s
+ * accepted answer "dead wood on a shore" put "dead" there. MEASURED on this
+ * repository BEFORE this function existed: 120 consecutive hand-offs of 60
+ * renders each, 4 refused - 3.3% - every one of them a name like
+ * `deadc5c72a3b2c58.png` or `8cbeef1942f91d73.png` quoted in answers.json and
+ * nothing else anywhere. The arithmetic agrees: sixteen hex characters hold 13
+ * places a four-character word can start, so 60 renders is 780 draws at 16^-4
+ * and two such tokens give 2.4% a run; the 161-render build `make verify-art`
+ * does is 6%. AFTER: 240 consecutive builds, none refused.
+ *
+ * And that is why it presented as a flaky TEST FILE rather than a flaky gate.
+ * tests/unit/infra/art-handoff-gate.test.ts builds about forty hand-offs over
+ * the real contract, each with its own salt, so roughly seven runs in ten put at
+ * least one collision somewhere - in a DIFFERENT case each time, because the
+ * draw is independent per build. A different case failing every run, one clean
+ * run in three, and a leak report naming a file that leaks nothing.
+ *
+ * WHAT IS AND IS NOT EXEMPTED, because this file is right to distrust
+ * exemptions. Nothing is exempted by WORD. A token is dropped only where it
+ * falls inside a string that (a) is sixteen hex characters, (b) is the name of
+ * a render this very run wrote, and (c) has already been proved opaque by
+ * `OPAQUE_NAME` in the walk above. The same token in the same file one character
+ * outside such a name still fails, which is what the test beside this asserts.
+ * That is the same proof the render-name skip stands on, applied where the name
+ * is quoted rather than where it is listed - not a stop-word list, which
+ * `leakTokens` refuses on four grounds and which this does not become.
+ *
+ * NOR IS IT THE SELF-REFERENTIAL VERSION `leakTokens` warns about ("exempt the
+ * words the briefing already contains", which goes green on the leak it exists
+ * to catch). The names are not text anybody wrote: they are `sha256(salt || png)`
+ * truncated, they are the secret that makes the hand-off unlinkable, and a
+ * subject id or an accepted answer cannot be one - both carry characters outside
+ * [0-9a-f]. Paste a subject name into answers.json and it is still caught.
+ *
+ * KEYED ON THE SET AND NOT ON THE SHAPE. A bare `/[0-9a-f]{16}/` would also
+ * blind the scan to any other sixteen-hex run that turned up in a handed-over
+ * file - including one a leak was hidden in. This redacts the names in
+ * `opaqueNames` and no other string.
+ */
+function redactOpaqueNames(text, opaqueNames) {
+  if (opaqueNames.size === 0) return text;
+  // One pass. `\n` rather than `''` so that a multi-word phrase token cannot be
+  // spliced into existence across the gap a removal would leave.
+  return text.replace(/[0-9a-f]{16}(?:\.png)?/g, (match) =>
+    opaqueNames.has(`${match.slice(0, 16)}.png`) ? '\n' : match,
+  );
+}
+
+/**
  * The assertion that the anonymisation anonymises. Runs on every gate, not only
  * when somebody is identifying something — a leak that appears on a Tuesday and
  * is noticed at the next hand-off is a leak that has already happened.
@@ -2717,6 +2781,17 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
   const lowered = tokens.map((t) => t.toLowerCase());
   /** Filled per render below; read after the walk, where the sizes are compared. */
   const renderLengths = new Map();
+  /**
+   * The opaque names this run actually wrote, and the handed-over text files,
+   * held back until the walk is finished.
+   *
+   * THE TEXT SCAN CANNOT RUN INSIDE THE WALK ANY MORE, because it now needs to
+   * know every opaque name in the hand-off before it looks at the first
+   * sentence, and `readdirSync` hands `answers.json` over before most of the
+   * renders it lists. See `redactOpaqueNames`.
+   */
+  const opaqueNames = new Set();
+  const texts = [];
 
   for (const path of walk(dir)) {
     const name = basename(path);
@@ -2728,6 +2803,8 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
       const opaque = OPAQUE_NAME.test(name);
       if (!opaque) {
         failures.push(`${name}: not an opaque render name (expected 16 hex characters + .png)`);
+      } else {
+        opaqueNames.add(name);
       }
       for (const token of lowered) {
         /*
@@ -2779,10 +2856,18 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
       continue;
     }
 
-    // Anything else handed over is text we wrote, and is scanned in full.
-    const text = buf.toString('utf8').toLowerCase();
+    // Anything else handed over is text we wrote. Held back and scanned below,
+    // once the walk knows every opaque name in the run.
+    texts.push({ path, text: buf.toString('utf8').toLowerCase() });
+  }
+
+  /* ---------------------------------------------------------------- *
+   * THE TEXT THIS RUN HANDS OVER, WITH ITS OWN OPAQUE NAMES TAKEN OUT
+   * ---------------------------------------------------------------- */
+  for (const { path, text } of texts) {
+    const prose = redactOpaqueNames(text, opaqueNames);
     for (const token of lowered) {
-      if (text.includes(token)) {
+      if (prose.includes(token)) {
         failures.push(
           `${relative(dir, path)}: contains the leaking token "${token}". TWO CAUSES AND ` +
             `DIFFERENT FIXES: either this text was written from the contract, which is the ` +

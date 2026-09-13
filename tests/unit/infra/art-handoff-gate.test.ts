@@ -1506,6 +1506,74 @@ describe('a leak must fail', () => {
     expect(failures.join(' ')).toContain('leaking token "peace tower"');
   });
 
+  /*
+   * A HEX-SPELLABLE TOKEN INSIDE AN OPAQUE NAME IS NOT A LEAK, AND THE SCAN USED
+   * TO CALL IT ONE.
+   *
+   * This is the flake. `scanForLeaks` skipped a hex-only token on a render's own
+   * FILENAME - sha256 spells "beef" and "dead" by arithmetic - and did not skip
+   * it in `answers.json`, which is a list of those same filenames. The moment the
+   * contract grew a hex-spellable word (`beef-cattle`, and "dead wood on a shore"
+   * on `driftwood-pile`) the gate started refusing clean hand-offs at random:
+   * measured at 3.3% per 60-render build, which over a file that builds dozens of
+   * them is a red run most times and a green one often enough to be believed.
+   *
+   * Three cases, because the exemption is only defensible if it is narrow, and
+   * "narrow" has to be asserted rather than described.
+   */
+  /** One real render, so the planted directories below hold a genuine PNG. */
+  const plantable = (): { png: Buffer; keymapPath: string } => {
+    const source = handoff(fixture('hex-token-source'), [...CHEAP]);
+    expect(source.result.status, source.result.output).toBe(0);
+    const real = readdirSync(source.handoffDir).find((n) => n.endsWith('.png'))!;
+    return {
+      png: readFileSync(join(source.handoffDir, real)),
+      keymapPath: join(scratch('hex-token-key'), 'keymap.json'),
+    };
+  };
+
+  it('does not fire on a hex-spellable token inside THIS run\'s own opaque name', () => {
+    const { png, keymapPath } = plantable();
+    const dir = scratch('hex-in-name');
+    // Sixteen hex characters that happen to spell one. The salt picks these; no
+    // author can phrase around them and no identifier learns anything from them.
+    writeFileSync(join(dir, '0123beef456789ab.png'), png);
+    writeFileSync(
+      join(dir, 'answers.json'),
+      JSON.stringify({ identifications: [{ render: '0123beef456789ab.png', answer: '' }] }),
+    );
+
+    expect(
+      scanForLeaks({ handoffDir: dir, keymapPath, tokens: ['beef', 'beef-cattle'] }),
+    ).toEqual([]);
+  });
+
+  it('still fires on the SAME token one character outside such a name', () => {
+    // The half that makes the exemption narrow rather than a stop-word list. The
+    // word is exempt nowhere; the NAME is, and only where the name was proved
+    // opaque. A briefing that said what the picture was would still be caught.
+    const { png, keymapPath } = plantable();
+    const dir = scratch('hex-in-prose');
+    writeFileSync(join(dir, '0123beef456789ab.png'), png);
+    writeFileSync(join(dir, 'READ-ME-FIRST.txt'), 'render one shows beef cattle in a field');
+
+    const all = scanForLeaks({ handoffDir: dir, keymapPath, tokens: ['beef'] }).join('\n');
+    expect(all).toContain('READ-ME-FIRST.txt: contains the leaking token "beef"');
+  });
+
+  it('still fires on a sixteen-hex string that is not a render of this hand-off', () => {
+    // KEYED ON THE SET, NOT ON THE SHAPE. Blinding the scan to anything that
+    // merely LOOKS like an opaque name would blind it to a leak hidden in one.
+    // Only the names this run actually wrote are taken out.
+    const { png, keymapPath } = plantable();
+    const dir = scratch('hex-not-ours');
+    writeFileSync(join(dir, '0123456789abcdef.png'), png);
+    writeFileSync(join(dir, 'notes.txt'), 'see also f815dead598a9bf3.png');
+
+    const all = scanForLeaks({ handoffDir: dir, keymapPath, tokens: ['dead'] }).join('\n');
+    expect(all).toContain('notes.txt: contains the leaking token "dead"');
+  });
+
   it('fails on a render whose name is not opaque, and on one carrying PNG metadata', () => {
     const source = handoff(REPO, [...CHEAP]);
     const dir = scratch('planted-png');
