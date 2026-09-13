@@ -63,9 +63,14 @@ export function promptTargets(
 
   const targets: Record<string, LevelTarget> = {};
 
-  const offer = (rawId: string, kind: InteractKind): void => {
+  const offer = (rawId: string, kind: InteractKind, offersQuest = false): void => {
     const bare = bareTargetId(rawId);
-    const prompt = interactPrompt(locale, { id: bare, kind, done: state.done.has(bare) });
+    const prompt = interactPrompt(locale, {
+      id: bare,
+      kind,
+      done: state.done.has(bare),
+      offersQuest,
+    });
     /* No row, no offer. The alternative is a button whose label this file would
        have had to make up, which is the whole of `TN-REACH`'s defect. */
     if (prompt === null) return;
@@ -111,15 +116,17 @@ export function promptTargets(
    * a third generic row — `hud.interact.poi.offer`, "See what there is to do
    * here" — because a landmark that opens a *dialogue* is under-promised by
    * "Look at this place". That row and the precedence case that picks it live in
-   * `app/ui/copy.ts` and `app/ui/interact.ts`; when they land, `interactPrompt`
-   * takes a flag saying this target offers a quest and the call below passes
-   * `state.canEngage(poi.id)` as that flag instead of dropping it. What must not
-   * come back is the flag deciding the target's **kind**: a place that offers
-   * something is still a place, and `targets` is keyed by kind, so `npc.<id>`
-   * would also stop matching the `poi.<id>` the scene sends.
+   * `app/ui/copy.ts` and `app/ui/interact.ts`; both have landed, and the call
+   * below now passes `state.canEngage(poi.id)` as that flag instead of dropping
+   * it. What must not come back is the flag deciding the target's **kind**: a
+   * place that offers something is still a place, and `targets` is keyed by
+   * kind, so `npc.<id>` would also stop matching the `poi.<id>` the scene sends.
+   * `interactPrompt` guards that itself now — the flag is ignored unless the
+   * kind is already `poi` — so this call cannot reintroduce it, and the guard
+   * lives there rather than here because here is where it went wrong.
    */
   for (const poi of level.pois) {
-    offer(poi.id, 'poi');
+    offer(poi.id, 'poi', state.canEngage(poi.id));
   }
 
   return targets;

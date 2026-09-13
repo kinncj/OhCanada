@@ -52,27 +52,20 @@ describe('a point of interest is offered as a place, even when it offers a quest
     );
 
     /*
-     * `hud.interact.poi` — "Look at this place" — is what a giver landmark draws
-     * **today**, and it is the kind row because `app/ui` holds no better one.
+     * `hud.interact.poi.offer` — "See what there is to do here" — because this
+     * landmark offers the level's quest, and "Look at this place" promises a
+     * card and opens a conversation (`TN-REACH`, amended 2026-09-13).
      *
-     * `docs/stories/TN-REACH-what-is-in-reach.md`, amended 2026-09-13, asks for
-     * a third generic row, `hud.interact.poi.offer` ("See what there is to do
-     * here"), for a place that offers this level's quest — because "Look at this
-     * place" under-promises a dialogue. That row and the precedence case for it
-     * live in `app/ui/copy.ts` and `app/ui/interact.ts`, which this change may
-     * not edit. When they land, `interactPrompt` will need to be told that this
-     * target offers a quest, `promptTargets` will pass `state.canEngage(poi.id)`
-     * as that flag rather than dropping it, and this line becomes
-     * `hud.interact.poi.offer`. Asserted rather than loosened so that the day it
-     * changes, somebody comes back here and changes it on purpose.
+     * This line read `hud.interact.poi` until the row existed, with a note
+     * saying it would change. It changed on purpose.
      */
-    expect(prompt).toBe(text('en', 'hud.interact.poi'));
+    expect(prompt).toBe(text('en', 'hud.interact.poi.offer'));
   });
 
   it('says it in French too, because that is where the sentence is read', () => {
     const targets = promptTargets(PEGGYS_COVE, 'fr', EVERYTHING_ENGAGEABLE);
     expect(targets['peggys-point-light']?.prompt).not.toBe(text('fr', 'hud.interact.npc'));
-    expect(targets['peggys-point-light']?.prompt).toBe(text('fr', 'hud.interact.poi'));
+    expect(targets['peggys-point-light']?.prompt).toBe(text('fr', 'hud.interact.poi.offer'));
   });
 
   it('registers the landmark under the spelling the scene sends', () => {
@@ -84,10 +77,26 @@ describe('a point of interest is offered as a place, even when it offers a quest
     expect(targets['npc.peggys-point-light']).toBeUndefined();
   });
 
-  it('offers the same prompt whether or not the landmark gives a quest', () => {
+  it('says a different thing when the landmark gives a quest, and is still a place', () => {
     const asGiver = promptTargets(PEGGYS_COVE, 'en', EVERYTHING_ENGAGEABLE);
     const asScenery = promptTargets(PEGGYS_COVE, 'en', NOTHING_ENGAGEABLE);
-    expect(asGiver['peggys-point-light']).toEqual(asScenery['peggys-point-light']);
+
+    /* Different words, because pressing does a different thing. */
+    expect(asGiver['peggys-point-light']?.prompt).toBe(text('en', 'hud.interact.poi.offer'));
+    expect(asScenery['peggys-point-light']?.prompt).toBe(text('en', 'hud.interact.poi'));
+    expect(asGiver['peggys-point-light']?.prompt).not.toBe(
+      asScenery['peggys-point-light']?.prompt,
+    );
+
+    /* The assertion in this test that must survive every rewrite of it: the
+       flag changes the words and never the kind. `poi/engaged` carries
+       `poi.<id>`, so a giver registered as `npc.<id>` is a giver the event
+       never finds — which is the shape of the bug this file exists to hold
+       down. */
+    for (const targets of [asGiver, asScenery]) {
+      expect(targets['poi.peggys-point-light']).toBeDefined();
+      expect(targets['npc.peggys-point-light']).toBeUndefined();
+    }
   });
 
   it('draws the landmark’s own name nowhere', () => {
