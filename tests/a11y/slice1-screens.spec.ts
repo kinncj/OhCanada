@@ -1091,9 +1091,14 @@ test.describe('the passport', () => {
     const handles = await slots.evaluateAll((items) =>
       items.map((item) => item.getAttribute('data-level-handle')),
     );
+    /* The ten ids of `TN-LEVELS-2-to-10-spine.md`, all named: slots 2 and 10
+       carried numbers here until `peggys-cove` and `the-north` shipped with ids.
+       The passport's "not made yet" state is still reached — six of these ten
+       are unbuilt in the fixture on purpose (`TN-PASSPORT-04`, ADR-0024) — but
+       it no longer borrows two real levels' places to do it. */
     expect(handles).toEqual([
       'halifax',
-      '2',
+      'peggys-cove',
       'quebec-city',
       'ottawa',
       'toronto',
@@ -1101,7 +1106,7 @@ test.describe('the passport', () => {
       'prairie-rail',
       'alberta-foothills',
       'vancouver',
-      '10',
+      'the-north',
     ]);
   });
 
@@ -1161,7 +1166,7 @@ test.describe('the passport', () => {
     }
     expect(visited).toEqual([
       'halifax',
-      '2',
+      'peggys-cove',
       'quebec-city',
       'ottawa',
       'toronto',
@@ -1169,7 +1174,7 @@ test.describe('the passport', () => {
       'prairie-rail',
       'alberta-foothills',
       'vancouver',
-      '10',
+      'the-north',
     ]);
 
     /* Enter on a slot does nothing and announces nothing false. */

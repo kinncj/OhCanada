@@ -158,11 +158,20 @@ export const NEXT_LEVEL_PLAY_LABEL: string | null = ((): string | null => {
 })();
 
 /**
- * How the HUD says the player moves in that level, in English.
+ * How the HUD says the player moves in that level, in English, or `null` when
+ * that level declares no mode anybody has a word for.
  *
- * The one fact that tells the two levels apart from outside the game: they
- * declare different locomotion, so the mode strip changing is proof that the
- * *second* level loaded rather than the first one reloading.
+ * Read from the level's own document, like every other constant here, because
+ * what the strip must say is what the level it is in declares. It was once
+ * described as "the one fact that tells the two levels apart from outside the
+ * game" — true while the second level was Québec City, which toboggans, and
+ * false since `peggys-cove` shipped declaring `walk` and only `walk`. Two levels
+ * differing is a property of the journey's order; a level naming its own mode is
+ * a property of the HUD, and it is the one `level-end-to-next.spec.ts` asserts.
+ *
+ * `null` rather than a throw: a level with no locomotion row is a state
+ * `TN-MOVE-02` describes — the strip is absent rather than empty — so the spec
+ * asserts that instead of failing to collect.
  */
 export const NEXT_LEVEL_MODE_LABEL: string | null = ((): string | null => {
   if (NEXT_LEVEL === null) return null;

@@ -151,6 +151,27 @@ test.describe('reaching the end of a level sends the player to a new one', () =>
     page,
   }) => {
     await openLevel(page);
+
+    /*
+     * The mode strip before anything moves: the HUD names the mode **this**
+     * level declares. `START_LEVEL_MODE_LABEL` is `locomotion[0].labelKey` from
+     * `content/levels/<start>.json`, resolved through `app/ui/copy.ts` exactly
+     * as `app/bootstrap` resolves it, so nothing here is typed.
+     */
+    const modeLabel = page.getByTestId('hud-mode-label');
+    await expect(modeLabel).toBeVisible();
+    await expect(modeLabel).toHaveText(START_LEVEL_MODE_LABEL);
+
+    /*
+     * Mark the HUD this level built. The strip read after the change has to
+     * belong to the level that has arrived, and the marker is what tells a new
+     * strip from a leftover one — see the assertion below, which is where the
+     * reason lives.
+     */
+    await page
+      .getByTestId('hud')
+      .evaluate((element) => element.setAttribute('data-tn-previous-level', ''));
+
     await walkToTheEnd(page);
 
     await page.getByTestId('quest-complete-next').click();
@@ -161,14 +182,52 @@ test.describe('reaching the end of a level sends the player to a new one', () =>
     await page.waitForSelector('html[data-tn-level="ready"]', { timeout: 60_000 });
 
     /*
-     * It is really the *other* level. The two declare different locomotion, so
-     * the mode strip is the fact that tells them apart from outside the game —
-     * an assertion that "a level loaded" would pass on the first one reloading.
+     * **The HUD names the mode the level it is in declares.**
+     *
+     * This read `expect(NEXT_LEVEL_MODE_LABEL).not.toBe(START_LEVEL_MODE_LABEL)`
+     * until `peggys-cove` shipped, and the premise expired with the journey's
+     * order rather than with anything about the HUD: the second level was Québec
+     * City, which toboggans, and it is Peggy's Cove, which declares `walk` and
+     * only `walk` — deliberately (`TN-LEVEL-peggys-cove.md` adds no locomotion
+     * row at all). Two levels having different words for moving is a fact about
+     * what ships in what order, and the map may be reordered by a story that has
+     * nothing to do with this file.
+     *
+     * What the comparison was standing in for is a property of the *strip*: it
+     * says what this level's document says, and it is not a painting left over
+     * from the level before. Both halves are asserted, and neither needs the two
+     * levels to differ:
+     *
+     *  - the text is the label this level's `locomotion[0].labelKey` resolves
+     *    to — or, when it declares none, the strip is **absent** rather than
+     *    empty, which is `TN-MOVE-02` and the defect that made `boot.spec.ts`
+     *    settle for `toBeAttached` while the table had one `skate` row;
+     *  - the HUD carrying it is not the one the previous level built. The strip
+     *    used to draw the level just left for a moment, `Hud.setMode` read that
+     *    as a change worth announcing, and a screen-reader user was told they
+     *    had changed mode when they had only changed level — the reason
+     *    `app/bootstrap/main.ts` sets the label in `load` and not before.
      */
-    if (NEXT_LEVEL_MODE_LABEL !== null) {
-      await expect(page.getByTestId('hud-mode-label')).toHaveText(NEXT_LEVEL_MODE_LABEL);
-      expect(NEXT_LEVEL_MODE_LABEL).not.toBe(START_LEVEL_MODE_LABEL);
+    if (NEXT_LEVEL_MODE_LABEL === null) {
+      await expect(
+        modeLabel,
+        `content/levels/${NEXT_LEVEL ?? ''}.json declares no mode anybody has a word for, ` +
+          'so the strip must be absent rather than an empty paragraph (TN-MOVE-02)',
+      ).toBeHidden();
+    } else {
+      await expect(modeLabel).toBeVisible();
+      await expect(modeLabel).toHaveText(NEXT_LEVEL_MODE_LABEL);
     }
+
+    /* One HUD, and it is not the marked one. The count is asserted first so the
+       line below cannot pass by there being no HUD at all — which is the shape
+       an emptiness test passes in without meaning anything (ADR-0024). */
+    await expect(page.getByTestId('hud')).toHaveCount(1);
+    await expect(
+      page.locator('[data-testid="hud"][data-tn-previous-level]'),
+      'the HUD the player arrived in is the one the level they left built, so its mode ' +
+        'strip is a leftover painting rather than this level saying how it moves',
+    ).toHaveCount(0);
 
     /* One `<main>`, with the canvas inside it, exactly as on any other level:
        the level that was left took its landmark away with it. */

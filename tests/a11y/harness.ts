@@ -189,22 +189,29 @@ const waiting = {
 };
 
 /**
- * The shell's map entries.
+ * The shell's and the passport's map entries.
  *
  * **No copy here.** `TN-TITLE`, `TN-MAP`, `TN-FLOW` and `TN-LEVELS` write every
  * string these screens draw, so `app/ui/copy.ts` carries the rows and the shell
  * takes none as an option. What is left is the *state* of the journey, which is
- * data: ten entries in map order, from `TN-LEVELS-2-to-10-spine.md`, with levels
- * 2 and 10 carrying no id because that file deliberately leaves them unscoped.
+ * data: ten entries in map order, from `TN-LEVELS-2-to-10-spine.md`, **all ten
+ * named**. Levels 2 and 10 were numbered slots here until `b48bda1`, because
+ * that file left them unscoped; `peggys-cove` and `the-north` have ids, names
+ * and subject lines now, and `level.2.subtitle`, `level.10.title` and
+ * `level.10.subtitle` were retired with the state they described.
  *
- * The default fixture shows all three card states at once — Ottawa open, Halifax
- * built and not yet earned, the other eight not made yet — because `TN-MAP-05`
- * is about telling the last two apart, and a scan that never draws both proves
- * nothing about it.
+ * The default fixture still shows all three card states at once — Ottawa open,
+ * Halifax built and not yet earned, the other eight not made yet — because
+ * `TN-MAP-05` is about telling the last two apart, and a scan that never draws
+ * both proves nothing about it. **That state is synthetic on purpose**: the
+ * shipped build has a document for every level, so no card on it is "not made
+ * yet", and `TN-MAP-04` says in as many words that the guard supplies its own
+ * unbuilt entry rather than waiting for the config to contain one. A scan whose
+ * only input has been deleted is ADR-0024's vacuity wearing a green tick.
  */
-const PLACES: readonly (readonly [number, string | undefined])[] = [
+const PLACES: readonly (readonly [number, string])[] = [
   [1, 'halifax'],
-  [2, undefined],
+  [2, 'peggys-cove'],
   [3, 'quebec-city'],
   [4, 'ottawa'],
   [5, 'toronto'],
@@ -212,8 +219,24 @@ const PLACES: readonly (readonly [number, string | undefined])[] = [
   [7, 'prairie-rail'],
   [8, 'alberta-foothills'],
   [9, 'vancouver'],
-  [10, undefined],
+  [10, 'the-north'],
 ];
+
+/**
+ * `?map=unnamed` appends an eleventh entry with **no id at all**.
+ *
+ * The other half of what levels 2 and 10 used to prove. A card for a level whose
+ * place is not decided draws its number and no name, and `TN-MAP-04` forbids a
+ * placeholder in that space — no "TBD", no "coming soon", not the word
+ * `undefined`. Every shipped level is named today, so the entry that reaches
+ * that branch is supplied here rather than borrowed from two levels that have
+ * since been built. It is appended, never substituted, so the ten-card scans are
+ * unaffected by a parameter they do not set.
+ */
+const UNNAMED_ENTRY: MapEntry = { number: 11, built: false, unlocked: false };
+
+const withUnnamed = (entries: readonly MapEntry[]): readonly MapEntry[] =>
+  params.get('map') === 'unnamed' ? [...entries, UNNAMED_ENTRY] : entries;
 
 /**
  * `?stamped=<id>` puts one level's stamp in the passport, so the "Earned" badge
@@ -223,13 +246,15 @@ const PLACES: readonly (readonly [number, string | undefined])[] = [
 const STAMPED = params.get('stamped');
 
 const mapEntries = (built: readonly string[]): readonly MapEntry[] =>
-  PLACES.map(([number, id]) => ({
-    number,
-    ...(id === undefined ? {} : { id: id as LevelId }),
-    built: id !== undefined && built.includes(id),
-    unlocked: id === 'ottawa',
-    stamped: id !== undefined && id === STAMPED,
-  }));
+  withUnnamed(
+    PLACES.map(([number, id]) => ({
+      number,
+      id: id as LevelId,
+      built: built.includes(id),
+      unlocked: id === 'ottawa',
+      stamped: id === STAMPED,
+    })),
+  );
 
 /*
  * A fixed appearance, so a scan is reproducible. Drawn from the real slot list
@@ -475,13 +500,15 @@ switch (screen) {
     const stamps = params.get('stamps') ?? 'one';
     createPassport(ui, {
       locale,
-      entries: PLACES.map(([number, id]) => ({
-        number,
-        ...(id === undefined ? {} : { id: id as LevelId }),
-        built: id !== undefined && ['halifax', 'quebec-city', 'ottawa', 'toronto'].includes(id),
-        unlocked: id === 'halifax',
-        stamped: stamps !== 'none' && id === 'ottawa',
-      })),
+      entries: withUnnamed(
+        PLACES.map(([number, id]) => ({
+          number,
+          id: id as LevelId,
+          built: ['halifax', 'quebec-city', 'ottawa', 'toronto'].includes(id),
+          unlocked: id === 'halifax',
+          stamped: stamps !== 'none' && id === 'ottawa',
+        })),
+      ),
       announce,
       singleSwitch: store.current.singleSwitch,
       onBack: () => undefined,

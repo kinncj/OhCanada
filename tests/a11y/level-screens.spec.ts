@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-import { text } from '@ui/copy';
+import { hasCopyRow, text, type CopyKey } from '@ui/copy';
 
 import { HARNESS_URL } from './playwright.config';
 
@@ -99,40 +99,57 @@ const LEVEL_IDS: readonly string[] = readdirSync(
   .sort();
 
 /**
- * The ids the harness accepts, kept honest by the scan below.
+ * A place these scans can be pointed at: a level id the copy table has a
+ * waiting sentence for.
  *
- * This list is compared against `content/levels/` rather than trusted
- * ("every level with a document has a waiting sentence to scan"), so a level
- * that ships a document and is not added here fails rather than going unscanned.
- * The Alberta foothills and Vancouver arrived that way and were covered by none
- * of these scans until they were added — the third and fourth levels to do it.
+ * Derived from `app/ui/copy.ts` rather than written out, because the list
+ * somebody maintains by hand is the thing that goes stale. This union named
+ * eight levels on the day `peggys-cove` and `the-north` shipped documents, and
+ * nothing noticed until the assertion below failed in CI — which is one level
+ * better than not noticing, and two worse than not being able to happen.
  */
-type Place =
-  | 'halifax'
-  | 'quebec-city'
-  | 'ottawa'
-  | 'toronto'
-  | 'winnipeg'
-  | 'prairie-rail'
-  | 'alberta-foothills'
-  | 'vancouver';
+type PlaceOf<Key> = Key extends `level.${infer Id}.loading` ? Id : never;
+type Place = PlaceOf<CopyKey>;
 
-const PLACES: readonly Place[] = [
-  'halifax',
-  'quebec-city',
-  'ottawa',
-  'toronto',
-  'winnipeg',
-  'prairie-rail',
-  'alberta-foothills',
-  'vancouver',
-];
+/**
+ * The places these scans walk: every level that has a document, in id order.
+ *
+ * Two sources, deliberately: `LEVEL_IDS` is what makes a level *exist*, and
+ * {@link Place} is what the copy table can *say something about*. The cast is
+ * the claim that they agree, and the claim is asserted rather than assumed —
+ * "every level with a document has a waiting sentence to scan", below, and
+ * {@link rowFor}, which refuses to draw a row nobody wrote.
+ */
+const PLACES: readonly Place[] = LEVEL_IDS as readonly Place[];
+
+/**
+ * One of a level's own rows, or a failure that says which file is missing what.
+ *
+ * The harness falls back to Ottawa's rows when it is pointed at a place it has
+ * no row for, which is right for the page — a harness that rendered `undefined`
+ * would scan a defect of its own making — and wrong for this suite, which would
+ * then scan Ottawa twice and report that it had scanned two levels.
+ */
+const rowFor = (place: Place, row: 'loading' | 'error.title' | 'title', locale: 'en' | 'fr') => {
+  const key = `level.${place}.${row}`;
+  if (!hasCopyRow(key)) {
+    throw new Error(
+      `content/levels/${place}.json ships and app/ui/copy.ts has no ${key}, so this scan ` +
+        "would read Ottawa's row and believe it had read " +
+        `${place}'s. Transcribe the row from that level's story file.`,
+    );
+  }
+  return text(locale, key);
+};
 
 /** `level.<id>.loading` and `level.<id>.error.title`, in one language. */
 const waitingSentence = (place: Place, locale: 'en' | 'fr' = 'en'): string =>
-  text(locale, `level.${place}.loading` as Parameters<typeof text>[1]);
+  rowFor(place, 'loading', locale);
 const failureTitle = (place: Place, locale: 'en' | 'fr' = 'en'): string =>
-  text(locale, `level.${place}.error.title` as Parameters<typeof text>[1]);
+  rowFor(place, 'error.title', locale);
+/** What the map calls the place — the name a screen about another level may not say. */
+const placeName = (place: Place, locale: 'en' | 'fr' = 'en'): string =>
+  rowFor(place, 'title', locale);
 
 type ScreenName = 'level' | 'level-loading' | 'level-error' | 'poi';
 
@@ -641,8 +658,30 @@ test.describe('the level is loading, or did not load', () => {
      * are the levels `content/levels/` holds, so a level document that ships
      * without rows — or with rows this harness cannot be pointed at — fails here
      * rather than going unscanned. Winnipeg and the Prairies were both.
+     *
+     * This used to compare a hand-written list of places against the directory,
+     * and the list is what failed: `peggys-cove` and `the-north` shipped
+     * documents, nobody added them here, and two levels went unscanned until CI
+     * said so. The walk is derived from the directory now, so that comparison is
+     * a tautology and is gone — what it was standing in for is asserted instead:
+     * every level that exists has rows **of its own**, and the page draws them.
      */
-    expect([...PLACES].sort(), 'a level document has no scan').toEqual([...LEVEL_IDS]);
+    expect(
+      LEVEL_IDS.length,
+      'no level document was read at all, so every scan in this file walked nothing (ADR-0024)',
+    ).toBeGreaterThan(0);
+
+    for (const place of PLACES) {
+      for (const row of ['loading', 'error.title', 'title'] as const) {
+        expect(
+          hasCopyRow(`level.${place}.${row}`),
+          `content/levels/${place}.json ships and app/ui/copy.ts has no ` +
+            `level.${place}.${row} row, so this level waits, fails or is named in ` +
+            "another level's words",
+        ).toBe(true);
+      }
+    }
+
     /* And each one really renders, rather than falling back to Ottawa's row —
        the harness's own guard, read from the page. */
     for (const place of PLACES) {
@@ -729,19 +768,17 @@ test.describe('the level is loading, or did not load', () => {
       const root = await open(page, 'level-error', { place });
       /* The title is the dialog's accessible name, not merely text on it. */
       await expect(root).toHaveAccessibleName(title);
-      const drawn = (await root.textContent()) ?? '';
-      for (const other of [
-        'Halifax',
-        'Québec',
-        'Ottawa',
-        'Toronto',
-        'Winnipeg',
-        'Prairies',
-        'Alberta',
-        'Vancouver',
-      ]) {
-        if (title.includes(other)) continue;
-        expect(drawn, `the ${place} card named ${other}`).not.toContain(other);
+      /* The other nine places, in the map's words for them, derived like the
+         walk above: the list that used to be written out here named eight
+         levels on a ten-level map, so the two newest could not have been
+         caught naming anybody. Compared in lower case because a card may
+         legitimately carry its own name with a different article. */
+      const drawn = ((await root.textContent()) ?? '').toLowerCase();
+      for (const other of PLACES) {
+        if (other === place) continue;
+        expect(drawn, `the ${place} card named ${other}`).not.toContain(
+          placeName(other).toLowerCase(),
+        );
       }
     }
   });

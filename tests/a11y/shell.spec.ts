@@ -23,7 +23,18 @@ import { HARNESS_URL } from './playwright.config';
  * runs against the harness page, which mounts `createShell` directly with fixed
  * fixtures — ten map entries in three states, a resumable level, a blocked
  * browser — because those are states the shipped config does not have and a scan
- * that could not reach them would prove nothing about them. The **last** test in
+ * that could not reach them would prove nothing about them.
+ *
+ * **The unbuilt state is the sharpest case of that, and it is deliberate.** All
+ * ten levels have documents now, so no card on the shipped map is "Not made
+ * yet" — and the whole accessibility question on this screen is whether the
+ * three states are told apart in *words* rather than by colour. `TN-MAP-04`
+ * settles it: the guard supplies its own unbuilt entry, because a guard whose
+ * only input has been deleted passes exactly as a working guard passes and
+ * nothing can make it fail (ADR-0024). So the fixture builds Halifax and Ottawa
+ * only, Vancouver stands for a level nobody has built, and `?map=unnamed` adds
+ * the id-less entry that levels 2 and 10 used to be. None of those three is
+ * borrowed from a real level's name any more. The **last** test in
  * this file scans `dist/`, the artefact GitHub Pages serves, through the door a
  * visitor actually opens. It was `fixme` until `app/bootstrap/main.ts` called
  * `createShell`; task 1.20 landed that call and closed `OQ-TEST-2`.
@@ -63,6 +74,11 @@ interface HarnessOptions {
   readonly storageBlocked?: boolean;
   /** One level's stamp is in the passport, so the map's "Earned" badge is drawn. */
   readonly stamped?: string;
+  /**
+   * `unnamed`: an eleventh entry with no id, for the one card state the shipped
+   * ten cannot reach — a level whose place is not decided (`TN-MAP-04`).
+   */
+  readonly map?: 'unnamed';
 }
 
 const ROOT_TEST_ID: Readonly<Record<ShellView, string>> = {
@@ -86,6 +102,7 @@ async function open(page: Page, options: HarnessOptions = {}): Promise<Locator> 
   if (options.study === true) params.set('study', '1');
   if (options.levels !== undefined) params.set('levels', options.levels);
   if (options.stamped !== undefined) params.set('stamped', options.stamped);
+  if (options.map !== undefined) params.set('map', options.map);
   if (options.storageBlocked === true) {
     params.set('storage', 'blocked');
     params.set('export', '1');
@@ -319,7 +336,7 @@ test.describe('getting in without a pointer', () => {
 
     expect(reached).toEqual([
       'level-card-halifax',
-      'level-card-2',
+      'level-card-peggys-cove',
       'level-card-quebec-city',
       'level-card-ottawa',
       'level-card-toronto',
@@ -327,7 +344,7 @@ test.describe('getting in without a pointer', () => {
       'level-card-prairie-rail',
       'level-card-alberta-foothills',
       'level-card-vancouver',
-      'level-card-10',
+      'level-card-the-north',
     ]);
 
     for (const closed of ['level-card-halifax', 'level-card-vancouver']) {
@@ -450,15 +467,53 @@ test.describe('what the level select says about a place', () => {
     }
   });
 
-  test('a card with no place name yet draws no placeholder in its place', async ({ page }) => {
+  test('names the two levels that were numbered slots until they were built', async ({
+    page,
+  }) => {
+    /*
+     * `peggys-cove` and `the-north` drew a number and a subject line while they
+     * had no id, and this scan asserted exactly that. They shipped with ids,
+     * names and copy of their own in `b48bda1`, and `level.2.subtitle`,
+     * `level.10.title` and `level.10.subtitle` were retired with the state they
+     * described — so the assertion below is the same one, made against what is
+     * true now: every card on the shipped map names its place.
+     */
     await open(page, { view: 'level-select' });
 
-    const two = page.locator('[data-testid="level-card-2"]');
+    const two = page.locator('[data-testid="level-card-peggys-cove"]');
     await expect(two).toContainText('Level 2');
+    await expect(two).toContainText("Peggy's Cove");
     await expect(two).toContainText('Who we are');
-    for (const placeholder of ['TBD', '???', 'undefined', 'Coming soon']) {
-      await expect(two).not.toContainText(placeholder);
+
+    const ten = page.locator('[data-testid="level-card-the-north"]');
+    await expect(ten).toContainText('Level 10');
+    await expect(ten).toContainText('The North');
+    await expect(ten).toContainText("Canada's regions");
+  });
+
+  test('a card with no place name draws no placeholder in its place', async ({ page }) => {
+    /*
+     * The guard is handed its own entry, on purpose (`TN-MAP-04`, ADR-0024).
+     * Every level in the shipped journey is named, so the branch that draws a
+     * card for a level whose place is not decided has no input left on the map —
+     * and it is live code: what it answers instead of a name is what a player
+     * reads. The alternative to checking is the word "undefined" on a card.
+     */
+    await open(page, { view: 'level-select', map: 'unnamed' });
+
+    const unnamed = page.locator('[data-testid="level-card-11"]');
+    await expect(unnamed).toContainText('Level 11');
+    for (const placeholder of ['TBD', '???', 'undefined', 'null', 'Coming soon']) {
+      await expect(unnamed).not.toContainText(placeholder);
     }
+
+    /* It is still a card a screen reader can read and a switch user can reach:
+       a number is not a name, and "Not made yet" is the state either way. */
+    await expect(unnamed).toContainText('Not made yet');
+    await expect(unnamed).toHaveAccessibleName(/Level 11/);
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
   });
 
   test('survives greyscale: the states differ with no colour at all', async ({ page }) => {
