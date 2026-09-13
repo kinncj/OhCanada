@@ -14,6 +14,7 @@ import {
 } from './level-assets';
 import { bundledLevelCatalog, type LevelCatalog } from './level-catalog';
 import type { SceneLevel } from './level-document';
+import { censusIsRemarkable, describeCensus } from './verified-claim';
 import type { SceneEventListener, SceneMilestoneListener } from './level-events';
 import { dayPhase, tintPalette } from './time-of-day';
 import { LevelScene } from './level-scene';
@@ -378,6 +379,21 @@ export class GameRenderer {
   async loadLevel(id: string): Promise<Result<void>> {
     const document = await this.#catalog.load(id, this.#config.locomotionModes);
     if (!document.ok) return document;
+
+    /*
+     * What ADR-0003's filter did to this level (ADR-0024).
+     *
+     * Two states get a line: a claim was refused, or **nothing was examined**.
+     * The second is the one this exists for — every level carries at least a
+     * territorial claim, so zero examined is the filter having stopped matching
+     * the blocks it reads, which is exactly the failure that used to look like
+     * success. A level in good order says nothing here and still publishes all
+     * three numbers to the scene probe (`data-claims-*`), so "0 refused of 4
+     * examined" stays readable from outside without a warning every load.
+     */
+    if (censusIsRemarkable(document.value.claims)) {
+      console.warn(`verified-claim: ${describeCensus(String(id), document.value.claims)}`);
+    }
 
     /*
      * Resolve the level's textures BEFORE the scene is constructed.

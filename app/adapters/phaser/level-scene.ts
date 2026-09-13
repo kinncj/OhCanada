@@ -722,6 +722,13 @@ export class LevelScene extends Phaser.Scene {
       layersTextured: this.#texturedLayers,
       actors: level.pois.length + level.characters.length,
       actorsDrawn: this.#actorsDrawn,
+      /* What the ADR-0003 filter examined on this level and what it refused.
+         `actors` counts what is painted and is deliberately every placement, so
+         these are the only numbers that can tell a landmark that teaches from
+         one that is standing there. */
+      claimsExamined: level.claims.examined,
+      claimsDrawable: level.claims.drawable,
+      claimsRefused: level.claims.refused.length,
       playerDrawn: this.#playerCharacter !== null,
       placeholders: this.#placeholders,
       dayPhase: this.#phase,
@@ -1426,8 +1433,21 @@ export class LevelScene extends Phaser.Scene {
     const rectFor = (id: string, position: Vec2): TargetRect =>
       this.#drawnRects.get(id) ?? fallback(position);
 
+    /*
+     * `teachingPois`, not `pois` — ADR-0003 at the one seam where it shows.
+     *
+     * A landmark whose blurb a verifier declined is still painted by
+     * `#paintPois`, because the level's picture is composed around it and a hole
+     * is a worse lie than a quiet building. It is **not** a target: no reach
+     * event, so the HUD never offers it; no stop subject, so an automatic drive
+     * does not brake for something that would not open; no affordance mark, so
+     * nothing on screen says it can be tapped; and a tap that lands on it is a
+     * tap on scenery, which this scene already knows how to answer (see
+     * `#resolveTap`). The invitation and the thing being taught are withdrawn
+     * together, because the blurb was the whole of what the invitation promised.
+     */
     this.#reachTargets = [
-      ...level.pois.map((poi) => ({
+      ...level.teachingPois.map((poi) => ({
         id: poi.id as string,
         position: poi.position,
         npc: false,

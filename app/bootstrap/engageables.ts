@@ -70,10 +70,30 @@ export interface Engageable {
   readonly name: LocalizedText;
 }
 
-/** A point of interest, as the level places it. `name` is required by the schema. */
+/**
+ * A point of interest the player may engage: named, and with something verified
+ * to say.
+ *
+ * `blurb` is required here and it is not decoration. `SceneLevel.pois` — every
+ * landmark a level places — types its blurb as `LocalizedText | null`, because
+ * a landmark whose claim a verifier declined keeps its art and loses its
+ * teaching (ADR-0003, `app/adapters/phaser/verified-claim.ts`). So the whole
+ * level is **no longer assignable to {@link LevelPlacements}**, and the two
+ * callers that used to hand it over — the interact prompt and the quest giver
+ * resolver — have to pass `SceneLevel.teachingPois` instead. The filter cannot
+ * be forgotten by a caller who never heard of it, which is the property
+ * `Shippable<T>` gives the question bank and the property a `filter` somebody
+ * has to remember never has.
+ *
+ * It is the port's own field under the port's own name, so this is not a second
+ * declaration of a point of interest; it is the subset of one that a player may
+ * be invited to tap.
+ */
 export interface PlacedPoi {
   readonly id: string;
   readonly name: LocalizedText;
+  /** What it teaches. A landmark with none is scenery, and is not placed here. */
+  readonly blurb: LocalizedText;
 }
 
 /** A character, as the level places it. The name is the character document's. */
@@ -84,10 +104,14 @@ export interface PlacedCharacter {
 /**
  * The two lists, apart.
  *
- * `SceneLevel` satisfies this structurally, which is the point: the composition
- * root hands over the level it already loaded and no second shape is declared.
+ * `SceneLevel`'s **teaching** landmarks satisfy this structurally, which is the
+ * point: the composition root hands over the lists it already loaded and no
+ * second shape is declared. The level itself no longer satisfies it — see
+ * {@link PlacedPoi} — so `promptTargets(level, …)` is a compile error and the
+ * caller has to say which landmarks it means.
  */
 export interface LevelPlacements {
+  /** The landmarks that may be engaged — `SceneLevel.teachingPois`, never `pois`. */
   readonly pois: readonly PlacedPoi[];
   readonly characters: readonly PlacedCharacter[];
 }

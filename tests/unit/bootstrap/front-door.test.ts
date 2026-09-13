@@ -1327,8 +1327,31 @@ describe('the page has one <main>, and every modal is inside it (TN-HUD-07)', ()
 
 /* ------------------------------------------------------------ the learning loop */
 
+/** A landmark as `SceneLevel` carries it: a blurb, or `null` when it has none. */
+interface FixturePoi {
+  readonly id: string;
+  readonly name: { readonly en: string; readonly fr: string };
+  /** `null` is a claim ADR-0003 refused — the landmark is art and teaches nothing. */
+  readonly blurb: { readonly en: string; readonly fr: string } | null;
+}
+
+/**
+ * A level as the renderer hands one back, with `teachingPois` derived the way
+ * `parseLevelDocument` derives it.
+ *
+ * Derived rather than written out, so a fixture cannot declare a landmark that
+ * is refused *and* engageable — the state the composition root must never be
+ * given and, before this, the only state it had ever been given.
+ */
+const levelFixture = <T extends { readonly pois: readonly FixturePoi[] }>(
+  level: T,
+): T & { readonly teachingPois: readonly FixturePoi[] } => ({
+  ...level,
+  teachingPois: level.pois.filter((poi) => poi.blurb !== null),
+});
+
 /** A level document, as the scene hands it back once it has loaded. */
-const LOADED_LEVEL = {
+const LOADED_LEVEL = levelFixture({
   title: { en: 'Halifax', fr: 'Halifax' },
   locomotion: [{ labelKey: 'locomotion.walk.label' }],
   pois: [
@@ -1341,7 +1364,7 @@ const LOADED_LEVEL = {
   /* Every level document has one, empty or not, and the prompt is built from
      both lists: a character is a person and a point of interest is a place. */
   characters: [],
-};
+});
 
 const emit = (name: string, detail?: string): void => {
   const sink = hoisted.state.emit;
@@ -1394,7 +1417,7 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
     /* `TN-REACH`'s second rule: a level with something better to say says it.
        Ottawa writes "Look at Parliament Hill" because that landmark is not on
        `TN-NAMES`'s list and the row is in that level's story. */
-    hoisted.state.level = {
+    hoisted.state.level = levelFixture({
       ...LOADED_LEVEL,
       pois: [
         {
@@ -1403,7 +1426,7 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
           blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
         },
       ],
-    };
+    });
     await boot(`?level=${START_LEVEL}`);
     emit('level/ready');
     emit('poi/entered', 'parliament-hill');
@@ -2082,7 +2105,7 @@ describe('the passport is reachable, and gives the level back', () => {
  * two choices did to the save, and whether the level was given back.
  */
 describe('a quest is offered, accepted and tracked', () => {
-  const OTTAWA_LEVEL = {
+  const OTTAWA_LEVEL = levelFixture({
     title: { en: 'Ottawa', fr: 'Ottawa' },
     locomotion: [{ labelKey: 'locomotion.skate.label' }],
     pois: [
@@ -2093,7 +2116,7 @@ describe('a quest is offered, accepted and tracked', () => {
       },
     ],
     characters: [{ characterId: 'officer' }],
-  };
+  });
 
   const arriveInOttawa = async (): Promise<void> => {
     hoisted.state.level = OTTAWA_LEVEL;
@@ -2385,14 +2408,14 @@ describe('a landmark offers a quest, and it opens', () => {
     if (landmark === undefined || landmark === null) return;
     const { quest, level, poi } = landmark;
 
-    hoisted.state.level = {
+    hoisted.state.level = levelFixture({
       title: level.title,
       locomotion: level.locomotion,
       pois: level.pois,
       /* Empty, and that is the reason the ADR was written: there is nobody on
          this level to hold a quest and there never will be. */
       characters: [],
-    };
+    });
     await boot(`?level=${level.id}`);
     emit('level/ready');
 

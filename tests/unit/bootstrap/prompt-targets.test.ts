@@ -36,6 +36,9 @@ const PEGGYS_COVE: LevelPlacements = {
     {
       id: 'peggys-point-light',
       name: localised("Peggy's Point Lighthouse", "Le phare de Peggy's Point"),
+      /* Required by `PlacedPoi`: only a landmark with a verified claim is ever
+         offered to the player (ADR-0003). */
+      blurb: localised('A true, short thing.', 'Une chose vraie et courte.'),
     },
   ],
 };
@@ -143,7 +146,16 @@ describe('the precedence, and the two states that are not failures', () => {
        asserts the shape rather than a gap: a target whose kind row is missing
        would be absent, never "Interact" and never an empty string. */
     const targets = promptTargets(
-      { characters: [], pois: [{ id: 'a-plaque', name: localised('A plaque', 'Une plaque') }] },
+      {
+        characters: [],
+        pois: [
+          {
+            id: 'a-plaque',
+            name: localised('A plaque', 'Une plaque'),
+            blurb: localised('A true, short thing.', 'Une chose vraie et courte.'),
+          },
+        ],
+      },
       'en',
       NOTHING_ENGAGEABLE,
     );

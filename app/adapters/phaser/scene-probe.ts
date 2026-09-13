@@ -225,6 +225,24 @@ export interface SceneSnapshot {
   readonly affordances?: number;
   readonly affordancesReady?: number;
   /**
+   * What ADR-0003's claim filter did to this level, as three numbers.
+   *
+   * The same reason `layersTextured` sits beside `layers`. A landmark whose
+   * blurb a verifier declined is still painted — the level's picture is composed
+   * around it — and is not engageable, so from outside, a level with a refused
+   * claim and a level with none look identical: same art, one fewer thing to
+   * tap, nothing said about why.
+   *
+   * `claimsExamined` is the one that matters most and is the least interesting
+   * to read. A filter that stopped matching the blocks it reads publishes
+   * `examined: 0, refused: 0`; a level in good order publishes `examined: 4,
+   * refused: 0`. Those were the same observation before these existed, which is
+   * the whole defect (ADR-0024): the old code "filtered nothing" perfectly.
+   */
+  readonly claimsExamined?: number;
+  readonly claimsDrawable?: number;
+  readonly claimsRefused?: number;
+  /**
    * Where the level's sky is in the day, 0 at local midnight and 0.5 at noon.
    *
    * Published so that "the game follows the real world" is observable rather
@@ -349,6 +367,9 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'placeholders',
   'affordances',
   'affordancesReady',
+  'claimsExamined',
+  'claimsDrawable',
+  'claimsRefused',
   'tier',
   'motion',
   'renderer',
@@ -396,6 +417,9 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-placeholders': num(snapshot.placeholders),
     'data-affordances': num(snapshot.affordances),
     'data-affordances-ready': num(snapshot.affordancesReady),
+    'data-claims-examined': num(snapshot.claimsExamined),
+    'data-claims-drawable': num(snapshot.claimsDrawable),
+    'data-claims-refused': num(snapshot.claimsRefused),
     'data-day-phase': num(snapshot.dayPhase),
     'data-tier': text(snapshot.tier),
     'data-motion': text(snapshot.motion),

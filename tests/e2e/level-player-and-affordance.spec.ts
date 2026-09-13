@@ -38,7 +38,20 @@ import { START_LEVEL } from './start-level';
 const REPO_ROOT = fileURLToPath(new URL('../../', import.meta.url));
 
 interface LevelFile {
-  readonly pois: readonly { readonly id: string; readonly position: { readonly x: number } }[];
+  readonly pois: readonly {
+    readonly id: string;
+    readonly position: { readonly x: number };
+    /** ADR-0003's block: a landmark whose claim was declined is never offered. */
+    readonly fact: {
+      readonly factual: boolean;
+      readonly source: { readonly sourceHash: string } | null;
+      readonly verification: {
+        readonly status: string;
+        readonly sourceHash: string;
+        readonly evidence: string;
+      } | null;
+    };
+  }[];
   readonly characters: readonly {
     readonly characterId: string;
     readonly position: { readonly x: number };
@@ -54,7 +67,25 @@ const LEVEL = JSON.parse(
 
 const URL_FOR = (search = ''): string => `./?e2e=1&level=${START_LEVEL}${search}`;
 
-const ENGAGEABLE = LEVEL.pois.length + LEVEL.characters.length;
+/**
+ * What the game may offer, which is not the same as what it places.
+ *
+ * `pois.length + characters.length` was this number, and it stopped being true
+ * when ADR-0003's filter moved into the level parser: a landmark whose blurb a
+ * verifier declined is still painted and is not engageable, so a level with one
+ * of those would have failed here for being *correct*. Written from the
+ * document's own fields rather than imported from the adapter, so the scenario
+ * does not agree with the code under test by construction.
+ */
+const teaches = (poi: LevelFile['pois'][number]): boolean =>
+  poi.fact.factual !== true ||
+  (poi.fact.verification !== null &&
+    poi.fact.source !== null &&
+    poi.fact.verification.status === 'verified' &&
+    poi.fact.verification.sourceHash === poi.fact.source.sourceHash &&
+    poi.fact.verification.evidence.trim().length > 0);
+
+const ENGAGEABLE = LEVEL.pois.filter(teaches).length + LEVEL.characters.length;
 
 test.describe('the player is a character, not a rectangle', () => {
   test('composes the player from the rig, and reports no placeholder at all', async ({ page }) => {
@@ -128,7 +159,7 @@ test.describe('the world says what can be touched', () => {
       LEVEL.locomotion[0]?.interaction === null,
       'this level spawns in a mode that engages nothing',
     );
-    const target = [...LEVEL.characters, ...LEVEL.pois]
+    const target = [...LEVEL.characters, ...LEVEL.pois.filter(teaches)]
       .map((subject) => subject.position.x)
       .sort((a, b) => a - b)[0];
     expect(target, 'nothing to walk to').toBeGreaterThan(0);

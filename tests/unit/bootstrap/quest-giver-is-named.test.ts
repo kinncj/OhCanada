@@ -70,6 +70,8 @@ import { createSettingsStore } from '@ui/settings';
 import { hasCopyRow, UI_LOCALES, type UiLocale } from '@ui/copy';
 import type { QuestDocument } from '@application/ports';
 import type { LocalizedText } from '@domain/entities/values';
+import { parseLevelDocument } from '@adapters/phaser/level-document';
+import gameConfigJson from '@content/game.config.json';
 
 import { buildPage, type FakePage } from '../ui/support/fake-dom';
 import {
@@ -87,16 +89,29 @@ import type { CharacterId, LevelId } from '@domain/ids';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 
-/** A level document, as placements. The two lists apart, which is ADR-0029 §2. */
+const MODES: readonly string[] = (gameConfigJson as { locomotionModes: readonly string[] })
+  .locomotionModes;
+
+/**
+ * A level document, as placements. The two lists apart, which is ADR-0029 §2.
+ *
+ * Read through `parseLevelDocument` rather than picked out of the JSON by hand,
+ * and that is not tidiness. A landmark whose blurb a verifier declined is not an
+ * engageable at run time (ADR-0003, `app/adapters/phaser/verified-claim.ts`), so
+ * a quest given by one could not be offered — and a test that read `pois`
+ * straight out of the file would have said it could. The suite now asks the same
+ * question the game asks.
+ */
 function placementsOf(id: string): LevelPlacements | null {
   const path = `${REPO_ROOT}content/levels/${id}.json`;
   if (!existsSync(path)) return null;
-  const document = JSON.parse(readFileSync(path, 'utf8')) as {
-    pois?: { id: string; name: LocalizedText }[];
-    characters?: { characterId: string }[];
-  };
-  return { pois: document.pois ?? [], characters: document.characters ?? [] };
+  const parsed = parseLevelDocument(JSON.parse(readFileSync(path, 'utf8')), MODES);
+  if (!parsed.ok) throw new Error(`content/levels/${id}.json: ${parsed.error.message}`);
+  return { pois: parsed.value.teachingPois, characters: parsed.value.characters };
 }
+
+/** Whatever a placed landmark teaches. Verified by construction: see {@link PlacedPoi}. */
+const BLURB: LocalizedText = localised('A true, short thing.', 'Une chose vraie et courte.');
 
 const localisedName = (name: LocalizedText, locale: UiLocale): string =>
   locale === 'fr' ? name.fr : name.en;
@@ -205,7 +220,7 @@ describe('every quest this build ships can name whatever offers it', () => {
     const quest = makeQuest({ giver: characterId('a-plaque') });
     const halfNamed: LevelPlacements = {
       characters: [],
-      pois: [{ id: 'a-plaque', name: { en: 'A plaque', fr: '' } }],
+      pois: [{ id: 'a-plaque', name: { en: 'A plaque', fr: '' }, blurb: BLURB }],
     };
     /* `unnamed` is refused outright rather than half-answered: an English label
        announced to a French screen-reader user is `TN-CREATOR-09`'s defect. */
@@ -213,7 +228,7 @@ describe('every quest this build ships can name whatever offers it', () => {
 
     const named: LevelPlacements = {
       characters: [],
-      pois: [{ id: 'a-plaque', name: localised('A plaque', 'Une plaque') }],
+      pois: [{ id: 'a-plaque', name: localised('A plaque', 'Une plaque'), blurb: BLURB }],
     };
     expect(missingNameLocales(quest, named)).toEqual([]);
   });

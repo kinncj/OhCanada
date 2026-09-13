@@ -50,11 +50,25 @@ interface LevelFile {
     readonly interaction: { readonly reachPx: number } | null;
   }[];
   readonly ground: readonly { readonly x: number; readonly y: number }[];
-  readonly pois: readonly { readonly id: string; readonly position: { readonly x: number } }[];
+  readonly pois: readonly {
+    readonly id: string;
+    readonly position: { readonly x: number };
+    /** ADR-0003's block. Read here so the spec can tell art from teaching. */
+    readonly fact: {
+      readonly factual: boolean;
+      readonly source: { readonly sourceHash: string } | null;
+      readonly verification: {
+        readonly status: string;
+        readonly sourceHash: string;
+        readonly evidence: string;
+      } | null;
+    };
+  }[];
   readonly characters: readonly {
     readonly characterId: string;
     readonly position: { readonly x: number };
   }[];
+  readonly territory: { readonly fact: LevelFile['pois'][number]['fact'] };
 }
 
 const OTTAWA = JSON.parse(
@@ -81,6 +95,26 @@ const DESCENT_END_X = (() => {
 })();
 
 const LANDMARK_X = OTTAWA.pois[0]?.position.x ?? 0;
+
+/**
+ * ADR-0003's three conditions, over the document, so this spec can say which
+ * landmarks the game is allowed to offer.
+ *
+ * Written from the document's own field names rather than imported from the
+ * adapter: a scenario that asked the code under test what it should expect would
+ * agree with it however wrong it was.
+ */
+const verified = (fact: LevelFile['pois'][number]['fact']): boolean =>
+  fact.factual !== true ||
+  (fact.verification !== null &&
+    fact.source !== null &&
+    fact.verification.status === 'verified' &&
+    fact.verification.sourceHash === fact.source.sourceHash &&
+    fact.verification.evidence.trim().length > 0);
+
+/** The landmarks Ottawa may teach from, and the ones a verifier declined. */
+const TEACHING = OTTAWA.pois.filter((poi) => verified(poi.fact));
+const REFUSED = OTTAWA.pois.filter((poi) => !verified(poi.fact));
 
 /** One frame as `scene-probe.ts` records it. Restated so a rename fails a test. */
 interface Frame {
@@ -732,6 +766,122 @@ test.describe('TN-LEVEL-05 — coming into reach', () => {
       .filter((event) => event.name === 'poi/entered')
       .map((event) => event.detail);
     expect(entered, 'the skater reached the landmark without entering reach').toContain(LANDMARK);
+  });
+});
+
+/**
+ * ADR-0003 through the built artefact: a landmark with nothing verified to say
+ * is scenery.
+ *
+ * Ottawa's fourth landmark, `warming-hut`, claims "The Rideau Canal was built as
+ * a military waterway" and the cited page says it was *once* one. A verifier
+ * rejected it, `verify-content` reported it, and the sentence went on drawing to
+ * a player: the level parser carried `fact` through untouched and the POI card
+ * drew the prose beside it.
+ *
+ * What the fix does is withdraw the *invitation* along with the teaching. The
+ * hut is still painted — the level's picture is composed around it, and a hole
+ * in the canal bank is a worse lie than a quiet building — so `data-actors`
+ * still counts it. It is not a reach target, so the HUD never offers it, the
+ * automatic drive never brakes for it and no ring marks it as tappable.
+ *
+ * Both halves are asserted in the same run, deliberately: a spec that only
+ * proved the hut is silent would also pass on a build where *no* landmark can be
+ * engaged.
+ */
+test.describe('ADR-0003 — a refused claim is not offered to the player', () => {
+  test('paints every landmark and offers only the ones with something verified to say', async ({
+    page,
+  }) => {
+    await openLevel(page);
+    const probe = page.locator('[data-testid="scene-state"]');
+
+    /* Painted: every placement, refused or not. A missing building would be a
+       different lie, not a smaller one. */
+    await expect(probe).toHaveAttribute(
+      'data-actors',
+      String(OTTAWA.pois.length + OTTAWA.characters.length),
+    );
+    /* Offered: only what may teach, plus the people. This is the number that
+       moves when a claim is declined, and it is the report — "we don't know
+       what to click" — answered honestly rather than generously. */
+    await expect(
+      probe,
+      'the game marks a landmark as tappable whose blurb a verifier declined, so a player is ' +
+        'invited to open a card that has nothing true to put in it.',
+    ).toHaveAttribute('data-affordances', String(TEACHING.length + OTTAWA.characters.length));
+
+    /*
+     * And the census, so "nothing was refused" and "nothing was examined" are
+     * different readings on the page rather than the same silence (ADR-0024).
+     *
+     * `pois.length + 1` — the territorial claim is the one every level carries,
+     * so this number can never legitimately be zero. A build where it reads 0
+     * has a filter that has stopped matching the blocks it reads, and that is
+     * the state this attribute exists to make visible from outside.
+     */
+    await expect(
+      probe,
+      'the claim filter examined a different number of claims than the level document carries, ' +
+        'which means it is reading something other than every fact block on the level.',
+    ).toHaveAttribute('data-claims-examined', String(OTTAWA.pois.length + 1));
+    await expect(probe).toHaveAttribute('data-claims-refused', String(REFUSED.length));
+    await expect(probe).toHaveAttribute('data-claims-drawable', String(TEACHING.length + (verified(OTTAWA.territory.fact) ? 1 : 0)));
+  });
+
+  test('skates the whole canal and is never told the refused landmark is there', async ({
+    page,
+  }) => {
+    /*
+     * Skipped, not deleted, when every claim on this level is in order.
+     *
+     * The corpus moves: `warming-hut`'s blurb was rejected when this was written
+     * and an author has since reworded it and a verifier has granted it, which
+     * is the system working. A scenario that needed a live refusal would have
+     * been deleted on the day the content was fixed and would not be here the
+     * next time one is declined. The proof that does not depend on the corpus is
+     * `tests/unit/adapters/phaser/a-claim-draws-only-when-verified.test.ts`,
+     * which writes the verdict both ways on a real document; this is the one
+     * that watches the built artefact, and it re-arms itself.
+     */
+    test.skip(
+      REFUSED.length === 0,
+      'every landmark on content/levels/ottawa.json currently teaches something a verifier ' +
+        'granted, so there is no refused claim on this level to walk past. The test above still ' +
+        'asserts the census and the affordance count on every run.',
+    );
+    /* A traversal on a software rasteriser, not a computation. The assertion is
+       about which landmarks reported reach, not about how long the skate took. */
+    test.slow();
+    const furthest = Math.max(...OTTAWA.pois.map((poi) => poi.position.x));
+    const reachable = TEACHING.filter((poi) => poi.position.x <= furthest);
+    expect(reachable.length, 'no landmark on this level may teach, so nothing is proven').toBeGreaterThan(0);
+
+    await openLevel(page);
+    await clearTrace(page);
+
+    await page.keyboard.down('ArrowRight');
+    await waitForIntent(page, 1);
+    await waitForPlayerPast(page, furthest + (SKATE.interaction?.reachPx ?? 0) + 120);
+    await page.keyboard.up('ArrowRight');
+
+    const entered = (await events(page))
+      .filter((event) => event.name === 'poi/entered')
+      .map((event) => event.detail);
+
+    for (const poi of reachable) {
+      expect(
+        entered,
+        `the skater passed "${poi.id}", whose claim is verified, and was never told it was there`,
+      ).toContain(poi.id);
+    }
+    for (const poi of REFUSED) {
+      expect(
+        entered,
+        `"${poi.id}" reported the player into reach, so the HUD offered a landmark whose only ` +
+          'content a verifier declined. The prompt invites a tap; the card has nothing to draw.',
+      ).not.toContain(poi.id);
+    }
   });
 });
 

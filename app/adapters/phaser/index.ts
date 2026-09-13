@@ -157,8 +157,29 @@ export {
   MAX_DECODED_TEXTURE_BYTES,
   parseLevelDocument,
   refuseOverBudget,
+  refuseSilentLevel,
   type SceneLevel,
+  type ScenePoi,
+  type TeachingPoi,
 } from './level-document';
+
+/*
+  ADR-0003 for the claims that are not questions. Exported because the composition
+  root builds the "About this place" panel's content from `SceneLevel.about` and
+  has to be able to name the two shapes it can be, and because a future DOM
+  surface must not re-derive "may this be drawn" from the status field itself.
+  The *rule* is deliberately not on this list: `adjudicateClaim` and
+  `readFactClaim` are reachable only from inside this directory, so the only way
+  another layer can obtain a drawable claim is to have parsed a level.
+*/
+export {
+  censusIsRemarkable,
+  describeCensus,
+  type AboutThisPlace,
+  type ClaimCensus,
+  type ClaimRefusalReason,
+  type RefusedClaim,
+} from './verified-claim';
 
 export {
   MAX_GRADIENT,

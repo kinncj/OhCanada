@@ -139,6 +139,15 @@ describe('snapshotToAttributes', () => {
            Two numbers because they answer two different complaints. */
         'data-affordances',
         'data-affordances-ready',
+        /* What ADR-0003's claim filter examined on this level, and what it
+           refused. `data-claims-examined` is the one that reads as noise and is
+           the reason the trio exists: a filter that stopped matching the blocks
+           it reads publishes 0 examined and 0 refused, and a level whose claims
+           are all in order publishes 4 examined and 0 refused. Those two were
+           the same observation until these attributes existed (ADR-0024). */
+        'data-claims-examined',
+        'data-claims-drawable',
+        'data-claims-refused',
         /* The level's sky follows the device clock; this is what makes that
            observable instead of a screenshot taken at the right hour. */
         'data-day-phase',

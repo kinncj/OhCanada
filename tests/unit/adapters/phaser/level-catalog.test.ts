@@ -105,6 +105,41 @@ describe('interpreting what came back', () => {
     title: { en: 'Testville', fr: 'Testville' },
     size: { x: 1000, y: 1920 },
     spawn: { x: 10, y: 900 },
+    /* Required by the schema and, since ADR-0003's filter moved into the parser,
+       at run time too: the "About this place" panel is always reachable
+       (docs/content-review.md §10.2) and a level with no territory block is a
+       panel with nothing behind it. */
+    territory: {
+      nations: ['Testville First Nation'],
+      statement: {
+        en: 'Testville sits on the territory of the Testville First Nation.',
+        fr: 'Testville se trouve sur le territoire de la Première Nation de Testville.',
+      },
+      fact: {
+        factual: true,
+        source: { sourceHash: 'a'.repeat(64) },
+        verification: {
+          status: 'verified',
+          model: 'test',
+          checkedAt: '2026-09-13T00:00:00Z',
+          sourceHash: 'a'.repeat(64),
+          evidence: 'Testville is on the territory of the Testville First Nation.',
+        },
+      },
+      nationSource: {
+        publisher: 'Testville First Nation',
+        url: 'https://example.invalid/testville',
+        sourceHash: '',
+        asOf: null,
+        verification: {
+          status: 'unverified',
+          model: '',
+          checkedAt: null,
+          sourceHash: '',
+          evidence: '',
+        },
+      },
+    },
     camera: { followLerp: 0.2, deadZone: { x: 1, y: 1 }, offset: { x: 0, y: 0 }, zoom: 1 },
     ground: [
       { x: 0, y: 900 },

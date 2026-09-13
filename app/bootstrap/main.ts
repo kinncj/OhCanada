@@ -130,6 +130,7 @@ import { isPlayable, journeyEntries } from './journey';
 import { createExamController, type ExamController } from './exam';
 import { createExamEventLog } from './exam-events';
 import { promptTargets } from './prompt-targets';
+import type { LevelPlacements } from './engageables';
 import { createQuestController, type QuestController } from './quest';
 import { readQuests, questsForLevel, type QuestCatalogue } from './quests';
 import { createDrillRunner, type DrillRunner } from './quiz';
@@ -2032,6 +2033,28 @@ function openLevel(wiring: LevelWiring): LevelSession {
   }
 
   /**
+   * What this level offers the player: the characters it places, and the
+   * landmarks that have something **verified** to say (ADR-0003).
+   *
+   * `renderer.level` used to be handed over whole, and that is the bug this
+   * shape fixes. A landmark whose blurb a verifier declined keeps its art —
+   * `SceneLevel.pois` still carries it, and the scene still draws it, because
+   * the level's picture is composed around it — but it is not here, so the
+   * interact prompt never offers it, the auto-stop never brakes for it, no
+   * affordance ring marks it, and the card never opens on it. The game does not
+   * invite a tap it cannot honour.
+   *
+   * A thunk rather than a value: this is read before `loadLevel` resolves and
+   * again after every level change, and a list captured once would be the one
+   * from the level just left.
+   */
+  const placementsNow = (): LevelPlacements | null => {
+    const level = renderer.level;
+    if (level === null) return null;
+    return { pois: level.teachingPois, characters: level.characters };
+  };
+
+  /**
    * The quest, from the offer to the stamp (`app/bootstrap/quest.ts`).
    *
    * Built with the level whether or not the level has one: with no quests it
@@ -2051,7 +2074,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
        (`content/characters/<id>.json#/name`) or a point of interest
        (`pois[].name`). A thunk, not a value: this controller is built before
        `loadLevel` resolves, and a level read here would be the one just left. */
-    placements: () => renderer.level,
+    placements: placementsNow,
     host: hud.main,
     store,
     clock: wiring.clock,
@@ -2090,7 +2113,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
    * surface `TN-NAMES-04` fails the build for.
    */
   function targetsNow(): Readonly<Record<string, LevelTarget>> {
-    return promptTargets(renderer.level, locale, {
+    return promptTargets(placementsNow(), locale, {
       done: engaged,
       canEngage: (targetId) => quests.canEngage(targetId),
     });
@@ -2125,7 +2148,13 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
     const level: SceneLevel | null = renderer.level;
     if (level === null) return;
-    const poi = level.pois.find((candidate) => candidate.id === bareTargetId(detail));
+    /*
+     * `teachingPois`, not `pois`. A landmark whose claim was refused is not in
+     * this list, so there is nothing to open — and because the same list builds
+     * the prompt and the reach targets, the player was never offered it in the
+     * first place. The lookup failing here is the belt to that braces.
+     */
+    const poi = level.teachingPois.find((candidate) => candidate.id === bareTargetId(detail));
     if (poi === undefined) return;
     markEngaged(detail);
     learning = poi.id;

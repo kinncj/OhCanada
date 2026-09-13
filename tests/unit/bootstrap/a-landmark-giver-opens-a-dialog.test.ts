@@ -56,11 +56,20 @@ const LIGHT_NAME = {
  * scale, including a silhouette and a crowd", so there is nobody on this level
  * to hold a quest and there never will be.
  */
+/**
+ * What a placed landmark teaches.
+ *
+ * Required by `PlacedPoi` since ADR-0003's filter moved into the level parser: a
+ * landmark with no verified claim is not an engageable at all, so it cannot be
+ * a quest giver either, and the type says so.
+ */
+const BLURB = localised('A true, short thing.', 'Une chose vraie et courte.');
+
 const PEGGYS_COVE: LevelPlacements = {
   characters: [],
   pois: [
-    { id: 'granite-shore', name: localised('The granite shore', 'La côte de granit') },
-    { id: LIGHT, name: { ...LIGHT_NAME } },
+    { id: 'granite-shore', name: localised('The granite shore', 'La côte de granit'), blurb: BLURB },
+    { id: LIGHT, name: { ...LIGHT_NAME }, blurb: BLURB },
   ],
 };
 
@@ -351,7 +360,7 @@ describe('and a giver the level does not place opens nothing', () => {
        two are different failures and neither is a success. */
     const collision: LevelPlacements = {
       characters: [{ characterId: 'guide' }],
-      pois: [{ id: 'guide', name: localised('A sign', 'Un panneau') }],
+      pois: [{ id: 'guide', name: localised('A sign', 'Un panneau'), blurb: BLURB }],
     };
     const { controller } = harnessFor([lighthouseQuest({ giver: 'guide' })], collision);
 
@@ -376,7 +385,7 @@ describe('and a giver the level does not place opens nothing', () => {
       /* A document `make validate-content` would reject; the runtime refuses it
          too, because a dialog named "" is the defect and CI is not the only
          place this can be true. */
-      pois: [{ id: LIGHT, name: { en: "Peggy's Point Lighthouse", fr: '  ' } }],
+      pois: [{ id: LIGHT, name: { en: "Peggy's Point Lighthouse", fr: '  ' }, blurb: BLURB }],
     };
     const { controller } = harnessFor([lighthouseQuest()], half);
     expect(controller.canEngage(LIGHT)).toBe(false);

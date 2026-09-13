@@ -21,10 +21,33 @@
  * contract test fails, then the port is fixed, and then this file stops
  * compiling.
  *
- * The `Pick` is deliberately narrow: `subject`, `order`, `territory` and
- * `quests` are read by the content and quest layers, not by a scene, and a scene
- * that could reach them would eventually use one. What a scene may read is
- * geometry, art keys and tuning.
+ * The `Pick` is deliberately narrow: `subject`, `order` and `quests` are read by
+ * the content and quest layers, not by a scene, and a scene that could reach
+ * them would eventually use one. What a scene may read is geometry, art keys and
+ * tuning.
+ *
+ * `territory` is the one that changed, and not into the raw block. What comes
+ * out of here is {@link AboutThisPlace} — the territorial claim already
+ * adjudicated under ADR-0003, with the statement present only when a verifier
+ * granted it. A scene still cannot draw a sentence, because in the refused case
+ * there is no sentence in the object to draw.
+ *
+ * ## The claims (ADR-0003, ADR-0024)
+ *
+ * Two of a level's fields state facts about Canada: a point of interest's
+ * `blurb` and the territorial `statement`. Both carry a `factClaim`, and until
+ * this parser adjudicated them both were carried through untouched and drawn —
+ * while `verify-content` printed "excluded from the build" about four of them.
+ * See `./verified-claim.ts` for the rule and for why the count of what was
+ * *examined* travels with the level ({@link SceneLevel.claims}) rather than only
+ * the count of what was refused.
+ *
+ * A refused blurb does not remove the landmark: `pois` is still every placement
+ * the level authored, so the art is composed as the level intends. What it
+ * removes is the *teaching*, and {@link SceneLevel.teachingPois} — the only list
+ * whose `blurb` is non-null — is what the prompt, the auto-stop, the affordance
+ * ring and the card are built from. A landmark with nothing verified to say is
+ * scenery, and the game never offers a tap it cannot honour.
  *
  * ## The refusal (TN-LEVEL-02)
  *
@@ -43,6 +66,7 @@ import type {
   LevelAssetRef,
   LevelCharacter,
   LevelDocument,
+  LocalizedText,
   LocomotionTuning,
   ParallaxLayer,
   PointOfInterest,
@@ -53,6 +77,13 @@ import type { CharacterId, LevelId, PoiId } from '@domain/ids';
 import { appErr, ok, type Result } from '@common/result';
 
 import { DEFAULT_PALETTE } from './boot-config';
+import {
+  createClaimLedger,
+  readFactClaim,
+  type AboutThisPlace,
+  type ClaimCensus,
+  type ClaimLedger,
+} from './verified-claim';
 
 /**
  * CLAUDE.md, Budgets: "Decoded texture memory <= 64 MB per level on iPhone."
@@ -71,25 +102,70 @@ export const MAX_DECODED_TEXTURE_BYTES = 67_108_864;
  * `BootConfig.palette` gives `game.config.json`'s optional theme.
  */
 export interface SceneLevel
-  extends Pick<
-    LevelDocument,
-    | 'id'
-    | 'title'
-    | 'size'
-    | 'spawn'
-    | 'camera'
-    | 'ground'
-    | 'layers'
-    | 'locomotion'
-    | 'pois'
-    | 'characters'
-    | 'assets'
-    | 'textureBudgetBytes'
+  extends Omit<
+    Pick<
+      LevelDocument,
+      | 'id'
+      | 'title'
+      | 'size'
+      | 'spawn'
+      | 'camera'
+      | 'ground'
+      | 'layers'
+      | 'locomotion'
+      | 'pois'
+      | 'characters'
+      | 'assets'
+      | 'textureBudgetBytes'
+    >,
+    'pois'
   > {
+  /**
+   * Every landmark the level places, for the paint pass.
+   *
+   * `blurb` is nullable here and that is the whole mechanism: a landmark whose
+   * claim a verifier declined keeps its art, its position and its name, and has
+   * nothing to teach. Nothing that draws prose can take one of these without
+   * deciding what a null means.
+   */
+  readonly pois: readonly ScenePoi[];
+  /**
+   * The landmarks that may be engaged, because they have something verified to
+   * say. A subset of {@link pois}, in the same order.
+   *
+   * This is the list the interact prompt, the auto-stop, the affordance mark and
+   * the POI card are built from. `app/bootstrap/engageables.ts` requires a
+   * non-null `blurb` on a placement, so handing the whole level to those callers
+   * no longer compiles — the filter cannot be forgotten by a caller who never
+   * heard of it, which is the property `Shippable<T>` gives the question bank.
+   */
+  readonly teachingPois: readonly TeachingPoi[];
+  /** The "About this place" panel's content, adjudicated. `docs/content-review.md` §10.2. */
+  readonly about: AboutThisPlace;
+  /** What the ADR-0003 filter looked at on this level, and what it did. */
+  readonly claims: ClaimCensus;
   /** The level's `theme` over `DEFAULT_PALETTE`; always complete. */
   readonly palette: ThemeColours;
   /** Sum of `assets[].decodedBytes`. Compared to the two ceilings above. */
   readonly decodedTextureBytes: number;
+}
+
+/**
+ * A landmark as a scene holds it: the port's own POI, with a blurb that may be
+ * absent because the claim in it was not verified.
+ *
+ * Derived from `PointOfInterest` rather than restated, so every other property
+ * stays pinned to `level.schema.json` through
+ * `tests/unit/contracts/ports-match-schemas.test.ts`.
+ */
+export interface ScenePoi extends Omit<PointOfInterest, 'blurb'> {
+  /** The verified fact this landmark teaches, or `null` when there is not one. */
+  readonly blurb: LocalizedText | null;
+}
+
+/** A landmark with something to teach. The only kind the player can engage. */
+export interface TeachingPoi extends ScenePoi {
+  readonly blurb: LocalizedText;
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -395,11 +471,18 @@ function readAnimation(raw: unknown, where: string): Result<LocomotionTuning['an
   return ok(binding);
 }
 
-function readPois(source: Record<string, unknown>): Result<readonly PointOfInterest[]> {
+/** Every landmark the level places, and the subset of them that may teach. */
+interface ReadPois {
+  readonly pois: readonly ScenePoi[];
+  readonly teaching: readonly TeachingPoi[];
+}
+
+function readPois(source: Record<string, unknown>, ledger: ClaimLedger): Result<ReadPois> {
   const raw = readArray(source, 'pois', 0);
   if (!raw.ok) return raw;
 
-  const pois: PointOfInterest[] = [];
+  const pois: ScenePoi[] = [];
+  const teaching: TeachingPoi[] = [];
   for (const [index, item] of raw.value.entries()) {
     const where = `pois[${String(index)}]`;
     if (!isRecord(item)) return invalid(where, `"${where}" must be an object.`);
@@ -416,23 +499,29 @@ function readPois(source: Record<string, unknown>): Result<readonly PointOfInter
     const radiusPx = readNumber(item, 'radiusPx', { exclusiveMin: 0 });
     if (!radiusPx.ok) return invalid(`${where}.radiusPx`, radiusPx.error.message);
 
-    /* `fact` is carried through untouched: whether the blurb states something
-       true is ADR-0003's question and the content gates answer it. A scene must
-       not be able to render a POI whose claim it silently dropped. */
-    const fact = item['fact'];
-    if (!isRecord(fact) || typeof fact['factual'] !== 'boolean') {
-      return invalid(
-        `${where}.fact`,
-        `"${where}.fact" must declare "factual"; ADR-0003 governs a landmark blurb exactly as it ` +
-          'governs a question, and an absent declaration is an unchecked claim.',
-      );
-    }
+    /*
+     * The claim, read strictly and then adjudicated.
+     *
+     * This block used to be carried through untouched, on the reasoning that
+     * "whether the blurb states something true is ADR-0003's question and the
+     * content gates answer it". The gates answer it in CI; nothing answered it
+     * at run time, and `ottawa /pois/3` — "The Rideau Canal was built as a
+     * military waterway", where the cited page says it was *once* one — was
+     * rejected by a verifier and drawn to a player on the same day.
+     *
+     * `fact` is still carried, because a claim must travel with the prose it is
+     * about. What is new is that the prose does not travel unless the claim
+     * passed.
+     */
+    const claim = readFactClaim(item['fact'], `${where}.fact`);
+    if (!claim.ok) return claim;
+    const refusal = ledger.admit(`/pois/${String(index)}`, claim.value);
 
-    const poi: { -readonly [K in keyof PointOfInterest]: PointOfInterest[K] } = {
+    const poi: { -readonly [K in keyof ScenePoi]: ScenePoi[K] } = {
       id: id.value as PoiId,
       name: name.value,
-      blurb: blurb.value,
-      fact: fact as unknown as PointOfInterest['fact'],
+      blurb: refusal === null ? blurb.value : null,
+      fact: item['fact'] as unknown as PointOfInterest['fact'],
       position: position.value,
       artKey: artKey.value,
       radiusPx: radiusPx.value,
@@ -440,8 +529,85 @@ function readPois(source: Record<string, unknown>): Result<readonly PointOfInter
     const questId = item['questId'];
     if (typeof questId === 'string') poi.questId = questId as NonNullable<PointOfInterest['questId']>;
     pois.push(poi);
+    if (refusal === null) teaching.push({ ...poi, blurb: blurb.value });
   }
-  return ok(pois);
+  return ok({ pois, teaching });
+}
+
+/**
+ * The territorial statement, adjudicated into what the panel may draw.
+ *
+ * Required, as `level.schema.json` requires it. A level with no `territory` at
+ * all would present as a panel with nothing in it, which is exactly the silence
+ * `docs/content-review.md` §10.2 forbids — so it is refused here rather than
+ * discovered by a player who opened the panel.
+ *
+ * What comes back in the refused case carries no `nations` and no publisher: see
+ * {@link AboutThisPlace} for why a list of nations is the same attribution as
+ * the sentence.
+ */
+function readTerritory(
+  source: Record<string, unknown>,
+  ledger: ClaimLedger,
+): Result<AboutThisPlace> {
+  const territory = source['territory'];
+  if (!isRecord(territory)) {
+    return invalid(
+      'territory',
+      '"territory" must be an object. docs/content-review.md §10.2 fixes the "About this place" ' +
+        'panel as always reachable, and a panel with no source of content is a panel that ' +
+        'silently says nothing.',
+    );
+  }
+
+  const rawNations = readArray(territory, 'nations', 1);
+  if (!rawNations.ok) return invalid('territory.nations', rawNations.error.message);
+  const nations: string[] = [];
+  for (const [index, nation] of rawNations.value.entries()) {
+    if (typeof nation !== 'string' || nation.trim().length === 0) {
+      return invalid(
+        `territory.nations[${String(index)}]`,
+        'each nation is named, as that nation names itself (docs/content-review.md §3.1).',
+      );
+    }
+    nations.push(nation);
+  }
+
+  const statement = readLocalizedText(territory, 'statement');
+  if (!statement.ok) return invalid('territory.statement', statement.error.message);
+
+  const nationSource = territory['nationSource'];
+  if (
+    !isRecord(nationSource) ||
+    typeof nationSource['publisher'] !== 'string' ||
+    typeof nationSource['url'] !== 'string'
+  ) {
+    return invalid(
+      'territory.nationSource',
+      '"territory.nationSource" must name a publisher and a url: §10.2 requires the panel to ' +
+        'name where the statement comes from, and a panel that cannot cite it may not draw it.',
+    );
+  }
+
+  const claim = readFactClaim(territory['fact'], 'territory.fact');
+  if (!claim.ok) return claim;
+  const refusal = ledger.admit('/territory', claim.value);
+  if (refusal !== null) {
+    return ok({
+      kind: 'unavailable',
+      status: refusal.status,
+      why: refusal.why,
+      message: refusal.message,
+    });
+  }
+
+  return ok({
+    kind: 'statement',
+    nations,
+    statement: statement.value,
+    publisher: nationSource['publisher'],
+    sourceUrl: nationSource['url'],
+  });
 }
 
 function readCharacters(source: Record<string, unknown>): Result<readonly LevelCharacter[]> {
@@ -570,7 +736,10 @@ export function parseLevelDocument(
     locomotion.push(tuning.value);
   }
 
-  const pois = readPois(raw);
+  const ledger = createClaimLedger();
+  const about = readTerritory(raw, ledger);
+  if (!about.ok) return about;
+  const pois = readPois(raw, ledger);
   if (!pois.ok) return pois;
   const characters = readCharacters(raw);
   if (!characters.ok) return characters;
@@ -593,7 +762,10 @@ export function parseLevelDocument(
     ground: ground.value,
     layers: layers.value,
     locomotion,
-    pois: pois.value,
+    pois: pois.value.pois,
+    teachingPois: pois.value.teaching,
+    about: about.value,
+    claims: ledger.census,
     characters: characters.value,
     assets: assets.value,
     textureBudgetBytes: textureBudgetBytes.value,
@@ -601,8 +773,44 @@ export function parseLevelDocument(
     decodedTextureBytes,
   };
 
-  const refusal = refuseOverBudget(level);
-  return refusal ?? ok(level);
+  return refuseSilentLevel(level) ?? refuseOverBudget(level) ?? ok(level);
+}
+
+/**
+ * "A level whose claims are all filtered out must not reduce to a pass"
+ * (ADR-0024).
+ *
+ * The two numbers are both in the message for the same reason
+ * `admitSubjectBank` puts `offered` and `admitted` in its own: *no landmarks*
+ * and *no landmark that may speak* need different fixes and look identical from
+ * the outside. A level that authored no `pois` is a legal level and is not this
+ * check's business; a level that authored four and had all four declined is a
+ * walk with scenery, and shipping it as a level would mean the ADR-0003 filter
+ * had quietly emptied a subject of everything it teaches.
+ *
+ * Deliberately **not** extended to the territorial statement: a refused
+ * statement is drawn as a refusal by the panel (`AboutThisPlace`), which is
+ * `docs/content-review.md` §10.2's "always reachable" holding even when the
+ * sentence cannot be shown. Refusing the level for it would take the panel away
+ * along with everything else.
+ */
+export function refuseSilentLevel(level: SceneLevel): Result<never> | null {
+  if (level.pois.length === 0 || level.teachingPois.length > 0) return null;
+  return appErr(
+    'invalid',
+    'content.level.noVerifiedClaim',
+    `level "${level.id}" places ${String(level.pois.length)} landmark(s) and none of them may ` +
+      `speak: every blurb is unverified, rejected, quarantined, cites a source hash its ` +
+      'verification was not granted for, or quotes no evidence (ADR-0003). A level that teaches ' +
+      'nothing is refused rather than opened, because an empty level and a fully filtered one ' +
+      'are the same picture (ADR-0024).',
+    {
+      level: level.id,
+      placed: level.pois.length,
+      teaching: level.teachingPois.length,
+      refused: level.claims.refused.map((claim) => claim.pointer),
+    },
+  );
 }
 
 /**
