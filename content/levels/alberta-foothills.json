@@ -44,7 +44,7 @@
         "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028793/1581292336658",
         "sourceHash": "93a61bc461fa0bff50e6d270270ec756964693e6ab188c3e7cf0bc8d51fb53e2",
         "asOf": "2026-09-09T00:00:00Z",
-        "volatile": false,
+        "volatile": true,
         "quote": "the Territory north of the United States Boundary Line, east of the central range of the Rocky Mountains, and south and west of Treaties numbers six and four"
       },
       "verification": {

@@ -39,7 +39,7 @@
         "url": "https://www.ourcommons.ca/Content/Committee/421/TRAN/Brief/BR8708093/br-external/HuronWendatFirstNationCouncil-9505010-e.pdf",
         "sourceHash": "367d7d1ee559569d1ec5b5ac349c167dfe275faeebb13500c328fefdf77f53d2",
         "asOf": "2026-09-08T00:00:00Z",
-        "volatile": false,
+        "volatile": true,
         "quote": "The Wendake reserve is located in the administrative region of the Quebec national capital and is within the boundaries of the City of Quebec, which makes the Huron-Wendat Nation one of the most urbanized aboriginal nations in Quebec."
       },
       "verification": {

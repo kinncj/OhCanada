@@ -38,7 +38,7 @@
         "url": "https://mncfn.ca/the-toronto-purchase-treaty-no-13-1805/",
         "sourceHash": "58c92c469fc9031015911338a5c92c3b79cd12fce00be049520fd09c81d73933",
         "asOf": "2026-09-08T00:00:00Z",
-        "volatile": false,
+        "volatile": true,
         "quote": "The cities of Etobicoke, Toronto, North York, York and Vaughan are located within the boundaries of the Toronto Purchase Treaty lands."
       },
       "verification": {

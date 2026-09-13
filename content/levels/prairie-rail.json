@@ -39,7 +39,7 @@
         "url": "https://teaching.usask.ca/indigenoussk/import/treaty_4.php",
         "sourceHash": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
         "asOf": "2026-09-09T00:00:00Z",
-        "volatile": false,
+        "volatile": true,
         "quote": "The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba."
       },
       "verification": {
