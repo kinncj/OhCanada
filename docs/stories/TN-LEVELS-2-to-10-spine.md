@@ -59,18 +59,42 @@ journey has no `null` slots left: ten built, ten documents, ten sets of copy.** 
 - **Neither level declares the locomotion mode this table gave it.** Both declare `walk`. `canoe` and
   `dogsled` are still declared by no document and still have no label, so `OQ-REVIEW-10` is **unanswered and
   unengaged** rather than answered, and `TN-MOVE-02`'s last scenario passes on the day the map filled up.
-- **Neither level adds a row to `TN-MOVE`**, and neither places an NPC or declares a quest. **Six of the ten
-  built levels are now finished only by reaching the end of them** (`TN-DONE`, `OQ-DONE-1`).
+- **Neither level adds a row to `TN-MOVE`**, and neither places an NPC. **Both gained a quest on the same
+  day, offered by the landmark rather than by anybody** — see the fifth amendment below.
 - **`regions` has a bank, and this file said it had none.** `content/questions/regions/` holds **fifty-eight
   authored questions, all fifty-eight reported verified** — behind `history`'s ninety-six and ahead of the
   other eight subjects. The correction is recorded in `OQ-SPINE-3` rather than quietly applied.
 - **Level 8 is still the only built level that may not ship**, and it is now one of ten rather than one of
   eight. Nothing about that improved; the denominator moved.
 
+**Amended a fifth time, 2026-09-13: a quest is offered by an engageable, so two levels that could not hold
+one now do.** ADR-0029 widened `quest.giver` from a character to **a thing the level places** — a character
+or a point of interest. `content/quests/peggys-cove-point-light.json` is given by the lighthouse and
+`content/quests/the-north-sternwheeler.json` by the vessel; `characters` stays `[]` on both. Four things
+follow, and the first is the one this table most needed:
+
+- **The figure prohibition is untouched, and that is the point rather than a side effect.** The ADR's
+  alternatives section refuses weakening it — *"the cheapest way to be sure no figure is read as a depiction
+  of anybody is for there to be no figure"* — and identifies the real culprit as a schema clause that had
+  been turning a depiction rule into a scope cut. `CLAUDE.md` says slices are engineering practice and never
+  a scope cut; two of ten levels were a walk to the end because `giver` was typed as a character.
+- **Six of the ten built levels now have a quest, and four do not** — Winnipeg, the Prairies, the Alberta
+  foothills and Vancouver. `OQ-DONE-1`'s instance count drops with it, and the ADR says plainly that this
+  *removes two instances' cause* rather than fixing the defect.
+- **Each of the two quests has two steps, not three**: a `talk` on the giver, then an `answer` of three.
+  There is no `visit` step, because the giver **is** the landmark and a visit would target the same thing
+  twice.
+- **A landmark that speaks does not become somebody.** ADR-0029 §4 forbids `expression` on a line whose
+  speaker is a point of interest; §5 fixes the voice as second person and impersonal, held by review rather
+  than by a regex, *because on these two levels it is the figure prohibition arriving through the copy
+  instead of the picture*. `TN-PEGGYS-06` and `TN-NORTH-06` assert it, and both level stories add a
+  prohibition of their own: **no quest line states or paraphrases the territorial statement.**
+
 Read `README.md` in this directory first. `TN-MAP-level-select.md` draws the ten entries below;
 `TN-LEVEL-ottawa.md` is the worked example of what each of these rows becomes;
 `TN-MOVE-locomotion-labels.md` owns what the HUD calls each locomotion mode in the table below,
-`TN-WAIT-a-level-opens-or-it-does-not.md` owns the two strings every built level needs, and
+`TN-WAIT-a-level-opens-or-it-does-not.md` owns the two strings every built level needs,
+`TN-DIALOGUE-what-a-quest-giver-says.md` owns what a giver says at the moments a step cannot cover, and
 `TN-GUIDE-the-guide.md` owns the one NPC name that is written down today.
 
 ## What blocks work in this table, stated before the table
@@ -106,7 +130,9 @@ started now, and the reason they can is worth more than the rows themselves.
    (`assets/style/peggys-cove-level.md` §0). A level set in **Inuit Nunangat** — Iqaluit, Tuktoyaktuk,
    Pangnirtung — is still blocked, because the identifying built things there *are* Inuit, and
    `assets/style/the-north-level.md` §0 records that choosing the Yukon instead is **a scope decision rather
-   than a solution**. Both levels carry a **Tier 3 obligation** naming what a reviewer from the Mi'kmaq and
+   than a solution**. **ADR-0029 did not make it smaller either**: it widened what may *offer a quest*, and
+   its alternatives section refuses, by name, weakening the figure prohibition for a single small NPC or a
+   distant silhouette. Both levels carry a **Tier 3 obligation** naming what a reviewer from the Mi'kmaq and
    from Kwanlin Dün First Nation still owes, both are dated 2026-12-08 to match `OQ-REVIEW-2`, and **no copy
    in this directory may imply that review has happened** (`TN-PEGGYS-06`, `TN-NORTH-06`).
 2. **`OQ-REVIEW-10` is unanswered, and no level document engages it.** The canoe, the kayak, the dogsled and
@@ -140,7 +166,7 @@ is north, which is why no copy in `TN-MAP` claims the journey is east to west (`
 | # | Level id | Subject (bank key) | Place | Locomotion | Landmark that must survive blind identification | NPC | Status |
 |---|---|---|---|---|---|---|---|
 | 1 | `halifax` | `rights` | Halifax, Nova Scotia | `walk` | Pier 21's waterfront frontage and Immigration Hall, with the harbour behind — see the note below on how weak this is | the guide | **Built, and the game opens here** — copy in `TN-LEVEL-halifax.md`; quest authored; bank 37 verified; full story pending |
-| 2 | `peggys-cove` | `who-we-are` | Peggy's Cove, Nova Scotia — **a village, not a territory** | `walk` (**not** the `canoe` this table designed for; §2 above) | Peggy's Point Lighthouse, by its proportions — squat, and a third of it red — see below | none placed yet | **Built** — copy in `TN-LEVEL-peggys-cove.md`; no NPC, no quest; bank 46 verified |
+| 2 | `peggys-cove` | `who-we-are` | Peggy's Cove, Nova Scotia — **a village, not a territory** | `walk` (**not** the `canoe` this table designed for; §2 above) | Peggy's Point Lighthouse, by its proportions — squat, and a third of it red — see below | **none, and none proposed** — the landmark gives the quest (ADR-0029) | **Built** — copy in `TN-LEVEL-peggys-cove.md`; quest authored, given by the landmark; bank 46 verified |
 | 3 | `quebec-city` | `history` | Québec City (Old Québec) | `toboggan` | Château Frontenac seen from Dufferin Terrace, with the ramparts | the guide | **Built** — copy in `TN-LEVEL-quebec-city.md`; quest authored; bank 96 verified; full story pending |
 | 4 | `ottawa` | `government` | Ottawa | `skate` | Centre Block and the Peace Tower from the canal | the officer | **Shipped** — `TN-LEVEL-ottawa.md`; bank 38 verified |
 | 5 | `toronto` | `elections` | Toronto | `bike` | Toronto City Hall's two curved towers across Nathan Phillips Square — **but the shipped document draws the CN Tower**, `OQ-TORONTO-2` | the guide | **Built** — copy in `TN-LEVEL-toronto.md`; quest authored; bank 36 verified; full story pending |
@@ -148,7 +174,7 @@ is north, which is why no copy in `TN-MAP` claims the journey is east to west (`
 | 7 | `prairie-rail` | `modern-canada` | The Prairies (southern Saskatchewan) | `train` | A wooden prairie grain elevator beside the track — a standard plan, drawn from a cited building, shipping **blank**, see below | the journalist — **not placed yet** | **Built** — copy in `TN-LEVEL-prairie-rail.md`; no NPC, no quest; bank 39 verified |
 | 8 | `alberta-foothills` | `economy` | The Alberta foothills | `horse` | A working ranch's barn and corral against the foothills, drawn from the Bar U and named as a **type**, see below | the rancher — **not placed yet** | **Built, and NOT shippable** — copy in `TN-LEVEL-alberta-foothills.md`; no NPC, no quest; **bank 18 verified of a floor of 30** (`OQ-ALBERTA-2`) |
 | 9 | `vancouver` | `symbols` | Vancouver | `skateboard` | Canada Place's five white sails on the waterfront | the artist — **not placed yet** | **Built** — copy in `TN-LEVEL-vancouver.md`; no NPC, no quest; bank 42 verified |
-| 10 | `the-north` | `regions` | The North — drawn as **Whitehorse on the Yukon River**, and only that, see below | `walk` (**not** the `dogsled` this table designed for; §2 above) | A Yukon River sternwheeler, by its stern wheel and its hog posts — asked for a **type**, never for a place | none placed yet | **Built** — copy in `TN-LEVEL-the-north.md`; no NPC, no quest; bank 58 verified |
+| 10 | `the-north` | `regions` | The North — drawn as **Whitehorse on the Yukon River**, and only that, see below | `walk` (**not** the `dogsled` this table designed for; §2 above) | A Yukon River sternwheeler, by its stern wheel and its hog posts — asked for a **type**, never for a place | **none, and none proposed** — the landmark gives the quest (ADR-0029) | **Built** — copy in `TN-LEVEL-the-north.md`; quest authored, given by the landmark; bank 58 verified |
 
 **"Built" is not "shipped", and level 8 is where that stopped being a caption.** A built level has a
 document, a place on the map, a waiting sentence, an error title, a stamp sentence, a play label and a mode
@@ -158,12 +184,15 @@ so a player can reach it, finish it and earn its stamp today. `TN-LEVELS-03`'s l
 and nothing else in this directory fails closed on it — which is exactly why it is written in the status
 column rather than left to a test nobody has run.
 
-**Three of the four authored quests are given by the guide.** `content/quests/halifax-clock-and-pier.json`,
-`quebec-city-chateau-frontenac.json` and `toronto-cn-tower.json` all declare `"giver": "guide"`, and the
-three level documents place `characterId: "guide"` beside the quest. The NPC column above says "the guide"
-for those three levels because that is what shipped, not because the table was rewritten: level 1 was always
-the guide's, and levels 3 and 5 are now too. Its name is `npc.guide.name` and it is written in
-`TN-GUIDE-the-guide.md`.
+**Three of the six authored quests are given by the guide, two are given by a landmark, and one by the
+officer.** `content/quests/halifax-clock-and-pier.json`, `quebec-city-chateau-frontenac.json` and
+`toronto-cn-tower.json` all declare `"giver": "guide"`, and the three level documents place
+`characterId: "guide"` beside the quest. The NPC column above says "the guide" for those three levels because
+that is what shipped. `peggys-cove-point-light.json` and `the-north-sternwheeler.json` name a point of
+interest instead, which is ADR-0029's whole content. The guide's name is `npc.guide.name` and it is written
+in `TN-GUIDE-the-guide.md`; **a landmark giver needs no such row**, because ADR-0029 §6 takes its name from
+the level document's `pois[…].name`, in both languages, required — *"better founded than the character
+case"*, in the ADR's own words.
 
 ### Level 1 — Halifax, `rights`, walk
 
@@ -203,14 +232,21 @@ the finding is that this level has no place anchor**, and the fix is a second ci
 longer answer list. **The level's place rests on that one render**, which is the third level in a row to land
 there (`OQ-SPINE-6`).
 
+**That same landmark now gives the level's quest.** `content/quests/peggys-cove-point-light.json` declares
+`giver: "peggys-point-light"` and `characters` stays `[]` — ADR-0029's first worked example. Two steps: stop
+at the light and read two facts about the country, then answer three `who-we-are` questions. **The lighthouse
+is the giver and the target of the talk step**, which is why there is no `visit` step. It speaks in the
+second person and the impersonal, carries no `expression`, and its name reaches exactly two screens: the
+point-of-interest card's body and the dialog's accessible name (`TN-PEGGYS-01`).
+
 The territorial statement is quoted from **Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the
 Assembly of Nova Scotia Mi'kmaw Chiefs** — the first level whose `fact.source` and whose `nationSource` are
-**one body speaking for itself about its own lands**. It lives in "About this place" and nowhere else.
-`TN-LEVEL-peggys-cove.md` carries the copy-side rules, and two of them are silences this table should also
-record: **the word "unceded" is not used**, because the cited page says *"never surrendered, ceded, or sold"*
-and the statement says that; and **the word "Mi'kma'ki" is not used on this level**, because no source this
-level cites carries it — Halifax's document names it on the strength of a Crown page, and importing it here
-would put two documents behind one sentence.
+**one body speaking for itself about its own lands**. It lives in "About this place" and nowhere else, **and
+the quest did not move it**: `TN-LEVEL-peggys-cove.md` decides that question explicitly, because a plaque is
+exactly the object that would carry such a statement at a real site and moving it there would feel like an
+improvement. Two of the level's silences this table should also record: **the word "unceded" is not used**,
+because the cited page says *"never surrendered, ceded, or sold"* and the statement says that; and **the word
+"Mi'kma'ki" is not used on this level**, because no source this level cites carries it.
 
 **The canoe is not declared and no copy names one.** §2 above; `assets/style/peggys-cove-level.md` §9.
 
@@ -257,6 +293,9 @@ No. 1, and the homeland of the Red River Métis — is quoted from Parks Canada'
 this place", and no depiction follows from it. `TN-LEVEL-winnipeg.md` keeps it off the loading screen and
 off the stamp, and `OQ-WINNIPEG-3` records the one real problem with it: the level document has one
 `nationSource` and the quoted sentence names seven nations.
+
+**It is one of the four levels with no quest**, and after ADR-0029 that is no longer a constraint anybody is
+under: it places a museum it could give one to. That is a content decision for its slice, not a blocked one.
 
 ### Level 7 — The Prairies, `modern-canada`, train
 
@@ -365,7 +404,8 @@ nobody has to find the sheet: **Nunavut and the Northwest Territories are not in
 titled *The North*, it teaches a chapter that covers all three territories, and every pixel of it is one of
 them. That is a **scope decision, not a solution**, and a future slice giving the other two their own levels
 does not have to undo anything here. `TN-NORTH-06` makes it a copy rule too: no string claims the level shows
-more than it shows.
+more than it shows — **and it draws the line the quest made necessary**, that teaching a sourced fact about
+three territories is not a claim about what is drawn.
 
 The landmark is a **sternwheeler**, and it is level 7's and level 8's outcome a third time: the vessel
 carries its own name in large letters across the bow and the pilot house in every reference, `make verify-art`
@@ -374,14 +414,20 @@ and its blind contract asks for a type and is never asked for a place**. The Nor
 on nothing in this level's art, and the level's answer to *where* is its title, its territorial statement and
 its bank — none of which is a picture (`OQ-SPINE-6`).
 
+**That same vessel now gives the level's quest.** `content/quests/the-north-sternwheeler.json` declares
+`giver: "yukon-river-sternwheeler"` and `characters` stays `[]`. Two steps: stop at the vessel and read two
+facts about this part of the country, then answer three `regions` questions. Because the landmark is named
+as a **type**, what the dialog announces as its source is a kind of vessel rather than a named boat — which
+is the cheapest version of ADR-0029 §6 this game has (`TN-NORTH-01`).
+
 The territorial statement is quoted from **Kwanlin Dün First Nation's** own About page, and two things about
 it bind copy. **Endonyms are identical in both languages** — `Kwanlin Dün First Nation`, `Tagish Kwan` and
 `Chu Níikwän`, diacritics included (`docs/content-review.md` §9.3). And **the Ta'an Kwäch'än Council is not
 named, deliberately**: its government is in Whitehorse, and neither the cited page nor the Council's own
 history page says Whitehorse is inside its traditional territory, so naming it would be the invention the
 register exists to prevent. `content/sources/kdfn-about-us.json` records the silence and what would close it,
-and **no copy on this level resolves it in either direction** — the same shape as level 8's silence about the
-Métis Nation of Alberta.
+and **no copy on this level resolves it in either direction — the quest's lines included**, which is the one
+new way it could have been broken.
 
 **The dogsled is not declared and no copy names one.** §2 above; `assets/style/the-north-level.md` §9.
 
@@ -404,7 +450,7 @@ were chosen on that basis:
 | 7 | the journalist | le journaliste / la journaliste | Yes |
 | 8 | the rancher | l'éleveur / l'éleveuse | **No** — `OQ-SPINE-4` |
 | 9 | the artist | l'artiste | Yes |
-| 2, 10 | *none proposed* | — | **The question does not arise**, because no role is written — see below |
+| 2, 10 | *none proposed* | — | **The question does not arise**, because no role is written and none is needed — see below |
 
 `docs/content-review.md` §8.6 forbids « l'agent(e) » and « l'agent·e », and forbids any French copy about the
 *player* needing agreement. This table is about characters, not the player, so the rule that binds is
@@ -418,11 +464,13 @@ being a grade-6 word is answered by the same fact. **Levels 6, 7, 8 and 9 place 
 "the judge", "the journalist", "the rancher" and "the artist" are proposals, and no name is written as copy
 for any of them — a speaker's label with no dialogue behind it is copy for behaviour nothing performs.
 
-**Levels 2 and 10 are given no role at all, and that is deliberate rather than an omission after
-unblocking.** Their art sheets record that **no figure of any kind is drawn on either level**, at any scale,
-including a silhouette. Proposing a role here would be proposing the first figure either level has ever had,
-in a table, without the reading `docs/content-review.md` §1 requires. `OQ-PEGGYS-1` and `OQ-NORTH-1` route it
-to those levels' full stories, with one instruction each: choose an **epicene** French role noun.
+**Levels 2 and 10 are given no role at all, and after ADR-0029 that costs them nothing.** Their art sheets
+record that **no figure of any kind is drawn on either level**, at any scale, including a silhouette.
+Proposing a role here would be proposing the first figure either level has ever had, in a table, without the
+reading `docs/content-review.md` §1 requires — **and it is no longer the price of having a quest**, which is
+what ADR-0029 changed. The two levels have a giver, a dialogue and four moment lines without anybody being
+drawn. `OQ-PEGGYS-1` and `OQ-NORTH-1` keep the question open at the level's own story, with one instruction
+each if it is ever reopened: choose an **epicene** French role noun.
 
 ## Player-facing copy
 
@@ -535,6 +583,14 @@ Feature: Adding a level without touching the engine
     And the labels for "canoe" and "dogsled" still do not exist
     And ten built levels declare seven of the nine modes the config lists
 
+  Scenario: A quest is added by a document too, and its giver is a thing the level places
+    Given a quest document is added naming a giver
+    Then exactly one placement on that level has that id, counting characters and points of interest
+    And that placement declares the quest id
+    And no scene or adapter is changed to add it
+    And a giver matching zero placements fails the check, naming the level
+    And a giver matching two placements fails it too, naming both
+
   Scenario: A new level costs its own words, and the build says so
     Given a valid level document is added with no waiting sentence, error title, stamp sentence,
       play label or mode label
@@ -584,6 +640,13 @@ Feature: The content-review shipping rule is a gate, not a paragraph
     And "peggys-cove" and "the-north" are the two worked examples
     And a level document whose place name is a nation's territory fails this scenario
 
+  Scenario: A thing that speaks is not a person
+    Given a quest's giver resolves to a point of interest
+    Then no line it speaks carries an "expression"
+    And no portrait, face or figure is drawn for it
+    And the level may still declare no characters at all
+    And a figure added to satisfy a schema would fail this scenario, as ADR-0029 refused
+
   Scenario: A bank is not a licence
     Given a subject has a full bank of verified questions
     And the level that would teach it is blocked under §1
@@ -601,6 +664,7 @@ Feature: The content-review shipping rule is a gate, not a paragraph
     Then no string that level draws, in either language, contains "reviewed", "approved" or "endorsed"
     And none contains "in partnership with", "with the support of", "en partenariat" or "avec le soutien"
     And no screen renders a "communityReview" status
+    And that is true of a quest's lines as well as of a copy table's rows
     And TN-PEGGYS-06 and TN-NORTH-06 are the two levels where this is asserted by name
 
   Scenario: A vague nation value is refused
@@ -625,6 +689,7 @@ Feature: The content-review shipping rule is a gate, not a paragraph
   Scenario: The prohibition survives the art contract, in both directions
     Given a level's art contract lists an item in "neverAdd"
     Then no copy string in that level names it in either language
+    And no line of that level's quest names it either
     And no level document field names it
     And level 9's totem poles, inuksuk and suspension bridge are the worked example
     And level 10's inuksuk, qamutiik, dogsled, kayak and canoe are the second
@@ -661,15 +726,16 @@ Feature: The floor every level story stands on
       | its own stamp sentence and play label are written out per level, in both languages |
       | the mode it declares has a label in both languages, and the HUD is never empty |
       | its NPC, if it places one, has a name that is a role, never an organisation, and never "Speaker", "NPC" or empty |
-      | a quest it declares can be offered, which means its giver has a name before it has lines |
+      | a quest it declares can be offered, which means its giver is placed on it and can be named |
+      | a quest given by a point of interest carries no expression on any line, and no figure is drawn for it |
       | its landmark is reference-accurate and simplified, with references and credits recorded |
       | its landmark returns the intended subject under blind identification, and the contract asks for nothing the art is forbidden to draw |
       | its "About this place" panel is reachable from pause and from credits, is never modal, and states a sourced territorial fact |
-      | no screen but that panel states or paraphrases a territorial fact |
+      | no screen but that panel states or paraphrases a territorial fact, and no quest line does either |
       | no string it draws implies a cultural review that has not happened |
-      | every factual sentence it puts on screen is verified like a question |
-      | it is completable with a keyboard alone |
-      | it is completable with one switch, using short and long presses only |
+      | every factual sentence it puts on screen is verified like a question, wherever on screen it appears |
+      | it is completable with a keyboard alone, by every route it offers |
+      | it is completable with one switch, using short and long presses only, by every route it offers |
       | nothing in it counts down |
       | its whole flow works at 200 % text on a 390 x 844 viewport with no sideways scroll |
       | reduced motion removes parallax easing and particles and changes no tuning value |
@@ -699,9 +765,11 @@ Feature: The floor every level story stands on
   holds a hard-coded `LOCOMOTION_MODES` literal, so a level declaring a mode the adapter does not know passes
   `validate-content` and fails at load — a worse failure than the one that was fixed. **Three shipped levels
   depend on it** — `prairie-rail`'s `train`, `alberta-foothills`'s `horse` and `vancouver`'s `skateboard` —
-  and the two levels shipped on 2026-09-13 depend on it not at all, because both declare `walk`, which is the
-  cheapest possible evidence that the exposure is in the *new* modes and not in the count of levels. Not this
-  directory's to close; recorded so nobody reads "answered" as "done".
+  and the two levels shipped on 2026-09-13 depend on it not at all, because both declare `walk`. **ADR-0029
+  made the same trade in the same direction and said so**: `giver` lost its brand to gain a kind, and the
+  gate that replaces the brand checks something a brand never could — that the id resolves to a thing on the
+  level. Two ADRs widening a type and paying for it with a gate is a pattern worth noticing rather than
+  rediscovering.
 - **`OQ-SPINE-2` — are the subject lines the official chapter names, and who verifies them?** The ten
   subjects are *Discover Canada*'s chapters, and IRCC publishes both languages. The French written above is a
   translation of meaning; the official French chapter titles exist and are citable. *Recommendation:* the
@@ -729,9 +797,12 @@ Feature: The floor every level story stands on
   « agent / agente », and level 8 has shipped without placing a character, so nothing is blocked and nothing
   has been written either way. **Levels 2 and 10 shipped placing no character and proposing no role**, which
   is the cheapest possible state and is a decision rather than an oversight: neither level draws a figure of
-  any kind, so a proposed role would have been the first one. *Recommendation:* answer `OQ-LEVEL-8` once for
-  all ten levels rather than eight times, and prefer an epicene role for every level that still has to place
-  one — level 9's « l'artiste » shows what that buys. Do not reach for a bracketed ending in any case.
+  any kind, so a proposed role would have been the first one. **ADR-0029 is what makes that state permanent
+  rather than provisional**: those two levels have a quest, a giver and four moment lines without a character,
+  so nothing is waiting on this question there and nothing will be. *Recommendation:* answer `OQ-LEVEL-8`
+  once for all ten levels rather than eight times, and prefer an epicene role for every level that still has
+  to place one — level 9's « l'artiste » shows what that buys. Do not reach for a bracketed ending in any
+  case.
 - **`OQ-SPINE-5` — do modern buildings and named venues raise the same question the RCMP uniform did?**
   Levels 5, 6 and 9 name buildings completed well within living memory, and one of them (the CN Tower) has a
   trademarked name. `OQ-LEVEL-1` established that this project asks before drawing something protected rather
@@ -740,9 +811,11 @@ Feature: The floor every level story stands on
   mark and no claim of association — and the art half is unchanged: draw the form, carry no wordmark, no logo
   and no signage, cite the reference, credit the photograph. **Level 2 adds a case the list did not have**:
   Peggy's Point Lighthouse is a named structure that is nobody's brand and carries no mark at all, named in
-  its point-of-interest card in both languages and nowhere else — which is the easy end of the same rule and
-  is worth having on the list beside the hard ones. What is still the project owner's is whether trade names
-  may appear at all (`OQ-NAMES-1`).
+  its point-of-interest card in both languages and nowhere else — **and, since ADR-0029, as the accessible
+  name of the dialog it speaks through**, which is a second surface and is asserted rather than assumed
+  (`TN-PEGGYS-01`). A level whose landmark **is** on `TN-NAMES`'s list and which gave that landmark a quest
+  would put a trade name in a dialog's accessible name, and that case has not arisen and should be decided
+  before it does (`OQ-NAMES-1`).
 - **`OQ-SPINE-6` — is a level's *place* allowed to be a region rather than a city?** Levels 7, 8 and 10 are
   regions, and `TN-MAP` draws a place name for each. **All three have now shipped and all three landed the
   same way**, which makes it a pattern three times over: each landmark is a *type* — "Prairie grain
@@ -771,7 +844,9 @@ Feature: The floor every level story stands on
   would make the config the single source of that fact and delete the ambiguity rather than document it. The
   second is better and is not this directory's to make. **The map filling up makes this worse rather than
   better**: with ten of ten built, "how much of this game is finished" is a question the status column is now
-  the only answer to, and it answers it in prose. Routed to the plan owner with `OQ-ALBERTA-2`.
+  the only answer to, and it answers it in prose — **and two of the ten now carry a quest that validates and
+  cannot be opened** (ADR-0029's engine obligation), which is a third meaning the word "Built" is being asked
+  to carry. Routed to the plan owner with `OQ-ALBERTA-2`.
 - **`OQ-SPINE-9` — two Tier 3 obligations exist for these ten levels and nothing was reading either of
   them.** `assets/style/peggys-cove-level.md` §0 and `assets/style/the-north-level.md` §0 each carry an
   ADR-0009 marker dated 2026-12-08, naming what a reviewer from the Mi'kmaq and from Kwanlin Dün First
@@ -782,3 +857,13 @@ Feature: The floor every level story stands on
   are — two owners can write an obligation and only one directory is read, so the next art sheet's marker
   will be decoration again. Routed to the engine agent. `OQ-PEGGYS-4` and `OQ-NORTH-5` are the same question
   from the two level stories.
+- **`OQ-SPINE-10` — `TN-DIALOGUE` is written throughout as *what a character says*, and two givers are not
+  characters.** ADR-0029 records this as an obligation on this directory (due 2026-11-13, owner content), with
+  two acceptable discharges: add the landmark case to that file, or record that its existing scenarios are
+  read as applying to both. **Its own words are the reason it cannot simply be left**: *"A story that names
+  only one kind of giver is the sentence this ADR removed from the schema, surviving in the document that
+  specifies the screen."* *Recommendation:* take the first route. The second is cheaper and understates what
+  changed — four moment lines, a speaker label, a dialog's accessible name and a portrait that must not be
+  drawn are not all the same for a plaque as for a person, and `TN-PEGGYS-06` and `TN-NORTH-06` have already
+  had to write the difference down twice. Two level stories carrying a rule that belongs to the screen is the
+  shape this directory keeps correcting.

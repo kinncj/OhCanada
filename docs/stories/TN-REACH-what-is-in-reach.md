@@ -21,9 +21,19 @@ companion is a beaver: `hud.interact.npc` reads "Talk to this person" / « Parle
 what the HUD draws today whenever the guide is in reach on **the level the game opens on**. The generic row
 is unchanged and still right for a person; the guide's own row is what fixes the level.
 
+**Amended again 2026-09-13 — a place can now offer a quest, and "Look at this place" is the wrong promise
+for one that does.** ADR-0029 widened `quest.giver` from a character to an **engageable**, so
+`content/quests/peggys-cove-point-light.json` is offered by a lighthouse and
+`content/quests/the-north-sternwheeler.json` by a vessel. Pressing those two landmarks opens a **dialogue
+with a task in it**, not a card — and this file's founding rule is that the prompt says what pressing will
+do. One generic row is added, `hud.interact.poi.offer`, and the precedence list gains a case. Nothing about
+the three existing rows changes, and **neither of those two levels writes a per-target row**, because their
+own stories forbid the landmark's name inside the HUD (`TN-PEGGYS-01`, `TN-NORTH-01`).
+
 Read `README.md` in this directory first. `TN-HUD-hud-and-menu.md` owns the strip the prompt is drawn in;
 `TN-LEVEL-ottawa.md` owns Ottawa's two per-target rows and the officer; `TN-GUIDE-the-guide.md` owns the
 guide's name and its prompt; `TN-NAMES-naming-real-places.md` owns which names may appear where;
+`TN-DIALOGUE-what-a-quest-giver-says.md` owns what a giver says once the prompt has been taken;
 `TN-COPY-strings-and-counts.md` owns the rules every row here obeys.
 
 ## The defect this file exists to make impossible
@@ -51,15 +61,21 @@ where the target belongs.
 
 | Key | What it is |
 |---|---|
-| `hud.interact.poi` | A place is in reach and nothing more specific is written |
+| `hud.interact.poi` | A place is in reach, it has something to show, and nothing more specific is written |
+| `hud.interact.poi.offer` | A place is in reach **and it has something to offer** — it is this level's quest giver |
 | `hud.interact.npc` | A person is in reach and nothing more specific is written |
 | `hud.interact.done` | This one has already been done |
 | `hud.interact.hint` | The one-time explanation of the marks themselves |
 | `hud.interact.<target id>` | A row for one target, written in the story that owns that target |
 
-The target id is **the id the level document gives it** — `officer`, `parliament-hill`, `cn-tower`, `guide` —
-because that is what `poi/entered` carries and what the prompt is looked up by. Ottawa's two rows keep their
-wording and are respelled to that shape (`OQ-REACH-1`).
+The target id is **the id the level document gives it** — `officer`, `parliament-hill`, `cn-tower`, `guide`,
+`peggys-point-light`, `yukon-river-sternwheeler` — because that is what `poi/entered` carries and what the
+prompt is looked up by. Ottawa's two rows keep their wording and are respelled to that shape (`OQ-REACH-1`).
+
+**A target id never contains a dot, so `hud.interact.poi.offer` cannot be mistaken for one.** That is stated
+rather than assumed, because the two key families share a prefix and the lookup is by exact key: the kind
+words — `poi`, `poi.offer`, `npc`, `done`, `hint` — are reserved, and a level that gave a target one of those
+ids would be shadowing a generic row (`OQ-REACH-7`).
 
 **Where a per-target row lives follows what the target is**, which is `README.md`'s rule about the home of a
 string: a landmark belongs to one level, so its row is in that level's story; **a character that stands in
@@ -73,29 +89,66 @@ is how they stop being one sentence.
    The state is the news; the invitation is not, and a player who is told "Talk to the officer" about
    somebody they have already finished with will walk back for nothing.
 2. **A row exists for this target** → that row.
-3. **Otherwise, by kind** → `hud.interact.npc` for a person, `hud.interact.poi` for a place.
+3. **Otherwise, by kind** → `hud.interact.npc` for a person; `hud.interact.poi.offer` for a place that is
+   this level's quest giver; `hud.interact.poi` for any other place.
 
 **And never anything else.** Not the target's name from the level document, not "Interact", not "Engage",
 not an icon alone, not an empty string. A target this build has no row for offers **no prompt** rather than a
 guessed one — the same rule `TN-WAIT` applies to a level with no waiting sentence, and the same gate.
+
+**A character who offers a quest needs no new row**, and that asymmetry is the whole reason the new one
+exists. "Talk to the officer" already says what pressing does, because talking is what a person does whether
+or not they have a task. "Look at this place" is *wrong* about a place that talks — it promises a card and
+opens a conversation — and a prompt that understates what pressing does is the same defect as one that names
+the target, arriving from the other side.
+
+## Why the new row is not "Talk to this place"
+
+The obvious wording is refused, and ADR-0029 §5 is why. A landmark giver **is the named source of words on
+screen and does not acquire a mouth, a rig or a mood**; its lines are written in the second person and the
+impersonal for a reason that is not taste — a screen-reader user hears the dialog's accessible name, "Peggy's
+Point Lighthouse", and then the prose, and first-person prose after that name has told that user a person is
+standing there. On the two levels where this row is drawn, that is precisely the failure the art documents'
+`neverAdd` clause exists to prevent, arriving through the copy instead of the picture. **A prompt reading
+"Talk to this place" would do the same job one screen earlier.**
+
+Three other candidates and why each lost:
+
+- **"Read what is written here."** Truest to a plaque and false to the picture: `make verify-art` refuses a
+  `<text>` element in a render source, so **no lettering is drawn on either landmark**. A prompt promising
+  writing describes a state the screen is not in, which is the defect `README.md` names most often.
+- **"Stop here and read."** It is the quest's own first step prompt, drawn in `hud-quest-tracker`. Using it
+  in the prompt too would put one sentence in two HUD elements at once, which reads as a stutter and makes
+  neither say anything the other did not.
+- **"Look at this place", unchanged.** Simplest, and it is the promise that is wrong. It is kept for every
+  landmark that really does open a card.
+
+**"See what there is to do here" / « Voir ce qu'il y a à faire ici »** says what pressing does, names
+nothing, personifies nothing, claims no lettering, and uses the game's own word for a quest — a **task**
+(`quest.done.title`, "Task done!"). It is a demonstrative phrase like the other two generic rows, for the
+reason below.
 
 ## Why the generic rows say "this place" and "this person"
 
 A generic row cannot name the target, so it has to be useful without naming it, and the two candidates are a
 verb with a demonstrative ("Look at this place") or a bare verb ("Look"). The demonstrative wins: it is what
 a screen reader has to read on its own, out of any visual context, and "Look" alone is read as an
-instruction with no object.
+instruction with no object. `hud.interact.poi.offer` follows the same shape with "here" doing the
+demonstrative's work, because "See what there is to do at this place" is longer and says no more.
 
 **The player is not losing the name.** They can see the landmark; and the name — with a sentence saying what
 the building is, and a source — is on the card the prompt opens, which is where `TN-NAMES` decided a name
-teaches something. That is the same information a sighted and a screen-reader player get, in the same place,
-which is stronger than the name being in a button for one of them and nowhere for the other.
+teaches something. **Where the landmark is a quest giver they are not losing it either**: ADR-0029 §6 makes
+the giver's name the dialog's accessible name, so the name arrives one press later for everybody, in both
+languages, from the level document. That is the same information a sighted and a screen-reader player get, in
+the same place, which is stronger than the name being in a button for one of them and nowhere for the other.
 
 **Where a target can do better, it does.** Ottawa writes "Talk to the officer" and "Look at Parliament Hill",
 because that level has a named character and a landmark that is not on `TN-NAMES`'s list. The guide writes
 "Talk to the guide", because it is not a person and the generic row says it is. A level whose landmark **is**
 on that list may not write such a row, and the generic one is the answer rather than a worse-written specific
-one.
+one — **and so may a level whose own story forbids the name in the HUD**, which is the case on both levels
+that draw the new row.
 
 ## The three marks, and the words that stand in for their shapes
 
@@ -105,12 +158,13 @@ requires that colour is never the only signal. The shapes are the art's; **the w
 | Mark state | Claim | What the player reads when it is in reach |
 |---|---|---|
 | `idle` | this can be tapped, when you get to it | nothing — it is not in reach, and a prompt for it would be a lie |
-| `ready` | tapping it now will work | `hud.interact.npc`, `hud.interact.poi`, or the target's own row |
+| `ready` | tapping it now will work | `hud.interact.npc`, `hud.interact.poi`, `hud.interact.poi.offer`, or the target's own row |
 | `done` | you have already done this one | `hud.interact.done` |
 
 `hud.interact.done` carries the state **and** the way on, in that order, because the state is what the player
 did not know and the way on is what they can still do: engaging a finished landmark shows its card again,
-which is worth offering to somebody who wants to read the blurb twice.
+which is worth offering to somebody who wants to read the blurb twice. **It wins over the new row too**: a
+landmark whose quest is finished reads "Done. See this one again", not an invitation to a task that is over.
 
 ## The hint is shown once, and it is not a tutorial
 
@@ -127,24 +181,29 @@ the menu does not, and the mark itself is a shape.
   "Choose it" is the word the single-switch contract already uses (`README.md`), and it is true of every
   input.
 - It counts nothing down and expires on nothing.
+- **It says "something to see", which stays true on a level whose mark opens a task**, because seeing what
+  there is to do is still seeing. The hint is about the marks, not about what any one of them opens, and
+  rewording it per kind would make a one-time sentence depend on which mark happened to be first.
 
 ## Player-facing copy
 
 | Key | EN | FR |
 |---|---|---|
 | `hud.interact.poi` | Look at this place | Regarder ce lieu |
+| `hud.interact.poi.offer` | See what there is to do here | Voir ce qu'il y a à faire ici |
 | `hud.interact.npc` | Talk to this person | Parler à cette personne |
 | `hud.interact.done` | Done. See this one again | Terminé. Revoir |
 | `hud.interact.hint` | A mark shows something to see. Get close to it, then choose it. | Un repère indique quelque chose à voir. Approchez-vous, puis choisissez. |
 
-**The three prompts are labels and carry no full stop**; the hint is two sentences and carries two, because
+**The four prompts are labels and carry no full stop**; the hint is two sentences and carries two, because
 it is prose and is read as prose. « Terminé. Revoir » is shorter than its English and says the same two
 things — the state, then the way on — which is what a translation of meaning is allowed to do
 (`README.md`, French style).
 
 **No row here needs gender agreement, and none contains a bracketed ending.** « Cette personne » is
 feminine in French whoever it names, which is why the row is written about *the person in reach* and never
-about the player.
+about the player. « Voir ce qu'il y a à faire ici » has no adjective and no participle to agree with
+anything, which is one of the reasons it beat the alternatives.
 
 **`hud.interact.npc` is about a person, and it is not a fallback for every character.** A companion animal
 in reach draws its own row, because "Talk to this person" is false about a beaver and a false prompt is
@@ -248,6 +307,34 @@ Feature: The generic rows, and the names they keep out of the HUD
     And it does not read "Talk to this person"
     And the same row is drawn on Québec City and on Toronto
 
+  Scenario: A place that offers this level's quest
+    Given the Peggy's Cove level is playable
+    And this level's quest giver is the point of interest it places
+    When I come within reach of it
+    Then "interact-prompt" reads "See what there is to do here"
+    And it does not read "Look at this place"
+    And it does not read "Talk to this place"
+    And it does not read "Talk to this person"
+    And it names nothing
+    And the same row is drawn on the North, for the same reason
+
+  Scenario: The row follows what pressing opens, not what the target is made of
+    Given a place that offers a quest is in reach
+    When I take the prompt
+    Then a dialogue opens, as TN-QUEST-01 describes
+    Given a place that offers no quest is in reach
+    When I take the prompt
+    Then its card opens
+    And the two prompts differ, because the two outcomes differ
+
+  Scenario: A character who offers a quest draws no new row
+    Given the Ottawa level is playable
+    And the officer offers this level's quest
+    When I come within reach of them
+    Then "interact-prompt" reads "Talk to the officer"
+    And it does not read "See what there is to do here"
+    And a person's prompt already says what pressing does, whether or not they have a task
+
   Scenario: The name is where a name teaches something
     When I engage the landmark
     Then "poi-card" shows "CN Tower" as text, inside a sentence that says what it is
@@ -277,6 +364,14 @@ Feature: A mark that has already been used
     Then the prompt is still "Done. See this one again"
     And the same is true for a person, for a companion and for a place
 
+  Scenario: Done wins over a place that offered a task
+    Given the Peggy's Cove level is playable
+    And I have finished the task its landmark offered
+    When I come within reach of it again
+    Then "interact-prompt" reads "Done. See this one again"
+    And it does not read "See what there is to do here"
+    And nothing invites me to a task that is over
+
   Scenario: It is still a way in, not a dead control
     When I take it
     Then the card or the dialogue for that target opens again
@@ -301,6 +396,12 @@ Feature: Learning that the marks can be used, once
     Then the element "interact-hint" is visible
     And it reads "A mark shows something to see. Get close to it, then choose it."
     And it is shown beside "interact-prompt", not instead of it
+
+  Scenario: One hint covers every kind of mark
+    Given a level whose first mark in reach is a place that offers a task
+    Then the same hint is shown, word for word
+    And it is not reworded for the kind of thing the mark is over
+    And nothing about it says what that particular mark will open
 
   Scenario: It names no input, so it is true for everybody
     Then the hint contains none of "tap", "click", "press", "swipe", "hold" or a key name
@@ -336,15 +437,28 @@ Feature: The rule is checkable, not a promise
     And no name from the level document is drawn in its place
 
   Scenario: A missing generic row fails the build
-    Given a copy table is missing "hud.interact.poi", "hud.interact.npc",
+    Given a copy table is missing "hud.interact.poi", "hud.interact.poi.offer", "hud.interact.npc",
       "hud.interact.done" or "hud.interact.hint" in either language
     When the content check runs
     Then the build fails, naming the key and the language
+
+  Scenario: A level whose quest giver is a place needs the offer row
+    Given a level document places a point of interest that is its quest's giver
+    And no "hud.interact.poi.offer" row exists in both languages
+    When the content check runs
+    Then the build fails, naming the level and the key
+    And the prompt is never drawn as "Look at this place" in its place
 
   Scenario: A per-target row present in one language only fails the build
     Given "hud.interact.guide" exists in English and not in French
     When the content check runs
     Then the build fails, naming the missing French string
+
+  Scenario: A target id that shadows a generic row is refused
+    Given a level document gives a target the id "poi", "npc", "done" or "hint"
+    When the content check runs
+    Then the build fails, naming the id and this file
+    And the message says the kind words are reserved
 
   Scenario: A name from the list drawn in the prompt fails the build
     Given "interact-prompt" draws a string containing a name from TN-NAMES-naming-real-places.md's list
@@ -422,9 +536,19 @@ Feature: The prompt reaches everybody
     Then the announcement is the generic prompt and names nothing
     And no name from TN-NAMES-naming-real-places.md's list is ever announced by the prompt
 
+  Scenario: A place that offers a task announces the task, and the dialog announces the source
+    Given a place that offers a quest is in reach
+    Then "#tn-live-region" reads "See what there is to do here"
+    And it names nothing
+    When I take the prompt
+    Then the dialog's accessible name is the giver's name from the level document, as ADR-0029 requires
+    And the name is read before any of the words it is the source of
+    And a screen-reader user learns what is speaking one press after a sighted player can see it
+
   Scenario: The mark is not the only signal
     Then everything the mark's state says is also said by the prompt's words
     And a player who cannot see the mark can still tell an unused target from a done one
+    And a player who cannot see the mark can still tell a place that shows from a place that offers
 
   Scenario: Reduced motion
     Given reduced motion is on
@@ -443,6 +567,8 @@ Feature: The prompt reaches everybody
     Given text scaling is 200 %
     And the viewport is 390 x 844
     Then the whole of the prompt's label is visible, not cut off
+    And the whole of "See what there is to do here" is visible, which is the longest of the four
+    And in French the whole of "Voir ce qu'il y a à faire ici" is visible
     And the whole of the hint is visible, by scrolling inside "hud" if needed
     And neither covers "menu-button"
     And the skater is still drawn inside the upper two thirds of the canvas
@@ -461,6 +587,9 @@ Feature: The prompt in French
     Then "interact-prompt" reads "Regarder ce lieu"
     Given a person with no row of their own is in reach
     Then it reads "Parler à cette personne"
+    Given a place that offers this level's quest is in reach
+    Then it reads "Voir ce qu'il y a à faire ici"
+    And it does not read "Parler à ce lieu"
 
   Scenario: A target's own row is French too
     Given the Ottawa level is playable
@@ -487,6 +616,7 @@ Feature: The prompt in French
   Scenario: No French string here needs gender agreement
     Then no string in this file's table contains "(e)", "·e" or a bracketed ending
     And none of them is about the player
+    And "Voir ce qu'il y a à faire ici" carries no adjective and no participle to agree with anything
 
   Scenario: Changing the language redraws the prompt without leaving the level
     Given the Ottawa level is playable in English and the officer is in reach
@@ -511,13 +641,15 @@ Feature: The prompt in French
   landmark with one) is a lookup rule nobody can hold in their head. The wording — "Look at Parliament Hill"
   / « Regarder la Colline du Parlement » — is unchanged, no scenario in `TN-LEVEL-ottawa.md` asserts a key,
   and `app/ui/copy.ts` carries neither row today, so this costs nothing to do now and would cost a migration
-  later.
+  later. **`hud.interact.poi.offer` is the one key that keeps a dotted kind**, and it is a *kind* rather than
+  a target, which is the distinction the respelling was for.
 - **`OQ-REACH-2` — should `hud.interact.done` be two rows, one per kind?** "Done. See this one again" is
   kind-neutral, which is what makes one row possible, and a person-shaped version would read a little better
   ("Done. Talk again"). *Recommendation:* one row. The news is the state, not the kind; two rows are two
-  things to translate and a second place for the two to drift apart; and this state is rare enough that the
-  extra warmth buys less than the consistency costs. Revisit if a level ever has a character the player is
-  expected to return to — **the guide is now that character on three levels**, so this is closer than it was.
+  things to translate and a second place for the two to drift apart. Revisit if a level ever has a character
+  the player is expected to return to — **the guide is now that character on three levels**, and **two
+  landmarks now open a dialogue rather than a card**, so the kind-neutral wording is carrying more cases than
+  it was written for. It still reads correctly for all of them, which is the test.
 - **`OQ-REACH-3` — the hint's once-ness does not survive a closed tab.** These scenarios say the hint is
   shown once per sitting and goes for good once the player engages anything, which is testable today. A
   player who opens the game every day would meet it every day. *Recommendation:* remember it in the save when
@@ -528,8 +660,10 @@ Feature: The prompt in French
   `TN-LEVEL-08` requires the announcement to name Parliament Hill, and Ottawa's own row does; a level with no
   row announces "Look at this place" and the name arrives when the card opens. *Recommendation:* accept it,
   and prefer per-target rows in every level story where the name is not on `TN-NAMES`'s list — that is the
-  cheap fix and it is copy, not code. Where the name **is** on that list, the generic row is not a shortfall
-  but the rule: the name belongs on the card, for everybody, with its source.
+  cheap fix and it is copy, not code. **Levels 2 and 10 are the case where it is not available**: their names
+  are not on that list, but their own stories forbid the name inside the HUD, so the generic row is the rule
+  rather than a shortfall — and ADR-0029 gives those two the best version of this anyway, because the name
+  arrives as the dialog's accessible name one press later.
 - **`OQ-REACH-5` — is "mark" the right word, in either language?** The player sees a shape over a landmark
   and the hint calls it « un repère ». Neither word is in `Discover Canada` and neither is a term a newcomer
   arrives with. *Recommendation:* keep both, put them in front of the first plain-language reviewer with the
@@ -540,5 +674,11 @@ Feature: The prompt in French
   it actually describes. The alternatives are a vaguer generic ("Talk to this one" / « Parler à celui-ci »,
   which needs gender in French and is worse for everybody), or a second generic row per kind of character,
   which is a taxonomy invented for one beaver. *Recommendation:* keep it as it is, and treat any future
-  non-human character the same way — a row of its own in its own story. If a third such character appears,
-  revisit, because at that point the generic row is wrong more often than it is right.
+  non-human character the same way — a row of its own in its own story.
+- **`OQ-REACH-7` — the kind words are reserved and nothing enforces it yet.** `hud.interact.<target id>` and
+  `hud.interact.<kind>` share a prefix, so a level that gave a target the id `poi`, `npc`, `done` or `hint`
+  would shadow a generic row, silently, and draw the right words for the wrong reason. `TN-REACH-05` asserts
+  the build fails on it; no gate does today. *Recommendation:* the same check that compares declared targets
+  against written rows can compare ids against the reserved list in one pass, and it costs a set membership
+  test. The risk is small and the failure is invisible, which is the combination this directory keeps
+  deciding is worth a line. Routed with `TN-REACH-05`'s fixtures.

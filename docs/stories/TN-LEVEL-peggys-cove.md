@@ -1,16 +1,25 @@
 # TN-PEGGYS — Level 2, Peggy's Cove: the words this level says for itself
 
 **Intent.** Peggy's Cove tells the player what it is getting ready, names the way they move, and names itself
-when it fails and when it is finished — in both languages, with no lighthouse and no nation named on a screen
-that may not name one, and with a territorial statement quoted from a Mi'kmaw body's own words left exactly
-where it is, whole and in one place.
+when it fails and when it is finished — in both languages, with no nation named on a screen that may not name
+one, with a territorial statement quoted from a Mi'kmaw body's own words left exactly where it is, and with a
+quest offered by the lighthouse rather than by anybody.
 
 **This is not the whole level story.** `TN-LEVELS-2-to-10-spine.md` fixes what this level is; the full story
-— the walk across the barrens, the lighthouse's card, an NPC if one is ever placed, a quest if one is ever
-authored — is written in the slice that builds them, in the shape of `TN-LEVEL-ottawa.md`. What is here is
-the copy the level draws **today**, because `content/levels/peggys-cove.json` shipped,
-`content/game.config.json` lists it in `levels`, in `journey` and in `unlockRules.order`, and three copy
-gates are failing by name for want of these four rows.
+— the walk across the barrens, the lighthouse's card, the tuning of the quest's reach — is written in the
+slice that builds them, in the shape of `TN-LEVEL-ottawa.md`. What is here is the copy the level draws
+**today**, because `content/levels/peggys-cove.json` shipped, `content/game.config.json` lists it in `levels`,
+in `journey` and in `unlockRules.order`, and three copy gates are failing by name for want of these four
+rows.
+
+**Amended 2026-09-13 — this level has a quest, and nobody is drawn to offer it.** ADR-0029 widened
+`quest.giver` from a character to an **engageable**: a character the level places, *or a point of interest it
+places*. `content/quests/peggys-cove-point-light.json` shipped with `giver: "peggys-point-light"` — the
+lighthouse — and `characters` stays `[]`. **The figure prohibition is untouched**: the ADR refused weakening
+it and says so in its alternatives. What changed is the schema clause that had been turning that prohibition
+into a scope cut. Three sections below are rewritten because of it, and the two that matter most are the
+ones that decide **what "About this place" is still for** now that a landmark speaks, and **what the HUD says
+when a thing rather than a person wants to talk**.
 
 Read `README.md` in this directory first. The rows this file does not own:
 
@@ -20,7 +29,8 @@ Read `README.md` in this directory first. The rows this file does not own:
 | The mode label the HUD draws | `locomotion.walk.label` — "Walking" / « Marche »; this level adds **no row** | `TN-MOVE-locomotion-labels.md` |
 | The error card's body and its two buttons | `level.error.body`, `level.error.retry`, `level.error.back` | `TN-WAIT-a-level-opens-or-it-does-not.md` |
 | The completion card that draws two of this file's rows | `level.complete.*`, `quest.done.title`, `map.open`, `common.keepPlaying` | `TN-DONE-finishing-a-level.md` |
-| What the HUD says when something is in reach | `hud.interact.*` | `TN-REACH-what-is-in-reach.md` |
+| What the HUD says when something is in reach | `hud.interact.poi.offer`, `hud.interact.done` | `TN-REACH-what-is-in-reach.md` |
+| What the giver says when declined, returned to, or finished | inline on the quest document | `TN-DIALOGUE-what-a-quest-giver-says.md`, under ADR-0029 |
 | The landmark name and blurb | inline `localizedText` | `content/levels/peggys-cove.json`, under `TN-NAMES-naming-real-places.md` |
 | The territorial statement | inline `localizedText` | `content/levels/peggys-cove.json`, drawn by `about-this-place` (`docs/content-review.md` §10.2) |
 
@@ -39,17 +49,18 @@ line** with a citation, and `TN-LEVELS-02`'s second scenario states the same thi
 Three consequences bind every row in this file, and each is asserted rather than trusted:
 
 1. **No copy on this level makes its subject a territory.** Not the title, not the subject line, not the
-   waiting sentence, not the error title, not the stamp sentence, not the play label. A title is what the map
-   reads out ten times; a subject line is what the card says the level teaches. Neither may say that what this
-   level teaches is whose land this is (`TN-PEGGYS-06`).
+   waiting sentence, not the error title, not the stamp sentence, not the play label — **and not a line the
+   lighthouse speaks** (`TN-PEGGYS-06`).
 2. **The territorial statement lives in "About this place" and nowhere else.** `docs/content-review.md` §10.2
    fixes it there: always reachable, never modal, never dismissed to reach gameplay, sourced. A loading screen
-   is the splash card §10.2 rules out and a stamp line is a congratulation the player taps past, and a
-   forty-character paraphrase of a cited sentence is an unsourced claim about a nation.
+   is the splash card §10.2 rules out, a stamp line is a congratulation the player taps past, and **a quest
+   dialogue is a third shape that is not the panel** — see below, because that is the new risk and it needed
+   deciding rather than assuming.
 3. **Nothing in this level depicts anybody.** `assets/style/peggys-cove-level.md` §0 records that
    `neverAdd` on **both** of this level's art subjects carries *"a figure of any kind, at any scale,
    including a silhouette and a crowd"*, so the prohibition is a checked contract clause. The copy-side half
-   is this file's: no string on this level describes, addresses or names a person, a people or a nation.
+   is this file's: no string on this level describes, addresses or names a person, a people or a nation —
+   **including every line the quest puts on screen**.
 
 ### Two silences, kept
 
@@ -68,22 +79,21 @@ Both are recorded in `assets/style/peggys-cove-level.md` §0 and in
 
 ### The Tier 3 obligation, and what copy may not imply about it
 
-`assets/style/peggys-cove-level.md` §0 carries an ADR-0009 obligation dated **2026-12-08**: put this level,
-its document and its two art subjects in front of a Tier 3 reviewer from the **Mi'kmaq**, and record the
-answer. Five things it names are things no gate and no agent in this repository can check — among them
-whether quoting the Assembly of Nova Scotia Mi'kmaw Chiefs in a *game* is wanted at all, and whether a level
-set here that depicts **nobody** reads as respect or as erasure, which `docs/content-review.md` §10.3 already
-calls a half-step.
+`assets/style/peggys-cove-level.md` §0 carries an ADR-0009 marker dated **2026-12-08**: put this level, its
+document and its two art subjects in front of a Tier 3 reviewer from the **Mi'kmaq**, and record the answer.
+Five things it names are things no gate and no agent in this repository can check — among them whether
+quoting the Assembly of Nova Scotia Mi'kmaw Chiefs in a *game* is wanted at all, and whether a level set here
+that depicts **nobody** reads as respect or as erasure, which `docs/content-review.md` §10.3 already calls a
+half-step.
 
-**That review has not happened, and no string in this game may suggest it has.** No copy row, no panel line
-and no credit may say "reviewed", "approved", "endorsed", "in partnership with" or "with the support of", in
-either language, and `communityReview.status` is never rendered on any screen. `TN-PEGGYS-06` asserts each
-of those absences by name, because a warm word in a credits line is the cheapest possible way to claim a
-consent nobody gave.
+**That review has not happened, and no string in this game may suggest it has.** No copy row, no panel line,
+no quest line and no credit may say "reviewed", "approved", "endorsed", "in partnership with" or "with the
+support of", in either language, and `communityReview.status` is never rendered on any screen.
+`TN-PEGGYS-06` asserts each of those absences by name, because a warm word in a credits line is the cheapest
+possible way to claim a consent nobody gave.
 
-**The marker itself is currently checked by nothing** — `scripts/check-obligations.mjs` scans `*.md` under
-`docs/` only, and the art agent said so rather than assuming it counted. It is copied into
-`docs/content-review.md` §13 in the same change as this file, which puts a clock on it. See `OQ-PEGGYS-4`.
+**The marker is copied into `docs/content-review.md` §13**, because `scripts/check-obligations.mjs` scans
+`*.md` under `docs/` only and a marker in `assets/style/` had no clock on it. See `OQ-PEGGYS-4`.
 
 ## Player-facing copy
 
@@ -100,7 +110,8 @@ far side of the cove, and `peggys-cove-layer-40-granite-barrens`, which is joint
 four erratics and two tide pools, and is the band the walk line sits in. §6.3 puts it plainly: *"Bare rock is
 the subject; grass is what grows in the cracks in it."* The sentence describes that ground in common nouns,
 exactly as Ottawa's names the canal and Winnipeg's names the riverbank, and it survives an art decision that
-moves an erratic or a tide pool.
+moves an erratic or a tide pool. **The quest's own words picked the same noun up** — its `doneLine` reads
+"You walked the bare rock…" — which is one level's vocabulary agreeing with itself rather than a row leaking.
 
 **It does not say "shore", and that is a fact about the picture rather than a preference.** The water, the
 wharf and the fish stores are on the **cove** layer, *behind* and *below* the player; the barrens the player
@@ -116,24 +127,41 @@ grade-6 in both halves, is exactly what the tile draws, and collides with nothin
 « roche », a noun — never with the player — which is the same shape `TN-LOOK`'s hair values take and is what
 keeps `docs/content-review.md` §8.6 satisfied.
 
-**No noun in it is used by any other level, in either language.** Nine built levels now wait in nine
-different nouns: « le port », « la pente enneigée », « le canal », « les rues de la ville », « la rive »,
-« la voie ferrée », « le pâturage », « le front de mer », « la roche nue », and level 10's « la plage de
-galets ». `TN-WAIT-01` checks it rather than trusting it.
+**No noun in it is used by any other level, in either language.** Ten built levels wait in ten different
+nouns, and `TN-WAIT-01` checks it rather than trusting it.
 
 **It names no landmark.** Peggy's Point Lighthouse is the level's only place-anchor and the only render
-allowed to demand a place name (`assets/style/peggys-cove-level.md` §7). It is named in the
-point-of-interest card's body, in both languages, and **nowhere else** — not in the waiting sentence, not on
-the stamp, not in the HUD prompt (`TN-NAMES-01`, `TN-REACH`). A stamp is named after a place, never after a
-building (`TN-PASSPORT-02`).
+allowed to demand a place name (`assets/style/peggys-cove-level.md` §7). Where its name may and may not
+appear is the next section, and the quest moved that line by exactly one surface.
+
+### Where the landmark's name appears, now that it also speaks
+
+Before the quest, the answer was one screen: the point-of-interest card's body, in both languages, with a
+source. **ADR-0029 §6 adds a second, and it is required rather than incidental**: the dialog's accessible
+name is the giver's name, read from `content/levels/peggys-cove.json#/pois[…]/name`, and `app/bootstrap/quest.ts`
+refuses to open a dialog it cannot name. A screen-reader user is given the source of the words before the
+words. So:
+
+| Surface | Names it? | Why |
+|---|---|---|
+| The point-of-interest card's body | **Yes** | `TN-NAMES-01` — where a name teaches something, with its source |
+| The quest dialog's accessible name and speaker label | **Yes** | ADR-0029 §6 — a line with no attributable source is a line the live region cannot attribute |
+| The waiting sentence, the error title, the stamp sentence, the play label | No | `TN-WAIT`, `TN-DONE`, `TN-PASSPORT-02` — a stamp is named after a place, never after a building |
+| `interact-prompt` and anything else inside `hud` | No | `TN-REACH` — the prompt says what pressing does and is never a name |
+| The quest's title, summary and step prompts | No | they are drawn in `hud-quest-tracker`, which is inside the HUD |
+
+**That is two surfaces, not one, and the file that said "the only screen" is amended here rather than left
+to be contradicted by a test.** Both are principled and neither is a loosening: one is where a name teaches,
+the other is where a name attributes. Peggy's Point Lighthouse is on neither `TN-NAMES`'s list of trade names
+nor anybody's brand (`OQ-SPINE-5`), which is why a second surface is affordable here and would not be on
+level 9.
 
 ### The four rows, and the French that is easier than it looks
 
 - **`level.peggys-cove.error.title`.** The title carries no article in either language, so this is one of the
   easy rows — the shape Halifax, Toronto, Winnipeg and Vancouver already have. **It is written out all the
   same**, for the reason `TN-WAIT` gives: you cannot tell which levels a template will break until you write
-  them out, and the level immediately after this one in `unlockRules.order`, and the level at the end of it,
-  both break it.
+  them out, and the level at the end of `unlockRules.order` breaks it in both languages.
 - **The place name is not translated, and the apostrophe is load-bearing.**
   `content/levels/peggys-cove.json` declares the title as "Peggy's Cove" in `en` **and** in `fr`, which
   `TN-NAMES-03` covers: a string identical in both languages is written twice on purpose, never one value
@@ -169,33 +197,81 @@ keeps `canoe` out of the label table while no document declares it. **Nothing in
 a prompt or a sentence about a canoe**, and `TN-PEGGYS-06` asserts the word appears in no string on this
 level in either language.
 
-## What this level does not have yet
+## What this level has now, and what it still does not
 
-`content/levels/peggys-cove.json` declares `"characters": []` and `"quests": []`. There is no NPC, no
-dialogue and no task on this level today, so **the only way to finish it is to reach the end of it**, which
-earns the stamp and draws the completion card (`TN-DONE`). Everything on that card has to be true of a player
-who walked from the spawn to the exit, and `TN-DONE-02` is the sentence for the one who answered nothing on
-the way. **This is the fifth built level with no quest**, so the heading defect `OQ-DONE-1` records reaches
-one more level.
+`content/levels/peggys-cove.json` declares `"characters": []` and **one quest**,
+`content/quests/peggys-cove-point-light.json`, whose giver is the point of interest the level already places.
+
+**Two steps, not three.** A `talk` on the giver, then an `answer` of 3 drawn from `who-we-are`. There is no
+`visit` step, because **the giver is the landmark** and a visit would send the player to the thing they are
+already standing at — the same target named twice.
+
+**So there are two ways to finish this level, and the card says which one happened.** Completing the task
+draws `quest.done.title` — "Task done!" — and reaching the end draws `level.complete.title` — "Level
+finished!" (`TN-DONE-01`). **Both earn the same stamp and both draw the same two rows this file owns**, which
+is the point of writing the stamp sentence and the play label per level rather than per path. `TN-PEGGYS-05`
+carries both paths rather than the one premise it used to have.
+
+**The quest depicts nobody, and that is a property of the change rather than a hope.** `characters` is still
+`[]`; the speaker on all four moment lines and on every step line is `peggys-point-light`; ADR-0029 §4
+forbids `expression` on a line whose speaker resolves to a POI, and §7's gate checks it. ADR-0029 §5 fixes
+the voice: **second person and impersonal** — "You have reached the light on the bare rock" — never "I have
+kept this light for forty years". That rule is held by review rather than by a regex, and the ADR says why:
+a first-person check is trivial to evade, false-positives on a quoted passage, and is worse in French. **On
+this level it is the figure prohibition arriving through the copy instead of the picture**, which is the one
+sentence from ADR-0029 §5 this file most needs to carry.
 
 **The subject bank clears the floor comfortably.** `content/questions/who-we-are/` holds **forty-six authored
-questions, all forty-six reported verified**, against `CLAUDE.md`'s thirty. The spine said for two sessions
-that this bank existed and did not unblock the level, which was true then and is the right reading now too:
-what unblocked this level is that its subject is a chapter and its place is a village, not that its bank is
-full.
+questions, all forty-six reported verified**, against `CLAUDE.md`'s thirty, and the quest's answer step draws
+three of them. The spine said for two sessions that this bank existed and did not unblock the level, which
+was true then and is the right reading now too: what unblocked this level is that its subject is a chapter
+and its place is a village, not that its bank is full.
+
+**What it still does not have is a giver the runtime can name.** ADR-0029's own obligation
+(due 2026-11-13, owner engine) records it: `app/bootstrap/quest.ts` builds the copy key `npc.<giver>.name`,
+there is no `npc.peggys-point-light.name` row, so `canEngage` returns false and the dialog is refused. **This
+quest validates, passes every gate and cannot be played today.** That is fail-closed and correct, and it is
+written here because a story that describes a quest the player cannot reach should say so in the same breath
+(`OQ-PEGGYS-6`). **No copy row fixes it and none should be written to** — inventing `npc.peggys-point-light.name`
+would put a landmark's name in the character namespace and in a copy table, when ADR-0029 §6 has it in the
+level document already, in both languages, required.
+
+### What "About this place" is for, now that a landmark speaks
+
+**Unchanged — and the reason has to be written down, because this is the most plausible wrong turn the quest
+opens.** A plaque at a real lighthouse is exactly the object that would carry a territorial statement, the
+level now has something plaque-shaped that speaks, and moving the statement into it would feel like an
+improvement. It is refused, for three reasons and any one is sufficient:
+
+1. **§10.2 rules out anything the player taps past to reach gameplay.** A quest dialogue is advanced with
+   *Next* and then it is over; the panel is always reachable and never blocking. A statement that lives only
+   in dialogue is a statement that exists once, for the players who happened to accept.
+2. **A quest can be declined** (`TN-DIALOGUE`). A territorial statement a player can decline to hear is a
+   statement conditioned on consenting to a task, which is not what a sourced fact about whose land this is
+   can be.
+3. **They are two kinds of source and must not share a register.** The panel quotes **Kwilmu'kw
+   Maw-klusuaqn's own words** about its own lands, with one `nationSource`; every quest line's `fact` block
+   carries `sourceId: "discover-canada"`. Putting a nation's words in the same flow as a chapter paraphrase
+   makes them one kind of thing, and they are not.
+
+So the division is sharper than before, not looser: **the panel states the territorial fact; the landmark
+teaches the chapter; the loading screen says what is being prepared; the stamp says what was earned.** The
+new prohibition that follows is asserted in `TN-PEGGYS-06`: **no quest line on this level states or
+paraphrases the territorial statement**, and the panel is reachable whether the quest was never met,
+accepted, declined or finished.
 
 ## Accessibility and bilingual coverage map
 
 | Path | Discharged by |
 |---|---|
-| Keyboard only | `TN-PEGGYS-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06` |
+| Keyboard only | `TN-PEGGYS-03`; the escape route and the error buttons are `TN-WAIT-04`; the completion card is `TN-DONE-06`; the dialogue is `TN-QUEST-06` |
 | Single switch | `TN-PEGGYS-03`; `TN-WAIT-04`; `TN-DONE-06` |
-| Screen reader | `TN-PEGGYS-03`; `TN-DONE-07` |
+| Screen reader | `TN-PEGGYS-03`, which carries the dialog's accessible name; `TN-DONE-07` |
 | Reduced motion | `TN-PEGGYS-03`; `TN-DONE-07` |
 | 200 % text | `TN-PEGGYS-03` |
 | Bilingual | `TN-PEGGYS-04`, and `TN-PEGGYS-05` for the two completion rows |
 | Failure path | `TN-PEGGYS-02`; the missing-row gate is `TN-WAIT-03` for two of these rows and `TN-DONE-05` for the other two |
-| Depiction | `TN-PEGGYS-06`, which is on the same footing as the five above |
+| Depiction | `TN-PEGGYS-06`, which is on the same footing as the five above and now covers the quest's lines |
 
 ---
 
@@ -244,20 +320,32 @@ Feature: Peggy's Cove says what it is getting ready
     And it shows "Mi'kmaq"
     And it names the body the statement is quoted from
     And no other screen in this level shows that name in either language
+    And no line the quest puts on screen shows it
     And the panel is not modal and was not dismissed to reach the level
 
   Scenario: The landmark is named where a name teaches something
     Given the Peggy's Cove level is playable
     When I engage the landmark
-    Then "poi-card" shows "Peggy's Point Lighthouse" as text, inside a sentence that says what it is
-    And that is the only screen in this level that names it
+    Then the quest dialogue opens, because this landmark is this level's quest giver
+    And "poi-card" shows "Peggy's Point Lighthouse" as text, inside a sentence that says what it is,
+      whenever the card is the thing that opens
     And no lettering, wordmark or signage is drawn on the building
 
-  Scenario: The HUD does not name it either
+  Scenario: Exactly two surfaces name it, and the HUD is not one of them
+    Given the Peggy's Cove level is playable
+    Then "Peggy's Point Lighthouse" appears in the point-of-interest card's body
+    And it appears as the quest dialog's accessible name and speaker label, as ADR-0029 requires
+    And it appears on no other screen in this level, in either language
+    And no string drawn inside "hud" contains it
+    And no waiting sentence, error title, stamp sentence or play label contains it
+
+  Scenario: The HUD says a thing has something to offer, and does not name it
     Given the Peggy's Cove level is playable
     When I come within reach of the landmark
-    Then "interact-prompt" reads "Look at this place", as TN-REACH-02 requires
-    And no string drawn inside "hud" contains "Peggy's Point Lighthouse" in either language
+    Then "interact-prompt" reads "See what there is to do here", the row TN-REACH owns
+    And it does not read "Look at this place", because pressing opens a task and not a card
+    And it does not read "Talk to this person", because nobody is there
+    And it names nothing
 ```
 
 ## TN-PEGGYS-02 — Peggy's Cove fails in its own name (failure path)
@@ -299,6 +387,14 @@ Feature: The error card names this level
     Then a "Go back" button is visible and focusable
     And "level-loading" still reads "Getting the bare rock ready."
     And nothing on the screen counts down
+
+  Scenario: A quest whose giver cannot be named is refused, not guessed at
+    Given the runtime cannot resolve a display name for this level's quest giver
+    When I come within reach of the landmark
+    Then no dialogue opens
+    And no dialog is drawn with an empty, guessed or id-shaped accessible name
+    And nothing on screen blames me or reads as an error
+    And this is ADR-0029's obligation, open until the name is read from the level document
 ```
 
 ## TN-PEGGYS-03 — Everybody gets these strings
@@ -313,9 +409,19 @@ Feature: The level's own words reach every player
     Then "hud-mode-label" is in the accessibility tree as text reading "Walking"
     And the canvas is "aria-hidden"
 
+  Scenario: A screen-reader user is told what is speaking before they are told what it says
+    Given the Peggy's Cove level is playable
+    When the quest dialogue opens
+    Then the dialog's accessible name is "Peggy's Point Lighthouse", from the level document
+    And it is never empty, and the dialog is refused rather than opened unnamed
+    And "dialogue-speaker" carries the same string
+    And no portrait, face or expression is drawn beside it
+    And nothing in the dialogue is written in the first person
+
   Scenario: A screen-reader user can reach the territorial statement without leaving the level
     Given the Peggy's Cove level is playable
     Then "about-this-place-open" is reachable from the pause menu and from the credits
+    And it is reachable whether I have never met the quest, accepted it, declined it or finished it
     And opening it does not pause, block or end the level
     And its content is text in the accessibility tree, not an image
     And nothing about it is announced unasked while I am playing
@@ -329,10 +435,12 @@ Feature: The level's own words reach every player
     And nothing expires while I decide
     And the highlight never lands on "hud-mode-label"
 
-  Scenario: The whole level is completable without a second hand
+  Scenario: The whole level is completable without a second hand, by either route
     Given the Peggy's Cove level is playable
     Then I can reach the end of it with a keyboard alone
     And I can reach the end of it with short and long presses alone
+    And I can accept, read and finish its task with a keyboard alone
+    And I can do the same with short and long presses alone
     And no step of it needs a pinch, a swipe, a drag or a double tap
     And nothing on screen counts down
     And no scenario in this level passes or fails on how fast I act
@@ -374,6 +482,7 @@ Feature: The level in French
     Given the Peggy's Cove level is playable
     Then "hud-mode-label" reads "Marche"
     And the level title reads "Peggy's Cove" with the subtitle "Qui nous sommes"
+    And "interact-prompt" reads "Voir ce qu'il y a à faire ici" when the landmark is in reach
 
   Scenario: The failure is French, and the place name is not translated and takes no article
     Given requests for the Peggy's Cove assets fail
@@ -391,11 +500,19 @@ Feature: The level in French
 
   Scenario: The landmark's French name translates the common noun and keeps the place name
     Given the Peggy's Cove level is playable
-    When I engage the landmark
-    Then "poi-card" shows "Le phare de Peggy's Point"
-    And the English card shows "Peggy's Point Lighthouse"
+    When the quest dialogue opens
+    Then its accessible name is "Le phare de Peggy's Point"
+    And the English dialog's name is "Peggy's Point Lighthouse"
     And "Peggy's Point" is identical in both
+    And the point-of-interest card draws the same pair
     And no waiting, error, stamp or prompt string in either language contains either name
+
+  Scenario: The quest speaks French, impersonally
+    Given the Peggy's Cove level is playable
+    When the quest dialogue opens
+    Then every line is the French text the quest document carries
+    And no line uses "je", "j'ai", "nous" or "on" about the speaker
+    And no line names a person, a people or a nation
 
   Scenario: Both languages or neither
     Then every key in this file's table has a value in "en" and in "fr"
@@ -403,7 +520,7 @@ Feature: The level in French
     And no string is drawn onto the canvas as part of an image
 ```
 
-## TN-PEGGYS-05 — Finishing Peggy's Cove, and opening it from somewhere else
+## TN-PEGGYS-05 — Finishing Peggy's Cove, by either route
 
 ```gherkin
 Feature: This level's two sentences on the completion card
@@ -418,11 +535,21 @@ Feature: This level's two sentences on the completion card
     And it does not contain "lighthouse" or "Peggy's Point"
     And it does not contain "territory", "unceded" or the name of a nation
 
-  Scenario: The heading is true of a level with no task
-    Given this level document declares no quest
-    When I reach the end of it
-    Then "quest-complete-card" shows "Level finished!"
-    And it does not show "Task done!", as TN-DONE-01 requires
+  Scenario: There are two ways to finish, and the heading says which happened
+    Given the Peggy's Cove level is playable
+    When I finish its task
+    Then "quest-complete-card" shows "Task done!", as TN-QUEST-04 requires
+    Given I instead reach the end of the level having accepted no task
+    Then "quest-complete-card" shows "Level finished!", as TN-DONE-01 requires
+    And in both cases the stamp sentence and the play label are the rows in this file
+    And in both cases exactly one stamp is earned
+
+  Scenario: The stamp is the same whichever route I took
+    Given I finished the task
+    Then the passport shows one Peggy's Cove stamp
+    Given another player reached the end without accepting the task
+    Then their passport shows the same one stamp, with the same sentence
+    And no screen says one route was worth more than the other
 
   Scenario: The French stamp sentence takes "de", with no elision and no article
     Given the language is French
@@ -450,6 +577,7 @@ Feature: This level's two sentences on the completion card
     Then "quest-complete-stamp" still reads "You earned the Peggy's Cove stamp."
     And the line about my answers is the one in TN-DONE-02
     And no sentence on the card names the lighthouse
+    And nothing tells me I missed the task
 ```
 
 ## TN-PEGGYS-06 — What this level never says (depiction path)
@@ -469,6 +597,20 @@ Feature: The place is a place, the subject is a chapter, and no string says othe
     And no string in this level contains "unceded" or "non cédé"
     And the statement in "about-this-place" is the level document's own text, quoted, not paraphrased
 
+  Scenario: The quest teaches the chapter and never the territory
+    Then no line the quest puts on screen states or paraphrases the territorial statement
+    And no quest line contains "territory", "territoire", "unceded" or "non cédé"
+    And no quest line names a nation
+    And every quest line that states a fact carries a source, and that source is Discover Canada
+    And the territorial statement's own source is the level document's, and is drawn only by the panel
+
+  Scenario: The thing that speaks does not become somebody
+    Then every line on this level is attributed to "peggys-point-light"
+    And no line whose speaker is a point of interest carries an "expression"
+    And no portrait, face, mouth or figure is drawn for the speaker
+    And no line is written in the first person, in either language
+    And "characters" on this level document is empty
+
   Scenario: No string claims a review that has not happened
     Then no string in this level in either language contains "reviewed", "approved" or "endorsed"
     And none contains "in partnership with", "with the support of", "approuvé", "en partenariat"
@@ -487,50 +629,60 @@ Feature: The place is a place, the subject is a chapter, and no string says othe
     And it keeps its citation
     And it is not replaced by a paraphrase written by anything
     And no other screen in this level changes, because none of them carried the statement
+    And no quest line changes, because none of them carried it either
 ```
 
 ---
 
 ## Open questions
 
-- **`OQ-PEGGYS-1` — an NPC, an arrival announcement and a per-target prompt are not written here, on
-  purpose.** `TN-LEVELS` gave level 2 no NPC while it was blocked, and the shipped document places no
-  character and declares no quest, so a speaker's label or an arrival sentence written today would be copy for
-  behaviour nothing performs (ADR-0008). The landmark draws `TN-REACH`'s generic "Look at this place" /
-  « Regarder ce lieu ». *Recommendation:* when this level's full story is written, choose an **epicene**
-  French role noun so `OQ-LEVEL-8`'s agreement question never arises here — and read
-  `assets/style/peggys-cove-level.md` §0 before writing a word of any character, because a level whose
-  territorial statement quotes a nation is the place where a well-meant line invents a person.
-- **`OQ-PEGGYS-2` — the level's facts are unverified, and the four rows in this file are not.**
+- **`OQ-PEGGYS-1` — this level places no character, and after ADR-0029 that is a smaller gap than it was.**
+  The quest is given by the landmark, so nothing is waiting on a person and nothing is blocked. If a
+  character is ever placed here, it is the first figure this level has ever had and
+  `docs/content-review.md` §1 is engaged the moment it carries a marker — read
+  `assets/style/peggys-cove-level.md` §0 before writing a word of one. *Recommendation:* leave it as it is.
+  If one is ever wanted, choose an **epicene** French role noun so `OQ-LEVEL-8`'s agreement question never
+  arises here. **The interact prompt is already settled and is not waiting on that**: the landmark draws
+  `TN-REACH`'s new generic row rather than a per-target row, because a per-target row would name it in the
+  HUD and this file forbids that.
+- **`OQ-PEGGYS-2` — the level's facts are unverified, and the quest added five more.**
   `content/levels/peggys-cove.json` carries `verification.status: "unverified"` on the point of interest's
-  fact, on the territorial statement **and** on the `nationSource`, and `TN-LEVELS-03` requires every factual
-  sentence a level puts on screen to be verified like a question. Nothing in this file's four rows states a
-  fact, so none of them is blocked; the card and the panel are. **The good half is worth recording**:
-  `assets/style/peggys-cove-level.md` §8 shows this is the first level whose `fact.source` and `nationSource`
-  are **one body speaking for itself about its own lands**, which is what `OQ-WINNIPEG-3` and `OQ-VANCOUVER-4`
-  both asked for and neither could get. Routed to the content verifier.
+  fact, on the territorial statement **and** on the `nationSource`, and
+  `content/quests/peggys-cove-point-light.json` carries three `factual: true` lines in the same state. Nothing
+  in this file's four rows states a fact, so none of them is blocked; the card, the panel and now the
+  dialogue are. **The good half is worth recording**: `assets/style/peggys-cove-level.md` §8 shows this is the
+  first level whose `fact.source` and `nationSource` are **one body speaking for itself about its own lands**,
+  which is what `OQ-WINNIPEG-3` and `OQ-VANCOUVER-4` both asked for and neither could get. And ADR-0003's
+  second amendment is why the quest's lines go to the same verifier as everything else: **verification
+  follows the claim, not the screen it appears on** — a wrong fact on a plaque is exactly as wrong as a wrong
+  fact in a Mountie's mouth. Routed to the content verifier.
 - **`OQ-PEGGYS-3` — the statement is `volatile` for half a sentence, and the panel can lose it without
   warning.** `content/sources/kmk-about-consultation.json` records why: *never surrendered, ceded or sold* is
   about the absence of a historical cession and does not expire, while *a Title claim to all lands in Nova
   Scotia* describes a position inside a running negotiation. `CLAUDE.md` re-verifies volatile items every run
   and quarantines them. *Recommendation:* the panel behaves as `OQ-VANCOUVER-3` recommends — it says plainly
   that the source is being checked and keeps its citation — and **nothing in this file changes either way**,
-  which is the point of keeping the statement out of these four rows. `TN-PEGGYS-06`'s last scenario is that
-  behaviour written as acceptance. Routed to `docs/content-review.md`'s owner and to the verifier.
-- **`OQ-PEGGYS-4` — the Tier 3 obligation was decoration until this change, and the fix should be the wider
+  which is the point of keeping the statement out of these four rows and out of the quest.
+  `TN-PEGGYS-06`'s last scenario is that behaviour written as acceptance.
+- **`OQ-PEGGYS-4` — the Tier 3 obligation was decoration until 2026-09-13, and the fix should be the wider
   one.** `assets/style/peggys-cove-level.md` §0 and `assets/style/the-north-level.md` §0 both carry ADR-0009
-  markers dated 2026-12-08 that `scripts/check-obligations.mjs` never reads, because it scans `*.md` under
-  `docs/` only. Both are copied into `docs/content-review.md` §13 in this change, which puts a clock on them
-  today. *Recommendation:* **also widen the scanner** to `assets/style/`, and treat the copies in §13 as the
-  stop-gap they are. Two owners can write an obligation and only one directory is read, so the next marker an
-  art agent writes will be decoration again — and it will be written by somebody who has just been told, by
-  this very pattern, that writing it is enough. Routed to the engine agent; `scripts/` is not this directory's
-  to edit. See `OQ-NORTH-5`, which is the same question from the other level.
+  markers dated 2026-12-08 that `scripts/check-obligations.mjs` never read, because it scans `*.md` under
+  `docs/` only. Both are copied into `docs/content-review.md` §13, which puts a clock on them today.
+  *Recommendation:* **also widen the scanner** to `assets/style/`, and treat the copies as the stop-gap they
+  are. Routed to the engine agent; `scripts/` is not this directory's to edit. See `OQ-NORTH-5`.
 - **`OQ-PEGGYS-5` — "the bare rock" describes ground the player crosses for seventeen seconds and nothing
   else.** The level is 7040 px at the walk's 420 px/s, the polyline is flat the whole way, and the roll of the
-  barrens is drawn in the tile above the walk line rather than in the ground (`assets/style/peggys-cove-level.md`
-  §3). So the sentence is true of the picture and slightly literal as a sentence.
-  *Recommendation:* accept it, on the same licence `OQ-WAIT-3` took for "the harbour" and `OQ-ALBERTA-5` for
-  "the pasture": describe the ground, do not name it. If a French reviewer prefers a noun over a noun with an
-  adjective, « Préparation du granit. » is the fallback and it costs a grade-6 word this file would rather not
-  spend.
+  barrens is drawn in the tile above the walk line rather than in the ground
+  (`assets/style/peggys-cove-level.md` §3). *Recommendation:* accept it, on the same licence `OQ-WAIT-3` took
+  for "the harbour" and `OQ-ALBERTA-5` for "the pasture": describe the ground, do not name it. **The quest
+  reuses the noun** in its `doneLine` — "You walked the bare rock" — which is a level's vocabulary agreeing
+  with itself and is the cheapest evidence that the row was the right one.
+- **`OQ-PEGGYS-6` — this level's quest cannot be played, and the gate that would catch that does not exist.**
+  ADR-0029's obligation (due 2026-11-13, owner engine) records the cause: `app/bootstrap/quest.ts` resolves a
+  giver's display name from the `npc.<id>.name` copy row, there is no such row for a landmark, and the dialog
+  is refused for want of an accessible name. So this level ships a quest that **validates, passes every gate
+  and opens for nobody**. `TN-PEGGYS-02`'s last scenario asserts the refusal is silent and blameless, which is
+  the right behaviour for the state; what no scenario in this directory asserts is that the state ends.
+  *Recommendation:* when the name resolution lands, the same change should make a quest whose giver cannot be
+  named a **build** failure rather than a runtime refusal — a quest nobody can open is a content defect, and
+  `TN-WAIT-03`'s shape is the precedent. Routed to the engine agent with ADR-0029's obligation.

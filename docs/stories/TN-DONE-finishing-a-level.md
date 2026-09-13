@@ -20,10 +20,10 @@ completion card any player ever sees is the one with the most missing rows.
 **Amended again 2026-09-09 — eight levels are built, and level 8 is the row that ends the template argument.**
 `content/levels/alberta-foothills.json` and `content/levels/vancouver.json` shipped and are in
 `unlockRules.order`. Their rows are in `TN-LEVEL-alberta-foothills.md` and `TN-LEVEL-vancouver.md`. **Neither
-adds a fifth French form after « tampon »** — and that was worth saying plainly, because the argument for
-writing these rows out was never "every level is different". It is that **you cannot tell which ones are**
-until you write them: Vancouver's four rows are the easiest in the table and level 8's are the hardest, and
-they arrived in the same change.
+adds a fifth French form after « tampon » — there are still four** — and that was worth saying plainly,
+because the argument for writing these rows out was never "every level is different". It is that **you cannot
+tell which ones are** until you write them: Vancouver's four rows are the easiest in the table and level 8's
+are the hardest, and they arrived in the same change.
 
 **Amended a third time, 2026-09-13 — ten levels are built, the fifth French form arrived, and this file
 predicted it by name.** `content/levels/peggys-cove.json` and `content/levels/the-north.json` shipped and are
@@ -35,11 +35,19 @@ North. Their rows are in `TN-LEVEL-peggys-cove.md` and `TN-LEVEL-the-north.md`. 
   de le Nord » on the tenth level.
 - **« Jouer dans le Nord » was written in this file before level 10 had an id**, in the sentence that listed
   what the level still to come would cost. It arrived exactly as predicted, which is the second time this
-  table has predicted a row — the first was « Jouer dans les contreforts de l'Alberta » — and is the
-  strongest evidence that these tables are a model of the language rather than a list of special cases.
+  table has predicted a row — the first was « Jouer dans les contreforts de l'Alberta ».
 - **Peggy's Cove adds no form at all**, in either language, and is written out anyway. Ten levels, five
   French stamp forms, four French play shapes, two English play shapes. The set is closed: there is no
   eleventh level.
+
+**Amended a fourth time, 2026-09-13 — two of those levels gained a quest on the same day, so the walk-to-the-
+end path stopped being the only path on them.** ADR-0029 widened `quest.giver` from a character to an
+**engageable**, and `content/quests/peggys-cove-point-light.json` and `content/quests/the-north-sternwheeler.json`
+are offered by the landmarks those levels already place. **Four of the ten built levels declare no quest
+now, not six**, and `OQ-DONE-1`'s instance count drops with it. Two things this file has to say that it did
+not have to say before: **a level with a quest has two routes and the heading says which one happened**, and
+**the giver's own last line is drawn on this card**, so the rules about what a completion card may carry now
+bind a string that lives on a quest document.
 
 Read `README.md` in this directory first. This file owns the **completion card**: when it appears, what it
 may say, and the two rows that are the same on every level. It owns none of the following and points at all
@@ -66,10 +74,16 @@ Two things finish a level, and the card is drawn for both:
 
 The second path is the one this file was written for. **A player can walk from the spawn to the exit without
 stopping at a single landmark**, and the stamp is still earned, because reaching the end is what earns it.
-Everything the card says has to be true of that player as well as of the one who did everything. **Six of the
-ten built levels declare no quest at all** — Winnipeg, the Prairies, the Alberta foothills, Vancouver,
-Peggy's Cove and the North each place no character and carry an empty `quests` array — so on the majority of
-the game the second path is the *only* path, and the card's heading has to be right on it.
+Everything the card says has to be true of that player as well as of the one who did everything. **Four of
+the ten built levels declare no quest at all** — Winnipeg, the Prairies, the Alberta foothills and Vancouver
+each place no character, place no giver and carry an empty `quests` array — so on those four the second path
+is the *only* path, and the card's heading has to be right on it.
+
+**On the other six, both paths are reachable and they are not the same event.** A player who finishes the
+task gets `quest/completed`; a player who walks past the giver and reaches the exit gets `level/exitReached`.
+**Both earn one stamp, both draw the same two per-level rows, and the heading is what differs**
+(`TN-DONE-01`). Nothing on the card ranks them, because a learning tool that scored the route would be
+scoring a choice it never asked the player to make.
 
 ## The heading has to be true on both paths
 
@@ -104,7 +118,9 @@ Three things the wording has to be at once, and they pull against each other:
   (`TN-QUEST-04`: "no message tells me I failed").
 - **An open door.** The second sentence says what is in the level rather than what the player should have
   done. It is a statement, not an instruction: **no imperative, no "you should", no "go back and…"**, because
-  the way back is already on the card as `common.keepPlaying`, focusable and one press away.
+  the way back is already on the card as `common.keepPlaying`, focusable and one press away. **It also never
+  says a task was missed** — on the six levels with a quest, a player who walked past the giver made a choice
+  the game does not review.
 
 It carries **no level name and no number**, which is why it is one row rather than ten. It names no place,
 so it cannot leak a name `TN-NAMES` keeps in a point-of-interest card body; it counts nothing, so
@@ -177,7 +193,8 @@ Keys this card draws and does not own:
 
 | Key | Owned by |
 |---|---|
-| `quest.done.title`, `quest.done.body`, `common.keepPlaying` | `TN-QUEST-parliament-hill.md`; `quest.done.body` is ruled to become quest content by `TN-DIALOGUE` |
+| `quest.done.title`, `common.keepPlaying` | `TN-QUEST-parliament-hill.md` |
+| the giver's own last line, which `quest.done.body` used to be | the quest document's `doneLine`, ruled there by `TN-DIALOGUE` |
 | `stamp.<id>.earned` | that level's own story file — see the table below |
 | `level.<id>.play` | that level's own story file — see the table below |
 | `map.open`, `map.state.open`, `map.open.help`, `level.<id>.title` | `TN-MAP-level-select.md` and the level story that owns the name |
@@ -256,7 +273,15 @@ sentence.
    and the level's own name is not the building's; **level 2 is where it is easiest to break by accident**,
    because the level and its lighthouse share the words "Peggy's" and "Point" and only the level's name
    belongs on this card.
-2. **No territorial statement and no paraphrase of one.** Every one of the ten level documents carries a
+2. **The giver's own last line is on this card, and it is bound by everything in this list.** Since
+   `TN-DIALOGUE` moved `quest.done.body` onto the quest document as `doneLine`, the sentence a giver speaks
+   when the task is finished is drawn here — so a rule that binds "the card" now binds a string that lives in
+   `content/quests/`. **This got sharper when a landmark became able to give a quest** (ADR-0029): a
+   lighthouse's or a vessel's done line is the one place where the giver could name *itself* on a screen that
+   may not name it. Neither of the two shipped landmark quests does; `TN-NORTH-05` asserts it for both, and
+   the rule is stated here rather than only in two level stories, because the next landmark quest will be
+   written by somebody reading this file.
+3. **No territorial statement and no paraphrase of one.** Every one of the ten level documents carries a
    sourced statement and `docs/content-review.md` §10.2 fixes where a player reads it — the "About this
    place" panel. A stamp line is a congratulation the player taps past, which is the shape §10.2 rules out,
    and a compressed paraphrase of a cited statement is an unsourced claim about a nation. **Three of the ten
@@ -266,14 +291,15 @@ sentence.
    saying it must not try. **Nor may any line on this card imply that a cultural review has happened**: no
    "reviewed", "approved", "endorsed", "in partnership with", « en partenariat » or « avec le soutien », in
    either language, on any level (`TN-PEGGYS-06`, `TN-NORTH-06`).
-3. **No score, grade, star, percentage or streak**, and nothing that counts down. The card is the end of a
+4. **No score, grade, star, percentage or streak**, and nothing that counts down. The card is the end of a
    level, not a result screen; `TN-RESULT` owns the one screen in this game that reports a result.
-4. **No claim that anything was saved.** When storage is blocked the stamp is still earned and
+5. **No claim that anything was saved.** When storage is blocked the stamp is still earned and
    `storage-warning` is what tells the truth about the rest (`TN-HUD-03`).
-5. **No claim that the game is over.** Level 10 is the last level in `unlockRules.order` and finishing it
-   offers nothing next; the card says nothing is coming rather than congratulating the player on finishing
-   the game, because the exam, the passport and every level they can replay are all still there
-   (`TN-NORTH-05`).
+6. **No claim that the game is over**, and **no remark about the route the player took.** Level 10 is the
+   last level in `unlockRules.order` and finishing it offers nothing next; the card says nothing is coming
+   rather than congratulating the player on finishing the game (`TN-NORTH-05`). And on the six levels with a
+   quest, a player who reached the exit without accepting the task is told nothing about the task — not that
+   they missed it, not that it is still there, not how many they have left.
 
 ## Accessibility and bilingual coverage map
 
@@ -320,14 +346,32 @@ Feature: The completion card
     Given the level I finished declares no quest
     Then "quest-complete-card" shows "Level finished!"
     And it never shows "Task done!" on that level, whatever route I took
-    And this is true of Peggy's Cove, Winnipeg, the Prairies, the Alberta foothills, Vancouver
-      and the North
+    And this is true of Winnipeg, the Prairies, the Alberta foothills and Vancouver
+
+  Scenario: A level with a task has two routes, and one stamp
+    Given the level I finished declares a quest
+    When I finish its task
+    Then the heading is "Task done!"
+    Given instead I reach the end having accepted no task
+    Then the heading is "Level finished!"
+    And in both cases exactly one "stamp/earned" event is emitted for that level
+    And in both cases the stamp sentence and the play label are that level's own rows
+    And nothing on the card says one route was worth more than the other
+    And this is true of Halifax, Peggy's Cove, Québec City, Ottawa, Toronto and the North
 
   Scenario: The stamp line is this level's own sentence
     Then the element "quest-complete-stamp" reads "You earned the Halifax stamp."
     And it does not name any of the other nine levels
     And it names no landmark, hotel or business
     And it states no territorial fact and paraphrases none
+
+  Scenario: The giver's last line is on the card and obeys the card's rules
+    Given I finished this level's task
+    Then the line the giver speaks is drawn on the card, from the quest document's "doneLine"
+    And it names no landmark, hotel or business
+    And it states no territorial fact and paraphrases none
+    And it is subject to every rule in this file's "What may not appear on this card"
+    And a giver that is a point of interest does not name itself in it
 
   Scenario: What I answered here is drawn when I answered something
     Given I answered four questions in this level and three were right
@@ -381,6 +425,12 @@ Feature: The card does not claim a learning that did not happen
     And it contains none of "failed", "missed", "skipped", "incomplete" or "only"
     And nothing on the card is drawn as an error, a warning or a red state
     And no sentence on the card tells me I should have done something
+
+  Scenario: A task I never accepted is not mentioned
+    Given this level declares a quest and I walked past its giver
+    Then no sentence on the card names the task
+    And none says it is still waiting, still open or still there
+    And none counts what I did not do
 
   Scenario: It is an open door, and the way back is on the card
     Then "quest-complete-keep-playing" is offered and reads "Keep playing"
@@ -447,6 +497,14 @@ Feature: The stamp line names the level that was finished
       | The Alberta foothills | Vous avez obtenu le tampon des contreforts de l'Alberta. |
       | Vancouver             | Vous avez obtenu le tampon de Vancouver.                 |
       | The North             | Vous avez obtenu le tampon du Nord.                      |
+
+  Scenario: The same sentence whichever route finished the level
+    Given the level declares a quest
+    When I finish it by completing the task
+    Then the stamp sentence is that level's row above
+    When another player finishes it by reaching the end
+    Then the stamp sentence is the same row, word for word
+    And the heading is the only thing that differed
 
   Scenario: The French is not a template with the place dropped in
     Then no French stamp sentence is assembled from "le tampon" and a level title
@@ -570,6 +628,12 @@ Feature: The card is honest about what this build actually has
     And nothing reads as "TBD", "???", an empty box or a placeholder
     And the card still shows its heading and its ways on
 
+  Scenario: A quest with no done line draws the card without that line
+    Given the quest I finished carries no "doneLine"
+    Then no sentence is drawn in its place
+    And no other quest's line is drawn
+    And the card still shows its heading, its stamp sentence and its ways on
+
   Scenario: Nothing opened, because there is nothing left to open
     Given finishing this level opened no other level
     Then no "quest-complete-next" control is present
@@ -597,6 +661,13 @@ Feature: The card is honest about what this build actually has
     Then no second "stamp/earned" event is emitted
     And the passport still contains exactly one stamp for it
     And any line the card draws about my answers is the current count, not the old one
+
+  Scenario: Finishing the task after already reaching the end earns nothing twice either
+    Given I reached the end of a level with a quest and earned its stamp
+    When I come back and finish its task
+    Then the card is drawn with the heading "Task done!"
+    And no second "stamp/earned" event is emitted
+    And the passport still contains exactly one stamp for that level
 
   Scenario: The gates are proven by failing fixtures
     Then a fixture exists for each check above
@@ -742,6 +813,7 @@ Feature: Finishing a level in French
 
   Scenario: No French string on this card needs gender agreement
     Then no string on the card contains "(e)", "·e" or a bracketed ending
+    And that is true of the giver's own last line as well
 
   Scenario: Changing the language while the card is open redraws every line
     Given the card is open in English after finishing Halifax
@@ -753,6 +825,7 @@ Feature: Finishing a level in French
   Scenario: Both languages or neither
     Then every key this card draws has a value in "en" and in "fr"
     And a key present in one language and absent in the other fails the content check
+    And a quest's "doneLine" with only one language fails it too
 ```
 
 ---
@@ -762,15 +835,16 @@ Feature: Finishing a level in French
 - **`OQ-DONE-1` — the heading was not asked for, and it is wrong on the path this file exists for.** The card
   draws `quest.done.title` — "Task done!" — for a player who reached the end of a level having accepted no
   task. `level.complete.title` is written above as the second row for a state that has no true string today,
-  and `TN-QUEST`'s row is untouched. **Six of the ten built levels declare no quest at all**, so on Peggy's
-  Cove, Winnipeg, the Prairies, the Alberta foothills, Vancouver and the North the wrong heading is the
-  *only* heading a player can reach — and that is now the majority of the game rather than half of it.
-  *Recommendation:* ship both and pick by what finished. If the project owner would rather have one heading
-  for both paths, the honest one is the level's — a quest completing also finishes the level — and
-  `TN-QUEST-04` would be the file amended, not this one. What must not happen is the walk-through path
-  keeping a heading about a task, because "a screen never describes a state it is not in" is the rule this
-  directory has restated four times. **The map is complete and this is still open**, which means every level
-  this game will ship has shipped with it.
+  and `TN-QUEST`'s row is untouched. **Four of the ten built levels declare no quest at all**, so on
+  Winnipeg, the Prairies, the Alberta foothills and Vancouver the wrong heading is the *only* heading a
+  player can reach. **That count was six until ADR-0029**, which gave Peggy's Cove and the North a quest
+  offered by a landmark rather than a person — and the ADR says plainly what it did and did not do: *"This
+  does not fix it; it removes two of its instances' cause."* **The defect is unchanged on the other four, and
+  on the six with a quest it is still reachable by walking past the giver.** *Recommendation:* ship both
+  headings and pick by what finished. If the project owner would rather have one heading for both paths, the
+  honest one is the level's — a quest completing also finishes the level — and `TN-QUEST-04` would be the
+  file amended, not this one. What must not happen is the walk-through path keeping a heading about a task,
+  because "a screen never describes a state it is not in" is the rule this directory has restated four times.
 - **`OQ-DONE-2` — `level.complete.score` could still be `study.summary.score`.** The four reasons for
   splitting are above, and the alternative is one line: the card names Study's key and this row is deleted.
   *Recommendation:* keep the split and put both in front of the first French reviewer, together with
@@ -795,10 +869,11 @@ Feature: Finishing a level in French
   path and this card does not draw it on the walk-through path. A stamp was just earned either way.
   *Recommendation:* offer the same three ways on for both paths and leave the passport to the menu and the
   map, because a fourth control on a card a player meets ten times is three taps of clutter against one
-  screen they can reach from two places. **The tenth level makes one version of this sharper**: a player who
-  finishes the North fills the passport for the first time, and the card deliberately does not say so
-  (`TN-NORTH-05`). Recorded because `TN-QUEST-04`'s scenario asserts the passport button, so the two paths do
-  not agree today and one of the two files has to change when this is answered.
+  screen they can reach from two places. **Six levels now have both paths**, so the two cards are drawn side
+  by side far more often than when this was written, and a difference that used to be theoretical is now a
+  player noticing the passport button comes and goes. Recorded because `TN-QUEST-04`'s scenario asserts the
+  passport button, so the two paths do not agree today and one of the two files has to change when this is
+  answered.
 - **`OQ-DONE-6` — nothing here says what "answered in this level" counts across a reload.** A player who
   answers two questions, closes the tab, comes back and walks to the end reads a total that either includes
   those two or does not, and `TN-SAVE`'s survives table records answers but not which level they were given
@@ -814,3 +889,12 @@ Feature: Finishing a level in French
   degrades honestly, so it will not be the thing that reports the problem. **With ten of ten built, level 8
   is the only level in this state**, which makes it cheaper to fix and easier to forget. *Recommendation:*
   whoever answers `OQ-ALBERTA-2` decides whether the level stays in the order; this file changes either way.
+- **`OQ-DONE-8` — two of the six quests on this card cannot be finished, so two of its headings cannot be
+  reached.** ADR-0029's obligation (due 2026-11-13, owner engine) records the cause: `app/bootstrap/quest.ts`
+  resolves a giver's display name from an `npc.<id>.name` copy row, a landmark giver has none, and the dialog
+  is refused. So Peggy's Cove's and the North's quests validate, pass every gate and **cannot be offered**,
+  which means those two levels reach only the "Level finished!" heading today — the state this file's own
+  amendment says they left. *Recommendation:* nothing changes here when it lands. This is recorded so that a
+  reader who tests the two-route scenarios in `TN-DONE-01` and finds one route unreachable knows it is a
+  known engine obligation and not a story that overstated what shipped. `OQ-PEGGYS-6` and `OQ-NORTH-6` carry
+  it from the levels' side.
