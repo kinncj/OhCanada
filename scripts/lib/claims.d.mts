@@ -48,6 +48,14 @@ export interface TextIndex {
 
 export declare const CLAIM_COLLECTIONS: readonly string[];
 
+/** One root field a claim binds to from outside its unit, and why it does. */
+export interface DocumentScopeField {
+  readonly key: string;
+  readonly why: string;
+}
+
+export declare const DOCUMENT_SCOPE_FIELDS: readonly DocumentScopeField[];
+
 export declare const isSchemaDocument: (where: string) => boolean;
 
 export declare const words: (text: string) => readonly string[];

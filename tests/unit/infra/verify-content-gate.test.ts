@@ -1867,3 +1867,357 @@ describe('the gate refuses to pass by having nothing to check', () => {
     expect(result.status).toBe(0);
   });
 });
+
+/* -------------------------------------------------------------------------- */
+/* A4's GRAIN - a grant is a grant of ONE CLAIM, not of a document             */
+/* -------------------------------------------------------------------------- */
+/*
+ * A4 stored `authorFieldsOf(document)` while its own comment said "the unit is
+ * the claim". Two lines written into `territory.nationSource` - a sourceHash and
+ * an asOf, filling fields that had been empty since the first level shipped -
+ * voided every grant in all ten level documents: thirty point-of-interest blurbs
+ * whose prose, quote, page and chapter were byte-identical to what a verifier
+ * had checked hours earlier, plus the ten territorial statements that genuinely
+ * had come unbound. It cost two verifier passes.
+ *
+ * THE NARROWING IS PROVED BY MUTATION, IN BOTH DIRECTIONS, and that is the only
+ * way it can be proved. "The thirty stopped failing" is not evidence: a gate
+ * that binds a grant to nothing also makes them stop failing, reports green for
+ * ever, and fails silently in the direction of passing - which is worse than the
+ * document-grain rule it replaced, because that one at least over-fired.
+ *
+ * So every row of the table below states the EXACT set of grants a single edit
+ * unbinds. The positive half is "this edit voids this grant"; the negative half
+ * is the rest of the set being empty, which is what says the edit did NOT reach
+ * the other claims in the same file. A row that only asserted `toContain` would
+ * pass against the defect.
+ */
+
+/** Every verification block in a document, reset to the null form. */
+const unverified = (value: unknown): unknown => {
+  if (Array.isArray(value)) return value.map(unverified);
+  if (typeof value === 'object' && value !== null) {
+    return Object.fromEntries(
+      Object.entries(value as Json).map(([key, inner]) =>
+        key === 'verification' && inner !== null ? [key, NULL_FORM] : [key, unverified(inner)],
+      ),
+    );
+  }
+  return value;
+};
+
+/** One field of a document, changed, with nothing else touched. */
+const patched = (document: Json, path: readonly string[], value: unknown): Json => {
+  const copy = JSON.parse(JSON.stringify(document)) as Json;
+  const last = path.at(-1);
+  if (last === undefined) throw new Error('patched() needs a path');
+  let node = copy as Record<string, unknown>;
+  for (const key of path.slice(0, -1)) node = node[key] as Record<string, unknown>;
+  node[last] = value;
+  return copy;
+};
+
+/**
+ * A level carrying the three claim shapes that share a document: a territorial
+ * statement with the `nationSource` block beside it, and two points of interest.
+ * Deliberately NOT the `level()` fixture above - the cases that use that one are
+ * each about a single rule, and a territory would put a second claim's output
+ * into them.
+ */
+const a4Level = (): Json => ({
+  $schema: '../schemas/level.schema.json',
+  id: 'fix-level',
+  subject: 'government',
+  // Two root fields that were asked whether they belong to a claim and answered
+  // no. The negative case below edits both and expects nothing to come unbound.
+  order: 1,
+  textureBudgetBytes: 8_000_000,
+  territory: {
+    nations: ['A fixture nation'],
+    statement: {
+      en: "The Crown's representative here is chosen on the advice of the head of government.",
+      fr: "Le representant de la Couronne ici est choisi sur l'avis du chef du gouvernement.",
+    },
+    fact: factOf({
+      source: {
+        ...(factOf().source as Json),
+        quote:
+          'The Governor General is appointed by the Sovereign on the advice of the Prime Minister.',
+      },
+      verification: {
+        ...(factOf().verification as Json),
+        evidence: 'The Governor General is appointed by the Sovereign',
+      },
+    }),
+    // Not a claim - no `factual` - but it carries a verification block of its
+    // own, and it is the field whose two added lines started all this.
+    nationSource: {
+      publisher: 'A fixture nation',
+      url: 'https://example.invalid/nation',
+      sourceHash: '',
+      asOf: null,
+      verification: NULL_FORM,
+    },
+  },
+  pois: [
+    {
+      id: 'a-landmark',
+      name: { en: 'A landmark', fr: 'Un point de repere' },
+      blurb: {
+        en: 'The country keeps a crown, elects one chamber and appoints the other.',
+        fr: 'Le pays garde une couronne, elit une chambre et nomme l autre.',
+      },
+      position: { x: 100, y: 200 },
+      fact: factOf({
+        source: {
+          ...(factOf().source as Json),
+          quote:
+            'Canada is a constitutional monarchy, a parliamentary democracy and a federal state.',
+        },
+        verification: {
+          ...(factOf().verification as Json),
+          evidence: 'is a constitutional monarchy, a parliamentary democracy',
+        },
+      }),
+    },
+    {
+      id: 'another-landmark',
+      name: { en: 'Another landmark', fr: 'Un autre point de repere' },
+      blurb: {
+        en: 'A new law needs both chambers to agree, and then the Crown signs it.',
+        fr: 'Une nouvelle loi exige l accord des deux chambres, puis la Couronne la signe.',
+      },
+      position: { x: 400, y: 200 },
+      fact: factOf({
+        source: {
+          ...(factOf().source as Json),
+          quote: 'A bill must pass both Houses before it receives royal assent and becomes law.',
+        },
+        verification: {
+          ...(factOf().verification as Json),
+          evidence: 'A bill must pass both Houses before it receives royal assent',
+        },
+      }),
+    },
+  ],
+});
+
+const LEVEL_PATH = 'content/levels/fix-level.json';
+const QUEST_PATH = 'content/quests/fix-quest.json';
+
+/**
+ * Author everything in the null form, grant every status in a second commit,
+ * then apply one edit in a third. Three properly separated commits, so nothing
+ * but A4 can fire and the failures below are A4's alone.
+ */
+const a4Repo = (label: string, edit: (level: Json, questDoc: Json) => readonly [Json, Json]): Run => {
+  const root = tree(label, [question({ verification: NULL_FORM })]);
+  const level_ = a4Level();
+  const quest_ = quest();
+  write(root, LEVEL_PATH, unverified(level_));
+  write(root, QUEST_PATH, unverified(quest_));
+  initRepo(root);
+  commit(root, 'Author a level, a quest and a question in the null form');
+
+  write(root, 'content/questions/government/fix-0.json', question());
+  write(root, LEVEL_PATH, level_);
+  write(root, QUEST_PATH, quest_);
+  commit(root, 'Verify them all');
+
+  const [editedLevel, editedQuest] = edit(level_, quest_);
+  write(root, LEVEL_PATH, editedLevel);
+  write(root, QUEST_PATH, editedQuest);
+  commit(root, 'Edit one field');
+
+  return run(root, ['--collections', 'questions,quests,levels']);
+};
+
+/** Exactly which grants came unbound, as `path at pointer`, in sorted order. */
+const unbound = (out: string): readonly string[] =>
+  out
+    .split('\n')
+    .filter((line) => line.includes("the claim's own fields have changed since"))
+    .map((line) => line.slice(line.indexOf('FAIL: ') + 'FAIL: '.length, line.indexOf(': the status')))
+    .sort((a, b) => a.localeCompare(b));
+
+const TERRITORY = `${LEVEL_PATH} at /territory/fact/verification`;
+const POI_0 = `${LEVEL_PATH} at /pois/0/fact/verification`;
+const POI_1 = `${LEVEL_PATH} at /pois/1/fact/verification`;
+const DIALOGUE = `${QUEST_PATH} at /steps/0/dialogue/1/fact/verification`;
+
+describe('A4 binds a grant to its own claim, not to the document around it', () => {
+  const cases: readonly {
+    readonly what: string;
+    readonly edit: (level: Json, questDoc: Json) => readonly [Json, Json];
+    readonly voids: readonly string[];
+    readonly names: string;
+  }[] = [
+    {
+      // THE TRAP A FIELD LIST WOULD FALL INTO. French only: an implementation
+      // that reached for `blurb.en`, or that compared prose in one locale,
+      // would report green over a rewritten sentence half this country reads.
+      what: 'a blurb, in French only',
+      edit: (level_, quest_) => [
+        patched(level_, ['pois', '0', 'blurb', 'fr'], 'Une phrase entierement differente.'),
+        quest_,
+      ],
+      voids: [POI_0],
+      names: 'blurb.fr',
+    },
+    {
+      // `name` is the second `localizedText` sibling on a point of interest, and
+      // scripts/lib/claims.mjs already counts it as prose the claim governs.
+      what: "a point of interest's name",
+      edit: (level_, quest_) => [
+        patched(level_, ['pois', '0', 'name', 'en'], 'A renamed landmark'),
+        quest_,
+      ],
+      voids: [POI_0],
+      names: 'name.en',
+    },
+    {
+      // The citation, not the prose. A verifier checked page 55; page 56 is a
+      // different page of the same chapter and the grant is not a statement
+      // about it.
+      what: "a citation's page",
+      edit: (level_, quest_) => [patched(level_, ['pois', '1', 'fact', 'source', 'page'], 56), quest_],
+      voids: [POI_1],
+      names: 'fact.source.page',
+    },
+    {
+      what: "a citation's asOf date",
+      edit: (level_, quest_) => [
+        patched(level_, ['pois', '1', 'fact', 'source', 'asOf'], daysAgo(1)),
+        quest_,
+      ],
+      voids: [POI_1],
+      names: 'fact.source.asOf',
+    },
+    {
+      // THE EDIT THAT COST TWO VERIFIER PASSES, at the grain it should always
+      // have had. `nationSource` names the nation whose page is the authority
+      // for the territorial statement, so the statement's grant SHOULD come
+      // unbound - and the two blurbs' grants should not, which is what the
+      // empty rest of `voids` asserts.
+      what: "the nation source beside a territorial statement, the two lines that started this",
+      edit: (level_, quest_) => [
+        patched(
+          patched(level_, ['territory', 'nationSource', 'sourceHash'], SOURCE_SHA),
+          ['territory', 'nationSource', 'asOf'],
+          dateAgo(1),
+        ),
+        quest_,
+      ],
+      voids: [TERRITORY],
+      names: 'nationSource.sourceHash',
+    },
+    {
+      what: 'a territorial statement',
+      edit: (level_, quest_) => [
+        patched(
+          level_,
+          ['territory', 'statement', 'en'],
+          'The head of state is represented here by somebody the head of government names.',
+        ),
+        quest_,
+      ],
+      voids: [TERRITORY],
+      names: 'statement.en',
+    },
+    {
+      // The over-bind, asserted rather than left to be discovered. A point of
+      // interest's position is inside its unit and WILL void that one grant.
+      // The unit is taken whole because a field list is how this rule goes
+      // silent, and one re-verification is the price of that.
+      what: "a point of interest's position, which is the documented over-bind",
+      edit: (level_, quest_) => [patched(level_, ['pois', '0', 'position', 'x'], 999), quest_],
+      voids: [POI_0],
+      names: 'position.x',
+    },
+    {
+      // DOCUMENT SCOPE. ADR-0028: a subject is a teaching remit, and the
+      // one-proposition-one-subject check is made against it, so re-filing a
+      // level under another remit re-files every claim in it. All three grants,
+      // and nothing in the quest or the bank.
+      what: "the level's subject, which every claim in the level is filed under",
+      edit: (level_, quest_) => [patched(level_, ['subject'], 'history'), quest_],
+      voids: [POI_0, POI_1, TERRITORY],
+      names: 'subject',
+    },
+    {
+      // The same rule for the collection that carries no subject of its own.
+      what: "a quest's levelId, which is the only remit label it has",
+      edit: (level_, quest_) => [level_, patched(quest_, ['levelId'], 'some-other-level')],
+      voids: [DIALOGUE],
+      names: 'levelId',
+    },
+  ];
+
+  for (const { what, edit, voids, names } of cases) {
+    it(`voids the grant over ${what}, and no other grant`, () => {
+      const result = a4Repo(`a4-${names.replace(/[^a-z]+/giu, '-')}`, edit);
+      expect(unbound(result.out)).toEqual([...voids].sort((a, b) => a.localeCompare(b)));
+      expect(result.out).toContain(names);
+      expect(result.status).toBe(1);
+    });
+  }
+
+  /**
+   * The edit the whole table is measured against: two root fields that were
+   * asked whether a claim binds to them and answered NO. `order` is
+   * presentation and `textureBudgetBytes` is an engineering budget, and neither
+   * is anything a verifier read. Under the document-grain rule this edit voided
+   * all three grants in the file; it must now void none.
+   *
+   * Without a case like this, a gate that voided EVERYTHING would satisfy every
+   * row above, because each row's expected set is compared only with itself.
+   */
+  const reorderAndRebudget = (level_: Json, quest_: Json): readonly [Json, Json] => [
+    patched(patched(level_, ['order'], 2), ['textureBudgetBytes'], 9_000_000),
+    quest_,
+  ];
+
+  it('voids nothing when the level is reordered and its texture budget retuned', () => {
+    const result = a4Repo('a4-untouched', reorderAndRebudget);
+    expect(unbound(result.out)).toEqual([]);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  it('reports how many grants each named document-scope field bound', () => {
+    // ADR-0024's second guard, visible. A named field is the one part of a
+    // claim's field set that cannot be found by shape, so it is the one part
+    // that can go dead silently - renamed in a schema, dropped from the
+    // documents - and bind nothing for ever.
+    //
+    // Six grants: the question, the territorial statement, the two blurbs, the
+    // `nationSource` block's own grant, and the quest's one factual line. Four
+    // bind `subject` - the level's three claims plus `nationSource`, which is
+    // not a claim but does carry a verification block of its own. One binds
+    // `levelId`. A question's grant binds neither, because for a question the
+    // unit IS the document and `subject` is already inside it.
+    const result = a4Repo('a4-scope-counts', reorderAndRebudget);
+    expect(result.out).toContain('A4 binds each grant to its own claim');
+    expect(result.out).toContain('6 grant(s) bound at HEAD');
+    expect(result.out).toContain('document-scope bindings subject 4, levelId 1');
+  });
+
+  it('fails loudly when a grant binds to no author field of its own claim', () => {
+    // ADR-0024, the vacuity shape a NARROWING is exposed to. A grant bound to
+    // nothing can never be voided, so it reports green for ever; that is a
+    // failure and not a pass. The block below sits two levels down from the
+    // root with nothing authored beside it, which is the shape that empties a
+    // unit out. Note the document still carries `subject`, so the bound SET is
+    // not empty - the guard is on the claim's own unit, deliberately, because
+    // a remit label alone is not a claim.
+    const result = a4Repo('a4-vacuous-binding', (level_, quest_) => [
+      { ...level_, acknowledgement: { wrapper: { verification: NULL_FORM } } },
+      quest_,
+    ]);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('/acknowledgement/wrapper/verification');
+    expect(result.out).toContain('binds to NO author-owned field of its own claim');
+    expect(result.out).toContain('ADR-0024');
+    expect(unbound(result.out)).toEqual([]);
+  });
+});

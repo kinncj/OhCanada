@@ -175,6 +175,7 @@ import {
   claimsIn,
   collectionOf,
   containsRun,
+  DOCUMENT_SCOPE_FIELDS,
   indexText,
   isSchemaDocument,
   longestSharedRun,
@@ -669,6 +670,203 @@ const authorFieldsOf = (node) => {
 const bearsClaims = (path) => !path.startsWith('content/sources/');
 
 const canonical = (value) => JSON.stringify(value);
+
+/* -------------------------------------------------------------------------- */
+/* WHAT A CLAIM'S AUTHOR FIELDS ARE — the unit gate A4 binds a grant to        */
+/* -------------------------------------------------------------------------- */
+/*
+ * READ THIS BEFORE CHANGING WHAT VOIDS A GRANT. Everything below is a decision
+ * about which bytes a verifier's "verified" is a statement about, and the
+ * failure mode of getting it wrong in one direction is silence.
+ *
+ * A4 used to bind a grant to `authorFieldsOf(document)` — the WHOLE document —
+ * while its own comment said "the unit is the claim, which is what it should
+ * have been". That is document grain wearing a claim-grain label, and it cost
+ * two verifier passes: one commit wrote `territory.nationSource.sourceHash` and
+ * `.asOf` into ten level documents, two lines each, and voided every grant in
+ * all ten — including thirty point-of-interest blurbs whose prose, quote, page
+ * and chapter were byte-identical to what a verifier had checked hours earlier.
+ *
+ * So: WHICH FIELDS DOES A CLAIM BIND TO? Three answers, and the reason for each.
+ *
+ * 1. THE UNIT — the author-owned fields of the node the claim's apparatus hangs
+ *    off, taken WHOLE.
+ *
+ *    A verification block sits at `<unit>/<apparatus>/verification`:
+ *    `/pois/3/fact/verification`, `/territory/fact/verification`,
+ *    `/territory/nationSource/verification`,
+ *    `/steps/1/dialogue/0/fact/verification`. Two segments up from the block is
+ *    the thing an author wrote as one piece — the point of interest, the
+ *    territory acknowledgement, the dialogue line. A question has no such
+ *    enclosing node: its apparatus IS the document root, `/verification`, so its
+ *    unit is the document, which is what it already was and still is. That is
+ *    why this narrowing changes nothing for `content/questions/`.
+ *
+ *    Taking the unit WHOLE rather than as a list of field names is the
+ *    load-bearing decision here. A name list is how a claim-grain A4 fails
+ *    SILENTLY AND IN THE DIRECTION OF PASSING: the day a point of interest grows
+ *    a `caption`, or a territory grows a second citation, the list stops
+ *    covering it and nothing says so. The unit covers a field the moment it
+ *    exists. `scripts/lib/claims.mjs` reaches the same conclusion one level down
+ *    for the prose — every `localizedText`-shaped SIBLING of the block, never a
+ *    fixed list of field names — and that prose is a subset of the unit by
+ *    construction, so the gate and the walk cannot drift apart.
+ *
+ *    WHAT THIS DELIBERATELY OVER-BINDS, since an over-bind that is not written
+ *    down reads as a bug: a point of interest's `position`, `artKey` and
+ *    `radiusPx`, and a dialogue line's `speaker` and `expression`, are in the
+ *    unit and WILL void that one grant if they move. Accepted. Over-binding
+ *    costs one re-verification of a claim whose words did not change;
+ *    under-binding ships a grant that outlived the words it was granted over,
+ *    which is the whole reason A4 exists. The two are not symmetric.
+ *
+ * 2. THE APPARATUS — `factual`, and every field of `source`: `sourceId`,
+ *    `chapter`, `page`, `quote`, `sourceHash`, `asOf`, `volatile`, `url`.
+ *
+ *    These are inside the unit already, so this is a consequence of (1) and not
+ *    a second rule. It is written out because it is the half a reader is most
+ *    likely to mistake for the whole rule, and because binding to the `fact`
+ *    block ALONE is the obvious wrong answer: it misses the prose the claim
+ *    governs, which is the thing the verifier actually read.
+ *
+ *    `verification` and `communityReview` are NOT author fields anywhere in
+ *    here — `authorFieldsOf` collapses both to a constant. They must not be, or
+ *    every grant would void itself the instant it was written.
+ *
+ * 3. THE DOCUMENT SCOPE — root fields whose value the claim's MEANING depends
+ *    on, even though they sit outside the unit. These are NAMED, in
+ *    `DOCUMENT_SCOPE_FIELDS` in scripts/lib/claims.mjs, each with the reason it
+ *    is there — one list, because the gate binds by it and a contract test
+ *    proves against the corpus that no name on it has gone dead.
+ *
+ *    They have to be named, and the reason is the same measurement that made (1)
+ *    go the other way: a level root also carries `ground`, `layers`, `camera`,
+ *    `theme` and `textureBudgetBytes`, so binding every blurb's grant to
+ *    everything at the root would be the document-grain defect back again under
+ *    a new name — a collision polygon moving would void thirty verified
+ *    sentences. There is no shape that separates `subject` from `order`; only a
+ *    reason does. Being named, they can go dead silently, which is what the
+ *    second anti-vacuity guard is for.
+ *
+ *    ASKED AND ANSWERED NO, so the next reader does not have to re-derive it:
+ *    a level's or a quest's `id` (renaming the file the claim lives in changes
+ *    nothing a verifier read — and the questions' `id` is bound anyway, because
+ *    for a question the unit is the document); `order` (presentation); `title`,
+ *    `theme`, `size`, `spawn`, `camera`, `ground`, `layers`, `locomotion`,
+ *    `assets`, `characters`, `textureBudgetBytes` (art and engineering, none of
+ *    which a verifier checks a citation against); a level's `quests` array
+ *    (those claims live in `content/quests/` and bind there).
+ *
+ *    NOT NAMED BECAUSE IT DOES NOT NEED TO BE: `territory.nationSource`. It is
+ *    the field that started this, and it binds to the territorial statement for
+ *    free, because it is a SIBLING of `/territory/fact` and therefore inside
+ *    that claim's unit. It binds to nothing else in the level, which is the
+ *    whole point: the territory claims come unbound and the blurbs do not.
+ *
+ * ANTI-VACUITY (ADR-0024). The failure mode of a NARROWING gate is a field set
+ * that is empty: a grant bound to nothing can never be voided and reports green
+ * for ever, which is strictly worse than the document-grain rule it replaced.
+ * Two guards, because the two ways it can empty out are different:
+ *
+ *   - PER CLAIM, at HEAD: a bound field set carrying no author-owned leaf FAILS,
+ *     loudly. That catches a pointer shape this code does not understand
+ *     resolving to nothing.
+ *   - PER NAMED SCOPE FIELD: the run prints how many grants each one bound, so a
+ *     name that has gone dead — renamed in the schema, dropped from the
+ *     documents — is visible in the summary rather than absent from it, and
+ *     tests/unit/contracts/a-grant-binds-to-its-claim.test.ts fails if any of
+ *     them binds to zero grants in the real corpus. The count lives in the
+ *     script and the floor lives in the test, because a fixture tree that
+ *     legitimately has no quests would fail a floor stated here.
+ */
+
+/** A JSON pointer as its unescaped segments. `''` is the document itself. */
+const pointerSegments = (pointer) =>
+  pointer === ''
+    ? []
+    : pointer
+        .slice(1)
+        .split('/')
+        .map((segment) => segment.replace(/~1/gu, '/').replace(/~0/gu, '~'));
+
+const atPointer = (document, segments) => {
+  let node = document;
+  for (const segment of segments) {
+    if (Array.isArray(node)) node = node[Number(segment)];
+    else if (isObject(node)) node = node[segment];
+    else return undefined;
+    if (node === undefined) return undefined;
+  }
+  return node;
+};
+
+/**
+ * Author-owned leaves in a collapsed field set. A governed block counts zero
+ * because it is the verifier's, and `{}` and `[]` count zero because they are
+ * nothing — which is exactly the state the ADR-0024 guard is looking for.
+ */
+const authorLeafCount = (value) => {
+  if (value === GOVERNED_BLOCK) return 0;
+  if (Array.isArray(value)) return value.reduce((total, item) => total + authorLeafCount(item), 0);
+  if (isObject(value)) {
+    return Object.values(value).reduce((total, item) => total + authorLeafCount(item), 0);
+  }
+  return 1;
+};
+
+/**
+ * The field set the grant at `pointer` is a grant OF. The essay above is the
+ * specification; this is six lines of it.
+ *
+ * `segments.length >= 3` is the test for "the apparatus is enclosed in a unit":
+ * `/pois/0/fact/verification` is, `/verification` and `/fact/verification` are
+ * not, and in the second case the unit is the document root — which is where
+ * the prose sibling lives, so the answer is the same one by another route.
+ */
+const claimAuthorFieldsAt = (document, pointer) => {
+  const segments = pointerSegments(pointer);
+  const enclosed = segments.length >= 3;
+  const resolved = enclosed ? atPointer(document, segments.slice(0, -2)) : document;
+  // A unit that does not resolve, or resolves to something that is not a
+  // container, must reach the ADR-0024 guard below as EMPTY and not as `null`:
+  // `authorFieldsOf(null)` is a LEAF, so it would count as a bound field, bind
+  // to nothing, and report green for ever. That is the silent pass this whole
+  // narrowing is most exposed to, and it costs one line to close.
+  const unit = isObject(resolved) || Array.isArray(resolved) ? resolved : {};
+  const bound = { unit: authorFieldsOf(unit) };
+  // Skipped when the unit IS the document: the scope fields are already in it,
+  // and counting them twice would report one edit as two.
+  if (enclosed && isObject(document)) {
+    for (const { key } of DOCUMENT_SCOPE_FIELDS) {
+      if (key in document) bound[key] = authorFieldsOf(document[key]);
+    }
+  }
+  return bound;
+};
+
+/**
+ * Which fields of a bound set moved, as dotted paths, so the failure names the
+ * edit instead of making a verifier diff two revisions by hand. A narrowing is
+ * only auditable if it says what it caught.
+ */
+const changedPaths = (before, after, prefix = '', found = []) => {
+  if (canonical(before) === canonical(after)) return found;
+  if (isObject(before) && isObject(after)) {
+    for (const key of [...new Set([...Object.keys(before), ...Object.keys(after)])].sort()) {
+      changedPaths(before[key], after[key], prefix === '' ? key : `${prefix}.${key}`, found);
+    }
+    return found;
+  }
+  if (Array.isArray(before) && Array.isArray(after) && before.length === after.length) {
+    before.forEach((item, index) => changedPaths(item, after[index], `${prefix}[${index}]`, found));
+    return found;
+  }
+  found.push(prefix === '' ? '(the whole claim)' : prefix);
+  return found;
+};
+
+/** `unit` is this module's word for the claim's node, not a field a reader has seen. */
+const readablePath = (path) => path.replace(/^unit\./u, '').replace(/^unit$/u, '(the whole claim)');
 
 assertRecogniserIsLive();
 
@@ -1225,6 +1423,16 @@ const git = (args) =>
 
 const history = { commits: 0, documents: 0, grants: 0, reviews: 0, roled: 0, bound: 0, ran: false };
 
+/**
+ * How many grants each NAMED document-scope binding actually bound, counted at
+ * HEAD. ADR-0024's second guard: a name that has gone dead — renamed in a schema,
+ * dropped from the documents — voids nothing and would otherwise be invisible.
+ * The count is printed here; the floor that makes zero a failure lives in
+ * tests/unit/contracts/a-grant-binds-to-its-claim.test.ts, because a fixture tree
+ * with no quests in it legitimately binds `levelId` zero times.
+ */
+const scopeBinds = new Map(DOCUMENT_SCOPE_FIELDS.map(({ key }) => [key, 0]));
+
 const runHistoryGate = () => {
   try {
     git(['rev-parse', '--git-dir']);
@@ -1290,10 +1498,15 @@ const runHistoryGate = () => {
    * answer under a status granted for a different question.
    *
    * The fix needs no new schema field: the bytes a grant was granted against
-   * are recoverable from history. For each verification block, remember the
-   * document's AUTHOR-OWNED fields as they stood in the commit that last wrote
-   * that block, and compare them with the fields as they stand now. The unit is
-   * the claim, which is what it should have been.
+   * are recoverable from history. For each verification block, remember THAT
+   * CLAIM'S AUTHOR-OWNED fields as they stood in the commit that last wrote the
+   * block, and compare them with the same fields as they stand now.
+   *
+   * THE UNIT IS THE CLAIM, and for six months it was not — this comment said
+   * "claim" while `recordRevision` stored `authorFieldsOf(document)`. See the
+   * essay above `DOCUMENT_SCOPE_FIELDS` for which fields a claim's are and why;
+   * `claimAuthorFieldsAt()` is the whole of the answer. Editing one blurb now
+   * voids that blurb's grant and no other grant in the file.
    *
    * It is deliberately evaluated at HEAD rather than at the offending commit,
    * because unlike A1/A2 this is RECOVERABLE: re-verifying rewrites the block,
@@ -1307,30 +1520,40 @@ const runHistoryGate = () => {
    * verification block is already granted is a grant in a commit that also
    * authors that file, which A1/A2 fails.
    */
-  const grantState = new Map(); // `${path} ${pointer}` -> { author, sha, subject }
-  const latestAuthor = new Map(); // path -> canonical author fields, latest revision seen
+  const grantState = new Map(); // `${path} ${pointer}` -> { bound, sha, subject }
+  const latestAuthor = new Map(); // `${path} ${pointer}` -> that claim's bound fields, latest seen
   const latestGrants = new Map(); // path -> Map(pointer -> block), latest revision seen
   const stateKey = (path, pointer) => `${path} ${pointer}`;
 
+  // PER POINTER, not per path. The bound field set is now a property of the
+  // CLAIM, so two grants in one document hold two different sets and one of
+  // them moving says nothing about the other.
   const recordRevision = (path, document, sha, subject, rebind) => {
     const blocks = blocksIn(document).verification;
-    const author = canonical(authorFieldsOf(document));
     for (const [pointer, block] of blocks) {
       const key = stateKey(path, pointer);
+      const bound = claimAuthorFieldsAt(document, pointer);
       if (rebind(pointer, block) || !grantState.has(key)) {
-        grantState.set(key, { author, sha, subject });
+        grantState.set(key, { bound, sha, subject });
       }
+      latestAuthor.set(key, bound);
     }
     for (const key of [...grantState.keys()]) {
-      if (key.startsWith(`${path} `) && !blocks.has(key.slice(path.length + 1))) grantState.delete(key);
+      if (key.startsWith(`${path} `) && !blocks.has(key.slice(path.length + 1))) {
+        grantState.delete(key);
+        latestAuthor.delete(key);
+      }
     }
-    latestAuthor.set(path, author);
     latestGrants.set(path, blocks);
   };
 
   const forgetPath = (path) => {
-    for (const key of [...grantState.keys()]) if (key.startsWith(`${path} `)) grantState.delete(key);
-    latestAuthor.delete(path);
+    for (const key of [...grantState.keys()]) {
+      if (key.startsWith(`${path} `)) {
+        grantState.delete(key);
+        latestAuthor.delete(key);
+      }
+    }
     latestGrants.delete(path);
   };
 
@@ -1526,18 +1749,56 @@ const runHistoryGate = () => {
     const pointer = key.slice(cut + 1);
     const block = latestGrants.get(path)?.get(pointer);
     if (block === undefined) continue;
+    const at = pointer === '' ? '' : ` at ${pointer}`;
+    const now = latestAuthor.get(key);
+    if (now === undefined) continue;
     history.bound += 1;
+
+    /* --- ADR-0024: a grant bound to nothing can never be voided ---------- */
+    //
+    // The vacuity shape a NARROWING is exposed to, and the reason this is a
+    // failure rather than a `continue`: every check below is a comparison
+    // between two field sets, so an empty one compares equal for ever and this
+    // gate reports green over a claim it has stopped binding. Silent, and in the
+    // direction of passing — which is worse than the document-grain rule this
+    // replaced, because that one at least over-fired.
+    // The UNIT, not the whole bound set: a document-scope field such as
+    // `subject` would keep the set non-empty while the claim's OWN words and
+    // citation bound to nothing, which is the hazard, dressed as coverage.
+    if (authorLeafCount(now.unit) === 0) {
+      fail(
+        `${path}${at}: this verification block binds to NO author-owned field of its own claim, ` +
+          `so nothing an author could write to that claim would ever void the grant. A4 binds a ` +
+          `grant to the claim's UNIT — the node the block hangs off, carrying its prose and its ` +
+          `source — plus the document-scope fields ` +
+          `${DOCUMENT_SCOPE_FIELDS.map(({ key: field }) => field).join(' and ')}; here the unit is ` +
+          `empty, and a document-scope field alone is not a claim. Either the block sits at a ` +
+          `pointer shape claimAuthorFieldsAt() does not understand, or it is attached to a node ` +
+          `with no authored content. ADR-0024: an empty field set is a failure and not a pass, ` +
+          `because a grant that can never be voided reports green for ever — which is worse than ` +
+          `the document-grain rule this replaced, since that one at least over-fired.`,
+      );
+      continue;
+    }
+    for (const { key: field } of DOCUMENT_SCOPE_FIELDS) {
+      if (field in now) scopeBinds.set(field, (scopeBinds.get(field) ?? 0) + 1);
+    }
+
     if (str(block.status) !== 'verified') continue;
-    const now = latestAuthor.get(path);
-    if (now === undefined || now === record.author) continue;
+    if (canonical(now) === canonical(record.bound)) continue;
+    const moved = changedPaths(record.bound, now).map(readablePath);
     fail(
-      `${path}${pointer === '' ? '' : ` at ${pointer}`}: the status "verified" was granted in ` +
+      `${path}${at}: the status "verified" was granted in ` +
         `${record.sha} "${record.subject}", and the claim's own fields have changed since without ` +
-        `the verification block being rewritten. verification.sourceHash binds a grant to the ` +
-        `SOURCE, and nothing bound it to the CLAIM, so an edit to the prompt, the options or ` +
-        `correctIndex inherits a status granted for different text — including an edit that changes ` +
-        `which answer is correct. Re-verify against the current wording, or quarantine. This is ` +
-        `recoverable: rewriting the block re-binds the grant and clears it.`,
+        `the verification block being rewritten — ${String(moved.length)} field(s): ` +
+        `${moved.slice(0, 6).join(', ')}${moved.length > 6 ? ', and more' : ''}. ` +
+        `verification.sourceHash binds a grant to the SOURCE, and nothing bound it to the CLAIM, ` +
+        `so an edit to the prose, the citation, the options or correctIndex inherits a status ` +
+        `granted for different text — including an edit that changes which answer is correct. ` +
+        `What a grant is bound to is THIS claim's own fields and no other claim's: an edit ` +
+        `elsewhere in this document does not appear here, and the fields named above are the ones ` +
+        `that moved. Re-verify against the current wording, or quarantine. This is recoverable: ` +
+        `rewriting the block re-binds the grant and clears it.`,
     );
   }
 };
@@ -1736,6 +1997,20 @@ if (history.ran) {
     `verify-content: separation of duties — ${String(history.commits)} commit(s) touching content/, ` +
       `${String(history.documents)} document revision(s), ${String(history.grants)} verification ` +
       `block(s) and ${String(history.reviews)} communityReview block(s) inspected.`,
+  );
+  console.log(
+    `verify-content: A4 binds each grant to its own claim — ${String(history.bound)} grant(s) ` +
+      `bound at HEAD; document-scope bindings ${[...scopeBinds.entries()]
+        .map(([field, count]) => `${field} ${String(count)}`)
+        .join(', ')}. A named field binding 0 grants voids nothing (ADR-0024)${
+        [...scopeBinds.entries()].some(([, count]) => count === 0)
+          ? `; the zeroes here are ${DOCUMENT_SCOPE_FIELDS.filter(
+              ({ key }) => (scopeBinds.get(key) ?? 0) === 0,
+            )
+              .map(({ key, why }) => `"${key}" — ${why}`)
+              .join(' ')}`
+          : ''
+      }.`,
   );
   if (Object.keys(ROLE_IDENTITIES).length === 0) {
     console.log(
