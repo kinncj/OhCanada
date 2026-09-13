@@ -223,8 +223,8 @@
         "fr": "Silos à grains"
       },
       "blurb": {
-        "en": "Saskatchewan has 40 percent of the farmland in Canada. It grows more grain and oilseed than any other province.",
-        "fr": "La Saskatchewan possède 40 pour cent des terres agricoles du Canada. Elle produit plus de céréales et d'oléagineux que toute autre province."
+        "en": "Farms across Saskatchewan grow grain and oilseed crops. No other province in Canada produces more.",
+        "fr": "Les fermes de la Saskatchewan cultivent des céréales et des oléagineux. Aucune autre province du Canada n'en produit davantage."
       },
       "fact": {
         "factual": true,
@@ -236,7 +236,7 @@
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": true,
-          "quote": "has 40% of the arable land in Canada and is the country's largest producer of grains and oilseeds"
+          "quote": "is the country's largest producer of grains and oilseeds"
         },
         "verification": {
           "status": "rejected",
