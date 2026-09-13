@@ -59,8 +59,15 @@ import {
 } from './time-of-day';
 import {
   createSpriteCharacterRenderer,
+  type SpriteCharacterRenderer,
   type SpritePartObject,
 } from './sprite-character-renderer';
+import {
+  modeArtGapMessage,
+  modeArtGaps,
+  strandedPoses,
+  type ModeArtGap,
+} from './locomotion-pose';
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
@@ -452,8 +459,16 @@ export class LevelScene extends Phaser.Scene {
     bools: [],
     numbers: [],
   };
-  /** The player, composed from the rig. `null` means the placeholder is on screen. */
-  #playerCharacter: ICharacterRenderer | null = null;
+  /**
+   * The player, composed from the rig. `null` means the placeholder is on screen.
+   *
+   * Typed as the sprite backend's own view rather than the port, so the scene
+   * can publish `mode` and `pose` — what the puppet is *actually* drawing —
+   * onto the probe. Everything the scene *does* to the player goes through
+   * `ICharacterRenderer`; the two extra fields are read-only and exist to be
+   * observed. See `SpriteCharacterRenderer`.
+   */
+  #playerCharacter: SpriteCharacterRenderer | null = null;
   /** Placed characters by id, so an engagement can reach the one it engaged. */
   readonly #placed = new Map<string, ICharacterRenderer>();
   /** The tappable marks, by subject id, and the state each was last drawn in. */
@@ -475,6 +490,16 @@ export class LevelScene extends Phaser.Scene {
    * healthy level reads 0.
    */
   #placeholders = 0;
+  /**
+   * Modes this level declares that the rig has no art for.
+   *
+   * The counter the "it says skating and she walks" defect had no equivalent
+   * of. A missing character part had `#placeholders`; a missing *mode* had
+   * nothing at all, so a rig with no skating in it drew a walking figure under
+   * a HUD that said Skating and every gate read full marks. Published as
+   * `data-mode-gaps` and 0 on a level whose art has landed.
+   */
+  #modeGaps: readonly ModeArtGap[] = [];
   /** Set once the level's stamp has been reported. See {@link markLevelComplete}. */
   #levelComplete = false;
   /** The five-second clock that lets the sky follow the device's time of day. */
@@ -589,7 +614,40 @@ export class LevelScene extends Phaser.Scene {
         `[level] this level's locomotion animation binding names ${unbound.join(', ')}, which ` +
           `content/characters/rig.json does not declare as state-machine inputs. Those states ` +
           `can never be entered. The rig owns the vocabulary (ADR-0017) and no gate joins a ` +
-          `level's binding to it; the scene drives only what the rig declares.`,
+          `level's binding to it; the scene drives only what the rig declares. The binding is ` +
+          `not what animates a mode either — see locomotion-pose.ts; it names inputs, and every ` +
+          `shipped level names the same five.`,
+      );
+    }
+
+    /*
+     * Can the rig draw the way this level moves?
+     *
+     * Asked here, once, and answered on the console in every build — because the
+     * alternative is what shipped: a level declaring a mode the rig has nothing
+     * for drew the base cycle, the HUD named the mode anyway, and the two
+     * disagreeing was invisible to every counter the scene had. The atlas is
+     * asked as well as the rig: equipment declared in a page nobody packed is
+     * the same experience as equipment nobody drew.
+     */
+    this.#modeGaps = modeArtGaps(
+      this.#options.rig,
+      level.locomotion.map((tuning) => tuning.mode),
+      (frame) => {
+        const rig = this.#options.rig ?? null;
+        const atlas = rig === null ? null : this.#rigAtlas(rig);
+        return atlas !== null && this.textures.exists(atlas) && this.textures.get(atlas).has(frame);
+      },
+    );
+    for (const gap of this.#modeGaps) console.error(`[level] ${modeArtGapMessage(gap)}`);
+
+    const stranded = strandedPoses(this.#options.rig);
+    if (stranded.length > 0) {
+      console.error(
+        `[level] the rig declares the mode poses ${stranded.join(', ')}, each of which re-poses ` +
+          `a state the rig does not have and the selector therefore never selects. They can ` +
+          `never be played. A pose that never appears is the same defect as an input nothing ` +
+          `declares, pointed the other way.`,
       );
     }
 
@@ -649,6 +707,10 @@ export class LevelScene extends Phaser.Scene {
     this.#options.probe?.publish({
       level: level.id,
       mode: this.#tuning.mode,
+      /* Read back from the puppet, never restated from `#tuning`. Restating it
+         would make the two attributes agree by construction and the one thing
+         they exist to catch — the rig not being told — unobservable again. */
+      ...this.#characterModeSnapshot(),
       paused: false,
       playerX: this.#state.x,
       playerY: this.#state.y,
@@ -870,6 +932,7 @@ export class LevelScene extends Phaser.Scene {
         cameraX: this.#camera.x,
       });
       probe.publish({
+        ...this.#characterModeSnapshot(),
         playerX: this.#state.x,
         playerY: this.#state.y,
         speed: Math.abs(this.#state.velocityX),
@@ -1743,6 +1806,7 @@ export class LevelScene extends Phaser.Scene {
         artboardFor(this.#options.rig, id),
         {},
         DEPTH_ACTORS,
+        null,
       );
 
       if (renderer !== null) {
@@ -1804,6 +1868,14 @@ export class LevelScene extends Phaser.Scene {
       artboard,
       this.#options.playerSkins ?? {},
       DEPTH_ACTORS + 1,
+      /*
+       * **The line the whole defect was.** The level document declares how the
+       * player moves here and the rig is now told, so a level that says skating
+       * poses a skater. Nothing else in this file knows which mode that is: the
+       * name comes from the document, the pose comes from the rig, and the join
+       * is `locomotion-pose.ts`.
+       */
+      this.#tuning.mode,
     );
 
     if (renderer !== null) {
@@ -1856,7 +1928,16 @@ export class LevelScene extends Phaser.Scene {
     artboard: RigArtboard | null,
     skins: Readonly<Record<string, string>>,
     depth: number,
-  ): ICharacterRenderer | null {
+    /**
+     * How this character gets about, or `null` for one that does not.
+     *
+     * The player is handed the level's declared mode and nobody else is, which
+     * is a decision and not an omission: an NPC on the ice is *standing* on it.
+     * A level that wants a skating NPC says so by placing one, which is a
+     * document change and a rig pose, not an engine change.
+     */
+    mode: string | null,
+  ): SpriteCharacterRenderer | null {
     const rig = this.#options.rig ?? null;
     if (rig === null) return this.#reportCastGap(subject, 'no-rig');
     if (artboard === null) return this.#reportCastGap(subject, 'no-artboard');
@@ -1886,6 +1967,10 @@ export class LevelScene extends Phaser.Scene {
         createPart: (): SpritePartObject => this.add.image(0, 0, '__DEFAULT'),
       },
       baseDepth: depth,
+      /* Spread rather than `mode: mode ?? undefined`: `exactOptionalPropertyTypes`
+         makes an explicit `undefined` a different thing from an absent key, and
+         "this character has no mode" is the absent key. */
+      ...(mode === null ? {} : { mode }),
     });
     if (built.ok) return built.value;
     /* The half-packed atlas gets the sentence written for it; anything else —
@@ -1922,6 +2007,35 @@ export class LevelScene extends Phaser.Scene {
     console.error(`[level] ${castGapMessage(subject, gap)}`);
     this.#placeholders += 1;
     return null;
+  }
+
+  /**
+   * What the player's rig is being drawn as, for the probe.
+   *
+   * Three fields, and the split is the point. `data-mode` is what the level
+   * declares and what the HUD names; `data-character-mode` is what the puppet
+   * was built for; `data-pose` is the timeline it is playing this frame. The
+   * defect was the first disagreeing with the second in every level in the game,
+   * so a scenario has to be able to read both — and `data-mode-gaps` says
+   * whether the third is the mode's own pose or the rig's base cycle standing in
+   * for art that has not landed.
+   *
+   * Omitted entirely while the player is a placeholder: there is no rig to ask,
+   * and `unknown` is the honest answer the probe already has for that.
+   */
+  #characterModeSnapshot(): {
+    readonly characterMode?: string;
+    readonly pose?: string;
+    readonly modeGaps: number;
+  } {
+    const player = this.#playerCharacter;
+    const gaps = { modeGaps: this.#modeGaps.length };
+    if (player === null) return gaps;
+    return {
+      ...gaps,
+      ...(player.mode === null ? {} : { characterMode: player.mode }),
+      pose: player.pose,
+    };
   }
 
   /** Where a rig-composed character stands, in world space. */

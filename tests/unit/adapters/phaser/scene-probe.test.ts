@@ -124,6 +124,17 @@ describe('snapshotToAttributes', () => {
            compared with something. */
         'data-player-drawn',
         'data-placeholders',
+        /* The HUD named a mode the character did not play: every level animated
+           walking whatever its mode was. `data-character-mode` is what the rig
+           was actually asked for, so it can be compared with the mode the level
+           declared instead of being assumed equal to it; `data-pose` is the
+           state that mode selects; and `data-mode-gaps` counts modes whose art
+           has not landed, reading 0 on a healthy level. A level drawing a
+           walking figure under a label that says Skating has to say so rather
+           than look correct. */
+        'data-character-mode',
+        'data-pose',
+        'data-mode-gaps',
         /* What the player can see is tappable, and what a tap would engage.
            Two numbers because they answer two different complaints. */
         'data-affordances',

@@ -105,6 +105,38 @@ export const DEFAULT_TRACE_EVENTS = 200;
 export interface SceneSnapshot {
   readonly level?: string;
   readonly mode?: string;
+  /**
+   * The mode the **character rig** was actually built for, read back from the
+   * puppet rather than from the level document.
+   *
+   * The two exist to be compared. `mode` is what the level declares and what the
+   * HUD names; this is what the thing on screen is being drawn as, and for eight
+   * levels they disagreed — the strip said Skating, Sledding, Biking, and the
+   * rig was never told any of it, so every level animated the same cycle. One
+   * number could not have shown that, because the defect *is* the gap between
+   * two of them.
+   */
+  readonly characterMode?: string;
+  /**
+   * The rig state the player is playing right now — `<mode>/walk` for a mode
+   * with its own cycle, a bare state for one drawn by the rig's base cycle.
+   *
+   * What makes "the rig is asked for this level's mode" observable at all. The
+   * mode reaches no port method (it is not a bool, a number or a trigger), so
+   * without this the only assertion available was "something was called", which
+   * is the shape of test this defect lived behind.
+   */
+  readonly pose?: string;
+  /**
+   * Modes this level declares that the rig cannot draw. 0 on a healthy level.
+   *
+   * The honest half of the fallback: a mode whose art has not landed still
+   * draws — a level nobody can play is worse than one posed plainly — but it is
+   * **counted**, and every gap printed a sentence naming the mode as it was
+   * found (`locomotion-pose.ts`). A fallback nothing can observe is how a
+   * walking figure ships under a HUD that says Skating.
+   */
+  readonly modeGaps?: number;
   readonly paused?: boolean;
   readonly playerX?: number;
   readonly playerY?: number;
@@ -299,6 +331,9 @@ export function formatProbeNumber(value: number): string {
 const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'level',
   'mode',
+  'characterMode',
+  'pose',
+  'modeGaps',
   'paused',
   'facing',
   'grounded',
@@ -334,6 +369,12 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
   return {
     'data-level': text(snapshot.level),
     'data-mode': text(snapshot.mode),
+    /* What the level declares, and what the character is actually drawn as.
+       Two attributes because the defect they exist for is the two disagreeing,
+       and a scenario that can only read one of them cannot see it. */
+    'data-character-mode': text(snapshot.characterMode),
+    'data-pose': text(snapshot.pose),
+    'data-mode-gaps': num(snapshot.modeGaps),
     'data-paused': bool(snapshot.paused),
     'data-player-x': num(snapshot.playerX),
     'data-player-y': num(snapshot.playerY),

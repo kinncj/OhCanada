@@ -590,7 +590,16 @@ can fail, the game exposes one element, `data-testid="scene-state"`, refreshed a
 and present **only** when the page is opened with `?e2e=1`:
 
 `data-level`, `data-mode`, `data-paused`, `data-player-x`, `data-player-y`, `data-speed`, `data-facing`,
-`data-grounded`, `data-camera-x`, `data-parallax-easing` (`on`/`off`), `data-particles` (a count).
+`data-grounded`, `data-camera-x`, `data-parallax-easing` (`on`/`off`), `data-particles` (a count),
+`data-character-mode` (the locomotion mode the character is actually rigged for),
+`data-pose` (the animation state that mode selects), and `data-mode-gaps` (a count, `0` on a healthy
+level).
+
+The last three exist because the HUD named a mode the character did not play: every level animated
+walking whatever the mode was. `data-character-mode` is what the rig was asked for rather than what
+the level declared, so the two can be compared, and `data-mode-gaps` counts the modes whose art has
+not landed -- a level drawing a walking figure under a label that says Skating must say so rather
+than look correct.
 
 It carries no player-facing text, so it is invisible to axe and to a screen reader. See `OQ-TEST-1`.
 It is absent during an exam, because an exam is not a level (`TN-EXAM-01`).

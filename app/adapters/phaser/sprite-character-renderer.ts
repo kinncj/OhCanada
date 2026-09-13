@@ -68,6 +68,7 @@ import type {
   SurfaceHandle,
 } from '@application/ports';
 import { appErr, ok, type Result } from '@common/result';
+import { MODE_TEMPLATE_KEY, poseFor } from './locomotion-pose';
 
 /**
  * The atlas, as one question.
@@ -125,6 +126,47 @@ export interface SpriteCharacterRendererOptions {
   readonly host: SpritePartHost;
   /** Depth of the backmost part; `z` is added to it. Parts sit above the ground. */
   readonly baseDepth?: number;
+  /**
+   * How this character is getting about — the level's `locomotion[0].mode`.
+   *
+   * **The field whose absence was the "she is walking when it says skating"
+   * bug.** It re-poses every selected state through the rig's `<mode>/<state>`
+   * namespace and binds the `{mode}` brace so a part can be equipment, both by
+   * the rules in `locomotion-pose.ts`. Omitted is a real answer and is what an
+   * NPC has: somebody standing on the ice is standing, not skating, and the
+   * scene only hands this to the player.
+   *
+   * An adapter option rather than a port method because `ICharacterRenderer`'s
+   * setters are the rig's own vocabulary — bools, numbers and triggers — and a
+   * mode is none of those. It is fixed for the life of a level, so it is a
+   * construction fact, not a per-frame one.
+   */
+  readonly mode?: string;
+}
+
+/**
+ * The sprite backend's own view of a character: the port, plus the two facts
+ * only a puppet can answer.
+ *
+ * Both exist to be *observed*, and that is the whole argument for widening the
+ * return type. "Is the rig being asked for this level's mode?" was unanswerable
+ * from outside — the mode reached no method, so a test could only assert that
+ * something had been called with something, which is the class of test this
+ * defect hid behind for eight levels. `mode` and `pose` are what the puppet is
+ * actually drawing, so `level-scene.ts` publishes them on the probe and a
+ * Playwright scenario can fail on "the HUD says one thing and the character is
+ * posed as another".
+ */
+export interface SpriteCharacterRenderer extends ICharacterRenderer {
+  /** The mode this puppet was built for, or `null` for a character with none. */
+  readonly mode: string | null;
+  /**
+   * The **state key being played right now** — the mode's re-pose of the
+   * selected state when the rig declares one, otherwise the selected state
+   * itself. A skating player reads `<mode>/walk`; one whose art has not landed
+   * reads `walk`, which is exactly the fallback `modeArtGaps` counts.
+   */
+  readonly pose: string;
 }
 
 /** The state played when no selector rule matches. Always last in `selector.rules`. */
@@ -321,11 +363,15 @@ export function createSpriteCharacterRendererFactory(
 export function createSpriteCharacterRenderer(
   spec: CharacterRendererSpec,
   options: SpriteCharacterRendererOptions,
-): Result<ICharacterRenderer> {
+): Result<SpriteCharacterRenderer> {
   const invalid = validateSpec(spec);
   if (invalid !== null) return invalid;
 
   const rig = spec.rig;
+  /* How this character is getting about, or `null`. Fixed for the life of the
+     puppet: it re-poses every state and it dresses the equipment, and both are
+     resolved out of the rig rather than branched on here. */
+  const mode = options.mode ?? null;
   const space = rig.characterSpace;
   const baseDepth = options.baseDepth ?? 0;
   const kinds = new Map(rig.stateMachine.inputs.map((input) => [input.name, input.type] as const));
@@ -343,6 +389,11 @@ export function createSpriteCharacterRenderer(
   }
   let expression = spec.expression ?? rig.expressions.fallback;
   chosen.set('expression', expression);
+  /* The second brace that names something the character did not choose. A part
+     templated `{mode}` resolves to this mode's equipment frame, or — for a mode
+     that carries none, and for every character given no mode at all — to
+     nothing, which draws nothing by the same rule every "none" option uses. */
+  if (mode !== null) chosen.set(MODE_TEMPLATE_KEY, mode);
 
   const values = new Map<string, boolean | number>();
   for (const input of rig.stateMachine.inputs) {
@@ -351,6 +402,9 @@ export function createSpriteCharacterRenderer(
 
   let parts: PartView[] = [];
   let state = IDLE_STATE;
+  /* The timeline the selected state plays in this mode. Derived whenever
+     `state` changes and never independently, so the two cannot disagree. */
+  let pose = poseFor(rig, mode, IDLE_STATE);
   let stateElapsedMs = 0;
   let pending: string | null = null;
   let facing: 'left' | 'right' = 'right';
@@ -419,7 +473,10 @@ export function createSpriteCharacterRenderer(
    * part.
    */
   const paint = (): void => {
-    const animation = rig.states[state];
+    /* `pose`, not `state`: the selector picks *what is happening* and the mode
+       picks *how this character does it*. A skater and a walker select the same
+       state at the same speed and play different timelines for it. */
+    const animation = rig.states[pose];
     const keys = animation?.keys ?? [];
     const duration = animation?.durationMs ?? 0;
     const t = phaseOf(animation?.loop ?? 'loop', stateElapsedMs, duration);
@@ -479,10 +536,15 @@ export function createSpriteCharacterRenderer(
     return ok();
   };
 
-  const renderer: ICharacterRenderer = {
+  const renderer: SpriteCharacterRenderer = {
     characterId: spec.characterId,
     artboard: spec.artboard,
     surface,
+    mode,
+
+    get pose(): string {
+      return pose;
+    },
 
     get skinSlots(): readonly SkinSlotName[] {
       return [...optionsBySlot.keys()];
@@ -582,6 +644,7 @@ export function createSpriteCharacterRenderer(
 
       if (next !== state) {
         state = next;
+        pose = poseFor(rig, mode, next);
         stateElapsedMs = 0;
       } else {
         stateElapsedMs += deltaMs;
@@ -589,8 +652,10 @@ export function createSpriteCharacterRenderer(
 
       /* A `once` state holds the trigger until it has played out — which is what
          the selector's "and its state has not finished" means — and releases it
-         after, so `fire` is a pulse rather than a mode nobody clears. */
-      const animation = rig.states[state];
+         after, so `fire` is a pulse rather than a mode nobody clears. Asked of
+         the pose, because a mode may re-pose a `once` state at a different
+         duration and the trigger has to be held for the one being played. */
+      const animation = rig.states[pose];
       if (
         pending !== null &&
         (animation === undefined ||
