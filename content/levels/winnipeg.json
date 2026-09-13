@@ -48,11 +48,11 @@
         "quote": "The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
       },
       "verification": {
-        "status": "verified",
+        "status": "rejected",
         "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T19:13:39Z",
+        "checkedAt": "2026-09-13T21:04:56Z",
         "sourceHash": "f1e1749ea9bef82ec40b12391715afcbfc90799c252814acead0a8ff9b112ba2",
-        "evidence": "The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
+        "evidence": "Delve 6,000 years into the past at Winnipeg’s “Meeting Place” … The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
       }
     },
     "nationSource": {

@@ -44,9 +44,9 @@
       "verification": {
         "status": "verified",
         "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T19:13:39Z",
+        "checkedAt": "2026-09-13T21:04:56Z",
         "sourceHash": "d4d43d845d97752fa058e658598d7a2ccfd9dc3d4e4deb0a8992a334e3d91415",
-        "evidence": "We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Níikwän (today, the Yukon River). Our people have been here for millennia. … KDFN’s Traditional Territory encompasses the Yukon’s capital and economic heartland, the City of Whitehorse."
+        "evidence": "KDFN’s Traditional Territory encompasses the Yukon’s capital and economic heartland, the City of Whitehorse. Approximately 75 per cent of Yukon’s population lives on KDFN Traditional Territory. … We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Níikwän (today, the Yukon River). Our people have been here for millennia."
       }
     },
     "nationSource": {

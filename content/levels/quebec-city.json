@@ -43,11 +43,11 @@
         "quote": "The Wendake reserve is located in the administrative region of the Quebec national capital and is within the boundaries of the City of Quebec, which makes the Huron-Wendat Nation one of the most urbanized aboriginal nations in Quebec."
       },
       "verification": {
-        "status": "verified",
+        "status": "rejected",
         "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T19:13:39Z",
+        "checkedAt": "2026-09-13T21:04:56Z",
         "sourceHash": "367d7d1ee559569d1ec5b5ac349c167dfe275faeebb13500c328fefdf77f53d2",
-        "evidence": "According to the Huron-Wendat oral tradition, the customary territory of the Huron-Wendat Nation, the Nionwentsïo, which means “our magnificent land” in the Huron-Wendat language, lies along the north and south shores of the St. Lawrence River, between the Saint-Maurice River and the Saguenay River . … The Wendake reserve is located in the administrative region of the Quebec national capital and is within the boundaries of the City of Quebec"
+        "evidence": "Almost all of the Huron-Wendat members reside in Wendake, the only Huron-Wendat reserve in Canada. … the customary territory of the Huron-Wendat Nation, the Nionwentsïo, which means “our magnificent land” in the Huron-Wendat language, lies along the north and south shores of the St. Lawrence River, between the Saint-Maurice River and the Saguenay River … The Wendake reserve is located in the administrative region of the Quebec national capital and is within the boundaries of the City of Quebec"
       }
     },
     "nationSource": {
