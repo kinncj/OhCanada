@@ -185,11 +185,14 @@ export interface RepairedSelection {
  *
  * `TN-LOOK-05`: "the slot whose option is gone was filled by a uniform draw
  * over that slot's options. And it was not filled with the rig's `fallback` for
- * that slot." `repairSkins` in `app/domain/entities/character.ts` does the
- * opposite — it fills from `slot.fallback` — which is right for the NPC it was
- * written for and is a default player for this one, so the creator's repair
- * lives here. That divergence is reported rather than fixed: `app/domain` is
- * not this task's to edit.
+ * that slot." `repairSkins` in `app/domain/entities/character.ts` used to fill
+ * every slot from `slot.fallback`, which is right for a costume slot and is a
+ * default player for a selectable one; it now draws uniformly for a selectable
+ * slot and takes a `draw` it cannot be called without. This function stays
+ * because it repairs against **the rig**, which is where the creator's slots
+ * come from while `content/characters/player.json` does not exist; the domain
+ * one repairs against a `Character` document. The day that document lands, this
+ * is the caller that hands `repairSkins` its draw.
  *
  * A slot the save does not name is the same case as a slot whose option is
  * gone. A slot in the save that **this build does not have** is ignored and
@@ -220,76 +223,49 @@ export function repairSelection(
   return { selection, repaired };
 }
 
-/* ------------------------------------------- the slot name the save accepts --- */
+/* --------------------------------------------- the save, in the rig's words --- */
 
 /**
- * **A defect in `content/schemas/progress.schema.json`, encoded around rather
- * than fixed, because content is not this task's to edit.**
+ * The creator's choices as the save carries them: **unchanged**.
  *
- * The rig names its slots `hairShape`, `hairColour` and `headCovering`.
- * `progress.schema.json`'s `playerCharacter.skins` constrains its property
- * names with `common.schema.json#/$defs/id`, which is kebab-case
- * (`^[a-z0-9]+(?:-[a-z0-9]+)*$`), and `app/application/persistence/progress-schema.ts`
- * enforces the same pattern at runtime — **on the way out as well as in**. So a
- * character keyed the way the rig spells it fails `SaveCodec.encode`, every
- * write is refused, and the player is a first-run player for ever.
+ * There were two conversions here, and they are gone.
+ * `content/schemas/progress.schema.json` used to constrain `skins`' property
+ * names with `common.schema.json#/$defs/id`, which is kebab-case, while the rig
+ * names its slots `hairShape`, `hairColour` and `headCovering` and interpolates
+ * them into part templates by exactly those keys - the same contradiction
+ * `character.schema.json` had already fixed on its own side. Because
+ * `progress-schema.ts` enforces the pattern on **encode** as well as decode,
+ * every save write of a character keyed the rig's way was refused, and the
+ * player stayed a first-run player for ever. So this module kebab-cased the
+ * slot name on the way in and camel-cased it on the way out, in one place, with
+ * the defect written on it.
  *
- * This is the same contradiction `content/schemas/character.schema.json` has
- * already fixed on its own side, in its own words: "this used to $ref common
- * schema's id, which is kebab-case, while content/characters/rig.json names its
- * slots hairShape, hairColour and headCovering … a document could satisfy the
- * pattern while naming a slot the rig does not have". The progress schema is
- * the copy of that rule nobody updated.
- *
- * Until it is, the save carries the **kebab form of the rig's slot name** and
- * these two functions are the only place that knows. It is a rule, not a table:
- * no slot name is written down, the transformation is mechanical in both
- * directions, and it is a bijection for every name the rig has or is likely to
- * gain. A camelCase key read back — from a build that stored what the rig
- * spells — is simply a slot this build does not recognise, so
- * {@link repairSelection} redraws it, which is a uniform draw and never a
- * fallback. The player loses nothing either way.
- *
- * **What retires this:** change `skins`' `propertyNames` in
- * `content/schemas/progress.schema.json` to `^[a-z][A-Za-z0-9]*$` — the pattern
- * `character.schema.json` already uses for the same names — and the matching
- * `keys` shape in `app/application/persistence/progress-schema.ts`. Then both
- * functions below become `{ ...selection }` and a save migration maps the
- * kebab keys forward. Reported with the task.
+ * The schema now accepts the rig's form, `save-migrations.ts` carries a
+ * version-3 save's kebab keys forward, and these two functions are the identity
+ * they always should have been. What is left below is the branding and the
+ * null-to-undefined step, which are type boundaries rather than conversions.
  */
-function savedSlotName(slotName: string): string {
-  return slotName.replace(/[A-Z]/g, (upper) => `-${upper.toLowerCase()}`);
-}
-
-function rigSlotName(savedName: string): string {
-  return savedName.replace(/-([a-z])/g, (_whole, letter: string) => letter.toUpperCase());
-}
-
-/** The creator's choices as the save carries them. */
 export function toPlayerCharacter(
   selection: CharacterSelection,
   rig: RigDocument = RIG,
 ): PlayerCharacter {
-  const skins: Record<string, string> = {};
-  for (const [slotName, optionId] of Object.entries(selection)) {
-    skins[savedSlotName(slotName)] = optionId;
-  }
   return {
     /* Branded at the boundary. `parseCharacterId` would answer a `Result` for
        a string the rig already validated against `common.schema.json`'s id
        pattern, and a boot sequence that could fail on its own content is a
        worse failure mode than a cast the schema has already checked. */
     characterId: playerCharacterId(rig) as CharacterId,
-    skins,
+    /* Copied, not passed through: the save must not alias an object the creator
+       still holds. */
+    skins: { ...selection },
   };
 }
 
 /** The saved character as the creator reads it. */
 export function toSelection(character: PlayerCharacter | null): CharacterSelection | undefined {
+  /* `null` is "no character yet", which is what decides the first run, and
+     `undefined` is what `repairSelection` reads as one. The only thing this
+     function still does. */
   if (character === null) return undefined;
-  const selection: Record<string, string> = {};
-  for (const [savedName, optionId] of Object.entries(character.skins)) {
-    selection[rigSlotName(savedName)] = optionId;
-  }
-  return selection;
+  return { ...character.skins };
 }

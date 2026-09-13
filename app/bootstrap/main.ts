@@ -680,8 +680,10 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * for that slot." The fallback is what the rig reserves for NPC documents and
    * save recovery, and a repair that reached for it would put the default
    * player back through the one door nobody was watching. `repairSkins` in
-   * `app/domain/entities/character.ts` does exactly that and is right for the
-   * NPC it was written for; the creator's repair is `repairSelection`.
+   * `app/domain/entities/character.ts` did exactly that for every slot and now
+   * draws uniformly for a player-selectable one; it repairs against a
+   * `Character` document, and the creator's slots come from the rig, so the
+   * creator's repair is `repairSelection`.
    *
    * A save with no character is not a repair — it is a first run — so it raises
    * no message and the draw is simply the creator opening.

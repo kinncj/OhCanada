@@ -326,46 +326,58 @@ describe('the round trip through the save', () => {
     expect(toSelection(character)).toEqual(SELECTION);
   });
 
-  it('keys them the way the save schema will accept, which is not the rig’s spelling', () => {
+  it('keys them the way the rig spells its slots, with nothing converted on the way', () => {
     /*
-     * The defect this pins, so it cannot be "tidied" away by somebody who reads
-     * the kebab keys as a mistake: `progress.schema.json` constrains
-     * `character.skins`' property names with `common.schema.json#/$defs/id`,
-     * which is kebab-case, and `progress-schema.ts` enforces it **on encode**.
-     * A character keyed `hairShape` therefore fails every save write, silently,
-     * and the player stays a first-run player for ever.
-     *
-     * `character.schema.json` already fixed the same contradiction on its own
-     * side. When `progress.schema.json` does too, this test is what says which
-     * lines to delete — and a migration maps these keys forward.
+     * The workaround that used to live here, and what replaced it.
+     * `progress.schema.json` constrained `character.skins`' property names with
+     * `common.schema.json#/$defs/id`, which is kebab-case, while the rig names
+     * its slots `hairShape`, `hairColour`, `headCovering`; `progress-schema.ts`
+     * enforces the pattern **on encode**, so a character keyed the rig's way
+     * failed every save write and the player stayed a first-run player for ever.
+     * This module kebab-cased the key on the way in and camel-cased it on the
+     * way out until the schema was fixed. Both conversions are gone, so what is
+     * asserted now is that the save carries the rig's own keys, unaltered.
      */
     const character = toPlayerCharacter(SELECTION);
 
     expect(Object.keys(character.skins).sort()).toEqual([
       'feature',
-      'hair-colour',
-      'hair-shape',
-      'head-covering',
+      'hairColour',
+      'hairShape',
+      'headCovering',
       'skin',
     ]);
-    for (const key of Object.keys(character.skins)) {
-      expect(key, `${key} is not an id the save schema accepts`).toMatch(
-        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-      );
-    }
+    expect(character.skins).toEqual(SELECTION);
+    // Every key the rig declares as player-selectable is in there, spelled as
+    // the rig spells it — not as a rule this test restates.
+    expect(Object.keys(character.skins).sort()).toEqual(
+      playerSlots()
+        .map((entry) => entry.name)
+        .sort(),
+    );
   });
 
-  it('reads a camelCase save as slots this build does not know, and redraws them', () => {
-    /* A save from a build that stored what the rig spells — which is what the
-       schema will accept once it is fixed — costs the player nothing: the
-       unknown keys are ignored and the slots are redrawn uniformly. */
-    const fromFuture = toSelection({
+  it('copies the selection instead of aliasing the object the creator holds', () => {
+    const selection: Record<string, string> = { ...SELECTION };
+    const character = toPlayerCharacter(selection);
+    selection['skin'] = 'skin-1';
+    expect(character.skins['skin']).toBe('skin-5');
+    expect(toSelection(character)).not.toBe(character.skins);
+  });
+
+  it('reads a kebab-keyed save as slots this build does not know, and redraws them', () => {
+    /* What is left of a save the workaround wrote and the 3 -> 4 migration did
+       not reach — an imported file at version 4, say, hand-edited. It costs the
+       player nothing here either: the unknown keys are ignored and the slots are
+       redrawn uniformly, never from a fallback. */
+    const fromTheWorkaround = toSelection({
       characterId: 'player' as never,
-      skins: { skin: 'skin-5', hairShape: 'coil' },
+      skins: { skin: 'skin-5', 'hair-shape': 'coil' },
     });
-    const repaired = repairSelection(fromFuture, () => 0);
+    const repaired = repairSelection(fromTheWorkaround, () => 0);
 
     expect(repaired.selection['skin']).toBe('skin-5');
+    expect(repaired.selection['hair-shape']).toBeUndefined();
     expect(Object.keys(repaired.selection).length).toBe(5);
     expect(repaired.repaired).toBe(true);
   });
@@ -375,16 +387,44 @@ describe('the round trip through the save', () => {
     expect(Object.keys(character).sort()).toEqual(['characterId', 'skins']);
   });
 
-  it('survives the save validator that refuses what the rig spells', () => {
-    /* The negative control for the encoding above, run against the validator
-       that actually refuses the write rather than against a re-statement of its
-       rule. Without this the two tests above could both pass while the save
-       still failed. */
+  it('survives the save validator, which is the check the conversion existed to pass', () => {
+    /*
+     * Run against the validator that actually refuses the write rather than
+     * against a re-statement of its rule — without this, the tests above could
+     * pass while every save still failed, which is precisely what happened.
+     * The negative control has changed sides: what the schema refuses now is the
+     * kebab form the workaround used to produce.
+     */
     const accepted = toPlayerCharacter(SELECTION);
-    const refused = { characterId: accepted.characterId, skins: { ...SELECTION } };
+    const refused = {
+      characterId: accepted.characterId,
+      skins: { skin: 'skin-5', 'hair-shape': 'coil' },
+    };
 
     expect(characterIsSavable(accepted)).toBe(true);
     expect(characterIsSavable(refused)).toBe(false);
+  });
+
+  it('refuses a character that chose nothing, which is not the same as no character', () => {
+    /*
+     * ADR-0024, proved by removing the data rather than by asserting over a
+     * fixture: take the character this build really writes and empty it. `{}`
+     * comes back from every repair fully dressed, so it would read as a player
+     * who chose nothing and be silently replaced by somebody. "No character
+     * yet" is already writable, and it is `null`.
+     */
+    const chose = toPlayerCharacter(SELECTION);
+    const choseNothing = { characterId: chose.characterId, skins: {} };
+
+    expect(characterIsSavable(chose)).toBe(true);
+    expect(characterIsSavable(choseNothing)).toBe(false);
+    // And the state it must not be confused with is still accepted.
+    const noCharacter = toProgressSnapshot(newProgress(defaultSettings('en' as LocaleCode), []), {
+      version: 1,
+      updatedAt: 0 as never,
+    });
+    expect(noCharacter.ok && noCharacter.value.character).toBeNull();
+    expect(noCharacter.ok && validateProgressDocument(noCharacter.value).ok).toBe(true);
   });
 
   it('reads no character as no character, which is what decides the first run', () => {

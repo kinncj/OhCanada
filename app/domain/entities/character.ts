@@ -128,19 +128,59 @@ export const createPlayerCharacter = (
 /**
  * Make a saved character wearable again after the content changed.
  *
- * This is what `CharacterSlot.fallback` is for: a save is schema-valid and still
- * names an option id that a later build removed, or misses a slot a later build
- * added. Dropping the player back into the creator would lose TN-SAVE item 1 for
- * a reason the player did nothing to cause, so the unknown parts fall back and
- * the rest survives. A save naming a different character document is not
- * repairable and comes back unchanged for the caller to refuse.
+ * A save is schema-valid and still names an option id that a later build
+ * removed, or misses a slot a later build added. Dropping the player back into
+ * the creator would lose TN-SAVE item 1 for a reason the player did nothing to
+ * cause, so the unknown parts are refilled and the rest survives. A save naming
+ * a different character document is not repairable and comes back unchanged for
+ * the caller to refuse.
+ *
+ * **How a slot is refilled depends on whether a player chose it, and `draw` is
+ * why this function takes a third argument.** It used to fill every slot from
+ * `slot.fallback`, which is right for a costume slot and is **forbidden for a
+ * player-selectable one**: `TN-LOOK-05` requires a removed option to be replaced
+ * by a uniform draw over that slot's options and *not* by the fallback, for the
+ * same reason the creator has no skip and `assets/style/art-bible.md` §8 says no
+ * skin tone is the default. A repair that reached for the fallback would put the
+ * default player — the one content review spent real effort removing — back
+ * through the one door nobody was watching, on a path the player cannot see and
+ * did not ask for.
+ *
+ * Nothing called this when the divergence was found; the composition root had
+ * written its own uniform repair over the rig rather than use it. "Nobody calls
+ * the dangerous one" is a fact about today, so the shape is what changed instead:
+ * `draw` has no default, so a caller cannot reach a fallback for a selectable
+ * slot by forgetting something, and a costume slot still takes its fallback
+ * without consuming a number.
+ *
+ * `draw` returns [0, 1), which is `RandomSource.next` and every seeded source in
+ * this codebase. Domain code never calls `Math.random` (ADR-0001).
  */
-export const repairSkins = (character: Character, saved: PlayerCharacter): PlayerCharacter => {
+export const repairSkins = (
+  character: Character,
+  saved: PlayerCharacter,
+  draw: () => number,
+): PlayerCharacter => {
   if (saved.characterId !== character.id) return saved;
   const skins: Record<string, string> = {};
   for (const slot of character.slots) {
     const chosen = saved.skins[slot.name];
-    skins[slot.name] = chosen !== undefined && slotOffers(slot, chosen) ? chosen : slot.fallback;
+    if (chosen !== undefined && slotOffers(slot, chosen)) {
+      skins[slot.name] = chosen;
+      continue;
+    }
+    if (!slot.playerSelectable) {
+      // What `fallback` is for, and the only place it is still read: an NPC's
+      // costume, chosen by nobody, where "the default" is the whole idea.
+      skins[slot.name] = slot.fallback;
+      continue;
+    }
+    /* A slot with no options offers no choice, so there is no choice to have
+       been taken away and nothing to draw from; the fallback is the only value
+       in the document. `character.schema.json` floors `options` at one, so this
+       is a guard against a hand-built character rather than a content case. */
+    const index = Math.min(slot.options.length - 1, Math.floor(draw() * slot.options.length));
+    skins[slot.name] = slot.options[index]?.id ?? slot.fallback;
   }
   return { characterId: character.id, skins };
 };

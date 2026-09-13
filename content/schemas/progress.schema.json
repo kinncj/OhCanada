@@ -73,14 +73,16 @@
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
         },
         "skins": {
-          "description": "Slot name to chosen option id, one entry per selectable slot of that character document.",
+          "description": "Slot name to chosen option id, one entry per selectable slot of that character document. THE PROPERTY NAMES ARE THE RIG'S OWN SLOT KEYS - hairShape, hairColour, headCovering - and not the kebab id form. This used to $ref common.schema.json#/$defs/id, which is kebab-case, exactly as character.schema.json's characterSlot.name used to: content/characters/rig.json names its slots in camelCase and interpolates them into part templates by exactly those keys, so a save keyed any other way names slots the rig does not have. Here the contradiction did not draw the wrong character - progress-schema.ts enforces the pattern on ENCODE as well as decode, so every save write of a character keyed the way the rig spells it was refused, silently, and the player stayed a first-run player for ever. Save version 4 carries the kebab keys a version-3 save holds forward (save-migrations.ts, renameSkinSlotsToTheRigsSpelling). A pattern still cannot say WHICH keys the rig has - a save keyed hairStyle passes it - so tests/unit/contracts/a-save-names-the-rigs-slots.test.ts holds that half, the way a-character-names-the-rigs-slots.test.ts does for character documents. minProperties 1 because a character with no choices in it is not a character: `character` is nullable, so \"no character yet\" is already writable as null, and an empty skins object is a second spelling of it that every consumer folds back into somebody - the creator's repair redraws every missing slot uniformly and repairSkins redraws a selectable one and falls a costume slot back, so {} comes back fully dressed with no trace that nothing was ever chosen (ADR-0024: the identity element must not coincide with the success value). character.schema.json already floors `slots` at minItems 1, so a document with none is illegal for every consumer and the floor belongs here rather than in one of them.",
           "type": "object",
           "propertyNames": {
-            "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+            "type": "string",
+            "pattern": "^[a-z][A-Za-z0-9]*$"
           },
           "additionalProperties": {
             "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
-          }
+          },
+          "minProperties": 1
         }
       },
       "required": ["characterId", "skins"],

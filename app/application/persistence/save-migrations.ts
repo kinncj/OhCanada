@@ -6,6 +6,10 @@
  * tripwire that said so out loud: a mechanism nothing has ever exercised on real
  * input is not a mechanism anyone should trust. Version 2 is what fires it.
  *
+ * **What changed in 4.** `character.skins` is keyed the way the rig spells its
+ * slots. See `renameSkinSlotsToTheRigsSpelling` for what a version-3 save holds
+ * and why this one restores rather than drops.
+ *
  * **What changed in 3.** The exam attempt stopped being a score line and became a
  * record of the exam (ADR-0027): `answers[]` in draw order replaced
  * `askedQuestionIds` and `correctCount`, `finishedAt` stopped being nullable, and
@@ -46,6 +50,15 @@ import type { SaveMigration } from '@application/persistence/json-save-codec';
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
+
+/**
+ * `progress.schema.json`'s `skins` property names, which is the rig's slot key
+ * form. Written out here rather than imported from `progress-schema.ts`, whose
+ * exported surface is one function on purpose. `save-migrations.test.ts` pins
+ * this against the real validator, so the copy cannot drift into accepting a
+ * name a save could not hold.
+ */
+const RIG_SLOT_NAME = /^[a-z][A-Za-z0-9]*$/u;
 
 /**
  * 1 -> 2: a switch user's hold time stops being forgotten between sessions.
@@ -121,10 +134,75 @@ export const dropVersionTwoExams: SaveMigration = {
 };
 
 /**
+ * 3 -> 4: a character is keyed the way the rig spells its slots, and the saves
+ * written the other way are carried across rather than dropped.
+ *
+ * **What version 3 holds.** `progress.schema.json` constrained `skins`' property
+ * names with the shared kebab-case id while `content/characters/rig.json` names
+ * its slots `hairShape`, `hairColour`, `headCovering` - the same contradiction
+ * `character.schema.json` had already fixed on its own side. Because
+ * `SaveCodec.encode` validates on the way out as well as in, a character keyed
+ * the rig's way failed *every* write, so the composition root kebab-cased the
+ * slot name on the way into the save and camel-cased it on the way out. The
+ * schema now accepts the rig's form and that conversion is gone; what is left on
+ * a device is a version-3 document whose skins read `hair-shape`, `hair-colour`,
+ * `head-covering`.
+ *
+ * **This one restores, and that is the difference from 2 -> 3.** The exam step
+ * dropped what it could not carry because the three facts version 3 needs - the
+ * subject, the option chosen, the option that was right - were never written
+ * down, so a conversion would have had to invent them. Here nothing is missing:
+ * the kebab key *is* the rig's key, spelled by a rule, and un-spelling it is the
+ * same rule read backwards. A character is also the least replaceable thing in
+ * the save - a level comes back by walking it again; an appearance a player sat
+ * and chose does not - so dropping it to save four lines would be the wrong
+ * trade even if it were a close one.
+ *
+ * **What it costs: nothing, and nothing is dropped.** Every key any build ever
+ * wrote came out of one rule, "a hyphen and a lower case letter for every upper
+ * case one", whose inverse below is exact on precisely that image. A key
+ * *outside* it - `hair-1`, say, which no build could produce because a rig slot
+ * named `hair1` kebabs to `hair1` - un-spells to something the schema still
+ * refuses. So does a pair of keys that would land on the same name. In both
+ * cases this step leaves `skins` **exactly as it found it** and lets
+ * `validateProgressDocument` name the key in a JSON pointer, which is this
+ * module's rule for input it does not understand and a better outcome than half
+ * a character or a silently dropped slot. The document that reaches either
+ * branch is a hand-edited one.
+ */
+export const renameSkinSlotsToTheRigsSpelling: SaveMigration = {
+  from: 3,
+  to: 4,
+  apply: (document: Readonly<Record<string, unknown>>): Result<Record<string, unknown>> => {
+    const next = { ...document, version: 4 };
+    const character = document['character'];
+    // `null` is a save with no character, which is most of them, and anything
+    // else here is not a shape this step understands.
+    if (!isPlainObject(character)) return ok(next);
+    const skins = character['skins'];
+    if (!isPlainObject(skins)) return ok(next);
+
+    const renamed: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(skins)) {
+      const name = key.replace(/-([a-z])/gu, (_whole, letter: string) => letter.toUpperCase());
+      // Un-spelled to something the schema would refuse anyway, or onto a name
+      // another key already took: not this step's to guess at.
+      if (!RIG_SLOT_NAME.test(name) || Object.hasOwn(renamed, name)) return ok(next);
+      renamed[name] = value;
+    }
+    return ok({ ...next, character: { ...character, skins: renamed } });
+  },
+};
+
+/**
  * Every step this build can take, oldest first.
  *
  * `migrateForward` looks steps up by their `from`, so order is documentation
  * rather than mechanism — but a list a person can read top to bottom is how the
  * next author sees that 1 -> 2 exists before writing 2 -> 3.
  */
-export const SAVE_MIGRATIONS: readonly SaveMigration[] = [addHoldToChooseMs, dropVersionTwoExams];
+export const SAVE_MIGRATIONS: readonly SaveMigration[] = [
+  addHoldToChooseMs,
+  dropVersionTwoExams,
+  renameSkinSlotsToTheRigsSpelling,
+];

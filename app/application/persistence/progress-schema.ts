@@ -32,6 +32,20 @@ import { isIsoInstant } from '@application/persistence/iso-instant';
 const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const ID_MAX_LENGTH = 64;
 
+/**
+ * `progress.schema.json#/$defs/playerCharacter/properties/skins`' `propertyNames`,
+ * which is `character.schema.json`'s `characterSlot.name` and **not** the kebab
+ * id above.
+ *
+ * The rig names its slots `hairShape`, `hairColour`, `headCovering` and
+ * interpolates them into part templates by exactly those keys. This mirror used
+ * to hold `ID_PATTERN` here, and because `encode` validates on the way out as
+ * well as in, a character keyed the way the rig spells it failed *every* save
+ * write. No length bound: the schema states none for a slot name either, and a
+ * bound this file invented would be a disagreement with ajv rather than a check.
+ */
+const SLOT_NAME_PATTERN = /^[a-z][A-Za-z0-9]*$/u;
+
 /** The subset of JSON Schema `progress.schema.json` actually uses. Internal: the
  * exported surface of this module is one function, because one function is what
  * `SaveCodec.decode` needs and an exported shape table invites a second reader
@@ -58,7 +72,12 @@ type Shape =
       readonly properties: Readonly<Record<string, Shape>>;
       readonly required: readonly string[];
     }
-  | { readonly kind: 'record'; readonly keys: Shape; readonly values: Shape }
+  | {
+      readonly kind: 'record';
+      readonly keys: Shape;
+      readonly values: Shape;
+      readonly minProperties?: number;
+    }
   | {
       readonly kind: 'array';
       readonly items: Shape;
@@ -107,9 +126,20 @@ const settings = object({
   volumes: volumeSettings,
 });
 
+const slotName: Shape = { kind: 'string', pattern: SLOT_NAME_PATTERN, minLength: 1 };
+
 const playerCharacter = object({
   characterId: id,
-  skins: { kind: 'record', keys: id, values: id },
+  /*
+   * Keys are the rig's slot names; values are option ids, which *are* kebab.
+   * `minProperties: 1` is the schema's floor, and it is the one ADR-0024 names:
+   * `character` is nullable, so "no character yet" is already writable as
+   * `null`, and `{}` is a second spelling of it that every consumer folds back
+   * into a dressed character — the creator's repair redraws each missing slot,
+   * `repairSkins` redraws a selectable one and falls a costume slot back.
+   * Neither leaves a trace that nothing was ever chosen.
+   */
+  skins: { kind: 'record', keys: slotName, values: id, minProperties: 1 },
 });
 
 const questProgress = object({
@@ -265,7 +295,14 @@ const checkRecord = (
 ): readonly Violation[] => {
   if (!isPlainObject(value)) return [{ path, message: 'must be an object' }];
   const violations: Violation[] = [];
-  for (const [key, entry] of Object.entries(value)) {
+  const entries = Object.entries(value);
+  if (shape.minProperties !== undefined && entries.length < shape.minProperties) {
+    // Reported at the record's own path, so "chose nothing" and "no `skins`
+    // property" are two different messages about two different states — the
+    // same distinction `minItems` draws for an exam with no answers.
+    violations.push({ path, message: `must have at least ${String(shape.minProperties)} entries` });
+  }
+  for (const [key, entry] of entries) {
     for (const failure of checkShape(shape.keys, key, `${path}/${key}`)) {
       violations.push({ path: failure.path, message: `property name ${failure.message}` });
     }
