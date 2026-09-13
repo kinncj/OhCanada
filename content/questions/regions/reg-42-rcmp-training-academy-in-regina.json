@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-42-rcmp-training-academy-in-regina",
+  "subject": "regions",
+  "prompt": {
+    "en": "In which city does the Royal Canadian Mounted Police have its training academy?",
+    "fr": "Dans quelle ville la Gendarmerie royale du Canada a-t-elle son académie de formation?"
+  },
+  "options": [
+    {
+      "en": "Regina.",
+      "fr": "Regina."
+    },
+    {
+      "en": "Saskatoon.",
+      "fr": "Saskatoon."
+    },
+    {
+      "en": "Ottawa.",
+      "fr": "Ottawa."
+    },
+    {
+      "en": "Winnipeg.",
+      "fr": "Winnipeg."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The training academy of the Mounted Police is in Regina, the capital of Saskatchewan.",
+    "fr": "L'académie de formation de la Gendarmerie royale du Canada se trouve à Regina, la capitale de la Saskatchewan."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Regina, the capital, is home to the training academy of the Royal Canadian Mounted Police."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

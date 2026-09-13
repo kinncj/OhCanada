@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-58-nunavut-consensus-government",
+  "subject": "regions",
+  "prompt": {
+    "en": "How does Nunavut's Legislative Assembly choose a premier and ministers?",
+    "fr": "Comment l'Assemblée législative du Nunavut choisit-elle un premier ministre et des ministres?"
+  },
+  "options": [
+    {
+      "en": "By consensus.",
+      "fr": "Par consensus."
+    },
+    {
+      "en": "By a separate election held across the territory.",
+      "fr": "Par une élection distincte tenue dans tout le territoire."
+    },
+    {
+      "en": "The federal Cabinet appoints them.",
+      "fr": "Le Cabinet fédéral les nomme."
+    },
+    {
+      "en": "The party with the most seats chooses them.",
+      "fr": "Le parti qui compte le plus de sièges les choisit."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "In Nunavut, the members of the Legislative Assembly agree together on a premier and on ministers. That way of deciding is called consensus.",
+    "fr": "Au Nunavut, les membres de l'Assemblée législative s'entendent ensemble sur le choix d'un premier ministre et des ministres. Cette façon de décider s'appelle le consensus."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 104,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Nunavut, meaning “our land” in Inuktitut, was established in 1999 from the eastern part of the Northwest Territories, including all of the former District of Keewatin. The capital is Iqaluit, formerly Frobisher Bay, named after the English explorer Martin Frobisher, who penetrated the uncharted Arctic for Queen Elizabeth I in 1576. The 19-member Legislative Assembly chooses a premier and ministers by consensus."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

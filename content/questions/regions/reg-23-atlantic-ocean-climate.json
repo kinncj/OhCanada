@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-23-atlantic-ocean-climate",
+  "subject": "regions",
+  "prompt": {
+    "en": "What kind of weather does the Atlantic Ocean bring to the Atlantic Provinces?",
+    "fr": "Quel genre de climat l'océan Atlantique apporte-t-il aux provinces de l'Atlantique?"
+  },
+  "options": [
+    {
+      "en": "Cool winters and cool humid summers.",
+      "fr": "Des hivers frais et des étés frais et humides."
+    },
+    {
+      "en": "Mild winters and very dry summers.",
+      "fr": "Des hivers doux et des étés très secs."
+    },
+    {
+      "en": "Cold winters and hot dry summers.",
+      "fr": "Des hivers froids et des étés chauds et secs."
+    },
+    {
+      "en": "No real winter at all.",
+      "fr": "Aucun véritable hiver."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The ocean keeps both seasons cool on Canada's east coast: winters are cool, and summers are cool and humid.",
+    "fr": "L'océan garde les deux saisons fraîches sur la côte est du Canada : les hivers sont frais, et les étés sont frais et humides."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The Atlantic Ocean brings cool winters and cool humid summers."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

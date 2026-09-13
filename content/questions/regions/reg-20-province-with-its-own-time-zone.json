@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-20-province-with-its-own-time-zone",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which province has a time zone all to itself?",
+    "fr": "Quelle province possède son propre fuseau horaire?"
+  },
+  "options": [
+    {
+      "en": "Newfoundland and Labrador.",
+      "fr": "Terre-Neuve-et-Labrador."
+    },
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    },
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    },
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Newfoundland and Labrador keeps a time zone of its own. Clocks there are set apart from the rest of the country.",
+    "fr": "Terre-Neuve-et-Labrador a son propre fuseau horaire. Les horloges y sont réglées à part de celles du reste du pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Newfoundland and Labrador is the most easterly point in North America and has its own time zone."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

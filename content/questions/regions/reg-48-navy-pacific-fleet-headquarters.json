@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-48-navy-pacific-fleet-headquarters",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which city is the headquarters of the navy's Pacific fleet?",
+    "fr": "Quelle ville abrite le quartier général de la flotte du Pacifique de la marine?"
+  },
+  "options": [
+    {
+      "en": "Vancouver.",
+      "fr": "Vancouver."
+    },
+    {
+      "en": "Victoria.",
+      "fr": "Victoria."
+    },
+    {
+      "en": "Prince Rupert.",
+      "fr": "Prince Rupert."
+    },
+    {
+      "en": "Halifax.",
+      "fr": "Halifax."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Victoria, the capital of British Columbia, is a tourist centre and the home of the navy's Pacific fleet.",
+    "fr": "Victoria, la capitale de la Colombie-Britannique, est un centre touristique et le port d'attache de la flotte du Pacifique de la marine."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 102,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The capital, Victoria, is a tourist centre and headquarters of the navy’s Pacific fleet."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

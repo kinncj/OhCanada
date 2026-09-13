@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-44-banff-national-park-province",
+  "subject": "regions",
+  "prompt": {
+    "en": "In which province is Banff National Park?",
+    "fr": "Dans quelle province se trouve le parc national Banff?"
+  },
+  "options": [
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    },
+    {
+      "en": "Alberta.",
+      "fr": "L'Alberta."
+    },
+    {
+      "en": "Saskatchewan.",
+      "fr": "La Saskatchewan."
+    },
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Banff National Park is in Alberta. It was established in 1885 and is one of that province's national parks.",
+    "fr": "Le parc national Banff se trouve en Alberta. Il a été créé en 1885 et fait partie des parcs nationaux de cette province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 101,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Alberta has five national parks, including Banff National Park, established in 1885."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

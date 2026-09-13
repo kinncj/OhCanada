@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-36-lake-michigan-in-the-united-states",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which of the Great Lakes lies inside the United States?",
+    "fr": "Lequel des Grands Lacs se trouve à l'intérieur des États-Unis?"
+  },
+  "options": [
+    {
+      "en": "Lake Huron.",
+      "fr": "Le lac Huron."
+    },
+    {
+      "en": "Lake Michigan.",
+      "fr": "Le lac Michigan."
+    },
+    {
+      "en": "Lake Erie.",
+      "fr": "Le lac Érié."
+    },
+    {
+      "en": "Lake Superior.",
+      "fr": "Le lac Supérieur."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Discover Canada names the Great Lakes and marks Lake Michigan as the one in the United States. The others sit on the line between Ontario and its neighbour.",
+    "fr": "Découvrir le Canada nomme les Grands Lacs et précise que le lac Michigan se trouve aux États-Unis. Les autres se situent à la frontière entre l'Ontario et son voisin."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 99,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Lake Ontario, Lake Erie, Lake Huron, Lake Michigan (in the U.S.A.) and Lake Superior, the largest fresh water lake in the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

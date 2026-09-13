@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-26-nova-scotia-celtic-and-gaelic-traditions",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which traditions does Discover Canada say keep culture lively in Nova Scotia?",
+    "fr": "Selon Découvrir le Canada, quelles traditions font vivre la culture en Nouvelle-Écosse?"
+  },
+  "options": [
+    {
+      "en": "Ukrainian and Polish traditions.",
+      "fr": "Les traditions ukrainiennes et polonaises."
+    },
+    {
+      "en": "Celtic and Gaelic traditions.",
+      "fr": "Les traditions celtiques et gaéliques."
+    },
+    {
+      "en": "Basque and Portuguese traditions.",
+      "fr": "Les traditions basques et portugaises."
+    },
+    {
+      "en": "Norse and Icelandic traditions.",
+      "fr": "Les traditions nordiques et islandaises."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Celtic and Gaelic traditions keep culture strong in Nova Scotia, and the province holds hundreds of festivals every year.",
+    "fr": "Les traditions celtiques et gaéliques font vivre la culture en Nouvelle-Écosse, et la province tient des centaines de festivals chaque année."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The province’s Celtic and Gaelic traditions sustain a vibrant culture. Nova Scotia is home to over 700 annual festivals"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

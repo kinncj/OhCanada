@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-24-bay-of-fundy-tides",
+  "subject": "regions",
+  "prompt": {
+    "en": "Where does Discover Canada say the world's highest tides are found?",
+    "fr": "Où Découvrir le Canada situe-t-il les plus hautes marées du monde?"
+  },
+  "options": [
+    {
+      "en": "In Hudson Bay.",
+      "fr": "Dans la baie d'Hudson."
+    },
+    {
+      "en": "In Georgian Bay.",
+      "fr": "Dans la baie Georgienne."
+    },
+    {
+      "en": "In the Bay of Fundy.",
+      "fr": "Dans la baie de Fundy."
+    },
+    {
+      "en": "In Frobisher Bay.",
+      "fr": "Dans la baie Frobisher."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The Bay of Fundy, on the coast of Nova Scotia, has the highest tides in the world.",
+    "fr": "La baie de Fundy, sur la côte de la Nouvelle-Écosse, a les plus hautes marées du monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Known for the world’s highest tides in the Bay of Fundy"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

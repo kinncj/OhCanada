@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-07-capital-of-prince-edward-island",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the capital city of Prince Edward Island?",
+    "fr": "Quelle est la capitale de l'Île-du-Prince-Édouard?"
+  },
+  "options": [
+    {
+      "en": "Summerside.",
+      "fr": "Summerside."
+    },
+    {
+      "en": "Moncton.",
+      "fr": "Moncton."
+    },
+    {
+      "en": "Charlottetown.",
+      "fr": "Charlottetown."
+    },
+    {
+      "en": "Fredericton.",
+      "fr": "Fredericton."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Charlottetown is the capital of Prince Edward Island, one of the four Atlantic Provinces.",
+    "fr": "Charlottetown est la capitale de l'Île-du-Prince-Édouard, l'une des quatre provinces de l'Atlantique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Prince Edward Island .............................. Charlottetown"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

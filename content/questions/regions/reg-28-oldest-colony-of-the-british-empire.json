@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-28-oldest-colony-of-the-british-empire",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which province does Discover Canada call the oldest colony of the British Empire?",
+    "fr": "Quelle province Découvrir le Canada présente-t-il comme la plus ancienne colonie de l'Empire britannique?"
+  },
+  "options": [
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    },
+    {
+      "en": "New Brunswick.",
+      "fr": "Le Nouveau-Brunswick."
+    },
+    {
+      "en": "Newfoundland and Labrador.",
+      "fr": "Terre-Neuve-et-Labrador."
+    },
+    {
+      "en": "Prince Edward Island.",
+      "fr": "L'Île-du-Prince-Édouard."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Newfoundland and Labrador was the oldest colony of the British Empire and an important prize early in Canada's story. Its heritage is closely tied to the sea.",
+    "fr": "Terre-Neuve-et-Labrador a été la plus ancienne colonie de l'Empire britannique et un enjeu important au début de l'histoire du Canada. Son patrimoine est étroitement lié à la mer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Newfoundland and Labrador is the most easterly point in North America and has its own time zone. In addition to its natural beauty, the province has a unique heritage linked to the sea. The oldest colony of the British Empire and a strategic prize in Canada’s early history"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

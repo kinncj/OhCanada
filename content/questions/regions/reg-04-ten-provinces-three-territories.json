@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-04-ten-provinces-three-territories",
+  "subject": "regions",
+  "prompt": {
+    "en": "How many provinces and how many territories does Canada have?",
+    "fr": "Combien de provinces et combien de territoires le Canada compte-t-il?"
+  },
+  "options": [
+    {
+      "en": "Ten provinces and three territories.",
+      "fr": "Dix provinces et trois territoires."
+    },
+    {
+      "en": "Twelve provinces and one territory.",
+      "fr": "Douze provinces et un territoire."
+    },
+    {
+      "en": "Thirteen provinces and no territories.",
+      "fr": "Treize provinces et aucun territoire."
+    },
+    {
+      "en": "Nine provinces and four territories.",
+      "fr": "Neuf provinces et quatre territoires."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada is made up of ten provinces and three territories. Each one has its own capital city, and you should know the capital of the place where you live.",
+    "fr": "Le Canada est composé de dix provinces et de trois territoires. Chacun a sa propre capitale, et vous devriez connaître celle de l'endroit où vous habitez."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 94,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada has ten provinces and three territories. Each province and territory has its own capital city."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

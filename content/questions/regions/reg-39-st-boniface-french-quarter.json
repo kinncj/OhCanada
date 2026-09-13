@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-39-st-boniface-french-quarter",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the name of Winnipeg's French Quarter?",
+    "fr": "Quel est le nom du quartier français de Winnipeg?"
+  },
+  "options": [
+    {
+      "en": "St. Vital.",
+      "fr": "Saint-Vital."
+    },
+    {
+      "en": "Saint-Jean-Baptiste.",
+      "fr": "Saint-Jean-Baptiste."
+    },
+    {
+      "en": "Notre-Dame-de-Lourdes.",
+      "fr": "Notre-Dame-de-Lourdes."
+    },
+    {
+      "en": "St. Boniface.",
+      "fr": "Saint-Boniface."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "St. Boniface is the French Quarter of Winnipeg, and a large French-speaking community lives there.",
+    "fr": "Saint-Boniface est le quartier français de Winnipeg, et une importante communauté francophone y habite."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Winnipeg’s French Quarter, St. Boniface, has Western Canada’s largest Francophone community"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

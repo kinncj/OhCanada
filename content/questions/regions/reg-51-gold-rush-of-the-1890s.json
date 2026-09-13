@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-51-gold-rush-of-the-1890s",
+  "subject": "regions",
+  "prompt": {
+    "en": "Thousands of miners came to which part of Canada during the Gold Rush of the 1890s?",
+    "fr": "Des milliers de mineurs sont venus dans quelle partie du Canada pendant la ruée vers l'or des années 1890?"
+  },
+  "options": [
+    {
+      "en": "Labrador.",
+      "fr": "Le Labrador."
+    },
+    {
+      "en": "Nunavut.",
+      "fr": "Le Nunavut."
+    },
+    {
+      "en": "The Northwest Territories.",
+      "fr": "Les Territoires du Nord-Ouest."
+    },
+    {
+      "en": "The Yukon.",
+      "fr": "Le Yukon."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The Gold Rush of the 1890s brought thousands of miners to the Yukon. The poet Robert W. Service wrote about those days.",
+    "fr": "La ruée vers l'or des années 1890 a amené des milliers de mineurs au Yukon. Le poète Robert W. Service a chanté cette époque."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 103,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Thousands of miners came to the Yukon during the Gold Rush of the 1890s, as celebrated in the poetry of Robert W. Service."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

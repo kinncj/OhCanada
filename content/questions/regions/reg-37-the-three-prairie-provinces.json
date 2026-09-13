@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-37-the-three-prairie-provinces",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which three provinces are called the Prairie Provinces?",
+    "fr": "Quelles trois provinces forment les provinces des Prairies?"
+  },
+  "options": [
+    {
+      "en": "Alberta, British Columbia and Saskatchewan.",
+      "fr": "L'Alberta, la Colombie-Britannique et la Saskatchewan."
+    },
+    {
+      "en": "Manitoba, Ontario and Saskatchewan.",
+      "fr": "Le Manitoba, l'Ontario et la Saskatchewan."
+    },
+    {
+      "en": "Manitoba, Saskatchewan and Alberta.",
+      "fr": "Le Manitoba, la Saskatchewan et l'Alberta."
+    },
+    {
+      "en": "Saskatchewan, Alberta and the Northwest Territories.",
+      "fr": "La Saskatchewan, l'Alberta et les Territoires du Nord-Ouest."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The Prairie Provinces are Manitoba, Saskatchewan and Alberta. British Columbia is the West Coast region, and the Northwest Territories is one of the three territories.",
+    "fr": "Les provinces des Prairies sont le Manitoba, la Saskatchewan et l'Alberta. La Colombie-Britannique forme la région de la côte Ouest, et les Territoires du Nord-Ouest sont l'un des trois territoires."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

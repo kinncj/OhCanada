@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-21-birthplace-of-confederation",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which province does Discover Canada call the birthplace of Confederation?",
+    "fr": "Quelle province Découvrir le Canada appelle-t-il le berceau de la Confédération?"
+  },
+  "options": [
+    {
+      "en": "Ontario.",
+      "fr": "L'Ontario."
+    },
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    },
+    {
+      "en": "Prince Edward Island.",
+      "fr": "L'Île-du-Prince-Édouard."
+    },
+    {
+      "en": "Quebec.",
+      "fr": "Le Québec."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The guide gives Prince Edward Island the name birthplace of Confederation.",
+    "fr": "Le guide donne à l'Île-du-Prince-Édouard le nom de berceau de la Confédération."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "P.E.I. is the birthplace of Confederation"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-49-land-of-the-midnight-sun",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which part of Canada is often called the Land of the Midnight Sun?",
+    "fr": "Quelle partie du Canada appelle-t-on souvent le pays du soleil de minuit?"
+  },
+  "options": [
+    {
+      "en": "The West Coast.",
+      "fr": "La côte Ouest."
+    },
+    {
+      "en": "Central Canada.",
+      "fr": "Le Centre du Canada."
+    },
+    {
+      "en": "The North.",
+      "fr": "Le Nord."
+    },
+    {
+      "en": "The Atlantic Provinces.",
+      "fr": "Les provinces de l'Atlantique."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The North carries that name because at the height of summer the daylight there can last almost the whole day and night.",
+    "fr": "Le Nord porte ce nom parce qu'au cœur de l'été, la clarté peut y durer presque tout le jour et toute la nuit."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 103,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The North is often referred to as the “Land of the Midnight Sun” because at the height of summer, daylight can last up to 24 hours."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-43-who-alberta-is-named-after",
+  "subject": "regions",
+  "prompt": {
+    "en": "Alberta and Lake Louise were both named after whom?",
+    "fr": "L'Alberta et le lac Louise portent tous les deux le nom de qui?"
+  },
+  "options": [
+    {
+      "en": "Queen Victoria herself.",
+      "fr": "La reine Victoria elle-même."
+    },
+    {
+      "en": "Sir John A. Macdonald, Canada's first Prime Minister.",
+      "fr": "Sir John A. Macdonald, le premier des premiers ministres du Canada."
+    },
+    {
+      "en": "Sir William Logan, a famous geologist.",
+      "fr": "Sir William Logan, un géologue célèbre."
+    },
+    {
+      "en": "Princess Louise Caroline Alberta, a daughter of Queen Victoria.",
+      "fr": "La princesse Louise Caroline Alberta, une fille de la reine Victoria."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The province of Alberta and Lake Louise, in the Rocky Mountains, both take their name from Princess Louise Caroline Alberta, a daughter of Queen Victoria.",
+    "fr": "La province d'Alberta et le lac Louise, dans les montagnes Rocheuses, tirent tous deux leur nom de la princesse Louise Caroline Alberta, une fille de la reine Victoria."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 101,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Alberta is the most populous Prairie province. The province, and the world-famous Lake Louise in the Rocky Mountains, were both named after Princess Louise Caroline Alberta, fourth daughter of Queen Victoria."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

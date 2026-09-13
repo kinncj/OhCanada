@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-34-niagara-vineyards-and-fruit",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which region of Ontario is known for its vineyards, wines and fruit crops?",
+    "fr": "Quelle région de l'Ontario est reconnue pour ses vignobles, ses vins et ses cultures fruitières?"
+  },
+  "options": [
+    {
+      "en": "The Niagara region.",
+      "fr": "La région de Niagara."
+    },
+    {
+      "en": "The Okanagan Valley.",
+      "fr": "La vallée de l'Okanagan."
+    },
+    {
+      "en": "The Eastern Townships.",
+      "fr": "Les Cantons-de-l'Est."
+    },
+    {
+      "en": "The Gaspé.",
+      "fr": "La Gaspésie."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Niagara, in Ontario, is known for its grapes, its wine and its fruit. In British Columbia, the Okanagan Valley has fruit orchards and a wine industry.",
+    "fr": "La région de Niagara, en Ontario, est réputée pour ses raisins, son vin et ses fruits. En Colombie-Britannique, la vallée de l'Okanagan compte des vergers et une industrie vinicole."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 99,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The Niagara region is known for its vineyards, wines and fruit crops."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

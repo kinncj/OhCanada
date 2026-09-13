@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-54-mackenzie-river-system",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which river system in Canada's North comes second in length in North America, after the Mississippi?",
+    "fr": "Quel réseau fluvial du Nord canadien vient au deuxième rang en longueur en Amérique du Nord, après le Mississippi?"
+  },
+  "options": [
+    {
+      "en": "The Mackenzie River.",
+      "fr": "Le fleuve Mackenzie."
+    },
+    {
+      "en": "The Yukon River.",
+      "fr": "Le fleuve Yukon."
+    },
+    {
+      "en": "The Fraser River.",
+      "fr": "Le fleuve Fraser."
+    },
+    {
+      "en": "The Saskatchewan River.",
+      "fr": "La rivière Saskatchewan."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Mackenzie River runs through the Northwest Territories. In North America, only the Mississippi river system is longer.",
+    "fr": "Le fleuve Mackenzie traverse les Territoires du Nord-Ouest. En Amérique du Nord, seul le réseau du Mississippi est plus long."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 104,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The Mackenzie River, at 4,200 kilometres, is the second-longest river system in North America after the Mississippi"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

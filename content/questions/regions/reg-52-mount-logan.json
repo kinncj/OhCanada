@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-52-mount-logan",
+  "subject": "regions",
+  "prompt": {
+    "en": "Where is Mount Logan, the highest mountain in Canada?",
+    "fr": "Où se trouve le mont Logan, la plus haute montagne du Canada?"
+  },
+  "options": [
+    {
+      "en": "In Alberta.",
+      "fr": "En Alberta."
+    },
+    {
+      "en": "In the Yukon.",
+      "fr": "Au Yukon."
+    },
+    {
+      "en": "In British Columbia.",
+      "fr": "En Colombie-Britannique."
+    },
+    {
+      "en": "In the Northwest Territories.",
+      "fr": "Dans les Territoires du Nord-Ouest."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Mount Logan stands in the Yukon and is the highest mountain in the country. It honours Sir William Logan, a geologist of world renown.",
+    "fr": "Le mont Logan se dresse au Yukon et c'est la plus haute montagne du pays. Il honore Sir William Logan, un géologue de renommée mondiale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 104,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Mount Logan, located in the Yukon, is the highest mountain in Canada. It is named in honour of Sir William Logan, a world-famous geologist"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

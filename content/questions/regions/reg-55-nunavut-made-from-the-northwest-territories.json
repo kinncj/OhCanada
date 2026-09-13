@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-55-nunavut-made-from-the-northwest-territories",
+  "subject": "regions",
+  "prompt": {
+    "en": "Nunavut was created in 1999 out of which lands?",
+    "fr": "Le Nunavut a été créé en 1999 à partir de quelles terres?"
+  },
+  "options": [
+    {
+      "en": "The northern part of Quebec.",
+      "fr": "Le nord du Québec."
+    },
+    {
+      "en": "The northern part of Yukon.",
+      "fr": "Le nord du Yukon."
+    },
+    {
+      "en": "The western part of Manitoba.",
+      "fr": "L'ouest du Manitoba."
+    },
+    {
+      "en": "The eastern part of the Northwest Territories.",
+      "fr": "L'est des Territoires du Nord-Ouest."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Nunavut's lands came from the eastern Northwest Territories, and they took in the whole of the old District of Keewatin.",
+    "fr": "Les terres du Nunavut proviennent de l'est des Territoires du Nord-Ouest, et elles comprenaient tout l'ancien district de Keewatin."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 104,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Nunavut, meaning “our land” in Inuktitut, was established in 1999 from the eastern part of the Northwest Territories, including all of the former District of Keewatin."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

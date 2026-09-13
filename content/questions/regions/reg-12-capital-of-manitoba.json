@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-12-capital-of-manitoba",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the capital city of Manitoba?",
+    "fr": "Quelle est la capitale du Manitoba?"
+  },
+  "options": [
+    {
+      "en": "Winnipeg.",
+      "fr": "Winnipeg."
+    },
+    {
+      "en": "Brandon.",
+      "fr": "Brandon."
+    },
+    {
+      "en": "Regina.",
+      "fr": "Regina."
+    },
+    {
+      "en": "Saskatoon.",
+      "fr": "Saskatoon."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Winnipeg is the capital of Manitoba, one of the three Prairie Provinces.",
+    "fr": "Winnipeg est la capitale du Manitoba, l'une des trois provinces des Prairies."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Manitoba ................................................. Winnipeg"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

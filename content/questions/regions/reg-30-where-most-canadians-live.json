@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-30-where-most-canadians-live",
+  "subject": "regions",
+  "prompt": {
+    "en": "Most people in Canada live in cities and towns close to which waters?",
+    "fr": "La plupart des Canadiens habitent dans des villes et des villages situés près de quelles eaux?"
+  },
+  "options": [
+    {
+      "en": "The Great Lakes and the St. Lawrence River.",
+      "fr": "Les Grands Lacs et le fleuve Saint-Laurent."
+    },
+    {
+      "en": "The Bay of Fundy and the Atlantic coast.",
+      "fr": "La baie de Fundy et la côte atlantique."
+    },
+    {
+      "en": "Lake Winnipeg and the Red River.",
+      "fr": "Le lac Winnipeg et la rivière Rouge."
+    },
+    {
+      "en": "The Pacific coast and the Fraser River.",
+      "fr": "La côte du Pacifique et le fleuve Fraser."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Most Canadians live in southern Quebec and Ontario, in cities and towns close to the Great Lakes and the St. Lawrence River.",
+    "fr": "La majorité des Canadiens vivent dans le sud du Québec et de l'Ontario, dans des villes et des villages proches des Grands Lacs et du fleuve Saint-Laurent."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 98,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "More than half the people in Canada live in cities and towns near the Great Lakes and the St. Lawrence River in southern Quebec and Ontario"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

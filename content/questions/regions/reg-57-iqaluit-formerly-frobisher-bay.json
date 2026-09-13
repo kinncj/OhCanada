@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-57-iqaluit-formerly-frobisher-bay",
+  "subject": "regions",
+  "prompt": {
+    "en": "What was the city of Iqaluit called before?",
+    "fr": "Comment la ville d'Iqaluit s'appelait-elle auparavant?"
+  },
+  "options": [
+    {
+      "en": "Resolute.",
+      "fr": "Resolute."
+    },
+    {
+      "en": "Rankin Inlet.",
+      "fr": "Rankin Inlet."
+    },
+    {
+      "en": "Frobisher Bay.",
+      "fr": "Frobisher Bay."
+    },
+    {
+      "en": "Fort Churchill.",
+      "fr": "Fort Churchill."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Iqaluit, the capital of Nunavut, was once called Frobisher Bay, after the English explorer Martin Frobisher.",
+    "fr": "Iqaluit, la capitale du Nunavut, s'appelait autrefois Frobisher Bay, du nom de l'explorateur anglais Martin Frobisher."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 104,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The capital is Iqaluit, formerly Frobisher Bay, named after the English explorer Martin Frobisher"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

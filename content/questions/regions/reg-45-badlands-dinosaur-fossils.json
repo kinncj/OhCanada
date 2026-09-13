@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-45-badlands-dinosaur-fossils",
+  "subject": "regions",
+  "prompt": {
+    "en": "In which province are the Badlands, where many dinosaur fossils have been found?",
+    "fr": "Dans quelle province se trouvent les Badlands, où l'on a découvert de nombreux fossiles de dinosaures?"
+  },
+  "options": [
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    },
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    },
+    {
+      "en": "Alberta.",
+      "fr": "L'Alberta."
+    },
+    {
+      "en": "Saskatchewan.",
+      "fr": "La Saskatchewan."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Alberta's rugged Badlands hold some of the richest beds of prehistoric fossils and dinosaur finds anywhere.",
+    "fr": "Les Badlands accidentés de l'Alberta renferment certains des plus riches gisements de fossiles préhistoriques et de dinosaures qui soient."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 101,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Alberta has five national parks, including Banff National Park, established in 1885. The rugged Badlands house some of the world’s richest deposits of prehistoric fossils and dinosaur finds."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

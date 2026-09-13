@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-50-what-the-tundra-is-like",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the tundra in Canada's North like?",
+    "fr": "À quoi ressemble la toundra dans le Nord du Canada?"
+  },
+  "options": [
+    {
+      "en": "A wide rocky plain with no trees, where the ground stays frozen.",
+      "fr": "Une vaste plaine rocheuse sans arbres, où le sol reste gelé."
+    },
+    {
+      "en": "A thick forest of spruce and pine.",
+      "fr": "Une forêt dense d'épinettes et de pins."
+    },
+    {
+      "en": "Rolling farmland with deep, rich soil.",
+      "fr": "Des terres agricoles vallonnées au sol profond et riche."
+    },
+    {
+      "en": "A chain of high mountains covered by glaciers.",
+      "fr": "Une chaîne de hautes montagnes couvertes de glaciers."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The tundra is a vast rocky plain in the Arctic. The climate is so cold that no trees grow there and the ground stays frozen.",
+    "fr": "La toundra est une vaste plaine rocheuse de l'Arctique. Le climat y est si froid qu'aucun arbre n'y pousse et que le sol reste gelé."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 103,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Much of the North is made up of tundra, the vast rocky Arctic plain. Because of the cold Arctic climate, there are no trees on the tundra and the soil is permanently frozen."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

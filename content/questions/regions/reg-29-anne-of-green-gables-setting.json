@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-29-anne-of-green-gables-setting",
+  "subject": "regions",
+  "prompt": {
+    "en": "In which province is the story Anne of Green Gables set?",
+    "fr": "Dans quelle province se déroule l'histoire d'« Anne… la maison aux pignons verts » (Anne of Green Gables)?"
+  },
+  "options": [
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    },
+    {
+      "en": "Prince Edward Island.",
+      "fr": "L'Île-du-Prince-Édouard."
+    },
+    {
+      "en": "New Brunswick.",
+      "fr": "Le Nouveau-Brunswick."
+    },
+    {
+      "en": "Newfoundland and Labrador.",
+      "fr": "Terre-Neuve-et-Labrador."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Lucy Maud Montgomery set her much-loved story on Prince Edward Island. It follows a young red-haired orphan girl.",
+    "fr": "Lucy Maud Montgomery a situé son histoire bien-aimée à l'Île-du-Prince-Édouard. On y suit une jeune orpheline rousse."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Anne of Green Gables, set in P.E.I. by Lucy Maud Montgomery, is a much-loved story about the adventures of a little red-headed orphan girl."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

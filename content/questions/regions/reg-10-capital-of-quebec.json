@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-10-capital-of-quebec",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the capital city of Quebec?",
+    "fr": "Quelle est la capitale du Québec?"
+  },
+  "options": [
+    {
+      "en": "Montreal.",
+      "fr": "Montréal."
+    },
+    {
+      "en": "Québec City.",
+      "fr": "Québec."
+    },
+    {
+      "en": "Laval.",
+      "fr": "Laval."
+    },
+    {
+      "en": "Gatineau.",
+      "fr": "Gatineau."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Québec City is the capital of the province of Quebec. Many people think first of Montreal, but the capital is Québec City.",
+    "fr": "Québec est la capitale de la province de Québec. Bien des gens pensent d'abord à Montréal, mais la capitale, c'est Québec."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Quebec ................................................... Québec City"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-19-most-easterly-point-in-north-america",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which province is the most easterly point in North America?",
+    "fr": "Quelle province constitue le point le plus à l'est de l'Amérique du Nord?"
+  },
+  "options": [
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    },
+    {
+      "en": "Newfoundland and Labrador.",
+      "fr": "Terre-Neuve-et-Labrador."
+    },
+    {
+      "en": "New Brunswick.",
+      "fr": "Le Nouveau-Brunswick."
+    },
+    {
+      "en": "Prince Edward Island.",
+      "fr": "L'Île-du-Prince-Édouard."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "No part of North America reaches further east than Newfoundland and Labrador. Its heritage is closely tied to the sea.",
+    "fr": "Aucune partie de l'Amérique du Nord ne s'avance plus à l'est que Terre-Neuve-et-Labrador. Son patrimoine est étroitement lié à la mer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Newfoundland and Labrador is the most easterly point in North America and has its own time zone."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

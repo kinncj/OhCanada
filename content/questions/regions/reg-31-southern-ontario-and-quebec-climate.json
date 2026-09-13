@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-31-southern-ontario-and-quebec-climate",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the weather like in southern Ontario and Quebec?",
+    "fr": "Quel temps fait-il dans le sud de l'Ontario et du Québec?"
+  },
+  "options": [
+    {
+      "en": "Mild winters and cool, dry summers.",
+      "fr": "Des hivers doux et des étés frais et secs."
+    },
+    {
+      "en": "Cool winters and cool, humid summers.",
+      "fr": "Des hivers frais et des étés frais et humides."
+    },
+    {
+      "en": "Long cold winters and short cool summers.",
+      "fr": "De longs hivers froids et de courts étés frais."
+    },
+    {
+      "en": "Cold winters and warm, humid summers.",
+      "fr": "Des hivers froids et des étés chauds et humides."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "In southern Ontario and Quebec the winters are cold and the summers are warm and humid.",
+    "fr": "Dans le sud de l'Ontario et du Québec, les hivers sont froids et les étés sont chauds et humides."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 98,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Southern Ontario and Quebec have cold winters and warm humid summers."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

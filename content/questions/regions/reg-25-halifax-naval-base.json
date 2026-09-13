@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-25-halifax-naval-base",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which city is home to Canada's largest naval base?",
+    "fr": "Quelle ville abrite la plus grande base navale du Canada?"
+  },
+  "options": [
+    {
+      "en": "Halifax.",
+      "fr": "Halifax."
+    },
+    {
+      "en": "Saint John.",
+      "fr": "Saint John."
+    },
+    {
+      "en": "St. John's.",
+      "fr": "St. John's."
+    },
+    {
+      "en": "Charlottetown.",
+      "fr": "Charlottetown."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Halifax, the capital of Nova Scotia, has long mattered to Atlantic trade and defence, and Canada's largest naval base is there.",
+    "fr": "Halifax, capitale de la Nouvelle-Écosse, joue depuis longtemps un rôle important dans le commerce et la défense de l'Atlantique, et la plus grande base navale du Canada s'y trouve."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "the capital, Halifax, has played an important role in Atlantic trade and defence and is home to Canada’s largest naval base"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

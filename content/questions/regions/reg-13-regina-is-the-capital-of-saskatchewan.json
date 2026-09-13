@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-13-regina-is-the-capital-of-saskatchewan",
+  "subject": "regions",
+  "prompt": {
+    "en": "Regina is the capital city of which province?",
+    "fr": "Regina est la capitale de quelle province?"
+  },
+  "options": [
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    },
+    {
+      "en": "Alberta.",
+      "fr": "L'Alberta."
+    },
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    },
+    {
+      "en": "Saskatchewan.",
+      "fr": "La Saskatchewan."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Regina is the capital of Saskatchewan, one of the three Prairie Provinces.",
+    "fr": "Regina est la capitale de la Saskatchewan, l'une des trois provinces des Prairies."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Saskatchewan......................................... Regina"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

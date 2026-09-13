@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-18-capital-of-yukon",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the capital city of Yukon?",
+    "fr": "Quelle est la capitale du Yukon?"
+  },
+  "options": [
+    {
+      "en": "Dawson City.",
+      "fr": "Dawson City."
+    },
+    {
+      "en": "Yellowknife.",
+      "fr": "Yellowknife."
+    },
+    {
+      "en": "Whitehorse.",
+      "fr": "Whitehorse."
+    },
+    {
+      "en": "Skagway.",
+      "fr": "Skagway."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Whitehorse is the capital of Yukon. Skagway is not in Canada at all: it is in Alaska, next door.",
+    "fr": "Whitehorse est la capitale du Yukon. Skagway n'est pas au Canada : cette ville se trouve en Alaska, tout à côté."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Yukon Territory ....................................... Whitehorse"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

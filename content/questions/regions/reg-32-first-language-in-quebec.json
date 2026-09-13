@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-32-first-language-in-quebec",
+  "subject": "regions",
+  "prompt": {
+    "en": "In Quebec, what is the first language of most people?",
+    "fr": "Au Québec, quelle est la première langue de la plupart des gens?"
+  },
+  "options": [
+    {
+      "en": "English.",
+      "fr": "L'anglais."
+    },
+    {
+      "en": "French.",
+      "fr": "Le français."
+    },
+    {
+      "en": "Spanish.",
+      "fr": "L'espagnol."
+    },
+    {
+      "en": "Italian.",
+      "fr": "L'italien."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Most people in Quebec have French as their first language, and most of them live along or near the St. Lawrence River.",
+    "fr": "La plupart des gens au Québec ont le français comme première langue, et la plupart d'entre eux habitent le long du fleuve Saint-Laurent ou tout près."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 98,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Nearly eight million people live in Quebec, the vast majority along or near the St. Lawrence River. More than three-quarters speak French as their first language."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

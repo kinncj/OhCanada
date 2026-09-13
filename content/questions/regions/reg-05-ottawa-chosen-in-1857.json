@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-05-ottawa-chosen-in-1857",
+  "subject": "regions",
+  "prompt": {
+    "en": "In what year was Ottawa chosen as the capital of Canada?",
+    "fr": "En quelle année Ottawa a-t-elle été choisie comme capitale du Canada?"
+  },
+  "options": [
+    {
+      "en": "1791.",
+      "fr": "1791."
+    },
+    {
+      "en": "1857.",
+      "fr": "1857."
+    },
+    {
+      "en": "1867.",
+      "fr": "1867."
+    },
+    {
+      "en": "1931.",
+      "fr": "1931."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The guide dates the choice of Ottawa as the capital to 1857. The city sits on the Ottawa River.",
+    "fr": "Le guide situe en 1857 le choix d'Ottawa comme capitale. La ville se trouve sur la rivière des Outaouais."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 94,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Ottawa, located on the Ottawa River, was chosen as the capital in 1857"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-56-what-nunavut-means",
+  "subject": "regions",
+  "prompt": {
+    "en": "What does the name Nunavut mean in Inuktitut?",
+    "fr": "Que signifie le nom Nunavut en inuktitut?"
+  },
+  "options": [
+    {
+      "en": "The people.",
+      "fr": "Le peuple."
+    },
+    {
+      "en": "Our land.",
+      "fr": "Notre terre."
+    },
+    {
+      "en": "Great water.",
+      "fr": "Grande eau."
+    },
+    {
+      "en": "Land of snow.",
+      "fr": "Terre de neige."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Nunavut means our land in Inuktitut. The territory was established in 1999.",
+    "fr": "Nunavut signifie « notre terre » en inuktitut. Le territoire a été créé en 1999."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 104,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Nunavut, meaning “our land” in Inuktitut, was established in 1999"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

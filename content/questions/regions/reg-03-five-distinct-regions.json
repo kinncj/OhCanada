@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-03-five-distinct-regions",
+  "subject": "regions",
+  "prompt": {
+    "en": "Into how many distinct regions does Discover Canada divide the country?",
+    "fr": "En combien de régions distinctes Découvrir le Canada divise-t-il le pays?"
+  },
+  "options": [
+    {
+      "en": "Three.",
+      "fr": "Trois."
+    },
+    {
+      "en": "Four.",
+      "fr": "Quatre."
+    },
+    {
+      "en": "Five.",
+      "fr": "Cinq."
+    },
+    {
+      "en": "Seven.",
+      "fr": "Sept."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The guide names five: the Atlantic Provinces, Central Canada, the Prairie Provinces, the West Coast and the Northern Territories.",
+    "fr": "Le guide en nomme cinq : les provinces de l'Atlantique, le Centre du Canada, les provinces des Prairies, la côte Ouest et les territoires du Nord."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 93,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada includes many different geographical areas and five distinct regions."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

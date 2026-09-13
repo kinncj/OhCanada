@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-41-breadbasket-and-wheat-province",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which province was once called the breadbasket of the world and the wheat province?",
+    "fr": "Quelle province a déjà été appelée le grenier du monde et la province du blé?"
+  },
+  "options": [
+    {
+      "en": "Alberta.",
+      "fr": "L'Alberta."
+    },
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    },
+    {
+      "en": "Saskatchewan.",
+      "fr": "La Saskatchewan."
+    },
+    {
+      "en": "Ontario.",
+      "fr": "L'Ontario."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Saskatchewan is the province that once carried both of those names.",
+    "fr": "La Saskatchewan est la province qui portait autrefois ces deux surnoms."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,”"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

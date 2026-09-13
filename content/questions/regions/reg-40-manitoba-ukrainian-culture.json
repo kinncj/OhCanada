@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-40-manitoba-ukrainian-culture",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which province is an important centre of Ukrainian culture?",
+    "fr": "Quelle province est un centre important de la culture ukrainienne?"
+  },
+  "options": [
+    {
+      "en": "Ontario.",
+      "fr": "L'Ontario."
+    },
+    {
+      "en": "Manitoba.",
+      "fr": "Le Manitoba."
+    },
+    {
+      "en": "Alberta.",
+      "fr": "L'Alberta."
+    },
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Manitoba is an important centre of Ukrainian culture in Canada, and many people there report Ukrainian roots.",
+    "fr": "Le Manitoba est un centre important de la culture ukrainienne au Canada, et de nombreuses personnes y déclarent des origines ukrainiennes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Manitoba is also an important centre of Ukrainian culture"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

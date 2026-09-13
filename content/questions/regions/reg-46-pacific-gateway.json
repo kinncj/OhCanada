@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-46-pacific-gateway",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which province is known as Canada's Pacific gateway?",
+    "fr": "Quelle province est connue comme la porte d'entrée du Canada sur le Pacifique?"
+  },
+  "options": [
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    },
+    {
+      "en": "Alberta.",
+      "fr": "L'Alberta."
+    },
+    {
+      "en": "Yukon.",
+      "fr": "Le Yukon."
+    },
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "British Columbia lies on the Pacific coast and is known as the country's Pacific gateway. Its mountains are famous too.",
+    "fr": "La Colombie-Britannique borde l'océan Pacifique et on la connaît comme la porte d'entrée du pays sur le Pacifique. Ses montagnes sont célèbres elles aussi."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 102,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "British Columbia is known for its majestic mountains and as Canada’s Pacific gateway."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

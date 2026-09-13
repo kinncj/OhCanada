@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-09-capital-of-new-brunswick",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the capital city of New Brunswick?",
+    "fr": "Quelle est la capitale du Nouveau-Brunswick?"
+  },
+  "options": [
+    {
+      "en": "Saint John.",
+      "fr": "Saint John."
+    },
+    {
+      "en": "Moncton.",
+      "fr": "Moncton."
+    },
+    {
+      "en": "Fredericton.",
+      "fr": "Fredericton."
+    },
+    {
+      "en": "Bathurst.",
+      "fr": "Bathurst."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Fredericton is the capital of New Brunswick. Saint John and Moncton are two other well-known cities in the province.",
+    "fr": "Fredericton est la capitale du Nouveau-Brunswick. Saint John et Moncton sont deux autres villes bien connues de la province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "New Brunswick ....................................... Fredericton"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

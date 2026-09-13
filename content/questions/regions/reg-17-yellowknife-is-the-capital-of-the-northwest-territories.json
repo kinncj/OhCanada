@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-17-yellowknife-is-the-capital-of-the-northwest-territories",
+  "subject": "regions",
+  "prompt": {
+    "en": "Yellowknife is the capital city of which territory?",
+    "fr": "Yellowknife est la capitale de quel territoire?"
+  },
+  "options": [
+    {
+      "en": "Nunavut.",
+      "fr": "Le Nunavut."
+    },
+    {
+      "en": "Yukon.",
+      "fr": "Le Yukon."
+    },
+    {
+      "en": "The Northwest Territories.",
+      "fr": "Les Territoires du Nord-Ouest."
+    },
+    {
+      "en": "Labrador.",
+      "fr": "Le Labrador."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Yellowknife is the capital of the Northwest Territories. Labrador is not a territory at all: it is part of the province of Newfoundland and Labrador.",
+    "fr": "Yellowknife est la capitale des Territoires du Nord-Ouest. Le Labrador n'est pas un territoire : il fait partie de la province de Terre-Neuve-et-Labrador."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Northwest Territories............................... Yellowknife"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

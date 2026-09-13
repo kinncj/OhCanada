@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-01-second-largest-country",
+  "subject": "regions",
+  "prompt": {
+    "en": "How big is Canada compared with the other countries of the world?",
+    "fr": "Quelle est la taille du Canada par rapport aux autres pays du monde?"
+  },
+  "options": [
+    {
+      "en": "It is the largest country on earth.",
+      "fr": "C'est le plus grand pays du monde."
+    },
+    {
+      "en": "It is the second largest country on earth.",
+      "fr": "C'est le deuxième plus grand pays du monde."
+    },
+    {
+      "en": "It is the fifth largest country on earth.",
+      "fr": "C'est le cinquième plus grand pays du monde."
+    },
+    {
+      "en": "It is the tenth largest country on earth.",
+      "fr": "C'est le dixième plus grand pays du monde."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Only one country in the world covers more land than Canada. Discover Canada opens its chapter on the regions by calling Canada the second largest country on earth.",
+    "fr": "Un seul pays au monde couvre plus de territoire que le Canada. Découvrir le Canada ouvre son chapitre sur les régions en présentant le Canada comme le deuxième plus grand pays du monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 93,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada is the second largest country on earth—10 million square kilometres."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

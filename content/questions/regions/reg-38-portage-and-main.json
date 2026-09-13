@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-38-portage-and-main",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which famous street corner is in Winnipeg's Exchange District?",
+    "fr": "Quel carrefour célèbre se trouve dans l'Exchange District de Winnipeg?"
+  },
+  "options": [
+    {
+      "en": "Portage and Main.",
+      "fr": "Portage and Main."
+    },
+    {
+      "en": "Yonge and Bloor.",
+      "fr": "Yonge and Bloor."
+    },
+    {
+      "en": "Robson and Granville.",
+      "fr": "Robson and Granville."
+    },
+    {
+      "en": "Sainte-Catherine and Peel.",
+      "fr": "Sainte-Catherine et Peel."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Portage and Main, in Winnipeg, is called the most famous street corner in the country.",
+    "fr": "Portage and Main, à Winnipeg, est considéré comme le carrefour le plus célèbre du pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The province’s most populous city is Winnipeg, whose Exchange District includes the most famous street intersection in Canada, Portage and Main."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

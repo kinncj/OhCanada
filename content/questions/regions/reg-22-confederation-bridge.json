@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-22-confederation-bridge",
+  "subject": "regions",
+  "prompt": {
+    "en": "What joins Prince Edward Island to mainland Canada?",
+    "fr": "Qu'est-ce qui relie l'Île-du-Prince-Édouard au reste du Canada continental?"
+  },
+  "options": [
+    {
+      "en": "A tunnel under the sea.",
+      "fr": "Un tunnel sous la mer."
+    },
+    {
+      "en": "A causeway of stone.",
+      "fr": "Une chaussée de pierre."
+    },
+    {
+      "en": "The Confederation Bridge.",
+      "fr": "Le pont de la Confédération."
+    },
+    {
+      "en": "The Trans-Canada Ferry.",
+      "fr": "Le traversier transcanadien."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The Confederation Bridge carries traffic between the island and the mainland. It is one of the longest bridges of its kind anywhere in the world.",
+    "fr": "Le pont de la Confédération fait passer la circulation entre l'île et le continent. C'est l'un des plus longs ponts de ce type au monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "P.E.I. is the birthplace of Confederation, connected to mainland Canada by one of the longest continuous multispan bridges in the world, the Confederation Bridge."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

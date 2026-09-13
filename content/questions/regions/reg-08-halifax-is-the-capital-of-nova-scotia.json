@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-08-halifax-is-the-capital-of-nova-scotia",
+  "subject": "regions",
+  "prompt": {
+    "en": "Halifax is the capital city of which province?",
+    "fr": "Halifax est la capitale de quelle province?"
+  },
+  "options": [
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    },
+    {
+      "en": "New Brunswick.",
+      "fr": "Le Nouveau-Brunswick."
+    },
+    {
+      "en": "Newfoundland and Labrador.",
+      "fr": "Terre-Neuve-et-Labrador."
+    },
+    {
+      "en": "Prince Edward Island.",
+      "fr": "L'Île-du-Prince-Édouard."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Halifax is the capital of Nova Scotia. It is one of the four Atlantic Provinces.",
+    "fr": "Halifax est la capitale de la Nouvelle-Écosse. C'est l'une des quatre provinces de l'Atlantique."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Nova Scotia............................................. Halifax"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

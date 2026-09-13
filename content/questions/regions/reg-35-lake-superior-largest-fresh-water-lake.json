@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-35-lake-superior-largest-fresh-water-lake",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which of the Great Lakes is the largest fresh water lake in the world?",
+    "fr": "Lequel des Grands Lacs est le plus grand lac d'eau douce du monde?"
+  },
+  "options": [
+    {
+      "en": "Lake Ontario.",
+      "fr": "Le lac Ontario."
+    },
+    {
+      "en": "Lake Erie.",
+      "fr": "Le lac Érié."
+    },
+    {
+      "en": "Lake Huron.",
+      "fr": "Le lac Huron."
+    },
+    {
+      "en": "Lake Superior.",
+      "fr": "Le lac Supérieur."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Lake Superior holds more fresh water than any other lake on earth. It is one of the Great Lakes, which lie between Ontario and the United States.",
+    "fr": "Le lac Supérieur contient plus d'eau douce que tout autre lac de la planète. C'est l'un des Grands Lacs, qui se trouvent entre l'Ontario et les États-Unis."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 99,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "There are five Great Lakes located between Ontario and the United States: Lake Ontario, Lake Erie, Lake Huron, Lake Michigan (in the U.S.A.) and Lake Superior, the largest fresh water lake in the world."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-15-capital-of-british-columbia",
+  "subject": "regions",
+  "prompt": {
+    "en": "What is the capital city of British Columbia?",
+    "fr": "Quelle est la capitale de la Colombie-Britannique?"
+  },
+  "options": [
+    {
+      "en": "Vancouver.",
+      "fr": "Vancouver."
+    },
+    {
+      "en": "Kelowna.",
+      "fr": "Kelowna."
+    },
+    {
+      "en": "Victoria.",
+      "fr": "Victoria."
+    },
+    {
+      "en": "Prince George.",
+      "fr": "Prince George."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Victoria is the capital of British Columbia, the province on the West Coast.",
+    "fr": "Victoria est la capitale de la Colombie-Britannique, la province de la côte Ouest."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 95,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "British Columbia...................................... Victoria"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-02-three-oceans",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which ocean lies to the north of Canada?",
+    "fr": "Quel océan se trouve au nord du Canada?"
+  },
+  "options": [
+    {
+      "en": "The Arctic Ocean.",
+      "fr": "L'océan Arctique."
+    },
+    {
+      "en": "The Pacific Ocean.",
+      "fr": "L'océan Pacifique."
+    },
+    {
+      "en": "The Atlantic Ocean.",
+      "fr": "L'océan Atlantique."
+    },
+    {
+      "en": "The Indian Ocean.",
+      "fr": "L'océan Indien."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Three oceans border Canada. The Pacific is on the west side, the Atlantic on the east side, and the Arctic lies to the north.",
+    "fr": "Trois océans bordent le Canada. Le Pacifique se trouve à l'ouest, l'Atlantique à l'est, et l'Arctique au nord."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 93,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Three oceans line Canada’s frontiers: the Pacific Ocean in the west, the Atlantic Ocean in the east, and the Arctic Ocean to the north."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

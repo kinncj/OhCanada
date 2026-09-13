@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-27-moncton-acadian-centre",
+  "subject": "regions",
+  "prompt": {
+    "en": "Which New Brunswick city does Discover Canada call the main Francophone Acadian centre?",
+    "fr": "Quelle ville du Nouveau-Brunswick Découvrir le Canada présente-t-il comme le principal centre acadien francophone?"
+  },
+  "options": [
+    {
+      "en": "Fredericton.",
+      "fr": "Fredericton."
+    },
+    {
+      "en": "Moncton.",
+      "fr": "Moncton."
+    },
+    {
+      "en": "Saint John.",
+      "fr": "Saint John."
+    },
+    {
+      "en": "Bathurst.",
+      "fr": "Bathurst."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Moncton is the main Francophone Acadian centre. New Brunswick has a strong French culture, and its Acadian heritage is part of that.",
+    "fr": "Moncton est le principal centre acadien francophone. Le Nouveau-Brunswick a une forte culture française, et son patrimoine acadien en fait partie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Moncton is the principal Francophone Acadian centre"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

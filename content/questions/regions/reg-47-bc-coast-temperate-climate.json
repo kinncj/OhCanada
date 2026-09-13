@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-47-bc-coast-temperate-climate",
+  "subject": "regions",
+  "prompt": {
+    "en": "Why does the coast of British Columbia have a mild climate?",
+    "fr": "Pourquoi la côte de la Colombie-Britannique a-t-elle un climat doux?"
+  },
+  "options": [
+    {
+      "en": "The Rocky Mountains shelter it from the sea.",
+      "fr": "Les Rocheuses la protègent de la mer."
+    },
+    {
+      "en": "The Great Lakes keep it warm in winter.",
+      "fr": "Les Grands Lacs la gardent au chaud en hiver."
+    },
+    {
+      "en": "The prairies block cold Arctic air.",
+      "fr": "Les Prairies bloquent l'air froid de l'Arctique."
+    },
+    {
+      "en": "Warm air currents come in from the Pacific Ocean.",
+      "fr": "Des courants d'air chaud arrivent de l'océan Pacifique."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Warm air moving in from the Pacific Ocean gives the British Columbia coast its mild, temperate climate.",
+    "fr": "L'air chaud venu de l'océan Pacifique donne à la côte de la Colombie-Britannique son climat doux et tempéré."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 102,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Warm airstreams from the Pacific Ocean give the B.C. coast a temperate climate."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
