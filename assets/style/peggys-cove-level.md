@@ -178,8 +178,10 @@ the hero, it is drawn once, and `neverAdd` says so on the tile subject.
 - **`spawn`** `(420, 1280)`.
 - **Layer offsets** are `y` 0 / 700 / 840 / 1000, in depth order.
 - **Four points of interest, not one.** §12 is the table, the spacing and what each one teaches.
-- **`poi.peggys-point-light.position.x` 3520**, the middle of the level, `radiusPx` 300. The hero is
-  480 × 900, so it occupies world x 3280 … 3760 and world y 380 … 1280. **No row of it is empty** — unlike
+- **`poi.peggys-point-light.position.x` 3200**, `radiusPx` 300. (It was 3520, the exact middle of the level,
+  until the arrival-line measurement on 2026-09-13; §13 is the move and why the middle could not be kept.)
+  The hero is
+  480 × 900, so it occupies world x 2960 … 3440 and world y 380 … 1280. **No row of it is empty** — unlike
   `five-sails`, which is a pier and needed 280 rows of nothing under it, this building stands on rock and is
   drawn tight to its own base, and the barrens tile passes **behind** it.
 - **`camera`** `followLerp` 0.12, `deadZone` (60, 120), `offset` (150, −260), `zoom` 1. With the player on
@@ -473,13 +475,18 @@ the original two subjects do.
 | world x | POI | art | what it teaches | source |
 |---|---|---|---|---|
 | 1 500 | `granite-shore` | `peggys-cove-prop-granite-erratic`, 560 × 380 | three oceans line Canada: Pacific west, Atlantic east, Arctic north — and this is the Atlantic edge | *Discover Canada* p. 93 |
-| 3 520 | `peggys-point-light` | `peggys-cove-landmark-lighthouse`, 480 × 900 | the Acadians, the deportation, and Acadian culture today | *Discover Canada* p. 19 |
-| 5 200 | `fish-store` | `peggys-cove-prop-fish-store`, 620 × 520 | Atlantic Canada's coasts and its natural resources — fishing, farming, forestry, mining | *Discover Canada* p. 96 |
-| 6 700 | `village-house` | `peggys-cove-prop-fishermans-house`, 640 × 560 | most Canadians live in cities, and Canadians also live in small towns and rural areas | *Discover Canada* p. 94 |
+| 3 200 | `peggys-point-light` | `peggys-cove-landmark-lighthouse`, 480 × 900 | the Acadians, the deportation, and Acadian culture today | *Discover Canada* p. 19 |
+| 4 700 | `fish-store` | `peggys-cove-prop-fish-store`, 620 × 520 | Atlantic Canada's coasts and its natural resources — fishing, farming, forestry, mining | *Discover Canada* p. 96 |
+| 6 200 | `village-house` | `peggys-cove-prop-fishermans-house`, 640 × 560 | most Canadians live in cities, and Canadians also live in small towns and rural areas | *Discover Canada* p. 94 |
 
-**Gaps of 2 020, 1 680 and 1 500 px**, inside the 1 500–2 500 band. The hero stays in the middle of the level,
-where §3 put it and where the composition wants it. The house at 6 700 is 640 wide, so its right edge is
-world 7 020 against a level 7 040 wide — 20 px of margin, checked rather than assumed.
+**Gaps of 1 700, 1 500 and 1 500 px**, inside the 1 500–2 500 band. The house at 6 200 is 640 wide, so its
+right edge is world 6 520 against a level 7 040 wide.
+
+**Three of those four numbers changed later the same day, and §13 is why.** They were 3 520, 5 200 and 6 700
+for the hours between the respacing and the arrival-line measurement, with gaps of 2 020, 1 680 and 1 500 and
+the hero in the exact middle of the level, where §3 put it and where the composition wanted it. The house at
+6 700 stood **200 px past the x at which this level tells the player it is over**, and the three numbers are
+one chain: the floor between points is what carried the correction back up the walk to the hero.
 
 **The walk now has a shape.** Bare rock at the Atlantic edge, then the light, then the working waterfront,
 then the village. That order is the level's own geography read left to right, and it is why the house is last
@@ -518,3 +525,88 @@ Same shape as `peggys-cove-light`, which is already `singleSource()`. Until they
 names three more failures and says why. The alternative inside `assets/**` was `renders: []`, which the
 harness accepts as "unrendered on purpose" and which would have turned three quarters of this level's points
 of interest into subjects nobody checks.
+
+---
+
+## 13. The arrival line, and the three points that moved for it
+
+**Added 2026-09-13, after §12 and superseding three of its numbers.**
+
+`app/adapters/phaser/level-exit.ts` ends a level at **`bounds.right − view/2`** — half a camera view short of
+the wall, so the player is still walking freely and the camera has already stopped when the completion card
+opens. Here that is `7 040 − 540` = **world x 6 500**. It is derived from the level document, not typed into
+it: change `size.x`, the ground polyline or `camera.zoom` and it moves.
+
+**The house was at 6 700, which is 200 px past it.** §12 checked the house against the *wall* — right edge
+7 020 against a level 7 040 wide, 20 px of margin — and that was the wrong wall. The quest was rebuilt this
+week to visit every point this level has, so the player was told to walk to a house that stands past the x
+at which the level announces it is finished, and the completion card draws once per sitting, so finishing
+the task afterwards drew nothing at all.
+
+### The rule the new numbers satisfy
+
+**A point must be engageable only from before the line.** Engagement is `interaction.reachPx` — 200 px for
+this level's walk, measured from `position.x`, both ways — so the whole reach ring sits before the line:
+
+```
+position.x + reachPx + 100 ≤ exitLineX          6 200 + 200 + 100 = 6 500
+```
+
+The 100 px is margin, not physics: the level pauses while a card is open, so the standing x during two lines
+of dialogue and two questions is wherever the player engaged, and the ring is what bounds that. **This level
+sits exactly on the bound**, and with four points, a 1 500 px floor and the first at 1 500 there is no
+arrangement that has more: 1 500 + 3 × 1 500 = 6 000 is the earliest a fourth point can fall, and 6 200 is
+what is left after the reach ring and the margin come off 6 500.
+
+### Why the hero moved, which is the part worth reading
+
+It moved because the floor between points carried the correction up the walk. The house had to come back
+500 px; the fish store cannot be closer than 1 500 px to it, so it came back 500 too; and the light cannot be
+closer than 1 500 px to the fish store, so it came back **320 px — the least the floor allows**, which is why
+it is at 3 200 and not at some rounder or more even number. Three points, one chain, and the alternative was
+a 1 280 px gap in the middle of the walk, which is the spacing the four-point respacing existed to remove.
+
+**What was lost is a sentence, not a composition.** §3 called 3 520 "the middle of the level"; 3 200 is 45 %
+of it. The hero is still alone in the middle third with a clear screen either side, still the only
+place-anchor, and still drawn once on a level whose every layer repeats. Nothing about the *art* changed:
+**these are numbers, not new art.** No source was touched, no palette entry was added, and the atlases are
+byte-identical.
+
+### What the barrens say about the three new numbers
+
+`layer-40-granite-barrens` scrolls at 1.0, so it is locked to the world and repeats every 1 920 px; measured
+off the raster, its two tide pools have open water at tile-local **[477, 742]** and **[1425, 1575]** and its
+four erratics sit at **[206, 352]**, **[958, 1066]**, **[1290, 1370]** and **[1676, 1832]**. Every prop here
+is opaque across its whole width for the bottom 60 rows, so what matters is not what a prop stands on — it
+hides it — but what is left showing beside it:
+
+- **`village-house` 6 200** is tile-local 440 and covers [120, 760], which contains the first pool whole.
+  The house stands on bare pavement with nothing wet at its fence. At 6 700 it covered [620, 1260] and left
+  143 px of open pool sticking out past the left of the picket fence: a house in a puddle, which is what the
+  old number actually drew.
+- **`fish-store` 4 700** is tile-local 860 and leaves 73 px of that same pool showing at its left. Kept, and
+  wanted: this building stands on spruce piles over water in its own art, and water at its foot is the point
+  of it.
+- **`peggys-point-light` 3 200** is tile-local 1 280 and leaves 55 px of the second pool showing to the right
+  of its base. Also kept: `refs/peggys-cove/granite-barrens-and-sea.jpg` is a photograph of a tide pool on
+  the rock beside this light, and at 3 520 the tower hid the pool entirely.
+
+Renders at 390 px over the real background were made at all three positions before they were chosen.
+
+---
+
+## 14. The tail this level no longer has, and what would give it back
+
+Not a request, a measurement. The eight levels that were **not** defective put their last point 708 to
+1 300 px before their arrival line — Québec City 708, Ottawa 860, the Prairies 860, Winnipeg 1 040, Vancouver
+1 140, the North 1 140, the Alberta foothills 1 300. This level now has **300**, and Halifax the same.
+
+The cause is arithmetic, and it is the same on both: **the two levels that went to four points on 2026-09-13
+are 7 040 and 7 200 px long, and the other two four-point levels are 9 000 and 9 600.** This level got its
+fourth point without getting any more world.
+
+**The fix that needs no art and unbinds no verification grant is `size.x`.** Every layer here tiles, so width
+is free: 7 040 → 7 560 moves the arrival line to 7 020 and would have let all four points stay exactly where
+§12 put them — hero in the middle included — at a cost of 0 bytes and 0 textures. It was **not** taken,
+because moving points in is what was asked for and a world's length is a level-design call rather than an art
+one. It is recorded so that choosing it later is a decision and not a discovery.

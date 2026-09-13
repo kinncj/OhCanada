@@ -257,7 +257,7 @@
         }
       },
       "position": {
-        "x": 3520,
+        "x": 3200,
         "y": 1280
       },
       "artKey": "peggys-cove-landmark-lighthouse",
@@ -295,7 +295,7 @@
         }
       },
       "position": {
-        "x": 5200,
+        "x": 4700,
         "y": 1280
       },
       "artKey": "peggys-cove-prop-fish-store",
@@ -332,7 +332,7 @@
         }
       },
       "position": {
-        "x": 6700,
+        "x": 6200,
         "y": 1280
       },
       "artKey": "peggys-cove-prop-fishermans-house",

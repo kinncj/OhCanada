@@ -164,9 +164,14 @@ gradient, which is a hole in the middle of the picture and is only visible once 
   and the dial's centre at world y **718**. Nothing can occlude it: a POI hero is drawn at
   `DEPTH_ACTORS - 1`, above every parallax layer, and the tallest thing on any layer is the town's steeple
   at world 718 anyway.
-- **`poi.pier-21.position.x` = 4900**, `radiusPx` 240. The file is 900 × 620, so it occupies world x
-  4450 … 5350 and world y 660 … 1280. Keep the two POIs at least 1800 px apart: at 800 and 900 px wide they
+- **`poi.pier-21.position.x` = 4760**, `radiusPx` 240. (It was 4900 until 2026-09-13; §11 has the move and
+  why.) The file is 900 × 620, so it occupies world x
+  4310 … 5210 and world y 660 … 1280. Keep the two POIs at least 1800 px apart: at 800 and 900 px wide they
   cannot share a 1080 px camera frame without one of them being cropped.
+  **Its x is the one number in this level that the tile behind it cannot argue with**: the file is opaque
+  across all 900 px from world y 1060 down, so nothing of `layer-40` is visible at the waterline at any x,
+  and the only tile rows it lets through are world 660 … 1060 behind its right third, which is roofline
+  either way. That is why it, and not the tug, was the point that gave way when §11 needed 1 500 px back.
 - **Where the quayside's own features fall.** `layer-40` scrolls at 1.0, locked to the world, so this is
   exact rather than approximate. Per 2016 px tile, measured from the tile origin: the two gabled waterfront
   buildings occupy **[238, 594]** and **[1548, 1928]**, the cargo shed **[918, 1266]**, and the two open
@@ -583,19 +588,18 @@ four layers, same theme, same locomotion.
 |---|---|---|---|---|
 | 1 500 | `town-clock` | `halifax-landmark-town-clock`, 800 × 1010 | the first representative assembly in Canada was elected here in 1758 | *Discover Canada* p. 27 |
 | 3 100 | `market-stall` | `halifax-prop-market-stall`, 560 × 480 | taking responsibility for oneself and one's family: getting a job and working hard are Canadian values | *Discover Canada* p. 13 |
-| 4 900 | `pier-21` | `halifax-landmark-pier-21`, 900 × 620 | Canada is a land of immigrants | *Discover Canada* p. 21 |
-| 6 806 | `harbour-tug` | `halifax-prop-harbour-tug`, 720 × 520 | Halifax is Canada's largest east coast port, deep-water and ice-free | *Discover Canada* p. 97 |
+| 4 760 | `pier-21` | `halifax-landmark-pier-21`, 900 × 620 | Canada is a land of immigrants | *Discover Canada* p. 21 |
+| 6 360 | `harbour-tug` | `halifax-prop-harbour-tug`, 720 × 520 | Halifax is Canada's largest east coast port, deep-water and ice-free | *Discover Canada* p. 97 |
 
-**The gaps are 1 600, 1 800 and 1 906 px**, inside the 1 500–2 500 band the brief sets, and every one of them
+**The gaps are 1 600, 1 660 and 1 600 px**, inside the 1 500–2 500 band the brief sets, and every one of them
 is wider than the 1 800 px minimum §3 states for two heroes sharing a 1 080 px frame — except the first, at
 1 600, where the two objects are 560 and 800 px wide and cannot be in frame together anyway. The guide stands
 at 900, a screen short of the first point, and the spawn is at 400.
 
-**Why the tug is at 6 806 and not at a round number.** `layer-40-quayside` repeats every 2 016 px and its two
-open slips of water sit at tile-local [608, 908] and [1272, 1540]. 6 806 is tile-local 758 — the middle of the
-first slip — so the water the tug is drawn in has water behind it rather than a building. The art carries its
-own boardwalk edge and mooring bollard and does not depend on that, but the level is better when the two
-agree, and the arithmetic is written down here so the next person who moves it knows what it was for.
+**The last two of those four numbers changed later the same day, and §11 is why.** They were 4 900 and
+6 806 for the hours between the respacing and the arrival-line measurement; the tug's old x was tile-local
+758 — the middle of the first open slip — and the reason it could not stay there, along with the reason
+6 360 is the berth that replaces it, is recorded in full below rather than lost in a diff.
 
 **What was drawn as scenery and not as a POI, and why.** Nothing new. The corridor between the points was
 already the most populated in the game — `layer-40-quayside` carries lamps, benches, bollards, planters, an
@@ -621,3 +625,97 @@ document is 580 px out; the two readings are each internally consistent and cann
 `assets/`. **Nothing was changed on a guess.** What the new art does instead is stay inside both: the tallest
 new hero is 520 px, so it is fully framed whether the ground line lands at 700 or at 1280. Whoever owns
 `app/adapters/phaser/level-scene.ts` should settle it — the renders in this section are composited at 1280.
+
+---
+
+## 11. The arrival line, and the two points that moved for it
+
+**Added 2026-09-13, after §10 and superseding two of its numbers.**
+
+`app/adapters/phaser/level-exit.ts` ends a level at **`bounds.right − view/2`** — half a camera view short of
+the wall, so the player is still walking freely and the camera has already stopped when the completion card
+opens. For this level that is `7 200 − 540` = **world x 6 660**, and it is a property of the level document,
+not a number anyone typed: it moves whenever `size.x`, the ground polyline or `camera.zoom` moves.
+
+**The tug was at 6 806, which is 146 px past it.** An engine agent measured the shipped build: the tug came
+into reach at x ≈ 6 610 and "Level finished!" fired at x ≈ 6 664, a band about fifty pixels wide in which
+both were true. The quest was rebuilt this week to visit every point this level has, so the last thing the
+player is *told to go to* stood past the line that ends the level, and because the completion card draws once
+per sitting, finishing the task afterwards drew nothing. The placement was always wrong; the quest is what
+made it visible.
+
+### The rule the two new numbers satisfy
+
+**A point the player can engage must be engageable only from before the line.** Engagement is
+`interaction.reachPx` — 200 px for this level's walk, measured from `position.x`, both ways — so the whole
+reach ring has to sit before the arrival line:
+
+```
+position.x + reachPx + 100 ≤ exitLineX          6 360 + 200 + 100 = 6 660
+```
+
+The 100 px is margin, not physics. The level *pauses* while a card is open (`level-scene.ts` `#engageNearest`),
+so nobody drifts during two lines of dialogue and two questions — the standing x is wherever they engaged,
+and the ring is what bounds that. **This level sits exactly on the bound**, and that is the honest reading of
+it: with four points, a 1 500 px floor between them and the first at 1 500, Halifax has 100 px of slack and
+not one more. §12 says what the level would need to have more.
+
+### Why the tug is at 6 360 and not at a round number, and not at 6 806
+
+The old reasoning stands and is what chose the new number too: `layer-40-quayside` scrolls at 1.0, so it is
+locked to the world and its features are at exact world x, tile by tile. Per §3 the tile carries buildings at
+tile-local [238, 594], [918, 1266] (the shed) and [1548, 1928], open water at the slips [608, 908] and
+[1272, 1540], and the clear stretch [1930, 2254] that wraps into the next tile. **The tug's hull is 690 of the
+file's 720 px at the waterline** (world y 1140 … 1204, measured off the raster, not guessed), so at
+`position.x` it covers world [x − 336, x + 353] and hides whatever the tile draws there. Only the two ends
+show.
+
+At **6 360** the stern lands at world 5 984 — inside the clear stretch, which is open harbour water down to
+the deck — and the bow at 6 713, inside the first slip of the next tile, which runs 6 656 … 6 956. **Both ends
+of the hull meet water**, with 62 px and 57 px of tolerance, and the gabled waterfront building at world
+[6 286, 6 642] falls *entirely* behind the hull at the waterline and shows only above it, where it reads as
+the wharf the tug is tied to. Measured on the raster, 19 % of the harbour surface still visible at the tug's
+own waterline is water, against 6 % at 6 806, where the white building's ground floor and the cargo shed
+flanked the hull on both sides.
+
+The slip's own moored sailing hull (tile-local [636, 868], world 6 684 … 6 916) now extends about 200 px
+beyond the tug's bow instead of hiding behind it. That was looked at and kept: a second vessel moored ahead
+of a tug is what a harbour has, its two masts fall behind the planter and tree at tile-local [1000, 1100], and
+the alternative — a 14 px slot of water between two bows at 6 320 — reads as a hairline and not as a berth.
+**No position in the feasible window can hide it**: covering it needs x ≥ 6 563, which is 103 px past what
+the arrival line allows.
+
+Renders at 390 px over the real background were made at 6 000, 6 124, 6 286, 6 350, 6 400, 6 460 and 6 806
+before this was chosen. Nothing was drawn: **this is a number, not new art.**
+
+### Why Pier 21 moved, and nothing else did
+
+6 360 is 1 446 px from Pier 21 at 4 900 — under the 1 500 px floor the walk is built on, which is exactly the
+case §10's brief anticipated. Pier 21 went to **4 760**, which restores 1 600 px, and it is the point that
+gave way because it is the one the tile cannot argue with: §3 measures it opaque across all 900 px from world
+y 1060 down, so no tile feature is visible at its waterline at any x. The Town Clock stayed at 1 500 — it is
+this level's only place-anchor (§0), the spawn and the guide are composed a screen short of it, and it does
+not need moving. The market stall stayed at 3 100. **Two points moved, and both are recorded above with their
+old x.**
+
+---
+
+## 12. What this level would need to stop being the tightest walk in the game
+
+Not a request, a measurement, because it is the frame the next person will want.
+
+The eight levels that were *not* defective put their last point **708 to 1 300 px before their arrival line**
+(Québec City 708, Ottawa 860, the Prairies 860, Winnipeg 1 040, Vancouver 1 140, the North 1 140, the Alberta
+foothills 1 300; Toronto has one point and 3 540). Halifax now has **300**, and Peggy's Cove **300**. Both are
+inside the rule and neither has the tail the rest of the game has.
+
+The cause is arithmetic and it is the same on both: **the two levels that went to four points on 2026-09-13
+are 7 200 and 7 040 px long, and the other two four-point levels are 9 000 and 9 600.** Four points at a
+1 500 px floor from a first point at 1 500 cannot end before 6 000, and 6 000 plus a reach ring plus a
+screen-long tail does not fit in 7 200. This level got its fourth point without getting any more world.
+
+**The fix that needs no art and unbinds no grant is `size.x`.** §3 already says width is free here — every
+layer tiles — so 7 200 → 7 560 moves the arrival line to 7 020 and would have let the tug stay at 6 806 with
+214 px of margin and a 754 px tail, at a cost of 0 bytes, 0 textures and 0.86 s of extra walk. It was **not**
+taken, because moving points in is what was asked for and because a world's length is a level-design call
+rather than an art one. It is written down here so that choosing it later is a decision and not a discovery.
