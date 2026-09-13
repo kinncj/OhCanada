@@ -21,7 +21,6 @@
 import { appErr, ok } from '@common/result';
 import type { Result } from '@common/result';
 import type {
-  CharacterId,
   EpochMillis,
   LevelId,
   QuestId,
@@ -54,7 +53,14 @@ export interface QuestStep {
 export interface Quest {
   readonly id: QuestId;
   readonly levelId: LevelId;
-  readonly giver: CharacterId;
+  /**
+   * The engageable that offers this quest — a character or a point of interest,
+   * as the level placed it. Unbranded like `QuestStep.targetId`, and the port
+   * says the same: a union of brands is not a shape a schema can state, and
+   * `characterId` here was what stopped a level that may draw no figure from
+   * holding a quest at all (ADR-0029).
+   */
+  readonly giver: string;
   readonly title: LocalizedText;
   readonly summary: LocalizedText;
   readonly steps: readonly QuestStep[];

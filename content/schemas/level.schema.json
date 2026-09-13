@@ -218,7 +218,7 @@
           "exclusiveMinimum": 0
         },
         "questId": {
-          "description": "Quest this POI advances, when it is a quest target.",
+          "description": "Quest this POI GIVES or advances, when it is a quest target. It could always advance one; since ADR-0029 it can also be the `giver`, which is how `peggys-cove` and `the-north` hold a quest without drawing a figure - a plaque offers, reminds and closes, and the level's placement of it is what says the giver has no rig and no face. When this POI IS the giver, the quest's `giver` equals this POI's `id` and this field equals that quest's `id`; the gate checks both halves and refuses a giver matched by zero placements or by two.",
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId"
         }
       },
@@ -237,7 +237,7 @@
         "position": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2" },
         "facing": { "type": "string", "enum": ["left", "right"] },
         "questId": {
-          "description": "Quest this character gives or advances, when they are a quest target.",
+          "description": "Quest this character gives or advances, when they are a quest target. A character is ONE KIND of giver, not the definition of one (ADR-0029): the sibling field on `pointOfInterest` is the other, and the quest document names an id without saying which list it is in, because this document is the one that knows.",
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId"
         }
       },

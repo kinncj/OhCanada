@@ -545,7 +545,18 @@ export type LevelSummary = Pick<LevelDocument, 'id' | 'subject' | 'order' | 'tit
 
 /** One spoken line. Subtitles are on by default, so this is the subtitle text too. */
 export interface DialogueLine {
-  readonly speaker: CharacterId;
+  /**
+   * Whose words these are: the engageable the player is reading or listening to,
+   * named as the level placed it — a character, or a point of interest.
+   *
+   * Unbranded, like `QuestDocument.giver` and `QuestStepDocument.targetId`, and
+   * for the reason all three share: a union of brands is not a shape a schema
+   * can state, and writing one of the two down anyway is what ADR-0029 undid.
+   * Required, and not the field to make optional when a plaque feels
+   * speakerless: a screen reader is handed the dialog's accessible name before
+   * a word of prose, so a line with no source is a line nothing can attribute.
+   */
+  readonly speaker: string;
   readonly text: LocalizedText;
   /**
    * Whether this line claims a fact about Canada. "Welcome to Parliament Hill"
@@ -553,7 +564,13 @@ export interface DialogueLine {
    * NPC's mouth is exactly as wrong as one on a question card.
    */
   readonly fact: FactClaim;
-  /** Named face pose on the speaker's rig; absent leaves the rig's default. */
+  /**
+   * Named face pose on the speaker's rig; absent leaves the rig's default.
+   * Forbidden when the speaker is a point of interest — a plaque has no face and
+   * no mood, and one here would reach `ICharacterRenderer` as a request for a
+   * rig that does not exist. Held by the cross-document gate, which is the
+   * smallest thing that knows what kind of speaker this is (ADR-0029).
+   */
   readonly expression?: string;
 }
 
@@ -588,8 +605,19 @@ export interface QuestDocument {
   readonly $schema: string;
   readonly id: QuestId;
   readonly levelId: LevelId;
-  /** The character who offers the quest. */
-  readonly giver: CharacterId;
+  /**
+   * What offers the quest: a character the level places, or a point of interest
+   * on it. Required — a quest with no offerer folds to nothing to offer, nothing
+   * to decline and nothing to remind, and `app/ui/dialogue.ts` takes the giver's
+   * name as a required option so an unnamed dialog cannot be built.
+   *
+   * Unbranded, and which kind it is is NOT recorded here: the level declares it
+   * by listing `characters[]` and `pois[]` apart, and a second declaration on
+   * this document could disagree with the first. Resolution is cross-document —
+   * exactly one placement on this quest's level carries this id — and a giver
+   * matched by zero placements or by two fails differently (ADR-0029).
+   */
+  readonly giver: string;
   readonly title: LocalizedText;
   readonly summary: LocalizedText;
   /**

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://truenorth.app/schemas/quest.schema.json",
   "title": "TrueNorth quest",
-  "description": "One quest, `content/quests/<id>.json`. A quest is an ordered list of steps a character gives the player; finishing the last step completes it. Question scheduling belongs to the domain - a step names the pool, it does not pick from it.",
+  "description": "One quest, `content/quests/<id>.json`. A quest is an ordered list of steps an ENGAGEABLE gives the player - a character, or a landmark the level places - and finishing the last step completes it. `giver` said `characterId` until ADR-0029, which encoded \"a quest is offered by somebody\" as a type and cost `peggys-cove` and `the-north` their quests, because both levels forbid drawing a figure of any kind at any scale and a plaque is not a figure. Question scheduling belongs to the domain - a step names the pool, it does not pick from it.",
   "type": "object",
   "properties": {
     "$schema": {
@@ -13,12 +13,12 @@
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questId"
     },
     "levelId": {
-      "description": "The level this quest is played on. The level document lists the quest id too; validate-content is where the two are cross-checked.",
+      "description": "The level this quest is played on. The level document lists the quest id too. THIS SENTENCE USED TO SAY validate-content CROSS-CHECKS THE TWO AND IT DID NOT - `grep quest scripts/validate-content.mjs` finds a comment and no code, so the schema asserted a gate nobody had written, which is worse than an admitted gap because the claim stops the next person looking (ADR-0024, ADR-0029). Both directions are now checked by tests/unit/contracts/a-quest-giver-is-placed-on-its-level.test.ts.",
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId"
     },
     "giver": {
-      "description": "The character who offers the quest.",
-      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
+      "description": "What offers the quest: a character the level places, or a point of interest on it - a plaque, an interpretive panel, a marker. UNBRANDED for the reason `questStep.targetId` is unbranded, and it is the same reason: what it names depends on how the level placed it, and a union of brands is not a shape a schema can state. WHICH KIND IT IS IS NOT DECLARED HERE, because the level already declares it by listing `characters[]` and `pois[]` apart; a second declaration on this document could disagree with the first. Required, and required for a reason ADR-0024 owns: a quest with no offerer folds to nothing to offer, nothing to decline and nothing to remind, and `app/ui/dialogue.ts` takes the giver name as a required option so an unnamed dialog cannot be built. Resolution is cross-document and is held by tests/unit/contracts/a-quest-giver-is-placed-on-its-level.test.ts: EXACTLY ONE placement on this quest's level has this id, and that placement declares `questId` equal to this quest. Zero is dangling and two is ambiguous, and the two fail differently. ADR-0029.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
     },
     "title": {
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
@@ -64,7 +64,7 @@
   "$defs": {
     "questStep": {
       "title": "Quest step document",
-      "description": "One objective. `targetId` is deliberately an unbranded id: what it names depends on `kind` (a character for talk, a POI for visit or collect, a question pool for answer), and a union of brands is not a shape a schema can state.",
+      "description": "One objective. `targetId` is deliberately an unbranded id: what it names depends on `kind` (a character OR A POINT OF INTEREST for talk, a POI for visit or collect, a question pool for answer), and a union of brands is not a shape a schema can state. `talk` gained the POI case with ADR-0029: on a level that may draw no figure, the thing the player taps to be told something is a plaque, and this field was already the right shape for that - `giver` was not, and that is what ADR-0029 fixed.",
       "type": "object",
       "properties": {
         "id": {
@@ -182,7 +182,8 @@
       "type": "object",
       "properties": {
         "speaker": {
-          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/characterId"
+          "description": "Whose words these are: the engageable the player is reading or listening to, named as the level placed it - a character, or a point of interest. REQUIRED, and it is not the field to make optional if a panel feels speakerless: a screen reader is handed the dialog's accessible name before a word of prose, so a line with no source is a line the live region cannot attribute, and a landmark has a name already (`pois[].name`, bilingual, required). Unbranded and unresolved here for the same reason as `giver`; the cross-document gate resolves both on one pass. ADR-0029.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
         },
         "text": {
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
@@ -192,7 +193,7 @@
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factClaim"
         },
         "expression": {
-          "description": "Named face pose on the speaker's rig, resolved by the same name in Rive and in the sprite atlas. Absent leaves the rig's default.",
+          "description": "Named face pose on the speaker's rig, resolved by the same name in Rive and in the sprite atlas. Absent leaves the rig's default. FORBIDDEN WHEN THE SPEAKER IS A POINT OF INTEREST: a plaque has no face and no mood, and `expression: \"happy\"` on one is a small lie that would reach `ICharacterRenderer` as a request for a rig that does not exist. That rule is NOT here and cannot be: this document does not know what its speaker is, and asking it to say would be the second declaration `giver` refuses. Per ADR-0024 the floor goes where the meaning is known, which is the level's placement, so the gate at tests/unit/contracts/a-quest-giver-is-placed-on-its-level.test.ts holds it. ADR-0029.",
           "type": "string",
           "minLength": 1
         }

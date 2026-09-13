@@ -277,6 +277,46 @@ is what supplies that id, and the gate also checks that every key a document nam
 level has to load from its JSON alone" checkable — but it means art and content cannot land independently for
 a level, and a slice plan that plots them as separate tasks is plotting one commit as two.
 
+### A quest giver is an engageable, and the level says what kind
+
+A quest is offered by **something the player engages** — `CLAUDE.md`'s traversal rule already names both
+kinds: *"tap NPC or POI to engage."* `quest.giver` and `dialogueLine.speaker` are therefore **unbranded ids**
+naming either a character in the level's `characters[]` or a point of interest in its `pois[]`, the same
+treatment `questStep.targetId` has had since it was written, for the same reason: a union of brands is not a
+shape JSON Schema can state.
+
+Both said `characterId` until ADR-0029, and that one word was a scope cut. `peggys-cove` and `the-north` may
+draw no figure of any kind at any scale — a decision recorded in their art documents and their story
+documents, and not one this architecture may weaken — so those two levels could hold no quest at all and
+shipped with `quests: []` and `characters: []`. A plaque is not a figure, and it offers, reminds and closes
+as well as a person does.
+
+**The kind is not recorded on the quest.** It is resolved from the level, which is the document that owns
+placement, and this is the general rule worth carrying: *when a reference may name entities from more than
+one collection, the discriminator lives where the entity was placed, not on the thing pointing at it.* A
+second declaration on the quest could disagree with the first, and neither would be wrong on its own.
+
+What that costs is a cross-document check, and it is the interesting half:
+
+> **Exactly one placement on the quest's level carries the id, and that placement declares `questId` back.**
+
+Not `find`, not `some`, not `filter` — those reduce an empty collection to `undefined`, `false` or `[]`, and
+two of the three read as an answer (ADR-0024 §1). *Exactly one* has no success-shaped identity element: zero
+is a **dangling** giver, two is an **ambiguous** one, and the failure says which. The same pass forbids an
+`expression` on a landmark speaker, because the level's placement is the smallest thing that knows whether a
+speaker has a face (ADR-0024 §2).
+
+It lives in `tests/unit/contracts/a-quest-giver-is-placed-on-its-level.test.ts` rather than in
+`scripts/validate-content.mjs`, deliberately: this is a claim checked against another claim, two documents
+that must agree, and it needs no corpus walk that could pass over nothing. Writing it closed two gaps that
+were open and one that was worse than open — `quest.schema.json` had been *asserting* that
+`validate-content` cross-checked a quest against its level's `quests[]`, and no such code had ever existed.
+
+What the schema still cannot say, and review holds instead: a landmark's lines are written in the second
+person and the impersonal. That is an accessibility rule rather than a style one — a screen-reader user gets
+the dialog's accessible name and then the prose, so first-person prose after "Peggy's Point Lighthouse" has
+told that user a person is standing there. `docs/guidelines/dialogue-quests-and-landmarks.md` carries it.
+
 ## 5. Ports
 
 All under `app/application/ports/`, re-exported from `index.ts`. Interfaces and types only.

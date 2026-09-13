@@ -6,7 +6,7 @@
   "$defs": {
     "id": {
       "title": "Identifier",
-      "description": "Stable kebab-case identifier, unique within its collection. Unbranded: a property that $refs this def is a plain string in the port type. When the value names an entity the id vocabulary covers, $ref the branded def below instead.",
+      "description": "Stable kebab-case identifier, unique within its collection. Unbranded: a property that $refs this def is a plain string in the port type. When the value names an entity the id vocabulary covers, $ref the branded def below instead - UNLESS it may name an entity from MORE THAN ONE of those collections, which is a third case and is why `questStep.targetId` and `quest.giver` point here. A union of brands is not a shape JSON Schema can state, and choosing one of the two brands to write down anyway is how `quest.giver` came to say `characterId` and cost two levels their quests (ADR-0029). Where a value is unbranded for that reason, something else must resolve it: a sibling discriminator on the same object, or a cross-document gate that names the collections it searched and fails on zero matches and on two.",
       "type": "string",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
       "minLength": 1,
