@@ -1435,6 +1435,47 @@ const RECIPES = {
   'pier-21': singleSource(),
 
   /**
+   * Halifax's third and fourth heroes, added when every level in the game had
+   * exactly one thing to stop at and eight of them had it at the dead centre.
+   * Neither is a landmark — a market stall and a harbour tug are ordinary
+   * objects — and that is the point: a point of interest is whatever teaches a
+   * sourced fact at a spot, and a level with one of them is a corridor.
+   */
+  'market-stall': singleSource(),
+  'harbour-tug': singleSource(),
+
+  /**
+   * Peggy's Cove's three. This level draws no figure at any scale, so every one
+   * of them is a thing rather than a person, and `granite-erratic` carries the
+   * strongest `neverAdd` clause in the repository: no cairn, inuksuk, stone
+   * marker or stacked arrangement, and no object a viewer could read as one.
+   * An identifier who names one has found a defect, not a likeness.
+   */
+  'granite-erratic': singleSource(),
+  'fish-store': singleSource(),
+  'fishermans-house': singleSource(),
+
+  /**
+   * Québec City's two. `terrace-kiosk` is a drawing recovered rather than
+   * invented: a blind verifier named Terrasse Dufferin off a kiosk drawn into
+   * the repeating terrace tile, which was right about the kiosk and wrong about
+   * where it belonged. A building that names its city is drawn once, at one
+   * world x, which is what a POI hero is.
+   */
+  'city-wall': singleSource(),
+  'terrace-kiosk': singleSource(),
+
+  /**
+   * Ottawa's three. `warming-hut` is the first hero in the game standing on a
+   * surface the player skates over rather than walks on, which is why its base
+   * band is ice and not a snow bank — the builder is unchanged, the contract is
+   * not.
+   */
+  'canal-lock': singleSource(),
+  'library-of-parliament': singleSource(),
+  'warming-hut': singleSource(),
+
+  /**
    * "The quayside placed 160 px below the town tile's top edge (world y 860
    * against 700)."
    *

@@ -188,6 +188,43 @@
   "quests": [],
   "pois": [
     {
+      "id": "granite-shore",
+      "name": {
+        "en": "The granite shore",
+        "fr": "La côte de granit"
+      },
+      "blurb": {
+        "en": "Three oceans touch Canada: the Pacific in the west, the Atlantic in the east, and the Arctic in the north. This bare rock is the Atlantic edge.",
+        "fr": "Trois océans bordent le Canada : le Pacifique à l'ouest, l'Atlantique à l'est et l'Arctique au nord. Cette roche nue, c'est la bordure de l'Atlantique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 93,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Three oceans line Canada's frontiers: the Pacific Ocean in the west, the Atlantic Ocean in the east, and the Arctic Ocean to the north."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 1500,
+        "y": 1280
+      },
+      "artKey": "peggys-cove-prop-granite-erratic",
+      "radiusPx": 240
+    },
+    {
       "id": "peggys-point-light",
       "name": {
         "en": "Peggy's Point Lighthouse",
@@ -223,6 +260,80 @@
       },
       "artKey": "peggys-cove-landmark-lighthouse",
       "radiusPx": 300
+    },
+    {
+      "id": "fish-store",
+      "name": {
+        "en": "A fish store",
+        "fr": "Un hangar de pêche"
+      },
+      "blurb": {
+        "en": "Atlantic Canada's coasts and its natural resources — fishing, farming, forestry and mining — have made these provinces an important part of Canada's history.",
+        "fr": "Les côtes du Canada atlantique et ses ressources naturelles — la pêche, l'agriculture, la forêt et les mines — ont fait de ces provinces une part importante de l'histoire du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Atlantic Canada's coasts and natural resources, including fishing, farming, forestry and mining, have made these provinces an important part of Canada's history and development."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 5200,
+        "y": 1280
+      },
+      "artKey": "peggys-cove-prop-fish-store",
+      "radiusPx": 260
+    },
+    {
+      "id": "village-house",
+      "name": {
+        "en": "A village house",
+        "fr": "Une maison du village"
+      },
+      "blurb": {
+        "en": "Most Canadians live in cities. Canadians also live in small towns, in the countryside, and everywhere in between.",
+        "fr": "La plupart des Canadiens vivent dans des villes. Des Canadiens vivent aussi dans de petites localités, à la campagne, et partout entre les deux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 94,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "While the majority live in cities, Canadians also live in small towns, rural areas and everywhere in between."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6700,
+        "y": 1280
+      },
+      "artKey": "peggys-cove-prop-fishermans-house",
+      "radiusPx": 260
     }
   ],
   "characters": [],

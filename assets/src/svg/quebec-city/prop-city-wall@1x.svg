@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="500" viewBox="0 0 640 500" shape-rendering="geometricPrecision">
+  <title>A section of the city's fortified stone wall in winter: two mortared ashlar faces meeting at a salient angle, the near face lit and the returning face in shade, both battered so the wall leans back as it rises, a plain flat coping along the head with snow lying on it, corner quoins, sparse course marks rather than a drawn stone pattern, and a snow bank at the foot. NO CRENELLATION, no battlements, no arrow slits, no tower, no gate, no cannon: the wall in the reference has a plain coping and none of those. No lettering, no plaque, no flag. Drawn from assets/refs/quebec-city/quebec-ramparts-snow.jpg; see assets/refs/references.json, subject city-wall. POI hero, present at every visual tier.</title>
+
+  <ellipse cx="330" cy="450" rx="304" ry="18" fill="#16203a" opacity="0.28"/>
+
+  <polygon points="212,146 640,124 640,440 212,448" fill="#c8c1b6"/>
+  <polygon points="228,206 640,187 640,193 228,212" fill="#a99789"/>
+  <polygon points="228,267 640,250 640,256 228,273" fill="#a99789"/>
+  <polygon points="228,327 640,314 640,320 228,333" fill="#a99789"/>
+  <polygon points="228,388 640,377 640,383 228,394" fill="#a99789"/>
+  <rect x="300" y="141" width="7" height="60" fill="#a99789"/>
+  <rect x="470" y="133" width="7" height="59" fill="#a99789"/>
+  <rect x="380" y="197" width="7" height="60" fill="#a99789"/>
+  <rect x="560" y="187" width="7" height="59" fill="#a99789"/>
+  <rect x="320" y="260" width="7" height="60" fill="#a99789"/>
+  <rect x="500" y="250" width="7" height="59" fill="#a99789"/>
+  <rect x="420" y="314" width="7" height="60" fill="#a99789"/>
+  <rect x="600" y="303" width="7" height="59" fill="#a99789"/>
+  <rect x="350" y="378" width="7" height="60" fill="#a99789"/>
+  <rect x="540" y="366" width="7" height="59" fill="#a99789"/>
+
+  <polygon points="44,112 212,146 212,448 44,386" fill="#a99789"/>
+  <polygon points="60,176 196,204 196,210 60,182" fill="#8a6256"/>
+  <polygon points="60,272 196,296 196,302 60,278" fill="#8a6256"/>
+  <polygon points="60,368 196,388 196,394 60,374" fill="#8a6256"/>
+
+  <rect x="200" y="144" width="28" height="66" fill="#8a6256"/>
+  <rect x="200" y="222" width="28" height="66" fill="#8a6256"/>
+  <rect x="200" y="300" width="28" height="66" fill="#8a6256"/>
+  <rect x="200" y="378" width="28" height="68" fill="#8a6256"/>
+
+  <polygon points="196,124 640,102 640,128 196,150" fill="#a99789"/>
+  <polygon points="196,150 640,128 640,136 196,158" fill="#8a6256"/>
+  <polygon points="36,92 196,124 196,150 36,120" fill="#8a6256"/>
+
+  <polygon points="190,106 640,84 640,104 190,126" fill="#e6eff7"/>
+  <polygon points="190,106 640,84 640,92 190,114" fill="#ffffff"/>
+  <polygon points="30,74 190,106 190,126 30,96" fill="#c2d6e8"/>
+  <polygon points="30,74 190,106 190,114 30,84" fill="#e6eff7"/>
+
+  <path d="M 0 500 L 0 448 Q 130 410 268 438 Q 430 468 640 434 L 640 500 Z" fill="#e6eff7"/>
+  <path d="M 0 448 Q 130 410 268 438 Q 430 468 640 434 L 640 446 Q 430 480 268 450 Q 130 422 0 460 Z" fill="#ffffff"/>
+  <path d="M 0 500 L 0 484 Q 300 498 640 478 L 640 500 Z" fill="#c2d6e8"/>
+</svg>

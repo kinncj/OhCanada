@@ -220,12 +220,49 @@
         }
       },
       "position": {
-        "x": 2400,
+        "x": 1500,
         "y": 1280
       },
       "artKey": "halifax-landmark-town-clock",
       "radiusPx": 260,
       "questId": "halifax-clock-and-pier"
+    },
+    {
+      "id": "market-stall",
+      "name": {
+        "en": "A market stall",
+        "fr": "Un étal de marché"
+      },
+      "blurb": {
+        "en": "Taking responsibility for yourself and your family is a responsibility of citizenship. Getting a job, caring for your family and working hard are important Canadian values.",
+        "fr": "Prendre soin de soi et de sa famille est une responsabilité de la citoyenneté. Trouver un emploi, prendre soin de sa famille et travailler fort sont des valeurs canadiennes importantes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Taking responsibility for oneself and one's family — Getting a job, taking care of one's family and working hard in keeping with one's abilities are important Canadian values."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3100,
+        "y": 1280
+      },
+      "artKey": "halifax-prop-market-stall",
+      "radiusPx": 240
     },
     {
       "id": "pier-21",
@@ -258,12 +295,49 @@
         }
       },
       "position": {
-        "x": 5600,
+        "x": 4900,
         "y": 1280
       },
       "artKey": "halifax-landmark-pier-21",
       "radiusPx": 240,
       "questId": "halifax-clock-and-pier"
+    },
+    {
+      "id": "harbour-tug",
+      "name": {
+        "en": "A harbour tug",
+        "fr": "Un remorqueur de port"
+      },
+      "blurb": {
+        "en": "Halifax is Canada's largest port on the east coast. It is deep-water and ice-free, and it has long mattered to Atlantic trade and to defence.",
+        "fr": "Halifax est le plus grand port de la côte est du Canada. Il est en eau profonde et libre de glace, et il compte depuis longtemps pour le commerce de l'Atlantique et pour la défense."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "As Canada's largest east coast port, deep-water and ice-free, the capital, Halifax, has played an important role in Atlantic trade and defence and is home to Canada's largest naval base."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6806,
+        "y": 1280
+      },
+      "artKey": "halifax-prop-harbour-tug",
+      "radiusPx": 260
     }
   ],
   "characters": [

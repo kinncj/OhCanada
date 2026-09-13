@@ -102,6 +102,9 @@ scale**, and it is a decision rather than an omission:
 | `peggys-cove-layer-30-cove` | `layer-30-cove.svg` | 1760 × 270 | 480 | the far side of the cove: spruce, granite shore, seven fish stores on piles, a wharf, three boats, reflections |
 | `peggys-cove-layer-40-granite-barrens` | `layer-40-granite-barrens.svg` | 1920 × 280 | 193 | the barrens: jointed rock, grass in the joints, four erratics, two tide pools |
 | `peggys-cove-landmark-lighthouse@1x` | `landmark-lighthouse@1x.svg` | 480 × 900 | 63 | **POI hero, and the level's only place-anchor** |
+| `peggys-cove-prop-granite-erratic` | `prop-granite-erratic@1x.svg` | 560 × 380 | 22 | **POI hero, added 2026-09-13**: two rounded boulders on jointed pavement with a tide pool |
+| `peggys-cove-prop-fish-store` | `prop-fish-store@1x.svg` | 620 × 520 | 40 | **POI hero, added 2026-09-13**: a red store on timber cribbing over the water |
+| `peggys-cove-prop-fishermans-house` | `prop-fishermans-house@1x.svg` | 640 × 560 | 62 | **POI hero, added 2026-09-13**: a clapboard house behind a picket fence with wild roses |
 
 Shape counts are reported, not gated (ADR-0025). The hero is **63 shapes**, between the CN Tower's 49 and the
 Halifax Town Clock's 113, and it identifies at 120 px (§6.4).
@@ -174,6 +177,7 @@ the hero, it is drawn once, and `neverAdd` says so on the tile subject.
   420 px/s, between Québec City's 6048 and Halifax's 7200.
 - **`spawn`** `(420, 1280)`.
 - **Layer offsets** are `y` 0 / 700 / 840 / 1000, in depth order.
+- **Four points of interest, not one.** §12 is the table, the spacing and what each one teaches.
 - **`poi.peggys-point-light.position.x` 3520**, the middle of the level, `radiusPx` 300. The hero is
   480 × 900, so it occupies world x 3280 … 3760 and world y 380 … 1280. **No row of it is empty** — unlike
   `five-sails`, which is a pier and needed 280 rows of nothing under it, this building stands on rock and is
@@ -195,7 +199,8 @@ the hero, it is drawn once, and `neverAdd` says so on the tile subject.
 - **`locomotion`** declares **`walk` and nothing else**, with Halifax's numbers unchanged:
   `maxSpeed` 420, `acceleration` 2400, `deceleration` 1900, `turnAcceleration` 2100 (strictly between the
   other two), `glide` 0.10. §9 is why there is no second mode.
-- **`quests` and `characters` are both empty.** Like Winnipeg, the Prairies, the Alberta foothills and
+- **`quests` and `characters` are both empty**, and that is still true after §12: a POI is not a character,
+  and the three added carry no figure of any kind. Like Winnipeg, the Prairies, the Alberta foothills and
   Vancouver as first built, this level is finished by reaching its end (`TN-DONE`). §10 routes the quest.
 
 ## 4. Every effect has a plain path (ADR-0011)
@@ -209,11 +214,16 @@ broken by ripple bars — never a blur. AO is flat `ao-shadow` at 0.28 at ground
 ## 5. Budgets, measured
 
 ```
-level-payload:  OK - peggys-cove 0.49 MiB of 8.00 MiB over 9 file(s) [1x 0.37 / 2x 0.49]
-texture-memory: OK - peggys-cove 22.91 MiB of 36.00 MiB (64%) over 9 file(s)
-                     [1x device 14.67 MiB / 2x device 22.91 MiB]
+level-payload:  OK - peggys-cove 0.52 MiB of 8.00 MiB over 12 file(s) [1x 0.39 / 2x 0.52]
+texture-memory: OK - peggys-cove 26.32 MiB of 36.00 MiB (73%) over 12 file(s)
+                     [1x device 18.08 MiB / 2x device 26.32 MiB]
                      heaviest atlas/shared@2x 2045x1531 11.94 MiB = 33% of budget
 ```
+
+**Re-measured 2026-09-13** with §12's three POI heroes in. They cost **3.41 MiB between them** — erratic
+0.81, fish store 1.23, house 1.37 — and they are the whole of the move from 22.91. The level's own files are
+now 14.38 MiB; its honest worst case on ADR-0013's baseline is 14.38 + 11.94 + ~8 = **34.3 of 64, 54 %**. The
+figures below are the 2026-09-08 measurement and stand as the derivation they explain.
 
 The level's own files are **10.97 MiB**: four layers at 9.32 and the hero at 1.65. Its honest worst case on
 ADR-0013's baseline is 10.97 + 11.94 + ~8 = **30.9 of 64, 48 %** — within a rounding of what Vancouver
@@ -448,3 +458,63 @@ Every player-facing string on this level uses **Peggy's Cove** and **Peggy's Poi
 apostrophe, because *Discover Canada* itself does — its page 94 picture caption reads *"Peggy's Cove harbour,
 Nova Scotia"* — and this game teaches that document. `expectedBlindAnswer` accepts **both** spellings, which
 costs nothing and removes the question from the blind pass.
+
+
+---
+
+## 12. Four points of interest, and where they sit
+
+**Added 2026-09-13.** The level shipped with one POI in the middle of a 7 040 px walk. It now has four. The
+size, the ground line, the four layers, the theme, the locomotion and the territorial statement are all
+unchanged, and **§0 holds without an amendment**: the three new heroes depict nobody, and each one carries
+`a figure of any kind, at any scale, including a silhouette and a crowd` in its own `neverAdd`, exactly as
+the original two subjects do.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 1 500 | `granite-shore` | `peggys-cove-prop-granite-erratic`, 560 × 380 | three oceans line Canada: Pacific west, Atlantic east, Arctic north — and this is the Atlantic edge | *Discover Canada* p. 93 |
+| 3 520 | `peggys-point-light` | `peggys-cove-landmark-lighthouse`, 480 × 900 | the Acadians, the deportation, and Acadian culture today | *Discover Canada* p. 19 |
+| 5 200 | `fish-store` | `peggys-cove-prop-fish-store`, 620 × 520 | Atlantic Canada's coasts and its natural resources — fishing, farming, forestry, mining | *Discover Canada* p. 96 |
+| 6 700 | `village-house` | `peggys-cove-prop-fishermans-house`, 640 × 560 | most Canadians live in cities, and Canadians also live in small towns and rural areas | *Discover Canada* p. 94 |
+
+**Gaps of 2 020, 1 680 and 1 500 px**, inside the 1 500–2 500 band. The hero stays in the middle of the level,
+where §3 put it and where the composition wants it. The house at 6 700 is 640 wide, so its right edge is
+world 7 020 against a level 7 040 wide — 20 px of margin, checked rather than assumed.
+
+**The walk now has a shape.** Bare rock at the Atlantic edge, then the light, then the working waterfront,
+then the village. That order is the level's own geography read left to right, and it is why the house is last
+rather than first.
+
+**What was refused, and it matters more on this level than on any other.** Two objects were wanted for these
+positions and neither was drawn: **a stack of lobster traps** and **a hauled-up dory**. There is no
+licence-clean photograph of either in this repository, so both would have been drawn from memory — and a
+wrong lobster trap on this coast is the kind of error a person who lives there sees immediately. `neverAdd`
+on `fish-store` now forbids exactly those two objects on that subject, so the temptation to dress the store
+with them is a contract clause rather than a note. The erratic took the position instead, and it takes the
+better fact.
+
+**Scenery, and why none was added.** These four tiles already carry seven fish stores, a wharf, five boats,
+four erratics, two tide pools, spruce, grass in the joints and two skerries; `layer-30-cove.svg` alone is 480
+shapes. The corridor was not short of things to look at — it was short of things to stop at. Every byte spent
+here went into the four things a player can now tap.
+
+**`references.json` gained three subjects**: `granite-erratic`, `fish-store` and `fishermans-house`, each
+with real `renders`, its own `expectedBlindAnswer` and its own `neverAdd`. None of them is asked to name a
+place — `peggys-cove-light` remains the level's only place-anchor, exactly as §2 requires. `granite-erratic`
+carries the strongest `neverAdd` clause in this file: **a cairn, an inuksuk, a stone marker or any stacked or
+balanced stone arrangement, and any object a viewer could read as one**, with a note saying that an
+identifier who names one has found a defect and not a feature. The two boulders stand side by side on one
+plane with rock visible between them, and the 120 px silhouette was looked at for exactly this.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'granite-erratic': singleSource(),
+  'fish-store': singleSource(),
+  'fishermans-house': singleSource(),
+```
+
+Same shape as `peggys-cove-light`, which is already `singleSource()`. Until they land, `make verify-art`
+names three more failures and says why. The alternative inside `assets/**` was `renders: []`, which the
+harness accepts as "unrendered on purpose" and which would have turned three quarters of this level's points
+of interest into subjects nobody checks.

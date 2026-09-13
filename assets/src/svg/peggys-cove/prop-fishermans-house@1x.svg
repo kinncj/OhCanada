@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="560" viewBox="0 0 640 560" shape-rendering="geometricPrecision">
+  <title>A fishing village house: a storey-and-a-half clapboard house with its gable end to the road, white-trimmed sash windows and door, a shingled roof and a brick chimney, standing behind a weathered picket fence with wild rose bushes growing over it. A TYPE, not a named or recognisable house: no number, no sign, no wordmark and no lettering. Drawn from assets/refs/peggys-cove/village-houses.jpg and harbour-and-fish-stores.jpg; see assets/refs/references.json, subject fishermans-house. NO FIGURE OF ANY KIND, at any scale, on this file or anywhere in this level - assets/style/peggys-cove-level.md section 0. POI hero, present at every visual tier.</title>
+
+  <ellipse cx="320" cy="538" rx="300" ry="16" fill="#16203a" opacity="0.28"/>
+
+  <rect x="404" y="92" width="56" height="136" fill="#ab5936"/>
+  <rect x="404" y="92" width="18" height="136" fill="#cb8f62"/>
+  <rect x="398" y="86" width="68" height="16" rx="4" fill="#6f271f"/>
+
+  <polygon points="150,258 490,258 490,502 150,502" fill="#d5c18e"/>
+  <polygon points="440,258 490,258 490,502 440,502" fill="#c29455"/>
+  <polygon points="130,262 320,140 510,262" fill="#d5c18e"/>
+  <polygon points="320,140 510,262 424,262" fill="#c29455"/>
+  <polygon points="104,282 320,114 536,282 490,282 320,152 150,282" fill="#57647a"/>
+  <polygon points="104,282 320,114 340,130 150,282" fill="#7d8fa0"/>
+  <rect x="150" y="250" width="340" height="14" fill="#ffffff"/>
+
+  <rect x="286" y="176" width="68" height="72" rx="4" fill="#ffffff"/>
+  <rect x="294" y="184" width="52" height="56" fill="#30384f"/>
+  <rect x="317" y="184" width="6" height="56" fill="#ffffff"/>
+
+  <rect x="176" y="300" width="80" height="104" rx="4" fill="#ffffff"/>
+  <rect x="184" y="308" width="64" height="88" fill="#30384f"/>
+  <rect x="213" y="308" width="6" height="88" fill="#ffffff"/>
+  <rect x="184" y="348" width="64" height="6" fill="#ffffff"/>
+
+  <rect x="384" y="300" width="80" height="104" rx="4" fill="#ffffff"/>
+  <rect x="392" y="308" width="64" height="88" fill="#30384f"/>
+  <rect x="421" y="308" width="6" height="88" fill="#ffffff"/>
+  <rect x="392" y="348" width="64" height="6" fill="#ffffff"/>
+
+  <rect x="282" y="344" width="82" height="158" rx="4" fill="#ffffff"/>
+  <rect x="290" y="352" width="66" height="150" fill="#81bbb3"/>
+  <rect x="290" y="352" width="66" height="58" fill="#b4d5cc"/>
+  <rect x="150" y="258" width="16" height="244" fill="#ffffff"/>
+  <rect x="474" y="258" width="16" height="244" fill="#ffffff"/>
+
+  <rect x="0" y="440" width="640" height="12" fill="#8b857c"/>
+  <rect x="0" y="496" width="640" height="12" fill="#8b857c"/>
+  <path d="M 6 536 L 6 428 L 19 412 L 32 428 L 32 536 Z" fill="#afaca5"/>
+  <path d="M 26 536 L 26 428 L 32 428 L 32 536 Z" fill="#605a55"/>
+  <path d="M 66 536 L 66 428 L 79 412 L 92 428 L 92 536 Z" fill="#afaca5"/>
+  <path d="M 86 536 L 86 428 L 92 428 L 92 536 Z" fill="#605a55"/>
+  <path d="M 126 536 L 126 428 L 139 412 L 152 428 L 152 536 Z" fill="#afaca5"/>
+  <path d="M 146 536 L 146 428 L 152 428 L 152 536 Z" fill="#605a55"/>
+  <path d="M 186 536 L 186 428 L 199 412 L 212 428 L 212 536 Z" fill="#afaca5"/>
+  <path d="M 206 536 L 206 428 L 212 428 L 212 536 Z" fill="#605a55"/>
+  <path d="M 246 536 L 246 428 L 259 412 L 272 428 L 272 536 Z" fill="#afaca5"/>
+  <path d="M 266 536 L 266 428 L 272 428 L 272 536 Z" fill="#605a55"/>
+  <path d="M 306 536 L 306 428 L 319 412 L 332 428 L 332 536 Z" fill="#afaca5"/>
+  <path d="M 326 536 L 326 428 L 332 428 L 332 536 Z" fill="#605a55"/>
+  <path d="M 366 536 L 366 428 L 379 412 L 392 428 L 392 536 Z" fill="#afaca5"/>
+  <path d="M 386 536 L 386 428 L 392 428 L 392 536 Z" fill="#605a55"/>
+  <path d="M 426 536 L 426 428 L 439 412 L 452 428 L 452 536 Z" fill="#afaca5"/>
+  <path d="M 446 536 L 446 428 L 452 428 L 452 536 Z" fill="#605a55"/>
+  <path d="M 486 536 L 486 428 L 499 412 L 512 428 L 512 536 Z" fill="#afaca5"/>
+  <path d="M 506 536 L 506 428 L 512 428 L 512 536 Z" fill="#605a55"/>
+  <path d="M 546 536 L 546 428 L 559 412 L 572 428 L 572 536 Z" fill="#afaca5"/>
+  <path d="M 566 536 L 566 428 L 572 428 L 572 536 Z" fill="#605a55"/>
+  <path d="M 606 536 L 606 428 L 619 412 L 632 428 L 632 536 Z" fill="#afaca5"/>
+  <path d="M 626 536 L 626 428 L 632 428 L 632 536 Z" fill="#605a55"/>
+
+  <path d="M 0 536 Q 26 446 76 452 Q 122 404 176 452 Q 214 424 238 470 Q 250 522 240 536 Z" fill="#2c8055"/>
+  <path d="M 0 536 Q 26 446 76 452 Q 104 424 132 436 Q 96 470 92 536 Z" fill="#41b76b"/>
+  <path d="M 386 536 Q 392 470 436 458 Q 486 402 548 454 Q 612 444 640 522 L 640 536 Z" fill="#2c8055"/>
+  <path d="M 470 536 Q 470 462 512 444 Q 552 440 574 462 Q 512 486 510 536 Z" fill="#41b76b"/>
+  <circle cx="54" cy="470" r="14" fill="#e27468"/>
+  <circle cx="112" cy="440" r="13" fill="#e27468"/>
+  <circle cx="160" cy="470" r="14" fill="#d8262c"/>
+  <circle cx="212" cy="486" r="13" fill="#e27468"/>
+  <circle cx="30" cy="508" r="13" fill="#d8262c"/>
+  <circle cx="428" cy="480" r="13" fill="#e27468"/>
+  <circle cx="486" cy="438" r="14" fill="#d8262c"/>
+  <circle cx="540" cy="466" r="13" fill="#e27468"/>
+  <circle cx="600" cy="492" r="14" fill="#e27468"/>
+  <circle cx="624" cy="452" r="13" fill="#d8262c"/>
+
+  <rect x="0" y="536" width="640" height="24" fill="#56993a"/>
+  <rect x="0" y="536" width="640" height="8" fill="#89c05f"/>
+</svg>

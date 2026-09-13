@@ -22,7 +22,10 @@ Ten SVG sources. `scripts/assets.mjs` reads the level from the path, so everythi
 | `ottawa-layer-40-treeline` | `layer-40-treeline.svg` | 1440 × 340 | bare trees and spruces on the bank |
 | `ottawa-layer-50-canalwall` | `layer-50-canalwall.svg` | 2016 × 640 | retaining wall, railing, lamps, warming hut, lane spruces, skaters, one road bridge |
 | `ottawa-layer-60-ice` | `layer-60-ice.svg` | 1440 × 560 | the skateway lane, sheen and skate scoring |
-| `ottawa-landmark-parliament-hill` | `landmark-parliament-hill.svg` | 1080 × 1040 | **the POI hero**: Centre Block, the Peace Tower, the Library of Parliament |
+| `ottawa-landmark-parliament-hill` | `landmark-parliament-hill.svg` | 1080 × 1040 | **a POI hero**: Centre Block, the Peace Tower, the Library of Parliament |
+| `ottawa-prop-rideau-locks` | `prop-rideau-locks@1x.svg` | 680 × 440 | **POI hero, added 2026-09-13**: a lock chamber, its mitred timber gates and their balance beams |
+| `ottawa-prop-library-of-parliament` | `prop-library-of-parliament@1x.svg` | 600 × 820 | **POI hero, added 2026-09-13**: the round library, drawn as the building rather than as the spire tip the hero shows |
+| `ottawa-prop-warming-hut` | `prop-warming-hut@1x.svg` | 560 × 360 | **POI hero, added 2026-09-13**: a warming hut standing on the skateway ice |
 | `ottawa-poi-marker-idle` | `poi-marker-idle.svg` | 132 × 176 | tappable POI marker, not in reach |
 | `ottawa-poi-marker-active` | `poi-marker-active.svg` | 132 × 176 | tappable POI marker, in reach |
 | `ottawa-particle-snow` | `particle-snow.svg` | 96 × 32 | three snow-flake sizes |
@@ -464,3 +467,72 @@ What this level owes the rig, and what the rig owes it:
 - **The one thing this level should still be given is a brake.** `content/levels/ottawa.json` binds
   `brakeTrigger: "brake"`; the rig declares no such input and the binding is dead. A hockey stop throwing
   snow is the most characteristic thing anyone does on that ice. `rig-contract.md` §11.6 costs it out.
+
+
+---
+
+## 12. Four points of interest, and where they sit
+
+**Added 2026-09-13.** The level shipped with one POI at x 5400 on a 9 000 px skate — the longest corridor in
+the game with the fewest things in it. It now has four. `size`, the ground polyline, the six layers, the
+theme, both locomotion modes, the spawn and the officer's placement are all unchanged.
+
+| world x | ground y | POI | art | what it teaches | source |
+|---|---|---|---|---|---|
+| 1 800 | 1244 | `rideau-locks` | `ottawa-prop-rideau-locks`, 680 × 440 | Ottawa is on the Ottawa River and Queen Victoria chose it as the capital in 1857 | *Discover Canada* p. 94 |
+| 3 600 | 1246 | `library-of-parliament` | `ottawa-prop-library-of-parliament`, 600 × 820 | the Centre Block burned in 1916 and was rebuilt; the Library is the only original part left | *Discover Canada* p. 80 |
+| 5 400 | 1242 | `parliament-hill` | `ottawa-landmark-parliament-hill`, 1080 × 1040 | the Parliament buildings and the Peace Tower | *Discover Canada* p. 80 |
+| 7 600 | 1468 | `warming-hut` | `ottawa-prop-warming-hut`, 560 × 360 | the Rideau Canal was a military waterway and is now a tourist attraction and a winter skateway | *Discover Canada* p. 94 |
+
+**Gaps of 1 800, 1 800 and 2 200 px**, inside the 1 500–2 500 band. The officer NPC stays at 2 400, between
+the first two points, so the level's first three stops are a lock, a constable and a library. The last point
+is past the canal step at x 6 400, **on the ice**, at ground y 1468 — the first POI in this game whose art
+stands on a surface the player skates on rather than walks on, which is why its bottom band is `ice` with
+skate scoring and not a snow bank.
+
+**The library is drawn twice in this level and it is on purpose.** `landmark-parliament-hill@1x.svg` carries
+it as a spire tip behind the right wing — a dark cone and a finial, no drum, no dormers, no windows. The new
+hero is the building: a sixteen-sided sandstone drum, four buttresses with pinnacles, three pointed windows,
+a ribbed polygonal roof with a ring of gabled dormers and a stone lantern. Far view and near view of one
+building, 1 800 px apart, which is the same abstraction that puts the Halifax Town Clock and Pier 21 3 400 px
+apart when they are three kilometres apart in life. `references.json` says so on the subject, so a verifier
+who sees both does not report it as a duplication.
+
+**The hut is drawn twice too, and that one is a scale relationship rather than a fiction.**
+`layer-50-canalwall.svg` has a small warming hut on the **far** retaining wall, on a tile that repeats every
+2 016 px. The hero stands on the **near** ice beside the player at four times the size. Same arrangement as
+Peggy's Cove's seven far fish stores and its one near hero.
+
+**Budgets, re-measured 2026-09-13** over the real tree:
+
+```
+level-payload:  OK - ottawa 0.53 MiB of 8.00 MiB over 18 file(s)
+texture-memory: OK - ottawa 39.13 MiB of 48.00 MiB (82%, 9 305 748 B spare) over 18 file(s)
+```
+
+The three new heroes cost **3.79 MiB between them** — locks 1.14, library 1.88, hut 0.77 — and they are the
+whole of the move from 35.34. All three are `@1x`-pinned and standalone; at 2× they would have cost
+15.16 MiB and put this level 6 MiB over its declared budget, which is the ADR-0013 trade made three times in
+one afternoon.
+
+**What was refused.** A cannon on the Hill, the Centennial Flame, and a statue: the first two have no
+licence-clean photograph in this repository and the third is forbidden outright by reference rule 4, *do not
+depict a real, identifiable person*. `neverAdd` on `canal-lock` and on `library-of-parliament` names the
+specific inventions each subject tempts — a boat and a lock-keeper on one, a cross and a clock face on the
+other. **The clock is the interesting one**: a steep polygonal Gothic roof with pointed windows under it is
+one wrong addition away from a church, and one from a second clock tower in a level that already has the
+Peace Tower.
+
+**Scenery: none added.** Six tiles already carry a skyline, an escarpment, a treeline, a canal wall with
+lamps, spruces, skaters, a bridge and a hut, and the ice. What the level was short of was stops.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'canal-lock': singleSource(),
+  'library-of-parliament': singleSource(),
+  'warming-hut': singleSource(),
+```
+
+Same shape as `peace-tower`, which is already `singleSource()`. Until they land, `make verify-art` names
+three more failures and says why.

@@ -47,7 +47,7 @@ the other two subjects buys it back.
 
 ## 1. What was produced
 
-Six SVG sources. `scripts/assets.mjs` reads the level from the path, so everything under
+Eight SVG sources. `scripts/assets.mjs` reads the level from the path, so everything under
 `assets/src/svg/halifax/` gets the key `halifax-<filename>`:
 
 | key | source | authored px | shapes | what it is |
@@ -58,10 +58,18 @@ Six SVG sources. `scripts/assets.mjs` reads the level from the path, so everythi
 | `halifax-layer-40-quayside` | `layer-40-quayside.svg` | 2016 × 440 | 353 | the boardwalk — a **modelled plank deck**, §5.1 — its lamps, benches, bollards, planters, panel, gulls and six people; two waterfront buildings, a cargo shed and two open slips |
 | `halifax-landmark-town-clock` | `landmark-town-clock@1x.svg` | 800 × 1010 | 113 | **POI hero, and the level's only place-anchor** |
 | `halifax-landmark-pier-21` | `landmark-pier-21@1x.svg` | 900 × 620 | 137 | **POI hero**: the terminal, the liner and the immigrant train |
+| `halifax-prop-market-stall` | `prop-market-stall@1x.svg` | 560 × 480 | 60 | **POI hero, added 2026-09-13**: a striped awning on two posts over a trestle of produce crates, with a barrel and two sacks on the deck |
+| `halifax-prop-harbour-tug` | `prop-harbour-tug@1x.svg` | 720 × 520 | 51 | **POI hero, added 2026-09-13**: a tug alongside the boardwalk edge, tied to a bollard |
 
 Shape counts are **reported, not budgeted**: ADR-0025 retired the sixty-shape figure as a gate, because every
 SVG is rasterised to atlas frames and the GPU never sees a path. The binding tests are blind identification
 and the two-size test, and both landmarks passed the second (§6).
+
+**Two of the eight are not landmarks, and the prefix says so.** `prop-` rather than `landmark-`: a market
+stall and a harbour tug are TYPES, drawn to teach a sourced fact at a place the player can stop, and neither
+is a named building. The pipeline treats the two prefixes identically — it strips only `@1x` before forming
+the key — so the prefix is for the reader, and it is there because calling a tug a landmark is the first step
+toward drawing one that is.
 
 **There is no character source here.** Characters are `shared/` and already exist; this level places them.
 
@@ -150,13 +158,14 @@ gradient, which is a hole in the middle of the picture and is only visible once 
   `(0.5, 1)` at `(poi.position.x, groundYAt(x))` and depth `DEPTH_ACTORS − 1`, so **the file's bottom edge is
   the ground line and its horizontal centre is `position.x`.** Nothing else places it. Both files are
   authored to that: the Town Clock's grass mound and Pier 21's rail apron are the bottom rows.
-- **`poi.town-clock.position.x` ≈ 2400**, `radiusPx` 260. The file is 800 × 1010, so it occupies world x
-  2000 … 2800 and world y 270 … 1280. The gold ball sits at world y 290 — clear of the 120 px system band —
+- **`poi.town-clock.position.x` = 1500**, `radiusPx` 260. (It was 2400 until 2026-09-13; §10 has the
+  respacing and why.) The file is 800 × 1010, so it occupies world x
+  1100 … 1900 and world y 270 … 1280. The gold ball sits at world y 290 — clear of the 120 px system band —
   and the dial's centre at world y **718**. Nothing can occlude it: a POI hero is drawn at
   `DEPTH_ACTORS - 1`, above every parallax layer, and the tallest thing on any layer is the town's steeple
   at world 718 anyway.
-- **`poi.pier-21.position.x` ≈ 5600**, `radiusPx` 240. The file is 900 × 620, so it occupies world x
-  5150 … 6050 and world y 660 … 1280. Keep the two POIs at least 1800 px apart: at 800 and 900 px wide they
+- **`poi.pier-21.position.x` = 4900**, `radiusPx` 240. The file is 900 × 620, so it occupies world x
+  4450 … 5350 and world y 660 … 1280. Keep the two POIs at least 1800 px apart: at 800 and 900 px wide they
   cannot share a 1080 px camera frame without one of them being cropped.
 - **Where the quayside's own features fall.** `layer-40` scrolls at 1.0, locked to the world, so this is
   exact rather than approximate. Per 2016 px tile, measured from the tile origin: the two gabled waterfront
@@ -239,7 +248,15 @@ texture-memory: OK - halifax 25.01 MiB of 32.00 MiB (78%) over 10 file(s)
 | `halifax-landmark-pier-21` | **1×, source-pinned** | 900 × 620 | 2.13 MiB |
 | `halifax-layer-30-uptown` | 1× | 1800 × 260 | 1.79 MiB |
 | `halifax-layer-20-citadel` | 1× | 1800 × 160 | 1.10 MiB |
-| **total at a 2× device** | | | **26 224 128 B = 25.01 MiB** |
+| `halifax-prop-harbour-tug` | **1×, source-pinned** | 720 × 520 | 1.43 MiB |
+| `halifax-prop-market-stall` | **1×, source-pinned** | 560 × 480 | 1.03 MiB |
+| **total at a 2× device** | | | **30 934 016 B = 29.50 MiB** |
+
+**Re-measured 2026-09-13**, with the two new POI heroes in, by `npm run assets` over the real tree:
+`halifax 29.50 MiB of 34.00 MiB (87 %, 4 717 444 B spare)` over 12 files, and the transfer payload
+`0.42 MiB of 8.00 MiB`. The two heroes cost **2.45 MiB between them** and they are the whole of the move
+from 27.05. The figures in the four paragraphs below are the 2026-09-08 measurement and are left as they
+were written, because the derivation they explain has not changed — only the occupancy has.
 
 ### The budget number, derived rather than copied — and the derivation is different from Québec City's
 
@@ -504,6 +521,18 @@ author none.
 
 ### The exact patch `RECIPES` needs, so it is five lines and not a design task
 
+**Two more since 2026-09-13**, both the same shape, for the two POI heroes §10 adds:
+
+```js
+  'market-stall': singleSource(),
+  'harbour-tug': singleSource(),
+```
+
+Until they land, `make verify-art` names two more failures and says exactly this. The alternative available
+inside `assets/**` was `renders: []` — "unrendered on purpose" — which would have turned two of the level's
+four points of interest into subjects nobody checks. It was not taken, for the reason the rest of this
+section gives.
+
 Both shapes already exist as factories in `scripts/lib/art-handoff.mjs`; this adds no new builder shape.
 
 ```js
@@ -540,3 +569,55 @@ the highest-depth layers and drops the rest" — and so does the mirroring comme
 level is composed for the **coverage** rule, and reading the schema's sentence instead would suggest the sky
 is dropped first, when it is in fact the layer most certain to survive. The four coverage figures are in §2
 so the drop order can be checked rather than assumed.
+
+
+---
+
+## 10. Four points of interest, and where they sit
+
+**Added 2026-09-13.** The level shipped with two POIs 3 200 px apart on a 7 200 px walk, so nine tenths of it
+was clear deck. It now has four, and nothing else about the level moved: same size, same ground line, same
+four layers, same theme, same locomotion.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 1 500 | `town-clock` | `halifax-landmark-town-clock`, 800 × 1010 | the first representative assembly in Canada was elected here in 1758 | *Discover Canada* p. 27 |
+| 3 100 | `market-stall` | `halifax-prop-market-stall`, 560 × 480 | taking responsibility for oneself and one's family: getting a job and working hard are Canadian values | *Discover Canada* p. 13 |
+| 4 900 | `pier-21` | `halifax-landmark-pier-21`, 900 × 620 | Canada is a land of immigrants | *Discover Canada* p. 21 |
+| 6 806 | `harbour-tug` | `halifax-prop-harbour-tug`, 720 × 520 | Halifax is Canada's largest east coast port, deep-water and ice-free | *Discover Canada* p. 97 |
+
+**The gaps are 1 600, 1 800 and 1 906 px**, inside the 1 500–2 500 band the brief sets, and every one of them
+is wider than the 1 800 px minimum §3 states for two heroes sharing a 1 080 px frame — except the first, at
+1 600, where the two objects are 560 and 800 px wide and cannot be in frame together anyway. The guide stands
+at 900, a screen short of the first point, and the spawn is at 400.
+
+**Why the tug is at 6 806 and not at a round number.** `layer-40-quayside` repeats every 2 016 px and its two
+open slips of water sit at tile-local [608, 908] and [1272, 1540]. 6 806 is tile-local 758 — the middle of the
+first slip — so the water the tug is drawn in has water behind it rather than a building. The art carries its
+own boardwalk edge and mooring bollard and does not depend on that, but the level is better when the two
+agree, and the arithmetic is written down here so the next person who moves it knows what it was for.
+
+**What was drawn as scenery and not as a POI, and why.** Nothing new. The corridor between the points was
+already the most populated in the game — `layer-40-quayside` carries lamps, benches, bollards, planters, an
+interpretive panel, gulls, six people, two gabled waterfront buildings, a cargo shed and two open slips, and
+§5.1 rebuilt its deck so it reads as timber. Adding more to it would have cost 0 bytes and bought nothing;
+what the level was short of was things to *stop at*, and those are POIs by definition. The two new heroes are
+drawn as types for the reason §2 gives: the tile repeats, and Halifax comes from the Town Clock.
+
+**The two new subjects are in `references.json` with real `renders`**, `market-stall` and `harbour-tug`, each
+with its own `expectedBlindAnswer`, and neither is asked to name a place. Both passed the §5 two-size test at
+their shipping sizes before they were declared: at 180 px the stall's stripes, scallops, three crates and
+barrel hoops are legible and the tug's funnel, window band, bluff bow and four of five fenders are; as 120 px
+silhouettes the stall is a canopy on two posts over a table of goods and the tug is a deep short hull under a
+tall house with a funnel and a masthead.
+
+**One thing looked at and deliberately not changed: `camera.offset.y`.** This sheet, `art-bible.md` §6 and
+every tile in the level are composed for a ground line at **screen y ≈ 1280 of 1920**, which is what puts the
+whole 880-row sky tile on screen and leaves the Town Clock's gold ball clear of the 120 px system band.
+`content/levels/halifax.json` carries `camera.offset` `(140, −260)`, and Phaser's own
+`Camera.preRender` computes the midpoint as `follow − followOffset`, which would put the player's feet at
+screen y 700 and crop the top 310 px off the Town Clock. Either `level-scene.ts` negates it or the level
+document is 580 px out; the two readings are each internally consistent and cannot be told apart from inside
+`assets/`. **Nothing was changed on a guess.** What the new art does instead is stay inside both: the tallest
+new hero is 520 px, so it is fully framed whether the ground line lands at 700 or at 1280. Whoever owns
+`app/adapters/phaser/level-scene.ts` should settle it — the renders in this section are composited at 1280.

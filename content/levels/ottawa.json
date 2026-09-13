@@ -276,6 +276,80 @@
   ],
   "pois": [
     {
+      "id": "rideau-locks",
+      "name": {
+        "en": "The canal locks",
+        "fr": "Les \u00e9cluses du canal"
+      },
+      "blurb": {
+        "en": "Ottawa sits on the Ottawa River. Queen Victoria chose it as Canada's capital in 1857.",
+        "fr": "Ottawa se trouve sur la rivi\u00e8re des Outaouais. La reine Victoria en a fait la capitale du Canada en 1857."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 94,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Ottawa, located on the Ottawa River, was chosen as the capital in 1857 by Queen Victoria"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 1800,
+        "y": 1244
+      },
+      "artKey": "ottawa-prop-rideau-locks",
+      "radiusPx": 260
+    },
+    {
+      "id": "library-of-parliament",
+      "name": {
+        "en": "The Library of Parliament",
+        "fr": "La Biblioth\u00e8que du Parlement"
+      },
+      "blurb": {
+        "en": "Fire destroyed the Centre Block in 1916, and it was rebuilt by 1922. The Library is the only part of the first building still standing.",
+        "fr": "Un incendie a d\u00e9truit l'\u00e9difice du Centre en 1916, et il a \u00e9t\u00e9 reconstruit en 1922. La Biblioth\u00e8que est la seule partie du premier \u00e9difice encore debout."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Centre Block was destroyed by an accidental fire in 1916 and rebuilt in 1922. The Library is the only part of the original building remaining."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3600,
+        "y": 1246
+      },
+      "artKey": "ottawa-prop-library-of-parliament",
+      "radiusPx": 240
+    },
+    {
       "id": "parliament-hill",
       "name": {
         "en": "Parliament Hill",
@@ -312,6 +386,43 @@
       "artKey": "ottawa-landmark-parliament-hill",
       "radiusPx": 220,
       "questId": "ottawa-parliament-hill"
+    },
+    {
+      "id": "warming-hut",
+      "name": {
+        "en": "A warming hut",
+        "fr": "Une cabane chauff\u00e9e"
+      },
+      "blurb": {
+        "en": "The Rideau Canal was built as a military waterway. Today people come to visit it, and in winter it is a skateway.",
+        "fr": "Le canal Rideau a \u00e9t\u00e9 construit comme voie militaire. Aujourd'hui, les gens viennent le visiter et, l'hiver, on y patine."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 94,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Ottawa's Rideau Canal, once a military waterway, is now a tourist attraction and winter skateway."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 7600,
+        "y": 1468
+      },
+      "artKey": "ottawa-prop-warming-hut",
+      "radiusPx": 240
     }
   ],
   "characters": [

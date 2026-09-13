@@ -245,6 +245,33 @@
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/ under the rules in assets/style/art-bible.md; never traced."
     },
     {
+      "path": "src/svg/ottawa/prop-rideau-locks@1x.svg",
+      "kind": "shipped",
+      "title": "A Rideau Canal lock in winter - a level 4 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/prop-rideau-locks@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/ottawa/rideau-canal-ottawa-locks.jpg under the rules in assets/style/art-bible.md; never traced. That photograph is a summer exposure with water spilling over the gates; the level is winter, so the chamber is drawn with ice and the copings with snow and nothing is falling. The @1x suffix pins the source to one scale; the key ottawa-prop-rideau-locks carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 680 x 440 and passed at both probes; at 2x it would cost 4.57 MiB of decoded texture instead of 1.14 MiB."
+    },
+    {
+      "path": "src/svg/ottawa/prop-library-of-parliament@1x.svg",
+      "kind": "shipped",
+      "title": "The Library of Parliament - a level 4 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/prop-library-of-parliament@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/ottawa/parliament-hill-north-library.jpg under the rules in assets/style/art-bible.md; never traced. That photograph is a dark overcast exposure and is a geometry reference only; the sandstone and the roof are palette.json's stone and slate ramps. No cross, no statue, no clock and no flag: the reference carries a crocketed finial and a pinnacle cross on the building behind it, and neither is drawn. The @1x suffix pins the source to one scale; the key ottawa-prop-library-of-parliament carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 600 x 820 and passed at both probes; at 2x it would cost 7.51 MiB of decoded texture instead of 1.88 MiB."
+    },
+    {
+      "path": "src/svg/ottawa/prop-warming-hut@1x.svg",
+      "kind": "shipped",
+      "title": "A warming hut on the Rideau Canal Skateway - a level 4 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/prop-warming-hut@1x.svg",
+      "modifications": "Original work. Drawn from the change hut in assets/refs/ottawa/rideau-canal-skateway-portrait.jpg and the ice in rideau-canal-skateway-ice.jpg under the rules in assets/style/art-bible.md; never traced. A TYPE and not a named or operated building: the hut in the reference carries wordmarks and an operator's livery and neither is drawn. The @1x suffix pins the source to one scale; the key ottawa-prop-warming-hut carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 360 and passed at both probes; at 2x it would cost 3.08 MiB of decoded texture instead of 0.77 MiB."
+    },
+    {
       "path": "src/svg/shared/character/arm-lower-parka.svg",
       "kind": "shipped",
       "title": "TrueNorth character rig part \"arm-lower-parka\" — One frame serves both sides: the rig mirrors it about the character centre line. Parka sleeve, lower.",
@@ -992,6 +1019,24 @@
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/quebec-city/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/quebec-city-level.md; never traced."
     },
     {
+      "path": "src/svg/quebec-city/prop-city-wall@1x.svg",
+      "kind": "shipped",
+      "title": "A section of the fortified city wall in winter - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-city-wall@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/quebec-city/quebec-ramparts-snow.jpg under the rules in assets/style/art-bible.md; never traced. That photograph is a snow white-out, so it is a geometry and arrangement reference only and every colour comes from palette.json. No crenellation, tower, gate or cannon: the wall in the reference has none. The @1x suffix pins the source to one scale; the key quebec-city-prop-city-wall carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 640 x 500 and passed at both probes; at 2x it would cost 4.88 MiB of decoded texture instead of 1.22 MiB."
+    },
+    {
+      "path": "src/svg/quebec-city/prop-terrace-kiosk@1x.svg",
+      "kind": "shipped",
+      "title": "A striped bandstand kiosk on the winter promenade - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-terrace-kiosk@1x.svg",
+      "modifications": "Original work. Drawn from the kiosk in assets/refs/quebec-city/dufferin-terrace-boardwalk.jpg and the 1905 photograph dufferin-terrace-toboggan-slide-1905.jpg under the rules in assets/style/art-bible.md; never traced. This object is forbidden on the level's two repeating parallax tiles - it named the place off one of them in a blind pass and was replaced there - and is required here, on a hero drawn once at one place in the world. The @1x suffix pins the source to one scale; the key quebec-city-prop-terrace-kiosk carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 520 and passed at both probes; at 2x it would cost 4.44 MiB of decoded texture instead of 1.11 MiB."
+    },
+    {
       "path": "refs/halifax/town-clock-elevation.jpg",
       "kind": "reference",
       "title": "Old Town Clock, Citadel Hill, Halifax - street elevation in full sun",
@@ -1179,6 +1224,24 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/landmark-pier-21@1x.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/halifax/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/halifax-level.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key halifax-landmark-pier-21 is unchanged and no level document moves. The art-bible section 5 two-size test was run at the shipping size of 900 x 620 and passed at both probes, which is what ADR-0013 as amended requires before a landmark departs from the 2x default; at 2x it would cost 8.51 MiB of decoded texture instead of 2.13 MiB."
+    },
+    {
+      "path": "src/svg/halifax/prop-market-stall@1x.svg",
+      "kind": "shipped",
+      "title": "A market stall on the Halifax boardwalk - a level 1 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/prop-market-stall@1x.svg",
+      "modifications": "Original work. Drawn as a TYPE - no named market exists in the references - to the scale the reference photographs in assets/refs/halifax/ establish for the boardwalk and the people on it, under the rules in assets/style/art-bible.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key halifax-prop-market-stall carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 480 and passed at both probes; at 2x it would cost 4.10 MiB of decoded texture instead of 1.03 MiB."
+    },
+    {
+      "path": "src/svg/halifax/prop-harbour-tug@1x.svg",
+      "kind": "shipped",
+      "title": "A harbour tug alongside the Halifax boardwalk - a level 1 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/prop-harbour-tug@1x.svg",
+      "modifications": "Original work. Drawn from the tug in assets/refs/halifax/waterfront-boardwalk.jpg and the wharves in waterfront-harbour.jpg under the rules in assets/style/art-bible.md and the measured ratios in assets/refs/references.json, subject harbour-tug; never traced. A TYPE and not a named vessel: no name, hull number, house flag or funnel device. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key halifax-prop-harbour-tug carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 720 x 520 and passed at both probes; at 2x it would cost 5.71 MiB of decoded texture instead of 1.43 MiB."
     },
     {
       "path": "src/svg/toronto/layer-10-sky.svg",
@@ -1926,6 +1989,33 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/landmark-lighthouse@1x.svg",
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/peggys-cove/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/peggys-cove-level.md; never traced."
+    },
+    {
+      "path": "src/svg/peggys-cove/prop-granite-erratic@1x.svg",
+      "kind": "shipped",
+      "title": "A glacial erratic on the Peggy's Cove barrens - a level 2 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/prop-granite-erratic@1x.svg",
+      "modifications": "Original work. Drawn from the boulders and tide pools in assets/refs/peggys-cove/granite-barrens-and-sea.jpg and lighthouse-on-the-granite.jpg under the rules in assets/style/art-bible.md; never traced. Landform only: no cairn, no stacked or balanced stones, no marker of any kind. The @1x suffix pins the source to one scale; the key peggys-cove-prop-granite-erratic carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 380 and passed at both probes; at 2x it would cost 3.25 MiB of decoded texture instead of 0.81 MiB."
+    },
+    {
+      "path": "src/svg/peggys-cove/prop-fish-store@1x.svg",
+      "kind": "shipped",
+      "title": "A fish store on timber cribbing at Peggy's Cove - a level 2 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/prop-fish-store@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/peggys-cove/harbour-and-fish-stores.jpg and red-fish-store.jpg under the rules in assets/style/art-bible.md; never traced. A TYPE and not a named or recognisable building: no sign, number or wordmark. The @1x suffix pins the source to one scale; the key peggys-cove-prop-fish-store carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 620 x 520 and passed at both probes; at 2x it would cost 4.92 MiB of decoded texture instead of 1.23 MiB."
+    },
+    {
+      "path": "src/svg/peggys-cove/prop-fishermans-house@1x.svg",
+      "kind": "shipped",
+      "title": "A fishing village house behind a picket fence - a level 2 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/prop-fishermans-house@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/peggys-cove/village-houses.jpg and harbour-and-fish-stores.jpg under the rules in assets/style/art-bible.md; never traced. A TYPE and not a named or recognisable house. The @1x suffix pins the source to one scale; the key peggys-cove-prop-fishermans-house carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 640 x 560 and passed at both probes; at 2x it would cost 5.47 MiB of decoded texture instead of 1.37 MiB."
     },
     {
       "path": "refs/the-north/sternwheeler-broadside.jpg",

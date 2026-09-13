@@ -294,6 +294,267 @@
       ]
     },
     {
+      "id": "canal-lock",
+      "subject": "A canal lock with closed timber gates, in winter",
+      "renders": [
+        "src/svg/ottawa/prop-rideau-locks@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as peace-tower.",
+      "expectedBlindAnswer": [
+        "a canal lock",
+        "a lock",
+        "lock gates",
+        "a lock on a canal",
+        "a canal lock in winter",
+        "a set of lock gates"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. A lock chamber is a lock chamber; it names no canal and no city, and the gate",
+        "must not ask it to. The place-anchor for this level is parliament-hill.",
+        "WHAT IT MUST CARRY IS THE MECHANISM. \"A dam\", \"a weir\", \"a bridge\", \"a wall\" or \"a dock\" is a FAIL.",
+        "The pair of gates meeting at a mitre, with a long balance beam swung out over each wall, is what a",
+        "lock has and none of those has."
+      ],
+      "referenceFiles": [
+        "ottawa/rideau-canal-ottawa-locks.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a pair of gates meeting at a mitre across the chamber, pointing at the viewer",
+          "why": "It is the whole subject. A single flat gate across a channel is a sluice; two leaves meeting at an angle is a lock, and the angle is what makes the gates hold against the water behind them.",
+          "detail": "Two leaves, each running from its own wall to the centre, meeting on a vertical seam. The near edge of each leaf is LOWER on screen at the centre than at the wall, which is what draws the mitre pointing toward the camera. Each leaf carries three horizontal rails in a lighter tone of the same material.",
+          "palette": "white"
+        },
+        {
+          "feature": "a long balance beam swung out over each wall from the head of each gate",
+          "why": "It is the second half of the mechanism and the strongest horizontal in the picture. In the reference both beams are white timber and they are the only thing in the frame at that angle.",
+          "detail": "A tapering beam from the gate head out across the coping, ending over the wall, with a dark pivot block where the two gate heads meet. Drawn white with a lit top edge. They are what a person reads as \"somebody pushes this open\"."
+        },
+        {
+          "feature": "coursed stone chamber walls either side, with a coping and snow on top",
+          "detail": "Two masonry piers framing the chamber, each with four or five course lines and a few staggered vertical joints, a projecting coping course, and a band of `snow` above it with a lit crest. The first build drew the courses in the shade tone at 7 px and the wall read as brickwork; they are drawn in the base tone against a light face now.",
+          "palette": "limestone, snow"
+        },
+        {
+          "feature": "a black iron handrail along the top of each wall",
+          "detail": "Two posts and two rails per wall, in a dark neutral, standing clear against the sky. It is what says a person can stand here, and it is in the reference."
+        },
+        {
+          "feature": "ice in the chamber, not water, and no boat",
+          "why": "This level is winter and its locomotion is skating. Falling water in the frame would put the level in the wrong season.",
+          "detail": "A flat band of the `ice` ramp below the gates with a lit top edge and a couple of straight sheen bars. NO spray, NO foam, NO falling water, NO boat.",
+          "palette": "ice"
+        }
+      ],
+      "simplifyAway": [
+        "the chains, the crab winches, the gate paddles and the hinge ironwork",
+        "individual stones: five courses and a handful of joints are the whole masonry",
+        "the second and third chambers of the flight: one chamber is the subject",
+        "the buildings above the lock in the reference photograph, including the large hotel that dominates it"
+      ],
+      "neverAdd": [
+        "a boat, a canoe, a barge or a lock-keeper",
+        "falling water, spray, foam or a waterfall: the reference is a summer exposure with the gates spilling and this level is winter",
+        "a name, a number, a plaque, an interpretive panel or any lettering in either language",
+        "a flag or a flagpole (OQ-ART-04 is open)",
+        "a swing bridge, a footbridge or a road over the chamber: the level already draws one bridge, on layer-50-canalwall"
+      ],
+      "notes": [
+        "ottawa/rideau-canal-ottawa-locks.jpg is the only reference and it is a SUMMER exposure taken from",
+        "below, looking up: the gates are spilling, the sky is bright and the hotel above fills the top two",
+        "thirds of the frame. What it settles is the MECHANISM and the masonry - the mitre, the beams, the",
+        "coursing, the handrail - and nothing about the season. The winter is the level's, and the snow and",
+        "the ice come from palette.json.",
+        "PLACEMENT FLOOR: none is set; a lock at 120 px is still a pair of gates. DRAWING OBSERVATION, not an",
+        "identification: at 180 px wide the mitre seam, both balance beams, both handrails and four of the",
+        "five courses survive. The 120 px silhouette is the weakest of this level's four heroes - a lock is",
+        "mostly negative space - and it still reads as two walls with a low structure between them."
+      ]
+    },
+    {
+      "id": "library-of-parliament",
+      "subject": "The Library of Parliament, Ottawa: the round Gothic Revival library behind Centre Block",
+      "renders": [
+        "src/svg/ottawa/prop-library-of-parliament@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "the Library of Parliament",
+        "the Parliamentary Library",
+        "a round Gothic library",
+        "a chapter house",
+        "a polygonal Gothic Revival building",
+        "the library on Parliament Hill, Ottawa"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT MAY BE ASKED FOR A BUILDING AND MUST NOT BE ASKED FOR A CITY. It is a single",
+        "non-repeating POI hero of one specific building whose stack - a sixteen-sided sandstone drum ringed",
+        "with buttresses and pinnacles, three tall pointed windows, a deep cornice, and a very steep ribbed",
+        "polygonal roof with a ring of gabled dormers under a small stone lantern - is not shared by anything",
+        "else this game will draw. But the level already has an anchor that carries Ottawa, `parliament-hill`,",
+        "and this one is deliberately not asked to do it twice.",
+        "THE FAILURE TO WATCH FOR IS \"a church\", \"a chapel\" or \"a cathedral chapter house\". The roof, the",
+        "pointed windows and the pinnacles are all genuinely ecclesiastical in origin - that is what Gothic",
+        "Revival is - and the things that keep it a library are the absence of a cross, of a bell stage and",
+        "of a west door, and the presence of a plain spike finial. An identification of \"a chapter house\" is",
+        "accepted above because the building IS one architecturally; \"a church\" is not."
+      ],
+      "referenceFiles": [
+        "ottawa/parliament-hill-north-library.jpg",
+        "ottawa/parliament-hill-skyline.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a very steep polygonal roof with radiating ribs, much taller than the wall under it",
+          "why": "It is three quarters of the silhouette and it is the single thing that identifies the building at any size.",
+          "detail": "MEASURED on ottawa/parliament-hill-north-library.jpg, in the column through the building's axis: the roof is about 430 px tall over a 490 px base, so HEIGHT : BASE = 0.88. The shipped art draws 360 over 480 = 0.75 with the lantern above it, and the whole roof assembly including the lantern 410 over 480 = 0.85. Anything under about 0.6 stops being this building and becomes a bandstand. Seven or eight ribs run from the apex to the eave in a lighter tone; they are the facets of the polygon, not decoration.",
+          "palette": "slate"
+        },
+        {
+          "feature": "a ring of small gabled dormers with pointed-arch heads around the lower third of the roof",
+          "detail": "Five visible, evenly spaced, the middle one a little higher than its neighbours, each a small stone gable with a pointed opening. Rhythm, not count: the real building has sixteen and the number may differ, the shape and the spacing-to-width ratio may not."
+        },
+        {
+          "feature": "a polygonal sandstone drum ringed by stepped buttresses that rise into pinnacles",
+          "why": "It is what makes the building round rather than square, and the buttresses are what carry the eye from the wall into the roof.",
+          "detail": "Four visible buttresses standing proud of the wall, each capped by a pointed pinnacle that rises above the eave line and in front of the roof. Buff sandstone - the `stone` ramp, which is Nepean sandstone and is what Parliament Hill is built of - and NOT brick and NOT limestone.",
+          "palette": "stone"
+        },
+        {
+          "feature": "three tall pointed-arch windows between the buttresses, dark against the stone",
+          "detail": "Two thirds the height of the wall, each with one mullion and one transom. Glazing bars beyond that cross are simplified away, the same substitution the Peace Tower made on its dial."
+        },
+        {
+          "feature": "a small stone lantern with a dark cap and a plain spike finial at the apex",
+          "detail": "A short polygonal drum sitting ON the roof apex, a small dark cone over it, then a plain spike and a ball. The reference carries a crocketed iron finial with a weathervane; it becomes a spike and a ball."
+        },
+        {
+          "feature": "snow on every upward surface, and the ground it stands on is snow",
+          "detail": "On the dormer gables, on the pinnacle caps, on the cornice, and a swept snow bank at the foot. This level is winter; the file's bottom edge IS the level ground line and `theme.ground` is snow-base.",
+          "palette": "snow"
+        }
+      ],
+      "simplifyAway": [
+        "the flying buttresses of the real building: they become stepped wall buttresses, which is what reads at this size",
+        "the carved crockets, finials and gargoyles",
+        "the iron cresting along the eave",
+        "the Centre Block, the Peace Tower and everything else in the reference photograph: this hero is the library alone, and the Peace Tower is another subject",
+        "the shingle courses of the roof: the ribs are the whole roof structure"
+      ],
+      "neverAdd": [
+        "a cross, a crucifix, a bell, a belfry stage or any religious emblem. This is the single most likely wrong addition to a steep-roofed polygonal Gothic building and it would turn a library into a church",
+        "a clock face. Scoped deliberately: a clock is REQUIRED of peace-tower and forbidden here, and the reason is that the two subjects are judged in the same hand-off and this level must not have two clock towers",
+        "a flag or a flagpole (OQ-ART-04 is open)",
+        "a statue, a bust or a carved figure",
+        "any lettering, inscription, date stone or wordmark in either language",
+        "a green copper roof. Scoped deliberately: copper green is REQUIRED of parliament-hill and forbidden here. The library's roof reads dark in every reference in this repository, and drawing it green would merge the two subjects at phone size"
+      ],
+      "notes": [
+        "ottawa/parliament-hill-north-library.jpg is the PRIMARY reference: the library from the north with",
+        "the Peace Tower and Centre Block beside it. It is a DARK OVERCAST exposure - the sky is a grey field",
+        "and the stone reads brown-black - so it is a GEOMETRY reference only and every colour comes from",
+        "palette.json. The ratios above were read off a 200 x 280 crop of it, enlarged; that is the honest",
+        "limit of a 960 x 720 photograph in which the building is 200 px wide, and no finer figure is claimed.",
+        "THE HERO ALREADY CONTAINS THIS BUILDING, AND THAT IS STATED HERE RATHER THAN LEFT TO BE FOUND.",
+        "landmark-parliament-hill@1x.svg draws the library as a SPIRE TIP behind the right wing - a dark cone and",
+        "a finial, about 60 px wide, with no drum, no dormers, no buttresses and no windows. This subject is the",
+        "building itself at ten times that area. A verifier who sees both should read them as the far view and",
+        "the near view of one building, which is what they are; they are 1800 px apart in the level because a",
+        "side-scrolling level lays its subjects along a line, the same abstraction that puts the Halifax Town",
+        "Clock and Pier 21 3400 px apart when they are three kilometres apart in life.",
+        "WHY THIS BUILDING IS THE SECOND PARLIAMENT SUBJECT. The level's hero, parliament-hill, is the Peace",
+        "Tower and Centre Block. The library is the only part of the original building that survived the 1916",
+        "fire, which is the fact its POI blurb carries, and it is the one other piece of that group whose",
+        "shape is unmistakable on its own.",
+        "PLACEMENT FLOOR: do not draw it below 300 px wide anywhere the player is meant to recognise it,",
+        "adopted from the Ottawa floor rather than re-derived. DRAWING OBSERVATION, not an identification: at",
+        "180 px wide the ribs, all five dormers, the lantern, the three windows and the four pinnacles",
+        "survive; the 120 px silhouette is a steep ribbed cone on a ringed drum with a lantern on top."
+      ]
+    },
+    {
+      "id": "warming-hut",
+      "subject": "A warming hut standing on canal ice",
+      "renders": [
+        "src/svg/ottawa/prop-warming-hut@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a warming hut",
+        "a cabin",
+        "a hut on the ice",
+        "a wooden hut",
+        "a shelter on a frozen lake or canal",
+        "a skate hut",
+        "a log cabin on ice"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. It is a hut, and the real ones carry an operator's wordmark and livery, neither",
+        "of which this project draws. No answer here names a city or a canal and the gate must not reward one.",
+        "WHAT IT MUST CARRY IS THAT IT STANDS ON ICE. \"A house\", \"a shed\" or \"a cabin in the woods\" without",
+        "the ice is a partial answer; the scored ice band under it and the skate marks are what place it."
+      ],
+      "referenceFiles": [
+        "ottawa/rideau-canal-skateway-portrait.jpg",
+        "ottawa/rideau-canal-skateway-ice.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a low, long timber cabin under a shallow gable roof carrying snow",
+          "why": "Low and long is the whole proportion. A tall hut with a steep roof is an alpine chalet and belongs to a different country.",
+          "detail": "The wall is about three times as wide as it is tall and the roof pitch is shallow - roughly one in six - with a deep snow load along it and a lit edge on the near slope.",
+          "palette": "wood, slate, snow"
+        },
+        {
+          "feature": "two lit windows and one dark open doorway",
+          "why": "Lit windows are what say WARM, which is the entire purpose of the building and the reason a player would walk to it.",
+          "detail": "Windows in a warm light tone inside a white frame; the doorway a flat dark opening with a white frame and no door leaf drawn. The lit tone is `brass-light`, which no other element on this level uses.",
+          "palette": "brass, white, hide"
+        },
+        {
+          "feature": "painted panels on the boarding, in a red that is not the flag red",
+          "detail": "Two panels flanking the door, in the `oxide` ramp. The huts in the reference are dark boarding with red panels; `oxide` is the same red the Peggy's Cove fish stores use and is deliberately not `flag-red`, because OQ-ART-04 is open and nothing in this game asserts the flag's red.",
+          "palette": "oxide"
+        },
+        {
+          "feature": "ice at its foot, scored by skates, and no snow bank",
+          "why": "A snow bank would put the hut on the shore. It stands on the frozen canal, which is what the level's locomotion is about.",
+          "detail": "A flat band of the `ice` ramp across the bottom of the file with a lit top edge and three or four straight sheen bars for skate scoring. The file's bottom edge IS the level ground line, which on this stretch is world y 1468, on the ice.",
+          "palette": "ice"
+        },
+        {
+          "feature": "a plank bench along the wall",
+          "detail": "Where skates are put on, and the one piece of furniture that explains the building. Two legs, a plank seat, a lit top edge."
+        }
+      ],
+      "simplifyAway": [
+        "the operator's signage, wordmarks, banners and pricing boards, which is most of what is on the real hut",
+        "the stovepipe, the cables and the fittings below 12 px",
+        "the crowd around it: this hero draws no figure at all",
+        "the boarding pattern of the walls: art-bible section 1 forbids a surface pattern"
+      ],
+      "neverAdd": [
+        "any lettering, wordmark, logo or price in either language",
+        "a national flag or a maple leaf device (OQ-ART-04 is open)",
+        "a figure, on the ice or in the doorway",
+        "hockey boards, nets or line markings: the skateway is not a rink",
+        "a chimney with smoke drawn as a plume: smoke is a filter effect in cartoon shorthand and ADR-0011 wants every effect to have a plain path"
+      ],
+      "notes": [
+        "ottawa/rideau-canal-skateway-portrait.jpg is the primary reference: the change hut on the ice with",
+        "skaters in front of it and the bridge beyond. It is a bright winter exposure and the colours are",
+        "usable, but the building in it is heavily branded and the drawing takes only the FORM.",
+        "THIS LEVEL ALREADY HAS A HUT, and it is not this one. layer-50-canalwall.svg carries a small warming",
+        "hut on the FAR retaining wall, across the canal, as part of a tile that repeats every 2016 px. This",
+        "hero stands on the near ice beside the player, at one world x, at four times the size. The",
+        "relationship is the same as peggys-cove's seven far fish stores and its one near fish-store hero,",
+        "and it is recorded here so a verifier who sees both does not report a duplication.",
+        "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px the two lit windows,",
+        "the doorway, the red panels, the snow load, the bench and the spruce all survive; the 120 px",
+        "silhouette is a long low gabled box with a small conifer beside it."
+      ]
+    },
+    {
       "id": "officer",
       "renders": [
         "src/svg/shared/character/torso-serge.svg",
@@ -799,6 +1060,174 @@
       ]
     },
     {
+      "id": "city-wall",
+      "subject": "A section of a fortified stone city wall in winter",
+      "renders": [
+        "src/svg/quebec-city/prop-city-wall@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as chateau-frontenac.",
+      "expectedBlindAnswer": [
+        "a stone wall",
+        "a fortification wall",
+        "a city wall",
+        "a rampart",
+        "a fortified wall",
+        "a stone rampart",
+        "the wall of a fort"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. It is a piece of masonry, and a piece of masonry cannot carry a city. The",
+        "place-anchor for this level is chateau-frontenac and nothing else.",
+        "WHAT IT MUST CARRY: that the wall is DEFENSIVE. \"A garden wall\", \"a retaining wall\", \"a dam\" or \"a",
+        "building\" is a FAIL. The salient angle, the batter and the height against the snow bank are what",
+        "separate a rampart from a wall around a field, and they are the three things drawn hardest."
+      ],
+      "referenceFiles": [
+        "quebec-city/quebec-ramparts-snow.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "two faces meeting at a salient angle, the near face lit and the returning face in shade",
+          "why": "A straight wall drawn flat-on is a backdrop. The angle is what says bastion, and it is what the reference photograph is of.",
+          "detail": "The corner is a vertical line about a third of the way across the file, with quoin stones marking it. The returning face is drawn in the material’s shade tone, the near face in its base tone, and the coping runs unbroken round the corner so the two faces read as one wall rather than two walls meeting."
+        },
+        {
+          "feature": "a batter: the wall leans back as it rises, so it is wider at the foot than at the head",
+          "why": "Every fortification wall is battered and no garden wall is. It is the cheapest available cue and it costs two degrees of slope.",
+          "detail": "MEASURED by eye on quebec-city/quebec-ramparts-snow.jpg, which is a snow white-out and supports no finer measurement than that: the face leans back by roughly one part in twenty-five. The shipped art draws the head 22 px inboard of the foot over a 320 px rise."
+        },
+        {
+          "feature": "a plain flat coping along the head, with snow lying on it",
+          "why": "It is what the reference shows, and it is the feature most likely to be replaced by an invention.",
+          "detail": "One flat capping course projecting slightly over the face, with a shadow line under it, and a band of `snow` on top with a lit crest. NOT crenellated, NOT castellated, NOT pierced.",
+          "palette": "limestone, snow"
+        },
+        {
+          "feature": "coursed masonry drawn as sparse marks, not as a stone pattern",
+          "detail": "Five course lines across the near face with staggered vertical joints, all one tone apart from the face and all 6 to 7 px. A drawn stone pattern is forbidden by art-bible section 1, and the first build of this subject had three courses of 12 px and read as a wall of eight enormous bricks.",
+          "palette": "limestone"
+        },
+        {
+          "feature": "a snow bank at the foot, and snow is the ground",
+          "detail": "A swept `snow` bank running the width of the file with a lit crest, meeting the file’s bottom edge, which IS the level ground line. The level’s theme.ground is snow-base, so the bank continues into the fill below the line."
+        }
+      ],
+      "simplifyAway": [
+        "individual stones: five courses and a dozen joints are the whole masonry",
+        "mortar joints below 6 px, weathering, lichen and staining",
+        "the bare trees, the modern towers and the fog of the reference photograph",
+        "the ditch, the glacis and the counterscarp below the snow bank: they are below the ground line and are never drawn"
+      ],
+      "neverAdd": [
+        "crenellation, battlements, merlons, arrow slits or a machicolation. The wall in the reference has a plain coping and this is the single most likely wrong addition to a fortification in a cartoon",
+        "a tower, a turret, a gate, a drawbridge or a portcullis",
+        "a cannon, a gun carriage, a pile of shot, a sentry box or any weapon",
+        "a flag, a coat of arms, a plaque, a date stone or any lettering in either language",
+        "a figure on or in front of the wall",
+        "brick. Scoped deliberately: `brick` is required of chateau-frontenac and forbidden here, and the reason is that the two subjects are judged in the same hand-off and a shared ramp would make one read as part of the other"
+      ],
+      "notes": [
+        "quebec-city/quebec-ramparts-snow.jpg is the only reference and it is a SNOW WHITE-OUT: the air is",
+        "full of snow, the contrast is almost gone and the far end of the wall disappears into it. It is a",
+        "GEOMETRY AND ARRANGEMENT reference only - the angle, the batter, the plain coping, the snow on top,",
+        "the bank at the foot - and every colour in the drawing comes from palette.json. Recorded because the",
+        "temptation with a photograph this pale is to sample it, and what it would yield is white.",
+        "WHY THIS AND NOT A CANNON OR A GATE. Both were wanted and neither is in any licence-clean photograph",
+        "in this repository. The rule that costs this project references is the same rule that stops it",
+        "inventing: a thing that exists gets drawn from a reference, and a thing that does not is not drawn.",
+        "PLACEMENT FLOOR: none, because there is no identification threshold to protect - masonry at 120 px is",
+        "masonry. DRAWING OBSERVATION: at 180 px wide the corner, the quoins, the coping, the snow and four of",
+        "the five courses are still legible."
+      ]
+    },
+    {
+      "id": "terrace-kiosk",
+      "subject": "A striped open bandstand kiosk on a winter promenade",
+      "renders": [
+        "src/svg/quebec-city/prop-terrace-kiosk@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a bandstand",
+        "a bandstand kiosk",
+        "a music kiosk",
+        "a gazebo",
+        "a pavilion",
+        "a park pavilion",
+        "a promenade kiosk"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS ALLOWED TO BE IDENTIFIED AS A PLACE AND IS NOT REQUIRED TO BE. An unprimed verifier",
+        "named Terrasse Dufferin, Quebec City off this exact object when it was drawn into layer-50-terrace.svg,",
+        "which is why it is not there any more: that tile REPEATS, and a building that names a city cannot",
+        "repeat four times across a level. A POI hero is drawn once, at one place in the world, so here the",
+        "same recognisability is an asset rather than a defect.",
+        "WHAT IT MUST CARRY is the open pavilion: posts, a balustrade, a dark open interior and a striped",
+        "tented roof. \"A tent\", \"a carousel\", \"a merry-go-round\" or \"a circus top\" is a FAIL - the posts, the",
+        "balustrade and the stepped base are what make it built rather than pitched."
+      ],
+      "referenceFiles": [
+        "quebec-city/dufferin-terrace-boardwalk.jpg",
+        "quebec-city/dufferin-terrace-toboggan-slide-1905.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a shallow tented roof of radial green and white stripes",
+          "why": "It is the whole silhouette and the whole colour of the object, and it is what a verifier recognised it by.",
+          "detail": "Stripes converge on the apex, alternating white and green, drawn as triangles from the apex to the eave. MEASURED on quebec-city/dufferin-terrace-boardwalk.jpg: the roof is about 2.9 times as wide as it is tall from eave to apex, which is a shallow tent and not a cone. The stripes left of the apex take the light tone of each material and those right of it the base or shade, which is the one key light the whole game uses.",
+          "palette": "white, pine"
+        },
+        {
+          "feature": "a scalloped valance hanging from the eave, all round",
+          "why": "Without it the roof meets the posts in a hard line and the object reads as a bus shelter.",
+          "detail": "A continuous run of rounded scallops in one dark tone, about 47 px across each and 24 px deep. They were drawn alternating light and dark for one build and read as holes in the eave."
+        },
+        {
+          "feature": "an open pavilion: posts, a turned balustrade between them, and a DARK interior behind",
+          "why": "A bandstand is open. Filled in, it is a kiosk that sells things; walled, it is a shed.",
+          "detail": "Five white posts with a cap and a base block, a balustrade filling the lower half of each bay, and a flat dark field behind all of it so the eye reads through the structure into shadow. The dark is `slate-shade`, not black.",
+          "palette": "white, pine, slate"
+        },
+        {
+          "feature": "a stepped base standing clear of the deck, with snow on it",
+          "detail": "Two steps, the upper narrower than the lower, in `snow` tones because they are snow-covered. The file’s bottom edge IS the level ground line."
+        },
+        {
+          "feature": "a plain ball finial at the apex, and nothing else on the roof",
+          "detail": "A short post and one ball. No weathervane, no spire, no flag, no lamp."
+        }
+      ],
+      "simplifyAway": [
+        "the turning of the balusters: two lit bars per bay is the rhythm",
+        "the ironwork brackets in the spandrels of the arches",
+        "the seats, the electrical fittings and the loudspeakers inside",
+        "the ceiling boards: the interior is one flat dark field",
+        "the terrace railing, the lamps and the crowd around it: they are on layer-50-terrace.svg, which this hero is drawn in front of"
+      ],
+      "neverAdd": [
+        "any lettering, sign, date, wordmark or musical notation",
+        "a flag or a flagpole. The 1905 photograph shows a Union Flag and a Red Ensign flying beside this kiosk; both are real, both are historic, and OQ-ART-04 - which red is the National Flag - is still open",
+        "a band, a conductor, an audience or a figure of any kind",
+        "a carousel horse, a ticket window, a counter or a serving hatch: those turn a bandstand into a fairground and it is the nearest wrong reading",
+        "snow falling in the file. The level draws snow with Graphics at runtime, procedurally, and a drawn flake would double it"
+      ],
+      "notes": [
+        "THIS OBJECT HAS A HISTORY IN THIS REPOSITORY AND IT IS THE POINT OF THE SUBJECT. It was drawn into",
+        "layer-50-terrace.svg as street furniture; the blind pass of 2026-09-08 named the place off it; the",
+        "tile now carries a plain open timber shelter instead and its neverAdd forbids \"a recognisable",
+        "building of any kind on these repeating tiles, INCLUDING street furniture\". That prohibition is",
+        "scoped to those tiles, and verifyArtProtocol.contradictionRule is explicit that a prohibition on one",
+        "subject may not forbid a requirement of another. The kiosk is required HERE.",
+        "quebec-city/dufferin-terrace-boardwalk.jpg is the primary reference - the kiosk in full sun, square",
+        "on, with the terrace railing, the lamps and the slide behind it. The 1905 photograph shows the same",
+        "kiosk in winter with the crowd and the flags, and is where the winter setting comes from.",
+        "PLACEMENT FLOOR: do not draw it below 280 px wide anywhere the player is meant to recognise it.",
+        "DRAWING OBSERVATION, not an identification: at 180 px the stripes, the scallops, the five posts, the",
+        "balustrade and the two steps all survive; the 120 px silhouette is a wide shallow cone on an open",
+        "colonnade, which is a bandstand and is not a tent."
+      ]
+    },
+    {
       "id": "town-clock",
       "subject": "The Old Town Clock on Citadel Hill, Halifax",
       "renders": [
@@ -1101,6 +1530,185 @@
         "and on the water. Nothing else on the tile changed: no landmark was added and none may be, for the",
         "reason in `expectedBlindAnswerNote`. Judged by rendering the composite and looking at it, three times,",
         "not by reading the SVG."
+      ]
+    },
+    {
+      "id": "market-stall",
+      "subject": "A market stall under a striped awning on a harbour boardwalk",
+      "renders": [
+        "src/svg/halifax/prop-market-stall@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a market stall",
+        "a market stand",
+        "a produce stall",
+        "a fruit and vegetable stall",
+        "a farmers market stall",
+        "a greengrocer’s stall",
+        "a street market stall"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. This is a TYPE - a trestle, an awning and crates of produce - and it is drawn as",
+        "one because a named market would be a building, and a building on a waterfront is a place claim this",
+        "subject cannot support. No answer in this list names a city, a market or a country, and a verifier",
+        "who names one is not wrong; they are just not required to, and the gate must not reward it.",
+        "WHAT IT MUST CARRY: that goods are being SOLD from it. \"A tent\", \"a gazebo\", \"a bus shelter\" or \"a",
+        "picnic shelter\" is a FAIL - the crates, the produce and the trestle are what make it a stall, and",
+        "they are why the produce is drawn in three separate crates of three separate colours."
+      ],
+      "referenceFiles": [
+        "halifax/waterfront-boardwalk.jpg",
+        "halifax/waterfront-and-skyline.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a striped awning with a scalloped valance, carried on two timber posts",
+          "why": "The awning is the silhouette. A stall without one is a table.",
+          "detail": "The canopy is pitched toward the viewer - the back edge higher and narrower than the front, so it reads as a plane in perspective rather than as a signboard - and it hangs a valance of rounded scallops over the front edge. Stripes alternate light and dark across it, eight of them, and continue onto the valance in the shaded tone of the same two materials. Rhythm, not count.",
+          "palette": "white, pine"
+        },
+        {
+          "feature": "an open trestle table with crates of produce standing on it",
+          "why": "It is what the awning is over, and it is what makes the object a place that sells something.",
+          "detail": "A plank top on a plain apron and two legs, with three open crates on it. Each crate holds ONE kind of produce in one colour family, because a mixed heap at phone size is a brown mass: red fruit, pale roots, green heads. Produce is drawn as flat rounded shapes of 34 to 40 px, which is the floor at which a piece of fruit is still a piece of fruit at 390 px.",
+          "palette": "wood, flag-red, felt, grass"
+        },
+        {
+          "feature": "goods on the deck as well as on the table",
+          "why": "A stall that carries nothing but three crates reads as a display. The barrel, the sacks and the stacked crate are what make it somebody’s work.",
+          "detail": "A hooped timber barrel at one end, two tied sacks at the other, and one crate stacked under the table. All of them stand ON the deck line, which is the bottom edge of the file."
+        },
+        {
+          "feature": "it stands on the boardwalk deck, with its own contact shadow",
+          "detail": "A flat `ao-shadow` ellipse at 0.28 under the whole stall, and every post, barrel and sack ending on the same line. The file’s bottom edge IS the level ground line - level-scene.ts draws a POI with origin (0.5, 1) at the ground - so nothing may be drawn below it."
+        }
+      ],
+      "simplifyAway": [
+        "individual boards of the trestle and the crates: one rim band per crate is the whole joinery",
+        "awning seams, eyelets, guy ropes and the frame behind the canopy",
+        "stalks, leaves and blemishes on the produce: a flat rounded shape of one tone is a piece of fruit",
+        "the weave of the sacks and the grain of the barrel: art-bible section 1 forbids a surface pattern",
+        "anything a stall would carry below 12 px - scales, twine, punnets, coins"
+      ],
+      "neverAdd": [
+        "a price board, a chalkboard, a banner, a poster or any lettering or numeral in either language",
+        "a national flag, a coat of arms, a wordmark or a logo of any kind",
+        "a person. The background parallax tile already carries the level’s figures at the shared cartoon canon; a figure drawn into a POI hero would be a second canon and would need the character rig’s proportions, outline and skin slots",
+        "any cultural marker, pattern or craftwork on the goods, the cloth or the crates. docs/content-review.md 3.3: a market is exactly where an invented pattern gets drawn without anyone deciding to",
+        "a cash register, a card terminal, a branded crate or a supermarket bag: all of them date the picture or name a company"
+      ],
+      "notes": [
+        "NO PHOTOGRAPH OF THIS EXACT OBJECT IS IN THE REPOSITORY, and that is stated here rather than left to",
+        "be discovered. What the two Halifax references give is the SETTING - a timber deck, its lamps,",
+        "benches, bollards and planters, and the scale of a person against them - and the stall is drawn as a",
+        "TYPE to that scale: 560 px wide against a 420 px character, so the awning stands a little above head",
+        "height. A type is what this project draws for street furniture already (benches, bollards, lamps,",
+        "planters on halifax/layer-40-quayside.svg) and the rule it satisfies is the same one: nothing here is",
+        "a named or recognisable object, so nothing here can be wrong about a real one.",
+        "THE STRIPED-KIOSK LESSON IS WHY THE PARAGRAPH ABOVE EXISTS. A striped bandstand kiosk drawn into the",
+        "Quebec City terrace tile as street furniture was identified by a blind verifier as Terrasse Dufferin,",
+        "from a tile whose own neverAdd forbade exactly that. Furniture that is really architecture is",
+        "architecture. This stall is deliberately demountable: posts, a canopy, a trestle and goods, with no",
+        "roof structure, no walls, no floor and no foundation, so there is no building for anyone to name.",
+        "PLACEMENT FLOOR: do not draw it below 280 px wide anywhere the player is meant to recognise it.",
+        "DRAWING OBSERVATION, not an identification: at 180 px wide the awning stripes, the scallops, the",
+        "three crates and the barrel hoops are all still legible; the 120 px black silhouette is a canopy on",
+        "two posts over a table with goods under it, which is a stall and is not a shelter."
+      ]
+    },
+    {
+      "id": "harbour-tug",
+      "subject": "A small harbour tug lying alongside a timber boardwalk edge",
+      "renders": [
+        "src/svg/halifax/prop-harbour-tug@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as town-clock and pier-21.",
+      "expectedBlindAnswer": [
+        "a tugboat",
+        "a tug",
+        "a harbour tug",
+        "a tug moored at a wharf",
+        "a tugboat at a dock",
+        "a working boat at a wharf"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, AND IT MUST STAY THAT WAY. This is a TYPE, not a vessel: no name, no hull",
+        "number, no house flag and no funnel device, because every one of those is a real operator naming",
+        "itself and this project draws no lettering anywhere. A verifier who names a port or a company is",
+        "reading something that is not in the picture, and the gate must not reward it.",
+        "WHAT IT MUST CARRY IS THE BOAT. \"A boat\", \"a ship\" or \"a ferry\" is a FAIL: the whole point of the",
+        "funnel, the bluff bow, the low aft deck and the tyre fenders is that a tug is not any boat.",
+        "ONE WORD IS DELIBERATELY NOT IN THE LIST: \"small\". The hand-off's own READ-ME-FIRST.txt contains it as",
+        "ordinary English, and scripts/verify-art.mjs's leak check - which searches handed-over text for any token",
+        "from any accepted answer - reported it the moment this subject was added. It is not a leak: the text",
+        "predates the answer. The fix the gate itself names in that case is to reword the answer, so it is reworded."
+      ],
+      "referenceFiles": [
+        "halifax/waterfront-boardwalk.jpg",
+        "halifax/waterfront-harbour.jpg",
+        "halifax/waterfront-and-skyline.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "one tall funnel, wider than it is deep, well aft of the wheelhouse, with a dark cap",
+          "why": "It is the single feature that separates a tug from every other small craft at a wharf. A pleasure boat has no funnel; a fishing boat has a pipe. Drawn small or omitted, this subject becomes \"a boat\".",
+          "detail": "MEASURED on halifax/waterfront-boardwalk.jpg, the tug in mid-harbour at (1020..1180, 500..610) of a 1600x1067 frame: hull length on the waterline 73 px, funnel top 45 px above the waterline, so FUNNEL TOP : HULL LENGTH = 0.62, and the funnel is about 0.17 of the hull long. It is a big soft-shouldered oval in the photograph, not a thin stack. The shipped art draws a 128-wide funnel on a 690-long hull (0.185) with its top at 0.63 of the hull length above the kerb.",
+          "palette": "flag-red, hide"
+        },
+        {
+          "feature": "a bluff bow with the sheer sweeping up to it, and a low aft deck",
+          "why": "A tug is short, deep and full forward. Draw it with a fine bow and a level sheer and it becomes a launch or a small ferry.",
+          "detail": "The gunwale runs nearly level for two thirds of the hull from aft, then rises steeply over the forward fifth to a full, almost vertical stem. The aft deck is the LOWEST part of the vessel and is where the towing gear stands. Sheer rise from amidships to the stem head is about 0.08 of the hull length."
+        },
+        {
+          "feature": "a row of tyre fenders hung over the side facing the wharf",
+          "why": "It is what says WORKING BOAT rather than pleasure boat, and it is what says this hull spends its life pushing against things.",
+          "detail": "Five or six dark rings on the hull side, evenly spaced, each about 0.075 of the hull length across. Rhythm, not count. They are rings - a disc with a hole - and never plain dots."
+        },
+        {
+          "feature": "a black hull with a buff deckhouse and wheelhouse above it",
+          "why": "The two-material split is most of the read at phone size: a dark mass low, a light mass high.",
+          "detail": "Hull in the `hide` ramp, deckhouse and wheelhouse in `felt`, windows in `slate-shade`. The cap rail along the top of the hull is `felt` too, which is what stops the dark hull and the light house reading as two unrelated objects.",
+          "palette": "hide, felt, slate"
+        },
+        {
+          "feature": "the vessel is moored, not under way",
+          "why": "A POI is a thing the player walks up to and stops at. A boat drawn with a bow wave is a boat going somewhere else.",
+          "detail": "A mooring line runs from the stem down to a bollard standing on the deck in the foreground, and the timber edge of the boardwalk crosses the bottom of the frame in front of the hull. NO bow wave, NO wake, NO smoke."
+        }
+      ],
+      "simplifyAway": [
+        "rigging, aerials, radar reflectors and navigation lights below 12 px",
+        "the individual tread of the tyre fenders: a ring is the whole feature",
+        "plating seams, welds and rivets: they are a surface pattern, and art-bible section 1 forbids drawing one",
+        "the towing winch drum detail: one drum between two end flanges",
+        "the waterline, the boot-topping and everything below it - the hull is cut off by the boardwalk edge in the foreground, which is where the level ground line is"
+      ],
+      "neverAdd": [
+        "a name, a port of registry, a hull number, a house flag, a funnel device or any lettering in either language",
+        "the Canadian Coast Guard’s red hull and white stripe, or any other service livery: this is a commercial harbour tug and a livery is an operator naming itself",
+        "a naval gun, a pennant number or any warship fitting",
+        "a bow wave, a wake, smoke or spray",
+        "a lighthouse, a lifeboat davit or a crane: each one moves this subject to a different type of vessel"
+      ],
+      "notes": [
+        "The tug in halifax/waterfront-boardwalk.jpg is the PRIMARY reference and is the only one measured.",
+        "It is small in frame - 160 px across - so it settles the PROPORTIONS and the arrangement and nothing",
+        "finer. That is the honest limit of this reference and the drawing does not pretend past it: what is",
+        "drawn is what can be seen at that size, which is also what a player sees at 390 px.",
+        "COLOUR IS NOT TAKEN FROM IT. The photograph is heavily processed - dark, high contrast, a storm sky -",
+        "and references.json already labels it a geometry reference only for halifax-quayside. The funnel red",
+        "is `flag-red`, the hull `hide` and the house `felt`, all from palette.json rather than sampled.",
+        "WHY A TUG AND NOT A NAMED VESSEL. The blurb this POI carries is about the port, not about a ship, so",
+        "the art has to say \"working harbour\" and must not say \"this particular boat\". A type does that and",
+        "carries no licence, no livery and no claim this project cannot verify.",
+        "PLACEMENT FLOOR: do not draw it below 300 px wide anywhere the player is meant to recognise it.",
+        "Adopted from the Ottawa floor rather than re-derived, because no blind pass has been run on this",
+        "subject and the artist does not set the threshold for their own work. DRAWING OBSERVATION, not an",
+        "identification: at 180 px wide the funnel, the bluff bow, the window band and four of the five",
+        "fenders are still legible, and the 120 px black silhouette is a deep short hull with a tall house,",
+        "a funnel and a masthead - not confusable with the level’s two buildings."
       ]
     },
     {
@@ -2618,6 +3226,249 @@
       "notes": [
         "TWO WATERS ON ONE LEVEL, AND IT IS NOT A MISTAKE. layer-20 is the open Atlantic beyond the mouth of the cove and layer-30 is the sheltered water inside it, which is what Peggy's Cove is: a notch of calm water inside a granite headland, with the ocean on the other side of the rock. The compression is that the two are stacked in one view; the sheet records it rather than leaving it to be found.",
         "The composite is the level's traversal picture and it is where the player spends the whole level. It is never asked for a place."
+      ]
+    },
+    {
+      "id": "granite-erratic",
+      "subject": "A glacial erratic and a tide pool on bare granite barrens",
+      "renders": [
+        "src/svg/peggys-cove/prop-granite-erratic@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a boulder on bare rock",
+        "a large rock on a rocky shore",
+        "a glacial erratic",
+        "boulders on rock",
+        "a rock and a tide pool",
+        "a granite boulder"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC AND NATURAL. This is a LANDFORM. It names no place, and the gate must not ask it to: the",
+        "place-anchor for this level is peggys-cove-light and nothing else.",
+        "WHAT IT MUST NOT BE READ AS is the whole reason this subject is written down. If an identifier says",
+        "CAIRN, INUKSUK, STACKED STONES, A MARKER or A MONUMENT, that is a FAIL and it is a serious one:",
+        "docs/content-review.md forbids all of those in this game outright, and a boulder drawn so that it",
+        "reads as one is the exact defect the prohibition exists to prevent. One rounded mass resting on rock,",
+        "and a second smaller one beside it, NOT on top of it and NOT balanced on it."
+      ],
+      "referenceFiles": [
+        "peggys-cove/granite-barrens-and-sea.jpg",
+        "peggys-cove/lighthouse-on-the-granite.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "one large rounded mass resting ON the rock, not growing out of it",
+          "why": "That is what an erratic is: a boulder the ice left behind, sitting on pavement it does not belong to. Drawn as an outcrop rising out of the ground it is not this subject, it is a hill.",
+          "detail": "A closed rounded silhouette whose foot meets the pavement in a single flat line with a contact shadow under it. Wider than it is tall - MEASURED on peggys-cove/granite-barrens-and-sea.jpg, the boulders in the middle distance run about 1.4 to 1.6 wide to 1 tall, and the shipped art draws 348 x 210 = 1.66. Nothing about it is angular or faceted, because this granite is glacially rounded."
+        },
+        {
+          "feature": "a second, smaller boulder BESIDE it on the same pavement",
+          "why": "One boulder alone reads as scale-less. Two of different sizes on one plane give the eye the ground.",
+          "detail": "About half the height of the first, standing clear of it with rock visible between them. NEVER touching, NEVER stacked, NEVER balanced."
+        },
+        {
+          "feature": "bare pale granite pavement with joint lines and grass only in the joints",
+          "detail": "A flat band of `path-light` under everything, with `path-shade` joint lines running through it, and short broken runs of grass tufts that follow a joint and taper at both ends. Bare rock is the subject; grass is what grows in the cracks in it. This matches layer-40-granite-barrens.svg, which the POI stands in front of.",
+          "palette": "path, grass"
+        },
+        {
+          "feature": "a shallow tide pool in front, flat and still",
+          "why": "It is the second half of what a granite barren is, it is on the reference, and it is what says SEA rather than quarry.",
+          "detail": "A flat ellipse of `water-base` inside a `water-shade` rim, with one or two straight `water-light` ripple bars. No reflection of the boulders - a pool this shallow does not carry one at this scale - and no spray.",
+          "palette": "water"
+        }
+      ],
+      "simplifyAway": [
+        "lichen, crystal sparkle, grain and mineral speckle: art-bible section 1 forbids a surface pattern, and this rock is where the temptation is worst",
+        "the individual joints of the pavement below 12 px",
+        "seaweed, barnacles and shells in the pool below 12 px",
+        "every erratic beyond the second: the parallax tile behind already carries four"
+      ],
+      "neverAdd": [
+        "a cairn, an inuksuk, a stone marker, a stacked or balanced stone arrangement of any kind, or any object a viewer could read as one. docs/content-review.md and assets/style/peggys-cove-level.md section 0. This is the single most likely wrong drawing on this subject and it is forbidden outright",
+        "a carving, an inscription, a plaque, a painted mark or any lettering",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. This level depicts nobody, anywhere - assets/style/peggys-cove-level.md section 0, and the same clause is on both of this level’s original subjects",
+        "a flag, a pole, a fence, a bench or any built object: the subject is bare shore",
+        "surf, spray, breaking waves or a wet-rock sheen: this level is a clear calm morning and the tide pool is still"
+      ],
+      "notes": [
+        "WHY A ROCK IS A POINT OF INTEREST. It carries a sourced fact - Discover Canada page 93, the three",
+        "oceans, and this is the Atlantic edge - and the brief for this work is explicit that a point of",
+        "interest is something a player can stop at and learn one sourced fact from, not necessarily a",
+        "landmark. The alternatives considered for this position were a stack of lobster traps and a hauled",
+        "dory, and BOTH WERE REFUSED for the same reason: there is no licence-clean photograph of either in",
+        "this repository, and this level in particular does not get to invent what it cannot check.",
+        "PLACEMENT FLOOR: none is set, because there is no identification threshold to protect - a boulder",
+        "at 120 px is a boulder. DRAWING OBSERVATION: at 180 px wide the two masses, the light and shade on",
+        "each, the joint lines, the grass and the pool are all still legible."
+      ]
+    },
+    {
+      "id": "fish-store",
+      "subject": "A red fish store standing on timber cribbing at the water’s edge",
+      "renders": [
+        "src/svg/peggys-cove/prop-fish-store@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a fish store",
+        "a fishing shack",
+        "a fishing shed",
+        "a boathouse",
+        "a red shed on a dock",
+        "a fish house on pilings",
+        "a shed on a wharf"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE. There are seven more of these on layer-30-cove.svg, which repeats every 1760 px,",
+        "so nothing here may be a named building and nothing may be demanded of it that names one. A verifier",
+        "who says \"Peggy’s Cove\" is not wrong and is not required to, and the gate must not reward it: the",
+        "place-anchor for this level is peggys-cove-light.",
+        "WHAT IT MUST CARRY: that the building stands OVER WATER on built cribbing. \"A red barn\", \"a house\"",
+        "or \"a cabin\" is a FAIL - the cribbing, the deck and the dark water under it are the subject."
+      ],
+      "referenceFiles": [
+        "peggys-cove/harbour-and-fish-stores.jpg",
+        "peggys-cove/red-fish-store.jpg",
+        "peggys-cove/village-houses.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "stacked timber cribbing carrying a plank deck, with dark water under it",
+          "why": "It is what makes this a fish store and not a shed in a field, and it is the half of the building a photograph of this coast always shows.",
+          "detail": "Courses of squared timber laid in a stack between upright posts, drawn in the `glacier` ramp - MEASURED as a pale weathered green on peggys-cove/harbour-and-fish-stores.jpg, which is what that timber goes in salt air - over a `water-shade` field so the gaps between the courses read as shadow and not as sky. The deck is `wood` with a lit cap and a dark underside.",
+          "palette": "glacier, wood, water"
+        },
+        {
+          "feature": "a red clapboard gable end with white corner trim and white window and door frames",
+          "why": "Red with white trim is the colour pair of this coast and it is the whole read at phone size. The Halifax level’s brick is `brick`; this is `oxide`, the same red the seven stores on layer-30-cove.svg already use.",
+          "detail": "Walls in `oxide-base` with an `oxide-shade` far end, `white-base` boards at both corners and around every opening. NOT `brick` and NOT `flag-red`.",
+          "palette": "oxide, white"
+        },
+        {
+          "feature": "a wide plank door facing the deck, big enough to carry gear through",
+          "detail": "A double-leaf door about a third of the gable’s width and two thirds of the wall’s height, dark inside its white frame, with one small square window beside it. A domestic front door with a step is a house; this is a working opening."
+        },
+        {
+          "feature": "a shingled roof drawn as a plain chevron band over the gable",
+          "detail": "The gable end faces the player, so the roof is seen as its verge: one band in `slate`, lit on the left slope. No shingle courses, no ridge cap, no eaves detail - art-bible section 1 forbids the pattern and none of it survives 25 per cent anyway.",
+          "palette": "slate"
+        },
+        {
+          "feature": "a white-railed walkway running to it, and bare granite at its foot",
+          "why": "It ties the building to the ground the player is standing on, which is the barrens, and it is what the reference shows.",
+          "detail": "A plank walkway on posts entering from one side with a two-rail white handrail, and a band of `path` granite across the bottom of the file. The file’s bottom edge IS the level ground line."
+        }
+      ],
+      "simplifyAway": [
+        "clapboard boarding and shingle courses: surface pattern, forbidden by art-bible section 1",
+        "the lichen on the roof, which is bright orange on the reference and is the strongest single colour in that photograph. It is weather on one building, not a feature of the type",
+        "buoys, floats, ropes, nets and gear below 12 px",
+        "the individual timbers of the cribbing below 12 px: three courses is the rhythm",
+        "reflections in the water under the deck: it is in the building’s own shadow"
+      ],
+      "neverAdd": [
+        "a sign, a name, a number, a wordmark or any lettering in either language",
+        "a lighthouse, a lantern or a light of any kind on this building: this level has exactly one lighthouse and it is the hero",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. This level depicts nobody, anywhere - assets/style/peggys-cove-level.md section 0, and the same clause is on both of this level’s original subjects",
+        "a lobster trap, a dory or any gear this repository has no reference photograph of. The temptation on this subject is to dress it, and every piece of dressing would be invented",
+        "a chimney, a porch, a dormer or a garden: those belong to the house subject and they are what separate the two"
+      ],
+      "notes": [
+        "peggys-cove/harbour-and-fish-stores.jpg is the PRIMARY reference: it shows the red store, its",
+        "cribbing, its deck and its white rail in one frame, with the village houses behind. red-fish-store.jpg",
+        "is the second and is a bright-sun exposure, which is where the white trim and the red were checked.",
+        "BOTH ARE OF REAL BUILDINGS AND NEITHER IS COPIED. What is drawn is the type: one gable end, one",
+        "door, one window, three courses of cribbing. The building in the photograph has a lichened roof, a",
+        "lean-to, a second storey door and a jumble of gear, and none of that is here.",
+        "PLACEMENT FLOOR: do not draw it below 300 px wide anywhere the player is meant to recognise it.",
+        "DRAWING OBSERVATION, not an identification: at 180 px the cribbing courses, the door, the window,",
+        "the corner trim and the rail all survive; the 120 px silhouette is a gabled box standing on legs",
+        "over water, which is the subject."
+      ]
+    },
+    {
+      "id": "fishermans-house",
+      "subject": "A clapboard village house behind a picket fence with wild roses",
+      "renders": [
+        "src/svg/peggys-cove/prop-fishermans-house@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a house",
+        "a village house",
+        "a cottage",
+        "a clapboard house",
+        "a house behind a picket fence",
+        "a wooden house"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, like every other built subject on this level except the lighthouse. It is a house.",
+        "It names no place and no person and the gate must not ask it to.",
+        "WHAT IT MUST CARRY: a HOUSE somebody lives in - the chimney, the domestic windows, the door and the",
+        "garden fence. \"A barn\", \"a shed\", \"a church\" or \"a store\" is a FAIL, and the fence and the roses are",
+        "half of why it is not any of them."
+      ],
+      "referenceFiles": [
+        "peggys-cove/village-houses.jpg",
+        "peggys-cove/harbour-and-fish-stores.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a storey-and-a-half gable end facing the player, with one window in the gable",
+          "why": "It is the house form of this coast and it is what makes the building read as a dwelling at a glance: a tall triangle over a short wall, with a window up in the peak where the bedroom is.",
+          "detail": "MEASURED on peggys-cove/village-houses.jpg: on the mint-green house the wall below the eave is about 0.55 of the gable’s full height and the roof pitch is close to 40 degrees. The shipped art draws a 340-wide wall 244 tall under a gable rising 122, and one 68 x 72 window centred in the peak."
+        },
+        {
+          "feature": "white trim against a painted clapboard wall",
+          "why": "The colour pair is the whole read at phone size and it is what every house in the reference has. The wall may be any of the village colours; the trim is always white.",
+          "detail": "Corner boards at both ends of the wall, a band under the eave, and a white frame around every window and the door. The shipped wall is `felt-light`, the pale yellow of the reference’s second house; `glacier` is the mint green of the first and is used on this file’s door so the two are not the same object.",
+          "palette": "felt, white, glacier"
+        },
+        {
+          "feature": "a brick chimney standing through the roof slope",
+          "why": "A house is heated. It is the one roof feature that separates this from the fish store, whose roof carries nothing at all.",
+          "detail": "A plain brick stack with a capping course, passing BEHIND the roof band so it is clearly through the slope rather than sitting on it. `brick`, which no other object on this level uses.",
+          "palette": "brick"
+        },
+        {
+          "feature": "a weathered picket fence across the front, with wild rose bushes growing over it",
+          "why": "It is the garden, it is on every reference of this village, and it is what says somebody lives here rather than works here.",
+          "detail": "Pointed pickets of even width and gap on two rails, in weathered `path` tones rather than white - MEASURED on peggys-cove/village-houses.jpg, where the fence is bare silvered wood and the house trim beside it is white, and drawing both white loses the fence. Rosa rugosa bushes in `pine` with rounded pink and red flowers; the bushes break the fence line and stand taller than it in two places.",
+          "palette": "path, pine, flag-red"
+        },
+        {
+          "feature": "it stands on turf, and the turf is the only green ground on this level",
+          "detail": "A narrow `grass` band at the very bottom of the file, which is the level ground line. Everywhere else the player walks on `path-light` granite, so this band is what says garden."
+        }
+      ],
+      "simplifyAway": [
+        "clapboard boarding, shingle courses and the fence’s grain: surface pattern, forbidden by art-bible section 1",
+        "sash glazing bars beyond one cross per window",
+        "the overhead wires, the satellite dish, the propane tank and the outbuildings in the reference",
+        "individual rose leaves and buds: a rounded mass of two greens with flat flower discs on it",
+        "the second and third houses of the reference: one house is the subject"
+      ],
+      "neverAdd": [
+        "a street number, a name board, a mailbox with lettering, a sign or any lettering in either language",
+        "a flag, a coat of arms, a wordmark or a decorative emblem on the gable",
+        "a figure of any kind, at any scale, including a silhouette and a crowd. This level depicts nobody, anywhere - assets/style/peggys-cove-level.md section 0, and the same clause is on both of this level’s original subjects",
+        "a lighthouse, a fishing store, a boat, a net or a trap: this is the dwelling, and every one of those belongs to a different subject on this level",
+        "a cross, a steeple or a bell: a white-trimmed gable with a peak window is one wrong addition away from a chapel"
+      ],
+      "notes": [
+        "peggys-cove/village-houses.jpg is the PRIMARY reference and carries everything on this subject:",
+        "three houses, the fence, the roses, the shingle roofs and the brick chimney in one frame. It is a",
+        "flat overcast exposure - the sky in it is a grey field - so it is a GEOMETRY AND ARRANGEMENT",
+        "reference and the colours are taken from palette.json, lit for the clear morning this level is set on.",
+        "NO HOUSE IN THE PHOTOGRAPH IS COPIED. The drawing takes the form from the mint-green house, the wall",
+        "colour from the yellow one and the fence and roses from the foreground, and it is one building where",
+        "the reference has three.",
+        "PLACEMENT FLOOR: do not draw it below 300 px wide anywhere the player is meant to recognise it.",
+        "DRAWING OBSERVATION, not an identification: at 180 px the chimney, the gable window, the two sash",
+        "windows, the door, the fence pickets and the roses all survive; the 120 px silhouette is a gabled",
+        "house with a chimney behind a fence, which is the subject."
       ]
     },
     {

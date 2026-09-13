@@ -76,17 +76,23 @@ Nine SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `quebec-city-layer-30-river` | `layer-30-river.svg` | 1800 × 160 | the St Lawrence: three water bands and drifting ice pans |
 | `quebec-city-layer-50-terrace` | `layer-50-terrace.svg` | 2016 × 640 | Dufferin Terrace: parapet, cast-iron railing, lamps, a **plain open timber shelter** (it was a striped kiosk — see §7), benches, crowd, one timber footbridge, the chute's far wall |
 | `quebec-city-layer-60-slope` | `layer-60-slope.svg` | 1440 × 560 | the toboggan run: a **packed-snow** lane (it was `ice` — see §7), modelled divider ridges, runner streaks, two riders on toboggans, near bank |
-| `quebec-city-landmark-chateau-frontenac` | `landmark-chateau-frontenac@1x.svg` | 1080 × 900 | **the POI hero**: the Château Frontenac |
+| `quebec-city-landmark-chateau-frontenac` | `landmark-chateau-frontenac@1x.svg` | 1080 × 900 | **a POI hero**: the Château Frontenac |
+| `quebec-city-prop-city-wall` | `prop-city-wall@1x.svg` | 640 × 500 | **POI hero, added 2026-09-13**: two faces of the fortified wall meeting at a salient angle, snow on the coping |
+| `quebec-city-prop-terrace-kiosk` | `prop-terrace-kiosk@1x.svg` | 560 × 520 | **POI hero, added 2026-09-13**: the striped bandstand kiosk, drawn once, where a building that names its city belongs |
 | `quebec-city-poi-marker-idle` | `poi-marker-idle.svg` | 132 × 176 | tappable POI marker, not in reach |
 | `quebec-city-poi-marker-active` | `poi-marker-active.svg` | 132 × 176 | tappable POI marker, in reach |
 | `quebec-city-particle-snow` | `particle-snow.svg` | 96 × 32 | three snow-flake sizes |
 
 There is no character source here. Characters are `shared/` and already exist; this level places them.
 
-**There are no standalone prop files**, for the reason Ottawa's page gives: `level.schema.json` has no way to
-place a loose prop, so a prop file is a texture charged to the budget that nothing can reference. The kiosk,
-the benches, the lamps and the footbridge are all inside `layer-50-terrace.svg`; that file is their canonical
-geometry.
+**There were no standalone prop files, and now there are two — because a POI is a place a level document CAN
+put a file.** The sentence this paragraph used to carry is still true of a *loose* prop: `level.schema.json`
+has no field for one, so a decorative prop file is a texture nothing can reference (`poi-marker-idle`,
+`poi-marker-active` and `particle-snow` in the table above are exactly that, and they are still charged to
+this level for nothing). `pois[].artKey` is the exception and always was. The two `prop-` files added on
+2026-09-13 are referenced by `content/levels/quebec-city.json`, drawn once each, at a fixed world x. The
+benches, the lamps, the footbridge and the plain shelter remain inside `layer-50-terrace.svg`, which is still
+their canonical geometry.
 
 ---
 
@@ -256,7 +262,15 @@ texture-memory: OK - quebec-city 28.20 MiB of 40.00 MiB (71%, 12373168 B spare)
 | `quebec-city-layer-30-river` | 1× | 1800 × 160 | 1.10 MiB |
 | `quebec-city-layer-20-farbank` | 1× | 1800 × 150 | 1.03 MiB |
 | `quebec-city` atlas (2 markers + snow particle) | 2× | 206 × 694 | 0.55 MiB |
-| **total at a 2× device** | | | **29,566,976 B = 28.20 MiB** |
+| `quebec-city-prop-city-wall` | **1×, source-pinned** | 640 × 500 | 1.22 MiB |
+| `quebec-city-prop-terrace-kiosk` | **1×, source-pinned** | 560 × 520 | 1.11 MiB |
+| **total at a 2× device** | | | **34,151,024 B = 32.57 MiB** |
+
+**Re-measured 2026-09-13** over the real tree: `quebec-city 32.57 MiB of 40.00 MiB (81 %, 7 792 244 B spare)`
+over 14 files, transfer payload `0.44 MiB of 8.00 MiB`. The two new heroes cost **2.33 MiB between them**.
+The table above now differs from the 2026-09-08 measurement it was written for; both totals are printed so
+the delta is the finding rather than a number that quietly moved. **The 0.55 MiB of markers and particles is
+still a quarter of what the two new POIs cost and is still referenced by nothing.**
 
 Ottawa is **33.30 MiB** and unchanged by this work.
 
@@ -577,3 +591,62 @@ adds no source for them. `rig-contract.md` §11 is the contract; the three thing
   selector reaches them before any mount rule, so a level offering `toboggan` should set `interaction: null`
   on that mode and let the player dismount — which returns the mode to `walk` and the figure to its feet.
   The same holds for `jump`.
+
+
+---
+
+## 12. Three points of interest, and why three and not four
+
+**Added 2026-09-13.** The level shipped with one POI at x 1540 on a 6 048 px walk. It now has three.
+Nothing else moved: same `size`, same ground line, same five layers, same theme, same two locomotion modes,
+same spawn, same guide.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 1 540 | `chateau-frontenac` | `quebec-city-landmark-chateau-frontenac`, 1080 × 900 | Champlain built a fort in 1608 where Québec City stands today | *Discover Canada* p. 24 |
+| 3 200 | `city-wall` | `quebec-city-prop-city-wall`, 640 × 500 | in 1759 the British defeated the French at the Plains of Abraham, here, ending France's empire in America | *Discover Canada* p. 25 |
+| 4 800 | `terrace-kiosk` | `quebec-city-prop-terrace-kiosk`, 560 × 520 | *O Canada* was first sung in Québec City in 1880 and became the anthem in 1980; the French and English words differ | *Discover Canada* p. 84 |
+
+**Gaps of 1 660 and 1 600 px.** Three and not four is arithmetic, not taste: this is the shortest level in the
+game at 6 048 px, the spawn is at 1 050 and the first POI is the landmark at 1 540, which leaves 4 500 px of
+walk. A fourth would need the gaps down to about 1 450, under the 1 500 px floor the brief sets, and the
+alternative — lengthening the level — is the opposite of the complaint this work exists to answer.
+
+**The three facts are a sequence and were chosen as one**: 1608 the fort, 1759 the battle, 1880 the anthem.
+A player walking left to right walks forward through three centuries, and each date is on a different object.
+
+**The kiosk is the recovery of a deleted drawing, and that is the most interesting thing here.** §7 records
+that an unprimed verifier named *Terrasse Dufferin, Québec City* off the striped bandstand kiosk drawn into
+`layer-50-terrace.svg`, that the tile repeats every 2 016 px, and that the kiosk was therefore replaced with a
+plain open timber shelter. The finding was right and the deletion was right. **What was wrong was only where
+it was drawn.** A POI hero is drawn once, at one world x, and a building that names its city is exactly what
+belongs there. So the kiosk is back, bigger, as `terrace-kiosk`, and `references.json` says in both places
+why one subject forbids it and the other requires it — `verifyArtProtocol.contradictionRule` is explicit that
+a prohibition on one subject may not forbid a requirement of another.
+
+**What was refused.** A cannon on the rampart and a city gate: both are real, both would have made the wall
+read as a fortification instantly, and there is **no licence-clean photograph of either in this repository**.
+`neverAdd` on `city-wall` now forbids both by name so the next person does not spend the same hour deciding.
+The Champlain statue on the terrace was refused on a different rule and a firmer one — reference rule 4, *do
+not depict a real, identifiable person*.
+
+**Scenery: none added, and one thing deliberately left alone.** `layer-50-terrace.svg` is 44 kB of railing,
+lamps, benches, a footbridge, a shelter and a crowd; the corridor was never short of things to look at. And
+**`layer-60-slope`, the toboggan run, is still invisible in game** — §7's placement finding is unchanged:
+the tile sits at `offset.y` 1280 under a ground polyline at 1280 and the opaque ground polygon is painted
+over all 560 rows of it. That is one number in `content/levels/quebec-city.json`, which IS in this work's
+scope, and **it was still not changed**, because every fix available from inside the level document trades
+one defect for a worse one: raising the run above the ground line puts a lane that recedes *toward* the
+camera above the horizon, and lowering the ground polyline to 1840 moves the Château's foot 640 px down the
+screen, since `level-scene.ts` places a POI's bottom edge on the ground line and nothing else. The honest
+fix is a redraw of the tile into a band above the walk line, or an engine change. Recorded again here, with
+the two dead ends named, so the third person to find it does not re-derive them.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'city-wall': singleSource(),
+  'terrace-kiosk': singleSource(),
+```
+
+Same shape as `chateau-frontenac`. Until they land, `make verify-art` names two more failures.
