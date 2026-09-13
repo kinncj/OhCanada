@@ -42,5 +42,29 @@
       "action": "quote only the article's own sentences, never the correspondence it reproduces, and paraphrase into plain language before it reaches a screen"
     }
   ],
-  "grainNote": "One article, one heading. Both flags are at chapter grain because there is nothing finer to point at, and both are about the SOURCE rather than about drift: neither clears by re-fetching."
+  "grainNote": "One article, one heading. Both flags are at chapter grain because there is nothing finer to point at, and both are about the SOURCE rather than about drift: neither clears by re-fetching.",
+  "liveChecks": [
+    {
+      "checkedAt": "2026-09-13",
+      "checkedBy": "content-verifier",
+      "pages": [
+        {
+          "url": "https://teaching.usask.ca/indigenoussk/import/treaty_4.php",
+          "chapter": "Treaty 4",
+          "sourceDateModified": null,
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the extent of the treaty area: \"The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba.\"",
+            "the date and place of the negotiations: the commissioners were sent \"to Fort Qu'Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown\"",
+            "the two parties as the article itself writes them: \"the strategy of the Cree and Saulteaux was to gain full compensation for their lands\"",
+            "the article's framing of the treaty as a cession, which the second staleness flag covers",
+            "the nineteenth-century correspondence the article reproduces, including Indian Agent Allan Macdonald's \"this site ... represents the place on which the Treaty was signed\"",
+            "the absence of any modification or review date anywhere on the page"
+          ]
+        }
+      ],
+      "finding": "source-unrevised",
+      "consequence": "Fetched first-hand. The live page is BYTE-IDENTICAL to the cache: 198,728 bytes hashing to 93c17d772de7d39a5511c79a7f6ba1b67271e77073607f09ef780ce86a1e8873, this register's sha256, so extractedTextSha256 is untouched and every claim above compares equal by construction. sourceDateModified is null because the page publishes none - no \"Date modified\", no meta dateModified, no review stamp - which is why this check rests entirely on claimsCompared and not on a date. INTERVAL: retrievedAt 2026-09-09 to this check, four days. READ IT AS FOUR DAYS OF STABILITY AND NOT AS EVIDENCE THAT AN ACTIVELY EDITED UNIVERSITY ENCYCLOPEDIA IS UNMAINTAINED. The first flag's action asks for a Treaty Four institution's own account if one becomes reachable; treaty4.ca still did not resolve on 2026-09-13, so that instruction stands unmet. WHAT THIS DOES NOT DO: both flags leave upstream absent, treated as \"revises\", so \"Treaty 4\" stays on ADR-0016 section 2 row 1 and content/levels/prairie-rail.json's territory claim is still on an unarmed row-1 clock."
+    }
+  ]
 }

@@ -53,5 +53,28 @@
       "action": "routed to content and to the schema owner: this is the second level to hit the one-nationSource limit, after content/levels/winnipeg.json. Do not fill the gap by paraphrasing an uncited claim about the Metis into the statement."
     }
   ],
-  "grainNote": "One web page and one heading, so all three flags are at chapter grain. The first is about what this document is entitled to say, the second about how often its bytes move, and the third about what it does not cover; a re-fetch answers only the second."
+  "grainNote": "One web page and one heading, so all three flags are at chapter grain. The first is about what this document is entitled to say, the second about how often its bytes move, and the third about what it does not cover; a re-fetch answers only the second.",
+  "liveChecks": [
+    {
+      "checkedAt": "2026-09-13",
+      "checkedBy": "content-verifier",
+      "pages": [
+        {
+          "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028793/1581292336658",
+          "chapter": "Treaty No. 7",
+          "sourceDateModified": "2013-08-30",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the parties and the treaty area, in the transcription's own nineteenth-century words: \"the Blackfeet, Blood, Piegan, Sarcee, Stony and other Indians, inhabitants of the Territory north of the United States Boundary Line, east of the central range of the Rocky Mountains, and south and west of Treaties numbers six and four\"",
+            "the bounds of the ceded tract, including \"thence north-westerly along the said boundary to a point due west of the source of the main branch of the Red Deer River\"",
+            "the date and place of the treaty: the 1877 edition, at \"the Blackfoot Crossing of Bow River and Fort Macleod\"",
+            "the document's provenance: \"Reprinted from the Edition of 1877\" by the Queen's Printer, Ottawa, 1966, Cat. No. Ci 72-0766",
+            "the page's own \"Date modified: 2013-08-30\" footer"
+          ]
+        }
+      ],
+      "finding": "source-unrevised",
+      "consequence": "Fetched first-hand. The live page is BYTE-IDENTICAL to the cache: 43,549 bytes hashing to 762d65ef037648210f783904caad20b40aefde3d8d4e4cd63c9d0b5f2cf5e518, which is this register's sha256 exactly, so the recorded extraction and extractedTextSha256 are untouched and every claim above compares equal by construction. READ THE INTERVAL BEFORE READING THE VERDICT: retrievedAt is 2026-09-09 and this check is 2026-09-13, so what is established is four days of stability, not a maintained-versus-unmaintained finding. The second staleness flag here predicts that the canada.ca template around the transcription will move the sha256 while the treaty text stands still; over four days it has not, which neither confirms nor refutes the prediction and is recorded so the next checker knows the interval was too short to. WHAT THIS DOES NOT DO: it does not move \"Treaty No. 7\" to ADR-0016 section 2 row 2. All three flags here leave upstream absent, which the table treats exactly as \"revises\", so the chapter stays on row 1 and content/levels/alberta-foothills.json's territory claim is still on row 1's clock - which is armed by source.volatile and is currently unarmed. volatile is the AUTHOR's field and the verifier did not set it; tests/unit/contracts/questions-cite-a-cached-source.test.ts fails on exactly that today and is left failing."
+    }
+  ]
 }

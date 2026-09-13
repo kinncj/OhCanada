@@ -37,5 +37,29 @@
       "action": "re-fetch and re-hash if the claim is ever challenged"
     }
   ],
-  "grainNote": "One filed document, one part. `pages` is absent from the flag because the whole brief is the unit; the level's own citation carries a page."
+  "grainNote": "One filed document, one part. `pages` is absent from the flag because the whole brief is the unit; the level's own citation carries a page.",
+  "liveChecks": [
+    {
+      "checkedAt": "2026-09-13",
+      "checkedBy": "content-verifier",
+      "pages": [
+        {
+          "url": "https://www.ourcommons.ca/Content/Committee/421/TRAN/Brief/BR8708093/br-external/HuronWendatFirstNationCouncil-9505010-e.pdf",
+          "chapter": "PART I — PRESENTATION AND HISTORY OF THE HURON-WENDAT NATION",
+          "sourceDateModified": "2016-12-20",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the Nation’s own description of its territory: “the customary territory of the Huron-Wendat Nation, the Nionwentsïo, which means “our magnificent land” in the Huron-Wendat language, lies along the north and south shores of the St. Lawrence River, between the Saint-Maurice River and the Saguenay River”",
+            "the St. Lawrence as “the Great River according to the Huron-Wendat oral tradition, which is situated at the very core of the Nionwentsïo”",
+            "the point-in-time membership figure: \"The Huron-Wendat Nation has approximately 4,000 members\"",
+            "\"Almost all of the Huron-Wendat members reside in Wendake, the only Huron-Wendat reserve in Canada.\"",
+            "the treaty basis: \"The Huron-British Treaty of 1760\", and the Sioui ruling's \"over the entire territory frequented by the Hurons\"",
+            "the filing: submitted to the Standing Committee on Transport, Infrastructure and Communities from Wendake, Quebec, dated December 7, 2016"
+          ]
+        }
+      ],
+      "finding": "source-unrevised",
+      "consequence": "Fetched first-hand. The live PDF is BYTE-IDENTICAL to the cache: 89,630 bytes hashing to 8a540d2a4745a37f39b35a2447876918c50d083f36d4adee7040d9e9d5a3dbeb, this register's sha256, and the recorded pdftotext extraction is therefore untouched. sourceDateModified is the PDF's own /ModDate, Tue Dec 20 15:46:53 2016 EST, read with pdfinfo - it is the document's claim about itself, which is what the field asks for, but it is NOT a canada.ca \"Date modified\" and must not be read as one. This is the one source of the six where the disposition is not really in doubt: a brief filed with a committee of the 42nd Parliament is not a page anyone maintains and cannot be revised, so a periodic re-check here genuinely has nothing to find. NOTE FOR THE FLAG OWNER, NOT ACTED ON HERE: that makes the single flag's upstream: \"unknown\" almost certainly wrong and \"does-not-revise\" almost certainly right, with a bannedFromAnswers list anchored on the 2016 membership figure (\"4,000\", \"4 000\") - the one number in the cited passage that drifts and that a filed brief will never update. Declaring it would move this chapter to ADR-0016 section 2 row 2 and silence the volatile demand the contract gate is making on content/levels/quebec-city.json right now, so the verifier recorded the evidence and left the declaration to whoever can read the level prose. AS IT STANDS the chapter is on row 1 and the claim's clock is unarmed."
+    }
+  ]
 }

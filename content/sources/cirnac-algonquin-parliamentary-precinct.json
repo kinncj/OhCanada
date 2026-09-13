@@ -33,5 +33,28 @@
       "action": "re-fetch and re-hash if the claim is ever challenged"
     }
   ],
-  "grainNote": "One web page, one chapter. `pages` is absent because the source is not paginated, so the contract test's missing-page fault correctly does not fire."
+  "grainNote": "One web page, one chapter. `pages` is absent because the source is not paginated, so the contract test's missing-page fault correctly does not fire.",
+  "liveChecks": [
+    {
+      "checkedAt": "2026-09-13",
+      "checkedBy": "content-verifier",
+      "pages": [
+        {
+          "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2024/06/traditional-signing-ceremony-marks-the-commitment-to-establish-a-dedicated-algonquin-space-in-the-parliamentary-precinct.html",
+          "chapter": "Traditional signing ceremony marks the commitment to establish a dedicated Algonquin space in the Parliamentary Precinct",
+          "sourceDateModified": "2024-06-06",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the dateline that carries both halves of the territory claim in one contiguous string: \"June 5, 2024 - Ottawa, unceded, unsurrendered territory of the Anishinabe Algonquin Nation, Ontario\"",
+            "the release's own restatement: \"the Parliamentary Precinct is on the traditional and unceded territory of the Algonquin\"",
+            "the parties to the signing: \"The Grand Chief, Chiefs, and Councils from the Anishinabe Algonquin Nation\" and the Minister of Crown-Indigenous Relations",
+            "the office holder the release names, \"the Honourable Gary Anandasangaree, Minister of Crown-Indigenous Relations\"",
+            "the page's own dcterms.modified metadata, 2024-06-06 (this release prints no \"Date modified\" in its body)"
+          ]
+        }
+      ],
+      "finding": "source-unrevised",
+      "consequence": "Fetched first-hand, and the prose is unmoved - but THE REGISTER'S sha256 NO LONGER REPRODUCES. The live fetch is 37,851 bytes hashing to e63d288f50b3ccaf26de7f4e40835ac86bb3970252f30a085a20483bba08b6da against this register's 37,852 bytes and b20dd776919c80fe4478badd0e9806c7f854e05eee722787a8b70c789d8610c2. The whole of the difference is the Akamai BOOMR beacon block at the foot of <head> - request id, edge timestamp, connection port and signature - and nothing else; the python3 tag-stripper recorded verbatim as extraction.command in cirnac-treaty-7.json and kdfn-about-us.json, run over the live fetch and over the cached file, and the two outputs diffed produced an EMPTY diff. So extractedTextSha256 (8276d6ce...), which is the digest content/levels/ottawa.json cites as its sourceHash, still matches, and the finding is that this URL cannot be re-fetched to this register's sha256 by anyone, ever, because that field captured one CDN response rather than the document. That is a defect in what the register pins, not a revision, and it is recorded here rather than fixed because re-hashing would pin the next response just as uselessly. NOTE FOR THE FLAG OWNER, NOT ACTED ON HERE: the release names \"the Honourable Gary Anandasangaree, Minister of Crown-Indigenous Relations\", and canada.ca today names the Honourable Rebecca Alty in that office. A dated news release will never correct that, which is the textbook upstream: \"does-not-revise\" case with a bannedFromAnswers list of the minister's name and title - but declaring it would move this chapter to row 2 and silence the volatile demand the contract gate is making on content/levels/ottawa.json right now, so the verifier recorded it and left the declaration to whoever can read the level prose. WHAT THIS DOES NOT DO: the single flag here declares upstream \"unknown\" by omission, so the chapter stays on ADR-0016 section 2 row 1 and the claim's clock is still unarmed."
+    }
+  ]
 }

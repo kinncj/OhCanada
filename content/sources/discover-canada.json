@@ -23,6 +23,11 @@
   "committed": false,
   "chapters": [
     {
+      "title": "The Oath of Citizenship",
+      "page": 2,
+      "endPage": 3
+    },
+    {
       "title": "Rights and Responsibilities of Citizenship",
       "page": 11,
       "endPage": 15
@@ -76,11 +81,12 @@
   "knownStaleness": [
     {
       "topic": "Oath of Citizenship",
-      "problem": "Names Her Majesty Queen Elizabeth II. The reigning monarch is King Charles III, and the Oath was amended in June 2021 to add recognition of Aboriginal and treaty rights of First Nations, Inuit and Metis peoples. Recorded at chapter grain until 2026-09-08, which forced volatile on all 38 questions in Rights and Responsibilities while the Oath is not in that chapter's pages at all — a flag firing on everything, which carries the same information as one firing on nothing. Both pages are listed because the extraction prints a page number after that page's text, so the Oath sits after marker 2 and is page 3 by that convention while the manifest records page 2; the wider span is the safe direction until the convention is settled.",
+      "problem": "Names Her Majesty Queen Elizabeth II. The reigning monarch is King Charles III, and the Oath was amended in June 2021 to add recognition of Aboriginal and treaty rights of First Nations, Inuit and Metis peoples. Recorded at chapter grain until 2026-09-08, which forced volatile on all 38 questions in Rights and Responsibilities while the Oath is not in that chapter's pages at all — a flag firing on everything, which carries the same information as one firing on nothing. Both pages are listed because the extraction prints a page number after that page's text, so the Oath sits after marker 2 and is page 3 by that convention while the manifest records page 2; the wider span is the safe direction until the convention is settled. 2026-09-13: the flag still could not fire. applicableFlags needs the CHAPTER and the PAGE to match, and pages 2-3 fell inside no entry of chapters[] at all - the first was Rights and Responsibilities of Citizenship at 11-15 - so a question citing this flag's pages was rejected for citing a page outside its chapter, and a question citing the chapter could never reach these pages. The Oath was uncitable and unflaggable at once. chapters[] now carries \"The Oath of Citizenship\" at 2-3, which is a heading the document really prints, and it is ADDED to affects rather than swapped in: nothing this flag covers today stops being covered.",
       "affects": [
+        "The Oath of Citizenship",
         "Rights and Responsibilities of Citizenship"
       ],
-      "action": "volatile: verify against the live canada.ca page, never against this file. upstream is still \"unknown\" here, so ADR-0016 section 2 puts questions on pages 2-3 on row 1 and the volatile demand stands, even though the flag below over the same pages declares does-not-revise. Absent and unknown are treated exactly as revises, because continuing to fetch is the safe direction.",
+      "action": "volatile: verify against the live canada.ca page, never against this file. upstream is still \"unknown\" here, so ADR-0016 section 2 puts a claim on pages 2-3 on row 1 and the volatile demand stands. That is true no matter what the flag below over the same pages declares, and no matter what a future live check for these chapters finds: absent and unknown are treated exactly as revises, and row 2 requires EVERY flag over the claim to declare does-not-revise. So this one entry holds the Oath on row 1 by itself, which is the safe direction and is deliberate.",
       "grain": "pages",
       "upstream": "unknown",
       "pages": [
@@ -90,14 +96,15 @@
     },
     {
       "topic": "The monarch and the Governor General",
-      "problem": "References to the Sovereign are pre-accession throughout: five occurrences of \"Her Majesty\" and eight of \"Elizabeth\", and zero of \"His Majesty\". The document is uniformly old on this point rather than partly updated. An earlier note in this file claimed one \"His Majesty\"; that was a misread of \"King Charles II of England\" in a 1670 sentence about the Hudson's Bay Company charter.",
+      "problem": "References to the Sovereign are pre-accession throughout: five occurrences of \"Her Majesty\" and eight of \"Elizabeth\", and zero of \"His Majesty\". The document is uniformly old on this point rather than partly updated. An earlier note in this file claimed one \"His Majesty\"; that was a misread of \"King Charles II of England\" in a 1670 sentence about the Hudson's Bay Company charter. 2026-09-13: this flag named Canadian Symbols in affects and listed only page 57, which is in How Canadians Govern Themselves - so applicableFlags(register, \"Canadian Symbols\", n) returned nothing for every n, and the flag was unreachable on the chapter it claimed to cover. Page 78 is the cost: \"Queen Elizabeth II, who has been Queen of Canada since 1952, marked her Golden Jubilee in 2002, and celebrated her Diamond Jubilee (60 years as Sovereign) in 2012\" - present perfect, and false since September 2022. Four shipped claims cite page 78 and all four route around that sentence, by an author's judgement that nothing recorded and nothing checked. Page 78 is now listed, so the ban list is searched there.",
       "affects": [
         "How Canadians Govern Themselves",
         "Canadian Symbols"
       ],
-      "action": "Route the answers around these terms; that is bannedFromAnswers and it is the mitigation that works. Whether volatile is also DEMANDED depends on the chapter, not on this flag: How Canadians Govern Themselves has a live check finding source-unrevised, so it is on ADR-0016 section 2 row 2 and the clock is on liveChecks[].checkedAt at the source. Canadian Symbols has no live check, so it is on row 1 and its questions must be volatile to be on any clock at all.",
+      "action": "Route the answers around these terms; that is bannedFromAnswers and it is the mitigation that works. Whether volatile is also DEMANDED depends on the chapter, not on this flag. How Canadians Govern Themselves has a live check finding source-unrevised (liveChecks[0], 2026-09-08), so it is on ADR-0016 section 2 row 2 and the clock is on liveChecks[].checkedAt at the source. CORRECTED 2026-09-13: this action used to say Canadian Symbols has no live check and is therefore on row 1. It has had one since 2026-09-09 - liveChecks[3], finding source-unrevised - so Canadian Symbols is on row 2 as well. Read that row with the entry beside it: its page records agreesWithCache false, because the read-online HTML has been updated for the accession in the Royal Anthem section while the cached PDF has not, and dispositionRow grants row 2 off finding alone and never reads agreesWithCache. ADR-0016 records that divergence as an open decision, not as settled behaviour, and Canadian Symbols is the chapter it actually bites on.",
       "pages": [
-        57
+        57,
+        78
       ],
       "grain": "pages",
       "upstream": "does-not-revise",
@@ -119,17 +126,17 @@
     },
     {
       "topic": "Named office holders and election dates",
-      "problem": "Any named Prime Minister, Governor General, premier or seat count is a point-in-time fact.",
+      "problem": "Any named Prime Minister, Governor General, premier or seat count is a point-in-time fact. 2026-09-13, two repairs. FIRST, affects named Modern Canada (pages 45-53) alongside pages 57/60/63, none of which is in that range, so the flag could never fire on that chapter: applicableFlags needs the chapter AND the page to match. The chapter was named in error rather than mislocalised - pages 45-53 carry no named current office holder and no election date, only \"Lord Grey, the Governor General, in 1909\" and the 1948 and 1960 extensions of the franchise, all of which are history and none of which is point-in-time. Modern Canada is removed. The removal is inert as well as correct: discover-canada is paginated, so the contract gate already rejects any claim citing it without a page, and there is therefore no page-less claim that was picking this flag up at chapter grain. SECOND, \"Her Majesty's Loyal Opposition\" appears twice, once on page 63 inside this flag and once on page 71 - the fill-in-the-blank page, \"The name of the party representing Her Majesty's Loyal Opposition is\" - which no flag covered. Page 71 is now listed.",
       "affects": [
         "How Canadians Govern Themselves",
-        "Federal Elections",
-        "Modern Canada"
+        "Federal Elections"
       ],
-      "action": "Route the answers around these terms. How Canadians Govern Themselves and Federal Elections both carry a live check finding source-unrevised, so they are on ADR-0016 section 2 row 2: one fetch per chapter into liveChecks[] replaces per-question re-verification, and the 180-day clock is on that check. Modern Canada has no live check, so it is on row 1 and volatile is still demanded there.",
+      "action": "Route the answers around these terms. How Canadians Govern Themselves and Federal Elections both carry a live check finding source-unrevised, so they are on ADR-0016 section 2 row 2: one fetch per chapter into liveChecks[] replaces per-question re-verification, and the 180-day clock is on that check. The sentence that used to stand here about Modern Canada being on row 1 has gone with the chapter; it described a branch this flag could not reach.",
       "pages": [
         57,
         60,
-        63
+        63,
+        71
       ],
       "grain": "pages",
       "upstream": "does-not-revise",
@@ -153,9 +160,10 @@
       "topic": "The Oath of Citizenship is genuinely mixed",
       "problem": "The cached Oath on page 2 already carries the June 2021 amendment recognising the Aboriginal and treaty rights of First Nations, Inuit and Metis peoples, while still naming Queen Elizabeth the Second. So one passage is simultaneously current and out of date. That is the real 'reads as current in places' hazard in this document, and it is sharper than a uniformly old text would be.",
       "affects": [
+        "The Oath of Citizenship",
         "Rights and Responsibilities of Citizenship"
       ],
-      "action": "volatile: verify against the live canada.ca page, never against this file. Rights and Responsibilities of Citizenship has no entry in liveChecks[], so ADR-0016 section 2 puts it on row 1 and the volatile demand stands; the does-not-revise declaration below buys the exemption only once a live check for this chapter records that the page really is unrevised.",
+      "action": "volatile: verify against the live canada.ca page, never against this file. Rights and Responsibilities of Citizenship and The Oath of Citizenship both have no entry in liveChecks[], so ADR-0016 section 2 puts them on row 1 and the volatile demand stands. CORRECTED 2026-09-13: this action used to say that a live check for the chapter would buy the row-2 exemption. It would not. The \"Oath of Citizenship\" flag over these same pages - the first entry in this list - declares upstream \"unknown\", and row 2 requires every flag over the claim to declare does-not-revise, so no live check can lift these pages off row 1 while that entry stands. The does-not-revise declared HERE is therefore doing nothing to the row; what it is doing is making bannedFromAnswers mandatory, and that list is the whole of the mitigation on this passage.",
       "pages": [
         2,
         3

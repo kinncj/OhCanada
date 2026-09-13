@@ -33,5 +33,28 @@
       "action": "re-fetch before drawing any claim about settlements, compensation or claims still in progress; the boundary sentence does not move"
     }
   ],
-  "grainNote": "One web page, one heading, no pagination. The flag is on the page's settlement narrative, not on its boundary statement, because those two go stale at completely different rates and a flag covering both would fire on everything."
+  "grainNote": "One web page, one heading, no pagination. The flag is on the page's settlement narrative, not on its boundary statement, because those two go stale at completely different rates and a flag covering both would fire on everything.",
+  "liveChecks": [
+    {
+      "checkedAt": "2026-09-13",
+      "checkedBy": "content-verifier",
+      "pages": [
+        {
+          "url": "https://mncfn.ca/the-toronto-purchase-treaty-no-13-1805/",
+          "chapter": "The Toronto Purchase Treaty, No. 13 (1805)",
+          "sourceDateModified": null,
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the boundary sentence the level statement rests on: \"The cities of Etobicoke, Toronto, North York, York and Vaughan are located within the boundaries of the Toronto Purchase Treaty lands.\"",
+            "the settlement narrative the flag covers: \"In 2010, the Government of Canada settled the Toronto Purchase Claim and the Brant Tract Claim for compensation of $145 million- at that time the largest claims settlement in Canadian history.\"",
+            "the 1788 survey dispute: \"An attempt to survey the Toronto Purchase Treaty lands in 1788 met Mississauga opposition indicating that there had been no clear delineation of land boundaries agreed upon by the Crown and the First Nation.\"",
+            "that this page still makes no mention of the 2025 Rouge Tract Settlement published elsewhere on the same site",
+            "the page's own stamp, which is a post date and not a modification date: \"Posted on November 3, 2020\""
+          ]
+        }
+      ],
+      "finding": "source-unrevised",
+      "consequence": "Fetched first-hand, and the prose is unmoved - but THE REGISTER'S sha256 NO LONGER REPRODUCES. The live fetch is 92,809 bytes, the same length as the cache, hashing to bd8d2b37067a5c31f5e6e6ea364752be68eb8549bd33e737afaccfc4f26df9ce against this register's 585db875e61f61fd2623873462fd492e7e56670d6bac1798cf7069f1e04bb9b5. The whole of the difference is per-response WordPress state - four nonces, a Wordfence hid parameter and two plugin tokens, each a fixed-width hex string, which is why the byte count is unchanged - and nothing else; the python3 tag-stripper recorded verbatim as extraction.command in cirnac-treaty-7.json and kdfn-about-us.json, run over the live fetch and over the cached file, and the two outputs diffed produced an EMPTY diff. So extractedTextSha256 (58c92c46...), the digest content/levels/toronto.json cites as its sourceHash, still matches, and the finding is that this register's sha256 is not reproducible by re-fetching and never will be: the nonces are minted per request. Recorded rather than re-hashed, for the same reason as cirnac-algonquin-parliamentary-precinct. sourceDateModified is null because the page publishes no modification date; \"Posted on November 3, 2020\" is a publication date and putting it in this field would misstate what the page claims. WHAT THIS DOES NOT DO: this is a live, maintained nation website - the flag itself notes the same site published a 2025 settlement - so upstream: \"does-not-revise\" would be FALSE here and was not written. The chapter stays on ADR-0016 section 2 row 1 and content/levels/toronto.json's territory claim is still on an unarmed row-1 clock."
+    }
+  ]
 }

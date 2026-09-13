@@ -53,5 +53,28 @@
       "action": "when the hash stops matching, re-read the three passages named in the first flag before assuming a claim moved."
     }
   ],
-  "grainNote": "One web page, one heading, no pagination, so `pages` is absent and the chapter carries a title alone. Three flags: which passages the statement rests on, which nation it does not name and why, and how often the bytes move."
+  "grainNote": "One web page, one heading, no pagination, so `pages` is absent and the chapter carries a title alone. Three flags: which passages the statement rests on, which nation it does not name and why, and how often the bytes move.",
+  "liveChecks": [
+    {
+      "checkedAt": "2026-09-13",
+      "checkedBy": "content-verifier",
+      "pages": [
+        {
+          "url": "https://www.kwanlindun.com/about/",
+          "chapter": "About us",
+          "sourceDateModified": "2026-04-08",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the recorded quote, character for character as the page prints it: “We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Níikwän (today, the Yukon River). Our people have been here for millennia.”",
+            "the second passage the statement rests on: “KDFN’s Traditional Territory encompasses the Yukon’s capital and economic heartland, the City of Whitehorse”",
+            "the third: “Our ancestors called the area Kwanlin , which means “running water through canyon” in Southern Tutchone” — reproduced here with the stray space before the comma that the cached extraction actually contains",
+            "that the page still names the Ta’an Kwach’an only in the history of Chief Jim Boss, and still does not say that Whitehorse lies inside Ta’an Kwach’an traditional territory",
+            "the page's own article:modified_time metadata, 2026-04-08T23:58:55-07:00"
+          ]
+        }
+      ],
+      "finding": "source-unrevised",
+      "consequence": "THE WEAKEST OF THE SIX CHECKS AND IT SAYS SO HERE RATHER THAN IN A REPORT NOBODY KEEPS. retrievedAt is 2026-09-13 and this check is 2026-09-13: the cache was taken the same day, so re-fetching established only that the URL served the same 157,548 bytes twice in one day, hashing both times to 455bc9eb1762549ca55dbddc0cc0e61fc781ad196e9a8ee7a168b20b9f02b786. That is not an interval and it is not evidence about maintenance. What it IS good for is the third flag, which predicts the digest will move for reasons unrelated to the three passages: the clock on this entry starts today and the next check is the one with something to say. The page's own article:modified_time is 2026-04-08, five months before the cache, which is the only real evidence here and is the page's claim about itself rather than a fact. ONE DISCREPANCY FOUND, NOT FIXED: the first staleness flag transcribes the quoted river name as “Chu Ni’ikwan”, with an apostrophe and two plain vowels; both the live page and the cached extraction read “Chu Níikwän”, with an acute i and an a-diaeresis and no apostrophe at all. The shipped quote is unaffected - verify-content reports every source.quote contiguous in its extraction, so content/levels/the-north.json carries the page's spelling - and it is the REGISTER's instruction prose that mis-transcribes the name a verifier is told to check against. It is a nation's own word for its own river and the verifier does not edit quotations, so it is reported and left. Same flag, same sentence: the extraction renders \"Kwanlin , which means\" with a space before the comma, an artefact of the tag stripper crossing an emphasis tag, and the flag's prose silently closes it up. WHAT THIS DOES NOT DO: all three flags leave upstream absent, treated as \"revises\", so \"About us\" stays on ADR-0016 section 2 row 1 - correctly, since the third flag says in as many words that this is a live nation website - and content/levels/the-north.json's territory claim is still on an unarmed row-1 clock."
+    }
+  ]
 }
