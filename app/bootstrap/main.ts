@@ -751,6 +751,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     stampsToUnlock: rules.unlockRules.stampsToUnlockNext,
     announce,
     ...(progress.lastPlayedLevelId === null ? {} : { resumeLevelId: progress.lastPlayedLevelId }),
+    /* Where the map says the player is when it is opened from the title screen.
+       `app/ui` never reads the save, so the field is handed to it. */
+    lastPlayedLevelId: progress.lastPlayedLevelId,
     onExportSave: exportSave,
     creator: {
       slots: creatorSlots,
@@ -1215,6 +1218,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
      */
     progress = { ...progress, lastPlayedLevelId: id };
     shell.setResumeLevelId(id);
+    shell.setLastPlayedLevelId(id);
     persist();
   }
 

@@ -647,7 +647,9 @@ const CSS = `
  *     survives greyscale and forced colours.
  *
  * There is no animation in this block at all, so reduced motion has nothing to
- * remove: a route that drew itself in would be information arriving as movement.
+ * remove here. The rail is read beside the words, and it stays still. The map
+ * above the list is where the route draws itself in, and that block says how
+ * reduced motion takes it away.
  * ------------------------------------------------------------------ */
 
 .tn-journey {
@@ -736,11 +738,10 @@ const CSS = `
 }
 
 /*
-  Where the drawn route ends: bigger, with a ring round it. It is the only mark
-  on the rail that is not about one card on its own, and it still states nothing
-  new -- it sits on the first card reading "Open" without "Earned", or on the
-  last one reading "Earned". The ring is a box-shadow, which forced colours
-  drops; the size difference is not, so the mark survives with no colour at all.
+  Where the player is: bigger, with a ring round it. It still states nothing
+  new -- it sits beside the one card that says "You are here". The ring is a
+  box-shadow, which forced colours drops; the size difference is not, so the
+  mark survives with no colour at all.
 */
 .tn-journey[data-journey-current="true"] .tn-journey__pin,
 .tn-map__stop[data-journey-current="true"] .tn-journey__pin {
@@ -794,10 +795,11 @@ const CSS = `
 /* ------------------------------------------------------------------ *
  * The map above the route: the country, and where the journey is on it.
  *
- * app/ui/level-map.ts draws it: the drawing from assets/src/svg/screens/, and a
- * pin at each stop's anchor. Its pins are the rail's pins -- every shape and
- * fill above matches .tn-map__stop as well as .tn-journey -- so this block only
- * says where a pin goes and how big it is.
+ * app/ui/level-map.ts draws it: the drawing from assets/src/svg/screens/, a pin
+ * at each stop's anchor, and a line through the stops the player has travelled.
+ * Its pins are the rail's pins -- every shape and fill above matches
+ * .tn-map__stop as well as .tn-journey -- so this block says where a pin goes,
+ * how big it is, how the line is drawn and how both move.
  *
  * FOUR THINGS HERE ARE ACCEPTANCE CRITERIA, NOT DECORATION:
  *
@@ -817,8 +819,16 @@ const CSS = `
  *     are 5 % of the drawing's width apart in the inset. So a pin is sized in cqi,
  *     a share of the map's own width, after a rem fallback for a browser without
  *     container units.
- *  4. NOTHING ANIMATES. A mark that slid to its place would be information
- *     arriving as movement, which reduced motion would then have to take away.
+ *  4. MOTION IS AN ENTRANCE, AND IT ENDS. The line draws itself in along its
+ *     own order in 1.2 s and the "you are here" pin then swells three times,
+ *     1.2 s each: everything is still before five seconds have passed, which is
+ *     WCAG 2.2.2's bound for motion that needs no pause control. Nothing counts,
+ *     nothing changes colour or opacity (nothing flashes), and nothing loops.
+ *  5. REDUCED MOTION REMOVES THE MOVEMENT AND KEEPS THE DRAWING. A leg's dash is
+ *     set only inside its keyframes, and the pulse is a transform, so with the
+ *     animations removed the line is simply drawn and the pin is simply bigger.
+ *     The rules below take the animations away for the attribute and for the
+ *     media query on their own, whether or not the map sits inside .tn-screen.
  * ------------------------------------------------------------------ */
 
 .tn-map {
@@ -883,8 +893,89 @@ const CSS = `
   box-shadow: 0 0 0 0.5cqi var(--tn-paper), 0 0 0 0.9cqi var(--tn-ink);
 }
 
+/*
+  The way the player came. One line per leg, over the drawing and under the
+  pins, in the drawing's own viewBox units, so it keeps the drawing's
+  proportions at any text size exactly as a pin does. Ink on a paper casing, so
+  it reads over sea, land and the inset's frame alike. Every leg on it is
+  travelled -- nothing ahead of the player is drawn -- so it has one style.
+*/
+.tn-map {
+  --tn-route-draw: 1200ms;
+}
+
+.tn-map__route {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.tn-map__route line {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.tn-map__casing {
+  stroke: var(--tn-paper);
+  stroke-width: 13;
+}
+
+.tn-map__leg {
+  stroke: var(--tn-ink);
+  stroke-width: 6;
+}
+
+@keyframes tn-map-route-draw {
+  from {
+    stroke-dasharray: var(--tn-leg-length);
+    stroke-dashoffset: var(--tn-leg-length);
+  }
+  to {
+    stroke-dasharray: var(--tn-leg-length);
+    stroke-dashoffset: 0;
+  }
+}
+
+/* A transform only: the pin grows and settles, and its colour, border and fill
+   never change, so nothing about it flashes. */
+@keyframes tn-map-here-pulse {
+  0%,
+  100% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+}
+
+/* Each leg starts where the one before it ends and lasts its share of the line,
+   so the line grows at one speed. backwards, not both: before its turn a leg is
+   hidden, and after it the dash rule is gone and the leg is plainly drawn. */
+.tn-map__route line {
+  animation: tn-map-route-draw calc(var(--tn-route-draw) * var(--tn-leg-share)) linear
+    calc(var(--tn-route-draw) * var(--tn-leg-start)) 1 backwards;
+}
+
+.tn-map .tn-map__stop[data-journey-current="true"] .tn-journey__pin {
+  animation: tn-map-here-pulse 1200ms ease-in-out var(--tn-route-draw) 3;
+}
+
+[data-tn-motion="reduced"] .tn-map,
+[data-tn-motion="reduced"] .tn-map * {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tn-map,
+  .tn-map * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 @media (forced-colors: active) {
   .tn-map { border-color: CanvasText; }
+  .tn-map__leg { stroke: CanvasText; }
+  .tn-map__casing { stroke: Canvas; }
 }
 
 /* ------------------------------------------------------------------ *
@@ -973,6 +1064,30 @@ const CSS = `
   border: 0.125rem solid var(--tn-accent-edge);
   background: var(--tn-accent);
   color: var(--tn-accent-ink);
+}
+
+/*
+  Where the player is, said as a word. The map's ringed pin and the rail's are
+  both hidden from assistive technology, so this is the fact they draw, on the
+  card a screen reader reads. Paper lettering on ink, the reverse of the state
+  word beside it, but it is told apart by being a word and not by colour. In
+  forced colours both pills lose their fills, so this one takes a double edge.
+*/
+.tn-levels__here {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-weight: 800;
+  font-size: 0.8125rem;
+  padding: 0.1875rem 0.625rem;
+  border-radius: var(--tn-radius-pill);
+  border: 0.125rem solid var(--tn-ink);
+  background: var(--tn-ink);
+  color: var(--tn-paper);
+}
+
+@media (forced-colors: active) {
+  .tn-levels__here { border: 0.25rem double CanvasText; }
 }
 
 .tn-levels .tn-screen__state {

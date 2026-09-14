@@ -99,6 +99,7 @@ vi.mock('@ui/shell', () => ({
       leaveLevel: (): void => undefined,
       setEntries: (): void => undefined,
       setResumeLevelId: (): void => undefined,
+      setLastPlayedLevelId: (): void => undefined,
       setCharacterRequired: (): void => undefined,
       setStorageWarning: (): void => undefined,
       setModalOpen: (): void => undefined,

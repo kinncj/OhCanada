@@ -150,6 +150,8 @@ const hoisted = vi.hoisted(() => {
     completeOptions: Record<string, unknown> | null;
     /** What `shell.leaveLevel` was told to land on, per call. */
     leftTo: unknown[];
+    /** Every level the shell was told the save now records as last played. */
+    lastPlayedSet: (string | null)[];
     /**
      * The renderer's own `onLevelEvent`, captured at construction.
      *
@@ -253,6 +255,7 @@ const hoisted = vi.hoisted(() => {
     completeShown: [],
     completeOptions: null,
     leftTo: [],
+    lastPlayedSet: [],
     emit: null,
     milestone: null,
     markedComplete: 0,
@@ -389,6 +392,9 @@ vi.mock('@ui/shell', () => ({
         hoisted.state.entries = next;
       },
       setResumeLevelId: (): void => undefined,
+      setLastPlayedLevelId: (id: string | null): void => {
+        hoisted.state.lastPlayedSet.push(id);
+      },
       setCharacterRequired: (): void => undefined,
       setStorageWarning: (raised: boolean): void => {
         hoisted.state.storageWarning = raised;
@@ -919,6 +925,7 @@ beforeEach(() => {
   hoisted.state.completeShown = [];
   hoisted.state.completeOptions = null;
   hoisted.state.leftTo = [];
+  hoisted.state.lastPlayedSet = [];
   hoisted.state.emit = null;
   hoisted.state.drillCalls = [];
   hoisted.state.availableCalls = 0;
@@ -2687,5 +2694,31 @@ describe('a landmark offers a quest, and it opens', () => {
     expect(offer.lines.length, 'the offer had no lines to read').toBeGreaterThan(0);
     expect(offer.accept?.label).toBe(text('en', 'quest.accept'));
     expect(offer.decline?.label).toBe(text('en', 'quest.decline'));
+  });
+});
+
+/*
+ * Where the map says the player is. The rule is `app/ui`'s (`whereYouAre`), and
+ * the facts are this file's to hand over: `app/ui` never reads the save, so the
+ * save's last played level reaches the shell here, once at boot and again every
+ * time a level is entered. Which level the map was opened from the shell already
+ * knows, because this file tells it in `shell.enterLevel`.
+ */
+describe('the map is told where the player is', () => {
+  it("hands the shell the save's last played level at boot, even when there is none", async () => {
+    await boot('');
+    expect(hoisted.state.shellOptions).not.toBeNull();
+    expect(hoisted.state.shellOptions).toHaveProperty('lastPlayedLevelId', null);
+  });
+
+  it('tells the shell every level the player enters, as the level last played', async () => {
+    await boot(`?level=${START_LEVEL}`);
+    expect(hoisted.state.calls).toContain(`shell.enterLevel:${String(START_LEVEL)}`);
+    expect(hoisted.state.lastPlayedSet).toEqual([START_LEVEL]);
+  });
+
+  it('tells it nothing for a level this build refuses to open', async () => {
+    await boot('?level=atlantis');
+    expect(hoisted.state.lastPlayedSet).toEqual([]);
   });
 });

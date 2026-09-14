@@ -832,3 +832,108 @@ describe('settings, opened from a screen the caller owns', () => {
     expect(page.doc.listenerCount('pointerdown')).toBe(ringWhileModal);
   });
 });
+
+/**
+ * Where the map says the player is, and which fact said so.
+ *
+ * The shell holds the two facts the rule needs: the level it handed the page
+ * to, from `enterLevel`, and the save's last played level, handed to it by the
+ * composition root. A map opened on the way out of a level says that level; a
+ * map opened from the title says the last played one; with neither, the route's
+ * own answer.
+ */
+describe('where the map says the player is', () => {
+  /** Halifax, Québec City and Ottawa built and open. */
+  const OPEN = (stamped: readonly string[] = []): readonly MapEntry[] =>
+    entries(['halifax', 'quebec-city', 'ottawa'], ['halifax', 'quebec-city', 'ottawa']).map(
+      (entry) => ({ ...entry, stamped: stamped.includes(String(entry.id)) }),
+    );
+
+  const hereOn = (at: Fixture['at']): readonly (string | null)[] =>
+    (at('level-select-list')?.querySelectorAll('button') ?? [])
+      .filter((control) => control.getAttribute('data-here') === 'true')
+      .map((control) => control.getAttribute('data-level-handle'));
+
+  it('says the level just left, when the map is opened from inside it', () => {
+    const { shell, at } = mount({ entries: OPEN(), lastPlayedLevelId: id('halifax') });
+    shell.start();
+    shell.enterLevel(id('quebec-city'));
+    shell.leaveLevel();
+
+    expect(hereOn(at)).toEqual(['quebec-city']);
+    expect(at('level-card-quebec-city-here')?.textContent).toBe('You are here');
+  });
+
+  it("says the save's last played level, when the map is opened from the title", () => {
+    const { shell, at } = mount({ entries: OPEN(), lastPlayedLevelId: id('ottawa') });
+    shell.start();
+    at('title-choose-level')?.click();
+
+    expect(hereOn(at)).toEqual(['ottawa']);
+  });
+
+  it("falls back to the route's answer when the shell knows neither", () => {
+    const { shell, at } = mount({ entries: OPEN(['halifax']) });
+    shell.start();
+    at('title-choose-level')?.click();
+
+    expect(hereOn(at)).toEqual(['quebec-city']);
+  });
+
+  it('stops saying the level just left once the map is reached from the title instead', () => {
+    const { shell, at } = mount({ entries: OPEN(), lastPlayedLevelId: id('halifax') });
+    shell.start();
+    shell.enterLevel(id('quebec-city'));
+    shell.leaveLevel();
+    expect(hereOn(at)).toEqual(['quebec-city']);
+
+    at('level-select-back')?.click();
+    at('title-choose-level')?.click();
+    /* The composition root never said Québec City was played, so the save's
+       answer stands. In the game it would have said so, on entering. */
+    expect(hereOn(at)).toEqual(['halifax']);
+  });
+
+  it('shows a new level and a new stamp on the next opening, without a reload', () => {
+    const { shell, at } = mount({ entries: OPEN() });
+    shell.start();
+
+    shell.enterLevel(id('halifax'));
+    shell.setLastPlayedLevelId(id('halifax'));
+    shell.leaveLevel();
+    expect(hereOn(at)).toEqual(['halifax']);
+    expect(at('level-select-map')?.querySelectorAll('.tn-map__leg')).toHaveLength(0);
+
+    shell.enterLevel(id('quebec-city'));
+    shell.setLastPlayedLevelId(id('quebec-city'));
+    /* Halifax's stamp, earned since the map was last drawn. */
+    shell.setEntries(OPEN(['halifax']));
+    shell.leaveLevel();
+
+    expect(hereOn(at)).toEqual(['quebec-city']);
+    expect(at('level-card-halifax-stamp')).not.toBeNull();
+    const legs = (at('level-select-map')?.querySelectorAll('.tn-map__leg') ?? []).map((leg) => [
+      leg.getAttribute('data-map-from'),
+      leg.getAttribute('data-map-to'),
+    ]);
+    expect(legs).toEqual([['halifax', 'quebec-city']]);
+  });
+
+  it("moves an open map when the save's last played level changes", () => {
+    const { shell, at } = mount({ entries: OPEN() });
+    shell.start();
+    at('title-choose-level')?.click();
+    expect(hereOn(at)).toEqual(['halifax']);
+
+    shell.setLastPlayedLevelId(id('ottawa'));
+    expect(hereOn(at)).toEqual(['ottawa']);
+  });
+
+  it('keeps the landing it always had: focus on the card just left', () => {
+    const { shell, at, page } = mount({ entries: OPEN(), lastPlayedLevelId: id('halifax') });
+    shell.start();
+    shell.enterLevel(id('ottawa'));
+    shell.leaveLevel();
+    expect(page.doc.activeElement).toBe(at('level-card-ottawa'));
+  });
+});

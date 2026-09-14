@@ -26,10 +26,11 @@
  *
  * Concretely: a leg is *travelled* exactly where the card above it says
  * "Earned"; a pin is *reached* exactly where its own card says "Earned"; the
- * *current* stop is the first card that says "Open" and does not say "Earned".
- * A player who ignores the rail entirely reads the same ten facts in the same
- * order. {@link journeyRoute} is that derivation as a pure function, so the
- * drawing and the words cannot disagree, and so it can be tested without a DOM.
+ * *current* stop is the one card that says "You are here" (`map.here`), and
+ * {@link whereYouAre} is the rule that picks it. A player who ignores the rail
+ * entirely reads the same facts in the same order. {@link journeyRoute} is that
+ * derivation as a pure function, so the drawing and the words cannot disagree,
+ * and so it can be tested without a DOM.
  *
  * ## What this module deliberately does not do
  *
@@ -43,8 +44,11 @@
  * level 10 makes the sentence false, and the same reasoning applies to a line
  * that bends west: a route drawn as a shape is a claim about where places are.
  *
- * DOM only (ADR-0005).
+ * DOM only (ADR-0005). The id vocabulary is the one thing it takes from
+ * `app/domain`, which is what `app/ui` is allowed to take.
  */
+
+import type { LevelId } from '@domain/ids';
 
 import { element } from './dom';
 
@@ -66,6 +70,11 @@ export type JourneyLeg = 'none' | 'travelled' | 'ahead';
  * vocabulary, and nothing here would change.
  */
 export interface JourneyStep {
+  /**
+   * The level's id, when its place is fixed. It is how a level named by
+   * {@link HereFacts} finds its stop; a step with no id can never be "here".
+   */
+  readonly id?: LevelId;
   /** A level document exists in this build. */
   readonly built: boolean;
   /** `unlockedLevelIds` includes it. */
@@ -82,7 +91,10 @@ export interface JourneyStop {
   readonly after: JourneyLeg;
   /** This stop's own stamp is earned: the player has been here. */
   readonly reached: boolean;
-  /** Where the drawn route ends. At most one stop is this. */
+  /**
+   * Where the player is, by {@link whereYouAre}. At most one stop is this, and
+   * on the level select its card says so in words (`map.here`).
+   */
   readonly current: boolean;
 }
 
@@ -113,6 +125,72 @@ export function currentStopIndex(steps: readonly JourneyStep[]): number {
   return steps.map((step) => step.stamped === true).lastIndexOf(true);
 }
 
+/**
+ * Which fact said where the player is.
+ *
+ *  - `in-level` — the level select was opened from inside that level.
+ *  - `last-played` — the save records it as the level last played.
+ *  - `route` — neither applied, so {@link currentStopIndex} answered.
+ */
+export type HereSource = 'in-level' | 'last-played' | 'route';
+
+/**
+ * What the composition root knows about where the player has been.
+ *
+ * Both arrive as data. `app/ui` never reads a save: `lastPlayed` is the save's
+ * `lastPlayedLevelId`, handed through `app/bootstrap`, and `inLevel` is the
+ * level the shell was told the player entered, and is only given to a level
+ * select opened on the way out of it.
+ */
+export interface HereFacts {
+  readonly inLevel?: LevelId | null;
+  readonly lastPlayed?: LevelId | null;
+}
+
+export interface Here {
+  /** Into the steps; `-1` when there is nowhere to say. */
+  readonly index: number;
+  /** `null` exactly when `index` is `-1`. */
+  readonly source: HereSource | null;
+}
+
+/**
+ * Where the player is: the one card that says "You are here".
+ *
+ * Three sources, in this order, and the first that names a stop wins:
+ *
+ *  1. **The level the map was opened from.** A player who leaves Québec City by
+ *     its menu is in Québec City, whatever their stamps say. The old rule put
+ *     the mark on the first open card without a stamp, so it stayed on Halifax
+ *     while the player was playing Québec City, which is the defect this
+ *     function was written for.
+ *  2. **The level the save says they last played**, for a map opened from the
+ *     title screen.
+ *  3. **The route's own answer**, {@link currentStopIndex}, for a player who
+ *     has not played anything yet.
+ *
+ * A named level counts only if the journey has a stop for it **and that stop
+ * is built**. A save from another build, or a `?level=` address somebody typed,
+ * can name a level this build does not have, and a player cannot be somewhere
+ * that is not in the game. It falls through to the next source rather than to
+ * nowhere.
+ */
+export function whereYouAre(steps: readonly JourneyStep[], facts: HereFacts = {}): Here {
+  const stopOf = (id: LevelId | null | undefined): number =>
+    id === null || id === undefined
+      ? -1
+      : steps.findIndex((step) => step.id === id && step.built);
+
+  const inLevel = stopOf(facts.inLevel);
+  if (inLevel !== -1) return { index: inLevel, source: 'in-level' };
+
+  const lastPlayed = stopOf(facts.lastPlayed);
+  if (lastPlayed !== -1) return { index: lastPlayed, source: 'last-played' };
+
+  const index = currentStopIndex(steps);
+  return { index, source: index === -1 ? null : 'route' };
+}
+
 /** One step of the journey and the length of route it sits on. */
 export interface JourneyStopOf<T> {
   readonly step: T;
@@ -136,12 +214,17 @@ export interface JourneyStopOf<T> {
  * subscript is how a card ends up drawn with its neighbour's route, and under
  * `noUncheckedIndexedAccess` it is also a branch for a missing element that no
  * test can ever reach.
+ *
+ * `here` moves the current stop and nothing else. The legs still read the
+ * stamps alone: where the player *is* does not change where they *have been*.
+ * The passport passes nothing and keeps the route's own answer.
  */
 export function journeyRoute<T extends JourneyStep>(
   steps: readonly T[],
+  here: HereFacts = {},
 ): readonly JourneyStopOf<T>[] {
   const last = steps.length - 1;
-  const current = currentStopIndex(steps);
+  const current = whereYouAre(steps, here).index;
   const earned = steps.map((step) => step.stamped === true);
   const leg = (index: number): JourneyLeg => (earned[index] === true ? 'travelled' : 'ahead');
 

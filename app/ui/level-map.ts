@@ -1,12 +1,14 @@
 /**
- * The map of Canada above the route, and where the journey is on it.
+ * The map of Canada above the route: where each stop is, where the player is,
+ * and the way they came.
  *
  * `docs/stories/TN-MAP-level-select.md` `OQ-MAP-2` answered "a vertical list of
  * cards on a painted backdrop that suggests the journey … If a drawn map is
  * wanted later, it is a decoration behind the same list, never the only way to
  * choose." `./journey.ts` drew the route without the painting. This module is
  * the painting: `assets/src/svg/screens/map-canada.svg`, drawn from Natural
- * Earth, and a pin at each stop's anchor from the sidecar beside it.
+ * Earth, a pin at each stop's anchor from the sidecar beside it, and a line
+ * through the stops the player has travelled.
  *
  * ## Decoration and orientation, never the control
  *
@@ -24,15 +26,29 @@
  *    `journeyRoute` and `levelCardState` and passed in here, and it is drawn by
  *    the same `.tn-journey__pin` rules: solid for open, dashed for locked,
  *    dotted for not made yet, brass where the card says "Earned", bigger and
- *    ringed where the route has got to. No fourth shape, no new colour.
+ *    ringed where the card says "You are here". No fourth shape, no new colour.
+ *  - **The line joins those same words in the list's order.** It runs through
+ *    every stop whose card says "Earned" and comes before the card saying "You
+ *    are here", and it ends on that card. {@link routeLegs} is the rule. Nothing
+ *    ahead of the player is drawn, so the line never claims a trip nobody has
+ *    made. The order it follows is the list's own, so it adds no sentence about
+ *    direction.
  *  - What the map adds is *where*, which is orientation and exactly what the
  *    brief asked of it. It adds no fact about the player.
  *
+ * ## Why a line now, when the first version refused one
+ *
+ * The first version drew no line because "a straight line reads as a route
+ * travelled", and nothing then knew what had been travelled, so any line would
+ * have been a claim. The stop the player is at (`whereYouAre`) and the stamps
+ * on the cards make it a claim the list already makes, and showing real
+ * progress is the reason for drawing it.
+ *
  * ## What it deliberately does not draw
  *
- *  - **No line between the pins.** The rail's legs say "one route, in this
- *    order"; a straight segment across a country says "travelled this way",
- *    which nobody has decided (§0, §12 of the art note).
+ *  - **No leg ahead of the player**, and no leg to a stop that is neither
+ *    stamped nor where the player is. A stop that was skipped is joined past:
+ *    the player went from the stop before it to the stop after it.
  *  - **No regions.** "The Prairies", "the Alberta foothills" and "the North" are
  *    regions, and which area to light is a claim content owners have not made
  *    (`OQ-MAPART-2`). Point anchors only.
@@ -43,6 +59,23 @@
  * an inset at 13× (§7), and the sidecar gives both stops an anchor there, so a
  * stop the inset anchors is pinned **in the inset** and nowhere else. Two pins
  * on the locator box would be one smudge.
+ *
+ * The line follows the pins. A leg between two stops the inset anchors is drawn
+ * **in the inset**, between their inset anchors; on the main map it would be a
+ * line four units long, which is no line at all. A leg between an inset stop and
+ * a stop on the main map is drawn on the main map, from the inset stop's
+ * main-map anchor. That point lies inside the locator box the drawing puts round
+ * the inset's area, so the line comes out of the box that stands for the inset,
+ * rather than out of a pin that is not there.
+ *
+ * ## Motion
+ *
+ * When the screen opens the line draws itself in, along its own order, and then
+ * the "you are here" pin swells and settles three times. The stylesheet owns
+ * both: both end within five seconds, neither changes a colour, and reduced
+ * motion removes both and leaves the finished drawing. {@link LevelMap.draw}
+ * does not redraw a state it already shows, so changing the language does not
+ * replay them.
  *
  * DOM only (ADR-0005). Reads the sidecar through its port type and imports the
  * drawing by URL, so Vite content-hashes it and a browser fetches it only when a
@@ -56,6 +89,8 @@ import sidecar from '../../assets/src/svg/screens/map-canada.anchors.json';
 
 import { element, replaceChildren } from './dom';
 import type { JourneyStop } from './journey';
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /** The drawing, by URL: hashed and emitted by the UI build, never inlined. */
 export const MAP_ART_URL: string = new URL(
@@ -114,6 +149,8 @@ export interface PlacedStop {
 }
 
 const percent = (value: number): number => Math.round(value * 1000) / 1000;
+const units = (value: number): number => Math.round(value * 1000) / 1000;
+const fraction = (value: number): number => Math.round(value * 10000) / 10000;
 
 /**
  * Where each stop goes, in the order given.
@@ -150,14 +187,99 @@ export function placeStops(
   return placed;
 }
 
+/**
+ * The stops the line runs through, in journey order.
+ *
+ * Every stop up to where the player is whose stamp is earned, then the stop the
+ * player is at. Empty when no placed stop is "here": a line "up to where they
+ * are" has nowhere to end, and drawing one would be inventing a position.
+ */
+export function travelledStops(placed: readonly PlacedStop[]): readonly PlacedStop[] {
+  const here = placed.findIndex((stop) => stop.current);
+  if (here === -1) return [];
+  return placed.slice(0, here + 1).filter((stop) => stop.reached || stop.current);
+}
+
+/** Which part of the drawing a leg is drawn on. */
+export type MapFrame = 'main' | 'inset';
+
+/** One straight length of the travelled line, in the drawing's viewBox units. */
+export interface RouteLeg {
+  readonly from: LevelId;
+  readonly to: LevelId;
+  readonly frame: MapFrame;
+  readonly x1: number;
+  readonly y1: number;
+  readonly x2: number;
+  readonly y2: number;
+  readonly length: number;
+  /** Where along the whole line this leg begins, as a share of it, 0 to 1. */
+  readonly start: number;
+  /** How much of the whole line this leg is, 0 to 1. The shares add up to 1. */
+  readonly share: number;
+}
+
+/**
+ * The travelled line, leg by leg, in journey order.
+ *
+ * A leg between two inset stops is drawn in the inset between their inset
+ * anchors. Any other leg is drawn on the main map between main-map anchors,
+ * which for an inset stop is a point inside the locator box. A leg that would
+ * have no length, or whose ends the sidecar cannot place in its frame, is not
+ * drawn.
+ *
+ * `start` and `share` are what the stylesheet paces the draw-in by, so the line
+ * grows at one speed along its whole length instead of spending as long on a
+ * short leg as on a long one.
+ */
+export function routeLegs(
+  placed: readonly PlacedStop[],
+  anchors: MapAnchorsDocument,
+): readonly RouteLeg[] {
+  const measured: Omit<RouteLeg, 'start' | 'share'>[] = [];
+  let previous: PlacedStop | undefined;
+  for (const stop of travelledStops(placed)) {
+    if (previous !== undefined) {
+      const frame: MapFrame = previous.inset && stop.inset ? 'inset' : 'main';
+      const table = frame === 'inset' ? anchors.inset?.anchors : anchors.anchors;
+      const from = table?.[previous.id];
+      const to = table?.[stop.id];
+      if (from !== undefined && to !== undefined) {
+        const length = Math.hypot(to.x - from.x, to.y - from.y);
+        if (length > 0) {
+          measured.push({
+            from: previous.id,
+            to: stop.id,
+            frame,
+            x1: units(from.x),
+            y1: units(from.y),
+            x2: units(to.x),
+            y2: units(to.y),
+            length: units(length),
+          });
+        }
+      }
+    }
+    previous = stop;
+  }
+
+  const total = measured.reduce((sum, leg) => sum + leg.length, 0);
+  let before = 0;
+  return measured.map((leg) => {
+    const start = before / total;
+    before += leg.length;
+    return { ...leg, start: fraction(start), share: fraction(leg.length / total) };
+  });
+}
+
 export interface LevelMap {
   readonly element: HTMLElement;
-  /** Progress changed: move the marks, keep the drawing. */
+  /** Progress changed: move the marks and the line, keep the drawing. */
   readonly draw: (stops: readonly MapStopInput[]) => void;
 }
 
 export function createLevelMap(doc: Document, anchors: MapAnchorsDocument): LevelMap {
-  const [, , width, height] = anchors.viewBox;
+  const [minX, minY, width, height] = anchors.viewBox;
 
   /*
    * `alt=""` and not a description: this is decoration, and a description would
@@ -178,14 +300,41 @@ export function createLevelMap(doc: Document, anchors: MapAnchorsDocument): Leve
     },
   });
 
+  /*
+   * The line, in the drawing's own coordinates. An `<svg>` over the drawing and
+   * under the pins, the same box as both, so a leg's ends are the sidecar's
+   * numbers with no arithmetic between them and the pins it joins.
+   * `preserveAspectRatio="none"` is safe because the box already has the
+   * drawing's proportions: the `<img>` reserves them with its width and height.
+   *
+   * No `<title>`, no `<text>`, no role: it inherits the map's `aria-hidden`, and
+   * `focusable="false"` keeps the one old engine that tabs into an `<svg>` from
+   * doing it.
+   */
+  const route = doc.createElementNS(SVG_NS, 'svg');
+  route.setAttribute('class', 'tn-map__route');
+  route.setAttribute('data-testid', 'level-select-map-route');
+  route.setAttribute('viewBox', `${String(minX)} ${String(minY)} ${String(width)} ${String(height)}`);
+  route.setAttribute('preserveAspectRatio', 'none');
+  route.setAttribute('focusable', 'false');
+  route.setAttribute('data-map-legs', '0');
+
+  /* Every casing under every line, so where two legs meet the paper edge of
+     one never cuts across the ink of the other. */
+  const casings = doc.createElementNS(SVG_NS, 'g');
+  casings.setAttribute('class', 'tn-map__casings');
+  const lines = doc.createElementNS(SVG_NS, 'g');
+  lines.setAttribute('class', 'tn-map__legs');
+  route.append(casings, lines);
+
   const pins = element(doc, 'div', { className: 'tn-map__pins' });
 
   const root = element(doc, 'div', {
     className: 'tn-map',
     testId: 'level-select-map',
     attrs: { 'aria-hidden': 'true' },
-    children: [art, pins],
   });
+  root.append(art, route, pins);
 
   /* A map that failed to load is an empty frame with pins floating in it, which
      is noise. Take the whole thing away: the list beside it says everything. */
@@ -212,10 +361,53 @@ export function createLevelMap(doc: Document, anchors: MapAnchorsDocument): Leve
     return node;
   }
 
+  function line(leg: RouteLeg, className: string): SVGLineElement {
+    const node = doc.createElementNS(SVG_NS, 'line');
+    node.setAttribute('class', className);
+    node.setAttribute('x1', String(leg.x1));
+    node.setAttribute('y1', String(leg.y1));
+    node.setAttribute('x2', String(leg.x2));
+    node.setAttribute('y2', String(leg.y2));
+    node.setAttribute('data-map-from', leg.from);
+    node.setAttribute('data-map-to', leg.to);
+    node.setAttribute('data-map-frame', leg.frame);
+    /* The pacing, as data the sheet reads. The dash is one unit longer than the
+       leg and rounded up, so no sliver of the next dash shows at the far end
+       while the leg is still hidden. */
+    node.style.setProperty('--tn-leg-length', String(Math.ceil(leg.length) + 1));
+    node.style.setProperty('--tn-leg-start', String(leg.start));
+    node.style.setProperty('--tn-leg-share', String(leg.share));
+    return node;
+  }
+
+  function refill(node: Element, children: readonly Element[]): void {
+    while (node.firstChild !== null) node.removeChild(node.firstChild);
+    node.append(...children);
+  }
+
+  /* What is on the map now, so the same state is not drawn twice. Drawing it
+     again would replace every pin and leg and replay the entrance for nothing. */
+  let shown: string | null = null;
+
   return {
     element: root,
     draw(stops): void {
-      replaceChildren(pins, placeStops(stops, anchors).map(pin));
+      const placed = placeStops(stops, anchors);
+      const legs = routeLegs(placed, anchors);
+      const state = JSON.stringify([placed, legs]);
+      if (state === shown) return;
+      shown = state;
+
+      replaceChildren(pins, placed.map(pin));
+      refill(
+        casings,
+        legs.map((leg) => line(leg, 'tn-map__casing')),
+      );
+      refill(
+        lines,
+        legs.map((leg) => line(leg, 'tn-map__leg')),
+      );
+      route.setAttribute('data-map-legs', String(legs.length));
     },
   };
 }

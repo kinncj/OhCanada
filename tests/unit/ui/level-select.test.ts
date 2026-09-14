@@ -798,3 +798,137 @@ describe('describing one card away from the map', () => {
     expect(levelTitle('en', unnamed as MapEntry)).toBeNull();
   });
 });
+
+/**
+ * Where the player is, said on the card.
+ *
+ * The map rings the stop and the rail beside the card marks it, and both are
+ * `aria-hidden`, so the card for that level says "You are here" in words. One
+ * decision drives all three, which is what these tests pin: the word, the rail
+ * pin and the map pin are always on the same card.
+ */
+describe('where the player is, in words', () => {
+  const FOUR = ['halifax', 'peggys-cove', 'quebec-city', 'ottawa'];
+
+  /** The first four places built and open, with the stamps named. */
+  const travelled = (stamped: readonly string[]): readonly MapEntry[] =>
+    entries(FOUR, FOUR).map((entry) => ({
+      ...entry,
+      stamped: stamped.includes(String(entry.id)),
+    }));
+
+  const hereHandles = (fixture: Fixture): readonly (string | null)[] =>
+    (fixture.at('level-select-list')?.querySelectorAll('button') ?? [])
+      .filter((control) => control.getAttribute('data-here') === 'true')
+      .map((control) => control.getAttribute('data-level-handle'));
+
+  const railHere = (fixture: Fixture): string | null =>
+    fixture
+      .at('level-select-list')
+      ?.querySelectorAll('li')
+      .find(
+        (item) =>
+          item.querySelector('.tn-journey')?.getAttribute('data-journey-current') === 'true',
+      )
+      ?.querySelector('button')
+      ?.getAttribute('data-level-handle') ?? null;
+
+  const mapHere = (fixture: Fixture): readonly (string | null)[] =>
+    (fixture.at('level-select-map')?.querySelectorAll('[data-journey-current="true"]') ?? []).map(
+      (pin) => pin.getAttribute('data-map-handle'),
+    );
+
+  it('says "You are here" on the card for the level the map was opened from', () => {
+    const fixture = open({
+      entries: travelled(['halifax']),
+      here: { inLevel: id('quebec-city'), lastPlayed: id('halifax') },
+    });
+    const badge = fixture.at('level-card-quebec-city-here');
+    expect(badge?.textContent).toBe('You are here');
+    /* Inside the button, so it is part of the card's name and not a stop. */
+    expect(badge?.closest('button')).toBe(fixture.at('level-card-quebec-city'));
+    expect(fixture.page.doc.querySelectorAll('.tn-levels__here')).toHaveLength(1);
+    expect(hereHandles(fixture)).toEqual(['quebec-city']);
+  });
+
+  it('says it on the level the save last played, when the map was not opened from a level', () => {
+    const fixture = open({ entries: travelled([]), here: { lastPlayed: id('ottawa') } });
+    expect(hereHandles(fixture)).toEqual(['ottawa']);
+    expect(fixture.at('level-card-ottawa-here')?.textContent).toBe('You are here');
+  });
+
+  it("falls back to the route's own answer, and still says it in words", () => {
+    /* Halifax stamped, nothing named: the first open card without a stamp. */
+    const fixture = open({ entries: travelled(['halifax']) });
+    expect(hereHandles(fixture)).toEqual(['peggys-cove']);
+    expect(fixture.at('level-card-peggys-cove-here')?.textContent).toBe('You are here');
+  });
+
+  it('is French', () => {
+    const fixture = open({ entries: travelled([]), here: { lastPlayed: id('quebec-city') } });
+    fixture.screen.setLocale('fr');
+    expect(fixture.at('level-card-quebec-city-here')?.textContent).toBe('Vous êtes ici');
+  });
+
+  it('marks the same card in words, on the rail and on the map', () => {
+    const fixture = open({
+      entries: travelled(['halifax', 'peggys-cove']),
+      here: { lastPlayed: id('quebec-city') },
+    });
+    expect(hereHandles(fixture)).toEqual(['quebec-city']);
+    expect(railHere(fixture)).toBe('quebec-city');
+    expect(mapHere(fixture)).toEqual(['quebec-city']);
+  });
+
+  it('draws the travelled line on the map up to that card, and nothing after it', () => {
+    const fixture = open({
+      entries: travelled(['halifax', 'peggys-cove', 'ottawa']),
+      here: { lastPlayed: id('quebec-city') },
+    });
+    const legs = (fixture.at('level-select-map')?.querySelectorAll('.tn-map__leg') ?? []).map(
+      (leg) => [
+        leg.getAttribute('data-map-from'),
+        leg.getAttribute('data-map-to'),
+        leg.getAttribute('data-map-frame'),
+      ],
+    );
+    /* Ottawa's stamp is further on than the player is, so no leg reaches it. */
+    expect(legs).toEqual([
+      ['halifax', 'peggys-cove', 'inset'],
+      ['peggys-cove', 'quebec-city', 'main'],
+    ]);
+  });
+
+  it('says nothing where there is nowhere to say', () => {
+    const fixture = open({ entries: entries([], []), here: { lastPlayed: id('ottawa') } });
+    expect(fixture.page.doc.querySelectorAll('.tn-levels__here')).toHaveLength(0);
+    expect(hereHandles(fixture)).toEqual([]);
+  });
+
+  it('moves when told, without the screen being rebuilt', () => {
+    const fixture = open({ entries: travelled([]), here: { lastPlayed: id('halifax') } });
+    const screen = fixture.at('level-select');
+    fixture.screen.setHere({ lastPlayed: id('ottawa') });
+    expect(fixture.at('level-select')).toBe(screen);
+    expect(hereHandles(fixture)).toEqual(['ottawa']);
+    expect(mapHere(fixture)).toEqual(['ottawa']);
+  });
+
+  it('redraws nothing when told the same thing, so focus stays where it was', () => {
+    const fixture = open({ entries: travelled([]), here: { lastPlayed: id('halifax') } });
+    const card = fixture.at('level-card-quebec-city');
+    fixture.screen.setHere({ lastPlayed: id('halifax'), inLevel: null });
+    expect(fixture.at('level-card-quebec-city')).toBe(card);
+  });
+
+  it('adds nothing to the order a keyboard or a switch walks', () => {
+    const fixture = open({
+      entries: travelled(['halifax']),
+      here: { lastPlayed: id('quebec-city') },
+      onBack: () => undefined,
+    });
+    expect(fixture.at('level-select')?.querySelectorAll('button')).toHaveLength(11);
+    expect(fixture.at('level-card-quebec-city-here')?.getAttribute('tabindex')).toBeNull();
+    expect(fixture.at('level-select-map')?.querySelectorAll('[tabindex]')).toHaveLength(0);
+  });
+});

@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { currentStopIndex, journeyRail, journeyRoute, type JourneyStep } from '@ui/journey';
+import type { LevelId } from '@domain/ids';
+
+import {
+  currentStopIndex,
+  journeyRail,
+  journeyRoute,
+  whereYouAre,
+  type JourneyStep,
+} from '@ui/journey';
 
 import { buildPage } from './support/fake-dom';
 
@@ -147,6 +155,114 @@ describe('where the drawn route ends', () => {
   it('marks none at all where there is no here to mark', () => {
     const route = journeyRoute([step({ built: false }), step({ built: false })]);
     expect(route.every((entry) => !entry.stop.current)).toBe(true);
+  });
+});
+
+/**
+ * Where the player is: the one card that says "You are here".
+ *
+ * The defect, in the player's words: "no matter if I am in Quebec, it doesn't
+ * show it." The mark followed `currentStopIndex`, the first open card without a
+ * stamp, so it stayed on Halifax while the player was in Québec City. Three
+ * sources now, in order, one test per source and one for each way a source is
+ * passed over.
+ */
+describe('where you are', () => {
+  const id = (value: string): LevelId => value as LevelId;
+
+  /** Halifax stamped; Peggy's Cove and Québec City open; Ottawa locked; Toronto not built. */
+  const places: readonly JourneyStep[] = [
+    { id: id('halifax'), built: true, unlocked: true, stamped: true },
+    { id: id('peggys-cove'), built: true, unlocked: true },
+    { id: id('quebec-city'), built: true, unlocked: true },
+    { id: id('ottawa'), built: true, unlocked: false },
+    { id: id('toronto'), built: false, unlocked: false },
+  ];
+
+  it('is the level the map was opened from, when it was opened inside a level', () => {
+    expect(whereYouAre(places, { inLevel: id('quebec-city') })).toEqual({
+      index: 2,
+      source: 'in-level',
+    });
+  });
+
+  it('is the level the save last played, when the map was not opened from a level', () => {
+    expect(whereYouAre(places, { inLevel: null, lastPlayed: id('quebec-city') })).toEqual({
+      index: 2,
+      source: 'last-played',
+    });
+  });
+
+  it("falls back to the route's own answer when neither names a stop", () => {
+    /* The first open card without a stamp: Peggy's Cove. */
+    expect(whereYouAre(places)).toEqual({ index: 1, source: 'route' });
+    expect(whereYouAre(places, { inLevel: null, lastPlayed: null })).toEqual({
+      index: 1,
+      source: 'route',
+    });
+    expect(whereYouAre(places).index).toBe(currentStopIndex(places));
+  });
+
+  it('puts the level the map was opened from ahead of what the save last played', () => {
+    expect(
+      whereYouAre(places, { inLevel: id('quebec-city'), lastPlayed: id('halifax') }),
+    ).toEqual({ index: 2, source: 'in-level' });
+  });
+
+  it('is no longer the old answer once the player is somewhere else, which was the defect', () => {
+    expect(currentStopIndex(places)).toBe(1);
+    expect(whereYouAre(places, { inLevel: id('quebec-city') }).index).toBe(2);
+  });
+
+  it('passes over a level this build has no stop for, or has not built', () => {
+    /* A save from another build, or a `?level=` address somebody typed. The
+       player cannot be somewhere that is not in the game, so the next source
+       answers rather than nowhere. */
+    expect(whereYouAre(places, { inLevel: id('atlantis'), lastPlayed: id('quebec-city') })).toEqual(
+      { index: 2, source: 'last-played' },
+    );
+    expect(whereYouAre(places, { inLevel: id('toronto'), lastPlayed: id('atlantis') })).toEqual({
+      index: 1,
+      source: 'route',
+    });
+  });
+
+  it('is a locked level if that is the level the player was really in', () => {
+    /* A deep link opens a level whatever the unlock rules say; leaving it, the
+       player was there. Locked is a statement about opening it, not about
+       whether they have stood in it. */
+    expect(whereYouAre(places, { inLevel: id('ottawa') })).toEqual({
+      index: 3,
+      source: 'in-level',
+    });
+  });
+
+  it('is nowhere when no source names a stop and the route has none', () => {
+    const nothing: readonly JourneyStep[] = [
+      { id: id('halifax'), built: false, unlocked: false },
+      { built: false, unlocked: false },
+    ];
+    expect(whereYouAre(nothing, { inLevel: id('halifax'), lastPlayed: id('halifax') })).toEqual({
+      index: -1,
+      source: null,
+    });
+  });
+
+  it('marks the stop where the player is on the route, and only that one', () => {
+    const route = journeyRoute(places, { lastPlayed: id('quebec-city') });
+    expect(route.map((entry) => entry.stop.current)).toEqual([false, false, true, false, false]);
+  });
+
+  it('moves the mark and not the legs: the legs still read the stamps', () => {
+    const legs = (here: Parameters<typeof journeyRoute>[1]) =>
+      journeyRoute(places, here).map(({ stop }) => [stop.before, stop.after, stop.reached]);
+    expect(legs({ inLevel: id('quebec-city') })).toEqual(legs({}));
+  });
+
+  it('keeps the old answer for a caller that says nothing, as the passport does', () => {
+    expect(journeyRoute(places).findIndex((entry) => entry.stop.current)).toBe(
+      currentStopIndex(places),
+    );
   });
 });
 

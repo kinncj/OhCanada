@@ -12,10 +12,11 @@
  * invisible. Each card is drawn as a **stop on a route** now: a rail down the
  * left of the list joins the ten in order, the legs the player has already
  * travelled are drawn solid and the ones ahead dotted, and the stop where the
- * drawn route ends is marked. `./journey.ts` owns that and explains why every
- * mark on it is a redrawing of a word the card already carries rather than a
- * new fact — which is what lets the rail be `aria-hidden` without costing a
- * screen reader user anything.
+ * player is gets marked. `./journey.ts` owns that and explains why every mark
+ * on it is a redrawing of a word the card already carries rather than a new
+ * fact, which is what lets the rail be `aria-hidden` without costing a screen
+ * reader user anything. The mark for where the player is has its word on the
+ * card: "You are here" (`map.here`).
  *
  * `OQ-MAP-2` asked whether this screen is a map or a list and answered "a
  * vertical list of cards on a painted backdrop that suggests the journey, with
@@ -68,7 +69,7 @@ import type { LevelId } from '@domain/ids';
 
 import { count, text, type CopyKey, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
-import { journeyRail, journeyRoute, type JourneyStop } from './journey';
+import { journeyRail, journeyRoute, type HereFacts, type JourneyStop } from './journey';
 import { createLevelMap, SHIPPED_MAP_ANCHORS } from './level-map';
 import { injectScreenStyles } from './screen-styles';
 
@@ -260,6 +261,12 @@ export interface LevelSelectOptions {
   readonly onOpenPassport?: () => void;
   /** The one live region: a card that cannot be opened says why (`TN-MAP-03`). */
   readonly announce?: (message: string) => void;
+  /**
+   * What the caller knows about where the player is: the level this map was
+   * opened from, and the level the save says they last played. `whereYouAre`
+   * picks one, and falls back to the route's own answer. Absent is that fallback.
+   */
+  readonly here?: HereFacts;
 }
 
 export interface LevelSelect {
@@ -269,6 +276,8 @@ export interface LevelSelect {
   readonly arrivalMessage: string;
   /** Progress changed: redraw the states without rebuilding the screen. */
   readonly setEntries: (entries: readonly MapEntry[]) => void;
+  /** Where the player is changed. An unchanged answer redraws nothing. */
+  readonly setHere: (here: HereFacts) => void;
   readonly setLocale: (locale: UiLocale) => void;
   /** `TN-FLOW-01`: the map opens with the one open card focused. */
   readonly focus: () => void;
@@ -297,6 +306,7 @@ export function createLevelSelect(
 
   let locale = options.locale;
   let entries = options.entries;
+  let here: HereFacts = options.here ?? {};
 
   const root = element(doc, 'div', {
     id: 'tn-level-select',
@@ -378,8 +388,9 @@ export function createLevelSelect(
     /* The route is derived once per draw, from the whole journey: a stop's legs
        depend on the stop before it, so no card can work it out alone. The map
        is handed the same derivation and the same state word as the rail, so a
-       pin on the map and the pin beside the card cannot disagree. */
-    const route = journeyRoute(entries);
+       pin on the map, the pin beside the card and the card's "You are here"
+       cannot disagree. */
+    const route = journeyRoute(entries, here);
     replaceChildren(
       list,
       route.map(({ step, stop }, index) => card(step, index, stop)),
@@ -449,6 +460,25 @@ export function createLevelSelect(
     }
 
     /*
+     * Where the player is, said as a word.
+     *
+     * The map rings this stop and the rail beside the card marks it, and both
+     * are `aria-hidden`: without this word the fact would exist only in pixels,
+     * which `TN-PASSPORT-09` refuses from the other end. It is inside the
+     * button, like "Earned", so it is part of the name a screen reader reads
+     * for the card rather than a separate stop in the Tab order.
+     */
+    if (stop.current) {
+      parts.push(
+        element(doc, 'span', {
+          className: 'tn-levels__here',
+          testId: `${testId}-here`,
+          text: text(locale, 'map.here'),
+        }),
+      );
+    }
+
+    /*
      * The stamp, said as a word.
      *
      * `MapEntry.stamped` has been on this type since the map was written and
@@ -482,6 +512,7 @@ export function createLevelSelect(
         'data-state': state,
         'data-level-handle': handle,
         'data-stamped': entry.stamped === true ? 'true' : 'false',
+        'data-here': stop.current ? 'true' : 'false',
       },
       children: parts,
     });
@@ -568,6 +599,15 @@ export function createLevelSelect(
     setEntries(next): void {
       entries = next;
       render();
+    },
+    setHere(next): void {
+      /* Re-rendering replaces every card, and a replaced card takes focus with
+         it, so a call that changes nothing does nothing. */
+      const same =
+        (next.inLevel ?? null) === (here.inLevel ?? null) &&
+        (next.lastPlayed ?? null) === (here.lastPlayed ?? null);
+      here = next;
+      if (!same) render();
     },
     setLocale(next): void {
       locale = next;

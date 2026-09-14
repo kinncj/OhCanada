@@ -10,8 +10,9 @@
  *
  * The wording is not this module's to choose. Every key below is transcribed
  * from a "Player-facing copy" table in `docs/stories/`; the story file is named
- * above each block. There are no exceptions left: {@link COPY_GAPS} is empty.
- * See that constant for what stays a caller's option and why.
+ * above each block. The exceptions are the rows {@link COPY_GAPS} declares;
+ * see that constant for why each was written here and what stays a caller's
+ * option.
  *
  * **A key that names a level carries the level's id.** `level.loading` and
  * `level.error.title` — one row each, for whichever level happened to have a
@@ -713,6 +714,12 @@ const EN = {
   'map.locked.stamps.other': 'Earn {{n}} more stamps to open this.',
   'map.notBuilt.help': 'We are still making this level.',
   'map.number': 'Level {{n}}',
+  /* Written here and listed in {@link COPY_GAPS}: no story owns it. The map
+     and the rail both mark the stop the player is at, and both are hidden from
+     assistive technology, so the card for that level has to say it in words or
+     the fact exists only in pixels. A label, not a sentence: it names no place,
+     because the card already does, and no direction (`OQ-MAP-3`). */
+  'map.here': 'You are here',
 
   /* docs/stories/TN-FLOW-first-run-and-return.md */
   'common.back': 'Back',
@@ -1225,6 +1232,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'map.locked.stamps.other': 'Gagnez encore {{n}} tampons pour ouvrir ce niveau.',
   'map.notBuilt.help': 'Ce niveau est encore en préparation.',
   'map.number': 'Niveau {{n}}',
+  /* « ici » and no place: the card already names it, and French does not put
+     one preposition in front of all ten (« à Ottawa », « dans le Nord »). */
+  'map.here': 'Vous êtes ici',
 
   'common.back': 'Retour',
   'flow.leaveLevel': 'Quitter le niveau',
@@ -1273,14 +1283,20 @@ const FR: Readonly<Record<CopyRow, string>> = {
 /**
  * Strings this module had to write because no story table carries them.
  *
- * **It was empty, and the "About this place" panel is why it is not.** Eight
+ * **It was empty, and the "About this place" panel is why it is not.** Nine
  * rows are listed below, and listing them is the point: `docs/stories/README.md`
  * says the UI invents no copy, so a string this directory had to write is
  * declared here and reported upward to be ratified or replaced in a story file.
  * A row written and left off this list would be a string that *looks* reviewed,
  * which is the one outcome this constant exists to prevent. The unit suite
- * pins the list to exactly these eight, so a ninth invented row anywhere else
+ * pins the list to exactly these nine, so a tenth invented row anywhere else
  * fails the build rather than joining them quietly.
+ *
+ * The ninth is `map.here`, "You are here". The level select marks the stop the
+ * player is at on the map and on the route beside the cards, and both are hidden
+ * from assistive technology, so the card has to carry the fact as a word.
+ * `TN-MAP` has no row for it, because until then the marked stop was
+ * computed from words the card already carried.
  *
  * Why there was no table to transcribe from: `docs/content-review.md` §10.2
  * specifies the panel — where it is reachable from, what it states, that it is
@@ -1331,6 +1347,7 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'about.unavailable.notShown',
   'about.unavailable.checking',
   'about.unavailable.ours',
+  'map.here',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

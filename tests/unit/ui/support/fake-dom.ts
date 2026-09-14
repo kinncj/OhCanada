@@ -87,6 +87,7 @@ export class FakeElement {
   readonly attributes = new Map<string, string>();
   readonly childNodes: FakeNode[] = [];
   readonly style = new FakeStyle();
+  namespaceURI = 'http://www.w3.org/1999/xhtml';
   parentElement: FakeElement | null = null;
   focusCount = 0;
   clickCount = 0;
@@ -396,6 +397,13 @@ export class FakeDocument {
 
   createElement(tag: string): FakeElement {
     return new FakeElement(this, tag);
+  }
+
+  /** SVG, for the map's route line. The namespace is recorded and nothing else differs. */
+  createElementNS(namespace: string, tag: string): FakeElement {
+    const node = new FakeElement(this, tag);
+    node.namespaceURI = namespace;
+    return node;
   }
 
   getElementById(id: string): FakeElement | null {

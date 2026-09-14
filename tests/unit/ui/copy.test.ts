@@ -125,8 +125,13 @@ describe('the copy table', () => {
      * that wording: `TN-REACH-what-is-in-reach.md` owns what the HUD says is in
      * reach and never mentions the panel, and the ten level stories own the
      * territorial *statement*, which is content on the level document and never
-     * a row in this table. So the eight rows below were written by `app/ui` and
-     * are declared, to be ratified or replaced by whoever owns the words.
+     * a row in this table. So those eight rows were written by `app/ui` and are
+     * declared, to be ratified or replaced by whoever owns the words.
+     *
+     * The ninth is `map.here`, "You are here", added deliberately: the level
+     * select marks where the player is on a map and a rail that are both
+     * `aria-hidden`, so the card has to say it in words, and `TN-MAP` has no
+     * row for it.
      *
      * The list is pinned rather than merely non-empty, which is what keeps the
      * gate: a ninth invented row, anywhere, fails here instead of joining a list
@@ -145,7 +150,9 @@ describe('the copy table', () => {
       'about.unavailable.notShown',
       'about.unavailable.checking',
       'about.unavailable.ours',
+      'map.here',
     ]);
+    expect(COPY_GAPS).toHaveLength(9);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {
@@ -156,6 +163,27 @@ describe('the copy table', () => {
       }
     }
     expect(source.includes(marker), `${marker} survives in copy.ts`).toBe(false);
+  });
+
+  it('says where the player is, in both languages, as a label naming no place and no direction', () => {
+    /*
+     * `map.here` is drawn on the card for the level the player is in, because
+     * the map and the rail that mark it are hidden from assistive technology.
+     * Literal on both sides. A label, so no closing full stop, and nothing in it
+     * says which way the journey runs (`OQ-MAP-3`) or names a place, since the
+     * card already names one and French has no single preposition for all ten.
+     */
+    expect(text('en', 'map.here')).toBe('You are here');
+    expect(text('fr', 'map.here')).toBe('Vous êtes ici');
+    for (const locale of UI_LOCALES) {
+      const value = text(locale, 'map.here');
+      expect(value.endsWith('.'), `map.here (${locale}) is punctuated as a sentence`).toBe(false);
+      expect(
+        /\b(east|west|north|south|est|ouest|nord|sud)\b/iu.test(value),
+        `map.here (${locale}) names a direction: ${value}`,
+      ).toBe(false);
+      expect(value.includes('{{'), `map.here (${locale}) takes a placeholder`).toBe(false);
+    }
   });
 
   it('names the hud region from the table, and still takes the waiting sentence as data', () => {

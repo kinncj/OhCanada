@@ -12,7 +12,9 @@ import {
   MAP_ART_URL,
   mapAnchorsOf,
   placeStops,
+  routeLegs,
   SHIPPED_MAP_ANCHORS,
+  travelledStops,
   type MapStopInput,
 } from '@ui/level-map';
 
@@ -269,5 +271,275 @@ describe('the map, drawn', () => {
     expect(root.hidden).toBe(false);
     root.querySelector('img')?.dispatchEvent(new FakeEvent('error', { bubbles: false }));
     expect(root.hidden).toBe(true);
+  });
+});
+
+/**
+ * The line through the stops the player has travelled.
+ *
+ * The rule, which is the licence for drawing it behind `aria-hidden`: it joins
+ * the cards that say "Earned" and come before the card that says "You are here",
+ * in the list's order, and it ends on that card. Nothing ahead of the player is
+ * drawn. A leg between two inset stops is drawn in the inset; a leg into or out
+ * of the inset is drawn on the main map from the inset stop's main-map point,
+ * inside the locator box.
+ */
+describe('the line the player has travelled', () => {
+  /** FIXTURE with a second inset stop, so a leg can run inside the inset. */
+  const ROUTE_FIXTURE: MapAnchorsDocument = {
+    ...FIXTURE,
+    anchors: { ...FIXTURE.anchors, delta: { x: 203, y: 99 } },
+    inset: {
+      frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
+      window: { x: 242, y: 57, width: 46, height: 36 },
+      locator: { x: 195, y: 95, width: 10, height: 10 },
+      anchors: { gamma: { x: 250, y: 60 }, delta: { x: 280, y: 90 } },
+      magnification: 4,
+    },
+  };
+
+  const at = (levelId: string, over: Partial<JourneyStop> = {}): MapStopInput => ({
+    id: id(levelId),
+    state: 'open',
+    stop: stop(over),
+  });
+
+  const legsOf = (stops: readonly MapStopInput[], anchors = ROUTE_FIXTURE) =>
+    routeLegs(placeStops(stops, anchors), anchors);
+
+  it('joins the stamped stops before the player, in order, and ends where the player is', () => {
+    const legs = legsOf([
+      at('gamma', { reached: true }),
+      at('delta', { reached: true }),
+      at('alpha', { current: true }),
+      at('beta'),
+    ]);
+    expect(legs.map((leg) => [leg.from, leg.to, leg.frame])).toEqual([
+      ['gamma', 'delta', 'inset'],
+      ['delta', 'alpha', 'main'],
+    ]);
+    /* Inside the inset between inset anchors; out of it from the main-map point. */
+    expect(legs[0]).toMatchObject({ x1: 250, y1: 60, x2: 280, y2: 90 });
+    expect(legs[1]).toMatchObject({ x1: 203, y1: 99, x2: 150, y2: 75 });
+  });
+
+  it('draws nothing ahead of the player, not even a stamp earned further on', () => {
+    const stops = [at('alpha', { current: true }), at('beta', { reached: true })];
+    expect(legsOf(stops)).toEqual([]);
+    expect(travelledStops(placeStops(stops, ROUTE_FIXTURE)).map((placed) => placed.id)).toEqual([
+      'alpha',
+    ]);
+  });
+
+  it('joins past a stop the player skipped, because they went from one to the other', () => {
+    const legs = legsOf([at('alpha', { reached: true }), at('gamma'), at('beta', { current: true })]);
+    expect(legs.map((leg) => [leg.from, leg.to])).toEqual([['alpha', 'beta']]);
+  });
+
+  it('draws no line when the only stop travelled is where the player is', () => {
+    expect(legsOf([at('alpha', { current: true }), at('beta')])).toEqual([]);
+  });
+
+  it('draws no line when nothing says where the player is', () => {
+    /* "Up to where they are" has nowhere to end. */
+    expect(legsOf([at('alpha', { reached: true }), at('beta', { reached: true })])).toEqual([]);
+  });
+
+  it('draws no leg the sidecar cannot place in its frame', () => {
+    const anchors: MapAnchorsDocument = {
+      ...ROUTE_FIXTURE,
+      inset: {
+        frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
+        window: { x: 242, y: 57, width: 46, height: 36 },
+        locator: { x: 195, y: 95, width: 10, height: 10 },
+        /* In the inset and nowhere on the main map, so a leg out of the inset
+           has no point to start from. validate-content refuses this document. */
+        anchors: { omega: { x: 260, y: 70 } },
+        magnification: 4,
+      },
+    };
+    expect(legsOf([at('omega', { reached: true }), at('alpha', { current: true })], anchors)).toEqual(
+      [],
+    );
+  });
+
+  it('paces the line by length: each leg starts where the one before ends, and the shares make one', () => {
+    const legs = legsOf([
+      at('gamma', { reached: true }),
+      at('delta', { reached: true }),
+      at('alpha', { reached: true }),
+      at('beta', { current: true }),
+    ]);
+    expect(legs).toHaveLength(3);
+    const total = legs.reduce((sum, leg) => sum + leg.length, 0);
+    expect(legs.reduce((sum, leg) => sum + leg.share, 0)).toBeCloseTo(1, 3);
+    let before = 0;
+    for (const leg of legs) {
+      expect(leg.start).toBeCloseTo(before / total, 3);
+      expect(leg.share).toBeCloseTo(leg.length / total, 3);
+      before += leg.length;
+    }
+  });
+
+  it("runs Halifax to Peggy's Cove inside the inset, and out of it to Québec City on the main map", () => {
+    /* On the main map Halifax and Peggy's Cove are four units apart, and a leg
+       between them there would be a line with no length. */
+    const anchors = SHIPPED_MAP_ANCHORS;
+    if (anchors === null) throw new Error('the shipped sidecar did not read');
+    const inset = anchors.inset;
+    if (inset === undefined) throw new Error('the shipped sidecar has no inset');
+
+    const legs = legsOf(
+      [
+        at('halifax', { reached: true }),
+        at('peggys-cove', { reached: true }),
+        at('quebec-city', { current: true }),
+        at('ottawa'),
+      ],
+      anchors,
+    );
+    expect(legs.map((leg) => [leg.from, leg.to, leg.frame])).toEqual([
+      ['halifax', 'peggys-cove', 'inset'],
+      ['peggys-cove', 'quebec-city', 'main'],
+    ]);
+
+    const [inInset, outOfInset] = legs;
+    expect(inInset).toMatchObject({
+      x1: inset.anchors['halifax']?.x,
+      y1: inset.anchors['halifax']?.y,
+      x2: inset.anchors['peggys-cove']?.x,
+      y2: inset.anchors['peggys-cove']?.y,
+    });
+    for (const leg of legs) expect(leg.length, `${leg.from} to ${leg.to}`).toBeGreaterThan(20);
+
+    /* The leg out of the inset starts inside the box that stands for it. */
+    const { locator } = inset;
+    expect(outOfInset?.x1).toBeGreaterThanOrEqual(locator.x);
+    expect(outOfInset?.x1).toBeLessThanOrEqual(locator.x + locator.width);
+    expect(outOfInset?.y1).toBeGreaterThanOrEqual(locator.y);
+    expect(outOfInset?.y1).toBeLessThanOrEqual(locator.y + locator.height);
+    expect(outOfInset).toMatchObject({
+      x2: anchors.anchors['quebec-city']?.x,
+      y2: anchors.anchors['quebec-city']?.y,
+    });
+  });
+
+  it('can join the whole shipped journey, and every leg has a length', () => {
+    const anchors = SHIPPED_MAP_ANCHORS;
+    if (anchors === null) throw new Error('the shipped sidecar did not read');
+    expect(LEVEL_IDS.length).toBeGreaterThan(1);
+    const stops = LEVEL_IDS.map((levelId, index) =>
+      at(levelId, index === LEVEL_IDS.length - 1 ? { current: true } : { reached: true }),
+    );
+    const legs = legsOf(stops, anchors);
+    expect(legs).toHaveLength(LEVEL_IDS.length - 1);
+    for (const leg of legs) expect(leg.length, `${leg.from} to ${leg.to}`).toBeGreaterThan(0);
+  });
+});
+
+describe('the line, drawn', () => {
+  const ROUTE_FIXTURE: MapAnchorsDocument = {
+    ...FIXTURE,
+    anchors: { ...FIXTURE.anchors, delta: { x: 203, y: 99 } },
+    inset: {
+      frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
+      window: { x: 242, y: 57, width: 46, height: 36 },
+      locator: { x: 195, y: 95, width: 10, height: 10 },
+      anchors: { gamma: { x: 250, y: 60 }, delta: { x: 280, y: 90 } },
+      magnification: 4,
+    },
+  };
+
+  const travelled: readonly MapStopInput[] = [
+    { id: id('gamma'), state: 'open', stop: stop({ reached: true }) },
+    { id: id('delta'), state: 'open', stop: stop({ reached: true }) },
+    { id: id('alpha'), state: 'open', stop: stop({ current: true }) },
+    { id: id('beta'), state: 'locked', stop: stop() },
+  ];
+
+  const drawn = (stops: readonly MapStopInput[]) => {
+    const page = buildPage();
+    const map = createLevelMap(page.document, ROUTE_FIXTURE);
+    map.draw(stops);
+    return { map, root: map.element as unknown as FakeElement };
+  };
+
+  it('sits over the drawing and under the pins, in the drawing’s own units', () => {
+    const { root } = drawn(travelled);
+    expect(root.children.map((child) => child.className)).toEqual([
+      'tn-map__art',
+      'tn-map__route',
+      'tn-map__pins',
+    ]);
+    const route = root.querySelector('[data-testid="level-select-map-route"]');
+    expect(route?.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(route?.getAttribute('viewBox')).toBe('100 50 200 100');
+    expect(route?.getAttribute('focusable')).toBe('false');
+    expect(route?.getAttribute('data-map-legs')).toBe('2');
+  });
+
+  it('is one ink line on one paper casing per leg, carrying what the sheet paces it by', () => {
+    const { root } = drawn(travelled);
+    const inks = root.querySelectorAll('.tn-map__leg');
+    const casings = root.querySelectorAll('.tn-map__casing');
+    expect(inks).toHaveLength(2);
+    expect(casings).toHaveLength(2);
+
+    const [first, second] = inks;
+    expect(first?.getAttribute('data-map-from')).toBe('gamma');
+    expect(first?.getAttribute('data-map-to')).toBe('delta');
+    expect(first?.getAttribute('data-map-frame')).toBe('inset');
+    expect(second?.getAttribute('data-map-frame')).toBe('main');
+    expect([first?.getAttribute('x1'), first?.getAttribute('y1')]).toEqual(['250', '60']);
+    expect([first?.getAttribute('x2'), first?.getAttribute('y2')]).toEqual(['280', '90']);
+
+    /* hypot(30, 30) = 42.43, rounded up and one unit longer. */
+    expect(first?.style.getPropertyValue('--tn-leg-length')).toBe('44');
+    expect(first?.style.getPropertyValue('--tn-leg-start')).toBe('0');
+    expect(Number(second?.style.getPropertyValue('--tn-leg-start'))).toBeCloseTo(
+      Number(first?.style.getPropertyValue('--tn-leg-share')),
+      3,
+    );
+  });
+
+  it('carries no words and nothing focusable, in the line as in the rest of the map', () => {
+    const { root } = drawn(travelled);
+    expect(root.textContent).toBe('');
+    expect(root.querySelectorAll('a, button, input, [tabindex]')).toHaveLength(0);
+    expect(root.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('does not redraw a state it already shows, so the entrance is not replayed', () => {
+    const { root, map } = drawn(travelled);
+    const leg = root.querySelector('.tn-map__leg');
+    const pin = root.querySelector('.tn-map__stop');
+
+    map.draw(travelled.map((entry) => ({ ...entry, stop: { ...entry.stop } })));
+
+    expect(root.querySelector('.tn-map__leg')).toBe(leg);
+    expect(root.querySelector('.tn-map__stop')).toBe(pin);
+  });
+
+  it('redraws the line when the player moves on', () => {
+    const { root, map } = drawn(travelled);
+    map.draw([
+      { id: id('gamma'), state: 'open', stop: stop({ reached: true }) },
+      { id: id('delta'), state: 'open', stop: stop({ reached: true }) },
+      { id: id('alpha'), state: 'open', stop: stop({ reached: true }) },
+      { id: id('beta'), state: 'open', stop: stop({ current: true }) },
+    ]);
+    expect(root.querySelectorAll('.tn-map__leg').map((leg) => leg.getAttribute('data-map-to'))).toEqual(
+      ['delta', 'alpha', 'beta'],
+    );
+    expect(root.querySelector('[data-testid="level-select-map-route"]')?.getAttribute('data-map-legs')).toBe(
+      '3',
+    );
+  });
+
+  it('takes the line away when there is no longer anywhere to draw it to', () => {
+    const { root, map } = drawn(travelled);
+    map.draw([{ id: id('alpha'), state: 'open', stop: stop({ current: true }) }]);
+    expect(root.querySelectorAll('.tn-map__leg')).toHaveLength(0);
+    expect(root.querySelectorAll('.tn-map__casing')).toHaveLength(0);
   });
 });

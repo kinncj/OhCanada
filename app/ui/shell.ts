@@ -68,6 +68,7 @@ import {
   type CreatorSlot,
 } from './character-creator';
 import { text, type UiLocale } from './copy';
+import type { HereFacts } from './journey';
 import { createLevelSelect, type LevelSelect, type MapEntry } from './level-select';
 import { injectScreenStyles } from './screen-styles';
 import { createSettingsScreen, type SettingsScreen } from './settings-screen';
@@ -116,6 +117,17 @@ export interface ShellOptions {
    * returning player is given "Choose a level" instead (`TN-TITLE-04`).
    */
   readonly resumeLevelId?: LevelId | null;
+  /**
+   * The save's `lastPlayedLevelId`, so a map opened from the title screen can
+   * say where the player is (`map.here`). Handed over by the composition root,
+   * because `app/ui` never reads a save. A map opened on the way out of a level
+   * says that level instead: see {@link Shell.leaveLevel}.
+   *
+   * Separate from {@link ShellOptions.resumeLevelId} although both come from the
+   * same field today. That one decides whether Continue is offered, and a rule
+   * that withdraws Continue must not also move the player on the map.
+   */
+  readonly lastPlayedLevelId?: LevelId | null;
   /** The one live region (`app/ui/live-region.ts`). */
   readonly announce?: (message: string, lang?: string) => void;
   /** The player chose a level. The composition root loads it. */
@@ -199,12 +211,20 @@ export interface Shell {
   readonly show: (view: ShellView) => void;
   /** A level has the page now. Call **before** the HUD is created. */
   readonly enterLevel: (id: LevelId) => void;
-  /** The level is gone. Call **after** the HUD is destroyed. */
+  /**
+   * The level is gone. Call **after** the HUD is destroyed.
+   *
+   * The map it lands on says the player is in the level they just left: it was
+   * opened from inside that level, and that beats whatever the save last
+   * recorded.
+   */
   readonly leaveLevel: (options?: LeaveLevelOptions) => void;
   /** Progress changed: redraw which levels are open. */
   readonly setEntries: (entries: readonly MapEntry[]) => void;
   /** A save was read, or a level became ready: offer or withdraw Continue. */
   readonly setResumeLevelId: (id: LevelId | null) => void;
+  /** The save's last played level changed: the next map opened from the title says it. */
+  readonly setLastPlayedLevelId: (id: LevelId | null) => void;
   /** An exam was left, finished or discarded: relabel the title's exam control. */
   readonly setExamUnfinished: (unfinished: boolean) => void;
   /** A character was created, or found in a save: the creator step is done. */
@@ -266,6 +286,14 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
   let modalOpen = false;
   let storageBlocked = false;
   let lastLevelId: LevelId | null = null;
+  let lastPlayedLevelId: LevelId | null = options.lastPlayedLevelId ?? null;
+  /*
+   * The level the map on screen was opened from, or `null` when it was opened
+   * from the title or the creator. Set when the view is built, so a map reached
+   * from the title later in the same sitting does not claim the player is still
+   * inside a level they left; that map reads the save's last played level.
+   */
+  let mapOpenedFrom: LevelId | null = null;
 
   let title: TitleScreen | null = null;
   let creator: CharacterCreator | null = null;
@@ -598,10 +626,16 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     creator.show();
   }
 
+  /** What the map is told about where the player is. */
+  function hereFacts(): HereFacts {
+    return { inLevel: mapOpenedFrom, lastPlayed: lastPlayedLevelId };
+  }
+
   function buildLevelSelect(): void {
     levelSelect = createLevelSelect(main, {
       locale: store.current.locale,
       entries,
+      here: hereFacts(),
       stampsToUnlock: options.stampsToUnlock,
       ...(options.announce === undefined ? {} : { announce: options.announce }),
       onChoose: (id) => {
@@ -616,9 +650,10 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     });
   }
 
-  function build(next: ShellView): void {
+  function build(next: ShellView, openedFrom: LevelId | null = null): void {
     clearView();
     view = next;
+    mapOpenedFrom = next === 'level-select' ? openedFrom : null;
     if (next === 'title') buildTitle();
     else if (next === 'creator') buildCreator();
     else buildLevelSelect();
@@ -695,7 +730,8 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
 
     leaveLevel(leaving): void {
       if (!main.isConnected) host.append(main);
-      build('level-select');
+      /* Opened from inside the level just left, so that is where the player is. */
+      build('level-select', lastLevelId);
       applyWarning();
 
       /*
@@ -734,6 +770,11 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       resumeLevelId = id;
       title?.setRoutes(routesOf());
       syncRing();
+    },
+
+    setLastPlayedLevelId(id): void {
+      lastPlayedLevelId = id;
+      levelSelect?.setHere(hereFacts());
     },
 
     setExamUnfinished(unfinished): void {
