@@ -475,7 +475,7 @@ the original two subjects do.
 | world x | POI | art | what it teaches | source |
 |---|---|---|---|---|
 | 1 500 | `granite-shore` | `peggys-cove-prop-granite-erratic`, 560 × 380 | three oceans line Canada: Pacific west, Atlantic east, Arctic north — and this is the Atlantic edge | *Discover Canada* p. 93 |
-| 3 200 | `peggys-point-light` | `peggys-cove-landmark-lighthouse`, 480 × 900 | the Acadians, the deportation, and Acadian culture today | *Discover Canada* p. 19 |
+| 3 200 | `peggys-point-light` | `peggys-cove-landmark-lighthouse`, 480 × 900 | Nova Scotia's identity is linked to shipbuilding, fisheries and shipping (was the Acadians, p. 19 — removed 2026-09-13 because this level names no people in any string) | *Discover Canada* p. 97 |
 | 4 700 | `fish-store` | `peggys-cove-prop-fish-store`, 620 × 520 | Atlantic Canada's coasts and its natural resources — fishing, farming, forestry, mining | *Discover Canada* p. 96 |
 | 6 200 | `village-house` | `peggys-cove-prop-fishermans-house`, 640 × 560 | most Canadians live in cities, and Canadians also live in small towns and rural areas | *Discover Canada* p. 94 |
 
