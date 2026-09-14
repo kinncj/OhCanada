@@ -60,9 +60,11 @@ The art is pinned to 1x, because `riderAnchor` and `groundLineY` are art pixels 
   that turns is mirrored about the anchor, so the rider never changes seat;
 - **the rider is drawn at the anchor and the physics position does not move.** The camera, reach, the
   auto-stop and the level exit see exactly what they saw before rides existed;
-- depths are relative to the player: `behind` half a step under the first rig part, `front` one step over
-  the last part (read from the rig, not assumed), both under the tappable marks; the track just above the
-  ground and under every actor;
+- depths are relative to the player: `behind` under the first rig part, `front` over the last part (the
+  rig's `z` range is read, not assumed), both under the tappable marks; the track just above the ground and
+  under every actor. Since 2026-09-14 these are the two empty ends of the player's own depth slot in
+  `depth-plan.ts`, above every other character's slot, after the player and a placed character were found
+  drawing their parts at interleaved depths;
 - the rock is `|sin|` over distance travelled, scaled by speed, zero at rest, and **zero under reduced
   motion unconditionally.** That is the engine's rule; no field can opt a level out of it.
 

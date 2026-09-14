@@ -153,6 +153,12 @@ describe('snapshotToAttributes', () => {
            compared with something. */
         'data-player-drawn',
         'data-placeholders',
+        /* Nothing missing, and still wrong: the guide's parts drew between the
+           player's, so the rider on Toronto was two puppets shuffled together
+           while every counter above read full marks. This counts what sits, by
+           depth, inside a character it is not part of, and reads 0 on a
+           healthy level. */
+        'data-parts-interleaved',
         /* The vehicle or animal the player rides (ADR-0031), and whether its art
            drew. A player reported the Prairies figure "walks by itself on a
            track"; a ride whose art never packed would seat the same figure in

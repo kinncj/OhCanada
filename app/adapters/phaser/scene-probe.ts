@@ -250,6 +250,19 @@ export interface SceneSnapshot {
    */
   readonly placeholders?: number;
   /**
+   * How many drawn things sit, by depth, between the first and last part of a
+   * character they are not part of. 0 on a healthy level.
+   *
+   * Every counter above read full marks over a scrambled player. On Toronto the
+   * guide drew its parts at `500 + z` and the player at `501 + z`, so wherever
+   * the player stopped on the guide — and ADR-0032 stops every drive there — the
+   * two puppets were shuffled together: somebody else's head-shell over the
+   * player's head, somebody else's arm over the toque. Nothing was missing, so
+   * nothing counted it. Read off the live display list (`depth-plan.ts`), not
+   * restated from the plan, so a depth set anywhere in the scene is caught.
+   */
+  readonly partsInterleaved?: number;
+  /**
    * How many things are marked as tappable right now, and how many of those are
    * in reach.
    *
@@ -479,6 +492,7 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'actorsVisible',
   'playerDrawn',
   'placeholders',
+  'partsInterleaved',
   'affordances',
   'affordancesReady',
   'claimsExamined',
@@ -542,6 +556,9 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-actors-visible': num(snapshot.actorsVisible),
     'data-player-drawn': bool(snapshot.playerDrawn),
     'data-placeholders': num(snapshot.placeholders),
+    /* Nothing missing and still wrong: parts of two characters shuffled
+       together by depth. 0 on a healthy level. */
+    'data-parts-interleaved': num(snapshot.partsInterleaved),
     'data-affordances': num(snapshot.affordances),
     'data-affordances-ready': num(snapshot.affordancesReady),
     'data-claims-examined': num(snapshot.claimsExamined),

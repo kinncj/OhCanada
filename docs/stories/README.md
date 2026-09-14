@@ -760,7 +760,9 @@ and present **only** when the page is opened with `?e2e=1`:
 `data-character-mode` (the locomotion mode the character is actually rigged for),
 `data-pose` (the animation state that mode selects), `data-mode-gaps` (a count, `0` on a healthy
 level), and `data-rides` / `data-rides-drawn` (whether the mode the player moves by has a ride, and
-whether its art drew: `0`/`0` or `1`/`1` on a healthy level).
+whether its art drew: `0`/`0` or `1`/`1` on a healthy level), and `data-parts-interleaved` (a count of
+drawn things that sit, by depth, between the first and last part of a character they are not part of: `0`
+on a healthy level).
 
 `data-character-mode`, `data-pose` and `data-mode-gaps` exist because the HUD named a mode the
 character did not play: every level animated walking whatever the mode was. `data-character-mode` is
@@ -772,6 +774,12 @@ label that says Skating must say so rather than look correct.
 player reported the figure "walks by itself on a track". A train is a ride, not rig equipment
 (ADR-0031), and a ride whose art never drew would seat the rider in mid-air while the level still
 reached `ready`, so the pair must read equal.
+
+`data-parts-interleaved` exists because a rider on Toronto drew scrambled while every counter read full
+marks: nothing was missing. The guide drew its parts at depths `500 + z` and the player at `501 + z`, so
+wherever the player stopped on the guide the two puppets were shuffled together. It is read off the
+scene's display list when the level is ready, not restated from `depth-plan.ts`, so a depth set anywhere
+in the scene is counted.
 
 It carries no player-facing text, so it is invisible to axe and to a screen reader. See `OQ-TEST-1`.
 It is absent during an exam, because an exam is not a level (`TN-EXAM-01`).

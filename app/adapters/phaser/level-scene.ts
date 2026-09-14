@@ -74,6 +74,7 @@ import {
 import { gestureHoldMs } from './engagement-pose';
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
 import { rideArtProblems, rideBobPx, rideFor, ridePlacement, type RideArtSize } from './ride';
+import { depthPlan, interleavedDepths, type DepthGroup, type DepthPlan } from './depth-plan';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
 import { watchExit, type ExitWatch } from './level-exit';
@@ -149,31 +150,12 @@ const GRADIENT_BANDS = 64;
  */
 const clampAxis = (value: number): number => Math.max(-1, Math.min(1, value));
 
-/** Depth slots. Layers sit between the sky and the ground; actors above both. */
-const DEPTH_SKY = 0;
-const DEPTH_LAYERS = 100;
-const DEPTH_GROUND = 400;
-/**
- * A ride's track (ADR-0031): on the ground and under every actor. Not a parallax
- * layer, because layers sit below the ground fill and the tier drops them, and a
- * train whose rails the low tier removed is floating.
+/*
+ * Depths are not constants here any more. Every non-player character drew at
+ * `500 + z` and the player at `501 + z`, so the two puppets shuffled together
+ * wherever the player stood on one — see `depth-plan.ts`, which now owns every
+ * band, and `#depths`, which is that plan for this level.
  */
-const DEPTH_RIDE_TRACK = DEPTH_GROUND + 2;
-const DEPTH_ACTORS = 500;
-/**
- * The player. Their rig parts draw at this plus each part's `z` (1..n), so a
- * ride's `behind` layer goes just under this and its `front` layer just above
- * the last part — both still under {@link DEPTH_AFFORDANCE}.
- */
-const DEPTH_PLAYER = DEPTH_ACTORS + 1;
-/**
- * The tappable marks, above everything they describe and below the weather.
- *
- * Above the actors deliberately: a mark hidden behind the thing it points at is
- * the defect it exists to fix, arriving from the other side.
- */
-const DEPTH_AFFORDANCE = 550;
-const DEPTH_SNOW = 600;
 
 /**
  * The actor placeholder, in design pixels.
@@ -540,6 +522,23 @@ export class LevelScene extends Phaser.Scene {
   #skyClock: Phaser.Time.TimerEvent | null = null;
   /** The rig's atlas key, resolved once. `undefined` is "not asked yet". */
   #atlasKey: string | null | undefined = undefined;
+  /**
+   * Where everything draws, front to back, for this level (`depth-plan.ts`).
+   *
+   * Fixed for the life of the scene: the number of characters and the rig's
+   * `z` range are both known at construction, and a slot that moved after a
+   * character was dressed would leave its parts in the old one.
+   */
+  readonly #depths: DepthPlan;
+  /**
+   * Every composed character's part objects, by who they belong to.
+   *
+   * Kept only so `data-parts-interleaved` can be read off the display list the
+   * frame the level is ready. The renderer owns the parts and destroys them;
+   * this holds references, and a destroyed part is skipped by asking the display
+   * list, not by trusting this list.
+   */
+  #partGroups: { readonly owner: string; readonly parts: Phaser.GameObjects.Image[] }[] = [];
   /** The target a tap landed on, waiting for the next `#sampleIntent`. */
   #tapTarget: string | null = null;
   /** That same target, handed to the frame that is running. */
@@ -562,6 +561,12 @@ export class LevelScene extends Phaser.Scene {
     }
     this.#tuning = tuning;
     this.#ride = rideFor(options.level.rides, tuning.mode);
+    /* One slot per character the level places and one for the player, each as
+       deep as the rig's `z` range, so no two puppets can shuffle together. */
+    this.#depths = depthPlan({
+      characters: options.level.characters.length,
+      partZ: options.rig?.parts.map((part) => part.z) ?? [],
+    });
     this.#locomotion = createLocomotion(tuning);
     this.#braking = createLocomotion(brakingTuning(tuning));
     this.#autoStop = createAutoStop(tuning);
@@ -776,6 +781,8 @@ export class LevelScene extends Phaser.Scene {
       claimsRefused: level.claims.refused.length,
       playerDrawn: this.#playerCharacter !== null,
       placeholders: this.#placeholders,
+      /* Read off the display list, after every character and the ride exist. */
+      partsInterleaved: this.#partsInterleaved(),
       dayPhase: this.#phase,
       ...this.#affordanceCounts(),
       ...this.#visibleArt(),
@@ -800,6 +807,7 @@ export class LevelScene extends Phaser.Scene {
          the texture manager's and is dropped by the unload path, not here. */
       for (const character of this.#characters) character.dispose();
       this.#characters = [];
+      this.#partGroups = [];
       this.#playerCharacter?.dispose();
       this.#playerCharacter = null;
       /* The images go with the scene's display list; the references are dropped
@@ -1656,7 +1664,7 @@ export class LevelScene extends Phaser.Scene {
 
   #paintSky(): void {
     const { designWidth, designHeight } = this.#options;
-    const graphics = this.add.graphics().setScrollFactor(0, 0).setDepth(DEPTH_SKY);
+    const graphics = this.add.graphics().setScrollFactor(0, 0).setDepth(this.#depths.sky);
     const bandHeight = designHeight / GRADIENT_BANDS;
 
     this.#repaint(() => {
@@ -1707,7 +1715,7 @@ export class LevelScene extends Phaser.Scene {
     this.#texturedLayers = 0;
 
     ordered.forEach((layer, index) => {
-      const depth = DEPTH_LAYERS + index;
+      const depth = this.#depths.layer(index);
       if (this.textures.exists(layer.key)) {
         this.#texturedLayers += 1;
         const source = this.textures.get(layer.key).getSourceImage();
@@ -1811,7 +1819,7 @@ export class LevelScene extends Phaser.Scene {
    */
   #paintGround(): void {
     const { level } = this.#options;
-    const ground = this.add.graphics().setDepth(DEPTH_GROUND);
+    const ground = this.add.graphics().setDepth(this.#depths.ground);
 
     this.#repaint(() => {
       ground.clear();
@@ -1840,7 +1848,7 @@ export class LevelScene extends Phaser.Scene {
   #paintOverlays(): void {
     const { level, designWidth, designHeight } = this.#options;
 
-    const sheen = this.add.graphics().setDepth(DEPTH_GROUND + 1);
+    const sheen = this.add.graphics().setDepth(this.#depths.sheen);
     this.#repaint(() => {
       sheen.clear();
       sheen.fillStyle(toPhaserColor(this.#palette.horizon), 1);
@@ -1848,7 +1856,7 @@ export class LevelScene extends Phaser.Scene {
     });
     this.#sheen = sheen;
 
-    const haze = this.add.graphics().setScrollFactor(0, 0).setDepth(DEPTH_LAYERS - 1);
+    const haze = this.add.graphics().setScrollFactor(0, 0).setDepth(this.#depths.haze);
     this.#repaint(() => {
       haze.clear();
       haze.fillStyle(toPhaserColor(this.#palette.horizon), 1);
@@ -1865,7 +1873,7 @@ export class LevelScene extends Phaser.Scene {
         const image = this.add
           .image(poi.position.x, y, poi.artKey)
           .setOrigin(0.5, 1)
-          .setDepth(DEPTH_ACTORS - 1);
+          .setDepth(this.#depths.poi);
         this.#actorsDrawn += 1;
         const rect = {
           x: poi.position.x - image.width / 2,
@@ -1879,7 +1887,7 @@ export class LevelScene extends Phaser.Scene {
       }
       /* A tower silhouette: tall enough to be framed by TN-LEVEL-04's "fully
          inside the canvas" check, plain enough that nobody files it as art. */
-      const mark = this.add.graphics().setDepth(DEPTH_ACTORS - 1);
+      const mark = this.add.graphics().setDepth(this.#depths.poi);
       this.#repaint(() => {
         mark.clear();
         mark.fillStyle(blendColors(toPhaserColor(this.#palette.horizon), 0x000000, 0.35), 1);
@@ -1920,14 +1928,18 @@ export class LevelScene extends Phaser.Scene {
    */
   #paintCharacters(): void {
     const { level } = this.#options;
-    for (const character of level.characters) {
+    for (const [index, character] of level.characters.entries()) {
       const id = String(character.characterId);
       const y = groundYAt(level.ground, character.position.x);
+      /* Its own slot, in the order the level lists characters: no two
+         characters' parts share a depth, so nobody can be drawn between
+         somebody else's head and hat (`depth-plan.ts`). */
+      const depth = this.#characterDepth(index);
       const renderer = this.#composeCharacter(
         id,
         artboardFor(this.#options.rig, id),
         {},
-        DEPTH_ACTORS,
+        depth,
         null,
       );
 
@@ -1949,7 +1961,7 @@ export class LevelScene extends Phaser.Scene {
         continue;
       }
 
-      const actor = this.add.graphics().setDepth(DEPTH_ACTORS);
+      const actor = this.add.graphics().setDepth(depth);
       actor.fillStyle(blendColors(toPhaserColor(level.palette.ink), 0xffffff, 0.15), 1);
       actor.fillRoundedRect(
         character.position.x - ACTOR_WIDTH / 2,
@@ -1989,7 +2001,9 @@ export class LevelScene extends Phaser.Scene {
       PLAYER_SUBJECT,
       artboard,
       this.#options.playerSkins ?? {},
-      DEPTH_PLAYER,
+      /* The slot above every other character's, so the player is drawn whole
+         and in front of anybody they stop on. */
+      this.#depths.player.baseDepth,
       /*
        * **The line the whole defect was.** The level document declares how the
        * player moves here and the rig is now told, so a level that says skating
@@ -2014,7 +2028,7 @@ export class LevelScene extends Phaser.Scene {
       return;
     }
 
-    const player = this.add.graphics().setDepth(DEPTH_PLAYER);
+    const player = this.add.graphics().setDepth(this.#depths.player.baseDepth);
     player.fillStyle(toPhaserColor(level.palette.ink), 1);
     player.fillRoundedRect(-ACTOR_WIDTH / 2, -ACTOR_HEIGHT, ACTOR_WIDTH, ACTOR_HEIGHT, 18);
     player.setPosition(this.#state.x, this.#state.y);
@@ -2029,10 +2043,12 @@ export class LevelScene extends Phaser.Scene {
    * `data-rides` 1 — because the failure it stands for is a rider posed in a seat
    * that is not on screen, and that reaches `ready` exactly like success.
    *
-   * Depths are relative to the player's own: `behind` half a step under the
-   * first rig part, `front` one step over the last, and the track on the ground
-   * under every actor. The part count is read from the rig rather than assumed,
-   * so a rig with a twenty-eighth part does not end up in front of the car.
+   * Depths are the player's slot's two empty ends (`depth-plan.ts`): `behind`
+   * under the rider's first part, `front` over the last, both over every other
+   * character — a ride runs on a nearer line than the people the level places —
+   * and the track on the ground under every actor. The slot is sized from the
+   * rig's `z` range, so a rig that grows a part does not end up in front of the
+   * car.
    */
   #paintRide(): void {
     const ride = this.#ride;
@@ -2046,12 +2062,11 @@ export class LevelScene extends Phaser.Scene {
     const problems = rideArtProblems(ride, sizeOf);
     for (const problem of problems) console.error(`[level] ${problem}`);
 
-    const lastPart = this.#options.rig?.parts.length ?? 0;
     for (const layer of ride.art) {
       const size = sizeOf(layer.key);
       if (size === null) continue;
       this.#rideSize ??= size;
-      const depth = layer.side === 'behind' ? DEPTH_PLAYER - 0.5 : DEPTH_PLAYER + lastPart + 1;
+      const depth = layer.side === 'behind' ? this.#depths.rideBehind : this.#depths.rideFront;
       const object = this.add.image(0, 0, layer.key).setOrigin(0.5, 0).setDepth(depth);
       this.#rideArt.push({ object, side: layer.side });
     }
@@ -2063,7 +2078,7 @@ export class LevelScene extends Phaser.Scene {
           .tileSprite(0, 0, this.#options.designWidth, size.height, ride.track.artKey)
           .setOrigin(0, 0)
           .setScrollFactor(0, 1)
-          .setDepth(DEPTH_RIDE_TRACK);
+          .setDepth(this.#depths.rideTrack);
       }
     }
 
@@ -2169,6 +2184,10 @@ export class LevelScene extends Phaser.Scene {
       heightPx: rig.characterSpace.height,
     };
 
+    /* Every part this character is dressed in, including any a later re-dress
+       makes, so `data-parts-interleaved` is read off the display list rather
+       than restated from the plan. */
+    const parts: Phaser.GameObjects.Image[] = [];
     const built = createSpriteCharacterRenderer(spec, {
       textureKey: atlas,
       frames: {
@@ -2178,7 +2197,11 @@ export class LevelScene extends Phaser.Scene {
         /* `__DEFAULT` is Phaser's built-in blank texture: the renderer sets the
            real frame on the next line of its own constructor, and an image needs
            *a* texture to exist at all. */
-        createPart: (): SpritePartObject => this.add.image(0, 0, '__DEFAULT'),
+        createPart: (): SpritePartObject => {
+          const part = this.add.image(0, 0, '__DEFAULT');
+          parts.push(part);
+          return part;
+        },
       },
       baseDepth: depth,
       /* Spread rather than `mode: mode ?? undefined`: `exactOptionalPropertyTypes`
@@ -2186,7 +2209,10 @@ export class LevelScene extends Phaser.Scene {
          "this character has no mode" is the absent key. */
       ...(mode === null ? {} : { mode }),
     });
-    if (built.ok) return built.value;
+    if (built.ok) {
+      this.#partGroups.push({ owner: subject, parts });
+      return built.value;
+    }
     /* The half-packed atlas gets the sentence written for it; anything else —
        an appearance naming an option the rig dropped, a rig with no parts — is
        reported as itself rather than dressed up as a missing atlas. */
@@ -2198,6 +2224,47 @@ export class LevelScene extends Phaser.Scene {
     );
     this.#placeholders += 1;
     return null;
+  }
+
+  /**
+   * The base depth of the `index`-th character the level places.
+   *
+   * The plan was built from this level's own character list, so a missing band
+   * means the scene is painting a list it was not constructed with — refused
+   * rather than guessed, because a guess is exactly how two puppets end up in
+   * one slot.
+   */
+  #characterDepth(index: number): number {
+    const band = this.#depths.characters[index];
+    if (band === undefined) {
+      throw new TypeError(
+        `character ${String(index)} has no depth slot: the plan has ` +
+          `${String(this.#depths.characters.length)}. The scene is painting a different ` +
+          'character list from the one it was constructed with.',
+      );
+    }
+    return band.baseDepth;
+  }
+
+  /**
+   * Drawn things that sit, by depth, between the first and last part of a
+   * character they are not part of — `data-parts-interleaved`, 0 when healthy.
+   *
+   * Read off the display list as it is, not restated from `#depths`, so a depth
+   * set anywhere else in this file is counted too. Asked once, at ready: every
+   * depth in the level is fixed by then.
+   */
+  #partsInterleaved(): number {
+    const owned = new Set<Phaser.GameObjects.GameObject>();
+    const groups: DepthGroup[] = this.#partGroups.map(({ owner, parts }) => {
+      const live = parts.filter((part) => this.children.exists(part));
+      for (const part of live) owned.add(part);
+      return { owner, depths: live.map((part) => part.depth) };
+    });
+    const loose = this.children.list
+      .filter((object) => !owned.has(object))
+      .map((object) => ('depth' in object && typeof object.depth === 'number' ? object.depth : 0));
+    return interleavedDepths(groups, loose);
   }
 
   /**
@@ -2431,7 +2498,9 @@ export class LevelScene extends Phaser.Scene {
     for (const mark of marks) {
       const existing = this.#marks.get(mark.id);
       if (existing === undefined) {
-        const object = this.add.graphics().setDepth(DEPTH_AFFORDANCE);
+        /* Above the last character slot, deliberately: a mark hidden behind the
+           thing it points at is the defect it exists to fix. */
+        const object = this.add.graphics().setDepth(this.#depths.affordance);
         object.setPosition(mark.x, mark.y);
         const entry = { object, mark };
         this.#marks.set(mark.id, entry);
@@ -2641,7 +2710,7 @@ export class LevelScene extends Phaser.Scene {
   /* ----------------------------------------------------------------- snow --- */
 
   #buildSnow(): void {
-    this.#snowGraphics = this.add.graphics().setScrollFactor(0, 0).setDepth(DEPTH_SNOW);
+    this.#snowGraphics = this.add.graphics().setScrollFactor(0, 0).setDepth(this.#depths.snow);
   }
 
   /**
