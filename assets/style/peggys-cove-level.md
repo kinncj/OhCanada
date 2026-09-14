@@ -215,7 +215,7 @@ No `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<st
 `make assets`' palette lint checks it and reports every declaration it read. Water is three flat `water`
 tones with straight ripple bars. Reflections are flat vertical bars in the reflected object's own tones,
 broken by ripple bars — never a blur. AO is flat `ao-shadow` at 0.28 at ground contacts and 0.18 at overlaps.
-**No falling weather, no fog, no spray.**
+**No falling weather, no fog, no spray.** **Player costume: `jacket`**: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it.
 
 ## 5. Budgets, measured
 

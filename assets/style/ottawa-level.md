@@ -160,6 +160,7 @@ in any of the ten sources.
 | ice shimmer | flat `ice-light` lozenges with a 12 px corner radius, plus sparse `snow-light` scoring arcs at 0.26–0.30 alpha. Static shapes, authored, no animation required. | an additive sheen sweep would be a bonus and must never be the thing that makes the ice read as ice. |
 | skate scoring | the art bible's one sanctioned stroke overlay: 3–4 px `snow-light` arcs, 13 of them per 1440 px tile, authored as shapes. | none. |
 | falling snow | `ottawa-particle-snow`, three flat opaque discs with a flat highlight. Phaser particles, ≤ 400 on a phone at every tier and 150 at `low`. | none. A glow on a 13 px disc is invisible on a phone. |
+| player costume | `parka`: the winter parka, scarf and mitts (`player.md`), because this level is winter and snow falls on it. | — |
 | POI marker "in reach" | the ring **fills and gains a second ring** — a shape change, not a glow and not only a colour change. | a pulse is welcome; the shape difference already carries the state, so reduced motion and Canvas both stay correct. |
 | lamp globes | flat `brass-light` disc with a `white-light` highlight disc. | a bloom would be a bonus. |
 

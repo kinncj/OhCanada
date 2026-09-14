@@ -163,6 +163,7 @@ theme gradient.
 | city haze | an opaque `cloud-base` band at the foot of the skyline tile and paler tones on the further towers. Aerial perspective by tone, not by alpha. | a distance fade would be a bonus and must never be what makes the towers read as far away. |
 | glass | flat `ice` and `water` tones with `slate` window bands. | a specular sweep would be a bonus. |
 | falling weather | **none. This level is late summer** — no particles, no `particle-*` source. | — |
+| player costume | `jacket`: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it. | — |
 
 **One thing deliberately not drawn: overhead wires.** They are characteristic of Toronto streets and they
 were designed as a fifth layer, at world 900 … 1010, scroll 0.85. Composited, they were visible in 40 rows

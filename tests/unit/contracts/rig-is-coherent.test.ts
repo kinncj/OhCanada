@@ -91,6 +91,8 @@ interface RigPart {
   readonly name: string;
   readonly z: number;
   readonly frame: string;
+  readonly pivot: readonly number[];
+  readonly mirrorX: boolean;
 }
 interface RigKeyframe {
   readonly t: number;
@@ -365,6 +367,46 @@ describe('the constraints a JSON Schema cannot state (ADR-0017)', () => {
       `frame key(s) ${bad.join(', ')} do not start with "${rig.atlas.framePrefix}". The prefix is ` +
         `what keeps rig frames from colliding with a level's in a shared atlas namespace.`,
     ).toEqual([]);
+  });
+
+  it('carries every bare hand on its own hand: same pivot, same mirror, same transform in every key', () => {
+    // `bare-hand-l` and `bare-hand-r` are the skin under the `jacket` cuff. The
+    // rig parents nothing, so a bare hand stays on its wrist only because it
+    // shares `hand-l`/`hand-r`'s pivot and carries its transform in every key of
+    // every state - the rule `foot-gear-*` follows for its boot. A pose edited on
+    // one and not the other detaches a hand from its sleeve on every warm-weather
+    // level, and it renders perfectly in the parka, which draws no bare hand.
+    const bare = rig.parts.filter((part) => part.name.startsWith('bare-hand-'));
+    expect(
+      bare.map((part) => part.name).sort(),
+      'the rig no longer declares both bare hands, so the jacket has lost a hand or grown a third',
+    ).toEqual(['bare-hand-l', 'bare-hand-r']);
+
+    const faults: string[] = [];
+    for (const part of bare) {
+      const handName = part.name.replace(/^bare-/u, '');
+      const hand = rig.parts.find((candidate) => candidate.name === handName);
+      if (hand === undefined) {
+        faults.push(`"${part.name}" has no "${handName}" to ride on`);
+        continue;
+      }
+      if (JSON.stringify(part.pivot) !== JSON.stringify(hand.pivot) || part.mirrorX !== hand.mirrorX) {
+        faults.push(`"${part.name}" does not share "${handName}"'s pivot and mirror`);
+      }
+      if (part.z !== hand.z - 1) {
+        faults.push(`"${part.name}" draws at z ${String(part.z)}, not immediately before "${handName}" at z ${String(hand.z)}`);
+      }
+      for (const [stateName, state] of Object.entries(rig.states)) {
+        for (const key of state.keys) {
+          const carried = JSON.stringify(key.parts[part.name]);
+          const worn = JSON.stringify(key.parts[handName]);
+          if (carried !== worn) {
+            faults.push(`${stateName} t ${String(key.t)}: "${part.name}" is ${String(carried)} and "${handName}" is ${String(worn)}`);
+          }
+        }
+      }
+    }
+    expect(faults, faults.join('\n')).toEqual([]);
   });
 
   it('falls back to an expression it declares', () => {

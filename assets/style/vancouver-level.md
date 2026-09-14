@@ -95,7 +95,7 @@ furniture. **No suspension bridge appears anywhere.**
 
 No `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<style>` or `url(#…)` anywhere.
 Water is three flat `water` tones with straight ripple bars. Distance is a flat tone per range. AO is flat
-`ao-shadow` at 0.28 at ground contacts and 0.18 at overlaps. **No falling weather.**
+`ao-shadow` at 0.28 at ground contacts and 0.18 at overlaps. **No falling weather.** **Player costume: `jacket`**: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it.
 
 ## 5. Budgets, measured
 

@@ -142,6 +142,7 @@ the five sources.
 | ballast | scattered flat chips in two tones, never a texture fill. |
 | swaths | fourteen flat parallelograms with their own shadow lines. |
 | falling weather | **none. This level is late-summer harvest.** |
+| player costume | `jacket`: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it. |
 
 ---
 

@@ -1,7 +1,7 @@
-# The player: winter kit
+# The player: winter kit and warm-weather clothes
 
-The design sheet for `costume: parka` — the artboard `player`. Read with `art-bible.md`, `rig-contract.md`
-and `palette.json` open.
+The design sheet for `costume: parka` — the artboard `player` — and, in §7, for `costume: jacket`, which the
+player wears on levels that are not winter. Read with `art-bible.md`, `rig-contract.md` and `palette.json` open.
 
 ## 0. Redrawn 2026-09-14 — read `art-bible.md` §7.7 first
 
@@ -187,3 +187,46 @@ ankle. The hood ruff is the first thing to go, which is expected — it is 10 px
 and it is why the other five marks are not allowed to be quiet. Every one of the 480 creator appearances
 was rendered against every expression before this shipped; the toque clears the brows and every hair shape
 reads under it and without it.
+
+## 7. Warm weather: `costume: jacket`
+
+Added 2026-09-14. A live-site audit photographed the player in this parka, the scarf and the mitts on Winnipeg
+in early autumn, and on Toronto, Vancouver, the Prairies, the foothills and the North in late summer. Every one
+of those art sheets says what season it is and that no weather falls; only Ottawa and Québec City are winter.
+The player was dressed for January on eight levels out of ten. `jacket` is what they wear on the other eight.
+
+**What it is.** A light cotton jacket worn open to the hip, over a plain crew-neck T-shirt; blue jeans rolled
+once at the ankle; red canvas high-top sneakers with white toe caps and soles; bare hands. Nothing skimpy, and
+the same person: the head, hair, face, neck, skin and every head-and-neck part are the shared ones, and the
+figure stands on the same pivots, crown, sole and hand and foot sizes as the parka.
+
+| area | ramp | why |
+|---|---|---|
+| jacket shell, sleeves, collar, cuffs, waistband | `cobalt` | The same blue as the parka, so the player is recognisably the same person in any season, and still not a red beside the officer's serge. |
+| T-shirt | `white` | Reads as summer, and a narrow strip down the open front. Red was tried first and read as a red bib: a large red field is what §3 keeps off this character. |
+| jeans, rolled cuff | `water` | A mid denim blue a clear step lighter than the cobalt jacket, so the jacket and the legs do not read as one column. |
+| high-tops | `flag-red`, toe cap and sole `white` | The small red marks the scarf and the mitts used to carry, moved to the feet. |
+| bare hands | `skin-1` … `skin-6` | Skin, in the player's own ramp; see below. |
+
+**What changed structurally, and why.** A mitt can be one frame for every tone; a hand cannot. So the bare hand
+is its own pair of parts, `bare-hand-l` and `bare-hand-r` on `bare-hand-{costume}-{skin}`, drawn in all six
+ramps and only for this costume, and `hand-jacket` is the ribbed sleeve cuff that closes over the wrist
+(`rig-contract.md` §4). Its geometry is the mitt's: one mass and a thumb, 42 px, with one curl line for the
+fingers. Two creases were tried first and read as stitching on a mitt. The feet keep the boot outline exactly,
+because it is proven on every pedal, deck, stirrup and seat. The shaft of the high-top rides on the shin in
+`leg-lower-jacket`, the same way the parka's boot shaft does.
+
+**Which level wears which.** Each `assets/style/<level>-level.md` states the player's costume beside its weather:
+`parka` on Ottawa and Québec City, `jacket` on the eight whose sheets say no weather falls.
+
+**The toque is left alone.** `headCovering` is the player's choice (`docs/content-review.md` §8), and the rig
+has no way to hide a covering on one costume without templating the covering on the costume. That would be a
+level decision inside a slot the player owns. A player who picked the toque still wears it in July.
+
+**What the parka's width rule means here.** Every `jacket` window sits inside the matching `parka` window, so
+the body span `stand-off.ts` measures is the same and no stop moves. At rest the jacket figure is narrower than
+the parka.
+
+**Not verified.** No blind `make verify-art` verdict exists for the player in either costume. The `player`
+subject in `assets/refs/references.json` still pins `costume=parka`, and a jacket figure has not been handed to
+an identifier.

@@ -252,11 +252,12 @@
       "options": [
         "parka",
         "serge",
-        "beaver"
+        "beaver",
+        "jacket"
       ],
       "fallback": "parka",
       "playerSelectable": false,
-      "note": "Not player-selectable, so it is outside the slot-independence product: it says WHICH character this artboard is, not how a player customised one. `beaver` is the guide's pelt, and it drives four parts no human artboard resolves - tail, head-shell, muzzle and the bare hide of the paws and hind feet."
+      "note": "Not player-selectable, so it is outside the slot-independence product: it says WHICH character this artboard is, and for the player WHAT THE LEVEL DRESSES THEM IN - never how a player customised one. `parka` is the player's winter kit and `jacket` their warm-weather clothes (a light open jacket over a T-shirt, jeans and canvas high-tops, with bare hands); a level's season, as its art sheet states it, decides which. `serge` is the officer's and `beaver` is the guide's pelt, which drives four parts no human artboard resolves - tail, head-shell, muzzle and the bare hide of the paws and hind feet. `jacket` is the one costume whose hands are skin, so its hands resolve on `bare-hand-{costume}-{skin}` in all six ramps and its `hand-{costume}` frame is only the sleeve cuff."
     },
     "presentation": {
       "options": [
@@ -329,8 +330,19 @@
       "mirrorX": false
     },
     {
-      "name": "hand-l",
+      "name": "bare-hand-l",
       "z": 6,
+      "frame": "bare-hand-{costume}-{skin}",
+      "pivot": [
+        137,
+        282
+      ],
+      "mirrorX": false,
+      "note": "The wearer's left - far - BARE hand, which only a costume whose hands are skin draws. The template names `{costume}` and `{skin}` together, and `jacket` is the only costume with frames on it - all six ramps, so no skin tone lacks a hand and no other costume grows one: the parka's mitts, the serge gauntlets and the beaver's forepaws resolve to nothing here. It shares `hand-l`'s pivot and carries `hand-l`'s transform in every key of every state, which is what keeps it on the wrist on a rig that parents nothing, and it draws immediately BEFORE `hand-l`, whose `jacket` frame is the sleeve cuff that closes over the wrist."
+    },
+    {
+      "name": "hand-l",
+      "z": 7,
       "frame": "hand-{costume}",
       "pivot": [
         137,
@@ -340,7 +352,7 @@
     },
     {
       "name": "leg-upper-l",
-      "z": 7,
+      "z": 8,
       "frame": "leg-upper-{costume}",
       "pivot": [
         132,
@@ -350,7 +362,7 @@
     },
     {
       "name": "leg-lower-l",
-      "z": 8,
+      "z": 9,
       "frame": "leg-lower-{costume}",
       "pivot": [
         132,
@@ -360,7 +372,7 @@
     },
     {
       "name": "foot-l",
-      "z": 9,
+      "z": 10,
       "frame": "foot-l-{costume}",
       "pivot": [
         132,
@@ -370,7 +382,7 @@
     },
     {
       "name": "foot-gear-l",
-      "z": 10,
+      "z": 11,
       "frame": "foot-gear-l-{mode}",
       "pivot": [
         132,
@@ -381,7 +393,7 @@
     },
     {
       "name": "leg-upper-r",
-      "z": 11,
+      "z": 12,
       "frame": "leg-upper-{costume}",
       "pivot": [
         108,
@@ -391,7 +403,7 @@
     },
     {
       "name": "leg-lower-r",
-      "z": 12,
+      "z": 13,
       "frame": "leg-lower-{costume}",
       "pivot": [
         108,
@@ -401,7 +413,7 @@
     },
     {
       "name": "foot-r",
-      "z": 13,
+      "z": 14,
       "frame": "foot-r-{costume}",
       "pivot": [
         108,
@@ -411,7 +423,7 @@
     },
     {
       "name": "foot-gear-r",
-      "z": 14,
+      "z": 15,
       "frame": "foot-gear-r-{mode}",
       "pivot": [
         108,
@@ -422,7 +434,7 @@
     },
     {
       "name": "neck",
-      "z": 15,
+      "z": 16,
       "frame": "neck-{skin}",
       "pivot": [
         120,
@@ -433,7 +445,7 @@
     },
     {
       "name": "torso",
-      "z": 16,
+      "z": 17,
       "frame": "torso-{costume}",
       "pivot": [
         120,
@@ -443,7 +455,7 @@
     },
     {
       "name": "head",
-      "z": 17,
+      "z": 18,
       "frame": "head-{skin}",
       "pivot": [
         120,
@@ -453,7 +465,7 @@
     },
     {
       "name": "hair",
-      "z": 18,
+      "z": 19,
       "frame": "hair-{hairShape}-{hairColour}",
       "pivot": [
         120,
@@ -463,7 +475,7 @@
     },
     {
       "name": "head-shell",
-      "z": 19,
+      "z": 20,
       "frame": "head-shell-{costume}",
       "pivot": [
         120,
@@ -473,7 +485,7 @@
     },
     {
       "name": "face",
-      "z": 20,
+      "z": 21,
       "frame": "face-{expression}-{presentation}",
       "pivot": [
         120,
@@ -483,7 +495,7 @@
     },
     {
       "name": "head-covering",
-      "z": 21,
+      "z": 22,
       "frame": "head-covering-{headCovering}",
       "pivot": [
         120,
@@ -493,7 +505,7 @@
     },
     {
       "name": "hat",
-      "z": 22,
+      "z": 23,
       "frame": "hat-{costume}",
       "pivot": [
         120,
@@ -503,7 +515,7 @@
     },
     {
       "name": "feature",
-      "z": 23,
+      "z": 24,
       "frame": "feature-{feature}",
       "pivot": [
         120,
@@ -513,7 +525,7 @@
     },
     {
       "name": "arm-upper-r",
-      "z": 24,
+      "z": 25,
       "frame": "arm-upper-{costume}",
       "pivot": [
         103,
@@ -523,7 +535,7 @@
     },
     {
       "name": "arm-lower-r",
-      "z": 25,
+      "z": 26,
       "frame": "arm-lower-{costume}",
       "pivot": [
         103,
@@ -532,8 +544,19 @@
       "mirrorX": true
     },
     {
+      "name": "bare-hand-r",
+      "z": 27,
+      "frame": "bare-hand-{costume}-{skin}",
+      "pivot": [
+        103,
+        282
+      ],
+      "mirrorX": true,
+      "note": "The wearer's right - near - BARE hand, which only a costume whose hands are skin draws. The template names `{costume}` and `{skin}` together, and `jacket` is the only costume with frames on it - all six ramps, so no skin tone lacks a hand and no other costume grows one: the parka's mitts, the serge gauntlets and the beaver's forepaws resolve to nothing here. It shares `hand-r`'s pivot and carries `hand-r`'s transform in every key of every state, which is what keeps it on the wrist on a rig that parents nothing, and it draws immediately BEFORE `hand-r`, whose `jacket` frame is the sleeve cuff that closes over the wrist."
+    },
+    {
       "name": "hand-r",
-      "z": 26,
+      "z": 28,
       "frame": "hand-{costume}",
       "pivot": [
         103,
@@ -543,7 +566,7 @@
     },
     {
       "name": "mount-fore",
-      "z": 27,
+      "z": 29,
       "frame": "mount-fore-{mode}",
       "pivot": [
         120,
@@ -590,6 +613,11 @@
             "arm-lower-l": [
               3.56,
               -0.09,
+              -8
+            ],
+            "bare-hand-l": [
+              13.02,
+              -0.75,
               -8
             ],
             "hand-l": [
@@ -692,6 +720,11 @@
               -1.25,
               3
             ],
+            "bare-hand-r": [
+              -16.53,
+              -1.34,
+              3
+            ],
             "hand-r": [
               -16.53,
               -1.34,
@@ -730,6 +763,11 @@
             "arm-lower-l": [
               3.56,
               -1.69,
+              -8
+            ],
+            "bare-hand-l": [
+              13.02,
+              -2.35,
               -8
             ],
             "hand-l": [
@@ -832,6 +870,11 @@
               -2.85,
               3
             ],
+            "bare-hand-r": [
+              -16.53,
+              -2.94,
+              3
+            ],
             "hand-r": [
               -16.53,
               -2.94,
@@ -870,6 +913,11 @@
             "arm-lower-l": [
               3.56,
               -0.09,
+              -8
+            ],
+            "bare-hand-l": [
+              13.02,
+              -0.75,
               -8
             ],
             "hand-l": [
@@ -972,6 +1020,11 @@
               -1.25,
               3
             ],
+            "bare-hand-r": [
+              -16.53,
+              -1.34,
+              3
+            ],
             "hand-r": [
               -16.53,
               -1.34,
@@ -1019,6 +1072,11 @@
               -1.25,
               4
             ],
+            "bare-hand-l": [
+              8.23,
+              -1.41,
+              4
+            ],
             "hand-l": [
               8.23,
               -1.41,
@@ -1117,6 +1175,11 @@
             "arm-lower-r": [
               -15.3,
               -1.74,
+              20
+            ],
+            "bare-hand-r": [
+              -38.55,
+              -5.84,
               20
             ],
             "hand-r": [
@@ -1159,6 +1222,11 @@
               -3.04,
               8
             ],
+            "bare-hand-l": [
+              -7.09,
+              -3.7,
+              8
+            ],
             "hand-l": [
               -7.09,
               -3.7,
@@ -1259,6 +1327,11 @@
               -3.17,
               14
             ],
+            "bare-hand-r": [
+              -21.19,
+              -5.19,
+              14
+            ],
             "hand-r": [
               -21.19,
               -5.19,
@@ -1297,6 +1370,11 @@
             "arm-lower-l": [
               -15.3,
               -1.74,
+              20
+            ],
+            "bare-hand-l": [
+              -38.55,
+              -5.84,
               20
             ],
             "hand-l": [
@@ -1399,6 +1477,11 @@
               -1.25,
               4
             ],
+            "bare-hand-r": [
+              8.23,
+              -1.41,
+              4
+            ],
             "hand-r": [
               8.23,
               -1.41,
@@ -1437,6 +1520,11 @@
             "arm-lower-l": [
               -4.74,
               -3.17,
+              14
+            ],
+            "bare-hand-l": [
+              -21.19,
+              -5.19,
               14
             ],
             "hand-l": [
@@ -1539,6 +1627,11 @@
               -3.04,
               8
             ],
+            "bare-hand-r": [
+              -7.09,
+              -3.7,
+              8
+            ],
             "hand-r": [
               -7.09,
               -3.7,
@@ -1577,6 +1670,11 @@
             "arm-lower-l": [
               12.98,
               -1.25,
+              4
+            ],
+            "bare-hand-l": [
+              8.23,
+              -1.41,
               4
             ],
             "hand-l": [
@@ -1677,6 +1775,11 @@
             "arm-lower-r": [
               -15.3,
               -1.74,
+              20
+            ],
+            "bare-hand-r": [
+              -38.55,
+              -5.84,
               20
             ],
             "hand-r": [
@@ -1726,6 +1829,11 @@
               -2.62,
               5.8
             ],
+            "bare-hand-l": [
+              11.81,
+              -2.97,
+              5.8
+            ],
             "hand-l": [
               11.81,
               -2.97,
@@ -1824,6 +1932,11 @@
             "arm-lower-r": [
               -21.97,
               -3.65,
+              29
+            ],
+            "bare-hand-r": [
+              -54.94,
+              -12.17,
               29
             ],
             "hand-r": [
@@ -1866,6 +1979,11 @@
               -4.44,
               11.6
             ],
+            "bare-hand-l": [
+              -10.23,
+              -5.83,
+              11.6
+            ],
             "hand-l": [
               -10.23,
               -5.83,
@@ -1966,6 +2084,11 @@
               -4.7,
               20.3
             ],
+            "bare-hand-r": [
+              -30.46,
+              -8.92,
+              20.3
+            ],
             "hand-r": [
               -30.46,
               -8.92,
@@ -2004,6 +2127,11 @@
             "arm-lower-l": [
               -21.97,
               -3.65,
+              29
+            ],
+            "bare-hand-l": [
+              -54.94,
+              -12.17,
               29
             ],
             "hand-l": [
@@ -2106,6 +2234,11 @@
               -2.62,
               5.8
             ],
+            "bare-hand-r": [
+              11.81,
+              -2.97,
+              5.8
+            ],
             "hand-r": [
               11.81,
               -2.97,
@@ -2144,6 +2277,11 @@
             "arm-lower-l": [
               -6.87,
               -4.7,
+              20.3
+            ],
+            "bare-hand-l": [
+              -30.46,
+              -8.92,
               20.3
             ],
             "hand-l": [
@@ -2246,6 +2384,11 @@
               -4.44,
               11.6
             ],
+            "bare-hand-r": [
+              -10.23,
+              -5.83,
+              11.6
+            ],
             "hand-r": [
               -10.23,
               -5.83,
@@ -2284,6 +2427,11 @@
             "arm-lower-l": [
               18.69,
               -2.62,
+              5.8
+            ],
+            "bare-hand-l": [
+              11.81,
+              -2.97,
               5.8
             ],
             "hand-l": [
@@ -2384,6 +2532,11 @@
             "arm-lower-r": [
               -21.97,
               -3.65,
+              29
+            ],
+            "bare-hand-r": [
+              -54.94,
+              -12.17,
               29
             ],
             "hand-r": [
@@ -2431,6 +2584,11 @@
             "arm-lower-l": [
               -21.01,
               -7.33,
+              34
+            ],
+            "bare-hand-l": [
+              -59.04,
+              -18.95,
               34
             ],
             "hand-l": [
@@ -2533,6 +2691,11 @@
               -9.88,
               -4
             ],
+            "bare-hand-r": [
+              32.4,
+              -10.04,
+              -4
+            ],
             "hand-r": [
               32.4,
               -10.04,
@@ -2571,6 +2734,11 @@
             "arm-lower-l": [
               -27.66,
               -12.88,
+              44
+            ],
+            "bare-hand-l": [
+              -74.89,
+              -31.96,
               44
             ],
             "hand-l": [
@@ -2673,6 +2841,11 @@
               -17.33,
               -6
             ],
+            "bare-hand-r": [
+              43.14,
+              -17.71,
+              -6
+            ],
             "hand-r": [
               43.14,
               -17.71,
@@ -2718,6 +2891,11 @@
             "arm-lower-l": [
               23.26,
               -8.1,
+              -2
+            ],
+            "bare-hand-l": [
+              25.63,
+              -8.14,
               -2
             ],
             "hand-l": [
@@ -2820,6 +2998,11 @@
               -9.88,
               38
             ],
+            "bare-hand-r": [
+              -69.52,
+              -24.29,
+              38
+            ],
             "hand-r": [
               -69.52,
               -24.29,
@@ -2858,6 +3041,11 @@
             "arm-lower-l": [
               29.81,
               -8.88,
+              -10
+            ],
+            "bare-hand-l": [
+              41.62,
+              -9.92,
               -10
             ],
             "hand-l": [
@@ -2960,6 +3148,11 @@
               -11.11,
               40
             ],
+            "bare-hand-r": [
+              -77.71,
+              -27.02,
+              40
+            ],
             "hand-r": [
               -77.71,
               -27.02,
@@ -3005,6 +3198,11 @@
             "arm-lower-l": [
               18.74,
               -2.63,
+              4
+            ],
+            "bare-hand-l": [
+              14,
+              -2.8,
               4
             ],
             "hand-l": [
@@ -3107,6 +3305,11 @@
               -4.1,
               38
             ],
+            "bare-hand-r": [
+              -65.12,
+              -18.52,
+              38
+            ],
             "hand-r": [
               -65.12,
               -18.52,
@@ -3145,6 +3348,11 @@
             "arm-lower-l": [
               25.47,
               7.05,
+              8
+            ],
+            "bare-hand-l": [
+              16.01,
+              6.39,
               8
             ],
             "hand-l": [
@@ -3247,6 +3455,11 @@
               4.04,
               58
             ],
+            "bare-hand-r": [
+              -89.59,
+              -27.93,
+              58
+            ],
             "hand-r": [
               -89.59,
               -27.93,
@@ -3285,6 +3498,11 @@
             "arm-lower-l": [
               3.56,
               -0.09,
+              1
+            ],
+            "bare-hand-l": [
+              2.37,
+              -0.1,
               1
             ],
             "hand-l": [
@@ -3387,6 +3605,11 @@
               -0.09,
               7
             ],
+            "bare-hand-r": [
+              -11.85,
+              -0.6,
+              7
+            ],
             "hand-r": [
               -11.85,
               -0.6,
@@ -3432,6 +3655,11 @@
             "arm-lower-l": [
               -7.11,
               -0.37,
+              14
+            ],
+            "bare-hand-l": [
+              -23.56,
+              -2.39,
               14
             ],
             "hand-l": [
@@ -3534,6 +3762,11 @@
               -3.33,
               22
             ],
+            "bare-hand-r": [
+              -4.46,
+              -8.28,
+              22
+            ],
             "hand-r": [
               -4.46,
               -8.28,
@@ -3572,6 +3805,11 @@
             "arm-lower-l": [
               -10.64,
               -2.04,
+              19
+            ],
+            "bare-hand-l": [
+              -32.78,
+              -5.74,
               19
             ],
             "hand-l": [
@@ -3674,6 +3912,11 @@
               -10.31,
               24
             ],
+            "bare-hand-r": [
+              6.34,
+              -16.19,
+              24
+            ],
             "hand-r": [
               6.34,
               -16.19,
@@ -3712,6 +3955,11 @@
             "arm-lower-l": [
               -7.11,
               -0.37,
+              14
+            ],
+            "bare-hand-l": [
+              -23.56,
+              -2.39,
               14
             ],
             "hand-l": [
@@ -3814,6 +4062,11 @@
               -3.33,
               22
             ],
+            "bare-hand-r": [
+              -4.46,
+              -8.28,
+              22
+            ],
             "hand-r": [
               -4.46,
               -8.28,
@@ -3859,6 +4112,11 @@
             "arm-lower-l": [
               3.56,
               -0.09,
+              1
+            ],
+            "bare-hand-l": [
+              2.37,
+              -0.1,
               1
             ],
             "hand-l": [
@@ -3961,6 +4219,11 @@
               -0.09,
               7
             ],
+            "bare-hand-r": [
+              -11.85,
+              -0.6,
+              7
+            ],
             "hand-r": [
               -11.85,
               -0.6,
@@ -3999,6 +4262,11 @@
             "arm-lower-l": [
               -10.64,
               -1.84,
+              17
+            ],
+            "bare-hand-l": [
+              -30.52,
+              -4.81,
               17
             ],
             "hand-l": [
@@ -4101,6 +4369,11 @@
               -20.08,
               -28
             ],
+            "bare-hand-r": [
+              79.16,
+              -28.04,
+              -28
+            ],
             "hand-r": [
               79.16,
               -28.04,
@@ -4139,6 +4412,11 @@
             "arm-lower-l": [
               -12.98,
               -2.25,
+              19
+            ],
+            "bare-hand-l": [
+              -35.11,
+              -5.95,
               19
             ],
             "hand-l": [
@@ -4241,6 +4519,11 @@
               -24.39,
               -37
             ],
+            "bare-hand-r": [
+              92.24,
+              -38.08,
+              -37
+            ],
             "hand-r": [
               92.24,
               -38.08,
@@ -4279,6 +4562,11 @@
             "arm-lower-l": [
               3.56,
               -0.09,
+              1
+            ],
+            "bare-hand-l": [
+              2.37,
+              -0.1,
               1
             ],
             "hand-l": [
@@ -4381,6 +4669,11 @@
               -0.09,
               7
             ],
+            "bare-hand-r": [
+              -11.85,
+              -0.6,
+              7
+            ],
             "hand-r": [
               -11.85,
               -0.6,
@@ -4426,6 +4719,11 @@
             "arm-lower-l": [
               11.59,
               -3.4,
+              10
+            ],
+            "bare-hand-l": [
+              -0.22,
+              -4.44,
               10
             ],
             "hand-l": [
@@ -4528,6 +4826,11 @@
               -12.94,
               -12
             ],
+            "bare-hand-r": [
+              64.2,
+              -14.42,
+              -12
+            ],
             "hand-r": [
               64.2,
               -14.42,
@@ -4566,6 +4869,11 @@
             "arm-lower-l": [
               12.36,
               -4.5,
+              11
+            ],
+            "bare-hand-l": [
+              -0.61,
+              -5.75,
               11
             ],
             "hand-l": [
@@ -4668,6 +4976,11 @@
               -15.08,
               -13
             ],
+            "bare-hand-r": [
+              69.67,
+              -16.82,
+              -13
+            ],
             "hand-r": [
               69.67,
               -16.82,
@@ -4706,6 +5019,11 @@
             "arm-lower-l": [
               11.59,
               -3.4,
+              10
+            ],
+            "bare-hand-l": [
+              -0.22,
+              -4.44,
               10
             ],
             "hand-l": [
@@ -4808,6 +5126,11 @@
               -12.94,
               -12
             ],
+            "bare-hand-r": [
+              64.2,
+              -14.42,
+              -12
+            ],
             "hand-r": [
               64.2,
               -14.42,
@@ -4853,6 +5176,11 @@
             "arm-lower-l": [
               8.5,
               -3.51,
+              28
+            ],
+            "bare-hand-l": [
+              -23.42,
+              -11.47,
               28
             ],
             "hand-l": [
@@ -4955,6 +5283,11 @@
               -21.62,
               -34
             ],
+            "bare-hand-r": [
+              131.2,
+              -33.25,
+              -34
+            ],
             "hand-r": [
               131.2,
               -33.25,
@@ -4993,6 +5326,11 @@
             "arm-lower-l": [
               23.74,
               0.69,
+              14
+            ],
+            "bare-hand-l": [
+              7.29,
+              -1.33,
               14
             ],
             "hand-l": [
@@ -5095,6 +5433,11 @@
               -13.36,
               -16
             ],
+            "bare-hand-r": [
+              89.46,
+              -16,
+              -16
+            ],
             "hand-r": [
               89.46,
               -16,
@@ -5133,6 +5476,11 @@
             "arm-lower-l": [
               90.23,
               -7.79,
+              -34
+            ],
+            "bare-hand-l": [
+              128.26,
+              -19.42,
               -34
             ],
             "hand-l": [
@@ -5235,6 +5583,11 @@
               -17.34,
               28
             ],
+            "bare-hand-r": [
+              -20.48,
+              -25.3,
+              28
+            ],
             "hand-r": [
               -20.48,
               -25.3,
@@ -5273,6 +5626,11 @@
             "arm-lower-l": [
               68.01,
               -0.08,
+              -16
+            ],
+            "bare-hand-l": [
+              86.76,
+              -2.71,
               -16
             ],
             "hand-l": [
@@ -5375,6 +5733,11 @@
               -12.59,
               14
             ],
+            "bare-hand-r": [
+              9.99,
+              -14.61,
+              14
+            ],
             "hand-r": [
               9.99,
               -14.61,
@@ -5413,6 +5776,11 @@
             "arm-lower-l": [
               8.5,
               -3.51,
+              28
+            ],
+            "bare-hand-l": [
+              -23.42,
+              -11.47,
               28
             ],
             "hand-l": [
@@ -5515,6 +5883,11 @@
               -21.62,
               -34
             ],
+            "bare-hand-r": [
+              131.2,
+              -33.25,
+              -34
+            ],
             "hand-r": [
               131.2,
               -33.25,
@@ -5560,6 +5933,11 @@
             "arm-lower-l": [
               15.38,
               1.17,
+              28
+            ],
+            "bare-hand-l": [
+              -16.54,
+              -6.79,
               28
             ],
             "hand-l": [
@@ -5662,6 +6040,11 @@
               -19.08,
               -34
             ],
+            "bare-hand-r": [
+              139.12,
+              -30.7,
+              -34
+            ],
             "hand-r": [
               139.12,
               -30.7,
@@ -5700,6 +6083,11 @@
             "arm-lower-l": [
               30.7,
               5.25,
+              14
+            ],
+            "bare-hand-l": [
+              14.25,
+              3.23,
               14
             ],
             "hand-l": [
@@ -5802,6 +6190,11 @@
               -10.96,
               -16
             ],
+            "bare-hand-r": [
+              97.42,
+              -13.59,
+              -16
+            ],
             "hand-r": [
               97.42,
               -13.59,
@@ -5840,6 +6233,11 @@
             "arm-lower-l": [
               97.12,
               -3.12,
+              -34
+            ],
+            "bare-hand-l": [
+              135.14,
+              -14.74,
               -34
             ],
             "hand-l": [
@@ -5942,6 +6340,11 @@
               -14.79,
               28
             ],
+            "bare-hand-r": [
+              -12.56,
+              -22.75,
+              28
+            ],
             "hand-r": [
               -12.56,
               -22.75,
@@ -5980,6 +6383,11 @@
             "arm-lower-l": [
               74.98,
               4.48,
+              -16
+            ],
+            "bare-hand-l": [
+              93.72,
+              1.84,
               -16
             ],
             "hand-l": [
@@ -6082,6 +6490,11 @@
               -10.18,
               14
             ],
+            "bare-hand-r": [
+              17.96,
+              -12.2,
+              14
+            ],
             "hand-r": [
               17.96,
               -12.2,
@@ -6120,6 +6533,11 @@
             "arm-lower-l": [
               15.38,
               1.17,
+              28
+            ],
+            "bare-hand-l": [
+              -16.54,
+              -6.79,
               28
             ],
             "hand-l": [
@@ -6222,6 +6640,11 @@
               -19.08,
               -34
             ],
+            "bare-hand-r": [
+              139.12,
+              -30.7,
+              -34
+            ],
             "hand-r": [
               139.12,
               -30.7,
@@ -6267,6 +6690,11 @@
             "arm-lower-l": [
               -81.75,
               129.5,
+              30
+            ],
+            "bare-hand-l": [
+              -115.75,
+              120.39,
               30
             ],
             "hand-l": [
@@ -6369,6 +6797,11 @@
               141,
               26
             ],
+            "bare-hand-r": [
+              -105.25,
+              134.11,
+              26
+            ],
             "hand-r": [
               -105.25,
               134.11,
@@ -6407,6 +6840,11 @@
             "arm-lower-l": [
               -84.94,
               127.98,
+              31
+            ],
+            "bare-hand-l": [
+              -119.97,
+              118.26,
               31
             ],
             "hand-l": [
@@ -6509,6 +6947,11 @@
               140.11,
               27
             ],
+            "bare-hand-r": [
+              -109.34,
+              132.7,
+              27
+            ],
             "hand-r": [
               -109.34,
               132.7,
@@ -6547,6 +6990,11 @@
             "arm-lower-l": [
               -81.75,
               129.5,
+              30
+            ],
+            "bare-hand-l": [
+              -115.75,
+              120.39,
               30
             ],
             "hand-l": [
@@ -6649,6 +7097,11 @@
               141,
               26
             ],
+            "bare-hand-r": [
+              -105.25,
+              134.11,
+              26
+            ],
             "hand-r": [
               -105.25,
               134.11,
@@ -6694,6 +7147,11 @@
             "arm-lower-l": [
               -108.9,
               131.19,
+              36
+            ],
+            "bare-hand-l": [
+              -148.87,
+              118.21,
               36
             ],
             "hand-l": [
@@ -6796,6 +7254,11 @@
               148.25,
               32
             ],
+            "bare-hand-r": [
+              -136.77,
+              137.92,
+              32
+            ],
             "hand-r": [
               -136.77,
               137.92,
@@ -6834,6 +7297,11 @@
             "arm-lower-l": [
               -118.02,
               133.94,
+              39
+            ],
+            "bare-hand-l": [
+              -160.81,
+              118.78,
               39
             ],
             "hand-l": [
@@ -6936,6 +7404,11 @@
               152.79,
               35
             ],
+            "bare-hand-r": [
+              -148.09,
+              140.49,
+              35
+            ],
             "hand-r": [
               -148.09,
               140.49,
@@ -6974,6 +7447,11 @@
             "arm-lower-l": [
               -108.9,
               131.19,
+              36
+            ],
+            "bare-hand-l": [
+              -148.87,
+              118.21,
               36
             ],
             "hand-l": [
@@ -7074,6 +7552,11 @@
             "arm-lower-r": [
               -100.73,
               148.25,
+              32
+            ],
+            "bare-hand-r": [
+              -136.77,
+              137.92,
               32
             ],
             "hand-r": [
@@ -7123,6 +7606,11 @@
               131.19,
               36
             ],
+            "bare-hand-l": [
+              -148.87,
+              118.21,
+              36
+            ],
             "hand-l": [
               -148.87,
               118.21,
@@ -7223,6 +7711,11 @@
               148.25,
               32
             ],
+            "bare-hand-r": [
+              -136.77,
+              137.92,
+              32
+            ],
             "hand-r": [
               -136.77,
               137.92,
@@ -7261,6 +7754,11 @@
             "arm-lower-l": [
               -118.02,
               133.94,
+              39
+            ],
+            "bare-hand-l": [
+              -160.81,
+              118.78,
               39
             ],
             "hand-l": [
@@ -7363,6 +7861,11 @@
               152.79,
               35
             ],
+            "bare-hand-r": [
+              -148.09,
+              140.49,
+              35
+            ],
             "hand-r": [
               -148.09,
               140.49,
@@ -7401,6 +7904,11 @@
             "arm-lower-l": [
               -108.9,
               131.19,
+              36
+            ],
+            "bare-hand-l": [
+              -148.87,
+              118.21,
               36
             ],
             "hand-l": [
@@ -7503,6 +8011,11 @@
               148.25,
               32
             ],
+            "bare-hand-r": [
+              -136.77,
+              137.92,
+              32
+            ],
             "hand-r": [
               -136.77,
               137.92,
@@ -7548,6 +8061,11 @@
             "arm-lower-l": [
               31.23,
               -31.4,
+              -30
+            ],
+            "bare-hand-l": [
+              65.23,
+              -40.51,
               -30
             ],
             "hand-l": [
@@ -7650,6 +8168,11 @@
               -32.07,
               2
             ],
+            "bare-hand-r": [
+              -3.83,
+              -32.11,
+              2
+            ],
             "hand-r": [
               -3.83,
               -32.11,
@@ -7688,6 +8211,11 @@
             "arm-lower-l": [
               34.38,
               -29.28,
+              -32
+            ],
+            "bare-hand-l": [
+              70.41,
+              -39.61,
               -32
             ],
             "hand-l": [
@@ -7790,6 +8318,11 @@
               -30.38,
               3
             ],
+            "bare-hand-r": [
+              -4.11,
+              -30.47,
+              3
+            ],
             "hand-r": [
               -4.11,
               -30.47,
@@ -7828,6 +8361,11 @@
             "arm-lower-l": [
               31.23,
               -31.4,
+              -30
+            ],
+            "bare-hand-l": [
+              65.23,
+              -40.51,
               -30
             ],
             "hand-l": [
@@ -7930,6 +8468,11 @@
               -32.07,
               2
             ],
+            "bare-hand-r": [
+              -3.83,
+              -32.11,
+              2
+            ],
             "hand-r": [
               -3.83,
               -32.11,
@@ -7975,6 +8518,11 @@
             "arm-lower-l": [
               61.96,
               -38.8,
+              -58
+            ],
+            "bare-hand-l": [
+              119.63,
+              -70.76,
               -58
             ],
             "hand-l": [
@@ -8077,6 +8625,11 @@
               -32.31,
               10
             ],
+            "bare-hand-r": [
+              -16.4,
+              -33.34,
+              10
+            ],
             "hand-r": [
               -16.4,
               -33.34,
@@ -8115,6 +8668,11 @@
             "arm-lower-l": [
               66.61,
               -37.52,
+              -62
+            ],
+            "bare-hand-l": [
+              126.65,
+              -73.6,
               -62
             ],
             "hand-l": [
@@ -8217,6 +8775,11 @@
               -30.57,
               12
             ],
+            "bare-hand-r": [
+              -19.96,
+              -32.05,
+              12
+            ],
             "hand-r": [
               -19.96,
               -32.05,
@@ -8255,6 +8818,11 @@
             "arm-lower-l": [
               61.96,
               -38.8,
+              -58
+            ],
+            "bare-hand-l": [
+              119.63,
+              -70.76,
               -58
             ],
             "hand-l": [
@@ -8357,6 +8925,11 @@
               -32.31,
               10
             ],
+            "bare-hand-r": [
+              -16.4,
+              -33.34,
+              10
+            ],
             "hand-r": [
               -16.4,
               -33.34,
@@ -8402,6 +8975,11 @@
             "arm-lower-l": [
               78.58,
               -35.88,
+              -66
+            ],
+            "bare-hand-l": [
+              140.7,
+              -76.22,
               -66
             ],
             "hand-l": [
@@ -8504,6 +9082,11 @@
               -29.57,
               16
             ],
+            "bare-hand-r": [
+              -21.62,
+              -32.2,
+              16
+            ],
             "hand-r": [
               -21.62,
               -32.2,
@@ -8542,6 +9125,11 @@
             "arm-lower-l": [
               82.05,
               -33.87,
+              -70
+            ],
+            "bare-hand-l": [
+              145.95,
+              -78.61,
               -70
             ],
             "hand-l": [
@@ -8644,6 +9232,11 @@
               -28.09,
               18
             ],
+            "bare-hand-r": [
+              -24.92,
+              -31.42,
+              18
+            ],
             "hand-r": [
               -24.92,
               -31.42,
@@ -8682,6 +9275,11 @@
             "arm-lower-l": [
               78.58,
               -35.88,
+              -66
+            ],
+            "bare-hand-l": [
+              140.7,
+              -76.22,
               -66
             ],
             "hand-l": [
@@ -8784,6 +9382,11 @@
               -29.57,
               16
             ],
+            "bare-hand-r": [
+              -21.62,
+              -32.2,
+              16
+            ],
             "hand-r": [
               -21.62,
               -32.2,
@@ -8829,6 +9432,11 @@
             "arm-lower-l": [
               30.92,
               37.89,
+              -45
+            ],
+            "bare-hand-l": [
+              79.01,
+              17.97,
               -45
             ],
             "hand-l": [
@@ -8931,6 +9539,11 @@
               26.21,
               -28.5
             ],
+            "bare-hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
             "hand-r": [
               79.08,
               17.97,
@@ -8969,6 +9582,11 @@
             "arm-lower-l": [
               32.33,
               36.52,
+              -43.3
+            ],
+            "bare-hand-l": [
+              78.96,
+              18.01,
               -43.3
             ],
             "hand-l": [
@@ -9071,6 +9689,11 @@
               24.47,
               -25.2
             ],
+            "bare-hand-r": [
+              79.02,
+              17.99,
+              -25.2
+            ],
             "hand-r": [
               79.02,
               17.99,
@@ -9109,6 +9732,11 @@
             "arm-lower-l": [
               30.92,
               37.89,
+              -45
+            ],
+            "bare-hand-l": [
+              79.01,
+              17.97,
               -45
             ],
             "hand-l": [
@@ -9209,6 +9837,11 @@
             "arm-lower-r": [
               46.63,
               26.21,
+              -28.5
+            ],
+            "bare-hand-r": [
+              79.08,
+              17.97,
               -28.5
             ],
             "hand-r": [
@@ -9258,6 +9891,11 @@
               37.89,
               -45
             ],
+            "bare-hand-l": [
+              79.01,
+              17.97,
+              -45
+            ],
             "hand-l": [
               79.01,
               17.97,
@@ -9358,6 +9996,11 @@
               26.21,
               -28.5
             ],
+            "bare-hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
             "hand-r": [
               79.08,
               17.97,
@@ -9396,6 +10039,11 @@
             "arm-lower-l": [
               30.92,
               37.89,
+              -45
+            ],
+            "bare-hand-l": [
+              79.01,
+              17.97,
               -45
             ],
             "hand-l": [
@@ -9498,6 +10146,11 @@
               26.21,
               -28.5
             ],
+            "bare-hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
             "hand-r": [
               79.08,
               17.97,
@@ -9536,6 +10189,11 @@
             "arm-lower-l": [
               30.92,
               37.89,
+              -45
+            ],
+            "bare-hand-l": [
+              79.01,
+              17.97,
               -45
             ],
             "hand-l": [
@@ -9638,6 +10296,11 @@
               26.21,
               -28.5
             ],
+            "bare-hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
             "hand-r": [
               79.08,
               17.97,
@@ -9676,6 +10339,11 @@
             "arm-lower-l": [
               30.92,
               37.89,
+              -45
+            ],
+            "bare-hand-l": [
+              79.01,
+              17.97,
               -45
             ],
             "hand-l": [
@@ -9778,6 +10446,11 @@
               26.21,
               -28.5
             ],
+            "bare-hand-r": [
+              79.08,
+              17.97,
+              -28.5
+            ],
             "hand-r": [
               79.08,
               17.97,
@@ -9816,6 +10489,11 @@
             "arm-lower-l": [
               30.92,
               37.89,
+              -45
+            ],
+            "bare-hand-l": [
+              79.01,
+              17.97,
               -45
             ],
             "hand-l": [
@@ -9916,6 +10594,11 @@
             "arm-lower-r": [
               46.63,
               26.21,
+              -28.5
+            ],
+            "bare-hand-r": [
+              79.08,
+              17.97,
               -28.5
             ],
             "hand-r": [
@@ -9965,6 +10648,11 @@
               39.54,
               -46.9
             ],
+            "bare-hand-l": [
+              78.96,
+              18,
+              -46.9
+            ],
             "hand-l": [
               78.96,
               18,
@@ -10065,6 +10753,11 @@
               27.5,
               -30.6
             ],
+            "bare-hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
             "hand-r": [
               78.97,
               18.03,
@@ -10103,6 +10796,11 @@
             "arm-lower-l": [
               29.3,
               39.54,
+              -46.9
+            ],
+            "bare-hand-l": [
+              78.96,
+              18,
               -46.9
             ],
             "hand-l": [
@@ -10205,6 +10903,11 @@
               27.5,
               -30.6
             ],
+            "bare-hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
             "hand-r": [
               78.97,
               18.03,
@@ -10243,6 +10946,11 @@
             "arm-lower-l": [
               29.3,
               39.54,
+              -46.9
+            ],
+            "bare-hand-l": [
+              78.96,
+              18,
               -46.9
             ],
             "hand-l": [
@@ -10345,6 +11053,11 @@
               27.5,
               -30.6
             ],
+            "bare-hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
             "hand-r": [
               78.97,
               18.03,
@@ -10383,6 +11096,11 @@
             "arm-lower-l": [
               29.3,
               39.54,
+              -46.9
+            ],
+            "bare-hand-l": [
+              78.96,
+              18,
               -46.9
             ],
             "hand-l": [
@@ -10485,6 +11203,11 @@
               27.5,
               -30.6
             ],
+            "bare-hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
             "hand-r": [
               78.97,
               18.03,
@@ -10523,6 +11246,11 @@
             "arm-lower-l": [
               29.3,
               39.54,
+              -46.9
+            ],
+            "bare-hand-l": [
+              78.96,
+              18,
               -46.9
             ],
             "hand-l": [
@@ -10625,6 +11353,11 @@
               27.5,
               -30.6
             ],
+            "bare-hand-r": [
+              78.97,
+              18.03,
+              -30.6
+            ],
             "hand-r": [
               78.97,
               18.03,
@@ -10670,6 +11403,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -10772,6 +11510,11 @@
               91.61,
               -57.38
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -57.38
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -10810,6 +11553,11 @@
             "arm-lower-l": [
               -3.02,
               88.94,
+              -53.58
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -53.58
             ],
             "hand-l": [
@@ -10912,6 +11660,11 @@
               89.82,
               -55.56
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -55.56
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -10950,6 +11703,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -11050,6 +11808,11 @@
             "arm-lower-r": [
               4.14,
               91.61,
+              -57.38
+            ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
               -57.38
             ],
             "hand-r": [
@@ -11099,6 +11862,11 @@
               90.59,
               -55.29
             ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
+              -55.29
+            ],
             "hand-l": [
               51.7,
               61.31,
@@ -11199,6 +11967,11 @@
               91.61,
               -57.38
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -57.38
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -11237,6 +12010,11 @@
             "arm-lower-l": [
               -3.02,
               88.94,
+              -53.58
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -53.58
             ],
             "hand-l": [
@@ -11339,6 +12117,11 @@
               89.82,
               -55.56
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -55.56
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -11377,6 +12160,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -11477,6 +12265,11 @@
             "arm-lower-r": [
               4.14,
               91.61,
+              -57.38
+            ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
               -57.38
             ],
             "hand-r": [
@@ -11526,6 +12319,11 @@
               90.59,
               -55.29
             ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
+              -55.29
+            ],
             "hand-l": [
               51.7,
               61.31,
@@ -11626,6 +12424,11 @@
               91.61,
               -57.38
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -57.38
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -11664,6 +12467,11 @@
             "arm-lower-l": [
               -3.02,
               88.94,
+              -53.58
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -53.58
             ],
             "hand-l": [
@@ -11766,6 +12574,11 @@
               89.82,
               -55.56
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -55.56
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -11804,6 +12617,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -11906,6 +12724,11 @@
               91.61,
               -57.38
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -57.38
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -11951,6 +12774,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -12053,6 +12881,11 @@
               60.43,
               172
             ],
+            "bare-hand-r": [
+              42.05,
+              -74.91,
+              172
+            ],
             "hand-r": [
               42.05,
               -74.91,
@@ -12091,6 +12924,11 @@
             "arm-lower-l": [
               -3.32,
               89.36,
+              -54.02
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -54.02
             ],
             "hand-l": [
@@ -12193,6 +13031,11 @@
               50.85,
               -172
             ],
+            "bare-hand-r": [
+              65.43,
+              -84.48,
+              -172
+            ],
             "hand-r": [
               65.43,
               -84.48,
@@ -12231,6 +13074,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -12333,6 +13181,11 @@
               60.43,
               172
             ],
+            "bare-hand-r": [
+              42.05,
+              -74.91,
+              172
+            ],
             "hand-r": [
               42.05,
               -74.91,
@@ -12378,6 +13231,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -12480,6 +13338,11 @@
               91.61,
               -57.38
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -57.38
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -12518,6 +13381,11 @@
             "arm-lower-l": [
               -3.47,
               89.56,
+              -54.23
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -54.23
             ],
             "hand-l": [
@@ -12620,6 +13488,11 @@
               21.02,
               -116
             ],
+            "bare-hand-r": [
+              122.92,
+              -76.79,
+              -116
+            ],
             "hand-r": [
               122.92,
               -76.79,
@@ -12658,6 +13531,11 @@
             "arm-lower-l": [
               -3.47,
               89.56,
+              -54.23
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -54.23
             ],
             "hand-l": [
@@ -12760,6 +13638,11 @@
               13.93,
               -126
             ],
+            "bare-hand-r": [
+              116.2,
+              -94.04,
+              -126
+            ],
             "hand-r": [
               116.2,
               -94.04,
@@ -12798,6 +13681,11 @@
             "arm-lower-l": [
               -4.2,
               90.59,
+              -55.29
+            ],
+            "bare-hand-l": [
+              51.7,
+              61.31,
               -55.29
             ],
             "hand-l": [
@@ -12900,6 +13788,11 @@
               91.61,
               -57.38
             ],
+            "bare-hand-r": [
+              61.42,
+              60.27,
+              -57.38
+            ],
             "hand-r": [
               61.42,
               60.27,
@@ -12945,6 +13838,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -13047,6 +13945,11 @@
               28.47,
               -79.38
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -79.38
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -13085,6 +13988,11 @@
             "arm-lower-l": [
               -31.76,
               17.83,
+              -67.37
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -67.37
             ],
             "hand-l": [
@@ -13187,6 +14095,11 @@
               26.87,
               -78.0
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -78.0
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -13225,6 +14138,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -13327,6 +14245,11 @@
               28.47,
               -79.38
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -79.38
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -13372,6 +14295,11 @@
             "arm-lower-l": [
               -29.84,
               20.58,
+              -69.86
+            ],
+            "bare-hand-l": [
+              34.0,
+              -24.0,
               -69.86
             ],
             "hand-l": [
@@ -13474,6 +14402,11 @@
               28.36,
               -79.29
             ],
+            "bare-hand-r": [
+              75.0,
+              -27.0,
+              -79.29
+            ],
             "hand-r": [
               75.0,
               -27.0,
@@ -13512,6 +14445,11 @@
             "arm-lower-l": [
               -30.32,
               17.61,
+              -64.4
+            ],
+            "bare-hand-l": [
+              31.0,
+              -21.0,
               -64.4
             ],
             "hand-l": [
@@ -13614,6 +14552,11 @@
               28.1,
               -76.48
             ],
+            "bare-hand-r": [
+              72.0,
+              -24.0,
+              -76.48
+            ],
             "hand-r": [
               72.0,
               -24.0,
@@ -13652,6 +14595,11 @@
             "arm-lower-l": [
               -34.64,
               17.54,
+              -67.1
+            ],
+            "bare-hand-l": [
+              28.0,
+              -24.0,
               -67.1
             ],
             "hand-l": [
@@ -13754,6 +14702,11 @@
               28.45,
               -79.36
             ],
+            "bare-hand-r": [
+              69.0,
+              -27.0,
+              -79.36
+            ],
             "hand-r": [
               69.0,
               -27.0,
@@ -13792,6 +14745,11 @@
             "arm-lower-l": [
               -33.89,
               20.66,
+              -72.59
+            ],
+            "bare-hand-l": [
+              31.0,
+              -27.0,
               -72.59
             ],
             "hand-l": [
@@ -13894,6 +14852,11 @@
               28.62,
               -82.07
             ],
+            "bare-hand-r": [
+              72.0,
+              -30.0,
+              -82.07
+            ],
             "hand-r": [
               72.0,
               -30.0,
@@ -13932,6 +14895,11 @@
             "arm-lower-l": [
               -29.84,
               20.58,
+              -69.86
+            ],
+            "bare-hand-l": [
+              34.0,
+              -24.0,
               -69.86
             ],
             "hand-l": [
@@ -14034,6 +15002,11 @@
               28.36,
               -79.29
             ],
+            "bare-hand-r": [
+              75.0,
+              -27.0,
+              -79.29
+            ],
             "hand-r": [
               75.0,
               -27.0,
@@ -14079,6 +15052,11 @@
             "arm-lower-l": [
               -15.3,
               24.75,
+              -66.37
+            ],
+            "bare-hand-l": [
+              47.0,
+              -16.0,
               -66.37
             ],
             "hand-l": [
@@ -14181,6 +15159,11 @@
               27.43,
               -71.51
             ],
+            "bare-hand-r": [
+              88.0,
+              -19.0,
+              -71.51
+            ],
             "hand-r": [
               88.0,
               -19.0,
@@ -14219,6 +15202,11 @@
             "arm-lower-l": [
               -15.47,
               21.29,
+              -59.3
+            ],
+            "bare-hand-l": [
+              43.0,
+              -12.0,
               -59.3
             ],
             "hand-l": [
@@ -14321,6 +15309,11 @@
               27.76,
               -68.22
             ],
+            "bare-hand-r": [
+              84.0,
+              -15.0,
+              -68.22
+            ],
             "hand-r": [
               84.0,
               -15.0,
@@ -14359,6 +15352,11 @@
             "arm-lower-l": [
               -21.54,
               21.04,
+              -62.92
+            ],
+            "bare-hand-l": [
+              39.0,
+              -16.0,
               -62.92
             ],
             "hand-l": [
@@ -14461,6 +15459,11 @@
               27.77,
               -71.81
             ],
+            "bare-hand-r": [
+              80.0,
+              -19.0,
+              -71.81
+            ],
             "hand-r": [
               80.0,
               -19.0,
@@ -14499,6 +15502,11 @@
             "arm-lower-l": [
               -20.86,
               24.64,
+              -69.9
+            ],
+            "bare-hand-l": [
+              43.0,
+              -20.0,
               -69.9
             ],
             "hand-l": [
@@ -14601,6 +15609,11 @@
               27.18,
               -74.8
             ],
+            "bare-hand-r": [
+              84.0,
+              -23.0,
+              -74.8
+            ],
             "hand-r": [
               84.0,
               -23.0,
@@ -14639,6 +15652,11 @@
             "arm-lower-l": [
               -15.3,
               24.75,
+              -66.37
+            ],
+            "bare-hand-l": [
+              47.0,
+              -16.0,
               -66.37
             ],
             "hand-l": [
@@ -14741,6 +15759,11 @@
               27.43,
               -71.51
             ],
+            "bare-hand-r": [
+              88.0,
+              -19.0,
+              -71.51
+            ],
             "hand-r": [
               88.0,
               -19.0,
@@ -14786,6 +15809,11 @@
             "arm-lower-l": [
               -19.71,
               17.45,
+              -65.17
+            ],
+            "bare-hand-l": [
+              42.0,
+              -22.0,
               -65.17
             ],
             "hand-l": [
@@ -14888,6 +15916,11 @@
               21.6,
               -71.66
             ],
+            "bare-hand-r": [
+              83.0,
+              -25.0,
+              -71.66
+            ],
             "hand-r": [
               83.0,
               -25.0,
@@ -14926,6 +15959,11 @@
             "arm-lower-l": [
               -6.81,
               15.65,
+              -61.59
+            ],
+            "bare-hand-l": [
+              53.0,
+              -20.0,
               -61.59
             ],
             "hand-l": [
@@ -15026,6 +16064,11 @@
             "arm-lower-r": [
               32.69,
               15.6,
+              -64.38
+            ],
+            "bare-hand-r": [
+              94.0,
+              -23.0,
               -64.38
             ],
             "hand-r": [
@@ -15075,6 +16118,11 @@
               15.65,
               -61.59
             ],
+            "bare-hand-l": [
+              53.0,
+              -20.0,
+              -61.59
+            ],
             "hand-l": [
               53.0,
               -20.0,
@@ -15175,6 +16223,11 @@
               15.6,
               -64.38
             ],
+            "bare-hand-r": [
+              94.0,
+              -23.0,
+              -64.38
+            ],
             "hand-r": [
               94.0,
               -23.0,
@@ -15213,6 +16266,11 @@
             "arm-lower-l": [
               -14.18,
               17.32,
+              -64.12
+            ],
+            "bare-hand-l": [
+              47.0,
+              -21.0,
               -64.12
             ],
             "hand-l": [
@@ -15315,6 +16373,11 @@
               19.3,
               -68.7
             ],
+            "bare-hand-r": [
+              88.0,
+              -24.0,
+              -68.7
+            ],
             "hand-r": [
               88.0,
               -24.0,
@@ -15360,6 +16423,11 @@
             "arm-lower-l": [
               -32.2,
               18.9,
+              -68.33
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.33
             ],
             "hand-l": [
@@ -15462,6 +16530,11 @@
               31.43,
               -81.91
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -81.91
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -15500,6 +16573,11 @@
             "arm-lower-l": [
               -32.28,
               19.12,
+              -68.54
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.54
             ],
             "hand-l": [
@@ -15602,6 +16680,11 @@
               30.02,
               -80.71
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -80.71
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -15640,6 +16723,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -15742,6 +16830,11 @@
               28.47,
               -79.38
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -79.38
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -15787,6 +16880,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -15889,6 +16987,11 @@
               -39.52,
               192.0
             ],
+            "bare-hand-r": [
+              86.27,
+              -174.04,
+              192.0
+            ],
             "hand-r": [
               86.27,
               -174.04,
@@ -15927,6 +17030,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -16029,6 +17137,11 @@
               -46.63,
               208.0
             ],
+            "bare-hand-r": [
+              103.68,
+              -174.67,
+              208.0
+            ],
             "hand-r": [
               103.68,
               -174.67,
@@ -16067,6 +17180,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -16169,6 +17287,11 @@
               -39.52,
               192.0
             ],
+            "bare-hand-r": [
+              86.27,
+              -174.04,
+              192.0
+            ],
             "hand-r": [
               86.27,
               -174.04,
@@ -16214,6 +17337,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -16316,6 +17444,11 @@
               28.47,
               -79.38
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -79.38
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -16354,6 +17487,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -16456,6 +17594,11 @@
               -41.89,
               -116.0
             ],
+            "bare-hand-r": [
+              133.21,
+              -139.7,
+              -116.0
+            ],
             "hand-r": [
               133.21,
               -139.7,
@@ -16494,6 +17637,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -16596,6 +17744,11 @@
               -48.99,
               -126.0
             ],
+            "bare-hand-r": [
+              126.48,
+              -156.95,
+              -126.0
+            ],
             "hand-r": [
               126.48,
               -156.95,
@@ -16634,6 +17787,11 @@
             "arm-lower-l": [
               -32.28,
               19.11,
+              -68.53
+            ],
+            "bare-hand-l": [
+              31.0,
+              -24.0,
               -68.53
             ],
             "hand-l": [
@@ -16736,6 +17894,11 @@
               28.47,
               -79.38
             ],
+            "bare-hand-r": [
+              72.0,
+              -27.0,
+              -79.38
+            ],
             "hand-r": [
               72.0,
               -27.0,
@@ -16760,6 +17923,13 @@
       "w": 42,
       "h": 90
     },
+    "character-arm-lower-jacket": {
+      "source": "src/svg/shared/character/arm-lower-jacket.svg",
+      "x": 117,
+      "y": 210,
+      "w": 40,
+      "h": 89
+    },
     "character-arm-lower-parka": {
       "source": "src/svg/shared/character/arm-lower-parka.svg",
       "x": 116,
@@ -16781,6 +17951,13 @@
       "w": 46,
       "h": 109
     },
+    "character-arm-upper-jacket": {
+      "source": "src/svg/shared/character/arm-upper-jacket.svg",
+      "x": 116,
+      "y": 126,
+      "w": 42,
+      "h": 107
+    },
     "character-arm-upper-parka": {
       "source": "src/svg/shared/character/arm-upper-parka.svg",
       "x": 113,
@@ -16794,6 +17971,48 @@
       "y": 126,
       "w": 42,
       "h": 107
+    },
+    "character-bare-hand-jacket-skin-1": {
+      "source": "src/svg/shared/character/bare-hand-jacket-skin-1.svg",
+      "x": 103,
+      "y": 280,
+      "w": 59,
+      "h": 54
+    },
+    "character-bare-hand-jacket-skin-2": {
+      "source": "src/svg/shared/character/bare-hand-jacket-skin-2.svg",
+      "x": 103,
+      "y": 280,
+      "w": 59,
+      "h": 54
+    },
+    "character-bare-hand-jacket-skin-3": {
+      "source": "src/svg/shared/character/bare-hand-jacket-skin-3.svg",
+      "x": 103,
+      "y": 280,
+      "w": 59,
+      "h": 54
+    },
+    "character-bare-hand-jacket-skin-4": {
+      "source": "src/svg/shared/character/bare-hand-jacket-skin-4.svg",
+      "x": 103,
+      "y": 280,
+      "w": 59,
+      "h": 54
+    },
+    "character-bare-hand-jacket-skin-5": {
+      "source": "src/svg/shared/character/bare-hand-jacket-skin-5.svg",
+      "x": 103,
+      "y": 280,
+      "w": 59,
+      "h": 54
+    },
+    "character-bare-hand-jacket-skin-6": {
+      "source": "src/svg/shared/character/bare-hand-jacket-skin-6.svg",
+      "x": 103,
+      "y": 280,
+      "w": 59,
+      "h": 54
     },
     "character-face-happy-feminine": {
       "source": "src/svg/shared/character/face-happy-feminine.svg",
@@ -16907,6 +18126,13 @@
       "w": 71,
       "h": 47
     },
+    "character-foot-l-jacket": {
+      "source": "src/svg/shared/character/foot-l-jacket.svg",
+      "x": 106,
+      "y": 419,
+      "w": 71,
+      "h": 47
+    },
     "character-foot-l-parka": {
       "source": "src/svg/shared/character/foot-l-parka.svg",
       "x": 106,
@@ -16923,6 +18149,13 @@
     },
     "character-foot-r-beaver": {
       "source": "src/svg/shared/character/foot-r-beaver.svg",
+      "x": 82,
+      "y": 419,
+      "w": 77,
+      "h": 47
+    },
+    "character-foot-r-jacket": {
+      "source": "src/svg/shared/character/foot-r-jacket.svg",
       "x": 82,
       "y": 419,
       "w": 77,
@@ -17096,6 +18329,13 @@
       "w": 59,
       "h": 62
     },
+    "character-hand-jacket": {
+      "source": "src/svg/shared/character/hand-jacket.svg",
+      "x": 115,
+      "y": 268,
+      "w": 44,
+      "h": 24
+    },
     "character-hand-parka": {
       "source": "src/svg/shared/character/hand-parka.svg",
       "x": 103,
@@ -17180,6 +18420,13 @@
       "w": 48,
       "h": 99
     },
+    "character-leg-lower-jacket": {
+      "source": "src/svg/shared/character/leg-lower-jacket.svg",
+      "x": 107,
+      "y": 358,
+      "w": 50,
+      "h": 99
+    },
     "character-leg-lower-parka": {
       "source": "src/svg/shared/character/leg-lower-parka.svg",
       "x": 107,
@@ -17200,6 +18447,13 @@
       "y": 239,
       "w": 56,
       "h": 147
+    },
+    "character-leg-upper-jacket": {
+      "source": "src/svg/shared/character/leg-upper-jacket.svg",
+      "x": 107,
+      "y": 242,
+      "w": 50,
+      "h": 144
     },
     "character-leg-upper-parka": {
       "source": "src/svg/shared/character/leg-upper-parka.svg",
@@ -17298,6 +18552,13 @@
       "y": 126,
       "w": 116,
       "h": 208
+    },
+    "character-torso-jacket": {
+      "source": "src/svg/shared/character/torso-jacket.svg",
+      "x": 65,
+      "y": 116,
+      "w": 110,
+      "h": 186
     },
     "character-torso-parka": {
       "source": "src/svg/shared/character/torso-parka.svg",

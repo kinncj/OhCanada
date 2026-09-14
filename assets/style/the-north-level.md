@@ -190,7 +190,7 @@ No `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<st
 Water is three flat `glacier` tones with straight ripple bars and flat white riffles. AO is flat `ao-shadow`
 at 0.28 at ground contacts and 0.18 at overlaps — and on this level the 0.18 band under each of the vessel's
 deck edges is load-bearing rather than decorative, because without it three white decks on a white hull
-merge into one slab. **No falling weather, no smoke, no steam, no aurora.**
+merge into one slab. **No falling weather, no smoke, no steam, no aurora.** **Player costume: `jacket`**: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it.
 
 ## 5. Budgets, measured
 

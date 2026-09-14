@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="144" viewBox="107 242 50 144" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides. Blue jeans, hip to knee, with a light outer seam. The knee end is a circle centred on the knee pivot.</title>
+  <path d="M 112,264 A 20 20 0 1 1 152,264 L 150.5,362 A 18.5 18.5 0 0 1 113.5,362 Z" fill="#2c8cba"/>
+  <defs><clipPath id="lu"><path d="M 112,264 A 20 20 0 1 1 152,264 L 150.5,362 A 18.5 18.5 0 0 1 113.5,362 Z"/></clipPath></defs>
+  <g clip-path="url(#lu)">
+    <path d="M 139,234 L 176,234 L 176,392 L 139,392 Z" fill="#1a487a"/>
+    <ellipse cx="122" cy="295.36" rx="4.4" ry="19.6" fill="#5cbfd6"/>
+    <ellipse cx="132" cy="331" rx="30" ry="9" fill="#16203a" opacity="0.18"/>
+    <path d="M 146,284 C 148,310 147,336 145,356" fill="none" stroke="#5cbfd6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 152,264 L 150.5,362 A 18.5 18.5 0 0 1 113.5,362 L 112,264" fill="none" stroke="#2c8cba" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 152,264 L 150.5,362 A 18.5 18.5 0 0 1 113.5,362 L 112,264" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

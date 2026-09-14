@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="42" height="107" viewBox="116 126 42 107" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. Light jacket sleeve, upper. Its shoulder cap and its elbow cap are circles centred ON the shoulder and elbow pivots, so rotation never swings a cap out from under the next part.</title>
+  <path d="M 121,146 A 16 16 0 0 1 153,146 C 154,170 153,196 152,214 A 15 15 0 0 1 122,214 C 121,196 120,170 121,146 Z" fill="#153f86"/>
+  <defs><clipPath id="au"><path d="M 121,146 A 16 16 0 0 1 153,146 C 154,170 153,196 152,214 A 15 15 0 0 1 122,214 C 121,196 120,170 121,146 Z"/></clipPath></defs>
+  <g clip-path="url(#au)">
+    <path d="M 142.12,116 L 181,116 L 181,244 L 142.12,244 Z" fill="#091740"/>
+    <ellipse cx="129" cy="167.76" rx="3.52" ry="13.6" fill="#2275c6"/>
+    <path d="M 121,146 A 16 16 0 0 1 153,146 C 154,170 153,196 152,214 A 15 15 0 0 1 122,214 C 121,196 120,170 121,146 Z" fill="none" stroke="#153f86" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 121,146 A 16 16 0 0 1 153,146 C 154,170 153,196 152,214 A 15 15 0 0 1 122,214 C 121,196 120,170 121,146 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -225,6 +225,7 @@ reference in any of the nine sources**, checked mechanically.
 | ~~iced chute sheen~~ | **REMOVED, §7.** The lane is packed snow in the `snow` ramp, not polished ice, because the `ice` ramp made a blind verifier read the whole lower half as a frozen river. | none. |
 | runner scoring | 4 px `snow-shade` grooves at 0.42 and `snow-light` bars, 39 per 1440 px tile, **straight and level**. A toboggan runner scores straight lines; the curved arcs on Ottawa's ice are skate marks and would say "rink". | none. |
 | falling snow | `quebec-city-particle-snow`, three flat opaque discs with a flat highlight. Phaser particles, ≤ 400 on a phone at every tier and 150 at `low`. | none. |
+| player costume | `parka`: the winter parka, scarf and mitts (`player.md`), because this level is winter and snow falls on it. | — |
 | POI marker "in reach" | the ring **fills and gains a second ring** — a shape change, not a glow and not only a colour change. | a pulse is welcome; the shape difference already carries the state, so reduced motion and Canvas both stay correct. |
 | lamp globes | flat `white-base` disc with a `white-light` highlight disc. | a bloom would be a bonus. |
 

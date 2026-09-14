@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="24" viewBox="115 268 44 24" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides. The ribbed cuff of the light jacket sleeve, closing over the wrist so the bare hand under it meets the sleeve with no joint showing. The hand itself is its own part, bare-hand-{costume}-{skin}, because it is skin.</title>
+  <path d="M 124,271 L 150,271 C 156.5,271 156.5,289 150,289 L 124,289 C 117.5,289 117.5,271 124,271 Z" fill="#153f86"/>
+  <defs><clipPath id="cf"><path d="M 124,271 L 150,271 C 156.5,271 156.5,289 150,289 L 124,289 C 117.5,289 117.5,271 124,271 Z"/></clipPath></defs>
+  <g clip-path="url(#cf)">
+    <ellipse cx="137" cy="289" rx="20" ry="5" fill="#091740"/>
+    <ellipse cx="126" cy="276" rx="4" ry="3" fill="#2275c6"/>
+    <path d="M 131,275 L 131,285" fill="none" stroke="#091740" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 137,275 L 137,285" fill="none" stroke="#091740" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 143,275 L 143,285" fill="none" stroke="#091740" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 124,271 L 150,271 C 156.5,271 156.5,289 150,289 L 124,289 C 117.5,289 117.5,271 124,271 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

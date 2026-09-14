@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="89" viewBox="117 210 40 89" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. Light jacket sleeve, lower. A flat top ON the elbow pivot and the same radius as the upper sleeve cap, with no line across it. It ends in a circle on the wrist pivot, under the cuff.</title>
+  <path d="M 122,214 L 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214 Z" fill="#153f86"/>
+  <defs><clipPath id="al"><path d="M 122,214 L 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214 Z"/></clipPath></defs>
+  <g clip-path="url(#al)">
+    <path d="M 141.8,184 L 181,184 L 181,312 L 141.8,312 Z" fill="#091740"/>
+    <ellipse cx="129.5" cy="235.76" rx="3.3" ry="13.6" fill="#2275c6"/>
+    <ellipse cx="137" cy="220" rx="16" ry="5" fill="#16203a" opacity="0.18"/>
+    <path d="M 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214" fill="none" stroke="#153f86" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="99" viewBox="107 358 50 99" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides. Blue jeans, knee to ankle, rolled once above a red canvas high-top sneaker. A flat top on the knee pivot, and it ENDS in a circle on the ankle pivot so the foot, drawn next, covers it at every ankle angle (art-bible.md 7.5).</title>
+  <path d="M 113.5,362 L 150.5,362 L 147.99,436.65 A 16 16 0 0 1 116.01,436.65 Z" fill="#2c8cba"/>
+  <defs><clipPath id="ll"><path d="M 113.5,362 L 150.5,362 L 147.99,436.65 A 16 16 0 0 1 116.01,436.65 Z"/></clipPath></defs>
+  <g clip-path="url(#ll)">
+    <path d="M 138.5,332 L 176,332 L 176,466 L 138.5,466 Z" fill="#1a487a"/>
+    <ellipse cx="122.5" cy="385.68" rx="4" ry="14.8" fill="#5cbfd6"/>
+    <path d="M 150.5,362 L 147.99,436.65 A 16 16 0 0 1 116.01,436.65 L 113.5,362" fill="none" stroke="#2c8cba" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <defs><clipPath id="llb"><path d="M 100,412 L 170,412 L 170,480 L 100,480 Z"/></clipPath></defs>
+    <g clip-path="url(#llb)">
+    <path d="M 100,412 L 170,412 L 170,480 L 100,480 Z" fill="#d8262c"/>
+    <path d="M 139,400 L 180,400 L 180,480 L 139,480 Z" fill="#941835"/>
+    <ellipse cx="124" cy="424" rx="3.5" ry="7" fill="#e27468"/>
+    <path d="M 150.5,362 L 147.99,436.65 A 16 16 0 0 1 116.01,436.65 L 113.5,362" fill="none" stroke="#d8262c" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+  <path d="M 150.5,362 L 147.99,436.65 A 16 16 0 0 1 116.01,436.65 L 113.5,362" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 117,398 L 147,398 C 155,398 155,415 147,415 L 117,415 C 109,415 109,398 117,398 Z" fill="#5cbfd6"/>
+  <defs><clipPath id="jc"><path d="M 117,398 L 147,398 C 155,398 155,415 147,415 L 117,415 C 109,415 109,398 117,398 Z"/></clipPath></defs>
+  <g clip-path="url(#jc)">
+    <ellipse cx="132" cy="415" rx="24" ry="5" fill="#2c8cba"/>
+    <path d="M 117,398 L 147,398 C 155,398 155,415 147,415 L 117,415 C 109,415 109,398 117,398 Z" fill="none" stroke="#5cbfd6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 117,398 L 147,398 C 155,398 155,415 147,415 L 117,415 C 109,415 109,398 117,398 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

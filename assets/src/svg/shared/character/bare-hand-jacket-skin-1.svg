@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="59" height="54" viewBox="103 280 59 54" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides. A bare hand, skin ramp 1, worn with the light jacket: one mass and a thumb, the fingers marked by two creases rather than separated. The same 42 px hand as every mitt, gauntlet and forepaw in the rig, because a garment may add bulk and a body may not.</title>
+  <path d="M 124,298 C 112,295 106,304 110,311 C 113,317 122,318 127,313 Z" fill="#efbe99"/>
+  <defs><clipPath id="th"><path d="M 124,298 C 112,295 106,304 110,311 C 113,317 122,318 127,313 Z"/></clipPath></defs>
+  <g clip-path="url(#th)">
+    <ellipse cx="114" cy="303" rx="5" ry="6" fill="#f6ecde"/>
+    <path d="M 124,298 C 112,295 106,304 110,311 C 113,317 122,318 127,313 Z" fill="none" stroke="#efbe99" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 124,298 C 112,295 106,304 110,311 C 113,317 122,318 127,313 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 128,286 C 134,283 142,283 148,286 C 155,291 158,301 158,311 C 157,322 149,330 138,330 C 126,330 117,322 117,310 C 117,300 121,291 128,286 Z" fill="#efbe99"/>
+  <defs><clipPath id="mt"><path d="M 128,286 C 134,283 142,283 148,286 C 155,291 158,301 158,311 C 157,322 149,330 138,330 C 126,330 117,322 117,310 C 117,300 121,291 128,286 Z"/></clipPath></defs>
+  <g clip-path="url(#mt)">
+    <ellipse cx="127" cy="299" rx="6" ry="9" fill="#f6ecde"/>
+    <ellipse cx="154" cy="322" rx="12" ry="14" fill="#d47d62"/>
+    <ellipse cx="137" cy="289" rx="18" ry="5" fill="#16203a" opacity="0.18"/>
+    <path d="M 128,286 C 134,283 142,283 148,286 C 155,291 158,301 158,311 C 157,322 149,330 138,330 C 126,330 117,322 117,310 C 117,300 121,291 128,286 Z" fill="none" stroke="#efbe99" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 128,286 C 134,283 142,283 148,286 C 155,291 158,301 158,311 C 157,322 149,330 138,330 C 126,330 117,322 117,310 C 117,300 121,291 128,286 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 131,315 C 138,320 146,320 152,314" fill="none" stroke="#d47d62" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

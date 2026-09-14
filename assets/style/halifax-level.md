@@ -205,6 +205,7 @@ sources in the repository (§7, `OQ-ART-11`).
 | lamp globes | flat `white-light` discs on dark standards. | a bloom would be a bonus and must never be what makes them read as lamps. |
 | harbour water | three flat `water` tones with straight `water-light` ripple bars. Static shapes. | none. |
 | falling weather | **none. This level is summer** — no particles, no `particle-*` source. Two of this game's levels are already winter and a third would make the country look like one season. | — |
+| player costume | `jacket`: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it. | — |
 
 ### The four levels' theme triples, so nobody has to compare them by eye
 

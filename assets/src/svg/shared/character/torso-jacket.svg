@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="186" viewBox="65 116 110 186" shape-rendering="geometricPrecision">
+  <title>Light cotton jacket, worn open to the hip, three-quarter facing right: a cobalt shell with a fold-down collar behind the neck, a lapel on the leading edge, a ribbed waistband and a pocket welt, over a plain crew-neck T-shirt that shows down the open front. The warm-weather costume of the player, for levels that are not winter. No hood, no fur, no scarf, no flag, no lettering and no diagonal across the chest.</title>
+  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 169,180 167,204 164,222 C 162,236 164,252 166,266 C 167,276 167,284 166,288 C 165,292 161,294 153,294 C 131,296 109,296 87,294 C 79,294 75,292 74,288 C 73,284 73,276 74,266 C 76,252 78,236 76,222 C 73,204 71,180 72,156 C 72,142 76,134 84,131 C 92,129 100,131 106,137 Z" fill="#153f86"/>
+  <defs><clipPath id="jk"><path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 169,180 167,204 164,222 C 162,236 164,252 166,266 C 167,276 167,284 166,288 C 165,292 161,294 153,294 C 131,296 109,296 87,294 C 79,294 75,292 74,288 C 73,284 73,276 74,266 C 76,252 78,236 76,222 C 73,204 71,180 72,156 C 72,142 76,134 84,131 C 92,129 100,131 106,137 Z"/></clipPath></defs>
+  <g clip-path="url(#jk)">
+    <path d="M 50,110 L 94,110 C 86,150 86,190 92,226 C 96,256 88,290 86,350 L 50,350 Z" fill="#2275c6"/>
+    <path d="M 190,110 L 160,110 C 162,150 162,190 158,226 C 156,258 162,292 164,350 L 190,350 Z" fill="#091740"/>
+    <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 169,180 167,204 164,222 C 162,236 164,252 166,266 C 167,276 167,284 166,288 C 165,292 161,294 153,294 C 131,296 109,296 87,294 C 79,294 75,292 74,288 C 73,284 73,276 74,266 C 76,252 78,236 76,222 C 73,204 71,180 72,156 C 72,142 76,134 84,131 C 92,129 100,131 106,137 Z" fill="none" stroke="#153f86" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 50,278 C 90,283 150,283 190,278 L 190,350 L 50,350 Z" fill="#091740"/>
+    <path d="M 60,279 C 95,284 145,284 180,279" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="122" cy="176" rx="34" ry="10" fill="#16203a" opacity="0.18"/>
+    <path d="M 126,141 C 132,146 138,146 144,140 C 147,172 149,236 153,300 L 121,300 C 125,236 127,180 126,141 Z" fill="#f0f2f5"/>
+    <defs><clipPath id="te"><path d="M 126,141 C 132,146 138,146 144,140 C 147,172 149,236 153,300 L 121,300 C 125,236 127,180 126,141 Z"/></clipPath></defs>
+    <g clip-path="url(#te)">
+      <path d="M 139,120 L 175,120 L 175,320 L 144,320 C 143,250 141,180 139,120 Z" fill="#cbd2da"/>
+      <ellipse cx="131" cy="190" rx="3" ry="14" fill="#ffffff"/>
+      <ellipse cx="136" cy="160" rx="18" ry="6" fill="#16203a" opacity="0.18"/>
+    </g>
+    <path d="M 126,141 C 127,180 125,236 121,300" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 144,140 C 147,172 149,236 153,300" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 84,242 L 104,248" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 169,180 167,204 164,222 C 162,236 164,252 166,266 C 167,276 167,284 166,288 C 165,292 161,294 153,294 C 131,296 109,296 87,294 C 79,294 75,292 74,288 C 73,284 73,276 74,266 C 76,252 78,236 76,222 C 73,204 71,180 72,156 C 72,142 76,134 84,131 C 92,129 100,131 106,137 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 83,151 C 76,139 85,127 101,127 C 102,135 106,141 113,146 C 104,154 92,156 83,151 Z" fill="#153f86"/>
+  <defs><clipPath id="cl"><path d="M 83,151 C 76,139 85,127 101,127 C 102,135 106,141 113,146 C 104,154 92,156 83,151 Z"/></clipPath></defs>
+  <g clip-path="url(#cl)">
+    <ellipse cx="92" cy="134" rx="9" ry="6" fill="#2275c6"/>
+    <ellipse cx="108" cy="150" rx="12" ry="6" fill="#091740"/>
+    <path d="M 83,151 C 76,139 85,127 101,127 C 102,135 106,141 113,146 C 104,154 92,156 83,151 Z" fill="none" stroke="#153f86" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 83,151 C 76,139 85,127 101,127 C 102,135 106,141 113,146 C 104,154 92,156 83,151 Z" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 102,138 C 112,146 130,146 140,138 C 145,141 146,149 142,152 C 131,158 111,158 100,152 C 96,149 97,141 102,138 Z" fill="#f0f2f5"/>
+  <defs><clipPath id="cn"><path d="M 102,138 C 112,146 130,146 140,138 C 145,141 146,149 142,152 C 131,158 111,158 100,152 C 96,149 97,141 102,138 Z"/></clipPath></defs>
+  <g clip-path="url(#cn)">
+    <ellipse cx="112" cy="145" rx="10" ry="4" fill="#ffffff"/>
+    <ellipse cx="138" cy="155" rx="14" ry="6" fill="#cbd2da"/>
+    <path d="M 102,138 C 112,146 130,146 140,138 C 145,141 146,149 142,152 C 131,158 111,158 100,152 C 96,149 97,141 102,138 Z" fill="none" stroke="#f0f2f5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 102,138 C 112,146 130,146 140,138 C 145,141 146,149 142,152 C 131,158 111,158 100,152 C 96,149 97,141 102,138 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 141,139 C 149,135 157,136 162,141 C 158,150 153,158 149,166 C 147,156 145,147 141,139 Z" fill="#153f86"/>
+  <defs><clipPath id="lp"><path d="M 141,139 C 149,135 157,136 162,141 C 158,150 153,158 149,166 C 147,156 145,147 141,139 Z"/></clipPath></defs>
+  <g clip-path="url(#lp)">
+    <ellipse cx="160" cy="156" rx="8" ry="14" fill="#091740"/>
+    <path d="M 141,139 C 149,135 157,136 162,141 C 158,150 153,158 149,166 C 147,156 145,147 141,139 Z" fill="none" stroke="#153f86" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 141,139 C 149,135 157,136 162,141 C 158,150 153,158 149,166 C 147,156 145,147 141,139 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

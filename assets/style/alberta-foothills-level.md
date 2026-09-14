@@ -98,7 +98,7 @@ the tree bluffs are types. The mountain front is a landform and is scoped as one
 
 No `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<style>` or `url(#…)` anywhere.
 Distance is a flat tone per range and never a blur. AO is flat `ao-shadow` at 0.28 under every ground
-contact and 0.18 at structural overlaps. **No falling weather: this level is late summer.**
+contact and 0.18 at structural overlaps. **No falling weather: this level is late summer.** **Player costume: `jacket`**: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it.
 
 ## 5. Budgets, measured
 

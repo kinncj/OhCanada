@@ -146,7 +146,7 @@ the other.
 | `hairColour` | `black`, `brown`, `blond`, `red`, `grey` | `brown` | yes |
 | `headCovering` | `none`, `toque` | **`toque`** | yes |
 | `feature` | `none`, `glasses` | `none` | yes |
-| `costume` | `parka`, `serge`, `beaver` | `parka` | no |
+| `costume` | `parka`, `serge`, `beaver`, `jacket` | `parka` | no — the player's is chosen by the level (§4, `jacket`) |
 | `presentation` | `feminine`, `masculine`, `neutral` | `neutral` | yes — listed last on the player artboard (below) |
 
 Plus **two axes that are not slots**, and both are braces a part template can name:
@@ -202,9 +202,9 @@ change nobody would notice. Two independent slots make the product structural: 4
 
 The check is arithmetic and a test can run it: **the number of reachable part frames must equal what the
 slot product implies, and every declared frame must be reachable.** As shipped: 6 skin × 4 hair shapes ×
-5 hair colours × 2 head coverings × 2 features × 3 costumes × 4 expressions × 3 presentations =
-**17 280 combinations, 74 of the 80 frames declared, 74 reachable, 0 unreachable** — 24 costume frames
-(8 templates × 3 costumes), 44 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + **4 × 3
+5 hair colours × 2 head coverings × 2 features × 4 costumes × 4 expressions × 3 presentations =
+**23 040 combinations, 88 of the 94 frames declared, 88 reachable, 0 unreachable** — 32 costume frames
+(8 templates × 4 costumes), 6 bare hands (`jacket` × 6 skin, on `{costume}` and `{skin}` together), 44 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + **4 × 3
 face**, on `{expression}` and `{presentation}`, + 4 × 5 hair), 5 optional singletons (`toque`, `glasses`,
 `hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground shadow.
 
@@ -214,7 +214,7 @@ consequence of the previous paragraph: a level's decision is not in the product 
 
 The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 × 3 = **1 440 appearances**, now that
 the creator offers `presentation` (480 before it did); neither `costume`
-nor the mode is in it: `costume` says which character an artboard is, the mode says what the level put under
+nor the mode is in it: `costume` says which character an artboard is and what a level dresses the player in, the mode says what the level put under
 them, and neither says how somebody customised one. Adding the guide therefore added nothing to the creator
 and took nothing away from it, which was the constraint the beaver had to satisfy before it was allowed to
 exist, and adding skates satisfied the same one.
@@ -258,40 +258,42 @@ a costume part, which is more frames on every level's shared atlas (`OQ-RIG-1`).
 
 ## 4. Parts, draw order and mirroring
 
-Twenty-seven parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
+Twenty-nine parts, fixed draw order, back to front. Each names a **frame template** whose `{braces}` are slot
 names, and a **pivot** — the joint it rotates about, in character space. **Four of them are equipment and are
 marked ▲; every one of them draws nothing on a level whose mode authors no frame, which is every level
 that walks.**
 
 | z | part | frame template | pivot | mirrored |
 |---|---|---|---|---|
-| 1 | `ground-shadow` | `ground-shadow` | 120, 457 | |
-| 2 | ▲ `mount-deck` | `mount-deck-{mode}` | 120, 440 | |
-| 3 | `tail` | `tail-{costume}` | 100, 296 | |
-| 4 | `arm-upper-l` | `arm-upper-{costume}` | 137, 146 | |
-| 5 | `arm-lower-l` | `arm-lower-{costume}` | 137, 214 | |
-| 6 | `hand-l` | `hand-{costume}` | 137, 282 | |
-| 7 | `leg-upper-l` | `leg-upper-{costume}` | 132, 264 | |
-| 8 | `leg-lower-l` | `leg-lower-{costume}` | 132, 362 | |
-| 9 | `foot-l` | `foot-l-{costume}` | 132, 436 | |
-| 10 | ▲ `foot-gear-l` | `foot-gear-l-{mode}` | 132, 436 | |
-| 11 | `leg-upper-r` | `leg-upper-{costume}` | 108, 264 | ✔ |
-| 12 | `leg-lower-r` | `leg-lower-{costume}` | 108, 362 | ✔ |
-| 13 | `foot-r` | `foot-r-{costume}` | 108, 436 | |
-| 14 | ▲ `foot-gear-r` | `foot-gear-r-{mode}` | 108, 436 | |
-| 15 | `neck` | `neck-{skin}` | 120, 148 | |
-| 16 | `torso` | `torso-{costume}` | 120, 264 | |
-| 17 | `head` | `head-{skin}` | 120, 112 | |
-| 18 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
-| 19 | `head-shell` | `head-shell-{costume}` | 120, 112 | |
-| 20 | `face` | `face-{expression}-{presentation}` | 120, 112 | |
-| 21 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
-| 22 | `hat` | `hat-{costume}` | 120, 112 | |
-| 23 | `feature` | `feature-{feature}` | 120, 112 | |
-| 24 | `arm-upper-r` | `arm-upper-{costume}` | 103, 146 | ✔ |
-| 25 | `arm-lower-r` | `arm-lower-{costume}` | 103, 214 | ✔ |
-| 26 | `hand-r` | `hand-{costume}` | 103, 282 | ✔ |
-| 27 | ▲ `mount-fore` | `mount-fore-{mode}` | 120, 440 | |
+| 1 | `ground-shadow` | `ground-shadow` | 120, 457 |  |
+| 2 | ▲ `mount-deck` | `mount-deck-{mode}` | 120, 440 |  |
+| 3 | `tail` | `tail-{costume}` | 100, 296 |  |
+| 4 | `arm-upper-l` | `arm-upper-{costume}` | 137, 146 |  |
+| 5 | `arm-lower-l` | `arm-lower-{costume}` | 137, 214 |  |
+| 6 | `bare-hand-l` | `bare-hand-{costume}-{skin}` | 137, 282 |  |
+| 7 | `hand-l` | `hand-{costume}` | 137, 282 |  |
+| 8 | `leg-upper-l` | `leg-upper-{costume}` | 132, 264 |  |
+| 9 | `leg-lower-l` | `leg-lower-{costume}` | 132, 362 |  |
+| 10 | `foot-l` | `foot-l-{costume}` | 132, 436 |  |
+| 11 | ▲ `foot-gear-l` | `foot-gear-l-{mode}` | 132, 436 |  |
+| 12 | `leg-upper-r` | `leg-upper-{costume}` | 108, 264 | ✔ |
+| 13 | `leg-lower-r` | `leg-lower-{costume}` | 108, 362 | ✔ |
+| 14 | `foot-r` | `foot-r-{costume}` | 108, 436 |  |
+| 15 | ▲ `foot-gear-r` | `foot-gear-r-{mode}` | 108, 436 |  |
+| 16 | `neck` | `neck-{skin}` | 120, 148 |  |
+| 17 | `torso` | `torso-{costume}` | 120, 264 |  |
+| 18 | `head` | `head-{skin}` | 120, 112 |  |
+| 19 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 |  |
+| 20 | `head-shell` | `head-shell-{costume}` | 120, 112 |  |
+| 21 | `face` | `face-{expression}-{presentation}` | 120, 112 |  |
+| 22 | `head-covering` | `head-covering-{headCovering}` | 120, 112 |  |
+| 23 | `hat` | `hat-{costume}` | 120, 112 |  |
+| 24 | `feature` | `feature-{feature}` | 120, 112 |  |
+| 25 | `arm-upper-r` | `arm-upper-{costume}` | 103, 146 | ✔ |
+| 26 | `arm-lower-r` | `arm-lower-{costume}` | 103, 214 | ✔ |
+| 27 | `bare-hand-r` | `bare-hand-{costume}-{skin}` | 103, 282 | ✔ |
+| 28 | `hand-r` | `hand-{costume}` | 103, 282 | ✔ |
+| 29 | ▲ `mount-fore` | `mount-fore-{mode}` | 120, 440 |  |
 
 **The two equipment z's that are not at the ends are the whole reason there are four parts and not one.**
 `foot-gear-*` sits immediately after its own boot, because a skate holder closes over a sole and a boot
@@ -369,6 +371,27 @@ you are looking at the other side of the same person, not at a mistake.
 template that is not in `frames` draws nothing.** Both backends implement one rule instead of two, and
 adding a head covering later is a new SVG plus one option string.
 
+### `jacket`: the costume a level dresses the player in, and the one whose hands are skin
+
+Added 2026-09-14, after a live-site audit found the player in a parka, a scarf and mitts on every summer level.
+`jacket` is the player's warm-weather clothes: a light jacket worn open over a plain T-shirt, jeans rolled once
+and canvas high-tops. `player.md` §7 is its design sheet. Two things about it are structural.
+
+- **A level chooses it, not the player.** `costume` is still not player-selectable and still outside the 1 440
+  appearances a player turns. The player artboard's `skins` keep `parka`, which is what a figure wears when
+  nothing else says. A level declares what its player wears, from the season its art sheet states.
+- **Its hands are skin, and skin needs `{skin}`.** `hand-{costume}` cannot know a tone, so two parts,
+  `bare-hand-l` and `bare-hand-r`, resolve on `bare-hand-{costume}-{skin}`. Only `jacket` has frames there, in all
+  six ramps, so the mitts, the gauntlets and the forepaws resolve nothing on it, and no skin tone lacks a hand.
+  This is not a coupling in `docs/content-review.md` §8.2's sense: `costume` is nobody's choice, and every skin
+  option is drawn. Each bare hand shares its hand's pivot and mirror, draws immediately before it, and carries its
+  transform in every key of every state, which `tests/unit/contracts/rig-is-coherent.test.ts` holds. On `jacket`,
+  `hand-{costume}` is only the sleeve cuff that closes over the wrist.
+
+**Every `jacket` window sits inside the matching `parka` window**, so `stand-off.ts#figureSpan`, which reads the
+artboard's `skins`, gives the same body span in all seven modes whichever costume the level chose, and a stop
+computed for the parka stands clear of the jacket. Measured when it landed: −58 to +57 px walking, identical.
+
 ### Five parts are mirrored rather than drawn twice
 
 `arm-upper`, `arm-lower`, `hand`, `leg-upper` and `leg-lower` are drawn straight and symmetric about their
@@ -400,7 +423,7 @@ The fallback is **not** a flipbook of pre-composed frames. A flipbook would mult
 `5 760 combinations × 8 states × frames` and could never ship; more to the point, it would be a *different*
 character, and "the fallback nobody wants to look at" is how a seam quietly stops being a seam.
 
-Instead the atlas holds the **same twenty-seven parts**, and the sprite adapter composites them with the **same
+Instead the atlas holds the **same twenty-nine parts**, and the sprite adapter composites them with the **same
 per-part transforms** from `states` in the contract JSON. What the two backends actually differ in is
 interpolation and where the compositing happens — not in the art, the proportions, the poses or the names.
 

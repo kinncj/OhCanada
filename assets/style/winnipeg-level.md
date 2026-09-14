@@ -147,6 +147,7 @@ There is not a single `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text
 | river water | three flat `water` tones with straight `water-light` ripple bars. Static shapes. |
 | lamp globes | flat `white-light` discs with a `brass-light` wash at 0.35 on dark standards. |
 | falling weather | **none. This level is early autumn.** Two of this game's levels are winter already. |
+| player costume | `jacket`: the light jacket, T-shirt, jeans and high-tops (`player.md` §7), because this level is not winter and no weather falls on it. |
 
 ---
 

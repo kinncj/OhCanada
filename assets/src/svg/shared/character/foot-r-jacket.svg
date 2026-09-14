@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="47" viewBox="82 419 77 47" shape-rendering="geometricPrecision">
+  <title>Red canvas high-top sneaker: a white rubber toe cap, a white sole and white laces, the wearer right - the NEAR side. Same outline and size as every foot in the rig. Feet are not mirrored: both point the way the character travels. The ankle is a circle on the ankle pivot with no line across its top. No logo.</title>
+  <path d="M 92,436 A 16 16 0 0 1 124,436 C 126,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 90,438 92,436 Z" fill="#d8262c"/>
+  <defs><clipPath id="ft"><path d="M 92,436 A 16 16 0 0 1 124,436 C 126,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 90,438 92,436 Z"/></clipPath></defs>
+  <g clip-path="url(#ft)">
+    <ellipse cx="120" cy="444" rx="10" ry="4" fill="#e27468"/>
+    <ellipse cx="90" cy="450" rx="8" ry="10" fill="#941835"/>
+    <path d="M 124,436 C 126,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 90,438 92,436" fill="none" stroke="#d8262c" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 135,442 C 145,442 155,448 155,456 L 155,470 L 131,470 C 129,458 130,448 135,442 Z" fill="#f0f2f5"/>
+    <ellipse cx="151" cy="446" rx="5" ry="3" fill="#ffffff"/>
+    <path d="M 135,443 C 130,448 129,455 131,462" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 68,450 C 108,448 134,448 164,450 L 164,470 L 68,470 Z" fill="#f0f2f5"/>
+    <path d="M 68,456 C 108,455 134,455 164,456 L 164,470 L 68,470 Z" fill="#cbd2da"/>
+    <path d="M 70,450 C 108,448 134,448 164,450" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 113,435 L 119,440" fill="none" stroke="#f0f2f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 120,438 L 125,443" fill="none" stroke="#f0f2f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 124,436 C 126,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 90,438 92,436" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1469,6 +1469,132 @@
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/beaver/ under the rules in assets/style/art-bible.md and assets/style/guide.md; never traced."
     },
     {
+      "path": "src/svg/shared/character/arm-lower-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"arm-lower-jacket\" — One frame serves both sides: the rig reflects it about the character centre line. Light jacket sleeve, lower.…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/arm-upper-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"arm-upper-jacket\" — One frame serves both sides: the rig reflects it about the character centre line. Light jacket sleeve, upper.…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/bare-hand-jacket-skin-1.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"bare-hand-jacket-skin-1\" — One frame serves both sides. A bare hand, skin ramp 1, worn with the light jacket: one mass and a thumb, the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/bare-hand-jacket-skin-2.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"bare-hand-jacket-skin-2\" — One frame serves both sides. A bare hand, skin ramp 2, worn with the light jacket: one mass and a thumb, the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/bare-hand-jacket-skin-3.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"bare-hand-jacket-skin-3\" — One frame serves both sides. A bare hand, skin ramp 3, worn with the light jacket: one mass and a thumb, the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/bare-hand-jacket-skin-4.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"bare-hand-jacket-skin-4\" — One frame serves both sides. A bare hand, skin ramp 4, worn with the light jacket: one mass and a thumb, the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/bare-hand-jacket-skin-5.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"bare-hand-jacket-skin-5\" — One frame serves both sides. A bare hand, skin ramp 5, worn with the light jacket: one mass and a thumb, the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/bare-hand-jacket-skin-6.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"bare-hand-jacket-skin-6\" — One frame serves both sides. A bare hand, skin ramp 6, worn with the light jacket: one mass and a thumb, the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/foot-l-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"foot-l-jacket\" — Red canvas high-top sneaker: a white rubber toe cap, a white sole and white laces, the wearer left - the FAR…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/foot-r-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"foot-r-jacket\" — Red canvas high-top sneaker: a white rubber toe cap, a white sole and white laces, the wearer right - the…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/hand-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"hand-jacket\" — One frame serves both sides. The ribbed cuff of the light jacket sleeve, closing over the wrist so the bare…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/leg-lower-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"leg-lower-jacket\" — One frame serves both sides. Blue jeans, knee to ankle, rolled once above a red canvas high-top sneaker. A…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/leg-upper-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"leg-upper-jacket\" — One frame serves both sides. Blue jeans, hip to knee, with a light outer seam. The knee end is a circle…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
+      "path": "src/svg/shared/character/torso-jacket.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"torso-jacket\" — Light cotton jacket, worn open to the hip, three-quarter facing right: a cobalt shell with a fold-down collar…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
       "path": "refs/beaver/beaver-upright-winter-gnawing.jpg",
       "kind": "reference",
       "title": "North American beaver sitting upright on its hind legs in snow, holding a browse stick in its forepaws",
