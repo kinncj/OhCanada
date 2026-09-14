@@ -411,16 +411,16 @@ What carries the walk until then, and each piece was chosen against a render:
 
 ### 14.5 Budgets, measured
 
-`make assets`, 2026-09-14:
+`make assets`, 2026-09-14, on main after the atlas packer (ADR-0033) and the layer foot padding:
 
 ```
-level-payload:  alberta-foothills 0.49 MiB of 8.00 MiB over 14 file(s)
-texture-memory: alberta-foothills 27.46 MiB of 36.00 MiB (76%, 8957136 B spare) over 14 file(s)
+level-payload:  alberta-foothills 0.57 MiB of 8.00 MiB over 14 file(s)
+texture-memory: alberta-foothills 26.08 MiB of 36.00 MiB (72%, 10406536 B spare) over 14 file(s)
 ```
 
-Before the ride: **26.22 MiB (73 %)** over 12 files and 0.46 MiB of payload. The horse costs 1.02 MiB and the trail
+Measured before those two landed, the ride took the level from **26.22 MiB (73 %)** over 12 files to 27.46 MiB (76 %), and the payload from 0.46 to 0.49 MiB. The horse costs 1.02 MiB and the trail
 0.22 MiB, both `@1x`-pinned, because `riderAnchor` and `groundLineY` are art pixels. **`textureBudgetBytes` is
-unchanged** at 36 MiB: 76 % is inside the band the other levels sit in, and the perf lane opens Ottawa. The shared
+unchanged** at 36 MiB: 72 % is inside the band the other levels sit in, and the perf lane opens Ottawa. The shared
 atlas did not change, so no other level's number moved.
 
 ### 14.6 What the renders showed
@@ -430,10 +430,12 @@ scene probe read `data-rides` 1, `data-rides-drawn` 1, `data-mode-gaps` 0 and a 
 console error. The rider sits in the saddle with the boot at the stirrup and the rein in both fists, and the horse
 turns with the rider.
 
-**Two renders show rig parts in the wrong order, and it is the renderer, not the pose.** At the gate stop the jeans
-draw over the coat, and while cruising the hair draws detached behind the face; the spawn render of the same
-`horse/idle` key is correct, and a composite of those keys built with the renderer's own placement arithmetic is
-correct. The part depth and rotation in `sprite-character-renderer.ts` are being fixed separately.
+**The first renders showed rig parts in the wrong order, and it was the renderer, not the pose.** At the gate stop
+the jeans drew over the coat and while cruising the hair drew detached behind the face, while the spawn render of
+the same `horse/idle` key and a composite built with the renderer's own placement arithmetic were both correct.
+The cause was the guide's parts interleaving with the player's at a shared depth. Re-rendered after the fix that
+gives each character its own depth slot, the gate stop and cruising both draw the coat over the legs and the hair
+on the head.
 
 ### The builder patch `scripts/lib/art-handoff.mjs` needs
 
