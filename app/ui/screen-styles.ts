@@ -485,6 +485,51 @@ const CSS = `
   padding: 0.875rem;
   background: var(--tn-paper-2);
   color: var(--tn-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+/* ------------------------------------------------------------------ *
+ * The character creator's skin tones: a swatch above each name.
+ *
+ * The colour arrives on the element as --tn-swatch, set by
+ * app/ui/character-creator.ts from assets/style/palette.json through the
+ * composition root, so no colour is written here. The swatch is decoration
+ * beside the name ("1, light"): the name is what a screen reader reads and what
+ * tells six tones apart when the colour is gone.
+ *
+ * The grid fills a row at a time, left to right, so the reading order is the
+ * ramp's order, lightest first, at every width; at 200 % text min() drops it to
+ * one column instead of pushing a name past the edge.
+ * ------------------------------------------------------------------ */
+.tn-creator__help { display: block; }
+
+.tn-creator__swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 6.5rem), 1fr));
+  gap: 0.625rem;
+}
+
+.tn-creator__swatch {
+  /* A line of its own inside the option, with the mark and the name under it. */
+  flex: 1 0 100%;
+  box-sizing: border-box;
+  min-block-size: 2.25rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: 0.5rem;
+  background: var(--tn-swatch);
+  /* The one fill a forced-colours theme must not flatten: it is the colour the
+     player is choosing. The ink edge keeps the chip visible on paper and on the
+     chosen brass alike, and the focus ring sits outside the option, so it never
+     depends on contrast against the swatch (TN-SKIN-06). */
+  forced-color-adjust: none;
+}
+
+.tn-creator__name { flex: 1 1 auto; min-inline-size: 0; }
+
+@media (forced-colors: active) {
+  .tn-creator__swatch { border-color: CanvasText; }
 }
 
 /* A result, a warning, a dismissal: a callout with a thick leading edge. */

@@ -46,13 +46,32 @@
  */
 
 import { labelled, text, type UiLocale } from './copy';
-import { button, element, mark, replaceChildren } from './dom';
+import {
+  button,
+  CHOSEN_GLYPH,
+  chosenMark,
+  element,
+  replaceChildren,
+  UNCHOSEN_GLYPH,
+} from './dom';
 import { createScreen, type Screen } from './screen';
 
 /** One choice inside a slot. `name` is already localised by the caller. */
 export interface CreatorOption {
   readonly id: string;
   readonly name: string;
+  /**
+   * A CSS colour drawn above the name, for an option whose content *is* a
+   * colour: the six skin ramps. The composition root reads it from the art
+   * palette and this module never invents one.
+   *
+   * It is decoration. The name is still all a screen reader hears, and all
+   * high contrast needs to tell six tones apart (`TN-SKIN-05`), so the swatch is
+   * `aria-hidden`. What it fixes is the sighted player's problem: six buttons
+   * reading "1, light" … "6, dark", with no colour on any of them, is a skin
+   * tone picker that shows no skin tones.
+   */
+  readonly swatch?: string;
 }
 
 /**
@@ -65,6 +84,13 @@ export interface CreatorSlot {
   /** `slot-skin`, `slot-hair-shape`, `slot-hair-colour`, … (`TN-LOOK-01`). */
   readonly testId: string;
   readonly label: string;
+  /**
+   * One line under the group's heading that says how to read its options —
+   * "From light to dark" on the skin group. Drawn visibly and made the group's
+   * accessible description, so the sighted reader and the listener get the
+   * same sentence. Absent means the options read on their own.
+   */
+  readonly help?: string;
   readonly options: readonly CreatorOption[];
 }
 
@@ -216,36 +242,36 @@ export function createCharacterCreator(
   screen.describedBy(intro);
 
   /*
-   * The preview is named by the same text the player can read. `TN-CREATOR-06`
-   * asks for "a text description listing the chosen option of every slot"; a
-   * visible paragraph doing double duty means the description cannot drift from
-   * what is drawn, and `TN-CREATOR-03`'s "the art fails to load" case still
-   * leaves a screen with words on it rather than an empty box.
+   * The preview: a panel headed "Your character" that says, in words, what was
+   * chosen in every group (`TN-CREATOR-06`).
+   *
+   * It used to be a `role="img"` box with nothing in it and the sentence beside
+   * it. **Nothing draws character art into this screen** — no renderer is wired
+   * to it — so what a player saw was an empty bordered box, which is
+   * `TN-CREATOR-03`'s "an empty box with no explanation", and what a screen
+   * reader heard was an image nobody could see. Now the panel is a group named
+   * by its own visible heading and described by the sentence inside it, so the
+   * name and the description are text on the page in every state, and a
+   * renderer that draws the character later adds an `aria-hidden` picture
+   * inside the panel without changing either.
+   *
+   * The `data-*` hooks stay on this element (`TN-CREATOR-01`): they are what
+   * that renderer, and the e2e suite, read.
    */
-  const previewText = element(doc, 'p', {
-    id: 'tn-creator-preview-text',
-    className: 'tn-screen__help',
+  const previewHeading = element(doc, 'h2', {
+    id: 'tn-creator-preview-heading',
+    text: text(locale, 'creator.preview.label'),
   });
+  const previewText = element(doc, 'p', { id: 'tn-creator-preview-text' });
   const preview = element(doc, 'div', {
     testId: 'character-preview',
     className: 'tn-screen__preview',
-    /*
-     * Named by `creator.preview.label` and *described* by the sentence, which
-     * is the pair `TN-CREATOR-06` asks for: "character-preview has the
-     * accessible name 'Your character'. And it has a text description listing
-     * the chosen option of every slot."
-     *
-     * The sentence is a **sibling**, not a child. A `role="img"` hides its
-     * subtree from assistive technology, so a paragraph inside the preview
-     * would be read only through the name computation and would stop being
-     * text on the page — and `TN-CREATOR-03`'s "the art fails to load" case
-     * needs it to be text on the page.
-     */
     attrs: {
-      role: 'img',
-      'aria-label': text(locale, 'creator.preview.label'),
+      role: 'group',
+      'aria-labelledby': 'tn-creator-preview-heading',
       'aria-describedby': 'tn-creator-preview-text',
     },
+    children: [previewHeading, previewText],
   });
 
   /*
@@ -284,9 +310,11 @@ export function createCharacterCreator(
    * change.
    */
   const primary = options.primary ?? 'start';
+  /* The one red action on the screen: it is what carries the player on. */
   const startButton = button(doc, {
     testId: primary === 'done' ? 'creator-done' : 'start-playing',
     text: text(locale, primary === 'done' ? 'creator.done' : 'creator.start'),
+    attrs: { 'data-tn-action': 'primary' },
     onClick: () => options.onStart?.(selection),
   });
 
@@ -298,17 +326,28 @@ export function createCharacterCreator(
       : button(doc, {
           testId: 'creator-back',
           text: text(locale, 'common.back'),
+          attrs: { 'data-tn-action': 'quiet' },
           onClick: options.onBack,
         });
 
   /* `OQ-SET-1`. `common.settings` names the control that opens Settings, so a
      player who heard "Settings" in the HUD menu hears the same word here
-     (`TN-CREATOR`'s copy table); `settings.title` stays that screen's heading. */
-  const settingsButton = button(doc, {
-    testId: 'creator-settings',
-    text: text(locale, 'common.settings'),
-    ...(options.onOpenSettings === undefined ? {} : { onClick: options.onOpenSettings }),
-  });
+     (`TN-CREATOR`'s copy table); `settings.title` stays that screen's heading.
+
+     **Absent when there is nowhere to open.** It used to be drawn either way,
+     and the creator re-opened *from* Settings passes no handler — so that
+     screen carried a "Settings" button that did nothing when pressed, which a
+     switch user walking the ring has no way to know until they try it. Same
+     rule as Back: no control that goes nowhere. */
+  const settingsButton =
+    options.onOpenSettings === undefined
+      ? null
+      : button(doc, {
+          testId: 'creator-settings',
+          text: text(locale, 'common.settings'),
+          attrs: { 'data-tn-action': 'quiet' },
+          onClick: options.onOpenSettings,
+        });
 
   const saveFailure = element(doc, 'div', {
     testId: 'creator-save-error',
@@ -321,7 +360,6 @@ export function createCharacterCreator(
     intro,
     optionGone,
     preview,
-    previewText,
     groupsHost,
     saveFailure,
     element(doc, 'div', {
@@ -329,7 +367,7 @@ export function createCharacterCreator(
       children: [
         randomiseButton,
         startButton,
-        settingsButton,
+        ...(settingsButton === null ? [] : [settingsButton]),
         ...(backButton === null ? [] : [backButton]),
       ],
     }),
@@ -363,10 +401,10 @@ export function createCharacterCreator(
       title.textContent = text(next, 'creator.title');
       intro.textContent = text(next, 'creator.intro');
       optionGone.textContent = text(next, 'creator.optionGone');
-      preview.setAttribute('aria-label', text(next, 'creator.preview.label'));
+      previewHeading.textContent = text(next, 'creator.preview.label');
       randomiseButton.textContent = text(next, 'creator.randomise');
       startButton.textContent = text(next, primary === 'done' ? 'creator.done' : 'creator.start');
-      settingsButton.textContent = text(next, 'common.settings');
+      if (settingsButton !== null) settingsButton.textContent = text(next, 'common.settings');
       if (backButton !== null) backButton.textContent = text(next, 'common.back');
       /* The chosen option survives the language change (`TN-CREATOR-10`): only
          the labels are rebuilt, and `selection` is never touched here. */
@@ -431,16 +469,37 @@ export function createCharacterCreator(
           className: 'tn-screen__legend',
           text: slot.label,
         });
+        /* A `span`, not a `p`: it sits inside the radiogroup, where the only
+           children with a role should be the radios. */
+        const help =
+          slot.help === undefined
+            ? null
+            : element(doc, 'span', {
+                id: `tn-creator-${slot.id}-help`,
+                className: 'tn-screen__help tn-creator__help',
+                text: slot.help,
+              });
+        const list = optionsOf(slot);
+        const radios = list.map((option, index) => optionButton(slot, option, index, list.length));
+        /* Swatches sit in a grid that fills a row at a time, left to right, so
+           the reading order is the ramp's order at every width. */
+        const swatched = list.some((option) => option.swatch !== undefined);
         const group = element(doc, 'div', {
           className: 'tn-screen__group',
           testId: slot.testId,
-          attrs: { role: 'radiogroup', 'aria-labelledby': legendId },
-          children: [legend],
+          attrs: {
+            role: 'radiogroup',
+            'aria-labelledby': legendId,
+            ...(help === null ? {} : { 'aria-describedby': help.id }),
+          },
+          children: [
+            legend,
+            ...(help === null ? [] : [help]),
+            ...(swatched
+              ? [element(doc, 'div', { className: 'tn-creator__swatches', children: radios })]
+              : radios),
+          ],
         });
-
-        for (const option of optionsOf(slot)) {
-          group.append(optionButton(slot, option));
-        }
 
         group.addEventListener('keydown', (event: KeyboardEvent) =>
           onGroupKey(slot, event),
@@ -453,20 +512,57 @@ export function createCharacterCreator(
 
   /**
    * An option is a radio with a *name* — never a bare colour swatch
-   * (`TN-CREATOR-06`, and "colour is never the only signal"). The chosen one is
-   * marked with a tick as well as a background, so reduced motion, high contrast
-   * and greyscale all leave the choice visible.
+   * (`TN-CREATOR-06`, and "colour is never the only signal").
+   *
+   * **The chosen one is marked by a shape.** Every option draws the radio
+   * circle: filled when chosen, empty when not (`chosenMark`). It used to draw a
+   * tick on *every* option, chosen or not, so the only thing that set the chosen
+   * one apart was its fill and border — which is colour doing the work the tick
+   * was there to do.
+   *
+   * **Position is stated, not inferred.** `aria-posinset` and `aria-setsize`
+   * make "1 of 6" part of what a screen reader says for each tone, so the names
+   * never have to carry it (`TN-SKIN-05`).
+   *
+   * `data-slot`, `data-option` and `data-chosen` are the hooks
+   * `docs/stories/README.md` names for every option; `data-slot-id` and
+   * `data-option-id` stay beside them for the code already reading them.
    */
-  function optionButton(slot: CreatorSlot, option: CreatorOption): HTMLElement {
+  function optionButton(
+    slot: CreatorSlot,
+    option: CreatorOption,
+    index: number,
+    total: number,
+  ): HTMLElement {
+    const children: HTMLElement[] = [];
+    if (option.swatch !== undefined) {
+      const swatch = element(doc, 'span', {
+        className: 'tn-creator__swatch',
+        attrs: { 'aria-hidden': 'true' },
+      });
+      /* Set through the CSSOM, never as a `style` attribute, so a strict
+         content security policy cannot strip the colour. */
+      swatch.style.setProperty('--tn-swatch', option.swatch);
+      children.push(swatch);
+    }
+    children.push(
+      chosenMark(doc, false),
+      element(doc, 'span', { className: 'tn-creator__name', text: option.name }),
+    );
     return button(doc, {
       testId: `${slot.testId}-${option.id}`,
       attrs: {
         role: 'radio',
         'aria-checked': 'false',
+        'aria-posinset': String(index + 1),
+        'aria-setsize': String(total),
+        'data-slot': slot.id,
+        'data-option': option.id,
+        'data-chosen': 'false',
         'data-option-id': option.id,
         'data-slot-id': slot.id,
       },
-      children: [mark(doc, '✓'), element(doc, 'span', { text: option.name })],
+      children,
       onClick: () => select(slot, option),
     });
   }
@@ -511,7 +607,13 @@ export function createCharacterCreator(
       )) {
         const chosen = control.getAttribute('data-option-id') === selection[slot.id];
         control.setAttribute('aria-checked', String(chosen));
+        control.setAttribute('data-chosen', String(chosen));
         control.tabIndex = chosen ? 0 : -1;
+        const indicator = control.querySelector<HTMLElement>('[data-tn-chosen]');
+        if (indicator !== null) {
+          indicator.textContent = chosen ? CHOSEN_GLYPH : UNCHOSEN_GLYPH;
+          indicator.setAttribute('data-tn-chosen', String(chosen));
+        }
       }
       /* Data hooks the level's renderer reads, and `TN-CREATOR-01` asserts. */
       preview.setAttribute(previewAttribute(slot.id), selection[slot.id] ?? '');

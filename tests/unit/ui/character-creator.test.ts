@@ -6,6 +6,7 @@ import {
   randomSelection,
   type CreatorSlot,
 } from '@ui/character-creator';
+import { CHOSEN_GLYPH, UNCHOSEN_GLYPH } from '@ui/dom';
 import { HIGHLIGHT_ATTRIBUTE } from '@ui/single-switch';
 
 import { buildPage, FakeEvent, press, type FakeElement, type FakePage } from './support/fake-dom';
@@ -206,18 +207,96 @@ describe('the character creator', () => {
     expect(creator.selection['coat']).toBe(before['coat']);
   });
 
-  it('marks the chosen option with a tick and a name, never with a colour alone', () => {
-    const { option } = open();
+  it('marks the chosen option with a filled circle and a name, never with a colour alone', () => {
+    const { option, root } = open();
     const braids = option('slot-hair', 'braids');
     braids.click();
 
     expect(braids.getAttribute('aria-checked')).toBe('true');
+    expect(braids.getAttribute('data-chosen')).toBe('true');
     expect(braids.getAttribute('role')).toBe('radio');
     expect(braids.textContent).toContain('Braids');
-    /* The tick is hidden from assistive tech: the word beside it is what should
+    /* The mark is hidden from assistive tech: the word beside it is what should
        be read, and the shape is what a colour-blind player sees. */
     const glyph = braids.querySelector('[aria-hidden="true"]');
-    expect(glyph?.textContent).toBe('✓');
+    expect(glyph?.textContent).toBe(CHOSEN_GLYPH);
+
+    /* And every option that is not chosen draws the other shape. A tick drawn on
+       all of them — the old screen — left the fill as the only difference. */
+    const others = (root.byTestId('slot-hair')?.querySelectorAll('[role="radio"]') ?? []).filter(
+      (other) => other !== braids,
+    );
+    expect(others.length).toBe(3);
+    for (const other of others) {
+      expect(other.querySelector('[data-tn-chosen]')?.textContent).toBe(UNCHOSEN_GLYPH);
+      expect(other.getAttribute('data-chosen')).toBe('false');
+    }
+  });
+
+  it('carries the hooks the story names, and its place in the group', () => {
+    /* `docs/stories/README.md`: "Every option inside a group reports data-slot,
+       data-option and data-chosen". `aria-posinset` and `aria-setsize` make the
+       position part of what is spoken (`TN-SKIN-05`). */
+    const { root } = open({ initialSelection: { skin: 'skin-1', hair: 'curly', coat: 'parka' } });
+    const options = root.byTestId('slot-hair')?.querySelectorAll('[role="radio"]') ?? [];
+
+    expect(options.map((option) => option.getAttribute('data-option'))).toEqual([
+      'coily',
+      'curly',
+      'straight',
+      'braids',
+    ]);
+    for (const [index, option] of options.entries()) {
+      expect(option.getAttribute('data-slot')).toBe('hair');
+      expect(option.getAttribute('aria-posinset')).toBe(String(index + 1));
+      expect(option.getAttribute('aria-setsize')).toBe('4');
+      expect(option.getAttribute('data-chosen')).toBe(String(index === 1));
+    }
+  });
+
+  it('draws a swatch only where the caller gives one, hidden, beside a name that is still text', () => {
+    const { root, page } = open({
+      slots: [
+        {
+          id: 'skin',
+          testId: 'slot-skin',
+          label: 'Skin tone',
+          help: 'From light to dark',
+          options: [
+            { id: 'skin-1', name: '1, light', swatch: '#efbe99' },
+            { id: 'skin-2', name: '2, light', swatch: '#dfa477' },
+          ],
+        },
+        SLOTS[1]!,
+      ],
+    });
+    const skin = root.byTestId('slot-skin');
+    const first = root.byTestId('slot-skin-skin-1');
+    const swatch = first?.children.find((child) => child.className === 'tn-creator__swatch');
+
+    expect(swatch?.getAttribute('aria-hidden')).toBe('true');
+    expect(swatch?.style.getPropertyValue('--tn-swatch')).toBe('#efbe99');
+    expect(first?.textContent).toContain('1, light');
+    /* The reading line is visible and is the group's description. */
+    const help = page.doc.getElementById(skin?.getAttribute('aria-describedby') ?? '');
+    expect(help?.textContent).toBe('From light to dark');
+    expect(help?.parentElement).toBe(skin);
+
+    /* A group whose options carry no colour draws none, and no reading line. */
+    const hair = root.byTestId('slot-hair');
+    expect(hair?.getAttribute('aria-describedby')).toBe(null);
+    for (const option of hair?.querySelectorAll('[role="radio"]') ?? []) {
+      expect(option.children.some((child) => child.className === 'tn-creator__swatch')).toBe(false);
+    }
+  });
+
+  it('makes one control the primary action, and Back and Settings quiet', () => {
+    const { root } = open({ onBack: vi.fn(), onOpenSettings: vi.fn() });
+
+    expect(root.byTestId('start-playing')?.getAttribute('data-tn-action')).toBe('primary');
+    expect(root.byTestId('creator-back')?.getAttribute('data-tn-action')).toBe('quiet');
+    expect(root.byTestId('creator-settings')?.getAttribute('data-tn-action')).toBe('quiet');
+    expect(root.querySelectorAll('[data-tn-action="primary"]').length).toBe(1);
   });
 
   it('announces the choice in words', () => {
@@ -232,13 +311,16 @@ describe('the character creator', () => {
     const describedBy = preview?.getAttribute('aria-describedby') ?? '';
     const description = page.doc.getElementById(describedBy);
 
-    expect(preview?.getAttribute('role')).toBe('img');
     /* `TN-CREATOR-06`: the preview is *named* "Your character" and *described*
-       by the five label-and-value pairs. The description is a sibling, because
-       a role="img" hides its own subtree and the sentence has to stay text on
-       the page for the art-fails-to-load case. */
-    expect(preview?.getAttribute('aria-label')).toBe('Your character');
-    expect(description?.parentElement).toBe(preview?.parentElement);
+       by the label-and-value pairs. Both are visible text inside it: nothing
+       draws art into this screen, and a `role="img"` box with nothing in it was
+       `TN-CREATOR-03`'s "empty box with no explanation". */
+    expect(preview?.getAttribute('role')).toBe('group');
+    const heading = page.doc.getElementById(preview?.getAttribute('aria-labelledby') ?? '');
+    expect(heading?.tagName).toBe('H2');
+    expect(heading?.textContent).toBe('Your character');
+    expect(heading?.parentElement).toBe(preview);
+    expect(description?.parentElement).toBe(preview);
     expect(description?.textContent).toContain('Skin tone');
 
     option('slot-hair', 'curly').click();
@@ -280,6 +362,14 @@ describe('the character creator', () => {
     expect(control?.textContent).toBe('Settings');
     control?.click();
     expect(onOpenSettings).toHaveBeenCalledTimes(1);
+  });
+
+  it('draws no Settings control when there is nowhere for it to go', () => {
+    /* The creator re-opened from Settings passes no handler. It used to draw a
+       "Settings" button anyway, which did nothing when pressed. */
+    const { root } = open({ primary: 'done' });
+    expect(root.byTestId('creator-settings')).toBe(null);
+    expect(root.byTestId('creator-done')).not.toBe(null);
   });
 
   describe('the keyboard', () => {
@@ -374,7 +464,7 @@ describe('the character creator', () => {
       option('slot-coat', 'anorak').click();
       const chosen = root.byTestId('slot-coat-anorak');
       expect(chosen?.textContent).toContain('Anorak');
-      expect(chosen?.querySelector('[aria-hidden="true"]')?.textContent).toBe('✓');
+      expect(chosen?.querySelector('[aria-hidden="true"]')?.textContent).toBe(CHOSEN_GLYPH);
     });
   });
 
