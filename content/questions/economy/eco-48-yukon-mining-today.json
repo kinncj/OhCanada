@@ -40,9 +40,9 @@
     "quote": "Mining remains a significant part of the economy."
   },
   "verification": {
-    "status": "rejected",
+    "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-14T00:26:41Z",
+    "checkedAt": "2026-09-14T00:45:10Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "Thousands of miners came to the Yukon during the Gold Rush of the 1890s, as celebrated in the poetry of Robert W. Service. Mining remains a significant part of the economy."
   }

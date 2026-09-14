@@ -40,9 +40,9 @@
     "quote": "Canada’s openness and generosity do not extend to barbaric cultural practices that tolerate spousal abuse, “honour killings,” female genital mutilation, forced marriage or other gender-based violence."
   },
   "verification": {
-    "status": "rejected",
+    "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-14T00:26:41Z",
+    "checkedAt": "2026-09-14T00:45:10Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "In Canada, men and women are equal under the law. Canada’s openness and generosity do not extend to barbaric cultural practices that tolerate spousal abuse, “honour killings,” female genital mutilation, forced marriage or other gender-based violence."
   }
