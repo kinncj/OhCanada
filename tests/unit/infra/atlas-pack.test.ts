@@ -226,7 +226,8 @@ describe('atlas-pack chooses the page, and chooses it the same way every time (O
     }
     const smallest = Math.min(...areas);
     expect((Math.max(...areas) - smallest) / smallest).toBeLessThan(0.05);
-  });
+    // Thirteen full searches over the real frames: seconds on a CI runner, not milliseconds.
+  }, 60_000);
 
   it('spills onto another page only when one cannot hold the set, each page as small as it can be', () => {
     const plan = planAtlas(
