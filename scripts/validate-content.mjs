@@ -16,6 +16,14 @@
  *    ramp tone and ink names a colour that exists. A JSON Schema can say "these
  *    are ids"; it cannot say "this id is in that table", and 97 colours in 31
  *    ramps is exactly the file where that distinction bites.
+ * 6. Validates every screen-art sidecar, `assets/src/svg/screens/<name>.anchors.json`,
+ *    against the schema it declares, then cross-checks what no schema can say:
+ *    that it describes the drawing beside it, that it anchors every level in
+ *    content/levels/ and nothing else, and that every coordinate lands inside the
+ *    viewBox and the inset it claims (scripts/lib/screen-art.mjs). UI code places
+ *    markers at those coordinates without looking at the map, so they are checked
+ *    here rather than trusted there. The directory's other rules - flat, SVG or
+ *    sidecar only, not empty - belong to `make assets`, which owns the source tree.
  *
  * Exits non-zero and lists every failure. Prints a one-line summary.
  *
@@ -32,6 +40,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
+
+import { readLevelDocuments } from './lib/level-payload.mjs';
+import { SIDECAR_SCHEMA, checkScreenSidecars, screenArtTree } from './lib/screen-art.mjs';
 
 const argv = process.argv.slice(2);
 const rootFlag = argv.indexOf('--root');
@@ -184,10 +195,23 @@ const contentDocuments = walk(
   (f) => extname(f) === '.json' && !f.startsWith(SCHEMA_DIR + sep),
 );
 
+/**
+ * Screen-art sidecars are data a DOM screen will trust, so they are schema-checked
+ * like content. Found by the screen-art home's own walk rather than by widening
+ * this gate to every `.json` under assets/: the directory is the decision that
+ * these are documents, and a sidecar the walk refuses (no drawing beside it, in a
+ * subdirectory) is `make assets`'s failure to report, not this gate's.
+ */
+const screenArt = screenArtTree({ root: ROOT });
+
 const dataFiles = [
   ...contentDocuments,
   ...EXTERNAL_DATA_FILES.map((e) => e.file).filter((f) => existsSync(f)),
+  ...screenArt.sidecars.map((s) => s.file),
 ];
+
+/** absolute path -> { data, schemaPath } for every document that passed its schema. */
+const validatedDocuments = new Map();
 
 let validated = 0;
 
@@ -236,6 +260,7 @@ for (const file of dataFiles) {
     continue;
   }
   validated += 1;
+  validatedDocuments.set(file, { data, schemaPath });
 }
 
 // ---------------------------------------------------------- locale parity ---
@@ -609,6 +634,42 @@ if (existsSync(PALETTE_FILE)) {
   }
 }
 
+// ------------------------------------------------------ screen-art sidecars ---
+
+/**
+ * The half of a sidecar its schema cannot hold: is it about the drawing beside
+ * it, and about the levels that exist? Only sidecars that passed their schema
+ * are cross-checked; one that failed has already been reported above, and its
+ * shape cannot be relied on here.
+ *
+ * A `.anchors.json` must declare map-anchors.schema.json specifically. A sidecar
+ * validated against some other schema would pass the schema half and hand the
+ * cross-checks a shape they were not written for.
+ */
+const SIDECAR_SCHEMA_PATH = join(SCHEMA_DIR, SIDECAR_SCHEMA);
+const checkableSidecars = [];
+for (const sidecar of screenArt.sidecars) {
+  const done = validatedDocuments.get(sidecar.file);
+  if (done === undefined) continue;
+  if (done.schemaPath !== SIDECAR_SCHEMA_PATH) {
+    fail(
+      sidecar.rel,
+      `declares ${rel(done.schemaPath)}; a "*.anchors.json" sidecar must declare ` +
+        `content/schemas/${SIDECAR_SCHEMA}, the shape its cross-checks are written for`,
+    );
+    continue;
+  }
+  checkableSidecars.push({ ...sidecar, doc: done.data });
+}
+
+// Malformed level documents are the schema pass's to report; here only the ids
+// that exist matter.
+const levelIds = readLevelDocuments(ROOT, () => {})
+  .map((doc) => doc.id)
+  .sort();
+const sidecarCheck = checkScreenSidecars({ root: ROOT, sidecars: checkableSidecars, levelIds });
+failures.push(...sidecarCheck.failures);
+
 // -------------------------------------------- anti-vacuum, per printed count ---
 
 /**
@@ -766,6 +827,19 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
+/**
+ * Said in words when there is nothing to check, never as "0 sidecar(s)": zero
+ * is legal here (screen art need not have a sidecar, and a tree may have no
+ * screen art), and a count of zero would read like a pass over something.
+ */
+const screenArtClause = !screenArt.exists
+  ? 'no screen art under assets/src/svg/screens/, so no sidecar to check'
+  : sidecarCheck.checked === 0
+    ? 'no screen-art sidecar to check'
+    : `${sidecarCheck.checked} screen-art sidecar(s) cross-checked: ${sidecarCheck.anchors} anchor(s) ` +
+      `against ${levelIds.length} level(s), the drawing's viewBox and its inset, ` +
+      `${sidecarCheck.regions} region id(s) found in the drawing`;
+
 console.log(
   `validate-content: OK - ${validated}/${dataFiles.length} content file(s) valid against ` +
     `${schemasByPath.size} schema(s), ` +
@@ -774,5 +848,6 @@ console.log(
       : `${localeBundlesChecked} locale bundle(s) in EN/FR parity`}, ` +
     `${creditedAssets} asset file(s) under assets/ credited ` +
     `(${shippedEntries} shipped, ${referenceEntries} reference), ` +
-    `palette ${paletteColours} colour(s) in ${paletteRamps} ramp(s), every tone and ink resolved.`,
+    `palette ${paletteColours} colour(s) in ${paletteRamps} ramp(s), every tone and ink resolved, ` +
+    `${screenArtClause}.`,
 );

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/map-anchors.schema.json",
+  "title": "Map anchors",
+  "description": "The sidecar beside a screen-art map, `assets/src/svg/screens/<name>.anchors.json`: where each level's stop is on the drawing, in the drawing's own viewBox, plus the inset and the projection the points were placed with. It carries coordinates and no names, because a shipped JSON is reachable by a player and the basis for each point lives in the art sheet that never ships (assets/style/map-canada.md section 6). UI code places markers at these coordinates without looking at the map, so the claims this schema cannot state are cross-checked by make validate-content (scripts/lib/screen-art.mjs): `svg` names the drawing the sidecar sits beside, `viewBox` is that drawing's viewBox, there is exactly one anchor per level document in content/levels/, every anchor lies in the viewBox, the inset's frame, window, locator and anchors nest as they claim, and every listed region id is an id in the drawing. No port type mirrors it yet: nothing under app/ reads it until the level select is wired to the map (ADR-0008).",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "svg": {
+      "description": "Filename of the drawing this sidecar describes, which must sit beside it: `map-canada.svg` for `map-canada.anchors.json`. A filename, not a URL - the shipped URL is content-hashed by the UI build.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.svg$"
+    },
+    "viewBox": {
+      "description": "The drawing's viewBox as [minX, minY, width, height]. Every coordinate in this file is in these units; validate-content checks it equals the SVG's own.",
+      "type": "array",
+      "prefixItems": [
+        { "type": "number" },
+        { "type": "number" },
+        { "type": "number", "exclusiveMinimum": 0 },
+        { "type": "number", "exclusiveMinimum": 0 }
+      ],
+      "minItems": 4,
+      "maxItems": 4,
+      "items": false
+    },
+    "units": {
+      "description": "The coordinate convention in words, for a person reading the file.",
+      "type": "string",
+      "minLength": 1
+    },
+    "anchors": {
+      "description": "One point per level, keyed by level id. validate-content requires exactly the level ids in content/levels/ - a missing one is a stop the screen cannot place, an extra one is a stop that does not exist.",
+      "type": "object",
+      "propertyNames": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId" },
+      "additionalProperties": { "$ref": "#/$defs/mapPoint" },
+      "minProperties": 1
+    },
+    "inset": { "$ref": "#/$defs/mapInset" },
+    "projection": { "$ref": "#/$defs/mapProjection" },
+    "provincesAndTerritories": {
+      "description": "ISO 3166-2 codes the drawing carries as element ids, for a screen that inlines the SVG. validate-content checks each is an id in the drawing.",
+      "type": "array",
+      "items": { "type": "string", "pattern": "^CA-[A-Z]{2}$" },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": ["$schema", "svg", "viewBox", "anchors", "projection"],
+  "additionalProperties": false,
+  "$defs": {
+    "mapPoint": {
+      "title": "Map point",
+      "description": "A point in the drawing's viewBox; origin top-left, y down.",
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "required": ["x", "y"],
+      "additionalProperties": false
+    },
+    "mapRect": {
+      "title": "Map rectangle",
+      "description": "An axis-aligned rectangle in the drawing's viewBox.",
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "required": ["x", "y", "width", "height"],
+      "additionalProperties": false
+    },
+    "mapInsetFrame": {
+      "title": "Map inset frame",
+      "description": "The inset card's outer rectangle and its corner radius.",
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "radius": { "type": "number", "minimum": 0 }
+      },
+      "required": ["x", "y", "width", "height", "radius"],
+      "additionalProperties": false
+    },
+    "mapInset": {
+      "title": "Map inset",
+      "description": "An enlarged view of stops too close to tell apart on the main map. `anchors` are in the viewBox too, inside `window`; each names a stop the main map anchors, and that main-map point lies inside `locator`.",
+      "type": "object",
+      "properties": {
+        "frame": { "$ref": "#/$defs/mapInsetFrame" },
+        "window": { "$ref": "#/$defs/mapRect" },
+        "locator": { "$ref": "#/$defs/mapRect" },
+        "anchors": {
+          "type": "object",
+          "propertyNames": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId" },
+          "additionalProperties": { "$ref": "#/$defs/mapPoint" },
+          "minProperties": 1
+        },
+        "magnification": {
+          "description": "Inset scale over main-map scale.",
+          "type": "number",
+          "exclusiveMinimum": 1
+        }
+      },
+      "required": ["frame", "window", "locator", "anchors", "magnification"],
+      "additionalProperties": false
+    },
+    "mapAffine": {
+      "title": "Map affine transform",
+      "description": "x = a*E + c, y = d*N + f, from projected metres to viewBox units, so a later point can be placed without re-deriving the fit.",
+      "type": "object",
+      "properties": {
+        "a": { "type": "number" },
+        "c": { "type": "number" },
+        "d": { "type": "number" },
+        "f": { "type": "number" }
+      },
+      "required": ["a", "c", "d", "f"],
+      "additionalProperties": false
+    },
+    "mapProjection": {
+      "title": "Map projection",
+      "description": "The projection the drawing and every anchor were placed with.",
+      "type": "object",
+      "properties": {
+        "crs": { "type": "string", "pattern": "^EPSG:[0-9]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "toViewBox": { "type": "string", "minLength": 1 },
+        "main": { "$ref": "#/$defs/mapAffine" },
+        "inset": { "$ref": "#/$defs/mapAffine" },
+        "mainPxPerKmAtStandardParallels": { "type": "number", "exclusiveMinimum": 0 },
+        "insetPxPerKmAtStandardParallels": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "required": ["crs", "main"],
+      "additionalProperties": false
+    }
+  }
+}

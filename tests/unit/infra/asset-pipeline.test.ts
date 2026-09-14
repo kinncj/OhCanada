@@ -624,6 +624,8 @@ describe('make assets refuses to finish', () => {
     });
     expect(built.status).toBe(1);
     expect(built.output).toContain('sits under "montreal/", which is neither "shared" nor a level id');
+    // The third known owner is named in the refusal, and is not a way round it.
+    expect(built.output).toContain('nor "screens", the home for art a DOM screen owns');
     expect(built.output).toContain('charged to no payload budget');
   });
 
@@ -674,5 +676,159 @@ describe('make assets refuses to finish', () => {
     });
     expect(built.status).toBe(1);
     expect(built.output).toContain('over the 4096 px texture cap');
+  });
+});
+
+/* ======================================================================
+ * Screen art: a DOM screen's, not a level's
+ * ====================================================================== */
+
+/**
+ * `assets/src/svg/screens/` (scripts/lib/screen-art.mjs). The level-select map
+ * of Canada could not enter the tree: under a directory of its own this
+ * pipeline refused it, and under `shared/` it would have cost Halifax 9.89 MiB
+ * of texture memory for a picture no level draws.
+ *
+ * The first case is the promise - linted, never rasterised, charged to no level
+ * - measured as an ABSENCE from the manifest and as level totals identical to a
+ * build without the file. The rest are the refusals that keep the directory from
+ * becoming a place anything can go, and the last two are the unknown-directory
+ * rule this home must not have weakened.
+ */
+describe('screen art under svg/screens/', () => {
+  const screenSvg = (fill: string, inner = '', rootAttributes = 'viewBox="0 0 300 200"'): string =>
+    `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" ${rootAttributes}>${inner}` +
+    `<rect width="300" height="200" fill="${fill}"/></svg>`;
+  const levelArt = { 'svg/ottawa/skyline.svg': svg(1080, 1920, '#a5d6ee') };
+  const levelDocs = { ottawa: levelDoc('ottawa', ['ottawa-skyline']) };
+
+  it('is palette-linted, then left out of the manifest and out of every level total', () => {
+    const without = build({ sources: levelArt, levelDocs });
+    const withScreen = build({
+      sources: {
+        ...levelArt,
+        'svg/screens/map.svg': screenSvg(FIXTURE_COLOURS['sky-base']),
+        'svg/screens/map.anchors.json': '{}\n',
+      },
+      levelDocs,
+    });
+    expect(without.status, without.output).toBe(0);
+    expect(withScreen.status, withScreen.output).toBe(0);
+
+    // Linted: the palette counts the level source AND the screen source.
+    expect(withScreen.stdout).toContain('in 2 source(s)');
+    // Not rasterised: the pipeline's own source count is the level's alone.
+    expect(withScreen.stdout).toContain('1 SVG + 0 Rive source(s)');
+
+    const manifest = withScreen.manifest();
+    for (const file of manifest.files) {
+      expect(file.path).not.toContain('map');
+      expect(file.keys.join(' ')).not.toContain('map');
+    }
+    // Charged to no level: every per-level number is what it is without it.
+    expect(manifest.levels).toEqual(without.manifest().levels);
+
+    expect(withScreen.stdout).toContain('screens: 1 SVG source(s) and 1 sidecar(s) in assets/src/svg/screens/');
+    expect(withScreen.stdout).toContain('charged to no level');
+    // And a tree with none says so in words, not as a count of zero.
+    expect(without.stdout).toContain('screens: none - assets/src/svg/screens/ does not exist');
+  });
+
+  it('fails on an off-palette fill, exactly as level art does', () => {
+    const built = build({ sources: { ...levelArt, 'svg/screens/map.svg': screenSvg('#123456') }, levelDocs });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('assets/src/svg/screens/map.svg: fill="#123456" is not a colour in');
+  });
+
+  it('fails on a screens/ directory with no SVG in it (ADR-0024)', () => {
+    const built = build({ sources: { ...levelArt, 'svg/screens/.gitkeep': '' }, levelDocs });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('assets/src/svg/screens/ exists and holds no SVG. ANTI-VACUUM FLOOR');
+    expect(built.stdout).not.toContain('level-payload: OK');
+  });
+
+  it('fails on a sidecar with no drawing beside it', () => {
+    const built = build({ sources: { ...levelArt, 'svg/screens/map.anchors.json': '{}\n' }, levelDocs });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('assets/src/svg/screens/map.anchors.json is a sidecar with no drawing');
+  });
+
+  it('fails on a subdirectory, because nothing would validate its name', () => {
+    const built = build({
+      sources: { ...levelArt, 'svg/screens/level-select/map.svg': screenSvg(FIXTURE_COLOURS['sky-base']) },
+      levelDocs,
+    });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('assets/src/svg/screens/level-select/ is a subdirectory of the screen-art home');
+  });
+
+  it('fails on a file type the palette lint cannot read', () => {
+    const built = build({
+      sources: {
+        ...levelArt,
+        'svg/screens/map.svg': screenSvg(FIXTURE_COLOURS['sky-base']),
+        'svg/screens/map.png': 'not-really-a-png',
+      },
+      levelDocs,
+    });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('assets/src/svg/screens/map.png is neither an SVG nor a "<name>.anchors.json" sidecar');
+  });
+
+  it('fails on what is inert as pixels and live as SVG: script, handlers, lettering, outside links', () => {
+    const built = build({
+      sources: {
+        ...levelArt,
+        'svg/screens/map.svg': screenSvg(
+          FIXTURE_COLOURS['sky-base'],
+          '<title>Canada</title><script>alert(1)</script>' +
+            `<use href="https://example.com/x.svg#a"/><circle r="4" fill="${FIXTURE_COLOURS['snow-base']}" onclick="go()"/>`,
+        ),
+      },
+      levelDocs,
+    });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('map.svg: contains <script>');
+    expect(built.output).toContain('map.svg: contains <title>');
+    expect(built.output).toContain('carries an onclick= event handler');
+    expect(built.output).toContain('href="https://example.com/x.svg#a" points outside the drawing');
+  });
+
+  it('fails on screen art with no viewBox, which a screen cannot scale', () => {
+    const built = build({
+      sources: { ...levelArt, 'svg/screens/map.svg': screenSvg(FIXTURE_COLOURS['sky-base'], '', '') },
+      levelDocs,
+    });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('the root <svg> has no usable viewBox');
+  });
+
+  it('refuses a Rive file under rive/screens/, which no screen would ship', () => {
+    const built = build({ sources: { ...levelArt, 'rive/screens/map.riv': 'RIVE-not-really' }, levelDocs });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('assets/src/rive/screens/map.riv sits under "screens/", the home for screen art');
+  });
+
+  it('refuses a level whose id is a reserved directory name', () => {
+    const built = build({
+      sources: levelArt,
+      levelDocs: { ...levelDocs, screens: levelDoc('screens', []) },
+    });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('declares a level with id "screens", which is a reserved directory');
+  });
+
+  it('still fails on an unknown directory beside it: the map where art first put it', () => {
+    const built = build({
+      sources: {
+        ...levelArt,
+        'svg/screens/map.svg': screenSvg(FIXTURE_COLOURS['sky-base']),
+        'svg/map/map-canada.svg': screenSvg(FIXTURE_COLOURS['sky-base']),
+      },
+      levelDocs,
+    });
+    expect(built.status).toBe(1);
+    expect(built.output).toContain('sits under "map/", which is neither "shared" nor a level id');
+    expect(built.stdout).not.toContain('level-payload: OK');
   });
 });

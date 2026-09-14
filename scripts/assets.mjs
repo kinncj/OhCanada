@@ -50,6 +50,27 @@
  * not a warning. A `shared/` file is charged to every level, because every level
  * downloads it.
  *
+ * AND ONE DIRECTORY THAT IS NOT A LEVEL'S AT ALL: `screens/`
+ *
+ *   assets/src/svg/screens/<name>.svg            -> no level; a DOM screen's art
+ *   assets/src/svg/screens/<name>.anchors.json   -> its sidecar
+ *
+ * The level-select map of Canada is drawn by a DOM screen, not by Phaser, and no
+ * level places it. Under `shared/` it cost Halifax 9.89 MiB of texture memory it
+ * never draws and broke art bible §9; under any other name this script refused
+ * it. So screen art has a reserved directory, and this script's whole treatment
+ * of it is to LEAVE IT OUT: the palette lint below still reads it, because that
+ * lint walks the source tree rather than `sources`, and the credit gate walks all
+ * of assets/, but it is never rasterised, never packed, never written to the
+ * manifest and never charged to a level. The UI build ships the SVG verbatim.
+ * scripts/lib/screen-art.mjs holds the directory's own rules - flat, SVG or
+ * sidecar only, no script or lettering, a viewBox, and a floor for an empty
+ * directory - and this script fails on any of them.
+ *
+ * It is a third known owner, not a relaxation. A directory that is not a level
+ * id, not `shared/` and not `screens/` still stops the build, and a level whose
+ * id is one of the two reserved names does too.
+ *
  * FULL-SCREEN PARALLAX LAYERS SHIP AT 1x ONLY
  *
  * Owner's decision, slice 1: 2x is for characters, props and things the player
@@ -130,6 +151,7 @@ import sharp from 'sharp';
 
 import { MANIFEST_NAME, MANIFEST_VERSION, checkLevelPayload, mib } from './lib/level-payload.mjs';
 import { lintPalette } from './lib/palette-lint.mjs';
+import { SCREENS_OWNER, describeScreenArt, screenArtTree } from './lib/screen-art.mjs';
 import { BYTES_PER_PIXEL, checkTextureMemory, decodedByDeviceScale } from './lib/texture-memory.mjs';
 import { resolveByDeviceScale, worstDeviceScale } from './lib/variant-scales.mjs';
 
@@ -154,6 +176,16 @@ Source layout (the level a file belongs to is read from its path):
   assets/src/svg/shared/<name>.svg       every level, key <name>
   assets/src/svg/<levelId>-<name>.svg    level <levelId>, key <levelId>-<name>
   assets/src/rive/<levelId|shared>/<name>.riv   same rule, copied verbatim
+
+Screen art (a DOM screen's, not a level's):
+
+  assets/src/svg/screens/<name>.svg            palette-linted, never rasterised,
+                                               not in the manifest, charged to no
+                                               level; the UI build ships it
+  assets/src/svg/screens/<name>.anchors.json   its sidecar (validate-content)
+
+The screens directory is flat and holds only those two kinds of file. Any other
+directory under assets/src/svg/ must be a level id or "shared", or the build fails.
 
 A source may pin itself to 1x by ending its name "@1x" (the suffix is stripped
 from the key). Use it for large art that is drawn once at a fixed place and does
@@ -235,6 +267,18 @@ function readLevels() {
 
 const { ids: LEVELS, layerKeys: LAYER_KEYS } = readLevels();
 
+// A level named after a reserved directory would make `assets/src/svg/<id>/`
+// mean two things, and `assign` would silently pick one of them.
+for (const reserved of [SHARED_OWNER, SCREENS_OWNER]) {
+  if (LEVELS.includes(reserved)) {
+    fatal(
+      `content/levels/ declares a level with id "${reserved}", which is a reserved directory under ` +
+        `assets/src/svg/ ("${SHARED_OWNER}" is art every level pays for, "${SCREENS_OWNER}" is art a DOM ` +
+        'screen owns). Its sources could not be told apart from those; rename the level.',
+    );
+  }
+}
+
 /**
  * A full-screen parallax layer ships at 1x only; everything else ships at both.
  *
@@ -313,12 +357,25 @@ function assign(file, base) {
     const owner = inner[0];
     const tail = [...inner.slice(1), name].join('-');
     if (owner === SHARED_OWNER) return { owner, key: tail, pin };
+    if (owner === SCREENS_OWNER) {
+      // The SVG walk leaves screens/ to scripts/lib/screen-art.mjs before it
+      // gets here, so this is reached by the Rive tree: a DOM screen has no
+      // Rive runtime and nothing would ship the file, so it is refused rather
+      // than copied into a manifest no screen reads.
+      fatal(
+        `${rel(file)} sits under "${SCREENS_OWNER}/", the home for screen art: SVG that a DOM screen ` +
+          `draws. Only assets/src/svg/${SCREENS_OWNER}/ is screen art; nothing ships a ` +
+          `${extname(file)} file to a screen, so this file would be charged to nothing and read by nothing.`,
+      );
+      return null;
+    }
     if (LEVELS.includes(owner)) {
       return { owner, key: tail.startsWith(`${owner}-`) ? tail : `${owner}-${tail}`, pin };
     }
     fatal(
       `${rel(file)} sits under "${owner}/", which is neither "${SHARED_OWNER}" nor a level id in ` +
-        `content/levels/ (${LEVELS.length > 0 ? LEVELS.join(', ') : 'there are none'}). ` +
+        `content/levels/ (${LEVELS.length > 0 ? LEVELS.join(', ') : 'there are none'}), nor ` +
+        `"${SCREENS_OWNER}", the home for art a DOM screen owns. ` +
         'Rename the directory or add the level document; this file is charged to no payload budget.',
     );
     return null;
@@ -411,8 +468,23 @@ function promote() {
 
 // -------------------------------------------------------------------- main ---
 
-const sources = walk(join(SRC_DIR, 'svg'), ['.svg'])
-  .map((file) => ({ file, ...(assign(file, join(SRC_DIR, 'svg')) ?? {}) }))
+const SVG_DIR = join(SRC_DIR, 'svg');
+
+/**
+ * Screen art is left out HERE, before `assign`, and that one filter is the whole
+ * of "never rasterised, never in the manifest, charged to no level": nothing
+ * below this line can see a file that is not in `sources`. The palette lint
+ * further down walks the tree itself, so leaving a file out of `sources` does
+ * not leave it unlinted.
+ */
+const isScreenArt = (file) => relative(SVG_DIR, file).split(sep)[0] === SCREENS_OWNER;
+
+const screens = screenArtTree({ root: ROOT });
+for (const failure of screens.failures) fatal(failure);
+
+const sources = walk(SVG_DIR, ['.svg'])
+  .filter((file) => !isScreenArt(file))
+  .map((file) => ({ file, ...(assign(file, SVG_DIR) ?? {}) }))
   .filter((s) => s.owner !== undefined);
 
 const riveSources = walk(join(SRC_DIR, 'rive'), ['.riv'])
@@ -761,6 +833,9 @@ promote();
 
 console.log(`level-payload: OK - ${payload.summary}`);
 console.log(`texture-memory: OK - ${textures.summary}`);
+// After both gates on purpose: screen art is in neither total above, and this
+// line says so rather than leaving a reader to infer it from an absence.
+console.log(`screens: ${describeScreenArt(screens)}.`);
 
 /**
  * Print the errors and stop, discarding the staged build and leaving
