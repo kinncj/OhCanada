@@ -60,6 +60,13 @@ if (found === undefined) {
 export const START_LEVEL: string = `${found}`;
 
 /**
+ * The map's places, in map order, as the config lists them. The travelled line
+ * on the map joins stops in this order and draws nothing ahead of the player,
+ * so a spec asserting a leg has to know which of two levels comes first.
+ */
+export const JOURNEY: readonly (string | null)[] = CONFIG.journey;
+
+/**
  * What the HUD must call the way the player moves in that level, in English.
  *
  * Asked of the same two sources the game asks, for the same reason `START_LEVEL`

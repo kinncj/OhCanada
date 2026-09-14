@@ -254,20 +254,27 @@ const withUnnamed = (entries: readonly MapEntry[]): readonly MapEntry[] =>
   params.get('map') === 'unnamed' ? [...entries, UNNAMED_ENTRY] : entries;
 
 /**
- * `?stamped=<id>` puts one level's stamp in the passport, so the "Earned" badge
- * is a state a scan can actually reach. Without it `MapEntry.stamped` is never
- * `true` on any harness page and the badge is drawn by nothing.
+ * `?stamped=<id>[,<id>…]` puts those levels' stamps in the passport, so the
+ * "Earned" badge is a state a scan can actually reach. Without it
+ * `MapEntry.stamped` is never `true` on any harness page and the badge is drawn
+ * by nothing. A list, so the travelled line on the map, which joins stamps, can
+ * be scanned with more than one leg on it.
  */
-const STAMPED = params.get('stamped');
+const STAMPED: readonly string[] = (params.get('stamped') ?? '')
+  .split(',')
+  .filter((part) => part !== '');
 
-const mapEntries = (built: readonly string[]): readonly MapEntry[] =>
+const mapEntries = (
+  built: readonly string[],
+  unlocked: readonly string[] = ['ottawa'],
+): readonly MapEntry[] =>
   withUnnamed(
     PLACES.map(([number, id]) => ({
       number,
       id: id as LevelId,
       built: built.includes(id),
-      unlocked: id === 'ottawa',
-      stamped: id === STAMPED,
+      unlocked: unlocked.includes(id),
+      stamped: STAMPED.includes(id),
     })),
   );
 
@@ -993,16 +1000,28 @@ switch (screen) {
 
   case 'shell': {
     const view = params.get('view') ?? 'title';
+    const levels = params.get('levels');
+    /* `journey`: the first four places built and open, so stamps and a level
+       last played can put the player somewhere other than the first card. */
+    const journeyBuilt = ['halifax', 'peggys-cove', 'quebec-city', 'ottawa'];
     const built =
-      params.get('levels') === 'none'
+      levels === 'none'
         ? []
-        : params.get('levels') === 'one'
+        : levels === 'one'
           ? ['ottawa']
-          : ['ottawa', 'halifax'];
+          : levels === 'journey'
+            ? journeyBuilt
+            : ['ottawa', 'halifax'];
+    /* `?here=<id>` is the save's last played level, which the composition root
+       hands the shell; `?from=<id>` opens the map on the way out of that level,
+       the route the level's menu takes. */
+    const here = params.get('here');
+    const from = params.get('from');
 
     const shell = createShell(ui, {
       store,
-      entries: mapEntries(built),
+      entries: levels === 'journey' ? mapEntries(built, built) : mapEntries(built),
+      ...(here === null ? {} : { lastPlayedLevelId: here as LevelId }),
       stampsToUnlock: 1,
       creator: {
         slots: { en: slotsFor('en'), fr: slotsFor('fr') },
@@ -1032,7 +1051,12 @@ switch (screen) {
 
     shell.start();
     if (params.get('storage') === 'blocked') shell.setStorageWarning(true);
-    if (view === 'creator' || view === 'level-select') shell.show(view);
+    if (view === 'level-select' && from !== null) {
+      shell.enterLevel(from as LevelId);
+      shell.leaveLevel();
+    } else if (view === 'creator' || view === 'level-select') {
+      shell.show(view);
+    }
     break;
   }
 

@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
 import {
+  JOURNEY,
   NEXT_LEVEL,
   NEXT_LEVEL_MODE_LABEL,
   NEXT_LEVEL_PLAY_LABEL,
@@ -248,6 +249,24 @@ test.describe('reaching the end of a level sends the player to a new one', () =>
 
     await expect(page.getByTestId('level-select')).toBeVisible();
     await expect(page.getByTestId(`level-card-${NEXT_LEVEL ?? ''}`)).toBeFocused();
+
+    /*
+     * And the map says the player is in the level they just left, not in the one
+     * they finished before it, with no reload between: the menu moved the marker,
+     * and the stamp the walk earned put a leg on the line from the start level
+     * to this one. The leg is drawn only when this level comes after the start
+     * level on the journey, because nothing ahead of the player is drawn.
+     */
+    await expect(page.getByTestId(`level-card-${NEXT_LEVEL ?? ''}-here`)).toHaveText(
+      'You are here',
+    );
+    await expect(page.getByTestId(`level-card-${START_LEVEL}-here`)).toHaveCount(0);
+    if (JOURNEY.indexOf(START_LEVEL) < JOURNEY.indexOf(NEXT_LEVEL ?? '')) {
+      const leg = page.locator('[data-testid="level-select-map-route"] line.tn-map__leg');
+      await expect(leg).toHaveCount(1);
+      await expect(leg).toHaveAttribute('data-map-from', START_LEVEL);
+      await expect(leg).toHaveAttribute('data-map-to', NEXT_LEVEL ?? '');
+    }
   });
 
   test('finishing twice is still one card, and the map really has the new one', async ({
@@ -285,5 +304,10 @@ test.describe('reaching the end of a level sends the player to a new one', () =>
     /* And the level just finished carries its stamp, as a word rather than a
        colour (`TN-MAP-01`). */
     await expect(page.getByTestId(`level-card-${START_LEVEL}-stamp`)).toBeVisible();
+
+    /* Focus is on the news, and the player is still where they were: they left
+       the start level by its menu, so that is the card that says so. */
+    await expect(page.getByTestId(`level-card-${START_LEVEL}-here`)).toHaveText('You are here');
+    await expect(page.getByTestId(`level-card-${NEXT_LEVEL ?? ''}-here`)).toHaveCount(0);
   });
 });

@@ -70,12 +70,19 @@ interface HarnessOptions {
   readonly resume?: boolean;
   /** Study is offered from the title screen. */
   readonly study?: boolean;
-  /** `none`: no level document at all. `one`: only Ottawa, so nothing is locked. */
-  readonly levels?: 'none' | 'one';
+  /**
+   * `none`: no level document at all. `one`: only Ottawa, so nothing is locked.
+   * `journey`: the first four places built and open.
+   */
+  readonly levels?: 'none' | 'one' | 'journey';
   /** `TN-TITLE-04`: this browser is not saving. */
   readonly storageBlocked?: boolean;
-  /** One level's stamp is in the passport, so the map's "Earned" badge is drawn. */
+  /** Levels whose stamps are in the passport, comma-separated, so "Earned" is drawn. */
   readonly stamped?: string;
+  /** The save's last played level, as the composition root hands it to the shell. */
+  readonly here?: string;
+  /** Open the map on the way out of this level, as the level's menu does. */
+  readonly from?: string;
   /**
    * `unnamed`: an eleventh entry with no id, for the one card state the shipped
    * ten cannot reach — a level whose place is not decided (`TN-MAP-04`).
@@ -104,6 +111,8 @@ async function open(page: Page, options: HarnessOptions = {}): Promise<Locator> 
   if (options.study === true) params.set('study', '1');
   if (options.levels !== undefined) params.set('levels', options.levels);
   if (options.stamped !== undefined) params.set('stamped', options.stamped);
+  if (options.here !== undefined) params.set('here', options.here);
+  if (options.from !== undefined) params.set('from', options.from);
   if (options.map !== undefined) params.set('map', options.map);
   if (options.storageBlocked === true) {
     params.set('storage', 'blocked');
@@ -1253,5 +1262,343 @@ test.describe('a level whose stamp is in the passport', () => {
   test('is French', async ({ page }) => {
     const root = await open(page, { view: 'level-select', stamped: 'ottawa', locale: 'fr' });
     await expect(root.locator('[data-testid="level-card-ottawa-stamp"]')).toHaveText('Obtenu');
+  });
+});
+
+/**
+ * Where the player is: on the map, on the rail, and in words on the card.
+ *
+ * The player's report was "no matter if I am in Quebec, it doesn't show it". The
+ * marker followed the first open card without a stamp, so a player in Québec City
+ * saw it on Halifax. The fixture below stamps levels 1 and 2 and records level 3
+ * as last played, so every scan here is of a marker that is **not** on the first
+ * card, and of a line that runs inside the Atlantic inset and out of it.
+ */
+test.describe('the level select says where the player is', () => {
+  const TRAVELLED: HarnessOptions = {
+    view: 'level-select',
+    levels: 'journey',
+    stamped: 'halifax,peggys-cove',
+    here: 'quebec-city',
+  };
+
+  const drawingLoaded = (page: Page): Promise<unknown> =>
+    page.waitForFunction(() => {
+      const art = document.querySelector<HTMLImageElement>('[data-testid="level-select-map"] img');
+      return art !== null && art.complete && art.naturalWidth > 0;
+    });
+
+  /**
+   * Every element of the map with the animation the cascade gave it. Computed
+   * style rather than `getAnimations()`, so the answer does not depend on how
+   * long the page took to get here: a finished animation leaves no running
+   * animation behind, and its declaration is still there.
+   */
+  const mapMotion = (
+    page: Page,
+  ): Promise<{ name: string; tag: string; iterations: string; end: number }[]> =>
+    page.evaluate(() => {
+      const seconds = (value: string): number =>
+        Math.max(
+          ...value
+            .split(',')
+            .map((part) =>
+              part.trim().endsWith('ms')
+                ? Number.parseFloat(part) / 1000
+                : Number.parseFloat(part),
+            ),
+        );
+      return [
+        ...document.querySelectorAll(
+          '[data-testid="level-select-map"], [data-testid="level-select-map"] *',
+        ),
+      ].map((node) => {
+        const style = getComputedStyle(node);
+        const iterations = style.animationIterationCount;
+        const count = iterations === 'infinite' ? Number.POSITIVE_INFINITY : Number(iterations);
+        return {
+          name: style.animationName,
+          tag: node.tagName.toLowerCase(),
+          iterations,
+          end: seconds(style.animationDelay) + seconds(style.animationDuration) * count,
+        };
+      });
+    });
+
+  const pinWidths = (page: Page): Promise<{ here: number; plain: number }> =>
+    page.evaluate(() => {
+      const width = (flag: string): number =>
+        document
+          .querySelector(
+            `[data-testid="level-select-map"] [data-journey-current="${flag}"] .tn-journey__pin`,
+          )
+          ?.getBoundingClientRect().width ?? 0;
+      return { here: width('true'), plain: width('false') };
+    });
+
+  test('has no axe violations with the marker on level 3, in English and in French', async ({
+    page,
+  }) => {
+    for (const locale of ['en', 'fr'] as const) {
+      await open(page, { ...TRAVELLED, locale });
+      await drawingLoaded(page);
+      await expect(page.locator('[data-testid="level-card-quebec-city-here"]')).toHaveText(
+        locale === 'en' ? 'You are here' : 'Vous êtes ici',
+      );
+      const results = await scan(page).analyze();
+      expect(results.violations, `${locale}: ${violationsOf(results)}`).toEqual([]);
+    }
+  });
+
+  test('says it in words on that one card, and the map and the rail mark the same card', async ({
+    page,
+  }) => {
+    await open(page, TRAVELLED);
+    const card = page.locator('[data-testid="level-card-quebec-city"]');
+    await expect(card).toHaveAccessibleName(/Québec City/);
+    await expect(card).toHaveAccessibleName(/You are here/);
+    await expect(page.locator('.tn-levels__here')).toHaveCount(1);
+    /* Not the first card, which is where the old rule put it. */
+    await expect(page.locator('[data-testid="level-card-halifax-here"]')).toHaveCount(0);
+
+    const current = page.locator('[data-testid="level-select-map"] [data-journey-current="true"]');
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveAttribute('data-map-handle', 'quebec-city');
+    const railHandle = await page.evaluate(
+      () =>
+        document
+          .querySelector('[data-testid="level-select-list"] [data-journey-current="true"]')
+          ?.closest('li')
+          ?.querySelector('button[data-level-handle]')
+          ?.getAttribute('data-level-handle') ?? 'none',
+    );
+    expect(railHandle).toBe('quebec-city');
+  });
+
+  test('says the level the map was opened from ahead of the level last played', async ({
+    page,
+  }) => {
+    await open(page, { ...TRAVELLED, from: 'ottawa' });
+    await expect(page.locator('[data-testid="level-card-ottawa-here"]')).toHaveText('You are here');
+    await expect(page.locator('.tn-levels__here')).toHaveCount(1);
+    /* And the player lands on that card, as they always did. */
+    expect(await focusedTestId(page)).toBe('level-card-ottawa');
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('draws the travelled line inside the inset and out of it, ending on the marker', async ({
+    page,
+  }) => {
+    /* Reduced motion, so no pin is mid-swell while its centre is measured. */
+    await open(page, { ...TRAVELLED, motion: 'reduced' });
+    await drawingLoaded(page);
+
+    const drawn = await page.evaluate(() => {
+      const svg = document.querySelector<SVGSVGElement>('[data-testid="level-select-map-route"]');
+      const matrix = svg?.getScreenCTM() ?? null;
+      const centre = (handle: string): { x: number; y: number } | null => {
+        const box = document
+          .querySelector(
+            `[data-testid="level-select-map"] [data-map-handle="${handle}"] .tn-journey__pin`,
+          )
+          ?.getBoundingClientRect();
+        return box === undefined ? null : { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+      };
+      const legs = [
+        ...document.querySelectorAll<SVGLineElement>('[data-testid="level-select-map"] line.tn-map__leg'),
+      ].map((line) => {
+        const point = (x: string, y: string): { x: number; y: number } | null => {
+          if (matrix === null) return null;
+          const at = new DOMPoint(
+            Number(line.getAttribute(x)),
+            Number(line.getAttribute(y)),
+          ).matrixTransform(matrix);
+          return { x: at.x, y: at.y };
+        };
+        return {
+          from: line.getAttribute('data-map-from'),
+          to: line.getAttribute('data-map-to'),
+          frame: line.getAttribute('data-map-frame'),
+          start: point('x1', 'y1'),
+          end: point('x2', 'y2'),
+        };
+      });
+      return {
+        legs,
+        halifax: centre('halifax'),
+        peggysCove: centre('peggys-cove'),
+        quebecCity: centre('quebec-city'),
+      };
+    });
+
+    expect(drawn.legs.map((leg) => [leg.from, leg.to, leg.frame])).toEqual([
+      ['halifax', 'peggys-cove', 'inset'],
+      ['peggys-cove', 'quebec-city', 'main'],
+    ]);
+
+    const near = (
+      a: { x: number; y: number } | null,
+      b: { x: number; y: number } | null,
+      what: string,
+    ): void => {
+      expect(a, `${what}: no point`).not.toBeNull();
+      expect(b, `${what}: no pin`).not.toBeNull();
+      expect(Math.hypot((a?.x ?? 0) - (b?.x ?? 0), (a?.y ?? 0) - (b?.y ?? 0)), what).toBeLessThan(3);
+    };
+    const [inInset, outOfInset] = drawn.legs;
+    near(inInset?.start ?? null, drawn.halifax, 'the inset leg starts on Halifax');
+    near(inInset?.end ?? null, drawn.peggysCove, "the inset leg ends on Peggy's Cove");
+    near(outOfInset?.end ?? null, drawn.quebecCity, 'the line ends on the marker');
+
+    /* No leg is a dot: Halifax to Peggy's Cove is drawn where it has a length. */
+    for (const leg of drawn.legs) {
+      const length = Math.hypot(
+        (leg.end?.x ?? 0) - (leg.start?.x ?? 0),
+        (leg.end?.y ?? 0) - (leg.start?.y ?? 0),
+      );
+      expect(length, `${String(leg.from)} to ${String(leg.to)}`).toBeGreaterThan(8);
+    }
+  });
+
+  test('moves once and stops: the line draws in, the marker swells, all within five seconds', async ({
+    page,
+  }) => {
+    await open(page, TRAVELLED);
+    const motion = await mapMotion(page);
+
+    const lines = motion.filter((node) => node.tag === 'line');
+    expect(lines, 'two legs, each an ink line on a casing').toHaveLength(4);
+    for (const line of lines) {
+      expect(line.name).toBe('tn-map-route-draw');
+      expect(line.iterations).toBe('1');
+    }
+    expect(motion.filter((node) => node.name === 'tn-map-here-pulse')).toHaveLength(1);
+    for (const node of motion) {
+      expect(node.iterations, `${node.tag} loops`).not.toBe('infinite');
+      expect(node.end, `${node.tag} is still moving after five seconds`).toBeLessThanOrEqual(5);
+    }
+  });
+
+  test('reduced motion removes all of it, and keeps the line, the marker and the words', async ({
+    page,
+  }) => {
+    const still = async (): Promise<void> => {
+      await drawingLoaded(page);
+      const motion = await mapMotion(page);
+      expect(motion.length).toBeGreaterThan(10);
+      expect(motion.filter((node) => node.name !== 'none')).toEqual([]);
+      const running = await page.evaluate(
+        () =>
+          document.getAnimations().filter((animation) => {
+            const target = (animation.effect as KeyframeEffect | null)?.target;
+            return (
+              target instanceof Element &&
+              target.closest('[data-testid="level-select-map"]') !== null
+            );
+          }).length,
+      );
+      expect(running, 'an animation is running on the map').toBe(0);
+
+      /* The line is simply drawn: no dash left over from the animation. */
+      const lines = await page.evaluate(() =>
+        [...document.querySelectorAll<SVGLineElement>('[data-testid="level-select-map"] line')].map(
+          (line) => {
+            const box = line.getBoundingClientRect();
+            return { dash: getComputedStyle(line).strokeDasharray, size: box.width + box.height };
+          },
+        ),
+      );
+      expect(lines).toHaveLength(4);
+      for (const line of lines) {
+        expect(line.dash).toBe('none');
+        expect(line.size).toBeGreaterThan(4);
+      }
+
+      const pins = await pinWidths(page);
+      expect(pins.here).toBeGreaterThan(pins.plain);
+      await expect(page.locator('[data-testid="level-card-quebec-city-here"]')).toBeVisible();
+    };
+
+    /* The setting. */
+    await open(page, { ...TRAVELLED, motion: 'reduced' });
+    await still();
+
+    /* The operating system's preference, with the setting left off. */
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await open(page, TRAVELLED);
+    await still();
+    await page.emulateMedia({ reducedMotion: null });
+  });
+
+  test('reads in high contrast and in forced colours, without colour', async ({ page }) => {
+    await open(page, { ...TRAVELLED, contrast: 'high', motion: 'reduced' });
+    await drawingLoaded(page);
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+
+    await page.emulateMedia({ forcedColors: 'active' });
+    const pins = await pinWidths(page);
+    expect(pins.here, 'the marker is not bigger once colour is gone').toBeGreaterThan(pins.plain);
+    const looks = await page.evaluate(() => {
+      const leg = document.querySelector('[data-testid="level-select-map"] line.tn-map__leg');
+      const badge = document.querySelector('[data-testid="level-card-quebec-city-here"]');
+      return {
+        stroke: leg === null ? 'missing' : getComputedStyle(leg).stroke,
+        edge: badge === null ? 'missing' : getComputedStyle(badge).borderTopStyle,
+      };
+    });
+    expect(looks.stroke).not.toMatch(/^(none|missing|transparent|rgba\(0, 0, 0, 0\))$/);
+    expect(looks.edge).toBe('double');
+
+    /* `color-contrast` off for this scan only, as in the forced-colours scan
+       above: Chromium's emulation leaves authored text colours in the computed
+       style. */
+    const forced = await scan(page).disableRules(['color-contrast']).analyze();
+    expect(forced.violations, violationsOf(forced)).toEqual([]);
+    await page.emulateMedia({ forcedColors: null });
+  });
+
+  test('fits at 200 % text in French: the word wraps rather than clips, and Ottawa keeps its width', async ({
+    page,
+  }) => {
+    await open(page, { ...TRAVELLED, locale: 'fr', textScale: 200, font: 'dyslexia' });
+    await drawingLoaded(page);
+    expect(await scrollsSideways(page)).toBe(false);
+
+    const badge = page.locator('[data-testid="level-card-quebec-city-here"]');
+    await expect(badge).toHaveText('Vous êtes ici');
+    await expect(badge).toBeVisible();
+    expect(
+      await badge.evaluate((element) => element.scrollWidth <= element.clientWidth + 1),
+      'the word is clipped',
+    ).toBe(true);
+    expect(await undersizedTargets(page), 'at 200 % text, with the marker').toEqual([]);
+
+    const cardWidth = (): Promise<number> =>
+      page
+        .locator('[data-testid="level-card-ottawa"]')
+        .evaluate((card) => card.getBoundingClientRect().width);
+    const withMap = await cardWidth();
+    await page.evaluate(() => document.querySelector('[data-testid="level-select-map"]')?.remove());
+    expect(Math.abs((await cardWidth()) - withMap), 'the map squeezed the list').toBeLessThan(0.5);
+  });
+
+  test('adds nothing to the keyboard walk or the switch ring', async ({ page }) => {
+    await open(page, TRAVELLED);
+    await expect(
+      page.locator('[data-testid="level-select-map"]').locator('button, a[href], input, select, textarea, [tabindex]'),
+    ).toHaveCount(0);
+
+    /* From the heading, past the counts and the map, to the first card, then the
+       second: the word is inside a card, not a stop of its own. */
+    await page.locator('#tn-level-select-heading').focus();
+    await page.keyboard.press('Tab');
+    expect(await focusedTestId(page)).toBe('level-card-halifax');
+    await page.keyboard.press('Tab');
+    expect(await focusedTestId(page)).toBe('level-card-peggys-cove');
+
+    await open(page, { ...TRAVELLED, singleSwitch: true });
+    expect(await highlighted(page)).toBe(await focusedTestId(page));
   });
 });
