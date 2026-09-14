@@ -307,8 +307,10 @@ export function createLevelSelect(
   heading.tabIndex = -1;
 
   /* How much of the game exists, as text rather than as an absence the player
-     has to notice (`TN-MAP-01`). */
-  const counts = element(doc, 'p', {
+     has to notice (`TN-MAP-01`). One line per count: the rows are labels, not
+     sentences, and joined with a space they ran into one — "Levels ready: 2 of
+     10 Stamps: 0 of 10" — which a screen reader reads without a breath. */
+  const counts = element(doc, 'div', {
     testId: 'level-select-counts',
     className: 'tn-screen__help',
   });
@@ -337,7 +339,7 @@ export function createLevelSelect(
     return entries.filter((entry) => entry.stamped === true).length;
   }
 
-  function countsLine(): string {
+  function countsLines(): string[] {
     const total = entries.length;
     const ready = readyCount();
     const parts = [
@@ -347,12 +349,15 @@ export function createLevelSelect(
     /* Only while it is true. A game with every level built says nothing here,
        rather than promising more of something that is finished. */
     if (ready < total) parts.push(text(locale, 'map.moreComing'));
-    return parts.join(' ');
+    return parts;
   }
 
   function render(): void {
     heading.textContent = text(locale, 'map.title');
-    counts.textContent = countsLine();
+    replaceChildren(
+      counts,
+      countsLines().map((line) => element(doc, 'div', { text: line })),
+    );
     /* The route is derived once per draw, from the whole journey: a stop's legs
        depend on the stop before it, so no card can work it out alone. */
     replaceChildren(

@@ -115,6 +115,12 @@ describe('the passport', () => {
     expect(counts).toContain('More are coming.');
   });
 
+  it('draws each count on its own line, so a screen reader pauses between them', () => {
+    const { at } = open();
+    const lines = (at('passport-counts')?.children ?? []).map((line) => line.textContent);
+    expect(lines).toEqual(['Stamps: 1 of 10', 'Levels ready: 4 of 10', 'More are coming.']);
+  });
+
   it('draws ten slots, in the order the journey takes', () => {
     const { at } = open();
     const slots = at('passport-slots')?.children ?? [];

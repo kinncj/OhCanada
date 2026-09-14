@@ -111,6 +111,15 @@ describe('the level select', () => {
     expect(at('level-select-counts')?.textContent).toContain('More are coming.');
   });
 
+  it('draws each count on its own line, so a screen reader pauses between them', () => {
+    /* The three rows are labels with no closing punctuation. Joined with a
+       space they read as one run-on sentence: "Levels ready: 2 of 10 Stamps:
+       0 of 10 More are coming." */
+    const { at } = open();
+    const lines = (at('level-select-counts')?.children ?? []).map((line) => line.textContent);
+    expect(lines).toEqual(['Levels ready: 2 of 10', 'Stamps: 0 of 10', 'More are coming.']);
+  });
+
   it('lists ten cards, in the order the journey takes', () => {
     const { at } = open();
     const handles = at('level-select-list')

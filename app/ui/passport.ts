@@ -194,7 +194,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
   /* How much of the journey exists and how much of it is earned — the map's own
      three rows, joined, because they are the same facts and a second set would
      be a second set to keep true. */
-  const counts = element(doc, 'p', {
+  const counts = element(doc, 'div', {
     testId: 'passport-counts',
     className: 'tn-screen__help',
   });
@@ -231,7 +231,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     return entries.filter((entry) => entry.built).length;
   }
 
-  function countsLine(): string {
+  function countsLines(): string[] {
     const total = entries.length;
     const ready = readyCount();
     const parts = [
@@ -241,7 +241,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     /* Only while it is true, exactly as the map draws it: a finished game does
        not promise more of something that is finished. */
     if (ready < total) parts.push(text(locale, 'map.moreComing'));
-    return parts.join(' ');
+    return parts;
   }
 
   function handleOf(entry: MapEntry): string {
@@ -351,7 +351,11 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
 
     title.textContent = text(locale, 'passport.title');
     intro.textContent = text(locale, 'passport.intro');
-    counts.textContent = countsLine();
+    /* One line per count, as the map draws it: labels, not sentences. */
+    replaceChildren(
+      counts,
+      countsLines().map((line) => element(doc, 'div', { text: line })),
+    );
 
     /*
      * The empty state, and it is a beginning rather than an error: the ten slots
