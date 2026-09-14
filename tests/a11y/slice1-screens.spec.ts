@@ -94,6 +94,11 @@ interface HarnessOptions {
   readonly done?: boolean;
   /** Which level the card is about: its stamp row, and its quest's closing line. */
   readonly place?: string;
+  /**
+   * Pin the rig's `presentation` slot: `offered` gives it the three options the
+   * art agent is adding, `reserved` keeps it empty. Absent is the shipped rig.
+   */
+  readonly presentation?: 'offered' | 'reserved';
 }
 
 /** Open one screen and wait for the marker that says it is really there. */
@@ -121,6 +126,7 @@ async function openScreen(
   if (options.repaired === true) params.set('repaired', '1');
   if (options.done === true) params.set('done', '1');
   if (options.place !== undefined) params.set('place', options.place);
+  if (options.presentation !== undefined) params.set('presentation', options.presentation);
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -490,7 +496,9 @@ test.describe('the character creator', () => {
   ] as const;
 
   test('offers exactly the rig’s five groups, in the rig’s order', async ({ page }) => {
-    const root = await openScreen(page, 'creator');
+    /* `presentation` pinned empty, so this count is about the five and does not
+       change its answer the day that slot's art lands. */
+    const root = await openScreen(page, 'creator', { presentation: 'reserved' });
     const groups = root.locator('[role="radiogroup"]');
 
     await expect(groups).toHaveCount(GROUPS.length);
@@ -559,7 +567,7 @@ test.describe('the character creator', () => {
   });
 
   test('every option is at least 44 CSS px wide and tall', async ({ page }) => {
-    const root = await openScreen(page, 'creator');
+    const root = await openScreen(page, 'creator', { presentation: 'reserved' });
     const options = root.locator('[role="radio"]');
     const count = await options.count();
 
@@ -645,7 +653,194 @@ test.describe('the character creator', () => {
     const chosen = root.locator('[data-testid="slot-hair-colour-red"]');
     await chosen.click();
     await expect(chosen).toHaveAttribute('aria-checked', 'true');
-    await expect(chosen.locator('[aria-hidden="true"]')).toHaveText('✓');
+    /* A filled circle on the chosen option and an empty one on the rest: the
+       shape differs, so the fill is never the only difference. */
+    await expect(chosen.locator('[data-tn-chosen]')).toHaveText('●');
+    await expect(
+      root.locator('[data-testid="slot-hair-colour-black"] [data-tn-chosen]'),
+    ).toHaveText('○');
+  });
+
+  /* ---- the skin tones, the presentation slot and the preview ---------- */
+
+  /** `TN-SKIN`'s table, written out, so a changed row fails here. */
+  const TONES = {
+    en: ['1, light', '2, light', '3, medium', '4, medium', '5, dark', '6, dark'],
+    fr: ['1, clair', '2, clair', '3, moyen', '4, moyen', '5, foncé', '6, foncé'],
+  } as const;
+  const DIRECTION = { en: 'From light to dark', fr: 'Du clair au foncé' } as const;
+
+  /** The art palette, read off disk by the test rather than through the game. */
+  const palette = JSON.parse(
+    readFileSync(new URL('../../assets/style/palette.json', import.meta.url), 'utf8'),
+  ) as {
+    readonly colours: Readonly<Record<string, string>>;
+    readonly ramps: Readonly<Record<string, { readonly base: string }>>;
+  };
+
+  /** The rendered background of every skin swatch, in DOM order, as `rgb(r, g, b)`. */
+  const swatchColours = (page: Page): Promise<string[]> =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('[data-testid="slot-skin"] .tn-creator__swatch')].map(
+        (element) => getComputedStyle(element).backgroundColor,
+      ),
+    );
+
+  const rgbOf = (hex: string): string => {
+    const int = Number.parseInt(hex.slice(1), 16);
+    return `rgb(${String((int >> 16) & 0xff)}, ${String((int >> 8) & 0xff)}, ${String(int & 0xff)})`;
+  };
+
+  /** WCAG relative luminance of `rgb(r, g, b)`. */
+  const luminanceOf = (rgb: string): number => {
+    const [r, g, b] = (rgb.match(/\d+/g) ?? []).map((value) => {
+      const unit = Number(value) / 255;
+      return unit <= 0.04045 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0);
+  };
+
+  const lightestToDarkest = (colours: readonly string[]): boolean =>
+    colours.length > 1 &&
+    colours.every(
+      (colour, index) =>
+        index === 0 || luminanceOf(colours[index - 1] ?? '') > luminanceOf(colour),
+    );
+
+  test('draws each skin tone as the art’s own swatch, lightest to darkest, named by its row', async ({
+    page,
+  }) => {
+    for (const locale of ['en', 'fr'] as const) {
+      const root = await openScreen(page, 'creator', { locale });
+      const group = root.locator('[data-testid="slot-skin"]');
+      await expect(group).toHaveAccessibleDescription(DIRECTION[locale]);
+
+      const options = group.locator('[role="radio"]');
+      await expect(options).toHaveCount(6);
+      for (const [index, name] of TONES[locale].entries()) {
+        const option = options.nth(index);
+        /* The name is the row, the swatch is silent, and the place is stated. */
+        await expect(option).toHaveAccessibleName(name);
+        await expect(option).toHaveAttribute('aria-posinset', String(index + 1));
+        await expect(option).toHaveAttribute('aria-setsize', '6');
+        const swatch = option.locator('.tn-creator__swatch');
+        await expect(swatch).toHaveAttribute('aria-hidden', 'true');
+        await expect(swatch).toBeVisible();
+      }
+
+      const colours = await swatchColours(page);
+      expect(colours).toEqual(
+        ['skin-1', 'skin-2', 'skin-3', 'skin-4', 'skin-5', 'skin-6'].map((ramp) =>
+          rgbOf(palette.colours[palette.ramps[ramp]?.base ?? ''] ?? '#000000'),
+        ),
+      );
+      expect(lightestToDarkest(colours), colours.join(' | ')).toBe(true);
+    }
+  });
+
+  test('two swatches swapped is caught — the order check can fail', async ({ page }) => {
+    await openScreen(page, 'creator');
+    await page.evaluate(() => {
+      const swatches = [
+        ...document.querySelectorAll<HTMLElement>('[data-testid="slot-skin"] .tn-creator__swatch'),
+      ];
+      const first = swatches[0]?.style.getPropertyValue('--tn-swatch') ?? '';
+      const last = swatches[5]?.style.getPropertyValue('--tn-swatch') ?? '';
+      swatches[0]?.style.setProperty('--tn-swatch', last);
+      swatches[5]?.style.setProperty('--tn-swatch', first);
+    });
+    expect(lightestToDarkest(await swatchColours(page))).toBe(false);
+  });
+
+  test('has no axe violations with the swatches and the presentation group on screen', async ({
+    page,
+  }) => {
+    const settings: readonly HarnessOptions[] = [
+      { locale: 'en' },
+      { locale: 'fr' },
+      { contrast: 'high' },
+      { motion: 'reduced' },
+      { locale: 'fr', textScale: 200, font: 'dyslexia' },
+    ];
+    for (const setting of settings) {
+      const root = await openScreen(page, 'creator', { ...setting, presentation: 'offered' });
+      /* Not vacuous: the two things this scan is for are on the page. */
+      await expect(root.locator('[data-testid="slot-presentation"] [role="radio"]')).toHaveCount(3);
+      await expect(root.locator('[data-testid="slot-skin"] .tn-creator__swatch')).toHaveCount(6);
+
+      const results = await scan(page).analyze();
+      expect(results.violations, `${JSON.stringify(setting)}: ${violationsOf(results)}`).toEqual([]);
+    }
+
+    await openScreen(page, 'creator', { presentation: 'offered', textScale: 200 });
+    expect(await undersizedTargets(page)).toEqual([]);
+    expect(await scrollsSideways(page)).toBe(false);
+  });
+
+  test('offers the presentation group only when the rig gives it options', async ({ page }) => {
+    let root = await openScreen(page, 'creator', { presentation: 'reserved' });
+    await expect(root.locator('[data-testid="slot-presentation"]')).toHaveCount(0);
+    await expect(root).not.toContainText('Style');
+
+    for (const [locale, names] of [
+      ['en', ['Feminine', 'Masculine', 'Neutral']],
+      ['fr', ['Féminin', 'Masculin', 'Neutre']],
+    ] as const) {
+      root = await openScreen(page, 'creator', { locale, presentation: 'offered' });
+      const group = root.locator('[data-testid="slot-presentation"]');
+      await expect(group).toHaveAttribute('role', 'radiogroup');
+      await expect(group).toHaveAccessibleName('Style');
+      const options = group.locator('[role="radio"]');
+      await expect(options).toHaveCount(3);
+      for (const [index, name] of names.entries()) {
+        await expect(options.nth(index)).toHaveAccessibleName(name);
+      }
+    }
+  });
+
+  test('choosing a presentation changes no French string anywhere else', async ({ page }) => {
+    /* `docs/content-review.md` §8.6, in the browser: every text node outside the
+       presentation group, with the preview's own "Style : …" pair removed. */
+    const root = await openScreen(page, 'creator', { locale: 'fr', presentation: 'offered' });
+    const everythingElse = (): Promise<string> =>
+      root.evaluate((element) => {
+        const skip = element.querySelector('[data-testid="slot-presentation"]');
+        const description = element.querySelector('#tn-creator-preview-text');
+        const texts: string[] = [];
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+          if (skip?.contains(node) === true) continue;
+          const value = node.textContent ?? '';
+          texts.push(
+            node.parentElement === description ? value.replace(/(\. )?Style : [^.]+/, '') : value,
+          );
+        }
+        return texts.join('|');
+      });
+
+    const before = await everythingElse();
+    expect(before).toContain('Créez votre personnage');
+    for (const id of ['feminine', 'masculine', 'neutral']) {
+      const option = root.locator(`[data-testid="slot-presentation-${id}"]`);
+      await option.click();
+      await expect(option).toHaveAttribute('aria-checked', 'true');
+      expect(await everythingElse(), `choosing ${id} changed a string`).toBe(before);
+    }
+
+    /* The negative control: a choice in another group does move the text. */
+    await root.locator('[data-testid="slot-hair-colour-red"]').click();
+    expect(await everythingElse()).not.toBe(before);
+  });
+
+  test('shows the preview as words under a heading, never as an empty box', async ({ page }) => {
+    const root = await openScreen(page, 'creator');
+    const preview = root.locator('[data-testid="character-preview"]');
+
+    await expect(preview).toHaveRole('group');
+    await expect(preview.locator('h2')).toHaveText('Your character');
+    const description = preview.locator('#tn-creator-preview-text');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText('Skin tone: ');
   });
 
   test('moves within a group with the arrow keys', async ({ page }) => {

@@ -18,6 +18,9 @@
  * at 200 % text.
  */
 
+import rigJson from '../../content/characters/rig.json';
+
+import type { RigDocument } from '../../app/application/ports';
 import type { LevelId } from '../../app/domain/ids';
 
 import { createCharacterCreator, type CreatorSlot } from '../../app/ui/character-creator';
@@ -84,7 +87,46 @@ store.subscribe(apply);
  * `app/ui/copy.ts`, so what axe sees here is what a player sees, including the
  * longest French name (« Boucles serrées ») the 200 % scans exist to measure.
  */
-const slotsFor = (which: UiLocale): readonly CreatorSlot[] => creatorSlots(which);
+/*
+ * `?presentation=offered|reserved` pins the rig's `presentation` slot to one
+ * state, and no parameter leaves the shipped rig exactly as it is.
+ *
+ * The art for that slot is landing separately. A scan of the creator with the
+ * three options on it cannot wait for the art, and a scan that counts groups
+ * cannot change its answer on the day the art arrives — so both ask for the
+ * state they are about. `offered` is the three ids the art agent is adding;
+ * `reserved` is the slot as it was before, empty and not selectable. Nothing
+ * else in the rig is touched, and the default is still what a player sees.
+ */
+const creatorRig = ((): RigDocument | undefined => {
+  const asked = params.get('presentation');
+  if (asked !== 'offered' && asked !== 'reserved') return undefined;
+  const rig = rigJson as unknown as RigDocument;
+  const offered = asked === 'offered';
+  return {
+    ...rig,
+    slots: {
+      ...(rig.slots as unknown as Record<string, unknown>),
+      presentation: offered
+        ? { options: ['feminine', 'masculine', 'neutral'], fallback: 'neutral', playerSelectable: true }
+        : { options: [], fallback: null, playerSelectable: false, status: 'reserved' },
+    },
+    artboards: rig.artboards.map((board) =>
+      board.playerSelectableSlots.length === 0
+        ? board
+        : {
+            ...board,
+            playerSelectableSlots: [
+              ...board.playerSelectableSlots.filter((name) => name !== 'presentation'),
+              ...(offered ? ['presentation'] : []),
+            ],
+          },
+    ),
+  } as unknown as RigDocument;
+})();
+
+const slotsFor = (which: UiLocale): readonly CreatorSlot[] =>
+  creatorRig === undefined ? creatorSlots(which) : creatorSlots(which, creatorRig);
 
 const SLOTS: readonly CreatorSlot[] = slotsFor(locale);
 
@@ -283,7 +325,11 @@ const mapEntries = (
  * with a constant source rather than written out, so an option the art agent
  * renames cannot leave this fixture naming something the rig has never had.
  */
-const FIXED_CHARACTER = repairSelection(undefined, () => 0.5).selection;
+const FIXED_CHARACTER = (
+  creatorRig === undefined
+    ? repairSelection(undefined, () => 0.5)
+    : repairSelection(undefined, () => 0.5, creatorRig)
+).selection;
 
 const level = LEVEL[locale];
 
