@@ -424,7 +424,9 @@ Feature: The skin group in French
   alone and carry the load on the band words, which is what makes both ends described rather than one end
   privileged. If a reviewer says the direction itself is the problem, the answer is to drop the ordinal from
   the *name* and keep it in the id, and this file is where that change lands.
-- **`OQ-SKIN-4` — `docs/content-review.md` still recommends the wording this file amends.** §8.1 and
+- ~~**`OQ-SKIN-4` — `docs/content-review.md` still recommends the wording this file amends.**~~ **Answered
+  2026-09-14:** `docs/content-review.md` §8.1 now states this file's wording, and `OQ-REVIEW-6` is recorded
+  as answered here with both amendments named. What the question said: §8.1 and
   `OQ-REVIEW-6` in §12 both say "Skin tone 1 (lightest)"…"Skin tone 6 (deepest)". That document is the PO's
   and is **not** in `docs/stories/`, so this file cannot edit it. *Recommendation:* its owner records
   `OQ-REVIEW-6` as answered here, with the two amendments named — a cue on all six, and "dark" rather than

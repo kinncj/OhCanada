@@ -433,11 +433,16 @@ acceptance criteria and `OQ-CREATOR-5` routed the naming question here.
   (`palette.json`, `assets/style/art-bible.md` §8). All six are offered. Six is a floor, not a target.
 - **Names are not colour words and not food words.** No "tan", "olive", "caramel", "chocolate", "honey",
   "peach", "nude", "flesh". No ethnicity or nationality in a tone name, ever.
-- Recommended naming (`OQ-REVIEW-6`, answering `OQ-CREATOR-5`): **ordinal with a lightness cue** —
-  `creator.skin.1` = "Skin tone 1 (lightest)" / « Teint 1 (le plus clair) », through
-  "Skin tone 6 (deepest)" / « Teint 6 (le plus foncé) ». It carries the ordering the art bible already
-  states, gives a screen-reader user something meaningful, translates without connotation, and names nobody.
-  The rejected alternative is unnamed swatches, which fails the "colour is never the only signal" rule.
+- Naming (`OQ-REVIEW-6`, answering `OQ-CREATOR-5`): **ordinal with a lightness cue**, as ruled in
+  `docs/stories/TN-SKIN-naming-the-six-skin-tones.md`. `creator.skin.skin-1` … `creator.skin.skin-6` read
+  "1, light", "2, light", "3, medium", "4, medium", "5, dark", "6, dark" / « 1, clair », « 2, clair »,
+  « 3, moyen », « 4, moyen », « 5, foncé », « 6, foncé », under the slot label "Skin tone" / « Teint de peau ».
+  It carries the ordering the art bible already states, gives a screen-reader user something meaningful,
+  translates without connotation, and names nobody. `TN-SKIN` amended this section's first recommendation
+  ("Skin tone 1 (lightest)" … "Skin tone 6 (deepest)") in two places: a band word on all six options rather
+  than only the two ends, and "dark" rather than "deep", because a euphemism at one end with the plain word
+  at the other says that one end needs softening. The rejected alternative is unnamed swatches, which fails
+  the "colour is never the only signal" rule.
 - **No tone is pre-selected.** The creator randomises on open (§8.3). `CharacterSlot.default` is used for
   NPC documents and save recovery, and is never rendered as a pre-chosen option — see `OQ-REVIEW-7`, which
   is a real conflict between the schema and the art bible, not a nicety.
@@ -691,8 +696,10 @@ answer nobody has given.
   (recording the judgement rather than defaulting it, like `FactClaim.factual`) and `nation` conditionally
   required on it. Until then, §1's shipping rule holds anyway, so nothing ships unchecked — but the rule is
   held by prose, and this project does not trust prose.
-- **`OQ-REVIEW-6` — skin tone option names (answers `OQ-CREATOR-5`).** *Recommendation:* "Skin tone 1
-  (lightest)"…"Skin tone 6 (deepest)" / « Teint 1 (le plus clair) »…« Teint 6 (le plus foncé) », per §8.1.
+- ~~**`OQ-REVIEW-6` — skin tone option names (answers `OQ-CREATOR-5`).**~~ **Answered by
+  `docs/stories/TN-SKIN-naming-the-six-skin-tones.md`**, which kept this recommendation's direction — ordinal
+  with a lightness cue — and amended its wording twice: a band word on all six ("1, light" … "6, dark" /
+  « 1, clair » … « 6, foncé »), and "dark" rather than "deep". §8.1 states the wording that ships.
 - **`OQ-REVIEW-7` — `CharacterSlot.default` forces a default skin tone, and the art bible says no tone is
   the default.** A real conflict between `content/schemas/character.schema.json` and
   `assets/style/art-bible.md` §8. *Recommendation:* the creator randomises all slots on open and never

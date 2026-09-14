@@ -567,9 +567,10 @@ change a proportion, a silhouette, a stroke width or an animation.
 Every option needs a **text name**, not just a swatch: `content/schemas/character.schema.json` requires it,
 and CLAUDE.md requires that colour is never the only signal. Naming skin tones is not an art decision.
 `docs/content-review.md` §8.1 governs it, forbids colour words, food words and any ethnicity or nationality
-in a tone name, and its recommended ordinal naming is still an open recommendation (`OQ-REVIEW-6`), not a
-settled answer. **The eleven ramps ship unnamed until that question is settled**, and the names arrive as
-localiser keys, not as art. No agent grants cultural sign-off on them or on anything else
+in a tone name. Its ordinal naming (`OQ-REVIEW-6`) is settled by
+`docs/stories/TN-SKIN-naming-the-six-skin-tones.md` ("1, light" … "6, dark"), and the five hair colours are
+named by `docs/stories/TN-LOOK-what-the-player-can-choose.md`. **The eleven ramps carry no names in the
+art**: the names arrive as localiser keys, not as art. No agent grants cultural sign-off on them or on anything else
 (`docs/content-review.md`, the standing rule at the top of the document).
 
 **"No tone is the default" stands, and the schema agrees.** `OQ-REVIEW-7` recorded this section as a direct

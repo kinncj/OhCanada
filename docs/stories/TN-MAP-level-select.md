@@ -138,6 +138,17 @@ rule does and does not say:
 | `map.notBuilt.help` | We are still making this level. | Ce niveau est encore en préparation. |
 | `map.number` | Level {{n}} | Niveau {{n}} |
 
+**Proposed row, not yet ratified.** Written by `app/ui` and declared in `COPY_GAPS` (`app/ui/copy.ts`) until
+this file's owner moves it into the table above or replaces it:
+
+| Key | EN | FR |
+|---|---|---|
+| `map.here` | You are here | Vous êtes ici |
+
+It labels the stop the player is at. The map and the route beside the cards mark that stop visually and are
+both `aria-hidden`, so the card has to say it in words. It names no place, because the card already does, and
+no direction (`OQ-MAP-3`).
+
 The level names and subject lines are owned by `TN-LEVELS-2-to-10-spine.md` (`level.<id>.title` and
 `level.<id>.subtitle`, for **every level but Ottawa**) and by `TN-LEVEL-ottawa.md` (`level.ottawa.title`,
 `level.ottawa.subtitle`). This screen names the keys and does not carry the words: a place name written in

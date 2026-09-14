@@ -16,6 +16,13 @@ this file does not restate it. Where a scenario below still says "the Ottawa lev
 `start-playing`, it means the route in `TN-FLOW-01` completes to the Ottawa level; nothing else about those
 scenarios changed.
 
+**Amended 2026-09-14 — six slots.** The rig opened `presentation` (`feminine`, `masculine`, `neutral`) and
+lists it last on the player artboard, so the creator offers six groups, twenty-two options and 1 440
+reachable appearances (6 × 4 × 5 × 2 × 2 × 3). Where this file says five groups, nineteen options or 480,
+read six, twenty-two and 1 440. The slot's label and option names ("Style": Feminine, Masculine, Neutral /
+« Style » : Féminin, Masculin, Neutre) were written by `app/ui` and are declared in `COPY_GAPS` until
+`TN-LOOK` ratifies them.
+
 **Amended 2026-09-09 — this file no longer says what the slots are.** It said three: `skin`, `hair`, `coat`.
 The rig says five — `skin`, `hairShape`, `hairColour`, `headCovering`, `feature` — with nineteen options
 between them and 480 reachable appearances, and `coat` is `costume`, which is `playerSelectable: false` and
@@ -502,7 +509,8 @@ Feature: Reaching Settings from the creator
 - ~~**`OQ-CREATOR-1` — how many slots and how many options each?**~~ **Answered 2026-09-09, by the rig
   rather than by this file.** `content/characters/rig.json` declares five player-selectable slots — `skin`
   (6), `hairShape` (4), `hairColour` (5), `headCovering` (2), `feature` (2) — nineteen options and 480
-  reachable appearances, all of it drawn and shipped. The recommendation here was three slots of four to six
+  reachable appearances, all of it drawn and shipped. *Amended 2026-09-14:* six, with `presentation` (3)
+  opened by the rig — twenty-two options and 1 440 reachable appearances. The recommendation here was three slots of four to six
   options and it was wrong in both directions: fewer slots than the art has, and one slot (`coat`) the art
   never had. `TN-LOOK` writes the names. **The rule that survives is the one this question got right:** if
   the art lands with different slot names, this directory is updated and the schema is not.

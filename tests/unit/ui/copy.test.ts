@@ -130,11 +130,11 @@ describe('the copy table', () => {
      *
      * The ninth is `map.here`, "You are here", added deliberately: the level
      * select marks where the player is on a map and a rail that are both
-     * `aria-hidden`, so the card has to say it in words, and `TN-MAP` has no
-     * row for it.
+     * `aria-hidden`, so the card has to say it in words, and `TN-MAP` carries it
+     * only as a proposed row. The last five are the character creator's.
      *
      * The list is pinned rather than merely non-empty, which is what keeps the
-     * gate: a ninth invented row, anywhere, fails here instead of joining a list
+     * gate: a fifteenth invented row, anywhere, fails here instead of joining a list
      * that has already been allowed to grow once. Removing an entry is what a
      * story file writing the row down looks like, and that is a green change.
      */

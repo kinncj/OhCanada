@@ -1,4 +1,4 @@
-# TN-LOOK — The five slots, and the names of everything in four of them
+# TN-LOOK — The six slots, and the names of everything in four of them
 
 **Intent.** Every appearance the rig can draw has a name a player can read and a screen reader can say, in
 both languages, and no option is reachable only by looking at a picture.
@@ -7,6 +7,13 @@ Read `README.md` in this directory first. `TN-CREATOR-character-creator.md` owns
 are drawn on; `TN-SKIN-naming-the-six-skin-tones.md` owns the sixth table, the skin ramps, because that one
 slot's naming is a ruling under `docs/content-review.md` §8.1 and has to be re-openable without touching the
 other four; `TN-FIRSTRUN-choosing-a-character-before-playing.md` owns when the screen is offered.
+
+**Amended 2026-09-14 — six slots.** The rig opened `presentation` (`feminine`, `masculine`, `neutral`,
+fallback `neutral`) and lists it last on the player artboard, so the creator offers six groups, twenty-two
+options and 6 × 4 × 5 × 2 × 2 × 3 = 1 440 appearances. `TN-LOOK-01` and `TN-LOOK-02` below state the new
+counts; where later scenarios still say "five groups", read six. The slot's label and option names are
+**proposed rows** (see the slot table), written by `app/ui` and declared in `COPY_GAPS` until ratified. A
+save written before the slot opened is not a repair: see the second block of `TN-LOOK-05`.
 
 ## Why this is a file and not four rows in `TN-CREATOR`
 
@@ -82,6 +89,17 @@ the preview's description.
 | `creator.slot.hairColour` | Hair colour | Couleur des cheveux |
 | `creator.slot.headCovering` | Head covering | Couvre-chef |
 | `creator.slot.feature` | Glasses | Lunettes |
+
+**Proposed rows, not yet ratified: the sixth slot.** Written by `app/ui` and declared in `COPY_GAPS`
+(`app/ui/copy.ts`) until this file's owner moves them into the table above or replaces them. The French
+options agree with « style », which is masculine, never with the player (`docs/content-review.md` §8.6).
+
+| Key | EN | FR |
+|---|---|---|
+| `creator.slot.presentation` | Style | Style |
+| `creator.presentation.feminine` | Feminine | Féminin |
+| `creator.presentation.masculine` | Masculine | Masculin |
+| `creator.presentation.neutral` | Neutral | Neutre |
 
 `creator.slot.hair` and `creator.slot.coat` are **deleted**. The first names a slot the rig split in two on
 purpose (`assets/style/rig-contract.md`: "Twenty combined options in a single `hair` slot … would have made
@@ -208,7 +226,7 @@ And the Canadian spelling: **"Grey"**, not "gray".
 
 ---
 
-## TN-LOOK-01 — Five groups, nineteen options, and nothing that is not in the rig
+## TN-LOOK-01 — Six groups, twenty-two options, and nothing that is not in the rig
 
 ```gherkin
 Feature: The creator offers exactly what the rig declares
@@ -220,8 +238,8 @@ Feature: The creator offers exactly what the rig declares
     Given the element "character-creator" is visible
 
   Scenario: The groups are the rig's player-selectable slots, in the rig's order
-    Then the groups "slot-skin", "slot-hair-shape", "slot-hair-colour", "slot-head-covering"
-      and "slot-feature" are visible, in that order
+    Then the groups "slot-skin", "slot-hair-shape", "slot-hair-colour", "slot-head-covering",
+      "slot-feature" and "slot-presentation" are visible, in that order
     And no other group is shown
     And no group is shown for the "costume" slot
     And each group has an accessible name that is one of the slot rows in this file
@@ -232,6 +250,7 @@ Feature: The creator offers exactly what the rig declares
     And "slot-hair-colour" offers 5 options
     And "slot-head-covering" offers 2 options
     And "slot-feature" offers 2 options
+    And "slot-presentation" offers 3 options
     And every option reports "data-option" equal to an option id in "content/characters/rig.json"
     And every option id in that file's player-selectable slots is offered by exactly one group
 
@@ -280,16 +299,18 @@ Feature: Slot independence
     Then the option count of every other group is unchanged each time
     When I choose each option of "slot-feature" in turn
     Then the option count of every other group is unchanged each time
+    When I choose each option of "slot-presentation" in turn
+    Then the option count of every other group is unchanged each time
 
   Scenario: Choosing changes exactly one group's answer
-    Given I have noted the chosen option of all five groups
+    Given I have noted the chosen option of all six groups
     When I choose a different option in one group
     Then that group's chosen option is the one I chose
-    And the other four groups' chosen options are unchanged
+    And the other five groups' chosen options are unchanged
 
   Scenario: The arithmetic is the check
-    Then the product of the five groups' option counts is 480
-    And the number of appearances the creator can reach is 480
+    Then the product of the six groups' option counts is 1440
+    And the number of appearances the creator can reach is 1440
     And no combination of options is refused
 ```
 
@@ -408,6 +429,33 @@ Feature: A saved appearance that this build cannot draw
   Scenario: The message is French in French
     Given the language is French
     Then it reads "Un de vos choix ne se trouve pas dans cette version. Nous en avons choisi un autre. Vous pouvez le modifier ici."
+```
+
+**Added 2026-09-14.** A save older than a slot is a different case from a save naming a gone option, and
+treating the two alike told every returning player something untrue the day `presentation` opened.
+
+```gherkin
+Feature: A saved appearance older than a slot
+  As a player coming back after an update that added a slot
+  I want my character exactly as I left it
+  So that I am not told a choice was lost when none was
+
+  Background:
+    Given my saved character names an offered option for every slot it names
+    And it does not name a slot this build offers
+
+  Scenario: The new slot takes the rig's fallback, and nothing is said
+    When I open the game and reach a level
+    Then every slot my save names shows the option I chose
+    And the slot my save does not name holds the rig's "fallback" for that slot
+    And "creator-option-gone" is not shown when I open the character creator
+    And nothing about a repair is announced in "#tn-live-region"
+
+  Scenario: A gone option is still a repair, even in an older save
+    Given my saved character also names an option id that no player-selectable slot declares
+    When I open the character creator
+    Then the element "creator-option-gone" is visible
+    And only the group whose option is gone was redrawn
 ```
 
 ## TN-LOOK-06 — Every group and every option from the keyboard

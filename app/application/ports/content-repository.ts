@@ -819,7 +819,7 @@ export interface LocaleBundle {
  *
  * Why it is read at runtime, in one line: the shipped atlas is a CUT-OUT PUPPET
  * — 20 parts placed by `pivot`, `z` and `mirrorX` and animated by keyframes —
- * and a puppet is the only model that can compose 480 player-selectable
+ * and a puppet is the only model that can compose 1 440 player-selectable
  * appearances from 21 drawings. A pre-rendered flipbook would have to bake each
  * combination, which is what `docs/content-review.md` §8.2 forbids.
  *

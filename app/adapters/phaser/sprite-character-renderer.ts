@@ -14,10 +14,11 @@
  *
  * This file was a flipbook first — frames named per clip, advanced at a fixed
  * rate — and it could not draw the art that exists. The rig offers
- * 6 skin x 4 hairShape x 5 hairColour x 2 headCovering x 2 feature = **480**
- * player-selectable appearances, 960 across both costumes. A flipbook *bakes* a
- * combination; a puppet *composes* one, so 21 drawings cover all 480 while a
- * flipbook would need a frame per combination per keyframe per state.
+ * 6 skin x 4 hairShape x 5 hairColour x 2 headCovering x 2 feature x
+ * 3 presentation = **1 440** player-selectable appearances. A flipbook *bakes* a
+ * combination; a puppet *composes* one, so a few dozen part drawings cover all
+ * of them while a flipbook would need a frame per combination per keyframe per
+ * state.
  *
  * More than economy: `docs/content-review.md` §8.2 makes slot independence the
  * mechanical anti-caricature check, and ADR-0017 split `hairShape` from

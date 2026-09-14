@@ -103,8 +103,9 @@ const EN = {
      where it goes. */
   'creator.done': 'Done',
 
-  /* docs/stories/TN-LOOK-what-the-player-can-choose.md — the five slots and
-     thirteen of the nineteen options. `TN-SKIN` owns the other six.
+  /* docs/stories/TN-LOOK-what-the-player-can-choose.md — five of the six slots
+     and thirteen of the twenty-two options. `TN-SKIN` owns the six skin tones;
+     the sixth slot's label and three options are `COPY_GAPS` rows.
 
      **The key is derived from the rig, by one rule, in two shapes.** A slot row
      is `creator.slot.<slotName>` and an option row is
@@ -1321,7 +1322,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
 /**
  * Strings this module had to write because no story table carries them.
  *
- * **It was empty, and the "About this place" panel is why it is not.** Nine
+ * **It was empty, and the "About this place" panel is why it is not.** Fourteen
  * rows are listed below, and listing them is the point: `docs/stories/README.md`
  * says the UI invents no copy, so a string this directory had to write is
  * declared here and reported upward to be ratified or replaced in a story file.
@@ -1330,7 +1331,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
  * pins the list to exactly its entries, so one more invented row anywhere else
  * fails the build rather than joining them quietly.
  *
- * The ninth is `map.here`, "You are here". The level select marks the stop the
+ * Eight are the panel's. The five after `map.here` are the character creator's,
+ * explained beside the list. The ninth is `map.here`, "You are here", and
+ * `TN-MAP` now carries it as a proposed row. The level select marks the stop the
  * player is at on the map and on the route beside the cards, and both are hidden
  * from assistive technology, so the card has to carry the fact as a word.
  * `TN-MAP` has no row for it, because until then the marked stop was
