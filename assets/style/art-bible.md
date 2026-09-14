@@ -235,6 +235,18 @@ y=1920  └───────────────────────
 - **Side-panel seam.** The extreme left and right columns of the sky layer and of the ground layer must be
   the flat palette colour named in the level's theme, or the desktop side panel will show a visible join.
   `palette.json` `levelTheme` proposes those ids.
+- **Top-band seam.** The sky layer's **first row** must be exactly the level document's `theme.sky`. A phone
+  taller than 9:16 letterboxes above and below the canvas (76 CSS px each at 390×844), and `index.html` paints
+  that band flat `theme.sky` down to the canvas's first row. Ottawa's sky opened on `sky-shade` under a document
+  that said `sky-base`, and the top of every Ottawa screen was a strip of a different blue until the document
+  took the `levelTheme` id this bible already proposed (2026-09-14).
+- **Tile tops are the pipeline's, not yours.** A layer is a Phaser 4 TileSprite, whose shader wraps the texture
+  coordinate inside the frame, and on an antialiased canvas a pixel the tile's top edge only part-covers wraps to
+  the tile's **last** rows. Every tile top in the sky drew a hairline in the colour of its foot (Halifax 620 and
+  700, Peggy's Cove 700, Québec City 700, 790 and 930). `scripts/assets.mjs` now gives every layer placed below
+  world 0 four fully transparent rows under its art and reads them back from the WebP, so the wrap lands on
+  nothing. Do not author those rows, and do not count them: `offset.y` still names your first row, and the
+  viewBox is still the band you drew.
 - **Layer budget.** Six parallax layers at the `high` preset, four at `medium`, two at `low`
   (`content/game.config.json`). **Which ones are dropped changed in slice 2 and it changes how you
   compose.** `app/adapters/phaser/level-effects.ts` `selectLayers` keeps **the layers that cover the most

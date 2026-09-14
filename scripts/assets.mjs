@@ -247,7 +247,9 @@ function walk(dir, extensions) {
 function readLevels() {
   const ids = [];
   const layerKeys = new Set();
-  if (!existsSync(LEVELS_DIR)) return { ids, layerKeys };
+  // key -> the lowest world row any level document puts that tile's top edge at.
+  const layerTops = new Map();
+  if (!existsSync(LEVELS_DIR)) return { ids, layerKeys, layerTops };
   for (const name of readdirSync(LEVELS_DIR).sort()) {
     if (!name.endsWith('.json')) continue;
     try {
@@ -258,16 +260,20 @@ function readLevels() {
       // guessed from a filename or a pixel count, so "is this a background?" is
       // answered by the file that decides how the thing is drawn.
       for (const layer of Array.isArray(doc?.layers) ? doc.layers : []) {
-        if (typeof layer?.key === 'string' && layer.key.length > 0) layerKeys.add(layer.key);
+        if (typeof layer?.key === 'string' && layer.key.length > 0) {
+          layerKeys.add(layer.key);
+          const top = Number.isFinite(layer?.offset?.y) ? layer.offset.y : 0;
+          layerTops.set(layer.key, Math.max(layerTops.get(layer.key) ?? 0, top));
+        }
       }
     } catch (error) {
       fatal(`content/levels/${name} is not valid JSON (${error.message}).`);
     }
   }
-  return { ids: [...new Set(ids)].sort(), layerKeys };
+  return { ids: [...new Set(ids)].sort(), layerKeys, layerTops };
 }
 
-const { ids: LEVELS, layerKeys: LAYER_KEYS } = readLevels();
+const { ids: LEVELS, layerKeys: LAYER_KEYS, layerTops: LAYER_TOPS } = readLevels();
 
 // A level named after a reserved directory would make `assets/src/svg/<id>/`
 // mean two things, and `assign` would silently pick one of them.
@@ -313,6 +319,42 @@ const scalesFor = (key, pin) => (pin !== null ? [pin] : isFullScreenLayer(key) ?
  * cheaper than a rule that cannot be stated per file.
  */
 const mustStandAlone = (key, pin) => pin !== null || isFullScreenLayer(key);
+
+/**
+ * Transparent rows appended under a parallax tile whose top edge is inside the
+ * frame, so that edge stops drawing a hairline in the colour of the tile's foot.
+ *
+ * A layer is a Phaser 4 TileSprite, and its shader wraps the texture coordinate
+ * inside the frame: `mod(texCoord, 1.0)`. The canvas is antialiased, so a pixel
+ * the tile's top edge only partly covers is still shaded at its centre, which is
+ * just above the tile, where the coordinate is slightly negative and wraps to
+ * the tile's LAST rows. That pixel is painted in the colour of the tile's bottom
+ * row. Every tile top in the sky drew a one-pixel line across the screen: world
+ * 620 and 700 on Halifax (citadel and uptown), 700 on Peggy's Cove (the open
+ * sea's dark foot over the sky), 700, 790 and 930 on Quebec City, measured on
+ * the live site at 390x844 DPR 3.
+ *
+ * An atlas frame is ringed by its own edge pixels, so a sample that leaves it
+ * lands on a copy of the edge. A standalone image has nothing outside it: the
+ * sample wraps. So the image is given a foot of fully transparent rows, and the
+ * wrapped sample lands on transparency, which draws nothing:
+ *
+ *   - at the BOTTOM, so `offset.y` still names the tile's first row of art and
+ *     nothing in a level document moves;
+ *   - TRANSPARENT, so the tile covers exactly what it covered before, and the
+ *     tile's bottom edge, whose partial pixels wrap to its (transparent) top
+ *     rows, is unchanged;
+ *   - only where a level puts the tile's top below world 0. A sky at offset 0
+ *     has its top edge on the canvas edge, where no pixel is part-covered, and
+ *     is shipped byte-identical.
+ *
+ * The sample is at most half a device pixel outside the tile. At the lowest
+ * preset's renderScale of 0.75 that is 0.67 texel, plus half a texel of bilinear
+ * footprint: two rows. Four is the margin, and costs 4 x width x 4 B.
+ */
+const LAYER_WRAP_PAD_ROWS = 4;
+const wrapPadRowsFor = (key, scale) =>
+  isFullScreenLayer(key) && (LAYER_TOPS.get(key) ?? 0) > 0 ? LAYER_WRAP_PAD_ROWS * scale : 0;
 
 /**
  * Work out the owning level and the texture key for a source file.
@@ -535,6 +577,7 @@ let atlasPages = 0;
 let standalone = 0;
 /** One line per atlas page, printed after the summary: size, frames, and the layout that won. */
 const atlasReport = [];
+let paddedLayers = 0;
 
 /**
  * owner -> scale -> [{ key, png, width, height }]
@@ -593,7 +636,39 @@ for (const { file, owner, key, pin } of sources) {
       );
       continue;
     }
-    const webp = await sharp(r.png).webp({ lossless: true, effort: 6 }).toBuffer();
+    const padRows = wrapPadRowsFor(key, r.scale);
+    const source =
+      padRows === 0
+        ? r.png
+        : await sharp(r.png)
+            .ensureAlpha()
+            .extend({ bottom: padRows, background: { r: 0, g: 0, b: 0, alpha: 0 } })
+            .png({ compressionLevel: 6 })
+            .toBuffer();
+    const webp = await sharp(source).webp({ lossless: true, effort: 6 }).toBuffer();
+    const height = r.height + padRows;
+    if (padRows > 0) {
+      // Read the foot back from the file that ships, not from the buffer it was
+      // made from: an encoder that dropped the alpha channel or cropped the image
+      // would bring the hairline back with every number above still true.
+      const { data, info } = await sharp(webp).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+      let opaque = 0;
+      for (let y = info.height - padRows; y < info.height; y += 1) {
+        for (let x = 0; x < info.width; x += 1) {
+          if (data[(y * info.width + x) * info.channels + info.channels - 1] !== 0) opaque += 1;
+        }
+      }
+      if (info.width !== r.width || info.height !== height || opaque > 0) {
+        fatal(
+          `img/${key}@${r.scale}x should end in ${padRows} fully transparent row(s) under its ` +
+            `${r.width}x${r.height} px of art, and the shipped WebP is ${info.width}x${info.height} with ` +
+            `${opaque} non-transparent pixel(s) in them. The tile's top edge would draw its foot's colour ` +
+            'as a line across the frame.',
+        );
+        continue;
+      }
+      paddedLayers += 1;
+    }
     standalone += 1;
     emit(`img/${key}@${r.scale}x.${hash8(webp)}.webp`, webp, {
       kind: 'image',
@@ -609,8 +684,8 @@ for (const { file, owner, key, pin } of sources) {
       scalePin: pin,
       scale: r.scale,
       width: r.width,
-      height: r.height,
-      decodedBytes: r.width * r.height * BYTES_PER_PIXEL,
+      height,
+      decodedBytes: r.width * height * BYTES_PER_PIXEL,
       levels: chargedTo(owner),
       keys: [key],
     });
@@ -804,6 +879,11 @@ if (atlasReport.length > 0) {
       `${ATLAS_EXTRUDE} px ring re-read from the encoded WebP is its own edge pixel, and the padding is empty.`,
   );
 }
+// Its own line, so the summary above keeps the wording the pipeline tests match.
+console.log(
+  `layer feet: ${paddedLayers} parallax layer file(s) below world 0 end in ${LAYER_WRAP_PAD_ROWS} transparent ` +
+    'row(s), read back from the WebP, so a tile top does not wrap to its foot.',
+);
 
 // ------------------------------------------------------------------- gate ---
 
