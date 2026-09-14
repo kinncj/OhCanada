@@ -96,7 +96,7 @@
           "minimum": 1
         },
         "questionPool": {
-          "description": "Optional narrowing of the draw to these ids, still ordered and filtered by the scheduler. Absent means the whole subject bank is eligible, which is the normal case; present is for a step that must stay on one topic.",
+          "description": "Narrows the draw to these ids, still ordered and filtered by the scheduler: the questions in the level's subject that the step's own prompt is about. Optional in the schema, where absent means the whole subject bank is eligible. But every `answer` step that ships names one: without it \"Answer 2 questions about voting\" asked about Magna Carta (ADR-0036). The ids must exist, be askable (verified for their `sourceHash`, and bilingual), sit in the level's `subject`, and number at least `count`. Nothing here or in `validate-content` can check that across documents, so tests/unit/contracts/an-answer-steps-pool-can-fill-its-count.test.ts does.",
           "type": "array",
           "items": {
             "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/questionId"
