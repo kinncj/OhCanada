@@ -11,6 +11,7 @@ import {
 
 import { reachLevelSelect } from './front-door';
 import { START_LEVEL } from './start-level';
+import { walkWithProbe } from './walk';
 
 /**
  * Touch, through real touch events, into real Phaser.
@@ -607,17 +608,18 @@ test.describe('a tap means the thing under it, and a jump when there is nothing'
      * a scenario that only waited to arrive would tap at a position it had
      * already left.
      */
-    await page.keyboard.down('ArrowRight');
-    await page.waitForFunction(
-      (want: number) => {
-        const scene = (window as unknown as { __tnScene: { snapshot: () => { playerX?: number } } })
-          .__tnScene;
-        return (scene.snapshot().playerX ?? 0) >= want;
-      },
-      NPC.position.x - reach * 1.4,
-      { timeout: 45_000 },
-    );
-    await page.keyboard.up('ArrowRight');
+    /* Ottawa places the canal locks before the officer, and a held skate comes to
+       rest at them (ADR-0032): the walk presses on from there, and lets go the
+       moment it arrives, still at speed, exactly as before. */
+    expect(
+      await walkWithProbe(
+        page,
+        'ArrowRight',
+        { kind: 'past', x: NPC.position.x - reach * 1.4 },
+        { budgetMs: 45_000 },
+      ),
+      'the skater never got near the officer',
+    ).toBe(true);
     await page.keyboard.down('ArrowLeft');
     await waitForSpeedBelow(page, 25);
     await page.keyboard.up('ArrowLeft');

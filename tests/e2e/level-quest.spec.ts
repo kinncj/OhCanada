@@ -6,6 +6,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { hasCopyRow, text } from '@ui/copy';
 
 import { NEXT_LEVEL_PLAY_LABEL, START_LEVEL } from './start-level';
+import { letGo, walkInLegs } from './walk';
 
 /**
  * The level's own quest, walked end to end on the shipped build: **offer,
@@ -291,42 +292,49 @@ async function openLevel(page: Page, query = '', level: string = START_LEVEL): P
  *
  * Returns the prompt it stopped at, `'card'` when the level ended first — a real
  * outcome, not a timeout — and `null` when the walk ran out of time.
+ *
+ * **Held in legs** (`./walk.ts`). A held drive comes to rest at every landmark
+ * and character it approaches and waits there for the player to let go and press
+ * again (ADR-0032), so a walk told to pass the guide and go on to a landmark has
+ * to do what a player does at the guide. Each leg watches for up to a few
+ * seconds and ends by letting go; the next leg's press is the fresh one.
  */
 async function walkRightWatching(
   page: Page,
   want: { readonly ignore?: readonly string[]; readonly wanted?: string },
-  budgetMs = 40_000,
+  budgetMs = 60_000,
 ): Promise<string | null> {
-  await page.keyboard.down('ArrowRight');
-  try {
-    return await page.evaluate(
-      async ({ ignore, wanted, budget }) => {
-        const visible = (testId: string): Element | null => {
-          const found = document.querySelector(`[data-testid="${testId}"]`);
-          return found !== null && (found as HTMLElement).checkVisibility() ? found : null;
-        };
-        const deadline = performance.now() + budget;
-        while (performance.now() < deadline) {
-          if (visible('quest-complete-card') !== null) return 'card';
-          const offered = visible('interact-prompt')?.textContent ?? null;
-          if (offered !== null) {
-            if (wanted === undefined ? !ignore.includes(offered) : offered === wanted) {
-              return offered;
+  return walkInLegs(
+    page,
+    'ArrowRight',
+    (legMs) =>
+      page.evaluate(
+        async ({ ignore, wanted, budget }) => {
+          const visible = (testId: string): Element | null => {
+            const found = document.querySelector(`[data-testid="${testId}"]`);
+            return found !== null && (found as HTMLElement).checkVisibility() ? found : null;
+          };
+          const deadline = performance.now() + budget;
+          while (performance.now() < deadline) {
+            if (visible('quest-complete-card') !== null) return 'card';
+            const offered = visible('interact-prompt')?.textContent ?? null;
+            if (offered !== null) {
+              if (wanted === undefined ? !ignore.includes(offered) : offered === wanted) {
+                return offered;
+              }
             }
-          }
-          await new Promise((resolve) => {
-            requestAnimationFrame(() => {
-              resolve(null);
+            await new Promise((resolve) => {
+              requestAnimationFrame(() => {
+                resolve(null);
+              });
             });
-          });
-        }
-        return null;
-      },
-      { ignore: [...(want.ignore ?? [])], wanted: want.wanted, budget: budgetMs },
-    );
-  } finally {
-    await page.keyboard.up('ArrowRight');
-  }
+          }
+          return null;
+        },
+        { ignore: [...(want.ignore ?? [])], wanted: want.wanted, budget: legMs },
+      ),
+    { budgetMs },
+  );
 }
 
 /**
@@ -516,11 +524,17 @@ function stepShowing(line: string | null): QuestFile['steps'][number] | null {
   return QUEST.steps.find((step) => stem(line).endsWith(stem(step.prompt.en))) ?? null;
 }
 
-/** Keep walking until this target is out of reach, so the next one can be. */
+/**
+ * Keep walking until this target is out of reach, so the next one can be.
+ *
+ * Engaging a target lets the player go from it for the rest of the visit
+ * (ADR-0032), so this walks on rather than being stopped where it stands; the
+ * release is waited for so the walk after it begins with a press the level sees.
+ */
 async function walkOnPast(page: Page): Promise<void> {
   await page.keyboard.down('ArrowRight');
   await page.waitForTimeout(700);
-  await page.keyboard.up('ArrowRight');
+  await letGo(page, 'ArrowRight');
 }
 
 test.describe('the level the game opens on gives its task, and finishes it', () => {
@@ -871,10 +885,13 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     const card = page.getByTestId('quest-complete-card');
     const tracker = page.getByTestId('hud-quest-tracker');
 
+    /* Short bursts, each ending in a release the level sees: a held drive comes to
+       rest at every landmark and character on the way (ADR-0032), and the next
+       burst's press is what carries the player past it without engaging it. */
     for (let attempt = 0; attempt < 300 && !(await card.isVisible()); attempt += 1) {
       await page.keyboard.down('ArrowRight');
       await page.waitForTimeout(150);
-      await page.keyboard.up('ArrowRight');
+      await letGo(page, 'ArrowRight');
     }
 
     await expect(

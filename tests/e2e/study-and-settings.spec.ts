@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { text } from '@ui/copy';
 
 import { START_LEVEL } from './start-level';
+import { letGo } from './walk';
 
 /**
  * The two things a player could not do on the shipped build, done on the
@@ -274,7 +275,10 @@ test.describe('reaching a landmark teaches, then asks', () => {
     for (let step = 0; step < 30; step += 1) {
       await page.keyboard.down('ArrowRight');
       await page.waitForTimeout(600);
-      await page.keyboard.up('ArrowRight');
+      /* Waited for: the guide stands before the landmark, a held walk comes to
+         rest at the guide (ADR-0032), and only a press the level sees begin
+         carries the player on past them. */
+      await letGo(page, 'ArrowRight');
       if ((await prompt.isVisible()) && (await prompt.textContent()) === aPlace) break;
     }
     await expect(

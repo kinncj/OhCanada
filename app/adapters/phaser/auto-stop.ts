@@ -1,37 +1,38 @@
 /**
- * Where an automatic drive comes to rest, and what lets it go again.
+ * Where a drive comes to rest at the things a player can choose, and what lets
+ * it go again. ADR-0032.
  *
- * ## The defect
+ * ## The defects
  *
  * Auto-move existed, was wired to the settings switch, and stopped for nothing.
  * A player who turned it on walked past every landmark and every character in
  * the level: the option that exists so somebody does not have to hold a control
- * removed their only chance to use it. For an accessibility feature that is
- * worse than not shipping it.
+ * removed their only chance to use it.
+ *
+ * The held drive had the same hole from the other side. A player holding to move
+ * came to rest wherever their thumb happened to lift — on Ottawa's skate, which
+ * glides at 0.9, that is up to 2 000 px past the officer — so "tap an NPC or POI
+ * to engage" asked for a precision one-thumb play does not have. The product
+ * owner's ask was one sentence: *the character stops on each point of interest,
+ * and that also works with the auto walk.* So the rule is keyed on neither the
+ * setting nor the mode: **any drive, held or automatic, comes to rest at every
+ * engageable subject it approaches, once per visit.**
  *
  * ## `requiresStop` already said this, and nothing did it
  *
  * `content/levels/prairie-rail.json` declares `train` with `drive: "auto"` and
- * `interaction.requiresStop: true`, and `locomotion.ts` reads that field — it
- * gates `interaction-requested` on `velocityX === 0`. So the rule was
- * *implemented as a refusal and never as a behaviour*: a mode that drives itself
- * and may only engage at rest could never engage anything at all, because
- * nothing in the game ever brought it to rest. This module is the missing half,
- * and it is deliberately keyed on **the drive being automatic**, not on the
- * accessibility setting, so the train gets it from `content/levels/*.json` alone
- * and auto-move gets it from the same path rather than from a second one.
- *
- * `requiresStop` keeps its meaning untouched: it says whether engaging *needs*
- * the halt. This says when the halt happens. A mode with `whileMoving: true`
- * still stops, because a player who cannot hold a control cannot choose to stop
- * either, and "you may engage while moving" is not "you must".
+ * `interaction.requiresStop: true`, and `locomotion.ts` gates
+ * `interaction-requested` on `velocityX === 0`. A mode that drives itself and may
+ * only engage at rest could never engage anything, because nothing brought it to
+ * rest. This module is the missing half. `requiresStop` keeps its meaning: it
+ * says whether engaging *needs* the halt, and this says when the halt happens.
  *
  * ## Where the stop is, and why it is not `ready`
  *
- * `interaction-affordance.ts` already draws a `ready` mark the moment a subject
- * is within `reachPx`, and that boundary is the obvious trigger. It is the wrong
- * one, and it is wrong in **both** directions at once, because `reachPx` is a
- * fixed distance while stopping is a speed-dependent one:
+ * `interaction-affordance.ts` draws a `ready` mark the moment a subject is within
+ * `reachPx`, and that boundary is the obvious trigger. It is wrong in **both**
+ * directions at once, because `reachPx` is a fixed distance and stopping is a
+ * speed-dependent one:
  *
  * | mode (level)          | brake from cruise | `reachPx` |
  * |-----------------------|------------------:|----------:|
@@ -41,64 +42,98 @@
  * | toboggan (Québec City)|           ~ 406 px |    240 px |
  * | bike (Toronto)        |           ~ 365 px |    260 px |
  *
- * Braking at `ready` puts the toboggan and the bike at rest 100–150 px *past*
- * the landmark, and puts the walk at rest 150 px *short* of one — a halt with
- * nothing at it, which reads as the game seizing up. So the trigger is the
- * distance at which this mode, braking with its own declared brake, comes to
- * rest level with the subject: {@link stopLinePx}. It lands the player at the
- * thing every time, at 420 px/s and at 760 px/s, and it needs no new field in
- * `level.schema.json` — a level that tunes its brake moves its own stop line.
+ * Braking at `ready` puts the toboggan and the bike at rest 100–150 px *past* the
+ * landmark and the walk 150 px *short* of one. So the trigger is the distance at
+ * which this mode, braking with its own declared brake, comes to rest level with
+ * the subject: {@link stopLinePx}. It needs no new field in `level.schema.json` —
+ * a level that tunes its brake moves its own stop line.
  *
- * ## How it stops, and why the intent stays zero
+ * Because the stop always lands inside reach, `poi/entered` has fired by the time
+ * the player is at rest: the prompt is on screen, the mark reads `ready`, and the
+ * live region has already said the offer. The stop needs no announcement of its
+ * own, and no new copy.
  *
- * By handing the strategy {@link brakingTuning} for the frames it is stopping:
- * the same mode with `drive: 'held'`, no glide, and `deceleration` set to the
- * mode's own `turnAcceleration` — which `level.schema.json` calls "the brake" and
- * a contract test already pins strictly above `deceleration`. Nothing here
- * synthesises a direction, so `LocomotionIntent.move` is still exactly what the
- * player asked for and `tests/e2e/touch-controls.spec.ts`'s "every frame's
- * intent was zero" stays the honest statement it was. Coasting was not an option:
- * Ottawa's skate glides at 0.9 and would need 2 135 px to stop on friction alone.
+ * ## How it stops, and why the recorded intent is still the player's
+ *
+ * By stepping the strategy with {@link brakingTuning} and {@link brakingIntent}
+ * for the frames it is stopping: the same mode with `drive: 'held'`, no glide,
+ * `deceleration` set to the mode's own `turnAcceleration` ("the brake" in
+ * `level.schema.json`), and the move taken out of the intent. The move has to
+ * come out: a held drive that is being stopped is, by definition, a player still
+ * asking to go, and `drive: 'held'` with `move: 1` accelerates. Nothing is ever
+ * *added* to the intent, and the scene records the intent it sampled, so
+ * `tests/e2e/touch-controls.spec.ts`'s "every frame's intent was zero" on a
+ * hands-off run stays the honest statement it was.
+ *
+ * ## What the stop catches
+ *
+ * A subject is caught when it lies ahead of the way the player is travelling,
+ * inside the stop line, and this visit has not already let the player go from it,
+ * on a frame where **something is driving**: the drive is automatic, or the
+ * player is pressing the way they are travelling. A skater who let go and is
+ * gliding is not driving, and a glide is theirs — `TN-LEVEL-06` "releasing it
+ * glides exactly as it does after a released touch". A player pressing *against*
+ * their travel is braking or turning, and is not heading for anything.
  *
  * ## Letting go
  *
- * Two ways out, and no third:
+ * Three ways out, and no fourth:
  *
- *  - **the player engages what stopped them.** {@link AutoStopWatch.release} is
- *    called from the scene's `#engageNearest`, so closing the card and having the
- *    world move on again is the direct consequence of finishing with it. This is
- *    the one that matters: a player who chose auto-move because they cannot hold
- *    a contact must not need to hold one to carry on, or the first landmark is a
- *    dead end;
- *  - **the player steers.** Any intent the strategy would act on (≥
- *    `MOVE_DEADZONE`, the same threshold `requestedDirection` uses) releases the
- *    hold on the frame it arrives, because a setting a player cannot overrule is
- *    the trap `TN-SET-05` forbids.
+ *  - **the player engages.** {@link AutoStopWatch.release} is called with the
+ *    subject engaged, from the scene's `#engageNearest` (the interact key, a tap on
+ *    the canvas) and, through `GameRenderer.markEngaged`, from the composition
+ *    root (the interact prompt, by touch, by `Tab` and `Enter`, or by the switch).
+ *    Closing the card and having the world move on is the direct consequence of
+ *    finishing with it — a player who cannot hold a contact must not need one to
+ *    carry on;
+ *  - **the player presses again.** A press that *begins* while the drive is held
+ *    releases it. For a held drive that means letting go and pressing again: the
+ *    thumb that was already down when the stop caught it is the thumb that walked
+ *    into the landmark, and letting it overrule the stop would mean the stop never
+ *    happens, because a held control is intent ≥ `MOVE_DEADZONE` on every frame.
+ *    For an automatic drive, which is stopped with nothing pressed, every press is
+ *    a new one, so this is exactly the nudge auto-move has always had;
+ *  - **the player steers the other way.** Always, at once, however long the
+ *    control has been held, because a setting a player cannot overrule is the trap
+ *    `TN-SET-05` forbids.
  *
  * There is no timer and no automatic re-start after a delay. A world that begins
  * moving on its own while somebody is still reading is startling, and a timer
  * outside Exam mode is forbidden by CLAUDE.md anyway.
  *
- * ## Not stopping twice
+ * "Begins" is measured in the frames this watch is fed. A pause — a card, the
+ * menu, a backgrounded tab — hides the hands, so the scene calls
+ * {@link AutoStopWatch.forgetInput} and the first press seen afterwards counts as
+ * new. Otherwise a player who lifted their thumb while the menu was open would
+ * press again and be ignored.
+ *
+ * ## Once per visit, finished or not
  *
  * A released subject is latched, exactly as `level-exit.ts` latches the arrival
  * at the end of the level and for the same reason: a stop is a moment, and a
  * position is not. Without the latch a player standing at a landmark they have
- * declined is re-caught on the next frame, and a player walking back past a
- * finished landmark is stopped by it again. Subjects the domain has reported
- * finished (the affordance's `done` state) are never stopped for at all.
+ * declined is re-caught on the next frame, and a player walking back past it is
+ * stopped by it again. The latch lives in the watch, and the scene builds one per
+ * level visit.
+ *
+ * Subjects the domain reports finished are stopped for too — once, like any
+ * other. `TN-REACH-03` offers a done target as "Done. See this one again", and on
+ * the train, whose `requiresStop` refuses an engagement in motion, or with
+ * auto-move, which a player chose because they cannot hold, a landmark the drive
+ * never stops at is one that offer can never be taken up from. The cost to
+ * everyone else is one press per landmark per visit — four or five in a level —
+ * and never twice.
  *
  * ## Cost
  *
- * One pass over the level's engageable subjects per frame — three of them in the
- * largest shipped level — and a `Set` lookup each. No allocation, no drawing,
- * nothing that touches the frame budget.
+ * One pass over the level's engageable subjects per frame — five in the largest
+ * shipped level — and a `Set` lookup each. No allocation, no drawing.
  *
  * Pure: no Phaser, no DOM, no clock. `tests/unit/adapters/phaser/auto-stop.test.ts`
  * drives it over every shipped level with the real strategy.
  */
 
-import type { LocomotionTuning } from '@application/ports';
+import type { LocomotionIntent, LocomotionTuning } from '@application/ports';
 
 import { MAX_STEP_SECONDS, MOVE_DEADZONE } from './locomotion';
 
@@ -112,11 +147,12 @@ export interface AutoStopSubject {
 /** One frame, as the scene knows it after sampling input and before stepping. */
 export interface AutoStopFrame {
   /**
-   * Is the drive automatic at all?
+   * Does the drive carry the player with nothing pressed?
    *
    * True when the level document says `drive: "auto"` **or** the accessibility
-   * option is on. False makes this inert: a player holding to move already
-   * stops by letting go, and a halt they did not ask for would be an override.
+   * option is on. It decides one thing only: whether a frame with nothing pressed
+   * is still a drive that can be caught. What releases a stop is the same either
+   * way.
    */
   readonly automatic: boolean;
   readonly playerX: number;
@@ -125,36 +161,38 @@ export interface AutoStopFrame {
    *
    * The direction comes from here and from nowhere else — not from `facing`, and
    * not from the level's layout. A player at rest has a braking distance of zero
-   * and therefore no stop line at all, so "which way would the drive take them
-   * from a standstill" is a question that never has to be answered: nothing can
-   * be inside a line of zero length. That is also what stops a subject placed on
+   * and therefore no stop line at all, which is what stops a subject placed on
    * the spawn pinning a player before they have moved.
    */
   readonly velocityX: number;
   /** The player's own intent this frame: keyboard and finger, already summed. */
   readonly playerMove: number;
   readonly subjects: readonly AutoStopSubject[];
-  /** Ids the domain has reported finished. Never stopped for. */
-  readonly completed: ReadonlySet<string>;
 }
 
 export interface AutoStopWatch {
   /** The subject the drive is currently held at, or `null`. */
   readonly holding: string | null;
   /**
-   * Feed this frame. `true` means the automatic drive is suspended: step the
-   * player with {@link brakingTuning} instead of the driving one.
+   * Feed this frame. `true` means the drive is suspended: step the player with
+   * {@link brakingTuning} and {@link brakingIntent} instead of the driving pair.
    */
   update(frame: AutoStopFrame): boolean;
   /**
-   * The player is done here — let the drive carry them on, and never stop for
-   * this subject again.
+   * The player engaged something — let the drive carry them on, and never stop
+   * for what they engaged, or for what was holding them, again this visit.
    *
-   * Called by the scene when an engagement actually happens. Releasing with
-   * nothing held is a no-op rather than an error: an engagement can happen while
-   * moving in every mode that allows it, and that is not a resume.
+   * `engaged` is optional because an engagement can happen while moving in every
+   * mode that allows it, before the stop line is reached; latching it then is
+   * what keeps the player from being halted at a card they have just closed.
+   * Releasing with nothing held and nothing named is a no-op, not an error.
    */
-  release(): void;
+  release(engaged?: string): void;
+  /**
+   * The scene stopped seeing the player's hands — a pause, a blur. The next press
+   * this watch is fed counts as a new one.
+   */
+  forgetInput(): void;
 }
 
 /**
@@ -170,6 +208,19 @@ export interface AutoStopWatch {
  */
 export function brakingTuning(tuning: LocomotionTuning): LocomotionTuning {
   return { ...tuning, drive: 'held', glide: 0, deceleration: tuning.turnAcceleration };
+}
+
+/**
+ * The intent the brake is stepped with: the player's, with the move taken out.
+ *
+ * A held drive is caught while the control is still down, and
+ * {@link brakingTuning}'s `drive: 'held'` would accelerate on it. Only the move
+ * goes: a jump or an interact pressed on a stopped frame is still the player's
+ * to make. Nothing is added — a direction the player did not ask for is never
+ * synthesised.
+ */
+export function brakingIntent(intent: LocomotionIntent): LocomotionIntent {
+  return intent.move === 0 ? intent : { ...intent, move: 0 };
 }
 
 /**
@@ -206,12 +257,19 @@ export function stopLinePx(speed: number, tuning: LocomotionTuning): number {
   return brake + speed * MAX_STEP_SECONDS;
 }
 
+/** The direction a move asks for after the strategy's own deadzone: -1, 0 or 1. */
+function pressedDirection(move: number): -1 | 0 | 1 {
+  if (!Number.isFinite(move) || Math.abs(move) < MOVE_DEADZONE) return 0;
+  return move > 0 ? 1 : -1;
+}
+
 /**
- * A watch over one level's engageable subjects, for one locomotion mode.
+ * A watch over one level visit's engageable subjects, for one locomotion mode.
  *
- * Built per scene, alongside the strategy, and it holds the two pieces of memory
- * a pure per-frame rule cannot: which subject the drive is currently held at, and
- * which subjects the player is already finished being stopped by.
+ * Built per scene, alongside the strategy, and it holds the memory a pure
+ * per-frame rule cannot: which subject the drive is held at and which way it was
+ * going, which subjects this visit has already let the player go from, and which
+ * way the player was pressing on the last frame it saw.
  */
 export function createAutoStop(tuning: LocomotionTuning): AutoStopWatch {
   /* A mode that can engage nothing stops for nothing — a canoe mid-river would
@@ -220,56 +278,75 @@ export function createAutoStop(tuning: LocomotionTuning): AutoStopWatch {
      what the player can see agree by construction. */
   const engages = (tuning.interaction?.reachPx ?? 0) > 0;
   const done = new Set<string>();
-  let holding: string | null = null;
+  let holding: { readonly id: string; readonly heading: 1 | -1 } | null = null;
+  /* The press the previous frame saw. A press is "new" when this frame's
+     direction differs from it, which is what makes letting go and pressing again
+     a release while holding on is not. */
+  let lastPressed: -1 | 0 | 1 = 0;
 
   const letGo = (): void => {
     if (holding === null) return;
-    done.add(holding);
+    done.add(holding.id);
     holding = null;
   };
 
   return {
     get holding(): string | null {
-      return holding;
+      return holding?.id ?? null;
     },
-    release: letGo,
+    release(engaged?: string): void {
+      if (engaged !== undefined) done.add(engaged);
+      letGo();
+    },
+    forgetInput(): void {
+      lastPressed = 0;
+    },
     update(frame: AutoStopFrame): boolean {
-      if (!engages || !frame.automatic) {
-        /* Not latched: turning the option off is not the player declining the
-           landmark, so turning it back on may stop for it again. */
+      const pressed = pressedDirection(frame.playerMove);
+      const began = pressed !== 0 && pressed !== lastPressed;
+      lastPressed = pressed;
+
+      if (!engages) {
         holding = null;
         return false;
       }
 
-      /* Steering wins, on the frame it arrives. The threshold is the strategy's
-         own, so the input that would override the drive is exactly the input
-         that releases the hold — one boundary, not two that can disagree. */
-      if (Math.abs(frame.playerMove) >= MOVE_DEADZONE) {
-        letGo();
-        return false;
+      if (holding !== null) {
+        /* Steering back always wins, on the frame it arrives. A press that began
+           while held wins too, whichever way it points. A control held down
+           since before the stop, the way the player was already going, does
+           not: that is the thumb that walked them here. The threshold is the
+           strategy's own, so the input that would move the player is exactly
+           the input that can release them. */
+        if (pressed !== 0 && (pressed !== holding.heading || began)) {
+          letGo();
+          return false;
+        }
+        return true;
       }
 
-      if (holding !== null) return true;
+      /* Is anything driving? A glide the player let go of is theirs. */
+      if (pressed === 0 && !frame.automatic) return false;
 
-      const speed = Math.abs(frame.velocityX);
-      const line = stopLinePx(speed, tuning);
+      const line = stopLinePx(Math.abs(frame.velocityX), tuning);
       if (line <= 0) return false;
 
       /* Travel, not the level's layout: the same landmark is ahead going one way
-         and behind going the other, and a drive does not brake for what it has
-         already passed. Never zero — `line > 0` means `speed > 0`. */
-      const heading = Math.sign(frame.velocityX);
+         and behind going the other. Never zero — `line > 0` means speed > 0. */
+      const heading: 1 | -1 = frame.velocityX > 0 ? 1 : -1;
+      /* Pressing against the travel is braking or turning, not approaching. */
+      if (pressed !== 0 && pressed !== heading) return false;
 
       let nearest: { id: string; ahead: number } | null = null;
       for (const subject of frame.subjects) {
-        if (done.has(subject.id) || frame.completed.has(subject.id)) continue;
+        if (done.has(subject.id)) continue;
         const ahead = (subject.x - frame.playerX) * heading;
         if (ahead <= 0 || ahead > line) continue;
         if (nearest === null || ahead < nearest.ahead) nearest = { id: subject.id, ahead };
       }
 
       if (nearest === null) return false;
-      holding = nearest.id;
+      holding = { id: nearest.id, heading };
       return true;
     },
   };

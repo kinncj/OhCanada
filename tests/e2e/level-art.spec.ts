@@ -13,6 +13,8 @@ import { expect, test, type Page } from '@playwright/test';
 */
 import { parseAssetManifest, selectLevelAssets } from '@adapters/phaser/level-assets';
 
+import { walkWithProbe } from './walk';
+
 /**
  * **The assertion that was missing.**
  *
@@ -331,13 +333,10 @@ test.describe('the level draws its art', () => {
 
 /** Hold right until the player is at least here, then let the glide settle. */
 async function walkTo(page: Page, worldX: number): Promise<void> {
-  const probe = page.locator('[data-testid="scene-state"]');
-  await page.keyboard.down('ArrowRight');
-  for (let tick = 0; tick < 400; tick += 1) {
-    if (Number(await probe.getAttribute('data-player-x')) >= worldX) break;
-    await page.waitForTimeout(50);
-  }
-  await page.keyboard.up('ArrowRight');
+  /* A held skate comes to rest at the canal locks on the way to the officer
+     (ADR-0032), and a player heading on lets go and presses again. Not asserted
+     here: the caller reads where the player ended up and says so if it is short. */
+  await walkWithProbe(page, 'ArrowRight', { kind: 'past', x: worldX }, { budgetMs: 30_000 });
   /* Skating glides: releasing the key is not stopping, and the assertions are
      about where the camera settles rather than where the key went up. */
   await page.waitForTimeout(1200);

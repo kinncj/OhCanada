@@ -651,6 +651,19 @@ export class GameRenderer {
     this.#level?.markCompleted(subjectId);
   }
 
+  /**
+   * Tell the open level that the player engaged this subject.
+   *
+   * The interact prompt engages in `app/bootstrap` without passing through the
+   * scene (`TN-LEVEL-05`), so without this the stop that brought the player to
+   * rest there never heard about it: the card closed on a player still held at
+   * the landmark, and one who could not steer — auto-move, one switch — could
+   * not leave it. ADR-0032. Idempotent, and a no-op with no level open.
+   */
+  markEngaged(subjectId: string): void {
+    this.#level?.markEngaged(subjectId);
+  }
+
   /** Tell the open level that its stamp was earned. See {@link markQuestComplete}. */
   markLevelComplete(): void {
     this.#level?.markLevelComplete();

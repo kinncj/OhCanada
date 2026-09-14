@@ -8,6 +8,7 @@ import {
   START_LEVEL,
   START_LEVEL_MODE_LABEL,
 } from './start-level';
+import { walkInLegs } from './walk';
 
 /**
  * "Once you reach the end of a level, it should send you to a new level."
@@ -85,24 +86,36 @@ async function openLevel(page: Page, url = LEVEL_URL): Promise<void> {
  * Walk right until the completion card arrives.
  *
  * The key is held rather than tapped because that is how the game is played, and
- * it is released **after** the card appears: a player does not let go the instant
- * they arrive, and a card that only opened because the input stopped would be a
- * different feature.
+ * the leg that sees the card is released **after** the card appears: a player
+ * does not let go the instant they arrive, and a card that only opened because
+ * the input stopped would be a different feature.
+ *
+ * Held in legs, because a held drive comes to rest at every landmark and
+ * character on the way and waits there for the player to let go and press again
+ * (ADR-0032). This page has no scene probe to read the stop from, so each leg
+ * ends by letting go and the next begins with a fresh press — at a stop that is
+ * the re-press, and mid-stride it costs a step of glide.
  */
 async function walkToTheEnd(page: Page): Promise<void> {
   const card = page.getByTestId('quest-complete-card');
-  await page.keyboard.down('ArrowRight');
-  try {
-    await expect(
-      card,
-      `walking right in ${START_LEVEL} never reached the end of the level. The scene ` +
-        'publishes `level/exitReached` when the player crosses the line; if that never ' +
-        'arrives, either the walk is not moving or the milestone is not wired to the ' +
-        'composition root.',
-    ).toBeVisible({ timeout: 240_000 });
-  } finally {
-    await page.keyboard.up('ArrowRight');
-  }
+  const arrived = await walkInLegs(
+    page,
+    'ArrowRight',
+    (legMs) =>
+      card
+        .waitFor({ state: 'visible', timeout: legMs })
+        .then(() => true)
+        .catch(() => null),
+    { budgetMs: 240_000 },
+  );
+  expect(
+    arrived,
+    `walking right in ${START_LEVEL} never reached the end of the level. The scene ` +
+      'publishes `level/exitReached` when the player crosses the line; if that never ' +
+      'arrives, either the walk is not moving or the milestone is not wired to the ' +
+      'composition root.',
+  ).toBe(true);
+  await expect(card).toBeVisible();
 }
 
 test.describe('reaching the end of a level sends the player to a new one', () => {

@@ -13,6 +13,7 @@ import type { EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
 import { text } from '@ui/copy';
 
 import { START_LEVEL } from './start-level';
+import { walkInLegs } from './walk';
 
 /**
  * What a quest giver says at the three moments a step cannot speak for, on the
@@ -236,37 +237,42 @@ async function walkUntilThePromptReads(page: Page, wanted: string): Promise<stri
 /**
  * Walk right until the HUD offers `wanted` — or, with `wanted` null, anything
  * not in `ignore`. `'card'` when the level ended first, `null` when time ran out.
+ *
+ * Held in legs (`./walk.ts`): a held drive comes to rest at every landmark and
+ * character on the way and waits for the player to let go and press again
+ * (ADR-0032), which is what each new leg does.
  */
 async function walkRightUntil(
   page: Page,
   want: { readonly wanted: string | null; readonly ignore: readonly string[] },
 ): Promise<string | null> {
-  await page.keyboard.down('ArrowRight');
-  try {
-    return await page.evaluate(
-      async ({ target, skip, budget }) => {
-        const deadline = performance.now() + budget;
-        while (performance.now() < deadline) {
-          const card = document.querySelector('[data-testid="quest-complete-card"]');
-          if (card !== null && (card as HTMLElement).checkVisibility()) return 'card';
-          const prompt = document.querySelector('[data-testid="interact-prompt"]');
-          if (prompt !== null && (prompt as HTMLElement).checkVisibility()) {
-            const offered = prompt.textContent ?? '';
-            if (target === null ? !skip.includes(offered) : offered === target) return offered;
-          }
-          await new Promise((resolve) => {
-            requestAnimationFrame(() => {
-              resolve(null);
+  return walkInLegs(
+    page,
+    'ArrowRight',
+    (legMs) =>
+      page.evaluate(
+        async ({ target, skip, budget }) => {
+          const deadline = performance.now() + budget;
+          while (performance.now() < deadline) {
+            const card = document.querySelector('[data-testid="quest-complete-card"]');
+            if (card !== null && (card as HTMLElement).checkVisibility()) return 'card';
+            const prompt = document.querySelector('[data-testid="interact-prompt"]');
+            if (prompt !== null && (prompt as HTMLElement).checkVisibility()) {
+              const offered = prompt.textContent ?? '';
+              if (target === null ? !skip.includes(offered) : offered === target) return offered;
+            }
+            await new Promise((resolve) => {
+              requestAnimationFrame(() => {
+                resolve(null);
+              });
             });
-          });
-        }
-        return null;
-      },
-      { target: want.wanted, skip: [...want.ignore], budget: 40_000 },
-    );
-  } finally {
-    await page.keyboard.up('ArrowRight');
-  }
+          }
+          return null;
+        },
+        { target: want.wanted, skip: [...want.ignore], budget: legMs },
+      ),
+    { budgetMs: 60_000 },
+  );
 }
 
 const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');

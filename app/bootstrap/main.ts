@@ -2429,6 +2429,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
    */
   function markEngaged(detail: string): void {
     engaged.add(bareTargetId(detail));
+    /* Every route in ends here, and the prompt's route never passes through
+       the scene: without this, a player stopped at a landmark (ADR-0032) closed
+       its card and was still held there. */
+    renderer.markEngaged(bareTargetId(detail));
     hintShown = true;
     hintOnScreen = false;
     hud.setHint(null);

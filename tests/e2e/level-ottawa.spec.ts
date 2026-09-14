@@ -3,6 +3,8 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test, type Page } from '@playwright/test';
 
+import { walkWithProbe } from './walk';
+
 /**
  * TN-LEVEL-01, -03 and -04 against the production artefact.
  *
@@ -554,15 +556,19 @@ test.describe('TN-LEVEL-03 — skating feels like ice', () => {
   });
 
   test('a downhill adds speed, and never past the stated limit', async ({ page }) => {
+    /* A traversal: the skater comes to rest at every landmark and at the officer
+       on the way down the canal and presses on from each (ADR-0032). */
+    test.slow();
     await openLevel(page);
     await clearTrace(page);
     /* Far enough to cross the descent the level draws. Driven by the skater's
        position rather than by a clock, so a slow machine takes longer and still
-       measures the same stretch of canal. */
-    await page.keyboard.down('ArrowRight');
-    await waitForIntent(page, 1);
-    await waitForPlayerPast(page, DESCENT_END_X);
-    await page.keyboard.up('ArrowRight');
+       measures the same stretch of canal. The last stop before the descent is
+       600 px short of it, which is run-up enough to reach cruise first. */
+    expect(
+      await walkWithProbe(page, 'ArrowRight', { kind: 'past', x: DESCENT_END_X }),
+      'the skater never reached the end of the descent',
+    ).toBe(true);
 
     const trace = await frames(page);
     const ceiling = SKATE.maxSpeed * SKATE.maxSpeedMultiplierDownhill;
@@ -739,14 +745,19 @@ test.describe('TN-LEVEL-05 — coming into reach', () => {
   const REACH = SKATE.interaction?.reachPx ?? 0;
 
   test('reports entering and leaving reach, naming who was reached', async ({ page }) => {
+    /* Past the locks and the officer, stopping at both and pressing on (ADR-0032). */
+    test.slow();
     expect(OFFICER, 'the level places nobody to come into reach of').toBeDefined();
     await openLevel(page);
     await clearTrace(page);
 
-    await page.keyboard.down('ArrowRight');
-    await waitForIntent(page, 1);
-    await waitForPlayerPast(page, (OTTAWA.characters[0]?.position.x ?? 0) + REACH + 200);
-    await page.keyboard.up('ArrowRight');
+    expect(
+      await walkWithProbe(page, 'ArrowRight', {
+        kind: 'past',
+        x: (OTTAWA.characters[0]?.position.x ?? 0) + REACH + 200,
+      }),
+      'the skater never got past the officer',
+    ).toBe(true);
 
     const trace = await events(page);
     const entered = trace
@@ -871,10 +882,16 @@ test.describe('ADR-0003 — a refused claim is not offered to the player', () =>
     await openLevel(page);
     await clearTrace(page);
 
-    await page.keyboard.down('ArrowRight');
-    await waitForIntent(page, 1);
-    await waitForPlayerPast(page, furthest + (SKATE.interaction?.reachPx ?? 0) + 120);
-    await page.keyboard.up('ArrowRight');
+    /* Stopping at every landmark it is told about, and pressing on (ADR-0032). */
+    expect(
+      await walkWithProbe(
+        page,
+        'ArrowRight',
+        { kind: 'past', x: furthest + (SKATE.interaction?.reachPx ?? 0) + 120 },
+        { budgetMs: 150_000 },
+      ),
+      'the skater never got to the end of the canal',
+    ).toBe(true);
 
     const entered = (await events(page))
       .filter((event) => event.name === 'poi/entered')

@@ -41,6 +41,7 @@ import {
   type CastGap,
 } from './character-cast';
 import {
+  brakingIntent,
   brakingTuning,
   createAutoStop,
   type AutoStopSubject,
@@ -371,15 +372,15 @@ export class LevelScene extends Phaser.Scene {
   /**
    * The same mode with its brake on, built once.
    *
-   * Stepped instead of {@link #locomotion} on the frames an automatic drive is
-   * being brought to rest, so a halt is the mode's own `turnAcceleration` and no
-   * direction is ever synthesised into `LocomotionIntent.move`. See
-   * `auto-stop.ts`; it does not depend on the accessibility option, so it is
-   * built with the tuning and never rebuilt.
+   * Stepped instead of {@link #locomotion} on the frames a drive — held or
+   * automatic — is being brought to rest at a subject, so a halt is the mode's
+   * own `turnAcceleration` and no direction is ever synthesised into
+   * `LocomotionIntent.move`. See `auto-stop.ts`; it does not depend on the
+   * accessibility option, so it is built with the tuning and never rebuilt.
    */
   readonly #braking: ReturnType<typeof createLocomotion>;
   /**
-   * What an automatic drive stops for, and what lets it go again.
+   * What a drive stops for, and what lets it go again (ADR-0032).
    *
    * The rule is `auto-stop.ts`'s, not this file's, for the reason `level-exit.ts`
    * gives: `environment: 'node'` cannot load a module that imports Phaser, so a
@@ -927,12 +928,14 @@ export class LevelScene extends Phaser.Scene {
     const intent = this.#sampleIntent();
 
     /*
-     * Does an automatic drive have to let go of this frame?
+     * Is the drive being brought to rest at something this frame? (ADR-0032)
      *
-     * Asked after the intent, because the player's own direction is what
-     * overrules it, and before the step, because the answer chooses which
-     * strategy takes the step. `true` is the brake; nothing is added to the
-     * intent, so a trace of a hands-off run still reads as zero on every frame.
+     * Asked after the intent, because what the player is pressing is what
+     * releases it, and before the step, because the answer chooses which
+     * strategy takes the step. `true` is the brake, stepped with the move taken
+     * out of the intent — a held drive is caught while the control is still
+     * down. The probe below records the intent as sampled, so a trace of a
+     * hands-off run still reads as zero on every frame and a held one as held.
      */
     const halted = this.#autoStop.update({
       automatic: this.#automaticDrive(),
@@ -940,10 +943,11 @@ export class LevelScene extends Phaser.Scene {
       velocityX: this.#state.velocityX,
       playerMove: intent.move,
       subjects: this.#stopSubjects,
-      completed: this.#completed,
     });
 
-    const step = (halted ? this.#braking : this.#locomotion).step(this.#state, intent, dt);
+    const step = halted
+      ? this.#braking.step(this.#state, brakingIntent(intent), dt)
+      : this.#locomotion.step(this.#state, intent, dt);
     this.#state = applyBounds(step.state, this.#bounds, this.#tuning, dt);
 
     for (const event of step.events) this.#publishLocomotionEvent(event.kind);
@@ -1122,6 +1126,10 @@ export class LevelScene extends Phaser.Scene {
   /** Bound once so `off` can find it again; see `#bindInput` and SHUTDOWN. */
   readonly #releaseEveryPointer = (): void => {
     this.#touch.cancelAll();
+    /* The same moment hides the player's hands from the auto-stop: a thumb
+       lifted while a card or the menu was open never reached a frame, so the
+       first press seen afterwards has to count as a new one (ADR-0032). */
+    this.#autoStop.forgetInput();
   };
 
   /**
@@ -1302,7 +1310,9 @@ export class LevelScene extends Phaser.Scene {
    * True for the accessibility option **and** for a level that declares
    * `drive: "auto"` — prairie-rail's train does, with `requiresStop: true`. One
    * question, so the train's halt and auto-move's halt are the same code path
-   * and a level can have the behaviour from JSON alone.
+   * and a level can have the behaviour from JSON alone. A held drive stops at
+   * the same subjects on the same line; this only says whether a frame with
+   * nothing pressed is still a drive (`auto-stop.ts`).
    */
   #automaticDrive(): boolean {
     return this.#autoMove || this.#tuning.drive === 'auto';
@@ -1587,13 +1597,15 @@ export class LevelScene extends Phaser.Scene {
     /*
      * The player is done being stopped here.
      *
-     * An automatic drive that halted for this subject lets go now, so the world
-     * moves on when the card the engagement opens is closed — the level is
-     * paused while it is open, so nothing slides underneath it. This is the
-     * resume that matters: a player who chose auto-move because they cannot hold
-     * a contact must not need to hold one to leave the first landmark.
+     * A drive that halted for this subject lets go now, and neither it nor the
+     * subject engaged catches the player again this visit — so the world moves
+     * on when the card the engagement opens is closed. The level is paused while
+     * it is open, so nothing slides underneath it. This is the resume that
+     * matters: a player who chose auto-move because they cannot hold a contact
+     * must not need to hold one to leave the first landmark. The interact
+     * prompt's route reaches the same call through {@link markEngaged}.
      */
-    this.#autoStop.release();
+    this.#autoStop.release(best.id);
     /* The rig has a `once` interact state; firing it is what makes an engagement
        visible in the world rather than only in the DOM above it. A rig that
        declares no such trigger simply has nothing fired at it. */
@@ -2518,6 +2530,19 @@ export class LevelScene extends Phaser.Scene {
   }
 
   /* ------------------------------------------------------------ milestones --- */
+
+  /**
+   * The player engaged this subject by a route that did not pass through this
+   * scene — the interact prompt, by touch, by `Tab` and `Enter`, or by the switch.
+   *
+   * `#engageNearest` already tells the auto-stop about the interact key and a
+   * tap on the canvas. This is the same call for the prompt, so a player the
+   * level brought to rest at a landmark is let go however they chose it, and is
+   * not caught by it again this visit (ADR-0032). Idempotent.
+   */
+  markEngaged(subjectId: string): void {
+    this.#autoStop.release(subjectId);
+  }
 
   /**
    * The domain finished a quest. Make the world show it.

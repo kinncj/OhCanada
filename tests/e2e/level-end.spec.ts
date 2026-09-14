@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, test, type Page } from '@playwright/test';
 
 import { START_LEVEL } from './start-level';
+import { walkWithProbe } from './walk';
 
 /**
  * "Once you reach the end of a level, it should send you to a new level" — the
@@ -147,6 +148,11 @@ test.describe('the end of the level', () => {
    * Walk the level, end to end, holding one key — which is how a player finds
    * the end, and is why this is slow rather than clever. Nothing here asserts
    * how long it took.
+   *
+   * The held drive comes to rest at every landmark and character on the way
+   * (ADR-0032), so the walk does what a player heading for the end does at each
+   * one: lets go and presses again. `walkWithProbe` reads the stop off the frame
+   * trace rather than guessing at it.
    */
   test('publishes the arrival, naming the level, before the wall', async ({ page }) => {
     test.slow();
@@ -154,18 +160,19 @@ test.describe('the end of the level', () => {
     await page.goto(`./?e2e=1&level=${START_LEVEL}`);
     await page.waitForSelector('[data-testid="playable"]');
 
-    await page.keyboard.down('ArrowRight');
-    await expect
-      .poll(async () => (await arrivals(page)).length, {
-        message:
-          'the player walked the whole level and it never said they had arrived. This is the ' +
-          'state the game shipped in: you reach the far edge, the bounds clamp holds you ' +
-          'there, and nothing happens.',
-        timeout: 120_000,
-        intervals: [500],
-      })
-      .toBe(1);
-    await page.keyboard.up('ArrowRight');
+    const walked = await walkWithProbe(
+      page,
+      'ArrowRight',
+      { kind: 'event', name: 'level/exitReached' },
+      { budgetMs: 150_000 },
+    );
+    expect(
+      walked,
+      'the player walked the whole level and it never said they had arrived. This is the ' +
+        'state the game shipped in: you reach the far edge, the bounds clamp holds you ' +
+        'there, and nothing happens.',
+    ).toBe(true);
+    await expect.poll(async () => (await arrivals(page)).length, { timeout: 5_000 }).toBe(1);
 
     const [arrival] = await arrivals(page);
     expect(
