@@ -847,7 +847,7 @@ test.describe('ADR-0003 — a refused claim is not offered to the player', () =>
       'the claim filter examined a different number of claims than the level document carries, ' +
         'which means it is reading something other than every fact block on the level.',
     ).toHaveAttribute('data-claims-examined', String(OTTAWA.pois.length + 1));
-    await expect(probe).toHaveAttribute('data-claims-refused', String(REFUSED.length));
+    await expect(probe).toHaveAttribute('data-claims-refused', String(REFUSED.length + (verified(OTTAWA.territory.fact) ? 0 : 1)));
     await expect(probe).toHaveAttribute('data-claims-drawable', String(TEACHING.length + (verified(OTTAWA.territory.fact) ? 1 : 0)));
   });
 

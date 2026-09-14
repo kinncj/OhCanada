@@ -501,7 +501,7 @@ describe('the same document, one verdict written both ways', () => {
       /* The sentence, both languages, and where it came from — §10.2 requires
          the panel to name its source, and a panel that cannot cite it may not
          draw it. */
-      expect(granted.about.statement.en).toContain("Mi'kma'ki");
+      expect(granted.about.statement.en).toContain("Mi'kmaq");
       expect(granted.about.statement.fr.length).toBeGreaterThan(0);
       expect(granted.about.publisher.length).toBeGreaterThan(0);
       expect(granted.about.sourceUrl).toMatch(/^https?:\/\//);
