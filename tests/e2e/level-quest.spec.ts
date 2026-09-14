@@ -479,9 +479,14 @@ async function engageOnce(page: Page): Promise<'answered' | 'talked' | 'nothing'
   }
 
   if (await question.isVisible()) {
-    await page.getByTestId('option-0').click();
-    const next = page.getByTestId('question-next');
-    if (await next.isVisible()) await next.click();
+    /* An `answer` step asks everything it has left in one go (ADR-0036), so the
+       card is answered until it goes rather than once. */
+    for (let asked = 0; asked < 12 && (await question.isVisible()); asked += 1) {
+      await page.getByTestId('option-0').click();
+      const next = page.getByTestId('question-next');
+      await expect(next).toBeVisible();
+      await next.click();
+    }
     await expect(question).toBeHidden();
     return 'answered';
   }
@@ -535,6 +540,23 @@ async function walkOnPast(page: Page): Promise<void> {
   await page.keyboard.down('ArrowRight');
   await page.waitForTimeout(700);
   await letGo(page, 'ArrowRight');
+}
+
+/**
+ * Keep playing past the card that says what is left (ADR-0036).
+ *
+ * Reaching the end of a level whose task is not done earns nothing and draws a
+ * card saying so, which the player dismisses to carry on. A walk that finishes
+ * the task can meet it: Halifax's harbour tug stands past the level's arrival
+ * line, so the player crosses the end on the way to the last landmark the task
+ * names. That card is drawn once per sitting, so this is a no-op every other
+ * time it is called.
+ */
+async function keepPlayingPastTheEnd(page: Page): Promise<void> {
+  const unfinished = page.locator('[data-testid="quest-complete-card"][data-reason="unfinished"]');
+  if (!(await unfinished.isVisible())) return;
+  await unfinished.getByTestId('quest-complete-keep-playing').click();
+  await expect(unfinished).toBeHidden();
 }
 
 test.describe('the level the game opens on gives its task, and finishes it', () => {
@@ -745,8 +767,9 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
      * Halifax had one landmark to visit and one step to answer. The quest now
      * sends the player to four landmarks and asks nine questions, and a walk
      * that moved on after each engagement drifted a landmark behind the step it
-     * was on: it answered five, ran out of level and drew "Level finished!" —
-     * the *other* completion card, correctly, for a task it had not finished.
+     * was on: it answered five, ran out of level and drew the *other* completion
+     * card, correctly, for a task it had not finished — since ADR-0036 the card
+     * that says what is left, which this walk now keeps playing past.
      * The test had expired; the game had not. `stepShowing` is the fix, and the
      * scenario it now proves is `TN-DONE`'s first: a player who stops at every
      * landmark finishes the task.
@@ -758,10 +781,17 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await page.getByTestId('dialogue-accept').click();
 
     const card = page.getByTestId('quest-complete-card');
+    /* The card that says the task is done — not the one that says what is left,
+       which this walk can meet on its way to a landmark past the end of the
+       level and simply keeps playing past (ADR-0036). */
+    const finished = page.locator(
+      '[data-testid="quest-complete-card"]:not([data-reason="unfinished"])',
+    );
     const tracker = page.getByTestId('hud-quest-tracker');
     const seen: string[] = [];
 
-    for (let round = 0; round < 40 && !(await card.isVisible()); round += 1) {
+    for (let round = 0; round < 40 && !(await finished.isVisible()); round += 1) {
+      await keepPlayingPastTheEnd(page);
       const line = ((await tracker.textContent()) ?? '').trim();
       if (line !== '' && !seen.includes(line)) seen.push(line);
 
@@ -788,18 +818,22 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
       const prompt = page.getByTestId('interact-prompt');
       const inReach = (await prompt.isVisible()) ? ((await prompt.textContent()) ?? '') : null;
 
+      /* `'card'` is the end of the level. Unfinished, it is dismissed at the top
+         of the next round and the walk goes on; finished, the loop ends. */
       if (onAnswerStep) {
         if (inReach === null) {
           const offered = await walkUntilSomethingIsInReach(page);
-          if (offered === 'card' || offered === null) break;
+          if (offered === null) break;
+          if (offered === 'card') continue;
         }
       } else if (inReach === null || inReach === DONE_PROMPT) {
         const offered = await walkPastAndOnTo(page, [DONE_PROMPT]);
-        if (offered === 'card' || offered === null) break;
+        if (offered === null) break;
+        if (offered === 'card') continue;
       }
 
       const did = await engageOnce(page);
-      if (await card.isVisible()) break;
+      if (await finished.isVisible()) break;
       if (onAnswerStep && did === 'answered') continue;
 
       /*
@@ -811,7 +845,7 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     }
 
     await expect(
-      card,
+      finished,
       `the task never finished. The tracker showed: ${seen.join(' | ')}. Every step of ` +
         `content/quests/${QUEST.id}.json has to be reachable by walking and choosing.`,
     ).toBeVisible({ timeout: 30_000 });
@@ -863,21 +897,19 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(passport.getByTestId('passport-counts')).toContainText('1 of 10');
   });
 
-  test('walks past every landmark, and still finishes the level', async ({ page }) => {
+  test('walks past every landmark, earns no stamp, and is told what is left', async ({ page }) => {
     /*
-     * The other way a level ends, and until now it had no test of its own on
-     * this level — it was being exercised by accident, by a walk that meant to
-     * finish the task and ran out of level instead.
+     * The other way a level ends, and ADR-0036 changed what it is worth.
      *
-     * `docs/stories/TN-DONE-finishing-a-level.md`: **both cards are real.**
-     * Finishing the task draws "Task done!" and reaching the end draws "Level
-     * finished!"; both earn the one stamp, both carry the same two rows, and
-     * neither ranks above the other. A player who walks the length of Halifax
-     * without tapping anything has finished the level, and the game says so
-     * without claiming they did a task they never accepted.
+     * It used to earn the stamp: a player who walked the length of the level
+     * without tapping anything was told "You earned the … stamp" under a
+     * passport that promises one for finishing a level's task. Now the end of a
+     * level whose task is not done earns nothing, opens nothing, and draws the
+     * card that says what the stamp is for and what is left — and gives the
+     * level back.
      *
      * Nothing is engaged here: no dialogue, no card, no question. The tracker
-     * must stay away for the whole walk, because there is no task.
+     * must stay away for the whole walk, because no task was accepted.
      */
     test.setTimeout(300_000);
 
@@ -899,26 +931,29 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
       `walking the whole of ${START_LEVEL} without stopping never reached the end of it.`,
     ).toBeVisible({ timeout: 30_000 });
 
-    /* The level finished, and the card says that and not "Task done!" — the
-       player accepted nothing and answered nothing. */
-    await expect(card).toHaveAccessibleName(text('en', 'level.complete.title'));
+    /* The card that says what is left — not "Level finished!", and not "Task
+       done!": the player accepted nothing and answered nothing (ADR-0036). */
+    await expect(card).toHaveAttribute('data-reason', 'unfinished');
+    await expect(card).toHaveAccessibleName(text('en', 'level.unfinished.title'));
+    await expect(card).not.toHaveAccessibleName(text('en', 'level.complete.title'));
     await expect(card).not.toHaveAccessibleName(text('en', 'quest.done.title'));
 
-    /* One stamp, the same one: reaching the end earns it too (`TN-DONE`). */
-    await expect(card.getByTestId('quest-complete-stamp')).toHaveText(STAMP_SENTENCE);
-
-    /*
-     * And the score row is honest about a walk that answered nothing: the card
-     * draws `level.complete.none` rather than "0 out of 0", which is a mark out
-     * of nothing (`TN-DONE-02`).
-     */
-    await expect(card.getByTestId('quest-complete-progress')).toHaveText(
-      text('en', 'level.complete.none'),
+    /* What the stamp is for — the passport's own promise — and what to do. */
+    await expect(card.getByTestId('quest-complete-left-0')).toHaveText(text('en', 'passport.intro'));
+    await expect(card.getByTestId('quest-complete-left-1')).toHaveText(
+      text('en', 'level.unfinished.notStarted'),
     );
 
+    /* No stamp, no score, no route into a level nothing opened, nothing new in
+       the passport. */
+    await expect(card.getByTestId('quest-complete-stamp')).toHaveCount(0);
+    await expect(card).not.toContainText(STAMP_SENTENCE);
+    await expect(card.getByTestId('quest-complete-progress')).toHaveCount(0);
+    await expect(card.getByTestId('quest-complete-next')).toHaveCount(0);
+    await expect(card.getByTestId('quest-complete-passport')).toHaveCount(0);
+
     /* And no remark about the task. Every closing line describes a route this
-       player never walked, so it is drawn under "Task done!" only (`TN-DONE`
-       rule 6). */
+       player never walked (`TN-DONE` rule 6). */
     await expect(card.getByTestId('quest-complete-done')).toHaveCount(0);
     if (QUEST.doneLine !== undefined) {
       await expect(card).not.toContainText(QUEST.doneLine.text.en);
@@ -928,15 +963,20 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(tracker).toBeHidden();
     await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'true');
 
-    /*
-     * The stamp is in the passport either way — reached through the card's own
-     * way there, because the card is modal and the HUD's menu button is behind
-     * it. That is the point of the card carrying the route.
-     */
-    await card.getByTestId('quest-complete-passport').click();
-    await expect(page.getByTestId('passport').getByTestId('passport-counts')).toContainText(
-      '1 of 10',
-    );
+    /* One way on: back into the level, which is where the task is. */
+    const keepPlaying = card.getByTestId('quest-complete-keep-playing');
+    await expect(keepPlaying).toHaveAttribute('data-tn-action', 'primary');
+    await keepPlaying.click();
+    await expect(card).toBeHidden();
+    await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'false');
+
+    /* And the passport, opened from the menu now that the card has gone, holds
+       no stamp for a walk. */
+    await page.getByTestId('menu-button').click();
+    await page.getByTestId('menu-passport').click();
+    const passport = page.getByTestId('passport');
+    await expect(passport).toBeVisible();
+    await expect(passport.getByTestId('passport-counts')).not.toContainText('1 of 10');
   });
 });
 

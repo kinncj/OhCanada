@@ -134,7 +134,7 @@ describe('the copy table', () => {
      * only as a proposed row. The last five are the character creator's.
      *
      * The list is pinned rather than merely non-empty, which is what keeps the
-     * gate: a fifteenth invented row, anywhere, fails here instead of joining a list
+     * gate: a twentieth invented row, anywhere, fails here instead of joining a list
      * that has already been allowed to grow once. Removing an entry is what a
      * story file writing the row down looks like, and that is a green change.
      */
@@ -159,8 +159,17 @@ describe('the copy table', () => {
       'creator.presentation.feminine',
       'creator.presentation.masculine',
       'creator.presentation.neutral',
+      /* ADR-0036's five, written by app/ui: the card at the end of a level whose
+         task is not done, which `TN-DONE` has no row for, and the question
+         card's tag reworded from a lone "New" while `TN-CARD`'s table still
+         carries the old words. */
+      'level.unfinished.title',
+      'level.unfinished.next',
+      'level.unfinished.notStarted',
+      'card.kind.new',
+      'card.kind.seen',
     ]);
-    expect(COPY_GAPS).toHaveLength(14);
+    expect(COPY_GAPS).toHaveLength(19);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

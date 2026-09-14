@@ -45,16 +45,38 @@ import type {
   SchedulerTuning,
   ShippableQuestion,
 } from '@application/ports';
+import { questionsTelling } from '@application/content/proposition';
 import { loadEveryBank } from '@application/content/question-bank';
 import { scheduleReview } from '@application/use-cases/schedule-review';
 import type { Progress } from '@domain/entities/progress';
-import type { QuestionId } from '@domain/ids';
+import type { QuestionId, SubjectId } from '@domain/ids';
 
 /** One question of a drill: the document to render, and the tag the card shows. */
 export interface StudyQuestion {
   readonly question: ShippableQuestion;
   /** `new` or `seen`. The only thing about the schedule a player ever learns. */
   readonly familiarity: 'new' | 'seen';
+}
+
+/**
+ * Where a drill may draw from, when it is not the whole bank (ADR-0036).
+ *
+ * Study passes nothing and draws from every subject. A level passes its own
+ * subject — ADR-0030 §2: "a level's `subject` is the remit of its quest's
+ * `answer` steps and of the bank the scheduler draws for it" — and, at a
+ * landmark, what that landmark told the player.
+ */
+export interface DrillScope {
+  /** Only this subject's questions. */
+  readonly subject?: SubjectId | undefined;
+  /** A quest step's `questionPool`: only these ids, still chosen by the scheduler. */
+  readonly pool?: readonly QuestionId[] | undefined;
+  /**
+   * The `source.quote` of every claim the place just told the player. A question
+   * resting on one of those sentences is asked first, when it is inside the
+   * scope and was not asked in this sitting.
+   */
+  readonly teaches?: readonly string[] | undefined;
 }
 
 export interface StudyDrill {
@@ -77,8 +99,11 @@ export interface StudyDrill {
 export interface StudySession {
   /** How many questions this build can ask at all. */
   available(): Promise<Result<number>>;
-  /** Draw the next drill, at most `count` questions. */
-  drill(count: number): Promise<Result<StudyDrill>>;
+  /**
+   * Draw the next drill, at most `count` questions — from the whole bank, or
+   * from `scope` when a level narrows it (ADR-0036).
+   */
+  drill(count: number, scope?: DrillScope): Promise<Result<StudyDrill>>;
   /** How many one drill asks by default, from `game.config.json#/study`. */
   readonly drillSize: number;
 }
@@ -104,11 +129,20 @@ export const createStudySession = (deps: StudySessionDeps): StudySession => {
       return map(await loadEveryBank(deps.bank), (questions) => questions.length);
     },
 
-    async drill(count: number): Promise<Result<StudyDrill>> {
+    async drill(count: number, scope?: DrillScope): Promise<Result<StudyDrill>> {
       const bank = await loadEveryBank(deps.bank);
       if (!bank.ok) return bank;
 
       const byId = new Map(bank.value.map((question) => [question.id, question]));
+      /*
+       * What the place told the player, as question ids. Resolved over the whole
+       * bank and handed to the scheduler as a preference only: `scheduleReview`
+       * drops any that fall outside the subject or the pool, so a landmark
+       * whose sentence another subject grades asks nothing out of its level's
+       * remit (ADR-0030 §2).
+       */
+      const prefer =
+        scope?.teaches === undefined ? [] : questionsTelling(bank.value, scope.teaches);
       const drawn = scheduleReview(
         { clock: deps.clock, random: deps.random },
         {
@@ -117,6 +151,9 @@ export const createStudySession = (deps: StudySessionDeps): StudySession => {
           progress: deps.progress(),
           tuning: deps.tuning,
           recentlyAsked,
+          subject: scope?.subject,
+          pool: scope?.pool,
+          prefer,
         },
       );
       if (!drawn.ok) return drawn;

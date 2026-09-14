@@ -183,6 +183,8 @@ const hoisted = vi.hoisted(() => {
     scenesBoot: boolean;
     /** What the fake `StudySession` hands back, and how often it was asked. */
     drillCalls: number[];
+    /** The scope each drill was asked for: subject, pool, what a landmark told. */
+    drillScopes: unknown[];
     availableCalls: number;
     /** Every answer that reached `answerQuestion`, as [questionId, index]. */
     recorded: [string, number][];
@@ -262,6 +264,7 @@ const hoisted = vi.hoisted(() => {
     playable: null,
     scenesBoot: true,
     drillCalls: [],
+    drillScopes: [],
     availableCalls: 0,
     recorded: [],
     prompts: [],
@@ -556,8 +559,9 @@ vi.mock('@application/use-cases/study-session', () => ({
       hoisted.state.availableCalls += 1;
       return Promise.resolve({ ok: true, value: 12 });
     },
-    drill: async (count: number): Promise<unknown> => {
+    drill: async (count: number, scope?: unknown): Promise<unknown> => {
       hoisted.state.drillCalls.push(count);
+      hoisted.state.drillScopes.push(scope);
       return Promise.resolve({
         ok: true,
         value: {
@@ -619,10 +623,10 @@ vi.mock('@application/use-cases/answer-question', async () => {
              whether a stamp was earned: the card's heading follows this one. */
           questCompleted: hoisted.state.questCompletes,
           /*
-           * The judgement, because the completion card counts on it: reaching
-           * the end of a level earns the stamp whether or not anything was
-           * answered, so "how many did you get right here" is the only thing on
-           * that card telling a played level from a walked-through one. Driven
+           * The judgement, because the completion card counts on it: a level
+           * already stamped is finished again at its end whether or not anything
+           * was answered in that sitting (ADR-0036), so "how many did you get
+           * right here" is what tells the two sittings apart. Driven
            * from the fixture, so a suite can be about a player who answered
            * correctly and a player who did not.
            */
@@ -931,6 +935,7 @@ beforeEach(() => {
   hoisted.state.lastPlayedSet = [];
   hoisted.state.emit = null;
   hoisted.state.drillCalls = [];
+  hoisted.state.drillScopes = [];
   hoisted.state.availableCalls = 0;
   hoisted.state.recorded = [];
   hoisted.state.prompts = [];
@@ -1527,6 +1532,49 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
     });
   });
 
+  it('asks from the level’s own subject, and draws no counter over one question (ADR-0036)', async () => {
+    /*
+     * The play-through: Toronto's streetcar asked about Magna Carta, and five
+     * levels opened on "What is the job of the police?", because every landmark
+     * drew from the whole bank. The level carries its subject now.
+     */
+    hoisted.state.level = { ...LOADED_LEVEL, subject: 'rights' };
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.drillScopes[0]).toMatchObject({ subject: 'rights' });
+    expect(
+      'progress' in (hoisted.state.questionsAsked[0] as object),
+      'one question with no task counts nothing, so the card is told no count',
+    ).toBe(false);
+  });
+
+  it('asks first what the landmark just told', async () => {
+    const quote = 'A true, short thing, and the sentence it rests on.';
+    hoisted.state.level = levelFixture({
+      ...LOADED_LEVEL,
+      subject: 'rights',
+      pois: [
+        {
+          id: 'town-clock',
+          name: { en: 'Halifax Town Clock', fr: "Tour de l'horloge d'Halifax" },
+          blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
+          fact: { factual: true, source: { quote } },
+        },
+      ],
+    });
+    await boot(`?level=${START_LEVEL}`);
+    emit('level/ready');
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.drillScopes[0]).toMatchObject({ subject: 'rights', teaches: [quote] });
+  });
+
   it('records the answer through answerQuestion, and only once', async () => {
     await arrive();
     emit('poi/engaged', 'town-clock');
@@ -1699,15 +1747,51 @@ describe('"ready" means the player can touch it', () => {
   });
 });
 
-describe('reaching the end of a level finishes it and offers the next one', () => {
+/**
+ * Finish the level the way a player does: answer at a landmark, and that answer
+ * earns the stamp.
+ *
+ * `answerQuestion` is faked, so what earns it is `stampFor`; what this suite
+ * asserts is the composition root's half — what it does once the domain says a
+ * stamp was earned. The domain's half is `answerQuestion`'s own suite.
+ */
+const finishByAnswering = async (): Promise<void> => {
+  hoisted.state.level = LOADED_LEVEL;
+  await boot(`?level=${START_LEVEL}`);
+  emit('level/ready');
+  hoisted.state.stampFor = `${START_LEVEL}`;
+  emit('poi/engaged', 'town-clock');
+  modalOption<{ onClose: () => void }>('poi-card').onClose();
+  await flush();
+  const question = hoisted.state.questionOptions as {
+    onAnswer: (index: number, right: boolean) => void;
+    onNext: () => void;
+  };
+  question.onAnswer(0, true);
+  question.onNext();
+  await flush();
+};
+
+/** What the completion card was handed, in either language. */
+type CardContent = (locale: string) => {
+  reason?: string;
+  leftMessages?: readonly string[];
+  stampMessage?: string;
+  progressMessage?: string;
+  doneMessage?: string;
+  next?: { label: string; description: string };
+};
+
+describe('reaching the end of a level whose task is not done earns nothing (ADR-0036)', () => {
   /**
-   * Walk to the end of the world, having answered nothing.
+   * Walk to the end of the world, having done nothing.
    *
-   * The whole point of the scenario: `level/exitReached` is a **position**, and
-   * a player can reach it without engaging a single landmark. It still finishes
-   * the level, because that is the product decision — the points of interest are
-   * where the learning happens and the end of the world is the finish line — and
-   * the card is what has to be honest about it.
+   * `level/exitReached` is a **position**. It used to be an achievement as well:
+   * the composition root wrote the stamp on every arrival, and a player who
+   * walked past every landmark read "You earned the Ottawa stamp. You did not
+   * answer any questions here." under a passport that promises a stamp for
+   * finishing a level's task. The start level ships a task, so this walk is the
+   * route that promise is about.
    */
   const walkToTheEnd = async (): Promise<void> => {
     hoisted.state.level = LOADED_LEVEL;
@@ -1717,11 +1801,16 @@ describe('reaching the end of a level finishes it and offers the next one', () =
     await flush();
   };
 
-  it('earns the stamp, so the next level is really open on the map', async () => {
+  it('ships a task on the start level, or this is about nothing', () => {
+    expect(
+      readQuests().quests.some((quest) => String(quest.levelId) === String(START_LEVEL)),
+      `${String(START_LEVEL)} ships no quest, so reaching its end would rightly earn the stamp ` +
+        'and every case below would be about a different rule.',
+    ).toBe(true);
+  });
+
+  it('writes no stamp, so the next level stays shut on the map', async () => {
     await walkToTheEnd();
-    /* The map is rebuilt on the way out — `setEntries` replaces every card, so
-       it is done while no list is on screen (`TN-FLOW-03`). This is what the
-       player actually finds there. */
     modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
     hudOption<() => void>('onLeaveLevel')();
     await flush();
@@ -1733,110 +1822,65 @@ describe('reaching the end of a level finishes it and offers the next one', () =
     }[];
     expect(
       entries.find((entry) => entry.id === START_LEVEL)?.stamped,
-      `walking to the end of ${String(START_LEVEL)} must put its stamp in the passport`,
-    ).toBe(true);
+      `walking to the end of ${String(START_LEVEL)} with its task undone put a stamp in the passport`,
+    ).not.toBe(true);
     expect(
       entries.find((entry) => entry.id === EARNED_LEVEL)?.unlocked,
-      `and that stamp is what opens ${String(EARNED_LEVEL)}: nothing else in the game ` +
-        'writes one',
-    ).toBe(true);
+      `and opened ${String(EARNED_LEVEL)}, which only a stamp may do`,
+    ).toBe(false);
+    expect(hoisted.state.leftTo.at(-1), 'nothing opened, so there is no news to land on').toEqual(
+      {},
+    );
   });
 
-  it('tells the world the level is over, so nothing in it keeps asking to be done', async () => {
+  it('leaves the world asking to be done', async () => {
     await walkToTheEnd();
     expect(
       hoisted.state.markedComplete,
-      'markLevelComplete had no caller anywhere in the app, so every affordance in a ' +
-        'finished level went on pulsing at a player who had already been given credit',
-    ).toBe(1);
+      'the world was told the level is over while its task was still waiting',
+    ).toBe(0);
   });
 
-  it('draws the completion card', async () => {
+  it('draws one card, saying the stamp is for the task and that it has not been started', async () => {
     await walkToTheEnd();
     expect(hoisted.state.completeShown).toHaveLength(1);
+
+    const resolve = hoisted.state.completeShown[0] as CardContent;
+    for (const locale of ['en', 'fr'] as const) {
+      const content = resolve(locale);
+      expect(content.reason).toBe('unfinished');
+      /* The passport's own promise, then what is left: no invented sentence
+         about the rule, and nothing that marks the player down. */
+      expect(content.leftMessages).toEqual([
+        text(locale, 'passport.intro'),
+        text(locale, 'level.unfinished.notStarted'),
+      ]);
+      expect(content.stampMessage).toBeUndefined();
+      expect(content.progressMessage).toBeUndefined();
+      expect(content.doneMessage).toBeUndefined();
+      expect(content.next).toBeUndefined();
+    }
   });
 
-  it('says plainly that nothing was answered, and never scores it', async () => {
-    await walkToTheEnd();
-    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
-      progressMessage?: string;
-      reason?: string;
-    };
-
-    /*
-     * `TN-DONE-02`. Silence was the honest answer while nothing was written; it
-     * is not the same as saying so, and a player who walked past every landmark
-     * should be told plainly that they did while there is still a way back. The
-     * sentence carries no number — a total of zero is what it *is* — so the card
-     * can never read "0 out of 0", and no word in it marks the player down.
-     */
-    expect(resolve('en').progressMessage).toBe(text('en', 'level.complete.none'));
-    expect(resolve('fr').progressMessage).toBe(text('fr', 'level.complete.none'));
-    expect(/\d/u.test(resolve('en').progressMessage ?? '')).toBe(false);
-
-    /* And the heading is the level's, not the quest's: no task was accepted, so
-       "Task done!" would be a claim about something that never happened. */
-    expect(resolve('en').reason).toBe('level');
-  });
-
-  it('scores the questions the player did answer, at this level’s landmarks', async () => {
-    hoisted.state.level = LOADED_LEVEL;
+  it('names the step that is left once the task is being played', async () => {
+    hoisted.state.level = { ...LOADED_LEVEL, characters: [{ characterId: 'guide' }] };
     await boot(`?level=${START_LEVEL}`);
     emit('level/ready');
-
-    /* One landmark, one question, answered wrongly: the count is what the
-       player did, not what they got right. */
-    hoisted.state.answersAreCorrect = false;
-    emit('poi/engaged', 'town-clock');
-    modalOption<{ onClose: () => void }>('poi-card').onClose();
-    await flush();
-    const question = hoisted.state.questionOptions as {
-      onAnswer: (index: number, right: boolean) => void;
-      onNext: () => void;
-    };
-    question.onAnswer(1, false);
-    question.onNext();
-    await flush();
+    emit('npc/engaged', 'guide');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    const step = hoisted.state.tasks.filter((task): task is string => task !== null).at(-1);
+    expect(step, 'accepting the start level’s task put nothing in the tracker').toBeDefined();
 
     reachEnd();
     await flush();
 
-    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
-      progressMessage?: string;
-    };
-    /* The card owns its own score row rather than borrowing Study's
-       (`TN-DONE`, `OQ-DONE-2`): the two screens count different sets and must be
-       free to be reworded apart. */
-    expect(resolve('en').progressMessage).toBe(
-      text('en', 'level.complete.score', { correct: 0, total: 1 }),
+    const resolve = hoisted.state.completeShown[0] as CardContent;
+    expect(resolve('en').reason).toBe('unfinished');
+    /* The tracker's own words, so the card and the HUD cannot name two
+       different things left to do. */
+    expect(resolve('en').leftMessages?.at(-1)).toBe(
+      text('en', 'level.unfinished.next', { step: step ?? '' }),
     );
-    expect(resolve('fr').progressMessage).toBe(
-      text('fr', 'level.complete.score', { correct: 0, total: 1 }),
-    );
-  });
-
-  it('names the level that just opened in the map’s own words, in either language', async () => {
-    await walkToTheEnd();
-    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
-      next?: { label: string; description: string };
-    };
-
-    const next = resolve('en').next;
-    expect(
-      next?.label,
-      `the route into ${String(EARNED_LEVEL)} is labelled with that level's own ` +
-        'level.<id>.play row: a label that says what pressing does, written out per ' +
-        'level because French takes « à » for three of the four and « dans la » for ' +
-        'the fourth',
-    ).toBe(text('en', `level.${String(EARNED_LEVEL)}.play` as never));
-    expect(resolve('fr').next?.label).toBe(
-      text('fr', `level.${String(EARNED_LEVEL)}.play` as never),
-    );
-    /* Three rows the map already draws, joined — never a fourth sentence. */
-    expect(next?.description).toContain(text('en', 'map.state.open'));
-    expect(next?.description).toContain(text('en', 'map.open.help'));
-
-    expect(resolve('fr').next?.description).toContain(text('fr', 'map.open.help'));
   });
 
   it('draws one card however many times the player walks over the end', async () => {
@@ -1845,12 +1889,57 @@ describe('reaching the end of a level finishes it and offers the next one', () =
     reachEnd();
     await flush();
 
+    expect(hoisted.state.completeShown).toHaveLength(1);
+  });
+
+  it('gives the level back when the player keeps playing', async () => {
+    await walkToTheEnd();
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
+
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    await flush();
+
+    expect(
+      doc.documentElement.dataset['tnPaused'],
+      'the level was left paused behind a card that has gone',
+    ).toBe('false');
+  });
+
+  it('lets the player leave for the map from the card, and lands them where they were', async () => {
+    await walkToTheEnd();
+    modalOption<{ onChooseLevel: () => void }>('quest-complete-card').onChooseLevel();
+    await flush();
+
+    expect(hoisted.state.calls).toContain('shell.leaveLevel');
+    expect(hoisted.state.leftTo.at(-1)).toEqual({});
+  });
+
+  it('still draws "Task done!" when the task is finished after the end was reached', async () => {
+    await walkToTheEnd();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+
+    hoisted.state.stampFor = `${START_LEVEL}`;
+    hoisted.state.questCompletes = true;
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+    const question = hoisted.state.questionOptions as {
+      onAnswer: (index: number, right: boolean) => void;
+      onNext: () => void;
+    };
+    question.onAnswer(0, true);
+    question.onNext();
+    await flush();
+
     expect(
       hoisted.state.completeShown,
-      'a quest finished twice is one stamp and one unlock; a level finished twice is ' +
-        'one card',
-    ).toHaveLength(1);
-    expect(hoisted.state.markedComplete).toBe(1);
+      'the card that says what is left must not stop the card that says it is done',
+    ).toHaveLength(2);
+    expect((hoisted.state.completeShown[1] as CardContent)('en').reason).toBe('quest');
+    expect(
+      hoisted.state.markedComplete,
+      'the task finished the level and the world was never told, so every mark went on pulsing',
+    ).toBe(1);
   });
 
   it('ignores a milestone that names another level', async () => {
@@ -1866,9 +1955,120 @@ describe('reaching the end of a level finishes it and offers the next one', () =
     ).toEqual([]);
     expect(hoisted.state.markedComplete).toBe(0);
   });
+});
+
+describe('reaching the end of a level already finished', () => {
+  /**
+   * Finish by answering, leave, come back, and walk to the end with nothing
+   * answered this time. The stamp is in the passport, so the end finishes the
+   * level again — and earns nothing twice.
+   */
+  const walkBackToTheEnd = async (): Promise<void> => {
+    await finishByAnswering();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    hoisted.state.completeShown = [];
+    hoisted.state.stampFor = null;
+    /* The first sitting told its world the level was over; this counts the second. */
+    hoisted.state.markedComplete = 0;
+    shellOption<(id: LevelId) => void>('onPlayLevel')(START_LEVEL);
+    await flush();
+    emit('level/ready');
+    reachEnd();
+    await flush();
+  };
+
+  it('draws the finished card, and says plainly that nothing was answered this time', async () => {
+    await walkBackToTheEnd();
+    expect(hoisted.state.completeShown).toHaveLength(1);
+
+    const resolve = hoisted.state.completeShown[0] as CardContent;
+    /*
+     * `TN-DONE-02`: the sentence carries no number — a total of zero is what it
+     * *is* — so the card can never read "0 out of 0", and no word in it marks
+     * the player down. And the heading is the level's: nothing finished a task
+     * in this sitting.
+     */
+    expect(resolve('en').reason).toBe('level');
+    expect(resolve('en').progressMessage).toBe(text('en', 'level.complete.none'));
+    expect(resolve('fr').progressMessage).toBe(text('fr', 'level.complete.none'));
+    expect(/\d/u.test(resolve('en').progressMessage ?? '')).toBe(false);
+    expect(
+      resolve('en').next,
+      'nothing opened this time, so there is no news to announce and no route to offer',
+    ).toBeUndefined();
+  });
+
+  it('tells the world the level is over, once however many times it is walked over', async () => {
+    await walkBackToTheEnd();
+    reachEnd();
+    reachEnd();
+    await flush();
+
+    expect(hoisted.state.markedComplete).toBe(1);
+    expect(hoisted.state.completeShown).toHaveLength(1);
+  });
+});
+
+describe('the card at the end of a finished level leads on', () => {
+  it('puts the stamp in the passport, so the next level is really open on the map', async () => {
+    await finishByAnswering();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    const entries = hoisted.state.entries as {
+      id?: LevelId;
+      unlocked: boolean;
+      stamped?: boolean;
+    }[];
+    expect(entries.find((entry) => entry.id === START_LEVEL)?.stamped).toBe(true);
+    expect(
+      entries.find((entry) => entry.id === EARNED_LEVEL)?.unlocked,
+      `the stamp is what opens ${String(EARNED_LEVEL)}`,
+    ).toBe(true);
+  });
+
+  it('scores the questions the player did answer, at this level’s landmarks', async () => {
+    /* One landmark, one question, answered wrongly: the count is what the
+       player did, not what they got right. */
+    hoisted.state.answersAreCorrect = false;
+    await finishByAnswering();
+
+    const resolve = hoisted.state.completeShown[0] as CardContent;
+    /* The card owns its own score row rather than borrowing Study's
+       (`TN-DONE`, `OQ-DONE-2`). */
+    expect(resolve('en').progressMessage).toBe(
+      text('en', 'level.complete.score', { correct: 0, total: 1 }),
+    );
+    expect(resolve('fr').progressMessage).toBe(
+      text('fr', 'level.complete.score', { correct: 0, total: 1 }),
+    );
+  });
+
+  it('names the level that just opened in the map’s own words, in either language', async () => {
+    await finishByAnswering();
+    const resolve = hoisted.state.completeShown[0] as CardContent;
+
+    const next = resolve('en').next;
+    expect(
+      next?.label,
+      `the route into ${String(EARNED_LEVEL)} is labelled with that level's own ` +
+        'level.<id>.play row: a label that says what pressing does, written out per level',
+    ).toBe(text('en', `level.${String(EARNED_LEVEL)}.play` as never));
+    expect(resolve('fr').next?.label).toBe(
+      text('fr', `level.${String(EARNED_LEVEL)}.play` as never),
+    );
+    /* Three rows the map already draws, joined — never a fourth sentence. */
+    expect(next?.description).toContain(text('en', 'map.state.open'));
+    expect(next?.description).toContain(text('en', 'map.open.help'));
+    expect(resolve('fr').next?.description).toContain(text('fr', 'map.open.help'));
+  });
 
   it('goes straight into the level that just opened when the player asks for it', async () => {
-    await walkToTheEnd();
+    await finishByAnswering();
     modalOption<{ onPlayNext: () => void }>('quest-complete-card').onPlayNext();
     await flush();
 
@@ -1883,7 +2083,7 @@ describe('reaching the end of a level finishes it and offers the next one', () =
   });
 
   it('leaves the new level back to the map, so back still goes one step up', async () => {
-    await walkToTheEnd();
+    await finishByAnswering();
     modalOption<{ onPlayNext: () => void }>('quest-complete-card').onPlayNext();
     await flush();
     hudOption<() => void>('onLeaveLevel')();
@@ -1892,17 +2092,9 @@ describe('reaching the end of a level finishes it and offers the next one', () =
     expect(hoisted.state.calls).toContain('shell.leaveLevel');
   });
 
-  it('still offers the map, and lands on the card that just opened', async () => {
-    await walkToTheEnd();
-    modalOption<{ onChooseLevel: () => void }>('quest-complete-card').onChooseLevel();
-    await flush();
-
-    expect(hoisted.state.leftTo.at(-1)).toEqual({ focusLevelId: EARNED_LEVEL });
-  });
-
   it('does not leave the level frozen when the card is closed', async () => {
-    await walkToTheEnd();
-    const pausedWithCardUp = hoisted.state.paused;
+    await finishByAnswering();
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
     modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
     await flush();
 
@@ -1911,38 +2103,10 @@ describe('reaching the end of a level finishes it and offers the next one', () =
      * level behind it stopped and would not start. A completion card is another
      * dialog over a live scene.
      */
-    expect(pausedWithCardUp).toBeGreaterThan(0);
-    expect(hoisted.state.resumed, 'the level was left paused behind a card that has gone')
-      .toBeGreaterThan(0);
-  });
-
-  it('offers no route into a level that is finished but opened nothing', async () => {
-    /* Every level in the chain already stamped: finishing one again opens
-       nothing, and the card must not claim otherwise. */
-    hoisted.state.level = LOADED_LEVEL;
-    await boot(`?level=${START_LEVEL}`);
-    emit('level/ready');
-    reachEnd();
-    await flush();
-    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
-    hudOption<() => void>('onLeaveLevel')();
-    await flush();
-
-    /* Back in, and finish it a second time. The stamp is already in the save. */
-    hoisted.state.completeShown = [];
-    shellOption<(id: LevelId) => void>('onPlayLevel')(START_LEVEL);
-    await flush();
-    emit('level/ready');
-    reachEnd();
-    await flush();
-
-    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
-      next?: unknown;
-    };
     expect(
-      resolve('en').next,
-      'nothing opened this time, so there is no news to announce and no route to offer',
-    ).toBeUndefined();
+      doc.documentElement.dataset['tnPaused'],
+      'the level was left paused behind a card that has gone',
+    ).toBe('false');
   });
 });
 
@@ -2069,11 +2233,10 @@ describe('the passport is reachable, and gives the level back', () => {
 
   it('is offered on the card where the stamp was just earned', async () => {
     /* `TN-QUEST-04` and `TN-PASSPORT-01` both assert it; `OQ-DONE-5` records the
-       disagreement about whether it belongs there. */
-    await boot(`?level=${START_LEVEL}`);
-    emit('level/ready');
-    reachEnd();
-    await flush();
+       disagreement about whether it belongs there. The stamp is earned by the
+       answer, because reaching the end of an unfinished level earns none
+       (ADR-0036). */
+    await finishByAnswering();
 
     modalOption<{ onOpenPassport: () => void }>('quest-complete-card').onOpenPassport();
     expect(hoisted.state.passportsShown).toBe(1);
@@ -2364,6 +2527,40 @@ describe('a quest is offered, accepted and tracked', () => {
     ).toHaveLength(1);
   });
 
+  it('asks every question the answer step has left, and the card counts the step (ADR-0036)', async () => {
+    /*
+     * Halifax's tracker read "Answer 2 questions about voting" over a card
+     * reading "Question 1 of 1". The step after the first visit is an answer
+     * step; the landmark asks all of it, from the level's subject, and the card
+     * counts through the step.
+     */
+    const firstVisitAt = OTTAWA_QUEST.steps.indexOf(FIRST_VISIT);
+    const answerStep = OTTAWA_QUEST.steps[firstVisitAt + 1];
+    expect(answerStep?.kind, `${String(OTTAWA_QUEST.id)} asks nothing after its first visit`).toBe(
+      'answer',
+    );
+    const count = answerStep?.count ?? 1;
+
+    hoisted.state.level = { ...OTTAWA_LEVEL, subject: 'government' };
+    await boot('?level=ottawa');
+    emit('level/ready');
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+
+    emit('poi/engaged', FIRST_VISIT.targetId);
+    const beforeTheLine = hoisted.state.dialoguesShown.length;
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+    if (hoisted.state.dialoguesShown.length > beforeTheLine) {
+      (hoisted.state.dialoguesShown.at(-1) as { next?: { onSelect: () => void } }).next?.onSelect();
+      await flush();
+    }
+
+    expect(hoisted.state.drillCalls.at(-1), 'the landmark asked less than the step asks').toBe(count);
+    expect(hoisted.state.drillScopes.at(-1)).toMatchObject({ subject: 'government' });
+    expect(hoisted.state.questionsAsked.at(-1)).toMatchObject({ progress: { n: 1, of: count } });
+  });
+
   it('says nothing at a landmark the current step is not about', async () => {
     if (LATER_VISIT === undefined) return;
     await arriveInOttawa();
@@ -2456,9 +2653,13 @@ describe('a quest is offered, accepted and tracked', () => {
       onAnswer: (i: number, right: boolean) => void;
       onNext: () => void;
     };
-    question.onAnswer(0, true);
-    question.onNext();
-    await flush();
+    /* Every question the landmark asks: an answer step asks all it has left in
+       one go (ADR-0036), and the card waits for the last of them to be done. */
+    for (let asked = 0; asked < hoisted.state.questionsAsked.length; asked += 1) {
+      question.onAnswer(0, true);
+      question.onNext();
+      await flush();
+    }
   };
 
   it('draws the finished quest’s own closing line on "Task done!", in both languages', async () => {
@@ -2486,7 +2687,7 @@ describe('a quest is offered, accepted and tracked', () => {
     }
   });
 
-  it('never draws the closing line on "Level finished!", even with the task accepted', async () => {
+  it('never draws the closing line at the end of a level whose accepted task is not done', async () => {
     await arriveInOttawa();
     emit('npc/engaged', 'officer');
     (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
@@ -2497,7 +2698,9 @@ describe('a quest is offered, accepted and tracked', () => {
     const resolve = hoisted.state.completeShown[0] as (locale: string) => Record<string, unknown>;
     for (const locale of ['en', 'fr'] as const) {
       const content = resolve(locale);
-      expect(content['reason']).toBe('level');
+      /* ADR-0036: the task is accepted and not done, so this is the card that
+         says what is left — never "Level finished!", never "Task done!". */
+      expect(content['reason']).toBe('unfinished');
       expect(
         'doneMessage' in content,
         `the walk to the end drew a remark about the task (${locale}), which TN-DONE rule 6 forbids`,
@@ -2697,6 +2900,39 @@ describe('a landmark offers a quest, and it opens', () => {
     expect(offer.lines.length, 'the offer had no lines to read').toBeGreaterThan(0);
     expect(offer.accept?.label).toBe(text('en', 'quest.accept'));
     expect(offer.decline?.label).toBe(text('en', 'quest.decline'));
+  });
+
+  it('asks the task’s questions at the landmark as soon as it is accepted (ADR-0036)', async () => {
+    /*
+     * Peggy's Cove's lighthouse says "then three questions", and the
+     * play-through found the tracker reading "Answer 3 questions" with nothing
+     * asked: a `talk` → `answer` quest had no landmark left to ask them at.
+     */
+    if (landmark === undefined || landmark === null) return;
+    const { quest, level, poi } = landmark;
+    const answer = quest.steps[1];
+    expect(answer?.kind, `${String(quest.id)} does not open talk → answer`).toBe('answer');
+    const count = answer?.count ?? 1;
+
+    hoisted.state.level = levelFixture({
+      title: level.title,
+      locomotion: level.locomotion,
+      pois: level.pois,
+      characters: [],
+    });
+    await boot(`?level=${level.id}`);
+    emit('level/ready');
+    emit('poi/engaged', poi.id);
+    expect(hoisted.state.drillCalls, 'a question was asked before the task was accepted').toEqual([]);
+
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    await flush();
+
+    expect(hoisted.state.drillCalls).toEqual([count]);
+    expect(hoisted.state.questionsAsked.at(-1)).toMatchObject({ progress: { n: 1, of: count } });
+    /* Still held: the offer gave the level back and the question took it again,
+       in the same turn, so the lighthouse never let the player walk off. */
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
   });
 });
 

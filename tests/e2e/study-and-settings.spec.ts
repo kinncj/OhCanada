@@ -324,7 +324,10 @@ test.describe('reaching a landmark teaches, then asks', () => {
       card,
       'the landmark taught something and asked nothing: the level has no way to assess',
     ).toBeVisible({ timeout: 15_000 });
-    await expect(card.locator('[data-testid="question-progress"]')).toHaveText('Question 1 of 1');
+    /* One question, and no task counting it: no counter, because "Question 1 of
+       1" counts nothing, and the dialog is named by the question (ADR-0036). */
+    await expect(card.locator('[data-testid="question-progress"]')).toBeHidden();
+    await expect(card).toHaveAccessibleName(/\S/);
     await expect(card.locator('[data-testid^="option-"]')).toHaveCount(4);
     /* Still paused: one hold covers the card and the question, so the game never
        moves in the gap between the two dialogs. */
@@ -343,6 +346,8 @@ test.describe('reaching a landmark teaches, then asks', () => {
     /* One question, so the control finishes rather than promising another. */
     const next = card.locator('[data-testid="question-next"]');
     await expect(next).toHaveText('Finish');
+    /* And one way on: "Close" beside "Finish" did the same thing (ADR-0036). */
+    await expect(card.locator('[data-testid="question-close"]')).toBeHidden();
     await next.click();
 
     await expect(card).toBeHidden();

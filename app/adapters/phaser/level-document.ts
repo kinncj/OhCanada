@@ -87,7 +87,7 @@ import type {
   ThemeColours,
   Vec2,
 } from '@application/ports';
-import type { CharacterId, LevelId, PoiId } from '@domain/ids';
+import type { CharacterId, LevelId, PoiId, SubjectId } from '@domain/ids';
 import { appErr, ok, type Result } from '@common/result';
 
 import { DEFAULT_PALETTE } from './boot-config';
@@ -120,6 +120,14 @@ export interface SceneLevel
     Pick<
       LevelDocument,
       | 'id'
+      /*
+       * The subject this level teaches, carried through for the composition
+       * root. It was the one field a level needs outside the scene that the
+       * scene's copy dropped, so every question a landmark asked was drawn from
+       * the whole bank: Toronto's streetcar asked about Magna Carta (ADR-0036).
+       * The scene never reads it.
+       */
+      | 'subject'
       | 'title'
       | 'size'
       | 'spawn'
@@ -890,6 +898,8 @@ export function parseLevelDocument(
 
   const id = readId(raw, 'id');
   if (!id.ok) return id;
+  const subject = readId(raw, 'subject');
+  if (!subject.ok) return subject;
   const title = readLocalizedText(raw, 'title');
   if (!title.ok) return title;
   const size = readVec2(raw, 'size');
@@ -940,6 +950,7 @@ export function parseLevelDocument(
 
   const level: SceneLevel = {
     id: id.value as LevelId,
+    subject: subject.value as SubjectId,
     title: title.value,
     size: size.value,
     spawn: spawn.value,

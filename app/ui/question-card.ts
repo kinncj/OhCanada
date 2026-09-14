@@ -7,7 +7,8 @@
  *  - **Nothing counts down.** There is no timer in this file, at all. The card
  *    is unchanged after two minutes because nothing is scheduled to change it.
  *  - **The player never learns how questions are chosen.** The only scheduling
- *    word on screen is the tag — "New" or "Seen before" — and the promise that a
+ *    word on screen is the tag — "New question" or "You have seen this question
+ *    before" (ADR-0036) — and the promise that a
  *    missed question comes back. `spaced repetition`, `FSRS`, `algorithm`,
  *    `interval`, `due` appear nowhere, in either language, and a unit test reads
  *    every string this card can draw to prove it.
@@ -29,11 +30,22 @@ import { button, element, mark, replaceChildren } from './dom';
 import { createScreen, type Screen } from './screen';
 
 export interface QuestionView {
-  /** "New" or "Seen before" — the only thing the player is told about scheduling. */
+  /** New, or seen before — the only thing the player is told about scheduling. */
   readonly kind: 'new' | 'seen';
   /** Zero-based position in the current activity, not in the bank (`OQ-CARD-3`). */
   readonly index: number;
   readonly total: number;
+  /**
+   * What the counter says, when it counts something other than this set.
+   *
+   * In a level the card counts the quest step's questions, not the drill: a step
+   * of two, one of which was answered at an earlier landmark, reads "Question 2
+   * of 2" over the one question left (ADR-0036). Absent, the counter is
+   * `index + 1` of `total`. Either way a count of one draws **no counter**:
+   * "Question 1 of 1" tells a player nothing, and the dialog is named by the
+   * question itself instead.
+   */
+  readonly progress?: { readonly n: number; readonly of: number };
   readonly prompt: string;
   /** Authored order (`OQ-CARD-2`). Four of them, in slice 1. */
   readonly options: readonly string[];
@@ -176,11 +188,16 @@ export function createQuestionCard(
       feedback.hidden = true;
       replaceChildren(feedback, []);
       nextButton.hidden = true;
+      /* A question not yet answered can be left; see `answer` for why an
+         answered one cannot be left this way. */
+      closeButton.hidden = false;
 
       screen.show();
       screen.refreshSwitch();
-      /* `TN-STUDY-08`: moving to the next question is announced. */
-      options.announce?.(progressText(question));
+      /* `TN-STUDY-08`: moving to the next question is announced. A card with no
+         counter has nothing to announce that its own name does not already say
+         on arrival, so it announces nothing rather than saying it twice. */
+      if (counts(question)) options.announce?.(progressText(question));
     },
 
     hide(): void {
@@ -209,15 +226,39 @@ export function createQuestionCard(
     },
   };
 
+  /** What the counter counts: the caller's count, or this set. */
+  function counted(question: QuestionView): { readonly n: number; readonly of: number } {
+    return question.progress ?? { n: question.index + 1, of: question.total };
+  }
+
+  /** Is there anything to count? One question is not a set. */
+  function counts(question: QuestionView): boolean {
+    return counted(question).of > 1;
+  }
+
   function progressText(question: QuestionView): string {
-    return text(locale, 'card.progress', {
-      n: question.index + 1,
-      total: question.total,
-    });
+    const { n, of } = counted(question);
+    return text(locale, 'card.progress', { n, total: of });
   }
 
   function paintQuestion(question: QuestionView): void {
-    progress.textContent = progressText(question);
+    /*
+     * The counter, or none. With a counter the dialog is named by it and
+     * described by the question (`TN-CARD-08`: a screen reader hears "Question 1
+     * of 3" before the prompt). Without one it is named by the question itself
+     * and has no separate description, so the question is read once, not twice.
+     */
+    if (counts(question)) {
+      progress.textContent = progressText(question);
+      progress.hidden = false;
+      screen.labelledBy(progress);
+      screen.describedBy(prompt);
+    } else {
+      progress.textContent = '';
+      progress.hidden = true;
+      screen.labelledBy(prompt);
+      screen.describedBy(null);
+    }
     kind.textContent = text(locale, question.kind === 'new' ? 'card.kind.new' : 'card.kind.seen');
     prompt.textContent = question.prompt;
 
@@ -252,6 +293,17 @@ export function createQuestionCard(
     repaintFeedback();
 
     nextButton.hidden = false;
+    /*
+     * One way on from the last question (ADR-0036). Once it is answered,
+     * "Finish" and "Close" both end the set and keep the answer, so a player
+     * reading the explanation was offered two controls with nothing to tell them
+     * apart. (In Study, "Close" also says the answers were kept and skips the
+     * summary; "Finish" is the route that shows it.) On the last question only the
+     * one that carries on is left. On any other, "Next" and "Close" are two
+     * different choices (go on, or leave the drill with the answers kept,
+     * `TN-STUDY-05`), so both stay. Escape still leaves the card.
+     */
+    closeButton.hidden = current.index + 1 >= current.total;
     screen.refreshSwitch();
     /* Focus the result so it is read, rather than left behind on the option
        the player just pressed (`TN-CARD-06`). */

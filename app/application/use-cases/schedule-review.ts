@@ -29,6 +29,7 @@ import { shippableQuestions } from '@domain/entities/question';
 import type { Progress } from '@domain/entities/progress';
 import { rememberAsked, selectQuestions } from '@domain/scheduling/question-scheduler';
 import type { ScheduledQuestion } from '@domain/scheduling/question-scheduler';
+import { hasBeenSeen } from '@domain/scheduling/review-record';
 import type { MemoryTuning } from '@domain/scheduling/review-record';
 
 export interface ScheduleReviewDeps {
@@ -50,6 +51,18 @@ export interface ScheduleReviewInput {
   readonly pool?: readonly QuestionId[] | undefined;
   /** Restricts the bank to one subject when the caller passed a wider one. */
   readonly subject?: SubjectId | undefined;
+  /**
+   * Questions the caller has a reason to ask **first**: the ones resting on the
+   * sentence a landmark has just told the player (ADR-0036).
+   *
+   * Each is asked ahead of the scheduler's draw when it is askable — verified,
+   * bilingual, inside `subject` and `pool` — and was not asked in this sitting
+   * (the exclusion window over `recentlyAsked`), so a place never repeats what
+   * the player was just asked somewhere else. The rest of the count is the
+   * scheduler's, over what is left. A preference narrows nothing: an id outside
+   * the bank, the subject or the pool is ignored rather than asked.
+   */
+  readonly prefer?: readonly QuestionId[] | undefined;
   readonly memory?: MemoryTuning | undefined;
 }
 
@@ -89,20 +102,13 @@ export const scheduleReview = (
     });
   }
 
-  const drawn = selectQuestions({
-    pool: askable.map((question) => question.id),
-    reviews: progress.reviews,
-    recentlyAsked,
-    // Never ask for more than exist: the scheduler would relax its exclusion
-    // window to fill the gap, and TN-STUDY-02 says a short drill stays short.
-    count: Math.min(count, askable.length),
-    now: deps.clock.now(),
-    settings: tuning,
-    random: deps.random,
-    ...(memory === undefined ? {} : { memory }),
-  });
+  const preferred = preferredFirst(input.prefer, askable, recentlyAsked, count, tuning);
+  const pool = askable
+    .map((question) => question.id)
+    .filter((id) => !preferred.some((chosen) => chosen === id));
+  const rest = count - preferred.length;
 
-  return map(drawn, (selected) => ({
+  const drawOf = (selected: readonly ScheduledQuestion[]): ScheduleReviewResult => ({
     questions: selected,
     recentlyAsked: rememberAsked(
       recentlyAsked,
@@ -110,5 +116,65 @@ export const scheduleReview = (
       tuning,
     ),
     shortfall: Math.max(0, count - selected.length),
-  }));
+  });
+
+  /*
+   * With nothing preferred this is exactly the draw it always was, and a bad
+   * count is still the scheduler's to refuse. With a preference the count is
+   * already known to be a positive whole number, and the scheduler is asked only
+   * for what is left — or not at all, when the preference filled the drill or
+   * nothing else may be asked.
+   */
+  if (preferred.length === 0 || (rest > 0 && pool.length > 0)) {
+    const drawn = selectQuestions({
+      pool,
+      reviews: progress.reviews,
+      recentlyAsked,
+      // Never ask for more than exist: the scheduler would relax its exclusion
+      // window to fill the gap, and TN-STUDY-02 says a short drill stays short.
+      count: Math.min(rest, pool.length),
+      now: deps.clock.now(),
+      settings: tuning,
+      random: deps.random,
+      ...(memory === undefined ? {} : { memory }),
+    });
+    return map(drawn, (selected) => drawOf([...familiar(preferred, progress), ...selected]));
+  }
+  return { ok: true, value: drawOf(familiar(preferred, progress)) };
 };
+
+/**
+ * The preferred ids that may be asked now, in the order given, at most `count`.
+ *
+ * Empty for a count the scheduler would refuse, so a bad count is refused by the
+ * one function that owns that rule rather than slipping through here.
+ */
+function preferredFirst(
+  prefer: readonly QuestionId[] | undefined,
+  askable: readonly QuestionDocument[],
+  recentlyAsked: readonly QuestionId[],
+  count: number,
+  tuning: SchedulerTuning,
+): readonly QuestionId[] {
+  if (prefer === undefined || !Number.isInteger(count) || count <= 0) return [];
+  const inBank = new Set(askable.map((question) => question.id));
+  const window = new Set(recentlyAsked.slice(0, Math.max(0, tuning.exclusionWindow)));
+  const chosen: QuestionId[] = [];
+  for (const id of prefer) {
+    if (chosen.length >= count) break;
+    if (!inBank.has(id) || window.has(id) || chosen.includes(id)) continue;
+    chosen.push(id);
+  }
+  return chosen;
+}
+
+/** A preferred id as the card sees it: `seen` once the player has answered it. */
+function familiar(ids: readonly QuestionId[], progress: Progress): readonly ScheduledQuestion[] {
+  return ids.map((questionId) => {
+    const record = progress.reviews.find((review) => review.questionId === questionId);
+    return {
+      questionId,
+      familiarity: record !== undefined && hasBeenSeen(record) ? 'seen' : 'new',
+    };
+  });
+}

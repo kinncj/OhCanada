@@ -185,8 +185,12 @@ const EN = {
 
   /* docs/stories/TN-CARD-question-card.md */
   'card.progress': 'Question {{n}} of {{total}}',
-  'card.kind.new': 'New',
-  'card.kind.seen': 'Seen before',
+  /* A sentence rather than a lone word (ADR-0036). "New", alone at the top of a
+     card, read as a label nobody explained — a new what? These say what the tag
+     is about, and still say nothing about how questions are chosen
+     (`TN-CARD-02`). Listed in `COPY_GAPS` until `TN-CARD`'s table is amended. */
+  'card.kind.new': 'New question',
+  'card.kind.seen': 'You have seen this question before',
   'card.correct': "That's right!",
   'card.wrong': 'Not quite.',
   'card.answerIs': 'The answer is: {{answer}}',
@@ -458,6 +462,19 @@ const EN = {
      `TN-COPY`'s counting rule 1 — so neither language needs plural rows and
      neither can draw "1 right answers". */
   'level.complete.score': 'Right answers in this level: {{correct}} out of {{total}}',
+
+  /* The card at the end of a level whose task is not done (ADR-0036). Written by
+     app/ui and listed in `COPY_GAPS`: `TN-DONE` has no row for this state,
+     because until ADR-0036 reaching the end always earned the stamp. The body is
+     `passport.intro` — the promise itself, in the words the passport uses — and
+     then one of the two lines below. Plain, second person, no mark and no blame:
+     the player can keep playing or leave, and nothing is taken away. */
+  'level.unfinished.title': 'You are at the end of this level',
+  /* `{{step}}` is the task's own current step, the tracker's words: "Answer 2
+     questions about voting". Last in the sentence, so no noun follows it. */
+  'level.unfinished.next': 'Your task here is not finished yet. Next: {{step}}',
+  'level.unfinished.notStarted':
+    "You have not started this level's task yet. Go back to find where it starts.",
 
   /* `stamp.<id>.earned` and `level.<id>.play`: one pair per built level, each
      transcribed from that level's own story, which `TN-DONE`'s two directories
@@ -967,8 +984,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'creator.presentation.neutral': 'Neutre',
 
   'card.progress': 'Question {{n}} sur {{total}}',
-  'card.kind.new': 'Nouvelle',
-  'card.kind.seen': 'Déjà vue',
+  'card.kind.new': 'Nouvelle question',
+  'card.kind.seen': 'Vous avez déjà vu cette question',
   'card.correct': "C'est exact!",
   'card.wrong': 'Pas tout à fait.',
   'card.answerIs': 'La bonne réponse est : {{answer}}',
@@ -1110,6 +1127,13 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.complete.none':
     "Vous n'avez répondu à aucune question ici. Chaque lieu de ce niveau a quelque chose à vous apprendre.",
   'level.complete.score': 'Bonnes réponses dans ce niveau : {{correct}} sur {{total}}',
+
+  /* See the English table (ADR-0036). « Vous êtes au bout » agrees with nobody,
+     so no row needs a gender. */
+  'level.unfinished.title': 'Vous êtes au bout de ce niveau',
+  'level.unfinished.next': "Votre mission ici n'est pas encore terminée. Prochaine étape : {{step}}",
+  'level.unfinished.notStarted':
+    "Vous n'avez pas encore commencé la mission de ce niveau. Retournez en arrière pour trouver où elle commence.",
 
   /* Four forms after « tampon » in six rows, and « à », « dans la » and
      « dans les » in the six below them: the pair of tables that proves a
@@ -1397,6 +1421,15 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'creator.presentation.feminine',
   'creator.presentation.masculine',
   'creator.presentation.neutral',
+  /* ADR-0036's five. The card at the end of an unfinished level — its heading and
+     its two ways of saying what is left — and the question card's tag, reworded
+     from a lone "New" into words that say what they are about. `TN-DONE` has no
+     row for the first three and `TN-CARD`'s table still carries the old tag. */
+  'level.unfinished.title',
+  'level.unfinished.next',
+  'level.unfinished.notStarted',
+  'card.kind.new',
+  'card.kind.seen',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

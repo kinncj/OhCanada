@@ -164,6 +164,19 @@ export interface QuestWiring {
   readonly onClose: () => void;
   /** The last step is done and the stamp is earned. Draw the card. */
   readonly onCompleted: (quest: QuestDocument) => void;
+  /**
+   * The player said "Yes, let's go", the offer has closed, and the quest is
+   * being played.
+   *
+   * Called after the dialogue has given the level back, and never for a quest
+   * that accepting completed. The composition root uses it for the one shape
+   * where acceptance is a place to be asked something: a quest that opens
+   * `talk` → `answer` — Peggy's Cove's lighthouse and the North's sternwheeler —
+   * whose giver says "then three questions" and used to ask none (ADR-0036).
+   * Optional, because a controller with nothing to do on acceptance is a normal
+   * one.
+   */
+  readonly onAccepted?: (quest: SpokenQuest) => void;
   /** Where focus goes when the dialogue closes back into the level. */
   readonly restoreFocusTo: () => HTMLElement | null;
 }
@@ -236,6 +249,16 @@ export interface VisitedOutcome {
   speak(onClosed: () => void): VisitSpeech;
 }
 
+/** An `answer` step in play, and how far through it the player is. */
+export interface AnsweringStep {
+  readonly quest: SpokenQuest;
+  readonly step: SpokenStep;
+  /** Questions already answered on this step. */
+  readonly done: number;
+  /** Questions the step asks: its `count`. */
+  readonly required: number;
+}
+
 /** Nothing happened here: not this step's target, or no quest is running. */
 const NOT_THIS_STEP: VisitedOutcome = {
   advanced: false,
@@ -256,6 +279,21 @@ export interface QuestController {
    * menu in the middle of a quest cannot finish it by accident.
    */
   readonly answering: QuestDocument | undefined;
+  /**
+   * The `answer` step being played, how many of its questions are answered, and
+   * how many it asks — or `undefined` when no answer would count.
+   *
+   * What a landmark needs to ask the step's questions rather than one question
+   * from anywhere (ADR-0036): the step's `questionPool`, and the count the card
+   * counts through, so "Answer 2 questions about voting" and "Question 2 of 2"
+   * are about the same two questions.
+   */
+  readonly answeringStep: AnsweringStep | undefined;
+  /**
+   * The tracker's line — what to do now — or `null` when no quest is being
+   * played. What the card at the end of an unfinished level says is left.
+   */
+  readonly task: string | null;
   /** Is a quest dialogue on screen? */
   readonly dialogueOpen: boolean;
   /**
@@ -781,7 +819,11 @@ export function createQuestController(wiring: QuestWiring): QuestController {
      * `content/quests/` is shaped that way today and the domain allows it, so the
      * stamp is folded here rather than left to a path that happens not to exist.
      */
-    if (result.value.questCompleted) earn(quest);
+    if (result.value.questCompleted) {
+      earn(quest);
+      return;
+    }
+    wiring.onAccepted?.(quest);
   }
 
   /**
@@ -916,6 +958,22 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       const state = stateOf(quest);
       if (state === undefined) return undefined;
       return currentStep(quest, state)?.kind === 'answer' ? quest : undefined;
+    },
+
+    get answeringStep(): AnsweringStep | undefined {
+      const quest = active();
+      if (quest === null) return undefined;
+      const state = stateOf(quest);
+      if (state === undefined) return undefined;
+      const step = currentStep(quest, state);
+      if (step?.kind !== 'answer') return undefined;
+      const spoken = spokenStep(quest, step);
+      if (spoken === undefined) return undefined;
+      return { quest, step: spoken, done: state.stepProgress, required: requiredForStep(step) };
+    },
+
+    get task(): string | null {
+      return trackerLine();
     },
 
     get dialogueOpen(): boolean {

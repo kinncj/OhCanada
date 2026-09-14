@@ -1,0 +1,105 @@
+import type { Page } from '@playwright/test';
+
+import { PROGRESS_STORAGE_KEY } from '@adapters/persistence/record-progress-repository';
+import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
+import { toProgressSnapshot } from '@application/persistence/progress-document';
+import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
+import { defaultSettings } from '@domain/entities/player';
+import { newProgress, withQuestState, withStamp } from '@domain/entities/progress';
+import type { EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
+
+/**
+ * Saves a scenario starts from, written by the game's own functions.
+ *
+ * Walking a quest to the end takes minutes on SwiftShader and is already
+ * `level-quest.spec.ts`'s job. A scenario about what happens *after* a step —
+ * the closing line on the card, the level that opens, the end of a level whose
+ * task is already done — starts from a save instead: `newProgress`,
+ * `withQuestState`, `withStamp`, `toProgressSnapshot` and the JSON save codec,
+ * put where ADR-0026 says an existing save is carried from — `localStorage`,
+ * before the first boot, into an empty IndexedDB. Nothing about the save's
+ * format is typed out here, so a format change moves these with it rather than
+ * breaking them silently.
+ *
+ * Moved out of `quest-moments.spec.ts` when `level-end-to-next.spec.ts` needed
+ * the same saves (ADR-0036).
+ */
+
+/** As much of a quest document as a seeded save needs. */
+export interface SeededQuest {
+  readonly id: string;
+  readonly levelId: string;
+  readonly steps: readonly { readonly kind: string; readonly count?: number }[];
+}
+
+const codec = createJsonSaveCodec({ maxImportBytes: 10_000_000, migrations: SAVE_MIGRATIONS });
+
+/** A save in which this level's quest is complete and its stamp earned, as the game writes one. */
+export function finishedSave(quest: SeededQuest): string {
+  const now = Date.now() as EpochMillis;
+  const level = quest.levelId as LevelId;
+  let progress = newProgress(defaultSettings('en' as LocaleCode), [level]);
+  progress = withQuestState(progress, level, {
+    questId: quest.id as QuestId,
+    status: 'completed',
+    stepIndex: quest.steps.length - 1,
+    stepProgress: 0,
+    updatedAt: now,
+  });
+  progress = withStamp(progress, level, now);
+  return encodeSave(progress, now);
+}
+
+/**
+ * A save one answer short of finishing this level's quest: accepted, on its last
+ * step, with that step's count all but met — and **no stamp**, because the
+ * answer that finishes the quest is what earns it. That is the route whose card
+ * reads "Task done!", which is the only card a quest's closing line is drawn on.
+ */
+export function oneAnswerFromDoneSave(quest: SeededQuest): string {
+  const lastIndex = quest.steps.length - 1;
+  const last = quest.steps[lastIndex];
+  if (last?.kind !== 'answer') {
+    throw new Error(
+      `${quest.id} does not end on an answer step, so no single answer can finish it. ` +
+        'Point this scenario at a quest that does.',
+    );
+  }
+  const now = Date.now() as EpochMillis;
+  const level = quest.levelId as LevelId;
+  const progress = withQuestState(newProgress(defaultSettings('en' as LocaleCode), [level]), level, {
+    questId: quest.id as QuestId,
+    status: 'active',
+    stepIndex: lastIndex,
+    stepProgress: Math.max(1, last.count ?? 1) - 1,
+    updatedAt: now,
+  });
+  return encodeSave(progress, now);
+}
+
+/** The save as the game writes one: snapshot, then the JSON codec. */
+function encodeSave(progress: ReturnType<typeof newProgress>, now: EpochMillis): string {
+  const snapshot = toProgressSnapshot(progress, { version: codec.version, updatedAt: now });
+  if (!snapshot.ok) throw new Error(`the seeded save is not a save: ${snapshot.error.message}`);
+  const encoded = codec.encode(snapshot.value);
+  if (!encoded.ok) throw new Error(`the seeded save would not encode: ${encoded.error.message}`);
+  return encoded.value;
+}
+
+/**
+ * Put a save where an older build would have left one, before the game boots.
+ *
+ * Once per tab: an init script runs on every navigation, and a save written
+ * again after the game has carried the first one into IndexedDB would be a
+ * second, stale copy the store keeps rather than reads.
+ */
+export async function seed(page: Page, bytes: string): Promise<void> {
+  await page.addInitScript(
+    ({ key, value }) => {
+      if (window.sessionStorage.getItem('tn-e2e-seeded') !== null) return;
+      window.sessionStorage.setItem('tn-e2e-seeded', '1');
+      window.localStorage.setItem(key, value);
+    },
+    { key: PROGRESS_STORAGE_KEY, value: bytes },
+  );
+}

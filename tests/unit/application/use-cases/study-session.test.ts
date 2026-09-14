@@ -10,6 +10,8 @@
 
 import { describe, expect, it } from 'vitest';
 
+import albertaFoothills from '@content/levels/alberta-foothills.json';
+import toronto from '@content/levels/toronto.json';
 import {
   BUNDLED_QUESTION_MODULES,
   createQuestionBank,
@@ -20,7 +22,7 @@ import type { Clock, SchedulerTuning } from '@application/ports';
 import { newProgress } from '@domain/entities/progress';
 import type { Progress } from '@domain/entities/progress';
 import { defaultSettings } from '@domain/entities/player';
-import type { EpochMillis, LocaleCode } from '@domain/ids';
+import type { EpochMillis, LocaleCode, QuestionId, SubjectId } from '@domain/ids';
 
 import { createStudySession } from '@application/use-cases/study-session';
 
@@ -123,6 +125,74 @@ describe('the Study seam, over the shipped bank', () => {
     expect(drill.ok).toBe(false);
     if (!available.ok) expect(available.error.code).toBe('content.questions.catalogue.empty');
     if (!drill.ok) expect(drill.error.code).toBe('content.questions.catalogue.empty');
+  });
+
+  it('draws only the subject a level asks for (ADR-0036)', async () => {
+    const drill = await sourceOver().drill(5, { subject: 'justice' as SubjectId });
+    expect(drill.ok).toBe(true);
+    if (!drill.ok) return;
+    expect(drill.value.questions).toHaveLength(5);
+    for (const drawn of drill.value.questions) {
+      expect(String(drawn.question.subject)).toBe('justice');
+    }
+  });
+
+  it('asks first the question resting on the sentence a landmark just told', async () => {
+    /* The Alberta foothills' pump jack, read from the level that ships it. */
+    const pumpJack = albertaFoothills.pois.find((poi) => poi.id === 'pump-jack');
+    const quote = pumpJack?.fact.source?.quote;
+    expect(quote, 'content/levels/alberta-foothills.json places no sourced pump jack').toBeDefined();
+    if (quote === undefined) return;
+
+    const drill = await sourceOver().drill(2, {
+      subject: albertaFoothills.subject as SubjectId,
+      teaches: [quote],
+    });
+    expect(drill.ok).toBe(true);
+    if (!drill.ok) return;
+    expect(String(drill.value.questions[0]?.question.id)).toMatch(/^eco-30-/u);
+    expect(drill.value.questions.every((drawn) => String(drawn.question.subject) === 'economy')).toBe(true);
+  });
+
+  it('never leaves the level’s subject for a sentence another subject grades', async () => {
+    /*
+     * Toronto's streetcar tells what municipalities look after, a sentence
+     * `government` grades (ADR-0030). Toronto teaches elections, so the streetcar
+     * asks an elections question rather than that one.
+     */
+    const streetcar = toronto.pois.find((poi) => poi.id === 'streetcar');
+    const quote = streetcar?.fact.source?.quote;
+    expect(quote).toBeDefined();
+    if (quote === undefined) return;
+
+    const drill = await sourceOver().drill(3, {
+      subject: toronto.subject as SubjectId,
+      teaches: [quote],
+    });
+    expect(drill.ok).toBe(true);
+    if (!drill.ok) return;
+    expect(drill.value.questions).toHaveLength(3);
+    for (const drawn of drill.value.questions) {
+      expect(String(drawn.question.subject)).toBe('elections');
+    }
+  });
+
+  it('draws only from a quest step’s pool when it names one', async () => {
+    const pool = ['jus-01', 'jus-02'].map((prefix) =>
+      Object.keys(BUNDLED_QUESTION_MODULES)
+        .map((path) => path.split('/').at(-1)?.replace(/\.json$/u, '') ?? '')
+        .find((id) => id.startsWith(`${prefix}-`)),
+    );
+    expect(pool.every((id) => id !== undefined)).toBe(true);
+    const ids = pool.filter((id): id is string => id !== undefined) as unknown as QuestionId[];
+
+    const drill = await sourceOver().drill(5, { subject: 'justice' as SubjectId, pool: ids });
+    expect(drill.ok).toBe(true);
+    if (!drill.ok) return;
+    expect(drill.value.questions.map((drawn) => String(drawn.question.id)).sort()).toEqual(
+      [...ids].map(String).sort(),
+    );
+    expect(drill.value.shortfall).toBe(3);
   });
 
   it('refuses a drill of zero rather than reporting an empty session', async () => {

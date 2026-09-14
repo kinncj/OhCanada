@@ -16,10 +16,13 @@
  *
  * ## What it is allowed to claim, and what it is not
  *
- * Reaching the end of the world finishes the level and earns its stamp. A player
- * can walk from the spawn to the exit **without answering a single question**,
- * and the card is still shown, because the stamp is still earned. What the card
- * must not do is imply the subject was learned. So the sentence about the
+ * Since ADR-0036, reaching the end of the world earns the stamp only when the
+ * level's task is done, the level sets none, or the stamp is already held; the
+ * end of an unfinished level draws this card with `reason: 'unfinished'`, which
+ * earns nothing and says what is left. A player coming back to a level they
+ * have finished can still walk to the exit **without answering a single
+ * question** this sitting, and that card is still shown. What the card must not
+ * do is imply the subject was learned. So the sentence about the
  * player's answers is drawn **only when there were answers**
  * ({@link LevelCompleteContent.progressMessage} is absent otherwise), and its
  * absence is the honest difference between a level walked through and a level
@@ -169,7 +172,19 @@ export interface LevelCompleteContent {
    * the end of the world is in, and the only one of the two that is true whether
    * or not a task was ever offered.
    */
-  readonly reason?: 'quest' | 'level';
+  readonly reason?: 'quest' | 'level' | 'unfinished';
+  /**
+   * What is left, already localised: drawn only when
+   * {@link LevelCompleteContent.reason} is `'unfinished'`.
+   *
+   * ADR-0036: reaching the end of a level whose task is not done earns no stamp.
+   * The card still appears, because the player has arrived somewhere and the
+   * game must not pretend otherwise — and it says what the stamp is for and what
+   * is left, offers the level back as its primary action, and offers the map.
+   * It never names a stamp, never offers the next level and never offers the
+   * passport: nothing was earned, so there is nothing new in it.
+   */
+  readonly leftMessages?: readonly string[];
   /**
    * The finished quest's own closing line (`doneLine`), already localised and
    * already verified.
@@ -286,6 +301,17 @@ export function createLevelComplete(
   /** Everything the card is saying right now, in reading order. */
   function lines(): HTMLElement[] {
     const said: HTMLElement[] = [];
+    /* The unfinished card says what the stamp is for and what is left, and
+       nothing else: no stamp, no score, no level that opened. */
+    if (content.reason === 'unfinished') {
+      for (const [index, left] of (content.leftMessages ?? []).entries()) {
+        if (left === '') continue;
+        said.push(
+          element(doc, 'p', { testId: `quest-complete-left-${String(index)}`, text: left }),
+        );
+      }
+      return said;
+    }
     /* The quest's own last line, first — and only on the showing whose heading
        says a task was done. On "Level finished!" it would be a remark about the
        task on the route `TN-DONE` rule 6 keeps silent about it. */
@@ -316,13 +342,21 @@ export function createLevelComplete(
 
   /** The heading, chosen by what actually finished. Never a default. */
   function headingText(forLocale: UiLocale): string {
-    return content.reason === 'quest'
-      ? text(forLocale, 'quest.done.title')
-      : text(forLocale, 'level.complete.title');
+    if (content.reason === 'quest') return text(forLocale, 'quest.done.title');
+    if (content.reason === 'unfinished') return text(forLocale, 'level.unfinished.title');
+    return text(forLocale, 'level.complete.title');
   }
 
   function render(): void {
     title.textContent = headingText(locale);
+    /* Which card this is, as a fact a test or a stylesheet can read without
+       parsing the heading's words. */
+    screen.element.setAttribute('data-reason', content.reason ?? 'level');
+
+    if (content.reason === 'unfinished') {
+      renderUnfinished();
+      return;
+    }
 
     const said = lines();
     replaceChildren(body, said);
@@ -399,6 +433,36 @@ export function createLevelComplete(
     replaceChildren(actions, controls);
   }
 
+  /**
+   * The end of a level whose task is not done (ADR-0036).
+   *
+   * One way on and one way out. Keeping playing is primary, because the task is
+   * behind the player and going back to it is the thing that earns what they
+   * came for; the map is there, quiet, for a player who would rather leave. No
+   * next level — nothing opened — and no passport, which holds nothing new.
+   */
+  function renderUnfinished(): void {
+    const said = lines();
+    replaceChildren(body, said);
+    body.hidden = said.length === 0;
+    screen.describedBy(said.length === 0 ? null : body);
+
+    replaceChildren(actions, [
+      button(doc, {
+        testId: 'quest-complete-keep-playing',
+        text: text(locale, 'common.keepPlaying'),
+        attrs: { 'data-tn-action': 'primary' },
+        onClick: keepPlaying,
+      }),
+      button(doc, {
+        testId: 'quest-complete-map',
+        text: text(locale, 'map.open'),
+        attrs: { 'data-tn-action': 'quiet' },
+        ...(options.onChooseLevel === undefined ? {} : { onClick: options.onChooseLevel }),
+      }),
+    ]);
+  }
+
   render();
 
   return {
@@ -423,8 +487,13 @@ export function createLevelComplete(
        * `aria-describedby` and is read on arrival, and repeating it through the
        * live region is the double-speaking every other screen here avoids.
        */
-      const stamp = content.stampMessage;
       const heading = headingText(locale);
+      /* The unfinished card's news is what is left, not a stamp: the heading and
+         the last line, which is the one that says what to do. */
+      const stamp =
+        content.reason === 'unfinished'
+          ? (content.leftMessages ?? []).filter((line) => line !== '').at(-1)
+          : content.stampMessage;
       options.announce?.(
         stamp === undefined || stamp === '' ? heading : `${heading} ${stamp}`,
         locale,

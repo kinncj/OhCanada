@@ -102,10 +102,12 @@ describe('a question arriving', () => {
     }
   });
 
-  it('says whether the question is new, in words', () => {
-    expect(open().at('question-kind').textContent).toBe('New');
+  it('says whether the question is new, in words that say what they are about', () => {
+    /* A lone "New" at the top of the card read as a label nobody explained
+       (ADR-0036). The tag is a phrase about the question now. */
+    expect(open().at('question-kind').textContent).toBe('New question');
     expect(open({ ...QUESTION, kind: 'seen' }).at('question-kind').textContent).toBe(
-      'Seen before',
+      'You have seen this question before',
     );
   });
 
@@ -302,6 +304,80 @@ describe('moving through a set', () => {
   });
 });
 
+/**
+ * ADR-0036: the in-level card said "Question 1 of 1" on every landmark, under a
+ * task that asked for two, and offered "Finish" and "Close" side by side after
+ * every answer.
+ */
+describe('a counter that counts something, and one way on', () => {
+  it('draws no counter for a single question, and is named by the question itself', () => {
+    const { root, page, at, announce } = open({ ...QUESTION, index: 0, total: 1 });
+
+    expect(at('question-progress').hidden).toBe(true);
+    expect(at('question-progress').textContent).toBe('');
+    const name = page.doc.getElementById(root.getAttribute('aria-labelledby') ?? '');
+    expect(name?.textContent).toBe(QUESTION.prompt);
+    /* Named by the prompt, so describing it by the prompt as well would read it twice. */
+    expect(root.getAttribute('aria-describedby')).toBeNull();
+    expect(announce).not.toHaveBeenCalledWith(expect.stringMatching(/^Question \d/u));
+  });
+
+  it('counts the task when the caller says what it counts', () => {
+    const { at, announce } = open({ ...QUESTION, index: 0, total: 1, progress: { n: 2, of: 2 } });
+
+    expect(at('question-progress').hidden).toBe(false);
+    expect(at('question-progress').textContent).toBe('Question 2 of 2');
+    expect(announce).toHaveBeenCalledWith('Question 2 of 2');
+  });
+
+  it('draws no counter when the task itself asks one question', () => {
+    const { at } = open({ ...QUESTION, index: 0, total: 1, progress: { n: 1, of: 1 } });
+    expect(at('question-progress').hidden).toBe(true);
+  });
+
+  it('finishes on the last question of the set, whatever the task counts', () => {
+    const { at } = open({ ...QUESTION, index: 0, total: 1, progress: { n: 1, of: 3 } });
+    at('option-0').click();
+    expect(at('question-next').textContent).toBe('Finish');
+  });
+
+  it('draws the counter again when a counted question follows a single one', () => {
+    const { card, root, page, at } = open({ ...QUESTION, index: 0, total: 1 });
+    card.present(QUESTION);
+
+    expect(at('question-progress').hidden).toBe(false);
+    const name = page.doc.getElementById(root.getAttribute('aria-labelledby') ?? '');
+    expect(name?.textContent).toBe('Question 1 of 3');
+    const description = page.doc.getElementById(root.getAttribute('aria-describedby') ?? '');
+    expect(description?.textContent).toBe(QUESTION.prompt);
+  });
+
+  it('offers one way on once the last question is answered: Finish, and no Close beside it', () => {
+    const { at } = open({ ...QUESTION, index: 0, total: 1 });
+    expect(at('question-close').hidden).toBe(false);
+
+    at('option-0').click();
+    expect(at('question-next').textContent).toBe('Finish');
+    expect(at('question-next').hidden).toBe(false);
+    expect(
+      at('question-close').hidden,
+      '"Finish" and "Close" side by side, doing the same thing, after the answer',
+    ).toBe(true);
+  });
+
+  it('keeps Close beside Next mid-set, where leaving and going on are different choices', () => {
+    const { card, at } = open();
+    at('option-0').click();
+    expect(at('question-next').textContent).toBe('Next');
+    expect(at('question-close').hidden).toBe(false);
+
+    card.present({ ...QUESTION, index: 2 });
+    expect(at('question-close').hidden, 'an unanswered question can always be left').toBe(false);
+    at('option-0').click();
+    expect(at('question-close').hidden).toBe(true);
+  });
+});
+
 describe('a question with no explanation', () => {
   it('still shows the result and the right answer', () => {
     /* Built without the key rather than with `undefined`: `exactOptionalPropertyTypes`
@@ -325,7 +401,7 @@ describe('French', () => {
   it('draws the card in French, with Canadian typography', () => {
     const { card, at, root } = open(FRENCH, { locale: 'fr' });
     expect(at('question-progress').textContent).toBe('Question 1 sur 3');
-    expect(at('question-kind').textContent).toBe('Nouvelle');
+    expect(at('question-kind').textContent).toBe('Nouvelle question');
 
     at('option-1').click();
     const feedback = at('question-feedback').textContent;

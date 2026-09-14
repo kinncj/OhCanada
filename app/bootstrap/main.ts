@@ -74,11 +74,11 @@ import {
   type SaveProgressDeps,
 } from '@application/use-cases/save-progress';
 import { defaultSettings, withSettings } from '@domain/entities/player';
+import { reachLevelEnd } from '@domain/entities/level-end';
 import {
   newProgress,
   stampedLevelIds,
   withCharacter,
-  withStamp,
   type Progress,
 } from '@domain/entities/progress';
 import type { EpochMillis, LevelId, LocaleCode } from '@domain/ids';
@@ -130,6 +130,7 @@ import {
 import { isPlayable, journeyEntries } from './journey';
 import { createExamController, type ExamController } from './exam';
 import { createExamEventLog } from './exam-events';
+import { counterForDrawn, landmarkDraw, teachingQuotes } from './landmark-questions';
 import { promptTargets } from './prompt-targets';
 import { levelPlacements, type LevelPlacements } from './engageables';
 import {
@@ -1112,6 +1113,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
          are in every number above as well; this one says they were read. */
       dialogueMoments: questCatalogue.census.moments,
     });
+    /* This level's quests, read once: the session offers them, and the end of
+       the level asks whether any of them is done (ADR-0036). */
+    const levelQuests = questsForLevel(questCatalogue, id);
     session = openLevel({
       id,
       words,
@@ -1136,7 +1140,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
          `budgets.timeToPlayMs` from the config CI measures against, doubled
          here and nowhere else. */
       stallAfterMs: rules.timeToPlayMs * 2,
-      quests: questsForLevel(questCatalogue, id),
+      quests: levelQuests,
       entries: entriesNow,
       /* One session for the sitting, shared with Study on the front door: see
          `LevelWiring.questions`. */
@@ -1144,22 +1148,35 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       record: recordAnswer,
       onExportSave: exportSave,
       /*
-       * Reaching the end of the level earns its stamp.
+       * Reaching the end of the level earns its stamp **only when the level's
+       * task is done** (ADR-0036).
        *
-       * `withStamp` rather than a use case, for the same reason `withSettings`
-       * is called directly a few lines up: there is no `finishLevel` use case to
-       * hold the clock for, the rule is one pure domain function, and the clock
-       * is already here. It is **idempotent by design** — TN-QUEST-04's "exactly
-       * one Ottawa stamp however many times the quest is finished" — so a level
-       * finished twice moves nothing and opens nothing a second time.
+       * The passport promises "You earn a stamp when you finish a level's task",
+       * and this line used to break that promise on every walk: it wrote the
+       * stamp on arrival, so the audit's player earned Ottawa's with "You did not
+       * answer any questions here" printed underneath. `reachLevelEnd` is the
+       * rule — already stamped, no task, or a task done earns; anything else is
+       * unfinished — and it is a pure domain function, called directly for the
+       * same reason `withSettings` is a few lines up: there is no use case to
+       * hold the clock for, and the clock is already here. The stamp stays
+       * idempotent, so a level finished twice moves nothing.
        *
        * The unlock rule is not run here and never is in this file: it is
        * `unlockedLevelIds`' over the stamps in the save, and `entriesNow()` asks
-       * it fresh. Writing the stamp *is* opening the next level.
+       * it fresh. Writing the stamp *is* opening the next level, which is why an
+       * unfinished level opens nothing.
        */
       finishLevel: () => {
-        progress = withStamp(progress, id, clock.now());
-        persist();
+        const outcome = reachLevelEnd(progress, {
+          levelId: id,
+          questIds: levelQuests.map((quest) => quest.id),
+          now: clock.now(),
+        });
+        if (outcome.kind === 'finished' && outcome.stampEarned) {
+          progress = outcome.progress;
+          persist();
+        }
+        return outcome.kind;
       },
       onLeave: () => {
         leaveLevel();
@@ -1395,9 +1412,10 @@ interface AnswerOutcome {
    * Not for the card — the card judged the answer before this call and is
    * already saying so. It is for the **completion card**, which has to be able
    * to tell a player who answered three questions from one who walked the length
-   * of the level and answered none. Reaching the end earns the stamp either way,
-   * so without this the same card would claim the same thing about two very
-   * different sittings, which is the game lying to a learner.
+   * of the level and answered none. A level whose stamp is already held is
+   * finished again by reaching its end (ADR-0036), so without this the same card
+   * would claim the same thing about two very different sittings, which is the
+   * game lying to a learner.
    */
   readonly correct: boolean;
 }
@@ -1486,15 +1504,17 @@ interface LevelWiring {
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
   readonly onExportSave: () => void;
   /**
-   * The level is finished: write its stamp into the passport.
+   * The player reached the end of the world: decide what that is worth, write
+   * the stamp if it earned one, and say which it was.
    *
    * Called when the player reaches the end of the world, and called by nothing
    * else. It is the caller's because only the caller holds `Progress` and the
-   * save, and it is **idempotent in the domain** — `withStamp` keeps the first
-   * moment rather than moving it, so a level finished twice is one stamp, one
-   * unlock and one line in the passport.
+   * save. `'finished'` means the stamp is in the passport — earned now, or
+   * already — and `'unfinished'` means the level's task is not done and nothing
+   * was written (ADR-0036, `reachLevelEnd`). Idempotent in the domain: a level
+   * finished twice is one stamp, one unlock and one line in the passport.
    */
-  readonly finishLevel: () => void;
+  readonly finishLevel: () => 'finished' | 'unfinished';
   readonly onLeave: () => void;
   /**
    * Leave, and land the player on a card other than this level's.
@@ -1594,13 +1614,16 @@ interface LevelWiring {
  * covers two dialogs and there is no frame in between where the game moves under
  * an open card.
  *
- * **The question is drawn from the whole bank, not from this level's subject,
- * and that is a seam gap rather than a choice.** `TN-CARD-01` asks for "all from
- * this level's subject"; `SceneLevel` — what `app/adapters/phaser` hands back for
- * a loaded level — carries `pois` and does not carry `subject`, so this file
- * cannot know which subject to ask for. The draw is the scheduler's, over
- * everything the build can ask, which is a real drill and a narrower claim.
- * Reported; the fix is one field on `SceneLevel` and one line here.
+ * **Every question comes from this level's subject** (ADR-0036, `TN-CARD-01`'s
+ * "all from this level's subject"). It used to be drawn from the whole bank,
+ * because `SceneLevel` did not carry `subject`, and a play-through found
+ * Toronto's streetcar asking about Magna Carta and Halifax's "Answer 2 questions
+ * about voting" over a card reading "Question 1 of 1" about the police.
+ * `SceneLevel.subject` carries it now, and `./landmark-questions.ts` is the rule:
+ * while an `answer` step is being played the landmark asks everything that step
+ * has left, and the card counts the step; otherwise it asks one question and
+ * draws no counter. Either way a question resting on the sentence the landmark
+ * just told is asked first.
  *
  * ## The interact prompt, and the copy gap it is wired around
  *
@@ -1953,9 +1976,11 @@ function openLevel(wiring: LevelWiring): LevelSession {
   }
 
   /*
-   * One question about the landmark just read, then back to the level.
+   * The landmark's questions — what the task's step has left, or one — then back
+   * to the level.
    *
-   * The runner is the same one Study uses, at a length of one. `TN-STUDY-01`:
+   * The runner is the same one Study uses, at whatever length the draw is
+   * (`./landmark-questions.ts`). `TN-STUDY-01`:
    * "answering behaves exactly as it does in a level" — which is only true while
    * there is one implementation of answering, so there is.
    */
@@ -2004,6 +2029,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
       showCompleted();
       return;
     }
+    if (unfinishedOwed) {
+      showUnfinished();
+      return;
+    }
     /* Back where they were. The card's own trap restores to whatever was
        focused when it opened, which is the landmark card that has since gone,
        so the destination is named. */
@@ -2022,6 +2051,21 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
   /** Has the completion card been drawn in this sitting of this level? */
   let cardShown = false;
+
+  /**
+   * Did the player reach the end with the level's task unfinished, this sitting?
+   *
+   * ADR-0036. The arrival is latched by the scene and said once; the card that
+   * says what is left is drawn once. Finishing the task afterwards still draws
+   * "Task done!" — `cardShown` is about that card, and this is not.
+   */
+  let endReachedUnfinished = false;
+
+  /** The unfinished card is owed, waiting for a card or a question to close. */
+  let unfinishedOwed = false;
+
+  /** Which of the two cards {@link completionContent} is resolving words for. */
+  let showing: 'finished' | 'unfinished' = 'finished';
 
   /**
    * Did a **quest** finish this level, as opposed to the player reaching its end?
@@ -2137,7 +2181,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
    *    same sentence, about the same fact, that the Study summary draws, reused
    *    rather than reworded exactly as `passport.state.earned` is reused by the
    *    map. **Absent when they answered nothing**, which is the whole point:
-   *    reaching the end earns the stamp, and a card that said the same thing to
+   *    a level already stamped is finished again at its end, and a card that said
+   *    the same thing to
    *    a player who read three landmarks and to one who walked straight past
    *    them would be claiming a subject was learned when nothing was answered;
    *  - the level that just opened, in the map's own words.
@@ -2147,6 +2192,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
    * invented here (ADR-0010).
    */
   function completionContent(forLocale: UiLocale): LevelCompleteContent {
+    if (showing === 'unfinished') return unfinishedContent(forLocale);
     const stampKey = `stamp.${String(id)}.earned`;
     const next = openedByThisLevel();
     const described = next === null ? null : wiring.describeNext(next, forLocale);
@@ -2189,6 +2235,20 @@ function openLevel(wiring: LevelWiring): LevelSession {
     finished = false;
     if (cardShown) return;
     cardShown = true;
+    showing = 'finished';
+    /* The task is done: whatever the unfinished card was waiting to say is not
+       true any more. */
+    unfinishedOwed = false;
+    /*
+     * The world's half, on every route that finishes a level. `markLevelComplete`
+     * once had no caller anywhere in the app, so every affordance in a finished
+     * level went on pulsing at a player who had already been given credit; it
+     * was then called only on arrival at the end, which since ADR-0036 is the
+     * rarer route to a stamp. Idempotent in the scene, and its `level/completed`
+     * echo arrives at `reachedTheEnd` after `cardShown` is set, so it draws
+     * nothing twice.
+     */
+    renderer.markLevelComplete();
     /* The card's own reason, not the landmark's. `poi` is taken and released by
        the landmark chain; a dialog that borrowed it could be closed by a chain
        finishing underneath it and leave a live level running behind an open
@@ -2208,11 +2268,53 @@ function openLevel(wiring: LevelWiring): LevelSession {
   }
 
   /**
+   * The words on the card at the end of an unfinished level (ADR-0036).
+   *
+   * Two lines, both true on this route and both in the player's language: the
+   * passport's own promise — "You earn a stamp when you finish a level's task" —
+   * so the reason there is no stamp is the rule the player was already told, and
+   * then what is left. The tracker's line when a task is being played ("Next:
+   * Answer 2 questions about voting"); a plain "you have not started it" when
+   * none is. No stamp, no score and no next level: nothing was earned.
+   */
+  function unfinishedContent(forLocale: UiLocale): LevelCompleteContent {
+    const task = quests.task;
+    return {
+      reason: 'unfinished',
+      leftMessages: [
+        text(forLocale, 'passport.intro'),
+        task === null
+          ? text(forLocale, 'level.unfinished.notStarted')
+          : text(forLocale, 'level.unfinished.next', { step: task }),
+      ],
+    };
+  }
+
+  /**
+   * Draw the card that says what is left, once per sitting.
+   *
+   * Its own hold, `'complete'`, like the finished card's: keeping playing
+   * releases it through the same `onKeepPlaying`, and leaving takes the level
+   * down with every hold it had.
+   */
+  function showUnfinished(): void {
+    unfinishedOwed = false;
+    if (cardShown) return;
+    showing = 'unfinished';
+    pause.hold('complete');
+    completed.show(completionContent);
+  }
+
+  /**
    * The player reached the end of the level.
    *
    * `level/exitReached` is the scene reporting a **position**; this is where it
    * becomes an achievement, which is the split `app/adapters/phaser`'s
-   * `level-events.ts` asks for and the reason the decision is here. In order:
+   * `level-events.ts` asks for and the reason the decision is here. Since
+   * ADR-0036 it is an achievement only when the level's task is done — or the
+   * level sets none, or its stamp is already held. Otherwise nothing is written,
+   * nothing opens, the world keeps its marks, and the card says what is left.
+   * When it is, in order:
    * the stamp goes into the passport (so `unlockedLevelIds` has already opened
    * whatever it opens before anything is drawn), the world is told the level is
    * over so nothing left in it keeps asking to be done, and then — and only
@@ -2222,15 +2324,21 @@ function openLevel(wiring: LevelWiring): LevelSession {
    * `markLevelComplete` returns early, and {@link showCompleted} draws once.
    */
   function reachedTheEnd(): void {
-    if (cardShown) return;
-    wiring.finishLevel();
-    /*
-     * The world's half. `markLevelComplete` had no caller anywhere in the app —
-     * a capability nothing composed, which is the shape this project keeps
-     * finding — so every affordance in a finished level went on pulsing at a
-     * player who had already been given credit for it.
-     */
-    renderer.markLevelComplete();
+    if (cardShown || endReachedUnfinished) return;
+    if (wiring.finishLevel() === 'unfinished') {
+      endReachedUnfinished = true;
+      /* The same guard as below, for the same reason: a card never opens over
+         another card. `backToTheLevel` draws what is owed. */
+      if (card.visible || runner.running) {
+        unfinishedOwed = true;
+        return;
+      }
+      showUnfinished();
+      return;
+    }
+    /* The world's half — `markLevelComplete` — is `showCompleted`'s, so a level
+       finished by its task is told it is over as well as one walked to the end
+       (ADR-0036). */
     /* A level cannot advance while a modal is open — the pause stops the scene,
        and the scene is what watches the exit line — so this branch is a guard
        rather than a path. It is here because the failure it prevents is a
@@ -2326,6 +2434,24 @@ function openLevel(wiring: LevelWiring): LevelSession {
          draws it, once per sitting, whichever way the level was finished. */
       finished = true;
       if (!card.visible && !runner.running) showCompleted();
+    },
+    /*
+     * Accepting a quest whose next step is an `answer` step asks its questions
+     * there and then (ADR-0036).
+     *
+     * Peggy's Cove's lighthouse and the North's sternwheeler open `talk` →
+     * `answer`: the giver says "then three questions", the player accepts, and
+     * the play-through found the tracker reading "Answer 3 questions" with
+     * nothing asked — the count was made up later by whatever landmark came
+     * next, on whatever subject. The giver is where the step is, so the giver is
+     * where it is asked, through the same chain a landmark uses.
+     */
+    onAccepted: (quest) => {
+      if (quests.answeringStep === undefined) return;
+      if (card.visible || runner.running) return;
+      learning = bareTargetId(String(quest.giver));
+      pause.hold('poi');
+      void askAbout();
     },
     restoreFocusTo: () => hud.prompt ?? hud.main,
   });
@@ -2442,7 +2568,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
   /**
    * The assessment half of the learning moment.
    *
-   * A drill of one, from the same session Study draws from, so a landmark never
+   * A drill from the level's subject (`./landmark-questions.ts`, ADR-0036), from
+   * the same session Study draws from, so a landmark never
    * asks what the player has just been asked. A bank that will not load, or that
    * has nothing left to ask, is **not** an error card here: the player is in a
    * level, they have just read something true, and interrupting that with a
@@ -2459,7 +2586,15 @@ function openLevel(wiring: LevelWiring): LevelSession {
       return;
     }
 
-    const drawn = await wiring.questions.drill(1);
+    /* The level's subject, what the step has left, and what this landmark just
+       told: `./landmark-questions.ts` says why each (ADR-0036). */
+    const level = renderer.level;
+    const draw = landmarkDraw({
+      levelSubject: level?.subject,
+      answering: quests.answeringStep,
+      teaches: teachingQuotes(level?.teachingPois, about),
+    });
+    const drawn = await wiring.questions.drill(draw.count, draw.scope);
     if (!drawn.ok || drawn.value.questions.length === 0) {
       if (!drawn.ok) {
         console.error(
@@ -2489,7 +2624,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
     /* Whatever the notice was about has stopped being true. */
     hud.setNotice(null);
-    runner.start(drawn.value.questions);
+    /* A short bank asks fewer than the step has left (`TN-QUEST-05`), and the
+       card never counts to a question that is not coming. */
+    runner.start(drawn.value.questions, counterForDrawn(draw, drawn.value.questions.length));
   }
 
   /*
@@ -2713,8 +2850,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
       hud.setLocale(next);
       card.setLocale(next);
       runner.setLocale(next);
-      completed.setLocale(next);
+      /* The quest before the completion card: the unfinished card's last line is
+         the tracker's, and the card re-resolves its words on `setLocale`. */
       quests.setLocale(next);
+      completed.setLocale(next);
       passport?.setLocale(next);
       /* The panel cannot re-resolve its own content: the statement is a
          `LocalizedText` on the level document and the refusal is a reason code,

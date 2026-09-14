@@ -342,6 +342,81 @@ describe('the way on from a finished level', () => {
   });
 });
 
+/**
+ * ADR-0036: the end of a level whose task is not done.
+ *
+ * The audit's player walked to the end of Ottawa and read "You earned the Ottawa
+ * stamp. You did not answer any questions here." — a stamp for a task nobody
+ * did, under a passport that promises one only for finishing it. The card on
+ * that route now earns nothing, says what is left, and gives the level back.
+ */
+describe('the end of a level whose task is not done', () => {
+  const LEFT = [text('en', 'passport.intro'), text('en', 'level.unfinished.notStarted')];
+
+  it('says where the player is, and what is left, with no stamp', () => {
+    const { card, at } = open({ onOpenPassport: vi.fn() });
+    /* Handed a stamp and a next level anyway: this card draws neither. */
+    card.show({ reason: 'unfinished', leftMessages: LEFT, stampMessage: OTTAWA_STAMP, next: NEXT });
+
+    const root = at('quest-complete-card');
+    expect(root?.getAttribute('data-reason')).toBe('unfinished');
+    expect(root?.textContent).toContain(text('en', 'level.unfinished.title'));
+    expect(root?.textContent).not.toContain('Level finished!');
+    expect(root?.textContent).not.toContain('Task done!');
+    expect(at('quest-complete-left-0')?.textContent).toBe(LEFT[0]);
+    expect(at('quest-complete-left-1')?.textContent).toBe(LEFT[1]);
+
+    expect(at('quest-complete-stamp')).toBeNull();
+    expect(at('quest-complete-progress')).toBeNull();
+    expect(at('quest-complete-next')).toBeNull();
+    expect(at('quest-complete-passport'), 'nothing was earned, so nothing is new in it').toBeNull();
+  });
+
+  it('gives the level back as its one primary action, and keeps the map beside it', () => {
+    const { card, at, onKeepPlaying, onChooseLevel } = open();
+    card.show({ reason: 'unfinished', leftMessages: LEFT });
+
+    expect(at('quest-complete-keep-playing')?.getAttribute('data-tn-action')).toBe('primary');
+    expect(at('quest-complete-map')?.getAttribute('data-tn-action')).toBe('quiet');
+
+    at('quest-complete-map')?.click();
+    expect(onChooseLevel).toHaveBeenCalledTimes(1);
+
+    at('quest-complete-keep-playing')?.click();
+    expect(onKeepPlaying).toHaveBeenCalledTimes(1);
+    expect(card.visible).toBe(false);
+  });
+
+  it('is described by what it says, and announces the heading and what to do', () => {
+    const { card, at, announce, page } = open();
+    card.show({ reason: 'unfinished', leftMessages: LEFT });
+
+    const root = at('quest-complete-card');
+    const description = page.doc.getElementById(root?.getAttribute('aria-describedby') ?? '');
+    expect(description?.textContent).toContain(LEFT[0]);
+    expect(description?.textContent).toContain(LEFT[1]);
+    expect(announce).toHaveBeenCalledWith(`${text('en', 'level.unfinished.title')} ${LEFT[1] ?? ''}`, 'en');
+  });
+
+  it('marks the finished card as finished, so the two cannot be mistaken', () => {
+    const { card, at } = open();
+    card.show({ reason: 'quest' });
+    expect(at('quest-complete-card')?.getAttribute('data-reason')).toBe('quest');
+    card.show({});
+    expect(at('quest-complete-card')?.getAttribute('data-reason')).toBe('level');
+  });
+
+  it('is French, from the heading to the line', () => {
+    const { card, at } = open({ locale: 'fr' });
+    card.show({
+      reason: 'unfinished',
+      leftMessages: [text('fr', 'passport.intro'), text('fr', 'level.unfinished.notStarted')],
+    });
+    expect(at('quest-complete-card')?.textContent).toContain(text('fr', 'level.unfinished.title'));
+    expect(at('quest-complete-keep-playing')?.textContent).toBe(text('fr', 'common.keepPlaying'));
+  });
+});
+
 describe('what the card claims about what the player did', () => {
   it('says what they answered, when they answered something', () => {
     const { card, at } = open();

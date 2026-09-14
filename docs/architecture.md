@@ -223,6 +223,14 @@ and a question's explanation are *told*: they may state a proposition another su
 hold. One place in the code still disagrees: until ADR-0030's gate change lands, gate A4 binds every level
 claim's grant to the level's `subject`.
 
+**The level's subject reaches the draw (ADR-0036).** `SceneLevel` carries `subject`, which the scene never
+reads and the composition root does: every question a level asks — at a landmark, or at a giver whose task
+opens on an `answer` step — is drawn from that subject through `StudySession.drill(count, scope)`, and
+`app/bootstrap/landmark-questions.ts` is the rule for how many and how the card counts them. A question
+resting on the sentence the landmark just told (the same `source.quote`, normalised as the contract gate
+does, in `app/application/content/proposition.ts`) is asked first. The end of a level earns its stamp only
+when the task is done, the level sets none, or the stamp is already held (`app/domain/entities/level-end.ts`).
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]

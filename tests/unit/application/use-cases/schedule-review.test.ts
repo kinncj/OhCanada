@@ -120,6 +120,120 @@ describe('what may be asked', () => {
     }
   });
 
+  it('asks a question the place just told first, then lets the scheduler choose the rest', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(5) },
+      {
+        questions: makeBank(10),
+        count: 3,
+        progress: emptyProgress(),
+        tuning,
+        prefer: [questionId('q-07')],
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (!drawn.ok) return;
+    const ids = drawn.value.questions.map((question) => question.questionId);
+    expect(ids[0]).toBe('q-07');
+    expect(ids).toHaveLength(3);
+    expect(new Set(ids).size).toBe(3);
+    expect(drawn.value.shortfall).toBe(0);
+    expect(drawn.value.recentlyAsked).toContain('q-07');
+  });
+
+  it('never prefers its way out of the subject or the pool', () => {
+    const bank = [
+      makeQuestion('gov-01'),
+      makeQuestion('gov-02'),
+      makeQuestion('his-01', { subject: subjectId('history') }),
+    ];
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(3) },
+      {
+        questions: bank,
+        count: 1,
+        progress: emptyProgress(),
+        tuning,
+        subject: subjectId(),
+        pool: [questionId('gov-02'), questionId('his-01')],
+        prefer: [questionId('his-01'), questionId('gov-01')],
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (drawn.ok) {
+      expect(drawn.value.questions.map((question) => question.questionId)).toEqual(['gov-02']);
+    }
+  });
+
+  it('does not ask again what was asked in this sitting, however preferred', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(9) },
+      {
+        questions: makeBank(10),
+        count: 2,
+        progress: emptyProgress(),
+        tuning,
+        recentlyAsked: [questionId('q-07')],
+        prefer: [questionId('q-07')],
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (drawn.ok) {
+      expect(drawn.value.questions.map((question) => question.questionId)).not.toContain('q-07');
+      expect(drawn.value.questions).toHaveLength(2);
+    }
+  });
+
+  it('fills a drill of one with the preferred question alone', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(2) },
+      {
+        questions: makeBank(4),
+        count: 1,
+        progress: emptyProgress(),
+        tuning,
+        prefer: [questionId('q-03'), questionId('q-04')],
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (drawn.ok) {
+      expect(drawn.value.questions).toEqual([{ questionId: 'q-03', familiarity: 'new' }]);
+    }
+  });
+
+  it('tags a preferred question the player has answered as seen', () => {
+    const bank = makeBank(4);
+    const first = bank[2];
+    if (first === undefined) throw new Error('the fixture bank is short');
+    const answered = answerQuestion(
+      { clock: testClock() },
+      { question: first, chosenIndex: 0, progress: emptyProgress() },
+    );
+    expect(answered.ok).toBe(true);
+    if (!answered.ok) return;
+    const drawn = scheduleReview(
+      { clock: testClock(at(ORIGIN + DAY)), random: seededRandomSource(2) },
+      { questions: bank, count: 1, progress: answered.value.progress, tuning, prefer: [first.id] },
+    );
+    expect(drawn.ok).toBe(true);
+    if (drawn.ok) expect(drawn.value.questions[0]?.familiarity).toBe('seen');
+  });
+
+  it('still refuses a drill of zero when something is preferred', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(2) },
+      {
+        questions: makeBank(4),
+        count: 0,
+        progress: emptyProgress(),
+        tuning,
+        prefer: [questionId('q-01')],
+      },
+    );
+    expect(drawn.ok).toBe(false);
+    if (!drawn.ok) expect(drawn.error.code).toBe('scheduler.count.invalid');
+  });
+
   it('asks for a shorter drill rather than repeating to pad it (TN-STUDY-02)', () => {
     const drawn = scheduleReview(
       { clock: testClock(), random: seededRandomSource(11) },
