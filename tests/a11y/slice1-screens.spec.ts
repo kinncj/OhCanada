@@ -1123,7 +1123,12 @@ test.describe('the passport', () => {
       const slot = root.locator(`[data-level-handle="${handle}"]`);
       states[handle] = await slot.evaluate((element) => ({
         word: element.querySelector('.tn-screen__state')?.textContent ?? '',
-        border: getComputedStyle(element).borderTopStyle,
+        /* The bordered box is the slot's page, one element inside the list item
+           it shares with the route rail. The three border styles are the three
+           they always were; only what carries them moved. */
+        border: getComputedStyle(
+          element.querySelector('.tn-passport__page') as HTMLElement,
+        ).borderTopStyle,
       }));
     }
 
@@ -1144,10 +1149,16 @@ test.describe('the passport', () => {
     await expect(root.locator('[data-level-handle="winnipeg"]')).toHaveAccessibleName(
       /Not made yet/,
     );
-    /* And no stamp is announced as "image", "graphic" or an empty string: the
-       mark is decoration beside the word that carries the same meaning. */
-    const marks = root.locator('[data-testid="stamp-ottawa"] .tn-screen__mark');
-    await expect(marks).toHaveAttribute('aria-hidden', 'true');
+    /*
+     * And no stamp is announced as "image", "graphic" or an empty string: the
+     * mark is decoration beside the word that carries the same meaning. It is
+     * pressed into the stamp on the route rail now rather than sitting loose in
+     * the row, and the rail is what carries `aria-hidden`, so the accessible
+     * name above is still the whole of what is read.
+     */
+    const rail = root.locator('[data-testid="stamp-ottawa"] .tn-journey');
+    await expect(rail).toHaveAttribute('aria-hidden', 'true');
+    await expect(rail.locator('.tn-journey__pin')).toHaveText('✓');
     await expect(page.locator('[data-testid="passport"] img')).toHaveCount(0);
   });
 
@@ -1255,5 +1266,66 @@ test.describe('the passport', () => {
     /* Every slot is still reachable by scrolling down, and every state word is
        fully visible rather than truncated. */
     await expect(root.locator('[data-testid="passport-slots"] > li')).toHaveCount(10);
+  });
+
+  /**
+   * The passport is the same journey as the map, marked differently.
+   *
+   * Both screens draw the same ten places in the same order and both used to
+   * draw them as ten identical rows. They share `app/ui/journey.ts` now, and
+   * differ in the mark on the route: the map marks a place you can go to, the
+   * passport marks a stamp pressed into a page. What only a browser can prove
+   * is that the drawing is really drawn, that hiding it cost nothing, and that
+   * `OQ-PASSPORT-4` still holds — no empty outline where nobody built a level.
+   */
+  test('draws the same route the map draws, and hides it from the reader', async ({ page }) => {
+    const root = await openScreen(page, 'passport');
+
+    const rails = root.locator('[data-testid="passport-slots"] .tn-journey');
+    await expect(rails).toHaveCount(10);
+    for (let index = 0; index < 10; index += 1) {
+      await expect(rails.nth(index)).toHaveAttribute('aria-hidden', 'true');
+      await expect(rails.nth(index)).toHaveAttribute('data-journey', 'stamp');
+    }
+
+    /* Nothing on the rail is focusable, so the ten things a keyboard stops on
+       are still the ten slots (`TN-PASSPORT-07`). */
+    await expect(root.locator('.tn-journey button, .tn-journey [tabindex]')).toHaveCount(0);
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('draws a stamp where one is earned, a space where one can be, and nothing where it cannot', async ({
+    page,
+  }) => {
+    /*
+     * `TN-PASSPORT-02` and `OQ-PASSPORT-4`. An empty outline reads as a slot the
+     * player could fill — which is true of a slot nobody has earned yet and
+     * false of a level nobody is making, so the square is drawn for the first
+     * and taken away for the second. The word beside each of them says the same
+     * thing, which is why this is reinforcement and not the signal.
+     */
+    const root = await openScreen(page, 'passport');
+
+    const pin = (handle: string) =>
+      root.locator(`[data-level-handle="${handle}"] .tn-journey__pin`);
+
+    await expect(pin('ottawa')).toHaveText('✓');
+    await expect(pin('ottawa')).toBeVisible();
+
+    await expect(pin('halifax')).toHaveText('');
+    await expect(pin('halifax'), 'an unearned slot draws no space to fill').toBeVisible();
+
+    await expect(
+      pin('winnipeg'),
+      'an outline over a level nobody is making reads as a slot to fill',
+    ).toBeHidden();
+
+    /* And the route still runs past it: the place is on the journey whether or
+       not the game contains it. */
+    await expect(
+      root.locator('[data-level-handle="winnipeg"] .tn-journey__leg--after'),
+    ).toBeVisible();
   });
 });

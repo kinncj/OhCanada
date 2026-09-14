@@ -617,6 +617,171 @@ const CSS = `
 }
 
 /* ------------------------------------------------------------------ *
+ * The journey: one route, ten stops, drawn down the left of a list.
+ *
+ * The level select and the passport share this block. It is the difference
+ * between ten options in a column and ten places on one road, and it is the
+ * answer OQ-MAP-2 gave -- "a vertical list of cards on a painted backdrop that
+ * suggests the journey" -- minus the painting, which is art and not CSS.
+ *
+ * THREE THINGS HERE ARE ACCEPTANCE CRITERIA, NOT DECORATION:
+ *
+ *  1. NOTHING ON THE RAIL IS INFORMATION. Every leg, pin and ring is a function
+ *     of two words the card beside it already prints -- its state and whether
+ *     its stamp is earned. app/ui/journey.ts computes them and hides the whole
+ *     rail from assistive technology, which is only honest because a player who
+ *     cannot see it loses nothing. Add a fact here and that stops being true.
+ *  2. EVERY LENGTH IS IN rem, so the rail and its pins grow with the text. The
+ *     gutter and its gap come to 1.25rem: 20 px at 100 % and 40 px at 200 %,
+ *     out of 390, and the card beside it keeps min-inline-size: 0 so it wraps
+ *     rather than pushing the page sideways. That width is the whole budget the
+ *     route is allowed, and it was measured down to it rather than guessed: at
+ *     200 % text the Ottawa card is 226 px wide with the rail and 266 px without.
+ *     At 1.625rem it was 214 px, and four place names wrapped one line more
+ *     than they do with no rail at all; at 1.25rem only Winnipeg, The North and
+ *     the Alberta foothills do, and every one is still wholly visible. Widen the
+ *     gutter and that is the cost to re-measure.
+ *  3. TRAVELLED AND AHEAD DIFFER BY BORDER STYLE, not by colour -- solid for a
+ *     leg the player has walked, dotted for one they have not -- which is the
+ *     same vocabulary the cards themselves use for their three states, and it
+ *     survives greyscale and forced colours.
+ *
+ * There is no animation in this block at all, so reduced motion has nothing to
+ * remove: a route that drew itself in would be information arriving as movement.
+ * ------------------------------------------------------------------ */
+
+.tn-journey {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  inline-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* The rail is as tall as the row beside it, so the leg below one stop ends
+     exactly where the leg above the next one begins. */
+  align-self: stretch;
+}
+
+/*
+  A leg of the route. A border rather than a background, because a border can be
+  dotted and a background cannot, and the difference between travelled and ahead
+  has to be a shape.
+*/
+.tn-journey__leg {
+  inline-size: 0;
+  flex: 0 0 auto;
+  border-inline-start: 0.1875rem solid var(--tn-ink);
+}
+
+/*
+  The leg below a stop grows to fill the row and never shrinks below its basis,
+  so a short card still shows a length of road under it. flex-basis rather
+  than min-block-size: every minimum size in this sheet is a touch target, a
+  test asserts none of them is under 2.75rem, and a decorative 12 px line would
+  have had to either break that rule or weaken it.
+*/
+.tn-journey__leg--before { block-size: 0.9rem; }
+.tn-journey__leg--after { flex: 1 0 0.75rem; }
+
+.tn-journey[data-journey-before="ahead"] .tn-journey__leg--before,
+.tn-journey[data-journey-after="ahead"] .tn-journey__leg--after {
+  border-inline-start-style: dotted;
+}
+
+/* The ends of the line: the first stop has nothing above it and the last has
+   nothing below it. Hidden rather than removed, so no row changes height. */
+.tn-journey[data-journey-before="none"] .tn-journey__leg--before,
+.tn-journey[data-journey-after="none"] .tn-journey__leg--after {
+  visibility: hidden;
+}
+
+/*
+  The stop. Round on the map -- a place on a route -- and the three card states
+  are the three border styles the cards themselves use, so the rail repeats the
+  card's own shape vocabulary rather than introducing a second one.
+*/
+.tn-journey__pin {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+  font-size: 0.625rem;
+  font-weight: 800;
+  line-height: 1;
+  border: 0.1563rem solid var(--tn-ink);
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-paper);
+}
+
+.tn-journey[data-journey-state="locked"] .tn-journey__pin { border-style: dashed; }
+.tn-journey[data-journey-state="not-earned"] .tn-journey__pin { border-style: dashed; }
+.tn-journey[data-journey-state="not-built"] .tn-journey__pin { border-style: dotted; }
+
+/* A place the player has been: the stamp is earned, and the card says so in the
+   word "Earned" right beside this. */
+.tn-journey[data-journey-reached="true"] .tn-journey__pin {
+  background: var(--tn-accent);
+  border-color: var(--tn-accent-edge);
+  border-style: solid;
+  color: var(--tn-accent-ink);
+}
+
+/*
+  Where the drawn route ends: bigger, with a ring round it. It is the only mark
+  on the rail that is not about one card on its own, and it still states nothing
+  new -- it sits on the first card reading "Open" without "Earned", or on the
+  last one reading "Earned". The ring is a box-shadow, which forced colours
+  drops; the size difference is not, so the mark survives with no colour at all.
+*/
+.tn-journey[data-journey-current="true"] .tn-journey__pin {
+  inline-size: 1rem;
+  block-size: 1rem;
+  box-shadow: 0 0 0 0.125rem var(--tn-paper), 0 0 0 0.1875rem var(--tn-ink);
+}
+
+/* A heavier edge on the road, and not on the stamp: at this size a 0.25rem
+   border on a 1rem square closes the gaps in a dashed one, and "not earned yet"
+   would stop being told apart by its shape. */
+.tn-journey[data-journey="stop"][data-journey-current="true"] .tn-journey__pin {
+  border-width: 0.25rem;
+}
+
+/*
+  The passport's mark is a stamp pressed into a page, not a place on a road: a
+  rounded square, set a few degrees off square the way a hand-held stamp lands.
+  A static rotation and not an animation -- there is nothing here for reduced
+  motion to take away.
+*/
+.tn-journey[data-journey="stamp"] .tn-journey__pin {
+  inline-size: 0.9375rem;
+  block-size: 0.9375rem;
+  border-radius: 0.25rem;
+  transform: rotate(-6deg);
+}
+
+.tn-journey[data-journey="stamp"][data-journey-current="true"] .tn-journey__pin {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+/* OQ-PASSPORT-4: no square at all where nobody has built the level. An empty
+   outline reads as a slot the player could fill, which is true of an unearned
+   slot and false of a place that is not in this game. The space stays so the
+   route runs straight past it. */
+.tn-journey[data-journey="stamp"][data-journey-state="not-built"] .tn-journey__pin {
+  visibility: hidden;
+}
+
+@media (forced-colors: active) {
+  .tn-journey__leg { border-inline-start-color: CanvasText; }
+  .tn-journey__pin { border-color: CanvasText; }
+  .tn-journey[data-journey-reached="true"] .tn-journey__pin { background: Highlight; }
+}
+
+/* ------------------------------------------------------------------ *
  * The level select: ten places, three states, and a stamp.
  * ------------------------------------------------------------------ */
 
@@ -624,7 +789,17 @@ const CSS = `
   gap: 0.875rem;
 }
 
+/* A row is the route plus one stop on it, side by side. */
 .tn-levels__item {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.25rem;
+}
+
+.tn-levels__stop {
+  flex: 1 1 auto;
+  min-inline-size: 0;
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
@@ -745,7 +920,24 @@ const CSS = `
 
 .tn-passport { gap: 0.625rem; }
 
+/*
+  A slot is the route plus the page the stamp is pressed into. The <li> is still
+  the focusable, labelled, data-state element -- what a keyboard reaches and what
+  a screen reader names did not move -- and the bordered box is now the child
+  beside the rail, because a route that runs between the slots cannot be drawn
+  inside one of them.
+*/
 .tn-passport__slot {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.25rem;
+}
+
+.tn-passport__page {
+  flex: 1 1 auto;
+  min-inline-size: 0;
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
@@ -760,6 +952,28 @@ const CSS = `
   border: var(--tn-edge-width) solid var(--tn-ink);
   border-radius: var(--tn-radius);
   background: var(--tn-paper-2);
+}
+
+/*
+  The focus ring lands on the page rather than on the row, so it looks exactly
+  as it did before the rail arrived: a ring round the slot, not round the slot
+  and a length of road. The <li> keeps the focus -- only the drawing moved -- and
+  the indicator is still an outline, a halo and a change of border geometry.
+*/
+.tn-passport__slot:focus-visible,
+.tn-passport__slot[data-switch-highlight="true"] {
+  outline: none;
+  box-shadow: none;
+  border-style: none;
+}
+
+.tn-passport__slot:focus-visible .tn-passport__page,
+.tn-passport__slot[data-switch-highlight="true"] .tn-passport__page {
+  outline: 0.25rem solid var(--tn-focus);
+  outline-offset: 0.1875rem;
+  box-shadow: 0 0 0 0.5rem var(--tn-focus-halo);
+  border-style: double;
+  border-width: 0.25rem;
 }
 
 .tn-passport__number {
@@ -802,7 +1016,10 @@ const CSS = `
   overflow-wrap: anywhere;
 }
 
-.tn-passport [data-state="earned"] {
+/* The three states are on the <li>; the box they paint is its page. Same three
+   shapes as before the rail arrived -- a solid edge, a dashed one, a dotted one
+   -- one element further in. */
+.tn-passport [data-state="earned"] .tn-passport__page {
   background: var(--tn-paper);
   border-inline-start-width: 0.625rem;
   border-inline-start-color: var(--tn-accent-edge);
@@ -814,17 +1031,25 @@ const CSS = `
   color: var(--tn-accent-ink);
 }
 
-.tn-passport [data-state="earned"] .tn-screen__mark { color: var(--tn-accent-ink); }
-
-.tn-passport [data-state="not-earned"] { border-style: dashed; background: var(--tn-paper-3); }
-.tn-passport [data-state="not-built"] { border-style: dotted; background: var(--tn-paper-3); }
+.tn-passport [data-state="not-earned"] .tn-passport__page {
+  border-style: dashed;
+  background: var(--tn-paper-3);
+}
+.tn-passport [data-state="not-built"] .tn-passport__page {
+  border-style: dotted;
+  background: var(--tn-paper-3);
+}
 
 .tn-passport__empty-slot:empty { display: none; }
 
 @media (forced-colors: active) {
-  .tn-passport__slot { border: 0.125rem solid CanvasText; }
-  .tn-passport [data-state="not-earned"] { border: 0.125rem dashed CanvasText; }
-  .tn-passport [data-state="not-built"] { border: 0.125rem dotted CanvasText; }
+  .tn-passport__page { border: 0.125rem solid CanvasText; }
+  .tn-passport [data-state="not-earned"] .tn-passport__page {
+    border: 0.125rem dashed CanvasText;
+  }
+  .tn-passport [data-state="not-built"] .tn-passport__page {
+    border: 0.125rem dotted CanvasText;
+  }
 }
 
 /* ------------------------------------------------------------------ *

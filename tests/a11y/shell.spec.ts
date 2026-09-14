@@ -566,6 +566,188 @@ test.describe('what the level select says about a place', () => {
   });
 });
 
+/**
+ * The level select reads as a journey rather than as a list of options.
+ *
+ * Ten identical rows in a column, each ending in a state word, is a menu; what
+ * this screen describes is one route across a country in a fixed order, and the
+ * player's word for the result was that "the maps are odd". `app/ui/journey.ts`
+ * draws the route. What can only be proved in a browser is here:
+ *
+ *  - that the rail is **drawn** and takes up room, rather than existing only as
+ *    attributes a unit test can read;
+ *  - that it costs a keyboard user, a screen-reader user and a switch user
+ *    **nothing** — the licence for hiding it is that it carries no fact of its
+ *    own, and axe is the check that hiding it was done correctly;
+ *  - that travelled and ahead differ by **shape**, which is the one thing the
+ *    fake DOM in `tests/unit/ui` cannot measure at all;
+ *  - that it grows with the text instead of squeezing the cards beside it.
+ */
+test.describe('the level select is a route, not a list', () => {
+  test('draws a length of route beside all ten cards, and axe is clean', async ({ page }) => {
+    await open(page, { view: 'level-select', stamped: 'ottawa' });
+
+    const rails = page.locator('[data-testid="level-select-list"] .tn-journey');
+    await expect(rails).toHaveCount(10);
+
+    /* Drawn, not merely present: a rail with no box would be ten attributes
+       nobody can see, which is a different screen from the one described. */
+    const widths = await rails.evaluateAll((elements) =>
+      elements.map((element) => element.getBoundingClientRect().width),
+    );
+    expect(Math.min(...widths)).toBeGreaterThan(8);
+
+    for (let index = 0; index < 10; index += 1) {
+      await expect(rails.nth(index)).toHaveAttribute('aria-hidden', 'true');
+    }
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('costs the keyboard, the reader and the switch nothing', async ({ page }) => {
+    await open(page, { view: 'level-select', stamped: 'ottawa' });
+
+    /* Nothing on the rail can be focused, so the ten stops on the journey are
+       still exactly the ten cards (`TN-MAP-07`, `TN-MAP-08`). */
+    await expect(page.locator('.tn-journey button, .tn-journey [tabindex]')).toHaveCount(0);
+
+    /* And the card's accessible name is what it always was: a number, a place
+       and a state, with nothing from the drawing leaking into it. */
+    const ottawa = page.locator('[data-testid="level-card-ottawa"]');
+    await expect(ottawa).toHaveAccessibleName(/Level 4/);
+    await expect(ottawa).toHaveAccessibleName(/Ottawa/);
+    await expect(ottawa).toHaveAccessibleName(/Open/);
+    await expect(ottawa).toHaveAccessibleDescription(/You can play this now/);
+  });
+
+  test('says only what the cards already say in words', async ({ page }) => {
+    /*
+     * The promise that lets the whole rail be hidden from assistive technology.
+     * Every mark on it is a redrawing of the state word and the "Earned" badge
+     * the card beside it prints; the day one of them states something new, a
+     * screen-reader user is missing something a sighted player has.
+     */
+    await open(page, { view: 'level-select', stamped: 'ottawa' });
+
+    const mismatches = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('[data-testid="level-select-list"] > li')]
+        .map((item) => {
+          const rail = item.querySelector<HTMLElement>('.tn-journey');
+          const card = item.querySelector<HTMLElement>('button[data-state]');
+          return {
+            handle: card?.getAttribute('data-level-handle') ?? '?',
+            state: [rail?.getAttribute('data-journey-state'), card?.getAttribute('data-state')],
+            stamp: [
+              rail?.getAttribute('data-journey-reached'),
+              card?.getAttribute('data-stamped'),
+            ],
+          };
+        })
+        .filter((row) => row.state[0] !== row.state[1] || row.stamp[0] !== row.stamp[1])
+        .map((row) => row.handle),
+    );
+    expect(mismatches, 'the rail disagrees with the words on these cards').toEqual([]);
+  });
+
+  test('tells a leg walked from a leg ahead by shape, not by colour', async ({ page }) => {
+    await open(page, { view: 'level-select', stamped: 'ottawa' });
+
+    /* Ottawa's stamp is earned, so the leg below it is travelled and the leg
+       below Toronto is not. Border style, because a dotted border is a shape
+       and greyscale does not take it away. */
+    const styles = await page.evaluate(() =>
+      ['ottawa', 'toronto'].map((handle) => {
+        const item = document
+          .querySelector(`[data-level-handle="${handle}"]`)
+          ?.closest('li');
+        const leg = item?.querySelector<HTMLElement>('.tn-journey__leg--after');
+        return leg === null || leg === undefined
+          ? '?'
+          : getComputedStyle(leg).borderInlineStartStyle;
+      }),
+    );
+    expect(styles[0]).toBe('solid');
+    expect(styles[1]).toBe('dotted');
+    expect(styles[0]).not.toBe(styles[1]);
+  });
+
+  test('marks where the route has got to, and survives forced colours doing it', async ({
+    page,
+  }) => {
+    await open(page, { view: 'level-select' });
+
+    await expect(page.locator('[data-journey-current="true"]')).toHaveCount(1);
+    /* And it is on Ottawa: the only card reading "Open" without "Earned", which
+       is a fact printed on the card and drawn here rather than invented. */
+    const markedHandle = await page.evaluate(
+      () =>
+        document
+          .querySelector('[data-journey-current="true"]')
+          ?.closest('li')
+          ?.querySelector('button[data-level-handle]')
+          ?.getAttribute('data-level-handle') ?? 'none',
+    );
+    expect(markedHandle).toBe('ottawa');
+
+    const sizeOf = async (): Promise<readonly number[]> =>
+      page.evaluate(() =>
+        ['true', 'false'].map((flag) => {
+          const pin = document.querySelector<HTMLElement>(
+            `[data-journey-current="${flag}"] .tn-journey__pin`,
+          );
+          return pin === null ? 0 : pin.getBoundingClientRect().width;
+        }),
+      );
+
+    const [markedNormal, plainNormal] = await sizeOf();
+    expect(markedNormal ?? 0).toBeGreaterThan(plainNormal ?? 0);
+
+    /* The ring round it is a box-shadow, which forced colours drops. The size
+       difference is not, so the mark still reads with no colour at all. */
+    await page.emulateMedia({ forcedColors: 'active' });
+    const [markedForced, plainForced] = await sizeOf();
+    expect(markedForced ?? 0).toBeGreaterThan(plainForced ?? 0);
+    await page.emulateMedia({ forcedColors: null });
+  });
+
+  test('grows with the text rather than squeezing the cards beside it', async ({ page }) => {
+    const railWidth = (): Promise<number> =>
+      page.evaluate(
+        () =>
+          document.querySelector<HTMLElement>('.tn-journey')?.getBoundingClientRect().width ?? 0,
+      );
+
+    await open(page, { view: 'level-select' });
+    const atOneHundred = await railWidth();
+
+    await open(page, { view: 'level-select', textScale: 200, font: 'dyslexia' });
+    const atTwoHundred = await railWidth();
+
+    /* Every length on the rail is in rem, so it doubles with the root font
+       size — a pixel literal would shrink relative to the text exactly when the
+       player asked for bigger text. */
+    expect(atTwoHundred).toBeGreaterThan(atOneHundred * 1.8);
+
+    /* And the cards beside it still fit, and are still targets. */
+    expect(await scrollsSideways(page)).toBe(false);
+    expect(await undersizedTargets(page), 'at 200 % text, beside the route').toEqual([]);
+  });
+
+  test('is still a list of ten items to a screen reader', async ({ page }) => {
+    /* `TN-MAP-09`. `list-style: none` on a flex <ul> is the one stylesheet
+       change WebKit takes the list role away for, so the role is written. */
+    await open(page, { view: 'level-select' });
+    await expect(page.locator('[data-testid="level-select-list"]')).toHaveAttribute(
+      'role',
+      'list',
+    );
+    await expect(
+      page.locator('[data-testid="level-select-list"]').getByRole('listitem'),
+    ).toHaveCount(10);
+  });
+});
+
 test.describe('the title screen states what it is', () => {
   test('says the game is not made by the Government of Canada', async ({ page }) => {
     await open(page);

@@ -5,10 +5,33 @@
  * `TN-LEVELS-2-to-10-spine.md` owns the ten place names and subject lines and
  * `TN-FLOW-first-run-and-return.md` owns the route in and out.
  *
+ * ## It is a route, not a list of options
+ *
+ * Ten cards in a column, each ending in a state word, is a menu; the thing it
+ * is describing is one journey across a country, in a fixed order, and that was
+ * invisible. Each card is drawn as a **stop on a route** now: a rail down the
+ * left of the list joins the ten in order, the legs the player has already
+ * travelled are drawn solid and the ones ahead dotted, and the stop where the
+ * drawn route ends is marked. `./journey.ts` owns that and explains why every
+ * mark on it is a redrawing of a word the card already carries rather than a
+ * new fact — which is what lets the rail be `aria-hidden` without costing a
+ * screen reader user anything.
+ *
+ * `OQ-MAP-2` asked whether this screen is a map or a list and answered "a
+ * vertical list of cards on a painted backdrop that suggests the journey, with
+ * the DOM order and focus order being the journey's order". This is that,
+ * without the painting: **the rail says the ten are one route in one order and
+ * says nothing about which way it runs**, because where these places are is a
+ * drawing of Canada and CLAUDE.md requires that to be reference-accurate rather
+ * than invented. `OQ-MAP-3` refuses the sentence that would claim a direction
+ * for the same reason a bent line would be refused.
+ *
  * ## The problem this screen is mostly about
  *
- * Nine of the ten levels do not exist. A screen listing ten things where nine
- * cannot be opened has to say *why*, and there are two different whys:
+ * Some of the ten levels may not exist in a given build — all ten do today, and
+ * `TN-MAP-04` says why the state stays anyway. A screen listing ten things
+ * where some cannot be opened has to say *why*, and there are two different
+ * whys:
  *
  *  - **locked** — the level exists and has not been earned yet. A goal.
  *  - **not made yet** — the game does not contain it. A statement about the
@@ -45,6 +68,7 @@ import type { LevelId } from '@domain/ids';
 
 import { count, text, type CopyKey, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
+import { journeyRail, journeyRoute, type JourneyStop } from './journey';
 import { injectScreenStyles } from './screen-styles';
 
 /** The three states, in the words `TN-MAP-01` requires on `data-state`. */
@@ -289,9 +313,13 @@ export function createLevelSelect(
     className: 'tn-screen__help',
   });
 
+  /* `role="list"` explicitly: `TN-MAP-09` requires the ten to be exposed as a
+     list of ten items, and `list-style: none` on a flex `<ul>` is the one
+     stylesheet change WebKit takes the role away for. */
   const list = element(doc, 'ul', {
     className: 'tn-screen__options tn-levels',
     testId: 'level-select-list',
+    attrs: { role: 'list' },
   });
 
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
@@ -325,7 +353,12 @@ export function createLevelSelect(
   function render(): void {
     heading.textContent = text(locale, 'map.title');
     counts.textContent = countsLine();
-    replaceChildren(list, entries.map(card));
+    /* The route is derived once per draw, from the whole journey: a stop's legs
+       depend on the stop before it, so no card can work it out alone. */
+    replaceChildren(
+      list,
+      journeyRoute(entries).map(({ step, stop }, index) => card(step, index, stop)),
+    );
     const controls: HTMLElement[] = [];
     if (options.onOpenPassport !== undefined) {
       controls.push(
@@ -353,7 +386,7 @@ export function createLevelSelect(
     return String(entry.id ?? entry.number);
   }
 
-  function card(entry: MapEntry, index: number): HTMLElement {
+  function card(entry: MapEntry, index: number, stop: JourneyStop): HTMLElement {
     const state = levelCardState(entry);
     const handle = handleOf(entry);
     const testId = `level-card-${handle}`;
@@ -449,7 +482,24 @@ export function createLevelSelect(
       });
     }
 
-    return element(doc, 'li', { className: 'tn-levels__item', children: [control, help] });
+    /*
+     * The card and the length of route it sits on, side by side.
+     *
+     * The rail is a sibling of the button rather than a child of it, because a
+     * route runs *between* stops: the leg below Ottawa has to reach the card
+     * under it, and nothing inside a button can. It is `aria-hidden` and holds
+     * nothing focusable, so the list a screen reader reads and the order a
+     * keyboard walks are exactly what they were.
+     */
+    const stopOf = element(doc, 'div', {
+      className: 'tn-levels__stop',
+      children: [control, help],
+    });
+
+    return element(doc, 'li', {
+      className: 'tn-levels__item',
+      children: [journeyRail(doc, { marker: 'stop', state, stop }), stopOf],
+    });
   }
 
   /* Both delegate to the pure functions above, which are also what the

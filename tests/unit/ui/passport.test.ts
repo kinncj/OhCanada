@@ -139,10 +139,20 @@ describe('the passport', () => {
     expect(slot?.getAttribute('data-state')).toBe('earned');
     expect(slot?.textContent).toContain('Earned');
     expect(slot?.textContent).toContain('Ottawa');
-    /* The mark is a shape beside the word, hidden from assistive technology so
-       the stamp is never announced as "image" or as an empty string. */
-    const mark = slot?.querySelectorAll('[aria-hidden="true"]') ?? [];
-    expect(mark, 'a stamp with no shape is a stamp told apart by colour alone').toHaveLength(1);
+    /*
+     * The mark is a shape beside the word, hidden from assistive technology so
+     * the stamp is never announced as "image" or as an empty string. It rides
+     * inside the rail now rather than loose in the row — the rail is what
+     * carries `aria-hidden`, so the tick is still never read out — and the
+     * assertion is on the mark rather than on "how many hidden things are in
+     * this slot", which the rail would otherwise answer for.
+     */
+    const rail = slot?.querySelector('.tn-journey');
+    expect(rail?.getAttribute('aria-hidden')).toBe('true');
+    const pin = rail?.querySelector('.tn-journey__pin');
+    expect(pin?.textContent, 'a stamp with no shape is told apart by colour alone').toBe('✓');
+    expect(rail?.getAttribute('data-journey-reached')).toBe('true');
+    expect(rail?.getAttribute('data-journey')).toBe('stamp');
   });
 
   it('draws an unearned slot in the same shape, never as a blank', () => {
@@ -152,9 +162,13 @@ describe('the passport', () => {
     expect(slot?.textContent).toContain('Not earned yet');
     expect(slot?.textContent).toContain('Halifax');
     expect(slot?.textContent).not.toContain('Locked');
-    /* No stamp shape on a slot nobody has earned: an outline reads as a slot the
-       player could fill. */
-    expect(slot?.querySelectorAll('[aria-hidden="true"]')).toHaveLength(0);
+    /* No stamp mark on a slot nobody has earned. The empty square stays, and is
+       right here: an outline reads as a slot the player could fill, which is
+       exactly what an unearned slot is. */
+    const rail = slot?.querySelector('.tn-journey');
+    expect(rail?.querySelector('.tn-journey__pin')?.textContent).toBe('');
+    expect(rail?.getAttribute('data-journey-reached')).toBe('false');
+    expect(rail?.getAttribute('data-journey-state')).toBe('not-earned');
   });
 
   it('says a level nobody has built is not made yet, in the map’s own words', () => {
@@ -191,6 +205,78 @@ describe('the passport', () => {
       (slot) => slot.getAttribute('data-state') === 'earned',
     );
     expect(earned).toHaveLength(2);
+  });
+});
+
+/**
+ * The same journey as the map, marked differently.
+ *
+ * The map and the passport draw the same ten places in the same order and both
+ * used to draw them as ten identical rows. They share `app/ui/journey.ts` now —
+ * one rail, one geometry, one rule for which legs are travelled — and differ in
+ * the mark, because the map marks a *place you can go to* and the passport marks
+ * a *stamp pressed into a page*. The promise that lets the rail be hidden from a
+ * screen reader is the same on both screens and is asserted on both: it redraws
+ * words the slot already prints and states nothing of its own.
+ */
+describe('the slots are stops on the same route the map draws', () => {
+  const railOf = (slot: FakeElement | null): FakeElement | null =>
+    slot?.querySelector('.tn-journey') ?? null;
+
+  it('draws a length of route beside every slot, hidden from assistive technology', () => {
+    const { at } = open();
+    const rails = at('passport-slots')?.querySelectorAll('.tn-journey') ?? [];
+    expect(rails).toHaveLength(10);
+    for (const rail of rails) {
+      expect(rail.getAttribute('aria-hidden')).toBe('true');
+      /* A stamp pressed into a page, not a place on a road. */
+      expect(rail.getAttribute('data-journey')).toBe('stamp');
+    }
+  });
+
+  it('says nothing the slot beside it does not already say in words', () => {
+    const { at } = open({ entries: entries(BUILT, ['ottawa', 'halifax']) });
+    for (const slot of at('passport-slots')?.children ?? []) {
+      const rail = railOf(slot);
+      expect(rail?.getAttribute('data-journey-state')).toBe(slot.getAttribute('data-state'));
+      expect(rail?.getAttribute('data-journey-reached')).toBe(
+        String(slot.getAttribute('data-state') === 'earned'),
+      );
+    }
+  });
+
+  it('draws the legs between the stamps earned solid and the rest ahead', () => {
+    const { at } = open({ entries: entries(BUILT, ['halifax']) });
+    const rails = at('passport-slots')?.querySelectorAll('.tn-journey') ?? [];
+    expect(rails[0]?.getAttribute('data-journey-before')).toBe('none');
+    expect(rails[0]?.getAttribute('data-journey-after')).toBe('travelled');
+    expect(rails[1]?.getAttribute('data-journey-before')).toBe('travelled');
+    expect(rails[1]?.getAttribute('data-journey-after')).toBe('ahead');
+    expect(rails[9]?.getAttribute('data-journey-after')).toBe('none');
+  });
+
+  it('keeps the slot itself as the thing a keyboard reaches and a reader names', () => {
+    /* `TN-PASSPORT-07` and `TN-PASSPORT-09`. The rail is a sibling of the page
+       inside the list item; what moved is the drawing, not the focus, the label
+       or the state. */
+    const { at } = open();
+    const slot = at('stamp-ottawa');
+    expect(slot?.tagName).toBe('LI');
+    expect(slot?.tabIndex).toBe(0);
+    expect(slot?.getAttribute('aria-label')).toContain('Ottawa');
+    expect(slot?.children.map((child) => child.className)).toEqual([
+      'tn-journey',
+      'tn-passport__page',
+    ]);
+    expect(slot?.querySelectorAll('[tabindex]')).toHaveLength(0);
+  });
+
+  it('redraws the route when a stamp is earned, without rebuilding the screen', () => {
+    const { at, passport } = open({ entries: entries(BUILT, []) });
+    expect(railOf(at('stamp-halifax'))?.getAttribute('data-journey-after')).toBe('ahead');
+    passport.setEntries(entries(BUILT, ['halifax']));
+    expect(railOf(at('stamp-halifax'))?.getAttribute('data-journey-after')).toBe('travelled');
+    expect(railOf(at('stamp-halifax'))?.getAttribute('data-journey-reached')).toBe('true');
   });
 });
 

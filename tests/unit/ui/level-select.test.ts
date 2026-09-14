@@ -172,6 +172,113 @@ describe('the level select', () => {
   });
 });
 
+/**
+ * The journey, drawn.
+ *
+ * Ten identical rows in a column is a menu; this game's ten levels are one
+ * route across a country in a fixed order, and that was invisible on the screen
+ * that calls itself a map. `app/ui/journey.ts` draws the route; what is asserted
+ * here is the promise that lets it be hidden from a screen reader — **every mark
+ * on it is a redrawing of a word the card beside it already prints.** The day
+ * that stops being true, a screen-reader user is missing something a sighted
+ * player has, and these are the tests that should fail.
+ */
+describe('the ten cards are stops on one route', () => {
+  const railOf = (card: FakeElement | null): FakeElement | null =>
+    card?.parentElement?.parentElement?.querySelector('.tn-journey') ?? null;
+
+  it('draws a length of route beside every card, hidden from assistive technology', () => {
+    const { at } = open();
+    const rails = at('level-select-list')?.querySelectorAll('.tn-journey') ?? [];
+    expect(rails).toHaveLength(10);
+    for (const rail of rails) expect(rail.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('adds nothing to the order a keyboard walks or a screen reader reads', () => {
+    /* `TN-MAP-07`: focus reaches all ten cards and nothing else stands between
+       them. A decorative rail that could be focused would be ten new stops in
+       the journey that are not places. */
+    const { at } = open();
+    const list = at('level-select-list');
+    expect(list?.querySelectorAll('li')).toHaveLength(10);
+    expect(list?.querySelectorAll('button')).toHaveLength(10);
+    expect(list?.querySelectorAll('[tabindex]')).toHaveLength(0);
+  });
+
+  it('says nothing the card beside it does not already say in words', () => {
+    const { at } = open({
+      entries: DEFAULT_ENTRIES.map((entry) =>
+        entry.id === id('ottawa') ? { ...entry, stamped: true } : entry,
+      ),
+    });
+
+    for (const [, levelId] of SPINE) {
+      const card = at(`level-card-${levelId}`);
+      const rail = railOf(card);
+      /* The shape on the rail and the word on the card are one decision. */
+      expect(rail?.getAttribute('data-journey-state')).toBe(card?.getAttribute('data-state'));
+      /* "Reached" is the "Earned" badge, and nothing else. */
+      expect(rail?.getAttribute('data-journey-reached')).toBe(
+        card?.getAttribute('data-stamped'),
+      );
+    }
+  });
+
+  it('ends the road at both ends of the journey and joins the eight between', () => {
+    const { at } = open();
+    const rails = at('level-select-list')?.querySelectorAll('.tn-journey') ?? [];
+    expect(rails[0]?.getAttribute('data-journey-before')).toBe('none');
+    expect(rails[9]?.getAttribute('data-journey-after')).toBe('none');
+    expect(rails.filter((rail) => rail.getAttribute('data-journey-before') === 'none'))
+      .toHaveLength(1);
+  });
+
+  it('draws the legs the player has walked solid and the rest ahead', () => {
+    const { at } = open({
+      entries: entries(['halifax', 'peggys-cove', 'ottawa'], ['halifax', 'peggys-cove']).map(
+        (entry) => (entry.id === id('halifax') ? { ...entry, stamped: true } : entry),
+      ),
+    });
+    const rails = at('level-select-list')?.querySelectorAll('.tn-journey') ?? [];
+    expect(rails[0]?.getAttribute('data-journey-after')).toBe('travelled');
+    expect(rails[1]?.getAttribute('data-journey-before')).toBe('travelled');
+    expect(rails[1]?.getAttribute('data-journey-after')).toBe('ahead');
+  });
+
+  it('marks the one place the route has reached, and only one', () => {
+    const { at } = open();
+    const current =
+      at('level-select-list')?.querySelectorAll('[data-journey-current="true"]') ?? [];
+    expect(current).toHaveLength(1);
+    /* Ottawa is the only card reading "Open" without "Earned", which is the
+       rule stated in words rather than a fourth state invented for the rail. */
+    expect(railOf(at('level-card-ottawa'))?.getAttribute('data-journey-current')).toBe('true');
+  });
+
+  it('marks nothing where there is nothing open and nothing earned', () => {
+    const { at } = open({ entries: entries([], []) });
+    expect(
+      at('level-select-list')?.querySelectorAll('[data-journey-current="true"]'),
+    ).toHaveLength(0);
+  });
+
+  it('redraws the route when progress changes, without being rebuilt', () => {
+    const { at, screen } = open();
+    expect(railOf(at('level-card-halifax'))?.getAttribute('data-journey-after')).toBe('ahead');
+
+    screen.setEntries(
+      entries(['ottawa', 'halifax'], ['ottawa', 'halifax']).map((entry) =>
+        entry.id === id('halifax') ? { ...entry, stamped: true } : entry,
+      ),
+    );
+
+    expect(railOf(at('level-card-halifax'))?.getAttribute('data-journey-after')).toBe(
+      'travelled',
+    );
+    expect(railOf(at('level-card-halifax'))?.getAttribute('data-journey-reached')).toBe('true');
+  });
+});
+
 describe('an open level', () => {
   it('says it is open, says how to take it, and takes it', () => {
     const { at, onChoose } = open();

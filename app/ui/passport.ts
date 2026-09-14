@@ -32,6 +32,22 @@
  * about a fact another screen already states — the pattern `describeEntry` set
  * for "this level is open".
  *
+ * ## The same journey as the map, marked differently
+ *
+ * The map and the passport draw the same ten places in the same order, and both
+ * used to draw them as ten identical rows. They share `./journey.ts` now — one
+ * rail, one geometry, one rule for which legs are travelled — so a player who
+ * has read the map recognises the rhythm here without being taught it twice.
+ *
+ * **What differs is the mark on the route, and it differs because the two
+ * screens answer different questions.** The map marks a *place you can go to*
+ * and the passport marks a *stamp pressed into a page*: a rounded square rather
+ * than a round stop, carrying the tick. An unearned slot draws the same square,
+ * empty, because that is exactly what it is — a space waiting for a stamp. A
+ * slot for a level nobody has built draws no square at all (`OQ-PASSPORT-4`),
+ * and the route passes through the gap, which is the honest picture of a place
+ * that is not in this game.
+ *
  * ## The empty passport is a beginning, not an error
  *
  * A new player opens this screen with nothing in it, and that is the first thing
@@ -59,7 +75,8 @@
  */
 
 import { text, type UiLocale } from './copy';
-import { button, element, mark, replaceChildren } from './dom';
+import { button, element, replaceChildren } from './dom';
+import { journeyRail, journeyRoute, type JourneyStop } from './journey';
 import { levelTitle, type MapEntry } from './level-select';
 import { createScreen, type Screen } from './screen';
 
@@ -184,9 +201,13 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
 
   const emptySlot = element(doc, 'div', { className: 'tn-passport__empty-slot' });
 
+  /* `role="list"` explicitly, for the reason the map states: `list-style: none`
+     on a flex `<ul>` is the one stylesheet change WebKit takes the role away
+     for, and `TN-PASSPORT-09` requires ten list items. */
   const list = element(doc, 'ul', {
     className: 'tn-screen__options tn-passport',
     testId: 'passport-slots',
+    attrs: { role: 'list' },
   });
 
   /* Below the slots: the stamps are what a passport is, and the exam is a
@@ -237,8 +258,15 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
    * and it carries an `aria-label` because a `listitem` takes no name from its
    * contents. Every word in that label is also on the screen: nothing important
    * exists only in the accessibility tree, and nothing only in pixels.
+   *
+   * The item holds two things: the length of route it sits on, and the bordered
+   * page the stamp is pressed into. The rail is a sibling of that page rather
+   * than a child of it, because the route runs *between* the slots and nothing
+   * inside a bordered box can reach the box below. The focusable, labelled,
+   * `data-state`-carrying element is still the `<li>`, so what a keyboard
+   * reaches and what a test reads are unchanged.
    */
-  function slot(entry: MapEntry): HTMLElement {
+  function slot(entry: MapEntry, stop: JourneyStop): HTMLElement {
     const state = stampState(entry);
     const handle = handleOf(entry);
     /* `levelTitle` is the map's own answer, reused: `null` for a place whose id
@@ -250,18 +278,6 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     const parts: HTMLElement[] = [
       element(doc, 'span', { className: 'tn-passport__number', text: number }),
     ];
-
-    /*
-     * The stamp itself: a shape, beside the word that says the same thing.
-     * `TN-PASSPORT-02` — "distinguishable from an unearned slot by a shape and a
-     * label, not by colour alone" — and `TN-PASSPORT-09` — a stamp is never
-     * announced as "image", "graphic" or an empty string, so the mark is hidden
-     * from assistive technology and the text beside it is what is read.
-     *
-     * A slot for a level nobody has built draws **no** mark at all
-     * (`OQ-PASSPORT-4`): an empty outline reads as a slot the player could fill.
-     */
-    if (state === 'earned') parts.push(mark(doc, '✓'));
 
     /* No place name and no placeholder in its space: level 2 has a subject line
        and, deliberately, no place (`TN-MAP-04`, `TN-PASSPORT-04`). */
@@ -284,6 +300,32 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
           })
         : null;
 
+    const page = element(doc, 'div', {
+      className: 'tn-passport__page',
+      children: help === null ? parts : [...parts, help],
+    });
+
+    /*
+     * The stamp itself: a shape, on the route, beside the word that says the
+     * same thing. `TN-PASSPORT-02` — "distinguishable from an unearned slot by
+     * a shape and a label, not by colour alone" — and `TN-PASSPORT-09` — a
+     * stamp is never announced as "image", "graphic" or an empty string, so the
+     * tick rides inside the rail, which is `aria-hidden`, and the text beside it
+     * is what is read.
+     *
+     * A slot for a level nobody has built draws **no** square at all
+     * (`OQ-PASSPORT-4`): an empty outline reads as a slot the player could fill,
+     * which is true of an unearned slot and false of a level nobody is making.
+     * The stylesheet takes the square away on `data-journey-state="not-built"`;
+     * the route still runs past it, because the place is still on the journey.
+     */
+    const rail = journeyRail(doc, {
+      marker: 'stamp',
+      state,
+      stop,
+      ...(state === 'earned' ? { glyph: '✓' } : {}),
+    });
+
     const item = element(doc, 'li', {
       /* `stamp-<levelId>` is the marker `docs/stories/README.md` fixes for a
          slot; a place whose id is not settled yet is keyed on its number, which
@@ -297,7 +339,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
           .filter((part): part is string => part !== null && part !== undefined && part !== '')
           .join('. '),
       },
-      children: help === null ? parts : [...parts, help],
+      children: [rail, page],
     });
     item.tabIndex = 0;
     return item;
@@ -332,7 +374,12 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
           ],
     );
 
-    replaceChildren(list, entries.map(slot));
+    /* One route, derived from the whole journey: a slot's legs depend on the
+       slot before it, so no slot can work its own out. */
+    replaceChildren(
+      list,
+      journeyRoute(entries).map(({ step, stop }) => slot(step, stop)),
+    );
     renderExam();
 
     replaceChildren(
