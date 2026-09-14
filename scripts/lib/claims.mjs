@@ -102,15 +102,21 @@ export const CLAIM_COLLECTIONS = ['questions', 'quests', 'levels'];
  * fields move. Most of a claim's fields are found by SHAPE — its unit, which is
  * the node the `factClaim` hangs off, so the prose and the `source` come for
  * free and so does anything added beside them later. These do not: they sit at
- * the document ROOT, beside a level's `ground` polygon and `textureBudgetBytes`,
- * and no shape separates a remit label from a texture budget. Only a reason
- * does, so each carries one. The full argument, including the fields that were
- * asked this question and answered no, is the essay above `claimAuthorFieldsAt`
- * in verify-content.mjs.
+ * the document ROOT, beside a level's `ground` polygon and a quest's `giver`,
+ * and no shape separates where a line is spoken from how it is drawn. Only a
+ * reason does, so each carries one. The full argument, including the fields that
+ * were asked this question and answered no, is the essay above
+ * `claimAuthorFieldsAt` in verify-content.mjs.
  *
  * ADD TO THIS LIST ONLY WITH A REASON OF THE SAME KIND: "a verifier's check of
  * this claim reads this field, so changing it makes the grant a statement about
  * something else."
+ *
+ * `subject` WAS HERE AND IS NOT, BY ADR-0030. A subject owns the propositions its
+ * questions GRADE, not the ones its levels and quests TELL, and no check a
+ * verifier makes of a blurb, a territorial statement or a dialogue line reads the
+ * level's remit. A question's `subject` is still bound, and needs no entry to be:
+ * for a question the unit is the document, so it is inside the unit already.
  *
  * Two readers, one list (ADR-0019). The gate binds by it;
  * tests/unit/contracts/a-grant-binds-to-its-claim.test.ts proves against the
@@ -120,20 +126,12 @@ export const CLAIM_COLLECTIONS = ['questions', 'quests', 'levels'];
  */
 export const DOCUMENT_SCOPE_FIELDS = [
   {
-    key: 'subject',
-    why:
-      'the teaching remit a question or a level is filed under. ADR-0028: a subject is a remit ' +
-      'and not a chapter, two subjects may share a chapter but never a proposition, and the ' +
-      'one-proposition-one-subject check is made AGAINST the subject. Re-filing a claim under a ' +
-      'different remit therefore makes it a different claim, however untouched its words.',
-  },
-  {
     key: 'levelId',
     why:
-      "a quest's attachment to a level, and through it to that level's subject. A quest document " +
-      'carries no subject of its own, so `levelId` is the only root field that says which remit ' +
-      'its dialogue claims teach under. It earns the binding `subject` earns, for the reason ' +
-      '`subject` earns it.',
+      "the place a quest's lines are said at. Lines are written about where they are spoken — " +
+      "'here', 'this river', 'the capital of this territory', and every landmark giver's line by " +
+      'design (ADR-0029 §5) — so re-attaching a quest to another level makes each grant a statement ' +
+      'about somewhere else, however untouched its words. ADR-0030.',
   },
 ];
 

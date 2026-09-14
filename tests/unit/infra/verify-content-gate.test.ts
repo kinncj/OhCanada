@@ -2011,6 +2011,7 @@ const a4Level = (): Json => ({
 
 const LEVEL_PATH = 'content/levels/fix-level.json';
 const QUEST_PATH = 'content/quests/fix-quest.json';
+const QUESTION_PATH = 'content/questions/government/fix-0.json';
 
 /**
  * The schemas the level and the quest name, copied from content/schemas/.
@@ -2036,33 +2037,44 @@ const writeSchemas = (root: string): void => {
 type Edit = (level: Json, questDoc: Json) => readonly [Json, Json];
 
 /**
+ * A step's edit to the bank's one question, in the same commit as the step's
+ * `Edit`. Separate so that every step about a level or a quest stays an `Edit`;
+ * a step without one leaves the question as it was.
+ */
+type QuestionEdit = (questionDoc: Json) => Json;
+
+/**
  * Author everything in the null form, grant every status in a second commit,
  * then one commit per step. Properly separated commits, so a failure is the
  * rule under test and not the fixture doing two jobs at once.
  */
 const historyRepo = (
   label: string,
-  steps: readonly (readonly [string, Edit])[],
+  steps: readonly (readonly [string, Edit] | readonly [string, Edit, QuestionEdit])[],
   options: { readonly schemas?: boolean } = {},
 ): Run => {
   const root = tree(label, [question({ verification: NULL_FORM })]);
   if (options.schemas ?? true) writeSchemas(root);
   let level_ = a4Level();
   let quest_ = quest();
+  let question_ = question();
   write(root, LEVEL_PATH, unverified(level_));
   write(root, QUEST_PATH, unverified(quest_));
   initRepo(root);
   commit(root, 'Author a level, a quest and a question in the null form');
 
-  write(root, 'content/questions/government/fix-0.json', question());
+  write(root, QUESTION_PATH, question_);
   write(root, LEVEL_PATH, level_);
   write(root, QUEST_PATH, quest_);
   commit(root, 'Verify them all');
 
-  for (const [subject, edit] of steps) {
+  for (const step of steps) {
+    const [subject, edit] = step;
     [level_, quest_] = edit(level_, quest_);
+    if (step.length === 3) question_ = step[2](question_);
     write(root, LEVEL_PATH, level_);
     write(root, QUEST_PATH, quest_);
+    write(root, QUESTION_PATH, question_);
     commit(root, subject);
   }
 
@@ -2070,7 +2082,10 @@ const historyRepo = (
 };
 
 /** Three commits: author, grant, and the one edit under test. Nothing but A4 can fire. */
-const a4Repo = (label: string, edit: Edit): Run => historyRepo(label, [['Edit one field', edit]]);
+const a4Repo = (label: string, edit: Edit, questionEdit?: QuestionEdit): Run =>
+  historyRepo(label, [
+    questionEdit === undefined ? ['Edit one field', edit] : ['Edit one field', edit, questionEdit],
+  ]);
 
 /** Exactly which grants came unbound, as `path at pointer`, in sorted order. */
 const unbound = (out: string): readonly string[] =>
@@ -2087,11 +2102,15 @@ const TERRITORY = `${LEVEL_PATH} at /territory/fact/verification`;
 const POI_0 = `${LEVEL_PATH} at /pois[id=a-landmark]/fact/verification`;
 const POI_1 = `${LEVEL_PATH} at /pois[id=another-landmark]/fact/verification`;
 const DIALOGUE = `${QUEST_PATH} at /steps[id=talk]/dialogue/1/fact/verification`;
+// A question is its document: its identity key is the document's own
+// `/verification`, with no unit or list crossed on the way.
+const QUESTION = `${QUESTION_PATH} at /verification`;
 
 describe('A4 binds a grant to its own claim, not to the document around it', () => {
   const cases: readonly {
     readonly what: string;
-    readonly edit: (level: Json, questDoc: Json) => readonly [Json, Json];
+    readonly edit: Edit;
+    readonly questionEdit?: QuestionEdit;
     readonly voids: readonly string[];
     readonly names: string;
   }[] = [
@@ -2178,27 +2197,35 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
       names: 'position.x',
     },
     {
-      // DOCUMENT SCOPE. ADR-0028: a subject is a teaching remit, and the
-      // one-proposition-one-subject check is made against it, so re-filing a
-      // level under another remit re-files every claim in it. All three grants,
-      // and nothing in the quest or the bank.
-      what: "the level's subject, which every claim in the level is filed under",
-      edit: (level_, quest_) => [patched(level_, ['subject'], 'history'), quest_],
-      voids: [POI_0, POI_1, TERRITORY],
-      names: 'subject',
-    },
-    {
-      // The same rule for the collection that carries no subject of its own.
-      what: "a quest's levelId, which is the only remit label it has",
+      // DOCUMENT SCOPE, for PLACE (ADR-0030 §5). A quest's lines are said
+      // somewhere and some are only true there - "sung here", "this river",
+      // "the capital of this territory", and every landmark giver's line by
+      // design (ADR-0029 §5) - so re-attaching the quest to another level makes
+      // the grant a statement about somewhere else, with no word changed. The
+      // quest's one factual line, and nothing in the level or the bank.
+      what: "a quest's levelId, which is the place its lines are said at",
       edit: (level_, quest_) => [level_, patched(quest_, ['levelId'], 'some-other-level')],
       voids: [DIALOGUE],
       names: 'levelId',
     },
+    {
+      // THE HALF OF THE SUBJECT BINDING ADR-0030 KEEPS, proved by mutation as
+      // the half it removed was. For a question the unit IS the document, so
+      // `subject` is inside it without any document-scope entry, and re-filing a
+      // question changes a GRADED claim: the ship floor and the exam row it
+      // counts in, and the subjects ADR-0028's gate compares it with. That
+      // question's grant, and nothing in the level or the quest.
+      what: "a question's subject, which is the remit that grades it",
+      edit: (level_, quest_) => [level_, quest_],
+      questionEdit: (question_) => patched(question_, ['subject'], 'history'),
+      voids: [QUESTION],
+      names: '1 field(s): subject.',
+    },
   ];
 
-  for (const { what, edit, voids, names } of cases) {
+  for (const { what, edit, questionEdit, voids, names } of cases) {
     it(`voids the grant over ${what}, and no other grant`, () => {
-      const result = a4Repo(`a4-${names.replace(/[^a-z]+/giu, '-')}`, edit);
+      const result = a4Repo(`a4-${names.replace(/[^a-z]+/giu, '-')}`, edit, questionEdit);
       expect(unbound(result.out)).toEqual([...voids].sort((a, b) => a.localeCompare(b)));
       expect(result.out).toContain(names);
       expect(result.status).toBe(1);
@@ -2227,6 +2254,24 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
     expect(result.status).toBe(0);
   });
 
+  it('voids nothing when the level is re-filed under another subject (ADR-0030)', () => {
+    // A subject owns the propositions its questions GRADE, not the ones its
+    // levels TELL. A level's `subject` is the remit of its quest's answer steps
+    // and of the bank drawn for it; no check a verifier makes of a blurb or a
+    // territorial statement reads it. Before ADR-0030 this edit voided all
+    // three grants in the level and bought three re-verifications that checked
+    // nothing. It must now void none - while the table above still shows a
+    // blurb's own words, a quest's levelId and a question's subject voiding
+    // exactly their grants, so this is not a gate that has stopped looking.
+    const result = a4Repo('a4-level-subject', (level_, quest_) => [
+      patched(level_, ['subject'], 'history'),
+      quest_,
+    ]);
+    expect(unbound(result.out)).toEqual([]);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
   it('reports how many grants each named document-scope field bound', () => {
     // ADR-0024's second guard, visible. A named field is the one part of a
     // claim's field set that cannot be found by shape, so it is the one part
@@ -2234,35 +2279,57 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
     // documents - and bind nothing for ever.
     //
     // Six grants: the question, the territorial statement, the two blurbs, the
-    // `nationSource` block's own grant, and the quest's one factual line. Four
-    // bind `subject` - the level's three claims plus `nationSource`, which is
-    // not a claim but does carry a verification block of its own. One binds
-    // `levelId`. A question's grant binds neither, because for a question the
-    // unit IS the document and `subject` is already inside it.
+    // `nationSource` block's own grant, and the quest's one factual line. One
+    // binds `levelId`, the quest's line. The level's four bind no root field
+    // at all since ADR-0030 took `subject` off the list, and a question's grant
+    // binds none because for a question the unit IS the document. The trailing
+    // full stop is the assertion that no other field is named.
     const result = a4Repo('a4-scope-counts', reorderAndRebudget);
     expect(result.out).toContain('A4 binds each grant to its own claim');
     expect(result.out).toContain('6 grant(s) bound at HEAD');
-    expect(result.out).toContain('document-scope bindings subject 4, levelId 1');
+    expect(result.out).toContain('document-scope bindings levelId 1.');
   });
 
-  it('fails loudly when a grant binds to no author field of its own claim', () => {
-    // ADR-0024, the vacuity shape a NARROWING is exposed to. A grant bound to
-    // nothing can never be voided, so it reports green for ever; that is a
-    // failure and not a pass. The block below sits two levels down from the
-    // root with nothing authored beside it, which is the shape that empties a
-    // unit out. Note the document still carries `subject`, so the bound SET is
-    // not empty - the guard is on the claim's own unit, deliberately, because
-    // a remit label alone is not a claim.
-    const result = a4Repo('a4-vacuous-binding', (level_, quest_) => [
-      { ...level_, acknowledgement: { wrapper: { verification: NULL_FORM } } },
-      quest_,
-    ]);
-    expect(result.status).toBe(1);
-    expect(result.out).toContain('/acknowledgement/wrapper/verification');
-    expect(result.out).toContain('binds to NO author-owned field of its own claim');
-    expect(result.out).toContain('ADR-0024');
-    expect(unbound(result.out)).toEqual([]);
-  });
+  const vacuous: readonly { readonly where: string; readonly label: string; readonly edit: Edit }[] = [
+    {
+      // A level binds no root field since ADR-0030, so here the bound set is
+      // the unit alone and the unit is empty.
+      where: LEVEL_PATH,
+      label: 'level',
+      edit: (level_, quest_) => [
+        { ...level_, acknowledgement: { wrapper: { verification: NULL_FORM } } },
+        quest_,
+      ],
+    },
+    {
+      // THE TRAP THE GUARD IS PLACED TO AVOID. The quest carries `levelId`, so
+      // the bound SET is not empty - only the claim's own unit is. The guard is
+      // on the unit, deliberately, because a place label alone is not a claim.
+      // Before ADR-0030 the level case exercised this through `subject`; the
+      // quest is the document that still can.
+      where: QUEST_PATH,
+      label: 'quest',
+      edit: (level_, quest_) => [
+        level_,
+        { ...quest_, acknowledgement: { wrapper: { verification: NULL_FORM } } },
+      ],
+    },
+  ];
+
+  for (const { where, label, edit } of vacuous) {
+    it(`fails loudly when a grant in a ${label} binds to no author field of its own claim`, () => {
+      // ADR-0024, the vacuity shape a NARROWING is exposed to. A grant bound to
+      // nothing can never be voided, so it reports green for ever; that is a
+      // failure and not a pass. The block sits two levels down from the root
+      // with nothing authored beside it, which is the shape that empties a unit.
+      const result = a4Repo(`a4-vacuous-binding-${label}`, edit);
+      expect(result.status).toBe(1);
+      expect(result.out).toContain(`${where} at /acknowledgement/wrapper/verification`);
+      expect(result.out).toContain('binds to NO author-owned field of its own claim');
+      expect(result.out).toContain('ADR-0024');
+      expect(unbound(result.out)).toEqual([]);
+    });
+  }
 });
 
 /* -------------------------------------------------------------------------- */

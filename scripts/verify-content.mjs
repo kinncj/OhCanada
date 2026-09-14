@@ -748,11 +748,18 @@ const canonical = (value) => JSON.stringify(value);
  *    `theme` and `textureBudgetBytes`, so binding every blurb's grant to
  *    everything at the root would be the document-grain defect back again under
  *    a new name — a collision polygon moving would void thirty verified
- *    sentences. There is no shape that separates `subject` from `order`; only a
- *    reason does. Being named, they can go dead silently, which is what the
- *    second anti-vacuity guard is for.
+ *    sentences. There is no shape that separates a quest's `levelId` from its
+ *    `giver`, or a level's `subject` from its `order`; only a reason does. Being
+ *    named, they can go dead silently, which is what the second anti-vacuity
+ *    guard is for.
  *
  *    ASKED AND ANSWERED NO, so the next reader does not have to re-derive it:
+ *    a level's `subject` (a level's subject is the remit of its quest and its
+ *    bank; no check a verifier makes of a blurb or a territorial statement reads
+ *    it — ADR-0030, which took it off the list it had been on. A QUESTION's
+ *    `subject` is still bound, because for a question the unit is the document,
+ *    and re-filing a question changes the floor, the exam row and the ADR-0028
+ *    comparison it enters);
  *    a level's or a quest's `id` (renaming the file the claim lives in changes
  *    nothing a verifier read — and the questions' `id` is bound anyway, because
  *    for a question the unit is the document); `order` (presentation); `title`,
@@ -2080,8 +2087,8 @@ const runHistoryGate = () => {
     // gate reports green over a claim it has stopped binding. Silent, and in the
     // direction of passing — which is worse than the document-grain rule this
     // replaced, because that one at least over-fired.
-    // The UNIT, not the whole bound set: a document-scope field such as
-    // `subject` would keep the set non-empty while the claim's OWN words and
+    // The UNIT, not the whole bound set: a document-scope field such as a
+    // quest's `levelId` would keep the set non-empty while the claim's OWN words and
     // citation bound to nothing, which is the hazard, dressed as coverage.
     if (authorLeafCount(now.unit) === 0) {
       fail(
