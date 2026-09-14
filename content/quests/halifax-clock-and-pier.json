@@ -230,6 +230,10 @@
       "targetId": "rights",
       "subject": "rights",
       "count": 2,
+      "questionPool": [
+        "rights-28-voting-which-elections",
+        "rights-29-voting-right-and-responsibility"
+      ],
       "prompt": {
         "en": "Answer 2 questions about voting",
         "fr": "Répondez à 2 questions sur le vote"
@@ -293,6 +297,10 @@
       "targetId": "rights",
       "subject": "rights",
       "count": 2,
+      "questionPool": [
+        "rights-23-rule-of-law-founding-principle",
+        "rights-24-nobody-is-above-the-law"
+      ],
       "prompt": {
         "en": "Answer 2 questions about obeying the law",
         "fr": "Répondez à 2 questions sur le respect de la loi"
@@ -356,6 +364,24 @@
       "targetId": "rights",
       "subject": "rights",
       "count": 3,
+      "questionPool": [
+        "rights-01-where-rights-come-from",
+        "rights-07-freedom-of-conscience-and-religion",
+        "rights-08-freedom-of-expression-includes-press",
+        "rights-09-freedom-of-peaceful-assembly",
+        "rights-10-freedom-of-association",
+        "rights-11-habeas-corpus-meaning",
+        "rights-12-habeas-corpus-origin",
+        "rights-13-charter-entrenched-1982",
+        "rights-14-charter-opening-principles",
+        "rights-15-what-the-charter-does",
+        "rights-16-mobility-rights",
+        "rights-17-passport-is-a-mobility-right",
+        "rights-18-charter-and-treaty-rights",
+        "rights-19-official-language-rights",
+        "rights-20-multiculturalism-in-the-charter",
+        "rights-21-equality-of-women-and-men"
+      ],
       "prompt": {
         "en": "Answer 3 questions about the Charter and your rights",
         "fr": "Répondez à 3 questions sur la Charte et vos droits"
@@ -419,6 +445,13 @@
       "targetId": "rights",
       "subject": "rights",
       "count": 2,
+      "questionPool": [
+        "rights-30-helping-others-volunteering",
+        "rights-31-what-volunteering-gives-back",
+        "rights-36-part-time-reserves",
+        "rights-37-cadets",
+        "rights-38-coast-guard-and-emergency-services"
+      ],
       "prompt": {
         "en": "Answer 2 questions about serving your community",
         "fr": "Répondez à 2 questions sur le service à la collectivité"

@@ -230,6 +230,12 @@
       "targetId": "economy",
       "subject": "economy",
       "count": 2,
+      "questionPool": [
+        "eco-05-three-types-of-industries",
+        "eco-06-most-workers-in-services",
+        "eco-07-service-industry-example",
+        "eco-11-natural-resource-industries"
+      ],
       "prompt": {
         "en": "Answer 2 questions about the kinds of work in Canada",
         "fr": "Répondez à 2 questions sur les types d'emplois au Canada"
@@ -293,6 +299,16 @@
       "targetId": "economy",
       "subject": "economy",
       "count": 3,
+      "questionPool": [
+        "eco-08-what-manufacturing-does",
+        "eco-09-manufactured-product-example",
+        "eco-25-ontario-quebec-manufacturing",
+        "eco-31-bc-forestry-products",
+        "eco-38-quebec-pulp-and-paper",
+        "eco-42-ontario-farm-products",
+        "eco-43-saskatchewan-grains-and-oilseeds",
+        "eco-46-alberta-beef-producer"
+      ],
       "prompt": {
         "en": "Answer 3 questions about what Canada makes and sells",
         "fr": "Répondez à 3 questions sur ce que le Canada produit et vend"
@@ -356,6 +372,20 @@
       "targetId": "economy",
       "subject": "economy",
       "count": 2,
+      "questionPool": [
+        "eco-12-resources-in-history",
+        "eco-22-labrador-hydro-electricity",
+        "eco-27-prairies-energy-and-farmland",
+        "eco-28-manitoba-economy",
+        "eco-29-saskatchewan-uranium-and-potash",
+        "eco-30-alberta-oil-and-gas",
+        "eco-32-northern-mines",
+        "eco-33-northern-oil-and-gas",
+        "eco-34-newfoundland-offshore-oil-and-gas",
+        "eco-39-quebec-hydro-electricity",
+        "eco-45-alberta-oil-sands",
+        "eco-48-yukon-mining-today"
+      ],
       "prompt": {
         "en": "Answer 2 questions about oil, gas and other resources",
         "fr": "Répondez à 2 questions sur le pétrole, le gaz et les autres ressources"
@@ -419,6 +449,18 @@
       "targetId": "economy",
       "subject": "economy",
       "count": 2,
+      "questionPool": [
+        "eco-01-engine-of-growth",
+        "eco-02-standard-of-living-needs-trade",
+        "eco-03-free-trade-1988",
+        "eco-04-mexico-joined-1994",
+        "eco-10-largest-trading-partner",
+        "eco-13-exports-are-commodities",
+        "eco-14-biggest-bilateral-relationship",
+        "eco-15-supply-chains-compete",
+        "eco-16-goods-canada-exports",
+        "eco-41-ontario-exports-from-services-and-manufacturing"
+      ],
       "prompt": {
         "en": "Answer 2 questions about what Canada sells to other countries",
         "fr": "Répondez à 2 questions sur ce que le Canada vend à d'autres pays"

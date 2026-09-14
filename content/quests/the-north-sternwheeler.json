@@ -170,6 +170,18 @@
       "targetId": "regions",
       "subject": "regions",
       "count": 2,
+      "questionPool": [
+        "reg-16-capital-of-nunavut",
+        "reg-17-yellowknife-is-the-capital-of-the-northwest-territories",
+        "reg-18-capital-of-yukon",
+        "reg-49-land-of-the-midnight-sun",
+        "reg-51-gold-rush-of-the-1890s",
+        "reg-53-diamond-capital-of-north-america",
+        "reg-55-nunavut-made-from-the-northwest-territories",
+        "reg-56-what-nunavut-means",
+        "reg-57-iqaluit-formerly-frobisher-bay",
+        "reg-58-nunavut-consensus-government"
+      ],
       "prompt": {
         "en": "Answer 2 questions about Canada's North",
         "fr": "Répondez à 2 questions sur le Nord du Canada"
@@ -231,6 +243,11 @@
       "targetId": "regions",
       "subject": "regions",
       "count": 3,
+      "questionPool": [
+        "reg-50-what-the-tundra-is-like",
+        "reg-52-mount-logan",
+        "reg-54-mackenzie-river-system"
+      ],
       "prompt": {
         "en": "Answer 3 questions about the land and rivers of the North",
         "fr": "Répondez à 3 questions sur les terres et les rivières du Nord"

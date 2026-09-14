@@ -230,6 +230,12 @@
       "targetId": "modern-canada",
       "subject": "modern-canada",
       "count": 2,
+      "questionPool": [
+        "mc-02-alberta-oil-1947",
+        "mc-03-1951-food-shelter-clothing",
+        "mc-18-japanese-canadians-gained-the-vote",
+        "mc-19-aboriginal-people-granted-the-vote"
+      ],
       "prompt": {
         "en": "Answer 2 questions about how life changed after the war",
         "fr": "Répondez à 2 questions sur les changements d'après-guerre"
@@ -293,6 +299,12 @@
       "targetId": "modern-canada",
       "subject": "modern-canada",
       "count": 2,
+      "questionPool": [
+        "mc-04-canada-health-act",
+        "mc-05-employment-insurance",
+        "mc-06-old-age-security-1927",
+        "mc-07-pension-plans-1965"
+      ],
       "prompt": {
         "en": "Answer 2 questions about the programs that support people here",
         "fr": "Répondez à 2 questions sur les programmes qui soutiennent les gens ici"
@@ -356,6 +368,10 @@
       "targetId": "modern-canada",
       "subject": "modern-canada",
       "count": 2,
+      "questionPool": [
+        "mc-01-gatt-became-the-wto",
+        "mc-08-postwar-trade-partner"
+      ],
       "prompt": {
         "en": "Answer 2 questions about trade after the Depression",
         "fr": "Répondez à 2 questions sur le commerce après la Dépression"
@@ -419,6 +435,17 @@
       "targetId": "modern-canada",
       "subject": "modern-canada",
       "count": 3,
+      "questionPool": [
+        "mc-27-james-naismith-basketball",
+        "mc-33-canadian-space-agency",
+        "mc-34-alexander-graham-bell",
+        "mc-35-bombardier-snowmobile",
+        "mc-36-sandford-fleming-time-zones",
+        "mc-37-evans-and-woodward-light-bulb",
+        "mc-38-fessenden-radio",
+        "mc-39-hopps-pacemaker",
+        "mc-40-banting-and-best-insulin"
+      ],
       "prompt": {
         "en": "Answer 3 questions about Canadian discoveries and inventions",
         "fr": "Répondez à 3 questions sur les découvertes et inventions canadiennes"

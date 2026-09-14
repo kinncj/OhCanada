@@ -230,6 +230,13 @@
       "targetId": "elections",
       "subject": "elections",
       "count": 2,
+      "questionPool": [
+        "elec-08-what-voters-choose-on-the-ballot",
+        "elec-11-which-polling-station",
+        "elec-18-no-card-received",
+        "gov-44-what-to-bring",
+        "gov-60-other-election-rules"
+      ],
       "prompt": {
         "en": "Answer 2 questions about voting where you live",
         "fr": "Répondez à 2 questions sur le vote là où vous habitez"
@@ -293,6 +300,13 @@
       "targetId": "elections",
       "subject": "elections",
       "count": 3,
+      "questionPool": [
+        "elec-03-another-name-for-a-riding",
+        "elec-04-whom-an-mp-represents",
+        "elec-06-many-candidates-in-a-district",
+        "gov-37-electoral-district",
+        "gov-39-who-wins-the-seat"
+      ],
       "prompt": {
         "en": "Answer 3 questions about electoral districts",
         "fr": "Répondez à 3 questions sur les circonscriptions électorales"
@@ -356,6 +370,25 @@
       "targetId": "elections",
       "subject": "elections",
       "count": 3,
+      "questionPool": [
+        "elec-01-what-canadians-vote-for",
+        "elec-02-re-elect-or-choose-new",
+        "elec-09-federal-referendum",
+        "elec-10-national-register-of-electors",
+        "elec-12-what-secret-ballot-means",
+        "elec-13-counting-the-ballots",
+        "elec-19-card-confirms-listing",
+        "elec-20-behind-the-screen",
+        "gov-35-fixed-election-date",
+        "gov-40-who-may-vote",
+        "gov-41-elections-canada",
+        "gov-42-voter-information-card",
+        "gov-43-added-on-election-day",
+        "gov-45-advance-poll",
+        "gov-46-marking-the-ballot",
+        "gov-47-ballot-box",
+        "gov-48-secret-ballot"
+      ],
       "prompt": {
         "en": "Answer 3 questions about voting across Canada",
         "fr": "Répondez à 3 questions sur le vote partout au Canada"

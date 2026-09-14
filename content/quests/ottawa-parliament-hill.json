@@ -189,6 +189,12 @@
       "targetId": "government",
       "subject": "government",
       "count": 2,
+      "questionPool": [
+        "gov-18-what-a-bill-is",
+        "gov-19-royal-assent",
+        "gov-20-committee-stage",
+        "gov-20-first-reading"
+      ],
       "prompt": {
         "en": "Answer 2 questions about how a bill becomes law",
         "fr": "Répondez à 2 questions sur la façon dont un projet de loi devient une loi"
@@ -252,6 +258,13 @@
       "targetId": "government",
       "subject": "government",
       "count": 3,
+      "questionPool": [
+        "gov-13-parts-of-parliament",
+        "gov-14-provincial-legislature-parts",
+        "gov-16-house-of-commons-elected",
+        "gov-17-senators-appointed",
+        "gov-23-sovereign-non-partisan"
+      ],
       "prompt": {
         "en": "Answer 3 questions about the parts of Parliament",
         "fr": "Répondez à 3 questions sur les parties du Parlement"
@@ -315,6 +328,14 @@
       "targetId": "government",
       "subject": "government",
       "count": 2,
+      "questionPool": [
+        "gov-03-constitution-act-1867",
+        "gov-04-federal-responsibilities",
+        "gov-05-provincial-responsibilities",
+        "gov-59-municipal-responsibilities",
+        "gov-62-shared-responsibilities",
+        "gov-63-band-chiefs"
+      ],
       "prompt": {
         "en": "Answer 2 questions about who looks after what",
         "fr": "Répondez à 2 questions sur qui s'occupe de quoi"

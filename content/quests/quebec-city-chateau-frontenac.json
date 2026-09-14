@@ -230,9 +230,19 @@
       "targetId": "history",
       "subject": "history",
       "count": 3,
+      "questionPool": [
+        "hist-01-why-called-indians",
+        "hist-07-john-cabot-1497",
+        "hist-08-lanse-aux-meadows",
+        "hist-09-cartier-three-voyages",
+        "hist-10-kanata-means-village",
+        "hist-11-first-settlement-1604",
+        "hist-12-champlain-quebec-1608",
+        "hist-50-leonard-tilley-dominion"
+      ],
       "prompt": {
-        "en": "Answer 3 questions about how this country got its name",
-        "fr": "Répondez à 3 questions sur l'origine du nom du pays"
+        "en": "Answer 3 questions about Canada's name and the first explorers",
+        "fr": "Répondez à 3 questions sur le nom du Canada et les premiers explorateurs"
       }
     },
     {
@@ -293,6 +303,14 @@
       "targetId": "history",
       "subject": "history",
       "count": 3,
+      "questionPool": [
+        "hist-19-quebec-act-religious-freedom",
+        "hist-20-quebec-act-two-legal-systems",
+        "hist-21-loyalists-40000",
+        "hist-22-joseph-brant",
+        "hist-23-black-loyalists-3000",
+        "hist-96-habitants-and-canadiens"
+      ],
       "prompt": {
         "en": "Answer 3 questions about what came after 1759",
         "fr": "Répondez à 3 questions sur ce qui a suivi 1759"
@@ -356,6 +374,11 @@
       "targetId": "history",
       "subject": "history",
       "count": 3,
+      "questionPool": [
+        "hist-24-first-assembly-halifax-1758",
+        "hist-25-constitutional-act-1791",
+        "hist-26-first-elected-assemblies-1791"
+      ],
       "prompt": {
         "en": "Answer 3 questions about the first elected assemblies",
         "fr": "Répondez à 3 questions sur les premières assemblées élues"

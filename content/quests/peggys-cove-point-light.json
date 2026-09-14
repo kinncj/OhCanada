@@ -170,9 +170,16 @@
       "targetId": "who-we-are",
       "subject": "who-we-are",
       "count": 3,
+      "questionPool": [
+        "wwa-22-official-languages-services",
+        "wwa-23-anglophones-and-francophones",
+        "wwa-24-francophones-outside-quebec",
+        "wwa-25-new-brunswick-bilingual",
+        "wwa-31-anglo-quebecers"
+      ],
       "prompt": {
-        "en": "Answer 3 questions about the two official languages",
-        "fr": "Répondez à 3 questions sur les deux langues officielles"
+        "en": "Answer 3 questions about English and French in Canada",
+        "fr": "Répondez à 3 questions sur l'anglais et le français au Canada"
       }
     },
     {
@@ -231,6 +238,14 @@
       "targetId": "who-we-are",
       "subject": "who-we-are",
       "count": 2,
+      "questionPool": [
+        "wwa-04-three-founding-peoples",
+        "wwa-26-acadians-1604",
+        "wwa-29-quebecers-8500-settlers",
+        "wwa-33-settlers-of-english-speaking-canada",
+        "wwa-35-why-english-canadians",
+        "wwa-36-land-of-immigrants"
+      ],
       "prompt": {
         "en": "Answer 2 questions about what built this country",
         "fr": "Répondez à 2 questions sur ce qui a bâti ce pays"
@@ -291,10 +306,13 @@
       "kind": "answer",
       "targetId": "who-we-are",
       "subject": "who-we-are",
-      "count": 2,
+      "count": 1,
+      "questionPool": [
+        "wwa-32-newcomers-embrace-rule-of-law"
+      ],
       "prompt": {
-        "en": "Answer 2 questions about becoming Canadian",
-        "fr": "Répondez à 2 questions sur le fait de devenir canadien"
+        "en": "Answer 1 question about becoming Canadian",
+        "fr": "Répondez à 1 question sur le fait de devenir canadien"
       }
     }
   ]
