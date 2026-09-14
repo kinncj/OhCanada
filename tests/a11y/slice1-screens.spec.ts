@@ -885,7 +885,7 @@ test.describe('the question card', () => {
     const root = await openScreen(page, 'card');
     await expect(root).toHaveAccessibleName(/Question 1 of 3/);
     await expect(root).toHaveAccessibleDescription(/head of state/);
-    await expect(root.locator('[data-testid="question-kind"]')).toHaveText('New');
+    await expect(root.locator('[data-testid="question-kind"]')).toHaveText('New question');
   });
 
   test('each option is a button carrying its whole wording', async ({ page }) => {
@@ -993,7 +993,7 @@ test.describe('the question card', () => {
   test('is French end to end', async ({ page }) => {
     const root = await openScreen(page, 'card', { locale: 'fr' });
     await expect(root.locator('[data-testid="question-progress"]')).toHaveText('Question 1 sur 3');
-    await expect(root.locator('[data-testid="question-kind"]')).toHaveText('Nouvelle');
+    await expect(root.locator('[data-testid="question-kind"]')).toHaveText('Nouvelle question');
 
     await root.locator('[data-testid="option-1"]').click();
     const feedback = root.locator('[data-testid="question-feedback"]');

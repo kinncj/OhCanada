@@ -102,6 +102,9 @@ describe('interpreting what came back', () => {
   const document = (patch: Record<string, unknown> = {}): Record<string, unknown> => ({
     $schema: '../schemas/level.schema.json',
     id: 'testville',
+    /* The parser carries the subject now, because every in-level question is
+       drawn from it (ADR-0036). */
+    subject: 'government',
     title: { en: 'Testville', fr: 'Testville' },
     size: { x: 1000, y: 1920 },
     spawn: { x: 10, y: 900 },
