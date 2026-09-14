@@ -695,7 +695,7 @@ Two smaller notes for the architect, recorded rather than assumed:
 | `OQ-REVIEW-6` | The names of the six skin ramps and five hair colours. The rig carries ids only until this is settled. | routed to `ui-a11y` / PO |
 | `OQ-REVIEW-8` | Body-mass slot, and whether a wheelchair is a locomotion mode. Neither exists here. A body-mass slot would be a new independent slot; a wheelchair would **not** be a cosmetic slot at all. | PO |
 | `OQ-RIG-1` | A character's whole option library is charged to **every** level's decoded-texture budget, because the atlas is one texture. The player wears one combination and pays for 5 760 of them and for four levels' equipment. Fixing it is a pipeline change — per-option standalone images loaded on demand — and it is the single biggest lever on this budget after the landmark. **The `{mode}` equipment made this worse and made it measurable**: Halifax walks and pays 2.47 MiB for a canal skate, a Dufferin toboggan, a seawall board and a waterfront bicycle it will never draw. **Updated 2026-09-14 (infra, ADR-0033): the packing half is closed and the loading half stays open.** The shared page had been chaotic: 1312 to 2048 px tall under a 3 % change, per art-bible §7.7. It is now packed for the smallest area. `shared@2x` went from 2045×1316, 10.27 MiB, to 1278×1805, 8.80 MiB, and ±2 px of frame drift moves it 0.13 MiB rather than 5.97 MiB. Every level still pays for the whole library. Per-option images loaded on demand remain the fix this row asks for. | infra |
-| `OQ-RIG-2` | **The horse's own gait is not drawn.** Since 2026-09-14 the horse is a ride on the foothills level (ADR-0031) and the rider has eight `horse/*` poses (§11.5), but a ride's art is one still image, so the horse's legs do not move while the ground goes by. A frame cycle on rides is engine and schema work. | engine / art |
+| `OQ-RIG-2` | **Closed 2026-09-14 (ADR-0035).** The horse's own gait was not drawn: a ride's art was one still image, so its legs did not move while the ground went by. A ride layer may now declare a `cycle` of frames advanced by distance travelled; the foothills horse walks four frames off Muybridge's plate 574, stands square at rest and holds one stride under reduced motion (§11.5, `alberta-foothills-level.md` §14.4). | engine / art |
 | `OQ-RIG-3` | **`train` has no equipment and no pose.** §11.5. A seated passenger needs a bench under them, and a bench is level furniture, not rig equipment. | PO |
 | `OQ-RIG-4` | **A brake is not drawn.** The dead `brakeTrigger` and `airborneInput` bindings left the level schema on 2026-09-14 (§11.6); what stays open is whether the rig gets a `brake` trigger and pose. §11.6 says what it would cost. | engine / art |
 
@@ -915,8 +915,10 @@ placement). What the three points at the top of this section became:
 - **Point 1, the fifth z, is answered by the pose, not by a part.** The ride has one layer behind every rig part,
   so nothing can go between the rider's legs. `horse/*` puts both hips on the near hip and both ankles on the
   near stirrup, so the far leg is exactly behind the near one, which is where the barrel would hide it.
-- **Point 2, the gait, is still open.** The horse is drawn in a walking stride measured off Muybridge's plate 574
-  and rocks by the ride's `bob`, but its legs do not move. That is `OQ-RIG-2` now.
+- **Point 2, the gait, is drawn by the ride, not the rig (ADR-0035).** Since 2026-09-14 a ride layer may declare a
+  `cycle`, and the horse walks four frames off Muybridge's plate 574, one frame per 55 px travelled, stands square
+  at rest, and holds one stride under reduced motion. The saddle is the group `seat`, identical in every frame, so
+  the rider's anchor never moves. `OQ-RIG-2` is closed.
 - **Point 3, the cost, is the level's.** 1.02 MiB for the horse and 0.22 MiB for the trail, on the foothills level
   only; the shared atlas did not change, because no rig frame was added.
 

@@ -331,7 +331,11 @@ Prairies train: the horse is a **ride**, level art the engine places at the play
 
 | key | source | px | what it is |
 |---|---|---|---|
-| `alberta-foothills-ride-ranch-horse` | `ride-ranch-horse@1x.svg` | 600 × 446 | a saddled bay quarter-horse type under a tan western saddle, walking; the ride's one layer, `behind` the rider |
+| `alberta-foothills-ride-ranch-horse` | `ride-ranch-horse@1x.svg` | 600 × 446 | a saddled bay quarter-horse type under a tan western saddle, walking; the ride's one layer, `behind` the rider. Since ADR-0035 walk frame 1 of 4, the far fore in the air, and the one frame drawn under reduced motion |
+| `alberta-foothills-ride-ranch-horse-walk-2` | `ride-ranch-horse-walk-2@1x.svg` | 600 × 446 | walk frame 2, the near hind in the air |
+| `alberta-foothills-ride-ranch-horse-walk-3` | `ride-ranch-horse-walk-3@1x.svg` | 600 × 446 | walk frame 3, the near fore in the air |
+| `alberta-foothills-ride-ranch-horse-walk-4` | `ride-ranch-horse-walk-4@1x.svg` | 600 × 446 | walk frame 4, the far hind in the air |
+| `alberta-foothills-ride-ranch-horse-stand` | `ride-ranch-horse-stand@1x.svg` | 600 × 446 | standing square on all four hooves: the frame the ride holds at rest |
 | `alberta-foothills-ride-ranch-horse-trail` | `ride-ranch-horse-trail@1x.svg` | 480 × 120 | the trail under it: grass verge with tussocks, a dry dirt rut, rough pasture |
 
 ### 14.1 What was measured
@@ -390,18 +394,47 @@ and both ankles on the near stirrup, so the near leg covers the far one exactly.
 hood was considered and not taken: every layer of a ride shares one size, so it would have been another 600 × 446,
 1.02 MiB of mostly transparent texture, for a detail ten CSS px across.
 
-### 14.4 The legs do not move, and why that was the choice
+### 14.4 The legs move, by the ground and not by the clock
 
-**A ride's art is one still image.** A real four-frame walk would need a frame cycle on rides: a field in
-`level.schema.json`, the content port, the parser, `ride.ts` and `level-scene.ts`, and a decision record, which is
-engine work and outside this art pass. It was not attempted here, and `OQ-RIG-2` in `rig-contract.md` now says the gait
-is what is still open. **It would fit the budget**: four horse frames at 600 × 446 would add 3.06 MiB, 30.52 of
-36 MiB (85 %).
+**Until 2026-09-14 a ride's art was one still image**, and the horse slid along in one stride (`OQ-RIG-2`). ADR-0035
+gave a ride layer a `cycle`, and the horse now declares one:
 
-What carries the walk until then, and each piece was chosen against a render:
+```json
+"cycle": { "rest": "…-ride-ranch-horse-stand",
+           "frames": ["…-ride-ranch-horse", "…-walk-2", "…-walk-3", "…-walk-4"], "framePx": 55 }
+```
 
-- **A stride, not a stand.** Both were drawn. Four square legs sliding along read as a statue on wheels; the stride
-  from plate 574, the near fore planted ahead and the near hind behind, reads as walking when it is still.
+- **Four walk frames, measured off plate 574.** The plate is a lateral four-beat walk: near hind, near fore, far hind,
+  far fore, each a quarter stride after the last, each hoof on the ground for about five eighths of the stride. The
+  frames sample it a quarter stride apart, an eighth off the touchdowns, so every frame has **three hooves down and
+  one in the air**, and the four frames lift the far fore, the near hind, the near fore and the far hind in turn. A
+  planted hoof steps back 54 px from one frame to the next and the planted stance runs ±68 px about each leg's
+  standing place.
+- **The swinging legs fold as the plate's do.** A fore lifts with the knee forward and the cannon folded back under
+  it, the sole turned to the rear; a hind lifts with the hock flexed back and the cannon angled forward and down. At
+  the end of stance a hoof breaks over its toe, heel up, before it leaves the ground.
+- **`framePx` 55 is the planted hoof's step**, so a hoof on the ground stays on the same tussock of the trail while
+  the body goes over it, instead of skating. Four frames of 55 px is a 220 px stride, which is the ride's `bob`
+  period: one rock per stride, counted from the same distance, so the two never drift apart.
+- **The seat does not move.** Only the legs are redrawn. The pad, saddle, cinch, fender, horn, stirrup leather and
+  stirrup are the SVG group `<g id="seat" data-rider-anchor="258 270">`, byte-identical in all five files, and
+  `level-art-is-placed-where-it-is-drawn.test.ts` fails the build if it differs in any of them or names another
+  anchor. The body, head, mane and bridle are also unchanged, so the ride's `footprint` (x 186–342) holds in every
+  frame.
+- **At rest, `ride-ranch-horse-stand`**, square on all four hooves. A stride that stops dead mid-step reads as a
+  statue; a horse that has stopped stands.
+- **Under reduced motion, `ride-ranch-horse@1x.svg` and nothing else.** It is walk frame 1, chosen as the still
+  because its raised far fore is mostly hidden behind the near fore, so the frozen picture is the wide stride the level
+  drew before the legs moved rather than a leg frozen in the air. It does not switch to the standing frame at rest
+  either: holding one frame is the whole rule.
+- **No run gait.** The cycle is counted in distance, so at cruise the same four frames play faster exactly as the
+  ground goes faster; a trot or lope would be another four frames and 4.08 MiB for a speed this level's tuning
+  reaches only in its last second of acceleration.
+
+What else carries the walk, and each piece was chosen against a render:
+
+- **A stride, not a stand, while moving.** Both were drawn. Four square legs sliding along read as a statue on
+  wheels, which is why the standing frame is drawn only at rest and the reduced-motion still is a stride.
 - **The trail goes by under the hooves.** It is fixed to the world, so its tussocks and clods move under a horse that
   stays put on screen, which is most of what the eye reads as travel.
 - **The ride's bob**, 5 px at cruise every 220 px, lifts horse and rider together, is still at rest, and is zero under
@@ -423,6 +456,19 @@ Measured before those two landed, the ride took the level from **26.22 MiB (73 %
 unchanged** at 36 MiB: 72 % is inside the band the other levels sit in, and the perf lane opens Ottawa. The shared
 atlas did not change, so no other level's number moved.
 
+**The walk cycle, `make assets`, 2026-09-14 (ADR-0035):**
+
+```
+level-payload:  alberta-foothills 0.67 MiB of 8.00 MiB over 18 file(s)
+texture-memory: alberta-foothills 30.16 MiB of 36.00 MiB (84%, 6124936 B spare) over 18 file(s)
+```
+
+Four more 600 × 446 frames at 1.02 MiB each: **+4.08 MiB**, from 26.08 MiB (72 %) to 30.16 MiB (84 %), and the payload
+from 0.57 to 0.67 MiB. The walk's first frame is the old file's key, so three walk frames and the standing frame are
+new. **`textureBudgetBytes` is still 36 MiB**: 84 % is the band the Prairies sits in after its car (ADR-0031), the
+perf lane that counts unpriced GPU bytes opens Ottawa, not this level, and every frame is a texture already decoded
+when the level loads, so swapping one allocates nothing. No other level's number moved.
+
 ### 14.6 What the renders showed
 
 At 390 px, spawn, cruising, the guide, all four points of interest and facing left, normal and reduced motion: the
@@ -436,6 +482,20 @@ the same `horse/idle` key and a composite built with the renderer's own placemen
 The cause was the guide's parts interleaving with the player's at a shared depth. Re-rendered after the fix that
 gives each character its own depth slot, the gate stop and cruising both draw the coat over the legs and the hair
 on the head.
+
+**The walk, rendered 2026-09-14 (ADR-0035)**, from a production build in headless Chromium at 390 × 844, DPR 3,
+holding right from the spawn to about x 1 900, then letting go and turning back:
+
+- **Normal motion.** At the spawn the horse stands square (`horse/idle`, speed 0). Moving at 620 px/s, crops taken
+  about 62 px apart show the four walk frames in order, three hooves on the trail and one lifted each time, with the
+  planted hooves stepping back between crops rather than jumping about; the rider's boot stays on the stirrup and the
+  seat line does not move in any of them. Facing left the horse mirrors and walks the same way. Stopped, it stands
+  again.
+- **Reduced motion.** Every crop — at rest, accelerating, at cruise, stopped and facing left — is the same stride,
+  walk frame 1, with no rock.
+- **Both.** `data-rides` 1, `data-rides-drawn` 1, `data-mode-gaps` 0, a `horse/` pose every time, and no console error.
+- **What the frames cannot fix.** Near the guide the first-visit hint panel still covers the legs (§14.2), and at
+  cruise the hooves sit at the panel's top edge on a 390 × 844 phone.
 
 ### The builder patch `scripts/lib/art-handoff.mjs` needs
 

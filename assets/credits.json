@@ -2546,7 +2546,43 @@
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ride-ranch-horse@1x.svg",
-      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced, from three references: assets/refs/alberta-foothills/quarter-horse-side-elevation.jpg, a photograph by Derrick Coetzee released under CC0; cow-horse-under-western-saddle.jpg, a photograph by Linda (Flickr user 9878580@N03), licensed CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/); and horse-walking-muybridge-plate-574.jpg, Eadweard Muybridge's plate 574, in the public domain. Carries no brand, number, name or lettering of any kind, and a plain felt pad with no pattern. The behind layer of a ride (ADR-0031): the player is drawn in front of it, astride. The @1x suffix pins the source to one scale; the key alberta-foothills-ride-ranch-horse carries no suffix."
+      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced, from three references: assets/refs/alberta-foothills/quarter-horse-side-elevation.jpg, a photograph by Derrick Coetzee released under CC0; cow-horse-under-western-saddle.jpg, a photograph by Linda (Flickr user 9878580@N03), licensed CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/); and horse-walking-muybridge-plate-574.jpg, Eadweard Muybridge's plate 574, in the public domain. Carries no brand, number, name or lettering of any kind, and a plain felt pad with no pattern. The behind layer of a ride (ADR-0031): the player is drawn in front of it, astride. Since ADR-0035 it is frame 1 of the ride's four-frame walk and the one frame drawn under reduced motion; the saddle, pad, cinch and stirrup are the group \"seat\", drawn identically in every frame. The @1x suffix pins the source to one scale; the key alberta-foothills-ride-ranch-horse carries no suffix."
+    },
+    {
+      "path": "src/svg/alberta-foothills/ride-ranch-horse-walk-2@1x.svg",
+      "kind": "shipped",
+      "title": "The Alberta ranch horse, frame 2 of its four-frame walk: the near hind in the air",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ride-ranch-horse-walk-2@1x.svg",
+      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced. The body, head, saddle and seat of ride-ranch-horse@1x.svg unchanged; only the legs are redrawn, to the lateral four-beat walk of horse-walking-muybridge-plate-574.jpg, Eadweard Muybridge's plate 574, in the public domain, sampled a quarter stride after frame 1. A frame of the Alberta ride's cycle (ADR-0035). The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/alberta-foothills/ride-ranch-horse-walk-3@1x.svg",
+      "kind": "shipped",
+      "title": "The Alberta ranch horse, frame 3 of its four-frame walk: the near fore in the air",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ride-ranch-horse-walk-3@1x.svg",
+      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced. The body, head, saddle and seat of ride-ranch-horse@1x.svg unchanged; only the legs are redrawn, to the lateral four-beat walk of horse-walking-muybridge-plate-574.jpg, Eadweard Muybridge's plate 574, in the public domain, sampled half a stride after frame 1. A frame of the Alberta ride's cycle (ADR-0035). The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/alberta-foothills/ride-ranch-horse-walk-4@1x.svg",
+      "kind": "shipped",
+      "title": "The Alberta ranch horse, frame 4 of its four-frame walk: the far hind in the air",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ride-ranch-horse-walk-4@1x.svg",
+      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced. The body, head, saddle and seat of ride-ranch-horse@1x.svg unchanged; only the legs are redrawn, to the lateral four-beat walk of horse-walking-muybridge-plate-574.jpg, Eadweard Muybridge's plate 574, in the public domain, sampled three quarters of a stride after frame 1. A frame of the Alberta ride's cycle (ADR-0035). The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/alberta-foothills/ride-ranch-horse-stand@1x.svg",
+      "kind": "shipped",
+      "title": "The Alberta ranch horse standing square, the frame its ride holds at rest",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ride-ranch-horse-stand@1x.svg",
+      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced. The body, head, saddle and seat of ride-ranch-horse@1x.svg unchanged; the legs stand square on all four hooves, proportioned from assets/refs/alberta-foothills/quarter-horse-side-elevation.jpg, a photograph by Derrick Coetzee released under CC0. The rest frame of the Alberta ride's cycle (ADR-0035). The @1x suffix pins the source to one scale."
     },
     {
       "path": "src/svg/alberta-foothills/ride-ranch-horse-trail@1x.svg",

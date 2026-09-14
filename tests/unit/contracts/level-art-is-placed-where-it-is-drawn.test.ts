@@ -65,9 +65,15 @@ interface LayerDoc {
   readonly repeatX: boolean;
 }
 
+interface RideCycleDoc {
+  readonly rest: string;
+  readonly frames: readonly string[];
+  readonly framePx: number;
+}
+
 interface RideDoc {
   readonly mode: string;
-  readonly art: readonly { readonly key: string; readonly side: string }[];
+  readonly art: readonly { readonly key: string; readonly side: string; readonly cycle?: RideCycleDoc }[];
   readonly riderAnchor: Vec2;
   readonly groundLineY: number;
   readonly track?: { readonly artKey: string; readonly topY: number };
@@ -82,6 +88,10 @@ interface LevelDoc {
   readonly pois: readonly { readonly id: string; readonly artKey: string; readonly position: Vec2 }[];
   readonly rides?: readonly RideDoc[];
 }
+
+/** Every texture a ride layer can draw — its still, its rest frame and its gait — each once (ADR-0035). */
+const layerKeys = (layer: RideDoc['art'][number]): readonly string[] =>
+  layer.cycle === undefined ? [layer.key] : [...new Set([layer.key, layer.cycle.rest, ...layer.cycle.frames])];
 
 const levels: readonly LevelDoc[] = readdirSync(LEVELS_DIR)
   .filter((name) => name.endsWith('.json'))
@@ -189,8 +199,8 @@ describe('every ride is registered to the art it names (ADR-0031)', () => {
         expect(new Set(sides).size, `${level.id}.json's "${ride.mode}" ride repeats a side`).toBe(sides.length);
       });
 
-      it(`${level.id}: every layer and the track of the "${ride.mode}" ride is a 1x-pinned source`, () => {
-        const keys = [...ride.art.map((layer) => layer.key), ...(ride.track ? [ride.track.artKey] : [])];
+      it(`${level.id}: every layer, frame and the track of the "${ride.mode}" ride is a 1x-pinned source`, () => {
+        const keys = [...ride.art.flatMap((layer) => layerKeys(layer)), ...(ride.track ? [ride.track.artKey] : [])];
         for (const key of keys) {
           const path = sourceFor(level.id, key);
           expect(
@@ -207,9 +217,9 @@ describe('every ride is registered to the art it names (ADR-0031)', () => {
         }
       });
 
-      it(`${level.id}: the "${ride.mode}" ride's layers share one size, and its anchor and rows lie on it`, () => {
-        const sizes = ride.art.map((layer) => {
-          const path = sourceFor(level.id, layer.key);
+      it(`${level.id}: the "${ride.mode}" ride's layers and frames share one size, and its anchor and rows lie on it`, () => {
+        const sizes = ride.art.flatMap((layer) => layerKeys(layer)).map((key) => {
+          const path = sourceFor(level.id, key);
           return path === null ? null : sizeOfSource(path);
         });
         const [first] = sizes;
@@ -245,6 +255,113 @@ describe('every ride is registered to the art it names (ADR-0031)', () => {
         .map((tuning) => `${level.id} moves by "${tuning.mode}" with no ride`),
     );
     expect(unridden, unridden.join('\n')).toEqual([]);
+  });
+});
+
+/**
+ * ### 4. A ride's frames move its legs and never its seat (ADR-0035)
+ *
+ * A ride has ONE `riderAnchor`, and the rider is drawn at it in every frame. So a
+ * frame that redraws the saddle a few pixels up or back lifts the rider out of it
+ * mid-stride, and nothing at run time can see that: the sizes match, the anchor
+ * is inside the art, and the scene reaches `ready`. The picture is a rider who
+ * floats and sinks four times a stride.
+ *
+ * The seat is therefore declared in the art, once per file, as
+ * `<g id="seat" data-rider-anchor="x y">`: everything the rider is seen sitting
+ * on or standing in, drawn after every leg. Every file a cycled layer can draw —
+ * its still, its rest frame and every frame of its gait — carries that group
+ * byte for byte, and names the level document's own anchor. And the frames of a
+ * gait are different pictures, because a cycle of one drawing moves nothing.
+ */
+const SEAT = /<g id="seat" data-rider-anchor="([\d.]+) ([\d.]+)">([\s\S]*?)<\/g>/gu;
+
+/** Everything wrong with one cycled layer's seat across its files, as sentences, or `[]`. */
+function seatFaults(files: Readonly<Record<string, string>>, anchor: Vec2): string[] {
+  const faults: string[] = [];
+  const seats = new Map<string, string>();
+  for (const [name, svg] of Object.entries(files)) {
+    const found = [...svg.matchAll(SEAT)];
+    if (found.length !== 1) {
+      faults.push(`${name} has ${String(found.length)} <g id="seat" data-rider-anchor="x y"> groups; it needs exactly one`);
+      continue;
+    }
+    const [match] = found;
+    const x = Number(match?.[1]);
+    const y = Number(match?.[2]);
+    if (x !== anchor.x || y !== anchor.y) {
+      faults.push(
+        `${name} seats its rider at (${String(x)}, ${String(y)}) and the level document at ` +
+          `(${String(anchor.x)}, ${String(anchor.y)}); one of them moved`,
+      );
+    }
+    const body = match?.[3] ?? '';
+    if (!/<(path|rect|ellipse|circle)\b/u.test(body)) faults.push(`${name}'s seat group draws nothing`);
+    seats.set(name, body);
+  }
+  const distinct = new Set(seats.values());
+  if (distinct.size > 1) {
+    faults.push(
+      `the seat is drawn ${String(distinct.size)} different ways across ${[...seats.keys()].join(', ')}; ` +
+        'the rider sits at one anchor, so a saddle that moves between frames leaves them in the air',
+    );
+  }
+  return faults;
+}
+
+describe('a ride layer that cycles keeps its rider`s seat in every frame (ADR-0035)', () => {
+  const cycled = levels.flatMap((level) =>
+    (level.rides ?? []).flatMap((ride) =>
+      ride.art.filter((layer) => layer.cycle !== undefined).map((layer) => ({ level, ride, layer })),
+    ),
+  );
+
+  it('has a cycled layer to check, so this block is not a pass over nothing (ADR-0024)', () => {
+    expect(cycled.length).toBeGreaterThan(0);
+  });
+
+  const read = (levelId: string, key: string): string => {
+    const path = sourceFor(levelId, key);
+    expect(path, `${levelId}: no source under assets/src/svg/${levelId}/ produces "${key}"`).not.toBeNull();
+    return path === null ? '' : readFileSync(path, 'utf8');
+  };
+
+  for (const { level, ride, layer } of cycled) {
+    it(`${level.id}: every frame of the "${ride.mode}" ride's "${layer.key}" layer draws one seat, at the document's anchor`, () => {
+      const files = Object.fromEntries(layerKeys(layer).map((key) => [key, read(level.id, key)]));
+      const faults = seatFaults(files, ride.riderAnchor);
+      expect(faults, faults.join('\n')).toEqual([]);
+    });
+
+    it(`${level.id}: the "${ride.mode}" ride's "${layer.key}" gait is ${String(layer.cycle?.frames.length)} different pictures`, () => {
+      const frames = [...new Set(layer.cycle?.frames ?? [])];
+      expect(frames.length, 'a cycle of one texture is a still').toBeGreaterThan(1);
+      const drawings = new Set(frames.map((key) => read(level.id, key)));
+      expect(drawings.size, `two frames of "${layer.key}" are the same file under two names`).toBe(frames.length);
+    });
+  }
+
+  it('fails a frame whose seat moved, whose anchor moved, or that has no seat (the negative control)', () => {
+    const [first] = cycled;
+    expect(first, 'no cycled layer to build the control from').toBeDefined();
+    if (first === undefined) return;
+    const keys = layerKeys(first.layer);
+    const files = Object.fromEntries(keys.map((key) => [key, read(first.level.id, key)]));
+    expect(seatFaults(files, first.ride.riderAnchor)).toEqual([]);
+
+    const [one, two] = keys;
+    expect(two, 'the control needs a layer with at least two files').toBeDefined();
+    if (one === undefined || two === undefined) return;
+
+    const raised = { ...files, [two]: (files[two] ?? '').replace(/(<g id="seat"[^>]*>[\s\S]*?\bd="M [\d.]+ )([\d.]+)/u, (_all, head: string, y: string) => `${head}${String(Number(y) - 4)}`) };
+    expect(raised[two]).not.toBe(files[two]);
+    expect(seatFaults(raised, first.ride.riderAnchor).join('\n')).toContain('different ways');
+
+    const moved = { ...files, [one]: (files[one] ?? '').replace(/data-rider-anchor="[\d.]+ [\d.]+"/u, 'data-rider-anchor="0 0"') };
+    expect(seatFaults(moved, first.ride.riderAnchor).join('\n')).toContain('one of them moved');
+
+    const bare = { ...files, [one]: (files[one] ?? '').replace(/<g id="seat"/u, '<g id="saddle"') };
+    expect(seatFaults(bare, first.ride.riderAnchor).join('\n')).toContain('needs exactly one');
   });
 });
 

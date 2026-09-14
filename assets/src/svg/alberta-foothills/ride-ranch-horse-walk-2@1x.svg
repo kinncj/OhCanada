@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="446" viewBox="0 0 600 446" shape-rendering="geometricPrecision">
+  <title>Walk, frame 2 of 4: a saddled bay ranch horse seen from its near side: a quarter-horse type with a deep round barrel, a short thick neck carried forward, the head angled down, black mane, tail and lower legs, and a tan western saddle with a horn, a square skirt, a fender, a cinch and an open stirrup, on a felt pad; a plain leather bridle and one rein running back to where the rider holds it above the horn. Proportions MEASURED on assets/refs/alberta-foothills/quarter-horse-side-elevation.jpg against W = the withers height; the saddle and the rider's seat from cow-horse-under-western-saddle.jpg. Never traced. The rider is the player, posed by the rig (horse/*) and drawn IN FRONT of this file, which is a frame of the behind layer of a ride (ADR-0031, ADR-0035); the rider's sole line rests on the anchor at (258, 270), on the stirrup tread, and everything in the group "seat" is drawn identically in every frame so the rider never leaves it. No brand, no lettering, no outline, because it is not a character. The stride from Muybridge plate 574 (horse-walking-muybridge-plate-574.jpg), a lateral four-beat walk sampled a quarter stride apart: three hooves on the ground and the near hind in the air.</title>
+  <ellipse cx="117.4" cy="431" rx="30" ry="6" fill="#16203a" opacity="0.28"/>
+  <ellipse cx="393.8" cy="431" rx="30" ry="6" fill="#16203a" opacity="0.28"/>
+  <ellipse cx="115.8" cy="431" rx="22" ry="4.5" fill="#16203a" opacity="0.16"/>
+  <ellipse cx="322" cy="431" rx="30" ry="6" fill="#16203a" opacity="0.28"/>
+  <path d="M 104 208.3 L 84.2 318.3 115.2 330 172.9 234.2 Z" fill="#401812"/>
+  <circle cx="138.4" cy="221.2" r="36.8" fill="#401812"/>
+  <circle cx="99.7" cy="324.2" r="16.6" fill="#401812"/>
+  <path d="M 83.4 327.2 L 100.6 394.2 124.2 389.8 116 321.1 Z" fill="#141217"/>
+  <circle cx="99.7" cy="324.2" r="16.6" fill="#141217"/>
+  <circle cx="112.4" cy="392" r="12" fill="#141217"/>
+  <path d="M 100.5 393.3 L 101.6 411.4 127.2 408.6 124.3 390.7 Z" fill="#141217"/>
+  <circle cx="112.4" cy="392" r="12" fill="#141217"/>
+  <circle cx="114.4" cy="410" r="12.9" fill="#141217"/>
+  <path d="M 102.8 410 L 124.6 410 Q 131.4 419 135.5 430 L 98.8 430 Q 98.8 419 102.8 410 Z" fill="#0f121a"/>
+  <path d="M 102.8 410 L 124.6 410 124.6 414 102.8 414 Z" fill="#242b33"/>
+  <path d="M 308.3 248.4 L 375.7 336.1 402.4 319.9 355.5 219.7 Z" fill="#401812"/>
+  <circle cx="331.9" cy="234" r="27.6" fill="#401812"/>
+  <circle cx="389.1" cy="328" r="15.6" fill="#401812"/>
+  <path d="M 373.4 327.9 L 376.8 392 400.8 392 404.7 328.1 Z" fill="#141217"/>
+  <circle cx="389.1" cy="328" r="15.6" fill="#141217"/>
+  <circle cx="388.8" cy="392" r="12" fill="#141217"/>
+  <path d="M 376.9 393.3 L 378 411.4 403.6 408.6 400.7 390.7 Z" fill="#141217"/>
+  <circle cx="388.8" cy="392" r="12" fill="#141217"/>
+  <circle cx="390.8" cy="410" r="12.9" fill="#141217"/>
+  <path d="M 379.2 410 L 401 410 Q 407.8 419 411.9 430 L 375.2 430 Q 375.2 419 379.2 410 Z" fill="#0f121a"/>
+  <path d="M 379.2 410 L 401 410 401 414 379.2 414 Z" fill="#242b33"/>
+  <path d="M 64 126 Q 32 146 26 214 Q 20 282 32 336 Q 42 352 56 340 Q 52 290 60 236 Q 68 182 88 140 Z" fill="#33303c"/>
+  <path d="M 54 170 Q 46 210 46 252 Q 46 280 48 296 Q 51 276 51 250 Q 52 212 58 174 Z" fill="#5a5365"/>
+  <path d="M 321 115 Q 262 132 204 124 Q 150 102 102 106 Q 64 110 50 146 Q 34 184 46 226 Q 60 262 104 268 Q 150 272 180 270 Q 244 296 304 286 Q 344 280 364 258 Q 398 236 396 198 Q 404 170 434 140 L 478 116 L 492 56 Q 430 58 380 84 Q 346 102 321 115 Z" fill="#7c4327"/>
+  <path d="M 104 262 Q 150 272 180 268 Q 244 294 304 284 Q 344 278 364 256 Q 352 290 304 298 Q 240 308 178 284 Q 140 278 104 262 Z" fill="#401812"/>
+  <path d="M 398 200 Q 406 170 434 142 L 478 116 L 480 132 Q 448 150 422 178 Q 408 196 398 214 Z" fill="#401812"/>
+  <path d="M 316 118 Q 262 134 204 127 Q 150 106 104 110 Q 72 113 58 136 Q 78 120 106 119 Q 152 118 204 136 Q 262 142 316 118 Z" fill="#b4733b"/>
+  <path d="M 68.8 185 L 50.7 305.7 84.8 317.4 144.5 211 Z" fill="#7c4327"/>
+  <circle cx="106.7" cy="198" r="40" fill="#7c4327"/>
+  <circle cx="67.8" cy="311.5" r="18" fill="#7c4327"/>
+  <path d="M 56 325.1 L 112.2 367.2 129.2 347.5 79.6 297.9 Z" fill="#33303c"/>
+  <circle cx="67.8" cy="311.5" r="18" fill="#33303c"/>
+  <circle cx="120.7" cy="357.4" r="13" fill="#33303c"/>
+  <path d="M 109 351.7 L 100.2 367.4 125.4 379.7 132.4 363.1 Z" fill="#33303c"/>
+  <circle cx="120.7" cy="357.4" r="13" fill="#33303c"/>
+  <circle cx="112.8" cy="373.5" r="14" fill="#33303c"/>
+  <path d="M 102.6 366.7 L 121.7 379.6 Q 122.7 391.1 120.1 402.6 L 87.9 380.9 Q 94 371.7 102.6 366.7 Z" fill="#242b33"/>
+  <path d="M 102.6 366.7 L 121.7 379.6 119.5 382.9 100.4 370 Z" fill="#44555f"/>
+  <path d="M 311 218.2 L 335.7 328.3 369.5 324.7 370.7 211.9 Z" fill="#7c4327"/>
+  <circle cx="340.9" cy="215.1" r="30" fill="#7c4327"/>
+  <circle cx="352.6" cy="326.5" r="17" fill="#7c4327"/>
+  <path d="M 337.3 319.1 L 312.9 379.5 336.3 390.7 368 333.8 Z" fill="#33303c"/>
+  <circle cx="352.6" cy="326.5" r="17" fill="#33303c"/>
+  <circle cx="324.6" cy="385.1" r="13" fill="#33303c"/>
+  <path d="M 312.2 381.1 L 305.7 397.9 332.3 406.6 337 389.1 Z" fill="#33303c"/>
+  <circle cx="324.6" cy="385.1" r="13" fill="#33303c"/>
+  <circle cx="319" cy="402.2" r="14" fill="#33303c"/>
+  <path d="M 308 396.9 L 328.7 407 Q 331.3 418.2 330.3 430 L 295.4 413 Q 300.2 403.1 308 396.9 Z" fill="#242b33"/>
+  <path d="M 308 396.9 L 328.7 407 327 410.6 306.3 400.5 Z" fill="#44555f"/>
+  <path d="M 486 44 Q 480 24 490 10 Q 506 26 504 50 Z" fill="#401812"/>
+  <path d="M 470 60 Q 486 48 504 46 Q 536 58 548 102 Q 560 136 572 160 Q 578 180 562 192 Q 540 200 520 190 Q 500 178 486 158 Q 458 142 462 106 Q 464 76 470 60 Z" fill="#7c4327"/>
+  <ellipse cx="484" cy="128" rx="26" ry="30" fill="#7c4327"/>
+  <path d="M 486 150 Q 500 176 520 188 Q 540 198 562 192 Q 548 204 520 200 Q 494 190 478 160 Z" fill="#401812"/>
+  <path d="M 544 150 Q 566 150 574 170 Q 576 188 560 194 Q 540 198 530 184 Q 528 160 544 150 Z" fill="#401812"/>
+  <ellipse cx="562" cy="166" rx="5" ry="3.5" fill="#141217"/>
+  <path d="M 478 62 Q 500 50 520 58 Q 504 60 488 72 Z" fill="#b4733b"/>
+  <ellipse cx="508" cy="92" rx="6.5" ry="7.5" fill="#141217"/>
+  <circle cx="506" cy="89" r="2" fill="#f0f2f5"/>
+  <path d="M 494 54 Q 500 30 514 16 Q 522 38 512 58 Z" fill="#7c4327"/>
+  <path d="M 500 50 Q 506 34 513 26 Q 516 40 509 54 Z" fill="#401812"/>
+  <path d="M 488 50 Q 500 46 512 56 Q 514 72 504 84 Q 500 68 490 62 Z" fill="#33303c"/>
+  <path d="M 322 110 Q 350 96 380 80 Q 430 54 492 50 L 496 62 Q 470 70 452 86 L 446 104 L 432 94 L 420 114 L 406 102 L 392 122 L 380 108 L 366 128 L 356 114 L 340 126 Z" fill="#33303c"/>
+  <path d="M 372 88 Q 420 68 460 58 Q 478 55 488 55 Q 456 64 414 80 Q 390 90 376 94 Z" fill="#5a5365"/>
+  <g id="seat" data-rider-anchor="258 270">
+    <path d="M 186 124 Q 186 114 198 114 L 330 114 Q 342 114 342 126 L 340 198 Q 340 206 330 206 L 196 206 Q 186 206 186 196 Z" fill="#c29455"/>
+    <path d="M 192 122 Q 192 112 204 112 L 322 112 Q 332 112 332 122 L 332 186 Q 332 196 322 196 L 202 196 Q 192 196 192 186 Z" fill="#96632f"/>
+    <path d="M 192 180 L 332 180 L 332 186 Q 332 196 322 196 L 202 196 Q 192 196 192 186 Z" fill="#5a2d19"/>
+    <path d="M 306 194 L 322 194 L 320 286 L 304 288 Z" fill="#c29455"/>
+    <path d="M 304 276 L 320 274 L 320 286 L 304 288 Z" fill="#965630"/>
+    <path d="M 236 140 Q 236 132 244 132 L 290 132 Q 300 132 300 142 L 296 222 Q 294 232 284 232 L 248 232 Q 238 232 238 222 Z" fill="#5a2d19"/>
+    <path d="M 240 136 L 296 136 L 296 146 L 240 146 Z" fill="#96632f"/>
+    <path d="M 190 100 Q 196 88 208 92 Q 218 114 258 119 Q 296 116 310 100 L 326 100 Q 336 108 332 124 L 192 126 Q 184 114 190 100 Z" fill="#96632f"/>
+    <path d="M 192 100 Q 198 90 208 94 Q 218 114 258 121 Q 226 121 206 110 Q 198 106 192 100 Z" fill="#c5994d"/>
+    <path d="M 310 102 L 316 80 L 328 80 L 326 102 Z" fill="#5a2d19"/>
+    <ellipse cx="322" cy="78" rx="12" ry="5" fill="#96632f"/>
+    <ellipse cx="320" cy="76" rx="8" ry="2.5" fill="#c5994d"/>
+    <path d="M 262 146 L 272 146 L 284 250 L 274 250 Z" fill="#401812"/>
+    <path d="M 252 254 Q 254 242 268 240 L 296 240 Q 310 242 312 254 L 314 278 L 250 278 Z" fill="#5a2d19"/>
+    <path d="M 258 258 Q 260 250 270 250 L 294 250 Q 304 250 306 258 L 306 270 L 258 270 Z" fill="#96632f"/>
+  </g>
+  <path d="M 486 58 L 494 56 L 528 164 L 520 166 Z" fill="#401812"/>
+  <path d="M 488 66 Q 510 60 530 72 L 528 78 Q 510 68 490 74 Z" fill="#401812"/>
+  <path d="M 530 140 Q 554 134 574 146 L 572 154 Q 552 142 532 148 Z" fill="#401812"/>
+  <circle cx="524" cy="168" r="5" fill="#d6a727"/>
+  <circle cx="523" cy="166" r="2" fill="#e1c368"/>
+  <path d="M 524 168 Q 440 150 386 118 Q 356 98 332 76" fill="none" stroke="#401812" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -395,7 +395,17 @@
       "art": [
         {
           "key": "alberta-foothills-ride-ranch-horse",
-          "side": "behind"
+          "side": "behind",
+          "cycle": {
+            "rest": "alberta-foothills-ride-ranch-horse-stand",
+            "frames": [
+              "alberta-foothills-ride-ranch-horse",
+              "alberta-foothills-ride-ranch-horse-walk-2",
+              "alberta-foothills-ride-ranch-horse-walk-3",
+              "alberta-foothills-ride-ranch-horse-walk-4"
+            ],
+            "framePx": 55
+          }
         }
       ],
       "riderAnchor": {
