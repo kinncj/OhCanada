@@ -369,7 +369,7 @@ describe('the puppet composes a character from the rig', () => {
     const { renderer, parts } = harness();
     expect(unwrap(renderer).setExpression('thinking').ok).toBe(true);
     expect(live(parts).find((part) => part.part.name === 'face')?.frame).toBe(
-      'character-face-thinking',
+      'character-face-thinking-neutral',
     );
   });
 
@@ -488,12 +488,21 @@ describe('a character state is shape, never colour', () => {
   });
 
   it('gives every expression a distinct frame, so the four differ as shape', () => {
-    const frames = RIG.expressions.names.map((name) =>
-      resolveFrameTemplate('face-{expression}', new Map([['expression', name]])),
-    );
-    expect(new Set(frames).size).toBe(RIG.expressions.names.length);
-    for (const frame of frames) {
-      expect(FRAMES.has(`${RIG.atlas.framePrefix}${String(frame)}`)).toBe(true);
+    expect(RIG.slots.presentation.options.length).toBeGreaterThan(0);
+    for (const presentation of RIG.slots.presentation.options) {
+      const frames = RIG.expressions.names.map((name) =>
+        resolveFrameTemplate(
+          'face-{expression}-{presentation}',
+          new Map([
+            ['expression', name],
+            ['presentation', presentation],
+          ]),
+        ),
+      );
+      expect(new Set(frames).size).toBe(RIG.expressions.names.length);
+      for (const frame of frames) {
+        expect(FRAMES.has(`${RIG.atlas.framePrefix}${String(frame)}`)).toBe(true);
+      }
     }
   });
 });

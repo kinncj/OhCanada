@@ -515,7 +515,7 @@ const CSS = `
   /* A line of its own inside the option, with the mark and the name under it. */
   flex: 1 0 100%;
   box-sizing: border-box;
-  min-block-size: 2.25rem;
+  min-block-size: 2.75rem;
   border: var(--tn-edge-width) solid var(--tn-ink);
   border-radius: 0.5rem;
   background: var(--tn-swatch);
