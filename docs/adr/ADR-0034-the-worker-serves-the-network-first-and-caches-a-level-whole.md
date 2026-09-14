@@ -74,7 +74,8 @@ saves live (ADR-0026).
 - **What the takeover can break is what a deploy already breaks.** A page left open on the old build that then
   lazy-loads a chunk the new deploy deleted gets a 404, exactly as it would with no worker. Hash routing and
   network-first navigations mean a reload always recovers.
-- **The notice that asks for that reload is `app/ui`'s, and is not in this change.** Its contract with the worker
+- **The notice that asks for that reload is `app/ui`'s, and was not in the first change.** It landed the same day;
+  the obligation below records what it added. Its contract with the worker
   needs no message and no port: a page that was **already controlled when it loaded** and then receives
   `controllerchange` on `navigator.serviceWorker` is running older code than the worker now in charge. The first
   visit's `controllerchange` — a page that was not controlled — is not an update and must not show it. The notice is
@@ -83,10 +84,24 @@ saves live (ADR-0026).
   reduced motion, and its two rows declared in `COPY_GAPS` in `app/ui/copy.ts` until a story ratifies them.
   Registration may move into `app/bootstrap` in the same change; if it does, `scripts/lib/pwa.mjs` stops writing the
   inline script and `scripts/deploy-check.mjs`'s registration clause moves with it.
-- **OBLIGATION due=2026-10-14 owner=ui-a11y** — build the update notice described in this section, with its EN and FR
+- ~~**OBLIGATION due=2026-10-14 owner=ui-a11y** — build the update notice described in this section, with its EN and FR
   rows through `COPY_GAPS`, an axe scan in `tests/a11y/`, and a spec in `tests/e2e/` that runs with
   `serviceWorkers: 'allow'`, stands in for a second deploy by changing what the worker URL serves, and asserts the
-  notice appears once on a page that was already controlled and never on a first visit.
+  notice appears once on a page that was already controlled and never on a first visit.~~
+  **DISCHARGED 2026-09-14** — `app/ui/update-notice.ts` draws the notice and `app/bootstrap/update-notice.ts` decides
+  when, as a pure function of "controlled at load" and the events since. **Registration stays in the artefact**, as
+  "Registration lives in the artefact" below argues: `scripts/lib/pwa.mjs` still writes it, `deploy-check` still
+  holds it against the flag, and the bootstrap only listens, and only while `featureFlags.serviceWorker` is on. What
+  the build added to the contract above: the notice waits while a question card, the exam or a quest dialogue is
+  open (the front door's Study and exam, a level's `poi`, `study` and `quest` pause reasons), and appears under no
+  other dialog either, waiting for the focus change that closes it; it is drawn first in the page's one `<main>` and
+  moved with it between the front door and a level, so it is in the Tab order and in the front door's switch ring
+  and never takes focus; its sentence is `role="status"` with `aria-live="off"`, so the one live region speaks it
+  once; the second control is `common.close`; `html[data-tn-update]` carries the phase. Rows `update.ready` and
+  `update.reload` are in `COPY_GAPS`. Tests: `tests/unit/bootstrap/update-notice.test.ts`,
+  `tests/unit/ui/update-notice.test.ts`, `tests/a11y/update-notice.spec.ts` (title and level, EN, FR, high contrast,
+  200 % text, forced colours, keyboard, one switch) and `tests/e2e/update-notice.spec.ts`, which appends a comment
+  to `dist/sw.js` between two visits and restores it after the test. Written, not run locally; CI runs them.
 
 ### The first visit
 
@@ -102,6 +117,10 @@ The inline script is written by the build, not by `app/bootstrap`. That is partl
 it is also the right place for the half that must track the kill switch: with the flag off, the build must stop
 registering in the same artefact that starts serving the tombstone, and `deploy-check` fails a tombstone build in
 which anything — `index.html` or any chunk — still calls `serviceWorker.register`.
+
+The update notice did not move it (2026-09-14). The slice allowed registration to move into `app/bootstrap` with
+the notice, and this section is the reason it did not: `app/bootstrap/update-notice.ts` adds a `controllerchange`
+listener and registers nothing, so the artefact is still the one place that says whether a worker is installed.
 
 ### The browser suites run without it, except one spec
 
@@ -151,7 +170,9 @@ bounded by the art the build ships, which is inside `budgets.totalPayloadBytes`.
   the background after `load`. The precache is 3464 kB against the 8 MiB ceiling.
 - A level's art is cached the first time it is played, both scales — 0.56–0.74 MiB a level today — and pruned to the
   current build on every update.
-- `featureFlags.serviceWorker` is no longer a flag nothing reads: the build reads it. `app/` still does not.
+- `featureFlags.serviceWorker` is no longer a flag nothing reads: the build reads it, and since the update notice
+  `app/bootstrap` reads it too, only to decide whether to listen for a newer worker. With the flag off the worker
+  being replaced is the tombstone, which reloads the page itself, so no notice is offered over it.
 - Rollback by re-running an older deploy still works, because navigations are network-first. A pre-F3 commit ships the
   tombstone and removes the worker; an older F3 commit ships its own worker, which takes over at once and prunes the
   newer build's art. `docs/runbook.md` §6 carries the re-drill this change makes due.

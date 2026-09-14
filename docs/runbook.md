@@ -444,10 +444,17 @@ message naming it.
 
 ### What CI does with it
 
-`tests/e2e`, `tests/perf` and `tests/a11y` run with `serviceWorkers: 'block'`, so no spec but one ever sees a
+`tests/e2e`, `tests/perf` and `tests/a11y` run with `serviceWorkers: 'block'`, so no spec but two ever sees a
 worker, and the perf lane keeps measuring a first load on a cold cache. `tests/e2e/offline.spec.ts` allows it,
 plays the start level online, goes offline, and opens the level and the title again. If that spec is red and
 nothing else is, the worker, the precache or the level art cache regressed.
+
+`tests/e2e/update-notice.spec.ts` allows it too. It stands in for a second deploy by appending a comment to
+`dist/sw.js` between two visits — `vite preview` reads the file on every request — and writes the original back
+after the test. The browser jobs check `dist/`'s digest before any test runs and the deploy downloads the artefact
+again, so the rewrite reaches nothing that ships. If that spec is red and `offline.spec.ts` is not, the update
+notice or its trigger (`app/bootstrap/update-notice.ts`) regressed, not the worker. A local `make build` after a
+run that was killed mid-test rebuilds `dist/`, which is the fix for a `sw.js` left rewritten.
 
 ---
 
