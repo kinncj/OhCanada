@@ -312,7 +312,7 @@
 
     "rideFootprint": {
       "title": "Ride footprint",
-      "description": "The span of the ride's art, in its own pixels, inside which a figure standing beyond the ride reads as being in it: seen through its glass, or sitting where the rider sits. A car names its glazing, not its steel flank, because a person behind a solid side reads as standing beyond the train; an animal names its whole body. The engine brings a drive to rest so that no character in reach stands inside this span (ADR-0037). Measured from the art's left edge and pinned to 1x like `riderAnchor`, so an art pixel is a design pixel.",
+      "description": "The span of the ride's art, in its own pixels, inside which a figure standing beyond the ride reads as being in it: seen through its glass, or sitting where the rider sits. A car names its glazing, not its steel flank, because a person behind a solid side reads as standing beyond the train; an animal names its saddle, the seat the rider is seen in, because a person behind its solid body reads as standing beyond it. The engine brings a drive to rest so that no character in reach stands inside this span (ADR-0037). Measured from the art's left edge and pinned to 1x like `riderAnchor`, so an art pixel is a design pixel.",
       "type": "object",
       "properties": {
         "x": {

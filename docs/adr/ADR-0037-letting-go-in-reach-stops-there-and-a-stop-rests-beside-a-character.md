@@ -97,7 +97,7 @@ From the spawn, with the real strategy and the real stop, every character now re
 
 | level / mode          | character | rests at | distance / reach | clear air |
 |-----------------------|-----------|---------:|-----------------:|----------:|
-| Alberta / horse       | guide     |    1 045 |        155 / 280 |     36 px |
+| Alberta / horse       | guide     |    1 014 |        186 / 280 |     40 px |
 | Halifax / walk        | guide     |      748 |        152 / 200 |     33 px |
 | Ottawa / skate        | officer   |    2 228 |        172 / 220 |     35 px |
 | Prairies / train      | guide     |    1 474 |        274 / 320 |     14 px |
@@ -115,9 +115,17 @@ glass.
 `level.schema.json#/$defs/rideFootprint`, required on every ride: `{ x, width }` in the art's own pixels — the span
 inside which a figure standing beyond the ride reads as being **in** it, seen through its glass or sitting where the
 rider sits. A car names its glazing and not its flank, because a person behind a solid side reads as standing beyond
-the train; an animal would name its whole body. Required rather than defaulted to the whole art, because the whole
-of a 1 420 px car is wider than any reach and no stop could keep a character clear of it. `prairie-rail.json`
-declares `{ "x": 220, "width": 400 }`, the dome and its frame in `ride-park-car@1x.svg`.
+the train. Required rather than defaulted to the whole art, because the whole of a 1 420 px car is wider than any
+reach and no stop could keep a character clear of it. `prairie-rail.json` declares `{ "x": 220, "width": 400 }`,
+the dome and its frame in `ride-park-car@1x.svg`.
+
+**An animal names its saddle**, the seat the rider is seen in, and not its whole body. Alberta's ranch horse
+(`ride-ranch-horse@1x.svg`, 600 × 446, rider anchor at x 258) runs on a nearer line: its hooves are 340 px below the
+walking line and its withers 25 px below it, so a person standing on the walking line can only ever be seen behind
+its head and neck, which the depth plan draws over them like the car's flank. Measured on the drawing, the body spans
+x 24–574 and the saddle — skirt, seat, fender, horn and stirrup — x 186–342, so `alberta-foothills.json` declares
+`{ "x": 186, "width": 156 }`, −72 to +84 about the rider. The whole body, −234 to +316 about the rider, would need
+418 px short of the guide or 366 px past him against a 280 px reach, and no stop could rest beside anyone.
 
 No NPC or landmark moved. The overlap was where the stop aimed, not where the level placed anyone, and every
 placement stays reference-accurate. Depth is unchanged: the guide is already drawn behind the car's `front` layer

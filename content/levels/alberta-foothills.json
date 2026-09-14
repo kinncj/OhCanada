@@ -404,6 +404,10 @@
       },
       "groundLineY": 90,
       "turnsWithRider": true,
+      "footprint": {
+        "x": 186,
+        "width": 156
+      },
       "bob": {
         "amplitudePx": 5,
         "periodPx": 220

@@ -774,9 +774,9 @@ Feature: Stopping at a person leaves room for both of us
     And "interact-prompt" offers them
 
   Scenario: A character is never inside the ride
-    Given the level's mode carries me on a ride with glass
+    Given the level's mode carries me on a ride — a car with glass, or a saddled horse
     When the ride comes to rest at a character
-    Then the character does not stand inside the ride's footprint
+    Then the character does not stand inside the ride's footprint, its glass or the seat I sit in
     And they read as standing beyond the ride
 
   Scenario: Landmarks are unchanged
