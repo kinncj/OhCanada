@@ -267,6 +267,13 @@ Feature: Coming into reach of something
     And the element "interact-prompt" is not present
     And no prompt describes something that cannot be engaged from here
 
+  Scenario: Being held at something keeps its offer (ADR-0037)
+    Given the level is holding me at something that came into reach
+    When the brake carries me past the edge of its reach
+    Then no "poi/left" is emitted for it
+    And "interact-prompt" still offers it, and taking it engages it
+    And the offer is withdrawn when the hold lets me go
+
   Scenario: The prompt does what the target does
     Given the officer is in reach
     When I take "interact-prompt"
@@ -687,9 +694,17 @@ Feature: Every drive stops at each thing a player can choose
     Then I come to rest there once
     And "interact-prompt" reads "Done. See this one again"
 
-  Scenario: A glide is mine
-    When I let go before I reach a landmark
+  Scenario: A glide I let go of outside reach is mine
+    When I let go before a landmark is in reach
     Then I glide as the mode glides and nothing brakes me for it
+    And I glide past it, and past anything else I glide through
+
+  Scenario: Letting go in reach stops me there (ADR-0037)
+    Given something I have not been let go from this visit is within the mode's "reachPx"
+    When I let go of the direction I was holding, while I am still moving
+    Then I come to rest at it, or beside it if it is a character
+    And "interact-prompt" still offers it once I am at rest
+    And a press, the other direction, or engaging lets me go, as above
 
   Scenario: Auto-move and the train stop at the same places, and never start on their own
     Given "Move by itself" is on, or the level's mode drives itself
@@ -708,6 +723,68 @@ Feature: Every drive stops at each thing a player can choose
   Scenario: Reduced motion changes nothing about where I stop
     Given "Less movement" is on
     Then I come to rest at the same place, on the same brake
+```
+
+## TN-REACH-10 — Let go when the prompt appears, then take it (ADR-0037)
+
+Added 2026-09-14. A live-site audit let go the moment each prompt appeared and tapped it: on Toronto the tap meant
+for the guide opened the streetcar, on Québec City the slide overshot the Château Frontenac, on Ottawa the skater
+glided past the locks and the officer. The rule is `app/adapters/phaser/auto-stop.ts`'s; the arithmetic is proved in
+`tests/unit/adapters/phaser/auto-stop.test.ts` and the shipped build in `tests/e2e/release-in-reach.spec.ts`.
+
+```gherkin
+Feature: One thumb can take a prompt
+  Scenario Outline: The prompt is still there when the thumb arrives
+    Given the <level> level is playable
+    When I hold to move and let go the moment "interact-prompt" appears
+    Then I come to rest within the mode's "reachPx" of what it offers
+    And "interact-prompt" still reads the same words
+    When I take "interact-prompt"
+    Then what opens is the thing it offered, and nothing else is engaged
+
+    Examples:
+      | level       |
+      | Toronto     |
+      | Québec City |
+      | Ottawa      |
+
+  Scenario: The same for a key and a finger
+    Then lifting a held finger and releasing a held key stop me in the same place
+
+  Scenario: Skating still coasts
+    Given the Ottawa level is playable
+    When I skate and let go with nothing in reach
+    Then the skater coasts past the next landmark without being braked
+```
+
+## TN-REACH-11 — I come to rest beside a character, not inside them (ADR-0037)
+
+Added 2026-09-14. Holding right from the front door stopped the player inside the Halifax guide; the bike rode
+through the Toronto guide, the toboggan sat under the Québec City guide, and on the Prairies the guide stood inside
+the train's glass dome. The rest points are `app/adapters/phaser/stand-off.ts`'s and every shipped level is held by
+`tests/unit/contracts/a-stop-rests-beside-a-character.test.ts`.
+
+```gherkin
+Feature: Stopping at a person leaves room for both of us
+  Scenario: A drive stops beside a character
+    Given a level places a character
+    When any drive comes to rest at them
+    Then my figure, my equipment and anything I ride do not overlap their body
+    And I am still within the mode's "reachPx" of them
+    And "interact-prompt" offers them
+
+  Scenario: A character is never inside the ride
+    Given the level's mode carries me on a ride with glass
+    When the ride comes to rest at a character
+    Then the character does not stand inside the ride's footprint
+    And they read as standing beyond the ride
+
+  Scenario: Landmarks are unchanged
+    When a drive comes to rest at a landmark
+    Then I come to rest level with it, as before
+
+  Scenario: Nobody was moved to make room
+    Then every character and landmark stands where its level document places it
 ```
 
 ## Open questions

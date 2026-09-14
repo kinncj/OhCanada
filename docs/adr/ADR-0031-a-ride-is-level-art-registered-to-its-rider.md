@@ -1,6 +1,8 @@
 # ADR-0031: A ride is level art registered to its rider
 
 - Status: Accepted (2026-09-14)
+- Amended by: ADR-0037 — a ride declares a required `footprint`, the span of its art a figure beyond it is seen
+  inside, so a stop can keep characters out of the glass.
 
 ## Context
 

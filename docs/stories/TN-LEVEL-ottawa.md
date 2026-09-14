@@ -419,6 +419,10 @@ Feature: Engaging an NPC and a point of interest
 
 ## TN-LEVEL-06 — Skating and engaging with a keyboard
 
+"Releasing it glides exactly as it does after a released touch" stands, for a key and a finger alike. Since
+2026-09-14 releasing **inside reach** of something not yet let go from this visit stops the skater there, and a
+release outside reach still coasts past everything (ADR-0037, `TN-REACH-09`, `TN-REACH-10`).
+
 ```gherkin
 Feature: Keyboard-only traversal
   Background:

@@ -4,6 +4,9 @@
 - Amends: the Traversal row of `CLAUDE.md` in behaviour, not in wording — "hold to move, tap to jump/interact,
   tap NPC or POI to engage" still describes every input; this says where holding to move comes to rest.
 - Criteria: `docs/stories/TN-REACH-what-is-in-reach.md`, `TN-REACH-09`; `TN-SET-02` points at it.
+- Amended by: ADR-0037 — letting go **inside** reach is caught (§1's "not caught: a glide nobody is pressing" now
+  covers a glide let go outside reach), a held subject stays on offer, and a stop aims beside a character rather
+  than at its `x`.
 
 ## Context
 
