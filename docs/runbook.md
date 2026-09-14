@@ -57,9 +57,17 @@ old run is a rollback.
   bytes. Verified locally by building twice and comparing hashes; see §5.
 - **Nothing is cancelled underneath it.** The `pages` concurrency group uses `cancel-in-progress: false`,
   so a queued deploy waits for the running one instead of killing it mid-upload.
-- **A stale service worker cannot pin anyone to the broken build.** Navigations are network-first
-  (ADR-0006), so the next page load fetches the rolled-back shell. Precached level assets are
-  content-hashed and therefore never collide with the ones the old build asks for.
+- **A service worker cannot pin anyone to the broken build.** Since slice F3 the site ships one (ADR-0034),
+  and every navigation still goes to the network first, so the next page load fetches the rolled-back shell.
+  The rolled-back build's `sw.js` differs from the broken one's - its precache names different files - so
+  every device's next update check installs it; it takes over at once and prunes the level art the broken
+  build cached. Rolling back past F3 serves the tombstone instead (§3b), which removes the worker entirely.
+  Precached code is content-hashed and never collides with the files the other build asks for.
+- **If the worker itself is what broke, a rollback is not the fastest lever.** Turn the worker off with
+  `featureFlags.serviceWorker` and ship that (§3c). It keeps the rest of the build and removes the worker
+  from every device on its next visit.
+- **A rollback across F3 is not yet drilled.** The §1 drill predates the worker. See §6 for the re-drill
+  this change makes due.
 - **The re-run is gated.** `deploy-pages.yml` runs `lint typecheck test validate-content verify-content
   verify-art`, then builds, then runs the e2e/perf/a11y suites, and only then uploads. A rollback to a
   commit that no longer passes its own gates will fail loudly rather than deploying something worse. Note
@@ -334,14 +342,15 @@ looking at anything else.
 
 ---
 
-## 3b. The tombstone service worker — do not delete `dist/sw.js`
+## 3b. The tombstone service worker — do not delete `infra/pages/sw.js`
 
-**Status: live since 2026-09-08. Earliest removal date: 2027-09-08.** Not before, and check the evidence
-below before removing it even then.
+**Status: live since 2026-09-08. Since slice F3 it is also the offline worker's kill switch (§3c), so it no
+longer has a removal date.** The 2027-09-08 floor further down was set for its first job alone.
 
-`dist/sw.js` is built from `infra/pages/sw.js` by a small plugin in `vite.config.ts`. It is not a PWA and
-not a feature. Nothing registers it, nothing imports it, and slice 0 has no service worker. It exists
-solely to be found by update checks from browsers that are still carrying the archived 3D build's worker.
+`infra/pages/sw.js` is what `dist/sw.js` is whenever `featureFlags.serviceWorker` is off; `scripts/lib/pwa.mjs`
+emits it (it used to be a small plugin in `vite.config.ts`). It is not a PWA and not a feature, and nothing
+registers it. It exists to be found by the update checks of browsers holding a worker it should remove: first the
+archived 3D build's, and now, if it is ever needed, the F3 worker's.
 
 ### Why it cannot simply be deleted
 
@@ -370,10 +379,14 @@ action. It has **no `fetch` handler** and must never gain one.
 
 ### What protects it
 
-`scripts/deploy-check.mjs` runs on every `make build`, before any upload, and fails if `dist/sw.js` is
-missing, if it contains a `fetch` handler, if it stops calling `registration.unregister()`, or if anything
-in the build starts statically referencing it (which would charge it to the initial-payload budget it is
-not part of). All four were confirmed to fail on a real violation, not merely to pass.
+`scripts/deploy-check.mjs` runs on every `make build`, before any upload. While `featureFlags.serviceWorker`
+is off it fails if `dist/sw.js` is missing, if it contains a `fetch` handler, if it stops calling
+`registration.unregister()`, or if anything in the build still registers a worker. In either mode it fails if
+anything in the build statically references `sw.js` (which would charge it to the initial-payload budget it is
+not part of). The missing-file, fetch-handler, unregister and static-reference clauses were confirmed to fail on
+a real violation in slice 0. The "still registers" clause came with F3 and was confirmed the same way on
+2026-09-14 — and its first version missed the very registration F3 writes, which is why it now matches that
+script word for word as well as any `register(...sw.js)` call.
 
 ### Caveats
 
@@ -386,10 +399,55 @@ not part of). All four were confirmed to fail on a real violation, not merely to
 
 ### Before removing it
 
-Removal is safe only once no browser can still hold the old registration. There is no way to measure that
-directly — there are no analytics, by design (ADR-0006). Hence the 12 month floor. When the date passes,
-delete `infra/pages/sw.js`, the plugin in `vite.config.ts`, and the `sw.js` clauses in
-`scripts/deploy-check.mjs` together, and say in the commit message that the tombstone expired.
+Not while the F3 worker exists: this file is its kill switch (§3c). The 12-month floor, 2027-09-08, still
+describes the archived worker — there is no way to measure when no browser holds that registration any more,
+because there are no analytics, by design (ADR-0006) — but it no longer ends this file's life. If the F3 worker is
+ever retired for good, ship with the flag off for twelve months first, for the same reason, and only then delete
+`infra/pages/sw.js`, its branch in `scripts/lib/pwa.mjs` and the tombstone clauses in `scripts/deploy-check.mjs`
+together.
+
+---
+
+## 3c. The offline service worker (slice F3) — and how to turn it off
+
+**Status: built 2026-09-14; not yet deployed when this was written.** ADR-0034 is the decision; this is what an
+operator needs.
+
+`dist/sw.js` is a Workbox worker built from `infra/pages/service-worker.js` by `scripts/lib/pwa.mjs`. It precaches
+the shell and every code chunk (30 files, 3.46 MB), caches each level's art the first time that level is played,
+answers every navigation from the network first, takes over as soon as a new build installs, and never touches
+IndexedDB or `localStorage`. `dist/index.html` registers it; `dist/manifest.webmanifest` and `dist/icons/` make the
+game installable.
+
+### Turning it off (the kill switch)
+
+Use this when the worker itself is the problem — the site loads for a first-time visitor but misbehaves for
+returning ones, the precache install fails, or cached art is wrong. It is faster than a rollback because it keeps
+the current build:
+
+1. In `content/game.config.json`, set `featureFlags.serviceWorker` to `false`. One line, through a normal pull
+   request, so the gates run.
+2. Merge. The deploy ships `dist/sw.js` as the tombstone (§3b) and `dist/index.html` with no registration;
+   `deploy-check` refuses a build in which anything still registers a worker.
+3. Each device holding the worker fetches the tombstone on its next navigation — the registration bypasses the
+   HTTP cache — which deletes the `truenorth-*` caches and the precache, unregisters, and reloads the page onto the
+   network. Saves are not touched.
+4. Confirm: `curl -s https://kinncj.github.io/OhCanada/sw.js | head -3` shows `TOMBSTONE SERVICE WORKER`.
+
+Turning it back on is the same line set to `true`.
+
+Exercised locally on 2026-09-14, not on the live site: a build with the flag off produced the tombstone at
+`dist/sw.js`, no registration in `dist/index.html`, and a green `deploy-check` ("service worker OFF: tombstone
+sw.js present and inert, nothing registers it"). The same day, eleven deliberate violations of the worker's and
+the manifest's checks were injected into a built `dist/` one at a time, and each failed `deploy-check` with a
+message naming it.
+
+### What CI does with it
+
+`tests/e2e`, `tests/perf` and `tests/a11y` run with `serviceWorkers: 'block'`, so no spec but one ever sees a
+worker, and the perf lane keeps measuring a first load on a cold cache. `tests/e2e/offline.spec.ts` allows it,
+plays the start level online, goes offline, and opens the level and the title again. If that spec is red and
+nothing else is, the worker, the precache or the level art cache regressed.
 
 ---
 
@@ -403,7 +461,10 @@ delete `infra/pages/sw.js`, the plugin in `vite.config.ts`, and the `sw.js` clau
 | Initial payload over `budgets.initialPayloadBytes` | CLAUDE.md budgets |
 | Fetchable `dist/` over `budgets.totalPayloadBytes` | CLAUDE.md budgets |
 | `basePath` not matching the publishing repository | ADR-0006 |
-| `dist/sw.js` missing, serving fetches, or in the initial payload | this runbook, §3b |
+| `dist/sw.js` missing, or statically referenced by the page | this runbook, §3b |
+| `featureFlags.serviceWorker` off: `dist/sw.js` serves fetches, does not unregister, or something still registers a worker | ADR-0034, this runbook §3b |
+| `featureFlags.serviceWorker` on: the worker's precache misses a chunk, reaches outside `dist/`, lacks a revision on an un-hashed file, or exceeds `budgets.initialPayloadBytes`; its level art disagrees with `dist/manifest.json`; or `dist/index.html` does not register it | ADR-0034, this runbook §3c |
+| `dist/manifest.webmanifest` missing, unlinked, off the base path, not portrait, or without a real 192 and 512 PNG and a maskable icon | ADR-0034 (Chromium's install criteria) |
 | A level over `budgets.levelPayloadBytes` | CLAUDE.md budgets, via `scripts/lib/level-payload.mjs` |
 | A level over its `textureBudgetBytes`, or over the 64 MiB decoded-texture ceiling | CLAUDE.md budgets, via `scripts/lib/texture-memory.mjs` |
 | A full-screen parallax layer shipping a 2x variant | owner's decision, slice 1; same gate |
@@ -562,3 +623,9 @@ Recorded here rather than left implicit. None of these are "fine"; they are simp
   commits and empty `objects/` — nothing recoverable. Deleted, along with the `.gitignore` rule that existed
   only to stop it being committed. If it reappears, delete it rather than re-adding the ignore rule: an
   ignore entry would have documented the typo in the repository permanently.
+- **OBLIGATION due=2026-10-14 owner=infra** — re-drill §1 across the F3 service worker (ADR-0034) once two
+  deploys that carry it exist: in a browser that has installed the newer build's worker, re-run the older run,
+  confirm on the next load that the older build is served and that `truenorth-level-*` holds only the older
+  build's art, then re-deploy the newer and confirm the reverse. §1's drill predates the worker, and "re-drill
+  when the deploy pipeline changes shape" is this change. Record the run URLs here. Exercise the §3c kill switch
+  on the live site only if the owner agrees: it reloads every open page.
