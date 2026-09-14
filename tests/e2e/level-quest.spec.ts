@@ -66,7 +66,18 @@ interface QuestFile {
   readonly id: string;
   readonly giver: string;
   readonly steps: readonly QuestStep[];
+  /**
+   * The four moment lines: what the giver says after "Not now", on a return
+   * mid-quest, after the quest is complete, and on the completion card. Read
+   * here so the census below covers them; for a while nothing in the build did.
+   */
+  readonly declinedLine?: QuestLine;
+  readonly reminderLine?: QuestLine;
+  readonly afterLine?: QuestLine;
+  readonly doneLine?: QuestLine;
 }
+
+type QuestLine = NonNullable<QuestStep['dialogue']>[number];
 
 interface QuestStep {
     readonly id: string;
@@ -219,14 +230,31 @@ const ALL_QUESTS: readonly QuestFile[] = readdirSync(`${REPO_ROOT}content/quests
   .sort()
   .map((name) => JSON.parse(readFileSync(`${REPO_ROOT}content/quests/${name}`, 'utf8')) as QuestFile);
 
-/** Every `dialogue` block in the build, with the verdict computed here. */
-const ALL_BLOCKS = ALL_QUESTS.flatMap((quest) =>
-  quest.steps.flatMap((step) =>
-    (step.dialogue?.length ?? 0) === 0
-      ? []
-      : [{ lines: step.dialogue ?? [], speakable: blockIsSpeakable(step) }],
-  ),
+const MOMENT_FIELDS = ['declinedLine', 'reminderLine', 'afterLine', 'doneLine'] as const;
+
+/**
+ * Every moment line in the build, each a block of one: a moment is one thing a
+ * speaker says at one moment. Computed from the documents, so the day an author
+ * removes or adds one the expectation follows the content.
+ */
+const MOMENT_BLOCKS = ALL_QUESTS.flatMap((quest) =>
+  MOMENT_FIELDS.flatMap((field) => {
+    const line = quest[field];
+    return line === undefined ? [] : [{ lines: [line], speakable: lineIsGranted(line) }];
+  }),
 );
+
+/** Every block of words in the build — steps and moments — with the verdict computed here. */
+const ALL_BLOCKS = [
+  ...ALL_QUESTS.flatMap((quest) =>
+    quest.steps.flatMap((step) =>
+      (step.dialogue?.length ?? 0) === 0
+        ? []
+        : [{ lines: step.dialogue ?? [], speakable: blockIsSpeakable(step) }],
+    ),
+  ),
+  ...MOMENT_BLOCKS,
+];
 
 test.describe.configure({ mode: 'serial', timeout: 300_000 });
 
@@ -563,6 +591,14 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await openLevel(page);
     await talkToTheGiver(page);
     await page.getByTestId('dialogue-decline').click();
+
+    /* "Not now" is answered in the quest's own words when it wrote some and a
+       verifier allows them (`TN-QUEST-03`, `declinedLine`). Closed here: this
+       scenario is about what comes after, and `quest-moments.spec.ts` reads it. */
+    if (QUEST.declinedLine !== undefined && lineIsGranted(QUEST.declinedLine)) {
+      await expect(page.getByTestId('dialogue-text')).toHaveText(QUEST.declinedLine.text.en);
+      await page.getByTestId('dialogue-next').click();
+    }
 
     await expect(page.getByTestId('dialogue')).toBeHidden();
     await expect(page.getByTestId('hud-quest-tracker')).toBeHidden();
@@ -1002,6 +1038,21 @@ test.describe('ADR-0003 — a line a verifier declined is not spoken', () => {
         'declined line in them. One refused line takes its whole block with it, and that is ' +
         'the number a player feels.',
     ).toHaveAttribute('data-dialogue-silenced', String(silenced));
+    /*
+     * The four moment lines each quest carries, and the reason this number is
+     * published at all: for a while the filter read steps only, so `examined`
+     * matched a count that left 40 authored, verified lines out, and every
+     * assertion above passed over them. Every number above includes them; this
+     * one says they were read.
+     */
+    expect(
+      MOMENT_BLOCKS.length,
+      'content/quests/ carries no moment line, so the moment half of this census is about nothing',
+    ).toBeGreaterThan(0);
+    await expect(
+      probe,
+      'the build examined a different number of moment lines than content/quests/ carries',
+    ).toHaveAttribute('data-dialogue-moments', String(MOMENT_BLOCKS.length));
 
     /* And the reading that ADR-0024 exists for: a filter that stopped matching
        the blocks it reads publishes `examined: 0` beside `refused: 0`, and looks

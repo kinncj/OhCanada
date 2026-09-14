@@ -161,6 +161,10 @@ describe('snapshotToAttributes', () => {
         'data-dialogue-refused',
         'data-dialogue-blocks',
         'data-dialogue-silenced',
+        /* Of the lines examined, the quest's four moment lines. The census once
+           read steps only, and 40 authored lines were neither spoken nor
+           counted; this is the number that shows they are read now. */
+        'data-dialogue-moments',
         /* The level's sky follows the device clock; this is what makes that
            observable instead of a screenshot taken at the right hour. */
         'data-day-phase',

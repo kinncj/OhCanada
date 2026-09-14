@@ -278,6 +278,17 @@ export interface SceneSnapshot {
   /** Of those, the ones left unsaid because a line in them was refused. */
   readonly dialogueSilenced?: number;
   /**
+   * Of `dialogueExamined`, the quest's moment lines — what a giver says after
+   * "Not now", on a return mid-quest, after the quest is complete, and on the
+   * completion card. Each is also one block.
+   *
+   * Its own number because the census once covered steps only: 40 authored,
+   * verified lines were read by nothing, so `dialogueExamined` said 92 while the
+   * content held 132. A scenario that can read this can tell "the moment lines
+   * were examined and granted" from "the moment lines were never read".
+   */
+  readonly dialogueMoments?: number;
+  /**
    * Where the level's sky is in the day, 0 at local midnight and 0.5 at noon.
    *
    * Published so that "the game follows the real world" is observable rather
@@ -410,6 +421,7 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'dialogueRefused',
   'dialogueBlocks',
   'dialogueSilenced',
+  'dialogueMoments',
   'tier',
   'motion',
   'renderer',
@@ -468,6 +480,7 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-dialogue-refused': num(snapshot.dialogueRefused),
     'data-dialogue-blocks': num(snapshot.dialogueBlocks),
     'data-dialogue-silenced': num(snapshot.dialogueSilenced),
+    'data-dialogue-moments': num(snapshot.dialogueMoments),
     'data-day-phase': num(snapshot.dayPhase),
     'data-tier': text(snapshot.tier),
     'data-motion': text(snapshot.motion),

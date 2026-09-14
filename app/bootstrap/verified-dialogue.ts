@@ -169,9 +169,73 @@ export interface SpokenStep extends Omit<QuestStepDocument, 'dialogue'> {
   readonly silenced?: SilencedUtterance;
 }
 
-/** A quest whose every line has been through {@link adjudicateQuest}. */
-export interface SpokenQuest extends Omit<QuestDocument, 'steps'> {
+/**
+ * The four lines a quest document carries outside its steps, by field name.
+ *
+ * `TN-DIALOGUE-what-a-quest-giver-says.md` rules what each is for: `declinedLine`
+ * when the player chose "Not now", `reminderLine` when they come back while the
+ * quest is accepted and unfinished, `afterLine` when they come back after it is
+ * complete, and `doneLine` on the completion card, in the past tense.
+ *
+ * The field names are the keys, rather than a friendlier vocabulary, so a
+ * pointer printed on the console (`halifax-clock-and-pier#/afterLine`) is the
+ * JSON path an author opens.
+ */
+export type QuestMoment = 'declinedLine' | 'reminderLine' | 'afterLine' | 'doneLine';
+
+/** Every moment, in the order a player can meet them. */
+export const QUEST_MOMENTS: readonly QuestMoment[] = [
+  'declinedLine',
+  'reminderLine',
+  'afterLine',
+  'doneLine',
+];
+
+/**
+ * A quest whose every line has been through {@link adjudicateQuest}.
+ *
+ * The four moment lines are re-declared as {@link SpeakableLine}, so a raw
+ * `DialogueLine` off the document cannot be handed to anything that speaks. They
+ * stay assignable to `QuestDocument`'s optional `DialogueLine` fields, which is
+ * what lets `startQuest` and `progressQuest` take one of these unchanged.
+ */
+export interface SpokenQuest extends Omit<QuestDocument, 'steps' | QuestMoment> {
   readonly steps: readonly SpokenStep[];
+  readonly declinedLine?: SpeakableLine;
+  readonly reminderLine?: SpeakableLine;
+  readonly afterLine?: SpeakableLine;
+  readonly doneLine?: SpeakableLine;
+  /**
+   * The moments whose line was read and refused, and why.
+   *
+   * The moment's twin of {@link SpokenStep.silenced}. A moment field absent from
+   * this quest **and** from this map is a document that wrote nothing for that
+   * moment; absent from the quest and present here is a line a verifier did not
+   * grant. Both are silent on screen, and ADR-0024 is why they are two states.
+   */
+  readonly momentsSilenced?: Readonly<Partial<Record<QuestMoment, SilencedUtterance>>>;
+}
+
+/**
+ * What one moment has to say, read off an adjudicated quest.
+ *
+ * - `spoken` — the document wrote a line and ADR-0003 allows it.
+ * - `unverified` — the document wrote a line and a verifier did not grant it.
+ * - `no-line` — the document wrote nothing for this moment. Silence is legal for
+ *   every moment (`TN-DIALOGUE-02`), so this is not a fault.
+ */
+export type MomentVerdict =
+  | { readonly said: 'spoken'; readonly line: SpeakableLine }
+  | { readonly said: 'unverified'; readonly silenced: SilencedUtterance }
+  | { readonly said: 'no-line' };
+
+/** The verdict for one moment. Reads the receipt; never re-derives it. */
+export function momentVerdict(quest: SpokenQuest, moment: QuestMoment): MomentVerdict {
+  const line = quest[moment];
+  if (line !== undefined) return { said: 'spoken', line };
+  const silenced = quest.momentsSilenced?.[moment];
+  if (silenced !== undefined) return { said: 'unverified', silenced };
+  return { said: 'no-line' };
 }
 
 /** One block of dialogue that will not be said, and why, line by line. */
@@ -217,6 +281,17 @@ export interface DialogueCensus {
   readonly spoken: number;
   /** Blocks said in full by nobody, because a line in them was refused. */
   readonly silenced: readonly SilencedUtterance[];
+  /**
+   * Of `examined`, the lines that are a quest's moment lines — `declinedLine`,
+   * `reminderLine`, `afterLine`, `doneLine` — rather than a step's dialogue.
+   *
+   * Its own number because it is the half that used to be missing. The filter
+   * once read steps only, so 40 authored and verified lines were neither spoken
+   * nor counted, and `examined` published 92 against the 132 `verify-content`
+   * counts. Each moment line is also one utterance: a moment is one thing a
+   * speaker says at one moment, which is what an utterance is.
+   */
+  readonly moments: number;
 }
 
 /** The census of a build that ships no quest at all. */
@@ -229,6 +304,7 @@ export const EMPTY_DIALOGUE_CENSUS: DialogueCensus = {
   utterances: 0,
   spoken: 0,
   silenced: [],
+  moments: 0,
 };
 
 /**
@@ -251,6 +327,12 @@ export interface DialogueLedger {
   admit(pointer: string, lines: readonly DialogueLine[]): Result<UtteranceVerdict>;
   /** Record that a document was walked, whatever it turned out to hold. */
   countQuest(): void;
+  /**
+   * Record that the block just admitted was a moment line rather than a step's
+   * dialogue. Called beside `admit`, never instead of it: a moment line is
+   * examined, adjudicated and counted exactly as any other line is.
+   */
+  countMoment(): void;
   readonly census: DialogueCensus;
 }
 
@@ -262,6 +344,15 @@ export type UtteranceVerdict =
 const paragraph = (pointer: string, total: number, refused: readonly RefusedClaim[]): string => {
   const held = total - refused.length;
   const reasons = refused.map((claim) => `    - ${claim.message}`).join('\n');
+  if (total === 1) {
+    /* A moment line is a block of one. There is no run-up to leave mid-thought,
+       so the block-versus-line sentence below would describe nothing. */
+    return (
+      `"${pointer}" is a line a verifier did not grant, so it is left unsaid (ADR-0003) and ` +
+      `the moment it belongs to is silent. Fixing this is an author's and then a verifier's ` +
+      `job; the runtime staying quiet is not a substitute for either.\n${reasons}`
+    );
+  }
   return (
     `"${pointer}" holds ${String(total)} line(s), ${String(refused.length)} of which a ` +
     `verifier did not grant, so the whole block is left unsaid (ADR-0003). The block is the ` +
@@ -277,11 +368,16 @@ export function createDialogueLedger(): DialogueLedger {
   let quests = 0;
   let utterances = 0;
   let spoken = 0;
+  let moments = 0;
   const silenced: SilencedUtterance[] = [];
 
   return {
     countQuest(): void {
       quests += 1;
+    },
+
+    countMoment(): void {
+      moments += 1;
     },
 
     admit(pointer, lines): Result<UtteranceVerdict> {
@@ -335,6 +431,7 @@ export function createDialogueLedger(): DialogueLedger {
         utterances,
         spoken,
         silenced: [...silenced],
+        moments,
       };
     },
   };
@@ -347,6 +444,15 @@ export function createDialogueLedger(): DialogueLedger {
  * that carries none is passed through untouched and is **not** counted as an
  * utterance: the author wrote no block there, and counting an absence would make
  * `utterances` a count of steps rather than of things a speaker says.
+ *
+ * **The four moment lines go through the same ledger**, each as a block of one
+ * at `<id>#/<field>`. One line is one utterance there by construction: a moment
+ * is one thing a speaker says at one moment. A granted one is carried as a
+ * {@link SpeakableLine}; a refused one is removed from the quest and its receipt
+ * put in {@link SpokenQuest.momentsSilenced}; an absent one is neither, and is
+ * not counted, for the reason a step with no `dialogue` is not. The raw
+ * `DialogueLine`s are stripped from the result rather than spread through, so an
+ * unadjudicated moment line is not a value this function can hand back.
  *
  * `Result` rather than a throw, and the failure is a document this file cannot
  * adjudicate rather than one it has adjudicated badly. `./quests.ts` puts it on
@@ -377,7 +483,41 @@ export function adjudicateQuest(
     );
   }
 
-  return ok({ ...quest, steps });
+  const moments: { [M in QuestMoment]?: SpeakableLine } = {};
+  const momentsSilenced: { [M in QuestMoment]?: SilencedUtterance } = {};
+  for (const moment of QUEST_MOMENTS) {
+    const line = quest[moment];
+    if (line === undefined) continue;
+
+    const verdict = ledger.admit(`${where}#/${moment}`, [line]);
+    if (!verdict.ok) return verdict;
+    ledger.countMoment();
+
+    if (!verdict.value.spoken) {
+      momentsSilenced[moment] = verdict.value.silenced;
+      continue;
+    }
+    const [said] = verdict.value.lines;
+    if (said !== undefined) moments[moment] = said;
+  }
+
+  /* Named with a leading underscore because they are taken off on purpose: the
+     raw lines must not survive into a `SpokenQuest` beside the adjudicated ones. */
+  const {
+    steps: _steps,
+    declinedLine: _declinedLine,
+    reminderLine: _reminderLine,
+    afterLine: _afterLine,
+    doneLine: _doneLine,
+    ...rest
+  } = quest;
+
+  return ok({
+    ...rest,
+    steps,
+    ...moments,
+    ...(Object.keys(momentsSilenced).length === 0 ? {} : { momentsSilenced }),
+  });
 }
 
 /**
@@ -426,7 +566,8 @@ export function describeDialogueCensus(census: DialogueCensus): string {
   const head =
     `${String(census.quests)} quest(s): ${String(census.utterances)} block(s) of dialogue, ` +
     `${String(census.examined)} line(s) examined, ${String(census.factual)} state a fact, ` +
-    `${String(census.drawable)} drawable, ${String(census.refused.length)} not drawn; ` +
+    `${String(census.drawable)} drawable, ${String(census.refused.length)} not drawn ` +
+    `(${String(census.moments)} of the lines are moment lines); ` +
     `${String(census.spoken)} block(s) said, ${String(census.silenced.length)} left unsaid.`;
   if (census.silenced.length === 0) return head;
   return [head, ...census.silenced.map((block) => `  - ${block.message}`)].join('\n');

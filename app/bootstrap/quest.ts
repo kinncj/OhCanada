@@ -24,22 +24,35 @@
  * strings and callbacks. `createDialogue` never learns that a quest exists, which
  * is what lets it carry any NPC in any level.
  *
- * ## Where the words come from, and the three that have no home
+ * ## Where the words come from
  *
  * Everything the giver says is the **quest document's**: the offer is the
  * leading `talk` step's `dialogue[].text`, the tracker is the current step's
- * `prompt`, and the reminder is that same prompt read back. Only two strings are
- * copy rows, because they are the same in every quest in the game: `quest.accept`
- * and `quest.decline`.
+ * `prompt`, and the three moments a step cannot speak for are the quest's own
+ * `declinedLine`, `reminderLine` and `afterLine` (`TN-DIALOGUE`). Only two
+ * strings are copy rows, because they are the same in every quest in the game:
+ * `quest.accept` and `quest.decline`.
  *
- * Three of `TN-QUEST`'s lines have **nowhere to live** and are therefore not
- * drawn: `officer.declined` ("No problem. Come back when you are ready."),
- * `officer.reminder` and `officer.afterStamp`. `quest.schema.json` puts dialogue
- * on a *step*, so a quest can say what its giver says when the step starts and
- * has no field for what he says when the player declines, comes back mid-quest,
- * or returns after finishing. Rather than invent three copy rows keyed on a quest
- * — the `level.loading` defect, one story later — declining closes the dialogue,
- * and coming back reads the step's own prompt. Reported with the task.
+ * Those moment lines were ruled, authored, verified and shipped, and for a while
+ * nothing here read them: declining closed the dialogue in silence, coming back
+ * read the step's `prompt` aloud as though it were speech, and coming back after
+ * the stamp read the `summary` back — an instruction in the present tense about a
+ * finished thing. {@link momentSpeech} is how they are said now, and three rules
+ * decide it:
+ *
+ *  - **A moment with no line is silent, and so is a refused one.** Nothing is
+ *    borrowed (`TN-DIALOGUE-02`): no prompt stands in for a missing reminder and
+ *    no summary for a missing after-line. The two silences are different words
+ *    (`no-line`, `unverified`), and only the second goes to the console.
+ *  - **The reminder is said instead of the step prompt, never beside it.** The
+ *    tracker already draws the prompt and goes on drawing it the moment the
+ *    dialogue closes; a dialog that said both would tell a returning player the
+ *    same instruction twice, once as a label and once in a voice.
+ *  - **The after-line is said every time a finished giver is engaged.** The HUD
+ *    offers that giver as "Done. See this one again", which promises the same
+ *    words again, and the line teaches a verified fact — hearing a fact twice is
+ *    review, not noise. A landmark giver behaves identically: nothing on this
+ *    path branches on the kind.
  *
  * ## Teaching at the landmark, which is what a `visit` step is for
  *
@@ -92,12 +105,16 @@ import type { SettingsStore } from '@ui/settings';
 import {
   resolveEngageable,
   whyNotEngageable,
+  type Engageable,
   type EngageableResolution,
   type LevelPlacements,
 } from './engageables';
 import {
+  momentVerdict,
   spokenStep,
+  type QuestMoment,
   type SilencedUtterance,
+  type SpeakableLine,
   type SpokenQuest,
   type SpokenStep,
 } from './verified-dialogue';
@@ -341,6 +358,120 @@ const openingWasSilenced = (quest: SpokenQuest): SilencedUtterance | undefined =
   return first !== undefined && first.kind === 'talk' ? first.silenced : undefined;
 };
 
+/**
+ * The three moments a giver says out loud, in a dialog.
+ *
+ * `doneLine` is the fourth moment and is not in this set: it is not said by
+ * anybody in a dialog, it is drawn on the completion card as what the quest was
+ * (`TN-DONE`), and {@link completionLine} is its reader.
+ */
+export type SpokenMoment = Exclude<QuestMoment, 'doneLine'>;
+
+/**
+ * What a moment will put on screen, or which silence it is.
+ *
+ * ADR-0024, and the reason this is a word and not a boolean or a nullable
+ * string: every branch but the first looks identical to a player — nothing
+ * opens — and they are four different facts about the build.
+ *
+ * - `spoken` — a verified line, and a speaker resolved through
+ *   `./engageables.ts` against what the level placed. `speaker.kind` says
+ *   whether that is a character or a landmark, and `speaker.name` is the
+ *   dialog's accessible name. Nothing here reads `line.expression`; a landmark's
+ *   line has no such key (ADR-0029 §4), and no portrait is asked for.
+ * - `no-line` — the document wrote nothing for this moment. Legal, and quiet.
+ * - `unverified` — the document wrote a line a verifier did not grant. The
+ *   receipt names the pointer and the status for the console.
+ * - `unnamed` — the line is granted and this build cannot name its speaker, so
+ *   the dialog is refused rather than opened with no accessible name
+ *   (`TN-QUEST-08`). `why` is the same sentence every other refusal prints.
+ */
+export type MomentSpeech =
+  | { readonly said: 'spoken'; readonly speaker: Engageable; readonly line: SpeakableLine }
+  | { readonly said: 'no-line' }
+  | { readonly said: 'unverified'; readonly silenced: SilencedUtterance }
+  | { readonly said: 'unnamed'; readonly speakerId: string; readonly why: string };
+
+/**
+ * One moment, resolved: the verdict on the line, then the name of whoever says
+ * it — through the one naming path there is.
+ *
+ * The speaker is the **line's** `speaker`, not the quest's `giver`. They are the
+ * same in every shipped quest, and the contract gate checks every moment line's
+ * speaker against the level's placements; reading the giver here instead would
+ * be a second answer to "who is talking" that could disagree with the line.
+ *
+ * Pure, and exported so a test can ask what a moment would say without opening
+ * anything — the controller below is the only thing that turns a `spoken` answer
+ * into a dialog.
+ */
+export function momentSpeech(
+  quest: SpokenQuest,
+  moment: SpokenMoment,
+  placements: LevelPlacements | null,
+  levelId: string,
+): MomentSpeech {
+  const verdict = momentVerdict(quest, moment);
+  if (verdict.said !== 'spoken') return verdict;
+
+  const speakerId = bareTargetId(String(verdict.line.speaker));
+  const resolution = resolveEngageable(placements, speakerId);
+  if (!resolution.ok) {
+    return { said: 'unnamed', speakerId, why: whyNotEngageable(speakerId, levelId, resolution) };
+  }
+  return { said: 'spoken', speaker: resolution.engageable, line: verdict.line };
+}
+
+/**
+ * How the completion card came to be drawn: a quest finished, naming it, or the
+ * player reached the end of the level. `TN-DONE`'s two routes, typed so that the
+ * quest route cannot be asked about without the quest.
+ */
+export type FinishedBy =
+  | { readonly by: 'quest'; readonly quest: SpokenQuest }
+  | { readonly by: 'level' };
+
+/**
+ * The quest's own closing line for the completion card, or why there is none.
+ *
+ * - `spoken` — a granted `doneLine`, as localised text. The card draws `text`
+ *   and nothing else off the line: **no speaker name**, because a landmark giver
+ *   is exactly the name the card may not carry (`TN-DONE` rule 1, `TN-PEGGYS-05`,
+ *   `TN-NORTH-05`), and because the card is already a dialog named by its
+ *   heading — a second name inside it would be a second thing for a screen
+ *   reader to attribute the card to.
+ * - `other-route` — the level was finished by reaching its end. **The line is
+ *   not drawn, whatever state the quest is in.** Every authored `doneLine`
+ *   describes the whole route walked and every question answered, which is false
+ *   of a player who accepted nothing and false of one who accepted and walked
+ *   past the last three steps; and `TN-DONE` rule 6 forbids any remark on that
+ *   card about the task on this route. A quest finished in an earlier sitting is
+ *   the same answer: the heading on this showing is "Level finished!", and the
+ *   line is about the showing whose heading is "Task done!".
+ * - `no-line` / `unverified` — the two silences, as for every other moment.
+ *   `TN-DONE-05`: a quest with no done line draws the card without that line,
+ *   and never another quest's.
+ *
+ * **Where it goes on the card**, for whoever draws it: in the card's described
+ * body, first, above the stamp sentence — and **not** in the live-region
+ * announcement. The card announces its heading and stamp sentence once and is
+ * read in full on arrival through `aria-describedby` (`app/ui/level-complete.ts`);
+ * a line placed in the body is read once by that, and a line placed in the
+ * announcement as well would be heard twice.
+ */
+export type CompletionLine =
+  | { readonly said: 'spoken'; readonly text: LocalizedText }
+  | { readonly said: 'no-line' }
+  | { readonly said: 'unverified'; readonly silenced: SilencedUtterance }
+  | { readonly said: 'other-route' };
+
+export function completionLine(finished: FinishedBy): CompletionLine {
+  if (finished.by !== 'quest') return { said: 'other-route' };
+  const verdict = momentVerdict(finished.quest, 'doneLine');
+  if (verdict.said === 'spoken') return { said: 'spoken', text: verdict.line.text };
+  return verdict;
+}
+
 export function createQuestController(wiring: QuestWiring): QuestController {
   let locale = wiring.store.current.locale;
   let dialogue: Dialogue | null = null;
@@ -460,6 +591,50 @@ export function createQuestController(wiring: QuestWiring): QuestController {
         whyNotEngageable(bareTargetId(`${quest.giver}`), String(wiring.levelId), resolution),
     );
   }
+
+  /**
+   * Say one moment's line in its speaker's name, or stay silent. `true` only
+   * when a dialog opened.
+   *
+   * The console hears about the two silences a maintainer has to act on —
+   * `unverified` and `unnamed` — and never about `no-line`, which is a document
+   * choosing to be quiet. {@link QuestController.canEngage} asks the same
+   * question through {@link momentSpeech} and prints nothing, because it runs on
+   * every prompt refresh; this runs only when a player engaged something.
+   */
+  function sayMoment(quest: SpokenQuest, moment: SpokenMoment): boolean {
+    const speech = momentSpeech(quest, moment, wiring.placements(), String(wiring.levelId));
+    switch (speech.said) {
+      case 'spoken':
+        /* `line.text` and the resolved name, and nothing else: no pose, no
+           portrait, whichever kind of thing is speaking. */
+        return open(
+          quest,
+          [localised(speech.line.text, locale)],
+          false,
+          localised(speech.speaker.name, locale),
+        );
+      case 'unverified':
+        console.error(
+          `[bootstrap] "${String(quest.id)}" says nothing at ${moment}. ` + speech.silenced.message,
+        );
+        return false;
+      case 'unnamed':
+        console.error(
+          `[bootstrap] "${String(quest.id)}" ${moment} is spoken by "${speech.speakerId}", and ` +
+            `this build cannot name it, so the line is left unsaid rather than announced as ` +
+            `nothing (TN-QUEST-08, ADR-0029). ` +
+            speech.why,
+        );
+        return false;
+      case 'no-line':
+        return false;
+    }
+  }
+
+  /** Would this moment open a dialog? Asked silently, for the prompt. */
+  const hasSomethingToSay = (quest: SpokenQuest, moment: SpokenMoment): boolean =>
+    momentSpeech(quest, moment, wiring.placements(), String(wiring.levelId)).said === 'spoken';
 
   function ensureDialogue(name: string): Dialogue {
     if (dialogue !== null) {
@@ -583,6 +758,24 @@ export function createQuestController(wiring: QuestWiring): QuestController {
     wiring.commit(result.value.progress);
     close();
     refresh();
+    /*
+     * "Not now" is answered, when the quest wrote an answer (`TN-QUEST-03`, and
+     * `OQ-DIALOGUE-4`'s reason: "come back when you are ready" is the one thing a
+     * declining player does not know — that the offer is still there).
+     *
+     * A new dialog, opened after the offer has closed, rather than the offer's
+     * words swapped in place. The offer's own close is what gives focus back and
+     * lets go of the level; opening again takes both afresh, so the focus trap
+     * lands on the new dialog's one control instead of on a "Not now" button
+     * that has just been removed from under the keyboard — and closing *this*
+     * one returns focus to the interact prompt, which `TN-DIALOGUE-04` requires
+     * of a decline. With no line, or a refused one, nothing opens and the
+     * decline is exactly as quiet as it always was.
+     */
+    if (decision === 'decline') {
+      sayMoment(quest, 'declinedLine');
+      return;
+    }
     /*
      * A quest of one `talk` step would be complete on acceptance. Nothing in
      * `content/quests/` is shaped that way today and the domain allows it, so the
@@ -758,10 +951,18 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       if (questIsOnOffer(wiring.progress(), quest)) {
         return openingDialogue(quest) !== undefined;
       }
-      /* Being played, or finished: the reminder and the summary are both real
-         things to read (`TN-REACH-03`: "the dialogue for that target opens
-         again"). */
-      return state !== undefined;
+      /*
+       * Being played, or finished: only if that moment has a line this build may
+       * say, in a name it can give. `TN-REACH-03`'s "the dialogue for that target
+       * opens again" is a promise about a dialogue that exists — a giver whose
+       * reminder was never written, or was refused, is not offered a prompt that
+       * would open nothing. A landmark giver in that state keeps whatever else
+       * the level gives it: `main.ts` falls through to its card when this is
+       * false.
+       */
+      if (state?.status === 'active') return hasSomethingToSay(quest, 'reminderLine');
+      if (state?.status === 'completed') return hasSomethingToSay(quest, 'afterLine');
+      return false;
     },
 
     engage(targetId): boolean {
@@ -789,26 +990,23 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       }
 
       /*
-       * Being played: the giver reads the current step back. It is a reminder in
-       * the quest's own words rather than a second offer — `TN-QUEST-02`, "no
-       * second quest/offered event is emitted" — and it is the step's `prompt`
-       * because `officer.reminder` has nowhere in the schema to live.
+       * Being played: the quest's own `reminderLine`, and only that. Not a second
+       * offer — `TN-QUEST-02`, "no second quest/offered event is emitted" — and
+       * not the step's `prompt` beside it: the tracker draws the prompt, is
+       * behind this dialog while it is open and is still there the moment it
+       * closes, so saying both would give a returning player the same
+       * instruction twice. No reminder, no dialog (`TN-DIALOGUE-02`).
        */
-      if (state?.status === 'active') {
-        const step = currentStep(quest, state);
-        if (step === undefined) return false;
-        return open(quest, [localised(step.prompt, locale)], false);
-      }
+      if (state?.status === 'active') return sayMoment(quest, 'reminderLine');
 
       /*
-       * Finished. The job, read back — which is what `summary` is for, and what
-       * "See this one again" offers a player who wants to read it twice
-       * (`TN-REACH-03`). Nothing is earned a second time: `earn` is not on this
-       * path at all.
+       * Finished: the quest's own `afterLine`, every time. The HUD offers this
+       * giver as "Done. See this one again", and a line that teaches a verified
+       * fact is worth hearing twice. Not the `summary`, which is an instruction
+       * in the present tense about a finished thing. Nothing is earned a second
+       * time: `earn` is not on this path at all.
        */
-      if (state?.status === 'completed') {
-        return open(quest, [localised(quest.summary, locale)], false);
-      }
+      if (state?.status === 'completed') return sayMoment(quest, 'afterLine');
 
       return false;
     },

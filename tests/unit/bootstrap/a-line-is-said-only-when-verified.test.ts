@@ -62,6 +62,7 @@ import {
   describeDialogueCensus,
   dialogueCensusIsRemarkable,
   EMPTY_DIALOGUE_CENSUS,
+  QUEST_MOMENTS,
   spokenStep,
   type DialogueCensus,
   type SpokenQuest,
@@ -526,6 +527,15 @@ describe('the census tells "nothing to refuse" from "refused everything"', () =>
      * this field exists to make visible.
      */
     const catalogue = readQuests();
+    /* A moment line is carried either spoken or with a receipt, never both. */
+    const momentsCarried = catalogue.quests.reduce(
+      (total, quest) =>
+        total +
+        QUEST_MOMENTS.filter(
+          (moment) => quest[moment] !== undefined || quest.momentsSilenced?.[moment] !== undefined,
+        ).length,
+      0,
+    );
     const carried = catalogue.quests.reduce(
       (total, quest) =>
         total +
@@ -533,10 +543,11 @@ describe('the census tells "nothing to refuse" from "refused everything"', () =>
           (inner, step) => inner + (step.dialogue?.length ?? step.silenced?.lines ?? 0),
           0,
         ),
-      0,
+      momentsCarried,
     );
 
     expect(catalogue.census.examined).toBe(carried);
+    expect(catalogue.census.moments).toBe(momentsCarried);
     expect(catalogue.census.utterances).toBe(
       catalogue.census.spoken + catalogue.census.silenced.length,
     );

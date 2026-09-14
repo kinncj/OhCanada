@@ -2210,6 +2210,20 @@ describe('a quest is offered, accepted and tracked', () => {
     await arriveInOttawa();
     emit('npc/engaged', 'officer');
     (hoisted.state.dialoguesShown[0] as { decline: { onSelect: () => void } }).decline.onSelect();
+
+    /*
+     * "Not now" is answered in the quest's own words — Ottawa's `declinedLine`,
+     * `TN-QUEST-03`'s "the dialogue shows 'No problem…'" — so the level is still
+     * held for one more dialog: the answer, not the offer. It is given back when
+     * that answer is closed, which is the path this scenario is about.
+     */
+    const answer = hoisted.state.dialoguesShown[1] as
+      | { accept?: unknown; next?: { onSelect: () => void } }
+      | undefined;
+    expect(answer, 'the officer said nothing after "Not now"').toBeDefined();
+    expect(answer?.accept, 'a decline was answered with a second offer').toBeUndefined();
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
+    answer?.next?.onSelect();
     expect(doc.documentElement.dataset['tnPaused']).toBe('false');
 
     /* Leaving without choosing is not a decline (`TN-QUEST-03`) — and it is the
@@ -2239,9 +2253,13 @@ describe('a quest is offered, accepted and tracked', () => {
     emit('npc/engaged', 'officer');
     (hoisted.state.dialoguesShown[0] as { decline: { onSelect: () => void } }).decline.onSelect();
 
+    /* The decline is answered first (`declinedLine`), and a dialogue that is
+       open is not engaged over; closing it is what a player does next. */
+    (hoisted.state.dialoguesShown[1] as { next: { onSelect: () => void } }).next.onSelect();
+
     emit('npc/engaged', 'officer');
-    const second = hoisted.state.dialoguesShown[1] as { accept?: unknown };
-    expect(second.accept, 'a declined quest was never offered again').toBeDefined();
+    const again = hoisted.state.dialoguesShown[2] as { accept?: unknown } | undefined;
+    expect(again?.accept, 'a declined quest was never offered again').toBeDefined();
   });
 
   it('gives a reminder rather than a second offer once it is being played', async () => {

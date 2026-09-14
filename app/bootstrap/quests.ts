@@ -61,7 +61,9 @@ import type { LocalizedText } from '@domain/entities/values';
 import {
   adjudicateQuest,
   createDialogueLedger,
+  QUEST_MOMENTS,
   type DialogueCensus,
+  type QuestMoment,
   type SpokenQuest,
 } from './verified-dialogue';
 
@@ -150,33 +152,49 @@ function readDialogue(raw: unknown, where: string): Result<DialogueLine[]> {
 
   const lines: DialogueLine[] = [];
   for (const [index, line] of raw.entries()) {
-    const at = `${where}[${String(index)}]`;
-    if (!isRecord(line)) return invalid(at, 'must be an object.');
-
-    const speaker = readId(line, 'speaker', at);
-    if (!speaker.ok) return speaker;
-    const text = readLocalized(line, 'text', at);
-    if (!text.ok) return text;
-
-    const fact = line['fact'];
-    if (!isRecord(fact)) return invalid(`${at}.fact`, 'is required on every line.');
-
-    const expression = line['expression'];
-    if (expression !== undefined && typeof expression !== 'string') {
-      return invalid(`${at}.expression`, 'must be the name of a face pose.');
-    }
-
-    lines.push({
-      speaker: speaker.value as CharacterId,
-      text: text.value,
-      /* Carried through as declared, for `./verified-dialogue.ts` to read.
-         Dropping it here would leave the surface unable to tell a claim from
-         flavour, which is what the dialogue path had instead of a gate. */
-      fact: fact as unknown as DialogueLine['fact'],
-      ...(typeof expression === 'string' ? { expression } : {}),
-    });
+    const read = readLine(line, `${where}[${String(index)}]`);
+    if (!read.ok) return read;
+    lines.push(read.value);
   }
   return ok(lines);
+}
+
+/**
+ * One line, wherever it sits: in a step's `dialogue` array, or as one of the
+ * quest's four moment lines.
+ *
+ * One reader for both, because they are one `$defs/dialogueLine` in the schema
+ * and a second reader is how the two would come to accept different shapes.
+ *
+ * `expression` is carried only when the document declares it, so a landmark's
+ * line has no `expression` key at all rather than one set to `undefined`
+ * (ADR-0029 §4) — whichever of the two places the line came from.
+ */
+function readLine(line: unknown, at: string): Result<DialogueLine> {
+  if (!isRecord(line)) return invalid(at, 'must be an object.');
+
+  const speaker = readId(line, 'speaker', at);
+  if (!speaker.ok) return speaker;
+  const text = readLocalized(line, 'text', at);
+  if (!text.ok) return text;
+
+  const fact = line['fact'];
+  if (!isRecord(fact)) return invalid(`${at}.fact`, 'is required on every line.');
+
+  const expression = line['expression'];
+  if (expression !== undefined && typeof expression !== 'string') {
+    return invalid(`${at}.expression`, 'must be the name of a face pose.');
+  }
+
+  return ok({
+    speaker: speaker.value as CharacterId,
+    text: text.value,
+    /* Carried through as declared, for `./verified-dialogue.ts` to read.
+       Dropping it here would leave the surface unable to tell a claim from
+       flavour, which is what the dialogue path had instead of a gate. */
+    fact: fact as unknown as DialogueLine['fact'],
+    ...(typeof expression === 'string' ? { expression } : {}),
+  });
 }
 
 function readStep(raw: unknown, where: string): Result<QuestStepDocument> {
@@ -278,6 +296,26 @@ export function readQuest(raw: unknown, where: string): Result<QuestDocument> {
     steps.push(read.value);
   }
 
+  /*
+   * The four moment lines, which until this change nothing in `app/` read: the
+   * port declared them, the schema validated them, a verifier granted them, and
+   * this function dropped them on the floor. Forty lines across ten quests.
+   *
+   * Each is optional and absent is legal — a quest with no line for a moment
+   * says nothing at that moment (`TN-DIALOGUE-02`). One that is present and
+   * malformed refuses the document, exactly as a malformed step line does: a
+   * half-read line is not a thing to speak, and one document costs itself and
+   * not the other nine.
+   */
+  const moments: Partial<Record<QuestMoment, DialogueLine>> = {};
+  for (const moment of QUEST_MOMENTS) {
+    const value = raw[moment];
+    if (value === undefined) continue;
+    const read = readLine(value, `${where}.${moment}`);
+    if (!read.ok) return read;
+    moments[moment] = read.value;
+  }
+
   return ok({
     $schema: typeof raw['$schema'] === 'string' ? raw['$schema'] : '',
     id: id.value as QuestId,
@@ -285,6 +323,7 @@ export function readQuest(raw: unknown, where: string): Result<QuestDocument> {
     giver: giver.value as CharacterId,
     title: title.value,
     summary: summary.value,
+    ...moments,
     steps,
   });
 }

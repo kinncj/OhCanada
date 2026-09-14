@@ -1097,6 +1097,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       dialogueRefused: questCatalogue.census.refused.length,
       dialogueBlocks: questCatalogue.census.utterances,
       dialogueSilenced: questCatalogue.census.silenced.length,
+      /* Of the lines examined, the four moment lines each quest carries. They
+         are in every number above as well; this one says they were read. */
+      dialogueMoments: questCatalogue.census.moments,
     });
     session = openLevel({
       id,
