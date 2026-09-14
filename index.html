@@ -106,7 +106,25 @@
           height-constrained under FIT, so the canvas is exactly as tall as this
           box. On a portrait phone the canvas is full width and the land layer is
           hidden behind it. See `landBand` in app/adapters/phaser.
+
+          A phone TALLER than 9:16 letterboxes the other way: FIT makes the
+          canvas as wide as the screen and centres it, leaving a band ABOVE and
+          BELOW it (76 CSS px each at 390x844). A ramp over the whole page is
+          already part-way to the ground at the canvas's first row, so the top
+          band read as a strip of a different sky over the level. The ramp
+          therefore runs over the CANVAS box, not the page: flat sky above the
+          canvas, flat ground below it. The box is FIT + CENTER_BOTH inside
+          #game's safe-area insets. When the viewport is wider than 9:16 that
+          box is all of #game, so the side panels are the same ramp as before.
+          16 / 9 is the design resolution, 1080x1920 (ADR-0002).
         */
+        --tn-game-height: calc(100dvh - var(--tn-safe-top) - var(--tn-safe-bottom));
+        --tn-game-width: calc(100vw - var(--tn-safe-left) - var(--tn-safe-right));
+        --tn-canvas-height: min(var(--tn-game-height), var(--tn-game-width) * 16 / 9);
+        --tn-canvas-top: calc(
+          var(--tn-safe-top) + (var(--tn-game-height) - var(--tn-canvas-height)) / 2
+        );
+        --tn-canvas-bottom: calc(var(--tn-canvas-top) + var(--tn-canvas-height));
         background:
           linear-gradient(
               180deg,
@@ -116,7 +134,14 @@
               transparent var(--tn-land-end)
             )
             no-repeat fixed,
-          linear-gradient(180deg, var(--tn-sky) 0%, var(--tn-ground) 100%) no-repeat fixed;
+          linear-gradient(
+              180deg,
+              var(--tn-sky) 0,
+              var(--tn-sky) var(--tn-canvas-top),
+              var(--tn-ground) var(--tn-canvas-bottom),
+              var(--tn-ground) 100%
+            )
+            no-repeat fixed;
         background-color: var(--tn-page);
 
         color: #e9f1f8;
