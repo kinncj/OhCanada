@@ -3320,12 +3320,12 @@ describe('a mounted subject is a person DOING something', () => {
     }
   });
 
-  it('says out loud that the contract still calls them unbuildable', () => {
+  it('says out loud which subjects are built from the rig with an empty renders', () => {
     // A subject whose `renders` is empty and whose picture the harness builds
-    // anyway is a disagreement between two files, and the quiet version of this
-    // fix is the one that would rot: the contract goes on saying "THE HARNESS
-    // CANNOT BUILD IT YET" while identifiers are handed the renders every run,
-    // and nothing anywhere connects the two. So the run states it.
+    // anyway reads as "nothing handed over" to anyone who does not know it is
+    // rig-driven. The contract once went on saying "THE HARNESS CANNOT BUILD IT
+    // YET" while identifiers were handed the renders every run, and nothing
+    // connected the two. The recipes say so now; the run still states it.
     //
     // AND IT STATES IT WITHOUT NAMING ANYBODY IN QUIET MODE, which is the rule
     // the whole harness is under: `art-handoff-blind` is safe to run AS the

@@ -279,27 +279,24 @@ function printHandoffSummary(keymap, { where = null } = {}) {
     }
   }
   /*
-   * THE HARNESS AND THE CONTRACT DISAGREE, AND THE HARNESS IS RIGHT.
+   * AN EMPTY `renders` THAT IS STILL A PICTURE.
    *
    * A subject composed from the rig needs no file list, so an empty `renders`
-   * does not stop it being built. Four subjects in the contract say the
+   * does not stop it being built. Four subjects in the contract once said the
    * opposite in their own `renderRecipe` -- "UNBUILT, AND NOT BY DECISION - THE
    * HARNESS CANNOT BUILD IT YET" -- because when it was written the harness had
-   * no builder for a posed, mounted figure, and the art agent left them
-   * provably incomplete rather than declare sources that would turn the build
-   * red. That deadlock is closed. Printed rather than left silent, because an
-   * art agent reading the contract would otherwise still find four subjects
-   * described as unbuildable and no sign anywhere that they are being handed to
-   * identifiers every run.
+   * no builder for a posed, mounted figure. That deadlock is closed and the
+   * recipes now say so. Printed rather than left silent all the same, because an
+   * empty `renders` reads as "nothing handed over" to anyone who does not know
+   * the subject is rig-driven.
    */
   const builtFromRig = keymap.builtFromRig ?? [];
   if (builtFromRig.length > 0) {
     console.log(
       `verify-art: ${builtFromRig.length} subject(s) were BUILT FROM THE RIG CONTRACT with an ` +
         `empty \`renders\` - the picture is composed from assets/style/rig-contract.json, so ` +
-        `the file list is documentation and not an input. Their \`renderRecipe\` still says the ` +
-        `harness cannot build them, which was true when it was written and is not now. The ` +
-        `contract has not caught up; the renders are real and were handed over.` +
+        `the file list is documentation and not an input. The renders are real and were ` +
+        `handed over.` +
         (quiet ? '' : ` (${builtFromRig.join(', ')})`),
     );
   }
