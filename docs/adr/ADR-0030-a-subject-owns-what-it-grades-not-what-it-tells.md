@@ -341,12 +341,39 @@ answer shown in an explanation during a mixed Study drill (§3); one proposition
   `levelId`'s reason restated as place, the A4 essay's "asked and answered no" list extended, and
   `tests/unit/infra/verify-content-gate.test.ts` proving by mutation that a level `subject` edit voids
   nothing while a question `subject` edit and a quest `levelId` edit still void their grants.
+  **DISCHARGED 2026-09-14** — `5aeab06`. `DOCUMENT_SCOPE_FIELDS` holds `levelId` alone, with the place
+  reason in §6's wording; the essay above `claimAuthorFieldsAt` lists a level's `subject` as asked and
+  answered no, and `make verify-content` on the tree prints `document-scope bindings levelId 59` and OK,
+  where it printed `subject 55, levelId 59` and OK before. Proved by mutation of the real corpus, each edit
+  in its own commit of a throwaway clone: re-filing `toronto` under `government` voids **0** grants and
+  passes (the pre-change `claims.mjs` voids 4 — the territory and the three blurbs); re-filing
+  `gov-59-municipal-responsibilities` under `elections` voids that question's grant and no other; moving
+  `quebec-city-chateau-frontenac` to `ottawa` voids all 6 of its factual line grants. The gate test's A4 table
+  carries the same three as cases — the level-subject case expects nothing voided and a passing run, a new
+  row expects a question's `subject` edit to void that grant alone, and the counts expectation names
+  `levelId` alone — and the vacuity guard is now also driven through a quest, the one document whose
+  `levelId` still keeps a bound set non-empty around an empty unit. Those vitest cases were written, not run,
+  on the machine that wrote them; a plain-Node replay of their fixtures against the real CLI holds on this
+  gate and fails four expectations with `subject` restored.
 - **OBLIGATION due=2026-10-13 owner=infra** — G4: `a-proposition-belongs-to-one-subject.test.ts` selects
   graded items by shape rather than by directory, and pins that no told claim is among them.
+  **DISCHARGED 2026-09-14** — `2ba3702`. The corpus is `claimsIn()` over every non-schema document under
+  `content/`, keeping `kind === 'question'`: 486 documents, the same set the directory held, none outside
+  it. Fixture cases prove the selection both ways — a question moved out of `content/questions/` is compared,
+  a blurb quoting another subject's question is not, a question-shaped document under `content/schemas/` is
+  never — and a corpus assertion pins every compared item as a question document, over a floor that told
+  claims exist (183 on the tree). Measured with the gate's own normalisation, the nine cross-subject and 33
+  same-subject told-and-graded pairs in Context are still there. Written, not run, on the machine that wrote
+  it; a plain-Node replay of its expectations holds for the shape selector, fails one for the directory
+  selector and three for a selector widened to told claims.
 - **OBLIGATION due=2026-10-13 owner=content** — reword the `subject` description in
   `content/schemas/level.schema.json` to: *"The teaching remit of this level's quest, and the question bank
   the scheduler draws from for it. Not a claim about what the level's landmark blurbs or dialogue teach
   (ADR-0030)."*
+  **DISCHARGED 2026-09-14** — `9ab8ddb`, the wording above verbatim, description only: no property, type or
+  requirement changed, and `make validate-content` passes. Made by infra beside the gate change it explains,
+  at the orchestrator's request; the commit says so, so the content owner can re-open it if the words need
+  their own review.
 
 ## References
 
