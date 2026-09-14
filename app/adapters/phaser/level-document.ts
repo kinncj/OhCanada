@@ -80,6 +80,10 @@ import type {
   LocomotionTuning,
   ParallaxLayer,
   PointOfInterest,
+  Ride,
+  RideArt,
+  RideBob,
+  RideTrack,
   ThemeColours,
   Vec2,
 } from '@application/ports';
@@ -168,6 +172,12 @@ export interface SceneLevel
    * to teach quests to.
    */
   readonly reachablePois: readonly ScenePoi[];
+  /**
+   * What carries the player, per mode (ADR-0031). Always an array: the document
+   * may omit `rides`, and a scene should not have to tell "no rides" from "the
+   * field was absent", which mean the same thing.
+   */
+  readonly rides: readonly Ride[];
   /** The "About this place" panel's content, adjudicated. `docs/content-review.md` §10.2. */
   readonly about: AboutThisPlace;
   /** What the ADR-0003 filter looked at on this level, and what it did. */
@@ -499,6 +509,117 @@ function readAnimation(raw: unknown, where: string): Result<LocomotionTuning['an
   return ok(binding);
 }
 
+/**
+ * The level's rides (ADR-0031), refused where the schema cannot see.
+ *
+ * `level.schema.json` validates each ride on its own. It cannot compare a ride's
+ * `mode` with the level's `locomotion[]`, and it cannot say that two rides do not
+ * carry one mode or that a ride has one layer per side, because each of those is
+ * an item compared with a sibling. A ride for a mode the level never moves by is
+ * art that is charged and never drawn; two rides for one mode would leave the
+ * scene choosing between them. Both are authoring errors, so both are a
+ * `Result` the loader reports rather than a picture somebody has to notice.
+ */
+function readRides(
+  source: Record<string, unknown>,
+  locomotion: readonly LocomotionTuning[],
+): Result<readonly Ride[]> {
+  const raw = source['rides'];
+  if (raw === undefined) return ok([]);
+  if (!Array.isArray(raw)) return invalid('rides', '"rides" must be an array when present.');
+
+  const declared = locomotion.map((tuning) => tuning.mode as string);
+  const carried = new Set<string>();
+  const rides: Ride[] = [];
+  for (const [index, item] of raw.entries()) {
+    const where = `rides[${String(index)}]`;
+    if (!isRecord(item)) return invalid(where, `"${where}" must be an object.`);
+
+    const mode = item['mode'];
+    if (typeof mode !== 'string' || !declared.includes(mode)) {
+      return invalid(
+        `${where}.mode`,
+        `"${where}.mode" must be one of this level's locomotion modes (${declared.join(', ')}). ` +
+          'A ride for a mode the level never moves by is never drawn.',
+      );
+    }
+    if (carried.has(mode)) {
+      return invalid(`${where}.mode`, `two rides carry "${mode}"; a mode has at most one ride.`);
+    }
+    carried.add(mode);
+
+    const rawArt = readArray(item, 'art', 1);
+    if (!rawArt.ok) return invalid(`${where}.art`, `"${where}.art" needs at least one layer.`);
+    const art: RideArt[] = [];
+    for (const [layerIndex, layer] of rawArt.value.entries()) {
+      const at = `${where}.art[${String(layerIndex)}]`;
+      if (!isRecord(layer)) return invalid(at, `"${at}" must be an object.`);
+      const key = readId(layer, 'key');
+      if (!key.ok) return invalid(`${at}.key`, `"${at}.key" must be a kebab-case texture key.`);
+      const side = layer['side'];
+      if (side !== 'behind' && side !== 'front') {
+        return invalid(`${at}.side`, `"${at}.side" must be "behind" or "front".`);
+      }
+      if (art.some((existing) => existing.side === side)) {
+        return invalid(`${at}.side`, `"${where}" has two "${side}" layers; a ride has one per side.`);
+      }
+      art.push({ key: key.value, side });
+    }
+
+    const riderAnchor = readVec2(item, 'riderAnchor');
+    if (!riderAnchor.ok) return invalid(`${where}.riderAnchor`, `"${where}.riderAnchor" needs x and y.`);
+    if (riderAnchor.value.x < 0 || riderAnchor.value.y < 0) {
+      return invalid(
+        `${where}.riderAnchor`,
+        `"${where}.riderAnchor" is measured from the art's top-left corner and cannot be negative.`,
+      );
+    }
+    const groundLineY = readNumber(item, 'groundLineY', { min: 0 });
+    if (!groundLineY.ok) return invalid(`${where}.groundLineY`, groundLineY.error.message);
+    const turnsWithRider = item['turnsWithRider'];
+    if (typeof turnsWithRider !== 'boolean') {
+      return invalid(`${where}.turnsWithRider`, `"${where}.turnsWithRider" must be a boolean.`);
+    }
+
+    const ride: { -readonly [K in keyof Ride]: Ride[K] } = {
+      mode,
+      art,
+      riderAnchor: riderAnchor.value,
+      groundLineY: groundLineY.value,
+      turnsWithRider,
+    };
+
+    const bob = item['bob'];
+    if (bob !== undefined) {
+      if (!isRecord(bob)) return invalid(`${where}.bob`, `"${where}.bob" must be an object when present.`);
+      const amplitudePx = readNumber(bob, 'amplitudePx', { min: 0 });
+      if (!amplitudePx.ok) return invalid(`${where}.bob.amplitudePx`, amplitudePx.error.message);
+      const periodPx = readNumber(bob, 'periodPx', { exclusiveMin: 0 });
+      if (!periodPx.ok) return invalid(`${where}.bob.periodPx`, periodPx.error.message);
+      const parsed: RideBob = { amplitudePx: amplitudePx.value, periodPx: periodPx.value };
+      ride.bob = parsed;
+    }
+
+    const track = item['track'];
+    if (track !== undefined) {
+      if (!isRecord(track)) {
+        return invalid(`${where}.track`, `"${where}.track" must be an object when present.`);
+      }
+      const artKey = readId(track, 'artKey');
+      if (!artKey.ok) {
+        return invalid(`${where}.track.artKey`, `"${where}.track.artKey" must be a kebab-case texture key.`);
+      }
+      const topY = readNumber(track, 'topY');
+      if (!topY.ok) return invalid(`${where}.track.topY`, topY.error.message);
+      const parsed: RideTrack = { artKey: artKey.value, topY: topY.value };
+      ride.track = parsed;
+    }
+
+    rides.push(ride);
+  }
+  return ok(rides);
+}
+
 /** Every landmark the level places, the ones that may teach, and the ones in reach. */
 interface ReadPois {
   readonly pois: readonly ScenePoi[];
@@ -769,6 +890,8 @@ export function parseLevelDocument(
     if (!tuning.ok) return tuning;
     locomotion.push(tuning.value);
   }
+  const rides = readRides(raw, locomotion);
+  if (!rides.ok) return rides;
 
   const ledger = createClaimLedger();
   const about = readTerritory(raw, ledger);
@@ -799,6 +922,7 @@ export function parseLevelDocument(
     pois: pois.value.pois,
     teachingPois: pois.value.teaching,
     reachablePois: pois.value.reachable,
+    rides: rides.value,
     about: about.value,
     claims: ledger.census,
     characters: characters.value,

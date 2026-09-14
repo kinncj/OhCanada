@@ -187,6 +187,19 @@ export interface SceneSnapshot {
   readonly layers?: number;
   readonly layersTextured?: number;
   /**
+   * Whether the mode the player is moving by has a ride — the vehicle or animal
+   * a level draws around the player (ADR-0031) — and whether its art drew.
+   *
+   * The same pair as `layers` and `layersTextured`, for the same reason and after
+   * the same defect: a player reported that the character "walks by itself on a
+   * track" on a level whose HUD said Train. A ride whose art never packed would
+   * put that figure back, seated in mid-air this time, and reach `ready` exactly
+   * like one that drew. `0/0` is a level whose mode needs no ride; `1/1` is a
+   * train on the Prairies; `1/0` is the failure, and a test can fail on it.
+   */
+  readonly rides?: number;
+  readonly ridesDrawn?: number;
+  /**
    * Points of interest and characters the level places, and how many of them
    * drew real art rather than a placeholder shape.
    *
@@ -457,6 +470,8 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'particleAllowance',
   'layers',
   'layersTextured',
+  'rides',
+  'ridesDrawn',
   'actors',
   'actorsDrawn',
   'layersVisible',
@@ -516,6 +531,10 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-particle-allowance': num(snapshot.particleAllowance),
     'data-layers': num(snapshot.layers),
     'data-layers-textured': num(snapshot.layersTextured),
+    /* A ride and its art, in the same shape as the layer pair above: equal on a
+       healthy level, and 0/0 on a level whose mode needs none (ADR-0031). */
+    'data-rides': num(snapshot.rides),
+    'data-rides-drawn': num(snapshot.ridesDrawn),
     'data-actors': num(snapshot.actors),
     'data-actors-drawn': num(snapshot.actorsDrawn),
     'data-layers-visible': num(snapshot.layersVisible),

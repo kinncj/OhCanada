@@ -30,7 +30,7 @@ import type {
 } from '@domain/ids';
 import type { Result } from '@common/result';
 import type { Shippable } from '@domain/entities/question';
-import type { LocomotionTuning } from './locomotion';
+import type { LocomotionMode, LocomotionTuning } from './locomotion';
 
 /**
  * The document types below mirror `content/schemas/*.schema.json` exactly: same
@@ -441,6 +441,47 @@ export interface LevelCharacter {
   readonly position: Vec2;
   readonly facing: 'left' | 'right';
   readonly questId?: QuestId;
+}
+
+/**
+ * A vehicle or animal the player rides, placed at the player every frame (ADR-0031).
+ *
+ * Level art registered to the rider, not a character and not rig equipment: the
+ * rig poses the rider with `<mode>/<state>` states, and this says where in the
+ * ride's own art the rider sits and where that art meets the level's ground.
+ */
+export interface Ride {
+  /** The locomotion mode this ride carries the player in; one ride per mode. */
+  readonly mode: LocomotionMode;
+  /** At least one layer, at most one per side. Every layer shares one size. */
+  readonly art: readonly RideArt[];
+  /** The rider's sole line on their centre line, in the art's own pixels from its top-left. */
+  readonly riderAnchor: Vec2;
+  /** The art row lying on the level's ground polyline under the rider. */
+  readonly groundLineY: number;
+  /** Whether the art mirrors about the rider when the rider turns. */
+  readonly turnsWithRider: boolean;
+  readonly bob?: RideBob;
+  readonly track?: RideTrack;
+}
+
+/** One layer of a ride, and the side of the rider it is drawn on. */
+export interface RideArt {
+  readonly key: string;
+  readonly side: 'behind' | 'front';
+}
+
+/** A vertical rock shared by the ride and its rider; zero at rest and under reduced motion. */
+export interface RideBob {
+  readonly amplitudePx: number;
+  readonly periodPx: number;
+}
+
+/** A repeating strip under a ride that runs on something other than the level's ground. */
+export interface RideTrack {
+  readonly artKey: string;
+  /** The strip's top edge, as a row in the ride's own art pixels. */
+  readonly topY: number;
 }
 
 /**

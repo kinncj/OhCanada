@@ -68,6 +68,11 @@
       "type": "array",
       "items": { "$ref": "#/$defs/levelCharacter" }
     },
+    "rides": {
+      "description": "What carries the player in a mode the rig cannot carry them in by itself: a vehicle or an animal drawn around the player, at the player, every frame they move by that mode (ADR-0031). Optional, because a level whose player walks, skates, sleds or cycles draws that on the rig (assets/style/rig-contract.md section 11) and declares none. At most one ride per mode, and a ride's `mode` must be one of this level's `locomotion[].mode`: JSON Schema cannot compare an array item with a sibling array, so the parser refuses both at load and tests/unit/contracts/level-art-is-placed-where-it-is-drawn.test.ts refuses them in CI.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/ride" }
+    },
     "assets": {
       "description": "The art this level needs, by KEY. Optional since ADR-0020: the loader is manifest-driven, so a level does not have to restate what it already names in layers[].key, pois[].artKey and characters[]. What a human writes here is key and kind; url, bytes and decodedBytes are build-derived and belong to assets/dist/manifest.json, which is the only place they can be true after a content-hashing build. The per-level texture budget is enforced from the manifest, not from this array - see ADR-0020 for why the previous arrangement left TN-LEVEL-02's runtime refusal summing an empty list.",
       "type": "array",
@@ -242,6 +247,98 @@
         }
       },
       "required": ["characterId", "position", "facing"],
+      "additionalProperties": false
+    },
+
+    "ride": {
+      "title": "Ride",
+      "description": "A vehicle or animal the player rides, placed by the engine at the player's position every frame rather than at a fixed point in the world. It is level art registered to the rider, not a character: the rig poses the rider with `<mode>/<state>` states (assets/style/rig-contract.md section 11) and this record says where in the ride's own art the rider sits and where that art meets the level's ground. Every file in `art` shares one size and one registration, so one `riderAnchor` and one `groundLineY` serve them all. Drawn only while the player moves by `mode`. The layers are level art and are charged to this level's texture budget alone, which is the reason a ride is not rig equipment: equipment lives on the shared atlas and is charged to every level.",
+      "type": "object",
+      "properties": {
+        "mode": {
+          "description": "The locomotion mode this ride carries the player in. One of this level's `locomotion[].mode`, and no other ride on the level names it.",
+          "$ref": "#/$defs/locomotionMode"
+        },
+        "art": {
+          "description": "The ride's layers, each drawn either behind the rider or in front of them. A car the rider sits inside is a `front` layer with the rider showing through its glass; a horse would be a `behind` body and a `front` near-side leg. At most one layer per side.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/rideArt" },
+          "minItems": 1
+        },
+        "riderAnchor": {
+          "description": "Where the rider's sole line meets their centre line, in the art's own pixels measured from its top-left corner (its SVG viewBox). The rig's `characterSpace.soleY` and `centreX` land on this point, so a seated pose authored with its feet on the sole line has them on this floor. The art ships at 1x, so an art pixel is a design pixel.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
+        },
+        "groundLineY": {
+          "description": "The row of the art, in its own pixels from the top, that lies on the level's ground polyline under the rider. The art's bottom row for a ride standing on the walking line. A row above the bottom for a ride drawn on a nearer line across the ground fill, which is what lets the landmarks and people placed on the walking line stand beyond it instead of being hidden by it.",
+          "type": "number",
+          "minimum": 0
+        },
+        "turnsWithRider": {
+          "description": "true when the art mirrors about the rider as the rider turns, as an animal walking head first does. false when it does not: a train backs up without turning round, and its passenger turns in their seat.",
+          "type": "boolean"
+        },
+        "bob": { "$ref": "#/$defs/rideBob" },
+        "track": { "$ref": "#/$defs/rideTrack" }
+      },
+      "required": ["mode", "art", "riderAnchor", "groundLineY", "turnsWithRider"],
+      "additionalProperties": false
+    },
+
+    "rideArt": {
+      "title": "Ride art",
+      "description": "One layer of a ride: a texture key, and which side of the rider it is drawn on.",
+      "type": "object",
+      "properties": {
+        "key": {
+          "description": "Texture key, `<levelId>-<file>` for a source under assets/src/svg/<levelId>/, pinned to 1x by its filename.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "side": {
+          "description": "`behind` draws under every part of the rider; `front` draws over every part of the rider and still under the tappable marks, which must never be hidden by the thing they sit above.",
+          "type": "string",
+          "enum": ["behind", "front"]
+        }
+      },
+      "required": ["key", "side"],
+      "additionalProperties": false
+    },
+
+    "rideBob": {
+      "title": "Ride bob",
+      "description": "A vertical rock the ride and its rider share, so a car rides its rail joints and an animal its gait. It grows with speed and is still at rest. Reduced motion holds it at zero, and that is the engine's rule rather than a level's (CLAUDE.md, Accessibility). Absent is still.",
+      "type": "object",
+      "properties": {
+        "amplitudePx": {
+          "description": "Peak lift at cruise speed, design-resolution pixels.",
+          "type": "number",
+          "minimum": 0
+        },
+        "periodPx": {
+          "description": "Distance travelled per rock, design-resolution pixels. A distance and not a time, so the rhythm follows the ground going by.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": ["amplitudePx", "periodPx"],
+      "additionalProperties": false
+    },
+
+    "rideTrack": {
+      "title": "Ride track",
+      "description": "What the ride runs on when that is not the level's own ground: a horizontally repeating strip drawn across the view and fixed to the world, so it scrolls past under the ride the way the ground does. It exists because a ride drawn on a nearer line than the walking line has nothing under it but ground fill, and a strip baked into the ride's own art would move with the ride and end where the art ends. Drawn above the ground and below every actor, and not subject to the parallax tier, because a train with no rails under it is floating.",
+      "type": "object",
+      "properties": {
+        "artKey": {
+          "description": "Texture key of the repeating strip, under the same rules as `rideArt.key`.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "topY": {
+          "description": "Where the strip's top edge sits, as a row in the ride's own art pixels. The strip does not share the ride's bob: it is the ground.",
+          "type": "number"
+        }
+      },
+      "required": ["artKey", "topY"],
       "additionalProperties": false
     },
 

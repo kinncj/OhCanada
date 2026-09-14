@@ -364,3 +364,83 @@ describe('the parse carries through what the scene must not silently drop', () =
     ).toBe(false);
   });
 });
+
+describe('a ride is read strictly, because the schema cannot compare it with its level (ADR-0031)', () => {
+  /* The minimal document moves by `walk`, so that is the mode a well-formed ride
+     here carries. The parser does not care which mode a ride is for, only that
+     the level moves by it. */
+  const ride = (patch: Record<string, unknown> = {}): Record<string, unknown> => ({
+    mode: 'walk',
+    art: [{ key: 'car-front', side: 'front' }],
+    riderAnchor: { x: 520, y: 416 },
+    groundLineY: 280,
+    turnsWithRider: false,
+    ...patch,
+  });
+
+  it('reads a level with no rides as an empty list, not as undefined', () => {
+    const result = parsed();
+    if (!result.ok) throw new Error(result.error.message);
+    expect(result.value.rides).toEqual([]);
+  });
+
+  it('keeps a ride whole, its bob and its track included', () => {
+    const result = parsed({
+      rides: [
+        ride({
+          art: [
+            { key: 'car-behind', side: 'behind' },
+            { key: 'car-front', side: 'front' },
+          ],
+          bob: { amplitudePx: 2, periodPx: 180 },
+          track: { artKey: 'car-track', topY: 532 },
+        }),
+      ],
+    });
+    if (!result.ok) throw new Error(result.error.message);
+    expect(result.value.rides).toEqual([
+      {
+        mode: 'walk',
+        art: [
+          { key: 'car-behind', side: 'behind' },
+          { key: 'car-front', side: 'front' },
+        ],
+        riderAnchor: { x: 520, y: 416 },
+        groundLineY: 280,
+        turnsWithRider: false,
+        bob: { amplitudePx: 2, periodPx: 180 },
+        track: { artKey: 'car-track', topY: 532 },
+      },
+    ]);
+  });
+
+  it('omits bob and track when the level does not declare them', () => {
+    const result = parsed({ rides: [ride()] });
+    if (!result.ok) throw new Error(result.error.message);
+    const [only] = result.value.rides;
+    expect('bob' in (only ?? {})).toBe(false);
+    expect('track' in (only ?? {})).toBe(false);
+  });
+
+  it.each([
+    ['rides that are not a list', { rides: { mode: 'walk' } }],
+    ['a ride for a mode the level never moves by', { rides: [ride({ mode: 'skate' })] }],
+    ['two rides for one mode', { rides: [ride(), ride()] }],
+    ['a ride with no art', { rides: [ride({ art: [] })] }],
+    ['a layer on a side that is neither behind nor front', { rides: [ride({ art: [{ key: 'car-front', side: 'above' }] })] }],
+    [
+      'two layers on one side',
+      { rides: [ride({ art: [{ key: 'a', side: 'front' }, { key: 'b', side: 'front' }] })] },
+    ],
+    ['a layer key that is not a texture key', { rides: [ride({ art: [{ key: 'Car Front', side: 'front' }] })] }],
+    ['an anchor measured outside the art', { rides: [ride({ riderAnchor: { x: -1, y: 10 } })] }],
+    ['a ground row above the art', { rides: [ride({ groundLineY: -1 })] }],
+    ['a ride that does not say whether it turns', { rides: [ride({ turnsWithRider: undefined })] }],
+    ['a bob with no period', { rides: [ride({ bob: { amplitudePx: 2, periodPx: 0 } })] }],
+    ['a track with no top row', { rides: [ride({ track: { artKey: 'car-track' } })] }],
+  ])('rejects %s', (_label, patch) => {
+    const result = parsed(patch as Record<string, unknown>);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.kind).toBe('invalid');
+  });
+});

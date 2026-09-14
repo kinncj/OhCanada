@@ -133,6 +133,13 @@ export function readLevelDocuments(root, fail) {
       keys: [
         ...(Array.isArray(doc.layers) ? doc.layers : []).map((l) => ({ key: l?.key, where: 'layers[].key' })),
         ...(Array.isArray(doc.pois) ? doc.pois : []).map((p) => ({ key: p?.artKey, where: 'pois[].artKey' })),
+        // A ride's layers and its track are level art like a POI's (ADR-0031):
+        // named by key, charged to this level, and a key nothing produces is a
+        // ride that draws nothing under a seated rider.
+        ...(Array.isArray(doc.rides) ? doc.rides : []).flatMap((r) => [
+          ...(Array.isArray(r?.art) ? r.art : []).map((a) => ({ key: a?.key, where: 'rides[].art[].key' })),
+          { key: r?.track?.artKey, where: 'rides[].track.artKey' },
+        ]),
       ].filter((k) => typeof k.key === 'string' && k.key.length > 0),
       assets: Array.isArray(doc.assets) ? doc.assets : [],
       // Raw, not validated here: the texture gate owns the rules for it and

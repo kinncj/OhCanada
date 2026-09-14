@@ -380,6 +380,20 @@ Because every difference between walking and dogsledding is a number or a `null`
 mode is **data plus one pure strategy registered with `LocomotionFactory`**. No scene, camera or input
 handler changes. An unregistered mode fails as `unsupported` at load time, not mid-level.
 
+### The ride seam
+
+What a mode puts under the player comes from one of two places, and the dividing line is **who pays for it**
+(ADR-0031). Equipment small enough for the shared atlas — skates, a sled, a bicycle — is a `{mode}` brace on a
+rig part and is charged to every level. Anything bigger — a passenger car, a horse — is a `ride` in the level
+document, charged to that level alone: level art registered to its rider by a `riderAnchor` and a
+`groundLineY`, drawn behind or in front of the rider's parts, optionally on its own repeating `track`, rocking
+with speed and never under reduced motion.
+
+A ride changes **where the rig is drawn, never where the player is**. The physics position, the camera, reach,
+the auto-stop and the level exit all read the same `LocomotionState` they read before rides existed, and the
+arithmetic is `app/adapters/phaser/ride.ts`, which imports no Phaser. No port was added: a ride is part of
+`LevelDocument` and mirrored by `Ride` under ADR-0007, so the ports table below is unchanged.
+
 ## 6. Seams deliberately left open
 
 Named here so a later slice picks them up on purpose rather than inventing them under pressure.

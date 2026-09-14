@@ -153,6 +153,13 @@ describe('snapshotToAttributes', () => {
            compared with something. */
         'data-player-drawn',
         'data-placeholders',
+        /* The vehicle or animal the player rides (ADR-0031), and whether its art
+           drew. A player reported the Prairies figure "walks by itself on a
+           track"; a ride whose art never packed would seat the same figure in
+           mid-air and still reach ready, so the pair reads equal on a healthy
+           level exactly as the layer pair does. */
+        'data-rides',
+        'data-rides-drawn',
         /* The HUD named a mode the character did not play: every level animated
            walking whatever its mode was. `data-character-mode` is what the rig
            was actually asked for, so it can be compared with the mode the level

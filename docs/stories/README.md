@@ -758,14 +758,20 @@ and present **only** when the page is opened with `?e2e=1`:
 `data-level`, `data-mode`, `data-paused`, `data-player-x`, `data-player-y`, `data-speed`, `data-facing`,
 `data-grounded`, `data-camera-x`, `data-parallax-easing` (`on`/`off`), `data-particles` (a count),
 `data-character-mode` (the locomotion mode the character is actually rigged for),
-`data-pose` (the animation state that mode selects), and `data-mode-gaps` (a count, `0` on a healthy
-level).
+`data-pose` (the animation state that mode selects), `data-mode-gaps` (a count, `0` on a healthy
+level), and `data-rides` / `data-rides-drawn` (whether the mode the player moves by has a ride, and
+whether its art drew: `0`/`0` or `1`/`1` on a healthy level).
 
-The last three exist because the HUD named a mode the character did not play: every level animated
-walking whatever the mode was. `data-character-mode` is what the rig was asked for rather than what
-the level declared, so the two can be compared, and `data-mode-gaps` counts the modes whose art has
-not landed -- a level drawing a walking figure under a label that says Skating must say so rather
-than look correct.
+`data-character-mode`, `data-pose` and `data-mode-gaps` exist because the HUD named a mode the
+character did not play: every level animated walking whatever the mode was. `data-character-mode` is
+what the rig was asked for rather than what the level declared, so the two can be compared, and
+`data-mode-gaps` counts the modes whose art has not landed -- a level drawing a walking figure under a
+label that says Skating must say so rather than look correct.
+
+`data-rides` and `data-rides-drawn` exist because the same defect had a second half on the Prairies: a
+player reported the figure "walks by itself on a track". A train is a ride, not rig equipment
+(ADR-0031), and a ride whose art never drew would seat the rider in mid-air while the level still
+reached `ready`, so the pair must read equal.
 
 It carries no player-facing text, so it is invisible to axe and to a screen reader. See `OQ-TEST-1`.
 It is absent during an exam, because an exam is not a level (`TN-EXAM-01`).

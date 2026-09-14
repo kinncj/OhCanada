@@ -6,6 +6,7 @@ import type {
   LocomotionIntent,
   LocomotionState,
   LocomotionTuning,
+  Ride,
   RigArtboard,
   RigDocument,
   ThemeColours,
@@ -69,6 +70,7 @@ import {
   type ModeArtGap,
 } from './locomotion-pose';
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
+import { rideArtProblems, rideBobPx, rideFor, ridePlacement, type RideArtSize } from './ride';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
 import { watchExit, type ExitWatch } from './level-exit';
@@ -148,7 +150,19 @@ const clampAxis = (value: number): number => Math.max(-1, Math.min(1, value));
 const DEPTH_SKY = 0;
 const DEPTH_LAYERS = 100;
 const DEPTH_GROUND = 400;
+/**
+ * A ride's track (ADR-0031): on the ground and under every actor. Not a parallax
+ * layer, because layers sit below the ground fill and the tier drops them, and a
+ * train whose rails the low tier removed is floating.
+ */
+const DEPTH_RIDE_TRACK = DEPTH_GROUND + 2;
 const DEPTH_ACTORS = 500;
+/**
+ * The player. Their rig parts draw at this plus each part's `z` (1..n), so a
+ * ride's `behind` layer goes just under this and its `front` layer just above
+ * the last part — both still under {@link DEPTH_AFFORDANCE}.
+ */
+const DEPTH_PLAYER = DEPTH_ACTORS + 1;
 /**
  * The tappable marks, above everything they describe and below the weather.
  *
@@ -372,6 +386,22 @@ export class LevelScene extends Phaser.Scene {
    */
   readonly #autoStop: AutoStopWatch;
   readonly #tuning: LocomotionTuning;
+  /**
+   * What carries the player in the mode they spawn in, or `null` (ADR-0031).
+   *
+   * Resolved once, like `#tuning`, because the mode is fixed for the life of
+   * the scene. The art objects are made in `#paintRide` and placed every frame in
+   * `#placeRide`, and `#riderY` is where the rig is drawn — the physics position
+   * is never moved, so the camera, reach and the auto-stop see exactly what they
+   * saw before a ride existed.
+   */
+  readonly #ride: Ride | null;
+  #rideArt: { readonly object: Phaser.GameObjects.Image; readonly side: 'behind' | 'front' }[] = [];
+  #rideTrack: Phaser.GameObjects.TileSprite | null = null;
+  #rideSize: RideArtSize | null = null;
+  #ridesDrawn = 0;
+  #rideDistancePx = 0;
+  #riderY = 0;
   readonly #bounds: LevelBounds;
   /**
    * The end of the level, and the latch that lets it be announced once.
@@ -527,6 +557,7 @@ export class LevelScene extends Phaser.Scene {
       );
     }
     this.#tuning = tuning;
+    this.#ride = rideFor(options.level.rides, tuning.mode);
     this.#locomotion = createLocomotion(tuning);
     this.#braking = createLocomotion(brakingTuning(tuning));
     this.#autoStop = createAutoStop(tuning);
@@ -547,6 +578,7 @@ export class LevelScene extends Phaser.Scene {
       groundYAt(options.level.ground, options.level.spawn.x),
       'right',
     );
+    this.#riderY = this.#state.y;
     this.#effects = createLevelEffects({
       layers: options.level.layers,
       requestedParticles: REQUESTED_PARTICLES,
@@ -658,6 +690,7 @@ export class LevelScene extends Phaser.Scene {
     this.#paintPois();
     this.#paintCharacters();
     this.#paintPlayer();
+    this.#paintRide();
     this.#buildSnow();
     this.#buildTargets();
 
@@ -696,6 +729,11 @@ export class LevelScene extends Phaser.Scene {
      */
     this.#camera = followCamera(this.#followInput(0));
     camera.setScroll(this.#camera.x, this.#camera.y);
+    /* After the camera, because the track strip is fixed to the world through
+       the camera's scroll; and the rider is re-seated before the first frame. */
+    this.#placeRide(0);
+    this.#player?.setPosition(this.#state.x, this.#riderY);
+    this.#playerCharacter?.setPosition(this.#state.x, this.#riderY);
 
     this.#buildAffordances();
     this.#bindInput();
@@ -720,6 +758,8 @@ export class LevelScene extends Phaser.Scene {
       cameraX: this.#camera.x,
       layers: level.layers.length,
       layersTextured: this.#texturedLayers,
+      rides: this.#ride === null ? 0 : 1,
+      ridesDrawn: this.#ridesDrawn,
       actors: level.pois.length + level.characters.length,
       actorsDrawn: this.#actorsDrawn,
       /* What the ADR-0003 filter examined on this level and what it refused.
@@ -757,6 +797,10 @@ export class LevelScene extends Phaser.Scene {
       this.#characters = [];
       this.#playerCharacter?.dispose();
       this.#playerCharacter = null;
+      /* The images go with the scene's display list; the references are dropped
+         so nothing holds a texture from a level that no longer exists. */
+      this.#rideArt = [];
+      this.#rideTrack = null;
       this.#placed.clear();
       this.#skyClock?.remove();
       this.#skyClock = null;
@@ -922,7 +966,8 @@ export class LevelScene extends Phaser.Scene {
     this.cameras.main.setScroll(this.#camera.x, this.#camera.y);
 
     this.#elapsedMs += delta;
-    this.#player?.setPosition(this.#state.x, this.#state.y);
+    this.#placeRide(dt);
+    this.#player?.setPosition(this.#state.x, this.#riderY);
     this.#updatePlayerCharacter(step.animationSpeed, delta);
     this.#updatePlacedCharacters(delta);
     this.#updateAffordances();
@@ -1902,7 +1947,7 @@ export class LevelScene extends Phaser.Scene {
       PLAYER_SUBJECT,
       artboard,
       this.#options.playerSkins ?? {},
-      DEPTH_ACTORS + 1,
+      DEPTH_PLAYER,
       /*
        * **The line the whole defect was.** The level document declares how the
        * player moves here and the rig is now told, so a level that says skating
@@ -1927,11 +1972,103 @@ export class LevelScene extends Phaser.Scene {
       return;
     }
 
-    const player = this.add.graphics().setDepth(DEPTH_ACTORS + 1);
+    const player = this.add.graphics().setDepth(DEPTH_PLAYER);
     player.fillStyle(toPhaserColor(level.palette.ink), 1);
     player.fillRoundedRect(-ACTOR_WIDTH / 2, -ACTOR_HEIGHT, ACTOR_WIDTH, ACTOR_HEIGHT, 18);
     player.setPosition(this.#state.x, this.#state.y);
     this.#player = player;
+  }
+
+  /**
+   * The ride for the mode in force, if the level declares one (ADR-0031).
+   *
+   * A layer whose texture did not load is skipped and **said**, like every other
+   * fallback in this file, and `data-rides-drawn` then reads 0 against
+   * `data-rides` 1 — because the failure it stands for is a rider posed in a seat
+   * that is not on screen, and that reaches `ready` exactly like success.
+   *
+   * Depths are relative to the player's own: `behind` half a step under the
+   * first rig part, `front` one step over the last, and the track on the ground
+   * under every actor. The part count is read from the rig rather than assumed,
+   * so a rig with a twenty-eighth part does not end up in front of the car.
+   */
+  #paintRide(): void {
+    const ride = this.#ride;
+    if (ride === null) return;
+
+    const sizeOf = (key: string): RideArtSize | null => {
+      if (!this.textures.exists(key)) return null;
+      const source = this.textures.get(key).getSourceImage();
+      return { width: source.width, height: source.height };
+    };
+    const problems = rideArtProblems(ride, sizeOf);
+    for (const problem of problems) console.error(`[level] ${problem}`);
+
+    const lastPart = this.#options.rig?.parts.length ?? 0;
+    for (const layer of ride.art) {
+      const size = sizeOf(layer.key);
+      if (size === null) continue;
+      this.#rideSize ??= size;
+      const depth = layer.side === 'behind' ? DEPTH_PLAYER - 0.5 : DEPTH_PLAYER + lastPart + 1;
+      const object = this.add.image(0, 0, layer.key).setOrigin(0.5, 0).setDepth(depth);
+      this.#rideArt.push({ object, side: layer.side });
+    }
+
+    if (ride.track !== undefined) {
+      const size = sizeOf(ride.track.artKey);
+      if (size !== null) {
+        this.#rideTrack = this.add
+          .tileSprite(0, 0, this.#options.designWidth, size.height, ride.track.artKey)
+          .setOrigin(0, 0)
+          .setScrollFactor(0, 1)
+          .setDepth(DEPTH_RIDE_TRACK);
+      }
+    }
+
+    this.#ridesDrawn = problems.length === 0 ? 1 : 0;
+  }
+
+  /**
+   * Put the ride, its track and its rider where they are this frame.
+   *
+   * The arithmetic is `ride.ts`'s. What is here is the frame's inputs: distance
+   * travelled for the rock, speed as a fraction of cruise, reduced motion from
+   * the tier, and any height the rider has off the ground, so a ride that can
+   * jump rises with its rider instead of leaving them in the air.
+   */
+  #placeRide(dtSeconds: number): void {
+    const ride = this.#ride;
+    const size = this.#rideSize;
+    if (ride === null || size === null) {
+      this.#riderY = this.#state.y;
+      return;
+    }
+    const { level } = this.#options;
+    this.#rideDistancePx += Math.abs(this.#state.velocityX) * dtSeconds;
+    const groundY = groundYAt(level.ground, this.#state.x);
+    const bob = rideBobPx({
+      bob: ride.bob,
+      distancePx: this.#rideDistancePx,
+      speedFraction: Math.abs(this.#state.velocityX) / this.#tuning.maxSpeed,
+      reducedMotion: this.#profile?.motion === 'reduced',
+    });
+    const placement = ridePlacement({
+      ride,
+      size,
+      riderX: this.#state.x,
+      groundY,
+      facing: this.#state.facing,
+      bobPx: bob + (this.#state.y - groundY),
+    });
+    for (const layer of this.#rideArt) {
+      layer.object.setPosition(placement.centreX, placement.top);
+      layer.object.setFlipX(placement.flipX);
+    }
+    if (this.#rideTrack !== null && placement.trackTop !== null) {
+      this.#rideTrack.setY(placement.trackTop);
+      this.#rideTrack.tilePositionX = this.#camera.x;
+    }
+    this.#riderY = placement.riderY;
   }
 
   /**
@@ -2147,7 +2284,9 @@ export class LevelScene extends Phaser.Scene {
       verticalSpeed: -this.#state.velocityY,
     });
     player.setFacing(this.#state.facing);
-    player.setPosition(this.#state.x, this.#state.y);
+    /* `#riderY`, which is the physics y unless a ride seats the player higher
+       or lower (ADR-0031); `#placeRide` has already run this frame. */
+    player.setPosition(this.#state.x, this.#riderY);
     player.update(deltaMs);
   }
 
