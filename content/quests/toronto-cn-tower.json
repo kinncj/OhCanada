@@ -28,8 +28,8 @@
     "speaker": "guide",
     "expression": "neutral",
     "text": {
-      "en": "Keep riding along the boulevard. The tower is easy to see from here.",
-      "fr": "Continuez à rouler sur le boulevard. La tour est facile à voir d'ici."
+      "en": "Go at your own speed. This whole ride is about how elections work in Canada. Your task on the screen says what to do now.",
+      "fr": "Allez à votre rythme. Toute cette balade porte sur le fonctionnement des élections au Canada. Votre mission à l'écran indique ce qu'il faut faire maintenant."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You rode down the boulevard to the CN Tower and answered everything I asked about voting and about ridings.",
-      "fr": "Vous avez roulé sur le boulevard jusqu'à la Tour CN et répondu à tout ce que je vous ai demandé sur le vote et les circonscriptions."
+      "en": "You rode down the boulevard to the tower and answered every question along the way about voting and ridings.",
+      "fr": "Vous avez roulé sur le boulevard jusqu'à la tour et répondu à toutes les questions posées en chemin sur le vote et les circonscriptions."
     },
     "fact": {
       "factual": false,

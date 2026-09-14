@@ -26,8 +26,8 @@
   "reminderLine": {
     "speaker": "peggys-point-light",
     "text": {
-      "en": "There are still questions here, about who Canadians are, and two more stops along the rock.",
-      "fr": "Il reste ici des questions sur qui sont les Canadiens, et deux autres haltes sur la roche."
+      "en": "Each stop along the bare rock teaches you something about this country. Your task on the screen says what to do now.",
+      "fr": "Chaque halte sur la roche nue vous apprend quelque chose sur ce pays. Votre mission à l'écran indique ce qu'il faut faire maintenant."
     },
     "fact": {
       "factual": false,
@@ -65,8 +65,8 @@
   "doneLine": {
     "speaker": "peggys-point-light",
     "text": {
-      "en": "You walked the bare rock from the light to the last house, and answered every question it left you about who Canadians are.",
-      "fr": "Vous avez parcouru la roche nue, du phare jusqu'à la dernière maison, et répondu à toutes les questions laissées sur qui sont les Canadiens."
+      "en": "You walked the bare rock out to the village house and answered every question along the way about who Canadians are.",
+      "fr": "Vous avez parcouru la roche nue jusqu'à la maison du village et répondu à toutes les questions posées en chemin sur qui sont les Canadiens."
     },
     "fact": {
       "factual": false,

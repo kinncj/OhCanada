@@ -16,7 +16,7 @@
     "expression": "neutral",
     "text": {
       "en": "That is fine. The snow will wait for us. Come back when you are ready.",
-      "fr": "C'est correct. La neige va nous attendre. Revenez quand vous serez prêt."
+      "fr": "C'est correct. La neige va nous attendre. Revenez quand vous voudrez."
     },
     "fact": {
       "factual": false,
@@ -28,8 +28,8 @@
     "speaker": "guide",
     "expression": "neutral",
     "text": {
-      "en": "Keep sliding down the hill. The Château Frontenac is below us, and there are two more stops after it.",
-      "fr": "Continuez à glisser vers le bas de la côte. Le Château Frontenac est en bas, et il y a deux autres haltes après."
+      "en": "Mind the ice, and take your time. Each stop on this run teaches you a piece of Canada's history. Your task on the screen says what to do now.",
+      "fr": "Attention à la glace, et prenez votre temps. Chaque halte de cette glissade vous apprend un bout de l'histoire du Canada. Votre mission à l'écran indique ce qu'il faut faire maintenant."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You slid from the Château down to the bandstand, stopping three times, and answered everything I asked about Canada's history.",
-      "fr": "Vous avez glissé du Château jusqu'au kiosque à musique, avec trois haltes, et répondu à tout ce que je vous ai demandé sur l'histoire du Canada."
+      "en": "You slid through the old city to the bandstand and answered every question along the way about Canada's history.",
+      "fr": "Vous avez glissé à travers la vieille ville jusqu'au kiosque à musique et répondu à toutes les questions posées en chemin sur l'histoire du Canada."
     },
     "fact": {
       "factual": false,

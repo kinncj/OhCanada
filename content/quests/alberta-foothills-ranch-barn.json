@@ -16,7 +16,7 @@
     "expression": "neutral",
     "text": {
       "en": "That is fine. The horses will wait. Come and find me when you want to ride.",
-      "fr": "C'est bien ainsi. Les chevaux vont attendre. Venez me voir quand vous voudrez partir."
+      "fr": "C'est correct. Les chevaux vont attendre. Venez me voir quand vous voudrez partir."
     },
     "fact": {
       "factual": false,
@@ -28,8 +28,8 @@
     "speaker": "guide",
     "expression": "neutral",
     "text": {
-      "en": "Keep riding along the fence line. The gate comes first, then the barn, then the cattle.",
-      "fr": "Continuez à chevaucher le long de la clôture. La barrière vient en premier, puis la grange, puis le troupeau."
+      "en": "The horses are in no hurry. Each stop on this ride is about Canada's economy. Your task on the screen says what to do now.",
+      "fr": "Les chevaux ne sont pas pressés. Chaque halte de cette randonnée porte sur l'économie du Canada. Votre mission à l'écran indique ce qu'il faut faire maintenant."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You rode the whole spread with me, from the gate out to the herd, and answered everything I asked about Canada's economy.",
-      "fr": "Vous avez parcouru tout le domaine avec moi, de la barrière jusqu'au troupeau, et répondu à tout ce que je vous ai demandé sur l'économie du Canada."
+      "en": "You rode across the ranch, from the gate out to the herd, and answered every question along the way about Canada's economy.",
+      "fr": "Vous avez parcouru le ranch à cheval, de la barrière jusqu'au troupeau, et répondu à toutes les questions posées en chemin sur l'économie du Canada."
     },
     "fact": {
       "factual": false,

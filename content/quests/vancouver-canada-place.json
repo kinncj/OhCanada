@@ -16,7 +16,7 @@
     "expression": "neutral",
     "text": {
       "en": "That is all right. I will be here by the water when you are ready.",
-      "fr": "C'est correct. Je serai ici, au bord de l'eau, quand vous serez prêt."
+      "fr": "C'est correct. Je serai ici, au bord de l'eau, quand vous voudrez."
     },
     "fact": {
       "factual": false,
@@ -28,8 +28,8 @@
     "speaker": "officer",
     "expression": "neutral",
     "text": {
-      "en": "Keep rolling along the water. The marina comes first, then Canada Place, then the cargo ship.",
-      "fr": "Continuez à rouler le long de l'eau. La marina vient en premier, puis Canada Place, puis le navire de charge."
+      "en": "There is plenty of time. Each stop on the waterfront is about Canada's symbols. Your task on the screen says what to do now.",
+      "fr": "Vous avez tout votre temps. Chaque halte sur le front de mer porte sur les symboles du Canada. Votre mission à l'écran indique ce qu'il faut faire maintenant."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "officer",
     "expression": "happy",
     "text": {
-      "en": "You skated the whole waterfront with me, from the marina out to the cargo ship, and answered everything I asked about Canada's symbols.",
-      "fr": "Vous avez parcouru tout le front de mer avec moi, de la marina jusqu'au navire de charge, et répondu à tout ce que je vous ai demandé sur les symboles du Canada."
+      "en": "You skated the whole waterfront, from the marina out to the cargo ship, and answered every question along the way about Canada's symbols.",
+      "fr": "Vous avez parcouru tout le front de mer, de la marina jusqu'au navire de charge, et répondu à toutes les questions posées en chemin sur les symboles du Canada."
     },
     "fact": {
       "factual": false,

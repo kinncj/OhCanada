@@ -16,7 +16,7 @@
     "expression": "neutral",
     "text": {
       "en": "That is fine. The harbour will still be here. Come and find me when you are ready.",
-      "fr": "C'est correct. Le port sera encore là. Venez me retrouver quand vous serez prêt."
+      "fr": "C'est correct. Le port sera encore là. Venez me retrouver quand vous voudrez."
     },
     "fact": {
       "factual": false,
@@ -28,8 +28,8 @@
     "speaker": "guide",
     "expression": "neutral",
     "text": {
-      "en": "We are walking down to the water. The Town Clock comes first.",
-      "fr": "On descend vers l'eau. La tour de l'horloge vient en premier."
+      "en": "Take your time. Each stop on this walk is about rights and responsibilities in Canada. Your task on the screen says what to do now.",
+      "fr": "Prenez votre temps. Chaque halte de cette promenade porte sur les droits et les responsabilités au Canada. Votre mission à l'écran indique ce qu'il faut faire maintenant."
     },
     "fact": {
       "factual": false,
@@ -41,8 +41,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "One more thing. A citizen of Canada may live and work in any part of the country, leave it freely and come back.",
-      "fr": "Encore une chose. Un citoyen du Canada peut vivre et travailler dans n'importe quelle partie du pays, le quitter librement et y revenir."
+      "en": "A citizen of Canada may live and work in any part of the country, leave it freely and come back.",
+      "fr": "Un citoyen du Canada peut vivre et travailler dans n'importe quelle partie du pays, le quitter librement et y revenir."
     },
     "fact": {
       "factual": true,
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You walked the whole harbour with me, from the Town Clock to the tugs, and answered every question I asked about rights and responsibilities.",
-      "fr": "Vous avez parcouru tout le port avec moi, de la tour de l'horloge jusqu'aux remorqueurs, et répondu à toutes mes questions sur les droits et les responsabilités."
+      "en": "You walked the harbour down to the tug, at the water's edge, and answered every question along the way about rights and responsibilities.",
+      "fr": "Vous avez parcouru le port jusqu'au remorqueur, au bord de l'eau, et répondu à toutes les questions posées en chemin sur les droits et les responsabilités."
     },
     "fact": {
       "factual": false,

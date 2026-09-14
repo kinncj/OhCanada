@@ -28,8 +28,8 @@
     "speaker": "officer",
     "expression": "neutral",
     "text": {
-      "en": "Keep going up the canal. The Library comes first, then the Peace Tower, then the warming hut.",
-      "fr": "Continuez sur le canal. La Bibliothèque vient en premier, puis la tour de la Paix, puis la cabane chauffée."
+      "en": "There is no rush out here. Each stop on the canal is about how Canada is governed. Your task on the screen says what to do now.",
+      "fr": "Ici, rien ne presse. Chaque halte sur le canal porte sur la façon dont le Canada est gouverné. Votre mission à l'écran indique ce qu'il faut faire maintenant."
     },
     "fact": {
       "factual": false,
@@ -69,8 +69,8 @@
     "speaker": "officer",
     "expression": "happy",
     "text": {
-      "en": "You skated the canal from the Library to the warming hut, stopping three times, and answered everything I asked about how Canada is governed.",
-      "fr": "Vous avez patiné sur le canal, de la Bibliothèque jusqu'à la cabane chauffée, avec trois haltes, et répondu à tout ce que je vous ai demandé sur la gouvernance du Canada."
+      "en": "You skated up the canal to the warming hut and answered every question along the way about how Canada is governed.",
+      "fr": "Vous avez patiné sur le canal jusqu'à la cabane chauffée et répondu à toutes les questions posées en chemin sur la façon dont le Canada est gouverné."
     },
     "fact": {
       "factual": false,
