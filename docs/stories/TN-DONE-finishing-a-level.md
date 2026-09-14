@@ -49,6 +49,25 @@ not have to say before: **a level with a quest has two routes and the heading sa
 **the giver's own last line is drawn on this card**, so the rules about what a completion card may carry now
 bind a string that lives on a quest document.
 
+**Amended a fifth time, 2026-09-14, by ADR-0036 — reaching the end earns the stamp only when the task is
+done.** Every one of the ten levels ships a quest now, and a play-through read "You earned the Ottawa stamp.
+You did not answer any questions here." under a passport that promises "You earn a stamp when you finish a
+level's task". The passport's promise won. Read everything below with these four changes:
+
+- **Reaching the end of a level whose task is not done earns nothing and opens nothing.** It still draws
+  `quest-complete-card`, with `data-reason="unfinished"`: the heading "You are at the end of this level", the
+  passport's own sentence, what is left, **"Keep playing" as its primary action** and "Choose a level" beside
+  it. No stamp line, no score, no next level, no passport. `TN-DONE-09` is that card.
+- **`TN-DONE-01`'s "Walking to the end finishes the level" and `TN-DONE-02`'s "The stamp is still earned,
+  because reaching the end is what earns it" hold only where the task is done, the level sets none, or the
+  stamp is already held** — which, with a quest on every level, is a player coming back to a level they have
+  finished. `level.complete.none` is the line that player reads.
+- **`TN-DONE-02`'s "A task I never accepted is not mentioned" is withdrawn.** The card that says nothing about
+  an unfinished task is the card that stamped a walk; the new card names what is left, in the tracker's words,
+  and says it kindly.
+- **Finishing the task after reaching the end still draws "Task done!"**, with the stamp and the level that
+  opened. The unfinished card and the finished card are two cards, one each per sitting.
+
 Read `README.md` in this directory first. This file owns the **completion card**: when it appears, what it
 may say, and the two rows that are the same on every level. It owns none of the following and points at all
 of them:
@@ -84,6 +103,11 @@ task gets `quest/completed`; a player who walks past the giver and reaches the e
 **Both earn one stamp, both draw the same two per-level rows, and the heading is what differs**
 (`TN-DONE-01`). Nothing on the card ranks them, because a learning tool that scored the route would be
 scoring a choice it never asked the player to make.
+
+**Superseded in part, 2026-09-14 (ADR-0036).** The table above is the card of a level whose stamp is earned.
+All ten levels declare a quest now, so the second row is reachable only on a level whose task is done or whose
+stamp is already held; reaching the end otherwise draws the unfinished card in `TN-DONE-09`, and emits no
+`level/completed` and no `stamp/earned`.
 
 ## The heading has to be true on both paths
 
@@ -829,6 +853,57 @@ Feature: Finishing a level in French
 ```
 
 ---
+
+## TN-DONE-09 — Reaching the end with the task not done (ADR-0036)
+
+```gherkin
+Feature: The end of a level earns the stamp only for the task
+  As a player who reached the end of a level without finishing its task
+  I want to be told what the stamp is for and what is left
+  So that I can go back and earn it, or leave, knowing where I stand
+
+  Background:
+    Given the Halifax level is playable
+    And its task is not done and its stamp is not in my passport
+
+  Scenario: No stamp, and nothing opens
+    When I reach the end of the level
+    Then no "stamp/earned" event is emitted for "halifax"
+    And the level after Halifax is still locked on the map
+
+  Scenario: The card says where I am and what is left
+    When I reach the end of the level
+    Then the element "quest-complete-card" is visible, with "data-reason" equal to "unfinished"
+    And it is named "You are at the end of this level"
+    And it reads "You earn a stamp when you finish a level's task."
+    And, when I have not accepted the task, it reads
+      "You have not started this level's task yet. Go back to find where it starts."
+    And, when I am on a step, it reads "Your task here is not finished yet. Next: " and that step's own words
+    And it shows no stamp sentence, no score, no level to play next and no passport control
+    And no sentence on it is drawn as an error, a warning or a red state
+
+  Scenario: One way on, and one way out
+    Then "quest-complete-keep-playing" reads "Keep playing" and is the primary action
+    And "quest-complete-map" reads "Choose a level"
+    When I tap "Keep playing"
+    Then the card is gone and the level accepts input again
+    And the card does not come back in this sitting, however often I cross the end
+
+  Scenario: Finishing the task afterwards is still finishing it
+    Given I reached the end and kept playing
+    When I finish the level's task
+    Then "quest-complete-card" shows "Task done!"
+    And the stamp is earned and the next level is offered
+
+  Scenario: The card in French
+    Given the game is in French
+    When I reach the end of the level
+    Then the card is named « Vous êtes au bout de ce niveau »
+    And it reads « Vous obtenez un tampon lorsque vous terminez la mission d'un niveau. »
+```
+
+The three new rows are `COPY_GAPS` entries in `app/ui/copy.ts`, written by `app/ui` and pending the product
+owner's ratification.
 
 ## Open questions
 

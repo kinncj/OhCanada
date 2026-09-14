@@ -30,7 +30,9 @@ in this directory that changed with it. `stamp.ottawa.earned` is one of them. Th
 `common.settings` and `settings.title`: the screen owns both its heading and the control that opens it.
 
 **Amended again 2026-09-08 — this quest is no longer the only way to finish a level.** Reaching the end of a
-level earns its stamp and draws the same card, which is `TN-DONE-finishing-a-level.md`. Two consequences for
+level earns its stamp and draws the same card, which is `TN-DONE-finishing-a-level.md`. (**Amended 2026-09-14
+by ADR-0036:** only when the level's task is done, the level sets none, or the stamp is already held. Reaching
+the end with this quest unfinished earns nothing, and the card says what is left.) Two consequences for
 this file, and neither changes a word of its copy:
 
 - **`stamp.ottawa.earned` is now one of six rows**, one per built level, each written in that level's own

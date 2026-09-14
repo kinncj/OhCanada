@@ -15,6 +15,22 @@ changed as a result — it is named here so a reader arriving from that side fin
 
 Read `README.md` in this directory first.
 
+**Amended 2026-09-14 by ADR-0036 — the card in a level counts the task, and says something when it counts
+nothing.** A play-through found every in-level card reading "Question 1 of 1" under a task that asked for
+two, an unexplained "New", and "Finish" and "Close" side by side after every answer. Three rules now hold, and
+where they touch a scenario below the scenario is read with them:
+
+- **No counter over one question.** "Question 1 of 1" counts nothing; the dialog is named by the question
+  itself instead. `TN-CARD-08`'s "accessible name includes 'Question 1 of 3'" holds wherever there are three.
+- **In a level the counter counts the quest step.** A landmark asks everything the current `answer` step has
+  left, all from the level's subject, and "Question 2 of 2" is the second of that step's two questions.
+- **After the last question is answered, "Close" goes and "Finish" stays.** Mid-set, "Next" and "Close" are
+  different choices and both stay (`TN-STUDY-05`).
+
+The tag's words are **proposed, not ratified**: "New question" / « Nouvelle question » and "You have seen this
+question before" / « Vous avez déjà vu cette question », listed in `app/ui/copy.ts`'s `COPY_GAPS`. The table
+below still carries the words they replace until the product owner decides.
+
 ## This file is the card inside a level or a drill. The exam's card is different, on purpose.
 
 **Amended 2026-09-08.** Exam mode reuses this card and changes four things about it, and each change has a

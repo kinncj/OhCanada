@@ -110,10 +110,12 @@ that word**, because every one of them owns a `stamp.<id>.earned` row that uses 
 "See my passport" / « Voir mon passeport » — and the key now lives in the file that owns the screen. `TN-HUD`
 and `TN-QUEST` name the key and point here, as they already do for nine other keys.
 
-**`passport.intro` says "a level's task" and six of the ten levels have none.** Reaching the end of a level
-earns its stamp too (`TN-DONE`), so the sentence describes one of the two routes and the more common route
-is the other one. That is `OQ-PASSPORT-8`, and it is a wording question rather than a behaviour one — no
-scenario in this file depends on the answer.
+**`passport.intro` says "a level's task", and since 2026-09-14 that is the rule (ADR-0036).** This paragraph
+used to record `OQ-PASSPORT-8`: six of the ten levels had no task, reaching the end of a level earned its stamp
+too (`TN-DONE`), and the sentence described the less common route. Every level ships a task now, and a
+play-through found a player stamped for walking past all of it. ADR-0036 kept the sentence and changed the
+behaviour: reaching the end of a level whose task is not done earns nothing, and the card there quotes this
+row back to the player. `OQ-PASSPORT-8` is closed.
 
 Keys this screen draws and does not own:
 

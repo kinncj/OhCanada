@@ -11,6 +11,12 @@ answer and `TN-CARD-02` makes missed-before-not-missed a hard rule, so the misse
 the scheduler offers next. Both cannot hold. **`TN-CARD` won.** The reasoning is below, in the story, because
 a decision that lives only in a commit message is a decision the next reader has to re-litigate.
 
+**Amended 2026-09-14 by ADR-0036 — the tag's words.** The scenarios below quote the tag as "New", "Seen before"
+and « Déjà vue ». The card now says "New question" / « Nouvelle question » and "You have seen this question
+before" / « Vous avez déjà vu cette question », proposed in `app/ui/copy.ts`'s `COPY_GAPS` because a lone
+"New" read as a label nobody explained. The fact each scenario asserts — seen, or not — is unchanged; read the
+quoted words as those rows.
+
 Read `README.md` in this directory first. The card itself is `TN-CARD-question-card.md`; the step being
 resumed is `TN-QUEST-04` step 3; what survives a closed tab is `TN-SAVE-save-and-reload.md`.
 
