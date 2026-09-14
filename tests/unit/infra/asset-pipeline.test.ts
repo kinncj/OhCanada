@@ -386,6 +386,67 @@ describe('make assets builds WebP from SVG', () => {
     expect(bench.every((f) => f.role === 'sprite')).toBe(true);
   });
 
+  it('rings every atlas frame with its own edge pixels, read back from the shipped WebP', async () => {
+    // The hairlines (ADR-0032). free-tex-packer-core's `extrude` painted a
+    // trimmed frame's ring in a colour taken from the whole source rather than
+    // from the frame's edge, so every character part drew a faint rectangle
+    // round itself under linear filtering. A sprite with a transparent margin is
+    // exactly the case it got wrong: the margin is trimmed away, and the ring
+    // must repeat the art's own edge, never a colour the art does not have.
+    const inset = (w: number, h: number, margin: number, fill: string): string =>
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
+      `<rect x="${margin}" y="${margin}" width="${w - 2 * margin}" height="${h - 2 * margin}" fill="${fill}"/></svg>`;
+    const insetBuilt = build({
+      sources: {
+        'svg/ottawa/bench.svg': inset(180, 120, 20, FIXTURE_COLOURS['sky-base']),
+        'svg/ottawa/sign.svg': inset(90, 150, 15, FIXTURE_COLOURS['pine-shade']),
+      },
+      levelDocs: { ottawa: levelDoc('ottawa', [], ['ottawa-bench', 'ottawa-sign']) },
+    });
+    expect(insetBuilt.status, insetBuilt.output).toBe(0);
+    expect(insetBuilt.stdout).toContain("every frame's 1 px ring re-read from the encoded WebP is its own edge pixel");
+
+    const pages = insetBuilt.manifest().files.filter((f) => f.kind === 'atlas-data');
+    expect(pages.map((f) => f.scale).sort()).toEqual([1, 2]);
+    for (const file of pages) {
+      const json = JSON.parse(readFileSync(join(insetBuilt.dist, ...file.path.split('/')), 'utf8')) as {
+        textures: {
+          image: string;
+          frames: { filename: string; trimmed: boolean; frame: { x: number; y: number; w: number; h: number } }[];
+        }[];
+      };
+      const texture = json.textures[0];
+      if (texture === undefined) throw new Error(`${file.path} names no texture`);
+      const { data, info } = await sharp(join(insetBuilt.dist, 'atlas', texture.image))
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      const pixel = (x: number, y: number): string => data.subarray((y * info.width + x) * 4, (y * info.width + x) * 4 + 4).join(',');
+
+      expect(texture.frames).toHaveLength(2);
+      for (const { filename, trimmed, frame } of texture.frames) {
+        // The margin really was trimmed, or this case would not reach the defect.
+        expect(trimmed, filename).toBe(true);
+        const { x, y, w, h } = frame;
+        const foreign: string[] = [];
+        const compare = (rx: number, ry: number, ex: number, ey: number): void => {
+          if (pixel(rx, ry) !== pixel(ex, ey)) foreign.push(`(${rx},${ry}) ${pixel(rx, ry)} beside ${pixel(ex, ey)}`);
+        };
+        for (let i = x; i < x + w; i++) {
+          compare(i, y - 1, i, y);
+          compare(i, y + h, i, y + h - 1);
+        }
+        for (let j = y; j < y + h; j++) {
+          compare(x - 1, j, x, j);
+          compare(x + w, j, x + w - 1, j);
+        }
+        expect(foreign.slice(0, 3), `${filename} at ${String(file.scale)}x: ${String(foreign.length)} ring pixel(s)`).toEqual([]);
+        // And one pixel further out is padding, which holds nothing.
+        expect(pixel(x - 2, y).split(',')[3], filename).toBe('0');
+      }
+    }
+  });
+
   it('points each atlas data file at the hashed texture beside it', () => {
     const manifest = built.manifest();
     for (const data of manifest.files.filter((f) => f.kind === 'atlas-data')) {

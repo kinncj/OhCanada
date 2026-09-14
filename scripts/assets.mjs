@@ -20,7 +20,9 @@
  *      (density 72 and 144, so librsvg re-renders the vector rather than
  *      upscaling a bitmap);
  *   2. packs everything that fits into per-level WebP atlases with
- *      free-tex-packer-core, page size capped at 2048 px (art-bible 9);
+ *      scripts/lib/atlas-pack.mjs, page size capped at 2048 px (art-bible 9),
+ *      the smallest page area it can find, each frame ringed by its own edge
+ *      pixels and every page re-read after encoding to prove it (ADR-0032);
  *   3. ships anything too big for a page — parallax layers are 1920 tall and
  *      wide — as a standalone WebP, capped at 4096 px, the texture size a 2021
  *      mid-range Android can be relied on to accept;
@@ -146,9 +148,9 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, extname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { packAsync } from 'free-tex-packer-core';
 import sharp from 'sharp';
 
+import { PACKER_ID, PACKER_VERSION, checkPage, packAtlas } from './lib/atlas-pack.mjs';
 import { MANIFEST_NAME, MANIFEST_VERSION, checkLevelPayload, mib } from './lib/level-payload.mjs';
 import { lintPalette } from './lib/palette-lint.mjs';
 import { SCREENS_OWNER, describeScreenArt, screenArtTree } from './lib/screen-art.mjs';
@@ -531,6 +533,8 @@ if (errors.length > 0) report();
 
 let atlasPages = 0;
 let standalone = 0;
+/** One line per atlas page, printed after the summary: size, frames, and the layout that won. */
+const atlasReport = [];
 
 /**
  * owner -> scale -> [{ key, png, width, height }]
@@ -615,49 +619,33 @@ for (const { file, owner, key, pin } of sources) {
 
 for (const [owner, byScale] of [...packable.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
   for (const [scale, sprites] of [...byScale.entries()].sort((a, b) => a[0] - b[0])) {
-    const textureName = `${owner}@${scale}x`;
-    const packed = await packAsync(
-      sprites.map((s) => ({ path: `${s.key}.png`, contents: s.png })),
-      {
-        textureName,
-        width: ATLAS_MAX_PX,
-        height: ATLAS_MAX_PX,
-        fixedSize: false,
-        powerOfTwo: false,
-        padding: ATLAS_PADDING,
-        extrude: ATLAS_EXTRUDE,
-        allowRotation: false,
-        allowTrim: true,
-        trimMode: 'trim',
-        detectIdentical: true,
-        removeFileExtension: true,
-        prependFolderName: false,
-        textureFormat: 'png',
-        exporter: 'Phaser3',
-      },
-    );
-
-    /** page name (no extension) -> { image, data } */
-    const pages = new Map();
-    for (const out of packed) {
-      const page = basename(out.name, extname(out.name));
-      if (!pages.has(page)) pages.set(page, {});
-      pages.get(page)[out.name.endsWith('.json') ? 'data' : 'image'] = out.buffer;
+    // Straight RGBA, as librsvg drew it. The packer trims, places and extrudes
+    // pixels, so it is handed pixels rather than PNG files to decode itself.
+    const decoded = [];
+    for (const s of sprites) {
+      const { data, info } = await sharp(s.png).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+      decoded.push({ key: s.key, width: info.width, height: info.height, rgba: data });
     }
+    const pages = packAtlas(decoded, { maxPx: ATLAS_MAX_PX, padding: ATLAS_PADDING, extrude: ATLAS_EXTRUDE });
 
     // The page ordinal makes the variant group: page 0 of ottawa's atlas at 1x
     // and page 0 at 2x are the same texture at two scales. If a scale needs more
     // pages than another, the extra page has no counterpart and the decoded gate
     // charges the only variant there is — an over-count, which is the safe
     // direction for a memory budget to be wrong in.
-    for (const [ordinal, [page, { image, data }]] of [...pages.entries()].sort().entries()) {
-      if (image === undefined || data === undefined) {
-        fatal(`the packer returned an incomplete atlas page "${page}" for ${owner} at ${scale}x.`);
-        continue;
-      }
+    for (const [ordinal, packed] of pages.entries()) {
+      // The name free-tex-packer-core gave a spilled set, kept so a page's file
+      // name does not change with the packer.
+      const page = `${owner}@${scale}x${pages.length > 1 ? `-${ordinal}` : ''}`;
 
-      const webp = await sharp(image).webp({ lossless: true, effort: 6 }).toBuffer();
-      const meta = await sharp(webp).metadata();
+      const webp = await sharp(packed.rgba, { raw: { width: packed.width, height: packed.height, channels: 4 } })
+        .webp({ lossless: true, effort: 6 })
+        .toBuffer();
+      // Checked on the ENCODED file, decoded again, not on the buffer the packer
+      // meant to write: the hairlines this check exists for were in shipped
+      // pixels and in no source, so the shipped pixels are what it reads.
+      const reread = await sharp(webp).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+      const meta = reread.info;
       if (meta.width > ATLAS_MAX_PX || meta.height > ATLAS_MAX_PX) {
         fatal(
           `atlas page ${page} is ${meta.width}x${meta.height}, over the ${ATLAS_MAX_PX} px cap ` +
@@ -665,13 +653,33 @@ for (const [owner, byScale] of [...packable.entries()].sort((a, b) => a[0].local
         );
         continue;
       }
+      if (meta.width !== packed.width || meta.height !== packed.height) {
+        fatal(`atlas page ${page} was packed at ${packed.width}x${packed.height} and decodes at ${meta.width}x${meta.height}.`);
+        continue;
+      }
+      const seams = checkPage(
+        { rgba: reread.data, width: meta.width, height: meta.height, frames: packed.frames },
+        { extrude: ATLAS_EXTRUDE },
+      );
+      for (const seam of seams) fatal(`atlas page ${page}: ${seam}`);
+      atlasReport.push(`${page} ${meta.width}x${meta.height} (${packed.frames.length} frames, ${packed.order}/${packed.method})`);
 
       const imagePath = `atlas/${page}.${hash8(webp)}.webp`;
       // The atlas data names its own texture, and the texture's name is not
-      // known until it is hashed, so the reference is rewritten rather than
-      // templated.
-      const json = JSON.parse(data.toString('utf8'));
-      json.textures[0].image = basename(imagePath);
+      // known until it is hashed. Phaser's multi-texture JSON shape, as the
+      // previous packer's Phaser3 exporter wrote it, so the loader is unchanged.
+      const json = {
+        textures: [
+          {
+            image: basename(imagePath),
+            format: 'RGBA8888',
+            size: { w: meta.width, h: meta.height },
+            scale: 1,
+            frames: packed.frames,
+          },
+        ],
+        meta: { app: PACKER_ID, version: PACKER_VERSION },
+      };
       const dataBuffer = Buffer.from(`${JSON.stringify(json, null, 2)}\n`, 'utf8');
       const frameKeys = json.textures[0].frames.map((f) => f.filename).sort();
 
@@ -790,6 +798,12 @@ console.log(
     `${SCALES.map((s) => `${s}x`).join(' + ')}, ${mib(totalBytes)} on disk across ` +
     `${Object.keys(levels).length} level(s).`,
 );
+if (atlasReport.length > 0) {
+  console.log(
+    `atlas: ${atlasReport.join('; ')}. Packed by ${PACKER_ID} for the smallest page area; every frame's ` +
+      `${ATLAS_EXTRUDE} px ring re-read from the encoded WebP is its own edge pixel, and the padding is empty.`,
+  );
+}
 
 // ------------------------------------------------------------------- gate ---
 
