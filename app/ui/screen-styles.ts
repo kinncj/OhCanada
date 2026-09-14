@@ -220,11 +220,13 @@ const CSS = `
   border-block-start: 0.4375rem solid var(--tn-accent);
   border-start-start-radius: var(--tn-radius-sheet);
   border-start-end-radius: var(--tn-radius-sheet);
+  /* The side gutters hold still at large text (see the note at the top): 18 px
+     at every scale, which gave every screen 36 px of line back at 200 %. */
   padding:
     1.5rem
-    max(1.125rem, env(safe-area-inset-right, 0px))
+    max(calc(1.125rem / var(--tn-text-scale, 1)), env(safe-area-inset-right, 0px))
     max(1.5rem, env(safe-area-inset-bottom, 0px))
-    max(1.125rem, env(safe-area-inset-left, 0px));
+    max(calc(1.125rem / var(--tn-text-scale, 1)), env(safe-area-inset-left, 0px));
   animation: tn-sheet-rise 200ms ease-out;
 }
 
@@ -459,6 +461,41 @@ const CSS = `
   gap: 0.75rem;
 }
 
+/*
+  The indent, taken back. .tn-screen ul (one class, one element) outranks
+  .tn-screen__options (one class), so every option list -- exam answers,
+  question cards, the map, the passport -- kept the 1.25rem list indent and sat
+  further in than its own heading: 20 px at 100 % and 40 px at 200 %, taken from
+  cards that had none to spare. Only the indent: the gap is left as it was drawn.
+*/
+.tn-screen ul.tn-screen__options { padding-inline-start: 0; }
+
+/*
+  An option's words share the first line with its mark, and wrap beside it.
+
+  With a basis of auto the words were one flex item as wide as their whole
+  sentence, so any answer longer than the line left the radio dot or the tick
+  alone on a line above its own words. A basis of 0 keeps them beside the mark
+  and lets them grow into the rest of the line. The state word -- "Your answer",
+  "Correct answer" -- takes a line of its own under them, at the end, so it never
+  squeezes the answer it describes.
+
+  The cost, taken knowingly: choosing an exam answer adds that line, so the
+  options below it move down by one line. It did before for any answer longer
+  than half a line, which is most of them; a word sharing the answer's line
+  instead would squeeze a 200 % answer to a word per line, which is the defect
+  this rule removes. Keyboard and switch players move by focus, not position.
+*/
+.tn-screen__options > li > button > span:not(.tn-screen__mark):not(.tn-screen__state) {
+  flex: 1 1 0%;
+  min-inline-size: 0;
+}
+.tn-screen__options > li > button > .tn-screen__state {
+  flex: 1 0 100%;
+  margin-inline-start: 0;
+  text-align: end;
+}
+
 /* An answer to pick: paper, not a slab, so the four of them read as a set. */
 .tn-screen__options button {
   background: var(--tn-paper-2);
@@ -535,7 +572,17 @@ const CSS = `
   forced-color-adjust: none;
 }
 
-.tn-creator__name { flex: 1 1 auto; min-inline-size: 0; }
+/* A basis of 0, for the reason option words have one above: "3, medium" wrapped
+   under its radio dot instead of beside it. */
+.tn-creator__name { flex: 1 1 0%; min-inline-size: 0; }
+
+/* A swatch option is a narrow grid cell, half a phone wide: a slimmer gap after
+   the dot and side padding that holds still at large text leave "3, medium" /
+   « 3, moyen » the one line the other four names already get. */
+.tn-creator__swatches [role="radio"] {
+  column-gap: 0.5rem;
+  padding-inline: calc(0.75rem / var(--tn-text-scale, 1));
+}
 
 @media (forced-colors: active) {
   .tn-creator__swatch { border-color: CanvasText; }
@@ -625,7 +672,8 @@ const CSS = `
   inline-size: 100%;
   max-inline-size: 34rem;
   box-sizing: border-box;
-  padding-inline: 1.125rem;
+  /* The sheet's own gutter, so the warning and the sheet under it line up. */
+  padding-inline: calc(1.125rem / var(--tn-text-scale, 1));
 }
 .tn-shell__warning:empty { display: none; }
 
@@ -1066,7 +1114,9 @@ const CSS = `
   flex-wrap: wrap;
   align-items: center;
   row-gap: 0.375rem;
-  padding: 1rem;
+  /* The side padding holds still at large text (ADR-0039): at 200 % a card had
+     about 170 px of line and drew "respon- / sabili- / tés". */
+  padding: 1rem calc(1rem / var(--tn-text-scale, 1));
   background: var(--tn-paper-2);
   color: var(--tn-ink);
   border-color: var(--tn-ink);
@@ -1074,14 +1124,34 @@ const CSS = `
 }
 .tn-levels button:active { box-shadow: 0 0 0 var(--tn-edge-soft); }
 
+/*
+  The pills on a card -- the number, "Earned", "You are here" and the state word.
+
+  Each keeps its own width and wraps only when it is wider than the whole line.
+  They used to shrink to fit beside their neighbours (flex: 0 1 auto with no
+  minimum), and with overflow-wrap: anywhere a pill has no minimum width at all,
+  so at 200 % text "Vous êtes ici" and "Ouvert" wrapped a word or a syllable per
+  line inside a pill radius, and read as round blobs. The radius is in em, so a
+  pill that does wrap is a rounded label rather than a circle.
+*/
+.tn-levels__number,
+.tn-levels__badge,
+.tn-levels__here,
+.tn-levels .tn-screen__state,
+.tn-passport__number,
+.tn-passport .tn-screen__state {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
 /* The level's number, as a disc: the journey has an order and the card says so. */
 .tn-levels__number {
-  flex: 0 1 auto;
-  min-inline-size: 0;
   font-weight: 800;
   font-size: 0.875rem;
   padding: 0.25rem 0.625rem;
-  border-radius: var(--tn-radius-pill);
+  border-radius: 1em;
   background: var(--tn-night);
   color: var(--tn-on-night);
 }
@@ -1101,6 +1171,7 @@ const CSS = `
   flex: 1 1 100%;
   min-inline-size: 0;
   color: var(--tn-ink-muted);
+  font-size: 0.9375rem;
   font-weight: 600;
   overflow-wrap: anywhere;
   hyphens: auto;
@@ -1108,13 +1179,10 @@ const CSS = `
 
 /* The stamp in the passport, said as a word on a brass badge. */
 .tn-levels__badge {
-  flex: 0 1 auto;
-  min-inline-size: 0;
-  overflow-wrap: anywhere;
   font-weight: 800;
   font-size: 0.8125rem;
   padding: 0.1875rem 0.625rem;
-  border-radius: var(--tn-radius-pill);
+  border-radius: 1em;
   border: 0.125rem solid var(--tn-accent-edge);
   background: var(--tn-accent);
   color: var(--tn-accent-ink);
@@ -1128,13 +1196,10 @@ const CSS = `
   forced colours both pills lose their fills, so this one takes a double edge.
 */
 .tn-levels__here {
-  flex: 0 1 auto;
-  min-inline-size: 0;
-  overflow-wrap: anywhere;
   font-weight: 800;
   font-size: 0.8125rem;
   padding: 0.1875rem 0.625rem;
-  border-radius: var(--tn-radius-pill);
+  border-radius: 1em;
   border: 0.125rem solid var(--tn-ink);
   background: var(--tn-ink);
   color: var(--tn-paper);
@@ -1145,11 +1210,9 @@ const CSS = `
 }
 
 .tn-levels .tn-screen__state {
-  min-inline-size: 0;
-  overflow-wrap: anywhere;
   font-size: 0.875rem;
   padding: 0.1875rem 0.625rem;
-  border-radius: var(--tn-radius-pill);
+  border-radius: 1em;
   border: 0.125rem solid var(--tn-ink);
   background: var(--tn-paper);
 }
@@ -1165,7 +1228,8 @@ const CSS = `
 */
 .tn-levels [data-state="open"] {
   background: var(--tn-paper);
-  border-inline-start-width: 0.625rem;
+  /* 10 px at every scale: a signal, not a share of the line. */
+  border-inline-start-width: calc(0.625rem / var(--tn-text-scale, 1));
   border-inline-start-color: var(--tn-primary);
 }
 .tn-levels [data-state="locked"] { border-style: dashed; background: var(--tn-paper-3); }
@@ -1223,7 +1287,7 @@ const CSS = `
      focusable even though it is not activatable: a switch and a keyboard both
      stop on it, so it is sized like a target rather than like a paragraph. */
   min-block-size: 3rem;
-  padding: 0.875rem 1rem;
+  padding: 0.875rem calc(1rem / var(--tn-text-scale, 1));
   border: var(--tn-edge-width) solid var(--tn-ink);
   border-radius: var(--tn-radius);
   background: var(--tn-paper-2);
@@ -1252,20 +1316,23 @@ const CSS = `
 }
 
 .tn-passport__number {
-  flex: 0 1 auto;
-  min-inline-size: 0;
   font-weight: 800;
   font-size: 0.875rem;
   padding: 0.25rem 0.625rem;
-  border-radius: var(--tn-radius-pill);
+  border-radius: 1em;
   background: var(--tn-night);
   color: var(--tn-on-night);
 }
 
-/* min-inline-size: 0 is what lets the name wrap instead of pushing the slot
-   wider than the sheet at 200 % text. */
+/*
+  The name shares the number's line while an 8rem column is left for it, and
+  takes a line of its own when it is not -- 128 px at 100 % text, which every
+  place name fits beside its number, and 256 px at 200 %, where none does. A
+  basis of auto let short names share the line with the state word and long ones
+  push it down, so rows were one line or two by the length of a place name.
+*/
 .tn-passport__name {
-  flex: 1 1 auto;
+  flex: 1 1 8rem;
   min-inline-size: 0;
   font-size: 1.1875rem;
   font-weight: 800;
@@ -1273,12 +1340,27 @@ const CSS = `
   hyphens: auto;
 }
 
+/*
+  The state word always starts a line of its own, so every slot is the same
+  shape: number and place, then "Not earned yet" or "Earned". The break is an
+  empty flex item a full line wide, ordered between the name and the state word;
+  it has no background and no content, so axe's contrast check has nothing to
+  give up on, and the order values keep the DOM order -- number, name, state,
+  sentence -- which is also the order a screen reader reads.
+*/
+.tn-passport__page::before {
+  content: "";
+  flex: 0 0 100%;
+  order: 1;
+  block-size: 0;
+}
+
 .tn-passport .tn-screen__state {
-  min-inline-size: 0;
-  overflow-wrap: anywhere;
+  order: 2;
+  margin-inline-start: 0;
   font-size: 0.875rem;
   padding: 0.1875rem 0.625rem;
-  border-radius: var(--tn-radius-pill);
+  border-radius: 1em;
   border: 0.125rem solid var(--tn-ink);
   background: var(--tn-paper);
 }
@@ -1286,6 +1368,7 @@ const CSS = `
 /* The sentence under a slot takes a line of its own, so the row above it is not
    squeezed at 200 % text. */
 .tn-passport .tn-screen__help {
+  order: 3;
   flex: 1 1 100%;
   min-inline-size: 0;
   overflow-wrap: anywhere;
