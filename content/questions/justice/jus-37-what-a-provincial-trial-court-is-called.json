@@ -3,31 +3,31 @@
   "id": "jus-37-what-a-provincial-trial-court-is-called",
   "subject": "justice",
   "prompt": {
-    "en": "In a province, what is the trial court sometimes called?",
-    "fr": "Dans une province, comment appelle-t-on parfois le tribunal de première instance?"
+    "en": "In most provinces, what is the trial court sometimes called?",
+    "fr": "Dans la plupart des provinces, comment appelle-t-on parfois le tribunal de première instance?"
   },
   "options": [
     {
-      "en": "The Court of Queen's Bench, or the Supreme Court of that province.",
-      "fr": "La Cour du Banc de la Reine, ou la Cour suprême de cette province."
+      "en": "The Supreme Court of the province.",
+      "fr": "La Cour suprême de la province."
+    },
+    {
+      "en": "The Supreme Court of Canada.",
+      "fr": "La Cour suprême du Canada."
     },
     {
       "en": "The Federal Court of Canada.",
       "fr": "La Cour fédérale du Canada."
     },
     {
-      "en": "The small claims court.",
-      "fr": "La cour des petites créances."
-    },
-    {
-      "en": "The traffic court.",
-      "fr": "Le tribunal de la circulation."
+      "en": "The Court of Appeal of the province.",
+      "fr": "La Cour d'appel de la province."
     }
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The court that hears trials carries different names from province to province. A province's own Supreme Court is not the Supreme Court of Canada, which is the highest court in the country.",
-    "fr": "Le tribunal qui entend les procès porte des noms différents d'une province à l'autre. La Cour suprême d'une province n'est pas la Cour suprême du Canada, qui est le plus haut tribunal du pays."
+    "en": "In most provinces, trials are heard in one court and appeals in another. The trial court is sometimes called the Supreme Court of the province. It is not the same court as the Supreme Court of Canada, which is the highest court in the country.",
+    "fr": "Dans la plupart des provinces, les procès sont entendus par un tribunal et les appels, par un autre. Le tribunal de première instance s'appelle parfois la Cour suprême de la province. Ce n'est pas le même tribunal que la Cour suprême du Canada, qui est le plus haut tribunal du pays."
   },
   "source": {
     "sourceId": "discover-canada",
