@@ -71,10 +71,16 @@ interface QuestFile {
   readonly levelId: string;
   readonly giver: string;
   readonly summary: Text;
-  readonly steps: readonly { readonly prompt: Text }[];
+  readonly steps: readonly {
+    readonly kind: string;
+    readonly count?: number;
+    readonly prompt: Text;
+  }[];
   readonly declinedLine?: Line;
   readonly reminderLine?: Line;
   readonly afterLine?: Line;
+  /** Not said in a dialog: drawn on the completion card, under "Task done!" only. */
+  readonly doneLine?: Line;
 }
 
 interface LevelFile {
@@ -152,7 +158,38 @@ function finishedSave(quest: QuestFile): string {
     updatedAt: now,
   });
   progress = withStamp(progress, level, now);
+  return encodeSave(progress, now);
+}
 
+/**
+ * A save one answer short of finishing this level's quest: accepted, on its last
+ * step, with that step's count all but met — and **no stamp**, because the
+ * answer that finishes the quest is what earns it. That is the route whose card
+ * reads "Task done!", which is the only card a quest's closing line is drawn on.
+ */
+function oneAnswerFromDoneSave(quest: QuestFile): string {
+  const lastIndex = quest.steps.length - 1;
+  const last = quest.steps[lastIndex];
+  if (last?.kind !== 'answer') {
+    throw new Error(
+      `${quest.id} does not end on an answer step, so no single answer can finish it. ` +
+        'Point this scenario at a quest that does.',
+    );
+  }
+  const now = Date.now() as EpochMillis;
+  const level = quest.levelId as LevelId;
+  const progress = withQuestState(newProgress(defaultSettings('en' as LocaleCode), [level]), level, {
+    questId: quest.id as QuestId,
+    status: 'active',
+    stepIndex: lastIndex,
+    stepProgress: Math.max(1, last.count ?? 1) - 1,
+    updatedAt: now,
+  });
+  return encodeSave(progress, now);
+}
+
+/** The save as the game writes one: snapshot, then the JSON codec. */
+function encodeSave(progress: ReturnType<typeof newProgress>, now: EpochMillis): string {
   const snapshot = toProgressSnapshot(progress, { version: codec.version, updatedAt: now });
   if (!snapshot.ok) throw new Error(`the seeded save is not a save: ${snapshot.error.message}`);
   const encoded = codec.encode(snapshot.value);
@@ -193,17 +230,29 @@ async function openLevel(page: Page, level: string): Promise<void> {
  * round trip per sample walks straight past a narrow reach band.
  */
 async function walkUntilThePromptReads(page: Page, wanted: string): Promise<string | null> {
+  return walkRightUntil(page, { wanted, ignore: [] });
+}
+
+/**
+ * Walk right until the HUD offers `wanted` — or, with `wanted` null, anything
+ * not in `ignore`. `'card'` when the level ended first, `null` when time ran out.
+ */
+async function walkRightUntil(
+  page: Page,
+  want: { readonly wanted: string | null; readonly ignore: readonly string[] },
+): Promise<string | null> {
   await page.keyboard.down('ArrowRight');
   try {
     return await page.evaluate(
-      async ({ target, budget }) => {
+      async ({ target, skip, budget }) => {
         const deadline = performance.now() + budget;
         while (performance.now() < deadline) {
           const card = document.querySelector('[data-testid="quest-complete-card"]');
           if (card !== null && (card as HTMLElement).checkVisibility()) return 'card';
           const prompt = document.querySelector('[data-testid="interact-prompt"]');
           if (prompt !== null && (prompt as HTMLElement).checkVisibility()) {
-            if (prompt.textContent === target) return target;
+            const offered = prompt.textContent ?? '';
+            if (target === null ? !skip.includes(offered) : offered === target) return offered;
           }
           await new Promise((resolve) => {
             requestAnimationFrame(() => {
@@ -213,12 +262,14 @@ async function walkUntilThePromptReads(page: Page, wanted: string): Promise<stri
         }
         return null;
       },
-      { target: wanted, budget: 40_000 },
+      { target: want.wanted, skip: [...want.ignore], budget: 40_000 },
     );
   } finally {
     await page.keyboard.up('ArrowRight');
   }
 }
+
+const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
 
 /** Focus is somewhere real after a dialog closes — never the body (`TN-DIALOGUE-04`). */
 const focusIsNotOnTheBody = (page: Page): Promise<boolean> =>
@@ -369,5 +420,73 @@ test.describe('a quest giver speaks at the moments a step cannot', () => {
     await expect(page.getByTestId('dialogue-text')).toHaveText(LANDMARK_QUEST.afterLine.text.en);
     /* No portrait of any kind: a plaque has no face. */
     await expect(dialogue.locator('img, canvas, svg, picture')).toHaveCount(0);
+  });
+
+  test('finishing the task draws the quest’s own closing line first on the card', async ({
+    page,
+  }) => {
+    /*
+     * `TN-DONE`: "the line the giver speaks is drawn on the card, from the quest
+     * document's doneLine" — under "Task done!", first in the card's body, with
+     * no speaker name. One answer from done, on the level the game opens on, so
+     * the walk is the giver and one landmark rather than the whole route.
+     */
+    expect(START_QUEST, `${START_LEVEL} places no character with a quest`).toBeDefined();
+    if (START_QUEST === undefined) return;
+    expect(
+      granted(START_QUEST.doneLine),
+      `${START_QUEST.id}'s doneLine is absent or not granted, so the card rightly draws none ` +
+        'and this scenario has nothing to find.',
+    ).toBe(true);
+    if (!granted(START_QUEST.doneLine)) return;
+    const doneLine = START_QUEST.doneLine;
+
+    await seed(page, oneAnswerFromDoneSave(START_QUEST));
+    await openLevel(page, START_LEVEL);
+
+    /* Past the giver, whose prompt is the reminder now, to the first landmark. */
+    const offered = await walkRightUntil(page, {
+      wanted: null,
+      ignore: [giverPrompt(START_QUEST.giver), text('en', 'hud.interact.done')],
+    });
+    expect(
+      offered,
+      `walking right in ${START_LEVEL} reached no landmark past the giver. "card" means the ` +
+        'level ended first, which would draw "Level finished!" and no closing line.',
+    ).not.toBeNull();
+    expect(offered).not.toBe('card');
+    await page.getByTestId('interact-prompt').click();
+
+    await expect(page.getByTestId('poi-card')).toBeVisible();
+    await page.getByTestId('poi-card-close').click();
+
+    const question = page.getByTestId('question-card');
+    await expect(question, 'the landmark asked nothing, so no answer could finish the task')
+      .toBeVisible({ timeout: 15_000 });
+    await page.getByTestId('option-0').click();
+    const onward = page.getByTestId('question-next');
+    if (await onward.isVisible()) await onward.click();
+
+    const card = page.getByTestId('quest-complete-card');
+    await expect(card).toBeVisible({ timeout: 15_000 });
+    await expect(card).toHaveAccessibleName(text('en', 'quest.done.title'));
+
+    /* The line, word for word, first in the body — so it is the first thing the
+       dialog's description reads after its name. */
+    await expect(card.getByTestId('quest-complete-done')).toHaveText(doneLine.text.en);
+    await expect(card.locator('#tn-level-complete-body > p').first()).toHaveAttribute(
+      'data-testid',
+      'quest-complete-done',
+    );
+    await expect(card).toHaveAccessibleDescription(
+      new RegExp(`^${escapeRegExp(doneLine.text.en)}`, 'u'),
+    );
+    await expect(card.getByTestId('quest-complete-stamp')).toHaveText(
+      text('en', `stamp.${START_LEVEL}.earned` as Parameters<typeof text>[1]),
+    );
+
+    /* No speaker: the giver is not named anywhere on the card. */
+    await expect(card).not.toContainText(characterName(START_QUEST.giver).en);
+    await expect(page.locator('main canvas')).toHaveAttribute('aria-hidden', 'true');
   });
 });

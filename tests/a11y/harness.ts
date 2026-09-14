@@ -183,6 +183,20 @@ const PLACE = ((): string => {
   return hasCopyRow(`level.${asked}.loading`) ? asked : 'ottawa';
 })();
 
+/**
+ * Every quest document's closing line, by level, for the completion card's
+ * `?done=1`.
+ *
+ * Read from `content/quests/` rather than written here, like the stamp rows are
+ * read from the copy table: the 200 % scans exist to measure the longest line a
+ * player can meet, and a fixture sentence would measure a line nobody ships.
+ * Whether a line may be *said* is `app/bootstrap`'s decision and not a scan's.
+ */
+const QUEST_DOCUMENTS = import.meta.glob<{
+  readonly levelId: string;
+  readonly doneLine?: { readonly text: { readonly en: string; readonly fr: string } };
+}>('../../content/quests/*.json', { eager: true, import: 'default' });
+
 const waiting = {
   title: text(locale, `level.${PLACE}.title` as Parameters<typeof text>[1]),
   loading: text(locale, `level.${PLACE}.loading` as Parameters<typeof text>[1]),
@@ -505,6 +519,14 @@ switch (screen) {
        path this card is drawn on most: the player reached the end of the level.
        They are two headings, and only one of them is true at a time. */
     const finishedAQuest = params.get('reason') === 'quest';
+    /* `?done=1` hands over the closing line of the quest this place's level
+       offers. The card draws it only under "Task done!", so `?done=1` without
+       `?reason=quest` is the scan that proves it stays off the other heading. */
+    const doneMessage =
+      params.get('done') === '1'
+        ? Object.values(QUEST_DOCUMENTS).find((quest) => quest.levelId === PLACE)?.doneLine
+            ?.text[locale]
+        : undefined;
     createLevelComplete(ui, {
       locale,
       announce,
@@ -515,6 +537,7 @@ switch (screen) {
       ...(nothingOpened ? {} : { onPlayNext: () => undefined }),
     }).show({
       reason: finishedAQuest ? 'quest' : 'level',
+      ...(doneMessage === undefined ? {} : { doneMessage }),
       ...(params.get('stamp') === '0'
         ? {}
         : { stampMessage: text(locale, `stamp.${PLACE}.earned` as Parameters<typeof text>[1]) }),

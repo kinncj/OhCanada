@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
@@ -87,6 +90,10 @@ interface HarnessOptions {
   readonly primary?: 'done';
   /** The creator after a saved option was redrawn (`TN-LOOK-05`). */
   readonly repaired?: boolean;
+  /** The completion card with the finished quest's own closing line handed over. */
+  readonly done?: boolean;
+  /** Which level the card is about: its stamp row, and its quest's closing line. */
+  readonly place?: string;
 }
 
 /** Open one screen and wait for the marker that says it is really there. */
@@ -112,6 +119,8 @@ async function openScreen(
   if (options.reason !== undefined) params.set('reason', options.reason);
   if (options.primary !== undefined) params.set('primary', options.primary);
   if (options.repaired === true) params.set('repaired', '1');
+  if (options.done === true) params.set('done', '1');
+  if (options.place !== undefined) params.set('place', options.place);
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -1008,6 +1017,108 @@ test.describe('the level completion card', () => {
 
   test('is still proven in high contrast and with less movement', async ({ page }) => {
     await openScreen(page, 'complete', { contrast: 'high', motion: 'reduced' });
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  /*
+   * The finished quest's own closing line (`TN-DONE`): first in the body, so it
+   * is the first thing the dialog's description reads; only under "Task done!";
+   * and fitting at 200 % in French. Read from `content/quests/` — the documents
+   * the harness hands the card — so the scans measure lines a player meets.
+   */
+  const DONE_LINES = readdirSync(fileURLToPath(new URL('../../content/quests', import.meta.url)))
+    .filter((name) => name.endsWith('.json'))
+    .flatMap((name) => {
+      const quest = JSON.parse(
+        readFileSync(
+          fileURLToPath(new URL(`../../content/quests/${name}`, import.meta.url)),
+          'utf8',
+        ),
+      ) as {
+        readonly levelId: string;
+        readonly doneLine?: { readonly text: { readonly en: string; readonly fr: string } };
+      };
+      return quest.doneLine === undefined ? [] : [{ place: quest.levelId, text: quest.doneLine.text }];
+    });
+  /** The harness's default place is Ottawa, so the default card carries Ottawa's line. */
+  const OTTAWA_DONE = DONE_LINES.find((line) => line.place === 'ottawa');
+  /** Measured rather than named: whichever French closing line is longest today. */
+  const LONGEST_FR = [...DONE_LINES].sort((a, b) => b.text.fr.length - a.text.fr.length)[0];
+  const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+  const startsWith = (value: string): RegExp => new RegExp(`^${escapeRegExp(value)}`, 'u');
+
+  for (const locale of ['en', 'fr'] as const) {
+    test(`draws the quest’s closing line first, where the description starts (${locale})`, async ({
+      page,
+    }) => {
+      expect(OTTAWA_DONE, 'content/quests/ has no Ottawa doneLine, so this scan draws none')
+        .toBeDefined();
+      const words = OTTAWA_DONE?.text[locale] ?? '';
+      const root = await openScreen(page, 'complete', { reason: 'quest', done: true, locale });
+
+      await expect(root.locator('[data-testid="quest-complete-done"]')).toHaveText(words);
+      await expect(root.locator('#tn-level-complete-body > p').first()).toHaveAttribute(
+        'data-testid',
+        'quest-complete-done',
+      );
+      await expect(root).toHaveAccessibleDescription(startsWith(words));
+      /* Description, never name: the dialog is still named by its heading. */
+      await expect(root).toHaveAccessibleName(locale === 'en' ? 'Task done!' : 'Mission accomplie!');
+
+      const results = await scan(page).analyze();
+      expect(results.violations, `${locale}: ${violationsOf(results)}`).toEqual([]);
+    });
+  }
+
+  test('the first-line check can fail — the negative control', async ({ page }) => {
+    const root = await openScreen(page, 'complete', { reason: 'quest', done: true });
+    await page.evaluate(() => {
+      const body = document.getElementById('tn-level-complete-body');
+      const line = document.querySelector('[data-testid="quest-complete-done"]');
+      if (body === null || line === null) throw new Error('the card drew no closing line to move');
+      body.append(line);
+    });
+    await expect(root.locator('#tn-level-complete-body > p').first()).not.toHaveAttribute(
+      'data-testid',
+      'quest-complete-done',
+    );
+    await expect(root).not.toHaveAccessibleDescription(startsWith(OTTAWA_DONE?.text.en ?? ' '));
+  });
+
+  test('never draws the closing line under "Level finished!"', async ({ page }) => {
+    /* `?done=1` without `?reason=quest`: the line is handed over and refused. */
+    const root = await openScreen(page, 'complete', { done: true });
+    await expect(root).toHaveAccessibleName('Level finished!');
+    await expect(root.locator('[data-testid="quest-complete-done"]')).toHaveCount(0);
+    await expect(root).not.toContainText(OTTAWA_DONE?.text.en ?? ' ');
+
+    const results = await scan(page).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+  });
+
+  test('the longest French closing line fits at 200 %, and every way on is a target', async ({
+    page,
+  }) => {
+    expect(LONGEST_FR, 'content/quests/ carries no doneLine at all').toBeDefined();
+    if (LONGEST_FR === undefined) return;
+    const root = await openScreen(page, 'complete', {
+      reason: 'quest',
+      done: true,
+      locale: 'fr',
+      textScale: 200,
+      place: LONGEST_FR.place,
+    });
+
+    const line = root.locator('[data-testid="quest-complete-done"]');
+    await line.scrollIntoViewIfNeeded();
+    await expect(line).toBeVisible();
+    await expect(line).toHaveText(LONGEST_FR.text.fr);
+    const clipped = await line.evaluate((element) => element.scrollWidth > element.clientWidth + 1);
+    expect(clipped, 'the closing line is cut off sideways').toBe(false);
+    expect(await scrollsSideways(page)).toBe(false);
+    expect(await undersizedTargets(page)).toEqual([]);
+
     const results = await scan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);
   });

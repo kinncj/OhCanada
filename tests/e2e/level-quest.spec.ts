@@ -817,6 +817,12 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
 
     /* The stamp is this level's own sentence, written out and not composed. */
     await expect(card.getByTestId('quest-complete-stamp')).toHaveText(STAMP_SENTENCE);
+    /* The quest's own closing line, when a verifier allows it to be said. */
+    if (QUEST.doneLine !== undefined && lineIsGranted(QUEST.doneLine)) {
+      await expect(card.getByTestId('quest-complete-done')).toHaveText(QUEST.doneLine.text.en);
+    } else {
+      await expect(card.getByTestId('quest-complete-done')).toHaveCount(0);
+    }
     /* The score is a count of answers, never a mark out of nothing. */
     await expect(card.getByTestId('quest-complete-progress')).toContainText('out of');
     /* The tracker goes when the task does: no half-finished task behind a card
@@ -892,6 +898,14 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(card.getByTestId('quest-complete-progress')).toHaveText(
       text('en', 'level.complete.none'),
     );
+
+    /* And no remark about the task. Every closing line describes a route this
+       player never walked, so it is drawn under "Task done!" only (`TN-DONE`
+       rule 6). */
+    await expect(card.getByTestId('quest-complete-done')).toHaveCount(0);
+    if (QUEST.doneLine !== undefined) {
+      await expect(card).not.toContainText(QUEST.doneLine.text.en);
+    }
 
     /* No task was ever accepted, so nothing tracked one. */
     await expect(tracker).toBeHidden();
