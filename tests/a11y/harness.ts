@@ -51,6 +51,10 @@ import {
 } from '../../app/ui/settings';
 import { hasCopyRow, isUiLocale, text, type UiLocale } from '../../app/ui/copy';
 import { creatorSlots, repairSelection } from '../../app/bootstrap/character-slots';
+import { creatorArt } from '../../app/bootstrap/creator-art';
+/* The adapter file, not the phaser barrel: the picture needs no Phaser, and the
+   harness should not load a game engine to scan a DOM screen. */
+import { createCharacterPreview } from '../../app/adapters/phaser/character-preview';
 
 const params = new URLSearchParams(window.location.search);
 const ui = document.getElementById('ui');
@@ -130,6 +134,14 @@ const slotsFor = (which: UiLocale): readonly CreatorSlot[] =>
   creatorRig === undefined ? creatorSlots(which) : creatorSlots(which, creatorRig);
 
 const SLOTS: readonly CreatorSlot[] = slotsFor(locale);
+
+/*
+ * `?art=real` draws the creator's picture with the renderer the game wires
+ * (ADR-0040), from the atlas in `assets/dist`, which this server serves. No
+ * parameter draws no picture, so every scan written before the picture existed
+ * still measures the screen it was written for.
+ */
+const CREATOR_ART = params.get('art') === 'real' ? { art: creatorArt(createCharacterPreview) } : {};
 
 const LONG_PROMPT_EN =
   'Which of these best describes what the Constitution Act, 1867 set up for Canada, ' +
@@ -424,6 +436,7 @@ switch (screen) {
       ...(params.get('primary') === 'done' ? { primary: 'done' as const } : {}),
       singleSwitch: store.current.singleSwitch,
       motion: store.current.reducedMotion ? 'reduced' : 'full',
+      ...CREATOR_ART,
       onOpenSettings: () => undefined,
       onStart: () => undefined,
     }).show();
@@ -1078,6 +1091,7 @@ switch (screen) {
         required: view === 'creator',
         /* Fixed rather than random, so a scan is reproducible. */
         initialSelection: FIXED_CHARACTER,
+        ...CREATOR_ART,
       },
       announce,
       onPlayLevel: () => undefined,
