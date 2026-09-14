@@ -101,19 +101,9 @@ interface Snapshot {
   readonly speed?: number;
 }
 
-interface TraceEvent {
-  readonly name: string;
-  readonly detail?: string;
-}
-
 const snapshot = (page: Page): Promise<Snapshot> =>
   page.evaluate(
     () => (window as unknown as { __tnScene: { snapshot: () => Snapshot } }).__tnScene.snapshot(),
-  );
-
-const events = (page: Page): Promise<TraceEvent[]> =>
-  page.evaluate(
-    () => (window as unknown as { __tnScene: { events: () => TraceEvent[] } }).__tnScene.events(),
   );
 
 async function waitForIntent(page: Page, move: number): Promise<void> {
@@ -266,17 +256,31 @@ test.describe('let go when the prompt appears, then tap it (ADR-0037, TN-REACH-1
 
       await prompt.tap();
 
+      /*
+       * What opened is the thing the prompt named. The audit's Toronto tap opened
+       * the streetcar's card where the guide's dialogue was meant, so the kind of
+       * modal and its accessible name are both asserted, and the other kind is
+       * asserted absent.
+       *
+       * Not read off the scene probe's event trace. The prompt engages in
+       * `app/bootstrap` (`TN-LEVEL-05`) and never passes through the scene, so the
+       * trace records `npc/engaged` and `poi/engaged` only for the interact key
+       * and a tap on the canvas; for the prompt it is empty by design, which is
+       * what this spec's first version asserted against and failed on.
+       */
       const opened = page.getByTestId(subject.npc ? 'dialogue' : 'poi-card');
       await expect(opened, `tapping "${wanted}" opened nothing`).toBeVisible();
-      await expect(opened).toHaveAccessibleName(subject.name);
-
-      const engaged = (await events(page)).filter(
-        (event) => event.name === 'npc/engaged' || event.name === 'poi/engaged',
+      await expect(opened, 'the tap opened something other than what the prompt named').toHaveAccessibleName(
+        subject.name,
       );
-      expect(
-        engaged.map((event) => event.detail),
-        'the tap engaged something other than what the prompt named',
-      ).toEqual([subject.id]);
+      await expect(page.getByTestId(subject.npc ? 'poi-card' : 'dialogue')).toBeHidden();
+      /* And the engagement was recorded against the subject in reach: the offer
+         behind the modal now says it is done (`TN-REACH-03`), which only engaging
+         that subject can make it say. */
+      await expect(
+        prompt,
+        `the tap did not record "${subject.id}" as engaged, so the offer still invites it`,
+      ).toHaveText(text('en', 'hud.interact.done'));
     });
   }
 });
