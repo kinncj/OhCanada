@@ -716,13 +716,19 @@ const CSS = `
   background: var(--tn-paper);
 }
 
-.tn-journey[data-journey-state="locked"] .tn-journey__pin { border-style: dashed; }
+/* .tn-map__stop is a pin on the map above the list. It is matched by these same
+   rules rather than given its own, so the map cannot drift into a second shape
+   language: see the map block below. */
+.tn-journey[data-journey-state="locked"] .tn-journey__pin,
+.tn-map__stop[data-journey-state="locked"] .tn-journey__pin { border-style: dashed; }
 .tn-journey[data-journey-state="not-earned"] .tn-journey__pin { border-style: dashed; }
-.tn-journey[data-journey-state="not-built"] .tn-journey__pin { border-style: dotted; }
+.tn-journey[data-journey-state="not-built"] .tn-journey__pin,
+.tn-map__stop[data-journey-state="not-built"] .tn-journey__pin { border-style: dotted; }
 
 /* A place the player has been: the stamp is earned, and the card says so in the
    word "Earned" right beside this. */
-.tn-journey[data-journey-reached="true"] .tn-journey__pin {
+.tn-journey[data-journey-reached="true"] .tn-journey__pin,
+.tn-map__stop[data-journey-reached="true"] .tn-journey__pin {
   background: var(--tn-accent);
   border-color: var(--tn-accent-edge);
   border-style: solid;
@@ -736,7 +742,8 @@ const CSS = `
   last one reading "Earned". The ring is a box-shadow, which forced colours
   drops; the size difference is not, so the mark survives with no colour at all.
 */
-.tn-journey[data-journey-current="true"] .tn-journey__pin {
+.tn-journey[data-journey-current="true"] .tn-journey__pin,
+.tn-map__stop[data-journey-current="true"] .tn-journey__pin {
   inline-size: 1rem;
   block-size: 1rem;
   box-shadow: 0 0 0 0.125rem var(--tn-paper), 0 0 0 0.1875rem var(--tn-ink);
@@ -744,8 +751,10 @@ const CSS = `
 
 /* A heavier edge on the road, and not on the stamp: at this size a 0.25rem
    border on a 1rem square closes the gaps in a dashed one, and "not earned yet"
-   would stop being told apart by its shape. */
-.tn-journey[data-journey="stop"][data-journey-current="true"] .tn-journey__pin {
+   would stop being told apart by its shape. A pin on the map is a stop on the
+   road, so it takes the road's edge. */
+.tn-journey[data-journey="stop"][data-journey-current="true"] .tn-journey__pin,
+.tn-map__stop[data-journey-current="true"] .tn-journey__pin {
   border-width: 0.25rem;
 }
 
@@ -778,7 +787,104 @@ const CSS = `
 @media (forced-colors: active) {
   .tn-journey__leg { border-inline-start-color: CanvasText; }
   .tn-journey__pin { border-color: CanvasText; }
-  .tn-journey[data-journey-reached="true"] .tn-journey__pin { background: Highlight; }
+  .tn-journey[data-journey-reached="true"] .tn-journey__pin,
+  .tn-map__stop[data-journey-reached="true"] .tn-journey__pin { background: Highlight; }
+}
+
+/* ------------------------------------------------------------------ *
+ * The map above the route: the country, and where the journey is on it.
+ *
+ * app/ui/level-map.ts draws it: the drawing from assets/src/svg/screens/, and a
+ * pin at each stop's anchor. Its pins are the rail's pins -- every shape and
+ * fill above matches .tn-map__stop as well as .tn-journey -- so this block only
+ * says where a pin goes and how big it is.
+ *
+ * FOUR THINGS HERE ARE ACCEPTANCE CRITERIA, NOT DECORATION:
+ *
+ *  1. IT TAKES NO INPUT. pointer-events: none on the whole map, so a tap or a
+ *     held switch contact over the drawing lands on the sheet behind it like
+ *     anywhere else on the screen, and a long press cannot open an image menu or
+ *     start a drag. It is aria-hidden and holds nothing focusable: the list is
+ *     the control.
+ *  2. IT SITS ABOVE THE LIST, NEVER BESIDE IT, so it costs a card no width at any
+ *     text size. Its height follows the column's width rather than the text, and
+ *     it is capped at 54vh wide -- 30 % of the viewport's height, at the
+ *     drawing's 1080:600 -- so on a wide window at 200 % text it cannot push the
+ *     whole route below the fold. A phone's column is narrower than the cap.
+ *  3. A PIN IS SIZED TO THE DRAWING, NOT TO THE TEXT. Every other length in this
+ *     sheet is rem, so that it grows with the text. The drawing does not grow,
+ *     and a pin that doubled at 200 % would cover Halifax and Peggy's Cove, which
+ *     are 5 % of the drawing's width apart in the inset. So a pin is sized in cqi,
+ *     a share of the map's own width, after a rem fallback for a browser without
+ *     container units.
+ *  4. NOTHING ANIMATES. A mark that slid to its place would be information
+ *     arriving as movement, which reduced motion would then have to take away.
+ * ------------------------------------------------------------------ */
+
+.tn-map {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 54vh;
+  max-inline-size: 54dvh;
+  margin-inline: auto;
+  container-type: inline-size;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper-2);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.tn-map__art {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: calc(var(--tn-radius) - var(--tn-edge-width));
+}
+
+/* Exactly the drawing's box, so a pin's percentages are the sidecar's. */
+.tn-map__pins {
+  position: absolute;
+  inset: 0;
+}
+
+/* Geography does not mirror with the writing direction, so left and top, not
+   the logical properties used everywhere else. */
+.tn-map__stop {
+  position: absolute;
+  left: var(--tn-map-x);
+  top: var(--tn-map-y);
+  display: flex;
+  transform: translate(-50%, -50%);
+}
+
+.tn-map .tn-map__stop .tn-journey__pin {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border-width: 0.125rem;
+  inline-size: 3.2cqi;
+  block-size: 3.2cqi;
+  border-width: 0.6cqi;
+}
+
+/* Where the route has got to: bigger and ringed, as on the rail, in the same
+   proportions. The size difference survives forced colours; the ring does not. */
+.tn-map .tn-map__stop[data-journey-current="true"] .tn-journey__pin {
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+  border-width: 0.1875rem;
+  box-shadow: 0 0 0 0.125rem var(--tn-paper), 0 0 0 0.1875rem var(--tn-ink);
+  inline-size: 3.8cqi;
+  block-size: 3.8cqi;
+  border-width: 0.9cqi;
+  box-shadow: 0 0 0 0.5cqi var(--tn-paper), 0 0 0 0.9cqi var(--tn-ink);
+}
+
+@media (forced-colors: active) {
+  .tn-map { border-color: CanvasText; }
 }
 
 /* ------------------------------------------------------------------ *

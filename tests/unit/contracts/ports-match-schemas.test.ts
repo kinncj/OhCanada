@@ -119,14 +119,11 @@ const SKIPPED_SCHEMAS: Readonly<Record<string, string>> = {
   // document, ADR-0007 applies to it, and this entry is deleted.
   'source.schema.json':
     'verification-time register (ADR-0003) — read by verify-content, never by the application at runtime',
-  // The level-select map's sidecar, `assets/src/svg/screens/map-canada.anchors.json`.
-  // It IS meant to be read at runtime - the level select will import it - but
-  // nothing under `app/` reads it today, and ADR-0008 says a port exists when
-  // something calls it. The job that wires the map into the screen writes the
-  // port type, and this entry must go in the same change: the staleness check
-  // below fails the day the ports index exports the type this file binds to.
-  'map-anchors.schema.json':
-    'screen-art sidecar with no reader under app/ yet (ADR-0008) — the level-select wiring writes its port type and deletes this entry',
+  // `map-anchors.schema.json` WAS here, until the level select read the sidecar
+  // (`app/ui/level-map.ts`). Its port type is `MapAnchorsDocument` in
+  // `app/application/ports/map-anchors.ts`, and the entry went in the same change,
+  // as the staleness check below requires.
+  //
   // `rig.schema.json` WAS here, with a written condition for its own removal:
   // "if a renderer ever reads this document at runtime to draw from … ADR-0007
   // applies, and this entry is deleted along with the cascade that follows from

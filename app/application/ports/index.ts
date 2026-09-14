@@ -80,6 +80,16 @@ export type {
   VolumeSettings,
 } from './progress-repository';
 
+export type {
+  MapAffineTransform,
+  MapAnchorsDocument,
+  MapInset,
+  MapInsetFrame,
+  MapPoint,
+  MapProjection,
+  MapRectangle,
+} from './map-anchors';
+
 export type { SaveCodec } from './save-codec';
 
 export type { Clock } from './clock';

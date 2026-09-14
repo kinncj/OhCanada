@@ -69,6 +69,7 @@ import type { LevelId } from '@domain/ids';
 import { count, text, type CopyKey, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
 import { journeyRail, journeyRoute, type JourneyStop } from './journey';
+import { createLevelMap, SHIPPED_MAP_ANCHORS } from './level-map';
 import { injectScreenStyles } from './screen-styles';
 
 /** The three states, in the words `TN-MAP-01` requires on `data-state`. */
@@ -326,7 +327,23 @@ export function createLevelSelect(
 
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
 
-  root.append(heading, counts, list, actions);
+  /*
+   * The map of Canada, above the list and beside nothing.
+   *
+   * Above rather than behind or beside, for two measured reasons: beside the
+   * list it would take width from cards that are already 226 px wide at 200 %
+   * text, and behind it the cards' text would sit over a drawing whose contrast
+   * axe cannot compute. `./level-map.ts` says why it is allowed to be hidden
+   * from assistive technology — it says nothing the cards do not — and it holds
+   * nothing focusable, so the Tab order and the switch ring go from the counts
+   * straight to the first card, exactly as before.
+   *
+   * No map at all rather than a wrong one if the sidecar ever fails to read as
+   * its port type; the list is the whole screen without it.
+   */
+  const levelMap = SHIPPED_MAP_ANCHORS === null ? null : createLevelMap(doc, SHIPPED_MAP_ANCHORS);
+
+  root.append(heading, counts, ...(levelMap === null ? [] : [levelMap.element]), list, actions);
   host.append(root);
 
   render();
@@ -359,10 +376,20 @@ export function createLevelSelect(
       countsLines().map((line) => element(doc, 'div', { text: line })),
     );
     /* The route is derived once per draw, from the whole journey: a stop's legs
-       depend on the stop before it, so no card can work it out alone. */
+       depend on the stop before it, so no card can work it out alone. The map
+       is handed the same derivation and the same state word as the rail, so a
+       pin on the map and the pin beside the card cannot disagree. */
+    const route = journeyRoute(entries);
     replaceChildren(
       list,
-      journeyRoute(entries).map(({ step, stop }, index) => card(step, index, stop)),
+      route.map(({ step, stop }, index) => card(step, index, stop)),
+    );
+    levelMap?.draw(
+      route.map(({ step, stop }) => ({
+        ...(step.id === undefined ? {} : { id: step.id }),
+        state: levelCardState(step),
+        stop,
+      })),
     );
     const controls: HTMLElement[] = [];
     if (options.onOpenPassport !== undefined) {

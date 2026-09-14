@@ -288,6 +288,108 @@ describe('the ten cards are stops on one route', () => {
   });
 });
 
+/**
+ * The map of Canada above the route.
+ *
+ * `OQ-MAP-2`: a drawn map "is a decoration behind the same list, never the only
+ * way to choose". So it is asserted the way the rail is: it is hidden from
+ * assistive technology, it adds nothing to the order a keyboard or a switch
+ * walks, it carries no words in either language, and **every pin on it is the
+ * rail's pin for the same card, in the same tokens**. Where a pin sits on the
+ * drawing is `tests/unit/ui/level-map.test.ts` and `tests/a11y/shell.spec.ts`.
+ */
+describe('the map above the route', () => {
+  const railCurrentHandle = (list: FakeElement | null): string | null =>
+    list
+      ?.querySelectorAll('li')
+      .find((item) => item.querySelector('.tn-journey')?.getAttribute('data-journey-current') === 'true')
+      ?.querySelector('button')
+      ?.getAttribute('data-level-handle') ?? null;
+
+  const mapCurrentHandles = (map: FakeElement | null): readonly (string | null)[] =>
+    (map?.querySelectorAll('[data-journey-current="true"]') ?? []).map((pin) =>
+      pin.getAttribute('data-map-handle'),
+    );
+
+  it('sits under the counts and over the list, so it takes no width from a card', () => {
+    const { at } = open();
+    const order = (at('level-select')?.children ?? []).map(
+      (child) => child.getAttribute('data-testid') ?? child.tagName.toLowerCase(),
+    );
+    expect(order.indexOf('level-select-map')).toBe(order.indexOf('level-select-counts') + 1);
+    expect(order.indexOf('level-select-list')).toBe(order.indexOf('level-select-map') + 1);
+  });
+
+  it('is hidden from assistive technology and adds nothing to a keyboard or switch walk', () => {
+    const { at } = open({ onBack: () => undefined });
+    const map = at('level-select-map');
+
+    expect(map?.getAttribute('aria-hidden')).toBe('true');
+    expect(map?.querySelectorAll('button, a, input, select, textarea, [tabindex]')).toHaveLength(0);
+    /* The ten cards and Back are still every control on the screen. */
+    expect(at('level-select')?.querySelectorAll('button')).toHaveLength(11);
+    expect(at('level-select-list')?.querySelectorAll('li')).toHaveLength(10);
+  });
+
+  it('carries no words, in either language', () => {
+    /* No place name baked into the page, no caption, and no sentence about
+       which way the journey runs (`OQ-MAP-3`). */
+    const { at, screen } = open();
+    expect(at('level-select-map')?.textContent).toBe('');
+    screen.setLocale('fr');
+    expect(at('level-select-map')?.textContent).toBe('');
+  });
+
+  it('says nothing the card for that place does not already say', () => {
+    const { at } = open({
+      entries: DEFAULT_ENTRIES.map((entry) =>
+        entry.id === id('ottawa') ? { ...entry, stamped: true } : entry,
+      ),
+    });
+
+    const pins = at('level-select-map')?.querySelectorAll('.tn-map__stop') ?? [];
+    expect(pins).toHaveLength(10);
+    for (const pin of pins) {
+      const handle = pin.getAttribute('data-map-handle') ?? '?';
+      const card = at(`level-card-${handle}`);
+      expect(pin.getAttribute('data-journey-state'), handle).toBe(card?.getAttribute('data-state'));
+      expect(pin.getAttribute('data-journey-reached'), handle).toBe(
+        card?.getAttribute('data-stamped'),
+      );
+    }
+  });
+
+  it('marks the stop the route has got to, and only that one', () => {
+    const { at } = open();
+    expect(mapCurrentHandles(at('level-select-map'))).toEqual([
+      railCurrentHandle(at('level-select-list')),
+    ]);
+    expect(mapCurrentHandles(at('level-select-map'))).toEqual(['ottawa']);
+  });
+
+  it('marks nothing where the route marks nothing', () => {
+    const { at } = open({ entries: entries([], []) });
+    expect(railCurrentHandle(at('level-select-list'))).toBeNull();
+    expect(mapCurrentHandles(at('level-select-map'))).toEqual([]);
+  });
+
+  it('draws no pin for a card that has no place', () => {
+    const { at } = open({ entries: [{ number: 11, built: false, unlocked: false }] });
+    expect(at('level-select-map')?.querySelectorAll('.tn-map__stop')).toHaveLength(0);
+  });
+
+  it('moves its mark when progress changes, without fetching the drawing again', () => {
+    const { at, screen } = open();
+    const art = at('level-select-map')?.querySelector('img');
+
+    screen.setEntries(entries(['ottawa', 'halifax'], ['ottawa', 'halifax']));
+
+    expect(mapCurrentHandles(at('level-select-map'))).toEqual(['halifax']);
+    expect(railCurrentHandle(at('level-select-list'))).toBe('halifax');
+    expect(at('level-select-map')?.querySelector('img')).toBe(art);
+  });
+});
+
 describe('an open level', () => {
   it('says it is open, says how to take it, and takes it', () => {
     const { at, onChoose } = open();

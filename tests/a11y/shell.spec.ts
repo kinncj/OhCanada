@@ -677,13 +677,16 @@ test.describe('the level select is a route, not a list', () => {
   }) => {
     await open(page, { view: 'level-select' });
 
-    await expect(page.locator('[data-journey-current="true"]')).toHaveCount(1);
+    /* Scoped to the list: the map above it marks the same stop with the same
+       token, and is asserted on its own below. */
+    const rail = page.locator('[data-testid="level-select-list"]');
+    await expect(rail.locator('[data-journey-current="true"]')).toHaveCount(1);
     /* And it is on Ottawa: the only card reading "Open" without "Earned", which
        is a fact printed on the card and drawn here rather than invented. */
     const markedHandle = await page.evaluate(
       () =>
         document
-          .querySelector('[data-journey-current="true"]')
+          .querySelector('[data-testid="level-select-list"] [data-journey-current="true"]')
           ?.closest('li')
           ?.querySelector('button[data-level-handle]')
           ?.getAttribute('data-level-handle') ?? 'none',
@@ -694,7 +697,7 @@ test.describe('the level select is a route, not a list', () => {
       page.evaluate(() =>
         ['true', 'false'].map((flag) => {
           const pin = document.querySelector<HTMLElement>(
-            `[data-journey-current="${flag}"] .tn-journey__pin`,
+            `[data-testid="level-select-list"] [data-journey-current="${flag}"] .tn-journey__pin`,
           );
           return pin === null ? 0 : pin.getBoundingClientRect().width;
         }),
