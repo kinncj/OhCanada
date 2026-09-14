@@ -184,6 +184,15 @@ Feature: Move by itself
   Scenario: Auto-move is not a difficulty change
     Then the same points of interest are reachable
     And the skate tuning values are unchanged
+
+  Scenario: Auto-move stops at each thing, and engaging carries the skater on (ADR-0032)
+    When the skater approaches a landmark or a character
+    Then the skater comes to rest within the skate tuning's "reachPx" of it, with no input
+    And nothing starts moving again on its own
+    When I engage it by the interact key, by tapping it, or by "interact-prompt", and close what it opened
+    Then the skater moves on without any input
+    And that landmark does not stop the skater again this visit
+    And the full rule, for held and automatic drives alike, is TN-REACH-09
 ```
 
 ## TN-SET-03 — A setting cannot be saved (failure path)

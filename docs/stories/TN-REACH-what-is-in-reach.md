@@ -632,6 +632,84 @@ Feature: The prompt in French
 
 ---
 
+## TN-REACH-09 — The player comes to rest at each thing they can choose (ADR-0032)
+
+Added 2026-09-14. A held drive used to come to rest wherever the thumb lifted — on the skate, up to two thousand
+pixels past the officer — and auto-move stopped at nothing the domain called finished. One rule now covers every
+drive. The rule is `app/adapters/phaser/auto-stop.ts`'s; the arithmetic is proved in
+`tests/unit/adapters/phaser/auto-stop.test.ts` and the wiring in `tests/e2e/held-move-stops.spec.ts` and
+`tests/e2e/auto-move-stops.spec.ts`.
+
+```gherkin
+Feature: Every drive stops at each thing a player can choose
+  Background:
+    Given a level is playable
+    And the mode the player moves in can engage something
+
+  Scenario: Holding to move stops at the first thing, and holding on does not overrule it
+    When I hold the key bound to "move-right", or hold a finger to the right of the player, and do not let go
+    Then I come to rest within the mode's "reachPx" of the first landmark or character ahead
+    And "data-speed" stays 0 for as long as I keep holding
+    And every frame's intent is still the direction I am holding
+    And "interact-prompt" is visible
+
+  Scenario: The stop is announced once, by the offer
+    When I come to rest at a landmark
+    Then "#tn-live-region" has already read the prompt's words for it, once
+    And nothing further is announced because I stopped
+
+  Scenario: Letting go and pressing again carries me on
+    Given I am at rest at a landmark with "move-right" held
+    When I let go and hold "move-right" again
+    Then I move on past it
+    And the next landmark or character stops me in the same way
+
+  Scenario: Steering back always lets me go
+    Given I am at rest at a landmark
+    When I hold "move-left", with or without letting go of "move-right" first
+    Then I move left on the first frame the level sees it
+
+  Scenario: Engaging lets me go, whichever way I engaged
+    Given I am at rest at a landmark
+    When I engage it by the key bound to "interact", by tapping it, or by "interact-prompt"
+    And I close what it opened
+    Then nothing holds me there
+    And pressing "move-right" once carries me on
+
+  Scenario: Nothing stops me twice in one visit
+    Given a landmark let me go
+    When I walk on, or turn and walk back past it
+    Then it does not stop me again until I next open the level
+
+  Scenario: Finished things stop me once per visit too
+    Given I finished a landmark on an earlier visit
+    When I reach it on this visit
+    Then I come to rest there once
+    And "interact-prompt" reads "Done. See this one again"
+
+  Scenario: A glide is mine
+    When I let go before I reach a landmark
+    Then I glide as the mode glides and nothing brakes me for it
+
+  Scenario: Auto-move and the train stop at the same places, and never start on their own
+    Given "Move by itself" is on, or the level's mode drives itself
+    Then the drive comes to rest at each landmark and character on the same line as a held drive
+    And a press of either direction, or engaging, lets it go
+    And nothing moves again while I do nothing
+
+  Scenario: One switch can engage and go on
+    Given single-switch mode is on
+    And the drive has brought me to rest at a landmark
+    When I move the highlight to "interact-prompt" and hold the switch past the threshold
+    Then the landmark is engaged
+    And closing what it opened lets an automatic drive carry me on
+    And nothing on screen counts down
+
+  Scenario: Reduced motion changes nothing about where I stop
+    Given "Less movement" is on
+    Then I come to rest at the same place, on the same brake
+```
+
 ## Open questions
 
 - **`OQ-REACH-1` — Ottawa's two rows are respelled, and nothing else about them changes.**
