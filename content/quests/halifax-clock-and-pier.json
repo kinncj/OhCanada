@@ -58,10 +58,10 @@
       },
       "verification": {
         "status": "verified",
-        "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T16:13:25Z",
+        "model": "claude-opus-5",
+        "checkedAt": "2026-09-14T03:00:06Z",
         "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-        "evidence": "Mobility Rights — Canadians can live and work anywhere they choose in Canada, enter and leave the country freely, and apply for a passport."
+        "evidence": "The Charter attempts to summarize fundamental freedoms while also setting out additional rights. The most important of these include: Mobility Rights — Canadians can live and work anywhere they choose in Canada, enter and leave the country freely, and apply for a passport."
       }
     }
   },
