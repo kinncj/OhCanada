@@ -108,7 +108,9 @@ the single-switch contract's word.
 
 The reworded hint, the twenty-seven landmark prompts and the ten finish-first sentences were written by
 `app/ui`. They are declared in `COPY_GAPS` as proposed rows in `TN-REACH` and `TN-MAP` until those stories'
-owners ratify or replace them, so the gap list is pinned at 52.
+owners ratify or replace them. That is 38 rows of this decision's own; with ADR-0036's five and the update
+notice's two (ADR-0034) the pinned list holds 59, and `tests/unit/ui/copy.test.ts` pins whatever the list
+actually holds.
 
 ## Consequences
 

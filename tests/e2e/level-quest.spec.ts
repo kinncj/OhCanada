@@ -365,7 +365,8 @@ const walkUntilThePromptReads = (page: Page, wanted: string): Promise<string | n
  * Walk right until the HUD offers something that is **not** one of these.
  *
  * The giver stands between the spawn and the first landmark, and once they have
- * been talked to their prompt reads "Done. See this one again" — so a walk that
+ * been talked to their prompt keeps its own words while the task runs (ADR-0039)
+ * and reads "Done. See this one again" once it is finished — so a walk that
  * stopped at the first mark stopped at the guide again, and engaging it opened
  * the reminder rather than the landmark. Saying what to ignore is how a walk
  * asks for "the next thing, not this one" without naming a landmark the level
