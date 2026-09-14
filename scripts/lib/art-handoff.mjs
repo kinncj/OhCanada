@@ -1656,6 +1656,14 @@ const RECIPES = {
   'grain-bins': singleSource(),
   'combine-harvester': singleSource(),
   'container-car': singleSource(),
+  /**
+   * The car the player rides on the Prairies (ADR-0031), on its own, at 1x. The
+   * rider is deliberately not composited: a ride subject built with `slots.pose`
+   * would fall under the mounted-subject block, which demands `{mode}` equipment
+   * a ride by definition does not have. The car is the art this source ships;
+   * the seated rider is the rig's, and `posedModesWithoutSubject` says so.
+   */
+  'park-car': singleSource(),
 
   /**
    * The foothills' two. `beef-cattle` is the first animal drawn since the llama

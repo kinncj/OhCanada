@@ -2767,10 +2767,10 @@
       "neverAdd": [
         "a grain elevator ON EITHER OF THESE TWO REPEATING TILES: it is required on the `grain-elevator` subject and forbidden here, and the reason is the tiling, not the building",
         "any lettering, number plate, whistle post, mile board or signage, in either language",
-        "a locomotive or rolling stock: these are two repeating background tiles, and a train drawn on a tile repeats with it. The level's `train` locomotion mode has no train art yet - the rig poses no `train/` state and no part resolves `{mode}` to `train` - and that is a known gap: the train is to become a rideable level object of its own, not scenery in this subject",
+        "a locomotive or rolling stock ON EITHER OF THESE TWO REPEATING TILES: a train drawn on a tile repeats with it, every 1920 px. The rideable level object this entry once waited for now exists - the `park-car` subject, a ride the engine places at the player (ADR-0031), with the rig's seated `train/` poses - and it is still never scenery in this subject",
         "overhead electrification, a catenary mast or a third rail: this is a diesel-worked prairie branch",
         "mountains or foothills on the horizon: that is level 8's picture",
-        "a second track, a turnout or a signal gantry: it is a single-track line",
+        "a second track, a turnout or a signal gantry ON EITHER TILE: each tile carries one track. The level as a whole now shows two - the ride's main line in the foreground and these tiles' rails behind it, which read as the siding the container car and the elevator stand on - and that second line belongs to the ride, not to this subject",
         "any depiction of a person, a pattern or an object belonging to any nation named in this level's territory statement"
       ],
       "notes": [
@@ -2783,7 +2783,11 @@
         "for the track's relationship to the buildings. It is NOT a colour reference: it is a winter dawn.",
         "THE SKY AND THE FAR HORIZON ARE NOT PART OF THIS SUBJECT. layer-10-sky.svg and layer-20-horizon.svg are",
         "drawn, credited and shipped and are asked no question: one is a flat field with clouds and the other is",
-        "a distant shelterbelt and two farmsteads, and neither has a feature that could identify anything."
+        "a distant shelterbelt and two farmsteads, and neither has a feature that could identify anything.",
+        "THE TRAIN IS NOT PART OF THIS SUBJECT EITHER. Since 2026-09-14 the level draws the player riding the",
+        "rear car of VIA Rail's Canadian on a nearer line in the foreground (ADR-0031, assets/style/prairie-rail-level.md",
+        "section 13). That car is `park-car` and is judged on its own; these two tiles are still judged as a",
+        "railway across the prairie with nothing on it, which is what they draw."
       ]
     },
     {
@@ -3001,7 +3005,7 @@
         },
         {
           "feature": "the car is at rest",
-          "detail": "No motion lines, no dust, no locomotive, no coupling to anything off-frame. The level's locomotion is `train` and the player rides one; a hero that looked like a moving train would be read as the player's own."
+          "detail": "No motion lines, no dust, no locomotive, no coupling to anything off-frame. The level's locomotion is `train` and since 2026-09-14 the player is drawn riding one - a stainless passenger car on the main line in the foreground (`park-car`, ADR-0031) - while this freight car stands on the siding beyond it; a hero that looked like a moving train would be read as part of the player's own."
         }
       ],
       "simplifyAway": [
@@ -3029,6 +3033,101 @@
         "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide the two boxes, the",
         "dropped well, both bogies, four wheels and the rail all survive; the 120 px silhouette is two stacked",
         "rectangles on a low frame over four wheels."
+      ]
+    },
+    {
+      "id": "park-car",
+      "subject": "The rear car of a stainless-steel passenger train, with a rounded observation end and a glass dome on its roof",
+      "renders": [
+        "src/svg/prairie-rail/ride-park-car@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x with `singleSource()`. It is the front layer of the Prairies ride (ADR-0031): the engine draws the player BEHIND this file, seated in the dome, so the file's dome is EMPTY and this render shows the car without its passenger. That is deliberate. The seated rider is the rig's (`train/*` in rig-contract.json) and a ride subject built with a pose would fall under the hand-off's mounted-subject rules, which require `{mode}` equipment frames that a ride by definition does not have; `verify-art` reports `train` as a posed mode with no subject, and that report is the true statement.",
+      "expectedBlindAnswer": [
+        "a passenger train car",
+        "a passenger rail car",
+        "a railway passenger car",
+        "a dome car",
+        "an observation car",
+        "a stainless steel passenger car",
+        "a glass-domed train car",
+        "the rear car of a passenger train"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, AND THE PLACE IS NOT ASKED FOR. The car is drawn from VIA Rail's Canadian and carries",
+        "none of what names it on the real train: no wordmark, no logo, no car name and no number. A verifier who",
+        "says VIA Rail or the Canadian has inferred it from a blue band, a dome and a rounded end, and is not wrong,",
+        "and it is NOT required: the subject is a passenger car that a person rides, which is the whole of what the",
+        "level needs the picture to say.",
+        "WHAT IT MUST CARRY: PASSENGER. `a freight car`, `a tanker`, `a bus` and `a subway car` are fails - the",
+        "windows, the dome and the observation end are drawn at full contrast for exactly that reason."
+      ],
+      "referenceFiles": [
+        "prairie-rail/park-car-side-and-dome-jasper.jpg",
+        "prairie-rail/park-car-observation-end-jasper.jpg",
+        "prairie-rail/canadian-side-elevation-1981.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a rounded observation end, with the blue band sweeping round it and a red marker light on top",
+          "why": "It is the Park car's silhouette and the one shape no other car in the train has. A flat end with a diaphragm is any coach.",
+          "detail": "The roof rolls down over the end on a large radius, the band follows it round, the lower body's corner is rounded, a big end window sits in the upper body and a red marker light stands on the roof at the end. park-car-observation-end-jasper.jpg shows all five from one corner.",
+          "palette": "white, cobalt, flag-red"
+        },
+        {
+          "feature": "a raised glass dome on the roof, clear enough to see through",
+          "why": "It is what makes this a passenger observation car rather than a coach, and it is where the player is seen riding: a head and shoulders through the glass, against the sky.",
+          "detail": "A band of glass on a stainless plinth, sloped at both ends under a stainless cap, just ahead of the observation end as both Jasper references show. The glass is a 16 percent sky tint, not a colour, because the rider is drawn behind this file; the mullions are placed clear of the seat so none crosses the rider's face.",
+          "palette": "white, slate, sky"
+        },
+        {
+          "feature": "a pale stainless body with horizontal flutes below a row of windows",
+          "why": "Fluted stainless steel is what the Budd cars are, and it is what separates this train from a painted one.",
+          "detail": "Five flute lines on the lower body, a smooth window band above a belt line, dark glass windows with a single sky glint each, and a door near the forward end.",
+          "palette": "white, slate"
+        },
+        {
+          "feature": "one blue letterboard band the length of the car, under the roof",
+          "why": "It is the livery's one colour, and a livery colour is not a mark: the same permission the elevator's ochre trim has.",
+          "detail": "VIA blue drawn from `cobalt`, with a darker lower edge and a pale top edge; nothing written in it.",
+          "palette": "cobalt"
+        },
+        {
+          "feature": "two four-wheel trucks under the car, over a rail",
+          "why": "It is what makes it a railway vehicle, and the wheels meeting the ride's track is what makes the rider read as carried rather than floating.",
+          "detail": "A dark frame and two wheels with lighter hubs at each truck, the rear one under the observation end, standing on the row the ride's track strip puts its rail head on.",
+          "palette": "hide, slate"
+        }
+      ],
+      "simplifyAway": [
+        "the car's length: a Park car is about six times as long as it is tall, and this one is compressed so the observation end, the dome and the car ahead share one screen",
+        "the full depth of the fluting: five lines stand for it",
+        "the dome's curved upper panes, merged into one band of glass under the cap",
+        "the vestibule steps, the underframe equipment, the brake rigging and the diaphragm's folds below its outline",
+        "the second marker light and the end's lower lights"
+      ],
+      "neverAdd": [
+        "any wordmark, logo, car name, number or lettering in either language, including the wordmark and the logo every reference carries",
+        "a flag decal",
+        "a locomotive or a second dome: neither is at the rear of this train",
+        "a figure drawn into the file: the passenger is the player, posed by the rig and drawn behind the car at run time",
+        "any depiction of a person, a pattern or an object belonging to any nation named in this level's territory statement"
+      ],
+      "notes": [
+        "prairie-rail/park-car-side-and-dome-jasper.jpg and prairie-rail/park-car-observation-end-jasper.jpg are",
+        "CC BY 2.0, by David Wilson, Jasper, Alberta, 2013, and are the references for the observation end, the",
+        "band, the marker light and where the dome sits. prairie-rail/canadian-side-elevation-1981.jpg is public",
+        "domain, a Roger Puta photograph, and is the near-orthographic view the side is proportioned from. Its",
+        "letterboard band is a darker blue-grey under a 1981 winter sky and is NOT a colour reference.",
+        "WHY THE REAR CAR, AND WHY THE DOME. The Park car is the car at the tail of the Canadian, so the rider",
+        "sits in the last car and the observation end is on screen whenever the train is at rest or cruising.",
+        "The dome is where a passenger is visible from outside at 390 px; a head at a side window is a dark",
+        "square with a dot in it.",
+        "WHERE IT RUNS. On a nearer line than the level's walking line, so the landmarks and the guide stand",
+        "beyond it: rendered at 390 px on the walking line, the car hid the container car and the guide at the",
+        "moment the train stopped for them. assets/style/prairie-rail-level.md section 13 has the numbers.",
+        "PLACEMENT FLOOR: none; the car is drawn at 1x at the player every frame. DRAWING OBSERVATION, not an",
+        "identification: at 390 px the dome, the observation end, the band, the windows and both trucks all",
+        "survive, and the rider's head and shoulders read through the glass."
       ]
     },
     {

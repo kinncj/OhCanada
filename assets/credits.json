@@ -1658,6 +1658,24 @@
       "modifications": "Original work. Drawn from the freight standing beside the elevator in assets/refs/prairie-rail/prairie-freight-train-at-dawn.jpg under the rules in assets/style/art-bible.md; never traced. Carries no reporting mark, number, livery or wordmark of any kind, and the two container colours are palette ramps rather than any operator's. The @1x suffix pins the source to one scale; the key prairie-rail-prop-container-car carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 820 x 420 and passed at both probes; at 2x it would cost 5.26 MiB of decoded texture instead of 1.31 MiB."
     },
     {
+      "path": "src/svg/prairie-rail/ride-park-car@1x.svg",
+      "kind": "shipped",
+      "title": "The rear of VIA Rail's Canadian - a stainless Park car with its dome and observation end - which the player rides across the Prairies",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/ride-park-car@1x.svg",
+      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced, from three references: assets/refs/prairie-rail/park-car-side-and-dome-jasper.jpg and park-car-observation-end-jasper.jpg, photographs by David Wilson from Oak Park, Illinois, USA, licensed CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/), and canadian-side-elevation-1981.jpg, a Roger Puta photograph in the public domain. Carries no wordmark, logo, car name, number or lettering of any kind; the blue band is a livery colour. The front layer of a ride (ADR-0031): the player is drawn behind it and shows through the dome glass. The @1x suffix pins the source to one scale; the key prairie-rail-ride-park-car carries no suffix."
+    },
+    {
+      "path": "src/svg/prairie-rail/ride-park-car-track@1x.svg",
+      "kind": "shipped",
+      "title": "The main line under the Prairies train: a repeating strip of rail, tie ends and ballast",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/ride-park-car-track@1x.svg",
+      "modifications": "Original work. The track a ride runs on (ADR-0031): a 480 px strip with ten ties on a 48 px period, repeated across the view and fixed to the world so the ties go by under the train. Drawn to match the right of way in assets/src/svg/prairie-rail/layer-40-railbed.svg. The @1x suffix pins the source to one scale."
+    },
+    {
       "path": "refs/winnipeg/cmhr-from-the-forks-tower.jpg",
       "kind": "reference",
       "title": "Canadian Museum for Human Rights from The Forks Tower",

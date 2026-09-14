@@ -361,3 +361,79 @@ fourteen swaths. The corridor was never short of things to look at.
   'combine-harvester': singleSource(),
   'container-car': singleSource(),
 ```
+
+---
+
+## 13. The train the player rides
+
+**Added 2026-09-14, after a player reported that the character "walks by itself on a track".** The level
+declared `train`, the HUD said Train, and the only thing on the rails was a person walking. `rig-contract.md`
+§11.5 had already shown the car could not be rig equipment; ADR-0031 made it a **ride**: level art the engine
+places at the player every frame, registered to the rider.
+
+| key | source | px | what it is |
+|---|---|---|---|
+| `prairie-rail-ride-park-car` | `ride-park-car@1x.svg` | 1 420 × 590 | the rear of VIA Rail's *Canadian*: a Budd Park car's observation end, dome and flank, and the coupled end of the car ahead |
+| `prairie-rail-ride-park-car-track` | `ride-park-car-track@1x.svg` | 480 × 56 | the main line under it: a rail head, ten tie ends on a 48 px period, a ballast shoulder |
+
+### 13.1 Placement, and why the car is not on the walking line
+
+`rides[0]` in `content/levels/prairie-rail.json`: `riderAnchor` (380, 422), `groundLineY` 330,
+`turnsWithRider` false, `bob` 2 px every 180 px, `track.topY` 582. In world terms the car's roof is at y 1 196,
+its dome glass runs up to about 1 004, and its rails are at 1 536 — **256 px below the walking line**, across the
+ground fill.
+
+That was a measurement, not a taste. The first version stood the car on the walking line; rendered at 390 px,
+a car tall enough to seat a rider in its dome is taller than the container car (whose containers sit 128 to
+308 px above that line) and the guide, and whichever was in front hid the other at the moment the train
+stopped to engage it. On the nearer line every landmark and the guide stand beyond the train with only their
+bottom 84 px behind its roof: the bins keep their cones and the daylight at the top of their legs, the combine
+its header, reel and cab, the container car both boxes. The renders of all four stops were looked at before
+this shipped.
+
+**So the level now shows two tracks, and the railbed tile's is the siding.** The train runs on the main line in
+the foreground; the tile's rails behind it are where the container car stands and the elevator spouts, which is
+what a siding at a prairie elevator is. `references.json`'s `prairie-rail-line` note is amended to match.
+
+### 13.2 Why the rear of the train, and why the dome
+
+The Park car is **the car at the tail of the *Canadian*** and the one the references show, so the rider sits in
+the last car and the rounded observation end is on screen whenever the train is at rest or cruising — the
+single most recognisable shape the train has. The dome is where a passenger is visible from outside at phone
+size: a head and shoulders against the sky, through clear glass, above a car body that says train by itself.
+A passenger at a side window reads as a dark square with a dot in it.
+
+The rider is drawn **behind** the car's file, so the car is the ride's `front` layer and its dome glass is a
+16 % tint, not a colour. The dome's mullions are placed to miss the seat, so no bar ever crosses the rider's
+face.
+
+### 13.3 What was simplified, and what is never drawn
+
+**Simplified away:** the car's full length (a Park car is about six times as long as it is tall; this one is
+compressed so the observation end, the dome and the car ahead share one screen), the fluting reduced to five
+lines, the dome's curved upper panes merged into one glass band, the vestibule steps, the underframe equipment
+and the brake rigging.
+
+**Never drawn:** the *Canada* wordmark, the VIA logo, the car's name, its number, or lettering of any kind;
+any flag decal; a second dome or a locomotive, neither of which is on the rear of this train.
+
+### 13.4 Budgets, measured
+
+`make assets`, 2026-09-14:
+
+```
+level-payload:  prairie-rail 0.43 MiB of 8.00 MiB over 14 file(s)
+texture-memory: prairie-rail 33.05 MiB of 40.00 MiB (83 %) over 14 file(s)
+```
+
+Before the ride it was **29.75 MiB of 36 (83 %)** and 0.41 MiB of payload. The car costs 3.20 MiB decoded at
+1x and the track 0.10 MiB; both are `@1x`-pinned, and must be, because `riderAnchor` and `groundLineY` are art
+pixels that equal design pixels only at 1x. **`textureBudgetBytes` went from 36 MiB to 40 MiB**, Québec City's
+figure: the build gate would have passed at 92 %, and ADR-0031 records why a halved margin was not left for the
+perf lane to discover.
+
+### The builder patch for the car
+
+```js
+  'park-car': singleSource(),
+```

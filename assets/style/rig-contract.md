@@ -735,12 +735,12 @@ read by `modeArtGaps`, which looks for `{mode}`-templated parts and finds a slot
 | `toboggan` | `mount-deck-toboggan`, `mount-fore-toboggan` | `toboggan/idle`, `/walk`, `/run` | **yes** |
 | `skateboard` | `mount-deck-skateboard` | `skateboard/idle`, `/walk`, `/run` | **yes** |
 | `bike` | `mount-deck-bike` | `bike/idle`, `/walk`, `/run` | **yes** |
-| `train` | none | none | **no — §11.5** |
+| `train` | none — the car is a ride (ADR-0031) | `train/idle`, `/walk`, `/run`, `/talk`, `/interact` | **yes, seated in a ride — §11.5** |
 | `horse` | none | none | **no — §11.5** |
 | `canoe`, `dogsled` | none | none | no, and no level asks yet |
 
 `modeArt().covered` is `base || poses || equipment`, so `walk` is covered by the state that carries its own
-name and the last three report as gaps. **That is the honest answer and it is why no frame was authored for
+name, `train` by its poses, and `horse` reports as a gap on the one level that declares it. **That is the honest answer and it is why no frame was authored for
 them:** a mode declared with no art draws a walking figure and says nothing, which is the whole defect. An
 empty declaration would have made `data-mode-gaps` read 0 while the screen was still wrong.
 
@@ -880,6 +880,28 @@ with a ride anchor.** When it exists, the art is a prairie-rail source drawn fro
 poses, `train/idle`, `/walk` and `/run`, of a passenger seated at a window. Neither is authored before then:
 a car nothing can place is charged and never drawn (art bible §9), and a seated pose with no car is a figure
 sitting in mid-air over the rails.
+
+**Landed 2026-09-14, as ADR-0031.** The mechanism is `level.schema.json#/$defs/ride`: level art registered to
+its rider by a `riderAnchor` and a `groundLineY`, placed at the player every frame. The prairie car is
+`assets/src/svg/prairie-rail/ride-park-car@1x.svg`, 1 420 × 590 at 1x, the rear of the *Canadian* with its
+observation end and dome, on a repeating track strip. Three things this section predicted and one it did not:
+
+- **The poses are five, not three.** `train/idle`, `/walk` and `/run` share one seated key set, and
+  `train/talk` and `train/interact` exist because the selector reaches `talk` and `interact` before anything a
+  mode re-poses, and a passenger who stood up to gesture would put their head through the dome. The feet rest
+  on the sole line, which is the ride's floor; the hips drop 91.34 px; the upper body reclines 3° and carries
+  the shoulders and head with it (§11.4); the hands rest on the lap by two-link IK, and in `talk` and
+  `interact` the near hand rises past the dome's sill, because a gesture below the sill is not seen.
+- **The rider sits in the dome, not at a window.** At 390 px a head and shoulders in the dome glass, against
+  the sky, is the one view of a passenger that survives; a head in a side window is a dark square with a dot.
+- **The car costs 3.2 MiB on prairie-rail and nothing anywhere else**, which was the point.
+- **The car does not stand on the walking line**, which this section did not foresee. A passenger car tall
+  enough to seat the rider in its dome is taller than the container car and the guide that stand on that line,
+  so it runs on a nearer line across the ground fill and they stand beyond it. ADR-0031 §3 has the reasoning.
+
+`train` no longer reports as a gap. **No level may declare `train` without a ride**, because its poses are a
+passenger sitting on a floor; `tests/unit/contracts/level-art-is-placed-where-it-is-drawn.test.ts` holds that
+for every mode any level rides.
 
 **`canoe` and `dogsled` are in `game.config.json` and no level uses them.** A canoe is a `mount-deck` and a
 `mount-fore` and would work; a dog team is a horse-shaped problem.

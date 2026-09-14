@@ -138,13 +138,15 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   side view of a rider found under an accepted licence was a trick in mid-air, which is not what this game's
   rider does.
 
-- `prairie-rail/` — **added 2026-09-14: three references for VIA Rail's *Canadian*, attached to no subject.**
-  `park-car-side-and-dome-jasper.jpg` and `park-car-observation-end-jasper.jpg` are **CC BY 2.0** (David
-  Wilson, Jasper, Alberta, 2013); `canadian-side-elevation-1981.jpg` is **public domain** (a Roger Puta
-  photograph, December 1981). They are here for the day the level can place a car the player rides in;
-  `rig-contract.md` §11.5 records why that is not rig equipment. The wordmarks, logos, car names and numbers
-  in all three are never drawn. The best side elevations of the current cars on Commons are CC BY-SA 4.0
-  and were rejected on licence.
+- `prairie-rail/` — **added 2026-09-14: three references for VIA Rail's *Canadian*, attached since the same day
+  to the `park-car` subject.** `park-car-side-and-dome-jasper.jpg` and `park-car-observation-end-jasper.jpg`
+  are **CC BY 2.0** (David Wilson, Jasper, Alberta, 2013); `canadian-side-elevation-1981.jpg` is **public
+  domain** (a Roger Puta photograph, December 1981). The level now places the car the player rides in, as a
+  ride (ADR-0031); `rig-contract.md` §11.5 records why it is not rig equipment. The shipped drawing's credit in
+  `assets/credits.json` names both photographers and the CC BY 2.0 licence, which is what the attribution
+  condition asks of a work drawn from them. The wordmarks, logos, car names and numbers in all three are
+  never drawn. The best side elevations of the current cars on Commons are CC BY-SA 4.0 and were rejected on
+  licence.
 
 - `beaver/` — the guide: the beaver companion who appears at points of interest. Six files, licence-checked
   against the Commons API on **2026-09-08** before any was downloaded: three public domain, one CC0, one

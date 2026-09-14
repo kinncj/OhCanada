@@ -65,12 +65,22 @@ interface LayerDoc {
   readonly repeatX: boolean;
 }
 
+interface RideDoc {
+  readonly mode: string;
+  readonly art: readonly { readonly key: string; readonly side: string }[];
+  readonly riderAnchor: Vec2;
+  readonly groundLineY: number;
+  readonly track?: { readonly artKey: string; readonly topY: number };
+}
+
 interface LevelDoc {
   readonly id: string;
   readonly size: Vec2;
   readonly ground: readonly Vec2[];
   readonly layers: readonly LayerDoc[];
+  readonly locomotion: readonly { readonly mode: string }[];
   readonly pois: readonly { readonly id: string; readonly artKey: string; readonly position: Vec2 }[];
+  readonly rides?: readonly RideDoc[];
 }
 
 const levels: readonly LevelDoc[] = readdirSync(LEVELS_DIR)
@@ -144,6 +154,98 @@ describe('every key a level document names has a source under its own level dire
       }
     });
   }
+});
+
+/**
+ * ### 3. A ride is registered to the art it names (ADR-0031)
+ *
+ * A ride says where, in its own art, the rider's feet rest and which row lies on
+ * the ground. Both are pixel coordinates in a file the document does not
+ * contain, so a ride can name a key nothing produces, an anchor outside the
+ * drawing, or two layers that do not line up, and the schema is satisfied by all
+ * three. The scene would still reach `ready`, with a seated passenger in mid-air.
+ *
+ * And two claims that compare one ride with its level, which JSON Schema cannot
+ * state: a ride's mode is one the level moves by, and a mode has one ride.
+ */
+describe('every ride is registered to the art it names (ADR-0031)', () => {
+  const ridden = levels.filter((level) => (level.rides ?? []).length > 0);
+
+  it('has a ride to check, so this block is not a pass over nothing (ADR-0024)', () => {
+    expect(ridden.length).toBeGreaterThan(0);
+  });
+
+  for (const level of ridden) {
+    const rides = level.rides ?? [];
+    for (const ride of rides) {
+      it(`${level.id}: the "${ride.mode}" ride carries a mode the level moves by, and is its only ride`, () => {
+        expect(
+          level.locomotion.map((tuning) => tuning.mode),
+          `${level.id}.json declares a ride for "${ride.mode}" and no locomotion by it. The ride is ` +
+            'charged to the texture budget and can never be drawn.',
+        ).toContain(ride.mode);
+        expect(rides.filter((other) => other.mode === ride.mode)).toHaveLength(1);
+        const sides = ride.art.map((layer) => layer.side);
+        expect(new Set(sides).size, `${level.id}.json's "${ride.mode}" ride repeats a side`).toBe(sides.length);
+      });
+
+      it(`${level.id}: every layer and the track of the "${ride.mode}" ride is a 1x-pinned source`, () => {
+        const keys = [...ride.art.map((layer) => layer.key), ...(ride.track ? [ride.track.artKey] : [])];
+        for (const key of keys) {
+          const path = sourceFor(level.id, key);
+          expect(
+            path,
+            `${level.id}.json names ride art "${key}" and no source under assets/src/svg/${level.id}/ ` +
+              'produces it. The rider would be posed for a ride that is not on screen.',
+          ).not.toBeNull();
+          expect(
+            path?.endsWith('@1x.svg'),
+            `${String(path)} is not pinned to 1x. riderAnchor and groundLineY are art pixels, and they ` +
+              'are design pixels only at 1x: a 2x texture would draw the car twice the size around a ' +
+              'rider placed for the 1x one.',
+          ).toBe(true);
+        }
+      });
+
+      it(`${level.id}: the "${ride.mode}" ride's layers share one size, and its anchor and rows lie on it`, () => {
+        const sizes = ride.art.map((layer) => {
+          const path = sourceFor(level.id, layer.key);
+          return path === null ? null : sizeOfSource(path);
+        });
+        const [first] = sizes;
+        expect(first, `${level.id}.json's "${ride.mode}" ride has no layer to measure`).not.toBeNull();
+        if (first === null || first === undefined) return;
+        for (const size of sizes) expect(size).toEqual(first);
+
+        const { x, y } = ride.riderAnchor;
+        expect(x, 'riderAnchor.x is outside the art').toBeGreaterThanOrEqual(0);
+        expect(x, 'riderAnchor.x is outside the art').toBeLessThanOrEqual(first.width);
+        expect(y, 'riderAnchor.y is outside the art').toBeGreaterThanOrEqual(0);
+        expect(y, 'riderAnchor.y is outside the art').toBeLessThanOrEqual(first.height);
+        expect(ride.groundLineY, 'groundLineY is below the art').toBeLessThanOrEqual(first.height);
+        if (ride.track !== undefined) {
+          expect(ride.track.topY, 'the track starts below the art').toBeLessThanOrEqual(first.height);
+        }
+      });
+    }
+  }
+
+  it('a mode carried on a ride on one level is carried on a ride everywhere it is declared', () => {
+    /* The rig poses a ridden mode for the ride: `train/*` is a passenger sitting
+       on a floor. A level declaring that mode with no ride draws the seated pose
+       over nothing, which is a figure sitting in mid-air. Derived from the
+       documents, so no mode is named here. */
+    const carried = new Set(levels.flatMap((level) => (level.rides ?? []).map((ride) => ride.mode)));
+    const unridden = levels.flatMap((level) =>
+      level.locomotion
+        .filter(
+          (tuning) =>
+            carried.has(tuning.mode) && !(level.rides ?? []).some((ride) => ride.mode === tuning.mode),
+        )
+        .map((tuning) => `${level.id} moves by "${tuning.mode}" with no ride`),
+    );
+    expect(unridden, unridden.join('\n')).toEqual([]);
+  });
 });
 
 /**

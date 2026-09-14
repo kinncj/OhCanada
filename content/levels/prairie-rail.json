@@ -377,6 +377,31 @@
       "questId": "prairie-rail-grain-elevator"
     }
   ],
+  "rides": [
+    {
+      "mode": "train",
+      "art": [
+        {
+          "key": "prairie-rail-ride-park-car",
+          "side": "front"
+        }
+      ],
+      "riderAnchor": {
+        "x": 380,
+        "y": 422
+      },
+      "groundLineY": 330,
+      "turnsWithRider": false,
+      "bob": {
+        "amplitudePx": 2,
+        "periodPx": 180
+      },
+      "track": {
+        "artKey": "prairie-rail-ride-park-car-track",
+        "topY": 582
+      }
+    }
+  ],
   "assets": [],
-  "textureBudgetBytes": 37748736
+  "textureBudgetBytes": 41943040
 }
