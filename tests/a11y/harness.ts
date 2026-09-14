@@ -42,6 +42,7 @@ import { createExamStartScreen, type ExamStartState } from '../../app/ui/exam-st
 import { createQuestionCard, type QuestionView } from '../../app/ui/question-card';
 import { createSettingsScreen } from '../../app/ui/settings-screen';
 import { createStudyScreen, type StudyState } from '../../app/ui/study-screen';
+import { createUpdateNotice } from '../../app/ui/update-notice';
 import {
   applySettings,
   createSettingsStore,
@@ -1117,6 +1118,52 @@ switch (screen) {
       shell.leaveLevel();
     } else if (view === 'creator' || view === 'level-select') {
       shell.show(view);
+    }
+    break;
+  }
+
+  /*
+   * "A new version is ready" (ADR-0034), drawn where the composition root draws
+   * it: first in the page's one `<main>`. Over the title screen by default and
+   * over a level's HUD with `?in=level`, the two `<main>`s a player can be looking
+   * at when a new build takes over. A whole page either way, so
+   * `tests/a11y/update-notice.spec.ts` scans it with `region` and
+   * `landmark-one-main` on.
+   */
+  case 'update-notice': {
+    const notice = createUpdateNotice(document, {
+      locale,
+      announce,
+      onReload: () => undefined,
+      onDismiss: () => undefined,
+    });
+    if (params.get('in') === 'level') {
+      const game = document.getElementById('game');
+      const hud = createHud(ui, {
+        locale,
+        announce,
+        onOpenSettings: () => undefined,
+        singleSwitch: store.current.singleSwitch,
+        ...(game === null ? {} : { canvasHost: game }),
+      });
+      hud.setMode(text(locale, 'locomotion.walk.label'));
+      notice.raise(hud.main);
+    } else {
+      const shell = createShell(ui, {
+        store,
+        entries: mapEntries(['ottawa', 'halifax']),
+        stampsToUnlock: 1,
+        creator: {
+          slots: { en: slotsFor('en'), fr: slotsFor('fr') },
+          required: false,
+          initialSelection: FIXED_CHARACTER,
+        },
+        announce,
+        onPlayLevel: () => undefined,
+        onCreateCharacter: () => undefined,
+      });
+      shell.start();
+      notice.raise(shell.main);
     }
     break;
   }
