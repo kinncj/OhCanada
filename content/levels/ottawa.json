@@ -43,11 +43,11 @@
         "quote": "Ottawa, unceded, unsurrendered territory of the Anishinabe Algonquin Nation, Ontario"
       },
       "verification": {
-        "status": "verified",
-        "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T20:05:31Z",
+        "status": "rejected",
+        "model": "claude-opus-5",
+        "checkedAt": "2026-09-14T17:59:17Z",
         "sourceHash": "8276d6ce5e2ec94e9cf29a39be32a1a7dadcf09cd067b863b3478388349a5727",
-        "evidence": "June 5, 2024 \u2014 Ottawa, unceded, unsurrendered territory of the Anishinabe Algonquin Nation, Ontario [\u2026] The traditional ceremony took place in Canada\u2019s Parliamentary Precinct today, located in downtown Ottawa [\u2026] This space will be an important sign of recognition that the Parliamentary Precinct is on the traditional and unceded territory of the Algonquin"
+        "evidence": "June 5, 2024 \u2014 Ottawa, unceded, unsurrendered territory of the Anishinabe Algonquin Nation, Ontario [\u2026] This space will be an important sign of recognition that the Parliamentary Precinct is on the traditional and unceded territory of the Algonquin [\u2026] Grand Chief Savanna McGregor, Algonquin Anishinabeg Nation Tribal Council"
       }
     },
     "nationSource": {
