@@ -39,7 +39,7 @@
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.63.0",
     "@types/howler": "2.2.13",
-    "@types/node": "26.5.0",
+    "@types/node": "26.5.1",
     "@vitest/coverage-v8": "5.0.0",
     "dependency-cruiser": "18.2.0",
     "eslint": "10.10.0",
