@@ -8,7 +8,7 @@
     "$schema": { "type": "string", "minLength": 1 },
     "id": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/levelId" },
     "subject": {
-      "description": "The Discover Canada subject this level teaches; also the question-bank key the scheduler draws from.",
+      "description": "The teaching remit of this level's quest, and the question bank the scheduler draws from for it. Not a claim about what the level's landmark blurbs or dialogue teach (ADR-0030).",
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/subjectId"
     },
     "order": {
