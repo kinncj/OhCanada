@@ -2513,6 +2513,33 @@
       "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (sRGB IEC61966-2.1) so the colours sampled off it are the colours a browser shows; all metadata stripped. COLOUR TRAP: a heavily graded dusk exposure with a teal sky and an orange ground - a geometry reference only; never sample colour off it."
     },
     {
+      "path": "refs/alberta-foothills/quarter-horse-side-elevation.jpg",
+      "kind": "reference",
+      "title": "A buckskin American Quarter Horse mare standing broadside in sun: the side elevation the Alberta ride horse is proportioned from",
+      "author": "Derrick Coetzee",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Mara_from_side_in_sun.jpg",
+      "modifications": "Downscaled from 2048 x 1536 to 1600 px long edge; re-encoded, which strips all metadata. The file carries no embedded colour profile, so nothing was converted."
+    },
+    {
+      "path": "refs/alberta-foothills/cow-horse-under-western-saddle.jpg",
+      "kind": "reference",
+      "title": "A dark bay quarter horse working cattle under a western saddle, a rider in the saddle: the saddle, the stirrup and the rider's seat",
+      "author": "Linda (Flickr user 9878580@N03)",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Cody_the_Cowhorse.jpg",
+      "modifications": "Re-encoded at its original 1024 x 768, which strips all metadata. No embedded colour profile."
+    },
+    {
+      "path": "refs/alberta-foothills/horse-walking-muybridge-plate-574.jpg",
+      "kind": "reference",
+      "title": "Eadweard Muybridge, Animal Locomotion plate 574, \"Hansel walking, free\" (1887): twenty-four consecutive phases of a horse at the walk",
+      "author": "Eadweard Muybridge (via the USC Digital Library)",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Horse_Hansel_walking,_free_(rbm-QP301M8-1887-574).jpg",
+      "modifications": "Cropped from the 3840 px Commons rendition to the photograph grid, which drops the mount and its printed caption; downscaled to 1600 px long edge; re-encoded, which strips all metadata."
+    },
+    {
       "path": "src/icons/truenorth-app-icon.svg",
       "kind": "shipped",
       "title": "TrueNorth app icon - a four-point north star over three bands of hills",
