@@ -1289,6 +1289,24 @@
       "modifications": "Original work. Drawn from the reference photographs in assets/refs/toronto/ under the rules in assets/style/art-bible.md and the measured ratios in assets/style/toronto-level.md; never traced. The @1x suffix pins the source to one scale: it is stripped before the texture key is formed, so the key toronto-landmark-cn-tower is unchanged and no level document moves. The art-bible section 5 two-size test was run at the shipping size of 700 x 1020 and passed at both probes, which is what ADR-0013 as amended requires before a landmark departs from the 2x default; at 2x it would cost 10.88 MiB of decoded texture instead of 2.72 MiB."
     },
     {
+      "path": "src/svg/toronto/prop-streetcar@1x.svg",
+      "kind": "shipped",
+      "title": "A Toronto low-floor streetcar on rails - a level 5 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/prop-streetcar@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/toronto/streetcar-beside-older-car.jpg, streetcar-flank.jpg and streetcar-front-and-wires.jpg (all CC0) under the rules in assets/style/art-bible.md; never traced. No fleet number, destination sign, transit logo or lettering, and no trolley pole or pantograph because the level draws no overhead wire. The @1x suffix pins the source to one scale; the key toronto-prop-streetcar carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 860 x 364: every mustBeRight feature survives at 25 per cent, and the 120 px silhouette identifies a rail vehicle rather than the city, which the livery carries. At 2x it would cost 4.78 MiB of decoded texture instead of 1.19 MiB."
+    },
+    {
+      "path": "src/svg/toronto/landmark-nathan-phillips-square@1x.svg",
+      "kind": "shipped",
+      "title": "Nathan Phillips Square and Toronto City Hall - a level 5 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/landmark-nathan-phillips-square@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/toronto/square-winter-rink-and-towers.jpg, city-hall-massing-aerial.jpg and square-arches-and-pool.jpg (all CC0) under the rules in assets/style/art-bible.md; never traced. Freedom of panorama for architecture (Copyright Act s.32.2(1)(b)) covers depicting the building. No city-name sign, none of the graphics set into it, no flag and no lettering; the pool's arches are not drawn because they are edge-on from the square. The @1x suffix pins the source to one scale; the key toronto-landmark-nathan-phillips-square carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 800 x 800 and passed at both probes; at 2x it would cost 9.77 MiB of decoded texture instead of 2.44 MiB."
+    },
+    {
       "path": "src/svg/shared/character/tail-beaver.svg",
       "kind": "shipped",
       "title": "TrueNorth character rig part \"tail-beaver\" — The guide's paddle tail: a broad flat scaly oval carried out to the wearer's right, leaning down and away on a scaly stub that leaves the body at the hip and tucks behind the leg, so the tail reads as attached rather than as a rock beside the feet. The tail is one of the two features that make a beaver identifiable at phone size, so it is drawn at full weight and never tucked behind the figure where a front-facing character would hide it. Scale is three cross bands - a rhythm, not a texture fill (art bible 1); an inner ring was tried and removed because it made the paddle read as a shell. Drawn from assets/refs/beaver/beaver-paddle-tail.jpg and beaver-ontario-full-body.jpg.",
@@ -1899,6 +1917,15 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/prop-beef-cattle@1x.svg",
       "modifications": "Original work. Drawn from assets/refs/alberta-foothills/rangeland-cattle-and-wire-fence.jpg under the rules in assets/style/art-bible.md; never traced. The red-bodied white-faced pattern is taken from the cattle already drawn on this level's own rangeland tile rather than from the photograph, which shows solid red animals; both are common on this range. No brand, ear tag or collar. The @1x suffix pins the source to one scale; the key alberta-foothills-prop-beef-cattle carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 720 x 420 and passed at both probes; at 2x it would cost 4.61 MiB of decoded texture instead of 1.15 MiB."
+    },
+    {
+      "path": "src/svg/alberta-foothills/prop-pump-jack@1x.svg",
+      "kind": "shipped",
+      "title": "An oil pump jack on a gravel lease - a level 8 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/prop-pump-jack@1x.svg",
+      "modifications": "Original work. Geometry measured on assets/refs/alberta-foothills/pump-jack-dusk-in-snow.jpg (Damien Goodyear, CC BY 2.0) and checked on pump-jack-side-elevation.jpg and pump-jacks-on-grassland.jpg; paint scheme from pump-jack-foothills-county.jpg (Marek Ślusarczyk, CC BY 3.0); under the rules in assets/style/art-bible.md; never traced. A TYPE, not an operator: no maker's name, lease sign or lettering. The @1x suffix pins the source to one scale; the key alberta-foothills-prop-pump-jack carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 660 x 510 and passed at both probes; at 2x it would cost 5.14 MiB of decoded texture instead of 1.28 MiB."
     },
     {
       "path": "src/svg/vancouver/layer-10-sky.svg",

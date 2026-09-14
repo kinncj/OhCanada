@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="364" viewBox="0 0 860 364" shape-rendering="geometricPrecision">
+  <title>A Toronto low-floor streetcar standing on rails set in the street, seen from the front three-quarter: the cab end faces left, lit, with a red roof cap, a white brow band, a tall dark windscreen, a white lamp band with round lamps and a red bumper; the long flank recedes to the right in the same livery - red roof band, white band, dark window band broken by pale pillars, white band, red skirt - divided into five modules by wide black articulation bellows, a long cab module at each end and shorter modules between. Drawn from refs/toronto/streetcar-beside-older-car.jpg (the view and the cab front) and streetcar-flank.jpg (the flank band heights, measured on the cab module against its own body height). NO FLEET NUMBER, NO DESTINATION SIGN, NO TRANSIT LOGO and no lettering of any kind; no trolley pole or pantograph, because this level draws no overhead wire. POI hero, present at every visual tier.</title>
+  <g transform="translate(0 -126)">
+  <rect x="0" y="436" width="860" height="54" fill="#8b857c"/>
+  <rect x="0" y="436" width="860" height="8" fill="#afaca5"/>
+  <rect x="0" y="478" width="860" height="12" fill="#605a55"/>
+  <ellipse cx="440" cy="443" rx="400" ry="8" fill="#16203a" opacity="0.28"/>
+  <rect x="8" y="451" width="844" height="5" rx="2" fill="#7d8fa0"/>
+  <rect x="8" y="456" width="844" height="3" fill="#242b33"/>
+  <rect x="8" y="466" width="844" height="6" rx="2" fill="#7d8fa0"/>
+  <rect x="8" y="472" width="844" height="3" fill="#242b33"/>
+  <rect x="290" y="140.2" width="82" height="15" rx="7" fill="#30384f"/>
+  <rect x="296" y="140.2" width="70" height="5" rx="3" fill="#57647a"/>
+  <rect x="470" y="144.5" width="60" height="15" rx="7" fill="#30384f"/>
+  <rect x="476" y="144.5" width="48" height="5" rx="3" fill="#57647a"/>
+  <rect x="690" y="149.8" width="50" height="15" rx="7" fill="#30384f"/>
+  <rect x="696" y="149.8" width="38" height="5" rx="3" fill="#57647a"/>
+  <polygon points="241,150 822,164 822,190.8 241,179" fill="#d8262c"/>
+  <polygon points="241,179 822,190.8 822,208 241,197.6" fill="#cbd2da"/>
+  <polygon points="241,197.6 822,208 822,352.7 241,354.2" fill="#242b33"/>
+  <polygon points="241,354.2 822,352.7 822,378.4 241,382" fill="#cbd2da"/>
+  <polygon points="241,382 822,378.4 822,432 241,440" fill="#d8262c"/>
+  <polygon points="241,150 822,164 822,170.7 241,157.2" fill="#e27468"/>
+  <polygon points="241,425.5 822,418.6 822,432 241,440" fill="#941835"/>
+  <polygon points="273.9,198.1 278.9,198.2 278.9,354.1 273.9,354.1" fill="#57647a"/>
+  <polygon points="309.3,198.8 314.3,198.9 314.3,354 309.3,354" fill="#57647a"/>
+  <polygon points="344.7,199.4 349.7,199.5 349.7,353.9 344.7,353.9" fill="#57647a"/>
+  <polygon points="380.1,200 385.1,200.1 385.1,353.8 380.1,353.8" fill="#57647a"/>
+  <polygon points="415,182.5 418,182.6 418,200.7 415,200.7" fill="#7d8fa0"/>
+  <polygon points="415,353.7 418,353.7 418,380.9 415,380.9" fill="#7d8fa0"/>
+  <polygon points="469.5,201.6 474.5,201.7 474.5,353.6 469.5,353.6" fill="#57647a"/>
+  <polygon points="503,184.3 506,184.4 506,202.3 503,202.2" fill="#7d8fa0"/>
+  <polygon points="503,353.5 506,353.5 506,380.4 503,380.4" fill="#7d8fa0"/>
+  <polygon points="552,203.1 557,203.2 557,353.4 552,353.4" fill="#57647a"/>
+  <polygon points="582.5,203.7 587.5,203.8 587.5,353.3 582.5,353.3" fill="#57647a"/>
+  <polygon points="613,204.2 618,204.3 618,353.2 613,353.2" fill="#57647a"/>
+  <polygon points="643,187.2 646,187.2 646,204.8 643,204.8" fill="#7d8fa0"/>
+  <polygon points="643,353.1 646,353.1 646,379.5 643,379.5" fill="#7d8fa0"/>
+  <polygon points="687.5,205.5 692.5,205.6 692.5,353 687.5,353" fill="#57647a"/>
+  <polygon points="715,188.6 718,188.7 718,206.1 715,206" fill="#7d8fa0"/>
+  <polygon points="715,352.9 718,352.9 718,379 715,379.1" fill="#7d8fa0"/>
+  <polygon points="759.5,206.8 764.5,206.9 764.5,352.8 759.5,352.8" fill="#57647a"/>
+  <polygon points="789.5,207.4 794.5,207.5 794.5,352.7 789.5,352.8" fill="#57647a"/>
+  <polygon points="819,190.7 822,190.8 822,208 819,207.9" fill="#7d8fa0"/>
+  <polygon points="819,352.7 822,352.7 822,378.4 819,378.4" fill="#7d8fa0"/>
+  <polygon points="262,254.6 277,208.3 286,208.3 271,254.6" fill="#30384f"/>
+  <polygon points="452,256.6 467,211.5 476,211.5 461,256.6" fill="#30384f"/>
+  <polygon points="560,257.7 575,213.3 584,213.3 569,257.7" fill="#30384f"/>
+  <polygon points="748,259.7 763,216.4 772,216.4 757,259.7" fill="#30384f"/>
+  <polygon points="418,154.3 438,154.7 438,428.8 418,429.1" fill="#242b33"/>
+  <polygon points="427,160.1 430.4,160.2 430.4,423.3 427,423.3" fill="#0f121a"/>
+  <polygon points="506,156.4 524,156.8 524,427.7 506,428" fill="#242b33"/>
+  <polygon points="514.1,162.2 517.2,162.2 517.2,422.2 514.1,422.3" fill="#0f121a"/>
+  <polygon points="646,159.8 662,160.1 662,426 646,426.2" fill="#242b33"/>
+  <polygon points="653.2,165.4 655.9,165.5 655.9,420.6 653.2,420.6" fill="#0f121a"/>
+  <polygon points="718,161.5 732,161.8 732,425.1 718,425.3" fill="#242b33"/>
+  <polygon points="724.3,167.1 726.7,167.1 726.7,419.7 724.3,419.8" fill="#0f121a"/>
+  <path d="M 822.0 164.0 Q 834.0 166.0 834.0 186.0 L 834.0 418.0 Q 834.0 432.0 822.0 432.0 Z" fill="#941835"/>
+  <polygon points="822,208 834,211 834,349.7 822,352.7" fill="#0f121a"/>
+  <rect x="237" y="174" width="12" height="256" fill="#941835"/>
+  <rect x="237" y="179" width="12" height="18.6" fill="#cbd2da"/>
+  <rect x="237" y="354.2" width="12" height="27.8" fill="#cbd2da"/>
+  <rect x="237" y="197.6" width="12" height="156.6" fill="#0f121a"/>
+  <path d="M 50.0 440.0 L 50.0 180.0 Q 50.0 150.0 80.0 150.0 L 211.0 150.0 Q 241.0 150.0 241.0 180.0 L 241.0 440.0 Z" fill="#d8262c"/>
+  <path d="M 58.0 174.0 Q 60.0 156.0 80.0 155.0 L 211.0 155.0 Q 227.0 156.0 229.0 161.0 L 80.0 161.0 L 64.0 177.0 Z" fill="#e27468"/>
+  <rect x="50" y="181.9" width="191" height="40" fill="#f0f2f5"/>
+  <path d="M 59.0 351.3 L 59.0 213.6 Q 59.0 197.6 77.0 197.6 L 216.0 197.6 Q 234.0 197.6 234.0 213.6 L 234.0 351.3 Z" fill="#30384f"/>
+  <polygon points="93,351.3 163,201.6 187,201.6 117,351.3" fill="#57647a"/>
+  <rect x="59" y="337.3" width="175" height="14" fill="#242b33"/>
+  <rect x="50" y="351.3" width="191" height="26.4" fill="#f0f2f5"/>
+  <rect x="50" y="351.3" width="191" height="5" fill="#ffffff"/>
+  <circle cx="75" cy="364.5" r="10" fill="#7d8fa0"/>
+  <circle cx="75" cy="364.5" r="6" fill="#ffffff"/>
+  <circle cx="216" cy="364.5" r="10" fill="#7d8fa0"/>
+  <circle cx="216" cy="364.5" r="6" fill="#ffffff"/>
+  <rect x="93" y="360.5" width="30" height="8" rx="4" fill="#7d8fa0"/>
+  <rect x="168" y="360.5" width="30" height="8" rx="4" fill="#7d8fa0"/>
+  <rect x="42" y="377.6" width="203" height="24" rx="6" fill="#d8262c"/>
+  <rect x="42" y="377.6" width="203" height="6" rx="3" fill="#e27468"/>
+  <rect x="42" y="395.6" width="203" height="6" fill="#941835"/>
+  <rect x="50" y="431" width="191" height="9" fill="#941835"/>
+  <rect x="54" y="401.6" width="183" height="6" fill="#16203a" opacity="0.18"/>
+  </g>
+</svg>

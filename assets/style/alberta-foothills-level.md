@@ -247,7 +247,8 @@ decoration on a continuous fence; the rails now stop at the gate posts. The catt
 animal two nostril dots on the muzzle, and at 390 px they read as a **second pair of eyes**. Both are in
 `simplifyAway` now.
 
-**What was refused, and it is the biggest single reference gap in this level.** **An oil pump jack.**
+**What was refused, and it is the biggest single reference gap in this level — RESOLVED 2026-09-13 when the
+references landed; see §13.** **An oil pump jack.**
 *Discover Canada* p. 101 says Alberta is the largest producer of oil and gas, and p. 90 illustrates the
 economy chapter with *"Oil pump jacks in southern Alberta"* — it is the province's defining economic fact and
 the test asks it. **There is no licence-clean photograph of a pump jack anywhere in this repository**, so
@@ -267,4 +268,54 @@ two-track road; `layer-30-foothills.svg` carries aspen and spruce bluffs and cou
 ```js
   'log-rail-gate': singleSource(),
   'beef-cattle': singleSource(),
+```
+
+---
+
+## 13. The fourth point of interest: the pump jack, and the herd that had to move
+
+**Added 2026-09-13**, on the four references committed in `db04cf2`.
+
+| world x | POI | art | what it teaches | source |
+|---|---|---|---|---|
+| 2 500 | `ranch-gate` | unchanged | Alberta and Lake Louise are named after Princess Louise Caroline Alberta | p. 101 |
+| 4 320 | `ranch-barn` | unchanged | ranching is agriculture, a natural-resource industry | p. 91 |
+| **6 000** | **`pump-jack`** | `alberta-foothills-prop-pump-jack`, 660 × 510 | **Alberta produces more oil and gas than anywhere else in Canada** | p. 101 |
+| **7 600** | `beef-cattle` | unchanged, **moved from 6 800** | Alberta's ranches make Canada a major beef producer | p. 101 |
+
+**There was no slot, so the herd moved, and that costs one re-verification.** After the herd, 6 800 + 1 500 =
+8 300 is past the last legal x (8 100 − 280 − 100 = 7 720), and neither existing gap (1 820, 2 480) can be
+split into two of 1 500. Moving `beef-cattle` to 7 600 and putting the pump jack at 6 000 gives gaps of 1 820,
+1 680 and 1 600, and an arrival of 7 600 + 280 + 100 = 7 980 inside 8 100. **`scripts/verify-content.mjs`
+binds a point's `position` into its claim unit, so the herd's verified grant is void** although its words did
+not change. That was the cheapest of the arrangements: moving the gate or the barn instead voids more. The
+quest's order — gate, barn, herd — is unchanged, and the herd is still the far end of the ride. The pump jack
+is not a quest stop.
+
+**Duplicate check.** The Prairie quest's 1947 line (p. 45) is the discovery of oil, a different proposition.
+`ranch-barn` names energy as a natural-resource industry and says nothing about Alberta. `eco-30` asks this
+fact with the same quote, which is the same subject and is how a card prepares a question. The blurb takes
+only the first clause of the sentence: the oil sands clause is `eco-45`, and "are being developed" is present
+tense in a 2012 guide.
+
+**The one real departure, stated.** `pump-jack-foothills-county.jpg`, the Alberta photograph in true colour, is
+a **rear-fulcrum unit** — its Samson post stands at the beam's rear end and its cranks sit under the horsehead.
+The other three references are conventional units. The geometry drawn is the conventional one, measured on
+the other Alberta photograph (`pump-jack-dusk-in-snow.jpg`, geometry only) against S = the saddle's height:
+horsehead 0.62 S, front arm 0.70 S (drawn 0.74), rear arm 0.53 S, pitman 0.49 S (drawn 0.52). The Foothills
+County unit supplies the paint: pale grey steel, a red horsehead, red counterweights, a red ladder and a black
+reducer. The red is `serge`, the nearest ramp by hue. Averaging the two geometries would draw a machine nobody
+built.
+
+**Two drawings wrong first.** The horsehead tapered to two points and read as a leaf at 390 px; it is now a
+block with a flat back. The counterweight was a rotated capsule; it is now a sector plate on the crank arm.
+
+**Budgets, re-measured 2026-09-13:** texture memory **27.89 MiB of 36.00 (77 %, 8 499 236 B spare)** over 12
+files, against 26.61 MiB (74 %) over 11 before; payload **0.46 MiB** of 8, against 0.43. The pump jack costs
+1.28 MiB and is `@1x`-pinned.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'pump-jack': singleSource(),
 ```

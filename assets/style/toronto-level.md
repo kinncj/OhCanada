@@ -362,3 +362,80 @@ contract. Three level-specific notes:
   arms are 136 px long; a pose that had to reach further would not close.
 - **`walk` resolves `mount-deck-walk`, which does not exist.** Wherever the level lets the player off the
   bicycle, the bicycle disappears with the mode, and no level document mentions it.
+
+---
+
+## 9. Three points of interest, and the one that is still not drawn
+
+**Added 2026-09-13**, on the CC0 references committed in `db04cf2`. The level shipped with one point of interest
+on a 7 680 px ride and asked 5 questions where others ask 7 to 9. `size`, the ground line, the four layers,
+the theme, the spawn, the guide and the CN Tower are unchanged, and the tower keeps its `questId`.
+
+| world x | POI | art | what it teaches | source | remit |
+|---|---|---|---|---|---|
+| 1 900 | `streetcar` | `toronto-prop-streetcar`, 860 × 364 | public transit is usually run by the local government, which also looks after streets, garbage and snow removal, firefighting, ambulances and recreation | *Discover Canada* p. 66, *Federal Elections* | this level's chapter, but the remit of `government`: `gov-59` quotes the same sentence |
+| 3 600 | `cn-tower` | unchanged | Toronto is the largest city and the main financial centre | p. 99 | regional |
+| 5 800 | `nathan-phillips-square` | `toronto-landmark-nathan-phillips-square`, 800 × 800 | most people in Canada live near the Great Lakes and the St. Lawrence, in southern Ontario and Quebec | p. 98, *Canada's Regions* | **regional only** |
+
+**Gaps of 1 700 and 2 200 px.** Arrival: 5 800 + 260 (bike `reachPx`) + 100 = 6 160, inside the exit line at
+7 680 − 540 = 7 140. Neither new point is a quest stop yet; `content/quests/` was not touched.
+
+**Refused as duplicates.** The references were fetched for "Toronto is the largest city in Canada" on the
+streetcar, and the tower already teaches it. The next most natural fact, transport as a service industry
+(p. 91), is already the Alberta foothills quest's ranch-gate line. Page 66's municipal-services sentence is the
+one left, and it is not in any other point of interest or quest line.
+
+**The page-98 blurb says "most people", not "more than half".** `content/sources/discover-canada.json`
+`knownStaleness` ("Shares, proportions and rankings", pages include 98) bans "la moitié" and "one-half" from
+anything a player reads and calls the share census-era. "Most" is the durable form, the same one `reg-30`
+uses, and the claim is marked `volatile`.
+
+**The in-subject option not taken, for a content author.** Page 66's next sentence, "Provincial, territorial
+and municipal elections are held by secret ballot, but the rules are not the same as those for federal
+elections", is an *elections* proposition (it is `gov-60`, filed under elections), and City Hall is the
+natural object for it. The square carries page 98 because that is the fact its references were fetched for.
+
+**Still not drawn: a polling station.** No interior under an accepted licence exists (see the licence audit in
+`references.json`), so the elections fact that most wants an object still has none.
+
+### The two drawings, and what each got wrong first
+
+- **The streetcar is three-quarter, cab first, because broadside it is either huge or a toy.** At the
+  boulevard's own scale (bicycle wheels put the verge at about 110 px/m) a 30 m car is 3 300 px long; shrunk
+  broadside to a hero width it stands no taller than a cyclist on the tile behind it. The cab front and its
+  bands are measured on `streetcar-beside-older-car.jpg`, the flank bands on `streetcar-flank.jpg`. **First
+  build: the flank was twice the height and the 120 px silhouette was a van**; it is now 2.7 : 1 with four
+  bellows. **No collector is drawn**: the references show trolley poles on two cars and a raised pantograph on
+  the third, none lowered, and §4 designed the wire out. The rails in the street carry "rail vehicle" instead.
+  Of this level's three heroes it has the weakest silhouette, and `references.json` says so.
+- **The square omits its arches, on measurement.** In `square-arches-and-pool.jpg` the arches' feet step toward
+  one vanishing point on both sides, so they span the pool north to south and stand one behind another; from
+  the square facing City Hall they are edge-on. The towers are measured against the shorter one's height:
+  taller 1.28 (1.22 on the aerial, where it is the farther tower), width 0.44, gap 0.12, saucer 0.55 × 0.137,
+  podium 0.18. The glass faces' top edges fall toward their far ends at 0.12 H, less than half the rink
+  photograph's 0.27, which is what makes two slabs read as the clamshell. **The sign in the rink photograph,
+  its maple leaf and the Indigenous graphics set into its letters are `neverAdd`.**
+
+**The CN Tower is no longer the only hero here that names a city.** §0, §1 and the tower's own subject note
+say it is; they predate `nathan-phillips-square` and are superseded by this section rather than edited.
+
+### Budgets, re-measured 2026-09-13
+
+| | before | after |
+|---|---|---|
+| texture memory | 25.78 MiB of 34.00 (76 %) over 9 files | **29.42 MiB of 34.00 (87 %, 4 807 364 B spare)** over 11 files |
+| payload | 0.37 MiB of 8.00 | **0.40 MiB of 8.00** |
+
+The streetcar costs 1.19 MiB and the square 2.44 MiB, both `@1x`-pinned and cropped to their content (the
+square's first file carried 100 empty rows of sky). 87 % matches Halifax as the tightest band in the game; a
+fourth hero here would need the budget raised or the square cut down.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'streetcar': singleSource(),
+  'nathan-phillips-square': singleSource(),
+```
+
+Until it lands, `make verify-art` names both subjects as having renders and no builder, for the reason §7
+gives for not declaring `renders: []`.

@@ -180,6 +180,43 @@
   ],
   "pois": [
     {
+      "id": "streetcar",
+      "name": {
+        "en": "Streetcar",
+        "fr": "Tramway"
+      },
+      "blurb": {
+        "en": "Public transit is usually run by the local government of a city or town. The local government also looks after streets and roads, garbage and snow removal, firefighting, ambulances and recreation centres.",
+        "fr": "Le transport en commun relève habituellement de la municipalité. Elle s'occupe aussi des rues et des routes, de l'enlèvement des ordures et de la neige, de la lutte contre les incendies, des ambulances et des centres de loisirs."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 66,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-13T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipalities are normally responsible for urban or regional planning, streets and roads, sanitation (such as garbage removal), snow removal, firefighting, ambulance and other emergency services, recreation facilities, public transit and some local health and social services."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 1900,
+        "y": 1280
+      },
+      "artKey": "toronto-prop-streetcar",
+      "radiusPx": 260
+    },
+    {
       "id": "cn-tower",
       "name": {
         "en": "CN Tower",
@@ -216,6 +253,43 @@
       "artKey": "toronto-landmark-cn-tower",
       "radiusPx": 240,
       "questId": "toronto-cn-tower"
+    },
+    {
+      "id": "nathan-phillips-square",
+      "name": {
+        "en": "Nathan Phillips Square",
+        "fr": "Place Nathan-Phillips"
+      },
+      "blurb": {
+        "en": "Most people in Canada live in cities and towns close to the Great Lakes and the St. Lawrence River. That part of the country is southern Ontario and southern Quebec.",
+        "fr": "La plupart des gens au Canada vivent dans des villes et des villages proches des Grands Lacs et du fleuve Saint-Laurent. Cette partie du pays, c'est le sud de l'Ontario et le sud du Québec."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-13T00:00:00Z",
+          "volatile": true,
+          "quote": "More than half the people in Canada live in cities and towns near the Great Lakes and the St. Lawrence River in southern Quebec and Ontario"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 5800,
+        "y": 1280
+      },
+      "artKey": "toronto-landmark-nathan-phillips-square",
+      "radiusPx": 260
     }
   ],
   "characters": [

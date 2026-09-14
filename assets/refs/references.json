@@ -1904,6 +1904,177 @@
       ]
     },
     {
+      "id": "streetcar",
+      "subject": "A Toronto low-floor streetcar on rails in the street, cab end first: a red roof cap, a white brow, a tall windscreen, a white lamp band and a red bumper, and a long red-and-white flank divided into modules by black bellows",
+      "renders": [
+        "src/svg/toronto/prop-streetcar@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as cn-tower.",
+      "expectedBlindAnswer": [
+        "a streetcar",
+        "a tram",
+        "a Toronto streetcar",
+        "a TTC streetcar",
+        "a light rail vehicle",
+        "an articulated tram",
+        "a low-floor tram",
+        "a trolley"
+      ],
+      "expectedBlindAnswerNote": [
+        "A TYPE WITH A PLACE IN IT, AND THE GATE REWARDS BOTH. The red-and-white livery with a white brow over the",
+        "windscreen and black bellows is the Toronto Transit Commission's, and a verifier who names Toronto has read it.",
+        "But \"a streetcar\" or \"a tram\" PASSES too: an articulated low-floor tram body is a family built for many",
+        "cities, and a drawing with no logo and no wire cannot demand the city. THE FAILURES ARE THE VEHICLE: \"a bus\",",
+        "\"an articulated bus\", \"a train\" or \"a subway car\" is a FAIL - the four bellows, the rails in the street and",
+        "the cab windscreen are what this subject exists to carry. A first build compressed the flank to twice the",
+        "height and its 120 px silhouette was a van; mustBeRight's last entry is the guard."
+      ],
+      "referenceFiles": [
+        "toronto/streetcar-beside-older-car.jpg",
+        "toronto/streetcar-flank.jpg",
+        "toronto/streetcar-front-and-wires.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "the livery bands along the flank: red roof band, white band, dark window band, white band, red skirt",
+          "why": "The strongest single cue this subject has.",
+          "detail": "MEASURED on toronto/streetcar-flank.jpg (1600x1200) down column 1060 on the cab module, as fractions of the body height there (440 px, roof to skirt foot): roof red 0.10, white 0.064, windows 0.54, white 0.095, red skirt 0.20. Drawn at exactly those fractions along the whole flank. Red sampled hsl(355,72%,43%) on the skirt and hsl(353,65%,63%) lit on the roof; `flag-red` base hsl(358,70%,50%) and light hsl(5,67%,65%) are within 5 degrees of hue.",
+          "palette": "flag-red, white, hide"
+        },
+        {
+          "feature": "the cab front: a rounded red roof cap, a white brow, a tall wide windscreen, a white lamp band with round lamps, and a red bumper standing proud",
+          "detail": "MEASURED on toronto/streetcar-beside-older-car.jpg, on the new car, as fractions of its front height (515 px): cap 0.11, brow 0.054, windscreen 0.53, lamp band 0.09, bumper 0.21; front width 0.68 of the height, against a real 2.54 m by 3.84 m, 0.66. Drawn 0.66 with every band at those fractions. The car in streetcar-flank.jpg agrees band for band."
+        },
+        {
+          "feature": "wide black articulation bellows dividing the flank into modules, with a long cab module at each end",
+          "why": "Four bellows make a tram. An articulated bus has one.",
+          "detail": "On streetcar-flank.jpg the bellows are wide black bands from the roof to the skirt, and the cab module is about three times as long as the module behind it (660 px against 200), UNCORRECTED FOR PERSPECTIVE - the camera is off-axis - so this is a rhythm and not a length. Drawn: five modules, cab, short, centre, short, cab, with four bellows 14 to 20 px wide receding."
+        },
+        {
+          "feature": "steel rails set in the street under it",
+          "why": "With no wire drawn, the rails are what put the vehicle on a track.",
+          "detail": "Two rails with dark flangeway grooves across the paved band, from streetcar-front-and-wires.jpg."
+        },
+        {
+          "feature": "long and low: the drawn car is about 2.7 times as long as its front is tall",
+          "why": "LEARNED ON A FIRST BUILD. A flank compressed to twice the height gave a 120 px silhouette that read as a van.",
+          "detail": "Front 191 px wide on a 290 px front; the flank recedes 581 px with a mild taper, 14 px at the roof and 8 at the skirt. A real car is 30 m long and 3.84 m tall, about 7.9 : 1. The drawn 2.7 : 1 is the three-quarter view's foreshortening plus a SHORTENING, recorded the way ranch-barn records its flank."
+        }
+      ],
+      "simplifyAway": [
+        "the trolley pole and the pantograph. The references disagree about which the car carries - trolley poles in streetcar-beside-older-car.jpg and streetcar-flank.jpg, a raised pantograph in streetcar-front-and-wires.jpg - none shows either lowered, and a raised collector reaching for a wire this level does not draw would float (toronto-level.md section 4 designed the overhead wire out)",
+        "the later front in streetcar-front-and-wires.jpg, where the lamp band is red over a white apron: two of the three references show a white lamp band over a red bumper, and the drawing takes those two rather than mixing the two fronts",
+        "the doors: glazed panels that read as more window at this size",
+        "the mirrors, the wipers, the coupler cover and the step lights",
+        "the interior, the passengers and the driver"
+      ],
+      "neverAdd": [
+        "the fleet number, the destination sign, a route number, a door decal, the TTC wordmark or its logo, or any lettering in either language",
+        "overhead wires, poles or span wires: a fifth layer carrying them was designed and not drawn for this level, and a wire ending in mid-air at the file edge is worse than none",
+        "the older high-floor streetcar beside it in the reference: a different vehicle",
+        "a stop sign, a shelter or a platform: none is in the references",
+        "a figure on or beside the car"
+      ],
+      "notes": [
+        "toronto/streetcar-beside-older-car.jpg is the PRIMARY reference for the view: its new car stands at the",
+        "three-quarter angle drawn, cab first, with the flank running away. toronto/streetcar-flank.jpg is the",
+        "reference for the flank bands and the bellows rhythm. toronto/streetcar-front-and-wires.jpg is the most recent",
+        "car and is here for the rails and for the disagreement recorded under simplifyAway.",
+        "PLACEMENT FLOOR: DRAWING OBSERVATION, not an identification: at 215 px wide (25 per cent) the cab, the white",
+        "bands, the bellows and the rails survive. The 120 px silhouette is a long low body with a rounded front corner",
+        "over a rail line: it identifies a rail vehicle and not a city, and the livery carries the rest. It is the",
+        "weakest silhouette of the level's three heroes, and that is written here rather than discovered by a verifier."
+      ]
+    },
+    {
+      "id": "nathan-phillips-square",
+      "subject": "Nathan Phillips Square and Toronto City Hall: two curved towers of unequal height facing each other round a white saucer-shaped council chamber on a podium, with the square's paving and reflecting pool in front",
+      "renders": [
+        "src/svg/toronto/landmark-nathan-phillips-square@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as cn-tower.",
+      "expectedBlindAnswer": [
+        "Toronto City Hall",
+        "City Hall, Toronto",
+        "Nathan Phillips Square",
+        "Nathan Phillips Square, Toronto",
+        "Toronto's City Hall"
+      ],
+      "expectedBlindAnswerNote": [
+        "ALLOWED to demand a place name, on the test cn-tower and five-sails pass: a single non-repeating POI hero drawing",
+        "one specific building that nothing else resembles - two unequal curved towers enclosing a saucer. So \"a city",
+        "hall\", \"a modern government building\" or \"two curved office towers\" is a PARTIAL: a true report the massing did",
+        "not finish. TORONTO IS NOW THE FIRST LEVEL WITH TWO HEROES THAT NAME A CITY; cn-tower's note calling itself the",
+        "only one predates this subject and is superseded here rather than edited."
+      ],
+      "referenceFiles": [
+        "toronto/square-winter-rink-and-towers.jpg",
+        "toronto/city-hall-massing-aerial.jpg",
+        "toronto/square-arches-and-pool.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "two curved towers of unequal height with their concave glass faces turned toward each other, the shorter on the left from the square",
+          "why": "The building's whole identity. Two straight slabs are any office park.",
+          "detail": "MEASURED against H, the shorter tower's height above the podium roof. On toronto/city-hall-massing-aerial.jpg (1600x1067) the taller tower is 492 px against the shorter's 402, 1.22; the taller is the farther from that camera, so the photograph UNDERSTATES the ratio, and it is drawn at 1.28. From the square, on square-winter-rink-and-towers.jpg, the shorter tower is 0.47 H wide including its near end strip of 0.10 H, and the gap to the taller tower is 0.12 H. Drawn 0.44 H, 0.10 H and 0.12 H."
+        },
+        {
+          "feature": "the curve read from the ground: each glass face's top edge falls from its near end to its far end, and the floor lines sag with it",
+          "why": "In an orthographic elevation the tops are flat, and a flat top is two rectangles.",
+          "detail": "On the rink photograph the top of the shorter tower's glass face falls about 0.27 H from its near end to its far end, seen from the ice. Drawn at 0.12 H on each tower, so the faces read as curved on a phone without the building being drawn from lying on the ice. The floor lines sag the same way and flatten toward the podium. A PERSPECTIVE CUE KEPT AT LESS THAN HALF THE PHOTOGRAPH'S STRENGTH, and the one non-orthographic element on this subject."
+        },
+        {
+          "feature": "pale ribbed concrete end strips framing dark glass",
+          "detail": "End strips sampled hsl(23,17%,74%) on the rink photograph and hsl(34,14%,61%) on the aerial: `limestone` light and base. Glass near-black on the aerial and warm grey with reflections on the rink photograph: `hide-base` on the face turned from the light and `slate-shade` on the face turned toward it. Two horizontal joints on each end strip at about 0.4 and 0.75 of its height, as both photographs show.",
+          "palette": "limestone, slate, hide"
+        },
+        {
+          "feature": "a low white saucer-shaped council chamber between the towers, on the podium",
+          "why": "The single thing no other building has, and what stops the pair reading as two office towers.",
+          "detail": "MEASURED on the rink photograph against H: the crown 0.137 H above the podium roof and the rim 0.066 H; 0.52 H wide on the aerial and more than 0.55 H on the rink photograph, which cuts it off. Drawn 0.55 H wide and 0.137 H high, white, over a dark drum with five radiating struts under the rim.",
+          "palette": "white, hide"
+        },
+        {
+          "feature": "a long podium with a pale fascia over a dark colonnade",
+          "detail": "0.19 H on the rink photograph; drawn 0.18 H. The fascia a pale band about a third of that, the colonnade dark glazing behind pale columns on a regular rhythm."
+        },
+        {
+          "feature": "the square in front: pale paving and the reflecting pool",
+          "why": "It makes this the square and not the building alone.",
+          "detail": "Paving `path-light` and the pool a `water` band inside a coping, from square-arches-and-pool.jpg.",
+          "palette": "path, water"
+        }
+      ],
+      "simplifyAway": [
+        "THE THREE CONCRETE ARCHES OVER THE POOL. On square-arches-and-pool.jpg the arches' feet step toward one vanishing point on both sides of the pool, so the arches span it north to south and stand one behind another. From the square facing City Hall they are edge-on. Drawing them broadside in front of the towers would put into one picture two things no viewpoint shows together, which is invention and not simplification",
+        "the fountain jets in the pool",
+        "the elevated walkway and its ramps round the square",
+        "the podium's roof garden, visible only from above",
+        "the flagpole in the forecourt: its height against the towers cannot be fixed from these views",
+        "Old City Hall and the surrounding towers, which are separate buildings",
+        "the mullions and the individual panes"
+      ],
+      "neverAdd": [
+        "the three-dimensional city-name sign in square-winter-rink-and-towers.jpg, its maple leaf, or the Indigenous graphics set into its letters, or any lettering in either language. The graphics belong to that sign and docs/content-review.md forbids lifting a pattern out of its setting",
+        "the skating rink or snow: this level is late summer, and the rink photograph is a reference for the massing only",
+        "a clock, a dome on a tower, a spire, a crest or a flag on a tower",
+        "towers of equal height, or the taller one on the left",
+        "straight flat-topped slabs: the curve is the building"
+      ],
+      "notes": [
+        "toronto/square-winter-rink-and-towers.jpg is the PRIMARY reference: the view from the square, with both",
+        "towers' end strips and glass faces, the saucer and the podium in one frame. It is a winter exposure and nothing",
+        "is sampled off the snow. toronto/city-hall-massing-aerial.jpg is the massing reference - the two crescents,",
+        "the saucer between them and the podium edge - and its ratios are corrected only in the direction its camera",
+        "biases them. toronto/square-arches-and-pool.jpg is the reference for the pool and the paving, and for the",
+        "orientation of the arches that is the reason they are not drawn. Canada's freedom of panorama for architecture",
+        "(Copyright Act s.32.2(1)(b)) covers depicting the building.",
+        "PLACEMENT FLOOR: DRAWING OBSERVATION, not an identification: at 200 px wide (25 per cent) both towers' curves,",
+        "the saucer and the podium survive. The 120 px silhouette is two unequal towers with curved notches facing",
+        "each other over a long base."
+      ]
+    },
+    {
       "id": "guide",
       "renders": [
         "src/svg/shared/character/tail-beaver.svg",
@@ -3209,6 +3380,98 @@
         "the species. DRAWING OBSERVATION, not an identification: at 280 px wide all three animals, their white",
         "faces, their socks and their tails are legible; at 180 px the smallest becomes a shape and the two",
         "nearest still read."
+      ]
+    },
+    {
+      "id": "pump-jack",
+      "subject": "An oil pump jack on a gravel lease in foothills pasture: a red horsehead on a pale grey walking beam balanced on an A-frame Samson post, pitman arms down to a crank with red counterweights on a black gear reducer, and the bridle hanging from the horsehead to a wellhead",
+      "renders": [
+        "src/svg/alberta-foothills/prop-pump-jack@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`, the same builder as ranch-barn and beef-cattle.",
+      "expectedBlindAnswer": [
+        "a pump jack",
+        "an oil pump jack",
+        "a pumpjack",
+        "an oil well pump",
+        "a nodding donkey",
+        "a beam pump",
+        "a horsehead pump",
+        "an oil pump"
+      ],
+      "expectedBlindAnswerNote": [
+        "A TYPE AND NOT A PLACE, on the test ranch-barn and grain-elevator pass: a beam pump is a standard machine",
+        "on oil fields across North America and beyond, and nothing drawn says which province. `Alberta` is NOT in the",
+        "accepted list and the gate MUST NOT reward it; the level's page-101 fact is carried by the card, not by the",
+        "picture. WHAT IT MUST CARRY IS THE MECHANISM: the beam on its fulcrum, the curved head over the well and the",
+        "counterweighted crank. \"A drilling rig\" or \"an oil derrick\" is a FAIL - a derrick is a tower over a hole",
+        "being drilled and a producing well has none - and \"a crane\", \"a see-saw\" or \"a hammer\" are the failures a",
+        "wrong silhouette produces."
+      ],
+      "referenceFiles": [
+        "alberta-foothills/pump-jack-dusk-in-snow.jpg",
+        "alberta-foothills/pump-jack-foothills-county.jpg",
+        "alberta-foothills/pump-jack-side-elevation.jpg",
+        "alberta-foothills/pump-jacks-on-grassland.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a walking beam balanced on an A-frame Samson post, longer in front of the post than behind it",
+          "why": "The lever is the machine. Without the fulcrum between the two ends it is a crane or a boom.",
+          "detail": "MEASURED on alberta-foothills/pump-jack-dusk-in-snow.jpg (1600x1067), the only clean side profile in the set: a dark silhouette against the sky, thresholded row by row. EVERY FIGURE IS IN S, the height of the saddle bearing above the skid (370 px), because the beam's tilt changes every other height with the phase of the stroke. Saddle to horsehead face 247 px, 0.70 S along an 18-degree beam; saddle to the beam's rear end 187 px, 0.53 S. Checked on pump-jack-side-elevation.jpg, which is a three-quarter view and so a check and not a measurement: 0.66 S and 0.54 S. Drawn at S = 300: face 222 px from the pivot, 0.74 S; rear arm 160 px, 0.53 S. The beam is drawn tilted 6 degrees, horsehead up; the reference's 18 is a phase and not a proportion."
+        },
+        {
+          "feature": "a red horsehead with a curved face at the well end of the beam",
+          "why": "The single most recognisable part and the top of the silhouette.",
+          "detail": "MEASURED 230 px tall on the dusk profile, 0.62 S, sitting about a third above the beam and two thirds below it; drawn 186 px, 0.62 S. The face is an arc centred on the saddle bearing - which is how the machine keeps the bridle vertical - so the wellhead stands directly under the face at the pivot's own height. A SOLID BLOCK WITH A FLAT BACK, deepest where the beam enters: a first build tapered it to two points and at 390 px it read as a leaf. Red sampled on pump-jack-foothills-county.jpg, lit hsl(7,96%,65%) and in shade hsl(5,96%,26%); drawn in `serge` (base hsl(4,65%,47%)), the palette's nearest red by hue - `flag-red` sits at 358 and `oxide` is the barn's red-oxide paint.",
+          "palette": "serge"
+        },
+        {
+          "feature": "pitman arms from the beam's rear end down to a counterweighted crank on a gear reducer",
+          "why": "It is the drive, and the counterweight is the second-largest shape in the silhouette.",
+          "detail": "Pitman 0.49 S on the dusk profile, from the beam to the crank pin at row 790; drawn 155 px, 0.52 S. The reducer is a black housing on a pedestal at the back of the skid, its output shaft 0.24 S above the skid top measured and 0.27 S drawn. The counterweights are sector-shaped plates on the crank arm, red, as on pump-jack-foothills-county.jpg; the crank is drawn pointing up and back, a phase in which the grassland units in pump-jacks-on-grassland.jpg show theirs.",
+          "palette": "serge, hide"
+        },
+        {
+          "feature": "a bridle and polished rod hanging from the horsehead to a small wellhead on the ground",
+          "why": "It connects the machine to the well, and it is what separates a pump jack from any other pivoting beam.",
+          "detail": "Wire rope over the face, a carrier bar, a bright polished rod, and a short stack of stuffing box, valve body with two side valves, and flange, standing clear of the skid in front of it as on the dusk profile."
+        },
+        {
+          "feature": "a motor and belt guard behind the reducer on one long steel skid, on a gravel lease",
+          "detail": "Motor rear to wellhead 1.69 S on the dusk profile; drawn 525 px, 1.75 S. The skid runs from behind the motor to the Samson post's front leg and stops there."
+        },
+        {
+          "feature": "pale grey steel, a red horsehead, red counterweights, a red ladder and a black reducer",
+          "why": "It is the scheme of the one Alberta unit photographed in true colour, and it keeps the machine off the near-black of the dusk frame, which is a colour grade and not paint.",
+          "detail": "Sampled on pump-jack-foothills-county.jpg: Samson post lit hsl(231,22%,87%), beam in shade hsl(195,15%,39%), reducer hsl(180,15%,7%). Drawn with `white-shade` as the steel's base, `white-base` lit and `slate-light` in shade - the palette has no grey steel ramp and these are its nearest tones - and the `hide` ramp for the reducer. A DEPARTURE, STATED: the Foothills County unit is a rear-fulcrum machine - its Samson post stands at the rear end of the beam and its cranks sit under the horsehead - while the other three references are conventional units with the post mid-beam and the cranks at the rear. The geometry drawn is the conventional one, measured on the other Alberta unit, and the Foothills unit supplies paint only. Averaging the two geometries would draw a machine nobody built.",
+          "palette": "white, slate, serge, hide"
+        }
+      ],
+      "simplifyAway": [
+        "the chain-link fence, the lease sign, the aerial and the electrical cabinet round the Foothills County unit",
+        "the ladder cage and the walkway platforms",
+        "bolts, pins under 12 px, the brake lever and the stroke-adjust holes in the crank arm",
+        "the lightening holes in the dusk unit's horsehead: the Foothills unit's head is solid, and a hole pattern is a maker's",
+        "the hay bales round the lease, and the flow lines and small tanks on the grassland pad"
+      ],
+      "neverAdd": [
+        "the maker's name on the walking beam, a lease sign, a well licence plate, an operator's logo or any lettering in either language",
+        "a derrick, a drilling mast or a flare stack: a producing well has none, and each is a different object",
+        "oil on the ground, a spill, a gusher or oil drums",
+        "a worker, a truck or any figure",
+        "a second pump jack on this hero: one machine is the point of interest, and a row of them is an oil field",
+        "snow: this level is late summer"
+      ],
+      "notes": [
+        "alberta-foothills/pump-jack-dusk-in-snow.jpg (CC BY 2.0) is the GEOMETRY reference and nothing else: a heavy",
+        "teal-and-orange grade, never sampled for colour. alberta-foothills/pump-jack-foothills-county.jpg (CC BY 3.0) is",
+        "the COLOUR reference and the Alberta context; its geometry is a different class of unit (mustBeRight, last",
+        "entry). pump-jack-side-elevation.jpg (public domain, Florida) and pump-jacks-on-grassland.jpg (public domain,",
+        "North Dakota) are mechanism checks, and neither is drawn as a place.",
+        "PLACEMENT FLOOR: DRAWING OBSERVATION, not an identification: at 165 px wide (25 per cent) the horsehead, the",
+        "beam on its A-frame, the counterweight and the wellhead all survive; the 120 px silhouette is a tilted beam on",
+        "a tripod with a curved head over a well, which is the subject."
       ]
     },
     {
@@ -4578,6 +4841,6 @@
       "CC-BY-3.0",
       "CC-BY-4.0"
     ],
-    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa. Re-run 2026-09-08 for the fifteen Halifax and Toronto references, by the same method and before any of them was downloaded: five CC0, five public domain, three CC BY 2.0, two CC BY 3.0 and one CC BY 4.0. Every one is inside the accepted set above. The Halifax Town Clock's best photographs and every photograph of the Citadel are CC BY-SA and were rejected on licence, not on quality, for the third level running - and for the Town Clock that cost real quality, because the ShareAlike set includes the only high-resolution near-orthographic elevations. The one CC BY 4.0 file that was available carried the day. Re-run 2026-09-08 for the six beaver references, by the same method and before any of them was downloaded: three public domain, one CC0, one CC BY 2.0 and one CC BY 2.5. CC-BY-2.5 appears in this list for the first time and it is inside the enum the architect settled - the intersection in assets/refs/README.md already contained it, and the list above had simply never had a member of it. Re-run 2026-09-13 for ten references for three points of interest that had none, by the same method and before any of them was downloaded, and re-checked against the live API on the same day after an interrupted session: six CC0, two public domain, one CC BY 3.0 and one CC BY 2.0. NONE IS YET ATTACHED TO A SUBJECT, and that is deliberate: checkContract refuses a subject with an empty expectedBlindAnswer or mustBeRight, and those are written by the art agent, not by whoever fetched the photographs. The files are credited in assets/credits.json and listed in assets/refs/README.md. A CORRECTION IS PART OF THIS RECORD. The first pass filtered licences with a pattern that expected 'cc-by-3.0' and the API returns 'CC BY 3.0', so every CC BY file was silently dropped and the pass briefly concluded that no Alberta pump jack was under an accepted licence. That was false, it was caught before anything was committed, and every search below was re-run with a filter tested against 'CC BY 3.0', 'CC BY-SA 4.0', 'CC BY-NC 2.0' and 'CC0'. A licence filter that has not been tested on the strings it will actually see is the ratio-without-a-measured-denominator mistake again. A PUMP JACK: alberta-foothills/pump-jack-foothills-county.jpg (CC BY 3.0, Marek Slusarczyk, Foothills County, Alberta, 2007 - a close side view of a working unit in a fenced lease among hay bales, and the primary reference; its author's required credit line is carried in credits.json), pump-jack-dusk-in-snow.jpg (CC BY 2.0, Damien Goodyear, Alberta, 2015 - a clean side profile under a heavy teal-and-orange grade, so a COLOUR TRAP and a geometry reference only), pump-jack-side-elevation.jpg (public domain by the author's release, a preserved unit in Florida - the whole mechanism near-orthographic) and pump-jacks-on-grassland.jpg (public domain, USDA Forest Service, three working units on a North Dakota grassland pad). Passed over: every other Alberta pump jack on Commons is CC BY-SA (Drayton Valley, Clairmont, Falher, Ponoka, Longview, two 'Ölförderung' and 'Oil Field Pump' Flickr files); 'Alberta IMG 5143' is CC BY 2.0 but carries its author's name burned into the image and shows a distant silhouette the Foothills County file already beats; 'Alberta pumpjack 011' to '013' are public domain but show the machine about 60 px tall. The machine is a TYPE and must never be asked to name a province, exactly as ranch-barn is not. A STREETCAR: toronto/streetcar-flank.jpg, streetcar-beside-older-car.jpg and streetcar-front-and-wires.jpg, all CC0. The best full-length three-quarter view on Commons ('New streetcar 4404 heading south on Spadina, 2014 12 20 (4)') was REJECTED ON LICENCE: its page carries cc-by-sa-2.0 from the Flickr review AND PD-Self under a VRT ticket nobody outside Wikimedia can read, and a file whose own page asserts two licences, one of which is ShareAlike, is not established. NATHAN PHILLIPS SQUARE: toronto/square-arches-and-pool.jpg, city-hall-massing-aerial.jpg and square-winter-rink-and-towers.jpg, all CC0; Canada's freedom of panorama covers the building. 'Curved city hall buildings (Unsplash)' was passed over because its page carries the {{Unsplash}} template rather than an explicit CC0 tag. A POLLING STATION INTERIOR WAS NOT FOUND, and the corrected re-run did not change that. Every Canadian polling-station photograph under an accepted licence shows the outside: signage, doors and the yellow arrow (Raysonho CC0, 2014-2023; ishmael n. daro CC BY 2.0, 2015; Roland Tanglao CC BY 2.0, 2011; Dennis Sylvester Hurd CC BY 2.0, 2019). The 2025 CC BY 2.0 files in the election categories are party yard signs. None shows a voting screen or a ballot box, and all of them are mostly lettering, which this project never draws. The only Canadian ballot boxes under an accepted licence are archive photographs, public domain: 1938 and 1959 (BAnQ) and 1942 (Library and Archives Canada, Mackenzie King at the conscription plebiscite). They show lettered metal and cardboard boxes of that era among identifiable people, no voting screen, and not today's equipment, so they are misses and not finds. Every interior photograph under an accepted licence comes from another country's election (United States, New Zealand, Iceland, Peru, Argentina), and drawing Canada's voting screen from one of them would be invention."
+    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa. Re-run 2026-09-08 for the fifteen Halifax and Toronto references, by the same method and before any of them was downloaded: five CC0, five public domain, three CC BY 2.0, two CC BY 3.0 and one CC BY 4.0. Every one is inside the accepted set above. The Halifax Town Clock's best photographs and every photograph of the Citadel are CC BY-SA and were rejected on licence, not on quality, for the third level running - and for the Town Clock that cost real quality, because the ShareAlike set includes the only high-resolution near-orthographic elevations. The one CC BY 4.0 file that was available carried the day. Re-run 2026-09-08 for the six beaver references, by the same method and before any of them was downloaded: three public domain, one CC0, one CC BY 2.0 and one CC BY 2.5. CC-BY-2.5 appears in this list for the first time and it is inside the enum the architect settled - the intersection in assets/refs/README.md already contained it, and the list above had simply never had a member of it. Re-run 2026-09-13 for ten references for three points of interest that had none, by the same method and before any of them was downloaded, and re-checked against the live API on the same day after an interrupted session: six CC0, two public domain, one CC BY 3.0 and one CC BY 2.0. NONE IS YET ATTACHED TO A SUBJECT, and that is deliberate: checkContract refuses a subject with an empty expectedBlindAnswer or mustBeRight, and those are written by the art agent, not by whoever fetched the photographs. The files are credited in assets/credits.json and listed in assets/refs/README.md. A CORRECTION IS PART OF THIS RECORD. The first pass filtered licences with a pattern that expected 'cc-by-3.0' and the API returns 'CC BY 3.0', so every CC BY file was silently dropped and the pass briefly concluded that no Alberta pump jack was under an accepted licence. That was false, it was caught before anything was committed, and every search below was re-run with a filter tested against 'CC BY 3.0', 'CC BY-SA 4.0', 'CC BY-NC 2.0' and 'CC0'. A licence filter that has not been tested on the strings it will actually see is the ratio-without-a-measured-denominator mistake again. A PUMP JACK: alberta-foothills/pump-jack-foothills-county.jpg (CC BY 3.0, Marek Slusarczyk, Foothills County, Alberta, 2007 - a close side view of a working unit in a fenced lease among hay bales, and the primary reference; its author's required credit line is carried in credits.json), pump-jack-dusk-in-snow.jpg (CC BY 2.0, Damien Goodyear, Alberta, 2015 - a clean side profile under a heavy teal-and-orange grade, so a COLOUR TRAP and a geometry reference only), pump-jack-side-elevation.jpg (public domain by the author's release, a preserved unit in Florida - the whole mechanism near-orthographic) and pump-jacks-on-grassland.jpg (public domain, USDA Forest Service, three working units on a North Dakota grassland pad). Passed over: every other Alberta pump jack on Commons is CC BY-SA (Drayton Valley, Clairmont, Falher, Ponoka, Longview, two 'Ölförderung' and 'Oil Field Pump' Flickr files); 'Alberta IMG 5143' is CC BY 2.0 but carries its author's name burned into the image and shows a distant silhouette the Foothills County file already beats; 'Alberta pumpjack 011' to '013' are public domain but show the machine about 60 px tall. The machine is a TYPE and must never be asked to name a province, exactly as ranch-barn is not. A STREETCAR: toronto/streetcar-flank.jpg, streetcar-beside-older-car.jpg and streetcar-front-and-wires.jpg, all CC0. The best full-length three-quarter view on Commons ('New streetcar 4404 heading south on Spadina, 2014 12 20 (4)') was REJECTED ON LICENCE: its page carries cc-by-sa-2.0 from the Flickr review AND PD-Self under a VRT ticket nobody outside Wikimedia can read, and a file whose own page asserts two licences, one of which is ShareAlike, is not established. NATHAN PHILLIPS SQUARE: toronto/square-arches-and-pool.jpg, city-hall-massing-aerial.jpg and square-winter-rink-and-towers.jpg, all CC0; Canada's freedom of panorama covers the building. 'Curved city hall buildings (Unsplash)' was passed over because its page carries the {{Unsplash}} template rather than an explicit CC0 tag. A POLLING STATION INTERIOR WAS NOT FOUND, and the corrected re-run did not change that. Every Canadian polling-station photograph under an accepted licence shows the outside: signage, doors and the yellow arrow (Raysonho CC0, 2014-2023; ishmael n. daro CC BY 2.0, 2015; Roland Tanglao CC BY 2.0, 2011; Dennis Sylvester Hurd CC BY 2.0, 2019). The 2025 CC BY 2.0 files in the election categories are party yard signs. None shows a voting screen or a ballot box, and all of them are mostly lettering, which this project never draws. The only Canadian ballot boxes under an accepted licence are archive photographs, public domain: 1938 and 1959 (BAnQ) and 1942 (Library and Archives Canada, Mackenzie King at the conscription plebiscite). They show lettered metal and cardboard boxes of that era among identifiable people, no voting screen, and not today's equipment, so they are misses and not finds. Every interior photograph under an accepted licence comes from another country's election (United States, New Zealand, Iceland, Peru, Argentina), and drawing Canada's voting screen from one of them would be invention. ATTACHED 2026-09-13 by the art agent, after the art was drawn: the four pump-jack files to subject pump-jack, the three streetcar files to streetcar, and the three Nathan Phillips Square files to nathan-phillips-square. None was rejected at drawing time. Two findings are recorded on the subjects rather than here: pump-jack-foothills-county.jpg is a rear-fulcrum unit and supplies paint only, and the arches in square-arches-and-pool.jpg span the pool north to south, so they are not drawn."
   }
 }

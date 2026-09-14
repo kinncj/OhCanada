@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" shape-rendering="geometricPrecision">
+  <title>Nathan Phillips Square and Toronto City Hall, seen from the square: two curved towers of unequal height facing each other, the shorter on the left, each a tall dark glass face whose floor lines curve, framed by pale ribbed concrete end strips; between them a low white saucer-shaped council chamber standing on a long podium with a pale fascia over a dark colonnade; in front, the square's paving and its reflecting pool. Drawn from refs/toronto/square-winter-rink-and-towers.jpg (the view from the square) and city-hall-massing-aerial.jpg (the massing, the saucer and the podium). MEASURED against H = the shorter tower's height above the podium: taller tower 1.28 H, tower width 0.44 H, gap 0.12 H, saucer 0.55 H wide and 0.14 H high, podium 0.18 H. The pool's three concrete arches are NOT drawn: they span the pool north-south and are edge-on from this side. No sign, no city-name letters, no flag and no lettering of any kind. POI hero, present at every visual tier.</title>
+  <g transform="translate(-20 -100)">
+  <path d="M 200.0 270.0 Q 223.8 330.0 332.0 330.0 L 332.0 760.0 L 200.0 760.0 Z" fill="#242b33"/>
+  <path d="M 200.0 305.6 Q 223.8 361.3 332.0 361.3 L 332.0 365.3 Q 223.8 365.3 200.0 309.6 Z" fill="#30384f"/>
+  <path d="M 200.0 327.3 Q 223.8 378.8 332.0 378.8 L 332.0 382.8 Q 223.8 382.8 200.0 331.3 Z" fill="#30384f"/>
+  <path d="M 200.0 348.9 Q 223.8 396.4 332.0 396.4 L 332.0 400.4 Q 223.8 400.4 200.0 352.9 Z" fill="#30384f"/>
+  <path d="M 200.0 370.5 Q 223.8 414.1 332.0 414.1 L 332.0 418.1 Q 223.8 418.1 200.0 374.5 Z" fill="#30384f"/>
+  <path d="M 200.0 392.2 Q 223.8 431.9 332.0 431.9 L 332.0 435.9 Q 223.8 435.9 200.0 396.2 Z" fill="#30384f"/>
+  <path d="M 200.0 413.8 Q 223.8 449.9 332.0 449.9 L 332.0 453.9 Q 223.8 453.9 200.0 417.8 Z" fill="#30384f"/>
+  <path d="M 200.0 435.5 Q 223.8 468.0 332.0 468.0 L 332.0 472.0 Q 223.8 472.0 200.0 439.5 Z" fill="#30384f"/>
+  <path d="M 200.0 457.1 Q 223.8 486.2 332.0 486.2 L 332.0 490.2 Q 223.8 490.2 200.0 461.1 Z" fill="#30384f"/>
+  <path d="M 200.0 478.7 Q 223.8 504.6 332.0 504.6 L 332.0 508.6 Q 223.8 508.6 200.0 482.7 Z" fill="#30384f"/>
+  <path d="M 200.0 500.4 Q 223.8 523.1 332.0 523.1 L 332.0 527.1 Q 223.8 527.1 200.0 504.4 Z" fill="#30384f"/>
+  <path d="M 200.0 522.0 Q 223.8 541.8 332.0 541.8 L 332.0 545.8 Q 223.8 545.8 200.0 526.0 Z" fill="#30384f"/>
+  <path d="M 200.0 543.6 Q 223.8 560.6 332.0 560.6 L 332.0 564.6 Q 223.8 564.6 200.0 547.6 Z" fill="#30384f"/>
+  <path d="M 200.0 565.3 Q 223.8 579.6 332.0 579.6 L 332.0 583.6 Q 223.8 583.6 200.0 569.3 Z" fill="#30384f"/>
+  <path d="M 200.0 586.9 Q 223.8 598.8 332.0 598.8 L 332.0 602.8 Q 223.8 602.8 200.0 590.9 Z" fill="#30384f"/>
+  <path d="M 200.0 608.5 Q 223.8 618.1 332.0 618.1 L 332.0 622.1 Q 223.8 622.1 200.0 612.5 Z" fill="#30384f"/>
+  <path d="M 200.0 630.2 Q 223.8 637.7 332.0 637.7 L 332.0 641.7 Q 223.8 641.7 200.0 634.2 Z" fill="#30384f"/>
+  <path d="M 200.0 651.8 Q 223.8 657.4 332.0 657.4 L 332.0 661.4 Q 223.8 661.4 200.0 655.8 Z" fill="#30384f"/>
+  <path d="M 200.0 673.5 Q 223.8 677.4 332.0 677.4 L 332.0 681.4 Q 223.8 681.4 200.0 677.5 Z" fill="#30384f"/>
+  <path d="M 200.0 695.1 Q 223.8 697.6 332.0 697.6 L 332.0 701.6 Q 223.8 701.6 200.0 699.1 Z" fill="#30384f"/>
+  <path d="M 200.0 716.7 Q 223.8 718.0 332.0 718.0 L 332.0 722.0 Q 223.8 722.0 200.0 720.7 Z" fill="#30384f"/>
+  <path d="M 200.0 738.4 Q 223.8 738.8 332.0 738.8 L 332.0 742.8 Q 223.8 742.8 200.0 742.4 Z" fill="#30384f"/>
+  <path d="M 200.0 268.0 Q 223.8 328.0 332.0 328.0 L 332.0 342.0 Q 223.8 342.0 200.0 282.0 Z" fill="#a99789"/>
+  <rect x="332" y="330" width="38" height="430" fill="#a99789"/>
+  <rect x="349.5" y="338" width="3" height="422" fill="#8b857c"/>
+  <rect x="332" y="502" width="38" height="5" fill="#8b857c"/>
+  <rect x="332" y="652.5" width="38" height="5" fill="#8b857c"/>
+  <rect x="332" y="330" width="38" height="6" fill="#8b857c"/>
+  <rect x="150" y="260" width="50" height="500" fill="#c8c1b6"/>
+  <rect x="165.2" y="268" width="3" height="492" fill="#a99789"/>
+  <rect x="181.8" y="268" width="3" height="492" fill="#a99789"/>
+  <rect x="150" y="460" width="50" height="5" fill="#a99789"/>
+  <rect x="150" y="635" width="50" height="5" fill="#a99789"/>
+  <rect x="150" y="260" width="50" height="6" fill="#a99789"/>
+  <path d="M 600.0 130.0 Q 576.2 206.8 468.0 206.8 L 468.0 760.0 L 600.0 760.0 Z" fill="#30384f"/>
+  <path d="M 600.0 166.0 Q 576.2 238.5 468.0 238.5 L 468.0 242.5 Q 576.2 242.5 600.0 170.0 Z" fill="#57647a"/>
+  <path d="M 600.0 188.0 Q 576.2 256.2 468.0 256.2 L 468.0 260.2 Q 576.2 260.2 600.0 192.0 Z" fill="#57647a"/>
+  <path d="M 600.0 210.0 Q 576.2 274.1 468.0 274.1 L 468.0 278.1 Q 576.2 278.1 600.0 214.0 Z" fill="#57647a"/>
+  <path d="M 600.0 232.0 Q 576.2 292.0 468.0 292.0 L 468.0 296.0 Q 576.2 296.0 600.0 236.0 Z" fill="#57647a"/>
+  <path d="M 600.0 254.0 Q 576.2 310.1 468.0 310.1 L 468.0 314.1 Q 576.2 314.1 600.0 258.0 Z" fill="#57647a"/>
+  <path d="M 600.0 276.0 Q 576.2 328.2 468.0 328.2 L 468.0 332.2 Q 576.2 332.2 600.0 280.0 Z" fill="#57647a"/>
+  <path d="M 600.0 298.0 Q 576.2 346.5 468.0 346.5 L 468.0 350.5 Q 576.2 350.5 600.0 302.0 Z" fill="#57647a"/>
+  <path d="M 600.0 320.0 Q 576.2 364.8 468.0 364.8 L 468.0 368.8 Q 576.2 368.8 600.0 324.0 Z" fill="#57647a"/>
+  <path d="M 600.0 342.0 Q 576.2 383.3 468.0 383.3 L 468.0 387.3 Q 576.2 387.3 600.0 346.0 Z" fill="#57647a"/>
+  <path d="M 600.0 364.0 Q 576.2 401.9 468.0 401.9 L 468.0 405.9 Q 576.2 405.9 600.0 368.0 Z" fill="#57647a"/>
+  <path d="M 600.0 386.0 Q 576.2 420.6 468.0 420.6 L 468.0 424.6 Q 576.2 424.6 600.0 390.0 Z" fill="#57647a"/>
+  <path d="M 600.0 408.0 Q 576.2 439.4 468.0 439.4 L 468.0 443.4 Q 576.2 443.4 600.0 412.0 Z" fill="#57647a"/>
+  <path d="M 600.0 430.0 Q 576.2 458.3 468.0 458.3 L 468.0 462.3 Q 576.2 462.3 600.0 434.0 Z" fill="#57647a"/>
+  <path d="M 600.0 452.0 Q 576.2 477.3 468.0 477.3 L 468.0 481.3 Q 576.2 481.3 600.0 456.0 Z" fill="#57647a"/>
+  <path d="M 600.0 474.0 Q 576.2 496.5 468.0 496.5 L 468.0 500.5 Q 576.2 500.5 600.0 478.0 Z" fill="#57647a"/>
+  <path d="M 600.0 496.0 Q 576.2 515.8 468.0 515.8 L 468.0 519.8 Q 576.2 519.8 600.0 500.0 Z" fill="#57647a"/>
+  <path d="M 600.0 518.0 Q 576.2 535.2 468.0 535.2 L 468.0 539.2 Q 576.2 539.2 600.0 522.0 Z" fill="#57647a"/>
+  <path d="M 600.0 540.0 Q 576.2 554.8 468.0 554.8 L 468.0 558.8 Q 576.2 558.8 600.0 544.0 Z" fill="#57647a"/>
+  <path d="M 600.0 562.0 Q 576.2 574.5 468.0 574.5 L 468.0 578.5 Q 576.2 578.5 600.0 566.0 Z" fill="#57647a"/>
+  <path d="M 600.0 584.0 Q 576.2 594.3 468.0 594.3 L 468.0 598.3 Q 576.2 598.3 600.0 588.0 Z" fill="#57647a"/>
+  <path d="M 600.0 606.0 Q 576.2 614.4 468.0 614.4 L 468.0 618.4 Q 576.2 618.4 600.0 610.0 Z" fill="#57647a"/>
+  <path d="M 600.0 628.0 Q 576.2 634.5 468.0 634.5 L 468.0 638.5 Q 576.2 638.5 600.0 632.0 Z" fill="#57647a"/>
+  <path d="M 600.0 650.0 Q 576.2 654.9 468.0 654.9 L 468.0 658.9 Q 576.2 658.9 600.0 654.0 Z" fill="#57647a"/>
+  <path d="M 600.0 672.0 Q 576.2 675.4 468.0 675.4 L 468.0 679.4 Q 576.2 679.4 600.0 676.0 Z" fill="#57647a"/>
+  <path d="M 600.0 694.0 Q 576.2 696.2 468.0 696.2 L 468.0 700.2 Q 576.2 700.2 600.0 698.0 Z" fill="#57647a"/>
+  <path d="M 600.0 716.0 Q 576.2 717.1 468.0 717.1 L 468.0 721.1 Q 576.2 721.1 600.0 720.0 Z" fill="#57647a"/>
+  <path d="M 600.0 738.0 Q 576.2 738.4 468.0 738.4 L 468.0 742.4 Q 576.2 742.4 600.0 742.0 Z" fill="#57647a"/>
+  <path d="M 600.0 128.0 Q 576.2 204.8 468.0 204.8 L 468.0 218.8 Q 576.2 218.8 600.0 142.0 Z" fill="#c8c1b6"/>
+  <rect x="430" y="206.8" width="38" height="553.2" fill="#c8c1b6"/>
+  <rect x="447.5" y="214.8" width="3" height="545.2" fill="#a99789"/>
+  <rect x="430" y="428.1" width="38" height="5" fill="#a99789"/>
+  <rect x="430" y="621.7" width="38" height="5" fill="#a99789"/>
+  <rect x="430" y="206.8" width="38" height="6" fill="#a99789"/>
+  <rect x="600" y="120" width="50" height="640" fill="#a99789"/>
+  <rect x="615.2" y="128" width="3" height="632" fill="#8b857c"/>
+  <rect x="631.8" y="128" width="3" height="632" fill="#8b857c"/>
+  <rect x="600" y="376" width="50" height="5" fill="#8b857c"/>
+  <rect x="600" y="600" width="50" height="5" fill="#8b857c"/>
+  <rect x="600" y="120" width="50" height="6" fill="#8b857c"/>
+  <rect x="150" y="752" width="500" height="8" fill="#16203a" opacity="0.18"/>
+  <rect x="301" y="733" width="198" height="27" fill="#30384f"/>
+  <polygon points="272.5,731 527.5,731 499,747 301,747" fill="#44555f"/>
+  <line x1="302.8" y1="733" x2="325.2" y2="746" stroke="#cbd2da" stroke-width="4" stroke-linecap="round"/>
+  <line x1="351.4" y1="733" x2="362.6" y2="746" stroke="#cbd2da" stroke-width="4" stroke-linecap="round"/>
+  <line x1="400" y1="733" x2="400" y2="746" stroke="#cbd2da" stroke-width="4" stroke-linecap="round"/>
+  <line x1="448.6" y1="733" x2="437.4" y2="746" stroke="#cbd2da" stroke-width="4" stroke-linecap="round"/>
+  <line x1="497.2" y1="733" x2="474.8" y2="746" stroke="#cbd2da" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 262.5 727.0 Q 400.0 656.0 537.5 727.0 Z" fill="#f0f2f5"/>
+  <path d="M 292.5 721.0 Q 360.0 690.0 410.0 696.5 Q 350.0 705.5 292.5 721.0 Z" fill="#ffffff"/>
+  <path d="M 258.5 726.0 L 541.5 726.0 Q 539.5 734.0 519.5 735.0 Q 400.0 736.0 272.5 735.0 Z" fill="#cbd2da"/>
+  <rect x="40" y="760" width="760" height="30" fill="#c8c1b6"/>
+  <rect x="40" y="760" width="760" height="5" fill="#cbd2da"/>
+  <rect x="40" y="784" width="760" height="6" fill="#a99789"/>
+  <rect x="48" y="790" width="744" height="58" fill="#30384f"/>
+  <rect x="48" y="790" width="744" height="8" fill="#16203a" opacity="0.18"/>
+  <rect x="62" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="62" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="108" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="108" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="154" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="154" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="200" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="200" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="246" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="246" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="292" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="292" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="338" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="338" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="384" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="384" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="430" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="430" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="476" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="476" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="522" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="522" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="568" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="568" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="614" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="614" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="660" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="660" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="706" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="706" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="752" y="790" width="10" height="58" fill="#a99789"/>
+  <rect x="752" y="790" width="4" height="58" fill="#c8c1b6"/>
+  <rect x="0" y="848" width="840" height="52" fill="#afaca5"/>
+  <rect x="0" y="848" width="840" height="7" fill="#16203a" opacity="0.28"/>
+  <rect x="120" y="858" width="600" height="30" rx="4" fill="#8b857c"/>
+  <rect x="128" y="864" width="584" height="20" fill="#2c8cba"/>
+  <rect x="128" y="878" width="584" height="6" fill="#1a487a"/>
+  <rect x="170" y="868" width="60" height="4" rx="2" fill="#5cbfd6"/>
+  <rect x="300" y="868" width="90" height="4" rx="2" fill="#5cbfd6"/>
+  <rect x="470" y="868" width="50" height="4" rx="2" fill="#5cbfd6"/>
+  <rect x="590" y="868" width="70" height="4" rx="2" fill="#5cbfd6"/>
+  <rect x="0" y="890" width="840" height="10" fill="#8b857c"/>
+  </g>
+</svg>

@@ -307,6 +307,43 @@
       "questId": "alberta-foothills-ranch-barn"
     },
     {
+      "id": "pump-jack",
+      "name": {
+        "en": "Oil pump jack",
+        "fr": "Chevalet de pompage"
+      },
+      "blurb": {
+        "en": "Alberta produces more oil and gas than anywhere else in Canada.",
+        "fr": "L'Alberta produit plus de pétrole et de gaz que partout ailleurs au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-13T00:00:00Z",
+          "volatile": false,
+          "quote": "Alberta is the largest producer of oil and gas"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6000,
+        "y": 1280
+      },
+      "artKey": "alberta-foothills-prop-pump-jack",
+      "radiusPx": 280
+    },
+    {
       "id": "beef-cattle",
       "name": {
         "en": "Cattle on the range",
@@ -337,7 +374,7 @@
         }
       },
       "position": {
-        "x": 6800,
+        "x": 7600,
         "y": 1280
       },
       "artKey": "alberta-foothills-prop-beef-cattle",
