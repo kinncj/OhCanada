@@ -114,7 +114,7 @@ describe('the copy table', () => {
     }
   });
 
-  it('invents nothing unlisted: the gap list is exactly the panel, and its marker is gone', () => {
+  it('invents nothing unlisted: the gap list is exactly its entries, and its marker is gone', () => {
     /*
      * `TN-COPY-06`, "the gap list is empty when the tables are complete", held
      * as an equality rather than as an emptiness — because the tables are *not*
@@ -151,8 +151,16 @@ describe('the copy table', () => {
       'about.unavailable.checking',
       'about.unavailable.ours',
       'map.here',
+      /* The character creator's five, written by app/ui: the skin group's
+         reading line, and the `presentation` slot's label and three options.
+         No story table carries them (`TN-SKIN` and `TN-LOOK` own the rest). */
+      'creator.slot.skin.help',
+      'creator.slot.presentation',
+      'creator.presentation.feminine',
+      'creator.presentation.masculine',
+      'creator.presentation.neutral',
     ]);
-    expect(COPY_GAPS).toHaveLength(9);
+    expect(COPY_GAPS).toHaveLength(14);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

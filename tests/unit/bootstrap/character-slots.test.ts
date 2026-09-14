@@ -1,24 +1,31 @@
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it } from 'vitest';
 
 import rigJson from '@content/characters/rig.json';
-import type { RigDocument } from '@application/ports';
+import type { RigDocument, RigSlot } from '@application/ports';
 import { defaultSettings } from '@domain/entities/player';
 import { newProgress, withCharacter } from '@domain/entities/progress';
 import type { PlayerCharacter } from '@domain/entities/character';
 import type { LocaleCode } from '@domain/ids';
 import { toProgressSnapshot } from '@application/persistence/progress-document';
 import { validateProgressDocument } from '@application/persistence/progress-schema';
+import type { CreatorSlot } from '@ui/character-creator';
 import {
   creatorSlots,
   creatorSlotsByLocale,
   missingCreatorRows,
+  missingSwatches,
   optionLabelKey,
+  optionSwatch,
   playerSlots,
   repairSelection,
+  slotHelpKey,
   slotLabelKey,
   slotTestId,
   toPlayerCharacter,
   toSelection,
+  type SwatchPalette,
 } from '../../../app/bootstrap/character-slots';
 
 /**
@@ -30,12 +37,44 @@ import {
  * agent adds, or an option they remove, fails here on the next run rather than
  * shipping a group whose heading is a localiser key.
  *
+ * **Which slots are offered is the rig's `playerSelectable` flag.** It used to
+ * be the copy table — a slot with no label row was skipped — which hid `costume`
+ * by accident and would have hidden a selectable slot that lost its row without
+ * a sound. The tests below prove the flag decides in both directions, and that a
+ * selectable slot with a missing row throws rather than disappears (ADR-0024).
+ *
+ * The shipped rig's `presentation` slot is being given options by the art agent
+ * while this is written. So every test over the shipped rig pins the five
+ * `TN-LOOK` slots exactly and allows `presentation` **only** when the rig
+ * really offers it, and every test *about* `presentation` runs over a fixture
+ * rig in which its state is fixed. Neither kind goes green by not looking.
+ *
  * The one thing it deliberately does not assert is that a name is *right*.
  * `TN-LOOK` and `TN-SKIN` are the wording, an agent wrote them, and
  * `docs/content-review.md` §1 forbids an agent granting sign-off on any of it.
  */
 
 const RIG = rigJson as unknown as RigDocument;
+
+/** `assets/style/palette.json`, read off disk rather than through the module under test. */
+const PALETTE = JSON.parse(
+  readFileSync(new URL('../../../assets/style/palette.json', import.meta.url), 'utf8'),
+) as SwatchPalette;
+
+/** The five slots `TN-LOOK-01` names, in its order. */
+const FIVE = ['skin', 'hairShape', 'hairColour', 'headCovering', 'feature'] as const;
+
+const slotOf = (rig: RigDocument, name: string): RigSlot | undefined =>
+  (rig.slots as unknown as Readonly<Record<string, RigSlot | undefined>>)[name];
+
+/** Whether the shipped rig offers `presentation` yet: false until its art lands. */
+const PRESENTATION_OFFERED = ((): boolean => {
+  const slot = slotOf(RIG, 'presentation');
+  return slot !== undefined && slot.playerSelectable && slot.options.length > 0;
+})();
+
+const fiveOf = (slots: readonly CreatorSlot[]): readonly CreatorSlot[] =>
+  slots.filter((slot) => (FIVE as readonly string[]).includes(slot.id));
 
 /** Would the shipped save validator accept a progress document holding this? */
 function characterIsSavable(character: PlayerCharacter): boolean {
@@ -55,35 +94,74 @@ function rigWith(slots: Record<string, unknown>): RigDocument {
   } as unknown as RigDocument;
 }
 
+/** The player artboard with these slots appended to its list. */
+function listing(rig: RigDocument, ...names: readonly string[]): RigDocument {
+  const artboards = rig.artboards.map((board) =>
+    board.playerSelectableSlots.length === 0
+      ? board
+      : {
+          ...board,
+          playerSelectableSlots: [
+            ...board.playerSelectableSlots.filter((name) => !names.includes(name)),
+            ...names,
+          ],
+        },
+  );
+  return { ...rig, artboards } as RigDocument;
+}
+
+/** The player artboard with these slots taken off its list. */
+function unlisting(rig: RigDocument, ...names: readonly string[]): RigDocument {
+  const artboards = rig.artboards.map((board) => ({
+    ...board,
+    playerSelectableSlots: board.playerSelectableSlots.filter((name) => !names.includes(name)),
+  }));
+  return { ...rig, artboards } as RigDocument;
+}
+
+/* The three states `presentation` can be in, as fixtures. */
+const RESERVED = {
+  options: [],
+  fallback: null,
+  playerSelectable: false,
+  status: 'reserved',
+  blockedBy: 'OQ-ART-08 / OQ-LEVEL-3',
+};
+/** Marked selectable before its art exists: nothing to choose yet. */
+const AWAITING_ART = { options: [], fallback: null, playerSelectable: true };
+/** The ids the art agent is adding, exactly. */
+const OFFERED = {
+  options: ['feminine', 'masculine', 'neutral'],
+  fallback: 'neutral',
+  playerSelectable: true,
+};
+
 describe('the creator is the rig, named', () => {
   it('offers the rig’s player-selectable slots, in the rig’s order', () => {
-    expect(playerSlots().map((entry) => entry.name)).toEqual([
-      'skin',
-      'hairShape',
-      'hairColour',
-      'headCovering',
-      'feature',
-    ]);
+    const names = playerSlots().map((entry) => entry.name);
+
+    expect(names.filter((name) => name !== 'presentation')).toEqual([...FIVE]);
+    expect(names.includes('presentation')).toBe(PRESENTATION_OFFERED);
   });
 
   it('offers no group for a slot the creator does not own', () => {
     const names = playerSlots().map((entry) => entry.name);
 
     /* `costume` says WHICH character an artboard is, not how a player
-       customised one, and `presentation` is reserved with no options. A group
-       heading for a group that cannot exist is a screen describing a state it
-       is not in. */
+       customised one. A group heading for a group that cannot exist is a
+       screen describing a state it is not in. */
     expect(names).not.toContain('costume');
-    expect(names).not.toContain('presentation');
   });
 
   it('spells every key from the rig, by the one rule', () => {
     expect(slotLabelKey('hairShape')).toBe('creator.slot.hairShape');
+    expect(slotHelpKey('skin')).toBe('creator.slot.skin.help');
     expect(optionLabelKey('skin', 'skin-1')).toBe('creator.skin.skin-1');
     /* It stutters, and it stays: a key derived by one rule is a key a gate can
        generate; a prettier key is a mapping somebody maintains. */
     expect(optionLabelKey('headCovering', 'none')).toBe('creator.headCovering.none');
     expect(optionLabelKey('feature', 'none')).toBe('creator.feature.none');
+    expect(optionLabelKey('presentation', 'neutral')).toBe('creator.presentation.neutral');
   });
 
   it('gives the two "none" options two rows, never one shared row', () => {
@@ -99,35 +177,16 @@ describe('the creator is the rig, named', () => {
     expect(slotTestId('skin')).toBe('slot-skin');
     expect(slotTestId('hairShape')).toBe('slot-hair-shape');
     expect(slotTestId('headCovering')).toBe('slot-head-covering');
+    expect(slotTestId('presentation')).toBe('slot-presentation');
   });
 
   it('names every slot and every option the rig declares, in both languages', () => {
     expect(missingCreatorRows()).toEqual([]);
-  });
-
-  it('fails when the rig gains a slot nobody has named (the negative control)', () => {
-    const grown = rigWith({
-      fringe: { options: ['none', 'blunt'], fallback: 'none', playerSelectable: true },
-    });
-    const artboards = grown.artboards.map((board) =>
-      board.playerSelectableSlots.length === 0
-        ? board
-        : { ...board, playerSelectableSlots: [...board.playerSelectableSlots, 'fringe'] },
-    );
-    const withArtboard = { ...grown, artboards } as RigDocument;
-
-    const missing = missingCreatorRows(withArtboard);
-    expect(missing).toContain('creator.slot.fringe');
-    expect(missing).toContain('creator.fringe.blunt');
-    /* Every one of them, not only the first (`TN-LOOK-04`). */
-    expect(missing.length).toBe(3);
-    /* And the unnamed slot is not drawn, so no player ever reads a key. */
-    expect(creatorSlots('en', withArtboard).map((slot) => slot.id)).not.toContain('fringe');
+    expect(() => creatorSlotsByLocale()).not.toThrow();
   });
 
   it('carries the counts the arithmetic depends on: 6 × 4 × 5 × 2 × 2 = 480', () => {
-    const slots = creatorSlots('en');
-    const counts = slots.map((slot) => slot.options.length);
+    const counts = fiveOf(creatorSlots('en')).map((slot) => slot.options.length);
 
     expect(counts).toEqual([6, 4, 5, 2, 2]);
     expect(counts.reduce((product, count) => product * count, 1)).toBe(480);
@@ -159,7 +218,7 @@ describe('the creator is the rig, named', () => {
     const name = (slot: string, option: string): string | undefined =>
       fr.find((entry) => entry.id === slot)?.options.find((o) => o.id === option)?.name;
 
-    expect(fr.map((slot) => slot.label)).toEqual([
+    expect(fiveOf(fr).map((slot) => slot.label)).toEqual([
       'Teint de peau',
       'Cheveux',
       'Couleur des cheveux',
@@ -203,18 +262,234 @@ describe('the creator is the rig, named', () => {
   it('hands app/ui no fallback at all, because a fallback is not an option here', () => {
     /* `CreatorSlot` has no field for one, which is the mechanical half of "the
        creator never renders the fallback as a pre-selection". This asserts the
-       shape rather than trusting the type, because the type is erased. */
+       shape rather than trusting the type, because the type is erased. The only
+       additions are the reading line and the swatch, and each is allowed only
+       where it belongs. */
     for (const slot of creatorSlots('en')) {
-      expect(Object.keys(slot).sort()).toEqual(['id', 'label', 'options', 'testId']);
+      const keys = Object.keys(slot).sort();
+      expect(keys).toEqual(
+        slot.id === 'skin'
+          ? ['help', 'id', 'label', 'options', 'testId']
+          : ['id', 'label', 'options', 'testId'],
+      );
       for (const option of slot.options) {
-        expect(Object.keys(option).sort()).toEqual(['id', 'name']);
+        expect(Object.keys(option).sort()).toEqual(
+          slot.id === 'skin' ? ['id', 'name', 'swatch'] : ['id', 'name'],
+        );
       }
+    }
+  });
+});
+
+describe('which slots are offered is the rig’s flag, and nothing else', () => {
+  it('leaves costume out because the rig says it is not the player’s, not because it has no row', () => {
+    const costume = slotOf(RIG, 'costume');
+    expect(costume?.playerSelectable).toBe(false);
+    expect(playerSlots().map((entry) => entry.name)).not.toContain('costume');
+
+    /* Flip only the flag. If the copy table were still deciding, costume would
+       stay hidden — it has no row. It is offered, and the build fails loudly
+       on the rows nobody wrote. */
+    const flipped = rigWith({ costume: { ...costume, playerSelectable: true } });
+    expect(playerSlots(flipped).map((entry) => entry.name)).toContain('costume');
+    expect(() => creatorSlots('en', flipped)).toThrow(/creator\.slot\.costume/);
+  });
+
+  it('does not offer a slot the artboard lists when the rig marks it not selectable', () => {
+    const listed = listing(RIG, 'costume');
+
+    expect(playerSlots(listed).map((entry) => entry.name)).not.toContain('costume');
+    expect(() => creatorSlots('en', listed)).not.toThrow();
+  });
+
+  it('offers a selectable slot the artboard forgot to list, after the listed ones', () => {
+    const forgotten = unlisting(rigWith({ presentation: OFFERED }), 'presentation');
+    const names = playerSlots(forgotten).map((entry) => entry.name);
+
+    expect(names.slice(0, 5)).toEqual([...FIVE]);
+    expect(names).toContain('presentation');
+  });
+
+  it('throws, naming every missing row, when a selectable slot has none (the negative control)', () => {
+    const grown = rigWith({
+      fringe: { options: ['none', 'blunt'], fallback: 'none', playerSelectable: true },
+    });
+
+    for (const rig of [listing(grown, 'fringe'), grown]) {
+      const missing = missingCreatorRows(rig);
+      /* Every one of them, not only the first (`TN-LOOK-04`) — and whether or
+         not the artboard lists the slot, because the flag is what offers it. */
+      expect(missing).toEqual(['creator.slot.fringe', 'creator.fringe.none', 'creator.fringe.blunt']);
+
+      let message = '';
+      try {
+        creatorSlots('fr', rig);
+      } catch (error) {
+        message = String(error);
+      }
+      expect(message, 'a selectable slot with no rows was silently left out').not.toBe('');
+      for (const key of missing) expect(message).toContain(key);
+      expect(() => creatorSlotsByLocale(rig)).toThrow(/ADR-0024/);
+    }
+  });
+});
+
+describe('the presentation slot', () => {
+  it('offers nothing while it is reserved', () => {
+    const rig = unlisting(rigWith({ presentation: RESERVED }), 'presentation');
+
+    expect(playerSlots(rig).map((entry) => entry.name)).toEqual([...FIVE]);
+    expect(creatorSlots('en', rig).map((slot) => slot.id)).not.toContain('presentation');
+  });
+
+  it('offers nothing — no heading over an empty group — while it is selectable with no options', () => {
+    /* The state between the art agent marking the slot selectable and the art
+       landing. Nothing to choose, so nothing drawn, and nothing missing. */
+    const rig = listing(rigWith({ presentation: AWAITING_ART }), 'presentation');
+
+    expect(playerSlots(rig).map((entry) => entry.name)).toEqual([...FIVE]);
+    expect(missingCreatorRows(rig)).toEqual([]);
+    expect(creatorSlots('fr', rig).map((slot) => slot.id)).not.toContain('presentation');
+  });
+
+  it('offers three named options once the art lands, in both languages', () => {
+    const rig = listing(rigWith({ presentation: OFFERED }), 'presentation');
+    const { en, fr } = creatorSlotsByLocale(rig);
+    const enSlot = en.find((slot) => slot.id === 'presentation');
+    const frSlot = fr.find((slot) => slot.id === 'presentation');
+
+    expect(missingCreatorRows(rig)).toEqual([]);
+    expect(enSlot?.testId).toBe('slot-presentation');
+    expect(enSlot?.label).toBe('Style');
+    expect(enSlot?.options).toEqual([
+      { id: 'feminine', name: 'Feminine' },
+      { id: 'masculine', name: 'Masculine' },
+      { id: 'neutral', name: 'Neutral' },
+    ]);
+    /* The same word in both languages, written out so a reviewer does not
+       "correct" it (`docs/stories/README.md`). */
+    expect(frSlot?.label).toBe('Style');
+    expect(frSlot?.options.map((option) => option.name)).toEqual(['Féminin', 'Masculin', 'Neutre']);
+    /* The five it joins are unchanged by its arrival (§8.2). */
+    expect(fiveOf(en).map((slot) => slot.options.length)).toEqual([6, 4, 5, 2, 2]);
+  });
+
+  it('agrees in French with « style », never with the player', () => {
+    const fr = creatorSlots('fr', listing(rigWith({ presentation: OFFERED }), 'presentation'));
+    const names = fr.find((slot) => slot.id === 'presentation')?.options.map((option) => option.name);
+
+    /* « Féminin » is the masculine form, because « style » is masculine: the
+       word does not change with the option chosen, or with who chose it. */
+    expect(names).not.toContain('Féminine');
+    expect(names).not.toContain('Masculine');
+    for (const name of names ?? []) {
+      expect(/\(e\)|·e\b|-e\)/.test(name), `${name} needs agreement`).toBe(false);
+    }
+  });
+
+  it('names what is visible and never an identity, in either language', () => {
+    /* `docs/content-review.md` §8.6: "No option is called 'Boy', 'Girl',
+       'Male', 'Female'". Checked word by word, so « Féminin » is not a hit for
+       "femme" and "Masculine" is not a hit for "man". */
+    const refused = [
+      'boy',
+      'girl',
+      'male',
+      'female',
+      'man',
+      'woman',
+      'gender',
+      'sex',
+      'garçon',
+      'fille',
+      'homme',
+      'femme',
+      'genre',
+      'sexe',
+    ];
+    const rig = listing(rigWith({ presentation: OFFERED }), 'presentation');
+    for (const [locale, slots] of Object.entries(creatorSlotsByLocale(rig))) {
+      const slot = slots.find((entry) => entry.id === 'presentation');
+      const words = [slot?.label ?? '', ...(slot?.options ?? []).map((option) => option.name)]
+        .flatMap((value) => value.toLowerCase().split(/[^\p{L}]+/u))
+        .filter((word) => word !== '');
+      expect(words.length, `${locale}: no words were read`).toBeGreaterThan(3);
+      for (const word of words) {
+        expect(refused.includes(word), `${locale}: "${word}" names an identity`).toBe(false);
+      }
+    }
+  });
+
+  it('draws the three uniformly, like every other slot (§8.3)', () => {
+    const rig = listing(rigWith({ presentation: OFFERED }), 'presentation');
+    let state = 0x2545_f491;
+    const random = (): number => {
+      state = (state * 1_664_525 + 1_013_904_223) >>> 0;
+      return state / 0x1_0000_0000;
+    };
+    const counts = new Map<string, number>();
+    for (let run = 0; run < 1000; run += 1) {
+      const drawn = repairSelection(undefined, random, rig).selection['presentation'] ?? '';
+      counts.set(drawn, (counts.get(drawn) ?? 0) + 1);
+    }
+
+    for (const option of OFFERED.options) {
+      const seen = counts.get(option) ?? 0;
+      expect(seen, `${option} never came up`).toBeGreaterThan(0);
+      expect(seen, `${option} came up ${String(seen)} times`).toBeLessThan((1000 / 3) * 2);
+    }
+    expect(counts.has('')).toBe(false);
+  });
+});
+
+describe('the skin swatches', () => {
+  it('draws every tone from the palette ramp of the same id, in both languages', () => {
+    const { en, fr } = creatorSlotsByLocale();
+    for (const slots of [en, fr]) {
+      const skin = slots.find((slot) => slot.id === 'skin');
+      expect(skin?.options.length).toBe(6);
+      for (const option of skin?.options ?? []) {
+        const base = PALETTE.ramps[option.id]?.base ?? '';
+        expect(option.swatch, `${option.id} has no swatch`).toBeDefined();
+        expect(option.swatch).toBe(PALETTE.colours[base]);
+        expect(optionSwatch(option.id)).toBe(option.swatch);
+      }
+    }
+  });
+
+  it('draws no swatch on any other slot', () => {
+    const others = creatorSlots('en').filter((slot) => slot.id !== 'skin');
+    expect(others.length).toBeGreaterThan(3);
+    for (const slot of others) {
+      for (const option of slot.options) {
+        expect(option.swatch, `${slot.id}.${option.id}`).toBeUndefined();
+      }
+    }
+  });
+
+  it('throws, naming the tone, when the palette loses a ramp (the negative control)', () => {
+    const { 'skin-4': _gone, ...ramps } = PALETTE.ramps;
+    const broken: SwatchPalette = { colours: PALETTE.colours, ramps };
+
+    expect(missingSwatches(RIG, PALETTE)).toEqual([]);
+    expect(missingSwatches(RIG, broken)).toEqual(['skin.skin-4']);
+    expect(() => creatorSlots('en', RIG, broken)).toThrow(/skin\.skin-4/);
+  });
+
+  it('carries the reading line on the skin group only, in both languages', () => {
+    const { en, fr } = creatorSlotsByLocale();
+
+    expect(en.find((slot) => slot.id === 'skin')?.help).toBe('From light to dark');
+    expect(fr.find((slot) => slot.id === 'skin')?.help).toBe('Du clair au foncé');
+    for (const slot of [...en, ...fr].filter((entry) => entry.id !== 'skin')) {
+      expect(slot.help, slot.id).toBeUndefined();
     }
   });
 });
 
 describe('a saved appearance this build cannot draw', () => {
   const always = (value: number) => (): number => value;
+  const OFFERED_COUNT = playerSlots().length;
 
   it('redraws the gone slot uniformly, and never reaches for the fallback', () => {
     /* `skin-3`, `crop`, `brown`, `toque`, `none` is the fallback combination.
@@ -247,7 +522,7 @@ describe('a saved appearance this build cannot draw', () => {
     expect(repaired.repaired).toBe(true);
     expect(repaired.selection['skin']).toBe('skin-2');
     expect(repaired.selection['hairShape']).toBe('long');
-    expect(Object.keys(repaired.selection).length).toBe(5);
+    expect(Object.keys(repaired.selection).length).toBe(OFFERED_COUNT);
   });
 
   it('ignores a slot from a newer build rather than repairing anything', () => {
@@ -257,6 +532,7 @@ describe('a saved appearance this build cannot draw', () => {
       hairColour: 'grey',
       headCovering: 'toque',
       feature: 'none',
+      ...(PRESENTATION_OFFERED ? { presentation: 'neutral' } : {}),
       /* `OQ-FIRSTRUN-5`: an unknown slot draws no part, which is the mechanism
          every "none" option already uses. */
       freckles: 'many',
@@ -273,7 +549,8 @@ describe('a saved appearance this build cannot draw', () => {
 
     /* Every slot answered, and nothing to tell the player about: a first run is
        a draw, not a repair. */
-    expect(Object.keys(opened.selection).length).toBe(5);
+    expect(Object.keys(opened.selection).length).toBe(OFFERED_COUNT);
+    expect(OFFERED_COUNT).toBeGreaterThanOrEqual(5);
     expect(opened.repaired).toBe(false);
   });
 
@@ -311,12 +588,13 @@ describe('a saved appearance this build cannot draw', () => {
 });
 
 describe('the round trip through the save', () => {
-  const SELECTION = {
+  const SELECTION: Readonly<Record<string, string>> = {
     skin: 'skin-5',
     hairShape: 'coil',
     hairColour: 'black',
     headCovering: 'none',
     feature: 'glasses',
+    ...(PRESENTATION_OFFERED ? { presentation: 'neutral' } : {}),
   };
 
   it('writes the choices under the rig’s own player id, and reads them back', () => {
@@ -340,13 +618,7 @@ describe('the round trip through the save', () => {
      */
     const character = toPlayerCharacter(SELECTION);
 
-    expect(Object.keys(character.skins).sort()).toEqual([
-      'feature',
-      'hairColour',
-      'hairShape',
-      'headCovering',
-      'skin',
-    ]);
+    for (const name of FIVE) expect(Object.keys(character.skins)).toContain(name);
     expect(character.skins).toEqual(SELECTION);
     // Every key the rig declares as player-selectable is in there, spelled as
     // the rig spells it — not as a rule this test restates.
@@ -378,7 +650,7 @@ describe('the round trip through the save', () => {
 
     expect(repaired.selection['skin']).toBe('skin-5');
     expect(repaired.selection['hair-shape']).toBeUndefined();
-    expect(Object.keys(repaired.selection).length).toBe(5);
+    expect(Object.keys(repaired.selection).length).toBe(playerSlots().length);
     expect(repaired.repaired).toBe(true);
   });
 

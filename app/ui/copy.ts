@@ -157,6 +157,31 @@ const EN = {
   'creator.skin.skin-5': '5, dark',
   'creator.skin.skin-6': '6, dark',
 
+  /* The character creator's rows no story table carries yet. **Written by
+     app/ui, and every one is listed in {@link COPY_GAPS}**, to be ratified or
+     replaced by `TN-SKIN` and `TN-LOOK`'s owner rather than left looking
+     reviewed.
+
+     `creator.slot.skin.help` is the line under the skin group's heading. The
+     six names already say where each tone sits; this says which way the
+     numbers run, once, on the group — so no single tone is the one described
+     as an end (`TN-SKIN` ruling 4), and it is "dark", never "deep" (ruling 6).
+
+     `creator.slot.presentation` and its three options name the rig's
+     `presentation` slot, and are drawn only once the rig offers it. "Style",
+     not "Gender": the slot draws how the character looks and claims nothing
+     about who the player is (`docs/content-review.md` §8.6 — labelled by what
+     is visible, never "Boy" or "Girl"). "Style" rather than "Look", because
+     "Look: Neutral" can be read as an order. "Neutral" rather than "Neither",
+     because the value is read alone in the preview and the live region —
+     "Style: Neither" says nothing on its own. "Style" is the same word in
+     French, and is written out in both on purpose. */
+  'creator.slot.skin.help': 'From light to dark',
+  'creator.slot.presentation': 'Style',
+  'creator.presentation.feminine': 'Feminine',
+  'creator.presentation.masculine': 'Masculine',
+  'creator.presentation.neutral': 'Neutral',
+
   /* docs/stories/TN-CARD-question-card.md */
   'card.progress': 'Question {{n}} of {{total}}',
   'card.kind.new': 'New',
@@ -927,6 +952,19 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'creator.skin.skin-5': '5, foncé',
   'creator.skin.skin-6': '6, foncé',
 
+  /* Listed in COPY_GAPS with the English. The French agrees with the noun in
+     the label and never with the player: « Féminin », « Masculin » and
+     « Neutre » agree with « style », which is masculine singular, so choosing
+     `feminine` changes no ending anywhere — the option reads « Féminin » for
+     everybody, and no other string on any screen reads the choice at all
+     (`docs/content-review.md` §8.6). « Du clair au foncé » is two nouns and
+     agrees with nobody. */
+  'creator.slot.skin.help': 'Du clair au foncé',
+  'creator.slot.presentation': 'Style',
+  'creator.presentation.feminine': 'Féminin',
+  'creator.presentation.masculine': 'Masculin',
+  'creator.presentation.neutral': 'Neutre',
+
   'card.progress': 'Question {{n}} sur {{total}}',
   'card.kind.new': 'Nouvelle',
   'card.kind.seen': 'Déjà vue',
@@ -1289,7 +1327,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
  * declared here and reported upward to be ratified or replaced in a story file.
  * A row written and left off this list would be a string that *looks* reviewed,
  * which is the one outcome this constant exists to prevent. The unit suite
- * pins the list to exactly these nine, so a tenth invented row anywhere else
+ * pins the list to exactly its entries, so one more invented row anywhere else
  * fails the build rather than joining them quietly.
  *
  * The ninth is `map.here`, "You are here". The level select marks the stop the
@@ -1334,7 +1372,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
  *    The level says which key; this table says what the key means; neither says
  *    the other's half.
  *
- * The unit suite asserts this list holds exactly the panel's rows *and* that
+ * The unit suite asserts this list holds exactly these rows *and* that
  * the marker this module used to carry beside an invented string survives
  * nowhere in the source, so a new one cannot slip in unlisted.
  */
@@ -1348,6 +1386,14 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'about.unavailable.checking',
   'about.unavailable.ours',
   'map.here',
+  /* The character creator's five: the skin group's reading line, and the
+     `presentation` slot's label and three options. No story table carries any
+     of them; the reasoning for each word is beside the rows in `EN` and `FR`. */
+  'creator.slot.skin.help',
+  'creator.slot.presentation',
+  'creator.presentation.feminine',
+  'creator.presentation.masculine',
+  'creator.presentation.neutral',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

@@ -27,6 +27,32 @@
  * which is the property that made building against the rig acceptable rather
  * than merely expedient. What that document needs is reported with the task.
  *
+ * ## Which slots the creator offers: the rig's flag, and nothing else
+ *
+ * A slot is offered **because the rig marks it `playerSelectable`**, and a slot
+ * the rig does not mark is never offered, whatever else is true of it. This
+ * used to be decided by the copy table: a slot with no `creator.slot.<name>` row
+ * was skipped, which made `costume` look hidden on purpose when it was hidden by
+ * accident — it has no row — and would have made a selectable slot that lost its
+ * row vanish without a sound. ADR-0024 is the rule that forbids the second: an
+ * absent row must not reduce to "nothing to show". So a selectable slot with a
+ * missing row **throws**, naming every missing key at once ({@link creatorSlots}),
+ * and `tests/unit/bootstrap/character-slots.test.ts` fails the build on the same
+ * condition before any player could reach it.
+ *
+ * A selectable slot with **no options** is still offered nothing. That is the
+ * reserved `presentation` slot before its art lands: there is nothing to choose,
+ * so no group is drawn, rather than a heading over an empty group.
+ *
+ * ## The skin swatches are the art's own ramps
+ *
+ * Each skin option carries a swatch, and the colour is read from
+ * `assets/style/palette.json` — `ramps[<option id>].base`, resolved through
+ * `colours` — rather than written anywhere in `app/`. The option id *is* the
+ * ramp id (`assets/style/art-bible.md` §8), so there is no mapping to keep. A
+ * skin option with no ramp throws, for the same ADR-0024 reason: a swatch
+ * quietly missing is a skin tone quietly reduced to a number.
+ *
  * ## What is deliberately absent
  *
  * A `fallback` never reaches the creator. The rig says in as many words that
@@ -40,14 +66,36 @@
  */
 
 import rigJson from '@content/characters/rig.json';
+import paletteJson from '../../assets/style/palette.json';
 
 import type { RigDocument, RigSlot } from '@application/ports';
 import type { PlayerCharacter } from '@domain/entities/character';
 import type { CharacterId } from '@domain/ids';
-import type { CharacterSelection, CreatorSlot } from '@ui/character-creator';
+import type { CharacterSelection, CreatorOption, CreatorSlot } from '@ui/character-creator';
 import { hasCopyRow, text, UI_LOCALES, type UiLocale } from '@ui/copy';
 
 const RIG = rigJson as unknown as RigDocument;
+
+/**
+ * The two parts of `assets/style/palette.json` a swatch needs: which colour id
+ * is a ramp's base, and what that id's colour is.
+ */
+export interface SwatchPalette {
+  readonly colours: Readonly<Record<string, string>>;
+  readonly ramps: Readonly<Record<string, { readonly base: string } | undefined>>;
+}
+
+const PALETTE = paletteJson as unknown as SwatchPalette;
+
+/**
+ * The slots whose options are palette ramps, and so are drawn as swatches.
+ *
+ * One entry, and a set rather than a rule over every id, on purpose: `skin` is
+ * the one slot where colour is the content and the art bible makes the option
+ * id the ramp id. A rule that drew a swatch for any option whose id happened to
+ * name a ramp would put one on a future option by coincidence.
+ */
+const SWATCHED_SLOTS: ReadonlySet<string> = new Set(['skin']);
 
 /**
  * The artboard the creator dresses: the one that offers a choice.
@@ -77,30 +125,55 @@ export function optionLabelKey(slotName: string, optionId: string): string {
 }
 
 /**
- * The player-selectable slots, in the rig's order, with the ids the rig
- * declares — and nothing about what they are called.
+ * The slots the creator offers, with the ids the rig declares — and nothing
+ * about what they are called.
  *
- * The order is the artboard's `playerSelectableSlots`, which is the list a
- * player reads down. `slots` is a record and a record has no order worth
- * relying on.
+ * **Whether** a slot is offered is the slot's own `playerSelectable` flag. The
+ * copy table has no say in it: a selectable slot with no row is a build defect
+ * that {@link creatorSlots} throws on, never a slot that quietly is not there.
+ * A selectable slot with no options is offered nothing, which is the reserved
+ * `presentation` slot until its art lands.
+ *
+ * **In what order** is the player artboard's `playerSelectableSlots`, which is
+ * the list a player reads down; a selectable slot that list forgot is appended
+ * in the rig's declaration order rather than dropped, because the flag is what
+ * decides and a missing list entry is a rig defect the player should not pay
+ * for. A listed slot the rig marks `playerSelectable: false` is not offered —
+ * `tests/unit/contracts/rig-is-coherent.test.ts` already fails that rig.
  */
 export function playerSlots(
   rig: RigDocument = RIG,
 ): readonly { readonly name: string; readonly slot: RigSlot }[] {
-  const artboard = playerArtboard(rig);
-  if (artboard === null) return [];
   const slots = rig.slots as unknown as Readonly<Record<string, RigSlot | undefined>>;
+  const listed = playerArtboard(rig)?.playerSelectableSlots ?? [];
+  const order = [
+    ...listed.filter((name) => slots[name] !== undefined),
+    ...Object.keys(slots).filter((name) => !listed.includes(name)),
+  ];
   const found: { name: string; slot: RigSlot }[] = [];
-  for (const name of artboard.playerSelectableSlots) {
+  for (const name of order) {
     const slot = slots[name];
-    /* A name the artboard offers and the rig does not declare is a rig defect,
-       and dropping it is the only honest answer here: inventing a slot would be
-       inventing content, and throwing would take the game down for a screen the
-       player can still use with four groups. */
     if (slot === undefined || !slot.playerSelectable || slot.options.length === 0) continue;
     found.push({ name, slot });
   }
   return found;
+}
+
+/** The row under a slot that says how to read its options, when one exists. */
+export function slotHelpKey(slotName: string): string {
+  return `${slotLabelKey(slotName)}.help`;
+}
+
+/**
+ * The swatch colour for one option: the base tone of the palette ramp the
+ * option id names, or `undefined` when there is no such ramp.
+ */
+export function optionSwatch(
+  optionId: string,
+  palette: SwatchPalette = PALETTE,
+): string | undefined {
+  const base = palette.ramps[optionId]?.base;
+  return base === undefined ? undefined : palette.colours[base];
 }
 
 /** The character document id the creator's choices belong to. */
@@ -109,14 +182,8 @@ export function playerCharacterId(rig: RigDocument = RIG): string {
 }
 
 /**
- * A slot or an option the rig declares and the copy table has never named.
- *
- * Reported rather than drawn. `ADR-0010` forbids this directory inventing
- * player-facing text, and a group whose heading is a key — or an option whose
- * name is `creator.hairShape.fringe` — is that rule broken in the one place a
- * player would see it. So a slot with no row is **left out of the creator** and
- * named on the console, which is a screen that works with four groups rather
- * than a screen that shows a developer a string.
+ * Every row an offered slot needs and the copy table does not have: the slot's
+ * label and each option's name. All of them, not the first (`TN-LOOK-04`).
  */
 export function missingCreatorRows(rig: RigDocument = RIG): readonly string[] {
   const missing: string[] = [];
@@ -130,41 +197,82 @@ export function missingCreatorRows(rig: RigDocument = RIG): readonly string[] {
 }
 
 /**
+ * A skin option the palette has no ramp for. Named, all of them, so a re-derived
+ * or renamed ramp fails with the id rather than drawing a blank swatch.
+ */
+export function missingSwatches(
+  rig: RigDocument = RIG,
+  palette: SwatchPalette = PALETTE,
+): readonly string[] {
+  const missing: string[] = [];
+  for (const { name, slot } of playerSlots(rig)) {
+    if (!SWATCHED_SLOTS.has(name)) continue;
+    for (const optionId of slot.options) {
+      if (optionSwatch(optionId, palette) === undefined) missing.push(`${name}.${optionId}`);
+    }
+  }
+  return missing;
+}
+
+/**
  * The creator's groups for one language.
  *
- * A slot whose own label has no row is dropped entirely; an option with no row
- * is dropped from its slot. Both are build defects that
- * `tests/unit/bootstrap/character-slots.test.ts` fails on, so neither reaches a
- * player — this is what the program does if one ever did.
+ * **Throws** when an offered slot is missing a row or a swatch. ADR-0010 forbids
+ * inventing the words, and ADR-0024 forbids the other way out — dropping the
+ * group — because a slot that disappears when its row does is a slot whose
+ * absence reads as a decision. The message names every missing key, so one run
+ * reports the whole gap.
  */
-export function creatorSlots(locale: UiLocale, rig: RigDocument = RIG): readonly CreatorSlot[] {
-  const built: CreatorSlot[] = [];
-  for (const { name, slot } of playerSlots(rig)) {
-    const labelKey = slotLabelKey(name);
-    if (!hasCopyRow(labelKey)) continue;
-    const options = slot.options
-      .filter((optionId) => hasCopyRow(optionLabelKey(name, optionId)))
-      .map((optionId) => ({
+export function creatorSlots(
+  locale: UiLocale,
+  rig: RigDocument = RIG,
+  palette: SwatchPalette = PALETTE,
+): readonly CreatorSlot[] {
+  const missing = missingCreatorRows(rig);
+  if (missing.length > 0) {
+    throw new Error(
+      `The rig offers the player a choice nothing names: ${missing.join(', ')}. A slot the rig ` +
+        'marks playerSelectable is drawn or the build fails; it is never silently left out. ' +
+        'See docs/stories/TN-LOOK-what-the-player-can-choose.md (TN-LOOK-04) and ADR-0024.',
+    );
+  }
+  const unswatched = missingSwatches(rig, palette);
+  if (unswatched.length > 0) {
+    throw new Error(
+      `No palette ramp draws these skin options: ${unswatched.join(', ')}. Every skin tone is ` +
+        'shown as a swatch from assets/style/palette.json, so colour and name arrive together.',
+    );
+  }
+
+  return playerSlots(rig).map(({ name, slot }): CreatorSlot => {
+    const helpKey = slotHelpKey(name);
+    const options = slot.options.map((optionId): CreatorOption => {
+      const swatch = SWATCHED_SLOTS.has(name) ? optionSwatch(optionId, palette) : undefined;
+      return {
         id: optionId,
         name: text(locale, optionLabelKey(name, optionId) as Parameters<typeof text>[1]),
-      }));
-    if (options.length === 0) continue;
-    built.push({
+        ...(swatch === undefined ? {} : { swatch }),
+      };
+    });
+    return {
       id: name,
       testId: slotTestId(name),
-      label: text(locale, labelKey as Parameters<typeof text>[1]),
+      label: text(locale, slotLabelKey(name) as Parameters<typeof text>[1]),
+      /* Optional by design: a slot whose options read on their own needs no
+         line explaining how to read them. */
+      ...(hasCopyRow(helpKey) ? { help: text(locale, helpKey) } : {}),
       options,
-    });
-  }
-  return built;
+    };
+  });
 }
 
 /** Both languages at once, which is the shape `app/ui/shell.ts` takes. */
 export function creatorSlotsByLocale(
   rig: RigDocument = RIG,
+  palette: SwatchPalette = PALETTE,
 ): Readonly<Record<UiLocale, readonly CreatorSlot[]>> {
   const table: Partial<Record<UiLocale, readonly CreatorSlot[]>> = {};
-  for (const locale of UI_LOCALES) table[locale] = creatorSlots(locale, rig);
+  for (const locale of UI_LOCALES) table[locale] = creatorSlots(locale, rig, palette);
   return table as Record<UiLocale, readonly CreatorSlot[]>;
 }
 
