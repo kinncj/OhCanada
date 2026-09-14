@@ -1,9 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="95" height="138" viewBox="65 19 95 138" shape-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" width="86" height="125" viewBox="70 29 86 125" shape-rendering="geometricPrecision">
   <title>Hair, long, falling down the back in one mass with the chest clear, ramp hair-red. Three-quarter view: the mass sits BEHIND the face plane and reaches lower at the back than at the front, and the fringe sweeps forward to clear the brow line - hair draws over the head and under the face, and a symmetric cap reads as a front view whatever the head under it is doing. Shape and colour are independent slots: every shape is offered with every colour and with every skin tone.</title>
-  <path d="M 72,146 C 64,110 72,92 75,74 C 79,40 89,22 116,22 C 145,22 157,46 156,70 C 152,57 148,49 141,46 C 127,40 105,47 94,60 C 85,71 80,86 79,100 C 78,122 84,135 85,144 C 86,155 74,157 72,146 Z" fill="#a94d22" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="matrix(0.9 0 0 0.9 12 12.1)">
+  
+  <path d="M 72,146 C 64,110 72,92 75,74 C 79,40 89,22 116,22 C 145,22 157,46 156,70 C 152,57 148,49 141,46 C 127,40 105,47 94,60 C 85,71 80,86 79,100 C 78,122 84,135 85,144 C 86,155 74,157 72,146 Z" fill="#a94d22" stroke="#3a2018" stroke-width="6.667" stroke-linecap="round" stroke-linejoin="round"/>
   <defs><clipPath id="hr-long"><path d="M 72,146 C 64,110 72,92 75,74 C 79,40 89,22 116,22 C 145,22 157,46 156,70 C 152,57 148,49 141,46 C 127,40 105,47 94,60 C 85,71 80,86 79,100 C 78,122 84,135 85,144 C 86,155 74,157 72,146 Z"/></clipPath></defs>
   <g clip-path="url(#hr-long)">
     <ellipse cx="94" cy="38" rx="23" ry="20" fill="#d18547"/>
     <ellipse cx="84" cy="138" rx="13" ry="16" fill="#631f16"/>
   </g>
+</g>
 </svg>

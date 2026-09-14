@@ -130,7 +130,8 @@ them by accident.
 |---|---|---|
 | parka shell | `cobalt` | Saturated, dark on snow, and **not** a red. The officer is scarlet and identified at 0.92 in a blind run; a red-coated player standing next to a red-coated constable converges at 25 % scale and puts that identification at risk. Blue is the cheapest possible way to keep them apart. |
 | scarf, mitts, toque crown | `flag-red` | The Canadian read, kept in small high-contrast marks at the neck, the hands and the head rather than in one large field. `flag-red` and `serge` are deliberately different reds (`palette.json`) and are not interchangeable. |
-| hood ruff, hem band, cuffs, toque fold, toque pom, boot cuff | `snow` / `white` | Fur and knit trim. |
+| hood ruff, hem band, cuffs, toque pom, boot cuff | `snow` / `white` | Fur and knit trim. |
+| toque cuff | `flag-red` shade, ribbed in base | **Not white, since 2026-09-14.** A red cap with a white fold and a white pom is a Santa hat at phone size, and it read as one. |
 | snow trousers | `slate` | A neutral cool grey-blue: separates from the cobalt shell above and the leather below, and is not the officer's `navy`. |
 | boots | `leather` | Upper, with a rounded `leather-light` toe cap and a `leather-shade` heel. |
 | boot soles | `hide` | Moulded rubber. Same ramp as the guide's tail and hind feet — see §4 of `guide.md` for its derivation. |

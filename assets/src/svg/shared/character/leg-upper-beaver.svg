@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="46" height="140" viewBox="109 247 46 140" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig reflects it about the character centre line. The guide’s hind leg, hip to knee.</title>
-  <path d="M 132,250 C 145,250 152,258 152,270 L 151,368 C 151,380 140,384 131,384 C 121,384 112,380 112,368 L 113,270 C 113,258 119,250 132,250 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="lu-beaver"><path d="M 132,250 C 145,250 152,258 152,270 L 151,368 C 151,380 140,384 131,384 C 121,384 112,380 112,368 L 113,270 C 113,258 119,250 132,250 Z"/></clipPath></defs>
+  <title>One frame serves both sides: the rig reflects it about the character centre line. The guide’s hind leg, hip to knee. Tapered toward the joint below it, so a limb reads as a limb and not a tube.</title>
+  <path d="M 132,250 C 145,250 152,258 152,270 L 149,366 C 149,377 141,382 132,382 C 123,382 115,377 115,366 L 112,270 C 112,258 119,250 132,250 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="lu-beaver"><path d="M 132,250 C 145,250 152,258 152,270 L 149,366 C 149,377 141,382 132,382 C 123,382 115,377 115,366 L 112,270 C 112,258 119,250 132,250 Z"/></clipPath></defs>
   <g clip-path="url(#lu-beaver)">
     <path d="M 142,258 C 150,260 150,270 150,282 L 150,388 L 136,388 L 137,282 C 137,270 136,260 142,258 Z" fill="#401812"/>
     <path d="M 120,260 C 126,260 127,270 127,282 L 126,388 L 113,388 L 113,282 C 113,270 114,262 120,260 Z" fill="#b4733b"/>

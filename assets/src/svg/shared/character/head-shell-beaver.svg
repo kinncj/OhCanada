@@ -1,13 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="115" height="124" viewBox="71 16 115 124" shape-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" width="105" height="115" viewBox="75 26 105 115" shape-rendering="geometricPrecision">
   <title>The guide’s head, three-quarter view facing right: the same neck part as every other character - the shared `neck-{skin}` column is drawn and then covered here in pelt, exactly as the shared head and the short crop are - a cranium that ENCLOSES the shared head and the shared short crop as one mass with the outline sitting 3-4 px outside them - the crown reaches y 17 because the crop's does 20 and pelt that stops short of it shows a tan crescent of human hair through the skull, which is what happened - one small rounded ear set low and well back and drawn UNDER the cranium, and the muzzle projecting on the leading edge with two oversized white incisors hanging below the shared mouth line. Drawn above hair and below face, so the guide plays the game’s four expressions rather than a second set. The incisors are white rather than the animal’s orange: at ship size each tooth is about 4 px and an orange tooth on a felt snout pad disappears. That is a legibility exaggeration of a real feature, written down rather than left looking like accuracy.</title>
-  <ellipse cx="99" cy="44" rx="11" ry="10" fill="#401812" stroke="#3a2018" stroke-width="4"/>
-  <path d="M 102,104 C 102,94 140,94 140,104 L 140,128 C 140,139 102,139 102,128 Z" fill="#401812" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="bnk"><path d="M 102,104 C 102,94 140,94 140,104 L 140,128 C 140,139 102,139 102,128 Z"/></clipPath></defs>
+  <g transform="matrix(0.9 0 0 0.9 12 12.1)">
+  
+  <ellipse cx="99" cy="44" rx="11" ry="10" fill="#401812" stroke="#3a2018" stroke-width="4.444"/>
+  <path d="M 99,104 C 99,94 141,94 141,104 L 141,128 C 141,140 99,140 99,128 Z" fill="#401812" stroke="#3a2018" stroke-width="6.667" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="bnk"><path d="M 99,104 C 99,94 141,94 141,104 L 141,128 C 141,140 99,140 99,128 Z"/></clipPath></defs>
   <g clip-path="url(#bnk)">
     <path d="M 98,92 L 113,92 C 110,110 109,126 110,142 L 98,142 Z" fill="#7c4327"/>
     <path d="M 132,92 L 144,92 L 144,142 L 133,142 C 135,126 134,110 132,92 Z" fill="#0f121a"/>
   </g>
-  <path d="M 75,96 C 71,50 86,20 118,20 C 148,20 162,44 165,70 C 172,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,125 81,112 75,96 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 75,96 C 71,50 86,20 118,20 C 148,20 162,44 165,70 C 172,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,125 81,112 75,96 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6.667" stroke-linecap="round" stroke-linejoin="round"/>
   <defs><clipPath id="bsh"><path d="M 75,96 C 71,50 86,20 118,20 C 148,20 162,44 165,70 C 172,72 177,79 177,90 C 177,101 167,107 155,108 C 150,118 138,124 124,124 C 104,125 81,112 75,96 Z"/></clipPath></defs>
   <g clip-path="url(#bsh)">
     <ellipse cx="96" cy="56" rx="25" ry="22" fill="#b4733b"/>
@@ -15,13 +17,14 @@
     <ellipse cx="122" cy="108" rx="30" ry="16" fill="#c29455"/>
     <ellipse cx="124" cy="122" rx="26" ry="10" fill="#16203a" opacity="0.18"/>
   </g>
-  <path d="M 152,83 C 166,83 180,89 180,99 C 180,110 164,115 150,115 C 137,115 131,109 131,99 C 131,89 140,83 152,83 Z" fill="#c29455" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 152,83 C 166,83 180,89 180,99 C 180,110 164,115 150,115 C 137,115 131,109 131,99 C 131,89 140,83 152,83 Z" fill="#c29455" stroke="#3a2018" stroke-width="6.667" stroke-linecap="round" stroke-linejoin="round"/>
   <defs><clipPath id="bmz"><path d="M 152,83 C 166,83 180,89 180,99 C 180,110 164,115 150,115 C 137,115 131,109 131,99 C 131,89 140,83 152,83 Z"/></clipPath></defs>
   <g clip-path="url(#bmz)">
     <ellipse cx="146" cy="90" rx="17" ry="8" fill="#d5c18e"/>
     <ellipse cx="168" cy="113" rx="14" ry="8" fill="#965630"/>
   </g>
-  <ellipse cx="175" cy="92" rx="8" ry="6.5" fill="#242b33" stroke="#3a2018" stroke-width="3"/>
-  <path d="M 143,110 L 152,110 L 152,125 C 152,129 143,129 143,125 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 154,110 L 163,110 L 163,124 C 163,128 154,128 154,124 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="175" cy="92" rx="8" ry="6.5" fill="#242b33" stroke="#3a2018" stroke-width="3.333"/>
+  <path d="M 143,110 L 152,110 L 152,125 C 152,129 143,129 143,125 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3.333" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 154,110 L 163,110 L 163,124 C 163,128 154,128 154,124 Z" fill="#ffffff" stroke="#3a2018" stroke-width="3.333" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
 </svg>

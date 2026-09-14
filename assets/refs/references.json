@@ -567,7 +567,7 @@
         "src/svg/shared/character/foot-r-serge.svg",
         "src/svg/shared/character/foot-l-serge.svg",
         "src/svg/shared/character/head-skin-4.svg",
-        "src/svg/shared/character/face-neutral.svg",
+        "src/svg/shared/character/face-neutral-neutral.svg",
         "src/svg/shared/character/hair-crop-black.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
@@ -702,7 +702,7 @@
         "src/svg/shared/character/foot-l-parka.svg",
         "src/svg/shared/character/head-covering-toque.svg",
         "src/svg/shared/character/head-skin-2.svg",
-        "src/svg/shared/character/face-neutral.svg",
+        "src/svg/shared/character/face-neutral-neutral.svg",
         "src/svg/shared/character/hair-crop-brown.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
@@ -2088,7 +2088,7 @@
         "src/svg/shared/character/foot-r-beaver.svg",
         "src/svg/shared/character/foot-l-beaver.svg",
         "src/svg/shared/character/head-skin-3.svg",
-        "src/svg/shared/character/face-neutral.svg",
+        "src/svg/shared/character/face-neutral-neutral.svg",
         "src/svg/shared/character/hair-crop-brown.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
@@ -3884,7 +3884,7 @@
         "The skates are `mount` slot art, shared by every character, and the pose is a state in the rig contract.",
         "assets/style/rig-contract.md section 11 is the contract for both.",
         "Nothing here is Ottawa-owned: a second level with `locomotion: skate` gets the same art with no new source.",
-        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/foot-gear-r-skate.svg, src/svg/shared/character/foot-gear-l-skate.svg."
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/foot-gear-r-skate.svg, src/svg/shared/character/foot-gear-l-skate.svg."
       ]
     },
     {
@@ -3943,7 +3943,7 @@
       "notes": [
         "A seated mount has no standing states: the level dismounts the player - `mount` back to `none` - to talk or to jump.",
         "assets/style/rig-contract.md section 11 is the contract.",
-        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-toboggan.svg, src/svg/shared/character/mount-fore-toboggan.svg."
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-toboggan.svg, src/svg/shared/character/mount-fore-toboggan.svg."
       ]
     },
     {
@@ -3999,7 +3999,7 @@
       "openQuestions": null,
       "notes": [
         "assets/style/rig-contract.md section 11 is the contract.",
-        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-bike.svg."
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-bike.svg."
       ]
     },
     {
@@ -4015,7 +4015,9 @@
       ],
       "designSheet": "assets/style/rig-contract.md",
       "referenceFiles": [
-        "vancouver/seawall-path-and-harbour.jpg"
+        "vancouver/seawall-path-and-harbour.jpg",
+        "vancouver/skateboard-rider-in-winter-coat.jpg",
+        "vancouver/skateboard-rider-knees-bent.jpg"
       ],
       "mustBeRight": [
         {
@@ -4025,14 +4027,14 @@
           "palette": "wood, hide, white, slate"
         },
         {
-          "feature": "both boots on the deck, apart",
-          "why": "One boot on a board reads as a person standing next to a board. The stance is the mode.",
-          "detail": "About 31 px apart, the near foot forward, both clearly on top of the deck."
+          "feature": "both boots on the deck, one over each truck",
+          "why": "One boot on a board reads as a person standing next to a board, and two boots together in the middle of it read as a person balancing on a plank. A rider's feet are over the trucks. The stance is the mode.",
+          "detail": "MEASURED ON THE RIG, SET BY THE REFERENCES. vancouver/skateboard-rider-in-winter-coat.jpg (CC0) and vancouver/skateboard-rider-knees-bent.jpg (CC BY 2.0) both put the front foot over the front truck and the back foot over the rear truck. The deck is 192 px (80 cm at 2.55 px/cm) with trucks 92 px apart, and the ankles are 92 px apart: the FRONT boot is the far (left) one, over the front truck, and the BACK boot is the near (right) one, over the rear truck. The legs do not cross. Both soles sit on the deck top at y 424. The references turn the feet across the board; a flat rig cannot foreshorten a foot, so the boots point the way the character travels, as every foot in the rig does."
         },
         {
-          "feature": "the knees are folded and the arms are out",
-          "why": "A stiff upright figure on a board reads as standing on it, not riding it.",
-          "detail": "Knees folded about 40 degrees - which is exactly the 32 px the deck stands off the ground, so the figure needs no body offset - torso pitched 16 degrees, near arm forward and far arm back as a counterweight."
+          "feature": "the knees are bent forward and the leading arm is out",
+          "why": "A stiff upright figure on a board reads as standing on it, not riding it. A knock-kneed diamond - the stance this pass replaced - reads as squatting.",
+          "detail": "Knees bent forward about 25 and 33 degrees at rest, 33 and 39 cruising, 45 and 50 at speed. The figure is lifted 30 px onto a deck whose top stands 36 px off the ground. Torso pitched 5, 9 and 14 degrees over the front foot. The LEADING (far) arm reaches forward and the trailing (near) arm hangs back, which is the balance vancouver/skateboard-rider-in-winter-coat.jpg shows."
         }
       ],
       "simplifyAway": [
@@ -4048,7 +4050,7 @@
       "openQuestions": null,
       "notes": [
         "assets/style/rig-contract.md section 11 is the contract.",
-        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-skateboard.svg."
+        "RENDER SOURCES, for the day this becomes buildable: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-skateboard.svg."
       ]
     },
     {

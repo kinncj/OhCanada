@@ -129,6 +129,23 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   was no Alberta pump jack to be had. That was false and was caught before commit. Every search was re-run
   with a filter tested against the strings the API actually returns.
 
+- `vancouver/` — **added 2026-09-14: two skateboard stance references**, attached to `player-on-a-skateboard`.
+  Licence strings were read from the Commons API extmetadata with no filter applied and re-asserted by the
+  fetch before download. `skateboard-rider-in-winter-coat.jpg` is **CC0** (Werner100359): a child in a winter
+  coat, toque and jeans with the front foot over the front truck and the back foot over the rear one.
+  `skateboard-rider-knees-bent.jpg` is **CC BY 2.0** (Roger Price): the same foot placement with the knees
+  bent. Both show identifiable children; rule 4 applies and they are posture references only. Every strict
+  side view of a rider found under an accepted licence was a trick in mid-air, which is not what this game's
+  rider does.
+
+- `prairie-rail/` — **added 2026-09-14: three references for VIA Rail's *Canadian*, attached to no subject.**
+  `park-car-side-and-dome-jasper.jpg` and `park-car-observation-end-jasper.jpg` are **CC BY 2.0** (David
+  Wilson, Jasper, Alberta, 2013); `canadian-side-elevation-1981.jpg` is **public domain** (a Roger Puta
+  photograph, December 1981). They are here for the day the level can place a car the player rides in;
+  `rig-contract.md` §11.5 records why that is not rig equipment. The wordmarks, logos, car names and numbers
+  in all three are never drawn. The best side elevations of the current cars on Commons are CC BY-SA 4.0
+  and were rejected on licence.
+
 - `beaver/` — the guide: the beaver companion who appears at points of interest. Six files, licence-checked
   against the Commons API on **2026-09-08** before any was downloaded: three public domain, one CC0, one
   CC BY 2.0 and one CC BY 2.5. The design sheet is `assets/style/guide.md`.

@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="152" height="42" viewBox="42 429 152 42" shape-rendering="geometricPrecision">
-  <title>Skateboard, side view, facing right. Deck with a kicked nose and tail, two trucks and two wheels; the wheels are drawn 16 px across rather than to scale, because a scale wheel is 5 px at design resolution and under 2 px on a phone. The board is one part and the rider stands ON it, so it draws behind the boots. Vancouver seawall: assets/style/vancouver-level.md.</title>
-  <ellipse cx="118" cy="466" rx="66" ry="6" fill="#16203a" opacity="0.28"/>
-  <path d="M 68,450 L 168,450" fill="none" stroke="#3a2018" stroke-width="10" stroke-linecap="round"/>
-  <circle cx="76" cy="458" r="11" fill="#f0f2f5" stroke="#3a2018" stroke-width="6"/>
-  <circle cx="160" cy="458" r="11" fill="#f0f2f5" stroke="#3a2018" stroke-width="6"/>
-  <path d="M 57,442 C 50,442 47,436 51,433 C 55,430 62,433 68,437 L 168,437 C 174,433 181,430 185,433 C 189,436 186,442 179,442 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="sb-deck"><path d="M 57,442 C 50,442 47,436 51,433 C 55,430 62,433 68,437 L 168,437 C 174,433 181,430 185,433 C 189,436 186,442 179,442 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="208" height="66" viewBox="16 406 208 66" shape-rendering="geometricPrecision">
+  <title>Skateboard, side view, facing right, drawn to the rider: 192 px of deck with a kicked nose and tail (80 cm at the rig scale of 2.55 px/cm, where the old deck was 60 cm), two trucks 92 px apart and two wheels 22 px across. The wheel is exaggerated on purpose - a scale wheel is 5 px - and the wheelbase is not, because it is where the rider's feet go: front boot over the front truck, back boot over the rear one. The deck top is y 424 and the wheels touch the ground line at 460 with no offset. The board is one part and the rider stands ON it, so it draws behind the boots. Vancouver seawall: assets/style/vancouver-level.md.</title>
+  <ellipse cx="120" cy="462" rx="92" ry="5" fill="#16203a" opacity="0.28"/>
+  <path d="M 64,429 L 84,429 L 80,442 L 68,442 Z" fill="#242b33" stroke="#3a2018" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 156,429 L 176,429 L 172,442 L 160,442 Z" fill="#242b33" stroke="#3a2018" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="74" cy="449" r="11" fill="#f0f2f5" stroke="#3a2018" stroke-width="6"/>
+  <circle cx="166" cy="449" r="11" fill="#f0f2f5" stroke="#3a2018" stroke-width="6"/>
+  <path d="M 48,431 C 36,431 26,426 24,419 C 23,415 27,413 31,415 C 37,418 42,423 50,424 L 190,424 C 198,423 203,418 209,415 C 213,413 217,415 216,419 C 214,426 204,431 192,431 Z" fill="#96632f" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs><clipPath id="sb-deck"><path d="M 48,431 C 36,431 26,426 24,419 C 23,415 27,413 31,415 C 37,418 42,423 50,424 L 190,424 C 198,423 203,418 209,415 C 213,413 217,415 216,419 C 214,426 204,431 192,431 Z"/></clipPath></defs>
   <g clip-path="url(#sb-deck)">
-    <path d="M 42,429 L 194,429 L 194,439 L 42,439 Z" fill="#242b33"/>
-    <path d="M 42,440 L 194,440 L 194,443 L 42,443 Z" fill="#5a2d19"/>
+    <path d="M 16,406 L 224,406 L 224,427 L 16,427 Z" fill="#242b33"/>
+    <path d="M 16,428 L 224,428 L 224,432 L 16,432 Z" fill="#5a2d19"/>
   </g>
 </svg>

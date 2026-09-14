@@ -146,7 +146,7 @@ the other.
 | `headCovering` | `none`, `toque` | **`toque`** | yes |
 | `feature` | `none`, `glasses` | `none` | yes |
 | `costume` | `parka`, `serge`, `beaver` | `parka` | no |
-| `presentation` | — **reserved, no options** | — | — |
+| `presentation` | `feminine`, `masculine`, `neutral` | `neutral` | yes — not yet listed on the player artboard (below) |
 
 Plus **two axes that are not slots**, and both are braces a part template can name:
 
@@ -201,30 +201,56 @@ change nobody would notice. Two independent slots make the product structural: 4
 
 The check is arithmetic and a test can run it: **the number of reachable part frames must equal what the
 slot product implies, and every declared frame must be reachable.** As shipped: 6 skin × 4 hair shapes ×
-5 hair colours × 2 head coverings × 2 features × 3 costumes × 4 expressions = **5 760 combinations, 66 of
-the 72 frames declared, 66 reachable, 0 unreachable** — 24 costume frames (8 templates × 3 costumes),
-36 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + 4 expression + 4 × 5 hair), 5 optional
-singletons (`toque`, `glasses`, `hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground shadow.
+5 hair colours × 2 head coverings × 2 features × 3 costumes × 4 expressions × 3 presentations =
+**17 280 combinations, 74 of the 80 frames declared, 74 reachable, 0 unreachable** — 24 costume frames
+(8 templates × 3 costumes), 44 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + **4 × 3
+face**, on `{expression}` and `{presentation}`, + 4 × 5 hair), 5 optional singletons (`toque`, `glasses`,
+`hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground shadow.
 
 **The remaining 6 frames are the `{mode}` equipment (§11) and they are outside this product on purpose.**
 They are reached by a level's locomotion mode, not by a slot combination, which is the arithmetic
 consequence of the previous paragraph: a level's decision is not in the product a player turns.
 
-The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 = **480 appearances**, and neither `costume`
+The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 = **480 appearances** today, and
+**1 440** once the creator offers `presentation`; neither `costume`
 nor the mode is in it: `costume` says which character an artboard is, the mode says what the level put under
 them, and neither says how somebody customised one. Adding the guide therefore added nothing to the creator
 and took nothing away from it, which was the constraint the beaver had to satisfy before it was allowed to
 exist, and adding skates satisfied the same one.
 
-### `presentation` is reserved and empty, out loud
+### `presentation` is open: three options, carried by the face
 
-`OQ-ART-08` / `OQ-LEVEL-3` — is the officer's gender presentation fixed or a player choice? — is the PO's
-and is not answered. The **slot name is reserved now** so the Rive file and the atlas agree when it is
-answered, and it ships with **zero options**. A contract test skips slots whose `status` is `reserved`.
+**Opened 2026-09-14.** `OQ-ART-08` / `OQ-LEVEL-3` asked whether gender presentation is fixed or a player
+choice. The product owner answered it by asking for the choice — *"the character has no gender"* — and the
+option ids are fixed so the creator can match them: **`feminine`, `masculine`, `neutral`.** The slot kept
+the name it was reserved under, which is why it was reserved.
 
-Recording it beats discovering later that Rive called it `presentation` and the atlas called it `gender`.
-Whatever the answer, it is a slot on the one artboard with the one proportion canon — never a second
-artboard, never a second rig, never a different height.
+It is still a slot on the one artboard with the one proportion canon. **Presentation lives in face detail
+inside the head outline, never in the body:** the `face` part's template is `face-{expression}-{presentation}`,
+twelve frames, and they differ only in
+
+| | brows | eyes | mouth | shading inside the outline |
+|---|---|---|---|---|
+| `feminine` | 2.6 px, arched higher | lashes at the outer corner of each eye | a lower-lip mark | a faint cheek tint |
+| `masculine` | 5.2 px, flatter and lower | — | 1.5 px wider | a jaw shadow |
+| `neutral` | 3.8 px, medium | — | — | — |
+
+No limb, width, height, head size, outline or pivot differs between them, and `neutral` is a look of its
+own rather than the absence of a choice. **Hair and clothing defaults are the creator's**, set from the
+presentation and each still independently adjustable; the rig carries no coupling, so every presentation
+works with every skin, hair shape, hair colour, head covering and feature (§8.2), and the renders of the
+riskiest pairings — `feminine` with `crop` under a toque, `masculine` with `long` and glasses — were checked
+at phone size before this shipped.
+
+`fallback` is `neutral`, because an NPC document or a repaired save must not acquire a presentation nobody
+chose. The guide pins `presentation: neutral` in its artboard `skins`; the officer resolves to the fallback.
+**The player artboard does not list `presentation` in `playerSelectableSlots` yet.** The creator shows
+exactly that list, `tests/unit/bootstrap/character-slots.test.ts` asserts it, and the slot's player copy
+does not exist; the one-line addition lands with the UI change, not before it.
+
+**What the slot system still cannot say.** There is no facial-hair option, no brow slot separate from
+presentation, and the costume has one cut: a `parka` presentation detail would be a `{presentation}` brace on
+a costume part, which is more frames on every level's shared atlas (`OQ-RIG-1`).
 
 ---
 
@@ -256,7 +282,7 @@ that walks.**
 | 17 | `head` | `head-{skin}` | 120, 112 | |
 | 18 | `hair` | `hair-{hairShape}-{hairColour}` | 120, 112 | |
 | 19 | `head-shell` | `head-shell-{costume}` | 120, 112 | |
-| 20 | `face` | `face-{expression}` | 120, 112 | |
+| 20 | `face` | `face-{expression}-{presentation}` | 120, 112 | |
 | 21 | `head-covering` | `head-covering-{headCovering}` | 120, 112 | |
 | 22 | `hat` | `hat-{costume}` | 120, 112 | |
 | 23 | `feature` | `feature-{feature}` | 120, 112 | |
@@ -411,7 +437,7 @@ state distinguished only by a glow does not exist on the plain path**, and colou
 | `interact` | the near arm reaches | shape difference |
 | `skate/*` | the body pitches 24°, one skate leaves the ice, the supporting knee folds | shape difference |
 | `toboggan/*` | the whole figure is seated and 131 px lower, knees up | shape difference |
-| `skateboard/*` | both boots 31 px apart on one deck, knees folded 40° | shape difference |
+| `skateboard/*` | one boot over each truck, 92 px apart, legs not crossed, knees bent forward, leading arm out | shape difference |
 | `bike/*` | hands solved to the bar, feet to the pedals, torso folded 22° | shape difference |
 
 **None of the locomotion states is distinguished by its equipment alone**, and that is the rule this row
@@ -658,7 +684,7 @@ Two smaller notes for the architect, recorded rather than assumed:
 
 | id | question | owner |
 |---|---|---|
-| `OQ-ART-08` | Officer gender presentation: fixed, or a player choice? The `presentation` slot is reserved and empty until this is answered. | PO |
+| ~~`OQ-ART-08`~~ | ~~Officer gender presentation: fixed, or a player choice?~~ **Answered 2026-09-14 by the PO: a player choice.** `presentation` has three options (§3). The officer resolves to the fallback. | PO |
 | `OQ-ART-09` | Is scarlet review order plausible outdoors on canal ice? If the answer is a winter working uniform, that is a **third `costume` option**, not a change to this contract. | PO |
 | `OQ-ART-10` | Visible sidearm on the officer? Currently absent. If it lands it is a part on the `costume` axis. | PO |
 | `OQ-REVIEW-6` | The names of the six skin ramps and five hair colours. The rig carries ids only until this is settled. | routed to `ui-a11y` / PO |
@@ -827,6 +853,32 @@ passenger, the camera does the moving, and what a seated passenger needs is a be
 level furniture, not rig equipment. `prairie-rail` is drawn as an exterior line with a railbed and has
 neither, so until it has an interior the honest answer is a figure standing beside the track and a gap
 printed at level open. Reconsider it when the level has something to sit on.
+
+**Re-examined 2026-09-14, after a player reported the figure "walks by itself on a track".** The judgement
+above still binds, and it is now numbers rather than a preference:
+
+- **The reference exists and is licence-clean.** The train that crosses the Prairies with passengers is VIA
+  Rail's *Canadian*: Budd stainless cars, a dome, a rounded observation end. `assets/refs/prairie-rail/`
+  now holds two CC BY 2.0 photographs of it at Jasper in 2013 and a public-domain side elevation from 1981.
+  The wordmarks, the logo and the car names in them are never drawn.
+- **A car the figure can visibly ride is wider than the screen.** The camera's `offset.x` is 200 in the
+  direction of travel, so the rider stands at screen x 340 of 1080; at the line's 760 px/s cruise the
+  dead zone and the follow lerp let the rider run 207 px ahead of where the camera wants them. A car
+  attached to the rider has to reach at least **740 + 207 px ahead and 340 + 80 px behind: about 1 370 px**,
+  or one of its cut ends is on screen — which is a half-drawn car, not a train. At any scale where a person
+  shows at a window it is also several hundred px tall.
+- **As rig equipment that is unaffordable on every level.** Rig frames live on the shared atlas, charged to
+  all ten levels (`OQ-RIG-1`). A 1 370 × 400 frame is 2 740 × 800 at 2×, over the 2 048 px page and
+  **8.4 MiB** standalone; Halifax has 5.36 MiB spare and Toronto 5.44 after this pass.
+- **As prairie-rail art it is affordable and cannot be placed.** A car pinned at 1× costs about 3.5 MiB on
+  a level with 6.25 MiB spare — but `level.schema.json` has no entity that travels with the player and
+  the scene has nothing to put a rider inside one. That is the same missing mechanism as the horse above.
+
+So the recommendation for both is the one already written: **a ridden vehicle or animal is a level entity
+with a ride anchor.** When it exists, the art is a prairie-rail source drawn from those references and three
+poses, `train/idle`, `/walk` and `/run`, of a passenger seated at a window. Neither is authored before then:
+a car nothing can place is charged and never drawn (art bible §9), and a seated pose with no car is a figure
+sitting in mid-air over the rails.
 
 **`canoe` and `dogsled` are in `game.config.json` and no level uses them.** A canoe is a `mount-deck` and a
 `mount-fore` and would work; a dog team is a horse-shaped problem.

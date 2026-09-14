@@ -227,9 +227,16 @@ Canadian institution uses; the cited page does not use it, so the statement does
 
 - **The wheels are drawn 22 px across against a scale 7**, because two pale discs under a dark deck is the
   entire read at 390 px and a scale wheel is under 2 px on a phone.
-- **The rider's knees fold 40°, which raises the ankles by the 32 px the deck stands off the ground.** The
-  figure does not float and does not need a body offset; the crouch is the offset, and it is the same
-  arithmetic a real rider's legs do.
+- **One boot over each truck.** Rendered at phone size over this seawall, the first stance read wrong, and
+  measurably: both boots sat 31 px apart in the middle of a 60 cm deck, the far foot BEHIND the near one,
+  so the legs crossed into a knock-kneed diamond with the knees folded 40°. Two licence-clean photographs
+  (`assets/refs/vancouver/skateboard-rider-in-winter-coat.jpg`, CC0, and
+  `skateboard-rider-knees-bent.jpg`, CC BY 2.0) put a rider's front foot over the front truck and the
+  back foot over the rear one. The deck is now 80 cm at the rig's scale with trucks 92 px apart, the front
+  (far) boot is over the front truck and the back (near) boot over the rear, the legs do not cross, the
+  knees bend forward 25–33° at rest and the leading arm reaches out. The figure is lifted 30 px onto a deck
+  top 36 px off the ground. The references turn the feet across the board; a flat rig cannot foreshorten a
+  foot, so the boots point the way the character travels.
 - **`glide` 0.62 is the highest in the game and the pose has to survive it.** `skateboard/idle` is a rolling
   stance with the arms brought in rather than a stand, because `moving` is intent and this seawall coasts.
 
