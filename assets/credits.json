@@ -2270,6 +2270,24 @@
       "modifications": "Original work. Drawn from the driftwood band along the shore in assets/refs/the-north/yukon-river-bluff-and-aspen.jpg and the bars in yukon-river-valley.jpg under the rules in assets/style/art-bible.md; never traced. Natural debris only: every log lies, nothing is stacked, leaned or arranged, and there is no structure, shelter, weir, marker, cairn, inuksuk or figure at any scale, per assets/style/the-north-level.md and docs/content-review.md. The @1x suffix pins the source to one scale; the key the-north-prop-driftwood-pile carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 700 x 340 and passed at both probes; at 2x it would cost 3.63 MiB of decoded texture instead of 0.91 MiB."
     },
     {
+      "path": "src/svg/screens/map-canada.svg",
+      "kind": "shipped",
+      "title": "Map of Canada - the level-select country inset, 1080 x 600",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/screens/map-canada.svg",
+      "modifications": "Original work drawn from Natural Earth 5.1.1 (public domain, https://www.naturalearthdata.com/about/terms-of-use/): ne_10m_admin_1_states_provinces_lakes 5.1.1, ne_10m_admin_0_countries_lakes 5.1.1 and ne_10m_lakes 5.0.0, downloaded 2026-09-13 from https://naciscdn.org/naturalearth/10m/. Projected to EPSG:3978, landmasses under 12 px dropped, simplified as a coverage at 1.6 px, coasts smoothed, lakes cut by size, drawn in palette colours. Coastlines, lakes and provincial and territorial boundaries only; no lettering, no region, no Indigenous nation, treaty or territorial boundary. See assets/style/map-canada.md."
+    },
+    {
+      "path": "src/svg/screens/map-canada.anchors.json",
+      "kind": "shipped",
+      "title": "Map of Canada - anchor coordinates for the ten stops, in the map's viewBox",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/screens/map-canada.anchors.json",
+      "modifications": "Original work. Points projected with the map's own EPSG:3978 transform from landmark coordinates published on Wikipedia and Wikidata; the basis for each is in assets/style/map-canada.md section 6."
+    },
+    {
       "path": "refs/alberta-foothills/pump-jack-side-elevation.jpg",
       "kind": "reference",
       "title": "A preserved pump jack seen from the side - horsehead, walking beam, Samson post, pitman arms, crank and counterweight, gearbox and skid, with the wellhead beside it (Oil Well Park, Sunniland Oil Field, Florida)",

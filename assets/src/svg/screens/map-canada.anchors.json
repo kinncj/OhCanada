@@ -1,0 +1,119 @@
+{
+  "$schema": "../../../../content/schemas/map-anchors.schema.json",
+  "svg": "map-canada.svg",
+  "viewBox": [
+    0,
+    0,
+    1080,
+    600
+  ],
+  "units": "SVG user units in the viewBox above; origin top-left, y down.",
+  "anchors": {
+    "halifax": {
+      "x": 737.8,
+      "y": 472.0
+    },
+    "peggys-cove": {
+      "x": 735.8,
+      "y": 475.5
+    },
+    "quebec-city": {
+      "x": 658.0,
+      "y": 476.0
+    },
+    "ottawa": {
+      "x": 623.6,
+      "y": 508.4
+    },
+    "toronto": {
+      "x": 594.9,
+      "y": 542.3
+    },
+    "winnipeg": {
+      "x": 419.1,
+      "y": 475.2
+    },
+    "prairie-rail": {
+      "x": 347.3,
+      "y": 454.8
+    },
+    "alberta-foothills": {
+      "x": 273.1,
+      "y": 443.1
+    },
+    "vancouver": {
+      "x": 194.6,
+      "y": 429.0
+    },
+    "the-north": {
+      "x": 193.5,
+      "y": 250.4
+    }
+  },
+  "inset": {
+    "frame": {
+      "x": 860,
+      "y": 400,
+      "width": 200,
+      "height": 170,
+      "radius": 18
+    },
+    "window": {
+      "x": 865,
+      "y": 405,
+      "width": 190,
+      "height": 160
+    },
+    "locator": {
+      "x": 730.1,
+      "y": 467.8,
+      "width": 13.3,
+      "height": 11.9
+    },
+    "anchors": {
+      "halifax": {
+        "x": 973.7,
+        "y": 462.3
+      },
+      "peggys-cove": {
+        "x": 947.2,
+        "y": 509.4
+      }
+    },
+    "magnification": 13.41
+  },
+  "projection": {
+    "crs": "EPSG:3978",
+    "name": "NAD83 / Canada Atlas Lambert",
+    "toViewBox": "x = a*E + c, y = d*N + f, with E and N in EPSG:3978 metres",
+    "main": {
+      "a": 0.00012300783709107667,
+      "c": 437.8185012367354,
+      "d": -0.00012300783709107667,
+      "f": 487.59728843870863
+    },
+    "inset": {
+      "a": 0.0016501268950223865,
+      "c": -3050.0280062295956,
+      "d": -0.0016501268950223865,
+      "f": 671.0379652259264
+    },
+    "mainPxPerKmAtStandardParallels": 0.123,
+    "insetPxPerKmAtStandardParallels": 1.6501
+  },
+  "provincesAndTerritories": [
+    "CA-BC",
+    "CA-AB",
+    "CA-SK",
+    "CA-MB",
+    "CA-ON",
+    "CA-QC",
+    "CA-NB",
+    "CA-NS",
+    "CA-PE",
+    "CA-NL",
+    "CA-YT",
+    "CA-NT",
+    "CA-NU"
+  ]
+}
