@@ -99,6 +99,14 @@ ADR-0002 extends the theme gradient into the panels beside the letterboxed canva
 left and right columns are pure band colour — every cloud is kept inside x 120…960 — so the panel seam has
 nothing to disagree with. Same for the ground: the ice layer's bands run full width.
 
+**Until 2026-09-14 `ottawa.json` did not carry the theme §3 asks for.** Its `theme.sky` was `sky-base`
+`#3d8ccb`, not `sky-shade` `#1f5fa8`, so the gradient the tiers fall back to did not open on the sky layer's
+top band, and on a phone taller than 9:16 the letterbox above the canvas, which the page paints `theme.sky`,
+was a strip of a lighter blue over a deep one (a step of 52 in one channel on the live site at 390×844). The
+document now takes `sky-shade`, which is `palette.json`'s `levelTheme.ottawa-winter` and, as a side effect,
+also clears the two triple-rule collisions `levelTheme.peggys-cove-atlantic-morning` records against Québec
+City and Vancouver.
+
 ---
 
 ## 3. Placement the level document should use
