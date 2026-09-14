@@ -1800,7 +1800,14 @@ describe('gate B walks every claim in content/, not every file in content/questi
     const result = runClaims(root);
     expect(result.out).toContain('verify-content: OK.');
     expect(result.out).toContain('content/questions/ — 1 document(s), 1 claim(s)');
-    expect(result.out).not.toContain('content/schemas/');
+    /* A schema must never be walked as a claim document. The identity note may still
+       name content/schemas/ as where it looks for required ids — that is a message about
+       the schemas, not a claim read from them — so assert on the claim walk itself. */
+    const walked = result.out
+      .split('\n')
+      .filter((line) => /document\(s\), \d+ claim\(s\)|found no claim in/u.test(line));
+    expect(walked.length, 'the gate printed no claim-walk lines to check').toBeGreaterThan(0);
+    expect(walked.join('\n')).not.toContain('content/schemas/');
   });
 
   it('fails when the schema defines a factClaim the recogniser would not match', () => {
