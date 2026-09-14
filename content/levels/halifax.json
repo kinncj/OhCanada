@@ -43,11 +43,11 @@
         "quote": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia."
       },
       "verification": {
-        "status": "rejected",
-        "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T19:13:39Z",
-        "sourceHash": "2497a7462458b6a0f90acb427b87b05d628bec33627a048c2f7558d0b3bd655e",
-        "evidence": "Unlike later treaties signed in other parts of Canada, the Peace and Friendship Treaties did not involve First Nations surrendering rights to the lands and resources they had traditionally used and occupied."
+        "status": "verified",
+        "model": "claude-opus-5",
+        "checkedAt": "2026-09-14T18:11:12Z",
+        "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
+        "evidence": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia. … Kwilmu’kw Maw-klusuaqn takes direction from the Assembly of Nova Scotia Mi’kmaw Chiefs in their work on behalf of the Mi’kmaq of Nova Scotia … KMK was developed by the Mi’kmaq, for the Mi’kmaq. Through these discussions, we hope that the Mi’kmaq of Nova Scotia can finally implement our Rights from the Treaties signed by our ancestors in the 1700’s."
       }
     },
     "nationSource": {

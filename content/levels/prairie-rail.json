@@ -44,11 +44,11 @@
         "quote": "The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba."
       },
       "verification": {
-        "status": "verified",
-        "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T20:05:31Z",
+        "status": "rejected",
+        "model": "claude-opus-5",
+        "checkedAt": "2026-09-14T18:11:12Z",
         "sourceHash": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
-        "evidence": "While negotiators for the British Crown struggled to contain First Nations’ demands, the strategy of the Cree and Saulteaux was to gain full compensation for their lands. […] The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba. Canada sent the Hon. Alexander Morris, Lieutenant-Governor of the North-West Territory […] with an escort of 105 militia to Fort Qu’Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown."
+        "evidence": "the strategy of the Cree and Saulteaux was to gain full compensation for their lands. … The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba. Canada sent the Hon. Alexander Morris, Lieutenant-Governor of the North-West Territory, David Laird, Minister of the Interior, and William Christie, retired HBC factor, with an escort of 105 militia to Fort Qu’Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown. … Loud Voice called for the unity of the Cree and Saulteaux as the leader of the Saulteaux, Chief Cote, threatened to leave."
       }
     },
     "nationSource": {
