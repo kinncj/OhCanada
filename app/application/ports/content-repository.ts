@@ -560,6 +560,11 @@ export interface LevelDocument {
    * numbers alone.
    */
   readonly locomotion: readonly LocomotionTuning[];
+  /**
+   * What carries the player in a mode the rig cannot draw by itself, at most one
+   * per mode (ADR-0031). Absent for a level whose every mode is drawn on the rig.
+   */
+  readonly rides?: readonly Ride[];
   readonly quests: readonly QuestId[];
   readonly pois: readonly PointOfInterest[];
   readonly characters: readonly LevelCharacter[];

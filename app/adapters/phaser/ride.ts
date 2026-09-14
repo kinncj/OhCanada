@@ -143,7 +143,11 @@ export function rideBobPx(input: RideBobInput): number {
   const raw = Number.isFinite(input.speedFraction) ? input.speedFraction : 0;
   const speed = Math.min(1, Math.max(0, raw));
   if (speed === 0 || bob.amplitudePx === 0) return 0;
-  const phase = Math.abs(Math.sin((Math.PI * input.distancePx) / bob.periodPx));
+  /* The phase is taken from the position inside one period, so a joint lands on
+     sin(0) exactly; sin(π · n) in floating point is a few 1e-16 off zero, which
+     would leave the car "settled" a hair above the rail on every joint but the first. */
+  const within = ((input.distancePx % bob.periodPx) + bob.periodPx) % bob.periodPx;
+  const phase = Math.sin((Math.PI * within) / bob.periodPx);
   const lift = bob.amplitudePx * speed * phase;
   return lift === 0 ? 0 : -lift;
 }
