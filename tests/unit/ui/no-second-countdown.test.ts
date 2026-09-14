@@ -61,6 +61,14 @@ const ALLOWED: Readonly<Record<string, string>> = {
    * fast the player acts". The queue drains whether or not the player moves.
    */
   'ui/live-region.ts': 'the live region paces its own speech; the queue drains by itself',
+  /*
+   * The character creator's picture breathing (ADR-0040). An animation frame
+   * repaints the idle pose; nothing counts down, nothing expires, nothing is
+   * chosen for the player, and under reduced motion no frame is requested at
+   * all. It stops when the creator closes.
+   */
+  'adapters/phaser/character-preview.ts':
+    "the creator picture repaints its idle pose; nothing expires, and it requests no frame under reduced motion",
 };
 
 const sourceFiles = (directory: string): readonly string[] =>
