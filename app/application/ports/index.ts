@@ -59,6 +59,7 @@ export type {
   Ride,
   RideArt,
   RideBob,
+  RideFootprint,
   RideTrack,
   ShippableQuestion,
   SaveRules,

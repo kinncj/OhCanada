@@ -425,6 +425,7 @@ describe('a ride is read strictly, because the schema cannot compare it with its
     riderAnchor: { x: 520, y: 416 },
     groundLineY: 280,
     turnsWithRider: false,
+    footprint: { x: 360, width: 320 },
     ...patch,
   });
 
@@ -458,6 +459,7 @@ describe('a ride is read strictly, because the schema cannot compare it with its
         riderAnchor: { x: 520, y: 416 },
         groundLineY: 280,
         turnsWithRider: false,
+        footprint: { x: 360, width: 320 },
         bob: { amplitudePx: 2, periodPx: 180 },
         track: { artKey: 'car-track', topY: 532 },
       },
@@ -486,6 +488,11 @@ describe('a ride is read strictly, because the schema cannot compare it with its
     ['an anchor measured outside the art', { rides: [ride({ riderAnchor: { x: -1, y: 10 } })] }],
     ['a ground row above the art', { rides: [ride({ groundLineY: -1 })] }],
     ['a ride that does not say whether it turns', { rides: [ride({ turnsWithRider: undefined })] }],
+    /* ADR-0037: the stop keeps a character clear of this span, so a ride that
+       does not say where it is gives the stop nothing to keep clear of. */
+    ['a ride with no footprint', { rides: [ride({ footprint: undefined })] }],
+    ['a footprint with no width', { rides: [ride({ footprint: { x: 360, width: 0 } })] }],
+    ['a footprint measured outside the art', { rides: [ride({ footprint: { x: -1, width: 40 } })] }],
     ['a bob with no period', { rides: [ride({ bob: { amplitudePx: 2, periodPx: 0 } })] }],
     ['a track with no top row', { rides: [ride({ track: { artKey: 'car-track' } })] }],
   ])('rejects %s', (_label, patch) => {

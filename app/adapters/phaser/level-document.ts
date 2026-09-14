@@ -83,6 +83,7 @@ import type {
   Ride,
   RideArt,
   RideBob,
+  RideFootprint,
   RideTrack,
   ThemeColours,
   Vec2,
@@ -615,12 +616,29 @@ function readRides(
       return invalid(`${where}.turnsWithRider`, `"${where}.turnsWithRider" must be a boolean.`);
     }
 
+    /* Required, because a ride with no footprint gives the stop nothing to keep a
+       character clear of, and the whole art is the wrong default for a car whose
+       flank a person can stand behind (ADR-0037). */
+    const rawFootprint = item['footprint'];
+    if (!isRecord(rawFootprint)) {
+      return invalid(
+        `${where}.footprint`,
+        `"${where}.footprint" needs x and width: the span of the art a figure beyond the ride is seen inside.`,
+      );
+    }
+    const footprintX = readNumber(rawFootprint, 'x', { min: 0 });
+    if (!footprintX.ok) return invalid(`${where}.footprint.x`, footprintX.error.message);
+    const footprintWidth = readNumber(rawFootprint, 'width', { exclusiveMin: 0 });
+    if (!footprintWidth.ok) return invalid(`${where}.footprint.width`, footprintWidth.error.message);
+    const footprint: RideFootprint = { x: footprintX.value, width: footprintWidth.value };
+
     const ride: { -readonly [K in keyof Ride]: Ride[K] } = {
       mode,
       art,
       riderAnchor: riderAnchor.value,
       groundLineY: groundLineY.value,
       turnsWithRider,
+      footprint,
     };
 
     const bob = item['bob'];

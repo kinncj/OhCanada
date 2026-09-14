@@ -461,8 +461,16 @@ export interface Ride {
   readonly groundLineY: number;
   /** Whether the art mirrors about the rider when the rider turns. */
   readonly turnsWithRider: boolean;
+  /** The span of the art a figure beyond the ride would be seen inside (ADR-0037). */
+  readonly footprint: RideFootprint;
   readonly bob?: RideBob;
   readonly track?: RideTrack;
+}
+
+/** A horizontal span of a ride's art, in its own pixels from its left edge. */
+export interface RideFootprint {
+  readonly x: number;
+  readonly width: number;
 }
 
 /** One layer of a ride, and the side of the rider it is drawn on. */

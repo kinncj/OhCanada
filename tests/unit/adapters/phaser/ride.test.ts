@@ -26,6 +26,7 @@ const car: Ride = {
   riderAnchor: { x: 520, y: 416 },
   groundLineY: 280,
   turnsWithRider: false,
+  footprint: { x: 380, width: 320 },
   bob: { amplitudePx: 2, periodPx: 180 },
   track: { artKey: 'car-track', topY: 532 },
 };
@@ -39,6 +40,7 @@ const animal: Ride = {
   riderAnchor: { x: 100, y: 60 },
   groundLineY: 200,
   turnsWithRider: true,
+  footprint: { x: 0, width: 240 },
 };
 
 const SIZE: RideArtSize = { width: 1520, height: 540 };

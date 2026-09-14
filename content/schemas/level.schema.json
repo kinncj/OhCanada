@@ -283,10 +283,11 @@
           "description": "true when the art mirrors about the rider as the rider turns, as an animal walking head first does. false when it does not: a train backs up without turning round, and its passenger turns in their seat.",
           "type": "boolean"
         },
+        "footprint": { "$ref": "#/$defs/rideFootprint" },
         "bob": { "$ref": "#/$defs/rideBob" },
         "track": { "$ref": "#/$defs/rideTrack" }
       },
-      "required": ["mode", "art", "riderAnchor", "groundLineY", "turnsWithRider"],
+      "required": ["mode", "art", "riderAnchor", "groundLineY", "turnsWithRider", "footprint"],
       "additionalProperties": false
     },
 
@@ -306,6 +307,26 @@
         }
       },
       "required": ["key", "side"],
+      "additionalProperties": false
+    },
+
+    "rideFootprint": {
+      "title": "Ride footprint",
+      "description": "The span of the ride's art, in its own pixels, inside which a figure standing beyond the ride reads as being in it: seen through its glass, or sitting where the rider sits. A car names its glazing, not its steel flank, because a person behind a solid side reads as standing beyond the train; an animal names its whole body. The engine brings a drive to rest so that no character in reach stands inside this span (ADR-0037). Measured from the art's left edge and pinned to 1x like `riderAnchor`, so an art pixel is a design pixel.",
+      "type": "object",
+      "properties": {
+        "x": {
+          "description": "The span's left edge, in the art's own pixels from its left edge.",
+          "type": "number",
+          "minimum": 0
+        },
+        "width": {
+          "description": "The span's width, in the art's own pixels.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": ["x", "width"],
       "additionalProperties": false
     },
 
