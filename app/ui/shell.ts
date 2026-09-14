@@ -65,6 +65,7 @@ import {
   createCharacterCreator,
   type CharacterCreator,
   type CharacterSelection,
+  type CreatorArtFactory,
   type CreatorSlot,
 } from './character-creator';
 import { text, type UiLocale } from './copy';
@@ -74,7 +75,7 @@ import { injectScreenStyles } from './screen-styles';
 import { createSettingsScreen, type SettingsScreen } from './settings-screen';
 import { createStorageWarning, type StorageWarning } from './storage-warning';
 import { createSwitchRing, type SwitchRing } from './single-switch';
-import { type SettingsStore } from './settings';
+import { prefersReducedMotion, resolveMotion, type SettingsStore } from './settings';
 import { createTitleScreen, type TitleScreen } from './title-screen';
 
 /** Which of the three surfaces in front of the game is showing. */
@@ -101,6 +102,11 @@ export interface ShellCreatorOptions {
    * (`TN-LOOK-05`).
    */
   readonly optionRepaired?: boolean;
+  /**
+   * What draws the character in the creator's preview, on both of its errands
+   * (ADR-0040). The composition root chooses it; absent, the preview is words.
+   */
+  readonly art?: CreatorArtFactory;
 }
 
 export interface ShellOptions {
@@ -350,11 +356,32 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       editor?.setLocale(next.locale, slotsFor(next.locale));
       warning?.setLocale(next.locale);
     }
+    /* Reduced motion turned on from Settings, over the creator, stills its
+       picture now rather than the next time the screen is built. */
+    if (changed === 'reducedMotion') {
+      creator?.setMotion(motionNow());
+      editor?.setMotion(motionNow());
+    }
     syncRing();
   });
 
   function slotsFor(locale: UiLocale): readonly CreatorSlot[] {
     return options.creator?.slots[locale] ?? [];
+  }
+
+  /**
+   * The setting **or** the device's preference, which is `resolveMotion`'s rule
+   * and the one `applySettings` writes on the page. Reading the setting alone
+   * left a player whose phone asks for less motion with a creator that said
+   * `data-animated="true"` (`TN-CREATOR-07`).
+   */
+  function motionNow(): 'reduced' | 'full' {
+    return resolveMotion(store.current, prefersReducedMotion(doc.defaultView ?? {}));
+  }
+
+  function creatorArt(): { readonly art?: CreatorArtFactory } {
+    const art = options.creator?.art;
+    return art === undefined ? {} : { art };
   }
 
   /** The ring is on only when single-switch is on, a view is up, and it owns the page. */
@@ -445,7 +472,8 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       ...(options.now === undefined ? {} : { now: options.now }),
       singleSwitch: store.current.singleSwitch,
       holdMs: store.current.holdToChooseMs,
-      motion: store.current.reducedMotion ? 'reduced' : 'full',
+      motion: motionNow(),
+      ...creatorArt(),
       onChange: (next) => {
         selection = next;
       },
@@ -595,7 +623,8 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       ...(options.now === undefined ? {} : { now: options.now }),
       singleSwitch: store.current.singleSwitch,
       holdMs: store.current.holdToChooseMs,
-      motion: store.current.reducedMotion ? 'reduced' : 'full',
+      motion: motionNow(),
+      ...creatorArt(),
       optionRepaired,
       /* `TN-FIRSTRUN-03`: back to the title, having saved nothing and having
          asked nothing. The player is still a first-run player afterwards, so

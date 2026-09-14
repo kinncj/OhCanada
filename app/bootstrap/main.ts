@@ -50,6 +50,7 @@ import { browserIndexedDb, browserLocalStorage, openProgressStore } from '@adapt
 import { createSeededRandom } from '@adapters/random';
 import {
   GameRenderer,
+  createCharacterPreview,
   hasLevel,
   parseBootConfig,
   type BootConfig,
@@ -115,6 +116,7 @@ import {
   toPlayerCharacter,
   toSelection,
 } from './character-slots';
+import { creatorArt } from './creator-art';
 import { aboutThisPlaceView } from './about-this-place';
 import { readGameRules, type GameRules } from './game-rules';
 import {
@@ -775,6 +777,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       required: progress.character === null,
       initialSelection: characterSelection,
       optionRepaired: repairedCharacter.repaired,
+      /* The picture beside the words (ADR-0040): the level's sprite puppet in a
+         2D canvas, loaded when the creator opens and released when it closes. */
+      art: creatorArt(createCharacterPreview),
     },
     /*
      * Two callbacks, not one with a flag (`TN-FIRSTRUN`, ruling 3). The first

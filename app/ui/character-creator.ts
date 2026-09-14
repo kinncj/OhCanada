@@ -109,6 +109,42 @@ export function previewAttribute(slotId: string): string {
 /** Slot id to chosen option id. */
 export type CharacterSelection = Readonly<Record<string, string>>;
 
+/** How far the picture got. `failed` hides it and leaves the words (`TN-CREATOR-03`). */
+export type CreatorArtState = 'loading' | 'ready' | 'failed';
+
+export interface CreatorArtStatus {
+  readonly state: CreatorArtState;
+  /**
+   * The atlas frames on the picture, back to front. Published as `data-frames`
+   * on `character-preview-art`, because pixels are not comparable on a software
+   * GPU and a frame name is.
+   */
+  readonly frames: readonly string[];
+}
+
+/** What draws the character into the preview. This screen never knows which renderer it is. */
+export interface CreatorArt {
+  /** Dress the picture in this selection: called on every change. */
+  draw(selection: CharacterSelection): void;
+  /** `reduced` is a still pose and no frame loop at all. */
+  setMotion(motion: 'reduced' | 'full'): void;
+  /** The creator closed: release the canvas, the image and the loop. */
+  destroy(): void;
+}
+
+export interface CreatorArtRequest {
+  readonly selection: CharacterSelection;
+  readonly motion: 'reduced' | 'full';
+  readonly onStatus: (status: CreatorArtStatus) => void;
+}
+
+/**
+ * The seam between this screen and whatever draws (ADR-0040). A DOM host and a
+ * callback rather than an application port, because its first argument is an
+ * element and a port may not name the DOM. The composition root supplies one.
+ */
+export type CreatorArtFactory = (host: HTMLElement, request: CreatorArtRequest) => CreatorArt;
+
 /**
  * The options a slot offers. It takes the slot and *nothing else* — no current
  * selection, no other slot — which is the mechanical half of "no combination is
@@ -183,6 +219,11 @@ export interface CharacterCreatorOptions {
   readonly onOpenSettings?: () => void;
   /** Reduced motion is a request for stillness; the preview never animates under it. */
   readonly motion?: 'reduced' | 'full';
+  /**
+   * What draws the character beside the words (ADR-0040). Absent draws no
+   * picture and no empty box: the preview is the sentence alone, as it was.
+   */
+  readonly art?: CreatorArtFactory;
   readonly singleSwitch?: boolean;
   readonly holdMs?: number;
   readonly now?: () => number;
@@ -217,6 +258,8 @@ export function createCharacterCreator(
   const screen: Screen = createScreen(host, {
     id: 'tn-character-creator',
     testId: 'character-creator',
+    /* The picture's layout, and its sticky panel, key off this. */
+    className: 'tn-creator',
     locale,
     /* Escape means back, and never means quit (`TN-FIRSTRUN-06`). */
     ...(options.onBack === undefined ? {} : { onEscape: options.onBack }),
@@ -243,36 +286,54 @@ export function createCharacterCreator(
 
   /*
    * The preview: a panel headed "Your character" that says, in words, what was
-   * chosen in every group (`TN-CREATOR-06`).
+   * chosen in every group (`TN-CREATOR-06`) — and, when the composition root
+   * hands this screen something to draw with, shows it (ADR-0040).
    *
-   * It used to be a `role="img"` box with nothing in it and the sentence beside
-   * it. **Nothing draws character art into this screen** — no renderer is wired
-   * to it — so what a player saw was an empty bordered box, which is
-   * `TN-CREATOR-03`'s "an empty box with no explanation", and what a screen
-   * reader heard was an image nobody could see. Now the panel is a group named
-   * by its own visible heading and described by the sentence inside it, so the
-   * name and the description are text on the page in every state, and a
-   * renderer that draws the character later adds an `aria-hidden` picture
-   * inside the panel without changing either.
+   * **The words are the preview and the picture sits beside them.** The panel
+   * is a group named by its own visible heading and described by the sentence
+   * inside it in every state: while the art loads, once it is drawn, and when it
+   * never arrives. The picture is `aria-hidden` and holds no control, so a
+   * screen reader, a keyboard and a switch meet exactly the screen they met
+   * before there was one.
    *
-   * The `data-*` hooks stay on this element (`TN-CREATOR-01`): they are what
-   * that renderer, and the e2e suite, read.
+   * It used to be a `role="img"` box with nothing in it, which was
+   * `TN-CREATOR-03`'s "an empty box with no explanation". So a picture that
+   * fails is **hidden**, not left as a frame: the words close up and carry the
+   * preview alone, as they always could.
+   *
+   * The `data-*` hooks stay on this element (`TN-CREATOR-01`). The picture's
+   * host publishes its own: `data-state` (`loading`, `ready`, `failed`) and
+   * `data-frames`, the atlas frames on the picture back to front, which is what
+   * the e2e suite reads.
    */
   const previewHeading = element(doc, 'h2', {
     id: 'tn-creator-preview-heading',
     text: text(locale, 'creator.preview.label'),
   });
   const previewText = element(doc, 'p', { id: 'tn-creator-preview-text' });
+  const artHost =
+    options.art === undefined
+      ? null
+      : element(doc, 'div', {
+          testId: 'character-preview-art',
+          className: 'tn-creator__art',
+          attrs: { 'aria-hidden': 'true', 'data-state': 'loading', 'data-frames': '' },
+        });
   const preview = element(doc, 'div', {
     testId: 'character-preview',
-    className: 'tn-screen__preview',
+    className: 'tn-screen__preview tn-creator__preview',
     attrs: {
       role: 'group',
       'aria-labelledby': 'tn-creator-preview-heading',
       'aria-describedby': 'tn-creator-preview-text',
+      ...(artHost === null ? {} : { 'data-art': 'loading' }),
     },
-    children: [previewHeading, previewText],
+    children: artHost === null ? [previewHeading, previewText] : [previewHeading, artHost, previewText],
   });
+  let motion: 'reduced' | 'full' = options.motion ?? 'full';
+  /* Declared before the first `paint`, which hands the picture every change. */
+  let art: CreatorArt | null = null;
+  let destroyed = false;
 
   /*
    * `TN-LOOK-05`. A sentence, not a dialog: it does not cover a control, it does
@@ -375,7 +436,14 @@ export function createCharacterCreator(
 
   buildGroups();
   paint();
-  applyMotion(options.motion ?? 'full');
+  applyMotion(motion);
+  if (artHost !== null && options.art !== undefined) {
+    try {
+      art = options.art(artHost, { selection, motion, onStatus: showArtStatus });
+    } catch {
+      dropArt();
+    }
+  }
   /* Once, on arrival, through the one live region — and after `paint`, so it is
      not overtaken by the description. */
   if (options.optionRepaired === true) say(text(locale, 'creator.optionGone'));
@@ -443,6 +511,15 @@ export function createCharacterCreator(
       screen.refreshSwitch();
     },
     destroy(): void {
+      /* The picture first: its frame loop must not outlive the screen it paints. */
+      const current = art;
+      art = null;
+      destroyed = true;
+      try {
+        current?.destroy();
+      } catch {
+        /* Nothing is left to show a failure on. */
+      }
       screen.destroy();
     },
   };
@@ -451,11 +528,54 @@ export function createCharacterCreator(
     options.announce?.(message);
   }
 
-  function applyMotion(motion: 'reduced' | 'full'): void {
-    /* Read by `TN-CREATOR-07` and by the renderer that will drive the preview.
-       The value comes from `resolveMotion`, which has no tier input, so a fast
-       machine cannot turn this back on. */
-    preview.setAttribute('data-animated', String(motion !== 'reduced'));
+  function applyMotion(next: 'reduced' | 'full'): void {
+    motion = next;
+    /* Read by `TN-CREATOR-07`, and handed to the picture, which paints a still
+       pose under `reduced` and requests no frame at all. The shell resolves the
+       value from the setting and the device's preference together, with no tier
+       input, so a fast machine cannot turn this back on. */
+    preview.setAttribute('data-animated', String(next !== 'reduced'));
+    withArt((current) => {
+      current.setMotion(next);
+    });
+  }
+
+  /** What the picture reports, published on its host and on the panel. */
+  function showArtStatus(status: CreatorArtStatus): void {
+    if (artHost === null || destroyed) return;
+    artHost.setAttribute('data-state', status.state);
+    artHost.setAttribute('data-frames', status.frames.join(' '));
+    preview.setAttribute('data-art', status.state);
+    /* Never an empty box (`TN-CREATOR-03`): a picture that cannot be drawn
+       steps aside, and the words carry the preview alone. */
+    artHost.hidden = status.state === 'failed';
+  }
+
+  /**
+   * Hand the picture something to do, and survive it.
+   *
+   * A renderer that throws is a picture that failed. It must never be a creator
+   * whose radio stops announcing, or whose focus stops moving, because the call
+   * that paints sits in the middle of `select`.
+   */
+  function withArt(action: (current: CreatorArt) => void): void {
+    if (art === null) return;
+    try {
+      action(art);
+    } catch {
+      dropArt();
+    }
+  }
+
+  function dropArt(): void {
+    const current = art;
+    art = null;
+    try {
+      current?.destroy();
+    } catch {
+      /* Already failing; the words are still on the page. */
+    }
+    showArtStatus({ state: 'failed', frames: [] });
   }
 
   function buildGroups(): void {
@@ -619,6 +739,11 @@ export function createCharacterCreator(
       preview.setAttribute(previewAttribute(slot.id), selection[slot.id] ?? '');
     }
     previewText.textContent = describeSelection();
+    /* The picture follows the same change the words just did. */
+    const chosen = selection;
+    withArt((current) => {
+      current.draw(chosen);
+    });
   }
 
   function describeSelection(): string {
