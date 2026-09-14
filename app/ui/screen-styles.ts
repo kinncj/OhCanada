@@ -38,6 +38,15 @@
  *     (`overflow-wrap: anywhere`), which is what "the page does not scroll
  *     sideways" comes down to at 390 px. Rows that hold a label and a badge
  *     wrap rather than clip.
+ *     **Chrome that holds still (ADR-0039).** Text scales; the space around it
+ *     does not have to. On a 390 px phone at 200 % text, padding, card edges and
+ *     the HUD's gaps that doubled with the text took the width and the height
+ *     the words needed — map cards drew one word per line and the HUD pushed its
+ *     action off screen. Where space is the constraint, a length is written
+ *     `calc(Nrem / var(--tn-text-scale, 1))`: still rem, the same CSS px at every
+ *     scale, and a minimum written that way is held to the same 2.75rem (44 px)
+ *     floor by the unit suite. The text inside keeps growing, so a control still
+ *     grows with its label; only the empty space around it stops doubling.
  *  3. **Reduced motion.** `[data-tn-motion="reduced"]` — set by `applySettings`
  *     from the setting *or* the media query — removes transitions and
  *     animations. The media query is honoured on its own as well, so stillness
@@ -1330,6 +1339,14 @@ const CSS = `
  *  2. It is chrome, not a play control. pointer-events: none on the region and
  *     its rows, auto on the controls, so a hold on the play area behind the
  *     strip reaches the level and activates nothing here.
+ *  3. THE ACTION IS ALWAYS ON SCREEN (ADR-0039). The strip draws the prompt and
+ *     Settings and Menu first, so they are the part of the scroll box that is
+ *     visible; the mode, the task, the notice and the hint follow and scroll.
+ *     At 200 % text a third of an 844 px viewport is 278 px, and the prompt
+ *     plus one row of controls fit in it only because the space AROUND the text
+ *     holds still: padding, gaps and the controls' minimum size are divided by
+ *     the text scale, and Settings and Menu share one row rather than taking
+ *     two. The words themselves still grow to 200 %.
  * ------------------------------------------------------------------ */
 
 .tn-main {
@@ -1358,23 +1375,23 @@ const CSS = `
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: calc(0.5rem / var(--tn-text-scale, 1));
   padding:
-    0.875rem
-    max(0.875rem, env(safe-area-inset-right, 0px))
-    max(0.875rem, env(safe-area-inset-bottom, 0px))
-    max(0.875rem, env(safe-area-inset-left, 0px));
+    calc(0.75rem / var(--tn-text-scale, 1))
+    max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-right, 0px))
+    max(calc(0.75rem / var(--tn-text-scale, 1)), env(safe-area-inset-bottom, 0px))
+    max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-left, 0px));
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 1rem;
-  line-height: 1.4;
+  line-height: 1.35;
   color: var(--tn-on-night);
   /* Opaque, not a wash over the canvas: text on a translucent panel over a
      gradient has no computable contrast, and axe reports "incomplete" rather
      than a pass. */
   background: var(--tn-night);
-  border-block-start: 0.25rem solid var(--tn-accent);
-  border-start-start-radius: 1.25rem;
-  border-start-end-radius: 1.25rem;
+  border-block-start: calc(0.25rem / var(--tn-text-scale, 1)) solid var(--tn-accent);
+  border-start-start-radius: calc(1.25rem / var(--tn-text-scale, 1));
+  border-start-end-radius: calc(1.25rem / var(--tn-text-scale, 1));
   pointer-events: none;
 }
 
@@ -1401,44 +1418,53 @@ const CSS = `
 .tn-hud__slot {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: calc(0.5rem / var(--tn-text-scale, 1));
 }
 
 .tn-hud__slot:empty { display: none; }
 
 /*
   The two controls a player needs while a level is running, on one row: the way
-  to Settings and the way to everything else. They wrap to two rows rather than
-  shrinking, because at 200 % text two words do not share a 390 px line.
+  to Settings and the way to everything else. Each is as wide as its word and the
+  row's spare width is shared between them, so at 200 % text "Settings" and
+  "Menu" -- and « Réglages » and « Menu » in the dyslexia font -- still share a
+  390 px line. They wrap to two rows only if a label ever cannot, rather than
+  shrinking a word into pieces.
 */
 .tn-hud__controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: calc(0.5rem / var(--tn-text-scale, 1));
 }
 
-.tn-hud__controls button { flex: 1 1 9rem; }
+.tn-hud .tn-hud__controls button {
+  flex: 1 1 auto;
+  inline-size: auto;
+}
 
 .tn-hud button {
   box-sizing: border-box;
-  min-block-size: 3rem;
-  min-inline-size: 3rem;
+  /* 48 px at every text size: the label grows the button past it, the padding
+     around the label does not (see the note at the top of this block). */
+  min-block-size: calc(3rem / var(--tn-text-scale, 1));
+  min-inline-size: calc(3rem / var(--tn-text-scale, 1));
   inline-size: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 0.875rem;
-  border: var(--tn-edge-width) solid var(--tn-ink);
-  border-radius: var(--tn-radius);
+  gap: calc(0.5rem / var(--tn-text-scale, 1));
+  padding: calc(0.5rem / var(--tn-text-scale, 1)) calc(0.75rem / var(--tn-text-scale, 1));
+  border: calc(var(--tn-edge-width) / var(--tn-text-scale, 1)) solid var(--tn-ink);
+  border-radius: calc(var(--tn-radius) / var(--tn-text-scale, 1));
   background: var(--tn-paper-2);
   color: var(--tn-ink);
   font: inherit;
   font-weight: 700;
+  line-height: 1.25;
   text-align: center;
   overflow-wrap: anywhere;
   cursor: pointer;
-  box-shadow: 0 var(--tn-lift) 0 var(--tn-night-2);
+  box-shadow: 0 calc(var(--tn-lift) / var(--tn-text-scale, 1)) 0 var(--tn-night-2);
   /* The controls, and only the controls, take input. */
   pointer-events: auto;
 }
@@ -1446,13 +1472,13 @@ const CSS = `
 .tn-hud button:active { box-shadow: 0 0 0 var(--tn-night-2); }
 
 /* What is in reach right now. Brass, so the thing to tap is the thing that
-   looks tappable — and it carries the landmark's own name, so it is not colour
+   looks tappable — and it says what pressing does in words, so it is not colour
    doing the work. */
 .tn-hud button.tn-hud__prompt {
   background: var(--tn-accent);
   color: var(--tn-accent-ink);
   border-color: var(--tn-accent-edge);
-  box-shadow: 0 var(--tn-lift) 0 var(--tn-accent-edge);
+  box-shadow: 0 calc(var(--tn-lift) / var(--tn-text-scale, 1)) 0 var(--tn-accent-edge);
   font-size: 1.0625rem;
 }
 
@@ -1472,18 +1498,18 @@ const CSS = `
   the rest of the strip. It is not an error and is not drawn as one.
 */
 .tn-hud__notice {
-  border: var(--tn-edge-width) solid var(--tn-on-night);
-  border-inline-start-width: 0.625rem;
-  border-radius: var(--tn-radius);
-  padding: 0.5rem 0.75rem;
+  border: calc(var(--tn-edge-width) / var(--tn-text-scale, 1)) solid var(--tn-on-night);
+  border-inline-start-width: calc(0.625rem / var(--tn-text-scale, 1));
+  border-radius: calc(var(--tn-radius) / var(--tn-text-scale, 1));
+  padding: calc(0.375rem / var(--tn-text-scale, 1)) calc(0.625rem / var(--tn-text-scale, 1));
   color: var(--tn-on-night);
   font-weight: 700;
 }
 
 .tn-hud__hint {
-  border: var(--tn-edge-width) solid var(--tn-on-night);
-  border-radius: var(--tn-radius);
-  padding: 0.5rem 0.75rem;
+  border: calc(var(--tn-edge-width) / var(--tn-text-scale, 1)) solid var(--tn-on-night);
+  border-radius: calc(var(--tn-radius) / var(--tn-text-scale, 1));
+  padding: calc(0.375rem / var(--tn-text-scale, 1)) calc(0.625rem / var(--tn-text-scale, 1));
   color: var(--tn-on-night);
   font-weight: 600;
 }

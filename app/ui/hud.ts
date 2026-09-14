@@ -176,9 +176,9 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   });
 
   const warningSlot = element(doc, 'div', { className: 'tn-hud__slot' });
-  /* The hint has a slot of its own, above the prompt's, rather than sharing one:
-     an explanation read before the offer is the order they are useful in, and
-     two slots keep that true however either of them arrives. */
+  /* The hint has a slot of its own, after the prompt's and the controls, rather
+     than sharing one: the offer is what the player can act on, the hint explains
+     the marks, and two slots keep that order however either of them arrives. */
   const hintSlot = element(doc, 'div', { className: 'tn-hud__slot' });
   const noticeSlot = element(doc, 'div', { className: 'tn-hud__slot' });
   const promptSlot = element(doc, 'div', { className: 'tn-hud__slot' });
@@ -224,12 +224,27 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
    * `<section>` with an accessible name is a `region` landmark, which is what
    * `TN-HUD-07` asks for by name. Every piece of visible text the HUD draws is
    * inside it, so axe's `region` rule has nothing left outside a landmark.
+   *
+   * **What the player can do comes first, and what explains it after**
+   * (ADR-0039). The strip is capped at a third of the viewport and scrolls inside
+   * itself, so whatever is first is what is on screen. At 200 % text on a
+   * 390 x 844 phone the old order — mode, task, warning, notice, hint, then the
+   * prompt and Menu — put "Talk to the guide" below the fold behind a hint that
+   * filled the strip, and cut Menu off at spawn. Now the offer and the two
+   * controls are always the top of the strip, and the paragraphs below them
+   * scroll. The DOM order *is* the visual order, so reading order and focus
+   * order agree with what a sighted player sees (WCAG 1.3.2, 2.4.3).
+   *
+   * One scroll box and not two: a strip with a text-only scroll area inside it
+   * would be a scrollable region with nothing focusable (axe's
+   * `scrollable-region-focusable`), and a pinned footer over scrolling text would
+   * leave axe unable to compute that text's contrast.
    */
   const region = element(doc, 'section', {
     testId: 'hud',
     className: 'tn-hud',
     attrs: { 'aria-label': text(locale, 'hud.label') },
-    children: [status, warningSlot, noticeSlot, hintSlot, promptSlot, controls],
+    children: [promptSlot, controls, warningSlot, noticeSlot, status, hintSlot],
   });
   main.append(region);
 
@@ -316,18 +331,22 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
         ...(options.onInteract === undefined ? {} : { onClick: options.onInteract }),
       }),
     );
+    /* A new offer is the top of the strip, and a player who had scrolled down to
+       read the hint must not have it arrive out of sight (ADR-0039). */
+    region.scrollTop = 0;
   }
 
   /**
-   * The hint, above the prompt.
+   * The hint, below the offer and the controls.
    *
    * Removed rather than hidden, for the reason the tracker is: `TN-REACH-04`
    * requires it to be absent from the accessibility tree once the player has
    * engaged anything, and a hidden element is one stylesheet away from being
    * visible and one screen reader away from being read.
    *
-   * It has a slot of its own above the prompt's, so the explanation is read
-   * first and the offer last whichever of the two arrives first.
+   * It has a slot of its own after the prompt's, so the offer is never pushed
+   * out of the strip by the sentence explaining it (ADR-0039) — it used to sit
+   * above the prompt, and at 200 % text it filled the strip.
    */
   function renderHint(): void {
     const existing = hintElement();

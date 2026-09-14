@@ -432,6 +432,50 @@ test.describe('the HUD', () => {
     await expect(page.locator('[data-testid="interact-prompt"]')).toHaveText("Parler à l'agent");
   });
 
+  test('keeps the offer, Settings and Menu inside the strip at 200 %, in French, with everything else on it', async ({
+    page,
+  }) => {
+    /*
+     * The live-site audit: at 200 % text the hint filled the strip, its words
+     * were cut off, the prompt was below the fold, and at spawn Menu was already
+     * cut off. ADR-0039 puts the action first and lets the words below it scroll,
+     * so the three controls are inside the strip's visible box whatever else is
+     * on it — the hint, the task, the notice and the storage warning together, in
+     * French, in the dyslexia font, on a 390 x 844 phone.
+     */
+    await open(page, 'level', {
+      locale: 'fr',
+      textScale: 200,
+      font: 'dyslexia',
+      task: true,
+      prompt: true,
+      hint: true,
+      notice: true,
+      warning: true,
+    });
+    const strip = await page.locator('[data-testid="hud"]').boundingBox();
+    expect(strip).not.toBeNull();
+    const top = strip?.y ?? 0;
+    const bottom = top + (strip?.height ?? 0);
+    for (const testId of ['interact-prompt', 'hud-settings-button', 'menu-button']) {
+      const box = await page.locator(`[data-testid="${testId}"]`).boundingBox();
+      expect(box, `${testId} is not drawn`).not.toBeNull();
+      expect(box?.y ?? -1, `${testId} starts above the strip`).toBeGreaterThanOrEqual(top - 1);
+      expect(
+        (box?.y ?? 0) + (box?.height ?? Number.POSITIVE_INFINITY),
+        `${testId} is cut off at the bottom of the strip, where a player has to scroll to find it`,
+      ).toBeLessThanOrEqual(bottom + 1);
+    }
+    /* And no label inside them is clipped to fit. */
+    const clipped = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('.tn-hud button')]
+        .filter((element) => element.scrollWidth > element.clientWidth + 1)
+        .map((element) => element.textContent ?? ''),
+    );
+    expect(clipped, clipped.join(' | ')).toEqual([]);
+    expect(await undersizedTargets(page)).toEqual([]);
+  });
+
   test('stays in the lower third, so the playfield is not covered', async ({ page }) => {
     /* TN-HUD-01 and TN-LEVEL-04: the skater is drawn in the upper two thirds. */
     await open(page, 'level', { task: true, prompt: true, warning: true, textScale: 200 });

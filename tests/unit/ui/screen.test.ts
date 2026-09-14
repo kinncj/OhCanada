@@ -244,6 +244,30 @@ describe('the screen stylesheet', () => {
       expect(unit, `min-size in "${unit ?? '?'}" does not scale with the text`).toBe('rem');
       expect(Number(value)).toBeGreaterThanOrEqual(2.75);
     }
+    /*
+     * The one other shape a minimum may take (ADR-0039): a rem length divided by
+     * the text scale, which is the same number of CSS px at every scale — the HUD
+     * uses it so its action fits a third of a phone at 200 % text. Its floor is
+     * the same 2.75rem, read the same way, so it can never be the loophole the
+     * rule above exists to close: 2.75rem over the scale is 44 px at 100 % and at
+     * 200 % alike.
+     */
+    const steady = [
+      ...css.matchAll(
+        /min-(?:block|inline)-size:\s*calc\(([\d.]+)(\w+) \/ var\(--tn-text-scale, 1\)\)/g,
+      ),
+    ];
+    expect(steady.length, 'the HUD declares no minimum control size').toBeGreaterThan(0);
+    for (const [, value, unit] of steady) {
+      expect(unit, `a steady min-size in "${unit ?? '?'}"`).toBe('rem');
+      expect(Number(value)).toBeGreaterThanOrEqual(2.75);
+    }
+    /* And nothing declares a minimum in any third shape that neither check reads. */
+    for (const [, declared] of css.matchAll(/min-(?:block|inline)-size:\s*calc\(([^;]*)\);/g)) {
+      expect(declared, 'a min-size calc() this suite cannot read').toMatch(
+        /^[\d.]+rem \/ var\(--tn-text-scale, 1\)$/,
+      );
+    }
 
     /* Reduced motion from the setting, and from the media query on its own. */
     expect(css).toContain('[data-tn-motion="reduced"]');

@@ -152,6 +152,54 @@ describe('the interact prompt', () => {
   });
 });
 
+describe('what the player can do comes first (ADR-0039)', () => {
+  /** Every test id under the region, in document order. */
+  const testIdsIn = (node: FakeElement | null): string[] => {
+    if (node === null) return [];
+    const own = node.getAttribute('data-testid');
+    return [...(own === null ? [] : [own]), ...node.children.flatMap((child) => testIdsIn(child))];
+  };
+
+  it('draws the offer, then Settings and Menu, then the words that explain them', () => {
+    /*
+     * The live-site audit: at 200 % text the hint filled the strip and pushed the
+     * prompt below the fold, and Menu was cut off at spawn. The strip is one
+     * scroll box capped at a third of the viewport, so what is first is what is
+     * seen. Geometry is `tests/a11y`'s to prove; the order is proved here.
+     */
+    const { hud, at } = mount();
+    hud.setMode('Walking');
+    hud.setTask('Find the Town Clock');
+    hud.setNotice('The questions are not ready right now. Try again later.');
+    hud.setHint('A mark shows someone or something you can choose. Get close, then choose.');
+    hud.setStorageWarning(true);
+    hud.setPrompt('Talk to the guide');
+
+    const order = testIdsIn(at('hud'));
+    const index = (testId: string): number => {
+      const found = order.indexOf(testId);
+      expect(found, `${testId} is not in the strip`).toBeGreaterThanOrEqual(0);
+      return found;
+    };
+    expect(index('interact-prompt')).toBeLessThan(index('hud-settings-button'));
+    expect(index('hud-settings-button')).toBeLessThan(index('menu-button'));
+    for (const words of ['storage-warning', 'hud-notice', 'hud-mode-label', 'hud-quest-tracker', 'interact-hint']) {
+      expect(index('menu-button'), `${words} is drawn before Menu`).toBeLessThan(index(words));
+    }
+    /* The mode and the task stay together, and the hint is last. */
+    expect(index('hud-mode-label')).toBeLessThan(index('hud-quest-tracker'));
+    expect(index('hud-quest-tracker')).toBeLessThan(index('interact-hint'));
+  });
+
+  it('brings a new offer back to the top of the strip', () => {
+    const { hud, at } = mount();
+    const region = at('hud') as unknown as { scrollTop: number };
+    region.scrollTop = 120;
+    hud.setPrompt('Talk to the guide');
+    expect(region.scrollTop, 'the offer arrived out of sight').toBe(0);
+  });
+});
+
 describe('the one-time hint, and the notice', () => {
   it('is a paragraph beside the prompt, never a control and never instead of it', () => {
     /*
