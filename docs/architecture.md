@@ -212,6 +212,17 @@ second amendment made the subject the **claim**, not the screen. A landmark blur
 carry a `FactClaim` — `factual`, plus the same `source` and `verification` blocks — and travel the same
 path. A wrong fact in a Mountie's mouth is exactly as wrong as one on a question card.
 
+**Verification follows the claim; ownership follows the grade.** These are two rules, and they are easy to
+merge by accident. Every claim, graded or told, is verified to the same standard (ADR-0003). Only a
+*graded* proposition — the one a question's prompt asks and its `correctIndex` keys — belongs to a subject,
+and at most one subject may grade it (ADR-0028), because the ship floor, the exam's by-subject rows and the
+scheduler count graded propositions and nothing else. A blurb, a territorial statement, a line of dialogue
+and a question's explanation are *told*: they may state a proposition another subject grades, and a level's
+`subject` is the remit of its quest and its bank, not of every sentence drawn on the level (ADR-0030).
+`a-proposition-belongs-to-one-subject.test.ts` holds the graded half; the told half has no ownership rule to
+hold. One place in the code still disagrees: until ADR-0030's gate change lands, gate A4 binds every level
+claim's grant to the level's `subject`.
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]

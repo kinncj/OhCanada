@@ -1,6 +1,9 @@
 # ADR-0028: A subject is a remit, not a chapter
 
 - Status: Accepted (2026-09-09)
+- Amended 2026-09-13 by ADR-0030: §4's rule reaches **graded** propositions — the one a question's prompt
+  asks and its `correctIndex` keys. Landmark blurbs, territorial statements, dialogue lines, explanations and
+  evidence are told, not graded, and are outside it. Nothing below is superseded.
 
 ## Context
 
