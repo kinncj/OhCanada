@@ -559,6 +559,14 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * first frame and not one level later.
    */
   renderer.setAutoMove(store.current.autoMove);
+  /*
+   * "Less movement", the same way and for the same reason. Its absence was a
+   * shipped defect: the setting restyled the DOM and the canvas never heard of
+   * it, so particles and parallax easing stayed on until the operating system
+   * asked for stillness instead. `applyToPage` above covers the screens; this
+   * covers what the renderer draws, from the save at boot and on every change.
+   */
+  renderer.setReducedMotion(store.current.reducedMotion);
 
   const entriesNow = (): readonly MapEntry[] =>
     journeyEntries({
@@ -1037,6 +1045,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       shellPassport?.setSingleSwitch(next.singleSwitch, next.holdToChooseMs);
     }
     if (changed === 'autoMove') renderer.setAutoMove(next.autoMove);
+    if (changed === 'reducedMotion') renderer.setReducedMotion(next.reducedMotion);
     progress = withSettings(progress, toDomainSettings(next, progress.settings));
     persist();
   });

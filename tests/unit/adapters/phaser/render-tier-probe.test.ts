@@ -16,6 +16,7 @@ import { createFrameCostRecorder } from '@adapters/phaser/frame-cost';
 import { identifyRenderer } from '@adapters/phaser/renderer-identity';
 import {
   applyTierMarkers,
+  motionLevelFor,
   prefersReducedMotion,
   readFormFactor,
   resolveMotionLevel,
@@ -115,6 +116,28 @@ describe('resolveMotionLevel', () => {
       'reduced',
     );
     expect(resolveMotionLevel({ mediaQuery: { matches: true }, override: false })).toBe('full');
+  });
+});
+
+describe('motionLevelFor — the in-game setting or the system, either one', () => {
+  it('reduces motion when the player turned "Less movement" on, whatever the system says', () => {
+    /* The shipped defect: the renderer read the media query alone, so this case
+       drew full motion. */
+    expect(motionLevelFor({ setting: true, mediaQuery: { matches: false } })).toBe('reduced');
+    expect(motionLevelFor({ setting: true, mediaQuery: null })).toBe('reduced');
+    expect(motionLevelFor({ setting: true })).toBe('reduced');
+  });
+
+  it('reduces motion when the system asks, even with the setting off', () => {
+    /* Unlike `resolveMotionLevel`'s override, a setting that is off never hands
+       motion back to a player whose system asked for stillness. */
+    expect(motionLevelFor({ setting: false, mediaQuery: { matches: true } })).toBe('reduced');
+  });
+
+  it('draws full motion only when neither asks for stillness', () => {
+    expect(motionLevelFor({ setting: false, mediaQuery: { matches: false } })).toBe('full');
+    expect(motionLevelFor({ setting: false, mediaQuery: null })).toBe('full');
+    expect(motionLevelFor({ setting: false })).toBe('full');
   });
 });
 
@@ -340,6 +363,76 @@ describe('startRenderTierProbe', () => {
     expect(probe.profile.particles).toBe(0);
     expect(probe.profile.parallaxEasing).toBe(false);
     expect(probe.profile.squashStretch).toBe(false);
+  });
+
+  it('takes motion away at once when the player asks, without re-measuring the tier', () => {
+    const fake = fakeSignals();
+    const target = marker();
+    const onProfile = vi.fn();
+    const probe = startRenderTierProbe(
+      probeOptions({
+        signals: fake.signals,
+        marker: target,
+        onProfile,
+        pinnedTier: 'high',
+        recorder: createFrameCostRecorder({ warmupFrames: 0, windowFrames: 4 }),
+      }),
+    );
+    expect(probe.profile.particles, 'a pinned high tier allows particles').toBeGreaterThan(0);
+    expect(probe.profile.parallaxEasing).toBe(true);
+    const calls = onProfile.mock.calls.length;
+
+    probe.setMotion('reduced');
+
+    /* Published straight away, through the same callback a tier change uses, so
+       the open level re-derives its snow and its parallax in the same step. */
+    expect(onProfile).toHaveBeenCalledTimes(calls + 1);
+    const published = onProfile.mock.calls.at(-1)?.[0];
+    expect(published?.motion).toBe('reduced');
+    expect(published?.particles).toBe(0);
+    expect(published?.parallaxEasing).toBe(false);
+    expect(published?.squashStretch).toBe(false);
+    expect(probe.profile.tier, 'motion is not a tier: the tier stays where it was').toBe('high');
+    expect(target.dataset['tnMotion'], '<html> and the canvas must not say "full"').toBe('reduced');
+  });
+
+  it('keeps motion away across later measurement windows, and gives it back when asked', () => {
+    const fake = fakeSignals();
+    const probe = startRenderTierProbe(
+      probeOptions({
+        signals: fake.signals,
+        recorder: createFrameCostRecorder({ warmupFrames: 0, windowFrames: 4 }),
+      }),
+    );
+
+    probe.setMotion('reduced');
+    /* Cheap frames that promote the device: the new profile is built under the
+       motion the player chose, not under the one the probe started with. */
+    fake.run(1 + 4 + 4, 1);
+    expect(probe.profile.tier).toBe('high');
+    expect(probe.profile.motion).toBe('reduced');
+    expect(probe.profile.particles).toBe(0);
+
+    probe.setMotion('full');
+    expect(probe.profile.motion).toBe('full');
+    expect(probe.profile.parallaxEasing).toBe(true);
+    expect(probe.profile.particles).toBe(
+      Math.min(PRESETS.high.particles, 1500),
+    );
+  });
+
+  it('does nothing for a motion it already has, and publishes nothing once stopped', () => {
+    const onProfile = vi.fn();
+    const probe = startRenderTierProbe(probeOptions({ onProfile, motion: 'reduced' }));
+    const calls = onProfile.mock.calls.length;
+
+    probe.setMotion('reduced');
+    expect(onProfile).toHaveBeenCalledTimes(calls);
+
+    probe.stop();
+    probe.setMotion('full');
+    expect(onProfile, 'a stopped probe reached into a destroyed level').toHaveBeenCalledTimes(calls);
+    expect(probe.profile.motion).toBe('full');
   });
 
   it('never grants Filters on Canvas, however fast it measures', () => {

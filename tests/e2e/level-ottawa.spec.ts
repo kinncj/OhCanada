@@ -947,6 +947,73 @@ test.describe('the visual tier is spent on something', () => {
     await expect(probe).toHaveAttribute('data-parallax-easing', 'off');
   });
 
+  /**
+   * The in-game setting, not the operating system's, and through the screen a
+   * player uses.
+   *
+   * The test above emulates `prefers-reduced-motion`, and that path always
+   * worked. "Less movement" in Settings did not: it restyled the page and the
+   * renderer never heard of it, so Ottawa kept its snow and its eased parallax
+   * with the switch on, and again after a reload. Pinned at `high` so there is
+   * snow to take away on a software rasteriser.
+   */
+  test('the in-game "Less movement" setting removes particles and parallax easing, and keeps them off after a reload', async ({
+    page,
+  }) => {
+    test.setTimeout(180_000);
+    await page.goto(`${LEVEL_URL}&tier=high`);
+    await page.waitForSelector('[data-testid="playable"]', { timeout: 60_000 });
+
+    const probe = page.locator('[data-testid="scene-state"]');
+    await expect(probe).toHaveAttribute('data-tier', 'high');
+    await expect(probe).toHaveAttribute('data-motion', 'full');
+    await expect(probe).toHaveAttribute('data-parallax-easing', 'on');
+    await expect
+      .poll(async () => Number(await probe.getAttribute('data-particles')), {
+        message: 'Ottawa snows at a pinned high tier, so the setting has something to remove',
+        timeout: 30_000,
+      })
+      .toBeGreaterThan(0);
+
+    await page.getByTestId('hud-settings-button').click();
+    const toggle = page.getByTestId('setting-reduced-motion');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-checked', 'true');
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('settings-screen')).toBeHidden();
+
+    await expect(page.locator('html')).toHaveAttribute('data-tn-motion', 'reduced');
+    await expect(probe, 'the setting never reached the renderer').toHaveAttribute('data-motion', 'reduced');
+    await expect(probe, 'snow still falls with "Less movement" on').toHaveAttribute('data-particles', '0');
+    await expect(probe).toHaveAttribute('data-particle-allowance', '0');
+    await expect(probe, 'parallax still eases with "Less movement" on').toHaveAttribute(
+      'data-parallax-easing',
+      'off',
+    );
+    /* Still off a few measurement windows later: the probe republishes on every
+       window, and it used to write "full" back onto <html> when it did. */
+    await page.waitForTimeout(2_000);
+    await expect(page.locator('html')).toHaveAttribute('data-tn-motion', 'reduced');
+    await expect(probe).toHaveAttribute('data-particles', '0');
+
+    /* After a reload, from the save. The save is written asynchronously, so the
+       reload is repeated until the page reads it back rather than raced once;
+       a setting that never persists fails at the timeout. */
+    await expect
+      .poll(
+        async () => {
+          await page.reload();
+          await page.waitForSelector('[data-testid="playable"]', { timeout: 60_000 });
+          return probe.getAttribute('data-motion');
+        },
+        { message: 'the setting did not survive a reload', timeout: 150_000, intervals: [1_000] },
+      )
+      .toBe('reduced');
+    await expect(probe).toHaveAttribute('data-particles', '0');
+    await expect(probe).toHaveAttribute('data-parallax-easing', 'off');
+    await expect(page.locator('html')).toHaveAttribute('data-tn-motion', 'reduced');
+  });
+
   test('this suite runs on a software rasteriser, so the tier is capped', async ({ page }) => {
     await openLevel(page);
     /* The same claim `scene-probe.spec.ts` makes at boot, re-made with a level

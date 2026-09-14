@@ -138,6 +138,8 @@ const hoisted = vi.hoisted(() => {
     loadingHidden: number;
     loadingStallAfterMs: number | undefined;
     autoMove: boolean[];
+    /** Every "Less movement" value the renderer was told, in order. */
+    reducedMotion: boolean[];
     appearance: Record<string, string>[];
     /** Every question the card was asked to present, in order. */
     questionsAsked: unknown[];
@@ -250,6 +252,7 @@ const hoisted = vi.hoisted(() => {
     loadingHidden: 0,
     loadingStallAfterMs: undefined,
     autoMove: [],
+    reducedMotion: [],
     appearance: [],
     questionsAsked: [],
     questionHost: null,
@@ -343,6 +346,10 @@ vi.mock('@adapters/phaser', () => ({
     }
     setAutoMove(enabled: boolean): void {
       hoisted.state.autoMove.push(enabled);
+    }
+    /* "Less movement": the setting the canvas never heard about. */
+    setReducedMotion(requested: boolean): void {
+      hoisted.state.reducedMotion.push(requested);
     }
     /* The other capability that had no caller until the creator was mounted:
        what the player chose is what the level draws (`TN-CREATOR-01`, "the
@@ -926,6 +933,7 @@ beforeEach(() => {
   hoisted.state.loadingHidden = 0;
   hoisted.state.loadingStallAfterMs = undefined;
   hoisted.state.autoMove = [];
+  hoisted.state.reducedMotion = [];
   hoisted.state.questionsAsked = [];
   hoisted.state.questionHost = null;
   hoisted.state.questionOptions = null;
@@ -1094,6 +1102,39 @@ describe('the settings a level has to obey', () => {
     store.set('autoMove', true);
 
     expect(hoisted.state.autoMove, 'turning auto-move on did not reach the scene').toEqual([true]);
+  });
+
+  it('tells the renderer about "Less movement" at boot, from the save', async () => {
+    await boot('');
+
+    /*
+     * The shipped defect: the setting restyled the page and the canvas never
+     * heard of it, so a player who turned it on kept falling snow and eased
+     * parallax — before and after a reload — and only the operating system's
+     * preference worked. The save's value has to reach the renderer on boot.
+     */
+    expect(
+      hoisted.state.reducedMotion,
+      'nothing ever told the renderer about the "Less movement" setting',
+    ).not.toEqual([]);
+    /* A fresh save has it off, and nothing on the way in turns it on. */
+    expect(hoisted.state.reducedMotion).not.toContain(true);
+  });
+
+  it('follows "Less movement" while the game is running, in both directions', async () => {
+    await boot('');
+    hoisted.state.reducedMotion = [];
+
+    const store = shellOption<{ set: (key: string, value: unknown) => void }>('store');
+    store.set('reducedMotion', true);
+    expect(hoisted.state.reducedMotion, 'turning it on did not reach the renderer').toEqual([true]);
+
+    store.set('reducedMotion', false);
+    expect(hoisted.state.reducedMotion).toEqual([true, false]);
+
+    /* Another setting changing is not a motion change. */
+    store.set('autoMove', true);
+    expect(hoisted.state.reducedMotion).toEqual([true, false]);
   });
 });
 

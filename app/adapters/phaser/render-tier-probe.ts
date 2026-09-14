@@ -81,6 +81,11 @@ export function prefersReducedMotion(query: MediaQueryLike | null | undefined): 
  * `override` is the settings toggle: when the player has expressed a choice it
  * wins over the media query in both directions, because an explicit answer
  * beats an inferred one.
+ *
+ * **Not what the renderer uses.** A setting that is off must not hand motion
+ * back to a player whose system asked for stillness, so `GameRenderer` resolves
+ * the axis with {@link motionLevelFor}. Kept for its callers outside the
+ * renderer and for its tests; do not wire it to the settings toggle.
  */
 export function resolveMotionLevel(input: {
   readonly mediaQuery?: MediaQueryLike | null;
@@ -88,6 +93,28 @@ export function resolveMotionLevel(input: {
 }): MotionLevel {
   if (input.override !== undefined) return input.override ? 'reduced' : 'full';
   return prefersReducedMotion(input.mediaQuery) ? 'reduced' : 'full';
+}
+
+/**
+ * The motion the renderer draws with: the in-game "Less movement" setting **or**
+ * the operating system's preference, and either one is enough.
+ *
+ * The same rule `app/ui/settings.ts` applies to the page (`resolveMotion`), and
+ * deliberately not {@link resolveMotionLevel}'s override, which lets a setting
+ * that is off hand motion back to a player whose system asked for stillness.
+ * Nothing in this game turns stillness off once something has asked for it
+ * (`TN-CREATOR-07`: "the in-game setting has the same effect as the browser
+ * setting").
+ *
+ * This is the function whose absence was the defect: the renderer read the
+ * media query alone, so a player who turned "Less movement" on in Settings kept
+ * 400 snowflakes and eased parallax, before and after a reload.
+ */
+export function motionLevelFor(input: {
+  readonly setting: boolean;
+  readonly mediaQuery?: MediaQueryLike | null;
+}): MotionLevel {
+  return input.setting || prefersReducedMotion(input.mediaQuery) ? 'reduced' : 'full';
 }
 
 /**
@@ -169,6 +196,17 @@ export interface RenderTierProbe {
    * they earned by rotating their phone.
    */
   reset(): void;
+  /**
+   * The player changed the motion axis: rebuild the profile at the tier in
+   * force and publish it at once.
+   *
+   * No measurement is involved and none is thrown away — motion is a separate
+   * axis from the tier (ADR-0011), so the tier stays exactly where it was and a
+   * later window re-derives its profile under the motion set here. A value equal
+   * to the current one does nothing, and a stopped probe publishes nothing: its
+   * game has gone and a listener on it would touch a destroyed level.
+   */
+  setMotion(motion: MotionLevel): void;
   /** Detach from the frame signals. Idempotent. */
   stop(): void;
 }
@@ -253,6 +291,8 @@ export function startRenderTierProbe(options: RenderTierProbeOptions): RenderTie
               'never a player.',
           ],
         };
+  /* Mutable, because the player can change it while the level runs. */
+  let motion: MotionLevel = options.motion;
   let profile = buildProfile(decision.tier);
   let lastWindow: FrameCostSummary | null = null;
   let stopped = false;
@@ -260,7 +300,7 @@ export function startRenderTierProbe(options: RenderTierProbeOptions): RenderTie
   function buildProfile(tier: RenderProfile['tier']): RenderProfile {
     return resolveRenderProfile({
       tier,
-      motion: options.motion,
+      motion,
       formFactor: options.formFactor,
       presets: options.presets,
       filtersAvailable: options.identity.filtersAvailable,
@@ -311,6 +351,13 @@ export function startRenderTierProbe(options: RenderTierProbeOptions): RenderTie
     reset(): void {
       timer.reset();
       recorder.reset();
+    },
+    setMotion(next): void {
+      if (next === motion) return;
+      motion = next;
+      profile = buildProfile(decision.tier);
+      if (stopped) return;
+      publish();
     },
     stop(): void {
       if (stopped) return;

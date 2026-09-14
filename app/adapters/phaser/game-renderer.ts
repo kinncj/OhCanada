@@ -28,14 +28,14 @@ import {
   type RendererKind,
 } from './renderer-identity';
 import {
+  motionLevelFor,
   readFormFactor,
-  resolveMotionLevel,
   startRenderTierProbe,
   type FrameSignals,
   type RenderTierProbe,
 } from './render-tier-probe';
 import { backingScaleFor } from './visual-tier';
-import type { RenderProfile, TierDecision, VisualTier } from './visual-tier';
+import type { MotionLevel, RenderProfile, TierDecision, VisualTier } from './visual-tier';
 import {
   SCENE_PROBE_GLOBAL,
   SCENE_PROBE_TEST_ID,
@@ -199,6 +199,17 @@ export class GameRenderer {
   /** The accessibility auto-move option, remembered across level changes. */
   #autoMove = false;
   /**
+   * The in-game "Less movement" setting, remembered across level changes and
+   * across the gap before `postBoot` — the save is read asynchronously, so the
+   * composition root may say this before the probe exists.
+   */
+  #reducedMotionSetting = false;
+  /** `prefers-reduced-motion: reduce`, watched so a system change applies live. */
+  #motionQuery: MediaQueryList | null = null;
+  readonly #onMotionQueryChange = (): void => {
+    this.#probe?.setMotion(this.#motionLevel());
+  };
+  /**
    * The appearance the player chose, remembered across level changes.
    *
    * The session owns it and a scene is per level, exactly as `#autoMove` is.
@@ -275,7 +286,9 @@ export class GameRenderer {
              asked unless that gate actually installed the probe. An ordinary
              load passes `null` and the tier is measured, as for every player. */
           const pinnedTier = this.#scene === null ? null : tierOverrideFrom(search);
-          this.#probe = startRendererProbe(game, options.config, this.#scene, pinnedTier, (profile) => {
+          this.#motionQuery = mediaQuery('(prefers-reduced-motion: reduce)');
+          this.#motionQuery?.addEventListener?.('change', this.#onMotionQueryChange);
+          this.#probe = startRendererProbe(game, options.config, this.#scene, pinnedTier, this.#motionLevel(), (profile) => {
             /*
              * Fewer pixels first, then tell the scene — it re-derives its camera
              * zoom from the scale manager and must read the new size.
@@ -613,6 +626,36 @@ export class GameRenderer {
     this.#level?.setAutoMove(enabled);
   }
 
+  /**
+   * The in-game "Less movement" setting (CLAUDE.md, Accessibility: reduced motion
+   * disables parallax easing, particles and squash-and-stretch).
+   *
+   * **This had no equivalent, and that was the defect.** The render profile took
+   * its motion from `prefers-reduced-motion` alone, once, at boot, so turning the
+   * setting on in Settings changed the page's `data-tn-motion` and nothing the
+   * canvas draws: Ottawa kept 400 snowflakes and eased parallax, and a reload
+   * did not help because nothing on this side ever read the save. Worse, the
+   * probe republishes `data-tn-motion` onto `<html>` on every measurement window,
+   * so the page's own reduced-motion rules were switched back off a second later.
+   *
+   * The setting **or** the system preference asks for stillness, and either is
+   * enough ({@link motionLevelFor}). Applied at once to the open level through
+   * the same `onProfile` path a tier change takes, so particles, parallax easing
+   * and the rig's `reducedMotion` input all follow in one step.
+   */
+  setReducedMotion(requested: boolean): void {
+    this.#reducedMotionSetting = requested;
+    this.#probe?.setMotion(this.#motionLevel());
+  }
+
+  /** The motion axis as the setting and the system answer it together, right now. */
+  #motionLevel(): MotionLevel {
+    return motionLevelFor({
+      setting: this.#reducedMotionSetting,
+      mediaQuery: this.#motionQuery ?? mediaQuery('(prefers-reduced-motion: reduce)'),
+    });
+  }
+
   /** The device clock, or the injected one. */
   #now(): Date {
     return this.#options.now?.() ?? new Date();
@@ -698,6 +741,8 @@ export class GameRenderer {
        listener on a destroyed game is how a level unload leaks into the next. */
     this.#probe?.stop();
     this.#probe = null;
+    this.#motionQuery?.removeEventListener?.('change', this.#onMotionQueryChange);
+    this.#motionQuery = null;
     this.#marker?.hide();
     this.#marker = null;
     this.#level = null;
@@ -733,6 +778,7 @@ function startRendererProbe(
   config: BootConfig,
   scene: SceneProbe | null,
   pinnedTier: VisualTier | null,
+  motion: MotionLevel,
   onProfileChanged: (profile: RenderProfile) => void,
 ): RenderTierProbe {
   const identity = identifyRenderer(rendererKindOf(game), webglContextOf(game));
@@ -743,7 +789,9 @@ function startRendererProbe(
     frameTimeMs: config.frameTimeMs,
     signals: frameSignalsFor(game),
     pinnedTier,
-    motion: resolveMotionLevel({ mediaQuery: mediaQuery('(prefers-reduced-motion: reduce)') }),
+    /* The setting and the system preference together (`motionLevelFor`), and
+       changed later through `RenderTierProbe.setMotion`. */
+    motion,
     formFactor: readFormFactor({
       widthCssPx: window.innerWidth,
       heightCssPx: window.innerHeight,
