@@ -114,7 +114,7 @@
   "featureFlags": {
     "debugOverlay": false,
     "autoMove": true,
-    "serviceWorker": false,
+    "serviceWorker": true,
     "switchMode": true
   },
   "theme": {

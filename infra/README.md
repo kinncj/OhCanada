@@ -2,8 +2,19 @@
 
 Infrastructure that is not the web app: packaging, native shells, deployment glue.
 
-Today this directory holds nothing but this file. `infra/capacitor/` will land here when the optional
-native shell is picked up (CLAUDE.md, "Hosting"); it stays isolated and inert until then.
+`infra/capacitor/` will land here when the optional native shell is picked up (CLAUDE.md, "Hosting"); it stays
+isolated and inert until then.
+
+## `infra/pages/` — the service worker, in both of its forms
+
+What `<base>sw.js` serves on GitHub Pages. `scripts/lib/pwa.mjs` (a build-only Vite plugin) picks one by
+`featureFlags.serviceWorker` in `content/game.config.json` (ADR-0034):
+
+- `service-worker.js` — the offline worker (slice F3). Not served as written: the plugin bundles it with its Workbox
+  modules and writes the precache and the level-art map into it. `scripts/deploy-check.mjs` reads them back.
+- `sw.js` — the tombstone. Served when the flag is off: it deletes this project's caches, unregisters itself and
+  reloads the page onto the network. It is the kill switch for the worker above, and it is still what clears the
+  archived 3D build's worker (`docs/runbook.md` §3b). Never delete it.
 
 ## Why the GitHub Actions workflows are *not* here
 

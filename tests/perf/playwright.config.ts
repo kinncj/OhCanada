@@ -105,6 +105,17 @@ export default defineConfig({
     trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: process.env.CI ? 'off' : 'retain-on-failure',
+    // NO SERVICE WORKER, ON PURPOSE (slice F3, ADR-0034). The initial-payload and
+    // time-to-playable budgets are about a FIRST load on a cold cache. A
+    // registered worker precaches the shell in the background after `load` -
+    // bytes nobody waits for, which `page.on('response')` does not attribute to
+    // the page anyway - and answers later navigations from Cache Storage, which
+    // would make a second `goto` in a test cheaper than any first visit. `block`
+    // keeps every number in this lane a measurement of that first load, exactly
+    // as it was before the worker existed. What the worker adds on install is
+    // weighed on disk by scripts/deploy-check.mjs against the same 8 MiB. The
+    // device lane inherits this through `base.use`.
+    serviceWorkers: 'block',
   },
 
   projects: [

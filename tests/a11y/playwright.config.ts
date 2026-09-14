@@ -101,6 +101,11 @@ export default defineConfig({
     trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: process.env.CI ? 'off' : 'retain-on-failure',
+    // NO SERVICE WORKER (slice F3, ADR-0034). The worker has no DOM, so it
+    // cannot change what axe scans; blocking it keeps every scan of `dist/`
+    // loading the build from the server, the same way the e2e and perf suites
+    // do, rather than from whatever an earlier navigation in the test cached.
+    serviceWorkers: 'block',
   },
 
   projects: [

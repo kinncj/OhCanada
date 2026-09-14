@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!--
+    TrueNorth app icon: a four-point north star over three bands of hills.
+    Original work, CC-BY-4.0, credited in assets/credits.json. Depicts no place,
+    no person and no national emblem, so no reference applies.
+
+    Rasterised by scripts/lib/pwa.mjs to 180, 192 and 512 px for the web app
+    manifest and the iOS home-screen icon, and palette-linted there. Full-bleed
+    square, with the star and the crest of the hills inside the central 80 %
+    circle, so one drawing serves the maskable purpose as well as `any`.
+
+    Three tones per material (art bible): the star is snow-light / snow-base /
+    snow-shade with the key light at the upper left, the hills pine-light /
+    pine-base / pine-shade, the sky cobalt-base.
+  -->
+  <rect x="0" y="0" width="512" height="512" fill="#153f86"/>
+
+  <path d="M0 360 C 90 322 170 318 256 344 C 340 370 420 336 512 346 L 512 512 L 0 512 Z" fill="#41b76b"/>
+  <path d="M0 392 C 110 362 214 370 300 390 C 380 408 448 392 512 382 L 512 512 L 0 512 Z" fill="#2c8055"/>
+  <path d="M0 448 C 120 426 230 432 330 450 C 410 464 470 456 512 448 L 512 512 L 0 512 Z" fill="#154536"/>
+
+  <path d="M256 64 L 230 206 L 256 232 Z" fill="#ffffff"/>
+  <path d="M256 64 L 282 206 L 256 232 Z" fill="#c2d6e8"/>
+  <path d="M364 232 L 282 206 L 256 232 Z" fill="#ffffff"/>
+  <path d="M364 232 L 282 258 L 256 232 Z" fill="#c2d6e8"/>
+  <path d="M256 332 L 282 258 L 256 232 Z" fill="#c2d6e8"/>
+  <path d="M256 332 L 230 258 L 256 232 Z" fill="#e6eff7"/>
+  <path d="M148 232 L 230 258 L 256 232 Z" fill="#e6eff7"/>
+  <path d="M148 232 L 230 206 L 256 232 Z" fill="#ffffff"/>
+</svg>

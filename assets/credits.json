@@ -2511,6 +2511,15 @@
       "licence": "CC-BY-2.0",
       "source": "https://commons.wikimedia.org/wiki/File:Alberta_-_Extraction_of_petroleum.jpg",
       "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (sRGB IEC61966-2.1) so the colours sampled off it are the colours a browser shows; all metadata stripped. COLOUR TRAP: a heavily graded dusk exposure with a teal sky and an orange ground - a geometry reference only; never sample colour off it."
+    },
+    {
+      "path": "src/icons/truenorth-app-icon.svg",
+      "kind": "shipped",
+      "title": "TrueNorth app icon - a four-point north star over three bands of hills",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/icons/truenorth-app-icon.svg",
+      "modifications": "Original work, drawn for slice F3 (ADR-0034). Depicts no place, person or national emblem, so no reference applies. Palette colours only, linted by scripts/lib/pwa.mjs. Rasterised at build to 180, 192 and 512 px PNG for the web app manifest and the iOS home-screen icon; the star and the crest of the hills sit inside the maskable safe zone, so one drawing serves both icon purposes."
     }
   ]
 }

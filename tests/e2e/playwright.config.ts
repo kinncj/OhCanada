@@ -79,6 +79,17 @@ export default defineConfig({
     trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: process.env.CI ? 'off' : 'retain-on-failure',
+    // NO SERVICE WORKER UNLESS A SPEC ASKS FOR ONE (slice F3, ADR-0034). The
+    // build registers a worker on every load, and a worker that answers requests
+    // changes what these specs observe: `page.route` never sees a request the
+    // worker answers - `level-landmarks.spec.ts` fails a level load by aborting
+    // its chunk that way - and a second load in the same test would come out of
+    // Cache Storage instead of the build under test. `block` makes Playwright
+    // stub `navigator.serviceWorker.register` with a function that resolves to
+    // nothing, which the registration script tolerates, so every spec sees the
+    // page it saw before the worker existed. The one spec about the worker,
+    // `offline.spec.ts`, opts back in with `test.use({ serviceWorkers: 'allow' })`.
+    serviceWorkers: 'block',
   },
 
   projects: [

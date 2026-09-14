@@ -2,9 +2,15 @@
  * TOMBSTONE SERVICE WORKER — it exists only to delete itself.
  *
  * DO NOT REGISTER THIS FILE. Nothing in app/ references it and nothing should.
- * Slice 0 is not gaining a service worker; it is getting rid of one. PWA and
- * offline play are slice F3, and that work will replace this file rather than
- * build on it.
+ *
+ * IT IS NOW ALSO THE KILL SWITCH FOR THE F3 WORKER (ADR-0034). `<base>sw.js` is
+ * the Workbox worker built from infra/pages/service-worker.js while
+ * `featureFlags.serviceWorker` in content/game.config.json is on, and THIS file
+ * while it is off - with no registration in the page. Turning the flag off
+ * therefore reaches every device holding the worker on its next update check,
+ * and the clean-up below already covers every cache that worker creates: its
+ * level caches are `truenorth-level-*` and its precache name contains the
+ * registration scope. Change that filter and the kill switch stops working.
  *
  * WHY IT IS HERE
  * The archived 3D build (archive/v0.1) shipped a real Workbox worker at
@@ -26,8 +32,9 @@
  * replaces the old one, clears its caches, unregisters itself and reloads the
  * open pages. One visit and the device is clean, with nothing for the user to
  * do. There is deliberately NO fetch handler: this worker must never serve a
- * byte from cache. scripts/deploy-check.mjs fails the build if one appears, and
- * fails if this file goes missing from dist/ — it looks unused, and it is not.
+ * byte from cache. While the flag is off, scripts/deploy-check.mjs fails the
+ * build if one appears, if this file goes missing from dist/, or if anything
+ * still registers a worker — it looks unused, and it is not.
  *
  * Kept small and dependency-free on purpose: the people who need it are, by
  * definition, the ones whose connection was too slow to beat a 4 second
