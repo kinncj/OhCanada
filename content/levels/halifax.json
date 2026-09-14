@@ -28,19 +28,19 @@
       "Mi'kmaq"
     ],
     "statement": {
-      "en": "Halifax is in Mi'kma'ki, the territory of the Mi'kmaq. The Peace and Friendship Treaties signed on this coast are not like the treaties signed later in other parts of Canada. They did not give up the land, or the right to use it.",
-      "fr": "Halifax se trouve au Mi'kma'ki, le territoire des Mi'kmaq. Les traités de paix et d'amitié signés sur cette côte ne ressemblent pas aux traités signés plus tard ailleurs au Canada. Ils n'ont pas cédé les terres, ni le droit de les utiliser."
+      "en": "This level is set in Halifax. Kwilmu'kw Maw-klusuaqn works under the direction of the Assembly of Nova Scotia Mi'kmaw Chiefs. It says the Mi'kmaq have never given up, handed over or sold title to any of their lands, and that their title claim covers all the land in Nova Scotia. It hopes the Mi'kmaq of Nova Scotia can at last put into practice the rights from the treaties their ancestors signed in the 1700s.",
+      "fr": "Ce niveau se déroule à Halifax. Kwilmu'kw Maw-klusuaqn travaille sous la direction de l'Assembly of Nova Scotia Mi'kmaw Chiefs. L'organisme affirme que les Mi'kmaq n'ont jamais abandonné, cédé ni vendu le titre sur aucune de leurs terres, et que leur revendication de titre couvre toutes les terres de la Nouvelle-Écosse. Il espère que les Mi'kmaq de la Nouvelle-Écosse pourront enfin mettre en œuvre les droits issus des traités que leurs ancêtres ont signés dans les années 1700."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "cirnac-peace-and-friendship-treaties",
-        "chapter": "Why are Peace and Friendship Treaties different than other historic treaties in Canada?",
-        "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028589/1539608999656",
-        "sourceHash": "2497a7462458b6a0f90acb427b87b05d628bec33627a048c2f7558d0b3bd655e",
-        "asOf": "2026-09-08T00:00:00Z",
-        "volatile": false,
-        "quote": "Unlike later treaties signed in other parts of Canada, the Peace and Friendship Treaties did not involve First Nations surrendering rights to the lands and resources they had traditionally used and occupied."
+        "sourceId": "kmk-about-consultation",
+        "chapter": "About Consultation",
+        "url": "https://mikmaqrights.com/?page_id=53",
+        "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
+        "asOf": "2026-09-13T00:00:00Z",
+        "volatile": true,
+        "quote": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia."
       },
       "verification": {
         "status": "rejected",
@@ -51,9 +51,9 @@
       }
     },
     "nationSource": {
-      "publisher": "Kwilmu'kw Maw-klusuaqn Negotiation Office (Assembly of Nova Scotia Mi'kmaw Chiefs)",
-      "url": "https://mikmaqrights.com/",
-      "sourceHash": "a40d51fab87c20ae66f93f5562f41048f8df886a46e62e154832a12c47a93a0b",
+      "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
+      "url": "https://mikmaqrights.com/?page_id=53",
+      "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
       "asOf": "2026-09-13T00:00:00Z",
       "verification": {
         "status": "unverified",

@@ -62,9 +62,11 @@ were tried on 2026-09-09 and neither reproduces the recorded digest. Each regist
 2026-09-13, when eight nation-source registers were cached with recorded commands; the five did
 not shrink, the denominator grew, and that is the less flattering of the two readings.
 
-This is not cosmetic. Every one of those five digests is cited as the `sourceHash` of a level's
-territory statement, so a shipped claim about whose land a level is set on is pinned to bytes only a
-machine that already holds the file can produce. Someone who fetches the page and matches its
+This is not cosmetic. Four of those five digests are cited as the `sourceHash` of a level's territory
+statement, so a claim about whose land a level is set on is pinned to bytes only a machine that already
+holds the file can produce. The fifth, `cirnac-peace-and-friendship-treaties`, was Halifax's until
+2026-09-14. That statement was rejected and moved to `kmk-about-consultation`, whose extraction does
+reproduce. Someone who fetches the page and matches its
 `sha256` still cannot check the quote. Closing it means finding a command whose output hashes to the
 recorded value — and if none exists, re-extracting with a recorded command and **re-verifying** the
 claims that move with it, which is the verifier's call and not an edit to a digest.

@@ -27,16 +27,16 @@
   "knownStaleness": [
     {
       "topic": "One body speaks for the fact AND for the name, and that is new",
-      "problem": "Every level before this one splits the two. content/levels/halifax.json takes its Mi'kmaq territorial fact from the CROWN (cirnac-peace-and-friendship-treaties) and names the nation from this organisation's home page. content/levels/winnipeg.json has one nationSource and a sentence naming seven nations (OQ-WINNIPEG-3). content/levels/vancouver.json quotes the Tsleil-Waututh for one of the three nations it names and gets the other two from a development corporation. content/levels/peggys-cove.json is the first whose fact.source and nationSource are the SAME body, and that body is the Assembly of Nova Scotia Mi'kmaw Chiefs speaking in the first person about its own lands. That is what docs/content-review.md 3.2 asks for and it is recorded here as an outcome rather than left to be noticed.",
+      "problem": "Every level before content/levels/peggys-cove.json split the two. content/levels/winnipeg.json has one nationSource and a sentence naming seven nations (OQ-WINNIPEG-3). content/levels/vancouver.json quotes the Tsleil-Waututh for one of the three nations it names and gets the other two from a development corporation. content/levels/peggys-cove.json was the first whose fact.source and nationSource are the SAME body, and that body is the Assembly of Nova Scotia Mi'kmaw Chiefs' own rights initiative speaking in the first person about its own lands. That is what docs/content-review.md 3.2 asks for. content/levels/halifax.json used to take its Mi'kmaq territorial fact from the CROWN (cirnac-peace-and-friendship-treaties) and name the nation from this organisation's home page (kmk-home). A verifier rejected that statement, and on 2026-09-14 it was moved onto this register, as this entry's action asked. Two levels now cite this page for both the fact and the name.",
       "affects": [
         "About Consultation"
       ],
       "grain": "chapter",
-      "action": "when the Halifax statement is next revisited, move it onto this register: a Crown page describing eighteenth-century treaties is a weaker source for the same fact than the Assembly's own words, and this cache makes the better one available."
+      "action": "done for halifax on 2026-09-14. Any later Nova Scotia level should cite this register for both fields in the same way, and should not import a word this page does not use in its own text. `Mi’kma’ki` appears here only in a sidebar headline, and no level may state it on this page's authority."
     },
     {
       "topic": "A live WordPress page with a Recent Articles sidebar",
-      "problem": "The page's own text - the five sentences under the heading About Consultation - is a standing statement of position and does not move. The sidebar beside it lists the five most recent posts and changes whenever the organisation publishes, so extractedTextSha256 will stop matching for reasons that have nothing to do with the quoted sentence. At the time of caching the sidebar carried posts dated July and August 2026.",
+      "problem": "The page's own text is the four sentences under the heading About Consultation. It is a standing statement of position and does not move. An earlier version of this entry said five sentences; the extraction at this hash has four, ending `formally addressed.` The sidebar beside it lists the five most recent posts and changes whenever the organisation publishes, so extractedTextSha256 will stop matching for reasons that have nothing to do with the quoted sentence. At the time of caching the sidebar carried posts dated July and August 2026.",
       "affects": [
         "About Consultation"
       ],
@@ -45,22 +45,31 @@
     },
     {
       "topic": "The extraction drops the first letter of the quoted paragraph into its own token",
-      "problem": "The paragraph opens with a CSS drop cap, so the T of `The` sits in its own element and the extraction renders the opening as `T he Mi'kmaq have never surrendered`. The quote recorded in content/levels/peggys-cove.json therefore begins at `Mi'kmaq have never surrendered` rather than at `The`, so that it is a contiguous substring of these bytes as ADR-0003 requires. This is stated rather than left for whoever next wonders why the quote starts mid-sentence.",
+      "problem": "The paragraph opens with a CSS drop cap, so the T of `The` sits in its own element and the extraction renders the opening as `T he Mi'kmaq have never surrendered`. The quotes recorded in content/levels/peggys-cove.json and content/levels/halifax.json therefore begin at `Mi'kmaq have never surrendered` rather than at `The`, so that each is a contiguous substring of these bytes as ADR-0003 requires. This is stated rather than left for whoever next wonders why the quote starts mid-sentence.",
       "affects": [
         "About Consultation"
       ],
       "grain": "chapter",
-      "action": "do not `fix` the quote by adding the word `The`; it would stop being contiguous and the verbatim check would fail."
+      "action": "do not `fix` either quote by adding the word `The`; it would stop being contiguous and the verbatim check would fail."
     },
     {
       "topic": "A title claim is a live position, not a closed historical fact",
-      "problem": "`The Mi'kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands` is a statement about the absence of a historical cession and does not expire. `We have a Title claim to all lands in Nova Scotia` describes a claim inside a running negotiation - the Made-in-Nova-Scotia Process, whose history this site's About Us page sets out - and it can be overtaken by an agreement without this page being rewritten. The level's fact is marked volatile for that half of the sentence.",
+      "problem": "`The Mi'kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands` is a statement about the absence of a historical cession and does not expire. `We have a Title claim to all lands in Nova Scotia` describes a claim inside a running negotiation - the Made-in-Nova-Scotia Process, whose history this site's About Us page sets out - and it can be overtaken by an agreement without this page being rewritten. The territorial facts in content/levels/peggys-cove.json and content/levels/halifax.json are both marked volatile for that half of the sentence.",
       "affects": [
         "About Consultation"
       ],
       "grain": "chapter",
       "action": "re-fetch before re-verifying. Do not draw any claim about the CURRENT state of those negotiations from this cache."
+    },
+    {
+      "topic": "Two sentences a level relies on sit in a site-wide footer, below the sidebar, not under the heading",
+      "problem": "content/levels/halifax.json's statement says who Kwilmu'kw Maw-klusuaqn works under, and that it hopes the Mi'kmaq of Nova Scotia can put their treaty rights into practice. Neither is under the About Consultation heading. Both come from a two-line block after the Recent Articles list: `Kwilmu’kw Maw-klusuaqn takes direction from the Assembly of Nova Scotia Mi’kmaw Chiefs in their work on behalf of the Mi’kmaq of Nova Scotia, with the Province of Nova Scotia and the Government of Canada on the discussion of Rights Implementation.` and `KMK was developed by the Mi’kmaq, for the Mi’kmaq. Through these discussions, we hope that the Mi’kmaq of Nova Scotia can finally implement our Rights from the Treaties signed by our ancestors in the 1700’s.` The same two lines appear word for word at the foot of content/sources/kmk-home.txt, so they are standing site text and not part of the moving sidebar. The block is still read from these bytes, so it is inside this register's one chapter. The second line describes a hope inside the same running process as the title claim, and it goes stale the same way: an implementation agreement would overtake it without the footer being rewritten. The level's `source.quote` is the title passage under the heading. It cannot also hold the footer, because no contiguous span joins the two without taking in the sidebar.",
+      "affects": [
+        "About Consultation"
+      ],
+      "grain": "chapter",
+      "action": "a verifier checking content/levels/halifax.json reads the footer block as well as the quoted paragraph. When the hash moves, check both before assuming the claim moved. If the footer is removed or reworded, the halifax statement's last two sentences lose their support even if the quoted paragraph is unchanged."
     }
   ],
-  "grainNote": "One web page, one heading, no pagination, so `pages` is absent and the chapter carries a title alone. Four flags: what this document is entitled to cover (and it is entitled to cover all of it, which is the point), how often its bytes move, why the quote starts mid-sentence, and which half of the quoted sentence can go stale."
+  "grainNote": "One web page, one heading, no pagination, so `pages` is absent and the chapter carries a title alone. Five flags: what this document is entitled to cover (and it is entitled to cover all of it, which is the point), how often its bytes move, why the quote starts mid-sentence, which half of the quoted sentence can go stale, and the footer block that a level's statement leans on beside the quoted paragraph."
 }
