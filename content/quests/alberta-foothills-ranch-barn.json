@@ -8,8 +8,8 @@
     "fr": "Le ranch dans les contreforts"
   },
   "summary": {
-    "en": "Ride across the foothills with your guide. You stop at the gate, at the barn and out among the cattle, and at each stop you learn a piece of how Canada earns its living, then answer questions about it.",
-    "fr": "Traversez les contreforts à cheval avec votre guide. Vous vous arrêtez à la barrière, à la grange et au milieu du troupeau; à chaque halte, vous apprenez un aspect de la façon dont le Canada gagne sa vie, puis vous répondez à des questions dessus."
+    "en": "Ride across the foothills with your guide. You stop at the gate, at the barn, at an oil pump and out among the cattle, and at each stop you learn a piece of how Canada earns its living, then answer questions about it.",
+    "fr": "Traversez les contreforts à cheval avec votre guide. Vous vous arrêtez à la barrière, à la grange, près d'un chevalet de pompage et au milieu du troupeau; à chaque halte, vous apprenez un aspect de la façon dont le Canada gagne sa vie, puis vous répondez à des questions dessus."
   },
   "declinedLine": {
     "speaker": "guide",
@@ -161,8 +161,8 @@
           "speaker": "guide",
           "expression": "happy",
           "text": {
-            "en": "Follow the trail. We pull up three times, and I have something for you at each stop.",
-            "fr": "Suivez la piste. On s'arrête trois fois, et j'ai quelque chose pour vous à chaque halte."
+            "en": "Follow the trail. We pull up four times, and I have something for you at each stop.",
+            "fr": "Suivez la piste. On s'arrête quatre fois, et j'ai quelque chose pour vous à chaque halte."
           },
           "fact": {
             "factual": false,
@@ -296,6 +296,69 @@
       "prompt": {
         "en": "Answer 3 questions about what Canada makes and sells",
         "fr": "Répondez à 3 questions sur ce que le Canada produit et vend"
+      }
+    },
+    {
+      "id": "ride-to-the-pump-jack",
+      "kind": "visit",
+      "targetId": "pump-jack",
+      "prompt": {
+        "en": "Ride over to the oil pump",
+        "fr": "Rendez-vous au chevalet de pompage"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Stop your horse here. Can you hear it creak as it goes up and down?",
+            "fr": "Arrêtez votre cheval ici. L'entendez-vous grincer en montant et en descendant?"
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "Alberta is not the only province with oil. Saskatchewan produces oil and natural gas too.",
+            "fr": "L'Alberta n'est pas la seule province qui a du pétrole. La Saskatchewan produit elle aussi du pétrole et du gaz naturel."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 100,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-13T00:00:00Z",
+              "volatile": false,
+              "quote": "and produces oil and natural gas"
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-pump-jack",
+      "kind": "answer",
+      "targetId": "economy",
+      "subject": "economy",
+      "count": 2,
+      "prompt": {
+        "en": "Answer 2 questions about oil, gas and other resources",
+        "fr": "Répondez à 2 questions sur le pétrole, le gaz et les autres ressources"
       }
     },
     {

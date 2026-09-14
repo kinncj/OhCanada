@@ -8,8 +8,8 @@
     "fr": "À vélo jusqu'à la Tour"
   },
   "summary": {
-    "en": "Your guide tells you how the vote is kept secret, and asks you about it. Then ride the boulevard to the CN Tower and learn how the country is divided up for an election.",
-    "fr": "Votre guide vous explique comment le vote reste secret, puis vous interroge là-dessus. Roulez ensuite sur le boulevard jusqu'à la Tour CN pour apprendre comment le pays est découpé pour une élection."
+    "en": "Your guide tells you how the vote is kept secret. Then ride the boulevard to a streetcar, the CN Tower and a big square, and answer questions about elections at each stop.",
+    "fr": "Votre guide vous explique comment le vote reste secret. Roulez ensuite sur le boulevard jusqu'à un tramway, à la Tour CN et à une grande place, et répondez à des questions sur les élections à chaque arrêt."
   },
   "declinedLine": {
     "speaker": "guide",
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You rode down the boulevard to the tower and answered every question along the way about voting and ridings.",
-      "fr": "Vous avez roulé sur le boulevard jusqu'à la tour et répondu à toutes les questions posées en chemin sur le vote et les circonscriptions."
+      "en": "You rode the whole boulevard, all the way to the big square, and answered every question along the way about voting and ridings.",
+      "fr": "Vous avez roulé sur tout le boulevard, jusqu'à la grande place, et répondu à toutes les questions posées en chemin sur le vote et les circonscriptions."
     },
     "fact": {
       "factual": false,
@@ -161,13 +161,65 @@
           "speaker": "guide",
           "expression": "happy",
           "text": {
-            "en": "Two questions on that first. Then ride down the boulevard to the tower, and I will have something else for you there.",
-            "fr": "D'abord deux questions là-dessus. Ensuite, roulez sur le boulevard jusqu'à la tour, et j'aurai autre chose pour vous là-bas."
+            "en": "Now ride down the boulevard. We stop three times, and I have something for you at each stop.",
+            "fr": "Maintenant, roulez sur le boulevard. On s'arrête trois fois, et j'ai quelque chose pour vous à chaque arrêt."
           },
           "fact": {
             "factual": false,
             "source": null,
             "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "ride-to-the-streetcar",
+      "kind": "visit",
+      "targetId": "streetcar",
+      "prompt": {
+        "en": "Ride to the streetcar",
+        "fr": "Roulez jusqu'au tramway"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Maybe you will ride a streetcar like this one to work or to school.",
+            "fr": "Vous prendrez peut-être un tramway comme celui-ci pour aller au travail ou à l'école."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "So your local government matters. It plays a big part in the lives of citizens.",
+            "fr": "Votre gouvernement local compte donc beaucoup. Il joue un grand rôle dans la vie des citoyens."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Federal Elections",
+              "page": 66,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-13T00:00:00Z",
+              "volatile": false,
+              "quote": "Local or municipal government plays an important role in the lives of our citizens."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
           }
         }
       ]
@@ -179,8 +231,8 @@
       "subject": "elections",
       "count": 2,
       "prompt": {
-        "en": "Answer 2 questions about the secret ballot",
-        "fr": "Répondez à 2 questions sur le vote secret"
+        "en": "Answer 2 questions about voting where you live",
+        "fr": "Répondez à 2 questions sur le vote là où vous habitez"
       }
     },
     {
@@ -244,6 +296,69 @@
       "prompt": {
         "en": "Answer 3 questions about electoral districts",
         "fr": "Répondez à 3 questions sur les circonscriptions électorales"
+      }
+    },
+    {
+      "id": "ride-to-the-square",
+      "kind": "visit",
+      "targetId": "nathan-phillips-square",
+      "prompt": {
+        "en": "Ride on to the big square",
+        "fr": "Roulez jusqu'à la grande place"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Stop here a moment and look at all the people crossing the square.",
+            "fr": "Arrêtez-vous un instant et regardez tous les gens qui traversent la place."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "Ontario has a lot of people, of many different cultures. Those people, its natural resources and its good location all help give Ontario a strong economy.",
+            "fr": "L'Ontario compte beaucoup de gens, de cultures très variées. Ces gens, ses ressources naturelles et son bon emplacement aident l'Ontario à avoir une économie forte."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's Regions",
+              "page": 99,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-13T00:00:00Z",
+              "volatile": false,
+              "quote": "The large and culturally diverse population, natural resources and strategic location contribute to a vital economy."
+            },
+            "verification": {
+              "status": "unverified",
+              "model": "",
+              "checkedAt": null,
+              "sourceHash": "",
+              "evidence": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-square",
+      "kind": "answer",
+      "targetId": "elections",
+      "subject": "elections",
+      "count": 3,
+      "prompt": {
+        "en": "Answer 3 questions about voting across Canada",
+        "fr": "Répondez à 3 questions sur le vote partout au Canada"
       }
     }
   ]
