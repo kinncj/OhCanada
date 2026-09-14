@@ -32,8 +32,9 @@
  * WHAT THIS DOES NOT PROVE, said plainly so its silence is not read as coverage:
  * it does not prove the gate binds these fields. That is proved by mutation in
  * `tests/unit/infra/verify-content-gate.test.ts`, which edits a level's
+ * `subject` and asserts it voids nothing (ADR-0030), then edits a question's
  * `subject` and a quest's `levelId` and asserts the exact set of grants each
- * edit voids. This file proves only that the names are still live — that there
+ * voids. This file proves only that the names are still live — that there
  * is something in `content/` for those bindings to bind.
  */
 
