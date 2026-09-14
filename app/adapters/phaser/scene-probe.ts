@@ -152,7 +152,8 @@ export interface SceneSnapshot {
   readonly parallaxEasing?: boolean;
   /**
    * Particles the level is **emitting** — the snow actually falling. Written by
-   * the level scene only, so it reads `unknown` until a level exists.
+   * the level scene only, so it reads `unknown` until a level exists, and `0`
+   * once a level whose document declares `weather: "none"` is open.
    *
    * This is the number the particle budget is about (CLAUDE.md: <= 400 phone,
    * <= 1500 iPad/desktop) and the one the stories mean by "`data-particles` is

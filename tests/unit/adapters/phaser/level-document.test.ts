@@ -55,6 +55,7 @@ const minimal = (): Record<string, unknown> => ({
   title: { en: 'Testville', fr: 'Testville' },
   size: { x: 4000, y: 1920 },
   spawn: { x: 100, y: 1000 },
+  weather: 'none',
   /* Required by `level.schema.json` and, since ADR-0003's filter moved into the
      parser, required at run time too: the "About this place" panel is always
      reachable (docs/content-review.md §10.2), so a level with no territory block
@@ -362,6 +363,55 @@ describe('the parse carries through what the scene must not silently drop', () =
     expect(
       parsed({ characters: [{ characterId: 'officer', position: { x: 1, y: 2 }, facing: 'up' }] }).ok,
     ).toBe(false);
+  });
+});
+
+describe('a level says what falls on it, and nothing is assumed', () => {
+  /* Read from the schema rather than restated, so a weather added there is
+     parsed here or this fails — the ADR-0023 lesson about mode names. */
+  const offered = (
+    JSON.parse(readFileSync(`${REPO_ROOT}content/schemas/level.schema.json`, 'utf8')) as {
+      readonly properties: { readonly weather: { readonly enum: readonly string[] } };
+    }
+  ).properties.weather.enum;
+
+  it('the schema offers more than one weather, so there is a decision to carry', () => {
+    expect(offered).toEqual(expect.arrayContaining(['snow', 'none']));
+  });
+
+  it.each(offered)('carries "%s" through to the scene', (weather) => {
+    const result = parsed({ weather });
+    if (!result.ok) throw new Error(result.error.message);
+    expect(result.value.weather).toBe(weather);
+  });
+
+  it('refuses a document that does not say, rather than defaulting to snow or to none', () => {
+    const silent = Object.fromEntries(Object.entries(minimal()).filter(([key]) => key !== 'weather'));
+    expect('weather' in silent).toBe(false);
+    const result = parseLevelDocument(silent, MODES);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.kind).toBe('invalid');
+      expect(result.error.code).toBe('content.level.weather');
+    }
+  });
+
+  it.each([
+    ['a weather the schema does not offer', 'rain'],
+    ['a weather in the wrong case', 'Snow'],
+    ['an empty string', ''],
+    ['a null', null],
+    ['a boolean', true],
+  ])('refuses %s', (_label, weather) => {
+    const result = parsed({ weather });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.code).toBe('content.level.weather');
+  });
+
+  it.each(levelFiles)('%s: declares a weather the schema offers', (file) => {
+    const result = parseLevelDocument(readLevel(file), MODES);
+    if (!result.ok) throw new Error(result.error.message);
+    expect(offered).toContain(result.value.weather);
   });
 });
 

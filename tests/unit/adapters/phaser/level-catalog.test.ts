@@ -105,6 +105,7 @@ describe('interpreting what came back', () => {
     title: { en: 'Testville', fr: 'Testville' },
     size: { x: 1000, y: 1920 },
     spawn: { x: 10, y: 900 },
+    weather: 'none',
     /* Required by the schema and, since ADR-0003's filter moved into the parser,
        at run time too: the "About this place" panel is always reachable
        (docs/content-review.md §10.2) and a level with no territory block is a

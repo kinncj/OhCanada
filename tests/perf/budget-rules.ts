@@ -250,6 +250,7 @@ export interface ParticleObservation {
  *      count: NOT MEASURED;
  *   2. zero emitted: NOT MEASURED. The largest of the readings is a max, which
  *      is safe as a fold, but zero here means the level drew no weather at all -
+ *      a level declaring `weather: "none"` (so this lane runs on a snowing one),
  *      snow off below `medium`, reduced motion on, or the scene never wrote the
  *      attribute's number - and none of those is a budget holding (ADR-0024);
  *   3. only then the largest emitted count against the limit.

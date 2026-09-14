@@ -28,6 +28,11 @@
       "description": "Where the player starts, in design-resolution pixels.",
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/vec2"
     },
+    "weather": {
+      "description": "What falls across the play area on this level, decided per level from its season as its art sheet states it (assets/style/<id>-level.md). `snow` draws falling snow, as many flakes as the visual tier allows and none under reduced motion; `none` draws no falling weather at any tier, so the scene probe's `data-particles` reads 0. Required, with no default: a default of `snow` put winter on eight summer and autumn levels, and a default of `none` would take it off the two winter ones the moment a level forgot to say. tests/unit/contracts/a-level-snows-only-where-its-art-sheet-says.test.ts holds every level to its sheet.",
+      "type": "string",
+      "enum": ["snow", "none"]
+    },
     "theme": {
       "description": "Palette override for this level. Absent means the renderer keeps game.config's theme.",
       "$ref": "https://truenorth.app/schemas/game.config.schema.json#/$defs/theme"

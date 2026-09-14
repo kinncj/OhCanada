@@ -123,6 +123,7 @@ export interface SceneLevel
       | 'title'
       | 'size'
       | 'spawn'
+      | 'weather'
       | 'camera'
       | 'ground'
       | 'layers'
@@ -275,6 +276,31 @@ function readLocalizedText(
     return invalid(field, `"${field}" must carry non-empty en and fr text (ADR-0003).`);
   }
   return ok({ en, fr });
+}
+
+/** Every weather `level.schema.json#/properties/weather` offers, in its order. */
+const WEATHERS: readonly LevelDocument['weather'][] = ['snow', 'none'];
+
+/**
+ * The level's `weather`, required and refused when absent.
+ *
+ * No default, in either direction. The scene used to snow on every level
+ * because no document could say otherwise, so eight summer and autumn levels
+ * drew winter; a default of `none` would take the snow off the two winter
+ * levels the first time one forgot the field. A level that does not say is an
+ * authoring error, and the loader reports it.
+ */
+function readWeather(source: Record<string, unknown>): Result<LevelDocument['weather']> {
+  const value = source['weather'];
+  const weather = WEATHERS.find((candidate) => candidate === value);
+  if (weather === undefined) {
+    return invalid(
+      'weather',
+      `"weather" must be one of ${WEATHERS.join(', ')}. It has no default: a level says ` +
+        'whether snow falls on it, from the season its art sheet states.',
+    );
+  }
+  return ok(weather);
 }
 
 /** The level's optional `theme`, merged per key over the renderer's fallback. */
@@ -873,6 +899,8 @@ export function parseLevelDocument(
   }
   const spawn = readVec2(raw, 'spawn');
   if (!spawn.ok) return spawn;
+  const weather = readWeather(raw);
+  if (!weather.ok) return weather;
   const palette = readPalette(raw);
   if (!palette.ok) return palette;
   const camera = readCamera(raw);
@@ -915,6 +943,7 @@ export function parseLevelDocument(
     title: title.value,
     size: size.value,
     spawn: spawn.value,
+    weather: weather.value,
     camera: camera.value,
     ground: ground.value,
     layers: layers.value,

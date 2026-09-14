@@ -24,7 +24,9 @@ import {
   layerCoverage,
   particleBudget,
   PLACEHOLDER_BAND_HEIGHT,
+  requestedParticlesFor,
   selectLayers,
+  SNOWFALL_PARTICLES,
   type EmitterTarget,
   type LayerViewport,
   type ScrollTarget,
@@ -241,6 +243,42 @@ describe('particleBudget', () => {
 
   it('honours a level that asks for fewer than the budget allows', () => {
     expect(particleBudget(profileFor('high', 'full', 'large'), 120)).toBe(120);
+  });
+});
+
+describe("a level's weather is what it asks the tier for", () => {
+  it('a snowing level asks for the snowfall, and the phone ceiling still binds', () => {
+    expect(requestedParticlesFor('snow')).toBe(SNOWFALL_PARTICLES);
+    expect(SNOWFALL_PARTICLES).toBeGreaterThan(0);
+    expect(particleBudget(profileFor('high'), requestedParticlesFor('snow'))).toBe(
+      Math.min(SNOWFALL_PARTICLES, PHONE_PARTICLE_CEILING),
+    );
+  });
+
+  it('a level with no weather asks for nothing, at every tier', () => {
+    expect(requestedParticlesFor('none')).toBe(0);
+    for (const tier of ['low', 'medium', 'high'] as const) {
+      for (const formFactor of ['phone', 'large'] as const) {
+        expect(particleBudget(profileFor(tier, 'full', formFactor), requestedParticlesFor('none'))).toBe(0);
+      }
+    }
+  });
+
+  it('a level with no weather emits nothing even where the tier runs the snowfall', () => {
+    /* The effect still runs at `high` — it is the tier's policy, not the level's —
+       and what it hands the emitter is the level's own request met with the
+       budget, which for `none` is 0. That 0 is what the scene counts and
+       publishes as `data-particles`. */
+    const summer = createLevelEffects({ layers: SIX, requestedParticles: requestedParticlesFor('none') });
+    let quantity = -1;
+    const emitter: EmitterTarget = {
+      setQuantity(value) {
+        quantity = value;
+      },
+      start() {},
+    };
+    expect(applyEffect(summer.snowfall, emitter, profileFor('high', 'full', 'large'))).toBe('plain');
+    expect(quantity).toBe(0);
   });
 
   it('is zero rather than NaN for a nonsense request', () => {

@@ -227,9 +227,11 @@ export {
 export {
   PINNED_SCROLL_FACTOR,
   PLACEHOLDER_BAND_HEIGHT,
+  SNOWFALL_PARTICLES,
   createLevelEffects,
   layerCoverage,
   particleBudget,
+  requestedParticlesFor,
   selectLayers,
   type LayerViewport,
   type EmitterTarget,

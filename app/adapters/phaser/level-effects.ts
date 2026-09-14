@@ -28,7 +28,7 @@
  * place `filters-have-a-plain-path.test.ts` permits Phaser's Filter API at all.
  */
 
-import type { ParallaxLayer } from '@application/ports';
+import type { LevelDocument, ParallaxLayer } from '@application/ports';
 
 import { createEffectRegistry, defineEffect, type EffectRegistry } from './visual-effects';
 import type { RenderProfile } from './visual-tier';
@@ -147,6 +147,36 @@ export function selectLayers(
 export function particleBudget(profile: RenderProfile, requested: number): number {
   if (!Number.isFinite(requested) || requested <= 0) return 0;
   return Math.max(0, Math.min(Math.floor(requested), profile.particles));
+}
+
+/**
+ * How many snowflakes a snowing level asks for before the tier has its say.
+ *
+ * Above the phone ceiling on purpose, so on a phone it is the 400 of CLAUDE.md's
+ * budget that binds and not this number.
+ */
+export const SNOWFALL_PARTICLES = 420;
+
+/**
+ * What each weather a level document can declare asks the tier for.
+ *
+ * A `Record` over the port's own union rather than a conditional, so a weather
+ * added to `level.schema.json` and `LevelDocument` stops this file compiling
+ * until somebody says what it costs — instead of falling through to snow, which
+ * is how eight summer and autumn levels came to snow.
+ */
+const REQUESTED_PARTICLES: Readonly<Record<LevelDocument['weather'], number>> = {
+  snow: SNOWFALL_PARTICLES,
+  none: 0,
+};
+
+/**
+ * The particles a level's `weather` asks for, before {@link particleBudget}
+ * meets it with the tier. `none` asks for nothing, so that level emits 0 at
+ * every tier and the probe's `data-particles` reads 0 once it is open.
+ */
+export function requestedParticlesFor(weather: LevelDocument['weather']): number {
+  return REQUESTED_PARTICLES[weather];
 }
 
 /** The parallax layer as an effect sees it. Phaser's TileSprite satisfies this. */

@@ -15,6 +15,7 @@
     "x": 440,
     "y": 1280
   },
+  "weather": "none",
   "theme": {
     "sky": "#1f5fa8",
     "ground": "#8b857c",

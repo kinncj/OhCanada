@@ -20,6 +20,7 @@ import type { LoadRequest } from './level-assets';
 import {
   PLACEHOLDER_BAND_HEIGHT,
   createLevelEffects,
+  requestedParticlesFor,
   selectLayers,
   type LayerViewport,
   type LevelEffects,
@@ -215,9 +216,6 @@ const MOVING_THRESHOLD_PX_S = 1;
 const INTERACT_TRIGGER = 'interact';
 /** The rig state that trigger selects. The same word, and a different thing. */
 const INTERACT_STATE = 'interact';
-
-/** How many snowflakes a level asks for before the tier has its say. */
-const REQUESTED_PARTICLES = 420;
 
 /** How deep the surface sheen runs below the ground line, design pixels. */
 const SHEEN_DEPTH = 34;
@@ -586,7 +584,9 @@ export class LevelScene extends Phaser.Scene {
     this.#riderY = this.#state.y;
     this.#effects = createLevelEffects({
       layers: options.level.layers,
-      requestedParticles: REQUESTED_PARTICLES,
+      /* The level's own weather, never a constant: a level that declares
+         `none` asks for nothing, so it emits 0 at every tier. */
+      requestedParticles: requestedParticlesFor(options.level.weather),
     });
 
     /* Read once here so the first frame is already at the right time of day; a

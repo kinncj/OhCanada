@@ -763,7 +763,7 @@ const canonical = (value) => JSON.stringify(value);
  *    a level's or a quest's `id` (renaming the file the claim lives in changes
  *    nothing a verifier read — and the questions' `id` is bound anyway, because
  *    for a question the unit is the document); `order` (presentation); `title`,
- *    `theme`, `size`, `spawn`, `camera`, `ground`, `layers`, `locomotion`,
+ *    `theme`, `weather`, `size`, `spawn`, `camera`, `ground`, `layers`, `locomotion`,
  *    `assets`, `characters`, `textureBudgetBytes` (art and engineering, none of
  *    which a verifier checks a citation against); a level's `quests` array
  *    (those claims live in `content/quests/` and bind there).

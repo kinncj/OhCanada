@@ -546,6 +546,12 @@ export interface LevelDocument {
   /** World size in design-resolution pixels. */
   readonly size: Vec2;
   readonly spawn: Vec2;
+  /**
+   * What falls across the play area, decided per level from the season its art
+   * sheet states. Required: a level with no say got snow, and so did every
+   * summer level in the game.
+   */
+  readonly weather: 'snow' | 'none';
   /** Palette override; absent keeps `game.config`'s theme. */
   readonly theme?: ThemeColours;
   /** Whose land this level is set on, stated as a citable fact. */

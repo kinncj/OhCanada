@@ -15,6 +15,7 @@
     "x": 640,
     "y": 1237
   },
+  "weather": "snow",
   "theme": {
     "sky": "#3d8ccb",
     "ground": "#e6eff7",
