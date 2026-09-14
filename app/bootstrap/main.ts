@@ -134,7 +134,9 @@ import { createExamEventLog } from './exam-events';
 import { promptTargets } from './prompt-targets';
 import { levelPlacements, type LevelPlacements } from './engageables';
 import {
+  completionLine,
   createQuestController,
+  type CompletionLine,
   type QuestController,
   type VisitedOutcome,
 } from './quest';
@@ -1954,13 +1956,19 @@ function openLevel(wiring: LevelWiring): LevelSession {
     singleSwitch: store.current.singleSwitch,
     holdMs: store.current.holdToChooseMs,
     onAnswer: (question, chosenIndex) => {
+      /* Asked before the answer is recorded: once it completes the last step,
+         no quest is answering any more, and the card needs to know which did. */
+      const answering = quests.answering;
       const outcome = wiring.record(question, chosenIndex);
       answeredHere += 1;
       if (outcome.correct) correctHere += 1;
       /* Remembered rather than acted on: the completion card must not open over
          the explanation the player is still reading. It opens when the question
          is done. */
-      if (outcome.questCompleted) finishedByQuest = true;
+      if (outcome.questCompleted) {
+        finishedByQuest = true;
+        finishedQuest = spokenQuestFor(answering);
+      }
       if (outcome.stampEarned) finished = true;
       /* The tracker counts answers as they are given, and it is behind the card
          the player is still reading — right by the time they close it. */
@@ -2013,6 +2021,26 @@ function openLevel(wiring: LevelWiring): LevelSession {
    * was done.
    */
   let finishedByQuest = false;
+
+  /**
+   * The quest that finished this level, kept from both routes that complete one
+   * — the controller's `onCompleted`, and an answer that completes the last
+   * step — so the card can draw that quest's own closing line. `null` on the
+   * walk to the end, where `completionLine` draws nothing whatever it holds.
+   */
+  let finishedQuest: SpokenQuest | null = null;
+
+  /** This level's adjudicated quest with that id: never the raw document. */
+  const spokenQuestFor = (quest: QuestDocument | undefined): SpokenQuest | null =>
+    quest === undefined ? null : (wiring.quests.find((own) => own.id === quest.id) ?? null);
+
+  /** The card's closing line, by the route that finished the level (`TN-DONE`). */
+  const doneLineNow = (): CompletionLine =>
+    completionLine(
+      finishedByQuest && finishedQuest !== null
+        ? { by: 'quest', quest: finishedQuest }
+        : { by: 'level' },
+    );
 
   /**
    * What the player answered **at this level's landmarks**, this sitting.
@@ -2112,12 +2140,17 @@ function openLevel(wiring: LevelWiring): LevelSession {
     const stampKey = `stamp.${String(id)}.earned`;
     const next = openedByThisLevel();
     const described = next === null ? null : wiring.describeNext(next, forLocale);
+    const done = doneLineNow();
     return {
       /* What finished, which is what the heading is about. `finishedByQuest` is
          set only by an answer that completed a quest; every other route here is
          the level ending, and "Task done!" over a player who accepted no task is
          a claim about something they never did (`TN-DONE`). */
       reason: finishedByQuest ? 'quest' : 'level',
+      /* The quest's own closing line, only when a quest finished and a verifier
+         granted it. Refused, absent or the walk to the end: no key at all, so
+         the card is exactly what it was (`TN-DONE-05`). No speaker name. */
+      ...(done.said === 'spoken' ? { doneMessage: localised(done.text, forLocale) } : {}),
       ...(hasCopyRow(stampKey) ? { stampMessage: text(forLocale, stampKey) } : {}),
       /* One slot, two rows, never both and never empty (`TN-DONE-02`). A total
          of zero is what `level.complete.none` *is*, not a value the score row
@@ -2152,6 +2185,15 @@ function openLevel(wiring: LevelWiring): LevelSession {
        card — or, the other way round, leave the level frozen after the card had
        gone. The menu did exactly that once. */
     pause.hold('complete');
+    /* The one silence a maintainer has to act on, said once per card rather
+       than on every language change the resolver below is asked again for. */
+    const done = doneLineNow();
+    if (done.said === 'unverified' && finishedQuest !== null) {
+      console.error(
+        `[bootstrap] "${String(finishedQuest.id)}" draws no closing line on its completion ` +
+          `card. ${done.silenced.message}`,
+      );
+    }
     completed.show(completionContent);
   }
 
@@ -2264,11 +2306,12 @@ function openLevel(wiring: LevelWiring): LevelSession {
       pause.release('quest');
       refreshPrompt();
     },
-    onCompleted: () => {
+    onCompleted: (quest) => {
       /* A **task** is what finished, so the card says so — the other route to
          this flag is an answer that completed a quest's last step, which
          `recordAnswer` reports. Reaching the end of the level sets neither. */
       finishedByQuest = true;
+      finishedQuest = spokenQuestFor(quest);
       /* The card, not here and not now: `showCompleted` is the one place that
          draws it, once per sitting, whichever way the level was finished. */
       finished = true;

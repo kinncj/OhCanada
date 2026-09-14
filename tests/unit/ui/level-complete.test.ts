@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 
+/* The shipped quest the game opens on, for its closing line. Read rather than
+   typed, so these tests are about where the card puts a line and never about
+   what an author wrote. */
+import halifaxQuest from '@content/quests/halifax-clock-and-pier.json';
 import { text } from '@ui/copy';
 import { createLevelComplete } from '@ui/level-complete';
 
@@ -443,5 +447,146 @@ describe('the card follows the language, and lets go of the level', () => {
     card.show({});
     expect(() => page.doc.byTestId('quest-complete-keep-playing')?.click()).not.toThrow();
     expect(page.doc.activeElement).not.toBe(detached);
+  });
+});
+
+/**
+ * The quest's own closing line — its `doneLine` — on the card (`TN-DONE`).
+ *
+ * Which line, and whether a verifier allows it, is `completionLine`'s and is
+ * asserted in `tests/unit/bootstrap/`. The card is handed a string or nothing,
+ * and what is asserted here is where it goes: first in the body, which is first
+ * in what `aria-describedby` reads, never in the announcement, never under
+ * "Level finished!", and never as an empty paragraph.
+ */
+describe('the quest’s own closing line', () => {
+  const DONE = halifaxQuest.doneLine.text;
+  const HALIFAX_STAMP = {
+    en: text('en', 'stamp.halifax.earned'),
+    fr: text('fr', 'stamp.halifax.earned'),
+  } as const;
+
+  /** The body's paragraphs, by test id, in reading order. */
+  const readingOrder = (page: ReturnType<typeof buildPage>): (string | null)[] =>
+    (page.doc.getElementById('tn-level-complete-body')?.children ?? []).map((line) =>
+      line.getAttribute('data-testid'),
+    );
+
+  for (const locale of ['en', 'fr'] as const) {
+    it(`is drawn first, above the stamp and the score (${locale})`, () => {
+      const { card, at, page } = open({ locale });
+      card.show({
+        reason: 'quest',
+        doneMessage: DONE[locale],
+        stampMessage: HALIFAX_STAMP[locale],
+        progressMessage: text(locale, 'level.complete.score', { correct: 2, total: 3 }),
+      });
+
+      expect(at('quest-complete-done')?.textContent).toBe(DONE[locale]);
+      expect(readingOrder(page)).toEqual([
+        'quest-complete-done',
+        'quest-complete-stamp',
+        'quest-complete-progress',
+      ]);
+      expect(at('quest-complete-card')?.textContent).toContain(text(locale, 'quest.done.title'));
+    });
+  }
+
+  it('stays first with the level that opened on the card as well', () => {
+    const { card, page } = open();
+    card.show({ reason: 'quest', doneMessage: DONE.en, stampMessage: HALIFAX_STAMP.en, next: NEXT });
+    expect(readingOrder(page)).toEqual([
+      'quest-complete-done',
+      'quest-complete-stamp',
+      'quest-complete-next-level',
+    ]);
+  });
+
+  it('is the first thing the dialog’s description reads, and is not announced', () => {
+    const { card, at, page, announce } = open();
+    card.show({ reason: 'quest', doneMessage: DONE.en, stampMessage: HALIFAX_STAMP.en });
+
+    const root = at('quest-complete-card');
+    const described = page.doc.getElementById(root?.getAttribute('aria-describedby') ?? '');
+    expect(described?.children[0]?.textContent).toBe(DONE.en);
+    expect((described?.textContent ?? '').startsWith(DONE.en)).toBe(true);
+
+    /* The live region stays the heading and the stamp. The line is read once, by
+       the description, and a line in both would be heard twice. */
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce).toHaveBeenCalledWith(`Task done! ${HALIFAX_STAMP.en}`, 'en');
+    expect(String(announce.mock.calls[0]?.[0])).not.toContain(DONE.en);
+  });
+
+  it('names no speaker and puts no quotation marks around the line', () => {
+    const { card, at } = open();
+    card.show({ reason: 'quest', doneMessage: DONE.en });
+
+    /* Exactly the line: no name before it, nothing around it. On two levels the
+       giver is a landmark this card may not name. */
+    expect(at('quest-complete-done')?.textContent).toBe(DONE.en);
+    const drawn = at('quest-complete-card')?.textContent ?? '';
+    for (const mark of ['“', '”', '"', '«', '»']) {
+      expect(drawn, `the card drew ${mark}, which implies a speaker`).not.toContain(mark);
+    }
+    expect(at('dialogue-speaker')).toBeNull();
+  });
+
+  it('draws nothing when there is no line, leaving the card exactly as it was', () => {
+    /* A quest with no line and a line a verifier refused both reach the card as
+       no `doneMessage`; an empty string must look the same (`TN-DONE-05`). */
+    const without = open();
+    without.card.show({ reason: 'quest', stampMessage: HALIFAX_STAMP.en, progressMessage: 'x' });
+    const empty = open();
+    empty.card.show({
+      reason: 'quest',
+      doneMessage: '',
+      stampMessage: HALIFAX_STAMP.en,
+      progressMessage: 'x',
+    });
+
+    for (const { at, page } of [without, empty]) {
+      expect(at('quest-complete-done'), 'no empty paragraph and no placeholder').toBeNull();
+      expect(readingOrder(page)).toEqual(['quest-complete-stamp', 'quest-complete-progress']);
+    }
+    expect(empty.at('quest-complete-card')?.textContent).toBe(
+      without.at('quest-complete-card')?.textContent,
+    );
+  });
+
+  it('points at no description when an empty line is all there would have been', () => {
+    const { card, at } = open();
+    card.show({ reason: 'quest', doneMessage: '' });
+    expect(at('quest-complete-card')?.getAttribute('aria-describedby')).toBeNull();
+  });
+
+  it('is never drawn under "Level finished!", whatever the caller hands over', () => {
+    /* `TN-DONE` rule 6: the card a player reaches by walking to the end says
+       nothing about the task, and every authored line is about the task. */
+    for (const reason of ['level', undefined] as const) {
+      const { card, at } = open();
+      card.show({
+        ...(reason === undefined ? {} : { reason }),
+        doneMessage: DONE.en,
+        stampMessage: HALIFAX_STAMP.en,
+      });
+      expect(at('quest-complete-card')?.textContent).toContain('Level finished!');
+      expect(at('quest-complete-done')).toBeNull();
+      expect(at('quest-complete-card')?.textContent).not.toContain(DONE.en);
+    }
+  });
+
+  it('follows the language when the caller resolves it, and stays first', () => {
+    const { card, at, page } = open();
+    card.show((locale) => ({
+      reason: 'quest',
+      doneMessage: DONE[locale],
+      stampMessage: HALIFAX_STAMP[locale],
+    }));
+    expect(at('quest-complete-done')?.textContent).toBe(DONE.en);
+
+    card.setLocale('fr');
+    expect(at('quest-complete-done')?.textContent).toBe(DONE.fr);
+    expect(readingOrder(page)[0]).toBe('quest-complete-done');
   });
 });

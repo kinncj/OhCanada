@@ -10,6 +10,7 @@ import officerDocument from '@content/characters/officer.json';
 /* Relative, not aliased: there is no `@bootstrap` alias and adding one means
    editing three configs that have to agree (tsconfig, vite, vitest). */
 import { readGameRules } from '../../../app/bootstrap/game-rules';
+import { completionLine } from '../../../app/bootstrap/quest';
 import { readQuests } from '../../../app/bootstrap/quests';
 import { unlockedLevelIds } from '@domain/entities/level';
 import { hasCopyRow, text } from '@ui/copy';
@@ -2411,6 +2412,89 @@ describe('a quest is offered, accepted and tracked', () => {
 
     const resolve = hoisted.state.completeShown[0] as (locale: string) => { reason?: string };
     expect(resolve('en').reason).toBe('quest');
+  });
+
+  /**
+   * The quest's own closing line on the card (`TN-DONE`).
+   *
+   * Kept from the answer that completes the quest — the route every shipped
+   * quest ends on, since each ends with an `answer` step — and never drawn on the
+   * walk to the end. The expectation is `completionLine`'s answer for this quest:
+   * *which* line, and whether a verifier allows it, is that function's suite's.
+   * What is asserted here is the composition: the root keeps the finished quest
+   * and hands the card that line on "Task done!", and nothing on "Level
+   * finished!".
+   */
+  const finishTheTaskByAnswering = async (): Promise<void> => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+
+    /* The landmark the task names first, which moves it on to an answer step. */
+    emit('poi/engaged', FIRST_VISIT.targetId);
+    const beforeTheLine = hoisted.state.dialoguesShown.length;
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+    if (hoisted.state.dialoguesShown.length > beforeTheLine) {
+      (hoisted.state.dialoguesShown.at(-1) as { next?: { onSelect: () => void } }).next?.onSelect();
+      await flush();
+    }
+
+    hoisted.state.stampFor = 'ottawa';
+    hoisted.state.questCompletes = true;
+    const question = hoisted.state.questionOptions as {
+      onAnswer: (i: number, right: boolean) => void;
+      onNext: () => void;
+    };
+    question.onAnswer(0, true);
+    question.onNext();
+    await flush();
+  };
+
+  it('draws the finished quest’s own closing line on "Task done!", in both languages', async () => {
+    await finishTheTaskByAnswering();
+    expect(
+      hoisted.state.answeredWithQuest.at(-1),
+      'the answer counted toward no quest, so nothing here finished one',
+    ).toBe(String(OTTAWA_QUEST.id));
+    expect(hoisted.state.completeShown).toHaveLength(1);
+
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => {
+      reason?: string;
+      doneMessage?: string;
+    };
+    expect(resolve('en').reason).toBe('quest');
+
+    const line = completionLine({ by: 'quest', quest: OTTAWA_QUEST });
+    if (line.said === 'spoken') {
+      expect(resolve('en').doneMessage).toBe(line.text.en);
+      expect(resolve('fr').doneMessage).toBe(line.text.fr);
+    } else {
+      /* No line, or a refused one: no key at all, so the card is what it was. */
+      expect('doneMessage' in resolve('en'), `a "${line.said}" closing line reached the card`)
+        .toBe(false);
+    }
+  });
+
+  it('never draws the closing line on "Level finished!", even with the task accepted', async () => {
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    reachEnd('ottawa');
+    await flush();
+
+    expect(hoisted.state.completeShown).toHaveLength(1);
+    const resolve = hoisted.state.completeShown[0] as (locale: string) => Record<string, unknown>;
+    for (const locale of ['en', 'fr'] as const) {
+      const content = resolve(locale);
+      expect(content['reason']).toBe('level');
+      expect(
+        'doneMessage' in content,
+        `the walk to the end drew a remark about the task (${locale}), which TN-DONE rule 6 forbids`,
+      ).toBe(false);
+      const words = OTTAWA_QUEST.doneLine?.text[locale];
+      if (words !== undefined) expect(JSON.stringify(content)).not.toContain(words);
+    }
   });
 
   it('offers no prompt for a character with nothing to say', async () => {

@@ -45,10 +45,18 @@
  * which happened, and "the level finished" is the honest answer when it does not
  * know, because reaching the end is what draws this card at all.
  *
- * ## Four strings this card takes as data, and one it does not
+ * ## Five strings this card takes as data, and one it does not
  *
  *  - The heading is a row here, because both headings are the same sentence for
  *    every level.
+ *  - The quest's own closing line — its `doneLine` — is content, and arrives
+ *    already chosen and already verified (`app/bootstrap/quest.ts`'s
+ *    `completionLine`). It is drawn **first**, and **only under "Task done!"**:
+ *    every authored line describes the route walked and the questions answered,
+ *    and `TN-DONE` rule 6 forbids any remark about the task on the card a player
+ *    reaches by walking to the end. It carries **no speaker name and no quotation
+ *    marks**: on two levels the giver is a landmark this card may not name, and
+ *    the dialog is already named by its heading.
  *  - The stamp sentence is **`stamp.<id>.earned`, per level**, for the reason
  *    `level.<id>.error.title` is per level: "You earned the {{level}} stamp." is
  *    right in English and wrong in French, where the article and the elision
@@ -163,6 +171,21 @@ export interface LevelCompleteContent {
    */
   readonly reason?: 'quest' | 'level';
   /**
+   * The finished quest's own closing line (`doneLine`), already localised and
+   * already verified.
+   *
+   * The first paragraph in the card's body, so it is the first thing
+   * `aria-describedby` reads after the heading — and it is **not** added to the
+   * live-region announcement, which stays the heading and the stamp, so nothing
+   * is heard twice.
+   *
+   * Drawn only when {@link LevelCompleteContent.reason} is `'quest'`. Absent or
+   * empty draws nothing at all: no empty paragraph and no placeholder, which is
+   * what a quest with no line and a line a verifier refused must both look like
+   * (`TN-DONE-05`).
+   */
+  readonly doneMessage?: string;
+  /**
    * `stamp.<id>.earned` for the level that was finished, already localised.
    * Absent when this build has no row for that level — the card then says the
    * task is done and offers the same ways on, which is every fact it has.
@@ -263,6 +286,13 @@ export function createLevelComplete(
   /** Everything the card is saying right now, in reading order. */
   function lines(): HTMLElement[] {
     const said: HTMLElement[] = [];
+    /* The quest's own last line, first — and only on the showing whose heading
+       says a task was done. On "Level finished!" it would be a remark about the
+       task on the route `TN-DONE` rule 6 keeps silent about it. */
+    const done = content.doneMessage;
+    if (content.reason === 'quest' && done !== undefined && done !== '') {
+      said.push(element(doc, 'p', { testId: 'quest-complete-done', text: done }));
+    }
     const stamp = content.stampMessage;
     if (stamp !== undefined && stamp !== '') {
       said.push(element(doc, 'p', { testId: 'quest-complete-stamp', text: stamp }));
