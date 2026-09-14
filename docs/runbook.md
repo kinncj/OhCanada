@@ -424,6 +424,48 @@ The last three also run inside `make assets`, over `assets/dist/` rather than `d
 and under the same exit code — so there is no way to build assets and skip them. `make check-assets` and
 `make check-textures` run them alone.
 
+### The performance job — what it asserts, and what it does not
+
+Blocking since 2026-09-13, in both `ci.yml` and `deploy-pages.yml`. Before that it timed frames on a GitHub runner,
+which has no GPU, and failed on every run behind `continue-on-error` without once describing the build. The
+full history and the protocol are in `tests/perf/README.md`; what an operator needs is below.
+
+`make test-perf` asserts budgets a GPU-less runner measures **exactly**, because they count the work the build hands
+the GPU rather than how fast it is done:
+
+| Budget | Measured by | Source of the limit |
+|---|---|---|
+| Overdraw <= 4x screen area per frame, at every tier the runner visited | `tests/perf/gl-census.ts`: every triangle clipped to the viewport, summed, attributed per frame to the tier in effect | CLAUDE.md budgets |
+| Texture bytes the GPU holds <= the level budget (48 MiB Ottawa, 64 MiB ceiling) | the same census, reconciled to the byte against the manifest | CLAUDE.md, level document |
+| Initial payload a browser transfers <= 8 MiB | Playwright request sizes | `content/game.config.json` |
+| Time to playable on the runner <= 6 s | wall clock — a tripwire, **not** the phone budget | `content/game.config.json` |
+
+`tests/perf/calibration.spec.ts` runs in the same job and proves the census against WebGL scenes with known answers
+first. If calibration fails, believe nothing else in that run.
+
+Every budget ends in one of three outcomes, printed as separate sections, separate annotation titles and separate
+rows on the job summary page:
+
+- **HELD** — green.
+- **BREACHED** — red. The build spends more than its budget. Read the detail: it carries the tier, the renderer and
+  the numbers that make the figure attributable. Fix the build, not the number; a budget changes only by ADR.
+- **NOT MEASURED** — red, and **not** a statement about the build. The instrument could not take the measurement,
+  and the line says why (an undecodable draw, a stale vertex read, a tier with too few attributable frames).
+  Everything this lane asserts is measurable on a runner, so this means the census or the page broke. Do not
+  re-run until it goes green; find the reason in the line.
+
+Printed on every run, green or red, under **NOT CHECKED HERE**: frame time, per-character cost, particles and
+time-to-play on a phone. **A green perf job says nothing about frame time, and nothing about particles** — the scene
+probe's `data-particles` has two writers (allowance and emission), so nothing can measure that budget until it is
+split. Those are checked by `make test-perf-device` on hardware
+with a GPU, recorded with `make record-perf-device DEVICE="..."` in `tests/perf/device-record.json`, and the job
+prints the newest pass (or `NONE RECORDED`). A laptop pass is not an iPhone 13 pass; `tests/perf/README.md` says how
+a phone pass is taken by hand.
+
+The perf job is in the `gate` / `browser` loop. **Never give it — or any job in that loop — a job-level
+`continue-on-error`:** measured on run 34427461281, that flag makes `needs.<job>.result` read `success` whatever
+happened, so the gate would pass over a red job. A job that must not block leaves the loop instead, and says so.
+
 ### When the deploy fails on decoded texture memory
 
 This is the one that reads as a surprise, because the download budget will be nowhere near troubled when it

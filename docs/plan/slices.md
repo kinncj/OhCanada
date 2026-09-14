@@ -19,8 +19,8 @@ State lives here, not in conversation history. Update the status column when a s
 | F1 | Exam mode | Official format, optional timer, results by subject | **Done** — 2026-09-09 |
 | F2 | Accessibility pass | Full audit: keyboard, switch, screen reader, scaling, contrast | **Substantially done** — 299 assertions in `tests/a11y/`, axe-core on every DOM screen including "About this place", single-switch and 200% text covered. Not signed off as an audit |
 | F3 | PWA and offline | Workbox per level, installable, offline after first load | **Not started** — no service worker and no manifest in the tree |
-| F4 | Performance pass | Every target device against the budgets | **In progress, and CI has never measured it.** The perf job reports "the page is not animating, so nothing was measured" on a GPU-less runner and is deliberately non-blocking |
-| F5 | Docs completion | ADRs, architecture, art bible, content review, runbook, credits, contributing | **In progress** — 29 ADRs, `docs/guidelines/` for outside contributors, art sheets per level. No runbook, no contributing guide |
+| F4 | Performance pass | Every target device against the budgets | **In progress.** Since 2026-09-13 CI measures what a GPU-less runner can, and blocks on it: overdraw per visited tier and GPU texture memory counted at the WebGL API (calibrated in the same run), plus payload (`tests/perf/README.md`). Frame time and per-character cost are device-only (`make test-perf-device`) and have **no recorded pass**. Particles are measured nowhere until `data-particles` stops having two writers. `high` is never exercised on a runner, and the tier tracker cycles low/medium on SwiftShader (both raised with the app owner) |
+| F5 | Docs completion | ADRs, architecture, art bible, content review, runbook, credits, contributing | **In progress** — 29 ADRs, `docs/guidelines/` for outside contributors, art sheets per level. a runbook covering the perf lanes; no contributing guide |
 
 ## Rules
 - A level must be addable by JSON and assets alone. If a level needs engine changes, the schema is wrong —

@@ -119,9 +119,13 @@
  * textures that come from files fit, and the character surfaces are on top of
  * that, unmeasured". Two things follow. Any budget derived from this gate's
  * number must RESERVE headroom for the surfaces rather than spend it, and
- * measuring them needs the renderer's real allocation at runtime —
- * tests/perf/character-cost.spec.ts, a different instrument from a build-time
- * gate over a manifest. This gate deliberately does not quote art's figure: a
+ * measuring them needs the renderer's real allocation at runtime. That
+ * instrument exists since 2026-09-13: the GL census in tests/perf/gl-census.ts,
+ * asserted by tests/perf/budgets.spec.ts on every CI run, counts every byte a
+ * level actually uploads to the GPU and reconciles the total against THIS
+ * manifest, naming what no build gate priced. It is a different instrument from
+ * a build-time gate over a manifest, and it measures only the tier and scale the
+ * runner settles at. This gate deliberately does not quote art's figure: a
  * number it cannot re-derive is exactly what it refuses to trust everywhere
  * else, and printing one here would make it look checked.
  */

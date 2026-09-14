@@ -3,7 +3,12 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Performance suite: frame time, payload weight and time-to-play budgets.
+ * The CI performance lane: budgets a GPU-less runner can measure exactly -
+ * overdraw and texture memory counted at the WebGL API (`gl-census.ts`, proved
+ * by `calibration.spec.ts`), the payload a browser transfers, and a time-to-playable
+ * tripwire. Frame time is NOT here: it is the device lane,
+ * `playwright.device.config.ts`, which extends this file and runs `*.device.ts`
+ * on real hardware only (tests/perf/README.md).
  *
  * Serves the production build with `vite preview` on port 4174 so the suite
  * exercises the same artefact GitHub Pages serves, base path included.
@@ -35,7 +40,14 @@ export default defineConfig({
   testMatch: '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
-  retries: process.env.CI ? 1 : 0,
+  // NO RETRIES, on CI included, and it is not stinginess. Everything this lane
+  // asserts is a count - covered pixels, uploaded bytes, bytes transferred - that
+  // is identical from one run of a build to the next (overdraw read the same to
+  // 1e-6 across 74 frames). A count that differs on retry is not flake to be
+  // absorbed; it is the census losing track of state, and a retry that passed
+  // would hide it. One attempt also means the reporter has exactly one verdict
+  // per budget to print.
+  retries: 0,
   // Stop after five failures on CI. This is the only setting here that bounds
   // the WORST case rather than the average: a systemic breakage - the app not
   // booting at all - fails every test in the suite and produces a full artefact
@@ -50,19 +62,21 @@ export default defineConfig({
   // sets `exactOptionalPropertyTypes` and an explicit `undefined` is not the
   // same as an omitted key under that rule. Same shape as `workers` below.
   ...(process.env.CI ? { maxFailures: 5 } : {}),
-  // ONE WORKER, ALWAYS - unlike the e2e and a11y configs, and not for artefact
-  // weight. This suite measures frame time. A frame time sampled while three
-  // other Chromium instances are saturating the same CPU on a software
-  // rasteriser is not a measurement of the game; it is a measurement of the
-  // machine's load, and it would fail (or pass) for reasons that have nothing to
-  // do with the build. `fullyParallel` above still applies within the worker's
-  // single browser, which costs nothing here: the suite is four tests.
+  // ONE WORKER, ALWAYS. The counts would survive parallel browsers; two things
+  // here would not. The time-to-playable tripwire is wall clock, and the overdraw
+  // test waits for the visual tier to hold still - three other Chromium
+  // instances on the same CPU would demote it mid-sample for reasons that have
+  // nothing to do with the build. The device lane inherits this, where frame
+  // time makes it non-negotiable.
   workers: 1,
   timeout: 60_000,
   expect: { timeout: 10_000 },
   outputDir: fileURLToPath(new URL('../../test-results/perf', import.meta.url)),
   reporter: [
     ['list'],
+    // Held, breached, NOT MEASURED, and NOT CHECKED HERE - four sections, on
+    // every run. Playwright alone can only say pass or fail (ADR-0024).
+    ['./perf-reporter.ts'],
     [
       'html',
       {

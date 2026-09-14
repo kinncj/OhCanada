@@ -1,91 +1,53 @@
-import { expect, test, type Page } from '@playwright/test';
+import { test, type Page } from '@playwright/test';
 
+import { inspectHost, softwareRefusal } from './device-host';
 import { CHARACTER_HARNESS_URL } from './playwright.config';
+import { atMost, notMeasured, settle } from './verdict';
 
 /**
- * Task 1.12's acceptance, as a measurement: **≤ 1.5 ms per character, ≤ 6 on
- * screen.**
+ * DEVICE LANE. Task 1.12's acceptance as a measurement: <= 1.5 ms per
+ * character, <= 6 on screen.
  *
- * The number is unproven and `docs/plan/slice-1.md` says so — *"If ≤ 1.5 ms per
- * character does not hold on an iPhone, the sprite-sheet fallback ships and Rive
- * waits. Decide with a measurement."* This file is that decision procedure. It
- * does not assert a preference between the backends; it measures each one and
- * fails only when a backend that is a candidate to ship misses the budget.
+ * Moved from `character-cost.spec.ts` on 2026-09-13. It PASSED on CI, which is
+ * the reason it moved rather than a reason to keep it: per-character cost is a
+ * subtraction of engine time on the same page, and on SwiftShader the
+ * rasterisation of those characters is inside the subtraction. A sprite
+ * character cheap enough to pass under a CPU rasteriser passes, and one that is
+ * too expensive on an iPhone's GPU could pass too; the green tick described the
+ * runner. So this settles NOT MEASURED on a software rasteriser, like the frame
+ * test beside it.
  *
- * ## What is sampled, and the trap it avoids
+ * What it measures, unchanged: engine work (`POST_RENDER - PRE_STEP`) through
+ * `frame-cost.ts`, as a mean over a 60-frame window (Chromium clamps
+ * `performance.now()` to 100 us, so a median can only read in 0.1 ms steps), at
+ * 0, 1 and 6 characters, per backend.
  *
- * Engine work, not frame interval: `POST_RENDER now - PRE_STEP now`, through the
- * same `frame-cost.ts` the visual tier is chosen from. ADR-0011 records why the
- * obvious alternative cannot work — a rAF delta is vsync-locked, so on a healthy
- * 60 Hz display it reads ~16.7 ms whether the GPU is idle or saturated, and a
- * per-character cost derived from it would be 0 ms right up until it was 16 ms.
- * That is a threshold detector, not a measurement, and the same mistake was
- * already removed from `budgets.spec.ts` once.
+ * Two things it will not do, also unchanged:
  *
- * Per-character cost is a subtraction against a zero-character baseline taken in
- * the same browser on the same page, because this suite runs on SwiftShader
- * where an empty scene already costs a real slice of a frame. ADR-0011's
- * consequence is honoured: the renderer that produced the number is reported
- * with it, because a budget met on SwiftShader and one met on a GPU are
- * different claims.
+ *   - call the Rive number a per-character cost. There is no drawable `.riv`;
+ *     `assets/style/rig-contract.riv` has every input and no drawable content,
+ *     so the Rive figure is the runtime's fixed FLOOR. Under budget proves
+ *     nothing; over budget decides against Rive. One-sided, deliberately.
+ *   - report milliseconds without VRAM. A Rive surface is sized by the display,
+ *     not by a file, so the build gate records `decodedBytes: 0` for it. Six at
+ *     480x840 is about 9.2 MiB no manifest counts. On CI the GL census in
+ *     `budgets.spec.ts` now counts whatever surfaces a level actually uploads.
  *
- * ## Two things this file will not do
- *
- * **It will not call the Rive number a per-character cost.** There is no
- * drawable `.riv`: `assets/style/rig-contract.riv` is a valid rig with all nine
- * inputs and *no drawable content*, kept that way deliberately so that nobody
- * adopts Rive on a measurement of an empty file. So the Rive figure here is the
- * runtime's fixed **floor** — instantiate, `advanceAndApply`, the canvas
- * surface, the per-frame upload — and the vector rasterisation of real art is on
- * top of it. A floor under budget proves nothing; a floor *over* budget would
- * settle the question against Rive, which is the only verdict it can carry, and
- * it is asserted in that direction only.
- *
- * **It will not report milliseconds without VRAM.** A Rive surface is sized by
- * the display rather than by a file, so `scripts/assets.mjs` records
- * `decodedBytes: 0` for a `.riv` and the texture-memory gate cannot see it at
- * all: six characters at 480x840 is ≈ 9.2 MiB that no dashboard counts. The
- * sprite backend adds zero, because its parts are inside an atlas that is
- * already weighed. That difference is printed beside every timing, because a
- * verdict of "Rive fits the 1.5 ms budget" that omitted it would be true and
- * misleading — and uncounted memory is the exact shape of the failure that
- * killed this project's predecessor.
+ * The old sprite test asserted three things; two were one inequality written
+ * twice ((many - base) / 6 <= 1.5 is (many - base) <= 9), so one verdict carries
+ * them now.
  */
 
-/** CLAUDE.md's per-character budget for task 1.12. */
 const PER_CHARACTER_BUDGET_MS = 1.5;
-/** The task's ceiling: six on screen. */
 const MANY = 6;
-
-/** Character space, from `assets/style/rig-contract.json`. */
+const MIN_SAMPLES = 30;
+const WINDOWS_TO_COLLECT = 2;
 const CHARACTER_WIDTH = 240;
 const CHARACTER_HEIGHT = 470;
-/** The pixel ratio the art pipeline emits characters at. */
 const CHARACTER_SCALE = 2;
-
-/**
- * Windows to let close before reading. The harness discards 30 warm-up frames
- * and then closes a window every 60, so two windows is ~150 frames — long
- * enough for shader compilation, the first uploads and the first GC to be
- * behind the numbers being read.
- */
-const WINDOWS_TO_COLLECT = 2;
 
 interface CostWindow {
   readonly samples: number;
-  /**
-   * The mean cost over the window, and the number the arithmetic below uses.
-   *
-   * Not the median, and the reason is a measurement floor rather than a change
-   * of mind about ADR-0011: Chromium clamps `performance.now()` to 100 us, so
-   * every per-frame cost is a multiple of 0.1 ms and a median is always exactly
-   * one of those multiples. Six sprite characters cost less than one tick, so a
-   * median can only say "0.1" or "0" and a per-character figure derived from it
-   * would be an artefact of the clock. A 60-frame mean resolves below the tick.
-   * `costP50`, `costP95` and `worstCostMs` are printed beside it so a mean
-   * inflated by one GC pause is visible — which is exactly the objection
-   * ADR-0011 raises against means, answered by reporting both.
-   */
   readonly meanCostMs: number;
   readonly costP50: number;
   readonly costP95: number;
@@ -105,137 +67,99 @@ async function measure(page: Page, backend: string, characters: number): Promise
   await page.goto(`${CHARACTER_HARNESS_URL}?backend=${backend}&n=${String(characters)}`);
   await page.waitForFunction(
     (needed: number) => {
-      const read = (window as unknown as Record<string, undefined | (() => CostReport)>)[
-        '__tnCharacterCost'
-      ];
+      const read = (window as unknown as Record<string, undefined | (() => CostReport)>)['__tnCharacterCost'];
       return read !== undefined && read().windows.length >= needed;
     },
     WINDOWS_TO_COLLECT,
     { timeout: 30_000 },
   );
-
   return page.evaluate(() => {
-    const read = (window as unknown as Record<string, undefined | (() => CostReport)>)[
-      '__tnCharacterCost'
-    ];
+    const read = (window as unknown as Record<string, undefined | (() => CostReport)>)['__tnCharacterCost'];
     if (read === undefined) throw new Error('the harness installed no probe');
     return read();
   });
 }
 
 /** The last closed window is the settled one; the first still carries warm-up. */
-function settled(report: CostReport): CostWindow {
-  const last = report.windows.at(-1);
-  if (last === undefined) throw new Error(`${report.backend}: no measurement window closed`);
-  return last;
-}
+const settled = (report: CostReport): CostWindow | undefined => report.windows.at(-1);
 
 /** `(cost with N - cost with 0) / N`, floored at 0: a negative cost is noise. */
-function perCharacterMs(baseline: CostWindow, loaded: CostWindow, n: number): number {
-  return Math.max(0, (loaded.meanCostMs - baseline.meanCostMs) / n);
+const perCharacterMs = (base: CostWindow, loaded: CostWindow, n: number): number =>
+  Math.max(0, (loaded.meanCostMs - base.meanCostMs) / n);
+
+function shortfall(reports: readonly CostReport[]): string | null {
+  for (const report of reports) {
+    const window = settled(report);
+    if (window === undefined) return `${report.backend} at ${String(report.characters)}: no measurement window closed`;
+    if (window.samples < MIN_SAMPLES) {
+      return `${report.backend} at ${String(report.characters)}: only ${String(window.samples)} frames, below the ${String(MIN_SAMPLES)}-frame floor`;
+    }
+  }
+  return null;
 }
 
-function describeReport(
-  what: string,
-  baseline: CostReport,
-  one: CostReport,
-  many: CostReport,
-): string {
-  const base = settled(baseline);
+function describe(what: string, baseline: CostReport, one: CostReport, many: CostReport, renderer: string): string {
+  const [b, o, m] = [settled(baseline), settled(one), settled(many)] as [CostWindow, CostWindow, CostWindow];
   return (
-    `${what} on "${many.renderer}": ` +
-    `baseline mean ${base.meanCostMs.toFixed(3)} ms ` +
-    `(p50 ${base.costP50.toFixed(1)}, p95 ${base.costP95.toFixed(1)}, ` +
-    `worst ${base.worstCostMs.toFixed(1)}, interval ${base.intervalP50.toFixed(1)}); ` +
-    `1 character mean ${settled(one).meanCostMs.toFixed(3)} ms ` +
-    `-> ${perCharacterMs(base, settled(one), 1).toFixed(3)} ms each; ` +
-    `${String(MANY)} characters mean ${settled(many).meanCostMs.toFixed(3)} ms ` +
-    `(p95 ${settled(many).costP95.toFixed(1)}, worst ${settled(many).worstCostMs.toFixed(1)}, ` +
-    `interval ${settled(many).intervalP50.toFixed(1)}) ` +
-    `-> ${perCharacterMs(base, settled(many), MANY).toFixed(3)} ms each; ` +
+    `${what} on ${renderer} (Phaser ${many.renderer}): baseline mean ${b.meanCostMs.toFixed(3)} ms ` +
+    `(p50 ${b.costP50.toFixed(1)}, p95 ${b.costP95.toFixed(1)}); 1 character -> ${perCharacterMs(b, o, 1).toFixed(3)} ms; ` +
+    `${String(MANY)} characters mean ${m.meanCostMs.toFixed(3)} ms (p95 ${m.costP95.toFixed(1)}, worst ` +
+    `${m.worstCostMs.toFixed(1)}) -> ${perCharacterMs(b, m, MANY).toFixed(3)} ms each; ` +
     `${String(many.layersPerCharacter)} draw(s) per character`
   );
 }
 
-test.describe('character renderer cost', () => {
-  test('the sprite fallback stays inside 1.5 ms a character, at 1 and at 6', async ({ page }) => {
+test.describe('character renderer cost on a real GPU', () => {
+  test('the sprite fallback stays inside 1.5 ms a character, at 1 and at 6', async ({ page }, testInfo) => {
+    const budget = 'sprite character cost <= 1.5 ms each, at 1 and at 6 on screen';
+    const host = await inspectHost(page);
+    if (host.software) return settle(testInfo, notMeasured(budget, softwareRefusal(host)));
+
     const baseline = await measure(page, 'sprite', 0);
     const one = await measure(page, 'sprite', 1);
     const many = await measure(page, 'sprite', MANY);
+    const missing = shortfall([baseline, one, many]);
+    if (missing !== null) return settle(testInfo, notMeasured(budget, missing));
 
-    const where = describeReport('sprite', baseline, one, many);
-    const base = settled(baseline);
-
-    for (const [count, report] of [
-      [0, baseline],
-      [1, one],
-      [MANY, many],
-    ] as const) {
-      expect(
-        settled(report).samples,
-        `only ${String(settled(report).samples)} frames measured at ${String(count)} ` +
-          'characters — the page is not animating, so nothing was measured',
-      ).toBeGreaterThanOrEqual(30);
-    }
-
-    expect(
-      perCharacterMs(base, settled(one), 1),
-      `one sprite character costs more than the ${String(PER_CHARACTER_BUDGET_MS)} ms ` +
-        `budget — ${where}`,
-    ).toBeLessThanOrEqual(PER_CHARACTER_BUDGET_MS);
-
-    expect(
-      perCharacterMs(base, settled(many), MANY),
-      `six sprite characters cost more than ${String(PER_CHARACTER_BUDGET_MS)} ms each — ` +
-        `${where}`,
-    ).toBeLessThanOrEqual(PER_CHARACTER_BUDGET_MS);
-
-    /* The whole-frame consequence, which the per-character number hides: six
-       characters must still leave the level a frame to be drawn in. */
-    expect(
-      settled(many).meanCostMs - base.meanCostMs,
-      `six sprite characters add more than the whole ${String(PER_CHARACTER_BUDGET_MS * MANY)} ` +
-        `ms they are allowed together — ${where}`,
-    ).toBeLessThanOrEqual(PER_CHARACTER_BUDGET_MS * MANY);
-
-    /* eslint-disable-next-line no-console -- the measurement IS the deliverable */
-    console.log(`[1.12] ${where}; VRAM added by the sprite backend: 0 bytes (its parts are ` +
-      `inside the counted atlas).`);
+    const base = settled(baseline) as CostWindow;
+    const worst = Math.max(
+      perCharacterMs(base, settled(one) as CostWindow, 1),
+      perCharacterMs(base, settled(many) as CostWindow, MANY),
+    );
+    return settle(
+      testInfo,
+      atMost(
+        budget,
+        worst,
+        PER_CHARACTER_BUDGET_MS,
+        'ms',
+        `${describe('sprite', baseline, one, many, host.renderer)}; VRAM added: 0 bytes (parts are inside the counted atlas)`,
+      ),
+    );
   });
 
-  /**
-   * The Rive **floor**, asserted in the only direction it can carry.
-   *
-   * Under budget proves nothing — the artboard is empty. Over budget would mean
-   * the runtime's fixed overhead alone exceeds the whole per-character budget
-   * before a single path has been rasterised, which decides the question against
-   * Rive without needing art. So the assertion is one-sided by design, and the
-   * number is printed either way for the report.
-   */
-  test('the Rive runtime floor is measured, and can only fail against Rive', async ({ page }) => {
+  test('the Rive runtime floor is measured, and can only fail against Rive', async ({ page }, testInfo) => {
+    const budget = 'Rive runtime FLOOR (empty artboard) <= 1.5 ms per character - one-sided';
+    const host = await inspectHost(page);
+    if (host.software) return settle(testInfo, notMeasured(budget, softwareRefusal(host)));
+
     const baseline = await measure(page, 'rive-floor', 0);
     const one = await measure(page, 'rive-floor', 1);
     const many = await measure(page, 'rive-floor', MANY);
+    const missing = shortfall([baseline, one, many]);
+    if (missing !== null) return settle(testInfo, notMeasured(budget, missing));
 
-    const base = settled(baseline);
-    const where = describeReport('rive floor (empty artboard)', baseline, one, many);
-
-    const surfaceBytes =
-      CHARACTER_WIDTH * CHARACTER_SCALE * CHARACTER_HEIGHT * CHARACTER_SCALE * 4;
-    const vram =
-      `VRAM no gate counts: ${(surfaceBytes / 1_048_576).toFixed(2)} MiB per character at ` +
-      `${String(CHARACTER_SCALE)}x, ` +
-      `${((surfaceBytes * MANY) / 1_048_576).toFixed(2)} MiB at ${String(MANY)} — ` +
-      `assets.mjs records decodedBytes: 0 for a .riv, so the texture gate does not move`;
-
-    /* eslint-disable-next-line no-console -- the measurement IS the deliverable */
-    console.log(`[1.12] ${where}. FLOOR ONLY: no drawable .riv exists. ${vram}.`);
-
-    expect(
-      perCharacterMs(base, settled(many), MANY),
-      `the Rive runtime's fixed overhead alone exceeds the whole ` +
-        `${String(PER_CHARACTER_BUDGET_MS)} ms per-character budget with an EMPTY artboard, ` +
-        `before any art is rasterised. That decides the backend against Rive — ${where}. ${vram}`,
-    ).toBeLessThanOrEqual(PER_CHARACTER_BUDGET_MS);
+    const surfaceBytes = CHARACTER_WIDTH * CHARACTER_SCALE * CHARACTER_HEIGHT * CHARACTER_SCALE * 4;
+    return settle(
+      testInfo,
+      atMost(
+        budget,
+        perCharacterMs(settled(baseline) as CostWindow, settled(many) as CostWindow, MANY),
+        PER_CHARACTER_BUDGET_MS,
+        'ms',
+        `${describe('rive floor', baseline, one, many, host.renderer)}. FLOOR ONLY: under budget proves nothing, ` +
+          `over budget decides against Rive. VRAM no build gate counts: ${((surfaceBytes * MANY) / 1_048_576).toFixed(2)} MiB at ${String(MANY)}`,
+      ),
+    );
   });
 });

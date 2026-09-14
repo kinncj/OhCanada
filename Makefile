@@ -4,7 +4,7 @@
 
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
-.PHONY: help setup deps browsers lint typecheck test test-e2e test-perf test-a11y \
+.PHONY: help setup deps browsers lint typecheck test test-e2e test-perf test-perf-device record-perf-device test-a11y \
         assets check-assets check-textures validate-content verify-content verify-art art-handoff art-handoff-blind build preview clean \
         check-obligations sources dist-digest verify-dist
 
@@ -87,12 +87,35 @@ shard_flag = $(if $(SHARD),-- --shard=$(SHARD))
 test-e2e: ## Playwright end-to-end suite against the production build (SHARD=i/n for one slice)
 	npm run test:e2e $(shard_flag)
 
-# NOT SHARDABLE, and the missing option is the point. tests/perf pins itself to
-# one worker because it measures frame time; splitting it across runners would
-# mean comparing numbers taken on different machines under different load, which
-# is the same mistake in a new place. It is 7 tests and it does not block.
-test-perf: ## Playwright performance-budget suite
+# TWO PERFORMANCE LANES, BECAUSE A CI RUNNER HAS NO GPU. tests/perf/README.md
+# has the history; the short version is that this target timed frames on
+# SwiftShader for a slice and a half and never once described the build.
+#
+#   test-perf         CI, BLOCKING. What a GPU-less runner measures exactly: the
+#                     work the build hands the GPU, counted at the WebGL API -
+#                     overdraw <= 4x screen, texture bytes the GPU holds <= the
+#                     level budget - plus payload, and a time-to-
+#                     playable tripwire. Every budget ends HELD, BREACHED or NOT
+#                     MEASURED, printed as separate sections, and frame time is
+#                     printed under NOT CHECKED HERE on every run.
+#   test-perf-device  NOT IN CI, ON PURPOSE. Frame time and per-character cost,
+#                     on hardware with a GPU. Settles NOT MEASURED on a software
+#                     rasteriser rather than producing a number. Run it by hand,
+#                     then record the pass (tests/perf/README.md). Headed by
+#                     default; TN_PERF_DEVICE_HEADLESS=1 to override.
+#
+# Neither is shardable: splitting them across runners would compare numbers
+# taken on different machines, and the tier each host settles at differs.
+test-perf: ## CI perf lane: overdraw and GPU texture memory at the WebGL API, payload (blocking)
 	npm run test:perf
+
+test-perf-device: ## Device perf lane: frame time and per-character cost, on a real GPU (never in CI)
+	scripts/browser-suite-lock.sh npx playwright test --config tests/perf/playwright.device.config.ts
+
+# DEVICE= is REQUIRED and an empty one is refused, as is a run the lane refused
+# for rasterising in software: a refused run is not a device pass.
+record-perf-device: ## Append the last device-lane run to tests/perf/device-record.json (DEVICE="...")
+	node scripts/record-perf-device.mjs --device "$(DEVICE)"
 
 test-a11y: ## Playwright axe-core accessibility suite (SHARD=i/n for one slice)
 	npm run test:a11y $(shard_flag)

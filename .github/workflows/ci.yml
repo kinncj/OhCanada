@@ -257,22 +257,38 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-  # Reports, does not block. The perf suite cannot be measured on this
-  # runner: it rasterises in software, so the level costs 45 ms a frame
-  # against 1 ms on a laptop for the same commit, and the visual tier
-  # degrades mid-sample because the container cannot hold a cadence.
-  # Every number it produces is a property of the container. Frame time
-  # is a device budget and wants a stable host with a real GPU.
+  # BLOCKING, since 2026-09-13 - and it measures something different from what
+  # it used to, which is the only reason that is safe.
   #
-  # Not sharded, and the missing option is the point: tests/perf pins itself to
-  # one worker because it measures frame time, and splitting it across runners
-  # would mean comparing samples taken on different machines.
+  # Until then this job timed frames on this runner and never described the
+  # build: the runner has no GPU, rasterises on SwiftShader, and the job failed
+  # every run ("only 19 playing frames in 2000 ms - the page is not animating,
+  # so nothing was measured", then "the tier moved from medium to low") while
+  # sitting behind `continue-on-error`. A job that is red on every run and
+  # skipped over teaches everyone to ignore job colour.
+  #
+  # What it measures now is the WORK the build hands the GPU, which a software
+  # rasteriser does not change: overdraw and texture bytes counted at the WebGL
+  # API, proved against known scenes in the same run, plus the payload and a
+  # time-to-playable tripwire (tests/perf/README.md). Every budget ends in
+  # one of three printed outcomes - HELD, BREACHED, NOT MEASURED - and frame time
+  # is listed as NOT CHECKED HERE on every run, with the last device pass.
+  # Frame time itself runs on real hardware only: `make test-perf-device`.
+  #
+  # NOT MEASURED is red here, deliberately: every budget in this lane is
+  # measurable on this runner, so failing to measure one means the instrument
+  # broke. Anything the runner genuinely cannot measure is not in the lane.
+  #
+  # No `continue-on-error`, and read the `gate` / `browser` job before ever adding
+  # it back: it would make this job's result unreadable there (run 34427461281).
+  #
+  # Not sharded: the tiers a host visits differ between machines, and every
+  # number is attributed to the tier it was taken at.
   perf:
-    name: Performance (reports, does not block)
+    name: Performance budgets (GPU work, not frame time)
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/prepare
@@ -281,8 +297,22 @@ jobs:
           built: 'true'
           digest: ${{ needs.build.outputs.digest }}
 
-      - name: Performance suite
+      # The reporter writes the three-outcome table to the job summary page, as
+      # annotations whose titles differ per outcome, and to the log.
+      - name: Performance budgets
         run: make test-perf
+
+      # ALWAYS, not on failure: the verdicts are the product of this job, and a
+      # green run's numbers are what the next red run is compared with. A few
+      # kilobytes of JSON.
+      - name: Upload the verdicts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perf-verdicts
+          path: test-results/perf-verdicts.json
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload Playwright report
         if: failure()
@@ -301,12 +331,13 @@ jobs:
   # required check never reports, which is the wedge described at the top of
   # this file. With it, the check goes red and says which gate did.
   #
-  # `perf` is awaited and reported but not required, exactly as before - and the
-  # second half of that is not optional. Measured on run 34427461281: the perf
-  # job failed on the container's frame sampling and `needs.perf.result` came
-  # back 'success' anyway, because a job-level `continue-on-error` rewrites the
-  # result the needs context reports. Asserting on it would be a gate that
-  # always passes.
+  # `perf` is REQUIRED here since 2026-09-13, which this job's name has claimed
+  # all along. It could not be before: measured on run 34427461281, the perf job
+  # failed and `needs.perf.result` came back 'success' anyway, because a
+  # job-level `continue-on-error` rewrites the result the needs context reports,
+  # and asserting on that would have been a gate that always passes. The flag is
+  # gone from perf, so its result means what it says. Keep it that way: see the
+  # rule in the step below.
   browser:
     name: Build, e2e, perf, a11y
     needs: [build, e2e, a11y, perf]
@@ -326,7 +357,7 @@ jobs:
           # shard succeeded. Anything else - failure, cancelled, skipped - is
           # not a pass and is not treated as one.
           status=0
-          for gate in "build:$BUILD" "e2e:$E2E" "a11y:$A11Y"; do
+          for gate in "build:$BUILD" "e2e:$E2E" "a11y:$A11Y" "perf:$PERF"; do
             name="${gate%%:*}"
             result="${gate#*:}"
             if [ "$result" = success ]; then
@@ -336,11 +367,15 @@ jobs:
               status=1
             fi
           done
-          # NOT "reported success". Measured on run 34427461281: the perf job
-          # FAILED and `needs.perf.result` was still 'success', because a
-          # job-level `continue-on-error` rewrites the result the needs context
-          # reports. So this value cannot tell a pass from a failure, and
-          # printing it as though it could would be the most confident wrong
-          # line in the log. Say what it is worth instead.
-          echo "not asserted  perf - job-level continue-on-error makes its result '$PERF' whatever happened; read the job."
+          # PERF IS ASSERTED NOW, AND ONE MEASUREMENT IS WHY IT WAS NOT BEFORE.
+          # Run 34427461281: the perf job FAILED and `needs.perf.result` read
+          # 'success', because a job-level `continue-on-error` rewrites the result
+          # the needs context reports. While perf carried that flag this value
+          # could not tell a pass from a failure, so it was printed as
+          # "not asserted" rather than trusted. The flag is gone (2026-09-13) and
+          # so perf is in the loop above. The rule that finding leaves is
+          # permanent: NO JOB IN THIS LOOP MAY CARRY A JOB-LEVEL
+          # `continue-on-error` - add one and this check passes whatever that job
+          # did. A job that must not block leaves the loop instead, and says so.
+          echo "not checked   frame time - no GPU on a runner; make test-perf-device on real hardware (tests/perf/README.md)"
           exit "$status"
