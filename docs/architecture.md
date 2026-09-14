@@ -356,6 +356,7 @@ is recorded there.
 | `AudioPort` | howler, autoplay unlock | Every cue carries a `captionKey` — sound always has a visual twin | `PROVISIONAL`, **no task** — delete it if slice 2 closes without an audio adapter |
 | `LocalizerPort` | i18next | No literal player-facing string exists anywhere else | `PROVISIONAL` → slice 1 task 1.15 |
 | `InputPort` | touch, keyboard, gamepad, switch | Keyboard bindings keyed by `KeyboardEvent.code` | `PROVISIONAL` → slice 1 task 1.15 |
+| `MapAnchorsDocument` | the screen-art map's sidecar JSON | Where each level's stop sits in the drawing's own viewBox, plus the inset; carries no names. Mirrors `map-anchors.schema.json` (ADR-0007), and `make validate-content` cross-checks what the schema cannot: one anchor per level, every point inside the viewBox, every region id in the drawing | Consumed by `app/ui/level-map.ts` |
 
 ### The character seam
 
