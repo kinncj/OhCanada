@@ -97,7 +97,7 @@ scale**, and it is a decision rather than an omission:
 
 | key | source | authored px | shapes | what it is |
 |---|---|---|---|---|
-| `peggys-cove-layer-10-sky` | `layer-10-sky.svg` | 1080 × 900 | 141 | one flat `sky-base` field and five rows of stratocumulus rolls |
+| `peggys-cove-layer-10-sky` | `layer-10-sky.svg` | 1080 × 900 | 113 | one flat `sky-base` field and a scattered deck of fifteen stratocumulus rolls |
 | `peggys-cove-layer-20-open-sea` | `layer-20-open-sea.svg` | 1760 × 260 | 126 | the open Atlantic: haze band, three water tones, a wooded headland, two skerries, two boats |
 | `peggys-cove-layer-30-cove` | `layer-30-cove.svg` | 1760 × 270 | 480 | the far side of the cove: spruce, granite shore, seven fish stores on piles, a wharf, three boats, reflections |
 | `peggys-cove-layer-40-granite-barrens` | `layer-40-granite-barrens.svg` | 1920 × 280 | 193 | the barrens: jointed rock, grass in the joints, four erratics, two tide pools |
@@ -151,8 +151,12 @@ the sky and the barrens, and the barrens tile is transparent everywhere above wo
 nearer opaque layer inside the sky's band to hide a band step behind. One flat `sky-base` field has no step
 to hide, and the field **is** the level document's `theme.sky`.
 
-**STRATOCUMULUS ROLLS — lumpy-topped, flat-based bars in regular rows, smaller and closer together toward
-the horizon.** That is the sixth distinct cloud treatment in the game and the only one of its kind: Halifax
+**STRATOCUMULUS ROLLS — lumpy-topped, flat-based bars, larger and wider apart high up, smaller, flatter and
+closer together toward the horizon, and scattered: no two rolls share a row.** Build two still set them in five
+rows of three or four, and the 2026-09-14 play-through audit of the live site read that sky as a grid. Each roll
+now has its own height and the gaps between rolls differ; every roll stays inside x 8 … 1072, so the tile's
+extreme columns are flat `sky-base` and it repeats without a seam. That is the sixth distinct cloud treatment in
+the game and the only one of its kind: Halifax
 has seven cumulus, the Alberta foothills six fair-weather cumulus, the Prairies six flat-bottomed cumulus
 banks, Winnipeg six thin banks, Toronto five soft banks and Vancouver eleven cirrus streaks. A seventh
 cumulus would have made this sky indistinguishable from three others at a glance.
@@ -291,7 +295,9 @@ Neither of these should use the art bible's ±10 %.
    now **broken runs of low tufts that follow a joint line and taper at both ends**, and they exist nowhere
    else on the tile. Bare rock is the subject; grass is what grows in the cracks in it.
 3. **The sky.** Build one's rolls were uniform pill shapes in a lattice and read as capsules. They are now
-   lumpy-topped and flat-based, with the row offsets jittered so the rows do not align into a grid.
+   lumpy-topped and flat-based, with the row offsets jittered so the rows do not align into a grid. **The
+   jitter was not enough:** on a phone the five rows still read as a lattice (audit, 2026-09-14). Build three
+   drops the rows altogether: fifteen rolls, each at its own height, one pair drifting together.
 4. **The four parallax bands, twice, and this is the expensive one.** Build one put the barrens at world
    960 … 1280 over a cove at 880 … 1160, and **132 of the barrens tile's 320 rows carried no ink at all** —
    1.0 MiB of nothing, and a `selectLayers` coverage number 41 % larger than the picture behind it. Raising
