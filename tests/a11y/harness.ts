@@ -77,11 +77,12 @@ apply();
 store.subscribe(apply);
 
 /*
- * The creator's five groups, the rig's and the copy table's, not a fixture's.
+ * The creator's groups, the rig's and the copy table's, not a fixture's: six,
+ * with twenty-two options, now that the rig offers `presentation`.
  *
  * This used to be three invented slots — `skin`, `hair`, `coat` — with invented
  * names, which meant the scan measured a screen the game does not draw: three
- * groups where the game has five, thirteen options where it has nineteen, and
+ * groups where the game had five, thirteen options where it had nineteen, and
  * option names no bundle carries. `app/bootstrap/character-slots.ts` derives
  * the real list from `content/characters/rig.json` and names it from
  * `app/ui/copy.ts`, so what axe sees here is what a player sees, including the
@@ -91,12 +92,12 @@ store.subscribe(apply);
  * `?presentation=offered|reserved` pins the rig's `presentation` slot to one
  * state, and no parameter leaves the shipped rig exactly as it is.
  *
- * The art for that slot is landing separately. A scan of the creator with the
- * three options on it cannot wait for the art, and a scan that counts groups
- * cannot change its answer on the day the art arrives — so both ask for the
- * state they are about. `offered` is the three ids the art agent is adding;
- * `reserved` is the slot as it was before, empty and not selectable. Nothing
- * else in the rig is touched, and the default is still what a player sees.
+ * The art for that slot has landed and the shipped rig offers it, so no
+ * parameter now draws six groups. A scan that counts groups still asks for the
+ * state it is about, so its answer does not move with the rig: `offered` is the
+ * three ids the rig ships; `reserved` is the slot as it was before, empty and
+ * not selectable. Nothing else in the rig is touched, and the default is still
+ * what a player sees.
  */
 const creatorRig = ((): RigDocument | undefined => {
   const asked = params.get('presentation');

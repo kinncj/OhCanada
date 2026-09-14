@@ -146,7 +146,7 @@ the other.
 | `headCovering` | `none`, `toque` | **`toque`** | yes |
 | `feature` | `none`, `glasses` | `none` | yes |
 | `costume` | `parka`, `serge`, `beaver` | `parka` | no |
-| `presentation` | `feminine`, `masculine`, `neutral` | `neutral` | yes — not yet listed on the player artboard (below) |
+| `presentation` | `feminine`, `masculine`, `neutral` | `neutral` | yes — listed last on the player artboard (below) |
 
 Plus **two axes that are not slots**, and both are braces a part template can name:
 
@@ -211,8 +211,8 @@ face**, on `{expression}` and `{presentation}`, + 4 × 5 hair), 5 optional singl
 They are reached by a level's locomotion mode, not by a slot combination, which is the arithmetic
 consequence of the previous paragraph: a level's decision is not in the product a player turns.
 
-The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 = **480 appearances** today, and
-**1 440** once the creator offers `presentation`; neither `costume`
+The part of that product a **player** turns is 6 × 4 × 5 × 2 × 2 × 3 = **1 440 appearances**, now that
+the creator offers `presentation` (480 before it did); neither `costume`
 nor the mode is in it: `costume` says which character an artboard is, the mode says what the level put under
 them, and neither says how somebody customised one. Adding the guide therefore added nothing to the creator
 and took nothing away from it, which was the constraint the beaver had to satisfy before it was allowed to
@@ -244,9 +244,10 @@ at phone size before this shipped.
 
 `fallback` is `neutral`, because an NPC document or a repaired save must not acquire a presentation nobody
 chose. The guide pins `presentation: neutral` in its artboard `skins`; the officer resolves to the fallback.
-**The player artboard does not list `presentation` in `playerSelectableSlots` yet.** The creator shows
-exactly that list, `tests/unit/bootstrap/character-slots.test.ts` asserts it, and the slot's player copy
-does not exist; the one-line addition lands with the UI change, not before it.
+**The player artboard lists `presentation` last in `playerSelectableSlots`**, which is the order the creator
+draws its groups in; `tests/unit/bootstrap/character-slots.test.ts` asserts the list, and the slot's player
+copy is "Style" / « Style ». A save written before the slot opened names no presentation: it takes the
+fallback silently and is not reported as a repair, because no choice the player made is gone.
 
 **What the slot system still cannot say.** There is no facial-hair option, no brow slot separate from
 presentation, and the costume has one cut: a `parka` presentation detail would be a `{presentation}` brace on

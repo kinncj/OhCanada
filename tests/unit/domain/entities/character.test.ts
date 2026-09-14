@@ -126,6 +126,20 @@ describe('a saved character after the content changed', () => {
     expect(repaired.skins['badge']).toBe('badge-none');
   });
 
+  it('fills a slot the save predates from its fallback, not from a draw', () => {
+    /*
+     * A slot the save never named is newer than the save: no choice was taken
+     * away, so nothing is drawn. `draw` is pinned at the far end so that a draw
+     * (`coat-blue`) and the fallback (`coat-red`) cannot give the same answer.
+     */
+    const predates = { characterId: character.id, skins: { skin: 'skin-2' } };
+    expect(repairSkins(character, predates, () => 0.99).skins).toEqual({
+      skin: 'skin-2',
+      coat: 'coat-red',
+      badge: 'badge-none',
+    });
+  });
+
   it('falls a selectable slot with nothing to draw from back, because there was no choice to lose', () => {
     /*
      * `character.schema.json` floors `options` at one, so this is a hand-built

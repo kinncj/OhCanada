@@ -10,7 +10,7 @@ import { START_LEVEL } from './start-level';
  * translated and shipped since slice 1 and had never been drawn on a page: the
  * shell can only represent a first run when a creator block is passed to it, no
  * creator block was ever passed, and so every cold load took the
- * returning-player branch. Roughly 480 appearances were in the payload and
+ * returning-player branch. Hundreds of appearances were in the payload and
  * nobody could choose between them. This suite is the route that changed —
  * title → creator → level select → level — with a real save in a real browser.
  *
@@ -60,14 +60,15 @@ test.describe('a first run', () => {
       'Make your character',
     );
 
-    /* Five groups, nineteen options, and every group already answered — the
-       screen opens on a complete randomised character (`TN-LOOK-01`). */
+    /* Six groups, twenty-two options, and every group already answered — the
+       screen opens on a complete randomised character (`TN-LOOK-01`). The
+       sixth group is `presentation`, which the shipped rig offers. */
     const groups = page.locator('[data-testid="character-creator"] [role="radiogroup"]');
-    await expect(groups).toHaveCount(5);
-    await expect(page.locator('[data-testid="character-creator"] [role="radio"]')).toHaveCount(19);
+    await expect(groups).toHaveCount(6);
+    await expect(page.locator('[data-testid="character-creator"] [role="radio"]')).toHaveCount(22);
     await expect(
       page.locator('[data-testid="character-creator"] [role="radio"][aria-checked="true"]'),
-    ).toHaveCount(5);
+    ).toHaveCount(6);
 
     /* And the way on is live before anything has been touched: nothing here is
        required, and there is no skip to be offered instead. */
@@ -251,7 +252,7 @@ test.describe('changing a character, later, which is what the intro promised', (
        named for where it goes (`TN-FIRSTRUN-04`). */
     await expect(
       page.locator('[data-testid="character-creator"] [role="radio"][aria-checked="true"]'),
-    ).toHaveCount(5);
+    ).toHaveCount(6);
     await expect(page.getByTestId('creator-done')).toBeVisible();
     await expect(page.getByTestId('start-playing')).toHaveCount(0);
 

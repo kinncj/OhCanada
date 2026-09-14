@@ -139,10 +139,11 @@ describe('the save the game writes names the slots the rig actually has', () => 
      * A slot the rig does not have passes the schema — `hairStyle` is a
      * perfectly good camelCase name — which is the whole reason this file
      * exists. What bounds it is `repairSelection`: an unknown key is a slot this
-     * build does not offer, so it is dropped and that slot is redrawn
-     * **uniformly**, never from the rig's fallback (TN-LOOK-05). The player
-     * loses one slot's choice and is told once; nothing silently becomes the
-     * default player.
+     * build does not offer, so it is dropped and draws no part, and every slot
+     * the save does not name is filled from the rig's fallback, as for any save
+     * older than a slot. Only an option id this build no longer offers is a
+     * lost choice that is redrawn uniformly and told (TN-LOOK-05); this save
+     * names none, so nothing is told.
      */
     const invented = { ...asTheGameWritesIt(), skins: { hairStyle: 'coil' } };
     expect(ajvAccepts(saveHolding(invented))).toBe(true);
@@ -150,7 +151,7 @@ describe('the save the game writes names the slots the rig actually has', () => 
     const repaired = repairSelection(toSelection(invented), () => 0);
     expect(Object.keys(repaired.selection)).toEqual(rigSlotNames);
     expect(repaired.selection['hairStyle']).toBeUndefined();
-    expect(repaired.repaired).toBe(true);
+    expect(repaired.repaired).toBe(false);
     for (const { name, slot } of playerSlots()) {
       expect(slot.options).toContain(repaired.selection[name]);
     }

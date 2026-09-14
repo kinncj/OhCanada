@@ -43,11 +43,11 @@ import {
  * a sound. The tests below prove the flag decides in both directions, and that a
  * selectable slot with a missing row throws rather than disappears (ADR-0024).
  *
- * The shipped rig's `presentation` slot is being given options by the art agent
- * while this is written. So every test over the shipped rig pins the five
- * `TN-LOOK` slots exactly and allows `presentation` **only** when the rig
- * really offers it, and every test *about* `presentation` runs over a fixture
- * rig in which its state is fixed. Neither kind goes green by not looking.
+ * The shipped rig offers `presentation`, listed last on the player artboard, so
+ * every test over the shipped rig pins all six slots exactly. The tests *about*
+ * the states `presentation` passed through on the way (reserved, selectable
+ * with no options) run over a fixture rig in which that state is fixed, so they
+ * keep proving the creator's behaviour for a slot in either state.
  *
  * The one thing it deliberately does not assert is that a name is *right*.
  * `TN-LOOK` and `TN-SKIN` are the wording, an agent wrote them, and
@@ -64,14 +64,11 @@ const PALETTE = JSON.parse(
 /** The five slots `TN-LOOK-01` names, in its order. */
 const FIVE = ['skin', 'hairShape', 'hairColour', 'headCovering', 'feature'] as const;
 
+/** What the shipped rig offers: the five, and `presentation` listed after them. */
+const SIX = [...FIVE, 'presentation'] as const;
+
 const slotOf = (rig: RigDocument, name: string): RigSlot | undefined =>
   (rig.slots as unknown as Readonly<Record<string, RigSlot | undefined>>)[name];
-
-/** Whether the shipped rig offers `presentation` yet: false until its art lands. */
-const PRESENTATION_OFFERED = ((): boolean => {
-  const slot = slotOf(RIG, 'presentation');
-  return slot !== undefined && slot.playerSelectable && slot.options.length > 0;
-})();
 
 const fiveOf = (slots: readonly CreatorSlot[]): readonly CreatorSlot[] =>
   slots.filter((slot) => (FIVE as readonly string[]).includes(slot.id));
@@ -140,8 +137,11 @@ describe('the creator is the rig, named', () => {
   it('offers the rig’s player-selectable slots, in the rig’s order', () => {
     const names = playerSlots().map((entry) => entry.name);
 
-    expect(names.filter((name) => name !== 'presentation')).toEqual([...FIVE]);
-    expect(names.includes('presentation')).toBe(PRESENTATION_OFFERED);
+    expect(names).toEqual([...SIX]);
+    /* Listed, not appended for having been forgotten: the artboard's own list
+       is the order, and the shipped list names all six. */
+    const player = RIG.artboards.find((board) => board.playerSelectableSlots.length > 0);
+    expect(player?.playerSelectableSlots).toEqual([...SIX]);
   });
 
   it('offers no group for a slot the creator does not own', () => {
@@ -185,11 +185,13 @@ describe('the creator is the rig, named', () => {
     expect(() => creatorSlotsByLocale()).not.toThrow();
   });
 
-  it('carries the counts the arithmetic depends on: 6 × 4 × 5 × 2 × 2 = 480', () => {
-    const counts = fiveOf(creatorSlots('en')).map((slot) => slot.options.length);
+  it('carries the counts the arithmetic depends on: 6 × 4 × 5 × 2 × 2 × 3 = 1440', () => {
+    const counts = creatorSlots('en').map((slot) => slot.options.length);
 
-    expect(counts).toEqual([6, 4, 5, 2, 2]);
-    expect(counts.reduce((product, count) => product * count, 1)).toBe(480);
+    expect(counts).toEqual([6, 4, 5, 2, 2, 3]);
+    expect(counts.reduce((product, count) => product * count, 1)).toBe(1440);
+    /* The five `TN-LOOK` slots are unchanged by the sixth's arrival (§8.2). */
+    expect(fiveOf(creatorSlots('en')).map((slot) => slot.options.length)).toEqual([6, 4, 5, 2, 2]);
   });
 
   it('draws the six tones in the rig’s order, with no ramp renamed', () => {
@@ -218,12 +220,13 @@ describe('the creator is the rig, named', () => {
     const name = (slot: string, option: string): string | undefined =>
       fr.find((entry) => entry.id === slot)?.options.find((o) => o.id === option)?.name;
 
-    expect(fiveOf(fr).map((slot) => slot.label)).toEqual([
+    expect(fr.map((slot) => slot.label)).toEqual([
       'Teint de peau',
       'Cheveux',
       'Couleur des cheveux',
       'Couvre-chef',
       'Lunettes',
+      'Style',
     ]);
     /* Plural, because they agree with « cheveux » — never with the player. */
     expect(name('hairShape', 'crop')).toBe('Courts');
@@ -514,15 +517,52 @@ describe('a saved appearance this build cannot draw', () => {
     expect(first.selection['hairColour']).toBe('red');
     expect(first.selection['headCovering']).toBe('none');
     expect(first.selection['feature']).toBe('glasses');
+    /* The save predates `presentation`: filled, silently, from the fallback. */
+    expect(first.selection['presentation']).toBe('neutral');
   });
 
-  it('treats a slot the save never named as the same case', () => {
-    const repaired = repairSelection({ skin: 'skin-2' }, always(0.99));
+  it('keeps a save written before presentation existed whole, and tells the player nothing', () => {
+    /*
+     * Every returning player's save looks like this: the five slots, all still
+     * offered, and no `presentation`. Nothing they chose is gone, so "one of
+     * your choices is not in this version" would be untrue, and it would be
+     * shown to all of them. The new slot takes the rig's fallback, which is
+     * what the rig keeps `fallback` for. The draw is pinned away from it
+     * (`always(0)` would draw `feminine`), so a draw cannot pass for the
+     * fallback here.
+     */
+    const beforePresentation = {
+      skin: 'skin-4',
+      hairShape: 'long',
+      hairColour: 'black',
+      headCovering: 'toque',
+      feature: 'none',
+    };
+    const kept = repairSelection(beforePresentation, always(0));
 
-    expect(repaired.repaired).toBe(true);
-    expect(repaired.selection['skin']).toBe('skin-2');
-    expect(repaired.selection['hairShape']).toBe('long');
-    expect(Object.keys(repaired.selection).length).toBe(OFFERED_COUNT);
+    expect(kept.repaired).toBe(false);
+    expect(kept.selection).toEqual({ ...beforePresentation, presentation: 'neutral' });
+    expect(slotOf(RIG, 'presentation')?.fallback).toBe('neutral');
+    expect(slotOf(RIG, 'presentation')?.options[0]).not.toBe('neutral');
+  });
+
+  it('fills a slot the save never named from the fallback, and does not call it a repair', () => {
+    const filled = repairSelection({ skin: 'skin-2' }, always(0.99));
+
+    expect(filled.repaired).toBe(false);
+    expect(filled.selection['skin']).toBe('skin-2');
+    /* `always(0.99)` would draw the last option, `long`; the fallback is `crop`. */
+    expect(filled.selection['hairShape']).toBe('crop');
+    expect(filled.selection['presentation']).toBe('neutral');
+    expect(Object.keys(filled.selection).length).toBe(OFFERED_COUNT);
+  });
+
+  it('draws for an unnamed slot only when the rig gives it no usable fallback, still silently', () => {
+    const noFallback = rigWith({ presentation: { ...OFFERED, fallback: null } });
+    const filled = repairSelection({ skin: 'skin-2' }, always(0), noFallback);
+
+    expect(filled.repaired).toBe(false);
+    expect(filled.selection['presentation']).toBe('feminine');
   });
 
   it('ignores a slot from a newer build rather than repairing anything', () => {
@@ -532,7 +572,7 @@ describe('a saved appearance this build cannot draw', () => {
       hairColour: 'grey',
       headCovering: 'toque',
       feature: 'none',
-      ...(PRESENTATION_OFFERED ? { presentation: 'neutral' } : {}),
+      presentation: 'masculine',
       /* `OQ-FIRSTRUN-5`: an unknown slot draws no part, which is the mechanism
          every "none" option already uses. */
       freckles: 'many',
@@ -542,6 +582,7 @@ describe('a saved appearance this build cannot draw', () => {
     expect(repaired.repaired).toBe(false);
     expect(repaired.selection['freckles']).toBeUndefined();
     expect(repaired.selection['skin']).toBe('skin-2');
+    expect(repaired.selection['presentation']).toBe('masculine');
   });
 
   it('calls a save with no character a first run, and raises no message', () => {
@@ -594,7 +635,7 @@ describe('the round trip through the save', () => {
     hairColour: 'black',
     headCovering: 'none',
     feature: 'glasses',
-    ...(PRESENTATION_OFFERED ? { presentation: 'neutral' } : {}),
+    presentation: 'neutral',
   };
 
   it('writes the choices under the rig’s own player id, and reads them back', () => {
@@ -637,11 +678,13 @@ describe('the round trip through the save', () => {
     expect(toSelection(character)).not.toBe(character.skins);
   });
 
-  it('reads a kebab-keyed save as slots this build does not know, and redraws them', () => {
+  it('reads a kebab-keyed save as slots this build does not know, and fills the rest', () => {
     /* What is left of a save the workaround wrote and the 3 -> 4 migration did
        not reach — an imported file at version 4, say, hand-edited. It costs the
-       player nothing here either: the unknown keys are ignored and the slots are
-       redrawn uniformly, never from a fallback. */
+       player nothing here either: the unknown keys are ignored like any slot
+       from another build, and the slots the save does not name are filled from
+       the rig's fallback, as for any save older than a slot. No option the save
+       names is gone, so there is nothing to tell. */
     const fromTheWorkaround = toSelection({
       characterId: 'player' as never,
       skins: { skin: 'skin-5', 'hair-shape': 'coil' },
@@ -650,8 +693,9 @@ describe('the round trip through the save', () => {
 
     expect(repaired.selection['skin']).toBe('skin-5');
     expect(repaired.selection['hair-shape']).toBeUndefined();
+    expect(repaired.selection['hairShape']).toBe(slotOf(RIG, 'hairShape')?.fallback);
     expect(Object.keys(repaired.selection).length).toBe(playerSlots().length);
-    expect(repaired.repaired).toBe(true);
+    expect(repaired.repaired).toBe(false);
   });
 
   it('carries no free text a player could be identified by', () => {

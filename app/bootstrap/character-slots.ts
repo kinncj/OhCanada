@@ -40,9 +40,9 @@
  * and `tests/unit/bootstrap/character-slots.test.ts` fails the build on the same
  * condition before any player could reach it.
  *
- * A selectable slot with **no options** is still offered nothing. That is the
- * reserved `presentation` slot before its art lands: there is nothing to choose,
- * so no group is drawn, rather than a heading over an empty group.
+ * A selectable slot with **no options** is still offered nothing: there is
+ * nothing to choose, so no group is drawn, rather than a heading over an empty
+ * group. `presentation` was in that state until its art landed.
  *
  * ## The skin swatches are the art's own ramps
  *
@@ -131,8 +131,7 @@ export function optionLabelKey(slotName: string, optionId: string): string {
  * **Whether** a slot is offered is the slot's own `playerSelectable` flag. The
  * copy table has no say in it: a selectable slot with no row is a build defect
  * that {@link creatorSlots} throws on, never a slot that quietly is not there.
- * A selectable slot with no options is offered nothing, which is the reserved
- * `presentation` slot until its art lands.
+ * A selectable slot with no options is offered nothing.
  *
  * **In what order** is the player artboard's `playerSelectableSlots`, which is
  * the list a player reads down; a selectable slot that list forgot is appended
@@ -302,10 +301,18 @@ export interface RepairedSelection {
  * one repairs against a `Character` document. The day that document lands, this
  * is the caller that hands `repairSkins` its draw.
  *
- * A slot the save does not name is the same case as a slot whose option is
- * gone. A slot in the save that **this build does not have** is ignored and
- * costs nothing: an unknown slot draws no part, which is the mechanism every
- * "none" option already uses (`OQ-FIRSTRUN-5`).
+ * **A slot the save does not name is not a repair.** It is a save written
+ * before that slot existed — every save made before `presentation` opened —
+ * and the player lost nothing, so telling them "one of your choices is not in
+ * this version" would be untrue, and would be told to every returning player.
+ * That slot takes the rig's `fallback`, silently: the case the rig reserves
+ * `fallback` for ("an NPC document or a repaired save must not acquire a
+ * presentation nobody chose"). Only a saved option id this build does not
+ * offer is a choice taken away, and only that is redrawn and told.
+ *
+ * A slot in the save that **this build does not have** is ignored and costs
+ * nothing: an unknown slot draws no part, which is the mechanism every "none"
+ * option already uses (`OQ-FIRSTRUN-5`).
  */
 export function repairSelection(
   saved: CharacterSelection | undefined,
@@ -318,6 +325,17 @@ export function repairSelection(
     const chosen = saved?.[name];
     if (chosen !== undefined && slot.options.includes(chosen)) {
       selection[name] = chosen;
+      continue;
+    }
+    if (saved !== undefined && chosen === undefined) {
+      /* Named by nothing in the save: the slot is newer than the save. The
+         fallback when the rig gives a usable one, a draw when it does not, and
+         never a repair either way. */
+      const filled =
+        slot.fallback !== null && slot.options.includes(slot.fallback)
+          ? slot.fallback
+          : draw(slot.options, random);
+      if (filled !== undefined) selection[name] = filled;
       continue;
     }
     const drawn = draw(slot.options, random);

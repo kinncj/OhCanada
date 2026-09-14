@@ -146,6 +146,12 @@ export const createPlayerCharacter = (
  * through the one door nobody was watching, on a path the player cannot see and
  * did not ask for.
  *
+ * **A slot the save never named is a different case, and it takes the
+ * fallback.** It is a slot newer than the save, so no choice was taken away and
+ * there is nothing to redraw; the fallback is exactly what the rig reserves for
+ * a save that predates a slot. Only an option id the slot no longer offers is a
+ * lost choice, and only that is drawn.
+ *
  * Nothing called this when the divergence was found; the composition root had
  * written its own uniform repair over the rig rather than use it. "Nobody calls
  * the dangerous one" is a fact about today, so the shape is what changed instead:
@@ -169,9 +175,10 @@ export const repairSkins = (
       skins[slot.name] = chosen;
       continue;
     }
-    if (!slot.playerSelectable) {
-      // What `fallback` is for, and the only place it is still read: an NPC's
-      // costume, chosen by nobody, where "the default" is the whole idea.
+    if (!slot.playerSelectable || chosen === undefined) {
+      // What `fallback` is for: an NPC's costume, chosen by nobody, where "the
+      // default" is the whole idea, and a slot the save predates, where nobody
+      // has chosen yet.
       skins[slot.name] = slot.fallback;
       continue;
     }
