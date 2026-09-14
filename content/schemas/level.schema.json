@@ -107,7 +107,7 @@
     "pois",
     "characters",
     "assets",
-    "textureBudgetBytes"
+    "textureBudgetBytes", "weather"
   ],
   "additionalProperties": false,
 
