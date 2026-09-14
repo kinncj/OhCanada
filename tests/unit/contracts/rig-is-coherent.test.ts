@@ -195,14 +195,34 @@ describe('the constraints a JSON Schema cannot state (ADR-0017)', () => {
   it('keeps the reserved slots reserved, and says what blocks each', () => {
     // The schema enforces zero options and a null fallback; this restates it over
     // the corpus and names which slots are held shut, so that opening one is a
-    // visible event rather than a diff nobody reads. OQ-ART-08 (the officer's
-    // gender presentation) is the open question behind `presentation`.
+    // visible event rather than a diff nobody reads. The corpus may hold none:
+    // `presentation` was the last, and it opened on 2026-09-14 when OQ-ART-08 was
+    // answered. So the loop below can legitimately check nothing, and the case
+    // after it is what keeps the rule from passing vacuously (ADR-0024).
     const reserved = Object.entries(rig.slots).filter(([, slot]) => slot.status === 'reserved');
     for (const [name, slot] of reserved) {
       expect(slot.options, `reserved slot "${name}" has options`).toEqual([]);
       expect(slot.fallback, `reserved slot "${name}" has a fallback`).toBeNull();
       expect(slot.playerSelectable, `reserved slot "${name}" is offered to players`).toBe(false);
     }
+  });
+
+  it('refuses a reserved slot that has been quietly filled in (the negative control)', () => {
+    // Proved over the shipped rig with one slot put back into the reserved state,
+    // so the schema's reserved branch is exercised whether or not any slot in the
+    // corpus is reserved today.
+    const withPresentation = (slot: Record<string, unknown>): unknown => {
+      const copy = JSON.parse(JSON.stringify(rig)) as { slots: Record<string, unknown> };
+      copy.slots['presentation'] = slot;
+      return copy;
+    };
+    const held = { options: [], fallback: null, playerSelectable: false, status: 'reserved', blockedBy: 'OQ-ART-08' };
+
+    expect(validateRig(withPresentation(held)), ajv.errorsText(validateRig.errors)).toBe(true);
+    expect(validateRig(withPresentation({ ...held, options: ['neutral'] }))).toBe(false);
+    expect(validateRig(withPresentation({ ...held, fallback: 'neutral' }))).toBe(false);
+    const { blockedBy: _reason, ...unexplained } = held;
+    expect(validateRig(withPresentation(unexplained))).toBe(false);
   });
 
   it('orders parts by a dense 1..n permutation of z', () => {
