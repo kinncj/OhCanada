@@ -18,15 +18,35 @@
  * *Canada's Regions*, which is the first time two subjects are deliberately
  * sent to one chapter. So the mechanism has to exist now.
  *
+ * ## What is compared: what is GRADED, found by shape (ADR-0030)
+ *
+ * A proposition is graded by at most one subject, and may be TOLD by anything,
+ * anywhere, as long as it is true. The three things that break when one
+ * proposition counts twice - the ship floor, the exam's by-subject rows and the
+ * scheduler - are all made of question documents, so a question document is
+ * what "graded" means. A landmark blurb, a territorial statement, a dialogue
+ * line, an explanation and a verifier's evidence are told: none of them enters
+ * a floor, an exam row or a schedule, and none of them is compared here.
+ *
+ * The compared corpus is therefore selected by the SHAPE of a graded item -
+ * `claimsIn()` from `scripts/lib/claims.mjs`, the same recogniser gate
+ * `verify-content` uses, keeping `kind === 'question'` - over every non-schema
+ * document under `content/`. It used to be a `readdirSync` over
+ * `content/questions/`, which selected the same 486 documents on the tree
+ * ADR-0030 was measured on. ADR-0019: a rule drawn round a container measures
+ * the container. The directory is only where graded things live today; a
+ * question moved out of it must still be compared, and a told claim that sits
+ * beside a graded one must still not be.
+ *
  * ## Why `source.quote` and not the prompt
  *
- * The property is *which subject teaches this proposition*. ADR-0019: name the
+ * The property is *which subject grades this proposition*. ADR-0019: name the
  * property, then find the smallest thing that carries it. The chapter does not
  * carry it (pages 60-69 are the proof) and neither does the page (pages 60, 62
  * and 66 are the proof). The proposition does, and the closest thing to a
  * proposition's identity in this repository is `source.quote` - the sentence
  * the author lifted out of the guide, required by `common.schema.json`, present
- * on all 390 questions in the tree.
+ * on every question in the tree.
  *
  * It is the source's words rather than the author's, which is exactly what
  * makes it work: two authors who independently reach for one sentence produce
@@ -60,18 +80,40 @@
  * false negative.
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-const BANK_DIR = fileURLToPath(new URL('../../../content/questions/', import.meta.url));
+import {
+  claimsIn,
+  isFactClaim,
+  isQuestionDocument,
+  isSchemaDocument,
+} from '../../../scripts/lib/claims.mjs';
+
+const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
+const CONTENT_DIR = `${REPO_ROOT}content`;
 
 interface QuestionLike {
   readonly id: string;
   readonly subject: string;
   readonly prompt: { readonly en: string; readonly fr: string };
   readonly source: { readonly sourceId: string; readonly quote: string };
+}
+
+/** One parsed document under `content/`, addressed by its repo-relative path. */
+interface ContentDocument {
+  readonly where: string;
+  readonly root: unknown;
+}
+
+/** One item the gate compares, and the claim record it was selected from. */
+interface GradedItem {
+  readonly where: string;
+  readonly pointer: string;
+  readonly kind: 'question' | 'fact';
+  readonly question: QuestionLike;
 }
 
 /**
@@ -89,7 +131,31 @@ export const normaliseQuote = (text: string): string =>
     .trim();
 
 /**
- * Every way two questions can be found to teach one proposition, as strings.
+ * The GRADED items among a set of documents, by shape (ADR-0030).
+ *
+ * Every claim `claimsIn()` finds, kept only when it is a question - the one
+ * shape that enters a floor, an exam row and a schedule. Schema documents are
+ * skipped by the same predicate `verify-content` skips them by. Exported so the
+ * fixtures below can prove the selection both ways: it must find a question
+ * wherever it lives, and it must not find a told claim however closely that
+ * claim's quote matches a question's.
+ */
+export const gradedItems = (documents: readonly ContentDocument[]): readonly GradedItem[] =>
+  documents.flatMap(({ where, root }) =>
+    isSchemaDocument(where)
+      ? []
+      : claimsIn(root, where)
+          .filter((claim) => claim.kind === 'question')
+          .map((claim) => ({
+            where: claim.where,
+            pointer: claim.pointer,
+            kind: claim.kind,
+            question: claim.document as QuestionLike,
+          })),
+  );
+
+/**
+ * Every way two questions can be found to grade one proposition, as strings.
  * Exported so the fixtures below can prove the gate fails, rather than proving
  * the corpus passes - a green run over a clean tree is evidence about the tree,
  * not about the gate (`TN-LEVELS-02`).
@@ -105,7 +171,7 @@ export const subjectClaimFaults = (questions: readonly QuestionLike[]): readonly
     if (quote.trim() === '') {
       faults.push(
         `${question.subject}/${question.id}: source.quote is empty. The quote is what identifies ` +
-          `the proposition this question teaches (ADR-0028), so a question without one cannot be ` +
+          `the proposition this question grades (ADR-0028), so a question without one cannot be ` +
           `checked against another subject's claim and silently exempts itself from this gate.`,
       );
       continue;
@@ -126,7 +192,7 @@ export const subjectClaimFaults = (questions: readonly QuestionLike[]): readonly
     faults.push(
       `${where.join(' and ')} rest on the same sentence of ${sharing[0]?.source.sourceId ?? '?'} ` +
         `while belonging to different subjects (${subjects.join(', ')}). TN-LEVELS-03: a level's ` +
-        `bank "shares none of them with another level's subject", and two levels teaching one ` +
+        `bank "shares none of them with another level's subject", and two subjects grading one ` +
         `sentence is what that forbids. Quote: "${sharing[0]?.source.quote ?? ''}". Either one ` +
         `subject drops the question - ADR-0028 says the question that already exists keeps the ` +
         `claim - or, if the sentence genuinely carries two propositions for two remits, narrow ` +
@@ -147,17 +213,21 @@ export const subjectClaimFaults = (questions: readonly QuestionLike[]): readonly
   return faults;
 };
 
-const readCorpus = (): readonly QuestionLike[] =>
-  readdirSync(BANK_DIR)
-    .filter((name) => statSync(`${BANK_DIR}${name}`).isDirectory())
-    .flatMap((subject) =>
-      readdirSync(`${BANK_DIR}${subject}`)
-        .filter((name) => name.endsWith('.json'))
-        .map(
-          (file) =>
-            JSON.parse(readFileSync(`${BANK_DIR}${subject}/${file}`, 'utf8')) as QuestionLike,
-        ),
-    );
+const jsonFilesUnder = (dir: string): readonly string[] =>
+  existsSync(dir)
+    ? readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+        const path = `${dir}/${entry.name}`;
+        if (entry.isDirectory()) return jsonFilesUnder(path);
+        return entry.isFile() && path.endsWith('.json') ? [path] : [];
+      })
+    : [];
+
+/** Every document under `content/`, schemas included - `gradedItems` is what skips them. */
+const readContent = (): readonly ContentDocument[] =>
+  jsonFilesUnder(CONTENT_DIR).map((path) => ({
+    where: path.slice(REPO_ROOT.length),
+    root: JSON.parse(readFileSync(path, 'utf8')) as unknown,
+  }));
 
 const q = (over: Partial<QuestionLike> & Pick<QuestionLike, 'id' | 'subject'>): QuestionLike => ({
   prompt: { en: `prompt ${over.id}`, fr: `question ${over.id}` },
@@ -177,6 +247,7 @@ describe('the gate is proven by a failing case, not by a green run', () => {
     expect(faults).toHaveLength(1);
     expect(faults[0]).toContain('economy/a and regions/b');
     expect(faults[0]).toContain('TN-LEVELS-03');
+    expect(faults[0]).toContain('two subjects grading one sentence');
   });
 
   it('sees through casing, accents and the punctuation a PDF copy carries', () => {
@@ -241,8 +312,91 @@ describe('the gate is proven by a failing case, not by a green run', () => {
   });
 });
 
-describe('no proposition is claimed by two subjects (TN-LEVELS-03, ADR-0028)', () => {
-  const corpus = readCorpus();
+/*
+ * THE SELECTION, PROVED BOTH WAYS (ADR-0030). A directory scope fails the first
+ * case - it never reads the moved question, so the collision goes unseen. A
+ * scope widened to every quoted claim fails the second - it compares a blurb
+ * with a question and refuses a told claim ADR-0030 rules legal.
+ */
+const SENTENCE = 'Alberta produces oil.';
+
+/** A question document as the corpus carries one: prompt, options, correctIndex. */
+const questionDocument = (id: string, subject: string): QuestionLike & Record<string, unknown> => ({
+  ...quoting(id, subject, SENTENCE),
+  options: [
+    { en: 'Yes.', fr: 'Oui.' },
+    { en: 'No.', fr: 'Non.' },
+    { en: 'Sometimes.', fr: 'Parfois.' },
+    { en: 'Never.', fr: 'Jamais.' },
+  ],
+  correctIndex: 0,
+  verification: null,
+});
+
+/** A level in another subject whose blurb TELLS the same sentence. */
+const tellingLevel = (subject: string): Record<string, unknown> => ({
+  id: 'a-level',
+  subject,
+  pois: [
+    {
+      id: 'a-well',
+      name: { en: 'A well', fr: 'Un puits' },
+      blurb: {
+        en: 'This province pumps a lot of oil.',
+        fr: 'Cette province pompe beaucoup de petrole.',
+      },
+      fact: {
+        factual: true,
+        source: { sourceId: 'discover-canada', quote: SENTENCE },
+        verification: null,
+      },
+    },
+  ],
+});
+
+describe('what is compared is what is graded, selected by shape (ADR-0030)', () => {
+  it('compares a question wherever it lives, not only under content/questions/', () => {
+    const graded = gradedItems([
+      { where: 'content/questions/economy/a.json', root: questionDocument('a', 'economy') },
+      { where: 'content/bank-moved/regions/b.json', root: questionDocument('b', 'regions') },
+    ]);
+    expect(graded.map((item) => item.where)).toEqual([
+      'content/questions/economy/a.json',
+      'content/bank-moved/regions/b.json',
+    ]);
+    expect(subjectClaimFaults(graded.map((item) => item.question))).toHaveLength(1);
+  });
+
+  it('does not compare a told claim, however exactly it quotes another subject', () => {
+    const documents = [
+      { where: 'content/questions/economy/a.json', root: questionDocument('a', 'economy') },
+      { where: 'content/levels/a-level.json', root: tellingLevel('regions') },
+    ];
+    // The told claim is really there to be excluded: the recogniser finds it.
+    expect(
+      documents.flatMap(({ where, root }) => claimsIn(root, where)).map((claim) => claim.kind),
+    ).toEqual(['question', 'fact']);
+    const graded = gradedItems(documents);
+    expect(graded.map((item) => item.where)).toEqual(['content/questions/economy/a.json']);
+    expect(subjectClaimFaults(graded.map((item) => item.question))).toEqual([]);
+  });
+
+  it('never compares a document under content/schemas/, even one shaped like a question', () => {
+    // Question-shaped at its ROOT, so the recogniser alone would take it; the
+    // path exclusion `verify-content` uses is what keeps it out, and this is
+    // the case that proves the selection applies it.
+    const shaped = questionDocument('s', 'economy');
+    expect(claimsIn(shaped, 'content/schemas/example.json').map((claim) => claim.kind)).toEqual([
+      'question',
+    ]);
+    expect(gradedItems([{ where: 'content/schemas/example.json', root: shaped }])).toEqual([]);
+  });
+});
+
+describe('no proposition is graded by two subjects (TN-LEVELS-03, ADR-0028, ADR-0030)', () => {
+  const content = readContent();
+  const graded = gradedItems(content);
+  const corpus = graded.map((item) => item.question);
 
   it('reads a bank at all', () => {
     /* The floor under every check below: this whole file passes over an empty
@@ -250,6 +404,36 @@ describe('no proposition is claimed by two subjects (TN-LEVELS-03, ADR-0028)', (
     expect(corpus.length).toBeGreaterThan(100);
     expect(new Set(corpus.map((question) => question.subject)).size).toBeGreaterThan(1);
     for (const question of corpus) expect(question.source.quote.trim().length).toBeGreaterThan(0);
+  });
+
+  it('compares graded items only, and never a told claim', () => {
+    /* Pins ADR-0030's ruling the way the test below pins ADR-0028's exemption.
+       The corpus has told claims to exclude - this floor is what stops the
+       assertion after it holding over a tree that has none. */
+    const told = content.flatMap(({ where, root }) =>
+      isSchemaDocument(where) ? [] : claimsIn(root, where).filter((claim) => claim.kind === 'fact'),
+    );
+    expect(told.length).toBeGreaterThan(0);
+
+    const notGraded = graded.filter(
+      (item) =>
+        item.kind !== 'question' ||
+        item.pointer !== '' ||
+        !isQuestionDocument(item.question) ||
+        isFactClaim(item.question),
+    );
+    expect(
+      notGraded.map((item) => `${item.where} at ${item.pointer === '' ? '(document)' : item.pointer}`),
+      `the proposition gate compared something that is not a question document. Under ADR-0030 a ` +
+        `subject owns the propositions its questions GRADE, not the ones its levels and quests ` +
+        `TELL: landmark blurbs, territorial statements, dialogue lines, explanations and evidence ` +
+        `are outside this rule, because none of them enters a ship floor, an exam row or a ` +
+        `schedule. Nine told claims on the tree ADR-0030 was measured on share a sentence with a ` +
+        `question in another subject - streetcar, nathan-phillips-square, cn-tower, ` +
+        `library-of-parliament, container-car, marina, granite-shore and two dialogue lines - and ` +
+        `a gate widened to told claims would refuse every one of them for a harm none of them ` +
+        `can cause. Select graded items by shape, and only those.`,
+    ).toEqual([]);
   });
 
   it('still has subjects that draw more than one proposition from one sentence', () => {
@@ -264,7 +448,7 @@ describe('no proposition is claimed by two subjects (TN-LEVELS-03, ADR-0028)', (
     expect([...byQuote.values()].filter((count) => count > 1).length).toBeGreaterThan(0);
   });
 
-  it('has no sentence taught by two subjects', () => {
+  it('has no sentence graded by two subjects', () => {
     expect(subjectClaimFaults(corpus)).toEqual([]);
   });
 });
