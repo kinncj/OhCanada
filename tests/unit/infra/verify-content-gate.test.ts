@@ -21,7 +21,7 @@
 
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -2006,14 +2006,42 @@ const LEVEL_PATH = 'content/levels/fix-level.json';
 const QUEST_PATH = 'content/quests/fix-quest.json';
 
 /**
- * Author everything in the null form, grant every status in a second commit,
- * then apply one edit in a third. Three properly separated commits, so nothing
- * but A4 can fire and the failures below are A4's alone.
+ * The schemas the level and the quest name, copied from content/schemas/.
+ *
+ * Gate A matches a claim across revisions by the id its item schema REQUIRES
+ * (scripts/lib/claims.mjs, "Which claim is which"), so a fixture tree without
+ * these keys every claim by position — the behaviour the identity fix exists to
+ * replace. The real files rather than fixture copies: the recogniser self-test
+ * reads common.schema.json too, and a hand-written one would test a schema
+ * nobody ships.
  */
-const a4Repo = (label: string, edit: (level: Json, questDoc: Json) => readonly [Json, Json]): Run => {
+const SCHEMAS_THAT_KEY_CLAIMS = ['common.schema.json', 'level.schema.json', 'quest.schema.json'];
+const writeSchemas = (root: string): void => {
+  for (const name of SCHEMAS_THAT_KEY_CLAIMS) {
+    write(
+      root,
+      `content/schemas/${name}`,
+      readFileSync(fileURLToPath(new URL(`../../../content/schemas/${name}`, import.meta.url)), 'utf8'),
+    );
+  }
+};
+
+type Edit = (level: Json, questDoc: Json) => readonly [Json, Json];
+
+/**
+ * Author everything in the null form, grant every status in a second commit,
+ * then one commit per step. Properly separated commits, so a failure is the
+ * rule under test and not the fixture doing two jobs at once.
+ */
+const historyRepo = (
+  label: string,
+  steps: readonly (readonly [string, Edit])[],
+  options: { readonly schemas?: boolean } = {},
+): Run => {
   const root = tree(label, [question({ verification: NULL_FORM })]);
-  const level_ = a4Level();
-  const quest_ = quest();
+  if (options.schemas ?? true) writeSchemas(root);
+  let level_ = a4Level();
+  let quest_ = quest();
   write(root, LEVEL_PATH, unverified(level_));
   write(root, QUEST_PATH, unverified(quest_));
   initRepo(root);
@@ -2024,13 +2052,18 @@ const a4Repo = (label: string, edit: (level: Json, questDoc: Json) => readonly [
   write(root, QUEST_PATH, quest_);
   commit(root, 'Verify them all');
 
-  const [editedLevel, editedQuest] = edit(level_, quest_);
-  write(root, LEVEL_PATH, editedLevel);
-  write(root, QUEST_PATH, editedQuest);
-  commit(root, 'Edit one field');
+  for (const [subject, edit] of steps) {
+    [level_, quest_] = edit(level_, quest_);
+    write(root, LEVEL_PATH, level_);
+    write(root, QUEST_PATH, quest_);
+    commit(root, subject);
+  }
 
   return run(root, ['--collections', 'questions,quests,levels']);
 };
+
+/** Three commits: author, grant, and the one edit under test. Nothing but A4 can fire. */
+const a4Repo = (label: string, edit: Edit): Run => historyRepo(label, [['Edit one field', edit]]);
 
 /** Exactly which grants came unbound, as `path at pointer`, in sorted order. */
 const unbound = (out: string): readonly string[] =>
@@ -2040,10 +2073,13 @@ const unbound = (out: string): readonly string[] =>
     .map((line) => line.slice(line.indexOf('FAIL: ') + 'FAIL: '.length, line.indexOf(': the status')))
     .sort((a, b) => a.localeCompare(b));
 
+// Claims as gate A names them: by identity. The two landmarks and the step are
+// keyed by the id their schemas require; the dialogue line has none of its own,
+// so it is its step's id plus its index; the territory is a fixed path.
 const TERRITORY = `${LEVEL_PATH} at /territory/fact/verification`;
-const POI_0 = `${LEVEL_PATH} at /pois/0/fact/verification`;
-const POI_1 = `${LEVEL_PATH} at /pois/1/fact/verification`;
-const DIALOGUE = `${QUEST_PATH} at /steps/0/dialogue/1/fact/verification`;
+const POI_0 = `${LEVEL_PATH} at /pois[id=a-landmark]/fact/verification`;
+const POI_1 = `${LEVEL_PATH} at /pois[id=another-landmark]/fact/verification`;
+const DIALOGUE = `${QUEST_PATH} at /steps[id=talk]/dialogue/1/fact/verification`;
 
 describe('A4 binds a grant to its own claim, not to the document around it', () => {
   const cases: readonly {
@@ -2219,5 +2255,378 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
     expect(result.out).toContain('binds to NO author-owned field of its own claim');
     expect(result.out).toContain('ADR-0024');
     expect(unbound(result.out)).toEqual([]);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/* WHICH CLAIM IS WHICH - known by its id, not by its position in a list       */
+/* -------------------------------------------------------------------------- */
+/*
+ * Gate A matched a claim across two revisions by its JSON pointer, and an array
+ * index is a position. The commit that gave Toronto a streetcar and Nathan
+ * Phillips Square, and the foothills a pump jack, inserted them ahead of granted
+ * landmarks: A1/A2 read that as rewriting the landmarks' grants - four failures
+ * no later grant can clear, because A1/A2 is judged per commit - and the beef
+ * cattle, moved in the same commit, had their old grant re-recorded against
+ * the moved fields, so A4 never said a word. The commit that made those
+ * landmarks quest stops did the same to quest steps, three failures more.
+ *
+ * Each shape is proved in BOTH directions: what identity lets through (an
+ * insertion, a reorder, a deletion, a step inserted ahead of a granted line) and
+ * what it must still catch (a moved landmark's own position, a moved line's own
+ * words, a grant sliding into another claim's slot, an ambiguous id). The shapes
+ * are rebuilt here rather than read from this repository's history, because a
+ * commit id is not a fixture.
+ */
+
+const GRANTED = factOf().verification;
+
+/** A point of interest as an author adds one: in the null form. */
+const newPoi = (id: string, x: number): Json => ({
+  id,
+  name: { en: 'A new landmark', fr: 'Un nouveau point de repere' },
+  blurb: {
+    en: 'A crown and two chambers together make the laws here.',
+    fr: 'Une couronne et deux chambres font ensemble les lois ici.',
+  },
+  position: { x, y: 200 },
+  fact: factOf({ verification: NULL_FORM }),
+});
+
+/** A quest step as an author adds one, ahead of the step that holds the granted line. */
+const newStep = (): Json => ({
+  id: 'arrive',
+  kind: 'visit',
+  targetId: 'a-landmark',
+  prompt: { en: 'Walk to the landmark', fr: 'Marchez jusqu au point de repere' },
+  dialogue: [
+    {
+      speaker: 'guide',
+      text: {
+        en: 'A crown and two chambers make up our Parliament.',
+        fr: 'Une couronne et deux chambres forment notre Parlement.',
+      },
+      fact: factOf({ verification: NULL_FORM }),
+    },
+  ],
+});
+
+const itemAt = (document: Json, list: string, index: number): Json => {
+  const found = (document[list] as readonly Json[])[index];
+  if (found === undefined) throw new Error(`no ${list}[${String(index)}] in the fixture`);
+  return found;
+};
+
+/** A verifier's commit: one landmark's block granted, nothing else touched. */
+const grantPoi =
+  (index: number): Edit =>
+  (level_, quest_) => [patched(level_, ['pois', String(index), 'fact', 'verification'], GRANTED), quest_];
+
+const grantNewStep: Edit = (level_, quest_) => [
+  level_,
+  patched(quest_, ['steps', '0', 'dialogue', '0', 'fact', 'verification'], GRANTED),
+];
+
+/** Every separation-of-duties failure, so a case can say there were none. */
+const dutyFailures = (out: string): readonly string[] =>
+  out
+    .split('\n')
+    .filter(
+      (line) =>
+        line.includes('AND writes its verification block') ||
+        line.includes('AND changes its verification block') ||
+        line.includes('AND authors content in'),
+    );
+
+describe('a claim is known by its id, not by its position in a list', () => {
+  it('clears the landmark shape: new landmarks were authored with no grant, and no grant changed', () => {
+    const result = historyRepo('id-insert-landmarks', [
+      [
+        'Give the level two more landmarks',
+        (level_, quest_) => [
+          {
+            ...level_,
+            pois: [newPoi('streetcar', 50), itemAt(level_, 'pois', 0), newPoi('square', 250), itemAt(level_, 'pois', 1)],
+          },
+          quest_,
+        ],
+      ],
+      ['Verify the new landmarks', (level_, quest_) => grantPoi(2)(...grantPoi(0)(level_, quest_))],
+    ]);
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(unbound(result.out)).toEqual([]);
+    // The gate says why, rather than a rule going quiet.
+    expect(result.out).toContain('/pois[id=streetcar]/fact/verification (null form, no grant)');
+    expect(result.out).toContain(
+      '/pois[id=a-landmark]/fact/verification (/pois/0/fact/verification -> /pois/1/fact/verification, ' +
+        'status "verified", block unchanged)',
+    );
+    expect(result.out).toContain(
+      'Matched by position, this commit would have written or changed 3 verification block(s) here; ' +
+        'matched by identity it wrote or changed 0.',
+    );
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+
+  it("unbinds a moved landmark because its OWN position changed, not because a slot moved", () => {
+    // The beef cattle: a landmark inserted ahead, and the granted one moved in
+    // the same commit. Under positions A4 was silent here.
+    const result = historyRepo('id-move-behind-insert', [
+      [
+        'Add a pump jack and move the second landmark',
+        (level_, quest_) => [
+          {
+            ...level_,
+            pois: [
+              itemAt(level_, 'pois', 0),
+              newPoi('pump-jack', 300),
+              { ...itemAt(level_, 'pois', 1), position: { x: 900, y: 200 } },
+            ],
+          },
+          quest_,
+        ],
+      ],
+      ['Verify the pump jack', grantPoi(1)],
+    ]);
+    expect(unbound(result.out)).toEqual([POI_1]);
+    expect(result.out).toContain('position.x');
+    expect(result.out).toContain('(in the file today at /pois/2/fact/verification)');
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(result.status).toBe(1);
+  });
+
+  it('leaves a granted landmark bound when one is inserted ahead of it', () => {
+    const result = historyRepo('id-insert-before', [
+      [
+        'Add a landmark at the front',
+        (level_, quest_) => [
+          { ...level_, pois: [newPoi('new-first', 50), itemAt(level_, 'pois', 0), itemAt(level_, 'pois', 1)] },
+          quest_,
+        ],
+      ],
+      ['Verify it', grantPoi(0)],
+    ]);
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(unbound(result.out)).toEqual([]);
+    expect(result.status).toBe(0);
+  });
+
+  it('leaves both grants bound when two landmarks swap places', () => {
+    const result = historyRepo('id-reorder', [
+      [
+        'Swap the two landmarks',
+        (level_, quest_) => [{ ...level_, pois: [itemAt(level_, 'pois', 1), itemAt(level_, 'pois', 0)] }, quest_],
+      ],
+    ]);
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(unbound(result.out)).toEqual([]);
+    expect(result.status).toBe(0);
+  });
+
+  it('accepts deleting a landmark', () => {
+    const result = historyRepo('id-delete', [
+      ['Remove the first landmark', (level_, quest_) => [{ ...level_, pois: [itemAt(level_, 'pois', 1)] }, quest_]],
+    ]);
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(unbound(result.out)).toEqual([]);
+    expect(result.status).toBe(0);
+  });
+
+  it("does not let a deleted landmark's grant attach to the claim that slides into its slot", () => {
+    // The survivor slides into slot 0 AND is reworded in the same commit. By
+    // position, slot 0's grant was re-recorded against the reworded survivor and
+    // A4 said nothing. By identity, the survivor is judged on its own words.
+    const result = historyRepo('id-delete-and-edit', [
+      [
+        'Remove the first landmark and reword the second',
+        (level_, quest_) => [
+          {
+            ...level_,
+            pois: [patched(itemAt(level_, 'pois', 1), ['blurb', 'fr'], 'Une phrase entierement differente.')],
+          },
+          quest_,
+        ],
+      ],
+    ]);
+    expect(unbound(result.out)).toEqual([POI_1]);
+    expect(result.out).toContain('blurb.fr');
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(result.status).toBe(1);
+  });
+
+  it('keeps a dialogue line bound when a step is inserted ahead of its step', () => {
+    // The quest-stops commit: a step inserted, every later step moved, the
+    // granted lines untouched. A line is its step's id plus its index.
+    const result = historyRepo('id-insert-step', [
+      [
+        'Add a stop before the talk',
+        (level_, quest_) => [level_, { ...quest_, steps: [newStep(), itemAt(quest_, 'steps', 0)] }],
+      ],
+      ['Verify the new stop', grantNewStep],
+    ]);
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(unbound(result.out)).toEqual([]);
+    expect(result.out).toContain(
+      '/steps[id=talk]/dialogue/1/fact/verification (/steps/0/dialogue/1/fact/verification -> ' +
+        '/steps/1/dialogue/1/fact/verification, status "verified", block unchanged)',
+    );
+    expect(result.status).toBe(0);
+  });
+
+  it('still unbinds that line when its own words change in the same commit', () => {
+    const result = historyRepo('id-insert-step-and-edit', [
+      [
+        'Add a stop before the talk and reword its line',
+        (level_, quest_) => [
+          level_,
+          {
+            ...quest_,
+            steps: [
+              newStep(),
+              patched(itemAt(quest_, 'steps', 0), ['dialogue', '1', 'text', 'en'], 'Parliament is three things, and one is the Crown.'),
+            ],
+          },
+        ],
+      ],
+      ['Verify the new stop', grantNewStep],
+    ]);
+    expect(unbound(result.out)).toEqual([DIALOGUE]);
+    expect(result.out).toContain('text.en');
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(result.status).toBe(1);
+  });
+
+  it('fails loudly on a duplicate id among granted claims, in the commit and in the tree', () => {
+    const result = historyRepo('id-duplicate', [
+      [
+        'Give the second landmark the id of the first',
+        (level_, quest_) => [patched(level_, ['pois', '1', 'id'], 'a-landmark'), quest_],
+      ],
+    ]);
+    const ambiguous = result.out.split('\n').filter((line) => line.includes('carry id "a-landmark"'));
+    expect(
+      ambiguous.filter((line) => line.includes('"Give the second landmark the id of the first" — content/levels/fix-level.json:')),
+    ).toHaveLength(1);
+    expect(ambiguous.filter((line) => line.includes('FAIL: content/levels/fix-level.json: 2 items of /pois'))).toHaveLength(1);
+    expect(result.out).toContain('ADR-0024');
+    // One finding, not a second invented one about keys made up to tell them apart.
+    expect(dutyFailures(result.out)).toEqual([]);
+    expect(result.status).toBe(1);
+  });
+
+  it('fails a duplicate id in the tree before anything is granted, and leaves no permanent failure', () => {
+    const twins: Edit = (level_, quest_) => [
+      { ...level_, pois: [itemAt(level_, 'pois', 0), itemAt(level_, 'pois', 1), newPoi('twin', 600), newPoi('twin', 700)] },
+      quest_,
+    ];
+    const unfixed = historyRepo('id-twins-unfixed', [['Add two landmarks that share an id', twins]]);
+    expect(unfixed.out).toContain('FAIL: content/levels/fix-level.json: 2 items of /pois carry id "twin"');
+    expect(unfixed.out).not.toContain('"Add two landmarks that share an id" — content/levels/fix-level.json: 2 items');
+    expect(unfixed.status).toBe(1);
+
+    const fixed = historyRepo('id-twins-fixed', [
+      ['Add two landmarks that share an id', twins],
+      ['Give the second twin its own id', (level_, quest_) => [patched(level_, ['pois', '3', 'id'], 'twin-two'), quest_]],
+      ['Verify the twins', (level_, quest_) => grantPoi(3)(...grantPoi(2)(level_, quest_))],
+    ]);
+    expect(fixed.out).toContain('verify-content: OK.');
+    expect(fixed.status).toBe(0);
+  });
+
+  it('treats a rename as a new claim: a grant carried across it is a grant in an authoring commit', () => {
+    const kept = historyRepo('id-rename-kept', [
+      ['Rename the first landmark', (level_, quest_) => [patched(level_, ['pois', '0', 'id'], 'renamed-landmark'), quest_]],
+    ]);
+    expect(
+      dutyFailures(kept.out).filter((line) =>
+        line.includes("/pois[id=renamed-landmark]/fact/verification: this commit changes the question's own fields AND writes"),
+      ),
+    ).toHaveLength(1);
+    expect(kept.status).toBe(1);
+
+    const reset = historyRepo('id-rename-reset', [
+      [
+        'Rename the first landmark and reset its grant',
+        (level_, quest_) => [
+          patched(patched(level_, ['pois', '0', 'id'], 'renamed-landmark'), ['pois', '0', 'fact', 'verification'], NULL_FORM),
+          quest_,
+        ],
+      ],
+      ['Re-verify the renamed landmark', grantPoi(0)],
+    ]);
+    expect(dutyFailures(reset.out)).toEqual([]);
+    expect(reset.status).toBe(0);
+  });
+
+  it('keys by position when the tree carries no schema, fails loudly, and says why', () => {
+    const result = historyRepo(
+      'id-no-schemas',
+      [
+        [
+          'Give the level two more landmarks',
+          (level_, quest_) => [
+            {
+              ...level_,
+              pois: [newPoi('streetcar', 50), itemAt(level_, 'pois', 0), newPoi('square', 250), itemAt(level_, 'pois', 1)],
+            },
+            quest_,
+          ],
+        ],
+      ],
+      { schemas: false },
+    );
+    expect(result.out).toContain('does not resolve in content/schemas/');
+    expect(result.out).toContain('NOT known by identity');
+    expect(dutyFailures(result.out).length).toBeGreaterThan(0);
+    expect(dutyFailures(result.out).every((line) => line.includes('matched by POSITION'))).toBe(true);
+    expect(result.status).toBe(1);
+  });
+
+  it('carries a grant across a schema change that re-keys its claim, so a later edit still unbinds it', () => {
+    // Granted while no schema said the landmarks had ids, so keyed by position;
+    // then the schemas arrive and the same claims are keyed by id. Without the
+    // grant state being carried from one key to the other, the next revision
+    // would re-record every grant against whatever its fields are by then - and
+    // the reworded blurb below would pass A4 in silence.
+    const root = tree('id-rekey', [question({ verification: NULL_FORM })]);
+    const level_ = a4Level();
+    write(root, LEVEL_PATH, unverified(level_));
+    write(root, QUEST_PATH, unverified(quest()));
+    initRepo(root);
+    commit(root, 'Author a level, a quest and a question in the null form');
+    write(root, 'content/questions/government/fix-0.json', question());
+    write(root, LEVEL_PATH, level_);
+    write(root, QUEST_PATH, quest());
+    commit(root, 'Verify them all');
+    writeSchemas(root);
+    commit(root, 'Add the schemas');
+    write(root, LEVEL_PATH, patched(level_, ['pois', '1', 'blurb', 'fr'], 'Une phrase entierement differente.'));
+    commit(root, 'Reword the second landmark');
+
+    const result = run(root, ['--collections', 'questions,quests,levels']);
+    expect(unbound(result.out)).toEqual([POI_1]);
+    expect(result.out).toContain('blurb.fr');
+    expect(result.out).toContain('2 grant state(s) carried across a schema change that re-keyed their claim');
+    expect(result.status).toBe(1);
+  });
+
+  it('fails when a schema stops requiring the id its documents still carry', () => {
+    const root = tree('id-drift', [question()]);
+    writeSchemas(root);
+    const levelSchemaPath = 'content/schemas/level.schema.json';
+    const levelSchema = JSON.parse(readFileSync(join(root, levelSchemaPath), 'utf8')) as {
+      $defs: { pointOfInterest: { required: string[] } };
+    };
+    levelSchema.$defs.pointOfInterest.required = levelSchema.$defs.pointOfInterest.required.filter(
+      (key) => key !== 'id',
+    );
+    write(root, levelSchemaPath, levelSchema);
+    write(root, LEVEL_PATH, a4Level());
+    write(root, QUEST_PATH, quest());
+    const result = runClaims(root);
+    expect(result.out).toContain('every item of /pois carries a distinct string "id"');
+    expect(result.out).toContain('keyed by POSITION');
+    expect(result.status).toBe(1);
   });
 });

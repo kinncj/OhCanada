@@ -78,6 +78,8 @@
  * both fabricated citations this project has shipped.
  */
 
+import { posix } from 'node:path';
+
 import { answerText } from './staleness.mjs';
 
 /**
@@ -381,6 +383,377 @@ export const claimsIn = (document, where) => {
   };
   walk(document, '', null);
   return found;
+};
+
+/* -------------------------------------------------------------------------- */
+/* Which claim is which: a claim's identity, stable across revisions          */
+/* -------------------------------------------------------------------------- */
+/*
+ * READ THIS BEFORE CHANGING HOW GATE A TELLS ONE CLAIM FROM ANOTHER.
+ *
+ * Gate A in `scripts/verify-content.mjs` compares a document with its parent:
+ * A1/A2 ask whether a commit wrote or changed a claim's grant, and A4 asks
+ * whether a grant still sits on the fields it was granted over. Both need to
+ * know which claim in the parent is which claim in the child. They used to
+ * answer with the JSON pointer — `/pois/2/fact/verification` — and an array
+ * index is a POSITION, not an identity.
+ *
+ * Measured cost, on the commit that gave Toronto a streetcar and Nathan Phillips
+ * Square and the foothills a pump jack: inserting landmarks ahead of the CN
+ * Tower and the beef cattle made that commit read as rewriting both of their
+ * grants and as changing grants in the new slots, which is four A1/A2 failures
+ * that no later grant can clear, because A1/A2 is judged per commit. Worse, the
+ * cattle MOVED in the same commit, from x 6800 to 7600, and A4 said nothing:
+ * the cattle's old grant was re-recorded as a fresh grant in slot 3, bound to
+ * the moved fields. The grant followed a slot rather than the claim it was made
+ * on.
+ *
+ * THE KEY. Every array step on the path to a block is keyed by the item's `id`
+ * WHEN THE ITEM'S SCHEMA REQUIRES `id`, and by position otherwise:
+ *
+ *   /pois[id=streetcar]/fact/verification
+ *   /steps[id=visit-barn]/dialogue/1/fact/verification
+ *   /territory/fact/verification                 (no array: the path IS the identity)
+ *   /verification                                (a question: the document is the claim)
+ *
+ * Whether an array is keyed is READ FROM THE SCHEMA — the `required` list of the
+ * item schema, through `$ref` and unconditional `allOf`, in the schema the
+ * document names in its own `$schema`, at the revision being read. There is no
+ * list of arrays here. A new collection whose items require an id is keyed by it
+ * the day its schema says so; a schema that stops requiring one while its
+ * documents still carry distinct ids is a DRIFT, reported by `claimKeys` rather
+ * than silently degrading to positions.
+ *
+ * WHY THE ONE NAME `id`. It is the schemas' own word for an entity's identity —
+ * `common.schema.json#/$defs/id`, "Stable kebab-case identifier, unique within
+ * its collection" — and every entity document and entity item uses it. Being
+ * id-TYPED is not being an identity: `questStep.targetId` is id-typed and names
+ * the thing the step points AT. So the type cannot decide; the requiredness of
+ * the entity's own `id` does.
+ *
+ * PER CLAIM KIND, and why:
+ *
+ *   - A question is its document. Pointer `''`, block `/verification`. A file
+ *     path is already an identity.
+ *   - A territory statement (`/territory/fact`), its `nationSource` block and a
+ *     quest moment line (`/afterLine/fact`, `/declinedLine/fact`, …) are
+ *     singletons at a fixed path. No array is crossed, so the pointer is stable.
+ *   - A point of interest requires `id`: `/pois[id=cn-tower]`.
+ *   - A quest step requires `id`: `/steps[id=visit-barn]`.
+ *   - A DIALOGUE LINE requires no id of its own, so it is its step's id plus its
+ *     index in that step: `/steps[id=visit-barn]/dialogue/1`. Decided, not
+ *     defaulted:
+ *
+ *       * Every content-derived identity — the quote, a hash of the text, the
+ *         speaker — changes on exactly the edit A4 exists to see. A reworded line
+ *         would read as a NEW claim arriving already verified, and A4's record
+ *         would start again on the new words: the slot bug by another route.
+ *       * Step id plus index is stable against every edit outside the step —
+ *         steps inserted, removed or reordered, landmarks moved — which is where
+ *         a whole-document index broke. What it does not survive is a line
+ *         inserted, removed or reordered AHEAD of a granted line inside ONE
+ *         step. That can only happen in a commit that authors the step, and a
+ *         grant that changes index in an authoring commit fails A1/A2 in that
+ *         commit: loud, not silent, and the A1/A2 message says the claim is
+ *         keyed by position so nobody splits a commit to satisfy it.
+ *       * Measured over this repository's history: of 35 commits touching levels
+ *         or quests, a granted dialogue line changed its index inside its step 0
+ *         times. Granted points of interest changed index twice, both in the
+ *         landmark commit above.
+ *       * If lines are ever reordered as a matter of course, a required `id` on
+ *         `dialogueLine` (a schema change, so an ADR) keys them by it with no
+ *         change to this module.
+ *
+ * A RENAME IS A NEW IDENTITY. Changing an item's `id` removes one claim and adds
+ * another. A grant carried across in the same commit is a grant arriving on a
+ * claim in an authoring commit, which A1/A2 fails: write the null form and have
+ * it re-verified. Measured: no granted point of interest or step has ever been
+ * renamed here. Matching a renamed claim to its old self by content was
+ * considered and refused, because the same matcher would accept an author moving
+ * a grant onto a different claim — which is ADR-0003's letter, not a heuristic's
+ * judgement call.
+ *
+ * AMBIGUITY FAILS (ADR-0024). Two items of one array with the same required id,
+ * or an item missing it, give the claims inside them no identity. Keying them by
+ * position "just this once" is how a grant reattached to a moved landmark, so
+ * `claimKeys` returns a fault and a disambiguated key that names the problem;
+ * the gate decides where a fault is a failure.
+ *
+ * NO SCHEMA, NO IDENTITY — AND SAID SO. A document whose `$schema` does not
+ * resolve (a fixture tree carrying no schemas, a revision older than them) is
+ * keyed by position, which is exactly the old behaviour, and the result says it
+ * was not resolved so the caller can count it rather than let it pass as keyed.
+ */
+
+/** The name the schemas give an entity's own identity. See the essay above. */
+const IDENTITY_KEY = 'id';
+
+const stripHash = (url) => {
+  try {
+    const parsed = new URL(url);
+    parsed.hash = '';
+    return parsed.href;
+  } catch {
+    return null;
+  }
+};
+
+const unescapePointer = (segment) => segment.replace(/~1/gu, '/').replace(/~0/gu, '~');
+const escapePointer = (segment) => segment.replace(/~/gu, '~0').replace(/\//gu, '~1');
+
+/** A JSON pointer as its unescaped segments. `''` is the document itself. */
+const segmentsOf = (pointer) => (pointer === '' ? [] : pointer.slice(1).split('/').map(unescapePointer));
+
+/**
+ * Every schema of one revision, by `$id` and by repo-relative path.
+ *
+ * `entries` is `{ where, document }` per schema file. A schema with no `$id` is
+ * addressed by a file URL of its path, so a relative `$ref` out of it still
+ * resolves.
+ */
+export const schemaRegistry = (entries) => {
+  const byId = new Map();
+  const byPath = new Map();
+  for (const { where, document } of entries) {
+    if (!isObject(document)) continue;
+    const fileUrl = new URL(posix.normalize(where), 'file:///').href;
+    const declared = str(document.$id) === null ? null : stripHash(document.$id);
+    const base = declared ?? fileUrl;
+    const entry = { document, base, file: posix.basename(posix.normalize(where)) };
+    byPath.set(posix.normalize(where), entry);
+    byId.set(base, entry);
+    byId.set(fileUrl, entry);
+  }
+  return { byId, byPath, size: byPath.size };
+};
+
+/** A schema node, the base URL its `$ref`s resolve against, and a readable name. */
+const schemaAt = (entry, fragment) => {
+  let node = entry.document;
+  const segments = fragment === '' || fragment === '#' ? [] : segmentsOf(fragment.slice(1));
+  for (const segment of segments) {
+    if (!isObject(node) && !Array.isArray(node)) return null;
+    node = node[segment];
+    if (node === undefined) return null;
+  }
+  return { schema: node, base: entry.base, label: `${entry.file}${fragment === '' ? '#' : fragment}` };
+};
+
+const refTarget = (registry, ref, base) => {
+  let url;
+  try {
+    url = new URL(ref, base);
+  } catch {
+    return null;
+  }
+  const fragment = decodeURIComponent(url.hash);
+  const entry = registry.byId.get(stripHash(url.href) ?? '');
+  return entry === undefined ? null : schemaAt(entry, fragment);
+};
+
+/**
+ * The schema nodes that apply UNCONDITIONALLY to one instance: the node, what
+ * its `$ref` points at, and every `allOf` member that is not an `if`. A
+ * conditional's `required` binds only some instances, so it cannot make an
+ * identity.
+ */
+const facetsOf = (registry, context, depth = 0) => {
+  if (context === null || !isObject(context.schema) || depth > 32) return [];
+  const found = [context];
+  if (str(context.schema.$ref) !== null) {
+    found.push(...facetsOf(registry, refTarget(registry, context.schema.$ref, context.base), depth + 1));
+  }
+  if (Array.isArray(context.schema.allOf)) {
+    context.schema.allOf.forEach((member, index) => {
+      if (!isObject(member) || 'if' in member) return;
+      found.push(
+        ...facetsOf(
+          registry,
+          { schema: member, base: context.base, label: `${context.label}/allOf/${String(index)}` },
+          depth + 1,
+        ),
+      );
+    });
+  }
+  return found;
+};
+
+/** The schema for one step down: `segment` of an object, or an array's items when `null`. */
+const childSchema = (registry, context, segment) => {
+  for (const facet of facetsOf(registry, context)) {
+    const sub =
+      segment === null
+        ? facet.schema.items
+        : isObject(facet.schema.properties)
+          ? facet.schema.properties[segment]
+          : undefined;
+    if (!isObject(sub)) continue;
+    const where = `${facet.label}${segment === null ? '/items' : `/properties/${escapePointer(segment)}`}`;
+    const target = str(sub.$ref) === null ? null : refTarget(registry, sub.$ref, facet.base);
+    return { schema: sub, base: facet.base, label: target?.label ?? where };
+  }
+  return null;
+};
+
+const requiresIdentity = (registry, context) =>
+  facetsOf(registry, context).some(
+    (facet) => Array.isArray(facet.schema.required) && facet.schema.required.includes(IDENTITY_KEY),
+  );
+
+/** The schema a document names in `$schema`, resolved against the document's own path. */
+const documentSchema = (registry, document, where) => {
+  const declared = isObject(document) ? str(document.$schema) : null;
+  if (declared === null) return null;
+  const entry = /^[a-z][a-z0-9+.-]*:/iu.test(declared)
+    ? registry.byId.get(stripHash(declared) ?? '')
+    : registry.byPath.get(posix.normalize(posix.join(posix.dirname(where), declared)));
+  return entry === undefined ? null : schemaAt(entry, '');
+};
+
+/** An id as it appears in a key: bare when it is a plain identifier, quoted when it is not. */
+const idText = (id) => (/^[A-Za-z0-9._-]+$/u.test(id) ? id : JSON.stringify(id));
+
+/**
+ * The identity key of every block at `pointers` in one document, under the
+ * schemas of the same revision. See the essay above for the scheme.
+ *
+ *   keys        pointer -> identity key
+ *   faults      duplicate or missing required ids, and any two pointers sharing a
+ *               key — each a string naming the document
+ *   ambiguous   key -> the key the claim would have had (null when it has no id at
+ *               all), for every key a fault made
+ *   positional  pointer -> the item schemas it was keyed through BY POSITION
+ *   drift       arrays keyed by position whose items nonetheless all carry a
+ *               distinct string id: the schema and the documents disagree
+ *   resolved    whether the document's `$schema` resolved at all
+ */
+export const claimKeys = (document, where, pointers, registry) => {
+  const root = documentSchema(registry, document, where);
+  const keys = new Map();
+  const faults = [];
+  const ambiguous = new Map();
+  const positional = new Map();
+  const drift = [];
+  const idCounts = new WeakMap();
+  const said = new Set();
+  const once = (list, token, message) => {
+    if (said.has(token)) return;
+    said.add(token);
+    list.push(message);
+  };
+  const countsOf = (array) => {
+    let counts = idCounts.get(array);
+    if (counts === undefined) {
+      counts = new Map();
+      for (const item of array) {
+        const id = isObject(item) ? str(item[IDENTITY_KEY]) : null;
+        if (id !== null) counts.set(id, (counts.get(id) ?? 0) + 1);
+      }
+      idCounts.set(array, counts);
+    }
+    return counts;
+  };
+
+  for (const pointer of pointers) {
+    let node = document;
+    let context = root;
+    let key = '';
+    let canonical = '';
+    let unidentified = false;
+    let hasNoId = false;
+    const through = [];
+    for (const segment of segmentsOf(pointer)) {
+      if (!Array.isArray(node)) {
+        key += `/${escapePointer(segment)}`;
+        canonical += `/${escapePointer(segment)}`;
+        context = context === null ? null : childSchema(registry, context, segment);
+        node = isObject(node) ? node[segment] : undefined;
+        continue;
+      }
+      const index = Number(segment);
+      const item = node[index];
+      const itemContext = context === null ? null : childSchema(registry, context, null);
+      const label = itemContext?.label ?? '(no schema resolved)';
+      if (itemContext !== null && requiresIdentity(registry, itemContext)) {
+        const id = isObject(item) ? str(item[IDENTITY_KEY]) : null;
+        const copies = id === null ? 0 : (countsOf(node).get(id) ?? 0);
+        if (id === null) {
+          unidentified = true;
+          hasNoId = true;
+          key += `[${segment},no-id]`;
+          once(
+            faults,
+            `${key} no-id`,
+            `${where}: item ${segment} of ${canonical === '' ? 'the document' : canonical} carries no string ` +
+              `"${IDENTITY_KEY}", and its schema ${label} requires one. The claims inside it have no ` +
+              `identity, so gate A cannot tell a grant on them from a grant on any other item. ` +
+              `ADR-0024: an ambiguous identity is a failure, not a guess — falling back to the position ` +
+              `is how a grant came to follow a slot instead of its claim. Give it the id its schema requires.`,
+          );
+        } else if (copies > 1) {
+          unidentified = true;
+          key += `[id=${idText(id)},duplicate-at=${segment}]`;
+          canonical += `[id=${idText(id)}]`;
+          once(
+            faults,
+            `${canonical} duplicate`,
+            `${where}: ${String(copies)} items of ${canonical.slice(0, canonical.lastIndexOf('['))} carry ` +
+              `${IDENTITY_KEY} "${id}", which their schema ${label} requires to identify each one. The ` +
+              `claims inside them have no identity: a grant on one cannot be told from a grant on the ` +
+              `other, in A1/A2 or in A4. ADR-0024: an ambiguous identity is a failure, not a guess — ` +
+              `picking one by position is how a grant came to follow a slot instead of its claim. Give ` +
+              `each a distinct id.`,
+          );
+        } else {
+          key += `[id=${idText(id)}]`;
+          canonical += `[id=${idText(id)}]`;
+        }
+      } else {
+        key += `/${segment}`;
+        canonical += `/${segment}`;
+        through.push(label);
+        const ids = node.map((entry) => (isObject(entry) ? str(entry[IDENTITY_KEY]) : null));
+        if (
+          itemContext !== null &&
+          ids.length > 0 &&
+          ids.every((id) => id !== null) &&
+          new Set(ids).size === ids.length
+        ) {
+          const arrayAt = key.slice(0, key.lastIndexOf('/'));
+          once(
+            drift,
+            `${arrayAt} drift`,
+            `${where}: every item of ${arrayAt === '' ? 'the document' : arrayAt} carries a distinct string ` +
+              `"${IDENTITY_KEY}", and its schema ${label} does not require one, so the claims inside are ` +
+              `keyed by POSITION — an insertion ahead of them reads as rewriting their grants, and a moved ` +
+              `claim's grant follows the slot. Claim identity is read from what a schema requires. Either ` +
+              `the schema stopped requiring an id its documents still carry, and it should require it ` +
+              `again, or these ids are not identities, which should be said where the schema is.`,
+          );
+        }
+      }
+      node = item;
+      context = itemContext;
+    }
+    keys.set(pointer, key);
+    if (unidentified) ambiguous.set(key, hasNoId ? null : canonical);
+    if (through.length > 0) positional.set(pointer, through);
+  }
+
+  const owners = new Map();
+  for (const [pointer, key] of keys) {
+    const other = owners.get(key);
+    if (other !== undefined) {
+      faults.push(
+        `${where}: the blocks at ${other} and ${pointer} resolve to one identity, ${key}, so gate A ` +
+          `cannot tell their grants apart. ADR-0024: an ambiguous identity is a failure, not a guess.`,
+      );
+      ambiguous.set(key, null);
+    } else {
+      owners.set(key, pointer);
+    }
+  }
+  return { keys, faults, ambiguous, positional, drift, resolved: root !== null };
 };
 
 /**

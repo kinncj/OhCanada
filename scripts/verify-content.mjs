@@ -172,6 +172,7 @@ import { fileURLToPath } from 'node:url';
 import {
   CLAIM_COLLECTIONS,
   claimCountFault,
+  claimKeys,
   claimsIn,
   collectionOf,
   containsRun,
@@ -180,6 +181,7 @@ import {
   isSchemaDocument,
   longestSharedRun,
   recogniserFaults,
+  schemaRegistry,
   unknownWords,
 } from './lib/claims.mjs';
 import {
@@ -282,6 +284,8 @@ Usage: node scripts/verify-content.mjs [options]
 Gate A  separation of duties, from git history
         one commit may not both author a claim and grant its verification, in
         the same document; no commit may move communityReview off "not-sought".
+        A claim is matched across commits by the id its schema requires, not
+        by its position in a list.
         Read the header: authorship itself is NOT establishable in this
         repository, and the header specifies what would make it so.
 Gate B  ADR-0003's CI clause, per CLAIM - a question, a line of NPC dialogue, a
@@ -868,6 +872,43 @@ const changedPaths = (before, after, prefix = '', found = []) => {
 /** `unit` is this module's word for the claim's node, not a field a reader has seen. */
 const readablePath = (path) => path.replace(/^unit\./u, '').replace(/^unit$/u, '(the whole claim)');
 
+/* -------------------------------------------------------------------------- */
+/* WHICH CLAIM IS WHICH — the identity gate A matches claims by               */
+/* -------------------------------------------------------------------------- */
+/*
+ * The scheme, per claim kind, and the measurement behind each decision are the
+ * essay above `claimKeys` in scripts/lib/claims.mjs. In one line: a claim inside
+ * a list is known by the `id` its item schema requires, and by its position only
+ * where the schema requires none.
+ *
+ * The working tree's schemas key the claims at HEAD. History keys each revision
+ * with the schemas of that revision — see `registryAt` in the history gate —
+ * because the identity rule is whatever a document's own `$schema` required
+ * when it was written.
+ */
+const EMPTY_REGISTRY = schemaRegistry([]);
+const WORKING_SCHEMAS = schemaRegistry(
+  jsonFilesUnder(join(CONTENT_DIR, 'schemas')).flatMap((path) => {
+    try {
+      return [{ where: relative(ROOT, path).replaceAll('\\', '/'), document: JSON.parse(readFileSync(path, 'utf8')) }];
+    } catch {
+      // An unparseable schema is make validate-content's failure. Here it simply
+      // resolves nothing, and the documents naming it are counted as unkeyed.
+      return [];
+    }
+  }),
+);
+
+/** What the working tree's claims are known by, for the summary. ADR-0024: counted, not assumed. */
+const identityTally = {
+  blocks: 0,
+  byId: 0,
+  byPath: 0,
+  positional: new Map(),
+  unresolvedBlocks: 0,
+  unresolvedDocuments: [],
+};
+
 assertRecogniserIsLive();
 
 /* -------------------------------------------------------------------------- */
@@ -1055,6 +1096,48 @@ for (const path of jsonFilesUnder(CONTENT_DIR)) {
   const drift = claimCountFault(raw, found, where);
   if (drift !== null) fail(drift);
   claims.push(...found);
+
+  // WHICH CLAIM IS WHICH, at HEAD. Gate A matches claims across revisions by
+  // identity, so an identity that is ambiguous HERE is a failure however the
+  // history reads: the next commit to grant one of these claims would be judged
+  // by a guess. It is recoverable, unlike a per-commit verdict — give the item
+  // the id its schema requires.
+  if (bearsClaims(where)) {
+    const governed = blocksIn(document);
+    const pointers = [...governed.verification.keys(), ...governed.review.keys()];
+    if (pointers.length > 0) {
+      const identity = claimKeys(document, where, pointers, WORKING_SCHEMAS);
+      for (const fault of identity.faults) fail(fault);
+      for (const message of identity.drift) fail(message);
+      if (!identity.resolved && pointers.some((pointer) => identity.positional.has(pointer))) {
+        identityTally.unresolvedDocuments.push(where);
+      }
+      for (const pointer of pointers) {
+        identityTally.blocks += 1;
+        const through = identity.positional.get(pointer);
+        if (through !== undefined && !identity.resolved) {
+          identityTally.unresolvedBlocks += 1;
+        } else if (through !== undefined) {
+          const label = through.at(-1) ?? '?';
+          identityTally.positional.set(label, (identityTally.positional.get(label) ?? 0) + 1);
+        } else if ((identity.keys.get(pointer) ?? pointer) !== pointer) {
+          identityTally.byId += 1;
+        } else {
+          identityTally.byPath += 1;
+        }
+      }
+    }
+  }
+}
+if (identityTally.unresolvedDocuments.length > 0) {
+  note(
+    `claim identity: ${String(identityTally.unresolvedDocuments.length)} document(s) carrying claims ` +
+      `inside a list name a $schema that does not resolve in content/schemas/ here — ` +
+      `${identityTally.unresolvedDocuments.slice(0, 3).join(', ')}` +
+      `${identityTally.unresolvedDocuments.length > 3 ? ', and more' : ''} — so gate A keys those claims ` +
+      `by POSITION, and an insertion ahead of one reads as rewriting its grant. Identity is read from what ` +
+      `a schema requires; with no schema there is nothing to read.`,
+  );
 }
 
 for (const claim of claims) {
@@ -1421,7 +1504,16 @@ const git = (args) =>
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 
-const history = { commits: 0, documents: 0, grants: 0, reviews: 0, roled: 0, bound: 0, ran: false };
+const history = {
+  commits: 0,
+  documents: 0,
+  grants: 0,
+  reviews: 0,
+  roled: 0,
+  bound: 0,
+  rekeyed: 0,
+  ran: false,
+};
 
 /**
  * How many grants each NAMED document-scope binding actually bound, counted at
@@ -1520,41 +1612,146 @@ const runHistoryGate = () => {
    * verification block is already granted is a grant in a commit that also
    * authors that file, which A1/A2 fails.
    */
-  const grantState = new Map(); // `${path} ${pointer}` -> { bound, sha, subject }
-  const latestAuthor = new Map(); // `${path} ${pointer}` -> that claim's bound fields, latest seen
-  const latestGrants = new Map(); // path -> Map(pointer -> block), latest revision seen
-  const stateKey = (path, pointer) => `${path} ${pointer}`;
+  /*
+   * WHICH CLAIM IS WHICH, BETWEEN TWO REVISIONS. Every rule in this gate compares
+   * a document with its parent, and matches a claim across the two by its
+   * IDENTITY KEY — `/pois[id=cn-tower]/fact/verification`, not
+   * `/pois/0/fact/verification`. The scheme per claim kind, and why, is the essay
+   * above `claimKeys` in scripts/lib/claims.mjs.
+   *
+   * It used to be the JSON pointer, and an array index is a position. Inserting
+   * two landmarks ahead of the CN Tower made the commit that added them read as
+   * rewriting the tower's grant — a per-commit A1/A2 failure no later grant can
+   * clear — and the same shift re-recorded the moved beef cattle's grant as a
+   * fresh grant in its new slot, bound to the moved fields, so A4 never said a
+   * word. The grant followed a slot rather than the claim it was made on.
+   *
+   * Keys are made with the schemas OF THE REVISION being read, and both sides of
+   * one commit are keyed with that commit's schemas, so one comparison never
+   * mixes two identity rules. A4's state outlives a commit, so where the rule
+   * changes under a document between two of its revisions, `rekeyState` carries
+   * the state across by pointer — the one correspondence that holds inside a
+   * single revision.
+   */
+  const schemaRegistries = new Map(); // content/schemas tree id -> registry
+  const schemaBlobs = new Map(); // blob id -> parsed schema, or null
+  const registryAt = (rev) => {
+    let tree;
+    try {
+      tree = git(['rev-parse', '--verify', '--quiet', `${rev}:content/schemas`]).trim();
+    } catch {
+      return EMPTY_REGISTRY;
+    }
+    const cached = schemaRegistries.get(tree);
+    if (cached !== undefined) return cached;
+    const entries = git(['ls-tree', '-r', tree])
+      .split('\n')
+      .filter((line) => line.trim() !== '')
+      .flatMap((line) => {
+        const [meta = '', name = ''] = line.split('\t');
+        const [, type, oid = ''] = meta.split(' ');
+        if (type !== 'blob' || !name.endsWith('.json')) return [];
+        if (!schemaBlobs.has(oid)) {
+          try {
+            schemaBlobs.set(oid, JSON.parse(git(['cat-file', 'blob', oid])));
+          } catch {
+            schemaBlobs.set(oid, null);
+          }
+        }
+        return [{ where: `content/schemas/${name}`, document: schemaBlobs.get(oid) }];
+      });
+    const registry = schemaRegistry(entries);
+    schemaRegistries.set(tree, registry);
+    return registry;
+  };
 
-  // PER POINTER, not per path. The bound field set is now a property of the
-  // CLAIM, so two grants in one document hold two different sets and one of
-  // them moving says nothing about the other.
-  const recordRevision = (path, document, sha, subject, rebind) => {
-    const blocks = blocksIn(document).verification;
-    for (const [pointer, block] of blocks) {
-      const key = stateKey(path, pointer);
+  /** A document's governed blocks, keyed by claim identity, each remembering its pointer. */
+  const keyedBlocks = (document, path, registry) => {
+    const { verification, review } = blocksIn(document);
+    const identity = claimKeys(document, path, [...verification.keys(), ...review.keys()], registry);
+    const byKey = (blocks) =>
+      new Map(
+        [...blocks].map(([pointer, block]) => [identity.keys.get(pointer) ?? pointer, { pointer, block }]),
+      );
+    return { verification: byKey(verification), review: byKey(review), identity };
+  };
+  const NO_BLOCKS = {
+    verification: new Map(),
+    review: new Map(),
+    identity: { keys: new Map(), faults: [], ambiguous: new Map(), positional: new Map(), drift: [], resolved: false },
+  };
+
+  const grantState = new Map(); // `${path} ${key}` -> { bound, sha, subject }
+  const latestAuthor = new Map(); // `${path} ${key}` -> that claim's bound fields, latest seen
+  const latestGrants = new Map(); // path -> Map(key -> { pointer, block }), latest revision seen
+  const keyRule = new Map(); // path -> the schema registry its state was last keyed with
+  const stateKey = (path, key) => `${path} ${key}`;
+
+  // PER CLAIM, and per claim IDENTITY rather than per pointer. The bound field
+  // set is a property of the claim, so two grants in one document hold two
+  // different sets and one of them moving says nothing about the other; and a
+  // claim that changes position keeps its own state instead of inheriting the
+  // state of whichever claim sat in that slot before.
+  const recordRevision = (path, document, keyed, registry, sha, subject, rebind) => {
+    for (const [key, { pointer, block }] of keyed.verification) {
+      const state = stateKey(path, key);
       const bound = claimAuthorFieldsAt(document, pointer);
-      if (rebind(pointer, block) || !grantState.has(key)) {
-        grantState.set(key, { bound, sha, subject });
+      if (rebind(key, block) || !grantState.has(state)) {
+        grantState.set(state, { bound, sha, subject });
       }
-      latestAuthor.set(key, bound);
+      latestAuthor.set(state, bound);
     }
-    for (const key of [...grantState.keys()]) {
-      if (key.startsWith(`${path} `) && !blocks.has(key.slice(path.length + 1))) {
-        grantState.delete(key);
-        latestAuthor.delete(key);
+    for (const state of [...grantState.keys()]) {
+      if (state.startsWith(`${path} `) && !keyed.verification.has(state.slice(path.length + 1))) {
+        grantState.delete(state);
+        latestAuthor.delete(state);
       }
     }
-    latestGrants.set(path, blocks);
+    latestGrants.set(path, keyed.verification);
+    keyRule.set(path, registry);
+  };
+
+  // A schema change can change a claim's key without touching the claim: a list
+  // whose items start requiring an id goes from `/pois/0` to `/pois[id=x]`.
+  // Without this, every grant in the document would read as new at its next
+  // revision and be re-recorded against whatever its fields are by then — A4's
+  // silent pass, by a third route. `before` is the last revision recorded for
+  // the path, so its pointers are the correspondence between the two rules.
+  const rekeyState = (path, before, registry) => {
+    const previous = keyRule.get(path);
+    if (previous === undefined || previous === registry) return;
+    const pointers = [...blocksIn(before).verification.keys()];
+    const from = claimKeys(before, path, pointers, previous).keys;
+    const to = claimKeys(before, path, pointers, registry).keys;
+    const moves = pointers.flatMap((pointer) => {
+      const was = from.get(pointer);
+      const is = to.get(pointer);
+      return was === undefined || is === undefined || was === is
+        ? []
+        : [[stateKey(path, was), stateKey(path, is)]];
+    });
+    const carried = moves.map(([was, is]) => [is, grantState.get(was), latestAuthor.get(was)]);
+    for (const [was] of moves) {
+      grantState.delete(was);
+      latestAuthor.delete(was);
+    }
+    for (const [is, state, author] of carried) {
+      if (state !== undefined) grantState.set(is, state);
+      if (author !== undefined) latestAuthor.set(is, author);
+    }
+    history.rekeyed += moves.length;
+    keyRule.set(path, registry);
   };
 
   const forgetPath = (path) => {
-    for (const key of [...grantState.keys()]) {
-      if (key.startsWith(`${path} `)) {
-        grantState.delete(key);
-        latestAuthor.delete(key);
+    for (const state of [...grantState.keys()]) {
+      if (state.startsWith(`${path} `)) {
+        grantState.delete(state);
+        latestAuthor.delete(state);
       }
     }
     latestGrants.delete(path);
+    keyRule.delete(path);
   };
 
   // An explicit --since means the grant may have been written before the range
@@ -1577,7 +1774,16 @@ const runHistoryGate = () => {
       for (const path of paths) {
         const document = blobAt(base, path);
         if (document !== null) {
-          recordRevision(path, document, base.slice(0, 9), `the base of ${SINCE}`, () => true);
+          const registry = registryAt(base);
+          recordRevision(
+            path,
+            document,
+            keyedBlocks(document, path, registry),
+            registry,
+            base.slice(0, 9),
+            `the base of ${SINCE}`,
+            () => true,
+          );
         }
       }
     }
@@ -1604,6 +1810,9 @@ const runHistoryGate = () => {
 
     const subject = git(['log', '-1', '--format=%s', sha]).trim();
     const short = sha.slice(0, 9);
+    // One identity rule per commit: both sides of every comparison below are
+    // keyed with the schemas this commit carries.
+    const registry = registryAt(sha);
     const role = roleOf(git(['log', '-1', '--format=%ae', sha]).trim());
     if (role !== null) history.roled += 1;
 
@@ -1622,10 +1831,41 @@ const runHistoryGate = () => {
       const before = statusCode === 'A' ? null : blobAt(parent, path);
       history.documents += 1;
 
-      const afterBlocks = blocksIn(after);
-      const beforeBlocks = before === null ? { verification: new Map(), review: new Map() } : blocksIn(before);
-      history.grants += afterBlocks.verification.size;
-      history.reviews += afterBlocks.review.size;
+      const afterKeyed = keyedBlocks(after, path, registry);
+      const beforeKeyed = before === null ? NO_BLOCKS : keyedBlocks(before, path, registry);
+      history.grants += afterKeyed.verification.size;
+      history.reviews += afterKeyed.review.size;
+
+      /* --- ADR-0024: a grant on a claim that has no identity ------------- */
+      //
+      // Duplicate or missing required ids leave the claims inside them with no
+      // identity, and every rule below matches claims by identity. Where a grant
+      // sits on one of them, in this revision or in its parent, a verdict here
+      // depends on an identity that does not exist, so the commit fails rather
+      // than being judged by a guess. Where none does — an ambiguity among
+      // null-form claims, fixed before anything was granted — there is no verdict
+      // to get wrong, and the working-tree check is what stops it shipping.
+      if (bearsClaims(path) && afterKeyed.identity.faults.length > 0) {
+        const carriesGrant = (entry) =>
+          entry !== undefined &&
+          !(isVerification(entry.block) && isNullForm(entry.block)) &&
+          !(isCommunityReview(entry.block) && str(entry.block.status) === 'not-sought');
+        const decides = [...afterKeyed.identity.ambiguous].some(
+          ([key, wouldBe]) =>
+            carriesGrant(afterKeyed.verification.get(key) ?? afterKeyed.review.get(key)) ||
+            (wouldBe !== null &&
+              carriesGrant(beforeKeyed.verification.get(wouldBe) ?? beforeKeyed.review.get(wouldBe))),
+        );
+        if (decides) {
+          for (const fault of afterKeyed.identity.faults) {
+            fail(
+              `${short} "${subject}" — ${fault} A grant sits on one of those claims in this commit or ` +
+                `its parent, so whether this commit granted it, and what the grant is bound to, both ` +
+                `depend on an identity the claim does not have.`,
+            );
+          }
+        }
+      }
 
       const authorChanged =
         bearsClaims(path) &&
@@ -1639,12 +1879,16 @@ const runHistoryGate = () => {
       // done both jobs at once: an author-role commit that grants a status,
       // alone, in its own commit, fails here and would pass there.
       if (role === 'author' && bearsClaims(path)) {
-        for (const [pointer, block] of afterBlocks.verification) {
-          const previous = beforeBlocks.verification.get(pointer);
+        for (const [key, { block }] of afterKeyed.verification) {
+          // A claim with no identity is judged by the ADR-0024 rule above, which
+          // says why; "writes a verification block" about a key made up to tell
+          // two duplicates apart would be a second finding and a wrong one.
+          if (afterKeyed.identity.ambiguous.has(key)) continue;
+          const previous = beforeKeyed.verification.get(key)?.block;
           if (previous !== undefined && canonical(previous) === canonical(block)) continue;
           if (previous === undefined && isNullForm(block)) continue;
           fail(
-            `${short} "${subject}" — ${path}${pointer === '' ? '' : ` at ${pointer}`}: this commit ` +
+            `${short} "${subject}" — ${path}${key === '' ? '' : ` at ${key}`}: this commit ` +
               `is authored by the content-author role and it ` +
               `${previous === undefined ? 'writes' : 'changes'} a verification block (status ` +
               `"${str(block.status) ?? '?'}"). ADR-0003: an author-authored commit may write a ` +
@@ -1661,25 +1905,87 @@ const runHistoryGate = () => {
       }
 
       /* --- collect this document's grants, for the per-commit rule ------- */
-      for (const [pointer, block] of bearsClaims(path) ? afterBlocks.verification : []) {
-        const previous = beforeBlocks.verification.get(pointer);
+      const grantedHere = [];
+      for (const [key, { pointer, block }] of bearsClaims(path) ? afterKeyed.verification : []) {
+        // No identity, no per-claim verdict: the ADR-0024 rule above owns it.
+        if (afterKeyed.identity.ambiguous.has(key)) continue;
+        const previous = beforeKeyed.verification.get(key)?.block;
         if (previous !== undefined && canonical(previous) === canonical(block)) continue;
-        // The one allowance: a new file must carry the block, and the null form
+        // The one allowance: a new claim must carry the block, and the null form
         // is the only shape an author may write it in. That is authoring, not
         // granting, so it does not count as a grant here.
         if (previous === undefined && isNullForm(block)) continue;
-        granted.push({ path, pointer, block, previous });
+        grantedHere.push({
+          path,
+          key,
+          block,
+          previous,
+          positional: afterKeyed.identity.positional.get(pointer) ?? [],
+        });
+      }
+      granted.push(...grantedHere);
+
+      /* --- say why, where identity and position disagree ----------------- */
+      //
+      // A change to how claims are matched is only auditable if the run says
+      // what it matched. Where a claim changed position, or where matching by
+      // pointer would have attributed a different number of grants to this
+      // commit than matching by identity does, the claims are named with both
+      // counts — so a verdict that changed because of identity reads as a
+      // reason, not as a rule that quietly stopped firing.
+      if (bearsClaims(path) && before !== null) {
+        const beforeAt = new Map(
+          [...beforeKeyed.verification.values()].map(({ pointer, block }) => [pointer, block]),
+        );
+        const byPosition = [...afterKeyed.verification.values()].filter(({ pointer, block }) => {
+          const previous = beforeAt.get(pointer);
+          if (previous !== undefined && canonical(previous) === canonical(block)) return false;
+          return !(previous === undefined && isNullForm(block));
+        }).length;
+        const moves = [...afterKeyed.verification].flatMap(([key, { pointer, block }]) => {
+          const was = beforeKeyed.verification.get(key);
+          if (was === undefined || was.pointer === pointer) return [];
+          const status = isNullForm(block) ? 'null form' : `status "${str(block.status) ?? '?'}"`;
+          const same = canonical(was.block) === canonical(block) ? 'block unchanged' : 'block changed';
+          return [
+            {
+              text: `${key} (${was.pointer} -> ${pointer}, ${status}, ${same})`,
+              atStake: !(isNullForm(block) && isNullForm(was.block)),
+            },
+          ];
+        });
+        const moved = moves.map((move) => move.text);
+        // Only where something was at stake. Null-form claims shifting behind a
+        // new one change no verdict, and naming them would bury the notes that do.
+        if (moves.some((move) => move.atStake) || byPosition !== grantedHere.length) {
+          const arrived = [...afterKeyed.verification].flatMap(([key, { block }]) =>
+            beforeKeyed.verification.has(key) || afterKeyed.identity.ambiguous.has(key)
+              ? []
+              : [`${key} (${isNullForm(block) ? 'null form, no grant' : `status "${str(block.status) ?? '?'}"`})`],
+          );
+          const left = [...beforeKeyed.verification.keys()].filter((key) => !afterKeyed.verification.has(key));
+          const listed = (items) =>
+            items.length === 0 ? '' : `: ${items.slice(0, 6).join('; ')}${items.length > 6 ? '; and more' : ''}`;
+          note(
+            `${short} "${subject}" — ${path}: claims are matched across this commit by identity, not by ` +
+              `position. ${String(moved.length)} changed position${listed(moved)}. ` +
+              `${String(arrived.length)} arrived${listed(arrived)}. ${String(left.length)} left${listed(left)}. ` +
+              `Matched by position, this commit would have written or changed ${String(byPosition)} ` +
+              `verification block(s) here; matched by identity it wrote or changed ` +
+              `${String(grantedHere.length)}.`,
+          );
+        }
       }
 
       /* --- A3: no agent grants cultural sign-off ------------------------- */
-      for (const [pointer, block] of afterBlocks.review) {
-        const previous = beforeBlocks.review.get(pointer);
+      for (const [key, { block }] of afterKeyed.review) {
+        const previous = beforeKeyed.review.get(key)?.block;
         const changed_ = previous === undefined || canonical(previous) !== canonical(block);
         if (!changed_) continue;
         const status = str(block.status) ?? '?';
         if (status === 'not-sought') continue;
         fail(
-          `${short} "${subject}" — ${path}${pointer === '' ? '' : ` at ${pointer}`}: this commit ` +
+          `${short} "${subject}" — ${path}${key === '' ? '' : ` at ${key}`}: this commit ` +
             `sets communityReview.status to "${status}"` +
             `${isObject(block) && str(block.reviewer) !== null ? `, naming ${String(block.reviewer)}` : ''}` +
             `. docs/content-review.md §1: no agent may grant cultural sign-off, ever, for any ` +
@@ -1695,8 +2001,9 @@ const runHistoryGate = () => {
 
       // A4's state, after the rules that read the diff.
       if (!bearsClaims(path)) continue;
-      recordRevision(path, after, short, subject, (pointer, block) => {
-        const previous = beforeBlocks.verification.get(pointer);
+      if (before !== null) rekeyState(path, before, registry);
+      recordRevision(path, after, afterKeyed, registry, short, subject, (key, block) => {
+        const previous = beforeKeyed.verification.get(key)?.block;
         return previous === undefined || canonical(previous) !== canonical(block);
       });
     }
@@ -1711,9 +2018,19 @@ const runHistoryGate = () => {
     // the block was unchanged; for qB the author fields were unchanged. The
     // property is "did one actor do both jobs", and what carries it is the
     // commit (ADR-0019).
-    for (const { path, pointer, block, previous } of granted) {
-      const at = pointer === '' ? '' : ` at ${pointer}`;
+    for (const { path, key, block, previous, positional } of granted) {
+      const at = key === '' ? '' : ` at ${key}`;
       const wrote = previous === undefined ? 'writes' : 'changes';
+      // The one shape identity cannot rescue, said where it fires so nobody
+      // "fixes" it by splitting a commit that did nothing wrong.
+      const byPosition =
+        positional.length === 0
+          ? ''
+          : ` This claim is matched by POSITION inside ${[...new Set(positional)].join(', ')}, which ` +
+            `requires no id (scripts/lib/claims.mjs, "Which claim is which"). An item inserted, removed ` +
+            `or reordered ahead of it in this commit reads exactly like this; if that is what happened, ` +
+            `the finding is about position rather than duties, and the durable remedy is an id on that ` +
+            `schema.`;
       if (authored.includes(path)) {
         fail(
           `${short} "${subject}" — ${path}${at}: this commit ` +
@@ -1723,7 +2040,7 @@ const runHistoryGate = () => {
             `commit may write a verification object only in the null form and may never change one ` +
             `that exists. One commit doing both jobs is one actor doing both jobs. Split it: the ` +
             `authored text in one commit with the null form, the granted status in another that ` +
-            `touches nothing else.`,
+            `touches nothing else.${byPosition}`,
         );
         continue;
       }
@@ -1735,7 +2052,7 @@ const runHistoryGate = () => {
           `The two jobs are in one commit, which is one actor doing both, even though no single ` +
           `file shows it: the file it granted was not edited, and the files it edited were not ` +
           `granted. ADR-0003 splits authoring from verifying between two agents. Split the commit: ` +
-          `authored text in one, granted statuses in another that touches nothing else.`,
+          `authored text in one, granted statuses in another that touches nothing else.${byPosition}`,
       );
     }
   }
@@ -1743,14 +2060,15 @@ const runHistoryGate = () => {
   /* ------------------------------------------------------------------------ */
   /* A4, evaluated at HEAD                                                     */
   /* ------------------------------------------------------------------------ */
-  for (const [key, record] of grantState) {
-    const cut = key.indexOf(' ');
-    const path = key.slice(0, cut);
-    const pointer = key.slice(cut + 1);
-    const block = latestGrants.get(path)?.get(pointer);
-    if (block === undefined) continue;
-    const at = pointer === '' ? '' : ` at ${pointer}`;
-    const now = latestAuthor.get(key);
+  for (const [state, record] of grantState) {
+    const cut = state.indexOf(' ');
+    const path = state.slice(0, cut);
+    const key = state.slice(cut + 1);
+    const entry = latestGrants.get(path)?.get(key);
+    if (entry === undefined) continue;
+    const { pointer, block } = entry;
+    const at = key === '' ? '' : ` at ${key}`;
+    const now = latestAuthor.get(state);
     if (now === undefined) continue;
     history.bound += 1;
 
@@ -1797,7 +2115,10 @@ const runHistoryGate = () => {
         `granted for different text — including an edit that changes which answer is correct. ` +
         `What a grant is bound to is THIS claim's own fields and no other claim's: an edit ` +
         `elsewhere in this document does not appear here, and the fields named above are the ones ` +
-        `that moved. Re-verify against the current wording, or quarantine. This is recoverable: ` +
+        `that moved. The claim is matched across revisions by its identity` +
+        `${pointer === key ? '' : ` (in the file today at ${pointer})`}, so a claim that moved within ` +
+        `its list is judged on its own fields and never on whichever claim now sits in its old slot. ` +
+        `Re-verify against the current wording, or quarantine. This is recoverable: ` +
         `rewriting the block re-binds the grant and clears it.`,
     );
   }
@@ -1963,6 +2284,29 @@ console.log(
   `verify-content: walked and found no claim in ${silent.length === 0 ? '(nothing else)' : silent.join(', ')}. ` +
     `The floor that makes an empty collection a failure covers ${REQUIRED_COLLECTIONS.join(', ')}.`,
 );
+/*
+ * WHAT THE CLAIMS ARE KNOWN BY, on every run. ADR-0024: gate A matches a claim
+ * across revisions by identity, and a claim keyed by position is exactly the
+ * state that let a grant follow a slot. So the split is printed rather than
+ * implied — a schema that stopped requiring an id would show here as a number
+ * moving from one column to the other.
+ */
+const positionalLine = [...identityTally.positional.entries()]
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([label, count]) => `${String(count)} inside ${label}`)
+  .join(', ');
+console.log(
+  `verify-content: claim identity — ${String(identityTally.blocks)} verification/communityReview ` +
+    `block(s) in the working tree: ${String(identityTally.byId)} known by a schema-required id, ` +
+    `${String(identityTally.byPath)} at a fixed path, ` +
+    `${positionalLine === '' ? '0 by position' : `by position ${positionalLine}, whose schema requires no id`}` +
+    `${
+      identityTally.unresolvedBlocks > 0
+        ? `; ${String(identityTally.unresolvedBlocks)} by POSITION because their document's $schema does ` +
+          `not resolve here, so NOT known by identity`
+        : ''
+    }.`,
+);
 console.log(`verify-content: ADR-0016 re-check disposition — ${rowLine}.`);
 // Printed on every run, including when it is zero, and with the SIZE of what was
 // searched rather than a tick. A banned-term gate that ran over no term list
@@ -1996,7 +2340,8 @@ if (history.ran) {
   console.log(
     `verify-content: separation of duties — ${String(history.commits)} commit(s) touching content/, ` +
       `${String(history.documents)} document revision(s), ${String(history.grants)} verification ` +
-      `block(s) and ${String(history.reviews)} communityReview block(s) inspected.`,
+      `block(s) and ${String(history.reviews)} communityReview block(s) inspected` +
+      `${history.rekeyed > 0 ? `; ${String(history.rekeyed)} grant state(s) carried across a schema change that re-keyed their claim` : ''}.`,
   );
   console.log(
     `verify-content: A4 binds each grant to its own claim — ${String(history.bound)} grant(s) ` +
