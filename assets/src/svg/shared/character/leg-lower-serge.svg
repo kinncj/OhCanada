@@ -1,12 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="41" height="98" viewBox="110 349 41 98" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig reflects it about the character centre line. Breeches, knee to ankle. The outline is OPEN across the top of the cap, which is drawn over the part above it: a closed cap there read as a bead at the joint.</title>
-  <path d="M 131,352 C 143,352 148,360 148,370 C 148,392 146,414 145,428 C 145,439 138,443 131,443 C 124,443 119,439 119,428 C 118,414 115,392 114,370 C 114,360 119,352 131,352 Z" fill="#2b3660" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="ll-serge"><path d="M 131,352 C 143,352 148,360 148,370 C 148,392 146,414 145,428 C 145,439 138,443 131,443 C 124,443 119,439 119,428 C 118,414 115,392 114,370 C 114,360 119,352 131,352 Z"/></clipPath></defs>
-  <g clip-path="url(#ll-serge)">
-    <path d="M 140,358 C 147,360 147,370 147,380 L 147,460 L 134,460 L 135,380 C 135,370 134,360 140,358 Z" fill="#101629"/>
-    <path d="M 121,360 C 126,360 127,370 127,380 L 126,460 L 114,460 L 114,380 C 114,370 115,362 121,360 Z" fill="#464c92"/>
-    <path d="M 144,354 L 150,354 L 150,456 L 144,456 Z" fill="#d6a727"/>
-    <ellipse cx="131" cy="356" rx="17" ry="8" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="98" viewBox="110 358 44 98" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides. Breeches close below the knee, tucked into a high brown riding boot, knee to ankle. A flat top on the knee pivot, and it ENDS in a circle on the ankle pivot so the foot, drawn next, covers it at every ankle angle (art-bible.md 7.5).</title>
+  <path d="M 114,362 L 150,362 L 149.99,362.49 L 147.99,436.43 A 16 16 0 0 1 116.01,436.43 L 114.01,362.49 Z" fill="#2b3660"/>
+  <defs><clipPath id="ll"><path d="M 114,362 L 150,362 L 149.99,362.49 L 147.99,436.43 A 16 16 0 0 1 116.01,436.43 L 114.01,362.49 Z"/></clipPath></defs>
+  <g clip-path="url(#ll)">
+    <path d="M 137.76,332 L 176,332 L 176,466 L 137.76,466 Z" fill="#101629"/>
+    <ellipse cx="123" cy="385.68" rx="3.96" ry="14.8" fill="#464c92"/>
+    <path d="M 150,362 L 149.99,362.49 L 147.99,436.43 A 16 16 0 0 1 116.01,436.43 L 114.01,362.49 L 114,362" fill="none" stroke="#2b3660" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <defs><clipPath id="llb"><path d="M 100,384 L 170,370 L 170,480 L 100,480 Z"/></clipPath></defs>
+    <g clip-path="url(#llb)">
+    <path d="M 100,384 L 170,370 L 170,480 L 100,480 Z" fill="#7c4327"/>
+    <path d="M 139,360 L 180,360 L 180,480 L 139,480 Z" fill="#401812"/>
+    <ellipse cx="124" cy="418" rx="3.5" ry="10" fill="#b4733b"/>
+    <path d="M 150,362 L 149.99,362.49 L 147.99,436.43 A 16 16 0 0 1 116.01,436.43 L 114.01,362.49 L 114,362" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  <path d="M 100,384 L 170,370" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 142.5,355 C 146,358 148,363.5 148,370 C 148,392 146,414 145,428 C 145,439 138,443 131,443 C 124,443 119,439 119,428 C 118,414 115,392 114,370 C 114,363.5 116,358 119.5,355" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 150,362 L 149.99,362.49 L 147.99,436.43 A 16 16 0 0 1 116.01,436.43 L 114.01,362.49 L 114,362" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -1,23 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="98" height="80" viewBox="67 3 98 80" shape-rendering="geometricPrecision">
-  <title>Knitted toque, three-quarter view facing right: a snug knit crown that follows the cranium, a FOLDED CUFF in the same red a tone darker with its ribs showing, and a white pom ON TOP. It was a tall peaked cap with a white band and a pom at the back, and at phone size that is a Santa hat. THE CUFF CLEARS THE BROWS AND IT IS MEASURED: over the face (x 118-156 before the head scale) its lowest ink is 3.4 px above the highest brow ink in any expression and presentation. It runs level over the forehead and drops behind the ear, which is the three-quarter cue. Nothing here sits above y = 0.</title>
-  <g transform="matrix(0.9 0 0 0.9 12 12.1)">
-  
-  <path d="M 75,64 C 64,32 86,6 119,6 C 149,6 166,21 165,36 C 146,40 106,48 75,64 Z" fill="#d8262c" stroke="#3a2018" stroke-width="6.667" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="tq-crown"><path d="M 75,64 C 64,32 86,6 119,6 C 149,6 166,21 165,36 C 146,40 106,48 75,64 Z"/></clipPath><clipPath id="tq-cuff"><path d="M 71,59 C 95,45 127,35 160,30 C 167,29 169,42 162,43 C 146,44 128,45 112,48 C 98,51 86,60 77,72 C 70,76 65,63 71,59 Z"/></clipPath></defs>
-  <g clip-path="url(#tq-crown)">
-    <path d="M 82,58 C 76,32 92,12 112,11 C 118,11 119,17 115,23 C 104,33 94,44 91,60 Z" fill="#e27468"/>
-    <path d="M 150,14 C 160,22 166,29 165,37 L 139,42 C 143,30 145,21 150,14 Z" fill="#941835"/>
-    <ellipse cx="118" cy="42" rx="42" ry="7" fill="#16203a" opacity="0.18" transform="rotate(-12 118 42)"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="109" height="89" viewBox="67 0 109 89" shape-rendering="geometricPrecision">
+  <title>Knitted toque, three-quarter facing right: a snug red crown, a darker ribbed red cuff and a white pom on top. The cuff runs level over the face and clears the highest brow in every expression and presentation (checked by the generator), then drops behind the ear.</title>
+  <path d="M 76,72 C 70,40 94,21 122,21 C 152,21 172,35 170,50 C 144,48 106,54 76,72 Z" fill="#d8262c"/>
+  <defs><clipPath id="tqc"><path d="M 76,72 C 70,40 94,21 122,21 C 152,21 172,35 170,50 C 144,48 106,54 76,72 Z"/></clipPath></defs>
+  <g clip-path="url(#tqc)">
+    <ellipse cx="102" cy="34" rx="22" ry="11" fill="#e27468"/>
+    <ellipse cx="162" cy="42" rx="14" ry="16" fill="#941835"/>
+    <ellipse cx="120" cy="54" rx="44" ry="7" fill="#16203a" opacity="0.18" transform="rotate(-8 120 54)"/>
+    <path d="M 76,72 C 70,40 94,21 122,21 C 152,21 172,35 170,50 C 144,48 106,54 76,72 Z" fill="none" stroke="#d8262c" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 71,59 C 95,45 127,35 160,30 C 167,29 169,42 162,43 C 146,44 128,45 112,48 C 98,51 86,60 77,72 C 70,76 65,63 71,59 Z" fill="#941835" stroke="#3a2018" stroke-width="4.444" stroke-linecap="round" stroke-linejoin="round"/>
-  <g clip-path="url(#tq-cuff)">
-    <path d="M 84,56 L 88,69" fill="none" stroke="#d8262c" stroke-width="2.889" stroke-linecap="round"/>
-    <path d="M 100,49 L 103,60" fill="none" stroke="#d8262c" stroke-width="2.889" stroke-linecap="round"/>
-    <path d="M 116,42 L 118,52" fill="none" stroke="#d8262c" stroke-width="2.889" stroke-linecap="round"/>
-    <path d="M 132,37 L 133,48" fill="none" stroke="#d8262c" stroke-width="2.889" stroke-linecap="round"/>
-    <path d="M 148,33 L 148,45" fill="none" stroke="#d8262c" stroke-width="2.889" stroke-linecap="round"/>
+  <path d="M 76,72 C 70,40 94,21 122,21 C 152,21 172,35 170,50 C 144,48 106,54 76,72 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 72,66 C 96,52 132,44 166,43 C 174,43 176,57 167,58 C 140,57 120,56 107,62 C 98,67 92,76 88,84 C 80,92 64,80 72,66 Z" fill="#941835"/>
+  <defs><clipPath id="tqb"><path d="M 72,66 C 96,52 132,44 166,43 C 174,43 176,57 167,58 C 140,57 120,56 107,62 C 98,67 92,76 88,84 C 80,92 64,80 72,66 Z"/></clipPath></defs>
+  <g clip-path="url(#tqb)">
+  <path d="M 84,60 L 86,74" fill="none" stroke="#d8262c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 102,53 L 104,66" fill="none" stroke="#d8262c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 120,49 L 121,60" fill="none" stroke="#d8262c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 138,46 L 138,59" fill="none" stroke="#d8262c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 155,44 L 155,58" fill="none" stroke="#d8262c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <ellipse cx="113" cy="5" rx="10.5" ry="10" fill="#e6eff7" stroke="#3a2018" stroke-width="4.444"/>
-  <ellipse cx="109.5" cy="1.5" rx="5" ry="4.2" fill="#ffffff"/>
-</g>
+  <path d="M 72,66 C 96,52 132,44 166,43 C 174,43 176,57 167,58 C 140,57 120,56 107,62 C 98,67 92,76 88,84 C 80,92 64,80 72,66 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z" fill="#e6eff7"/>
+  <defs><clipPath id="tqp"><path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z"/></clipPath></defs>
+  <g clip-path="url(#tqp)">
+    <ellipse cx="118" cy="9" rx="4.5" ry="3.5" fill="#ffffff"/>
+    <ellipse cx="126" cy="20" rx="6" ry="3.5" fill="#c2d6e8"/>
+    <path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z" fill="none" stroke="#e6eff7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

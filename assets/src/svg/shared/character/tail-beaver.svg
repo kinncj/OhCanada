@@ -1,13 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="84" height="141" viewBox="22 281 84 141" shape-rendering="geometricPrecision">
-  <title>The guide’s paddle tail: a broad flat scaly paddle on a stub that leaves the body at the hip and streams out behind, on the wearer’s right - which in a right-facing three-quarter pose is the trailing side. Three cross bands carry the scale as a rhythm, never as a texture fill. It is one of the two features that make a beaver identifiable at phone size.</title>
-  <path d="M 100,284 C 86,290 74,300 66,314 C 78,326 88,322 96,312 C 102,304 104,292 100,284 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 78,308 C 56,313 33,335 27,362 C 21,390 35,415 60,418 C 84,421 98,401 99,374 C 100,345 92,320 78,308 Z" fill="#242b33" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="tl"><path d="M 78,308 C 56,313 33,335 27,362 C 21,390 35,415 60,418 C 84,421 98,401 99,374 C 100,345 92,320 78,308 Z"/></clipPath></defs>
-  <g clip-path="url(#tl)">
-    <path d="M 74,310 C 52,318 32,340 27,364 C 46,374 82,370 99,358 C 96,336 88,318 74,310 Z" fill="#44555f"/>
-    <ellipse cx="58" cy="414" rx="32" ry="15" fill="#0f121a"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="89" height="145" viewBox="20 280 89 145" shape-rendering="geometricPrecision">
+  <title>The guide paddle tail: a broad flat paddle on a stub that leaves the body at the hip and streams out behind on the trailing side, with a large lit upper face and three cross bands carrying the scale as a rhythm, never a texture fill.</title>
+  <path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z" fill="#7c4327"/>
+  <defs><clipPath id="stub"><path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z"/></clipPath></defs>
+  <g clip-path="url(#stub)">
+    <path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 35,338 C 52,348 78,348 94,338" fill="none" stroke="#0f121a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 28,366 C 47,378 78,378 99,366" fill="none" stroke="#0f121a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 31,394 C 50,404 76,404 94,392" fill="none" stroke="#0f121a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z" fill="#242b33"/>
+  <defs><clipPath id="tl"><path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z"/></clipPath></defs>
+  <g clip-path="url(#tl)">
+    <path d="M 76,300 C 52,316 30,338 24,366 C 46,378 84,372 106,358 C 102,334 92,314 76,300 Z" fill="#44555f"/>
+    <ellipse cx="60" cy="418" rx="30" ry="12" fill="#0f121a"/>
+    <path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z" fill="none" stroke="#242b33" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 36,338 C 52,348 78,348 94,338" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 28,366 C 47,378 78,378 100,366" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 32,394 C 50,404 76,404 95,392" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

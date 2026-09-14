@@ -1,30 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="106" height="178" viewBox="70 124 106 178" shape-rendering="geometricPrecision">
-  <title>Scarlet tunic in review order, three-quarter view facing right: a standing collar dropped to the BASE of the neck - its top edge scooped so the neck comes out of it rather than the jaw sitting on it - and shoulder straps in midnight blue, one row of brass buttons down the chest plane on the leading edge, two pointed pocket flaps, a Sam Browne belt whose diagonal runs from the wearer’s right shoulder (the near one, trailing) down to the left hip (the far one, leading), and a white lanyard. No crest, no badge, no lettering, no collar dogs, no shoulder flashes, no rank chevrons, no service numbers: the insignia are protected marks and their absence is a legal constraint, not an oversight. Never named as a real force.</title>
-  <path d="M 122,140 C 134,140 145,135 152,128 C 155,126 157,130 158,136 C 166,144 169,152 168,164 C 166,182 160,206 159,228 C 158,246 168,268 171,286 C 173,296 162,298 140,298 C 112,298 84,298 76,290 C 69,282 82,258 82,236 C 82,212 77,186 75,166 C 74,152 78,142 86,135 C 89,132 92,134 96,138 C 104,140 113,140 122,140 Z" fill="#c5342a" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="tn"><path d="M 122,140 C 134,140 145,135 152,128 C 155,126 157,130 158,136 C 166,144 169,152 168,164 C 166,182 160,206 159,228 C 158,246 168,268 171,286 C 173,296 162,298 140,298 C 112,298 84,298 76,290 C 69,282 82,258 82,236 C 82,212 77,186 75,166 C 74,152 78,142 86,135 C 89,132 92,134 96,138 C 104,140 113,140 122,140 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="106" height="179" viewBox="67 126 106 179" shape-rendering="geometricPrecision">
+  <title>Scarlet tunic in review order, three-quarter facing right: fitted to a belted waist and flaring into a short skirt, a navy standing collar at the base of the neck, navy shoulder straps, pointed breast-pocket flaps, a single row of brass buttons, a brown Sam Browne belt with its cross-strap from the wearer right shoulder to the left hip, and a white lanyard. No crest, badge, lettering, collar dogs, shoulder flashes, chevrons or service numbers: the insignia are protected marks. Never named as a real force.</title>
+  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 168,178 166,198 162,216 C 160,224 160,230 161,236 C 165,252 169,270 169,286 C 169,294 164,298 154,299 C 131,301 109,301 86,299 C 76,298 71,294 71,286 C 71,270 75,252 79,236 C 80,230 80,224 78,216 C 74,198 72,178 72,156 C 72,142 76,134 84,131 C 92,129 100,130 106,134 Z" fill="#c5342a"/>
+  <defs><clipPath id="tn"><path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 168,178 166,198 162,216 C 160,224 160,230 161,236 C 165,252 169,270 169,286 C 169,294 164,298 154,299 C 131,301 109,301 86,299 C 76,298 71,294 71,286 C 71,270 75,252 79,236 C 80,230 80,224 78,216 C 74,198 72,178 72,156 C 72,142 76,134 84,131 C 92,129 100,130 106,134 Z"/></clipPath></defs>
   <g clip-path="url(#tn)">
-    <path d="M 80,150 C 92,144 98,150 96,162 C 92,186 96,212 92,238 C 88,262 82,278 78,294 L 58,294 L 58,150 Z" fill="#db7961"/>
-    <path d="M 160,150 C 150,146 145,152 147,164 C 150,188 145,212 148,238 C 151,264 158,282 162,298 L 184,298 L 184,150 Z" fill="#841a28"/>
-    <ellipse cx="120" cy="150" rx="46" ry="18" fill="#16203a" opacity="0.18"/>
+    <path d="M 50,110 L 94,110 C 86,150 86,190 92,226 C 96,256 88,290 86,330 L 50,330 Z" fill="#db7961"/>
+    <path d="M 190,110 L 152,110 C 154,150 154,190 150,226 C 148,258 156,292 160,330 L 190,330 Z" fill="#841a28"/>
+    <ellipse cx="122" cy="160" rx="34" ry="10" fill="#16203a" opacity="0.18"/>
+    <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 168,178 166,198 162,216 C 160,224 160,230 161,236 C 165,252 169,270 169,286 C 169,294 164,298 154,299 C 131,301 109,301 86,299 C 76,298 71,294 71,286 C 71,270 75,252 79,236 C 80,230 80,224 78,216 C 74,198 72,178 72,156 C 72,142 76,134 84,131 C 92,129 100,130 106,134 Z" fill="none" stroke="#c5342a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 88,140 L 164,244" fill="none" stroke="#401812" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 90,143 L 163,243" fill="none" stroke="#7c4327" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 104,130 L 76,140 C 70,142 74,158 80,156 L 108,146 C 114,144 110,128 104,130 Z" fill="#2b3660" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 140,144 L 162,152 C 168,154 172,139 166,137 L 144,129 C 138,127 134,142 140,144 Z" fill="#2b3660" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 97,129 C 103,135 111,138 122,137 C 135,136 143,131 147,128 C 153,131 155,149 147,153 C 138,157 106,158 98,154 C 91,150 92,133 97,129 Z" fill="#2b3660" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 101,135 C 107,141 113,143 122,142 C 132,141 139,138 143,135 C 145,137 146,141 144,142 C 136,146 108,147 101,143 C 99,141 99,137 101,135 Z" fill="#464c92"/>
-  <path d="M 82,258 L 168,258 C 176,258 176,234 168,234 L 82,234 C 74,234 74,258 82,258 Z" fill="#7c4327" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 84,245 L 166,245 C 169,245 169,236 166,236 L 84,236 C 81,236 81,245 84,245 Z" fill="#b4733b"/>
-  <rect x="128" y="234" width="22" height="24" rx="6" fill="#d6a727" stroke="#3a2018" stroke-width="3"/>
-  <rect x="104" y="180" width="32" height="24" rx="5" fill="#841a28"/>
-  <path d="M 104,176 L 136,176 L 136,191 L 120,199 L 104,191 Z" fill="#db7961" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <ellipse cx="120" cy="187" rx="5.5" ry="5.5" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
-  <rect x="140" y="182" width="22" height="24" rx="5" fill="#841a28"/>
-  <path d="M 140,178 L 162,178 L 162,193 L 151,201 L 140,193 Z" fill="#db7961" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <ellipse cx="151" cy="189" rx="5" ry="5" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
-  <ellipse cx="146" cy="168" rx="6" ry="6" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
-  <ellipse cx="148" cy="184" rx="6" ry="6" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
-  <ellipse cx="150" cy="200" rx="6" ry="6" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
-  <ellipse cx="152" cy="212" rx="6" ry="6" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
-  <path d="M 153,158 C 160,168 158,178 151,186" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 164,134 168,142 168,156 C 168,178 166,198 162,216 C 160,224 160,230 161,236 C 165,252 169,270 169,286 C 169,294 164,298 154,299 C 131,301 109,301 86,299 C 76,298 71,294 71,286 C 71,270 75,252 79,236 C 80,230 80,224 78,216 C 74,198 72,178 72,156 C 72,142 76,134 84,131 C 92,129 100,130 106,134 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 97,174 L 119,174 L 119,184 L 108,192 L 97,184 Z" fill="#db7961"/>
+  <defs><clipPath id="pk1"><path d="M 97,174 L 119,174 L 119,184 L 108,192 L 97,184 Z"/></clipPath></defs>
+  <g clip-path="url(#pk1)">
+  </g>
+  <path d="M 97,174 L 119,174 L 119,184 L 108,192 L 97,184 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 139,174 L 159,174 L 159,184 L 149,192 L 139,184 Z" fill="#db7961"/>
+  <defs><clipPath id="pk2"><path d="M 139,174 L 159,174 L 159,184 L 149,192 L 139,184 Z"/></clipPath></defs>
+  <g clip-path="url(#pk2)">
+  </g>
+  <path d="M 139,174 L 159,174 L 159,184 L 149,192 L 139,184 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="132" cy="166" rx="4.5" ry="4.5" fill="#d6a727" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="133" cy="186" rx="4.5" ry="4.5" fill="#d6a727" stroke="#3a2018" stroke-width="3"/>
+  <ellipse cx="134" cy="206" rx="4.5" ry="4.5" fill="#d6a727" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 84,140 L 94,131 L 165,222 L 155,231 Z" fill="#7c4327"/>
+  <defs><clipPath id="sbx"><path d="M 84,140 L 94,131 L 165,222 L 155,231 Z"/></clipPath></defs>
+  <g clip-path="url(#sbx)">
+    <path d="M 84,140 L 94,131 L 97,135 L 87,144 Z" fill="#b4733b"/>
+  </g>
+  <path d="M 84,140 L 94,131 L 165,222 L 155,231 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 77,221 C 100,231 140,231 163,221 L 164,239 C 140,249 100,249 78,239 Z" fill="#7c4327"/>
+  <defs><clipPath id="blt"><path d="M 77,221 C 100,231 140,231 163,221 L 164,239 C 140,249 100,249 78,239 Z"/></clipPath></defs>
+  <g clip-path="url(#blt)">
+    <path d="M 60,200 L 180,200 L 180,227 C 140,236 100,236 60,227 Z" fill="#b4733b"/>
+  </g>
+  <path d="M 77,221 C 100,231 140,231 163,221 L 164,239 C 140,249 100,249 78,239 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="132" y="225" width="16" height="18" rx="4" fill="#d6a727" stroke="#3a2018" stroke-width="3"/>
+  <path d="M 143,132 L 161,138 C 166,140 164,150 159,149 L 140,143 C 135,141 138,130 143,132 Z" fill="#2b3660"/>
+  <defs><clipPath id="ss1"><path d="M 143,132 L 161,138 C 166,140 164,150 159,149 L 140,143 C 135,141 138,130 143,132 Z"/></clipPath></defs>
+  <g clip-path="url(#ss1)">
+  </g>
+  <path d="M 143,132 L 161,138 C 166,140 164,150 159,149 L 140,143 C 135,141 138,130 143,132 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 97,132 L 79,138 C 74,140 76,150 81,149 L 100,143 C 105,141 102,130 97,132 Z" fill="#2b3660"/>
+  <defs><clipPath id="ss2"><path d="M 97,132 L 79,138 C 74,140 76,150 81,149 L 100,143 C 105,141 102,130 97,132 Z"/></clipPath></defs>
+  <g clip-path="url(#ss2)">
+  </g>
+  <path d="M 97,132 L 79,138 C 74,140 76,150 81,149 L 100,143 C 105,141 102,130 97,132 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 156,146 C 163,162 160,178 150,190" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 102,135 C 110,145 130,145 138,135 C 145,138 147,153 140,157 C 128,163 112,163 100,157 C 93,153 95,138 102,135 Z" fill="#2b3660"/>
+  <defs><clipPath id="cl"><path d="M 102,135 C 110,145 130,145 138,135 C 145,138 147,153 140,157 C 128,163 112,163 100,157 C 93,153 95,138 102,135 Z"/></clipPath></defs>
+  <g clip-path="url(#cl)">
+    <ellipse cx="110" cy="143" rx="8" ry="4" fill="#464c92"/>
+    <path d="M 102,135 C 110,145 130,145 138,135 C 145,138 147,153 140,157 C 128,163 112,163 100,157 C 93,153 95,138 102,135 Z" fill="none" stroke="#2b3660" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M 102,135 C 110,145 130,145 138,135 C 145,138 147,153 140,157 C 128,163 112,163 100,157 C 93,153 95,138 102,135 Z" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

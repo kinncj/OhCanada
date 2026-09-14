@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="41" height="102" viewBox="115 203 41 102" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig reflects it about the character centre line. Scarlet tunic sleeve, lower, from the elbow to the cuff. The outline is OPEN across the top of the cap, which is drawn over the part above it: a closed cap there read as a bead at the joint. Tapered toward the joint below it, so a limb reads as a limb and not a tube.</title>
-  <path d="M 136,206 C 146,206 152,212 152,222 L 150,288 C 150,297 144,301 136,301 C 128,301 122,297 122,288 L 120,222 C 120,212 126,206 136,206 Z" fill="#c5342a" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="al-serge"><path d="M 136,206 C 146,206 152,212 152,222 L 150,288 C 150,297 144,301 136,301 C 128,301 122,297 122,288 L 120,222 C 120,212 126,206 136,206 Z"/></clipPath></defs>
-  <g clip-path="url(#al-serge)">
-    <path d="M 146,214 C 153,216 153,224 153,232 L 152,304 L 140,304 L 141,232 C 141,224 140,216 146,214 Z" fill="#841a28"/>
-    <path d="M 125,216 C 130,216 131,224 131,232 L 130,304 L 119,304 L 119,232 C 119,224 119,218 125,216 Z" fill="#db7961"/>
-    <ellipse cx="136" cy="210" rx="18" ry="8" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="89" viewBox="117 210 40 89" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. Scarlet tunic sleeve, lower. A flat top ON the elbow pivot and the same radius as the upper sleeve cap, with no line across it: bent, the two read as one limb with no knob or bead at the joint.</title>
+  <path d="M 122,214 L 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214 Z" fill="#c5342a"/>
+  <defs><clipPath id="al"><path d="M 122,214 L 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214 Z"/></clipPath></defs>
+  <g clip-path="url(#al)">
+    <path d="M 141.8,184 L 181,184 L 181,312 L 141.8,312 Z" fill="#841a28"/>
+    <ellipse cx="129.5" cy="235.76" rx="3.3" ry="13.6" fill="#db7961"/>
+    <path d="M 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214" fill="none" stroke="#c5342a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 147.5,209 C 150.5,212 152,216.5 152,222 L 150,288 C 150,297 144,301 136,301 C 128,301 122,297 122,288 L 120,222 C 120,216.5 121.5,212 124.5,209" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 152,214 C 152.6,236 150.1,262 149.5,282 A 12.5 12.5 0 0 1 124.5,282 C 123.9,262 121.4,236 122,214" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

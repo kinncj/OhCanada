@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="60" height="55" viewBox="109 412 60 55" shape-rendering="geometricPrecision">
-  <title>Winter boot, brown leather with a knit cuff and a moulded rubber sole, the wearer’s left - the FAR side of the three-quarter pose. Feet are the one pair the rig does not reflect, and in this view that is what buys the turn: both point the way the character travels, and the far one is drawn shorter and set back so it reads as depth.</title>
-  <path d="M 121,426 C 133,420 149,424 159,432 C 165,438 163,446 165,452 C 167,460 157,464 145,464 L 123,464 C 115,464 113,458 113,450 C 113,438 113,430 121,426 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="btf"><path d="M 121,426 C 133,420 149,424 159,432 C 165,438 163,446 165,452 C 167,460 157,464 145,464 L 123,464 C 115,464 113,458 113,450 C 113,438 113,430 121,426 Z"/></clipPath></defs>
-  <g clip-path="url(#btf)">
-      <ellipse cx="153" cy="436" rx="18" ry="13" fill="#b4733b"/>
-      <ellipse cx="117" cy="442" rx="15" ry="15" fill="#401812"/>
-      <path d="M 109,450 C 131,446 157,446 171,450 L 171,470 L 109,470 Z" fill="#242b33"/>
-      <path d="M 109,450 C 131,446 157,446 171,450 L 171,456 C 157,452 131,452 109,456 Z" fill="#44555f"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="71" height="47" viewBox="106 419 71 47" shape-rendering="geometricPrecision">
+  <title>Winter boot foot: brown leather, rounded toe cap, dark moulded sole, the wearer left - the FAR side, drawn shorter. Feet are not mirrored: both point the way the character travels. The ankle is a circle on the ankle pivot with no line across its top.</title>
+  <path d="M 116,436 A 16 16 0 0 1 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436 Z" fill="#7c4327"/>
+  <defs><clipPath id="ft"><path d="M 116,436 A 16 16 0 0 1 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436 Z"/></clipPath></defs>
+  <g clip-path="url(#ft)">
+    <ellipse cx="158" cy="447" rx="11" ry="5" fill="#b4733b"/>
+    <ellipse cx="114" cy="452" rx="8" ry="10" fill="#401812"/>
+    <path d="M 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 92,451 C 132,449 152,449 182,451 L 182,470 L 92,470 Z" fill="#242b33"/>
+    <path d="M 92,451 C 132,449 152,449 182,451 L 182,455 C 152,453 132,453 92,455 Z" fill="#44555f"/>
   </g>
-  <path d="M 117,414 L 147,414 C 155,414 155,432 147,432 L 117,432 C 109,432 109,414 117,414 Z" fill="#e6eff7" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 119,423 L 149,423 C 153,423 153,431 149,431 L 119,431 C 115,431 115,423 119,423 Z" fill="#c2d6e8"/>
+  <path d="M 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

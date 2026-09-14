@@ -1,13 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="63" height="47" viewBox="106 420 63 47" shape-rendering="geometricPrecision">
-  <title>High brown riding boot with a strap and buckle at the ankle, the wearer’s left - the FAR side of the three-quarter pose. Feet are the one pair the rig does not reflect, and in this view that is what buys the turn: both point the way the character travels, and the far one is drawn shorter and set back so it reads as depth.</title>
-  <path d="M 121,426 C 133,420 149,424 159,432 C 165,438 163,446 165,452 C 167,460 157,464 145,464 L 123,464 C 115,464 113,458 113,450 C 113,438 113,430 121,426 Z" fill="#7c4327" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="btf"><path d="M 121,426 C 133,420 149,424 159,432 C 165,438 163,446 165,452 C 167,460 157,464 145,464 L 123,464 C 115,464 113,458 113,450 C 113,438 113,430 121,426 Z"/></clipPath></defs>
-  <g clip-path="url(#btf)">
-      <ellipse cx="153" cy="436" rx="18" ry="13" fill="#b4733b"/>
-      <ellipse cx="117" cy="442" rx="15" ry="15" fill="#401812"/>
-      <path d="M 109,450 C 131,446 157,446 171,450 L 171,470 L 109,470 Z" fill="#401812"/>
-      <path d="M 109,450 C 131,446 157,446 171,450 L 171,456 C 157,452 131,452 109,456 Z" fill="#7c4327"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="71" height="47" viewBox="106 419 71 47" shape-rendering="geometricPrecision">
+  <title>Riding boot foot: brown leather with a strap and brass buckle at the ankle, the wearer left - the FAR side, drawn shorter. Feet are not mirrored: both point the way the character travels. The ankle is a circle on the ankle pivot with no line across its top.</title>
+  <path d="M 116,436 A 16 16 0 0 1 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436 Z" fill="#7c4327"/>
+  <defs><clipPath id="ft"><path d="M 116,436 A 16 16 0 0 1 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436 Z"/></clipPath></defs>
+  <g clip-path="url(#ft)">
+    <ellipse cx="158" cy="447" rx="11" ry="5" fill="#b4733b"/>
+    <ellipse cx="114" cy="452" rx="8" ry="10" fill="#401812"/>
+    <path d="M 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 92,451 C 132,449 152,449 182,451 L 182,470 L 92,470 Z" fill="#401812"/>
+    <path d="M 92,451 C 132,449 152,449 182,451 L 182,455 C 152,453 132,453 92,455 Z" fill="#7c4327"/>
   </g>
-  <path d="M 112,424 L 154,424 C 159,424 159,434 154,434 L 112,434 C 107,434 107,424 112,424 Z" fill="#401812" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="128" y="423" width="10" height="12" rx="3" fill="#d6a727" stroke="#3a2018" stroke-width="2"/>
+  <path d="M 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 116,424 L 148,424 L 148,432 L 116,432 Z" fill="#401812"/>
+  <defs><clipPath id="strap"><path d="M 116,424 L 148,424 L 148,432 L 116,432 Z"/></clipPath></defs>
+  <g clip-path="url(#strap)">
+  </g>
+  <path d="M 116,424 L 148,424 L 148,432 L 116,432 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="134" y="422.5" width="9" height="11" rx="2.5" fill="#d6a727" stroke="#3a2018" stroke-width="3"/>
 </svg>

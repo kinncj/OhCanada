@@ -28,7 +28,7 @@
     "heightPx": 420,
     "headPx": 70,
     "heightHeads": 6,
-    "note": "Part windows are given in THIS space, so a window origin IS the part offset. To place a character at world (x, y) with its feet on the ground, draw each part at (x - 120 + frame.x, y - 460 + frame.y). THE VIEW IS PART OF THIS SPACE: every character is drawn three-quarter with the canonical facing RIGHT, the body about 40 degrees off strict profile and the HEAD about 25, because this is a side-scroller and a figure that faces the camera cannot read as travelling. Screen x is therefore the FORE-AFT axis, which is what makes the walk cycle swing at full amplitude, and the near side is the wearer RIGHT - so the -r parts draw last. See art-bible.md 7.1 and rig-contract.md 1."
+    "note": "Part windows are given in THIS space, so a window origin IS the part offset. To place a character at world (x, y) with its feet on the ground, draw each part at (x - 120 + frame.x, y - 460 + frame.y). THE VIEW IS PART OF THIS SPACE: every character is drawn three-quarter with the canonical facing RIGHT, the body about 40 degrees off strict profile and the HEAD at the same three-quarter with the whole face on its leading half (art-bible.md 7.7; it was turned to about 25 before 2026-09-14), because this is a side-scroller and a figure that faces the camera cannot read as travelling. Screen x is therefore the FORE-AFT axis, which is what makes the walk cycle swing at full amplitude, and the near side is the wearer RIGHT - so the -r parts draw last. See art-bible.md 7.1 and rig-contract.md 1."
   },
   "artboards": [
     {
@@ -585,17 +585,17 @@
             "arm-upper-l": [
               0,
               0,
-              -5
+              -3
             ],
             "arm-lower-l": [
-              5.93,
-              -0.26,
-              -12
+              3.56,
+              -0.09,
+              -8
             ],
             "hand-l": [
-              20.06,
-              -1.74,
-              -12
+              13.02,
+              -0.75,
+              -8
             ],
             "leg-upper-l": [
               0,
@@ -685,17 +685,17 @@
             "arm-upper-r": [
               0,
               0,
-              6
+              11
             ],
             "arm-lower-r": [
-              -7.11,
-              -0.37,
-              -2
+              -12.98,
+              -1.25,
+              3
             ],
             "hand-r": [
-              -4.73,
-              -0.41,
-              -2
+              -16.53,
+              -1.34,
+              3
             ],
             "mount-fore": [
               0,
@@ -725,17 +725,17 @@
             "arm-upper-l": [
               0,
               -1.6,
-              -5
+              -3
             ],
             "arm-lower-l": [
-              5.93,
-              -1.86,
-              -12
+              3.56,
+              -1.69,
+              -8
             ],
             "hand-l": [
-              20.06,
-              -3.34,
-              -12
+              13.02,
+              -2.35,
+              -8
             ],
             "leg-upper-l": [
               0,
@@ -825,17 +825,17 @@
             "arm-upper-r": [
               0,
               -1.6,
-              6
+              11
             ],
             "arm-lower-r": [
-              -7.11,
-              -1.97,
-              -2
+              -12.98,
+              -2.85,
+              3
             ],
             "hand-r": [
-              -4.73,
-              -2.01,
-              -2
+              -16.53,
+              -2.94,
+              3
             ],
             "mount-fore": [
               0,
@@ -865,17 +865,17 @@
             "arm-upper-l": [
               0,
               0,
-              -5
+              -3
             ],
             "arm-lower-l": [
-              5.93,
-              -0.26,
-              -12
+              3.56,
+              -0.09,
+              -8
             ],
             "hand-l": [
-              20.06,
-              -1.74,
-              -12
+              13.02,
+              -0.75,
+              -8
             ],
             "leg-upper-l": [
               0,
@@ -965,17 +965,17 @@
             "arm-upper-r": [
               0,
               0,
-              6
+              11
             ],
             "arm-lower-r": [
-              -7.11,
-              -0.37,
-              -2
+              -12.98,
+              -1.25,
+              3
             ],
             "hand-r": [
-              -4.73,
-              -0.41,
-              -2
+              -16.53,
+              -1.34,
+              3
             ],
             "mount-fore": [
               0,
@@ -12919,136 +12919,136 @@
   "frames": {
     "character-arm-lower-beaver": {
       "source": "src/svg/shared/character/arm-lower-beaver.svg",
-      "x": 115,
-      "y": 203,
-      "w": 41,
-      "h": 102
+      "x": 116,
+      "y": 210,
+      "w": 42,
+      "h": 90
     },
     "character-arm-lower-parka": {
       "source": "src/svg/shared/character/arm-lower-parka.svg",
-      "x": 115,
-      "y": 203,
-      "w": 41,
-      "h": 102
+      "x": 116,
+      "y": 210,
+      "w": 42,
+      "h": 90
     },
     "character-arm-lower-serge": {
       "source": "src/svg/shared/character/arm-lower-serge.svg",
-      "x": 115,
-      "y": 203,
-      "w": 41,
-      "h": 102
+      "x": 117,
+      "y": 210,
+      "w": 40,
+      "h": 89
     },
     "character-arm-upper-beaver": {
       "source": "src/svg/shared/character/arm-upper-beaver.svg",
-      "x": 115,
-      "y": 135,
-      "w": 44,
-      "h": 114
+      "x": 114,
+      "y": 125,
+      "w": 46,
+      "h": 109
     },
     "character-arm-upper-parka": {
       "source": "src/svg/shared/character/arm-upper-parka.svg",
-      "x": 115,
-      "y": 135,
-      "w": 44,
-      "h": 114
+      "x": 113,
+      "y": 125,
+      "w": 48,
+      "h": 109
     },
     "character-arm-upper-serge": {
       "source": "src/svg/shared/character/arm-upper-serge.svg",
-      "x": 115,
-      "y": 135,
-      "w": 44,
-      "h": 114
+      "x": 116,
+      "y": 126,
+      "w": 42,
+      "h": 107
     },
     "character-face-happy-feminine": {
       "source": "src/svg/shared/character/face-happy-feminine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 113,
+      "y": 65,
+      "w": 45,
+      "h": 49
     },
     "character-face-happy-masculine": {
       "source": "src/svg/shared/character/face-happy-masculine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 114,
+      "y": 66,
+      "w": 43,
+      "h": 59
     },
     "character-face-happy-neutral": {
       "source": "src/svg/shared/character/face-happy-neutral.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 115,
+      "y": 66,
+      "w": 41,
+      "h": 48
     },
     "character-face-neutral-feminine": {
       "source": "src/svg/shared/character/face-neutral-feminine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 113,
+      "y": 66,
+      "w": 45,
+      "h": 52
     },
     "character-face-neutral-masculine": {
       "source": "src/svg/shared/character/face-neutral-masculine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 114,
+      "y": 67,
+      "w": 43,
+      "h": 58
     },
     "character-face-neutral-neutral": {
       "source": "src/svg/shared/character/face-neutral-neutral.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 115,
+      "y": 67,
+      "w": 41,
+      "h": 45
     },
     "character-face-surprised-feminine": {
       "source": "src/svg/shared/character/face-surprised-feminine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 113,
+      "y": 62,
+      "w": 45,
+      "h": 55
     },
     "character-face-surprised-masculine": {
       "source": "src/svg/shared/character/face-surprised-masculine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 114,
+      "y": 63,
+      "w": 43,
+      "h": 62
     },
     "character-face-surprised-neutral": {
       "source": "src/svg/shared/character/face-surprised-neutral.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 115,
+      "y": 64,
+      "w": 41,
+      "h": 53
     },
     "character-face-thinking-feminine": {
       "source": "src/svg/shared/character/face-thinking-feminine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 113,
+      "y": 64,
+      "w": 45,
+      "h": 54
     },
     "character-face-thinking-masculine": {
       "source": "src/svg/shared/character/face-thinking-masculine.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 114,
+      "y": 65,
+      "w": 43,
+      "h": 60
     },
     "character-face-thinking-neutral": {
       "source": "src/svg/shared/character/face-thinking-neutral.svg",
-      "x": 98,
-      "y": 55,
-      "w": 67,
-      "h": 69
+      "x": 115,
+      "y": 65,
+      "w": 41,
+      "h": 48
     },
     "character-feature-glasses": {
       "source": "src/svg/shared/character/feature-glasses.svg",
-      "x": 93,
-      "y": 69,
-      "w": 60,
-      "h": 22
+      "x": 103,
+      "y": 72,
+      "w": 53,
+      "h": 25
     },
     "character-foot-gear-l-skate": {
       "source": "src/svg/shared/character/foot-gear-l-skate.svg",
@@ -13066,44 +13066,44 @@
     },
     "character-foot-l-beaver": {
       "source": "src/svg/shared/character/foot-l-beaver.svg",
-      "x": 110,
-      "y": 420,
-      "w": 59,
+      "x": 106,
+      "y": 419,
+      "w": 71,
       "h": 47
     },
     "character-foot-l-parka": {
       "source": "src/svg/shared/character/foot-l-parka.svg",
-      "x": 109,
-      "y": 412,
-      "w": 60,
-      "h": 55
+      "x": 106,
+      "y": 419,
+      "w": 71,
+      "h": 47
     },
     "character-foot-l-serge": {
       "source": "src/svg/shared/character/foot-l-serge.svg",
       "x": 106,
-      "y": 420,
-      "w": 63,
+      "y": 419,
+      "w": 71,
       "h": 47
     },
     "character-foot-r-beaver": {
       "source": "src/svg/shared/character/foot-r-beaver.svg",
-      "x": 86,
-      "y": 416,
-      "w": 65,
+      "x": 82,
+      "y": 419,
+      "w": 77,
       "h": 47
     },
     "character-foot-r-parka": {
       "source": "src/svg/shared/character/foot-r-parka.svg",
-      "x": 85,
-      "y": 408,
-      "w": 66,
-      "h": 55
+      "x": 82,
+      "y": 419,
+      "w": 77,
+      "h": 47
     },
     "character-foot-r-serge": {
       "source": "src/svg/shared/character/foot-r-serge.svg",
       "x": 82,
-      "y": 416,
-      "w": 69,
+      "y": 419,
+      "w": 77,
       "h": 47
     },
     "character-ground-shadow": {
@@ -13115,269 +13115,269 @@
     },
     "character-hair-bob-black": {
       "source": "src/svg/shared/character/hair-bob-black.svg",
-      "x": 72,
-      "y": 32,
-      "w": 86,
-      "h": 89
+      "x": 69,
+      "y": 33,
+      "w": 92,
+      "h": 95
     },
     "character-hair-bob-blond": {
       "source": "src/svg/shared/character/hair-bob-blond.svg",
-      "x": 72,
-      "y": 32,
-      "w": 86,
-      "h": 89
+      "x": 69,
+      "y": 33,
+      "w": 92,
+      "h": 95
     },
     "character-hair-bob-brown": {
       "source": "src/svg/shared/character/hair-bob-brown.svg",
-      "x": 72,
-      "y": 32,
-      "w": 86,
-      "h": 89
+      "x": 69,
+      "y": 33,
+      "w": 92,
+      "h": 95
     },
     "character-hair-bob-grey": {
       "source": "src/svg/shared/character/hair-bob-grey.svg",
-      "x": 72,
-      "y": 32,
-      "w": 86,
-      "h": 89
+      "x": 69,
+      "y": 33,
+      "w": 92,
+      "h": 95
     },
     "character-hair-bob-red": {
       "source": "src/svg/shared/character/hair-bob-red.svg",
-      "x": 72,
-      "y": 32,
-      "w": 86,
-      "h": 89
+      "x": 69,
+      "y": 33,
+      "w": 92,
+      "h": 95
     },
     "character-hair-coil-black": {
       "source": "src/svg/shared/character/hair-coil-black.svg",
-      "x": 75,
+      "x": 70,
       "y": 29,
-      "w": 84,
-      "h": 64
+      "w": 89,
+      "h": 81
     },
     "character-hair-coil-blond": {
       "source": "src/svg/shared/character/hair-coil-blond.svg",
-      "x": 75,
+      "x": 70,
       "y": 29,
-      "w": 84,
-      "h": 64
+      "w": 89,
+      "h": 81
     },
     "character-hair-coil-brown": {
       "source": "src/svg/shared/character/hair-coil-brown.svg",
-      "x": 75,
+      "x": 70,
       "y": 29,
-      "w": 84,
-      "h": 64
+      "w": 89,
+      "h": 81
     },
     "character-hair-coil-grey": {
       "source": "src/svg/shared/character/hair-coil-grey.svg",
-      "x": 75,
+      "x": 70,
       "y": 29,
-      "w": 84,
-      "h": 64
+      "w": 89,
+      "h": 81
     },
     "character-hair-coil-red": {
       "source": "src/svg/shared/character/hair-coil-red.svg",
-      "x": 75,
+      "x": 70,
       "y": 29,
-      "w": 84,
-      "h": 64
+      "w": 89,
+      "h": 81
     },
     "character-hair-crop-black": {
       "source": "src/svg/shared/character/hair-crop-black.svg",
-      "x": 79,
-      "y": 36,
-      "w": 78,
-      "h": 55
+      "x": 77,
+      "y": 34,
+      "w": 84,
+      "h": 73
     },
     "character-hair-crop-blond": {
       "source": "src/svg/shared/character/hair-crop-blond.svg",
-      "x": 79,
-      "y": 36,
-      "w": 78,
-      "h": 55
+      "x": 77,
+      "y": 34,
+      "w": 84,
+      "h": 73
     },
     "character-hair-crop-brown": {
       "source": "src/svg/shared/character/hair-crop-brown.svg",
-      "x": 79,
-      "y": 36,
-      "w": 78,
-      "h": 55
+      "x": 77,
+      "y": 34,
+      "w": 84,
+      "h": 73
     },
     "character-hair-crop-grey": {
       "source": "src/svg/shared/character/hair-crop-grey.svg",
-      "x": 79,
-      "y": 36,
-      "w": 78,
-      "h": 55
+      "x": 77,
+      "y": 34,
+      "w": 84,
+      "h": 73
     },
     "character-hair-crop-red": {
       "source": "src/svg/shared/character/hair-crop-red.svg",
-      "x": 79,
-      "y": 36,
-      "w": 78,
-      "h": 55
+      "x": 77,
+      "y": 34,
+      "w": 84,
+      "h": 73
     },
     "character-hair-long-black": {
       "source": "src/svg/shared/character/hair-long-black.svg",
-      "x": 70,
-      "y": 29,
-      "w": 86,
-      "h": 125
+      "x": 62,
+      "y": 34,
+      "w": 99,
+      "h": 136
     },
     "character-hair-long-blond": {
       "source": "src/svg/shared/character/hair-long-blond.svg",
-      "x": 70,
-      "y": 29,
-      "w": 86,
-      "h": 125
+      "x": 62,
+      "y": 34,
+      "w": 99,
+      "h": 136
     },
     "character-hair-long-brown": {
       "source": "src/svg/shared/character/hair-long-brown.svg",
-      "x": 70,
-      "y": 29,
-      "w": 86,
-      "h": 125
+      "x": 62,
+      "y": 34,
+      "w": 99,
+      "h": 136
     },
     "character-hair-long-grey": {
       "source": "src/svg/shared/character/hair-long-grey.svg",
-      "x": 70,
-      "y": 29,
-      "w": 86,
-      "h": 125
+      "x": 62,
+      "y": 34,
+      "w": 99,
+      "h": 136
     },
     "character-hair-long-red": {
       "source": "src/svg/shared/character/hair-long-red.svg",
-      "x": 70,
-      "y": 29,
-      "w": 86,
-      "h": 125
+      "x": 62,
+      "y": 34,
+      "w": 99,
+      "h": 136
     },
     "character-hand-beaver": {
       "source": "src/svg/shared/character/hand-beaver.svg",
-      "x": 108,
-      "y": 273,
-      "w": 49,
-      "h": 49
+      "x": 103,
+      "y": 271,
+      "w": 59,
+      "h": 62
     },
     "character-hand-parka": {
       "source": "src/svg/shared/character/hand-parka.svg",
-      "x": 108,
-      "y": 273,
-      "w": 49,
-      "h": 49
+      "x": 103,
+      "y": 270,
+      "w": 59,
+      "h": 63
     },
     "character-hand-serge": {
       "source": "src/svg/shared/character/hand-serge.svg",
-      "x": 108,
-      "y": 273,
-      "w": 49,
-      "h": 49
+      "x": 103,
+      "y": 267,
+      "w": 59,
+      "h": 66
     },
     "character-hat-serge": {
       "source": "src/svg/shared/character/hat-serge.svg",
-      "x": 77,
-      "y": 13,
-      "w": 97,
+      "x": 68,
+      "y": 2,
+      "w": 120,
       "h": 61
     },
     "character-head-covering-toque": {
       "source": "src/svg/shared/character/head-covering-toque.svg",
       "x": 67,
-      "y": 3,
-      "w": 98,
-      "h": 80
+      "y": 0,
+      "w": 109,
+      "h": 89
     },
     "character-head-shell-beaver": {
       "source": "src/svg/shared/character/head-shell-beaver.svg",
-      "x": 75,
-      "y": 26,
-      "w": 105,
-      "h": 115
+      "x": 66,
+      "y": 24,
+      "w": 116,
+      "h": 130
     },
     "character-head-skin-1": {
       "source": "src/svg/shared/character/head-skin-1.svg",
-      "x": 75,
-      "y": 39,
-      "w": 92,
-      "h": 89
+      "x": 78,
+      "y": 40,
+      "w": 93,
+      "h": 88
     },
     "character-head-skin-2": {
       "source": "src/svg/shared/character/head-skin-2.svg",
-      "x": 75,
-      "y": 39,
-      "w": 92,
-      "h": 89
+      "x": 78,
+      "y": 40,
+      "w": 93,
+      "h": 88
     },
     "character-head-skin-3": {
       "source": "src/svg/shared/character/head-skin-3.svg",
-      "x": 75,
-      "y": 39,
-      "w": 92,
-      "h": 89
+      "x": 78,
+      "y": 40,
+      "w": 93,
+      "h": 88
     },
     "character-head-skin-4": {
       "source": "src/svg/shared/character/head-skin-4.svg",
-      "x": 75,
-      "y": 39,
-      "w": 92,
-      "h": 89
+      "x": 78,
+      "y": 40,
+      "w": 93,
+      "h": 88
     },
     "character-head-skin-5": {
       "source": "src/svg/shared/character/head-skin-5.svg",
-      "x": 75,
-      "y": 39,
-      "w": 92,
-      "h": 89
+      "x": 78,
+      "y": 40,
+      "w": 93,
+      "h": 88
     },
     "character-head-skin-6": {
       "source": "src/svg/shared/character/head-skin-6.svg",
-      "x": 75,
-      "y": 39,
-      "w": 92,
-      "h": 89
+      "x": 78,
+      "y": 40,
+      "w": 93,
+      "h": 88
     },
     "character-leg-lower-beaver": {
       "source": "src/svg/shared/character/leg-lower-beaver.svg",
-      "x": 110,
-      "y": 349,
-      "w": 41,
-      "h": 98
+      "x": 108,
+      "y": 358,
+      "w": 48,
+      "h": 99
     },
     "character-leg-lower-parka": {
       "source": "src/svg/shared/character/leg-lower-parka.svg",
-      "x": 110,
-      "y": 349,
-      "w": 41,
-      "h": 98
+      "x": 107,
+      "y": 358,
+      "w": 50,
+      "h": 99
     },
     "character-leg-lower-serge": {
       "source": "src/svg/shared/character/leg-lower-serge.svg",
       "x": 110,
-      "y": 349,
-      "w": 41,
+      "y": 358,
+      "w": 44,
       "h": 98
     },
     "character-leg-upper-beaver": {
       "source": "src/svg/shared/character/leg-upper-beaver.svg",
-      "x": 109,
-      "y": 247,
-      "w": 46,
-      "h": 140
+      "x": 104,
+      "y": 239,
+      "w": 56,
+      "h": 147
     },
     "character-leg-upper-parka": {
       "source": "src/svg/shared/character/leg-upper-parka.svg",
-      "x": 109,
-      "y": 247,
-      "w": 46,
-      "h": 140
+      "x": 107,
+      "y": 242,
+      "w": 50,
+      "h": 144
     },
     "character-leg-upper-serge": {
       "source": "src/svg/shared/character/leg-upper-serge.svg",
-      "x": 109,
-      "y": 247,
-      "w": 46,
-      "h": 140
+      "x": 102,
+      "y": 242,
+      "w": 60,
+      "h": 142
     },
     "character-mount-deck-bike": {
       "source": "src/svg/shared/character/mount-deck-bike.svg",
@@ -13409,73 +13409,73 @@
     },
     "character-neck-skin-1": {
       "source": "src/svg/shared/character/neck-skin-1.svg",
-      "x": 101,
-      "y": 104,
-      "w": 38,
-      "h": 35
+      "x": 102,
+      "y": 100,
+      "w": 36,
+      "h": 46
     },
     "character-neck-skin-2": {
       "source": "src/svg/shared/character/neck-skin-2.svg",
-      "x": 101,
-      "y": 104,
-      "w": 38,
-      "h": 35
+      "x": 102,
+      "y": 100,
+      "w": 36,
+      "h": 46
     },
     "character-neck-skin-3": {
       "source": "src/svg/shared/character/neck-skin-3.svg",
-      "x": 101,
-      "y": 104,
-      "w": 38,
-      "h": 35
+      "x": 102,
+      "y": 100,
+      "w": 36,
+      "h": 46
     },
     "character-neck-skin-4": {
       "source": "src/svg/shared/character/neck-skin-4.svg",
-      "x": 101,
-      "y": 104,
-      "w": 38,
-      "h": 35
+      "x": 102,
+      "y": 100,
+      "w": 36,
+      "h": 46
     },
     "character-neck-skin-5": {
       "source": "src/svg/shared/character/neck-skin-5.svg",
-      "x": 101,
-      "y": 104,
-      "w": 38,
-      "h": 35
+      "x": 102,
+      "y": 100,
+      "w": 36,
+      "h": 46
     },
     "character-neck-skin-6": {
       "source": "src/svg/shared/character/neck-skin-6.svg",
-      "x": 101,
-      "y": 104,
-      "w": 38,
-      "h": 35
+      "x": 102,
+      "y": 100,
+      "w": 36,
+      "h": 46
     },
     "character-tail-beaver": {
       "source": "src/svg/shared/character/tail-beaver.svg",
-      "x": 22,
-      "y": 281,
-      "w": 84,
-      "h": 141
+      "x": 20,
+      "y": 280,
+      "w": 89,
+      "h": 145
     },
     "character-torso-beaver": {
       "source": "src/svg/shared/character/torso-beaver.svg",
       "x": 62,
-      "y": 123,
-      "w": 114,
-      "h": 187
+      "y": 126,
+      "w": 116,
+      "h": 208
     },
     "character-torso-parka": {
       "source": "src/svg/shared/character/torso-parka.svg",
-      "x": 68,
-      "y": 120,
-      "w": 109,
-      "h": 194
+      "x": 65,
+      "y": 116,
+      "w": 110,
+      "h": 214
     },
     "character-torso-serge": {
       "source": "src/svg/shared/character/torso-serge.svg",
-      "x": 70,
-      "y": 124,
+      "x": 67,
+      "y": 126,
       "w": 106,
-      "h": 178
+      "h": 179
     }
   }
 }

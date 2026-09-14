@@ -1,12 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="84" height="64" viewBox="75 29 84 64" shape-rendering="geometricPrecision">
-  <title>Hair, a rounded coil worn close, full at the crown and full behind, ramp hair-blond. Three-quarter view: the mass sits BEHIND the face plane and reaches lower at the back than at the front, and the fringe sweeps forward to clear the brow line - hair draws over the head and under the face, and a symmetric cap reads as a front view whatever the head under it is doing. Shape and colour are independent slots: every shape is offered with every colour and with every skin tone.</title>
-  <g transform="matrix(0.9 0 0 0.9 12 12.1)">
-  
-  <path d="M 76,86 C 67,54 85,22 116,22 C 146,22 161,46 160,72 C 156,60 151,51 142,47 C 127,40 106,47 94,60 C 86,70 80,78 76,86 Z" fill="#d2ae55" stroke="#3a2018" stroke-width="6.667" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="hr-coil"><path d="M 76,86 C 67,54 85,22 116,22 C 146,22 161,46 160,72 C 156,60 151,51 142,47 C 127,40 106,47 94,60 C 86,70 80,78 76,86 Z"/></clipPath></defs>
-  <g clip-path="url(#hr-coil)">
-    <ellipse cx="94" cy="36" rx="25" ry="21" fill="#decc96"/>
-    <ellipse cx="79" cy="78" rx="13" ry="15" fill="#a66c30"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="89" height="81" viewBox="70 29 89 81" shape-rendering="geometricPrecision">
+  <title>Hair, rounded coils worn close, drawn as a scalloped silhouette over the crown and the back, never as a texture fill, ramp hair-blond. Three-quarter: the mass sits behind the face plane, the ear stays clear and the fringe stops inside the forehead so the face is the leading edge. Shape and colour are independent slots.</title>
+  <path d="M 86.69,95.16 A 7.33 7.33 0 0 1 79.86,83.73 A 7.12 7.12 0 0 1 78.07,70.91 A 7.16 7.16 0 0 1 81.54,58.36 A 7.43 7.43 0 0 1 89.84,47.69 A 7.78 7.78 0 0 1 101.89,40.28 A 8.03 8.03 0 0 1 116.14,37.09 A 8.08 8.08 0 0 1 130.76,38.51 A 7.9 7.9 0 0 1 143.86,44.38 A 7.57 7.57 0 0 1 153.77,53.92 C 157,58 152,60 144,61 C 131,63 119,69 112,78 C 106,79 100,80 97,85 C 95,92 94,98 93,104 C 91,107 87,106 86,103 Z" fill="#d2ae55"/>
+  <defs><clipPath id="hr"><path d="M 86.69,95.16 A 7.33 7.33 0 0 1 79.86,83.73 A 7.12 7.12 0 0 1 78.07,70.91 A 7.16 7.16 0 0 1 81.54,58.36 A 7.43 7.43 0 0 1 89.84,47.69 A 7.78 7.78 0 0 1 101.89,40.28 A 8.03 8.03 0 0 1 116.14,37.09 A 8.08 8.08 0 0 1 130.76,38.51 A 7.9 7.9 0 0 1 143.86,44.38 A 7.57 7.57 0 0 1 153.77,53.92 C 157,58 152,60 144,61 C 131,63 119,69 112,78 C 106,79 100,80 97,85 C 95,92 94,98 93,104 C 91,107 87,106 86,103 Z"/></clipPath></defs>
+  <g clip-path="url(#hr)">
+    <ellipse cx="100" cy="46" rx="24" ry="12" fill="#decc96"/>
+    <ellipse cx="86" cy="98" rx="12" ry="14" fill="#a66c30"/>
+    <path d="M 86.69,95.16 A 7.33 7.33 0 0 1 79.86,83.73 A 7.12 7.12 0 0 1 78.07,70.91 A 7.16 7.16 0 0 1 81.54,58.36 A 7.43 7.43 0 0 1 89.84,47.69 A 7.78 7.78 0 0 1 101.89,40.28 A 8.03 8.03 0 0 1 116.14,37.09 A 8.08 8.08 0 0 1 130.76,38.51 A 7.9 7.9 0 0 1 143.86,44.38 A 7.57 7.57 0 0 1 153.77,53.92 C 157,58 152,60 144,61 C 131,63 119,69 112,78 C 106,79 100,80 97,85 C 95,92 94,98 93,104 C 91,107 87,106 86,103 Z" fill="none" stroke="#d2ae55" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-</g>
+  <path d="M 86.69,95.16 A 7.33 7.33 0 0 1 79.86,83.73 A 7.12 7.12 0 0 1 78.07,70.91 A 7.16 7.16 0 0 1 81.54,58.36 A 7.43 7.43 0 0 1 89.84,47.69 A 7.78 7.78 0 0 1 101.89,40.28 A 8.03 8.03 0 0 1 116.14,37.09 A 8.08 8.08 0 0 1 130.76,38.51 A 7.9 7.9 0 0 1 143.86,44.38 A 7.57 7.57 0 0 1 153.77,53.92 C 157,58 152,60 144,61 C 131,63 119,69 112,78 C 106,79 100,80 97,85 C 95,92 94,98 93,104 C 91,107 87,106 86,103 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

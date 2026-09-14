@@ -1,10 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="38" height="35" viewBox="101 104 38 35" shape-rendering="geometricPrecision">
-  <title>Neck, skin ramp 6, three-quarter view facing right. A CYLINDER, not a rectangle: the leading edge carries the ramp's shade and the trailing edge its light. Its own part, drawn below the torso, so the collar closes over its base and the head over its top. 26 px of skin inside a 38 px ink outer: 0.37 of the head's width, where the old 22 px column under a larger head read as a stalk. Length is measured, not chosen: art-bible.md 7.3.</title>
-  <path d="M 104,114 C 104,104 136,104 136,114 L 136,128 C 136,138 104,138 104,128 Z" fill="#553018" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <defs><clipPath id="nk6"><path d="M 104,114 C 104,104 136,104 136,114 L 136,128 C 136,138 104,138 104,128 Z"/></clipPath></defs>
-  <g clip-path="url(#nk6)">
-    <path d="M 98,102 L 112,102 C 109,118 108,132 109,152 L 98,152 Z" fill="#865f33"/>
-    <path d="M 129,102 L 142,102 L 142,152 L 130,152 C 132,132 131,118 129,102 Z" fill="#1d0f0b"/>
-    <ellipse cx="120" cy="108" rx="22" ry="9" fill="#16203a" opacity="0.18"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="46" viewBox="102 100 36 46" shape-rendering="geometricPrecision">
+  <title>Neck, skin ramp 6. Its own part below the torso so the scarf or collar closes over its base and the jaw over its top. Lit trailing edge, shade on the leading edge, never touching the ink.</title>
+  <path d="M 106,110 C 106,102 134,102 134,110 L 134,136 C 134,144 106,144 106,136 Z" fill="#553018"/>
+  <defs><clipPath id="nk"><path d="M 106,110 C 106,102 134,102 134,110 L 134,136 C 134,144 106,144 106,136 Z"/></clipPath></defs>
+  <g clip-path="url(#nk)">
+    <path d="M 123,96 L 146,96 L 146,150 L 125,150 C 127,132 126,114 123,96 Z" fill="#1d0f0b"/>
+    <ellipse cx="120" cy="106" rx="22" ry="9" fill="#16203a" opacity="0.18"/>
+    <path d="M 106,110 C 106,102 134,102 134,110 L 134,136 C 134,144 106,144 106,136 Z" fill="none" stroke="#553018" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
+  <path d="M 106,110 C 106,102 134,102 134,110 L 134,136 C 134,144 106,144 106,136 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
