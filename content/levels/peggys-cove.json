@@ -249,11 +249,11 @@
           "quote": "Nova Scotia is the most populous Atlantic Province, with a rich history as the gateway to Canada. Known for the world’s highest tides in the Bay of Fundy, the province’s identity is linked to shipbuilding, fisheries and shipping."
         },
         "verification": {
-          "status": "rejected",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T23:57:11Z",
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-14T00:26:48Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "THE ATLANTIC PROVINCES Atlantic Canada’s coasts and natural resources, including fishing, farming, forestry and mining, have made these provinces an important part of Canada’s history and development. … Nova Scotia is the most populous Atlantic Province, with a rich history as the gateway to Canada. … The Acadians are the descendants of French colonists who began settling in what are now the Maritime provinces in 1604."
+          "evidence": "Nova Scotia is the most populous Atlantic Province, with a rich history as the gateway to Canada. Known for the world’s highest tides in the Bay of Fundy, the province’s identity is linked to shipbuilding, fisheries and shipping."
         }
       },
       "position": {
