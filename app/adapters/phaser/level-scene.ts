@@ -639,10 +639,8 @@ export class LevelScene extends Phaser.Scene {
       level.locomotion.flatMap((tuning) =>
         [
           tuning.animation.speedInput,
-          tuning.animation.airborneInput,
           tuning.animation.jumpTrigger,
           tuning.animation.landTrigger,
-          tuning.animation.brakeTrigger,
         ].filter((name): name is string => name !== undefined),
       ),
     );
@@ -650,10 +648,11 @@ export class LevelScene extends Phaser.Scene {
       console.error(
         `[level] this level's locomotion animation binding names ${unbound.join(', ')}, which ` +
           `content/characters/rig.json does not declare as state-machine inputs. Those states ` +
-          `can never be entered. The rig owns the vocabulary (ADR-0017) and no gate joins a ` +
-          `level's binding to it; the scene drives only what the rig declares. The binding is ` +
-          `not what animates a mode either — see locomotion-pose.ts; it names inputs, and every ` +
-          `shipped level names the same five.`,
+          `can never be entered. The rig owns the vocabulary (ADR-0017), and ` +
+          `tests/unit/contracts/a-level-binds-only-what-the-rig-declares.test.ts holds every ` +
+          `shipped level to it, so this is a document CI never saw; the scene drives only what ` +
+          `the rig declares. The binding is not what animates a mode either — see ` +
+          `locomotion-pose.ts; it names inputs, and every shipped level names the same three.`,
       );
     }
 

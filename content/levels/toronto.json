@@ -170,8 +170,7 @@
         "approachSpeed": 110
       },
       "animation": {
-        "speedInput": "speed",
-        "brakeTrigger": "brake"
+        "speedInput": "speed"
       },
       "labelKey": "locomotion.bike.label"
     }

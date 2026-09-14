@@ -693,7 +693,7 @@ Two smaller notes for the architect, recorded rather than assumed:
 | `OQ-RIG-1` | A character's whole option library is charged to **every** level's decoded-texture budget, because the atlas is one texture. The player wears one combination and pays for 5 760 of them and for four levels' equipment. Fixing it is a pipeline change — per-option standalone images loaded on demand — and it is the single biggest lever on this budget after the landmark. **The `{mode}` equipment made this worse and made it measurable**: Halifax walks and pays 2.47 MiB for a canal skate, a Dufferin toboggan, a seawall board and a waterfront bicycle it will never draw. | infra |
 | `OQ-RIG-2` | **A horse is not drawn.** §11.5 has the reasoning and the numbers. It is the one locomotion mode in `game.config.json` whose art this contract cannot hold. | PO / infra |
 | `OQ-RIG-3` | **`train` has no equipment and no pose.** §11.5. A seated passenger needs a bench under them, and a bench is level furniture, not rig equipment. | PO |
-| `OQ-RIG-4` | `locomotion[].animation.brakeTrigger` and `.airborneInput` name `brake` and `airborne`; the rig declares neither, so both bindings are dead. §11.6 says exactly what each would cost. | engine / art |
+| `OQ-RIG-4` | **A brake is not drawn.** The dead `brakeTrigger` and `airborneInput` bindings left the level schema on 2026-09-14 (§11.6); what stays open is whether the rig gets a `brake` trigger and pose. §11.6 says what it would cost. | engine / art |
 
 ---
 
@@ -908,15 +908,19 @@ for every mode any level rides.
 
 ### 11.6 `airborne` and `brake` — the two bindings that name nothing
 
-`level.schema.json`'s `locomotionAnimationBinding` lets a level name `airborneInput` and `brakeTrigger`, and
-the levels name `airborne` and `brake`. **The rig declares neither**, so both bindings are dead, which
-`character-cast.ts#unboundAnimationInputs` already reports at every level open.
+`level.schema.json`'s `locomotionAnimationBinding` let a level name `airborneInput` and `brakeTrigger`, and
+every level named `airborne` and `brake`. **The rig declares neither**, so both bindings were dead, and
+`character-cast.ts#unboundAnimationInputs` logged them at every level open. **Both fields were removed from
+the schema, the port and all ten levels on 2026-09-14**: nothing read either one, and
+`tests/unit/contracts/a-level-binds-only-what-the-rig-declares.test.ts` now holds every name a binding still
+gives to an input the rig declares, of the type its field drives.
 
 - **`airborne` should not be added.** It is `grounded` inverted, and two bool inputs that are each other's
-  negation is a defect waiting for the one frame they disagree. The fix belongs on the other side: the level
-  binding should name `grounded`, or the engine should map `airborneInput` to `grounded` and invert. Adding
-  it here would make the contract wrong in a way no test can see.
-- **`brake` should be added, and it is a real pose.** A hockey stop on the canal and a foot-drag on the
+  negation is a defect waiting for the one frame they disagree. The fix belonged on the other side, and
+  renaming the binding to name `grounded` would have been a field with no reader; the scene already drives
+  `grounded` by the rig's own name. Adding it here would make the contract wrong in a way no test can see.
+- **`brake` should be added, and it is a real pose.** When it is, the level binding comes back with it, as a
+  trigger the contract test above can check. A hockey stop on the canal and a foot-drag on the
   seawall are the two most characteristic things either mode does, and both die with the trigger. It costs:
   one `trigger` input on the state machine, one selector rule above `jump-rise` naming a new base state
   `brake`, a `<mode>/brake` pose per mode that has one, and **a rebuilt `rig-contract.riv`** — §8's fixture

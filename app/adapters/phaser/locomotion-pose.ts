@@ -15,20 +15,23 @@
  *
  * `level.schema.json#/$defs/locomotionAnimationBinding` looks like the place
  * this belongs, and it is not. It binds **input names** — `speedInput`,
- * `airborneInput`, `jumpTrigger`, `landTrigger`, `brakeTrigger` — and an input
- * name cannot say what a skater looks like. Read the eight shipped documents and
- * the point makes itself: every binding is the same five names, except that the
- * two modes with no jump omit three of them. A field whose value is identical
- * across every level that differs cannot be what makes them differ.
+ * `jumpTrigger`, `landTrigger` — and an input name cannot say what a skater
+ * looks like. Read the shipped documents and the point makes itself: every
+ * binding is the same three names, except that the modes with no jump omit two
+ * of them. A field whose value is identical across every level that differs
+ * cannot be what makes them differ.
  *
- * It is also two-fifths dead. `airborne` and `brake` are not in the rig's
- * `stateMachine.inputs` — the rig declares `grounded`, not its negation, and has
- * no brake at all — so `character-cast.ts#unboundAnimationInputs` reports them
- * at every level open and the scene drives only what the rig declares. Nothing
- * else reads the binding. It is a feature declared in content and implemented
- * nowhere, and this module does not revive it: the mode's *name* is what reaches
- * the rig, because the mode's name is the only thing in the document that
- * actually varies with how the player is drawn.
+ * It was also two-fifths dead. `airborneInput` and `brakeTrigger` bound
+ * `airborne` and `brake`, which are not in the rig's `stateMachine.inputs` — the
+ * rig declares `grounded`, not its negation, and has no brake at all — so every
+ * level logged them at open. Both fields left the schema on 2026-09-14, and
+ * `tests/unit/contracts/a-level-binds-only-what-the-rig-declares.test.ts` holds
+ * what remains to the rig. Nothing reads the binding beyond
+ * `character-cast.ts#unboundAnimationInputs`, and the scene drives only what the
+ * rig declares. It is a feature declared in content and implemented nowhere,
+ * and this module does not revive it: the mode's *name* is what reaches the rig,
+ * because the mode's name is the only thing in the document that actually
+ * varies with how the player is drawn.
  *
  * ## The mechanism, in the rig's own existing vocabulary
  *

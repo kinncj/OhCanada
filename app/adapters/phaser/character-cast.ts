@@ -180,9 +180,9 @@ export function drivableInputs(rig: RigDocument | null | undefined): {
  *
  * **This is a real boundary defect and it is reported rather than worked
  * around.** `level.schema.json` lets a level name the rig inputs its mode
- * drives — `speedInput`, `airborneInput`, `jumpTrigger`, `landTrigger`,
- * `brakeTrigger` — and nothing checks those names against
- * `content/characters/rig.json`. ADR-0017 §1 says the rig owns the vocabulary
+ * drives — `speedInput`, `jumpTrigger`, `landTrigger` — and nothing in the
+ * document checks those names against `content/characters/rig.json`. ADR-0017 §1
+ * says the rig owns the vocabulary
  * and a character selects from it; the level document is a third party selecting
  * from a vocabulary nobody joins it to.
  *
@@ -192,10 +192,11 @@ export function drivableInputs(rig: RigDocument | null | undefined): {
  * cannot usefully read. So the scene calls this once at create, logs what does
  * not join, and then drives only what the rig declares.
  *
- * The durable fix is a content-side gate — the same shape as
- * `locomotion-tuning-is-coherent.test.ts` — asserting every animation binding
- * name against the rig's `stateMachine.inputs`. That is not this directory's to
- * write.
+ * The durable fix is the content-side gate
+ * `tests/unit/contracts/a-level-binds-only-what-the-rig-declares.test.ts`, which
+ * holds every binding name in `content/levels/` to the rig's
+ * `stateMachine.inputs` and to the input type its field drives. This report stays
+ * as the runtime half, for a document CI never saw.
  */
 export function unboundAnimationInputs(
   rig: RigDocument | null | undefined,

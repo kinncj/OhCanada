@@ -156,12 +156,9 @@ export interface LocomotionTuning {
 export interface LocomotionAnimationBinding {
   /** Number input fed normalised speed (0–1). */
   readonly speedInput: string;
-  /** Bool input set while airborne. Absent when the mode cannot jump. */
-  readonly airborneInput?: string;
-  /** Trigger fired on take-off, on landing, and on a hard stop. */
+  /** Trigger inputs fired at take-off and on ground contact. Absent when the mode cannot jump. */
   readonly jumpTrigger?: string;
   readonly landTrigger?: string;
-  readonly brakeTrigger?: string;
 }
 
 /** Movement state, expressed in design-resolution units. Plain data, no entity refs. */

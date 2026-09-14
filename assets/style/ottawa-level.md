@@ -464,8 +464,9 @@ What this level owes the rig, and what the rig owes it:
 - **The player now matches the four background skaters in `layer-50-canalwall.svg`.** They have always been
   in glide stance — torso pitched, one leg trailing, a dark blade under the boot — and the player arriving
   in a walk cycle was the visible seam. The player's pitch is 24°, theirs is about 25.
-- **The one thing this level should still be given is a brake.** `content/levels/ottawa.json` binds
-  `brakeTrigger: "brake"`; the rig declares no such input and the binding is dead. A hockey stop throwing
+- **The one thing this level should still be given is a brake.** `content/levels/ottawa.json` bound
+  `brakeTrigger: "brake"` to an input the rig does not declare, and the dead field left the level schema on
+  2026-09-14. A hockey stop throwing
   snow is the most characteristic thing anyone does on that ice. `rig-contract.md` §11.6 costs it out.
 
 

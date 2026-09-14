@@ -428,14 +428,12 @@
 
     "locomotionAnimationBinding": {
       "title": "Locomotion animation binding",
-      "description": "Character state-machine inputs this mode drives. The names must exist on the character's rig; slice 1 task 1.11's contract test asserts that against the .riv.",
+      "description": "Character state-machine inputs this mode drives. Every name must be an input content/characters/rig.json declares, of the type its field names: tests/unit/contracts/a-level-binds-only-what-the-rig-declares.test.ts holds every level to that. `airborneInput` and `brakeTrigger` were removed on 2026-09-14: every level bound them to `airborne` and `brake`, the rig declares `grounded` (not its negation) and no brake, nothing read either field, and every level logged the two names at open (assets/style/rig-contract.md section 11.6).",
       "type": "object",
       "properties": {
         "speedInput": { "description": "Number input fed normalised speed (0-1).", "type": "string", "minLength": 1 },
-        "airborneInput": { "description": "Bool input set while airborne. Absent when the mode cannot jump.", "type": "string", "minLength": 1 },
-        "jumpTrigger": { "type": "string", "minLength": 1 },
-        "landTrigger": { "type": "string", "minLength": 1 },
-        "brakeTrigger": { "type": "string", "minLength": 1 }
+        "jumpTrigger": { "description": "Trigger input fired at take-off. Absent when the mode cannot jump.", "type": "string", "minLength": 1 },
+        "landTrigger": { "description": "Trigger input fired on ground contact. Absent when the mode cannot jump.", "type": "string", "minLength": 1 }
       },
       "required": ["speedInput"],
       "additionalProperties": false

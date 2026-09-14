@@ -180,10 +180,8 @@
       },
       "animation": {
         "speedInput": "speed",
-        "airborneInput": "airborne",
         "jumpTrigger": "jump",
-        "landTrigger": "land",
-        "brakeTrigger": "brake"
+        "landTrigger": "land"
       },
       "labelKey": "locomotion.skateboard.label"
     },
@@ -212,10 +210,8 @@
       },
       "animation": {
         "speedInput": "speed",
-        "airborneInput": "airborne",
         "jumpTrigger": "jump",
-        "landTrigger": "land",
-        "brakeTrigger": "brake"
+        "landTrigger": "land"
       },
       "labelKey": "locomotion.walk.label"
     }

@@ -175,8 +175,7 @@
         "approachSpeed": 0
       },
       "animation": {
-        "speedInput": "speed",
-        "brakeTrigger": "brake"
+        "speedInput": "speed"
       },
       "labelKey": "locomotion.train.label"
     },
@@ -205,10 +204,8 @@
       },
       "animation": {
         "speedInput": "speed",
-        "airborneInput": "airborne",
         "jumpTrigger": "jump",
-        "landTrigger": "land",
-        "brakeTrigger": "brake"
+        "landTrigger": "land"
       },
       "labelKey": "locomotion.walk.label"
     }

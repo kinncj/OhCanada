@@ -524,7 +524,7 @@ function readAnimation(raw: unknown, where: string): Result<LocomotionTuning['an
     return invalid(`${where}.speedInput`, `"${where}.speedInput" must name a rig input.`);
   }
   const binding: { -readonly [K in keyof LocomotionTuning['animation']]: string } = { speedInput };
-  for (const field of ['airborneInput', 'jumpTrigger', 'landTrigger', 'brakeTrigger'] as const) {
+  for (const field of ['jumpTrigger', 'landTrigger'] as const) {
     const value = raw[field];
     if (value === undefined) continue;
     if (typeof value !== 'string' || value.length === 0) {
