@@ -170,3 +170,54 @@ recorded because "it was already like that" is not a decision.
   `UNMASKED_RENDERER_WEBGL` string is read, reduced to one of three words, and discarded — it is never
   written to the DOM. Publishing the raw string would add a fingerprinting surface to a site that collects
   nothing (CLAUDE.md, Storage), which is a different decision and would need a different ADR.
+
+## A tier's own cost decides whether it is tried again (amendment, 2026-09-14)
+
+### What broke
+
+On SwiftShader the tracker never settled. It promoted to `medium` after 71 frames and demoted after 41,
+forever. That is the Decision's own sequencing, not a device wobbling on a threshold: promotion was judged on
+frames drawn at `low` and demotion on frames drawn at `medium`, which draws about four times the pixels on the
+perf suite's phone viewport. No threshold measured at one tier predicts the cost of another, so more
+hysteresis on the same rule would only slow the cycle down.
+
+### What replaces "promote only after two agreeing ones"
+
+- **Demotion is unchanged:** the first window that is too slow. The thresholds are unchanged too, so the
+  device lane's allowances still hold.
+- **Promotion needs consecutive good windows:** 2 to begin with, doubled for every earlier demotion out of the
+  tier being tried, capped at 2 × 2¹⁰. The count restarts at every tier change, which is the cool-down.
+- **A tier that fails twice is closed for the session.** A failure is a demotion within 20 windows of entering
+  the tier. A reload measures from scratch, so a closed tier is never a permanent verdict on a device.
+- **A tier that held and later stalls is not a failure.** It drops at once and is retried after twice the
+  previous wait, and is never closed that way.
+- **Building a level resets the measurement**, as a resize or a resume already did. A wrong demotion now
+  counts towards closing a tier, so load frames must not be the evidence.
+
+The oscillating host now tries `medium` twice and stays at `low`. A fast machine reaches `high` on its second
+window and never meets the new rule.
+
+### The probe may pin a tier, and why that keeps the condition above
+
+`?e2e=1&tier=low|medium|high` pins the visual tier. The ratified condition was that the flag opens *nothing
+but observation*. It is restated, not dropped: **the flag opens nothing that outlives the page or reaches past
+the visitor's own rendering.** A pin writes no save, changes no content and affects no other visitor, which is
+exactly what makes a control surface on a public site harmless.
+
+- `tier` is read only behind the same check that installs the probe. Without `?e2e=1` it is ignored, and so are
+  `?e2e=0`, `?e2e=true` and malformed values (unit-tested).
+- A pin ignores the device ceiling but **still applies reduced motion**. The motion axis stays out of the
+  tracker's reach, pinned or not (e2e-tested at a pinned `high`).
+- A pinned tier is published as not measured, with `data-tier-pinned="true"`, so no report can mistake it for
+  a device's earned tier.
+
+The reason to accept it: SwiftShader never earns `high`, so without a pin the budgets that apply at `high`
+are never measured on a runner. A budget that is never measured at the tier it applies to is the failure the
+2026-09-08 amendment records.
+
+### Particles have one writer each
+
+`data-particles` is the snow actually falling, written only by the level scene from the flakes it draws, and
+reads `unknown` with no level open. `data-particle-allowance` is the tier's allowance, written only by the
+renderer. The perf suite checks the largest emitted count against 400 (phone) or 1500 (large) with the tier
+pinned at `high`.
