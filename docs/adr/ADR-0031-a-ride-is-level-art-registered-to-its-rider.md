@@ -3,6 +3,8 @@
 - Status: Accepted (2026-09-14)
 - Amended by: ADR-0037 — a ride declares a required `footprint`, the span of its art a figure beyond it is seen
   inside, so a stop can keep characters out of the glass.
+- Amended by: ADR-0035 — a ride layer may declare a `cycle` of frames, advanced by distance travelled, so the "its
+  own gait animation is still not expressible" consequence below is closed for the Alberta horse.
 
 ## Context
 
@@ -116,6 +118,6 @@ everywhere it is declared**, because its rig poses are seated.
 - **A horse is now a data change plus art.** A `behind` body, a `front` near-side leg, `turnsWithRider: true`,
   `groundLineY` at the hooves and a `bob` for the gait — and `horse/*` poses astride with the stirrups on the
   sole line. Its own gait animation is still not expressible: a ride's layers are still images. That is the
-  remaining half of `OQ-RIG-2`, stated rather than implied closed.
+  remaining half of `OQ-RIG-2`, stated rather than implied closed. *(Closed by ADR-0035: a layer's `cycle`.)*
 - **What this does not do.** A mode still cannot change mid-level, so a ride is resolved once; dismounting to
   `walk` would need the scene to re-resolve both the tuning and the ride, which it does for neither today.

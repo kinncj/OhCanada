@@ -473,10 +473,30 @@ export interface RideFootprint {
   readonly width: number;
 }
 
-/** One layer of a ride, and the side of the rider it is drawn on. */
+/**
+ * One layer of a ride, and the side of the rider it is drawn on.
+ *
+ * `key` is the layer's still: the only frame drawn under reduced motion, and the
+ * whole layer when it declares no `cycle` (ADR-0035).
+ */
 export interface RideArt {
   readonly key: string;
   readonly side: 'behind' | 'front';
+  readonly cycle?: RideCycle;
+}
+
+/**
+ * A layer's frames, advanced by distance travelled rather than by time, so the
+ * gait matches the ground going by and stops when the player stops (ADR-0035).
+ * Every frame shares the layer's size and registration.
+ */
+export interface RideCycle {
+  /** The frame drawn while the ride is not moving. */
+  readonly rest: string;
+  /** The gait, in order; at least two. */
+  readonly frames: readonly string[];
+  /** Design pixels travelled per frame. */
+  readonly framePx: number;
 }
 
 /** A vertical rock shared by the ride and its rider; zero at rest and under reduced motion. */

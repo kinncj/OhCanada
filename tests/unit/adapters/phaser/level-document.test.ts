@@ -474,6 +474,53 @@ describe('a ride is read strictly, because the schema cannot compare it with its
     expect('track' in (only ?? {})).toBe(false);
   });
 
+  /* ADR-0035: a layer may declare frames, advanced by distance. */
+  const cycle = (patch: Record<string, unknown> = {}): Record<string, unknown> => ({
+    rest: 'horse-stand',
+    frames: ['horse-walk-1', 'horse-walk-2', 'horse-walk-3', 'horse-walk-4'],
+    framePx: 60,
+    ...patch,
+  });
+  const cycled = (patch: Record<string, unknown> = {}): Record<string, unknown> =>
+    ride({ art: [{ key: 'horse-walk-1', side: 'behind', cycle: cycle(patch) }] });
+
+  it('keeps a layer`s cycle whole', () => {
+    const result = parsed({ rides: [cycled()] });
+    if (!result.ok) throw new Error(result.error.message);
+    expect(result.value.rides[0]?.art).toEqual([
+      {
+        key: 'horse-walk-1',
+        side: 'behind',
+        cycle: {
+          rest: 'horse-stand',
+          frames: ['horse-walk-1', 'horse-walk-2', 'horse-walk-3', 'horse-walk-4'],
+          framePx: 60,
+        },
+      },
+    ]);
+  });
+
+  it('omits the cycle from a layer that does not declare one', () => {
+    const result = parsed({ rides: [ride()] });
+    if (!result.ok) throw new Error(result.error.message);
+    const [layer] = result.value.rides[0]?.art ?? [];
+    expect('cycle' in (layer ?? {})).toBe(false);
+  });
+
+  it.each([
+    ['a cycle that is not an object', { rides: [ride({ art: [{ key: 'horse-walk-1', side: 'behind', cycle: [] }] })] }],
+    ['a cycle of one frame, which is a still', { rides: [cycled({ frames: ['horse-walk-1'] })] }],
+    ['a cycle with no frames', { rides: [cycled({ frames: undefined })] }],
+    ['a frame that is not a texture key', { rides: [cycled({ frames: ['horse-walk-1', 'Horse Walk 2'] })] }],
+    ['a cycle with no rest frame', { rides: [cycled({ rest: undefined })] }],
+    ['a cycle that travels no distance per frame', { rides: [cycled({ framePx: 0 })] }],
+    ['a cycle with no distance per frame', { rides: [cycled({ framePx: undefined })] }],
+  ])('rejects %s', (_label, patch) => {
+    const result = parsed(patch as Record<string, unknown>);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.kind).toBe('invalid');
+  });
+
   it.each([
     ['rides that are not a list', { rides: { mode: 'walk' } }],
     ['a ride for a mode the level never moves by', { rides: [ride({ mode: 'skate' })] }],

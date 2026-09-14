@@ -83,6 +83,7 @@ import type {
   Ride,
   RideArt,
   RideBob,
+  RideCycle,
   RideFootprint,
   RideTrack,
   ThemeColours,
@@ -598,7 +599,14 @@ function readRides(
       if (art.some((existing) => existing.side === side)) {
         return invalid(`${at}.side`, `"${where}" has two "${side}" layers; a ride has one per side.`);
       }
-      art.push({ key: key.value, side });
+      const rawCycle = layer['cycle'];
+      if (rawCycle === undefined) {
+        art.push({ key: key.value, side });
+        continue;
+      }
+      const cycle = readCycle(rawCycle, `${at}.cycle`);
+      if (!cycle.ok) return cycle;
+      art.push({ key: key.value, side, cycle: cycle.value });
     }
 
     const riderAnchor = readVec2(item, 'riderAnchor');
@@ -670,6 +678,37 @@ function readRides(
     rides.push(ride);
   }
   return ok(rides);
+}
+
+/**
+ * One ride layer's frames (ADR-0035), or why not.
+ *
+ * The schema says the same; the parser says it again because a `SceneLevel` is
+ * built from whatever reached the loader, and a cycle with one frame, or with no
+ * distance per frame, would leave `ride.ts` dividing by nothing or cycling
+ * through a single picture that looks like a still that forgot to move.
+ */
+function readCycle(raw: unknown, where: string): Result<RideCycle> {
+  if (!isRecord(raw)) return invalid(where, `"${where}" must be an object when present.`);
+  const rest = readId(raw, 'rest');
+  if (!rest.ok) return invalid(`${where}.rest`, `"${where}.rest" must be a kebab-case texture key.`);
+  const rawFrames = readArray(raw, 'frames', 2);
+  if (!rawFrames.ok) {
+    return invalid(`${where}.frames`, `"${where}.frames" needs at least two texture keys; one frame is a still.`);
+  }
+  const frames: string[] = [];
+  for (const [index, frame] of rawFrames.value.entries()) {
+    if (typeof frame !== 'string' || !ID_PATTERN.test(frame)) {
+      return invalid(
+        `${where}.frames[${String(index)}]`,
+        `"${where}.frames[${String(index)}]" must be a kebab-case texture key.`,
+      );
+    }
+    frames.push(frame);
+  }
+  const framePx = readNumber(raw, 'framePx', { exclusiveMin: 0 });
+  if (!framePx.ok) return invalid(`${where}.framePx`, framePx.error.message);
+  return ok({ rest: rest.value, frames, framePx: framePx.value });
 }
 
 /** Every landmark the level places, the ones that may teach, and the ones in reach. */

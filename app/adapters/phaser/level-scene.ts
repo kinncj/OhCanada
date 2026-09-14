@@ -7,6 +7,7 @@ import type {
   LocomotionState,
   LocomotionTuning,
   Ride,
+  RideArt,
   RigArtboard,
   RigDocument,
   ThemeColours,
@@ -73,7 +74,7 @@ import {
 } from './locomotion-pose';
 import { gestureHoldMs } from './engagement-pose';
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
-import { rideArtProblems, rideBobPx, rideFor, ridePlacement, type RideArtSize } from './ride';
+import { rideArtProblems, rideBobPx, rideFor, rideFrameKey, ridePlacement, type RideArtSize } from './ride';
 import { depthPlan, interleavedDepths, type DepthGroup, type DepthPlan } from './depth-plan';
 import { stopSubjectsFor } from './stand-off';
 import type { SceneLevel } from './level-document';
@@ -381,7 +382,8 @@ export class LevelScene extends Phaser.Scene {
    * saw before a ride existed.
    */
   readonly #ride: Ride | null;
-  #rideArt: { readonly object: Phaser.GameObjects.Image; readonly side: 'behind' | 'front' }[] = [];
+  /** Each layer's image, and the texture it shows now, so a frame is set only when it changes (ADR-0035). */
+  #rideArt: { readonly object: Phaser.GameObjects.Image; readonly layer: RideArt; shown: string }[] = [];
   #rideTrack: Phaser.GameObjects.TileSprite | null = null;
   #rideSize: RideArtSize | null = null;
   #ridesDrawn = 0;
@@ -2091,7 +2093,7 @@ export class LevelScene extends Phaser.Scene {
       this.#rideSize ??= size;
       const depth = layer.side === 'behind' ? this.#depths.rideBehind : this.#depths.rideFront;
       const object = this.add.image(0, 0, layer.key).setOrigin(0.5, 0).setDepth(depth);
-      this.#rideArt.push({ object, side: layer.side });
+      this.#rideArt.push({ object, layer, shown: layer.key });
     }
 
     if (ride.track !== undefined) {
@@ -2112,9 +2114,14 @@ export class LevelScene extends Phaser.Scene {
    * Put the ride, its track and its rider where they are this frame.
    *
    * The arithmetic is `ride.ts`'s. What is here is the frame's inputs: distance
-   * travelled for the rock, speed as a fraction of cruise, reduced motion from
-   * the tier, and any height the rider has off the ground, so a ride that can
-   * jump rises with its rider instead of leaving them in the air.
+   * travelled for the rock and the gait, speed as a fraction of cruise, reduced
+   * motion from the tier, and any height the rider has off the ground, so a ride
+   * that can jump rises with its rider instead of leaving them in the air.
+   *
+   * A layer's frame is set only when it changes, and only to a texture that
+   * loaded: a frame that did not is already a sentence and `data-rides-drawn` 0
+   * (`rideArtProblems`), and swapping to a missing key would draw Phaser's
+   * missing-texture square where the horse was.
    */
   #placeRide(dtSeconds: number): void {
     const ride = this.#ride;
@@ -2126,11 +2133,12 @@ export class LevelScene extends Phaser.Scene {
     const { level } = this.#options;
     this.#rideDistancePx += Math.abs(this.#state.velocityX) * dtSeconds;
     const groundY = groundYAt(level.ground, this.#state.x);
+    const reducedMotion = this.#profile?.motion === 'reduced';
     const bob = rideBobPx({
       bob: ride.bob,
       distancePx: this.#rideDistancePx,
       speedFraction: Math.abs(this.#state.velocityX) / this.#tuning.maxSpeed,
-      reducedMotion: this.#profile?.motion === 'reduced',
+      reducedMotion,
     });
     const placement = ridePlacement({
       ride,
@@ -2141,6 +2149,16 @@ export class LevelScene extends Phaser.Scene {
       bobPx: bob + (this.#state.y - groundY),
     });
     for (const layer of this.#rideArt) {
+      const key = rideFrameKey({
+        layer: layer.layer,
+        distancePx: this.#rideDistancePx,
+        speed: this.#state.velocityX,
+        reducedMotion,
+      });
+      if (key !== layer.shown && this.textures.exists(key)) {
+        layer.object.setTexture(key);
+        layer.shown = key;
+      }
       layer.object.setPosition(placement.centreX, placement.top);
       layer.object.setFlipX(placement.flipX);
     }

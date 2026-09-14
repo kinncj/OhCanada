@@ -32,7 +32,7 @@
  * Pure: no Phaser, no DOM, no clock. The scene hands Phaser the numbers.
  */
 
-import type { Ride, RideBob } from '@application/ports';
+import type { Ride, RideArt, RideBob } from '@application/ports';
 
 /** A loaded texture's size, in design pixels (ride art ships pinned to 1x). */
 export interface RideArtSize {
@@ -153,6 +153,55 @@ export function rideBobPx(input: RideBobInput): number {
 }
 
 /**
+ * Every texture one layer can draw: its still, and its cycle's rest frame and
+ * gait, each once. A cycle may name the layer's own `key` among its frames, and
+ * that is one texture, not two.
+ */
+export function rideLayerKeys(layer: RideArt): readonly string[] {
+  if (layer.cycle === undefined) return [layer.key];
+  return [...new Set([layer.key, layer.cycle.rest, ...layer.cycle.frames])];
+}
+
+export interface RideFrameInput {
+  readonly layer: RideArt;
+  /** Distance travelled so far, design pixels — the same count the rock reads. */
+  readonly distancePx: number;
+  /** Horizontal speed this frame, px/s; the sign is ignored. Zero, or not a number, is at rest. */
+  readonly speed: number;
+  readonly reducedMotion: boolean;
+}
+
+/**
+ * The texture a ride layer draws this frame (ADR-0035).
+ *
+ * **By distance, not by time.** One frame per `framePx` travelled, counted from
+ * the same distance as the rock, so a horse's legs keep pace with the trail going
+ * by at a walk and at cruise alike, slow as the drive brakes, and never run on
+ * the spot. **At rest, `rest`**, whatever frame the ride stopped on. **Under
+ * reduced motion, the layer's `key` and nothing else**, at every speed and every
+ * distance: CLAUDE.md lists "reduced motion disables parallax easing, particles
+ * and squash-and-stretch", and legs flicking through a cycle are the same kind of
+ * movement. One frame held is the whole of the rule — a switch from a standing
+ * frame to a stride as the player sets off would itself be the motion asked
+ * away. A layer with no cycle is its `key`, which is every ride before this.
+ */
+export function rideFrameKey(input: RideFrameInput): string {
+  const { layer } = input;
+  const cycle = layer.cycle;
+  if (cycle === undefined || input.reducedMotion) return layer.key;
+  const moving = Number.isFinite(input.speed) && input.speed !== 0;
+  if (!moving) return cycle.rest;
+  const count = cycle.frames.length;
+  const period = cycle.framePx * count;
+  if (!Number.isFinite(input.distancePx) || !(period > 0)) return cycle.frames[0] ?? layer.key;
+  /* Inside one period first, so a long ride does not lose the frame to floating
+     point, and a negative count (nothing produces one) still lands on a frame. */
+  const within = ((input.distancePx % period) + period) % period;
+  const index = Math.min(count - 1, Math.floor(within / cycle.framePx));
+  return cycle.frames[index] ?? layer.key;
+}
+
+/**
  * Everything wrong with a ride's art as loaded, as sentences, or `[]`.
  *
  * `sizeOf` answers `null` for a key the texture manager does not have. Every
@@ -164,7 +213,10 @@ export function rideArtProblems(
   sizeOf: (key: string) => RideArtSize | null,
 ): readonly string[] {
   const problems: string[] = [];
-  const keys = [...ride.art.map((layer) => layer.key), ...(ride.track ? [ride.track.artKey] : [])];
+  /* Every frame of every layer, because a frame that did not load is a layer that
+     vanishes mid-stride, and a frame of another size moves the rider's seat. */
+  const artKeys = [...new Set(ride.art.flatMap((layer) => rideLayerKeys(layer)))];
+  const keys = [...artKeys, ...(ride.track ? [ride.track.artKey] : [])];
   for (const key of keys) {
     if (sizeOf(key) === null) {
       problems.push(
@@ -174,8 +226,8 @@ export function rideArtProblems(
     }
   }
 
-  const sizes = ride.art
-    .map((layer) => ({ key: layer.key, size: sizeOf(layer.key) }))
+  const sizes = artKeys
+    .map((key) => ({ key, size: sizeOf(key) }))
     .filter((entry): entry is { key: string; size: RideArtSize } => entry.size !== null);
   const first = sizes[0];
   if (first === undefined) return problems;
@@ -183,7 +235,7 @@ export function rideArtProblems(
   for (const other of sizes.slice(1)) {
     if (other.size.width !== first.size.width || other.size.height !== first.size.height) {
       problems.push(
-        `the ride for "${ride.mode}" has layers of two sizes: "${first.key}" is ` +
+        `the ride for "${ride.mode}" has art of two sizes: "${first.key}" is ` +
           `${String(first.size.width)}x${String(first.size.height)} and "${other.key}" is ` +
           `${String(other.size.width)}x${String(other.size.height)}. One anchor cannot register both.`,
       );

@@ -297,16 +297,42 @@
       "type": "object",
       "properties": {
         "key": {
-          "description": "Texture key, `<levelId>-<file>` for a source under assets/src/svg/<levelId>/, pinned to 1x by its filename.",
+          "description": "Texture key, `<levelId>-<file>` for a source under assets/src/svg/<levelId>/, pinned to 1x by its filename. The layer's still: the whole layer when it declares no `cycle`, and the one frame drawn under reduced motion, at every speed, when it does (ADR-0035).",
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
         },
         "side": {
           "description": "`behind` draws under every part of the rider; `front` draws over every part of the rider and still under the tappable marks, which must never be hidden by the thing they sit above.",
           "type": "string",
           "enum": ["behind", "front"]
-        }
+        },
+        "cycle": { "$ref": "#/$defs/rideCycle" }
       },
       "required": ["key", "side"],
+      "additionalProperties": false
+    },
+
+    "rideCycle": {
+      "title": "Ride cycle",
+      "description": "Frames for one layer of a ride, so an animal's legs move while the ground goes by (ADR-0035). Advanced by distance travelled and not by time: one frame per `framePx` of travel, so the gait keeps pace with the ground at every speed and stops when the player stops. At rest the layer draws `rest`. Under reduced motion it draws the layer's `key` and never advances, and that is the engine's rule rather than a level's (CLAUDE.md, Accessibility), which is why no field here could express otherwise. Every frame shares the layer's size and registration, so the one `riderAnchor` seats the rider in every frame. Optional, because a ride whose art does not change as it travels (a car on a track) needs none.",
+      "type": "object",
+      "properties": {
+        "rest": {
+          "description": "Texture key of the frame drawn while the ride is not moving, under the same rules as `rideArt.key`. May be the layer's `key`.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "frames": {
+          "description": "Texture keys of the gait, in the order travel plays them, under the same rules as `rideArt.key`. The cycle repeats after the last. May include the layer's `key`, which costs no second texture.",
+          "type": "array",
+          "items": { "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id" },
+          "minItems": 2
+        },
+        "framePx": {
+          "description": "Design pixels travelled per frame. The whole cycle is `framePx` times the number of frames: one stride for an animal.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": ["rest", "frames", "framePx"],
       "additionalProperties": false
     },
 
