@@ -210,8 +210,12 @@ describe('the copy table', () => {
       'level.alberta-foothills.finishFirst',
       'level.vancouver.finishFirst',
       'level.the-north.finishFirst',
+      /* The update notice's sentence and its Reload control (ADR-0034, "Update
+         flow"), which names this list as their home until a story ratifies them. */
+      'update.ready',
+      'update.reload',
     ]);
-    expect(COPY_GAPS).toHaveLength(57);
+    expect(COPY_GAPS).toHaveLength(59);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

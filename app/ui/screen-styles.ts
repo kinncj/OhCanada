@@ -1797,6 +1797,112 @@ const CSS = `
   [data-testid="exam-review"] li[data-tn-answer="wrong"] { border-style: dashed; }
 }
 
+/* ------------------------------------------------------------------ *
+ * "A new version is ready" (ADR-0034, app/ui/update-notice.ts).
+ *
+ * A line in the page's own <main>, first in it: above the front door's view,
+ * the way the storage warning is, and at the top of a level while the HUD sits
+ * at the bottom. It is in the flow rather than floating over the page, so at
+ * 200 % text it grows downwards and covers no control. Positioned only so it
+ * paints above the canvas host, which is fixed; every dialog is z-index 40 and
+ * still covers it.
+ *
+ * A border of weight and a heavier start edge, like the storage warning, so it
+ * reads as a notice without colour. No transition and no animation anywhere in
+ * this block, so reduced motion has nothing to take away from it.
+ * The font is inherited, so the dyslexia-friendly face reaches it on the front
+ * door through .tn-screen and in a level through the rule below.
+ * ------------------------------------------------------------------ */
+
+.tn-update-notice {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  inline-size: calc(100% - 2.25rem);
+  max-inline-size: 34rem;
+  margin: 0.75rem auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.75rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-inline-start-width: 0.625rem;
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper);
+  color: var(--tn-ink);
+  line-height: 1.4;
+  pointer-events: auto;
+}
+
+[data-tn-font="dyslexia"] .tn-update-notice {
+  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  letter-spacing: 0.02em;
+  word-spacing: 0.08em;
+}
+
+.tn-update-notice__message {
+  flex: 1 1 12rem;
+  margin: 0;
+  color: var(--tn-ink);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.tn-update-notice__actions {
+  flex: 1 1 12rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tn-update-notice button {
+  box-sizing: border-box;
+  flex: 1 1 7rem;
+  min-block-size: 3rem;
+  min-inline-size: 3rem;
+  inline-size: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 0.875rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper-2);
+  color: var(--tn-ink);
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  box-shadow: 0 var(--tn-lift) 0 var(--tn-edge-soft);
+  pointer-events: auto;
+}
+
+.tn-update-notice button.tn-update-notice__reload {
+  background: var(--tn-action);
+  color: var(--tn-action-ink);
+  border-color: var(--tn-action-edge);
+  box-shadow: 0 var(--tn-lift) 0 var(--tn-action-edge);
+}
+
+.tn-update-notice button:active { box-shadow: none; }
+
+.tn-update-notice :focus-visible,
+.tn-update-notice [data-switch-highlight="true"] {
+  outline: 0.25rem solid var(--tn-focus);
+  outline-offset: 0.1875rem;
+  box-shadow: 0 0 0 0.5rem var(--tn-focus-halo);
+  border-style: double;
+  border-width: 0.25rem;
+}
+
+@media (forced-colors: active) {
+  .tn-update-notice { border: 0.25rem solid CanvasText; }
+  .tn-update-notice button { border: 0.125rem solid ButtonText; }
+}
+
 /* Motion is a separate axis from the visual tier: the attribute is written from
    the setting OR the media query, and the media query is also honoured alone. */
 [data-tn-motion="reduced"] .tn-screen,

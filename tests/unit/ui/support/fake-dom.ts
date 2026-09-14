@@ -219,6 +219,20 @@ export class FakeElement {
     return node;
   }
 
+  /** Insert before the first child, moving a node that is already somewhere, as the DOM does. */
+  prepend(...nodes: readonly (FakeNode | string)[]): void {
+    const children = nodes.map((node) => (typeof node === 'string' ? new FakeText(node) : node));
+    for (const child of children) {
+      child.parentElement?.removeChild(child);
+      child.parentElement = this;
+    }
+    this.childNodes.unshift(...children);
+  }
+
+  get firstElementChild(): FakeElement | null {
+    return this.children[0] ?? null;
+  }
+
   removeChild(node: FakeNode): void {
     const index = this.childNodes.indexOf(node);
     if (index >= 0) this.childNodes.splice(index, 1);

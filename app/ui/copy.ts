@@ -924,6 +924,17 @@ const EN = {
   'level.vancouver.subtitle': 'Canadian symbols',
   'level.the-north.title': 'The North',
   'level.the-north.subtitle': "Canada's regions",
+
+  /* The update notice (ADR-0034, "Update flow"; `app/ui/update-notice.ts`).
+     **Both rows are written by app/ui and listed in {@link COPY_GAPS}**: no
+     story table carries them. The sentence is a status, not an instruction —
+     "ready" and not "available", because nothing has to be fetched first — and
+     it is a label-shaped line with no full stop, like `map.here`. "Reload" is the
+     control's own verb, the one a browser uses, rather than "Update", which would
+     promise a download the worker has already done. The notice's other control
+     is `common.close`, so no third row is written. */
+  'update.ready': 'A new version is ready',
+  'update.reload': 'Reload',
 } as const;
 
 /** Every row in the table, plural forms included. */
@@ -1461,12 +1472,18 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.vancouver.subtitle': 'Les symboles canadiens',
   'level.the-north.title': 'Le Nord',
   'level.the-north.subtitle': 'Les régions du Canada',
+
+  /* Listed in COPY_GAPS with the English. « prête » agrees with « version »,
+     which is feminine, and never with the player. « Recharger » is the verb a
+     French browser puts on the same action. */
+  'update.ready': 'Une nouvelle version est prête',
+  'update.reload': 'Recharger',
 };
 
 /**
  * Strings this module had to write because no story table carries them.
  *
- * **It was empty, and the "About this place" panel is why it is not.** Fourteen
+ * **It was empty, and the "About this place" panel is why it is not.** Sixteen
  * rows are listed below, and listing them is the point: `docs/stories/README.md`
  * says the UI invents no copy, so a string this directory had to write is
  * declared here and reported upward to be ratified or replaced in a story file.
@@ -1594,6 +1611,11 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'level.alberta-foothills.finishFirst',
   'level.vancouver.finishFirst',
   'level.the-north.finishFirst',
+  /* The update notice's two (ADR-0034, "Update flow"): the sentence and the
+     Reload control. ADR-0034 names this list as where they go until a story
+     ratifies them. */
+  'update.ready',
+  'update.reload',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {
