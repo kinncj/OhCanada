@@ -279,9 +279,9 @@
             "verification": {
               "status": "verified",
               "model": "claude-opus-5[1m]",
-              "checkedAt": "2026-09-13T23:28:13Z",
+              "checkedAt": "2026-09-13T23:57:11Z",
               "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-              "evidence": "Manufacturing industries make products to sell in Canada and around the world. Manufactured products include paper, high technology equipment, aerospace technology, automobiles, machinery, food, clothing and many other goods."
+              "evidence": "CANADA’S ECONOMY INCLUDES THREE MAIN TYPES OF INDUSTRIES: … Manufacturing industries make products to sell in Canada and around the world. Manufactured products include paper, high technology equipment, aerospace technology, automobiles, machinery, food, clothing and many other goods."
             }
           }
         }
@@ -340,11 +340,11 @@
               "quote": "Canada exports billions of dollars worth of energy products, industrial goods, machinery, equipment, automotive, agricultural, fishing and forestry products, and consumer goods every year."
             },
             "verification": {
-              "status": "rejected",
+              "status": "verified",
               "model": "claude-opus-5[1m]",
-              "checkedAt": "2026-09-13T23:28:13Z",
+              "checkedAt": "2026-09-13T23:57:11Z",
               "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-              "evidence": "Canada enjoys close relations with the United States and each is the other’s largest trading partner. Over three-quarters of Canadian exports are destined for the U.S.A. In fact we have the biggest bilateral trading relationship in the world."
+              "evidence": "Natural resources industries include forestry, fishing, agriculture, mining and energy. … a large percentage of Canada’s exports are natural resources commodities. … Canada exports billions of dollars worth of energy products, industrial goods, machinery, equipment, automotive, agricultural, fishing and forestry products, and consumer goods every year."
             }
           }
         }

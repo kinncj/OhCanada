@@ -342,9 +342,9 @@
             "verification": {
               "status": "verified",
               "model": "claude-opus-5[1m]",
-              "checkedAt": "2026-09-13T23:28:13Z",
+              "checkedAt": "2026-09-13T23:57:11Z",
               "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-              "evidence": "CANADA’S OFFICIAL LANGUAGES English and French are the two official languages and are important symbols of identity. … You must have adequate knowledge of English or French to become a Canadian citizen."
+              "evidence": "English and French define the reality of day-to-day life for most people and are the country’s official languages. … English and French are the two official languages and are important symbols of identity. … You must have adequate knowledge of English or French to become a Canadian citizen. Adult applicants 55 years of age or over are exempted from this requirement."
             }
           }
         }

@@ -276,11 +276,11 @@
               "quote": "In becoming Canadian, newcomers are expected to embrace democratic principles such as the rule of law."
             },
             "verification": {
-              "status": "rejected",
+              "status": "verified",
               "model": "claude-opus-5[1m]",
-              "checkedAt": "2026-09-13T23:28:13Z",
+              "checkedAt": "2026-09-13T23:57:11Z",
               "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-              "evidence": "In becoming Canadian, newcomers are expected to embrace democratic principles such as the rule of law."
+              "evidence": "Such experiences do not justify bringing to Canada violent, extreme or hateful prejudices. In becoming Canadian, newcomers are expected to embrace democratic principles such as the rule of law. … Canada’s legal system is based on a heritage that includes the rule of law, freedom under the law, democratic principles and due process."
             }
           }
         }

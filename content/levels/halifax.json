@@ -289,9 +289,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "checkedAt": "2026-09-13T23:57:11Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "However, Canada is often referred to as a land of immigrants because, over the past 200 years, millions of newcomers have helped to build and defend our way of life."
+          "evidence": "The majority of Canadians were born in this country and this has been true since the 1800s. However, Canada is often referred to as a land of immigrants because, over the past 200 years, millions of newcomers have helped to build and defend our way of life."
         }
       },
       "position": {
@@ -327,9 +327,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "checkedAt": "2026-09-13T23:57:11Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "As Canada’s largest east coast port, deep-water and ice-free, the capital, Halifax, has played an important role in Atlantic trade and defence and is home to Canada’s largest naval base."
+          "evidence": "Nova Scotia is the most populous Atlantic Province, with a rich history as the gateway to Canada. Known for the world’s highest tides in the Bay of Fundy, the province’s identity is linked to shipbuilding, fisheries and shipping. As Canada’s largest east coast port, deep-water and ice-free, the capital, Halifax, has played an important role in Atlantic trade and defence and is home to Canada’s largest naval base."
         }
       },
       "position": {
