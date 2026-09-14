@@ -69,6 +69,7 @@ import {
   strandedPoses,
   type ModeArtGap,
 } from './locomotion-pose';
+import { gestureHoldMs } from './engagement-pose';
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
 import { rideArtProblems, rideBobPx, rideFor, ridePlacement, type RideArtSize } from './ride';
 import type { SceneLevel } from './level-document';
@@ -212,6 +213,8 @@ const MOVING_THRESHOLD_PX_S = 1;
  * is correct — an engagement is still an engagement without an animation for it.
  */
 const INTERACT_TRIGGER = 'interact';
+/** The rig state that trigger selects. The same word, and a different thing. */
+const INTERACT_STATE = 'interact';
 
 /** How many snowflakes a level asks for before the tier has its say. */
 const REQUESTED_PARTICLES = 420;
@@ -462,6 +465,8 @@ export class LevelScene extends Phaser.Scene {
   readonly #drawnRects = new Map<string, TargetRect>();
   #jumpQueued = false;
   #interactQueued = false;
+  /** An engaged puppet to advance to its gesture on the frame a pause freezes. See `#holdGesture`. */
+  #heldGesture: { readonly renderer: ICharacterRenderer; readonly holdMs: number } | null = null;
   /**
    * The level's palette under the current sky, and where the sky currently is.
    *
@@ -970,6 +975,7 @@ export class LevelScene extends Phaser.Scene {
     this.#player?.setPosition(this.#state.x, this.#riderY);
     this.#updatePlayerCharacter(step.animationSpeed, delta);
     this.#updatePlacedCharacters(delta);
+    this.#holdGesture();
     this.#updateAffordances();
     this.#scrollLayers();
     this.#updateSnow(dt);
@@ -1595,6 +1601,31 @@ export class LevelScene extends Phaser.Scene {
     const engaged = this.#placed.get(best.id) ?? this.#playerCharacter;
     if (engaged !== null && engaged !== undefined) engaged.fire(INTERACT_TRIGGER);
     this.#emit(best.npc ? 'npc/engaged' : 'poi/engaged', best.id);
+    /*
+     * Did that engagement pause the level? A card or a dialogue does, from inside
+     * the emit, so this frame is the last one drawn until it closes — and the
+     * puppet enters `interact` on its rest key. Hold the gesture instead, after
+     * this frame's character update (`#holdGesture`). See `engagement-pose.ts`.
+     */
+    if (engaged !== null && engaged !== undefined && this.sys.isPaused()) {
+      const mode = engaged === this.#playerCharacter ? this.#tuning.mode : null;
+      const holdMs = gestureHoldMs(this.#options.rig, mode, INTERACT_STATE);
+      if (holdMs > 0) this.#heldGesture = { renderer: engaged, holdMs };
+    }
+  }
+
+  /**
+   * Advance an engaged puppet to its gesture, once, on the frame a pause froze.
+   *
+   * After `#updatePlayerCharacter` and `#updatePlacedCharacters`, because the
+   * update that enters `interact` restarts its clock at 0 whatever the frame's
+   * delta was; advancing after it lands exactly on the held key.
+   */
+  #holdGesture(): void {
+    const held = this.#heldGesture;
+    if (held === null) return;
+    this.#heldGesture = null;
+    held.renderer.update(held.holdMs);
   }
 
   /* --------------------------------------------------------------- drawing -- */
