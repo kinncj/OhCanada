@@ -129,7 +129,7 @@ it is a namespace rather than eight more rules is that a rule is a condition, an
 would be eight `if (mode === …)` branches in an adapter.
 
 Eight **selected** states: `idle`, `walk`, `run`, `jump-rise`, `jump-fall`, `land`, `talk`, `interact`.
-Twenty **declared** ones: those eight, plus the twelve `<mode>/<state>` re-poses in §11.
+Thirty-three **declared** ones: those eight, plus the twenty-five `<mode>/<state>` re-poses in §11.
 
 ---
 
@@ -695,7 +695,7 @@ Two smaller notes for the architect, recorded rather than assumed:
 | `OQ-REVIEW-6` | The names of the six skin ramps and five hair colours. The rig carries ids only until this is settled. | routed to `ui-a11y` / PO |
 | `OQ-REVIEW-8` | Body-mass slot, and whether a wheelchair is a locomotion mode. Neither exists here. A body-mass slot would be a new independent slot; a wheelchair would **not** be a cosmetic slot at all. | PO |
 | `OQ-RIG-1` | A character's whole option library is charged to **every** level's decoded-texture budget, because the atlas is one texture. The player wears one combination and pays for 5 760 of them and for four levels' equipment. Fixing it is a pipeline change — per-option standalone images loaded on demand — and it is the single biggest lever on this budget after the landmark. **The `{mode}` equipment made this worse and made it measurable**: Halifax walks and pays 2.47 MiB for a canal skate, a Dufferin toboggan, a seawall board and a waterfront bicycle it will never draw. **Updated 2026-09-14 (infra, ADR-0033): the packing half is closed and the loading half stays open.** The shared page had been chaotic: 1312 to 2048 px tall under a 3 % change, per art-bible §7.7. It is now packed for the smallest area. `shared@2x` went from 2045×1316, 10.27 MiB, to 1278×1805, 8.80 MiB, and ±2 px of frame drift moves it 0.13 MiB rather than 5.97 MiB. Every level still pays for the whole library. Per-option images loaded on demand remain the fix this row asks for. | infra |
-| `OQ-RIG-2` | **A horse is not drawn.** §11.5 has the reasoning and the numbers. It is the one locomotion mode in `game.config.json` whose art this contract cannot hold. | PO / infra |
+| `OQ-RIG-2` | **The horse's own gait is not drawn.** Since 2026-09-14 the horse is a ride on the foothills level (ADR-0031) and the rider has eight `horse/*` poses (§11.5), but a ride's art is one still image, so the horse's legs do not move while the ground goes by. A frame cycle on rides is engine and schema work. | engine / art |
 | `OQ-RIG-3` | **`train` has no equipment and no pose.** §11.5. A seated passenger needs a bench under them, and a bench is level furniture, not rig equipment. | PO |
 | `OQ-RIG-4` | **A brake is not drawn.** The dead `brakeTrigger` and `airborneInput` bindings left the level schema on 2026-09-14 (§11.6); what stays open is whether the rig gets a `brake` trigger and pose. §11.6 says what it would cost. | engine / art |
 
@@ -740,11 +740,11 @@ read by `modeArtGaps`, which looks for `{mode}`-templated parts and finds a slot
 | `skateboard` | `mount-deck-skateboard` | `skateboard/idle`, `/walk`, `/run` | **yes** |
 | `bike` | `mount-deck-bike` | `bike/idle`, `/walk`, `/run` | **yes** |
 | `train` | none — the car is a ride (ADR-0031) | `train/idle`, `/walk`, `/run`, `/talk`, `/interact` | **yes, seated in a ride — §11.5** |
-| `horse` | none | none | **no — §11.5** |
+| `horse` | none — the horse is a ride (ADR-0031) | `horse/idle`, `/walk`, `/run`, `/jump-rise`, `/jump-fall`, `/land`, `/talk`, `/interact` | **yes, astride a ride — §11.5** |
 | `canoe`, `dogsled` | none | none | no, and no level asks yet |
 
 `modeArt().covered` is `base || poses || equipment`, so `walk` is covered by the state that carries its own
-name, `train` by its poses, and `horse` reports as a gap on the one level that declares it. **That is the honest answer and it is why no frame was authored for
+name, and `train` and `horse` by their poses. **That is the honest answer and it is why no frame was authored for
 them:** a mode declared with no art draws a walking figure and says nothing, which is the whole defect. An
 empty declaration would have made `data-mode-gaps` read 0 while the screen was still wrong.
 
@@ -833,7 +833,7 @@ Three more rules that a later editor will otherwise undo:
 
 ### 11.5 What is NOT drawn, and why
 
-**A horse is not drawn.** It was drawn three times and thrown away three times, and the reasons are worth
+**A horse is not rig equipment.** It was drawn three times as equipment and thrown away three times, and the reasons are worth
 keeping because they are structural rather than "it looked wrong":
 
 1. **A rider sits INSIDE a horse's silhouette, not on top of it.** The far leg belongs behind the barrel and
@@ -906,6 +906,36 @@ observation end and dome, on a repeating track strip. Three things this section 
 `train` no longer reports as a gap. **No level may declare `train` without a ride**, because its poses are a
 passenger sitting on a floor; `tests/unit/contracts/level-art-is-placed-where-it-is-drawn.test.ts` holds that
 for every mode any level rides.
+
+**The horse landed the same way, 2026-09-14.** The foothills level declares a ride: a saddled bay ranch horse,
+`assets/src/svg/alberta-foothills/ride-ranch-horse@1x.svg`, 600 × 446 at 1x, one `behind` layer, turning with the
+rider, on a world-fixed trail strip 340 px below the walking line (`alberta-foothills-level.md` §14 has the
+placement). What the three points at the top of this section became:
+
+- **Point 1, the fifth z, is answered by the pose, not by a part.** The ride has one layer behind every rig part,
+  so nothing can go between the rider's legs. `horse/*` puts both hips on the near hip and both ankles on the
+  near stirrup, so the far leg is exactly behind the near one, which is where the barrel would hide it.
+- **Point 2, the gait, is still open.** The horse is drawn in a walking stride measured off Muybridge's plate 574
+  and rocks by the ride's `bob`, but its legs do not move. That is `OQ-RIG-2` now.
+- **Point 3, the cost, is the level's.** 1.02 MiB for the horse and 0.22 MiB for the trail, on the foothills level
+  only; the shared atlas did not change, because no rig frame was added.
+
+**Eight poses, because the mode jumps.** The foothills `horse` tuning has a `jump`, so the selector reaches
+`jump-rise`, `jump-fall` and `land` as well as the five the train needed, and a rider who popped to a standing
+jump would leave the saddle. The seat is solved from the rig's pivots: the hips drop 29 px, the thigh goes
+forward about 40 degrees and the shin back about 23, heel down 8, the sole on the ride's anchor on the stirrup
+tread; both fists hold the rein above the horn by two-link IK. `walk` and `run` swing the seat fore and aft and
+rock the upper body, and never bob on their own clock: the ride's `bob` moves horse and rider together by distance,
+and a second rock by time would drift against it. `ground-shadow` moves 160 px to the hoof row, under the belly,
+because at the sole line it would be a stain on the horse's side.
+
+**One pose was fixed on the render, not in the numbers.** `horse/talk` first copied the train's raised arm, upper
+arm at -58 degrees, and at phone size the mitt covered the rider's face. It is raised forward to horizontal now,
+and its forearm keys are written 192 and 208 rather than on either side of 180: `train/talk`'s 172 and -172
+interpolate linearly through zero, which spins that forearm a full turn in 800 ms.
+
+`tests/unit/contracts/a-rider-stays-on-the-ride.test.ts` holds what a ride cannot say for itself: for every mode
+any level rides, each ankle is one point across every key of every `<mode>/*` state, and foot-gear rides on its boot.
 
 **`canoe` and `dogsled` are in `game.config.json` and no level uses them.** A canoe is a `mount-deck` and a
 `mount-fore` and would work; a dog team is a horse-shaped problem.

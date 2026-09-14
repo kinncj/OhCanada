@@ -1706,6 +1706,14 @@ const RECIPES = {
    * the shape was measured on the other references.
    */
   'pump-jack': singleSource(),
+  /**
+   * The horse the player rides in the foothills (ADR-0031), on its own, at 1x,
+   * for the park car's reason: a ride subject built with `slots.pose` would fall
+   * under the mounted-subject block, which demands `{mode}` equipment a ride by
+   * definition does not have. The saddled horse is the art this source ships;
+   * the rider is the rig's, and `posedModesWithoutSubject` says so.
+   */
+  'ranch-horse': singleSource(),
 
   /**
    * THE ONE NEGATIVE OFFSET IN THE TABLE, AND IT IS NOT A TYPO.

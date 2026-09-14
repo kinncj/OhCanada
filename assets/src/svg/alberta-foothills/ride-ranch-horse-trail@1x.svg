@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="120" viewBox="0 0 480 120" shape-rendering="geometricPrecision">
+  <title>The ranch trail under the Alberta ride, seen from beside it: a grass verge with tussocks, a dry dirt wheel rut the horse walks in, and rough pasture below sinking into the ground. A repeating strip fixed to the world, so the tussocks go by under a walking horse; nothing in it crosses the tile seam. The ride track of ADR-0031. No lettering, no signage.</title>
+  <rect x="0" y="28" width="480" height="92" fill="#677b37"/>
+  <rect x="0" y="28" width="480" height="5" fill="#9dac53"/>
+  <rect x="0" y="66" width="480" height="30" fill="#c29455"/>
+  <rect x="0" y="66" width="480" height="6" fill="#d5c18e"/>
+  <rect x="0" y="90" width="480" height="6" fill="#965630"/>
+  <rect x="0" y="104" width="480" height="16" fill="#30451c"/>
+  <rect x="0" y="96" width="480" height="8" fill="#677b37"/>
+  <path d="M 14 34 Q 20 16 26 16 Q 30 8 34 16 Q 40 16 46 34 Z" fill="#677b37"/>
+  <path d="M 22 34 Q 26 18 30 14 Q 32 20 36 34 Z" fill="#9dac53"/>
+  <path d="M 84.8 34 Q 89 20.2 93.2 21.4 Q 96 14.6 98.8 21.4 Q 103 20.2 107.2 34 Z" fill="#677b37"/>
+  <path d="M 90.4 34 Q 93.2 21.6 96 20 Q 97.4 23 100.2 34 Z" fill="#9dac53"/>
+  <path d="M 150.8 34 Q 158 13.2 165.2 12.4 Q 170 3.6 174.8 12.4 Q 182 13.2 189.2 34 Z" fill="#677b37"/>
+  <path d="M 160.4 34 Q 165.2 15.6 170 10 Q 172.4 18 177.2 34 Z" fill="#9dac53"/>
+  <path d="M 223.2 34 Q 228 18.8 232.8 19.6 Q 236 12.4 239.2 19.6 Q 244 18.8 248.8 34 Z" fill="#677b37"/>
+  <path d="M 229.6 34 Q 232.8 20.4 236 18 Q 237.6 22 240.8 34 Z" fill="#9dac53"/>
+  <path d="M 284 34 Q 290 16 296 16 Q 300 8 304 16 Q 310 16 316 34 Z" fill="#677b37"/>
+  <path d="M 292 34 Q 296 18 300 14 Q 302 20 306 34 Z" fill="#9dac53"/>
+  <path d="M 360.8 34 Q 365 20.2 369.2 21.4 Q 372 14.6 374.8 21.4 Q 379 20.2 383.2 34 Z" fill="#677b37"/>
+  <path d="M 366.4 34 Q 369.2 21.6 372 20 Q 373.4 23 376.2 34 Z" fill="#9dac53"/>
+  <path d="M 422.4 34 Q 429 14.6 435.6 14.2 Q 440 5.8 444.4 14.2 Q 451 14.6 457.6 34 Z" fill="#677b37"/>
+  <path d="M 431.2 34 Q 435.6 16.8 440 12 Q 442.2 19 446.6 34 Z" fill="#9dac53"/>
+  <ellipse cx="58" cy="80" rx="10" ry="3.5" fill="#965630"/>
+  <ellipse cx="142" cy="80" rx="7" ry="3.5" fill="#965630"/>
+  <ellipse cx="214" cy="80" rx="12" ry="3.5" fill="#965630"/>
+  <ellipse cx="318" cy="80" rx="8" ry="3.5" fill="#965630"/>
+  <ellipse cx="404" cy="80" rx="10" ry="3.5" fill="#965630"/>
+  <path d="M 10.4 106 Q 15.2 96 20 93.2 Q 24.8 96 29.6 106 Z" fill="#677b37"/>
+  <path d="M 108 106 Q 114 94 120 90 Q 126 94 132 106 Z" fill="#677b37"/>
+  <path d="M 197.6 106 Q 201.8 97 206 94.8 Q 210.2 97 214.4 106 Z" fill="#677b37"/>
+  <path d="M 269.2 106 Q 274.6 95 280 91.6 Q 285.4 95 290.8 106 Z" fill="#677b37"/>
+  <path d="M 338 106 Q 344 94 350 90 Q 356 94 362 106 Z" fill="#677b37"/>
+  <path d="M 420.4 106 Q 425.2 96 430 93.2 Q 434.8 96 439.6 106 Z" fill="#677b37"/>
+</svg>

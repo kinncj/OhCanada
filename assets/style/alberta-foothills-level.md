@@ -319,3 +319,126 @@ files, against 26.61 MiB (74 %) over 11 before; payload **0.46 MiB** of 8, again
 ```js
   'pump-jack': singleSource(),
 ```
+
+---
+
+## 14. The horse the player rides
+
+**Added 2026-09-14, after a play-through audit found that Alberta had no horse.** The HUD said Horse, the task said
+to ride up to the ranch gate, and the player walked the whole level on foot while the console printed that the rig
+could not draw the mode. `rig-contract.md` §11.5 had recommended the answer and ADR-0031 had since built it for the
+Prairies train: the horse is a **ride**, level art the engine places at the player every frame.
+
+| key | source | px | what it is |
+|---|---|---|---|
+| `alberta-foothills-ride-ranch-horse` | `ride-ranch-horse@1x.svg` | 600 × 446 | a saddled bay quarter-horse type under a tan western saddle, walking; the ride's one layer, `behind` the rider |
+| `alberta-foothills-ride-ranch-horse-trail` | `ride-ranch-horse-trail@1x.svg` | 480 × 120 | the trail under it: grass verge with tussocks, a dry dirt rut, rough pasture |
+
+### 14.1 What was measured
+
+On `refs/alberta-foothills/quarter-horse-side-elevation.jpg` (CC0), a broadside view, against **W = the withers
+height** above the hooves. The drawing uses W = 315 px, which puts the seat 145 px above the sole of a rider whose
+legs are the rig's own 98 + 74 px.
+
+| ratio | measured | drawn (W = 315) |
+|---|---|---|
+| barrel depth at the girth ÷ W | **0.51** | 171 px |
+| clear leg, girth to ground ÷ W | **0.49** | 144 px |
+| body length, point of shoulder to point of buttock ÷ W | **1.08** | 355 px |
+| poll ahead of / above the withers ÷ W | **0.54 / 0.20** | 171 / 59 px |
+| muzzle ahead of / below the withers ÷ W | **0.75 / 0.17** | 250 / 55 px |
+
+**The one cartoon departure is the head, about ten percent larger than measured**, so the eye, the ears and the
+nostril survive at 390 px. The llama this level drew once (§6.3) is guarded by the other rows: the legs are no
+longer than the barrel is deep, the neck runs forward, and the poll sits a fifth of W above the withers.
+
+The saddle and where a rider's leg lies come from `cow-horse-under-western-saddle.jpg` (CC BY 2.0): the horn over
+the withers, the square skirt, the fender under the thigh, the cinch behind the elbow, the stirrup at the belly
+line. The stride comes from `horse-walking-muybridge-plate-574.jpg` (public domain), frame 2 of the top row.
+
+**Colour was chosen, not measured, and is recorded as a choice.** The proportion reference is a buckskin and the
+saddle reference a dark bay in hard backlight. A bay, coat in `leather` and points in `hair-black`, separates the ride
+from the grey Percheron in the barn corral and from the red white-faced cattle. The saddle is `wood`, a tan saddle on
+a brown horse; the pad is plain `felt`. **No ramp was added.**
+
+### 14.2 Placement, and why the horse is not on the walking line
+
+`rides[0]` in `content/levels/alberta-foothills.json`: `riderAnchor` (258, 270), the rider's sole line on the stirrup
+tread; `groundLineY` 90; `turnsWithRider` true; `bob` 5 px every 220 px; `track.topY` 346. In world terms the hooves
+are at y 1 620, **340 px below the walking line**, the withers at 1 305 and the ears at about 1 202.
+
+The reason is the Prairies' constraint 4 again, and it is sharper here. Since ADR-0032 the drive rests the rider
+level with each point of interest, so a horse 600 px long on the walking line would stand in front of the gate's
+opening, the corral and its horse, the pump jack's wellhead and all three cattle at the moment the player stops to
+look. On the nearer line, rendered at 390 px at all five stops, every landmark keeps its identifying features: the
+horse's head covers only the bottom 80 px or so to the right of the rider, and the rider's upper body covers a
+strip about 115 px wide, as the walking figure always did. **A shallower line was ruled out by the cattle, by
+arithmetic rather than a render**: at 150 px below the walking line the horse's back would stand 165 px above it,
+across the bodies of the nearest two animals, which span about 130 to 270 px above the line in a hero centred on
+the stop.
+
+**The cost, stated.** Until the player first engages something, the HUD carries the hint *"A mark shows something to
+see"* and is taller; at the guide and gate stops it covers the horse below the belly. Clearing it would need the
+horse above about 150 px below the line, which is what the cattle rule out. The panel is UI and goes after the
+first engagement, so it is recorded here and not fixed in the art.
+
+### 14.3 One layer, and the far leg
+
+The ride is **one `behind` layer**. A rider sits inside a horse's silhouette and a ride has no z between the rider's
+legs, so the far leg is hidden by the pose, not by the art: `horse/*` puts both of the rider's hips on the near hip
+and both ankles on the near stirrup, so the near leg covers the far one exactly. A `front` layer carrying a stirrup
+hood was considered and not taken: every layer of a ride shares one size, so it would have been another 600 × 446,
+1.02 MiB of mostly transparent texture, for a detail ten CSS px across.
+
+### 14.4 The legs do not move, and why that was the choice
+
+**A ride's art is one still image.** A real four-frame walk would need a frame cycle on rides: a field in
+`level.schema.json`, the content port, the parser, `ride.ts` and `level-scene.ts`, and a decision record, which is
+engine work and outside this art pass. It was not attempted here, and `OQ-RIG-2` in `rig-contract.md` now says the gait
+is what is still open. **It would fit the budget**: four horse frames at 600 × 446 would add 3.06 MiB, 30.52 of
+36 MiB (85 %).
+
+What carries the walk until then, and each piece was chosen against a render:
+
+- **A stride, not a stand.** Both were drawn. Four square legs sliding along read as a statue on wheels; the stride
+  from plate 574, the near fore planted ahead and the near hind behind, reads as walking when it is still.
+- **The trail goes by under the hooves.** It is fixed to the world, so its tussocks and clods move under a horse that
+  stays put on screen, which is most of what the eye reads as travel.
+- **The ride's bob**, 5 px at cruise every 220 px, lifts horse and rider together, is still at rest, and is zero under
+  reduced motion by the engine's rule.
+- **The rider goes with it**: `horse/walk` swings the seat 2 px and rocks the upper body 1.5 degrees; `horse/run`
+  leans 8 degrees forward and swings more.
+
+### 14.5 Budgets, measured
+
+`make assets`, 2026-09-14:
+
+```
+level-payload:  alberta-foothills 0.49 MiB of 8.00 MiB over 14 file(s)
+texture-memory: alberta-foothills 27.46 MiB of 36.00 MiB (76%, 8957136 B spare) over 14 file(s)
+```
+
+Before the ride: **26.22 MiB (73 %)** over 12 files and 0.46 MiB of payload. The horse costs 1.02 MiB and the trail
+0.22 MiB, both `@1x`-pinned, because `riderAnchor` and `groundLineY` are art pixels. **`textureBudgetBytes` is
+unchanged** at 36 MiB: 76 % is inside the band the other levels sit in, and the perf lane opens Ottawa. The shared
+atlas did not change, so no other level's number moved.
+
+### 14.6 What the renders showed
+
+At 390 px, spawn, cruising, the guide, all four points of interest and facing left, normal and reduced motion: the
+scene probe read `data-rides` 1, `data-rides-drawn` 1, `data-mode-gaps` 0 and a `horse/` pose every time, with no
+console error. The rider sits in the saddle with the boot at the stirrup and the rein in both fists, and the horse
+turns with the rider.
+
+**Two renders show rig parts in the wrong order, and it is the renderer, not the pose.** At the gate stop the jeans
+draw over the coat, and while cruising the hair draws detached behind the face; the spawn render of the same
+`horse/idle` key is correct, and a composite of those keys built with the renderer's own placement arithmetic is
+correct. The part depth and rotation in `sprite-character-renderer.ts` are being fixed separately.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needs
+
+```js
+  'ranch-horse': singleSource(),
+```
+
+Applied with this change, as the park car's was.

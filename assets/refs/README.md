@@ -131,10 +131,11 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   (Linda, Flickr): a dark bay quarter horse working cattle under a western saddle, for the horn, the skirt, the
   fender, the stirrup and where a rider's leg lies. It shows a rider from behind; rule 4 applies and it is a
   posture reference only. `horse-walking-muybridge-plate-574.jpg` is **public domain**: Eadweard Muybridge's
-  *Animal Locomotion* plate 574, cropped to its photograph grid, for the walking stride. Every Commons
-  photograph of a Canadian Horse was CC BY-SA except one of Montreal police horses, which carries insignia and
-  identifiable officers; the Bar U saddle-horse barn photographs are CC BY-SA 4.0. Both were rejected on
-  licence. The horse is a type, and it must never be asked to name a province.
+  *Animal Locomotion* plate 574, cropped to its photograph grid, for the walking stride. Six of the nine files in
+  the Commons Canadian Horse category are CC BY-SA and were rejected on licence, as are the Bar U saddle-horse barn
+  photographs. The other three were set aside for what they show, not for their licence: an 1890s book plate, a
+  CC BY 3.0 show-judging photograph that was not examined, and a CC BY 2.0 photograph of Montreal police horses
+  with insignia and identifiable officers. The horse is a type, and it must never be asked to name a province.
 
   **A correction belongs in this record.** The first search filtered licences with a pattern that never matched
   the API's own spelling (`CC BY 3.0`), so every CC BY file was dropped and the pass briefly concluded there

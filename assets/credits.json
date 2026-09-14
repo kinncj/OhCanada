@@ -2540,6 +2540,24 @@
       "modifications": "Cropped from the 3840 px Commons rendition to the photograph grid, which drops the mount and its printed caption; downscaled to 1600 px long edge; re-encoded, which strips all metadata."
     },
     {
+      "path": "src/svg/alberta-foothills/ride-ranch-horse@1x.svg",
+      "kind": "shipped",
+      "title": "A saddled bay ranch horse under a western saddle, which the player rides across the Alberta foothills",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ride-ranch-horse@1x.svg",
+      "modifications": "Original work, drawn under assets/style/art-bible.md and never traced, from three references: assets/refs/alberta-foothills/quarter-horse-side-elevation.jpg, a photograph by Derrick Coetzee released under CC0; cow-horse-under-western-saddle.jpg, a photograph by Linda (Flickr user 9878580@N03), licensed CC BY 2.0 (https://creativecommons.org/licenses/by/2.0/); and horse-walking-muybridge-plate-574.jpg, Eadweard Muybridge's plate 574, in the public domain. Carries no brand, number, name or lettering of any kind, and a plain felt pad with no pattern. The behind layer of a ride (ADR-0031): the player is drawn in front of it, astride. The @1x suffix pins the source to one scale; the key alberta-foothills-ride-ranch-horse carries no suffix."
+    },
+    {
+      "path": "src/svg/alberta-foothills/ride-ranch-horse-trail@1x.svg",
+      "kind": "shipped",
+      "title": "The ranch trail under the Alberta ride: a repeating strip of grass verge, dirt rut and rough pasture",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ride-ranch-horse-trail@1x.svg",
+      "modifications": "Original work. The track a ride runs on (ADR-0031): a 480 px strip repeated across the view and fixed to the world, so the tussocks go by under a walking horse. Drawn in the level's own pasture and felt ramps to match assets/src/svg/alberta-foothills/layer-40-rangeland.svg. The @1x suffix pins the source to one scale."
+    },
+    {
       "path": "src/icons/truenorth-app-icon.svg",
       "kind": "shipped",
       "title": "TrueNorth app icon - a four-point north star over three bands of hills",

@@ -389,6 +389,31 @@
       "questId": "alberta-foothills-ranch-barn"
     }
   ],
+  "rides": [
+    {
+      "mode": "horse",
+      "art": [
+        {
+          "key": "alberta-foothills-ride-ranch-horse",
+          "side": "behind"
+        }
+      ],
+      "riderAnchor": {
+        "x": 258,
+        "y": 270
+      },
+      "groundLineY": 90,
+      "turnsWithRider": true,
+      "bob": {
+        "amplitudePx": 5,
+        "periodPx": 220
+      },
+      "track": {
+        "artKey": "alberta-foothills-ride-ranch-horse-trail",
+        "topY": 346
+      }
+    }
+  ],
   "assets": [],
   "textureBudgetBytes": 37748736
 }
