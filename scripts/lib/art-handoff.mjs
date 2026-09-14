@@ -1669,6 +1669,25 @@ const RECIPES = {
   'driftwood-pile': singleSource(),
 
   /**
+   * Toronto's two, from licence-checked photographs that arrived after the level
+   * had spent a season with one point of interest. The streetcar is drawn three-
+   * quarter, because side-on it is either far too long or smaller than the
+   * cyclists behind it, and it carries no pole or pantograph: the photographs
+   * disagree on which the car uses and the level has no overhead wire. At 120 px
+   * it reads as a rail vehicle rather than as Toronto, and its subject says so.
+   * The square draws no city-name sign and none of the graphics in its letters.
+   */
+  'streetcar': singleSource(),
+  'nathan-phillips-square': singleSource(),
+
+  /**
+   * The foothills' pump jack. The Foothills County photograph shows a different
+   * class of jack, pivoted at the back of the beam, so it supplied the paint and
+   * the shape was measured on the other references.
+   */
+  'pump-jack': singleSource(),
+
+  /**
    * THE ONE NEGATIVE OFFSET IN THE TABLE, AND IT IS NOT A TYPO.
    *
    * "In world coordinates the railbed tile's top edge is 210 px ABOVE the
