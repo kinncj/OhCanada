@@ -1434,20 +1434,30 @@ export class LevelScene extends Phaser.Scene {
       this.#drawnRects.get(id) ?? fallback(position);
 
     /*
-     * `teachingPois`, not `pois` — ADR-0003 at the one seam where it shows.
+     * `reachablePois`, not `pois` and not `teachingPois` — ADR-0003 at the one
+     * seam where it shows, and ADR-0029 at the one where it would break.
      *
      * A landmark whose blurb a verifier declined is still painted by
      * `#paintPois`, because the level's picture is composed around it and a hole
-     * is a worse lie than a quiet building. It is **not** a target: no reach
-     * event, so the HUD never offers it; no stop subject, so an automatic drive
-     * does not brake for something that would not open; no affordance mark, so
-     * nothing on screen says it can be tapped; and a tap that lands on it is a
-     * tap on scenery, which this scene already knows how to answer (see
-     * `#resolveTap`). The invitation and the thing being taught are withdrawn
-     * together, because the blurb was the whole of what the invitation promised.
+     * is a worse lie than a quiet building. Whether it is a **target** depends
+     * on whether it has a job besides the blurb:
+     *
+     *  - **No quest role** — no reach event, so the HUD never offers it; no stop
+     *    subject, so an automatic drive does not brake for something that would
+     *    not open; no affordance mark; and a tap on it is a tap on scenery (see
+     *    `#resolveTap`). The blurb was the whole of what the invitation promised.
+     *  - **A `questId`** — still a target. It gives or advances a quest, and that
+     *    is still there to do: refusing the claim withholds the card, not the
+     *    lighthouse the level's quest is given by. Before this, one refused blurb
+     *    at Peggy's Cove made the level's giver unreachable and its quest gone.
+     *
+     * `teachingPois` answered both questions at once, which is how the second
+     * went wrong. This scene still does not know what a quest is; `questId` is
+     * the level document declaring the role, and the list is derived in
+     * `level-document.ts`.
      */
     this.#reachTargets = [
-      ...level.teachingPois.map((poi) => ({
+      ...level.reachablePois.map((poi) => ({
         id: poi.id as string,
         position: poi.position,
         npc: false,

@@ -36,7 +36,14 @@ import type { QuestDocument } from '@application/ports';
 import type { LevelId } from '@domain/ids';
 
 import { buildPage, type FakePage } from '../ui/support/fake-dom';
-import { brandId, emptyProgress, testClock, text as localised } from '../support/fixtures';
+import {
+  brandId,
+  emptyProgress,
+  flavourFact,
+  spoken,
+  testClock,
+  text as localised,
+} from '../support/fixtures';
 
 /* ------------------------------------------------------------- the lighthouse */
 
@@ -103,7 +110,7 @@ const lighthouseQuest = (overrides: Partial<QuestDocument> = {}): QuestDocument 
               'You are standing on the Atlantic edge of Nova Scotia.',
               "Vous êtes sur la bordure atlantique de la Nouvelle-Écosse.",
             ),
-            fact: { claimsFact: false },
+            fact: flavourFact(),
           },
         ],
       },
@@ -136,7 +143,9 @@ function harnessFor(
 
   const wiring: QuestWiring = {
     levelId: brandId<LevelId>(level),
-    quests,
+    /* Through the adjudicator, because the controller takes nothing else
+       (ADR-0003, `app/bootstrap/verified-dialogue.ts`). */
+    quests: quests.map((quest) => spoken(quest, String(quest.id))),
     placements: () => placements,
     host: page.host,
     store: createSettingsStore(),
@@ -262,7 +271,7 @@ describe('a landmark has no face, and nothing on this path asks it for one', () 
               {
                 speaker: LIGHT,
                 text: { en: 'This spot marks the edge.', fr: 'Ce lieu marque la bordure.' },
-                fact: { claimsFact: false },
+                fact: flavourFact(),
               },
             ],
           },
@@ -298,7 +307,7 @@ describe('a landmark has no face, and nothing on this path asks it for one', () 
               {
                 speaker: 'officer',
                 text: { en: 'Welcome.', fr: 'Bienvenue.' },
-                fact: { claimsFact: false },
+                fact: flavourFact(),
                 expression: 'happy',
               },
             ],

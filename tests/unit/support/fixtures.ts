@@ -31,6 +31,11 @@ import type {
 import type { Clock } from '@application/ports/clock';
 import type { RandomSource, SeededRandomSource } from '@application/ports/random-source';
 import type { WebStorage } from '@adapters/persistence/web-storage';
+import {
+  adjudicateQuest,
+  createDialogueLedger,
+  type SpokenQuest,
+} from '../../../app/bootstrap/verified-dialogue';
 import type { LocalizedText } from '@domain/entities/values';
 import { defaultSettings } from '@domain/entities/player';
 import type { Settings } from '@domain/entities/player';
@@ -77,6 +82,42 @@ export const factVerification = (): QuestionDocument['verification'] => ({
   checkedAt: '2024-01-06T00:00:00.000Z' as IsoInstant,
   sourceHash: SOURCE_HASH,
   evidence: 'Canada is a federal state, a parliamentary democracy and a constitutional monarchy.',
+});
+
+/**
+ * A dialogue line's `fact` block, in the four shapes a test needs.
+ *
+ * Shaped exactly as `content/schemas/quest.schema.json` writes one, because
+ * `app/bootstrap/verified-dialogue.ts` refuses a block it cannot read and a
+ * fixture that is *nearly* a fact block would therefore prove the wrong thing.
+ * Four suites were carrying `{ claimsFact: false }` — a property no schema has —
+ * and every one of them passed, because until ADR-0003 reached this path nothing
+ * read the block at all. That is the same defect in miniature.
+ */
+export const flavourFact = (): Record<string, unknown> => ({
+  factual: false,
+  source: null,
+  verification: null,
+});
+
+/** A claim a verifier granted: the status, the hash it was granted for, evidence. */
+export const grantedFact = (): Record<string, unknown> => ({
+  factual: true,
+  source: { ...factSource() },
+  verification: { ...factVerification() },
+});
+
+/**
+ * A claim a verifier declined. `rejected` by default, because that is what the
+ * five live ones are; the parameter is there so `quarantined` and `unverified`
+ * are as easy to write, and neither may be drawn either.
+ */
+export const declinedFact = (
+  status: 'unverified' | 'quarantined' | 'rejected' = 'rejected',
+): Record<string, unknown> => ({
+  factual: true,
+  source: { ...factSource() },
+  verification: { ...factVerification(), status },
 });
 
 export const makeQuestion = (
@@ -133,6 +174,23 @@ export const makeQuest = (overrides: Partial<QuestDocument> = {}): QuestDocument
   ],
   ...overrides,
 });
+
+/**
+ * A quest document, adjudicated, as the composition root hands one over.
+ *
+ * `createQuestController` takes a `SpokenQuest` and a `QuestDocument` does not
+ * satisfy it, so every suite that drives the controller goes through here. That
+ * is not ceremony: it is the mechanism being exercised by the tests that are not
+ * about it, which is the only way a receipt ever stays honest.
+ *
+ * Throws rather than answering a `Result`, because a fixture whose `fact` blocks
+ * cannot be read is a broken test and not a scenario.
+ */
+export const spoken = (quest: QuestDocument, where = 'fixture'): SpokenQuest => {
+  const result = adjudicateQuest(quest, createDialogueLedger(), where);
+  if (!result.ok) throw new Error(`${where} was not adjudicable: ${result.error.message}`);
+  return result.value;
+};
 
 export const makeCharacter = (overrides: Partial<CharacterDocument> = {}): CharacterDocument => ({
   $schema: '../schemas/character.schema.json',

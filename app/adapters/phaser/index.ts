@@ -168,9 +168,23 @@ export {
   root builds the "About this place" panel's content from `SceneLevel.about` and
   has to be able to name the two shapes it can be, and because a future DOM
   surface must not re-derive "may this be drawn" from the status field itself.
+
   The *rule* is deliberately not on this list: `adjudicateClaim` and
-  `readFactClaim` are reachable only from inside this directory, so the only way
-  another layer can obtain a drawable claim is to have parsed a level.
+  `readFactClaim` are not reachable through this index, so the only way another
+  layer can obtain a drawable claim is to have parsed a level — or a quest.
+
+  There is exactly one other holder of the rule, and it is named here rather than
+  left to be discovered: `app/bootstrap/verified-dialogue.ts` deep-imports
+  `./verified-claim` to adjudicate a line of NPC dialogue. A dialogue line's
+  `fact` is the same block as a landmark blurb's `factClaim`, and the alternative
+  was a second copy of three conditions in another directory, which is how two
+  copies come to disagree about what "verified" means. That file is an enclosure
+  of the same kind: `SpeakableLine` carries its own private symbol, so it hands
+  out adjudicated lines and never the rule.
+
+  `tests/unit/contracts/one-rule-decides-what-may-be-drawn.test.ts` enforces the
+  list — the two files above and nothing else — so this paragraph is a statement
+  something can fail on rather than a comment that rots.
 */
 export {
   censusIsRemarkable,

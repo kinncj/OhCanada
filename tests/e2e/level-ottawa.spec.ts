@@ -53,6 +53,8 @@ interface LevelFile {
   readonly pois: readonly {
     readonly id: string;
     readonly position: { readonly x: number };
+    /** The quest this landmark gives or advances. Keeps it in reach when its claim is refused. */
+    readonly questId?: string;
     /** ADR-0003's block. Read here so the spec can tell art from teaching. */
     readonly fact: {
       readonly factual: boolean;
@@ -115,6 +117,14 @@ const verified = (fact: LevelFile['pois'][number]['fact']): boolean =>
 /** The landmarks Ottawa may teach from, and the ones a verifier declined. */
 const TEACHING = OTTAWA.pois.filter((poi) => verified(poi.fact));
 const REFUSED = OTTAWA.pois.filter((poi) => !verified(poi.fact));
+/**
+ * What the scene keeps in reach: a landmark that teaches, or one the level gives
+ * a quest role. A refused claim withholds the claim, not the landmark, so a
+ * refused landmark with a `questId` is still there for its quest.
+ */
+const REACHABLE = OTTAWA.pois.filter((poi) => verified(poi.fact) || typeof poi.questId === 'string');
+/** Refused and with no quest role: scenery, never reported into reach. */
+const SCENERY = REFUSED.filter((poi) => typeof poi.questId !== 'string');
 
 /** One frame as `scene-probe.ts` records it. Restated so a rename fails a test. */
 interface Frame {
@@ -809,7 +819,7 @@ test.describe('ADR-0003 — a refused claim is not offered to the player', () =>
       probe,
       'the game marks a landmark as tappable whose blurb a verifier declined, so a player is ' +
         'invited to open a card that has nothing true to put in it.',
-    ).toHaveAttribute('data-affordances', String(TEACHING.length + OTTAWA.characters.length));
+    ).toHaveAttribute('data-affordances', String(REACHABLE.length + OTTAWA.characters.length));
 
     /*
      * And the census, so "nothing was refused" and "nothing was examined" are
@@ -845,7 +855,7 @@ test.describe('ADR-0003 — a refused claim is not offered to the player', () =>
      * that watches the built artefact, and it re-arms itself.
      */
     test.skip(
-      REFUSED.length === 0,
+      SCENERY.length === 0,
       'every landmark on content/levels/ottawa.json currently teaches something a verifier ' +
         'granted, so there is no refused claim on this level to walk past. The test above still ' +
         'asserts the census and the affordance count on every run.',
@@ -875,7 +885,7 @@ test.describe('ADR-0003 — a refused claim is not offered to the player', () =>
         `the skater passed "${poi.id}", whose claim is verified, and was never told it was there`,
       ).toContain(poi.id);
     }
-    for (const poi of REFUSED) {
+    for (const poi of SCENERY) {
       expect(
         entered,
         `"${poi.id}" reported the player into reach, so the HUD offered a landmark whose only ` +

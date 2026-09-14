@@ -31,16 +31,39 @@
  * loads.
  *
  * What is **not** checked here is anything `make validate-content` owns against
- * the schema — `fact` provenance on a dialogue line, `$schema`, unknown
- * properties. This is the artefact's guard, not the repository's: a document
- * that reaches a player must be *drawable*, and the rest fails the build long
- * before that.
+ * the schema — `$schema`, unknown properties, the shape of a `source` block.
+ * This is the artefact's guard, not the repository's: a document that reaches a
+ * player must be *drawable*, and the rest fails the build long before that.
+ *
+ * ## What changed: verification is not the schema's job alone
+ *
+ * This file used to say that whether a line's claim is verified was
+ * `make validate-content`'s question and not its own. That was wrong in the way
+ * the level path was wrong before `app/adapters/phaser/verified-claim.ts`: CI
+ * *counted* five rejected lines as "excluded from the build" while `./quest.ts`
+ * put them on screen in a named character's voice. A gate that runs in CI and
+ * not at the artefact is a gate for the repository, and a player does not play
+ * the repository.
+ *
+ * So {@link readQuests} now hands out {@link SpokenQuest}s, not `QuestDocument`s:
+ * every line has been through `./verified-dialogue.ts`, and a line a verifier
+ * declined is not a value the quest surface can be given. {@link readQuest} is
+ * unchanged and still answers a plain `QuestDocument` — it reads the document,
+ * it does not adjudicate it — which keeps "is this drawable" and "is this true"
+ * as two separate refusals with two separate messages.
  */
 
 import { appErr, ok, type Result } from '@common/result';
 import type { DialogueLine, QuestDocument, QuestStepDocument } from '@application/ports';
 import type { CharacterId, LevelId, QuestId, QuestionId, SubjectId } from '@domain/ids';
 import type { LocalizedText } from '@domain/entities/values';
+
+import {
+  adjudicateQuest,
+  createDialogueLedger,
+  type DialogueCensus,
+  type SpokenQuest,
+} from './verified-dialogue';
 
 /**
  * Every `content/quests/<id>.json`, eagerly.
@@ -114,10 +137,11 @@ const STEP_KINDS: readonly QuestStepDocument['kind'][] = ['talk', 'visit', 'coll
  * a `talk` step whose dialogue would not load is refused: a giver who opens a
  * dialog and says nothing is worse than a giver who is not offered.
  *
- * `fact` is carried through untouched. Whether a line's claim is verified is
- * `make validate-content`'s question, not this file's, but dropping the field
- * would leave the surface unable to tell a claim from flavour if it ever needs
- * to.
+ * `fact` is carried through untouched, and that is now load-bearing rather than
+ * merely tidy: `./verified-dialogue.ts` reads it a moment later and decides
+ * whether the block may be said at all. This reader's job is the *shape* — a
+ * line with no `fact` is a line nobody recorded a judgement for, and it is
+ * refused here so the adjudicator downstream is never handed one.
  */
 function readDialogue(raw: unknown, where: string): Result<DialogueLine[]> {
   if (!Array.isArray(raw) || raw.length === 0) {
@@ -145,10 +169,9 @@ function readDialogue(raw: unknown, where: string): Result<DialogueLine[]> {
     lines.push({
       speaker: speaker.value as CharacterId,
       text: text.value,
-      /* Carried through as declared. Whether the claim is *verified* is
-         `make validate-content`'s question against the schema, not this file's:
-         what would be wrong here is dropping the field, because a surface that
-         cannot tell a claim from flavour cannot ever be made to check one. */
+      /* Carried through as declared, for `./verified-dialogue.ts` to read.
+         Dropping it here would leave the surface unable to tell a claim from
+         flavour, which is what the dialogue path had instead of a gate. */
       fact: fact as unknown as DialogueLine['fact'],
       ...(typeof expression === 'string' ? { expression } : {}),
     });
@@ -267,8 +290,15 @@ export function readQuest(raw: unknown, where: string): Result<QuestDocument> {
 }
 
 export interface QuestCatalogue {
-  /** Every quest this build could draw, in the order the bundler found them. */
-  readonly quests: readonly QuestDocument[];
+  /**
+   * Every quest this build may speak, in the order the bundler found them.
+   *
+   * {@link SpokenQuest} and not `QuestDocument`: every line in here has been
+   * adjudicated under ADR-0003, and the type is the receipt. Nothing downstream
+   * can be handed a line a verifier declined, because there is no such value to
+   * hand it (`./verified-dialogue.ts`).
+   */
+  readonly quests: readonly SpokenQuest[];
   /**
    * The documents that would not load, as sentences for the console.
    *
@@ -276,8 +306,21 @@ export interface QuestCatalogue {
    * away, and it must not stop the level it belongs to from being played. The
    * level is simply quieter than it should be, and the reason is on the console
    * where a developer can act on it.
+   *
+   * Two kinds of document land here now. One this reader could not *draw* — a
+   * missing prompt, an `answer` step with no count — and one
+   * `./verified-dialogue.ts` could not *adjudicate*, which is a `fact` block
+   * that is misspelt, mistyped or absent where `factual` is true. The second is
+   * refused rather than treated as unverified on purpose: a renamed field must
+   * not be able to present as an honest rejection (ADR-0024).
    */
   readonly refused: readonly string[];
+  /**
+   * What ADR-0003's filter looked at across every quest in the build, and what
+   * it did. Printed by `./main.ts` when it is remarkable and published to the
+   * scene probe whether or not it is.
+   */
+  readonly census: DialogueCensus;
 }
 
 /**
@@ -288,16 +331,34 @@ export interface QuestCatalogue {
  * in a stable one.
  */
 export function readQuests(modules: QuestModuleMap = BUNDLED_QUEST_MODULES): QuestCatalogue {
-  const quests: QuestDocument[] = [];
+  const quests: SpokenQuest[] = [];
   const refused: string[] = [];
+  const ledger = createDialogueLedger();
 
   for (const path of Object.keys(modules).sort()) {
     const read = readQuest(documentOf(modules[path]), path);
-    if (read.ok) quests.push(read.value);
-    else refused.push(`${read.error.code}: ${read.error.message}`);
+    if (!read.ok) {
+      refused.push(`${read.error.code}: ${read.error.message}`);
+      continue;
+    }
+    /*
+     * Read, then adjudicated, and never the other way round: a document that
+     * cannot be drawn has nothing worth verifying, and one whose claims cannot
+     * be read must not reach a surface because its prose happened to parse.
+     *
+     * The pointer is the quest's own id rather than the module path, because
+     * that is what `verify-content` prints and a developer comparing the two
+     * should not have to translate between a glob key and a document.
+     */
+    const spoken = adjudicateQuest(read.value, ledger, String(read.value.id));
+    if (spoken.ok) quests.push(spoken.value);
+    else refused.push(`${spoken.error.code}: ${spoken.error.message}`);
   }
 
-  return { quests, refused };
+  /* `ledger.census` and not a special case for the empty build: a build with no
+     quests reports `quests: 0, examined: 0`, which is a different sentence from
+     `quests: 10, examined: 0` and is exactly why `quests` is in the census. */
+  return { quests, refused, census: ledger.census };
 }
 
 /**
@@ -310,6 +371,6 @@ export function readQuests(modules: QuestModuleMap = BUNDLED_QUEST_MODULES): Que
 export function questsForLevel(
   catalogue: QuestCatalogue,
   levelId: LevelId,
-): readonly QuestDocument[] {
+): readonly SpokenQuest[] {
   return catalogue.quests.filter((quest) => quest.levelId === levelId);
 }

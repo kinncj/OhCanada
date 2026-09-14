@@ -40,12 +40,22 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { createQuestController, type QuestController } from '../../../app/bootstrap/quest';
 import { readQuest } from '../../../app/bootstrap/quests';
+import {
+  adjudicateQuest,
+  createDialogueLedger,
+  type SpokenQuest,
+} from '../../../app/bootstrap/verified-dialogue';
 import { resolveEngageable, type LevelPlacements } from '../../../app/bootstrap/engageables';
 import { withQuestState, type Progress } from '@domain/entities/progress';
 import { createSettingsStore } from '@ui/settings';
-import type { QuestDocument } from '@application/ports';
 import { buildPage, press, type FakePage } from '../ui/support/fake-dom';
-import { emptyProgress, ORIGIN, testClock, text as localised } from '../support/fixtures';
+import {
+  emptyProgress,
+  flavourFact,
+  ORIGIN,
+  testClock,
+  text as localised,
+} from '../support/fixtures';
 
 /* --------------------------------------------------------------- documents */
 
@@ -63,7 +73,15 @@ const FOOTHILLS: LevelPlacements = {
 const GATE_LINE = 'Alberta has the most beef cattle in Canada.';
 const BARN_LINE = 'The Prairie provinces are Alberta, Saskatchewan and Manitoba.';
 
-const flavour = { claimsFact: false } as const;
+/**
+ * A line that claims nothing about Canada, as `quest.schema.json` writes one.
+ *
+ * This fixture used to say `{ claimsFact: false }` — a property no schema has —
+ * and every assertion below passed, because nothing on the dialogue path read
+ * the block. It is a real block now, and a misspelt one refuses the document:
+ * `a-line-is-said-only-when-verified.test.ts` holds that on purpose.
+ */
+const flavour = flavourFact();
 
 /** A line, as a quest document writes one. `fact` is required on every line. */
 const line = (speaker: string, en: string, fr: string): Record<string, unknown> => ({
@@ -79,10 +97,16 @@ const line = (speaker: string, en: string, fr: string): Record<string, unknown> 
  * `readStep` keeps `dialogue` on a step that is not `talk` — a fixture cast to
  * `QuestDocument` would assert that over a value the loader never saw.
  */
-function parse(raw: Record<string, unknown>): QuestDocument {
+function parse(raw: Record<string, unknown>): SpokenQuest {
   const read = readQuest(raw, 'fixture');
   if (!read.ok) throw new Error(`fixture did not load: ${read.error.message}`);
-  return read.value;
+  /* Read, then adjudicated, which is the order `readQuests` uses. The
+     controller takes a `SpokenQuest` and nothing else, so a fixture that
+     skipped this would not compile — which is the mechanism, tested by being
+     relied on. */
+  const spoken = adjudicateQuest(read.value, createDialogueLedger(), 'fixture');
+  if (!spoken.ok) throw new Error(`fixture was not adjudicable: ${spoken.error.message}`);
+  return spoken.value;
 }
 
 interface StepOverrides {
@@ -91,7 +115,7 @@ interface StepOverrides {
   readonly atTheBarn?: readonly Record<string, unknown>[] | null;
 }
 
-const ranchQuest = (overrides: StepOverrides = {}): QuestDocument => {
+const ranchQuest = (overrides: StepOverrides = {}): SpokenQuest => {
   const atTheGate =
     overrides.atTheGate === undefined
       ? [
@@ -162,7 +186,7 @@ interface Harness {
  * quest was accepted — which `a-landmark-giver-opens-a-dialog.test.ts` owns.
  */
 function harnessFor(
-  quest: QuestDocument,
+  quest: SpokenQuest,
   stepIndex: number,
   placements: LevelPlacements | null = FOOTHILLS,
 ): Harness {
@@ -410,7 +434,7 @@ describe('a landmark speaks in its own name, and is asked for no face', () => {
   };
 
   /** The shape the two figureless levels ship: no `expression` on any line. */
-  const lighthouseQuest = (): QuestDocument =>
+  const lighthouseQuest = (): SpokenQuest =>
     parse({
       id: 'peggys-cove-point-light',
       levelId: 'peggys-cove',

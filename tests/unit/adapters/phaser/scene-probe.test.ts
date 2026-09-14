@@ -148,6 +148,19 @@ describe('snapshotToAttributes', () => {
         'data-claims-examined',
         'data-claims-drawable',
         'data-claims-refused',
+        /* The same distinction for the other half of the prose this game shows a
+           player: the words a character says. Five lines a verifier had declined
+           were spoken in named voices while `verify-content` counted them as
+           excluded from the build, which is the claim defect one path over.
+           `-refused` counts lines and `-silenced` counts blocks, because a
+           refused line takes its whole block with it — the granted lines beside
+           it are its run-up, and saying them alone leaves the speaker
+           mid-thought. One number could not show that. */
+        'data-dialogue-examined',
+        'data-dialogue-drawable',
+        'data-dialogue-refused',
+        'data-dialogue-blocks',
+        'data-dialogue-silenced',
         /* The level's sky follows the device clock; this is what makes that
            observable instead of a screenshot taken at the right hour. */
         'data-day-phase',
@@ -176,6 +189,47 @@ describe('snapshotToAttributes', () => {
     expect(attributes['data-player-x']).toBe('unknown');
     expect(attributes['data-speed']).toBe('unknown');
     expect(attributes['data-grounded']).toBe('unknown');
+    /*
+     * The dialogue census included, and this is not a formality. A build where
+     * the quests were never read and one where they were read and nothing was
+     * refused must not publish the same thing, and `0` for the first would be a
+     * fabricated measurement of exactly the kind ADR-0024 is about.
+     */
+    expect(attributes['data-dialogue-examined']).toBe('unknown');
+    expect(attributes['data-dialogue-silenced']).toBe('unknown');
+  });
+
+  it('distinguishes a build with no quests from a filter that stopped matching', () => {
+    const empty = snapshotToAttributes({
+      dialogueExamined: 0,
+      dialogueDrawable: 0,
+      dialogueRefused: 0,
+      dialogueBlocks: 0,
+      dialogueSilenced: 0,
+    });
+    const healthy = snapshotToAttributes({
+      dialogueExamined: 92,
+      dialogueDrawable: 92,
+      dialogueRefused: 0,
+      dialogueBlocks: 37,
+      dialogueSilenced: 0,
+    });
+    const refusing = snapshotToAttributes({
+      dialogueExamined: 92,
+      dialogueDrawable: 87,
+      dialogueRefused: 5,
+      dialogueBlocks: 37,
+      dialogueSilenced: 5,
+    });
+
+    /* All three read `0 refused`. Only `examined` tells the first from the
+       second, and only `silenced` tells how much a player actually lost. */
+    expect(empty['data-dialogue-examined']).toBe('0');
+    expect(healthy['data-dialogue-examined']).toBe('92');
+    expect(healthy['data-dialogue-silenced']).toBe('0');
+    expect(refusing['data-dialogue-refused']).toBe('5');
+    expect(refusing['data-dialogue-silenced']).toBe('5');
+    expect(refusing['data-dialogue-drawable']).toBe('87');
   });
 
   it('spells parallax easing on/off, as the stories assert it', () => {

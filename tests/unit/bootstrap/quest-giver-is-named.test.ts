@@ -65,6 +65,7 @@ import {
   resolveEngageable,
   type LevelPlacements,
   type EngageableResolution,
+  levelPlacements,
 } from '../../../app/bootstrap/engageables';
 import { createSettingsStore } from '@ui/settings';
 import { hasCopyRow, UI_LOCALES, type UiLocale } from '@ui/copy';
@@ -78,8 +79,10 @@ import {
   brandId,
   characterId,
   emptyProgress,
+  flavourFact,
   levelId,
   makeQuest,
+  spoken,
   testClock,
   text as localised,
 } from '../support/fixtures';
@@ -95,19 +98,23 @@ const MODES: readonly string[] = (gameConfigJson as { locomotionModes: readonly 
 /**
  * A level document, as placements. The two lists apart, which is ADR-0029 §2.
  *
- * Read through `parseLevelDocument` rather than picked out of the JSON by hand,
- * and that is not tidiness. A landmark whose blurb a verifier declined is not an
- * engageable at run time (ADR-0003, `app/adapters/phaser/verified-claim.ts`), so
- * a quest given by one could not be offered — and a test that read `pois`
- * straight out of the file would have said it could. The suite now asks the same
- * question the game asks.
+ * Read through `parseLevelDocument` and `levelPlacements` — the parser and the
+ * helper the game uses — rather than picked out of the JSON by hand. A landmark
+ * whose blurb a verifier declined is still placed and still names its quest
+ * (ADR-0003 withholds the claim, not the landmark); this suite went red when the
+ * game resolved givers over `teachingPois` and Peggy's Point Lighthouse's blurb
+ * was rejected, which is what it was for.
  */
 function placementsOf(id: string): LevelPlacements | null {
   const path = `${REPO_ROOT}content/levels/${id}.json`;
   if (!existsSync(path)) return null;
   const parsed = parseLevelDocument(JSON.parse(readFileSync(path, 'utf8')), MODES);
   if (!parsed.ok) throw new Error(`content/levels/${id}.json: ${parsed.error.message}`);
-  return { pois: parsed.value.teachingPois, characters: parsed.value.characters };
+  /* Through the helper the game calls, so this asks the question the game asks:
+     every landmark the level places, including one whose claim was refused. */
+  const placements = levelPlacements(parsed.value);
+  if (placements === null) throw new Error(`content/levels/${id}.json: no placements`);
+  return placements;
 }
 
 /** Whatever a placed landmark teaches. Verified by construction: see {@link PlacedPoi}. */
@@ -319,7 +326,9 @@ function harnessFor(
 
   const wiring: QuestWiring = {
     levelId: brandId<LevelId>(level),
-    quests,
+    /* Through the adjudicator, because the controller takes nothing else
+       (ADR-0003, `app/bootstrap/verified-dialogue.ts`). */
+    quests: quests.map((quest) => spoken(quest, String(quest.id))),
     placements: () => placements,
     host: page.host,
     store: createSettingsStore(),
@@ -357,7 +366,7 @@ const questGivenBy = (giver: CharacterId): QuestDocument =>
           {
             speaker: String(giver),
             text: localised('Hello.', 'Bonjour.'),
-            fact: { claimsFact: false },
+            fact: flavourFact(),
           },
         ],
       },

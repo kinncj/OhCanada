@@ -65,7 +65,10 @@ interface LevelFile {
 interface QuestFile {
   readonly id: string;
   readonly giver: string;
-  readonly steps: readonly {
+  readonly steps: readonly QuestStep[];
+}
+
+interface QuestStep {
     readonly id: string;
     readonly kind: string;
     readonly prompt: { readonly en: string; readonly fr: string };
@@ -81,8 +84,27 @@ interface QuestFile {
     readonly dialogue?: readonly {
       readonly speaker: string;
       readonly text: { readonly en: string; readonly fr: string };
+      /**
+       * ADR-0003's block, on the line. Read here so this spec can tell a line
+       * the game is allowed to say from one a verifier declined.
+       *
+       * Five of the lines in `content/quests/` were rejected and spoken anyway,
+       * in named characters' voices, while `verify-content` counted them as
+       * excluded from the build. `app/bootstrap/verified-dialogue.ts` is the gate
+       * that closed it, and the whole block goes when one line in it is refused —
+       * the granted lines beside it are its run-up, and saying them alone leaves
+       * the speaker mid-thought.
+       */
+      readonly fact: {
+        readonly factual: boolean;
+        readonly source: { readonly sourceHash: string } | null;
+        readonly verification: {
+          readonly status: string;
+          readonly sourceHash: string;
+          readonly evidence: string;
+        } | null;
+      };
     }[];
-  }[];
 }
 
 const LEVEL = JSON.parse(
@@ -149,9 +171,62 @@ const STAMP_SENTENCE = text('en', `stamp.${START_LEVEL}.earned` as Parameters<ty
 /** The step after the opening `talk`, which is what the tracker shows first. */
 const SECOND_STEP = QUEST.steps[1];
 
-/** The first landmark the task sends the player to, and what it teaches there. */
-const FIRST_VISIT = QUEST.steps.find((step) => step.kind === 'visit');
+/**
+ * ADR-0003's three conditions, over the document, so this spec can say which
+ * blocks the game is allowed to speak.
+ *
+ * Written from the document's own field names rather than imported from the
+ * gate, for the reason `level-ottawa.spec.ts` gives about the same rule: a
+ * scenario that asked the code under test what it should expect would agree with
+ * it however wrong it was.
+ */
+const lineIsGranted = (line: NonNullable<QuestStep['dialogue']>[number]): boolean =>
+  line.fact.factual !== true ||
+  (line.fact.verification !== null &&
+    line.fact.source !== null &&
+    line.fact.verification.status === 'verified' &&
+    line.fact.verification.sourceHash === line.fact.source.sourceHash &&
+    line.fact.verification.evidence.trim().length > 0);
+
+/** A block may be said only if every line in it may. The unit is the utterance. */
+const blockIsSpeakable = (step: QuestFile['steps'][number]): boolean =>
+  (step.dialogue ?? []).every((line) => lineIsGranted(line));
+
+/**
+ * The first landmark the task sends the player to **and is allowed to teach at**,
+ * and what it teaches there.
+ *
+ * "And is allowed to" is not a hedge. Halifax's quest carries a rejected line on
+ * its third step today, and a scenario that took `steps.find(kind === 'visit')`
+ * and asserted its words were drawn would be asserting that a declined claim
+ * reaches a player — which is what the old version of this file did, one level
+ * over. Which step is refused moves as authors fix them, so this is derived
+ * rather than indexed.
+ */
+const FIRST_VISIT = QUEST.steps.find(
+  (step) => step.kind === 'visit' && (step.dialogue?.length ?? 0) > 0 && blockIsSpeakable(step),
+);
 const FIRST_VISIT_LINES = (FIRST_VISIT?.dialogue ?? []).map((entry) => entry.text.en);
+
+/**
+ * Every quest in the build, for the census this suite reads off the probe.
+ *
+ * Read here, off the disk, by a route the bundle never takes: the expectation
+ * has to be computed from `content/` and not from the thing being measured.
+ */
+const ALL_QUESTS: readonly QuestFile[] = readdirSync(`${REPO_ROOT}content/quests`)
+  .filter((name) => name.endsWith('.json'))
+  .sort()
+  .map((name) => JSON.parse(readFileSync(`${REPO_ROOT}content/quests/${name}`, 'utf8')) as QuestFile);
+
+/** Every `dialogue` block in the build, with the verdict computed here. */
+const ALL_BLOCKS = ALL_QUESTS.flatMap((quest) =>
+  quest.steps.flatMap((step) =>
+    (step.dialogue?.length ?? 0) === 0
+      ? []
+      : [{ lines: step.dialogue ?? [], speakable: blockIsSpeakable(step) }],
+  ),
+);
 
 test.describe.configure({ mode: 'serial', timeout: 300_000 });
 
@@ -873,4 +948,64 @@ test.describe('every level that places a quest giver can give its quest', () => 
       await expect(page.getByTestId('dialogue-accept')).toBeVisible();
     });
   }
+});
+
+/**
+ * ADR-0003 through the built artefact, for the words a character says.
+ *
+ * The canvas is `aria-hidden` and a dialog that never opens leaves nothing on
+ * the page to assert, so "the rejected line was not said" is only provable from
+ * outside by its **absence** — and an absence is exactly what a filter that
+ * dropped everything also produces. That is why the census is on the probe:
+ * `data-dialogue-examined` is the number that separates "the filter ran and
+ * refused nothing" from "the filter never matched a block", and
+ * `data-dialogue-silenced` is what a player actually lost.
+ *
+ * The numbers are computed here from `content/quests/` by a route the bundle
+ * never takes, so this tracks the content: the day an author rewrites the five
+ * declined lines and a verifier grants them, `data-dialogue-silenced` goes to 0,
+ * this spec expects 0, and nothing here is edited. What it can never do is pass
+ * while the runtime and the documents disagree.
+ */
+test.describe('ADR-0003 — a line a verifier declined is not spoken', () => {
+  test('publishes a dialogue census that matches the documents in content/quests/', async ({
+    page,
+  }) => {
+    /* The floor. Every check below folds an empty corpus into a pass, and zero
+       blocks of dialogue is not a number this game can have. */
+    expect(
+      ALL_BLOCKS.length,
+      'content/quests/ holds no dialogue at all, so this scenario is about nothing',
+    ).toBeGreaterThan(0);
+
+    const lines = ALL_BLOCKS.reduce((total, block) => total + block.lines.length, 0);
+    const refused = ALL_BLOCKS.reduce(
+      (total, block) => total + block.lines.filter((line) => !lineIsGranted(line)).length,
+      0,
+    );
+    const silenced = ALL_BLOCKS.filter((block) => !block.speakable).length;
+
+    await openLevel(page, '&e2e=1');
+    const probe = page.locator('[data-testid="scene-state"]');
+
+    await expect(
+      probe,
+      'the dialogue filter examined a different number of lines than content/quests/ carries, ' +
+        'which means it is reading something other than every fact block on every line.',
+    ).toHaveAttribute('data-dialogue-examined', String(lines));
+    await expect(probe).toHaveAttribute('data-dialogue-blocks', String(ALL_BLOCKS.length));
+    await expect(probe).toHaveAttribute('data-dialogue-refused', String(refused));
+    await expect(probe).toHaveAttribute('data-dialogue-drawable', String(lines - refused));
+    await expect(
+      probe,
+      'the build silenced a different number of blocks than content/quests/ has blocks with a ' +
+        'declined line in them. One refused line takes its whole block with it, and that is ' +
+        'the number a player feels.',
+    ).toHaveAttribute('data-dialogue-silenced', String(silenced));
+
+    /* And the reading that ADR-0024 exists for: a filter that stopped matching
+       the blocks it reads publishes `examined: 0` beside `refused: 0`, and looks
+       exactly like a clean build without this. */
+    expect(lines, 'examined would be 0, which is the failure this attribute exists for').toBeGreaterThan(0);
+  });
 });

@@ -66,7 +66,7 @@
  * and the completion card takes its own reason (`'complete'`), never this one.
  */
 
-import type { QuestDocument, QuestStepDocument } from '@application/ports';
+import type { QuestDocument } from '@application/ports';
 import type { Clock } from '@application/ports/clock';
 import { startQuest, questIsOnOffer, offerQuest } from '@application/use-cases/start-quest';
 import {
@@ -95,11 +95,26 @@ import {
   type EngageableResolution,
   type LevelPlacements,
 } from './engageables';
+import {
+  spokenStep,
+  type SilencedUtterance,
+  type SpokenQuest,
+  type SpokenStep,
+} from './verified-dialogue';
 
 export interface QuestWiring {
   readonly levelId: LevelId;
-  /** This level's quests, in a stable order. Empty is the normal case today. */
-  readonly quests: readonly QuestDocument[];
+  /**
+   * This level's quests, in a stable order. Empty is the normal case today.
+   *
+   * {@link SpokenQuest} and not `QuestDocument`, which is the whole of ADR-0003
+   * on this path: a line reaches here only once `./verified-dialogue.ts` has
+   * adjudicated it, and the `unique symbol` on `SpeakableLine` means handing
+   * this controller the raw document `readQuest` produced does not compile. The
+   * filter cannot be forgotten by a caller who never heard of it — the property
+   * `Shippable<T>` gives the question bank, for the words a character says.
+   */
+  readonly quests: readonly SpokenQuest[];
   /**
    * What the level places, read when it is asked rather than when this
    * controller is built.
@@ -143,10 +158,11 @@ export interface QuestWiring {
  * to say which silence it is.** A `visit` step with no `dialogue` is a document
  * choosing to be quiet, and a step whose lines were dropped because something
  * read the wrong field looks exactly the same on screen. It does not look the
- * same here: `no-dialogue` is the document's choice, `unnamed` and
- * `many-speakers` are refusals this file made and wrote to the console, and
- * `no-step` means the player engaged something the current step is not about.
- * Only `spoken` puts words on screen.
+ * same here: `no-dialogue` is the document's choice, `unverified` is ADR-0003
+ * declining to say something a verifier declined, `unnamed` and `many-speakers`
+ * are refusals this file made and wrote to the console, and `no-step` means the
+ * player engaged something the current step is not about. Only `spoken` puts
+ * words on screen.
  */
 export type VisitSpeech =
   /** A dialogue opened, named after the speaker, and holds the step's lines. */
@@ -155,6 +171,17 @@ export type VisitSpeech =
   | 'no-step'
   /** The step carried no `dialogue`. The document is quiet, and so is the game. */
   | 'no-dialogue'
+  /**
+   * The step carried dialogue and a verifier declined a claim in it, so the
+   * whole block is left unsaid (ADR-0003, `./verified-dialogue.ts`).
+   *
+   * A separate word from `no-dialogue` and that is the entire point of it being
+   * a word. The two look identical on screen — nothing opens, the caller's
+   * continuation runs, the quest advances — and they are opposite facts about
+   * the document: one author wrote nothing, another wrote something a verifier
+   * would not grant. ADR-0024 says a silence must say which silence it is.
+   */
+  | 'unverified'
   /** The speaker is not placed on this level, or this build cannot name it. */
   | 'unnamed'
   /**
@@ -246,6 +273,15 @@ export interface QuestController {
    * lighthouse at Peggy's Cove offers a quest and no figure is drawn to hold it.
    */
   canEngage(targetId: string): boolean;
+  /**
+   * Is the step the player is on a `visit` or `collect` step for this target?
+   *
+   * The question the prompt needs about a landmark whose claim was refused: it
+   * has no card, so it is worth offering only while a quest is waiting for the
+   * player there. Asking changes nothing — {@link QuestController.visited} is
+   * the call that advances.
+   */
+  awaits(targetId: string): boolean;
   /** Is this target a quest giver in this level? */
   isGiver(targetId: string): boolean;
   /** An answer was recorded: redraw the tracker from the save. */
@@ -274,19 +310,42 @@ function fill(template: string, values: Readonly<Record<string, number>>): strin
 const localised = (value: LocalizedText, locale: UiLocale): string =>
   locale === 'fr' ? value.fr : value.en;
 
-/** The `talk` step a quest opens with, when it opens with one. */
-const openingDialogue = (quest: QuestDocument): QuestStepDocument | undefined => {
+/**
+ * The `talk` step a quest opens with, when it opens with one.
+ *
+ * `dialogue !== undefined` is now two facts and not one: the document wrote an
+ * opening block, **and** ADR-0003 allows it to be said. A quest whose offer was
+ * silenced answers `undefined` here, which routes through `canEngage` and
+ * `engage` to "the quest is not offered" — and that is the one place this
+ * mechanism costs a whole quest. It is said out loud rather than worked around:
+ * {@link openingWasSilenced} is why, and `createQuestController` writes the
+ * sentence to the console the first time the giver is examined.
+ */
+const openingDialogue = (quest: SpokenQuest): SpokenStep | undefined => {
   const first = quest.steps[0];
   return first !== undefined && first.kind === 'talk' && first.dialogue !== undefined
     ? first
     : undefined;
 };
 
+/**
+ * Did this quest open with words a verifier declined?
+ *
+ * The difference between a quest that cannot be offered because nobody wrote an
+ * offer — which `./quests.ts` already refuses outright, so it cannot happen —
+ * and one that cannot be offered because its opening block holds a refused
+ * claim. Only the second has a `silenced` receipt on step 0.
+ */
+const openingWasSilenced = (quest: SpokenQuest): SilencedUtterance | undefined => {
+  const first = quest.steps[0];
+  return first !== undefined && first.kind === 'talk' ? first.silenced : undefined;
+};
+
 export function createQuestController(wiring: QuestWiring): QuestController {
   let locale = wiring.store.current.locale;
   let dialogue: Dialogue | null = null;
   /** The quest whose dialogue is open, so closing knows what it was about. */
-  let talking: QuestDocument | null = null;
+  let talking: SpokenQuest | null = null;
   /**
    * What the caller is owed when the open dialogue closes, or `null`.
    *
@@ -298,11 +357,33 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    */
   let afterClose: (() => void) | null = null;
 
-  const stateOf = (quest: QuestDocument): QuestState | undefined =>
+  /*
+   * The one refusal that costs a whole quest, said once, where it happens.
+   *
+   * A quest's opening `talk` block is its offer. Silenced, `openingDialogue`
+   * answers `undefined`, `canEngage` answers false and the giver is never
+   * offered — the player walks past a character who does nothing. That is the
+   * right outcome (the alternatives are speaking a declined claim, or opening a
+   * dialog with no words, which `./quests.ts` already settled) and it is the one
+   * outcome a player cannot tell from a bug, so it is named here rather than
+   * left to `canEngage`, which runs on every prompt refresh and is silent by
+   * design.
+   */
+  for (const quest of wiring.quests) {
+    const silenced = openingWasSilenced(quest);
+    if (silenced === undefined) continue;
+    console.error(
+      `[bootstrap] "${String(quest.id)}" cannot be offered: its opening talk step is what a ` +
+        `giver says to offer it, and that block is left unsaid. ` +
+        silenced.message,
+    );
+  }
+
+  const stateOf = (quest: SpokenQuest): QuestState | undefined =>
     questStateFor(wiring.progress(), wiring.levelId, quest.id);
 
   /** The quest a giver id belongs to, or `null`. Ids are compared bare. */
-  function questFor(targetId: string): QuestDocument | null {
+  function questFor(targetId: string): SpokenQuest | null {
     const wanted = bareTargetId(targetId);
     return (
       wiring.quests.find((quest) => bareTargetId(`${quest.giver}`) === wanted) ?? null
@@ -310,7 +391,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
   }
 
   /** The quest that is being played right now, or `null`. */
-  function active(): QuestDocument | null {
+  function active(): SpokenQuest | null {
     return (
       wiring.quests.find((quest) => stateOf(quest)?.status === 'active') ?? null
     );
@@ -350,7 +431,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    * document which kind its giver is; the quest does not know, and a field for
    * it would be a second declaration that can disagree with the level's.
    */
-  const giverOf = (quest: QuestDocument): EngageableResolution =>
+  const giverOf = (quest: SpokenQuest): EngageableResolution =>
     resolveEngageable(wiring.placements(), bareTargetId(`${quest.giver}`));
 
   /**
@@ -363,13 +444,13 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    * announced as nothing, or — worse for the one user this matters most to —
    * announced as a kebab-case id read out one hyphen at a time.
    */
-  function speakerName(quest: QuestDocument): string | null {
+  function speakerName(quest: SpokenQuest): string | null {
     const resolution = giverOf(quest);
     return resolution.ok ? localised(resolution.engageable.name, locale) : null;
   }
 
   /** The refusal, as one sentence naming the document a maintainer must fix. */
-  function refuse(quest: QuestDocument): void {
+  function refuse(quest: SpokenQuest): void {
     const resolution = giverOf(quest);
     if (resolution.ok) return;
     console.error(
@@ -432,7 +513,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    * (ADR-0029 §4).
    */
   function open(
-    quest: QuestDocument,
+    quest: SpokenQuest,
     lines: readonly string[],
     offer: boolean,
     speaker?: string,
@@ -486,7 +567,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    * 2 the moment the dialogue closes. Declining leaves the quest offerable:
    * `TN-QUEST-03`, "the quest can be accepted later".
    */
-  function decide(quest: QuestDocument, decision: 'accept' | 'decline'): void {
+  function decide(quest: SpokenQuest, decision: 'accept' | 'decline'): void {
     const result = startQuest(
       { clock: wiring.clock },
       { quest, progress: wiring.progress(), decision },
@@ -520,7 +601,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    * unlock and one line in the passport (`TN-QUEST-04`). Reported: the right home
    * is one use case that both call.
    */
-  function earn(quest: QuestDocument): void {
+  function earn(quest: SpokenQuest): void {
     const progress = wiring.progress();
     if (!hasStamp(progress, quest.levelId)) {
       wiring.commit(withStamp(progress, quest.levelId, wiring.clock.now()));
@@ -551,9 +632,15 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    *    `app/ui/dialogue.ts` has no portrait and takes no pose.
    *  - **It does not invent a line.** A step with no `dialogue` is silent, and
    *    says which silence it is (ADR-0024): `no-dialogue` for a quiet document,
-   *    a console sentence naming the file for anything else.
+   *    `unverified` for a block ADR-0003 declined, and a console sentence naming
+   *    the file for anything else.
+   *
+   * It also does not decide *whether* a line may be said. That is settled before
+   * this file sees it: `step.dialogue` on a `SpokenStep` is `SpeakableLine[]`,
+   * and there is no way to be holding one that a verifier declined
+   * (`./verified-dialogue.ts`).
    */
-  function speechFor(quest: QuestDocument, step: QuestStepDocument): VisitedOutcome {
+  function speechFor(quest: SpokenQuest, step: SpokenStep): VisitedOutcome {
     const lines = step.dialogue;
     const where = `"${String(quest.id)}" step "${step.id}"`;
 
@@ -561,6 +648,29 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       advanced: true,
       speak(onClosed): VisitSpeech {
         if (lines === undefined || lines.length === 0) {
+          /*
+           * Two silences, and they are told apart by the receipt rather than by
+           * re-reading the document (ADR-0024).
+           *
+           * `silenced` present means `./verified-dialogue.ts` read a block here
+           * and would not let it be said: the whole block, because the granted
+           * lines beside a refused one are its run-up and saying them alone
+           * leaves the speaker mid-thought. The step still advanced and the
+           * caller is still owed its continuation, so the level remains
+           * finishable — what is lost is the teaching, exactly as a refused
+           * blurb costs a landmark its card and not its art.
+           *
+           * `silenced` absent means the author wrote no lines here, which is a
+           * document choosing to be quiet and is not news.
+           */
+          const { silenced } = step;
+          if (silenced !== undefined) {
+            console.error(
+              `[bootstrap] ${where} is left unsaid. ` + silenced.message,
+            );
+            onClosed();
+            return 'unverified';
+          }
           /* The document chose to be quiet. Nothing opens, and the caller is
              owed its continuation just the same. */
           onClosed();
@@ -607,7 +717,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
   }
 
   return {
-    get answering(): QuestDocument | undefined {
+    get answering(): SpokenQuest | undefined {
       const quest = active();
       if (quest === null) return undefined;
       const state = stateOf(quest);
@@ -621,6 +731,17 @@ export function createQuestController(wiring: QuestWiring): QuestController {
 
     isGiver(targetId): boolean {
       return questFor(targetId) !== null;
+    },
+
+    awaits(targetId): boolean {
+      const quest = active();
+      if (quest === null) return false;
+      const state = stateOf(quest);
+      if (state === undefined) return false;
+      const step = currentStep(quest, state);
+      if (step === undefined) return false;
+      if (step.kind !== 'visit' && step.kind !== 'collect') return false;
+      return bareTargetId(step.targetId) === bareTargetId(targetId);
     },
 
     canEngage(targetId): boolean {
@@ -712,7 +833,20 @@ export function createQuestController(wiring: QuestWiring): QuestController {
        * none, and the 27 lines authored to teach at a landmark would be dropped
        * on the floor while everything went on passing.
        */
-      const speech = speechFor(quest, step);
+      /*
+       * The branded step, recovered by identity from the quest's own array.
+       *
+       * `currentStep` is the domain's rule for which step the player is on and
+       * is typed for the domain's `Quest`, so what it answers has lost the
+       * receipt `./verified-dialogue.ts` attached. `spokenStep` gives it back
+       * without re-deriving the index: the value is an element of `quest.steps`,
+       * and a step that is not one of this quest's own answers `undefined`
+       * rather than being cast back into one.
+       */
+      const spoken = spokenStep(quest, step);
+      if (spoken === undefined) return NOT_THIS_STEP;
+
+      const speech = speechFor(quest, spoken);
 
       const advance = progressQuest(
         quest,

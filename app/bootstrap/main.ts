@@ -132,13 +132,18 @@ import { isPlayable, journeyEntries } from './journey';
 import { createExamController, type ExamController } from './exam';
 import { createExamEventLog } from './exam-events';
 import { promptTargets } from './prompt-targets';
-import type { LevelPlacements } from './engageables';
+import { levelPlacements, type LevelPlacements } from './engageables';
 import {
   createQuestController,
   type QuestController,
   type VisitedOutcome,
 } from './quest';
 import { readQuests, questsForLevel, type QuestCatalogue } from './quests';
+import {
+  describeDialogueCensus,
+  dialogueCensusIsRemarkable,
+  type SpokenQuest,
+} from './verified-dialogue';
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
 import { readSubjectIndex } from './subjects';
@@ -516,6 +521,21 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
   const questCatalogue: QuestCatalogue = readQuests();
   for (const refusal of questCatalogue.refused) {
     console.error(`[bootstrap] a quest document was refused. ${refusal}`);
+  }
+  /*
+   * What ADR-0003's filter did to the words this build speaks (ADR-0024).
+   *
+   * Two states get a line: a block was left unsaid, or **quests were read and
+   * nothing was examined**. The second is the one this exists for — every quest
+   * opens on a `talk` step whose dialogue `readQuest` requires, so zero examined
+   * across ten quests is the filter having stopped matching the blocks it reads,
+   * which is exactly the failure that used to look like success. A build in good
+   * order says nothing here and still publishes every number to the scene probe
+   * (`data-dialogue-*`), so "0 unsaid of 46 blocks" stays readable from outside
+   * without a warning on every load.
+   */
+  if (dialogueCensusIsRemarkable(questCatalogue.census)) {
+    console.warn(`verified-dialogue: ${describeDialogueCensus(questCatalogue.census)}`);
   }
 
   const store = createSettingsStore(toUiSettings(progress.settings));
@@ -1056,6 +1076,28 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     shellPassport = null;
     pause.release('shell');
     root.dataset['tnLevel'] = 'loading';
+    /*
+     * The dialogue census, on the probe, beside the level's claim census.
+     *
+     * Build-wide rather than per-level, because that is the scope it was
+     * computed at: `readQuests` walks every document once at boot. The numbers
+     * do not change between levels, and publishing them on every entry means a
+     * scenario that opens any level can read them — the canvas is `aria-hidden`
+     * and Playwright cannot read a word of dialogue out of it, so without this
+     * "the rejected line was not said" is only assertable by its absence, which
+     * is the shape of assertion that passes over a filter that dropped
+     * everything.
+     *
+     * `publish` merges, so the scene's own `level/ready` patch a moment later
+     * leaves these standing.
+     */
+    renderer.sceneProbe?.publish({
+      dialogueExamined: questCatalogue.census.examined,
+      dialogueDrawable: questCatalogue.census.drawable,
+      dialogueRefused: questCatalogue.census.refused.length,
+      dialogueBlocks: questCatalogue.census.utterances,
+      dialogueSilenced: questCatalogue.census.silenced.length,
+    });
     session = openLevel({
       id,
       words,
@@ -1366,11 +1408,18 @@ interface LevelWiring {
   /** This level's own three strings, in whatever language is asked for. */
   readonly words: LevelWordsFor;
   /**
-   * The quests this level offers. Empty for every level in this build today,
-   * which is a normal state and not a failure: no giver, no tracker, and no
-   * empty quest log drawn where there is nothing to log.
+   * The quests this level offers, with every line adjudicated under ADR-0003.
+   *
+   * `SpokenQuest` and not `QuestDocument`: `./verified-dialogue.ts` is the only
+   * thing in the program that can produce one, so a line a verifier declined
+   * cannot arrive here at all. Handing this the raw output of `readQuest` does
+   * not compile, which is the point — it is a receipt, not a filter somebody has
+   * to remember to call.
+   *
+   * An empty list is a normal state and not a failure: no giver, no tracker, and
+   * no empty quest log drawn where there is nothing to log.
    */
-  readonly quests: readonly QuestDocument[];
+  readonly quests: readonly SpokenQuest[];
   /**
    * The ten map entries as they are **now**, for the passport opened from the
    * level's menu. A thunk, because a stamp earned a moment ago has to be in it:
@@ -2154,26 +2203,26 @@ function openLevel(wiring: LevelWiring): LevelSession {
   }
 
   /**
-   * What this level offers the player: the characters it places, and the
-   * landmarks that have something **verified** to say (ADR-0003).
+   * What this level places: every character and **every** landmark, including
+   * one whose claim a verifier refused.
    *
-   * `renderer.level` used to be handed over whole, and that is the bug this
-   * shape fixes. A landmark whose blurb a verifier declined keeps its art —
-   * `SceneLevel.pois` still carries it, and the scene still draws it, because
-   * the level's picture is composed around it — but it is not here, so the
-   * interact prompt never offers it, the auto-stop never brakes for it, no
-   * affordance ring marks it, and the card never opens on it. The game does not
-   * invite a tap it cannot honour.
+   * **Refusing a claim withholds the claim, not the landmark.** This used to be
+   * built from `teachingPois`, which was right for the card and wrong for
+   * naming: Peggy's Point Lighthouse gives Peggy's Cove's quest (ADR-0029), its
+   * blurb was rejected, and the resolver was told the level "places nothing
+   * called peggys-point-light" — so the quest could not be offered and every
+   * line it speaks went unsaid. `levelPlacements` takes the level rather than a
+   * list, so which landmarks this means is no longer a choice made here.
+   *
+   * The card is still built from `teachingPois` in {@link engage}, and that is
+   * where the blurb's verdict is enforced; the prompt offers a refused landmark
+   * only while it has a quest to give or a step waiting (`promptTargets`).
    *
    * A thunk rather than a value: this is read before `loadLevel` resolves and
    * again after every level change, and a list captured once would be the one
    * from the level just left.
    */
-  const placementsNow = (): LevelPlacements | null => {
-    const level = renderer.level;
-    if (level === null) return null;
-    return { pois: level.teachingPois, characters: level.characters };
-  };
+  const placementsNow = (): LevelPlacements | null => levelPlacements(renderer.level);
 
   /**
    * The quest, from the offer to the stamp (`app/bootstrap/quest.ts`).
@@ -2237,6 +2286,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     return promptTargets(placementsNow(), locale, {
       done: engaged,
       canEngage: (targetId) => quests.canEngage(targetId),
+      awaits: (targetId) => quests.awaits(targetId),
     });
   }
 
@@ -2276,7 +2326,28 @@ function openLevel(wiring: LevelWiring): LevelSession {
      * first place. The lookup failing here is the belt to that braces.
      */
     const poi = level.teachingPois.find((candidate) => candidate.id === bareTargetId(detail));
-    if (poi === undefined) return;
+    if (poi === undefined) {
+      /*
+       * A landmark with no card: its claim was refused. If the level gives it a
+       * quest role and the player is on that step, the step still happens —
+       * the quest's own lines, then the question — with the card left out,
+       * because the card is the one thing the verdict withheld. Refusing a claim
+       * withholds the claim, not the landmark.
+       *
+       * Anything else is scenery and opens nothing, which is what it always did.
+       * `visited` changes nothing when this is not the current step's target.
+       */
+      const quiet = level.reachablePois.find((candidate) => candidate.id === bareTargetId(detail));
+      if (quiet === undefined) return;
+      const visit = quests.visited(detail);
+      if (!visit.advanced) return;
+      markEngaged(detail);
+      learning = quiet.id;
+      pause.hold('poi');
+      pendingVisit = visit;
+      afterTheCard();
+      return;
+    }
     markEngaged(detail);
     learning = poi.id;
     /* One hold for the whole chain: the landmark card, and the question after

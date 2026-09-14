@@ -243,6 +243,41 @@ export interface SceneSnapshot {
   readonly claimsDrawable?: number;
   readonly claimsRefused?: number;
   /**
+   * What ADR-0003's filter did to the words a character says, as five numbers.
+   *
+   * The claim trio above covers a level's own prose — a landmark blurb, a
+   * territorial statement. It says nothing about **dialogue**, which is the
+   * other half of the prose this game puts in front of a player and the half
+   * that had no filter at all: five lines a verifier had declined were spoken by
+   * named characters while `verify-content` counted them as excluded from the
+   * build (`app/bootstrap/verified-dialogue.ts`).
+   *
+   * Build-wide, not per-level: the quest documents are read once at boot and the
+   * numbers do not change between levels. Published by the composition root
+   * rather than by a scene, because a scene has never heard of a quest and must
+   * not start.
+   *
+   * Two layers, because the refusal and the verdict happen at different ones. A
+   * line is refused; the **block** it sits in is silenced, all of it, because the
+   * granted lines beside a refused one are its run-up and saying them alone
+   * leaves the speaker mid-thought. So `dialogueRefused` and `dialogueSilenced`
+   * are different numbers and a scenario that reads only one of them cannot tell
+   * "one line went" from "one conversation went".
+   *
+   * `dialogueExamined` is the one that reads as noise and is the reason the set
+   * exists. A filter that stopped matching the blocks it reads publishes
+   * `examined: 0, refused: 0`; a build whose lines are all granted publishes
+   * `examined: 92, refused: 0`. Those two were the same observation before these
+   * attributes existed (ADR-0024).
+   */
+  readonly dialogueExamined?: number;
+  readonly dialogueDrawable?: number;
+  readonly dialogueRefused?: number;
+  /** Blocks of dialogue read. One block is one thing a speaker says at one moment. */
+  readonly dialogueBlocks?: number;
+  /** Of those, the ones left unsaid because a line in them was refused. */
+  readonly dialogueSilenced?: number;
+  /**
    * Where the level's sky is in the day, 0 at local midnight and 0.5 at noon.
    *
    * Published so that "the game follows the real world" is observable rather
@@ -370,6 +405,11 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'claimsExamined',
   'claimsDrawable',
   'claimsRefused',
+  'dialogueExamined',
+  'dialogueDrawable',
+  'dialogueRefused',
+  'dialogueBlocks',
+  'dialogueSilenced',
   'tier',
   'motion',
   'renderer',
@@ -420,6 +460,14 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-claims-examined': num(snapshot.claimsExamined),
     'data-claims-drawable': num(snapshot.claimsDrawable),
     'data-claims-refused': num(snapshot.claimsRefused),
+    /* The same distinction for the words a character says out loud. A line is
+       refused; the block it sits in is silenced whole, so these are two numbers
+       and not one. */
+    'data-dialogue-examined': num(snapshot.dialogueExamined),
+    'data-dialogue-drawable': num(snapshot.dialogueDrawable),
+    'data-dialogue-refused': num(snapshot.dialogueRefused),
+    'data-dialogue-blocks': num(snapshot.dialogueBlocks),
+    'data-dialogue-silenced': num(snapshot.dialogueSilenced),
     'data-day-phase': num(snapshot.dayPhase),
     'data-tier': text(snapshot.tier),
     'data-motion': text(snapshot.motion),

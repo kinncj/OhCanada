@@ -39,6 +39,8 @@ const REPO_ROOT = fileURLToPath(new URL('../../', import.meta.url));
 
 interface LevelFile {
   readonly pois: readonly {
+    /** The quest this landmark gives or advances. Keeps it in reach when its claim is refused. */
+    readonly questId?: string;
     readonly id: string;
     readonly position: { readonly x: number };
     /** ADR-0003's block: a landmark whose claim was declined is never offered. */
@@ -85,7 +87,16 @@ const teaches = (poi: LevelFile['pois'][number]): boolean =>
     poi.fact.verification.sourceHash === poi.fact.source.sourceHash &&
     poi.fact.verification.evidence.trim().length > 0);
 
-const ENGAGEABLE = LEVEL.pois.filter(teaches).length + LEVEL.characters.length;
+/**
+ * A landmark the scene keeps in reach: one that teaches, or one the level gives
+ * a quest role with `questId`. Refusing a claim withholds the claim, not the
+ * landmark — a lighthouse that gives the level's quest is still there to be
+ * spoken to after its blurb is declined (ADR-0003 × ADR-0029).
+ */
+const reachable = (poi: LevelFile['pois'][number]): boolean =>
+  teaches(poi) || typeof poi.questId === 'string';
+
+const ENGAGEABLE = LEVEL.pois.filter(reachable).length + LEVEL.characters.length;
 
 test.describe('the player is a character, not a rectangle', () => {
   test('composes the player from the rig, and reports no placeholder at all', async ({ page }) => {

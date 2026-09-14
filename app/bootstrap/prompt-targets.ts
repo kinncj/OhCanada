@@ -57,6 +57,16 @@ export function promptTargets(
      * wrong.
      */
     readonly canEngage: (targetId: string) => boolean;
+    /**
+     * Is a running quest waiting for the player at this target right now?
+     *
+     * Asked only about a landmark whose claim was refused. Such a landmark has no
+     * card, so the prompt is offered for it only while there is something else
+     * to do there — a quest it gives (`canEngage`), or the `visit` step the
+     * player is on. Optional, and absent reads as "no": a caller that never
+     * learned about quests offers nothing it cannot open.
+     */
+    readonly awaits?: (targetId: string) => boolean;
   },
 ): Readonly<Record<string, LevelTarget>> {
   if (level === null) return {};
@@ -80,8 +90,10 @@ export function promptTargets(
   };
 
   /*
-   * A character is offered only while there is something for them to say, and a
-   * point of interest is always offered because it always has a card.
+   * A character is offered only while there is something for them to say. A
+   * point of interest is offered when it has a card, and — when its claim was
+   * refused and it has none — only while it has a quest to give or a step
+   * waiting for the player (see the loop below).
    */
   for (const character of level.characters) {
     if (state.canEngage(`${character.characterId}`)) offer(`${character.characterId}`, 'npc');
@@ -126,7 +138,25 @@ export function promptTargets(
    * lives there rather than here because here is where it went wrong.
    */
   for (const poi of level.pois) {
-    offer(poi.id, 'poi', state.canEngage(poi.id));
+    const offersQuest = state.canEngage(poi.id);
+    /*
+     * **Refusing a claim withholds the claim, not the landmark** — and not the
+     * invitation either, while there is still something to do there.
+     *
+     * A landmark whose blurb a verifier declined has no card. It is offered only
+     * when it gives a quest or a running quest is waiting for the player at it,
+     * and then as "See what there is to do here", because "Look at this place"
+     * would promise the card it no longer has. A refused landmark with neither
+     * is scenery and gets no prompt at all: the game does not offer a tap it
+     * cannot honour.
+     */
+    if (poi.blurb === null) {
+      const awaited = state.awaits?.(poi.id) ?? false;
+      if (!offersQuest && !awaited) continue;
+      offer(poi.id, 'poi', true);
+      continue;
+    }
+    offer(poi.id, 'poi', offersQuest);
   }
 
   return targets;

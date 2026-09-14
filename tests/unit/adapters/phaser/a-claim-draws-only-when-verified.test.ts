@@ -425,6 +425,14 @@ describe('the same document, one verdict written both ways', () => {
       granted.pois.length,
     );
     expect(declined.teachingPois.map((poi) => poi.id)).not.toContain(withheld?.id);
+    /* Still placed, and out of reach unless the level gives it a quest role:
+       this landmark carries no `questId`, so it is scenery. A refused landmark
+       that does carry one stays reachable for its quest —
+       `tests/unit/bootstrap/a-refused-landmark-keeps-its-quest.test.ts`. */
+    expect(declined.pois.map((poi) => poi.id)).toContain(withheld?.id);
+    if (withheld?.questId === undefined) {
+      expect(declined.reachablePois.map((poi) => poi.id)).not.toContain(withheld?.id);
+    }
     expect(declined.claims.refused.map((claim) => claim.pointer)).toContain(
       `/pois/${String(LANDMARK)}`,
     );

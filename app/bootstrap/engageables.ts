@@ -61,6 +61,22 @@ import { characterName } from './characters';
 /** Which of the level's two lists a thing was placed in. The level decides. */
 export type EngageableKind = 'character' | 'landmark';
 
+/**
+ * Whether a resolved thing has a card, and if not, why not.
+ *
+ * - `teaches` — a landmark whose blurb may be drawn.
+ * - `withheld` — a landmark whose claim a verifier declined. It is still placed,
+ *   still named and still able to give or host a quest; it has no card.
+ * - `none` — a character. Characters speak; they have no card to withhold.
+ *
+ * A word rather than a boolean for ADR-0024's reason: "this landmark's claim was
+ * refused" is a state a caller must be able to *read*, not infer from a missing
+ * blurb, and it must never be mistaken for "nothing is placed here" — which is
+ * what the resolver answered about Peggy's Point Lighthouse when the teaching
+ * list was all it was given.
+ */
+export type EngageableCard = 'teaches' | 'withheld' | 'none';
+
 /** One thing the player can engage, resolved and named. */
 export interface Engageable {
   /** The bare id, as the level document spells it. */
@@ -68,32 +84,48 @@ export interface Engageable {
   readonly kind: EngageableKind;
   /** Never empty, in either language: see {@link resolveEngageable}. */
   readonly name: LocalizedText;
+  readonly card: EngageableCard;
 }
 
 /**
- * A point of interest the player may engage: named, and with something verified
- * to say.
+ * A point of interest the level places: named, and teaching or not.
  *
- * `blurb` is required here and it is not decoration. `SceneLevel.pois` — every
- * landmark a level places — types its blurb as `LocalizedText | null`, because
- * a landmark whose claim a verifier declined keeps its art and loses its
- * teaching (ADR-0003, `app/adapters/phaser/verified-claim.ts`). So the whole
- * level is **no longer assignable to {@link LevelPlacements}**, and the two
- * callers that used to hand it over — the interact prompt and the quest giver
- * resolver — have to pass `SceneLevel.teachingPois` instead. The filter cannot
- * be forgotten by a caller who never heard of it, which is the property
- * `Shippable<T>` gives the question bank and the property a `filter` somebody
- * has to remember never has.
+ * **Refusing a claim withholds the claim, not the landmark.** `blurb` is
+ * `LocalizedText | null`, exactly as `SceneLevel.pois` carries it: `null` is a
+ * claim a verifier declined (ADR-0003, `app/adapters/phaser/verified-claim.ts`).
  *
- * It is the port's own field under the port's own name, so this is not a second
- * declaration of a point of interest; it is the subset of one that a player may
- * be invited to tap.
+ * This type used to require a non-null blurb, so that handing over the whole
+ * level would not compile and callers had to pass `SceneLevel.teachingPois`.
+ * That was right for the **card** and wrong for everything else this list feeds.
+ * The giver resolver runs over these placements too, so a landmark with a
+ * refused blurb stopped *existing* for naming: Peggy's Point Lighthouse is
+ * Peggy's Cove's quest giver (ADR-0029), its blurb was rejected, and the level's
+ * quest could not be offered, its lines were left unsaid, and the console said
+ * the level "places nothing called peggys-point-light".
+ *
+ * So the two questions are now answered by two things. **Is it placed, and what
+ * is it called** — every landmark, through {@link levelPlacements}. **May its
+ * blurb be drawn** — only a `TeachingPoi` from `SceneLevel.teachingPois`, whose
+ * blurb is non-null by type, and which is the only list the card is built from.
+ * Nothing here exposes a blurb to a drawer: {@link Engageable} carries the
+ * verdict as {@link EngageableCard} and never the prose.
+ *
+ * **The name is not withheld.** `scripts/lib/claims.mjs` counts every
+ * `localizedText` sibling of a `fact` block as prose that block governs, which
+ * includes `name`. The runtime does not follow it there, deliberately: a proper
+ * noun naming a landmark identifies the thing and asserts nothing about it — a
+ * verifier checks that "It carried freight on the Yukon" is entailed by the
+ * passage, not that the boat is called a sternwheeler — and a dialog without an
+ * accessible name is refused (`TN-QUEST-08`), so withholding the name would take
+ * the quest away again by a different route. A name that itself states a fact is
+ * an authoring defect for the content review to catch, not something to discover
+ * by blanking it in a live dialog.
  */
 export interface PlacedPoi {
   readonly id: string;
   readonly name: LocalizedText;
-  /** What it teaches. A landmark with none is scenery, and is not placed here. */
-  readonly blurb: LocalizedText;
+  /** What it teaches, or `null` when its claim was refused. Never drawn from here. */
+  readonly blurb: LocalizedText | null;
 }
 
 /** A character, as the level places it. The name is the character document's. */
@@ -102,18 +134,33 @@ export interface PlacedCharacter {
 }
 
 /**
- * The two lists, apart.
- *
- * `SceneLevel`'s **teaching** landmarks satisfy this structurally, which is the
- * point: the composition root hands over the lists it already loaded and no
- * second shape is declared. The level itself no longer satisfies it — see
- * {@link PlacedPoi} — so `promptTargets(level, …)` is a compile error and the
- * caller has to say which landmarks it means.
+ * The two lists, apart. Build one with {@link levelPlacements}.
  */
 export interface LevelPlacements {
-  /** The landmarks that may be engaged — `SceneLevel.teachingPois`, never `pois`. */
+  /** Every landmark the level places — `SceneLevel.pois`, refused claims included. */
   readonly pois: readonly PlacedPoi[];
   readonly characters: readonly PlacedCharacter[];
+}
+
+/** A level as it arrives: `SceneLevel` satisfies this structurally. */
+export interface PlacedLevel {
+  readonly pois: readonly PlacedPoi[];
+  readonly characters: readonly PlacedCharacter[];
+}
+
+/**
+ * What a level places, for naming and for the prompt.
+ *
+ * The one place placements are built, and it takes the **level**, not a list,
+ * so a caller cannot choose which landmarks it means. That choice is what went
+ * wrong: `app/bootstrap/main.ts` built this from `teachingPois`, and every
+ * landmark whose claim a verifier declined disappeared from naming along with
+ * its card. `tests/unit/bootstrap/a-refused-landmark-keeps-its-quest.test.ts`
+ * fails if this ever returns a subset of the level's `pois` again.
+ */
+export function levelPlacements(level: PlacedLevel | null): LevelPlacements | null {
+  if (level === null) return null;
+  return { pois: level.pois, characters: level.characters };
 }
 
 /**
@@ -165,18 +212,28 @@ export function resolveEngageable(
 ): EngageableResolution {
   if (placements === null) return { ok: false, why: 'no-level', count: 0 };
 
-  const matches: readonly { readonly kind: EngageableKind; readonly name: LocalizedText | null }[] =
-    [
-      ...placements.characters
-        .filter((placement) => placement.characterId === id)
-        .map((placement) => ({
-          kind: 'character' as const,
-          name: lookup(placement.characterId),
-        })),
-      ...placements.pois
-        .filter((placement) => placement.id === id)
-        .map((placement) => ({ kind: 'landmark' as const, name: placement.name ?? null })),
-    ];
+  const matches: readonly {
+    readonly kind: EngageableKind;
+    readonly name: LocalizedText | null;
+    readonly card: EngageableCard;
+  }[] = [
+    ...placements.characters
+      .filter((placement) => placement.characterId === id)
+      .map((placement) => ({
+        kind: 'character' as const,
+        name: lookup(placement.characterId),
+        card: 'none' as const,
+      })),
+    ...placements.pois
+      .filter((placement) => placement.id === id)
+      .map((placement) => ({
+        kind: 'landmark' as const,
+        name: placement.name ?? null,
+        /* The verdict, carried as a word. A refused claim is a landmark with no
+           card — never a landmark that is not there (ADR-0024). */
+        card: placement.blurb === null ? ('withheld' as const) : ('teaches' as const),
+      })),
+  ];
 
   const only = matches.length === 1 ? matches[0] : undefined;
   if (only === undefined) {
@@ -190,7 +247,7 @@ export function resolveEngageable(
   const name = usableName(only.name);
   if (name === null) return { ok: false, why: 'unnamed', count: 1, kind: only.kind };
 
-  return { ok: true, engageable: { id, kind: only.kind, name } };
+  return { ok: true, engageable: { id, kind: only.kind, name, card: only.card } };
 }
 
 /**
@@ -210,6 +267,9 @@ export function whyNotEngageable(
     case 'no-level':
       return `"${id}" cannot be resolved: no level document is loaded yet.`;
     case 'dangling':
+      /* Nothing is placed with this id. A landmark whose claim was refused is
+         placed, resolves, and is marked `card: 'withheld'` — it can never reach
+         this sentence through `levelPlacements`. */
       return (
         `"${levelId}" places nothing called "${id}" — no characters[].characterId and no ` +
         `pois[].id carries that id, so there is nothing to name or to talk to.`

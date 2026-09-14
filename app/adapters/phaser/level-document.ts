@@ -43,11 +43,21 @@
  * the count of what was refused.
  *
  * A refused blurb does not remove the landmark: `pois` is still every placement
- * the level authored, so the art is composed as the level intends. What it
- * removes is the *teaching*, and {@link SceneLevel.teachingPois} — the only list
- * whose `blurb` is non-null — is what the prompt, the auto-stop, the affordance
- * ring and the card are built from. A landmark with nothing verified to say is
- * scenery, and the game never offers a tap it cannot honour.
+ * the level authored, so the art is composed as the level intends and the
+ * landmark can still be named. What it removes is the *teaching*, and
+ * {@link SceneLevel.teachingPois} — the only list whose `blurb` is non-null — is
+ * what the card is built from.
+ *
+ * **Refusing a claim withholds the claim, not the landmark.** A landmark can have
+ * a second job besides teaching: under ADR-0029 it may give a quest, and any
+ * landmark may be where a quest sends the player. The level declares that job
+ * with `pois[].questId`, and {@link SceneLevel.reachablePois} — landmarks that
+ * teach *or* have a quest role — is what the reach events, the auto-stop and the
+ * affordance ring are built from. A refused landmark with no quest role is
+ * scenery, and the game never offers a tap it cannot honour; a refused landmark
+ * that gives the level's quest is still there to be spoken to. Before this split
+ * the one list did both jobs, and rejecting Peggy's Point Lighthouse's blurb
+ * deleted Peggy's Cove's quest.
  *
  * ## The refusal (TN-LEVEL-02)
  *
@@ -140,6 +150,24 @@ export interface SceneLevel
    * heard of it, which is the property `Shippable<T>` gives the question bank.
    */
   readonly teachingPois: readonly TeachingPoi[];
+  /**
+   * The landmarks the player can reach: every one that teaches, and every one
+   * the level gives a quest role with `questId`, whatever its claim's verdict.
+   * A subset of {@link pois}, in the same order, and a superset of
+   * {@link teachingPois}.
+   *
+   * Separate from {@link teachingPois} because "may draw this blurb" and "is
+   * somewhere a quest happens" are different facts, and one list answering both
+   * is how a rejected blurb took a quest giver with it. `questId` is the level's
+   * own declaration of the role — the only one a scene can read without learning
+   * what a quest is — and the contract gate requires it on every landmark giver.
+   *
+   * What this list cannot see is a landmark a quest step targets *without* the
+   * level marking it with `questId`. Such a landmark with a refused blurb is out
+   * of reach, and so is its step. That is a content rule to state, not a scene
+   * to teach quests to.
+   */
+  readonly reachablePois: readonly ScenePoi[];
   /** The "About this place" panel's content, adjudicated. `docs/content-review.md` §10.2. */
   readonly about: AboutThisPlace;
   /** What the ADR-0003 filter looked at on this level, and what it did. */
@@ -471,10 +499,11 @@ function readAnimation(raw: unknown, where: string): Result<LocomotionTuning['an
   return ok(binding);
 }
 
-/** Every landmark the level places, and the subset of them that may teach. */
+/** Every landmark the level places, the ones that may teach, and the ones in reach. */
 interface ReadPois {
   readonly pois: readonly ScenePoi[];
   readonly teaching: readonly TeachingPoi[];
+  readonly reachable: readonly ScenePoi[];
 }
 
 function readPois(source: Record<string, unknown>, ledger: ClaimLedger): Result<ReadPois> {
@@ -483,6 +512,7 @@ function readPois(source: Record<string, unknown>, ledger: ClaimLedger): Result<
 
   const pois: ScenePoi[] = [];
   const teaching: TeachingPoi[] = [];
+  const reachable: ScenePoi[] = [];
   for (const [index, item] of raw.value.entries()) {
     const where = `pois[${String(index)}]`;
     if (!isRecord(item)) return invalid(where, `"${where}" must be an object.`);
@@ -530,8 +560,12 @@ function readPois(source: Record<string, unknown>, ledger: ClaimLedger): Result<
     if (typeof questId === 'string') poi.questId = questId as NonNullable<PointOfInterest['questId']>;
     pois.push(poi);
     if (refusal === null) teaching.push({ ...poi, blurb: blurb.value });
+    /* In reach when it teaches, or when the level gives it a quest role. The
+       verdict decides whether the card draws, never whether the quest can be
+       reached. */
+    if (refusal === null || poi.questId !== undefined) reachable.push(poi);
   }
-  return ok({ pois, teaching });
+  return ok({ pois, teaching, reachable });
 }
 
 /**
@@ -764,6 +798,7 @@ export function parseLevelDocument(
     locomotion,
     pois: pois.value.pois,
     teachingPois: pois.value.teaching,
+    reachablePois: pois.value.reachable,
     about: about.value,
     claims: ledger.census,
     characters: characters.value,

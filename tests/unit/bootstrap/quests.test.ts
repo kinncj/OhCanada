@@ -40,7 +40,7 @@ const A_QUEST = {
         {
           speaker: 'officer',
           text: { en: 'Hello.', fr: 'Bonjour.' },
-          fact: { claimsFact: false },
+          fact: { factual: false, source: null, verification: null },
         },
       ],
     },
