@@ -27,7 +27,7 @@
     "check-texture-memory": "node scripts/check-texture-memory.mjs"
   },
   "dependencies": {
-    "@rive-app/canvas": "2.42.0",
+    "@rive-app/canvas": "2.42.1",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "howler": "2.2.4",
