@@ -2241,6 +2241,96 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/prop-driftwood-pile@1x.svg",
       "modifications": "Original work. Drawn from the driftwood band along the shore in assets/refs/the-north/yukon-river-bluff-and-aspen.jpg and the bars in yukon-river-valley.jpg under the rules in assets/style/art-bible.md; never traced. Natural debris only: every log lies, nothing is stacked, leaned or arranged, and there is no structure, shelter, weir, marker, cairn, inuksuk or figure at any scale, per assets/style/the-north-level.md and docs/content-review.md. The @1x suffix pins the source to one scale; the key the-north-prop-driftwood-pile carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 700 x 340 and passed at both probes; at 2x it would cost 3.63 MiB of decoded texture instead of 0.91 MiB."
+    },
+    {
+      "path": "refs/alberta-foothills/pump-jack-side-elevation.jpg",
+      "kind": "reference",
+      "title": "A preserved pump jack seen from the side - horsehead, walking beam, Samson post, pitman arms, crank and counterweight, gearbox and skid, with the wellhead beside it (Oil Well Park, Sunniland Oil Field, Florida)",
+      "author": "Declan M. Martin",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Sunniland_Oil_Field_preserved_pumpjack.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (Display P3) so the colours sampled off it are the colours a browser shows; all metadata stripped. Public domain by the author's own release (PD-self), evidenced on the source page. A mechanism reference only: it stands in Florida, not Alberta, and the interpretive sign in frame is lettering this project never draws."
+    },
+    {
+      "path": "refs/alberta-foothills/pump-jacks-on-grassland.jpg",
+      "kind": "reference",
+      "title": "Three working pump jacks on a well pad in rolling grassland under open sky, Little Missouri National Grassland, North Dakota, March 2026",
+      "author": "Scott C. Marvin / USDA Forest Service",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:2026019-FS-SCM-010_(55196746856).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (sRGB IEC61966-2.1) so the colours sampled off it are the colours a browser shows; all metadata stripped. Public domain as a work of the United States federal government (PD-USGov-USDA-FS; Flickr Public Domain Mark), evidenced on the source page."
+    },
+    {
+      "path": "refs/toronto/streetcar-flank.jpg",
+      "kind": "reference",
+      "title": "A TTC low-floor streetcar at King and Jarvis, Toronto - near-broadside flank, articulation, livery bands and doors",
+      "author": "Geo Swan (booledozer on Flickr)",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Flexity_streetcar_4533,_2019_05_17_(47888565511).jpg",
+      "modifications": "Downscaled to 1600 px long edge; The file carried no colour profile; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/streetcar-beside-older-car.jpg",
+      "kind": "reference",
+      "title": "A TTC low-floor streetcar beside an older high-floor streetcar on King Street, Toronto",
+      "author": "Geo Swan (booledozer on Flickr)",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:New_Flexity_streetcar_on_King,_2017_08_09_-l.jpg",
+      "modifications": "Downscaled to 1600 px long edge; The file carried no colour profile; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/streetcar-front-and-wires.jpg",
+      "kind": "reference",
+      "title": "A TTC low-floor streetcar head-on at Broadview and Gerrard, Toronto, with the overhead wires",
+      "author": "Poe8toe",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:TTC_Flexity_Outlook.jpg",
+      "modifications": "Downscaled to 1600 px long edge; The file carried no colour profile; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/square-arches-and-pool.jpg",
+      "kind": "reference",
+      "title": "Nathan Phillips Square, Toronto - the concrete arches over the reflecting pool, the podium walkway and Old City Hall behind",
+      "author": "Raysonho @ Open Grid Scheduler / Grid Engine",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:NathanPhillipsSquare4.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (Nikon sRGB 4.0.0.3002) so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/city-hall-massing-aerial.jpg",
+      "kind": "reference",
+      "title": "Toronto City Hall and Nathan Phillips Square from above - the two curved towers, the domed council chamber and the podium",
+      "author": "Daniel Lobo (daquellamanera on Flickr)",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:City_Hall_(41647547975).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (sRGB IEC61966-2.1) so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/toronto/square-winter-rink-and-towers.jpg",
+      "kind": "reference",
+      "title": "The Nathan Phillips Square skating rink in winter, with Toronto City Hall's curved towers and council chamber behind",
+      "author": "Matt byford",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:City_Hall_skater.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (sRGB IEC61966-2.1) so the colours sampled off it are the colours a browser shows; all metadata stripped. The three-dimensional city-name sign in frame is lettering this project never draws."
+    },
+    {
+      "path": "refs/alberta-foothills/pump-jack-foothills-county.jpg",
+      "kind": "reference",
+      "title": "A working pump jack in a fenced lease among hay bales, Foothills County, Alberta, August 2007 - horsehead, walking beam, Samson post, pitman arms, cranks and counterweights in side view",
+      "author": "Marek Ślusarczyk (Tupungato). The author's required credit line is \"Marek Ślusarczyk\" or \"www.microstock.pl\" - carried here because credits.schema.json is additionalProperties:false and has no field for a licence's own attribution wording.",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:31_Pumpjack_in_oil_well_-_oil_industry_in_Alberta,_Canada.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (sRGB IEC61966-2.1) so the colours sampled off it are the colours a browser shows; all metadata stripped. The maker's name on the walking beam is lettering this project never draws."
+    },
+    {
+      "path": "refs/alberta-foothills/pump-jack-dusk-in-snow.jpg",
+      "kind": "reference",
+      "title": "A pump jack in side profile on a snowy lease in rolling Alberta farmland, February 2015",
+      "author": "Damien Goodyear",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Alberta_-_Extraction_of_petroleum.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile (sRGB IEC61966-2.1) so the colours sampled off it are the colours a browser shows; all metadata stripped. COLOUR TRAP: a heavily graded dusk exposure with a teal sky and an orange ground - a geometry reference only; never sample colour off it."
     }
   ]
 }

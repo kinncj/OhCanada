@@ -95,6 +95,40 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   `assets/credits.json`, because `credits.schema.json` is `additionalProperties: false` and has no other
   field it could go in. Rule 5 below has the same shape of problem and the same answer.
 
+  **Added 2026-09-13: six more, for two points of interest that had no reference.** Licence-checked against
+  the Commons API before download and again the same day, all CC0. `streetcar-flank.jpg`,
+  `streetcar-beside-older-car.jpg` and `streetcar-front-and-wires.jpg` are the TTC low-floor streetcar;
+  `square-arches-and-pool.jpg`, `city-hall-massing-aerial.jpg` and `square-winter-rink-and-towers.jpg` are
+  Nathan Phillips Square and City Hall. **None of them is attached to a subject yet.** `references.json`
+  refuses a subject without `expectedBlindAnswer` and `mustBeRight`, and those are the art agent's to write.
+  The fleet number and destination sign on every streetcar, and the city-name sign in the rink photograph, are
+  lettering and are never drawn. The best full-length streetcar view on Commons was **rejected on licence**:
+  its page asserts CC BY-SA 2.0 and PD-self at once, and a file that claims two licences, one of them
+  ShareAlike, is not established.
+
+  **A polling-station interior was searched for and not found.** Every Canadian polling-station photograph
+  under an accepted licence shows the outside: signs, doors and the yellow arrow. The CC BY 2.0 files from
+  2019 and 2025 are yard signs. The public-domain Canadian ballot boxes come from archive photographs of 1938,
+  1942 and 1959. Interiors under an accepted licence all come from other countries' elections. The working is in
+  `references.json` under `licenceAudit`.
+
+- `alberta-foothills/` — the Level 8 subjects: the ranch barn and corral, the rangeland and the front range.
+  **Added 2026-09-13: four pump-jack files, not yet attached to a subject.**
+  `pump-jack-foothills-county.jpg` is the primary reference: a close side view of a working unit in
+  **Foothills County, Alberta**, CC BY 3.0. Its author requires the credit line "Marek Ślusarczyk" or
+  "www.microstock.pl", which is carried in the `author` field of its credit, as `bike-lane-street.jpg`'s is.
+  `pump-jack-dusk-in-snow.jpg` (Alberta, CC BY 2.0) is a clean side profile under a heavy teal-and-orange grade.
+  It is a **colour trap** and a geometry reference only. `pump-jack-side-elevation.jpg` shows a preserved unit
+  in Florida whose whole mechanism is close to orthographic; it is public domain by the author's own release.
+  `pump-jacks-on-grassland.jpg` shows three units on a North Dakota grassland pad and is public domain as a
+  US federal work. The maker's name on the walking beam is lettering and is never drawn. The machine is a type,
+  and it must never be asked to name a province.
+
+  **A correction belongs in this record.** The first search filtered licences with a pattern that never matched
+  the API's own spelling (`CC BY 3.0`), so every CC BY file was dropped and the pass briefly concluded there
+  was no Alberta pump jack to be had. That was false and was caught before commit. Every search was re-run
+  with a filter tested against the strings the API actually returns.
+
 - `beaver/` — the guide: the beaver companion who appears at points of interest. Six files, licence-checked
   against the Commons API on **2026-09-08** before any was downloaded: three public domain, one CC0, one
   CC BY 2.0 and one CC BY 2.5. The design sheet is `assets/style/guide.md`.
