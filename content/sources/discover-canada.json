@@ -392,6 +392,45 @@
         "22 membres"
       ],
       "action": "Both the stale count and the current one are banned, for the reason G7 is banned beside G8: an option saying 22 is right about Nunavut and wrong about the document the exam is drawn from. Ask about consensus government, which is the teachable and unmoving part of the sentence. Recorded at page grain on 104 alone; no shipped question cites that page."
+    },
+    {
+      "topic": "The Court of Queen's Bench in The Justice System",
+      "problem": "Page 76 says that in most provinces the trial court is \"sometimes called the Court of Queen’s Bench or the Supreme Court\". Since the 2022 accession, that court is the Court of King's Bench in at least four provinces. Each is sourced from the province's own court or government site, fetched 2026-09-13. ALBERTA: albertacourts.ca/kb/home is headed \"Court of King's Bench of Alberta\" and says \"The Court of King's Bench is the Superior Trial Court for the Province\". SASKATCHEWAN: sasklawcourts.ca/court-of-kings-bench/ carries a notice dated Sep 8, 2022: \"With the death of Her Majesty Queen Elizabeth II, and the succession of His Majesty King Charles III, the Court of Queen’s Bench becomes the Court of King’s Bench. The name change takes effect immediately.\" MANITOBA: manitobacourts.mb.ca shows \"Home > Court of King's Bench > News and Announcements\" and a notice posted June 30, 2026 on \"Amendment of Court of King's Bench Rules\". Its URLs still read /court-of-queens-bench/, and /court-of-kings-bench/ returns 404. The province's statutes site, web2.gov.mb.ca/laws/statutes/ccsm/c280e.php, lists \"Court of King's Bench: civil rules\". NEW BRUNSWICK: courtsnb-coursnb.ca/content/cour/en/kings-bench.html is headed \"The Court of King's Bench of New Brunswick\", and its French page, banc-du-roi.html, names the \"Cour du Banc du Roi du Nouveau-Brunswick\", once with a non-breaking space inside \"Banc du Roi\". NOT SOURCED, and not claimed: whether any other province or territory had or has a Court of Queen's Bench or King's Bench; how and when Alberta, Manitoba and New Brunswick made the change (only Saskatchewan's date and wording come from its own page); and whether any province still calls its trial court the Supreme Court, which is the other half of the sentence. The live English chapter (Date modified 2017-12-21) and the live French chapter (Date de modification 2023-09-07, « Cour du Banc de la Reine ») both still print the pre-accession name; see liveChecks for The Justice System, 2026-09-13. One question put \"the Court of Queen's Bench\" in a correct answer during the week of 2026-09-13, and only a verifier's reading caught it, because no flag covered this page.",
+      "affects": [
+        "The Justice System"
+      ],
+      "grain": "pages",
+      "pages": [
+        76
+      ],
+      "upstream": "does-not-revise",
+      "bannedFromAnswers": [
+        "Queen's Bench",
+        "Queen’s Bench",
+        "Queen‘s Bench",
+        "Queenʼs Bench",
+        "Queen`s Bench",
+        "Queen´s Bench",
+        "Queen′s Bench",
+        "Queen＇s Bench",
+        "Queens Bench",
+        "King's Bench",
+        "King’s Bench",
+        "King‘s Bench",
+        "Kingʼs Bench",
+        "King`s Bench",
+        "King´s Bench",
+        "King′s Bench",
+        "King＇s Bench",
+        "Kings Bench",
+        "Banc de la Reine",
+        "Banc du Roi",
+        "Bench",
+        "Banc",
+        "QB",
+        "KB"
+      ],
+      "action": "Both the old name and the new one are banned in both languages, for the reason G7 is banned beside G8. An option naming the Court of King's Bench is right about Alberta, Saskatchewan, Manitoba and New Brunswick and wrong about the document the exam is drawn from, and one naming the Court of Queen's Bench is the reverse. The teachable part of the sentence cannot move: most provinces have an appeal court and a trial court. That is what jus-17 grades, and jus-37 grades the trial court's other name, the Supreme Court of the province. Ask about those, or about neither court's name. HOW THE LIST IS BUILT. mentionsTerm lowercases and then matches the literal string. It normalises neither apostrophes nor spaces, so each explicit form is listed once per apostrophe code point an author or a paste can produce: U+0027, U+2019, U+2018, U+02BC, U+0060, U+00B4, U+2032 and U+FF07, plus the form with no apostrophe. That list is still open-ended, and a probe of the matcher on 2026-09-13 showed an explicit term also misses a non-breaking space (\"King’s\\u00A0Bench\", \"Banc\\u00A0du Roi\") and a doubled space. New Brunswick's own French page prints the non-breaking form. U+02BC also counts as a letter under \\p{L}, so it is not a word boundary. The bare whole words \"Bench\" and \"Banc\" are therefore the real catch-all and are deliberate. They match every spacing and apostrophe variant of all four names and do not match \"benches\" or \"bancs\" (the page's \"Jury benches\" caption). They WILL fire on \"a judge on the bench\" or « le banc des accusés » in any option or explanation citing page 76. That is the accepted direction, and the fix is to refine this entry, not to argue with the gate. \"QB\" and \"KB\" are listed because Manitoba's court site writes \"KB Notices\". \"Supreme Court\" is NOT banned: it is also the name of the country's highest court, which jus-15 grades on this page and jus-37 uses as a distractor. As before, the rule is wider than the list, and a verifier reading page 76 still has to catch anything the matcher cannot. source.quote and verification.evidence are not searched, so jus-17's and jus-37's verbatim quote of the stale sentence is untouched by this flag."
     }
   ],
   "grainNote": "knownStaleness entries carry `pages` where the affected claims are localised, and fall back to `affects` chapters where they are not. Chapter grain alone made 57 of 57 authored questions volatile because two facts in the chapter were, which stopped the flag discriminating: everything is re-verified every run and quarantined at 180 days, so nothing is prioritised. A flag that fires on everything carries the same information as a flag that fires on nothing.",
@@ -531,6 +570,37 @@
         }
       ],
       "consequence": "Fetched first-hand, twice, in answer to ADR-0028's precondition that this chapter be live-checked before any economy question cites it. Fourteen economy questions (eco-20 to eco-33) now do. The live page agrees with the cached extraction on every one of the twenty-two claims above, including every point-in-time figure: the 2011-era population totals, the census-era shares, the pre-accession \"great-great-grandmother of Queen Elizabeth II\" on page 94 and Nunavut's 19-member Legislative Assembly, which has had 22 seats since 2013. The Date modified of 2025-05-12 is therefore not evidence of revision, exactly as it was not for Who We Are: the page has been touched and these facts have not. Disposition is does-not-revise and the mitigation is the four page-grain flags added beside this entry, not a future fetch. What was NOT found is worth recording because ADR-0028 predicted it: the chapter does not call Nunavut \"Canada's newest territory\" anywhere, so that anticipated flag has no referent. All fourteen new questions were checked against every banned term these flags introduce and none contains a digit or a fraction in any option or explanation, in either language. This entry puts Canada's Regions on ADR-0016 section 2 row 2, so the flags demand no volatile marking, and the clock that keeps them honest is this checkedAt - 2027-03-09."
+    },
+    {
+      "checkedAt": "2026-09-13",
+      "checkedBy": "content-verifier",
+      "finding": "source-unrevised",
+      "pages": [
+        {
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/justice-system.html",
+          "chapter": "The Justice System",
+          "sourceDateModified": "2017-12-21",
+          "agreesWithCache": true,
+          "claimsCompared": [
+            "the justice system guarantees everyone due process, and the presumption of innocence in criminal matters",
+            "the legal heritage: rule of law, freedom under the law, democratic principles and due process",
+            "due process as the government respecting all of a person's legal rights",
+            "laws as written rules made by elected representatives, with courts settling disputes and police enforcing the laws",
+            "the law applies to everyone, including judges, politicians and the police",
+            "laws provide order, a peaceful way to settle disputes, and express the values and beliefs of Canadians",
+            "the Supreme Court of Canada as the country's highest court",
+            "the Federal Court of Canada and matters concerning the federal government",
+            "an appeal court and a trial court in most provinces, the trial court sometimes called the Court of Queen’s Bench or the Supreme Court",
+            "provincial courts for lesser offences, family courts, traffic courts and small claims courts",
+            "the police keep people safe and enforce the law, and the five situations in which to ask them for help",
+            "provincial police in Ontario and Quebec, municipal police in all provinces, and the RCMP's federal, provincial and municipal roles",
+            "questioning the police about their service or conduct",
+            "lawyers, and legal aid free of charge or at a low cost",
+            "the captions: Lady Justice, the border inspection, jury benches, and prisons punishing criminals and deterring crime"
+          ]
+        }
+      ],
+      "consequence": "Fetched first-hand as raw HTML, not through a summarising reader. The text of <main> was extracted and compared word by word, with difflib over word sequences, against pages 75-77 of the cached extraction (extractedTextSha256 fd51046981...). Every body sentence of the chapter is identical, including \"sometimes called the Court of Queen’s Bench or the Supreme Court\" with the same U+2019 apostrophe. The differences are all layout or captions: headings in title case rather than capitals (\"Courts\" for \"COURTS\"), the jury-benches caption block placed after Getting Legal Help rather than before Courts, the \"[ See larger version ]\" links, one caption reading \"Canada-US border\" where the PDF has \"Canada-U.S.A. border\", and that same caption block dropping the full stop after \"deterring crime\". Every source.quote citing page 76 was then searched for verbatim in the live text: 17 of the 18 (17 questions, 1 Winnipeg quest line) match exactly. jus-32-role-of-prisons misses only because of that caption's missing final full stop. Its words are all there, so the claim agrees. The page's own Date modified is 2017-12-21. Its dcterms.modified meta says 2012-07-01, and the HTTP Last-Modified header says 2026-09-13, which is the server and not the page. The French chapter (lisez-ligne/systeme-justice.html, Date de modification 2023-09-07) was fetched too. It still reads « qu’on appelle parfois Cour du Banc de la Reine ou Cour suprême ». So the French page was touched after the accession, and the court's name was not updated. It is recorded here and not as a second pages[] entry, because the cache is the English PDF and the French page is not what agreesWithCache compares. Disposition is does-not-revise, and the mitigation is the page-76 flag \"The Court of Queen's Bench in The Justice System\", added beside this entry. That flag is the only one naming this chapter, and it declares does-not-revise. This check therefore puts The Justice System on ADR-0016 section 2 row 2 for EVERY claim citing it, pages 75 and 77 included, not only page 76. That is a change in what can fail: until today, no Justice System claim had a clock of any kind, because none is volatile and row 1 arms its clock only on volatile. From 2027-03-13 (180 days after this checkedAt) the gate fails every claim citing this chapter unless someone looks again. No question, quest or level file was edited, and no verification block was touched."
     }
   ]
 }
