@@ -236,8 +236,8 @@ twelve frames, and they differ only in
 | `neutral` | 3.8 px, medium | — | — | — |
 
 No limb, width, height, head size, outline or pivot differs between them, and `neutral` is a look of its
-own rather than the absence of a choice. **Hair and clothing defaults are the creator's**, set from the
-presentation and each still independently adjustable; the rig carries no coupling, so every presentation
+own rather than the absence of a choice. **Choosing a presentation sets no other slot**: hair, clothing and
+everything else stay independent, and the rig carries no coupling, so every presentation
 works with every skin, hair shape, hair colour, head covering and feature (§8.2), and the renders of the
 riskiest pairings — `feminine` with `crop` under a toque, `masculine` with `long` and glasses — were checked
 at phone size before this shipped.
