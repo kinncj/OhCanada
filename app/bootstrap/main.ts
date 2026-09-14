@@ -151,6 +151,7 @@ import {
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
 import { readSubjectIndex } from './subjects';
+import { watchForUpdates, workerContainerOf, type UpdateWatch } from './update-notice';
 
 /**
  * The config is imported, not fetched. It is on the 6 s time-to-play budget and
@@ -265,6 +266,23 @@ function main(): void {
   applyPageTheme(renderer);
 
   /*
+   * "A new version is ready" (ADR-0034, `./update-notice.ts`).
+   *
+   * Started here, before anything awaits, because its trigger is whether this
+   * page was already controlled when it loaded, and that is read when the watch
+   * starts. It registers nothing: `scripts/lib/pwa.mjs` writes the registration
+   * into `dist/index.html`, and this only listens — and only while the flag that
+   * decides whether there is a worker at all is on. With no worker container, as
+   * under the bootstrap suites' `window` double, every call below is a no-op and
+   * the pause is handed back exactly as it was built.
+   */
+  const updates = watchForUpdates({
+    enabled: gameConfigDocument.featureFlags.serviceWorker === true,
+    container: workerContainerOf(window),
+    root,
+  });
+
+  /*
    * One pause, several reasons.
    *
    * The rotate overlay, the menu, a landmark card and the settings screen all
@@ -274,7 +292,14 @@ function main(): void {
    * which is what keeps `data-tn-paused` — the attribute the e2e suite and the
    * debug overlay read — a fact rather than the last caller's opinion.
    */
-  const pause = createPauseControl(renderer, root);
+  /* The update notice waits on three of these: a level holds `poi`, `study` and
+     `quest` exactly while a landmark's card and its question, a drill, or a quest
+     dialogue is open. Every reason still reaches the renderer unchanged. */
+  const pause = updates.deferDuring<PauseReason>(createPauseControl(renderer, root), [
+    'poi',
+    'study',
+    'quest',
+  ]);
 
   const overlay = createRotateOverlay(uiHost, {
     locale: toUiLocale(config.defaultLocale),
@@ -328,6 +353,7 @@ function main(): void {
     config,
     rules: rules.value,
     onMounted: syncOrientation,
+    updates,
   });
 }
 
@@ -352,6 +378,8 @@ interface FrontDoor {
   readonly rules: GameRules;
   /** Called once the DOM layer is on the page. See the note at the call site. */
   readonly onMounted: () => void;
+  /** The update notice's watch, started in `main` before anything awaited. */
+  readonly updates: UpdateWatch;
 }
 
 /**
@@ -893,6 +921,22 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     examUnfinished: progress.examInProgress !== null,
   });
 
+  /*
+   * The update notice's screens (ADR-0034). Drawn first in whichever `<main>`
+   * has the page — the level's while one is open, the front door's otherwise —
+   * so it is inside the landmark, in the Tab order and in the front door's switch
+   * ring, and it never has to take focus to be reached. `rehome` below moves it
+   * when the page changes hands. Reloading is this file's to do, not `app/ui`'s.
+   */
+  deps.updates.attach({
+    store,
+    announce,
+    host: () => session?.hud.main ?? shell.main,
+    reload: () => {
+      window.location.reload();
+    },
+  });
+
   /* Built on the first Study, kept for the session: the drill's `recentlyAsked`
      lives in `studySource` and the screen's is only DOM, but rebuilding the
      screen on every open would throw away a summary the player is reading. */
@@ -909,9 +953,11 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       },
       onOpen: () => {
         shell.setModalOpen(true);
+        deps.updates.block('study');
       },
       onClose: () => {
         shell.setModalOpen(false);
+        deps.updates.unblock('study');
       },
     });
     shellStudy.open();
@@ -965,9 +1011,11 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       openStudy: openShellStudy,
       onOpen: () => {
         shell.setModalOpen(true);
+        deps.updates.block('exam');
       },
       onClose: () => {
         shell.setModalOpen(false);
+        deps.updates.unblock('exam');
       },
       onAttemptChanged: () => {
         shell.setExamUnfinished(progress.examInProgress !== null);
@@ -1243,6 +1291,8 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
        */
       openedNext: () => openedWhileIn(entriesOnEntry),
     });
+    /* The level's `<main>` has the page now: the update notice follows it. */
+    deps.updates.rehome();
 
     /* The snapshot the comparison above is against, taken before a single
        question could have been answered. */
@@ -1334,6 +1384,8 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     const opened = focusLevelId ?? openedWhileIn(entriesOnEntry);
     entriesOnEntry = entries;
     shell.leaveLevel(opened === null ? {} : { focusLevelId: opened });
+    /* And back to the front door's, which is attached again. */
+    deps.updates.rehome();
   }
 
   /**
