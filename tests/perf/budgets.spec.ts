@@ -41,7 +41,7 @@ import { atMost, notMeasured, settle } from './verdict';
  * answers on the same runner, in the same run. From it:
  *
  *   - overdraw <= 4x screen area per frame, per visual tier the host visited,
- *     and at `low` and `medium` pinned;
+ *     and at `low`, `medium` and `high` pinned;
  *   - decoded texture memory the GPU actually holds <= the level's budget
  *     (48 MiB declared for Ottawa, 64 MiB ceiling), reconciled to the byte with
  *     what the build gate priced;
@@ -77,14 +77,14 @@ import { atMost, notMeasured, settle } from './verdict';
  * to the tier in effect when it began, from a log of the probe's `data-tier`
  * changes, and every tier the host visited is judged.
  *
- * `?e2e=1&tier=` makes the tier deterministic instead: `low` and `medium` are
- * pinned below, so each is measured on every run however the host behaves.
- * `high` is NOT pinned here yet, on purpose: this job blocks every deploy, and
- * overdraw at `high` (six layers) has never been measured on any runner. It
- * becomes a line in `PINNED_OVERDRAW_TIERS` once one run has reported the
- * number - adding a blocking budget that nobody has seen a reading of is how a
- * deploy gate goes red for a reason nobody predicted. Until then the verdicts
- * print it as NOT EXERCISED.
+ * `?e2e=1&tier=` makes the tier deterministic instead: `low`, `medium` and
+ * `high` are pinned below, so each is measured on every run however the host
+ * behaves. `high` (six layers) was pinned on an estimate, not a reading: `low`
+ * measured 2.21x and `medium` 2.66x, and `high` adds two bands and the surface
+ * sheen, about 3.3x of 4x. Its first verdict is therefore its first
+ * measurement, and a BREACHED there is a real reading over budget rather than a
+ * broken instrument. The attributed test above still prints `high` as NOT
+ * EXERCISED, because no runner earns it; the pinned one covers it.
  *
  * ## Outcomes
  *
@@ -107,14 +107,14 @@ const PLAYABLE_URL = `./?e2e=1&level=${LEVEL_ID}`;
 const pinnedUrl = (tier: string): string => `${PLAYABLE_URL}&tier=${tier}`;
 
 /**
- * Tiers whose overdraw is measured pinned, on every run.
+ * Tiers whose overdraw is measured pinned, on every run: all three.
  *
- * Both already held on this runner through the attributed test (2.21x at `low`,
- * 2.66x at `medium`); pinning makes them measured every time rather than when
- * the host happens to pass through. `high` joins once it has one reading - see
- * the header.
+ * `low` and `medium` held on this runner through the attributed test (2.21x and
+ * 2.66x); pinning makes them measured every time rather than when the host
+ * happens to pass through. `high` is gated on an estimate of about 3.3x - see
+ * the header - so its first verdict is also its first reading.
  */
-const PINNED_OVERDRAW_TIERS = ['low', 'medium'] as const;
+const PINNED_OVERDRAW_TIERS = ['low', 'medium', 'high'] as const;
 
 /** The tier whose preset allows the most particles, so the device ceiling is what binds. */
 const PARTICLE_TIER = 'high';

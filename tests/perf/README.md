@@ -101,17 +101,17 @@ depends on how long boot took. So each census frame is **attributed** to the tie
 log of the probe's `data-tier` changes, two frames are dropped at each edge of a run, and every tier the host visited
 is judged; the worst decides. Texture memory is the peak over the whole observation, which covers every tier visited.
 
-On top of that, `low` and `medium` are measured **pinned** (`?e2e=1&tier=low`, `?e2e=1&tier=medium`) on every run,
-so neither depends on the host passing through it. A pinned run that does not report `data-tier-pinned="true"` and
-exactly the one tier is NOT MEASURED. The override is read only behind `?e2e=1`, the same gate that decides whether
-the scene probe exists, so no player can reach it.
+On top of that, every tier is measured **pinned** (`?e2e=1&tier=low`, `?e2e=1&tier=medium`, `?e2e=1&tier=high`) on
+every run, so none depends on the host passing through it. A pinned run that does not report
+`data-tier-pinned="true"` and exactly the one tier is NOT MEASURED. The override is read only behind `?e2e=1`, the
+same gate that decides whether the scene probe exists, so no player can reach it.
 
-`high` is **not pinned for overdraw yet, deliberately**. This job blocks every deploy and nobody has seen a reading
-of overdraw at `high` (six layers) on any machine. Medium is 2.66x against the 4x limit, and `high` adds two bands
-and the surface sheen, so the estimate lands near 3.3x. An estimate is not a measurement, and a blocking budget
-added without one is how a deploy gate goes red for a reason nobody predicted. Take one run with `'high'` added to
-`PINNED_OVERDRAW_TIERS` in `budgets.spec.ts` (locally, or on a branch), read the number, then commit the line.
-Until then the attributed verdict prints `high` as **NOT EXERCISED**.
+`high` was pinned last, and **on an estimate rather than a reading**. CI measured `low` at 2.21x and `medium` at
+2.66x against the 4x limit; `high` adds two bands and the surface sheen, which puts it near 3.3x. No run had
+reported overdraw at `high` (six layers) when `'high'` joined `PINNED_OVERDRAW_TIERS` in `budgets.spec.ts`, so its
+first verdict is also its first measurement: a BREACHED there is a real reading over 4x, not an instrument fault,
+and the figure it prints replaces the estimate here. The unpinned, attributed test still prints `high` as
+**NOT EXERCISED**, because no runner earns it; the pinned test is what covers it.
 
 The first version also read overdraw 2.21x, 4 draws and 470 triangles — the provisional `low` a level shows for its
 first second — while the tier the page then held drew 5 draws and 7,739 triangles at 2.66x. A sample taken right
@@ -119,8 +119,8 @@ after "playable" measures the guess.
 
 **Requests to the app owner**, 2026-09-13, and where each stands:
 
-1. A probe-gated tier override (`?e2e=1&tier=high`, inert without `?e2e=1`). **Done**; used for `low` and `medium`
-   overdraw and for particles. `high` overdraw waits on its first reading, above.
+1. A probe-gated tier override (`?e2e=1&tier=high`, inert without `?e2e=1`). **Done**; used for overdraw at every
+   tier and for particles. `high` overdraw is gated on an estimate until its first reading, above.
 2. Split `data-particles` into allowed and emitted. **Done**: `data-particles` (emitted) and
    `data-particle-allowance`, and the particle budget is asserted.
 3. The tier cycle. **Done** in the tracker; the rule and its reasoning are in `createTierTracker`. It amends
