@@ -443,3 +443,11 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   written when there is a second version — not before.
 - **Ports not yet needed.** No telemetry port and no network port exist, because there is no server, no
   account and no analytics (CLAUDE.md, Storage). If one is ever proposed, it needs an ADR, not a file.
+- **The update notice (ADR-0034).** The service worker is outside these layers entirely: `scripts/lib/pwa.mjs`
+  builds it from `infra/pages/service-worker.js`, and the build writes its registration into `dist/index.html`.
+  No port exists for it and none is needed, because `app/` never asks it anything. The one seam `app/` has is
+  the browser's own: a page that was **already controlled when it loaded** and then hears `controllerchange` on
+  `navigator.serviceWorker` is running older code than the worker now in charge, and should offer "A new version
+  is ready" with a Reload button. Listening is a bootstrap concern, because it touches `navigator`; the notice
+  is `app/ui` DOM and copy. Not built yet — ADR-0034 carries it as a dated obligation. If `app/bootstrap` later
+  takes over registration as well, the build stops writing the inline script in the same change.
