@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-39-quebec-hydro-electricity",
+  "subject": "economy",
+  "prompt": {
+    "en": "What has made Quebec Canada's largest producer of hydro-electricity?",
+    "fr": "Qu'est-ce qui a fait du Québec le plus grand producteur d'hydroélectricité au Canada?"
+  },
+  "options": [
+    {
+      "en": "Its strong winds.",
+      "fr": "Ses vents forts."
+    },
+    {
+      "en": "Its large oil fields.",
+      "fr": "Ses grands gisements de pétrole."
+    },
+    {
+      "en": "Its huge supply of freshwater.",
+      "fr": "Son immense réserve d'eau douce."
+    },
+    {
+      "en": "Its coal mines.",
+      "fr": "Ses mines de charbon."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Quebec has a huge supply of freshwater. The guide says that is what has made it the largest producer of hydro-electricity in Canada.",
+    "fr": "Le Québec possède une immense réserve d'eau douce. Selon le guide, c'est ce qui en a fait le plus grand producteur d'hydroélectricité au Canada."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 98,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The province’s huge supply of freshwater has made it Canada’s largest producer of hydro-electricity."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

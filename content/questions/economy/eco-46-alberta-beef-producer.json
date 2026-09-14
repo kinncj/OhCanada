@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-46-alberta-beef-producer",
+  "subject": "economy",
+  "prompt": {
+    "en": "Alberta's vast cattle ranches make Canada one of the world's major producers of what?",
+    "fr": "Grâce aux vastes ranchs de bovins de l'Alberta, le Canada est l'un des grands producteurs mondiaux de quel produit?"
+  },
+  "options": [
+    {
+      "en": "Wool.",
+      "fr": "La laine."
+    },
+    {
+      "en": "Cheese.",
+      "fr": "Le fromage."
+    },
+    {
+      "en": "Pork.",
+      "fr": "Le porc."
+    },
+    {
+      "en": "Beef.",
+      "fr": "Le bœuf."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Alberta is known for farming, above all for its huge cattle ranches. Their beef makes Canada one of the world's major beef producers.",
+    "fr": "L'Alberta est connue pour son agriculture, surtout pour ses immenses ranchs de bovins. Leur bœuf fait du Canada l'un des grands producteurs de bœuf du monde."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 101,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Alberta is also renowned for agriculture, especially for the vast cattle ranches that make Canada one of the world’s major beef producers."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

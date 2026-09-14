@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-37-new-brunswick-principal-industries",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which of these does the guide list among New Brunswick's principal industries?",
+    "fr": "Laquelle de ces industries le guide nomme-t-il parmi les principales industries du Nouveau-Brunswick?"
+  },
+  "options": [
+    {
+      "en": "Oil sands development.",
+      "fr": "L'exploitation des sables bitumineux."
+    },
+    {
+      "en": "Diamond mining.",
+      "fr": "L'extraction de diamants."
+    },
+    {
+      "en": "Car assembly.",
+      "fr": "L'assemblage d'automobiles."
+    },
+    {
+      "en": "Food processing.",
+      "fr": "La transformation des aliments."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "New Brunswick's main industries are forestry, farming, fishing, mining, food processing and tourism.",
+    "fr": "Les principales industries du Nouveau-Brunswick sont la foresterie, l'agriculture, la pêche, l'exploitation minière, la transformation des aliments et le tourisme."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Forestry, agriculture, fisheries, mining, food processing and tourism are the principal industries."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-47-port-of-vancouver-largest-and-busiest",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which port does the guide call Canada's largest and busiest?",
+    "fr": "Quel port le guide présente-t-il comme le plus grand et le plus achalandé du Canada?"
+  },
+  "options": [
+    {
+      "en": "The Port of Halifax.",
+      "fr": "Le port d'Halifax."
+    },
+    {
+      "en": "The Port of Vancouver.",
+      "fr": "Le port de Vancouver."
+    },
+    {
+      "en": "The Port of Montreal.",
+      "fr": "Le port de Montréal."
+    },
+    {
+      "en": "The Port of Saint John.",
+      "fr": "Le port de Saint John."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "On the West Coast, the Port of Vancouver is the largest and busiest in the country. Goods traded with the whole world pass through it.",
+    "fr": "Sur la côte Ouest, le port de Vancouver est le plus grand et le plus achalandé du pays. Des marchandises échangées avec le monde entier y transitent."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 102,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "The Port of Vancouver, Canada’s largest and busiest"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-39-more-than-one-type-of-police",
+  "subject": "justice",
+  "prompt": {
+    "en": "How does Discover Canada describe policing in Canada?",
+    "fr": "Comment Découvrir le Canada décrit-il les services de police au pays?"
+  },
+  "options": [
+    {
+      "en": "There is more than one type of police force.",
+      "fr": "Il existe plus d'un type de corps de police."
+    },
+    {
+      "en": "One national force does all the policing.",
+      "fr": "Un seul corps national assure toute la police."
+    },
+    {
+      "en": "The courts run the police forces.",
+      "fr": "Les tribunaux dirigent les corps de police."
+    },
+    {
+      "en": "Each region shares a single force with its neighbours.",
+      "fr": "Chaque région partage un seul corps de police avec ses voisines."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada has different types of police: municipal police departments, provincial police forces in Ontario and Quebec, and the RCMP, which enforces federal laws across the country.",
+    "fr": "Le Canada compte différents types de police : des services de police municipaux, des corps de police provinciaux en Ontario et au Québec, et la GRC, qui applique les lois fédérales partout au pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "There are different types of police in Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

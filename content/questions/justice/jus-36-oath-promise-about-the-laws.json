@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-36-oath-promise-about-the-laws",
+  "subject": "justice",
+  "prompt": {
+    "en": "In the Oath of Citizenship, what do new citizens promise about the laws of Canada?",
+    "fr": "Dans le serment de citoyenneté, que promettent les nouveaux citoyens au sujet des lois du Canada?"
+  },
+  "options": [
+    {
+      "en": "To observe them faithfully, including the Constitution.",
+      "fr": "De les observer fidèlement, y compris la Constitution."
+    },
+    {
+      "en": "To study them for one year after the ceremony.",
+      "fr": "De les étudier pendant un an après la cérémonie."
+    },
+    {
+      "en": "To follow only the laws of their own province.",
+      "fr": "De ne suivre que les lois de leur propre province."
+    },
+    {
+      "en": "To follow them only while they live in Canada.",
+      "fr": "De les suivre seulement tant qu'ils vivent au Canada."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The oath includes a promise to observe the laws of Canada faithfully, and it names the Constitution among them. It also promises to fulfil the duties of a citizen.",
+    "fr": "Le serment comprend la promesse d'observer fidèlement les lois du Canada, et il nomme la Constitution parmi celles-ci. On y promet aussi de remplir ses obligations de citoyen."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Oath of Citizenship",
+    "page": 3,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "And that I will faithfully observe The laws of Canada Including the Constitution"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

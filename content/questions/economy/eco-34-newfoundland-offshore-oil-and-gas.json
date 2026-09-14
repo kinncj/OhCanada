@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-34-newfoundland-offshore-oil-and-gas",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which activity does the guide say now provides a substantial part of Newfoundland and Labrador's economy?",
+    "fr": "Selon le guide, quelle activité représente aujourd'hui une part importante de l'économie de Terre-Neuve-et-Labrador?"
+  },
+  "options": [
+    {
+      "en": "Taking oil and gas from wells off the coast.",
+      "fr": "L'extraction de pétrole et de gaz au large des côtes."
+    },
+    {
+      "en": "Building cars and trucks.",
+      "fr": "La fabrication d'automobiles et de camions."
+    },
+    {
+      "en": "Growing potatoes.",
+      "fr": "La culture de la pomme de terre."
+    },
+    {
+      "en": "Mining uranium.",
+      "fr": "L'extraction de l'uranium."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The province has always lived from the sea. Today the sea also gives it oil and gas, drawn from wells off its coast.",
+    "fr": "La province a toujours vécu de la mer. Aujourd'hui, la mer lui donne aussi du pétrole et du gaz, tirés de puits situés au large de ses côtes."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 96,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Today off-shore oil and gas extraction contributes a substantial part of the economy."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

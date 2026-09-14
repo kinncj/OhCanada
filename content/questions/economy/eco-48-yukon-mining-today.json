@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-48-yukon-mining-today",
+  "subject": "economy",
+  "prompt": {
+    "en": "What does the guide say about mining in Yukon today?",
+    "fr": "Que dit le guide au sujet de l'exploitation minière au Yukon aujourd'hui?"
+  },
+  "options": [
+    {
+      "en": "It stopped when the Gold Rush ended.",
+      "fr": "Elle a cessé à la fin de la ruée vers l'or."
+    },
+    {
+      "en": "It is still a significant part of the economy.",
+      "fr": "Elle représente toujours une part importante de l'économie."
+    },
+    {
+      "en": "It has been replaced by large-scale farming.",
+      "fr": "Elle a été remplacée par l'agriculture à grande échelle."
+    },
+    {
+      "en": "It is smaller than car manufacturing in the territory.",
+      "fr": "Elle est moins importante que la fabrication d'automobiles dans le territoire."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Thousands of miners came to Yukon during the Gold Rush of the 1890s. Mining did not end with the Gold Rush: it is still a big part of the territory's economy.",
+    "fr": "Des milliers de mineurs sont venus au Yukon pendant la ruée vers l'or des années 1890. L'exploitation minière n'a pas pris fin avec la ruée vers l'or : elle compte encore beaucoup dans l'économie du territoire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 103,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Mining remains a significant part of the economy."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

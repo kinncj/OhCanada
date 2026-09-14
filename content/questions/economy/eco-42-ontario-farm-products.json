@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-42-ontario-farm-products",
+  "subject": "economy",
+  "prompt": {
+    "en": "What do Ontario farmers raise, according to the guide?",
+    "fr": "Selon le guide, que produisent les agriculteurs de l'Ontario?"
+  },
+  "options": [
+    {
+      "en": "Dairy and beef cattle, poultry, vegetables and grain.",
+      "fr": "Des bovins laitiers et de boucherie, de la volaille, des légumes et des céréales."
+    },
+    {
+      "en": "Mainly potatoes and lobster.",
+      "fr": "Surtout des pommes de terre et du homard."
+    },
+    {
+      "en": "Mainly sheep and goats.",
+      "fr": "Surtout des moutons et des chèvres."
+    },
+    {
+      "en": "Mainly rice and cotton.",
+      "fr": "Surtout du riz et du coton."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Ontario farms are varied. Farmers keep cattle for milk and meat, raise poultry, and grow vegetables and grain.",
+    "fr": "Les fermes de l'Ontario sont variées. Les agriculteurs élèvent des bovins pour le lait et la viande, élèvent de la volaille et cultivent des légumes et des céréales."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 99,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Ontario farmers raise dairy and beef cattle, poultry, and vegetable and grain crops."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

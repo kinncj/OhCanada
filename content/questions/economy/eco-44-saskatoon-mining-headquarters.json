@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-44-saskatoon-mining-headquarters",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which city in Saskatchewan does the guide call the headquarters of the mining industry?",
+    "fr": "Quelle ville de la Saskatchewan le guide présente-t-il comme le siège de l'industrie minière?"
+  },
+  "options": [
+    {
+      "en": "Regina.",
+      "fr": "Regina."
+    },
+    {
+      "en": "Winnipeg.",
+      "fr": "Winnipeg."
+    },
+    {
+      "en": "Saskatoon.",
+      "fr": "Saskatoon."
+    },
+    {
+      "en": "Calgary.",
+      "fr": "Calgary."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "Saskatoon, the largest city in Saskatchewan, is the headquarters of the mining industry. Regina is the provincial capital.",
+    "fr": "Saskatoon, la plus grande ville de la Saskatchewan, est le siège de l'industrie minière. Regina est la capitale de la province."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Saskatoon, the largest city, is the headquarters of the mining industry and an important educational, research and technology centre."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

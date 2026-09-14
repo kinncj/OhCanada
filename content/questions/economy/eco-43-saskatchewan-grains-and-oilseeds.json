@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-43-saskatchewan-grains-and-oilseeds",
+  "subject": "economy",
+  "prompt": {
+    "en": "Which province does the guide call Canada's largest producer of grains and oilseeds?",
+    "fr": "Quelle province le guide présente-t-il comme le plus grand producteur de céréales et d'oléagineux au Canada?"
+  },
+  "options": [
+    {
+      "en": "Ontario.",
+      "fr": "L'Ontario."
+    },
+    {
+      "en": "Saskatchewan.",
+      "fr": "La Saskatchewan."
+    },
+    {
+      "en": "Nova Scotia.",
+      "fr": "La Nouvelle-Écosse."
+    },
+    {
+      "en": "British Columbia.",
+      "fr": "La Colombie-Britannique."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "The guide names Saskatchewan as the country's largest producer of grains and oilseeds. It was once known as the wheat province.",
+    "fr": "Le guide présente la Saskatchewan comme le plus grand producteur de céréales et d'oléagineux du pays. On l'a déjà appelée la province du blé."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 100,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” has 40% of the arable land in Canada and is the country’s largest producer of grains and oilseeds."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-37-what-a-provincial-trial-court-is-called",
+  "subject": "justice",
+  "prompt": {
+    "en": "In a province, what is the trial court sometimes called?",
+    "fr": "Dans une province, comment appelle-t-on parfois le tribunal de première instance?"
+  },
+  "options": [
+    {
+      "en": "The Court of Queen's Bench, or the Supreme Court of that province.",
+      "fr": "La Cour du Banc de la Reine, ou la Cour suprême de cette province."
+    },
+    {
+      "en": "The Federal Court of Canada.",
+      "fr": "La Cour fédérale du Canada."
+    },
+    {
+      "en": "The small claims court.",
+      "fr": "La cour des petites créances."
+    },
+    {
+      "en": "The traffic court.",
+      "fr": "Le tribunal de la circulation."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The court that hears trials carries different names from province to province. A province's own Supreme Court is not the Supreme Court of Canada, which is the highest court in the country.",
+    "fr": "Le tribunal qui entend les procès porte des noms différents d'une province à l'autre. La Cour suprême d'une province n'est pas la Cour suprême du Canada, qui est le plus haut tribunal du pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "The Justice System",
+    "page": 76,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In most provinces there is an appeal court and a trial court, sometimes called the Court of Queen’s Bench or the Supreme Court."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

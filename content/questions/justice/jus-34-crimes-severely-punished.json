@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-34-crimes-severely-punished",
+  "subject": "justice",
+  "prompt": {
+    "en": "What does Discover Canada say happens to people found guilty of spousal abuse, forced marriage or other gender-based violence?",
+    "fr": "Selon Découvrir le Canada, qu'arrive-t-il aux personnes reconnues coupables de violence conjugale, de mariage forcé ou d'une autre forme de violence fondée sur le sexe?"
+  },
+  "options": [
+    {
+      "en": "They are punished severely under Canada's criminal laws.",
+      "fr": "Elles sont punies sévèrement en vertu des lois criminelles du Canada."
+    },
+    {
+      "en": "They are asked to leave the community.",
+      "fr": "On leur demande de quitter la communauté."
+    },
+    {
+      "en": "They pay a small fine to their province.",
+      "fr": "Elles paient une petite amende à leur province."
+    },
+    {
+      "en": "They receive a written warning from their city council.",
+      "fr": "Elles reçoivent un avertissement écrit du conseil municipal."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada does not accept these acts, whatever custom is offered as a reason for them. They are crimes, and the criminal law punishes them severely.",
+    "fr": "Le Canada n'accepte pas ces actes, quelle que soit la coutume invoquée pour les justifier. Ce sont des crimes, et le droit criminel les punit sévèrement."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Those guilty of these crimes are severely punished under Canada’s criminal laws."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

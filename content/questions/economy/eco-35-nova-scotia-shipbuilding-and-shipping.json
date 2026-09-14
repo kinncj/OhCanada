@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-35-nova-scotia-shipbuilding-and-shipping",
+  "subject": "economy",
+  "prompt": {
+    "en": "The guide says Nova Scotia's identity is linked to three kinds of work. Which are they?",
+    "fr": "Selon le guide, l'identité de la Nouvelle-Écosse est liée à trois types de travail. Lesquels?"
+  },
+  "options": [
+    {
+      "en": "Oil sands, cattle ranching and wheat.",
+      "fr": "Les sables bitumineux, l'élevage de bovins et le blé."
+    },
+    {
+      "en": "Shipbuilding, fisheries and shipping.",
+      "fr": "La construction navale, les pêches et le transport maritime."
+    },
+    {
+      "en": "Uranium, potash and grain.",
+      "fr": "L'uranium, la potasse et les céréales."
+    },
+    {
+      "en": "Car making, banking and film.",
+      "fr": "La fabrication d'automobiles, les banques et le cinéma."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Nova Scotia is a sea province. Building ships, fishing and moving goods by ship are part of how it sees itself.",
+    "fr": "La Nouvelle-Écosse est une province tournée vers la mer. Construire des navires, pêcher et transporter des marchandises par bateau font partie de son identité."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 97,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "the province’s identity is linked to shipbuilding, fisheries and shipping"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

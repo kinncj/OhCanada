@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-33-criminal-justice-is-federal",
+  "subject": "justice",
+  "prompt": {
+    "en": "In the guide's table of responsibilities, which government looks after criminal justice?",
+    "fr": "Dans le tableau des responsabilités du guide, quel gouvernement s'occupe de la justice pénale?"
+  },
+  "options": [
+    {
+      "en": "The federal government.",
+      "fr": "Le gouvernement fédéral."
+    },
+    {
+      "en": "The provincial governments.",
+      "fr": "Les gouvernements provinciaux."
+    },
+    {
+      "en": "The municipal governments.",
+      "fr": "Les gouvernements municipaux."
+    },
+    {
+      "en": "The territorial governments.",
+      "fr": "Les gouvernements territoriaux."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The guide lists criminal justice in the federal column, beside national defence, foreign policy and citizenship. Policing is shared out differently, but criminal justice is named only for Ottawa.",
+    "fr": "Le guide inscrit la justice pénale dans la colonne fédérale, à côté de la défense nationale, de la politique étrangère et de la citoyenneté. Les services de police sont répartis autrement, mais la justice pénale n'est nommée que pour Ottawa."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 67,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "• Policing • Criminal Justice • International Trade"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

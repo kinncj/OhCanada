@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "jus-40-police-in-major-urban-centres",
+  "subject": "justice",
+  "prompt": {
+    "en": "In most major Canadian cities, who provides the police?",
+    "fr": "Dans la plupart des grandes villes canadiennes, qui assure les services de police?"
+  },
+  "options": [
+    {
+      "en": "The city itself, through a municipal police force.",
+      "fr": "La ville elle-même, au moyen d'un corps de police municipal."
+    },
+    {
+      "en": "The Parliament of Canada.",
+      "fr": "Le Parlement du Canada."
+    },
+    {
+      "en": "The provincial courts.",
+      "fr": "Les tribunaux provinciaux."
+    },
+    {
+      "en": "Private security companies.",
+      "fr": "Des entreprises de sécurité privées."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Policing in a big city is usually part of local government: the municipality runs its own police force.",
+    "fr": "Dans une grande ville, la police relève habituellement du gouvernement local : la municipalité gère son propre corps de police."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 66,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Most major urban centres have municipal police forces."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

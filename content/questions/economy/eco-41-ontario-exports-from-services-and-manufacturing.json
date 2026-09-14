@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-41-ontario-exports-from-services-and-manufacturing",
+  "subject": "economy",
+  "prompt": {
+    "en": "In Ontario, which industries does the guide say produce a large share of Canada's exports?",
+    "fr": "En Ontario, quelles industries produisent une grande partie des exportations du Canada, selon le guide?"
+  },
+  "options": [
+    {
+      "en": "Fishing and trapping.",
+      "fr": "La pêche et le piégeage."
+    },
+    {
+      "en": "Coal mining and shipbuilding.",
+      "fr": "L'extraction du charbon et la construction navale."
+    },
+    {
+      "en": "Tourism and film.",
+      "fr": "Le tourisme et le cinéma."
+    },
+    {
+      "en": "The service and manufacturing industries.",
+      "fr": "Les industries des services et de la fabrication."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "Many people in Ontario work in services or in factories, and what those industries produce makes up a large part of what Canada sells to other countries.",
+    "fr": "Beaucoup de gens en Ontario travaillent dans les services ou dans les usines, et ce que produisent ces industries représente une grande partie de ce que le Canada vend à d'autres pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 99,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Many people work in the service or manufacturing industries, which produce a large percentage of Canada’s exports."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

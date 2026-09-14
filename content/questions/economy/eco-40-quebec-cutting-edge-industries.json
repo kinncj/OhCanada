@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-40-quebec-cutting-edge-industries",
+  "subject": "economy",
+  "prompt": {
+    "en": "In which modern, high-tech industries does the guide say Quebecers are leaders?",
+    "fr": "Selon le guide, dans quelles industries modernes de pointe les Québécois sont-ils des chefs de file?"
+  },
+  "options": [
+    {
+      "en": "Shipbuilding and coal mining.",
+      "fr": "La construction navale et l'extraction du charbon."
+    },
+    {
+      "en": "Pharmaceuticals and aeronautics.",
+      "fr": "Les produits pharmaceutiques et l'aéronautique."
+    },
+    {
+      "en": "Potash and uranium.",
+      "fr": "La potasse et l'uranium."
+    },
+    {
+      "en": "Oil sands and cattle ranching.",
+      "fr": "Les sables bitumineux et l'élevage de bovins."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "Quebecers are leaders in pharmaceuticals, the medicine industry, and in aeronautics, the aircraft industry.",
+    "fr": "Les Québécois sont des chefs de file dans les produits pharmaceutiques, l'industrie des médicaments, et dans l'aéronautique, l'industrie des avions."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 98,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "Quebecers are leaders in cutting-edge industries such as pharmaceuticals and aeronautics."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

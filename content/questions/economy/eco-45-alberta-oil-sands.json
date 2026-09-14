@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-45-alberta-oil-sands",
+  "subject": "economy",
+  "prompt": {
+    "en": "What does the guide say is being developed in northern Alberta as a major energy source?",
+    "fr": "Selon le guide, qu'est-ce qu'on met en valeur dans le nord de l'Alberta comme grande source d'énergie?"
+  },
+  "options": [
+    {
+      "en": "The oil sands.",
+      "fr": "Les sables bitumineux."
+    },
+    {
+      "en": "Tidal power stations.",
+      "fr": "Des centrales marémotrices."
+    },
+    {
+      "en": "Uranium mines.",
+      "fr": "Des mines d'uranium."
+    },
+    {
+      "en": "Coal-fired ships.",
+      "fr": "Des navires au charbon."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Alberta already produces the most oil and gas in Canada. In the north of the province, the oil sands are being developed as another major source of energy.",
+    "fr": "L'Alberta produit déjà le plus de pétrole et de gaz au Canada. Dans le nord de la province, on met en valeur les sables bitumineux comme autre grande source d'énergie."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 101,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-09T00:00:00Z",
+    "volatile": false,
+    "quote": "the oil sands in the north are being developed as a major energy source"
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

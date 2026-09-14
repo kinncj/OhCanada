@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-49-work-contributes-to-prosperity",
+  "subject": "economy",
+  "prompt": {
+    "en": "Besides personal dignity and self-respect, what does the guide say work contributes to?",
+    "fr": "En plus de la dignité personnelle et du respect de soi, à quoi le travail contribue-t-il, selon le guide?"
+  },
+  "options": [
+    {
+      "en": "A shorter work week for everyone.",
+      "fr": "Une semaine de travail plus courte pour tous."
+    },
+    {
+      "en": "Lower taxes for every family.",
+      "fr": "Des impôts moins élevés pour chaque famille."
+    },
+    {
+      "en": "Canada's prosperity.",
+      "fr": "La prospérité du Canada."
+    },
+    {
+      "en": "The right to vote.",
+      "fr": "Le droit de vote."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "When people work, it helps them feel dignity and respect for themselves. Their work also helps Canada as a whole to prosper.",
+    "fr": "Le travail aide les gens à ressentir de la dignité et du respect envers eux-mêmes. Il aide aussi l'ensemble du Canada à prospérer."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 13,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Work contributes to personal dignity and self-respect, and to Canada’s prosperity."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
