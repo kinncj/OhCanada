@@ -111,7 +111,6 @@ import { createShell } from '@ui/shell';
 
 import {
   creatorSlotsByLocale,
-  missingCreatorRows,
   repairSelection,
   toPlayerCharacter,
   toSelection,
@@ -680,21 +679,25 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * copy table that had never been drawn on a shipped page.
    */
   const creatorRandom = random.fork('character');
-  const creatorSlots = creatorSlotsByLocale();
   /*
-   * A slot or an option the rig declares that nothing has named. Dropped from
-   * the screen rather than drawn as a key, and said out loud, because ADR-0010
-   * forbids this directory inventing player-facing text and a group heading
-   * reading `creator.slot.fringe` is that rule broken where a player can see
-   * it. `tests/unit/bootstrap/character-slots.test.ts` fails the build on the
-   * same condition, so this is what the program does if one ever ships.
+   * A slot or an option the rig offers that nothing names **throws**, naming
+   * every missing key (`creatorSlots`, ADR-0024): a group is drawn or the build
+   * fails, and is never silently left out. At boot that is a build defect, so it
+   * is reported the way every other refused boot is — `data-tn-boot="failed"`,
+   * a visible notice and a spoken one — rather than escaping `main()` and
+   * leaving the page on "loading" with nothing said.
+   * `tests/unit/bootstrap/character-slots.test.ts` fails the build on the same
+   * condition first, so this is what the program does if one ever ships.
    */
-  for (const key of missingCreatorRows()) {
-    console.error(
-      `[bootstrap] the rig declares a creator row nothing names: "${key}". That option or ` +
-        'group is not offered. See docs/stories/TN-LOOK-what-the-player-can-choose.md.',
-    );
-  }
+  const creatorSlots = ((): ReturnType<typeof creatorSlotsByLocale> | null => {
+    try {
+      return creatorSlotsByLocale();
+    } catch (error) {
+      reportFailure(error instanceof Error ? error.message : String(error));
+      return null;
+    }
+  })();
+  if (creatorSlots === null) return;
 
   /*
    * The saved appearance, repaired with a **uniform draw** and never with the
@@ -711,7 +714,10 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * creator's repair is `repairSelection`.
    *
    * A save with no character is not a repair — it is a first run — so it raises
-   * no message and the draw is simply the creator opening.
+   * no message and the draw is simply the creator opening. Nor is a save that
+   * predates a slot, which is every save made before `presentation` opened:
+   * the slot it does not name takes the rig's fallback silently, because no
+   * choice the player made is gone.
    */
   const repairedCharacter = repairSelection(toSelection(progress.character), creatorRandom.next);
   let characterSelection = repairedCharacter.selection;
