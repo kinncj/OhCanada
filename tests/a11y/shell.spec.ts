@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
@@ -748,6 +750,333 @@ test.describe('the level select is a route, not a list', () => {
     await expect(
       page.locator('[data-testid="level-select-list"]').getByRole('listitem'),
     ).toHaveCount(10);
+  });
+});
+
+/**
+ * The map of Canada above the route.
+ *
+ * `OQ-MAP-2` allowed a drawn map as "a decoration behind the same list, never the
+ * only way to choose", and `app/ui/level-map.ts` is that. What only a browser can
+ * prove about it is here:
+ *
+ *  - that it is **drawn** — the SVG really loads, above the list — and axe is
+ *    clean over the page with it, in both languages;
+ *  - that hiding it costs nobody anything: it is wordless, unfocusable, and a
+ *    card's name is what it was;
+ *  - that each pin **sits on its anchor**, with Halifax and Peggy's Cove in the
+ *    inset, and is drawn in **the rail's shapes**, not new ones;
+ *  - that at 200 % text it **takes no width from a card**, and its pins stay the
+ *    drawing's size rather than the text's;
+ *  - that a switch press over it is a press anywhere, and the drawing is fetched
+ *    only when the level select is built.
+ *
+ * Reduced motion and high contrast are the `VIEWS` loop at the top of this file,
+ * which now scans a level select with the map on it.
+ */
+interface SidecarPoint {
+  readonly x: number;
+  readonly y: number;
+}
+
+const MAP_SIDECAR = JSON.parse(
+  readFileSync(
+    new URL('../../assets/src/svg/screens/map-canada.anchors.json', import.meta.url),
+    'utf8',
+  ),
+) as {
+  readonly viewBox: readonly number[];
+  readonly anchors: Readonly<Record<string, SidecarPoint>>;
+  readonly inset?: { readonly anchors: Readonly<Record<string, SidecarPoint>> };
+};
+
+const JOURNEY = [
+  'halifax',
+  'peggys-cove',
+  'quebec-city',
+  'ottawa',
+  'toronto',
+  'winnipeg',
+  'prairie-rail',
+  'alberta-foothills',
+  'vancouver',
+  'the-north',
+] as const;
+
+test.describe('the map above the route shows where the journey is in the country', () => {
+  const mapOf = (page: Page): Locator => page.locator('[data-testid="level-select-map"]');
+
+  /** Until the drawing has decoded, a scan is of an empty frame, not of the map. */
+  const drawingLoaded = (page: Page): Promise<unknown> =>
+    page.waitForFunction(() => {
+      const art = document.querySelector<HTMLImageElement>('[data-testid="level-select-map"] img');
+      return art !== null && art.complete && art.naturalWidth > 0;
+    });
+
+  test('is drawn above the list, and axe is clean with it, in English and in French', async ({
+    page,
+  }) => {
+    for (const locale of ['en', 'fr'] as const) {
+      await open(page, { view: 'level-select', locale, stamped: 'ottawa' });
+      await drawingLoaded(page);
+
+      const map = await mapOf(page).boundingBox();
+      const list = await page.locator('[data-testid="level-select-list"]').boundingBox();
+      expect(map, 'the map has no box').not.toBeNull();
+      expect(list, 'the list has no box').not.toBeNull();
+      expect(map?.height ?? 0, 'the map is not really drawn').toBeGreaterThan(100);
+      expect((map?.y ?? 0) + (map?.height ?? 0), 'the map is not above the list').toBeLessThanOrEqual(
+        (list?.y ?? 0) + 0.5,
+      );
+
+      const results = await scan(page).analyze();
+      expect(results.violations, `${locale}: ${violationsOf(results)}`).toEqual([]);
+    }
+  });
+
+  test('is hidden from assistive technology, carries no words and adds no stop', async ({
+    page,
+  }) => {
+    await open(page, { view: 'level-select' });
+    const map = mapOf(page);
+
+    await expect(map).toHaveAttribute('aria-hidden', 'true');
+    await expect(map.locator('img')).toHaveAttribute('alt', '');
+    expect(((await map.textContent()) ?? '').trim(), 'the map carries words').toBe('');
+    await expect(
+      map.locator('button, a[href], input, select, textarea, [tabindex]'),
+    ).toHaveCount(0);
+
+    /* From the heading, over the counts and the map, the next stop is the first
+       card: the map put nothing between them (`TN-MAP-07`). */
+    await page.locator('#tn-level-select-heading').focus();
+    await page.keyboard.press('Tab');
+    expect(await focusedTestId(page)).toBe('level-card-halifax');
+
+    /* And a card's name is a number, a place and a state, as it always was. */
+    const ottawa = page.locator('[data-testid="level-card-ottawa"]');
+    await expect(ottawa).toHaveAccessibleName(/Level 4/);
+    await expect(ottawa).toHaveAccessibleName(/Ottawa/);
+    await expect(ottawa).toHaveAccessibleName(/Open/);
+    await expect(ottawa).toHaveAccessibleDescription(/You can play this now/);
+  });
+
+  test("pins each stop at its anchor, with Halifax and Peggy's Cove in the inset", async ({
+    page,
+  }) => {
+    await open(page, { view: 'level-select' });
+    await drawingLoaded(page);
+
+    const placed = await page.evaluate(() => {
+      const art = document
+        .querySelector('[data-testid="level-select-map"] img')
+        ?.getBoundingClientRect();
+      if (art === undefined) return [];
+      return [
+        ...document.querySelectorAll<HTMLElement>('[data-testid="level-select-map"] .tn-map__stop'),
+      ].map((stop) => {
+        const pin = stop.querySelector('.tn-journey__pin')?.getBoundingClientRect();
+        return {
+          handle: stop.getAttribute('data-map-handle') ?? '?',
+          x: pin === undefined ? -1 : (pin.left + pin.width / 2 - art.left) / art.width,
+          y: pin === undefined ? -1 : (pin.top + pin.height / 2 - art.top) / art.height,
+        };
+      });
+    });
+
+    expect(placed.map((stop) => stop.handle)).toEqual([...JOURNEY]);
+
+    const [, , width = 0, height = 0] = MAP_SIDECAR.viewBox;
+    for (const stop of placed) {
+      const point = MAP_SIDECAR.inset?.anchors[stop.handle] ?? MAP_SIDECAR.anchors[stop.handle];
+      expect(point, `the sidecar has no anchor for ${stop.handle}`).toBeDefined();
+      /* Six viewBox units is about two CSS px on a 390 px phone. */
+      expect(Math.abs(stop.x * width - (point?.x ?? 0)), `${stop.handle} x`).toBeLessThan(6);
+      expect(Math.abs(stop.y * height - (point?.y ?? 0)), `${stop.handle} y`).toBeLessThan(6);
+    }
+    expect(MAP_SIDECAR.inset?.anchors.halifax, 'Halifax is not in the inset').toBeDefined();
+    expect(MAP_SIDECAR.inset?.anchors['peggys-cove'], "Peggy's Cove is not in the inset").toBeDefined();
+  });
+
+  test("marks the stop the route has got to, in the rail's shapes and not new ones", async ({
+    page,
+  }) => {
+    await open(page, { view: 'level-select', stamped: 'ottawa' });
+    await drawingLoaded(page);
+
+    /* One mark, on the same stop the rail marks. */
+    const current = mapOf(page).locator('[data-journey-current="true"]');
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveAttribute('data-map-handle', 'ottawa');
+    const railHandle = await page.evaluate(
+      () =>
+        document
+          .querySelector('[data-testid="level-select-list"] [data-journey-current="true"]')
+          ?.closest('li')
+          ?.querySelector('button[data-level-handle]')
+          ?.getAttribute('data-level-handle') ?? 'none',
+    );
+    expect(railHandle).toBe('ottawa');
+
+    /* Open and earned, locked, not made yet: the map pin looks exactly like the
+       rail pin beside that card, and the three look different from each other. */
+    const looks = (): Promise<{ handle: string; map: string; rail: string }[]> =>
+      page.evaluate(() =>
+        ['ottawa', 'halifax', 'vancouver'].map((handle) => {
+          const look = (pin: Element | null | undefined): string => {
+            if (pin === null || pin === undefined) return 'missing';
+            const style = getComputedStyle(pin);
+            return `${style.borderTopStyle} ${style.backgroundColor}`;
+          };
+          return {
+            handle,
+            map: look(
+              document.querySelector(
+                `[data-testid="level-select-map"] [data-map-handle="${handle}"] .tn-journey__pin`,
+              ),
+            ),
+            rail: look(
+              document
+                .querySelector(`[data-level-handle="${handle}"]`)
+                ?.closest('li')
+                ?.querySelector('.tn-journey__pin'),
+            ),
+          };
+        }),
+      );
+
+    const normal = await looks();
+    for (const row of normal) expect(row.map, row.handle).toBe(row.rail);
+    expect(new Set(normal.map((row) => row.map.split(' ')[0])).size).toBe(3);
+
+    const sizes = (): Promise<number[]> =>
+      page.evaluate(() =>
+        ['true', 'false'].map(
+          (flag) =>
+            document
+              .querySelector(
+                `[data-testid="level-select-map"] [data-journey-current="${flag}"] .tn-journey__pin`,
+              )
+              ?.getBoundingClientRect().width ?? 0,
+        ),
+      );
+    const [marked = 0, plain = 0] = await sizes();
+    expect(marked).toBeGreaterThan(plain);
+
+    /* With no colour at all: the ring is gone, the size and the shapes are not. */
+    await page.emulateMedia({ forcedColors: 'active' });
+    const [markedForced = 0, plainForced = 0] = await sizes();
+    expect(markedForced).toBeGreaterThan(plainForced);
+    for (const row of await looks()) expect(row.map, `${row.handle}, forced`).toBe(row.rail);
+
+    /* `color-contrast` off for this scan only, for the reason given in "survives
+       greyscale" above: Chromium's emulation leaves authored text colours in the
+       computed style. */
+    const results = await scan(page).disableRules(['color-contrast']).analyze();
+    expect(results.violations, violationsOf(results)).toEqual([]);
+    await page.emulateMedia({ forcedColors: null });
+  });
+
+  test('takes no width from a card at 200 % text, and its pins stay the drawing\'s size', async ({
+    page,
+  }) => {
+    const pinShare = (): Promise<number> =>
+      page.evaluate(() => {
+        const art = document
+          .querySelector('[data-testid="level-select-map"] img')
+          ?.getBoundingClientRect().width;
+        const pin = document
+          .querySelector('[data-testid="level-select-map"] [data-journey-current="false"] .tn-journey__pin')
+          ?.getBoundingClientRect().width;
+        return art === undefined || pin === undefined || art === 0 ? 0 : pin / art;
+      });
+
+    await open(page, { view: 'level-select' });
+    await drawingLoaded(page);
+    const atOneHundred = await pinShare();
+    expect(atOneHundred).toBeGreaterThan(0);
+
+    await open(page, { view: 'level-select', textScale: 200, font: 'dyslexia' });
+    await drawingLoaded(page);
+    const atTwoHundred = await pinShare();
+    expect(Math.abs(atTwoHundred - atOneHundred), 'the pins grew with the text').toBeLessThan(
+      atOneHundred * 0.05,
+    );
+
+    /* Halifax and Peggy's Cove are still two pins, not one. */
+    const overlap = await page.evaluate(() => {
+      const box = (handle: string): DOMRect | undefined =>
+        document
+          .querySelector(
+            `[data-testid="level-select-map"] [data-map-handle="${handle}"] .tn-journey__pin`,
+          )
+          ?.getBoundingClientRect();
+      const a = box('halifax');
+      const b = box('peggys-cove');
+      if (a === undefined || b === undefined) return true;
+      return !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top);
+    });
+    expect(overlap, "Halifax and Peggy's Cove are drawn on top of each other").toBe(false);
+
+    /* The list beside nothing: the Ottawa card is exactly as wide with the map as
+       without it, which is the budget the route's gutter was measured against. */
+    expect(await scrollsSideways(page)).toBe(false);
+    expect(await undersizedTargets(page), 'at 200 % text, under the map').toEqual([]);
+    const cardWidth = (): Promise<number> =>
+      page
+        .locator('[data-testid="level-card-ottawa"]')
+        .evaluate((card) => card.getBoundingClientRect().width);
+    const withMap = await cardWidth();
+    await page.evaluate(() => document.querySelector('[data-testid="level-select-map"]')?.remove());
+    const withoutMap = await cardWidth();
+    expect(Math.abs(withMap - withoutMap), 'the map squeezed the list').toBeLessThan(0.5);
+  });
+
+  test('a switch press over the map is a press anywhere', async ({ page }) => {
+    await open(page, { view: 'level-select', singleSwitch: true });
+    await drawingLoaded(page);
+    await mapOf(page).scrollIntoViewIfNeeded();
+
+    const box = await mapOf(page).boundingBox();
+    expect(box, 'the map has no box').not.toBeNull();
+    const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
+    const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
+
+    /* Nothing on the map is under the pointer: it takes no input. */
+    const onMap = await page.evaluate(
+      ([px, py]) =>
+        document.elementFromPoint(px ?? 0, py ?? 0)?.closest('[data-testid="level-select-map"]') !==
+        null,
+      [x, y],
+    );
+    expect(onMap, 'the map took the pointer').toBe(false);
+
+    const before = await highlighted(page);
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.waitForTimeout(60);
+    await page.mouse.up();
+    expect(await highlighted(page), 'a press over the map did not advance').not.toBe(before);
+    await expect(page.locator('[data-testid="level-select"]')).toBeVisible();
+  });
+
+  test('fetches the drawing when the level select is built, not on the title screen', async ({
+    page,
+  }) => {
+    const isDrawing = (url: string): boolean =>
+      /\/map-canada[^/]*\.svg$/.test(new URL(url).pathname);
+    const fetched: string[] = [];
+    page.on('request', (request) => {
+      if (isDrawing(request.url())) fetched.push(request.url());
+    });
+
+    await open(page);
+    expect(fetched, 'the title screen fetched the map').toEqual([]);
+
+    const drawing = page.waitForRequest((request) => isDrawing(request.url()));
+    await page.locator('[data-testid="title-choose-level"]').click();
+    await drawing;
+    await expect(mapOf(page)).toBeVisible();
   });
 });
 
