@@ -693,8 +693,10 @@ eighteen shipped tones exactly, which was checked before anything was derived fr
 Base steps become 12.4, 10.8, 13.6, 11.5, 12.0. Moving `skin-2` darker as well was tried and rejected: it opened
 1→2 to 14.4 and closed 2→3 to 8.8.
 
-**Status: a proposal.** Skin tones are `docs/content-review.md` §8.1, the change needs the product owner's
-cultural sign-off, and no agent grants that. `palette.json` is unchanged and no art uses these values.
+**Status: declined, 2026-09-14.** Skin tones are `docs/content-review.md` §8.1 and need the product owner's
+sign-off, which no agent grants. The product owner reviewed the six tones beside this proposal and kept them
+("skin tones are ok"). `palette.json` is unchanged and no art uses the proposed values; the table stays as the
+record of what was measured and offered.
 
 ---
 
