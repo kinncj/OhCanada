@@ -970,6 +970,11 @@ const OFFICER_PLAN = {
       '`mustBeRight` feature. A second covering on top of it is two hats.',
   ),
   feature: pinned('none', 'the recipe names skin, hair and expression as what varies here'),
+  // The face template is `face-{expression}-{presentation}`, so a plan that
+  // names no presentation resolves no face frame at all. The officer's artboard
+  // does not pin it (it resolves to the rig's fallback at runtime), so it is
+  // varied like the other slots the artboard leaves open.
+  presentation: varied(),
 };
 
 /**
@@ -999,6 +1004,8 @@ const PLAYER_PLAN = {
   expression: varied(),
   headCovering: varied({ first: 'none' }),
   feature: varied(),
+  // Player-selectable, and read by the face template: `face-{expression}-{presentation}`.
+  presentation: varied(),
 };
 
 /**
@@ -1038,6 +1045,10 @@ const GUIDE_PLAN = {
     "this subject's `neverAdd` forbids clothing, a hat, a scarf or an accessory of any kind",
   ),
   feature: pinned('none', 'same clause: it is an animal companion, not a person in a suit'),
+  presentation: pinned(
+    'neutral',
+    "the guide's artboard pins `presentation: neutral` in its `skins`; the face template reads it",
+  ),
 };
 
 /* ------------------------------------------------------------------ *
@@ -1096,9 +1107,10 @@ const GUIDE_PLAN = {
  *                                             px and moves 28 px back"
  *     bike/walk t 0        torso 22 deg   =  "The torso folds 22 degrees over
  *                                             the bar"
- *     skateboard/walk t 0  feet 30.6 px apart
- *                                        =  "Both boots on the deck, 31 px
- *                                             apart"
+ *     skateboard/walk t 0  feet 92 px apart, torso 9 deg
+ *                                        =  "the ankles are 92 px apart";
+ *                                             "Torso pitched 5, 9 and 14
+ *                                             degrees" (9 is cruising)
  *
  * Four subjects, four independent numbers, all from the state named here at the
  * frame named here. No other state or t reproduces them.
