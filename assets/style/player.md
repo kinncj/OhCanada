@@ -3,6 +3,18 @@
 The design sheet for `costume: parka` — the artboard `player`. Read with `art-bible.md`, `rig-contract.md`
 and `palette.json` open.
 
+## 0. Redrawn 2026-09-14 — read `art-bible.md` §7.7 first
+
+After *"I'm not fine with the goofy look"* and *"the character itself looks bad"*, every part of this costume
+was redrawn on the same rig. What changed here: a rounder head with the face on its leading half and a 7 px
+nose; a puffed chest and a flared skirt either side of the drawcord waist, shortened to y 323 so the legs
+show; puffed sleeves whose shoulder, elbow and wrist ends are circles on their pivots, so no joint shows a knob;
+a closed round shoulder cap over a lower shoulder line, so a neck shows above the scarf; a red scarf wrapped
+lower at the neck with its tail still hanging straight down the leading edge; 42 px mitts; tall brown boots
+whose shaft and white cuff ride on the shin; a toque redrawn as a dome with a nearly level ribbed cuff. The
+rest-pose width is **115 px** and the neck **11 px** on the centre line. Numbers in the sections below that
+disagree with these are the pre-redesign values, kept as history.
+
 ## 1. The defects this redraw fixed
 
 The player shipped **front-on and too wide**. Both were reported by the repository owner from the live site,

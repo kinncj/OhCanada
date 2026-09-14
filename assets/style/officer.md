@@ -14,6 +14,16 @@ carries the same decision.
 
 References: `assets/refs/officer/`. Required-features list: `assets/refs/references.json`, subject `officer`.
 
+**Redrawn 2026-09-14 with the player and the guide** (`art-bible.md` §7.7). Every identifying feature in §2
+is still drawn and none was added: scarlet tunic fitted to a belted waist and flaring into a short skirt, navy
+standing collar at the base of the neck, navy shoulder straps, pointed breast-pocket flaps, one row of brass
+buttons, the Sam Browne and its diagonal from the wearer's right shoulder, the white lanyard, navy breeches
+full at the thigh with the gold stripe, high brown riding boots with a strap and buckle at the ankle, brown
+gauntlets. The boot shaft now rides on the shin so it cannot swing off the leg. **The brim now clears the
+brows** — the open defect in §2 row 4 — by 2.0 px over the highest brow in every expression and presentation,
+measured by the generator; the crown is a pinched peak with a fore-and-aft crease and no part sits above y 2.
+Rest-pose width **115 px**, the same as the other two; neck **13 px** on the centre line.
+
 ---
 
 ## 1. Proportions — identical to every other character

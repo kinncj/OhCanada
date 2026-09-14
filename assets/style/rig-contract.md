@@ -49,13 +49,14 @@ Every part is authored in one 240 × 470 coordinate system at design resolution:
 | sole | y = 460 |
 | height | 420 px = **6 heads of 70 px**, the canon in `art-bible.md` §7 |
 | ground line | world y = 1280 (`ottawa-level.md` §3) |
-| view | **three-quarter, canonical facing RIGHT** — body ≈ 40° off strict profile, **head ≈ 25°** |
+| view | **three-quarter, canonical facing RIGHT** — body ≈ 40° off strict profile, **head at the same three-quarter, face on its leading half** (§7.7 of the art bible; it was ≈ 25° before 2026-09-14) |
 
 **The view is part of the rig, not a drawing preference.** This is a side-scroller: every character traverses
 along the screen, so the figure is turned toward its direction of travel and `setFacing('left')` mirrors the
-whole composite. **The head is turned further than the body**, which is what a walking head does and what
-lets the officer keep the chest plane its cross-strap needs; it is also the half of the turn that decides
-whether the character reads as travelling, and it was the half the first pass missed. `art-bible.md` §7.1 carries the reasoning and the list of cues that carry the turn; what
+whole composite. **The head sits at the body's three-quarter, with the whole face on its leading half.** Until the
+2026-09-14 redesign it was turned further, about 25° off profile, and that crowded both eyes against the
+outline and read as a snout at phone size (`art-bible.md` §7.7). The head still decides whether a figure
+reads as travelling; it now does it through where the face sits, not through how far the outline is turned. `art-bible.md` §7.1 carries the reasoning and the list of cues that carry the turn; what
 this document has to say about it is structural, because in a turned figure **screen x is the fore-aft
 axis**. That is why the walk cycle reads: a limb swinging fore and aft swings horizontally on screen, at
 full amplitude, instead of foreshortening to nothing as it did front-on.
@@ -306,14 +307,17 @@ cannot be covered by the collar, and the head sat on the shoulders for exactly t
 drawn, inside `head-{skin}`, above the collar, and it read as a dark notch. Its pivot is the neck ROOT
 rather than the shared head pivot, and its keyframe transform is the CHEST's and the HEAD's averaged, per
 component, in every key of every state — so the head keeps turning further than the body and the neck is
-what makes that turn legible. Its 34 x 35 window at (103, 104) is covered everywhere outside y 121–134: **11 px under the jaw, 4.5 px under
-the collar**, against a worst-case relative motion of 0.8 px up and 1.5 px down. The window's lower bound is the
+what makes that turn legible. Since the 2026-09-14 redesign its 36 x 46 window at (102, 100) is covered, on the centre line,
+everywhere outside y 126–137 on the parka and 126–139 on the serge: **26 px under the jaw, 7–9 px under the scarf or
+collar**, against a worst-case relative motion of 0.8 px up and 1.5 px down. The window's lower bound is the
 collar and its UPPER bound is `head-shell-beaver`, which has to CONTAIN it or `make verify-art` refuses the
 guide's not-applicable claim for `skin` — that gate caught this, and it was right to.
 
 **The same UPPER bound holds over `hair`, and it is a rule about pixels, not about rectangles.**
-`head-shell-beaver`'s window is 115 x 124 at (71, 16), and it contains both the neck's 34 x 35 at (103, 104)
-and `hair-crop-*`'s 70 x 67 at (75, 20) — which is what `make verify-art` checks. What it cannot check is
+`head-shell-beaver`'s window is 116 x 130 at (66, 24), and it contains both the neck's 36 x 46 at (102, 100)
+and `hair-crop-*`'s 84 x 73 at (77, 34) — which is what `make verify-art` checks. Since 2026-09-14 the
+generator that drew them also composites the four and refuses to write if a single half-pixel sample of head,
+crop or neck is left uncovered by the pelt, which is the pixel check this paragraph asks for. What it cannot check is
 that the pelt actually PAINTS that window, and twice now a part under the pelt has moved while the pelt has
 not: the crop's crown ended up 5 px above the pelt's and a tan crescent of human hair showed through the top
 of the beaver's skull in the render, with every rectangle still nested. So the shell is drawn 1.5–2 px
@@ -337,7 +341,7 @@ sleeves 34 px apart overlap heavily at rest — which is what a three-quarter fi
 cycle separates them by swinging them fore and aft, which in this view is horizontally.
 
 ****The head parts share one pivot at (120, 112) and do NOT share an angle with the torso.** Nothing in the
-rig expresses "the head is turned 25° and the body 40°" — that difference is baked into the drawings, in
+rig expresses "the head is turned this far and the body that far" — that difference is baked into the drawings, in
 `head-{skin}`, `hair-*`, `face-*`, `hat-serge`, `head-covering-toque`, `feature-glasses` and
 `head-shell-beaver`, and the keyframe `rotation` on those parts is a small nod on top of it. So a redraw of
 any ONE of those parts has to hold the same head angle as the other seven or the head comes apart, and that

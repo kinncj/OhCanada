@@ -272,6 +272,10 @@ how the project avoids drawing some people as more heroic, more detailed or more
 
 ### 7.1 Every character is drawn in THREE-QUARTER VIEW, facing the way it travels
 
+> **Superseded in part on 2026-09-14 by §7.7.** The head no longer turns further than the body, the nose no
+> longer projects 16 px, and the eyes are no longer crowded into the front third. The reasoning below is kept
+> because it records why those choices were made and what they cost; §7.7 says what replaced them and why.
+
 The game is a portrait 2D side-scroller. Every character in it walks, skates, toboggans or bikes ALONG the
 screen, so a character drawn front-on, looking out at the player, is wrong by construction: it reads as a
 menu portrait somebody slid sideways. **The canonical facing is RIGHT, with the body turned about 40° off
@@ -313,12 +317,12 @@ What carries the turn, and what a redraw must not quietly drop:
 
 | cue | where | carries it at 390 px? |
 |---|---|---|
-| an ASYMMETRIC head outline: cranium behind, brow, nose, lip and chin in front, the nose projecting 16 px | `head-skin-*`, `head-shell-beaver` | **only if nothing else reaches further forward — see §7.4, which is the trap this line fell into** |
+| an ASYMMETRIC head outline: a round cranium behind, the jaw and a small rounded nose in front, the nose projecting about 7 px past the cheek (16 px before §7.7) | `head-skin-*`, `head-shell-beaver` | **only if nothing else reaches further forward — see §7.4, which is the trap this line fell into** |
 | the hair mass at the BACK, its fringe stopping at a tip INSIDE the forehead so the face profile is the leading edge | every `hair-*` | yes: at this size hair is a large flat colour block, and a fringe that overhangs the brow deletes the profile behind it |
 | chest plane and its fastening on the LEADING edge, back on the trailing edge | every torso | yes |
 | both feet pointing the way the character travels, far foot shorter | `foot-r-*`, `foot-l-*` | yes |
 | the hat brim swung forward, the toque band following the brow line downhill to the back | `hat-serge`, `head-covering-toque` | yes |
-| eyes crowded into the front third, 15 px apart, far eye foreshortened 6 px off the cheek edge | `face-*` | at 1× and 0.5× |
+| both eyes on the leading half of the face, 8 px apart, the far eye foreshortened and 9 px clear of the outline (§7.7) | `face-*` | yes |
 | ONE ear, set well back on the near side | `head-skin-*`, `head-shell-beaver` | no, and that is fine — it is a supporting cue, not a load-bearing one |
 | a NECK: a lit column between the jaw and a darker collar, its base closed over by the coat | `neck-{skin}`, and the neckline cut into every `torso-*` | yes, and it is what stops the whole head-and-shoulder mass reading as one lump |
 
@@ -337,12 +341,12 @@ chest-side shoulder — sits at x = 137.
 | **shoulder joint span**, near pivot to far pivot, as projected in this view | 0.49 | **34 px** (x = 103 and 137) |
 | **shoulder width**, across the bare figure at the shoulder line | 1.37 | **96 px** |
 | **maximum dressed silhouette AT REST**, wherever it falls on the figure | ≤ 1.66 | **≤ 116 px** |
-| **visible neck**, jaw ink to collar ink | 0.149 of head height | **12–13 px** |
+| **visible neck**, jaw ink to collar ink | 0.149 of head height | **12–13 px** (11 on the parka and 13 on the serge at the centre line since §7.7) |
 | **neck width**, skin between the ink edges | 0.26 of shoulder width | **22 px** (ink outer 34 px) |
 | hip width | 1.30 | 91 px |
 | hip to sole | 2.80 | 196 px |
-| hand width | 0.55 | 38 px |
-| foot length | 0.70 | 49 px |
+| hand width | 0.60 | 42 px (38 before §7.7) |
+| foot length | 1.01 near, 0.93 far | 71 px near, 65 px far, heel to toe (49 before §7.7) |
 | eye line | 0.50 of head height from the crown | 35 px down from the crown |
 | eye spacing | one eye-width apart, foreshortened to ~0.65 of that in this view | — |
 
@@ -362,7 +366,7 @@ reads, and 22 % over even in head units. What ships now is 96 px bare (**0.229**
 
 **A garment may add bulk; a body may not.** A parka genuinely broadens the shoulders and a fitted tunic
 barely does, so the costumes are allowed to differ *within one budget*: the widest point of the dressed
-figure at rest is **108 px on the parka, 104 px on the serge and 113 px at the beaver's waist**. Two things
+figure at rest is **115 px on all three costumes since §7.7**, arms and hands included (108 on the parka, 104 on the serge and 113 at the beaver's waist before it). Two things
 are measured beside that rather than inside it, because neither is the body: the officer's **hat brim at
 106 px**, which is headgear above the crown exactly as the toque is, and the guide's **paddle tail at
 132 px**, which is a limb held out to one side. Everything is inside the 116 px cap. What
@@ -531,7 +535,13 @@ away moved 8 px and did not.
 
 **Applied 2026-09-09**, after the first attempt at it was reverted with the rest of that pass: all three
 `leg-lower-*` now end at y 443 — **7 px past the ankle pivot, not 20** — and taper 35 px at the knee to
-26 px at the ankle. Measured by difference over 24 phases of all eight states, all three costumes: **no
+26 px at the ankle.
+
+**Rebuilt 2026-09-14 (§7.7), and the rule now holds by construction rather than by length.** Every
+`leg-lower-*` ENDS in a circle centred on the ankle pivot, and every `foot-*` draws the same circle, the same
+radius, with no line across its top. A circle centred on a pivot does not move when its part rotates, so the
+foot covers the end of the shin at every ankle angle any state reaches. The riding and winter boot shafts are
+drawn on the shin for the same reason: a shaft on the foot part would swing off the leg by up to 18 px in `run`. Measured by difference over 24 phases of all eight states, all three costumes: **no
 shin pixel is visible anywhere below the ankle pivot in any frame**, against 10.75 px below it before.
 
 It is gated the same way — by difference, over every frame of every state and every costume, so it catches a
@@ -554,6 +564,81 @@ pads, a toque covering the brows — were invisible in the SVG and obvious in a 
 front-facing head on a turned body, was invisible in a 1× render and obvious at phone width. The fifth and
 sixth, the peg leg and the hair swallowing the profile, were invisible in **every** render made here and
 obvious in a photograph of a phone. Each time the answer was to make the test more like the game.
+
+### 7.7 Redrawn 2026-09-14: rounded, readable, fewer pieces
+
+The product owner, after the pass that scaled the head to 0.9 and opened the joint outlines: *"I'm not fine
+with the goofy look… we need to improve"*, *"the character itself looks bad"*. Every character part was
+redrawn on the same rig: the same 27 parts, z-order, pivots, slots, frame templates and mode poses. Only the idle
+arms were re-solved. Measured on composites built from the rig (`walk` t 0.25 unless stated; CSS px on a 390 px
+phone = design px × 0.361):
+
+| measured before | why it read stiff, segmented and goofy |
+|---|---|
+| elbow caps centred **18 px and 8 px** below the elbow pivot; knee caps **4 px and 8 px** below the knee | a flat rig rotates each part about its own pivot, so off-pivot caps swing apart and the upper one pokes out as a knob at every bend (54° at `talk`, 46° at `run`); each segment's light and shade stripe broke at the joint |
+| coat width 87–113 px from shoulder to hem, coefficient of variation **0.082**; both legs together 68–72 px | a slab on two pillars, with straight sleeves hanging down its sides |
+| both eyes in the front **48 %** of the head, the far eye **2.3 CSS px** from the outline, the nose **8 px** past the brow, eyes **3.9 × 4.8 CSS px** | a bald cap with a snout on its front edge |
+| mitt 34 px on a 28–30 px forearm; boots a 21 × 14 CSS px lozenge | hands and feet read as the ends of tubes |
+| **26 %** of the figure's pixels are outline ink, cutting it into **21** islands | a cut-out puppet: the eye counts the pieces |
+
+**Three directions were sketched on the real skeleton and keys** (`renders/redesign/directions/` in the art
+agent's scratchpad; not shipped):
+
+- **A, soft three-quarter.** Joints closed, but the chin shading read as a beard, the face was still a snout and
+  the coat still a slab.
+- **B, graphic rubber-hose.** Thin constant limbs hide joints, but read as sticks at phone size, and dot eyes
+  vanish on `skin-6`. That breaks `rig-contract.md` §6's white-sclera rule. Rejected.
+- **C, chunky puffer.** A rounder head turned to the body's three-quarter, big eyes with the whole face on its
+  leading half, a puffed coat, big boots and mitts. **Chosen**, with A's scarf and a small nose nub on the outline:
+  - It keeps every rule in this document.
+  - The face owns the head, so four expressions carry at 390 px.
+  - The silhouette gets rhythm without a wider body.
+  - A small rounded nose with no snout is the lowest-risk geometry for the grey-face test (`docs/content-review.md`
+    §6.3).
+
+**Construction rules, binding on any redraw of these parts:**
+
+1. **Every joint end is a circle centred on its pivot.** The upper segment has a closed round end; the lower
+   segment starts flat on the pivot line, with the same radius and no ink across it. A circle centred on a pivot
+   does not move when its part rotates, so no bend shows a knob. Sleeves and legs may puff between joints: that is
+   garment.
+2. **The shin ends in a circle on the ankle pivot, and the foot draws the same circle with no top line** (§7.5).
+   Boot shafts ride on the shin.
+3. **The shoulder cap is a closed round ball on the shoulder pivot above a low shoulder line (y ≈ 131)**, so a
+   neck shows between the jaw and the scarf or collar.
+4. **Inner rim.** Every lit shape redraws its own outline in its base tone, at twice the ink width, inside its
+   own clip, before the ink. No shade tone ever touches an outline, on any skin ramp (§8.1).
+5. **The generator refuses to write** if a head covering comes within 1.5 px of the highest brow in any
+   expression and presentation (toque 4.5 px, hat 2.0 px), or if the pelt leaves a half-pixel of head, crop or neck
+   uncovered. Windows are fitted to the ink with 1 px of margin.
+
+| measured after | |
+|---|---|
+| arm centre line crossing ink, 7 poses | **0** (the leg crosses only the coat hem and the boot cuff) |
+| rest-pose width, arms included | **115 / 115 / 115 px**, 0.267 / 0.267 / 0.261 of height |
+| coat width variation | **0.055** |
+| neck column at x 120 | **11 px** parka (the near shoulder cap is the lower bound there), **13 px** serge |
+| eyes at phone size | near **4.9 × 6.4 CSS px** |
+| hand / foot | 42 px mitts; boots 71 px near, 65 px far |
+| outline ink share / islands | **29 % / 25**: *more* than before, not less, and recorded as such. Bigger eyes, closed shoulder caps and cuffs cost it; nothing here claims the line weight got lighter |
+| `shared@2x` | **2045×1316, 10.27 MiB** (2048×1419, 11.09 MiB before): every level 0.82 MiB lighter |
+
+**The atlas page is chaotic, and it nearly shipped wrong.** The first full pass packed to 2043×2034 (15.85 MiB),
+which left Halifax and Toronto at 98 % of budget. Trimming the hair made it worse: 2045×2047. The packer's layout
+is not a function of area. The same 80 frames repack at anything from 1312 to 2048 px tall under a 3 % change.
+What fixed it was a predictor that reproduces the pipeline's page exactly from frame sizes, and a search over small
+trims, re-packed under random ±2 px drift of the other frames. The chosen trim, `head-shell-beaver` 1 px narrower
+and 2 px shorter at 1x, stayed at or under 1618 px in 12 of 12 drift trials. **Anyone who resizes a character
+frame should repack and read the page, not the frame**, and `OQ-RIG-1` is the real fix.
+
+**Not solved, said out loud:**
+
+- At rest, the near sleeve still lies over the back half of the coat, and the standing figure reads as a column
+  until it walks.
+- In `train/*` and `toboggan/*` the rigid coat hangs below the lap.
+- The guide still stands on the human leg canon, so it is long in the leg for a beaver.
+- The faint rectangular hairlines around characters in the running game are older than this redraw. They show in
+  the before screenshots too, and they are not in any source.
 
 ## 8. Skin and hair
 
@@ -578,6 +663,38 @@ conflict with `CharacterSlot.default`. The architect settled it in the schema by
 `fallback`, documented as an id for NPC documents and save recovery and explicitly **not** a pre-selection,
 with the creator randomising uniformly over every option on open (`docs/content-review.md` §8.3). Art did
 not resolve that conflict and does not need to: the schema decided, and this section follows it unchanged.
+
+### 8.1 A skin-ramp proposal, awaiting the product owner — NOT APPLIED
+
+Two defects were reported against the ramps, and both measure true (CIELAB L\*, the rig ink `ink-warm` is
+L\* 15.5):
+
+| | measured | |
+|---|---|---|
+| base-to-base steps, 1→2 … 5→6 | **8.5**, 10.8, 13.6, 11.5, 12.0 | 1→2 is the smallest step on the ramp, which is why the two read as one tone |
+| shade minus ink, skin-5 and skin-6 | **−1.6** and **−9.8** | the shade is darker than the outline, so where shade meets ink the outline disappears |
+
+**The outline half is solved in the drawing and needs no palette change.** Since §7.7 every lit shape redraws
+its outline in its own base tone, at twice the ink width, inside its own clip, before the ink goes on, so no
+shade tone touches an outline on any ramp. The palette cannot solve it on its own: a shade 8 L below its base
+(the acceptance floor, §2) that also sits above the ink needs a skin-6 base near L 32, which is skin-5's today.
+Lifting skin-6 by +3.5 L and skin-5 by +1.5 was tried; the dark-end steps closed to 9.6 and 9.6, and skin-6's
+shade was still 8.7 L\* below the ink. That is not proposed.
+
+**Proposed for the 1→2 gap: lighten `skin-1` only**, by +4.5 HSL lightness at the same hue and saturation,
+with light and shade re-derived by the formula in §2 and the skin family override. The formula reproduces all
+eighteen shipped tones exactly, which was checked before anything was derived from it.
+
+| | light | base | shade | base L\* |
+|---|---|---|---|---|
+| `skin-1` today | `#f6ecde` | `#efbe99` | `#d47d62` | 80.4 |
+| `skin-1` proposed | `#fbf6ef` | `#f2cbad` | `#d98c75` | 84.3 |
+
+Base steps become 12.4, 10.8, 13.6, 11.5, 12.0. Moving `skin-2` darker as well was tried and rejected: it opened
+1→2 to 14.4 and closed 2→3 to 8.8.
+
+**Status: a proposal.** Skin tones are `docs/content-review.md` §8.1, the change needs the product owner's
+cultural sign-off, and no agent grants that. `palette.json` is unchanged and no art uses these values.
 
 ---
 

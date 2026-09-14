@@ -3,6 +3,18 @@
 The design sheet for `costume: beaver` — the artboard `guide`. Read with `art-bible.md`, `rig-contract.md`,
 `docs/content-review.md` and `palette.json` open.
 
+## 0. Redrawn 2026-09-14 — read `art-bible.md` §7.7 first
+
+Redrawn on the same rig with the player and the officer. The pelt head is one round mass that still covers
+the shared head, the short crop and the neck (the generator refuses to write if a half-pixel sample shows),
+with one small dark ear set high and back, a pale cheek and throat, a broad muzzle projecting about 20 px with
+a wide flat nose, and two white incisors about 20 px wide and 18 tall that hang below the snout pad and stop
+short of the chin. The body is a low pear whose belly carries the haunches over the hips, the forelegs puff
+slightly and end in dark paws the same size as every hand, the webbed hind feet are a tone lighter than the tail
+with three toe notches. The muzzle was pulled in by 7 px in the last iteration because the head alone measured
+124 px wide, over the 116 px cap; the whole figure is now **115 px** at rest. No clothing, no accessory, no
+pattern. Numbers in the sections below that disagree with these are the pre-redesign values, kept as history.
+
 ## 1. What it is and what it is not
 
 The guide is the **companion who appears at points of interest and leads the learning moments.** It is a
