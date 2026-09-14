@@ -4,8 +4,8 @@
   "levelId": "toronto",
   "giver": "guide",
   "title": {
-    "en": "Ride to the Tower",
-    "fr": "À vélo jusqu'à la Tour"
+    "en": "Ride the Boulevard",
+    "fr": "À vélo sur le boulevard"
   },
   "summary": {
     "en": "Your guide tells you how the vote is kept secret. Then ride the boulevard to a streetcar, the CN Tower and a big square, and answer questions about elections at each stop.",
@@ -134,7 +134,7 @@
           "expression": "thinking",
           "text": {
             "en": "Are you not on the list of voters? You can still be put on it, even on election day.",
-            "fr": "Vous n'êtes pas sur la liste électorale? Vous pouvez encore y être inscrit, même le jour du vote."
+            "fr": "Vous n'êtes pas sur la liste électorale? On peut encore vous y inscrire, même le jour du vote."
           },
           "fact": {
             "factual": true,
