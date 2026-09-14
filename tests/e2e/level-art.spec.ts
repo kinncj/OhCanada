@@ -271,6 +271,8 @@ test.describe('the level draws its art', () => {
   test('puts the officer on screen — and reports nothing there when it is not', async ({
     page,
   }) => {
+    /* A traversal: the walk to the officer stops at each point of interest on the way (ADR-0032). */
+    test.slow();
     const officerX = level.characters[0]?.position.x ?? 0;
     expect(officerX, 'the level places no character to look for').toBeGreaterThan(0);
 

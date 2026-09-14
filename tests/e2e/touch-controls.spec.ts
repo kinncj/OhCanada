@@ -595,6 +595,8 @@ test.describe('a tap means the thing under it, and a jump when there is nothing'
   });
 
   test('a tap on an NPC engages them and does not jump', async ({ page }) => {
+    /* A traversal: the walk to the officer now stops at rideau-locks first (ADR-0032). */
+    test.slow();
     await openLevel(page);
     const box = await canvasBox(page);
     const reach = MODE.interaction?.reachPx ?? 0;
