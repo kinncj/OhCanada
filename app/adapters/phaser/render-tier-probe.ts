@@ -29,6 +29,7 @@ import {
   type MotionLevel,
   type RenderProfile,
   type TierDecision,
+  type VisualTier,
 } from './visual-tier';
 
 /**
@@ -135,6 +136,21 @@ export interface RenderTierProbeOptions {
   readonly marker?: TierMarkerTarget | readonly TierMarkerTarget[] | null;
   readonly recorder?: FrameCostRecorder;
   readonly promoteAfterWindows?: number;
+  /**
+   * A tier to hold instead of measuring one, or `null` to measure.
+   *
+   * **Test instrumentation only.** `game-renderer.ts` passes a value only when
+   * the scene probe is installed (`?e2e=1`) and the page also asked for a tier
+   * (`tierOverrideFrom` in `scene-probe.ts`); on every other load this is
+   * `null`. It exists so the perf suite can count the work of every tier on a
+   * runner whose measured tier is never `high`.
+   *
+   * A pinned tier ignores the device ceiling, because measuring `high` on a
+   * software rasteriser is the point. It does not ignore reduced motion: the
+   * profile is still built by `resolveRenderProfile`. And it is published as
+   * *not measured*, so nothing can mistake it for a device's verdict.
+   */
+  readonly pinnedTier?: VisualTier | null;
 }
 
 export interface RenderTierProbe {
@@ -167,10 +183,11 @@ export interface RenderTierProbe {
  * assistive technology, and this is diagnostic data, not content.
  *
  * They exist so a Playwright run can read what a real browser decided without a
- * console hook. `tests/perf/budgets.spec.ts` will be able to report the tier its
+ * console hook. `tests/perf/frame-time.device.ts` reports the tier its
  * frame-time measurement was taken at, which is the difference between "16 ms"
- * and "16 ms, at low, on SwiftShader" — and the perf suite does run Chromium on
- * SwiftShader, so that distinction is live today.
+ * and "16 ms, at high, on this GPU"; `tests/perf/budgets.spec.ts` attributes
+ * each overdraw frame to the tier in effect on a runner that rasterises on
+ * SwiftShader, so that distinction is live on every run.
  */
 export function applyTierMarkers(
   target: TierMarkerTarget | readonly TierMarkerTarget[] | null | undefined,
@@ -221,8 +238,21 @@ export function startRenderTierProbe(options: RenderTierProbeOptions): RenderTie
   });
   const recorder = options.recorder ?? createFrameCostRecorder();
   const timer = createFrameTimer();
+  const pinned = options.pinnedTier ?? null;
 
-  let decision = tracker.decision;
+  let decision: TierDecision =
+    pinned === null
+      ? tracker.decision
+      : {
+          tier: pinned,
+          measured: false,
+          windows: 0,
+          reasons: [
+            `pinned at "${pinned}" by the scene probe's tier override (?e2e=1&tier=): no ` +
+              'measurement moves it and the device ceiling does not apply. Test instrumentation, ' +
+              'never a player.',
+          ],
+        };
   let profile = buildProfile(decision.tier);
   let lastWindow: FrameCostSummary | null = null;
   let stopped = false;
@@ -253,6 +283,9 @@ export function startRenderTierProbe(options: RenderTierProbeOptions): RenderTie
     if (summary === null) return;
 
     lastWindow = summary;
+    /* Still measured, so `lastWindow` shows what the pinned tier costs; never
+       decided from. */
+    if (pinned !== null) return;
     const previousTier = decision.tier;
     decision = tracker.observe(summary);
     /* Republish on every window: `measured` and the reasons change even when the

@@ -21,10 +21,11 @@ import {
   resolveMotionLevel,
   startRenderTierProbe,
   type FrameSignals,
+  type RenderTierProbe,
   type RenderTierProbeOptions,
   type TierMarkerTarget,
 } from '@adapters/phaser/render-tier-probe';
-import { resolveRenderProfile } from '@adapters/phaser/visual-tier';
+import { resolveRenderProfile, type VisualTier } from '@adapters/phaser/visual-tier';
 
 const PRESETS = (gameConfigJson as { graphicsPresets: GraphicsPresets }).graphicsPresets;
 const FRAME_BUDGET_MS = (gameConfigJson as { budgets: { frameTimeMs: number } }).budgets
@@ -489,5 +490,145 @@ describe('a tier change that changes the cost of the frames it is measured from'
       'the reset swallowed a genuinely slow device, so nothing can ever be demoted after a ' +
         'resize — which is worse than the oscillation it was added to stop',
     ).toBe('low');
+  });
+});
+
+/**
+ * Frame by frame, with the default warm-up and window and the resize reset
+ * `GameRenderer` performs on every tier change — so the run lengths below are
+ * the ones a browser produces, not a model of them.
+ */
+function runTierDependentHost(options: {
+  readonly costs: Readonly<Record<VisualTier, { readonly costMs: number; readonly intervalMs: number }>>;
+  readonly frames: number;
+  readonly overrides?: Partial<RenderTierProbeOptions>;
+}): { readonly probe: RenderTierProbe; readonly runs: { tier: VisualTier; frames: number }[] } {
+  const fake = fakeSignals();
+  /* The probe publishes its provisional profile before it returns, so the
+     callback reaches it through a holder rather than the return value. */
+  const started: { probe?: RenderTierProbe } = {};
+  let applied: VisualTier | null = null;
+  const probe = startRenderTierProbe(
+    probeOptions({
+      signals: fake.signals,
+      ...options.overrides,
+      onProfile: (profile) => {
+        /* What GameRenderer does: a new tier resizes the drawing buffer, and a
+           resize re-arms the warm-up. */
+        if (applied !== null && profile.tier !== applied) started.probe?.reset();
+        applied = profile.tier;
+      },
+    }),
+  );
+  started.probe = probe;
+
+  const runs: { tier: VisualTier; frames: number }[] = [];
+  for (let frame = 0; frame < options.frames; frame += 1) {
+    const { costMs, intervalMs } = options.costs[probe.profile.tier];
+    fake.run(1, costMs, intervalMs);
+    const tier = probe.profile.tier;
+    const last = runs.at(-1);
+    if (last?.tier === tier) last.frames += 1;
+    else runs.push({ tier, frames: 1 });
+  }
+  return { probe, runs };
+}
+
+const SWIFTSHADER = identifyRenderer('webgl', {
+  getExtension: () => ({}),
+  getParameter: () => 'Google SwiftShader',
+});
+
+describe('the host CI measured cycling low 71 frames, medium 41, forever', () => {
+  /* Cheap at low; over the budget at medium, which on the perf suite's phone
+     viewport draws four times low's fragments. */
+  const SWIFTSHADER_COSTS = {
+    low: { costMs: 9, intervalMs: 22 },
+    medium: { costMs: 38, intervalMs: 60 },
+    high: { costMs: 38, intervalMs: 60 },
+  } as const;
+
+  it('reproduces the measured cycle once, then settles at low for the session', () => {
+    const { probe, runs } = runTierDependentHost({
+      costs: SWIFTSHADER_COSTS,
+      frames: 3_000,
+      overrides: { identity: SWIFTSHADER },
+    });
+
+    const shape = runs.map((run) => `${run.tier} ${String(run.frames)}`).join(', ');
+    /* The first two runs are the old cycle's, frame for frame (the census
+       attributes the switching frame to the earlier run, hence 70 against 71).
+       What changed is that the cycle does not repeat. */
+    expect(runs[0]?.frames, shape).toBeGreaterThanOrEqual(70);
+    expect(runs[0]?.frames, shape).toBeLessThanOrEqual(71);
+    expect(runs[1], shape).toEqual({ tier: 'medium', frames: 41 });
+    expect(runs.map((run) => run.tier), shape).toEqual(['low', 'medium', 'low', 'medium', 'low']);
+    expect(runs.at(-1)?.frames, shape).toBeGreaterThan(2_500);
+    expect(probe.decision.reasons.join(' ')).toContain('closed for this session');
+  });
+
+  it('takes a fast host to high and holds it there, frame by frame', () => {
+    const { probe, runs } = runTierDependentHost({
+      costs: {
+        low: { costMs: 2, intervalMs: 16.7 },
+        medium: { costMs: 3, intervalMs: 16.7 },
+        high: { costMs: 6, intervalMs: 16.7 },
+      },
+      frames: 3_000,
+    });
+
+    expect(runs.map((run) => run.tier)).toEqual(['medium', 'high']);
+    expect(probe.profile.tier).toBe('high');
+    expect(probe.decision.measured).toBe(true);
+  });
+});
+
+describe('a pinned tier, which only the scene probe can ask for', () => {
+  const SLOW = {
+    low: { costMs: 40, intervalMs: 45 },
+    medium: { costMs: 40, intervalMs: 45 },
+    high: { costMs: 40, intervalMs: 45 },
+  } as const;
+
+  it('holds on frames that would demote it, above the device ceiling, and says it was not measured', () => {
+    const target = marker();
+    const { probe, runs } = runTierDependentHost({
+      costs: SLOW,
+      frames: 500,
+      overrides: { identity: SWIFTSHADER, pinnedTier: 'high', marker: target },
+    });
+
+    expect(runs).toEqual([{ tier: 'high', frames: 500 }]);
+    expect(probe.decision.measured, 'a pinned tier must not read as a measured one').toBe(false);
+    expect(probe.decision.reasons.join(' ')).toContain('pinned');
+    expect(target.dataset['tnTier']).toBe('high');
+    expect(target.dataset['tnTierMeasured']).toBe('false');
+    expect(probe.lastWindow, 'frames are still measured, for the record').not.toBeNull();
+  });
+
+  it('still strips motion under reduced motion, whatever tier is pinned', () => {
+    for (const tier of ['low', 'medium', 'high'] as const) {
+      const { probe } = runTierDependentHost({
+        costs: SLOW,
+        frames: 100,
+        overrides: { pinnedTier: tier, motion: 'reduced' },
+      });
+
+      expect(probe.profile.tier).toBe(tier);
+      expect(probe.profile.particles, `${tier}: particles survived reduced motion`).toBe(0);
+      expect(probe.profile.parallaxEasing).toBe(false);
+      expect(probe.profile.squashStretch).toBe(false);
+    }
+  });
+
+  it('is measured as always when nothing is pinned, which is what every player gets', () => {
+    const { probe } = runTierDependentHost({
+      costs: SLOW,
+      frames: 200,
+      overrides: { identity: SWIFTSHADER, pinnedTier: null },
+    });
+
+    expect(probe.decision.measured).toBe(true);
+    expect(probe.profile.tier).toBe('low');
   });
 });

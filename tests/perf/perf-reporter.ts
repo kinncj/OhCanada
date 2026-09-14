@@ -64,13 +64,6 @@ export const NOT_CHECKED_HERE: readonly { readonly budget: string; readonly why:
     why: 'a millisecond cost subtracted on a software rasteriser still contains the rasteriser',
   },
   {
-    budget: 'particles <= 400 on a phone (checked nowhere yet, device lane included)',
-    why:
-      "the scene probe's data-particles has two writers - the tier's allowance (game-renderer.ts) and the snow " +
-      'the level emits (level-scene.ts) - so it shows whichever wrote last, and read 0 at a tier allowing 150. ' +
-      'The allowance is clamped to 400 by construction, so checking it proves nothing; emission needs its own attribute',
-  },
-  {
     budget: 'time to play <= 6 s on a phone over 25 Mbps',
     why:
       'the runner has a data-centre network and a server CPU, so the time-to-playable this lane records ' +

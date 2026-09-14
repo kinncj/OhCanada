@@ -66,10 +66,14 @@
  * `window.location.search`.
  */
 
+import { TIER_ORDER } from './visual-tier';
 import type { MotionLevel, RenderProfile, VisualTier } from './visual-tier';
 
 /** The query flag, and the only value that turns the probe on. */
 export const SCENE_PROBE_PARAM = 'e2e';
+
+/** The tier override's query parameter. Read only behind `SCENE_PROBE_PARAM`. */
+export const TIER_OVERRIDE_PARAM = 'tier';
 export const SCENE_PROBE_TEST_ID = 'scene-state';
 
 /**
@@ -146,7 +150,26 @@ export interface SceneSnapshot {
   readonly grounded?: boolean;
   readonly cameraX?: number;
   readonly parallaxEasing?: boolean;
+  /**
+   * Particles the level is **emitting** — the snow actually falling. Written by
+   * the level scene only, so it reads `unknown` until a level exists.
+   *
+   * This is the number the particle budget is about (CLAUDE.md: <= 400 phone,
+   * <= 1500 iPad/desktop) and the one the stories mean by "`data-particles` is
+   * 0" under reduced motion.
+   */
   readonly particles?: number;
+  /**
+   * Particles the visual tier **allows**: the preset clamped to the device's
+   * ceiling and zeroed under reduced motion. Written by the renderer only.
+   *
+   * Its own field because it used to be written into `particles`, so the element
+   * showed whichever writer ran last — it read 0 at a tier allowing 150, and
+   * nothing could tell whether the budget held. The allowance is clamped by
+   * construction, so it proves nothing about the budget on its own; beside the
+   * emitted count it shows how much of it a level spends.
+   */
+  readonly particleAllowance?: number;
   /**
    * Parallax layers the level authored, and how many of them drew from a real
    * texture rather than from the placeholder band.
@@ -297,6 +320,12 @@ export interface SceneSnapshot {
    */
   readonly dayPhase?: number;
   readonly tier?: VisualTier;
+  /**
+   * True when `?e2e=1&tier=` pinned `tier` instead of the tracker measuring it.
+   * A perf verdict taken at a pinned tier says so; one taken at a measured tier
+   * says that instead.
+   */
+  readonly tierPinned?: boolean;
   readonly motion?: MotionLevel;
   readonly renderer?: string;
 }
@@ -379,6 +408,28 @@ export function isSceneProbeEnabled(search: string | null | undefined): boolean 
 }
 
 /**
+ * The visual tier a test asked to pin, or `null`.
+ *
+ * `?e2e=1&tier=high` pins `high`. Without `?e2e=1` — exactly
+ * `isSceneProbeEnabled`, the gate that decides whether the probe exists at all —
+ * the parameter is never read, so a player who pastes `?tier=high` gets the
+ * tier their device measures and nothing else. Only a tier the presets name
+ * pins anything; anything else is ignored rather than guessed at.
+ *
+ * It is the one input this probe has that changes what is drawn, and ADR-0011
+ * ratified the probe on the condition that the flag opens "nothing but
+ * observation". The override keeps that true for players, because the flag
+ * never reaches them; it does not keep it true for tests, and does not pretend
+ * to: a test that pins a tier is measuring a tier it chose, and the probe
+ * publishes `data-tier-pinned` so the measurement says so.
+ */
+export function tierOverrideFrom(search: string | null | undefined): VisualTier | null {
+  if (!isSceneProbeEnabled(search)) return null;
+  const requested = new URLSearchParams(search ?? '').get(TIER_OVERRIDE_PARAM);
+  return TIER_ORDER.find((tier) => tier === requested) ?? null;
+}
+
+/**
  * Numbers as attribute text: at most two decimals, trailing zeros trimmed.
  *
  * So a spawn x of 320 reads `"320"` and a speed of 412.5 reads `"412.5"`. The
@@ -403,6 +454,7 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'grounded',
   'parallaxEasing',
   'particles',
+  'particleAllowance',
   'layers',
   'layersTextured',
   'actors',
@@ -423,6 +475,7 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'dialogueSilenced',
   'dialogueMoments',
   'tier',
+  'tierPinned',
   'motion',
   'renderer',
 ];
@@ -458,7 +511,9 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     /* `on`/`off` rather than `true`/`false`: fixed by docs/stories/README.md. */
     'data-parallax-easing':
       snapshot.parallaxEasing === undefined ? 'unknown' : snapshot.parallaxEasing ? 'on' : 'off',
+    /* Emitted, and allowed: two writers, so two attributes. */
     'data-particles': num(snapshot.particles),
+    'data-particle-allowance': num(snapshot.particleAllowance),
     'data-layers': num(snapshot.layers),
     'data-layers-textured': num(snapshot.layersTextured),
     'data-actors': num(snapshot.actors),
@@ -483,16 +538,23 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-dialogue-moments': num(snapshot.dialogueMoments),
     'data-day-phase': num(snapshot.dayPhase),
     'data-tier': text(snapshot.tier),
+    'data-tier-pinned': bool(snapshot.tierPinned),
     'data-motion': text(snapshot.motion),
     'data-renderer': text(snapshot.renderer),
   };
 }
 
-/** The fields of a `RenderProfile` the probe reports. One mechanism, not two. */
+/**
+ * The fields of a `RenderProfile` the probe reports. One mechanism, not two.
+ *
+ * The particle number goes out as the **allowance**, never as `particles`: that
+ * field is the level scene's emitted count, and writing both into one field is
+ * the defect that made the particle budget unmeasurable.
+ */
 export function profileToSnapshot(profile: RenderProfile): SceneSnapshot {
   return {
     parallaxEasing: profile.parallaxEasing,
-    particles: profile.particles,
+    particleAllowance: profile.particles,
     tier: profile.tier,
     motion: profile.motion,
   };

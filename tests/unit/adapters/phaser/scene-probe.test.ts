@@ -26,6 +26,7 @@ import {
   profileToSnapshot,
   sceneProbeHandle,
   snapshotToAttributes,
+  tierOverrideFrom,
   type FrameTraceEntry,
   type ProbeElement,
 } from '@adapters/phaser/scene-probe';
@@ -78,6 +79,34 @@ describe('isSceneProbeEnabled', () => {
     'is off for %p, so a pasted URL cannot show a player a debug surface',
     (search) => {
       expect(isSceneProbeEnabled(search)).toBe(false);
+    },
+  );
+});
+
+describe('tierOverrideFrom', () => {
+  it.each(['low', 'medium', 'high'] as const)('pins %s when the probe flag is on', (tier) => {
+    expect(tierOverrideFrom(`?e2e=1&tier=${tier}`)).toBe(tier);
+    expect(tierOverrideFrom(`?tier=${tier}&level=ottawa&e2e=1`)).toBe(tier);
+  });
+
+  it.each([
+    '?tier=high',
+    '?level=ottawa&tier=high',
+    '?e2e=0&tier=high',
+    '?e2e=true&tier=high',
+    '?e2e&tier=high',
+    '?debug=1&tier=high',
+    '',
+    null,
+    undefined,
+  ])('is ignored for %p, so an ordinary page load cannot pin a player to a tier', (search) => {
+    expect(tierOverrideFrom(search)).toBeNull();
+  });
+
+  it.each(['?e2e=1', '?e2e=1&tier=', '?e2e=1&tier=ultra', '?e2e=1&tier=HIGH', '?e2e=1&tier=high%20'])(
+    'pins nothing for %p: only a tier the presets name',
+    (search) => {
+      expect(tierOverrideFrom(search)).toBeNull();
     },
   );
 });
@@ -176,13 +205,21 @@ describe('snapshotToAttributes', () => {
         'data-mode',
         'data-motion',
         'data-parallax-easing',
+        /* Two attributes, two writers. `data-particles` is the snow the level
+           emits and only the level scene writes it; the allowance is the tier's
+           and only the renderer writes it. They were one attribute with both
+           writers, which read 0 at a tier allowing 150. */
         'data-particles',
+        'data-particle-allowance',
         'data-paused',
         'data-player-x',
         'data-player-y',
         'data-renderer',
         'data-speed',
         'data-tier',
+        /* `true` only when `?e2e=1&tier=` pinned it: a pinned tier is not a
+           measured one, and a perf verdict must be able to say which it had. */
+        'data-tier-pinned',
       ].sort(),
     );
   });
@@ -254,10 +291,50 @@ describe('profileToSnapshot', () => {
 
     expect(snapshotToAttributes(profileToSnapshot(profile))).toMatchObject({
       'data-parallax-easing': 'off',
-      'data-particles': '0',
+      'data-particle-allowance': '0',
       'data-tier': 'high',
       'data-motion': 'reduced',
     });
+  });
+
+  it('publishes the allowance and never the emitted count, so neither can overwrite the other', () => {
+    const profile = resolveRenderProfile({
+      tier: 'low',
+      motion: 'full',
+      formFactor: 'phone',
+      presets: PRESETS,
+      filtersAvailable: true,
+    });
+
+    const snapshot = profileToSnapshot(profile);
+
+    expect(snapshot, 'the renderer wrote the emitted count again').not.toHaveProperty('particles');
+    expect(snapshot.particleAllowance).toBe(PRESETS.low.particles);
+  });
+
+  it('keeps "allowed 150, emitted 0" readable whichever writer published last', () => {
+    const element = fakeElement();
+    const probe = createSceneProbe({ element, now: fakeClock().now });
+    const low = resolveRenderProfile({
+      tier: 'low',
+      motion: 'full',
+      formFactor: 'phone',
+      presets: PRESETS,
+      filtersAvailable: true,
+    });
+
+    /* The level scene: snow is off below medium. Then the renderer's window. */
+    probe.publish({ particles: 0 });
+    probe.publish(profileToSnapshot(low));
+
+    expect(element.attributes['data-particles']).toBe('0');
+    expect(element.attributes['data-particle-allowance']).toBe(String(PRESETS.low.particles));
+  });
+
+  it('says "unknown" for the emitted count before any level has emitted anything', () => {
+    /* ADR-0024: at boot there is an allowance and no snow. "0" there would be a
+       measurement nobody took. */
+    expect(snapshotToAttributes({ particleAllowance: 400 })['data-particles']).toBe('unknown');
   });
 });
 

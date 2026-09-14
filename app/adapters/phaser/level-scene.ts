@@ -861,7 +861,11 @@ export class LevelScene extends Phaser.Scene {
     }
 
     this.#options.probe?.publish({
-      particles: this.#snowQuantity,
+      /* What is falling, counted from the flakes `#updateSnow` draws — not the
+         tier's allowance, which is the renderer's `data-particle-allowance`.
+         This scene is the only writer of `particles`; the two shared one
+         attribute once, and it read 0 at a tier allowing 150. */
+      particles: this.#flakes.length,
       parallaxEasing: profile.parallaxEasing,
       tier: profile.tier,
       motion: profile.motion,
@@ -1030,7 +1034,8 @@ export class LevelScene extends Phaser.Scene {
          answer for every one of those is "no pointer is down, there is nothing
          to drag". Checked here rather than inside the gesture module so the
          common case costs a field read instead of a call and an allocation —
-         per-frame pointer work is measured by `tests/perf/budgets.spec.ts`. */
+         per-frame pointer work is inside the engine cost
+         `tests/perf/frame-time.device.ts` measures. */
       if (this.#touch.active === 0) return;
       this.#touch.drag(pointer.id, this.#viewPointOf(pointer), this.time.now);
     });

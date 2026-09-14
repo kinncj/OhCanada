@@ -84,7 +84,12 @@ test.describe('the scene probe', () => {
     await expect(probe).toHaveAttribute('data-tier', /^(low|medium|high)$/);
     await expect(probe).toHaveAttribute('data-motion', /^(full|reduced)$/);
     await expect(probe).toHaveAttribute('data-parallax-easing', /^(on|off)$/);
-    await expect(probe).toHaveAttribute('data-particles', /^\d+$/);
+    /* Two writers, two attributes. The renderer publishes what the tier allows
+       from boot; the emitted count belongs to a level, and with none open it is
+       "unknown" rather than a 0 nobody measured (ADR-0024). */
+    await expect(probe).toHaveAttribute('data-particle-allowance', /^\d+$/);
+    await expect(probe).toHaveAttribute('data-particles', 'unknown');
+    await expect(probe).toHaveAttribute('data-tier-pinned', 'false');
     await expect(probe).toHaveAttribute('data-paused', 'false');
 
     /* This suite runs Chromium on SwiftShader (see playwright.config.ts), so the
@@ -97,6 +102,43 @@ test.describe('the scene probe', () => {
       canvas,
       'a named software rasteriser was promoted past its ceiling',
     ).toHaveAttribute('data-tn-tier', /^(low|medium)$/);
+  });
+
+  /**
+   * The tier override is the one query parameter that changes what is drawn,
+   * and it exists for the perf suite. It is read only behind `?e2e=1`. On this
+   * suite's SwiftShader a player's tier can never be `high` — the device ceiling
+   * is `medium` — so `high` without the flag would prove the override leaked.
+   */
+  test('ignores a tier override on an ordinary load, however the flag is spelled', async ({ page }) => {
+    for (const url of ['./?tier=high', './?e2e=0&tier=high', './?e2e=true&tier=high']) {
+      await page.goto(url);
+      await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
+      await expect(page.locator('[data-testid="scene-state"]'), `${url} installed the probe`).toHaveCount(0);
+
+      const canvas = page.locator('#game canvas');
+      /* Wait for a measured tier, or "not high" would only be the provisional guess. */
+      await expect(canvas).toHaveAttribute('data-tn-tier-measured', 'true', { timeout: 30_000 });
+      await expect(
+        canvas,
+        `${url} pinned a player's tier: a software rasteriser reached "high"`,
+      ).toHaveAttribute('data-tn-tier', /^(low|medium)$/);
+    }
+  });
+
+  test('pins the tier with ?e2e=1&tier=, and says it was pinned rather than measured', async ({ page }) => {
+    await page.goto('./?e2e=1&tier=high');
+    await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
+
+    const probe = page.locator('[data-testid="scene-state"]');
+    await expect(probe).toHaveAttribute('data-tier', 'high');
+    await expect(probe).toHaveAttribute('data-tier-pinned', 'true');
+    const canvas = page.locator('#game canvas');
+    await expect(canvas).toHaveAttribute('data-tn-tier', 'high');
+    await expect(canvas, 'a pinned tier must never read as a measured one').toHaveAttribute(
+      'data-tn-tier-measured',
+      'false',
+    );
   });
 
   test('says "unknown" with no level open, rather than a plausible zero', async ({ page }) => {

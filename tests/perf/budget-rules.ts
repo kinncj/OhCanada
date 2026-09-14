@@ -120,15 +120,17 @@ export interface TierChange {
 /**
  * Overdraw attributed frame by frame to the tier in effect when each frame began.
  *
- * Why not "wait for the tier to settle, then sample": on this runner it never
- * settles. Measured 2026-09-13, at normal speed and at 4x CPU throttle alike,
- * the tier tracker runs a fixed cycle - `low` for 71 frames, `medium` for 41,
- * forever - because a demotion takes one measurement window and a promotion
- * two, and a software rasteriser's cost straddles the `medium` threshold. A
- * settle-first design reported NOT MEASURED on every run for that reason, which
- * is honest and useless. Covered area is exact per frame, so it never needed a
- * stable tier; it needed each frame to be ATTRIBUTABLE to one. An oscillating
- * host now yields both tiers measured instead of neither.
+ * Why not "wait for the tier to settle, then sample": on this runner it did not
+ * settle. Measured 2026-09-13, at normal speed and at 4x CPU throttle alike, the
+ * tier tracker ran a fixed cycle - `low` for 71 frames, `medium` for 41, forever.
+ * The tracker now closes a tier after two failed attempts
+ * (`createTierTracker`), so that host visits `medium` twice and then holds
+ * `low`, and WHEN it settles still depends on how fast the runner is. A
+ * settle-first design reported NOT MEASURED on every run, which is honest and
+ * useless. Covered area is exact per frame, so it never needed a stable tier;
+ * it needed each frame to be ATTRIBUTABLE to one. So every tier a host passes
+ * through is judged, and a run pinned to one tier (`?e2e=1&tier=`) is the same
+ * computation with one entry in `changes`.
  *
  * `edgeFrames` are dropped from both ends of every run of one tier: the frame on
  * which a profile is applied may still carry the previous tier's geometry.
@@ -212,6 +214,94 @@ export function overdrawByTier(
       `${unvisited.length === 0 ? 'Every tier was visited' : `NOT EXERCISED on this host: ${unvisited.join(', ')}`}. ` +
       `Worst frame: ${worst.verdict.detail}${options.context === undefined ? '' : `; ${options.context}`}`,
   };
+}
+
+/**
+ * CLAUDE.md, Budgets: "Particles <= 400 phone, <= 1500 iPad/desktop."
+ *
+ * Restated rather than imported from `visual-tier.ts`: the adapter's own
+ * ceilings are the thing under test, and a limit read from the code it limits
+ * moves with that code.
+ */
+export const PARTICLE_LIMIT_PHONE = 400;
+export const PARTICLE_LIMIT_LARGE = 1500;
+export const PARTICLE_BUDGET = 'particles emitted <= 400 on a phone, <= 1500 on iPad and desktop';
+
+/** What the page said about particles while it was watched. Attribute text, as read. */
+export interface ParticleObservation {
+  /** Every value `data-particles` - the EMITTED count - took, oldest first. */
+  readonly emitted: readonly string[];
+  /** `data-particle-allowance`: what the tier allowed. Context, never the number judged. */
+  readonly allowance: string | null;
+  readonly tier: string | null;
+  readonly tierPinned: string | null;
+  /** The canvas's `data-tn-form-factor`: which of the two limits applies. */
+  readonly formFactor: string | null;
+  readonly motion: string | null;
+}
+
+/**
+ * The emitted particle count against the budget for the form factor the page
+ * classified itself as.
+ *
+ * The same three exits as the rules above:
+ *
+ *   1. no form factor, no emitted count, or an emitted count that is not a
+ *      count: NOT MEASURED;
+ *   2. zero emitted: NOT MEASURED. The largest of the readings is a max, which
+ *      is safe as a fold, but zero here means the level drew no weather at all -
+ *      snow off below `medium`, reduced motion on, or the scene never wrote the
+ *      attribute's number - and none of those is a budget holding (ADR-0024);
+ *   3. only then the largest emitted count against the limit.
+ *
+ * The allowance is reported and never judged. It is clamped to the device
+ * ceiling by construction, so holding it to the budget is a tautology - that
+ * was the defect when `data-particles` had two writers.
+ */
+export function particleVerdict(observation: ParticleObservation): Verdict {
+  const { formFactor } = observation;
+  const limit = formFactor === 'phone' ? PARTICLE_LIMIT_PHONE : formFactor === 'large' ? PARTICLE_LIMIT_LARGE : null;
+  if (limit === null) {
+    return notMeasured(
+      PARTICLE_BUDGET,
+      `the page published no form factor (data-tn-form-factor read ${String(formFactor)}), so there is no limit to hold it to`,
+    );
+  }
+
+  const readings = observation.emitted.filter((value) => value !== 'unknown');
+  const malformed = readings.filter((value) => !/^\d+$/.test(value));
+  if (malformed.length > 0) {
+    return notMeasured(
+      PARTICLE_BUDGET,
+      `data-particles read ${[...new Set(malformed)].slice(0, 3).join(', ')}, which is not a count`,
+    );
+  }
+  if (readings.length === 0) {
+    return notMeasured(
+      PARTICLE_BUDGET,
+      'the scene probe never published an emitted particle count (data-particles stayed unknown), so no level emitted anything this run could see',
+    );
+  }
+
+  const at =
+    `tier "${String(observation.tier)}"${observation.tierPinned === 'true' ? ' (pinned)' : ''}, ` +
+    `allowance ${String(observation.allowance)}, motion ${String(observation.motion)}`;
+  const worst = Math.max(...readings.map(Number));
+  if (worst === 0) {
+    return notMeasured(
+      PARTICLE_BUDGET,
+      `the level emitted no particles at ${at}: zero emitted is nothing to measure, not a budget held`,
+    );
+  }
+
+  return atMost(
+    PARTICLE_BUDGET,
+    worst,
+    limit,
+    'particles',
+    `largest emitted count over ${String(readings.length)} reading(s) at ${at}; form factor "${formFactor}" as the ` +
+      `page classified it, so the ${String(limit)} limit applies`,
+  );
 }
 
 interface ManifestLevel {

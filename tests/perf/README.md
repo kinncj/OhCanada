@@ -44,11 +44,16 @@ outside the page and counts, per frame:
 Plus, from outside the canvas: initial payload transferred <= 8 MiB, and time to playable on the runner <= 6 s,
 which is a **tripwire** for a boot that regressed badly and is not the phone budget.
 
-**Particles are no longer claimed.** This lane used to hold the scene probe's `data-particles` to 400, and that
-attribute has two writers: `game-renderer.ts:733` publishes the tier's *allowance* and `level-scene.ts:864` the snow
-the level *emits*, and the page shows whichever wrote last. It read 0 at a tier allowing 150. The allowance is
-clamped to 400 on a phone by construction, so checking it proves nothing, and emission cannot be told apart. The
-budget is listed under NOT CHECKED HERE until the probe publishes emission on its own attribute.
+**Particles are measured as emitted.** `data-particles` used to have two writers: the renderer published the
+tier's *allowance* into it and the level scene the snow it *emits*, and the page showed whichever wrote last. It
+read 0 at a tier allowing 150. The two are now separate attributes with one writer each: `data-particles` is the
+emitted count (the level scene, counted from the flakes it draws) and `data-particle-allowance` is the tier's (the
+renderer). The lane holds the **largest emitted count** to 400 on a phone and 1500 on a large screen, choosing the
+limit by the `data-tn-form-factor` the page classified itself as and printing it. The page is pinned to `high`
+(`?e2e=1&tier=high`), where the preset asks for 1500 and the device ceiling is what binds. The count is seeded when
+the tier is applied, so it is the same at 12 fps as at 60. Zero emitted is NOT MEASURED, not held. The allowance is
+reported and never judged, because it is clamped by construction. `calibration.spec.ts` drives every exit of the
+rule.
 
 ### Why these numbers can be believed
 
@@ -72,8 +77,8 @@ Every budget test ends in `settle()` (`verdict.ts`), and `perf-reporter.ts` prin
 - **NOT MEASURED** — fails, and is not a statement about the build: the instrument could not take the measurement,
   and the line says why. In this lane that means the instrument broke, because everything here is measurable on a
   runner. A test that dies before a verdict is reported here, never dropped, and a run with zero verdicts fails;
-- **NOT CHECKED HERE** — not an outcome. Frame time, per-character cost, particles and time-to-play on a phone,
-  with where they are checked (for particles: nowhere yet, and it says so) and the newest device pass. Printed on every run, so a green job cannot be read as "frame time is
+- **NOT CHECKED HERE** — not an outcome. Frame time, per-character cost and time-to-play on a phone, with where
+  they are checked and the newest device pass. Printed on every run, so a green job cannot be read as "frame time is
   fine".
 
 The same four go to `test-results/perf-verdicts.json` (uploaded on every run), to GitHub annotations whose titles
@@ -82,30 +87,44 @@ differ per outcome, and to the job summary page.
 ### The limit every tier-dependent number shares
 
 Overdraw (parallax layers) and texture scale depend on the visual tier, and the tier is chosen from measured frame
-cost — so **the host picks it**. And on SwiftShader it does not pick once. Measured 2026-09-13, at normal speed and
-at 4x CPU throttle alike, the tracker ran a fixed cycle: `low` for 71 frames, `medium` for 41, indefinitely (17
-changes in 30 s). A demotion takes one measurement window and a promotion two, and a software rasteriser's cost
-straddles the `medium` threshold. Some runs hold `medium` instead; the next run may cycle.
+cost — so **the host picks it**. Measured 2026-09-13, at normal speed and at 4x CPU throttle alike, the tracker ran a
+fixed cycle on SwiftShader: `low` for 71 frames, `medium` for 41, indefinitely (17 changes in 30 s). Those were the
+old rule's own numbers. Promotion was judged on frames drawn at `low` and demotion on frames drawn at `medium`,
+which draws four times the fragments on this viewport, so every window at `low` passed and every window at
+`medium` failed. The tracker now remembers failed attempts (`createTierTracker` in `visual-tier.ts`): that host
+tries `medium` twice, the second time after twice the headroom, and then holds `low` for the session. A player on
+that machine sees four changes instead of one every two seconds.
 
-So nothing here waits for the tier to settle — a first version did, and reported NOT MEASURED ("the visual tier did
-not hold for 80 frames within 60000 ms") on every run. Each census frame is **attributed** to the tier in effect when
-it began, from a log of the probe's `data-tier` changes, two frames are dropped at each edge of a run, and every tier
-the host visited is judged; the worst decides. Texture memory is the peak over the whole observation, which covers
-every tier visited. What no runner visits — `high`, with six layers — is printed as **NOT EXERCISED** in the verdict.
+Nothing here waits for the tier to settle — a first version did, and reported NOT MEASURED ("the visual tier did not
+hold for 80 frames within 60000 ms") on every run. How much of the settling falls inside an observation still
+depends on how long boot took. So each census frame is **attributed** to the tier in effect when it began, from a
+log of the probe's `data-tier` changes, two frames are dropped at each edge of a run, and every tier the host visited
+is judged; the worst decides. Texture memory is the peak over the whole observation, which covers every tier visited.
+
+On top of that, `low` and `medium` are measured **pinned** (`?e2e=1&tier=low`, `?e2e=1&tier=medium`) on every run,
+so neither depends on the host passing through it. A pinned run that does not report `data-tier-pinned="true"` and
+exactly the one tier is NOT MEASURED. The override is read only behind `?e2e=1`, the same gate that decides whether
+the scene probe exists, so no player can reach it.
+
+`high` is **not pinned for overdraw yet, deliberately**. This job blocks every deploy and nobody has seen a reading
+of overdraw at `high` (six layers) on any machine. Medium is 2.66x against the 4x limit, and `high` adds two bands
+and the surface sheen, so the estimate lands near 3.3x. An estimate is not a measurement, and a blocking budget
+added without one is how a deploy gate goes red for a reason nobody predicted. Take one run with `'high'` added to
+`PINNED_OVERDRAW_TIERS` in `budgets.spec.ts` (locally, or on a branch), read the number, then commit the line.
+Until then the attributed verdict prints `high` as **NOT EXERCISED**.
 
 The first version also read overdraw 2.21x, 4 draws and 470 triangles — the provisional `low` a level shows for its
 first second — while the tier the page then held drew 5 draws and 7,739 triangles at 2.66x. A sample taken right
 after "playable" measures the guess.
 
-**Requests to the app owner**, each of which would let this lane claim more:
+**Requests to the app owner**, 2026-09-13, and where each stands:
 
-1. A probe-gated tier override (`?e2e=1&tier=high`, inert without `?e2e=1`), so every tier's overdraw and texture
-   memory is measured on every run, `high` included. Not worked around here: faking the clock to force a tier
-   would change the physics and measure a fiction.
-2. Split `data-particles` into allowed and emitted, so the particle budget can be measured at all.
-3. Look at the tier cycle above. A host that flaps `low`/`medium` every two seconds redraws a different number of
-   parallax layers and snowflakes every two seconds, which a player sees. That is an ADR-0011 question, not a test
-   artefact.
+1. A probe-gated tier override (`?e2e=1&tier=high`, inert without `?e2e=1`). **Done**; used for `low` and `medium`
+   overdraw and for particles. `high` overdraw waits on its first reading, above.
+2. Split `data-particles` into allowed and emitted. **Done**: `data-particles` (emitted) and
+   `data-particle-allowance`, and the particle budget is asserted.
+3. The tier cycle. **Done** in the tracker; the rule and its reasoning are in `createTierTracker`. It amends
+   ADR-0011's "promote only after two agreeing ones", and that amendment belongs in `docs/adr/`.
 
 ## The device lane
 

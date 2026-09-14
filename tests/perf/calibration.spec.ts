@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-import { overdrawVerdict, textureVerdict } from './budget-rules';
+import { overdrawVerdict, particleVerdict, textureVerdict } from './budget-rules';
 import { CENSUS_GLOBAL, installGlCensus, type CensusSnapshot } from './gl-census';
 
 /**
@@ -128,6 +128,30 @@ async function runScene(page: Page, frames: readonly (readonly string[])[]): Pro
     { frames, width: W, height: H, globalName: CENSUS_GLOBAL },
   );
 }
+
+test.describe('particle rule calibration: known readings, known verdicts', () => {
+  /* No page: the rule is arithmetic on attribute text, and every exit it has is
+     driven here before `budgets.spec.ts` trusts one of them. */
+  const at = { allowance: '400', tier: 'high', tierPinned: 'true', formFactor: 'phone', motion: 'full' } as const;
+
+  test('an emitted count at the phone limit is HELD, and one over it is BREACHED', () => {
+    expect(particleVerdict({ ...at, emitted: ['unknown', '400'] }).status).toBe('held');
+    expect(particleVerdict({ ...at, emitted: ['400', '401'] }).status).toBe('breached');
+  });
+
+  test('the limit follows the form factor the page classified', () => {
+    expect(particleVerdict({ ...at, formFactor: 'large', allowance: '1500', emitted: ['1200'] }).status).toBe('held');
+    expect(particleVerdict({ ...at, formFactor: 'large', emitted: ['1501'] }).status).toBe('breached');
+    expect(particleVerdict({ ...at, formFactor: null, emitted: ['400'] }).status).toBe('not-measured');
+  });
+
+  test('nothing emitted, never published, or not a count is NOT MEASURED, not a pass', () => {
+    expect(particleVerdict({ ...at, emitted: ['0'] }).status).toBe('not-measured');
+    expect(particleVerdict({ ...at, emitted: ['unknown'] }).status).toBe('not-measured');
+    expect(particleVerdict({ ...at, emitted: [] }).status).toBe('not-measured');
+    expect(particleVerdict({ ...at, emitted: ['400', 'nan'] }).status).toBe('not-measured');
+  });
+});
 
 test.describe('census calibration: known scenes, known answers', () => {
   test('covered area is exact across VAO switches, clipping, indexed triangles and strips', async ({ page }) => {

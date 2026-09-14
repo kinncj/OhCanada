@@ -35,7 +35,7 @@ import {
   type RenderTierProbe,
 } from './render-tier-probe';
 import { backingScaleFor } from './visual-tier';
-import type { RenderProfile, TierDecision } from './visual-tier';
+import type { RenderProfile, TierDecision, VisualTier } from './visual-tier';
 import {
   SCENE_PROBE_GLOBAL,
   SCENE_PROBE_TEST_ID,
@@ -43,6 +43,7 @@ import {
   isSceneProbeEnabled,
   profileToSnapshot,
   sceneProbeHandle,
+  tierOverrideFrom,
   type SceneProbe,
   type SceneProbeHandle,
 } from './scene-probe';
@@ -264,14 +265,17 @@ export class GameRenderer {
       callbacks: {
         postBoot: (game) => {
           hideCanvasFromAssistiveTech(game.canvas);
+          const search = options.search ?? readLocationSearch();
           /* `?e2e=1` only. A normal load creates no element and installs no
              global, so the probe costs one query-string read and nothing else. */
-          this.#scene = installSceneProbe(
-            options.parent,
-            options.search ?? readLocationSearch(),
-          );
+          this.#scene = installSceneProbe(options.parent, search);
           this.#marker = installPlayableMarker(options.parent);
-          this.#probe = startRendererProbe(game, options.config, this.#scene, (profile) => {
+          /* The perf suite's tier override, fenced twice: `tierOverrideFrom`
+             reads `tier` only behind the same `?e2e=1` gate, and it is not even
+             asked unless that gate actually installed the probe. An ordinary
+             load passes `null` and the tier is measured, as for every player. */
+          const pinnedTier = this.#scene === null ? null : tierOverrideFrom(search);
+          this.#probe = startRendererProbe(game, options.config, this.#scene, pinnedTier, (profile) => {
             /*
              * Fewer pixels first, then tell the scene — it re-derives its camera
              * zoom from the scale manager and must read the new size.
@@ -715,6 +719,7 @@ function startRendererProbe(
   game: Phaser.Game,
   config: BootConfig,
   scene: SceneProbe | null,
+  pinnedTier: VisualTier | null,
   onProfileChanged: (profile: RenderProfile) => void,
 ): RenderTierProbe {
   const identity = identifyRenderer(rendererKindOf(game), webglContextOf(game));
@@ -724,6 +729,7 @@ function startRendererProbe(
     presets: config.graphicsPresets,
     frameTimeMs: config.frameTimeMs,
     signals: frameSignalsFor(game),
+    pinnedTier,
     motion: resolveMotionLevel({ mediaQuery: mediaQuery('(prefers-reduced-motion: reduce)') }),
     formFactor: readFormFactor({
       widthCssPx: window.innerWidth,
@@ -739,7 +745,12 @@ function startRendererProbe(
     /* One mechanism, not two: the tier the renderer probe measured is published
        through the same element a locomotion scenario reads. */
     onProfile: (profile) => {
-      scene?.publish({ ...profileToSnapshot(profile), renderer: identity.kind });
+      /* The allowance only: the emitted count is the level scene's to write. */
+      scene?.publish({
+        ...profileToSnapshot(profile),
+        renderer: identity.kind,
+        tierPinned: pinnedTier !== null,
+      });
       /* The level re-derives everything the tier controls from the new profile:
          how many parallax layers are drawn and how much snow falls. This is the
          line that makes ADR-0011 something a player can see. */

@@ -285,8 +285,9 @@ async function waitForPlayerPast(page: Page, x: number): Promise<void> {
  * TN-LEVEL-03 is a statement about the tuning — "at least 70 percent of maxSpeed
  * after 1 second" — so integrating the simulated `dt` asks the question the
  * story asks. Whether the machine delivers those seconds in a second is
- * `tests/perf/budgets.spec.ts`'s question, it has its own budget, and answering
- * it here as well would make one number fail two different claims.
+ * `tests/perf/frame-time.device.ts`'s question, on real hardware with its own
+ * budget, and answering it here as well would make one number fail two
+ * different claims.
  */
 const at = (trace: readonly Frame[], ms: number): Frame | undefined => {
   let simulated = 0;
@@ -896,18 +897,37 @@ test.describe('ADR-0003 — a refused claim is not offered to the player', () =>
 });
 
 test.describe('the visual tier is spent on something', () => {
-  test('reports a tier, and a particle count inside the phone budget', async ({ page }) => {
+  test('reports a tier, and an emitted particle count inside the phone budget', async ({ page }) => {
     await openLevel(page);
 
     const probe = page.locator('[data-testid="scene-state"]');
     await expect(probe).toHaveAttribute('data-tier', /^(low|medium|high)$/);
     await expect(probe).toHaveAttribute('data-parallax-easing', /^(on|off)$/);
+    await expect(probe).toHaveAttribute('data-particle-allowance', /^\d+$/);
+    /* A level is open, so the emitted count is a count, not "unknown". */
+    await expect(probe).toHaveAttribute('data-particles', /^\d+$/);
 
     const particles = Number(await probe.getAttribute('data-particles'));
-    expect(Number.isFinite(particles)).toBe(true);
     /* CLAUDE.md, Budgets: <= 400 on a phone, and this project runs the suite at
-       390x844 with a coarse pointer, which is a phone. */
+       390x844 with a coarse pointer, which is a phone. This is the snow the
+       level emits; the perf lane holds the same number at the tier that allows
+       the most. */
     expect(particles).toBeLessThanOrEqual(400);
+  });
+
+  test('reduced motion removes particles and parallax easing even at a pinned high tier', async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(`${LEVEL_URL}&tier=high`);
+    await page.waitForSelector('[data-testid="playable"]', { timeout: 60_000 });
+
+    const probe = page.locator('[data-testid="scene-state"]');
+    await expect(probe).toHaveAttribute('data-tier', 'high');
+    await expect(probe).toHaveAttribute('data-tier-pinned', 'true');
+    await expect(probe).toHaveAttribute('data-motion', 'reduced');
+    await expect(probe, 'a tier, pinned or measured, handed motion back').toHaveAttribute('data-particles', '0');
+    await expect(probe).toHaveAttribute('data-particle-allowance', '0');
+    await expect(probe).toHaveAttribute('data-parallax-easing', 'off');
   });
 
   test('this suite runs on a software rasteriser, so the tier is capped', async ({ page }) => {
