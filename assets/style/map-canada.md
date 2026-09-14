@@ -312,7 +312,7 @@ of what it rasterises, so the map is:
 per level document and no other, every anchor lies inside the viewBox, the inset nests as it claims with both
 inset stops inside the locator, and every `CA-` code is an id in the drawing.
 
-**How the screen reaches it** (wiring it in is a separate job): the SVG by URL through the UI build,
+**How the screen reaches it** (wired into the level select by `app/ui/level-map.ts`): the SVG by URL through the UI build,
 `new URL('…/map-canada.svg', import.meta.url)`, into a decorative `<img alt="">`, so Vite content-hashes it and a
 browser fetches it only when the level select is shown, not as part of the initial payload. The sidecar by static
 JSON import, about 2 kB in the level select's chunk. Not a copy into `assets/dist/`, because that manifest means
@@ -339,7 +339,7 @@ that is 250 kB of JavaScript string, and ids such as `sea` and `inset` would be 
 
 | id | question | owner | blocks |
 |---|---|---|---|
-| ~~**OQ-MAPART-1**~~ | Which owner in `scripts/assets.mjs` takes art for a DOM screen (§11), and how does the UI reach it? **Answered 2026-09-13 by infra:** `assets/src/svg/screens/`; the SVG by a Vite URL into an `<img>`, the sidecar by JSON import (§11). | infra | nothing; wiring the map is its own job |
+| ~~**OQ-MAPART-1**~~ | Which owner in `scripts/assets.mjs` takes art for a DOM screen (§11), and how does the UI reach it? **Answered 2026-09-13 by infra:** `assets/src/svg/screens/`; the SVG by a Vite URL into an `<img>`, the sidecar by JSON import (§11). | infra | nothing; the map is wired into the level select (`app/ui/level-map.ts`) |
 | **OQ-MAPART-2** | Which extent does each of the three regions highlight, and what is cited (§9)? | content owners | any region highlight |
 | ~~**OQ-MAPART-3**~~ | Does the sidecar get a schema in `content/schemas/`? It is data the UI reads, and `content/` is not art's. **Answered 2026-09-13 by infra:** yes, `content/schemas/map-anchors.schema.json`, with cross-checks in `make validate-content` (§11). The sidecar stays beside the drawing, in art's tree. | infra | nothing |
 | **OQ-MAPART-4** | Is the federal Québec–Labrador line acceptable on a French-language screen without comment (§2)? | PO, FR reviewer | nothing today |
