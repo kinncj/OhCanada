@@ -225,12 +225,12 @@ Feature: How I did, subject by subject
     And it shows "More are coming."
     And nothing on the screen suggests the missing subjects are the player's doing
 
-  Scenario: Every subject ready promises nothing more
+  Scenario: Every subject ready promises nothing more, and reports nothing (ADR-0039)
     Given every subject has a bank
-    Then it shows "Subjects ready: 10 of 10"
+    Then it does not show "Subjects ready: 10 of 10"
     And it does not show "More are coming."
-    And nothing is drawn in that sentence's place
-    And this is TN-MAP's rule, tested against the count that sits beside it
+    And nothing is drawn in their place
+    And this is TN-MAP's rule, which since ADR-0039 covers the count as well as the promise
 
   Scenario: A row is not a colour
     Then each row's numbers are text

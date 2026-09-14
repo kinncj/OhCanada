@@ -177,13 +177,13 @@ Feature: Starting a practice exam
     And it shows "This exam only asks about the subjects that are ready."
     And nothing on the screen reads as an error
 
-  Scenario: Every subject ready promises nothing more
+  Scenario: Every subject ready promises nothing more, and reports nothing (ADR-0039)
     Given every subject has a bank
-    Then it shows "Subjects ready: 10 of 10"
+    Then it does not show "Subjects ready: 10 of 10"
     And it does not show "More are coming."
-    And nothing is drawn in that sentence's place
-    And this is TN-MAP's rule, tested against the count that sits beside it
-    And it still shows "This exam only asks about the subjects that are ready."
+    And it does not show "This exam only asks about the subjects that are ready."
+    And nothing is drawn in their place
+    And this is TN-MAP's rule, which since ADR-0039 covers the count as well as the promise
 
   Scenario: The timer is a choice made here, and only here
     Then the control described in TN-TIMER-01 is on this screen

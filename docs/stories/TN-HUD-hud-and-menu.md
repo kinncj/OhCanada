@@ -439,6 +439,15 @@ Feature: The HUD honours the settings it opens
     Then both are readable, by scrolling inside "hud" if needed
     And neither covers "menu-button"
 
+  Scenario: The action stays on screen at 200 % (ADR-0039)
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    And "interact-prompt", "hud-quest-tracker", "hud-notice", "interact-hint" and "storage-warning" are all shown
+    Then "interact-prompt", "hud-settings-button" and "menu-button" are inside the visible part of "hud"
+    And the strip draws them before the mode, the task, the notice, the hint and the warning
+    And only the words after them need scrolling inside "hud"
+    And in French, with the dyslexia font, no label on them is cut off
+
   Scenario: The menu at 200 %
     Given text scaling is 200 %
     When the menu opens

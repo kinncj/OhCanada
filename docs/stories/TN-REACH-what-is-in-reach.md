@@ -30,6 +30,17 @@ do. One generic row is added, `hud.interact.poi.offer`, and the precedence list 
 the three existing rows changes, and **neither of those two levels writes a per-target row**, because their
 own stories forbid the landmark's name inside the HUD (`TN-PEGGYS-01`, `TN-NORTH-01`).
 
+**Amended 2026-09-14 — ADR-0039, from the live-site audit.** Four changes:
+
+- **Landmarks are named in their prompt.** Every landmark that opens a card has a per-target row unless its
+  name is on `TN-NAMES`'s list or it gives a quest. That is `OQ-REACH-4`'s recommendation carried out.
+- **Engaged is not the same as done.** A giver whose quest is unfinished, or a landmark a running quest waits
+  for, keeps its own prompt.
+- **The hint says "someone or something"**, because the first thing in reach on Halifax is the guide.
+- **The prompt is drawn before the hint in the strip, not after it.**
+
+The new rows are **proposed**, listed below and in `COPY_GAPS`, until this file's owner ratifies them.
+
 Read `README.md` in this directory first. `TN-HUD-hud-and-menu.md` owns the strip the prompt is drawn in;
 `TN-LEVEL-ottawa.md` owns Ottawa's two per-target rows and the officer; `TN-GUIDE-the-guide.md` owns the
 guide's name and its prompt; `TN-NAMES-naming-real-places.md` owns which names may appear where;
@@ -87,7 +98,9 @@ is how they stop being one sentence.
 
 1. **The target has been done** → `hud.interact.done`, whatever kind it is and whatever row was written.
    The state is the news; the invitation is not, and a player who is told "Talk to the officer" about
-   somebody they have already finished with will walk back for nothing.
+   somebody they have already finished with will walk back for nothing. **Done means engaged in this sitting
+   with nothing left to do there** (ADR-0039): a giver whose quest is on offer, declined or running, and a
+   landmark a running quest's step is waiting for, are not done, however recently they were engaged.
 2. **A row exists for this target** → that row.
 3. **Otherwise, by kind** → `hud.interact.npc` for a person; `hud.interact.poi.offer` for a place that is
    this level's quest giver; `hud.interact.poi` for any other place.
@@ -181,9 +194,11 @@ the menu does not, and the mark itself is a shape.
   "Choose it" is the word the single-switch contract already uses (`README.md`), and it is true of every
   input.
 - It counts nothing down and expires on nothing.
-- **It says "something to see", which stays true on a level whose mark opens a task**, because seeing what
-  there is to do is still seeing. The hint is about the marks, not about what any one of them opens, and
-  rewording it per kind would make a one-time sentence depend on which mark happened to be first.
+- **It says "someone or something you can choose"** (ADR-0039), which is true whatever a mark is over: a
+  person, the guide, a place that shows something and a place that opens a task. It used to say "something
+  to see", which was false on Halifax, where the first mark in reach is the guide. The hint is about the
+  marks, not about what any one of them opens, and rewording it per kind would make a one-time sentence
+  depend on which mark happened to be first.
 
 ## Player-facing copy
 
@@ -193,7 +208,53 @@ the menu does not, and the mark itself is a shape.
 | `hud.interact.poi.offer` | See what there is to do here | Voir ce qu'il y a à faire ici |
 | `hud.interact.npc` | Talk to this person | Parler à cette personne |
 | `hud.interact.done` | Done. See this one again | Terminé. Revoir |
-| `hud.interact.hint` | A mark shows something to see. Get close to it, then choose it. | Un repère indique quelque chose à voir. Approchez-vous, puis choisissez. |
+| `hud.interact.hint` | *proposed, see below* | *proposed, see below* |
+
+**Proposed rows, not yet ratified (ADR-0039).** Written by `app/ui` and declared in `COPY_GAPS`
+(`app/ui/copy.ts`) until this file's owner moves them into the table above or replaces them. The hint replaces
+"A mark shows something to see. Get close to it, then choose it." / « Un repère indique quelque chose à voir.
+Approchez-vous, puis choisissez. », which was untrue whenever the first thing in reach was a person or the
+guide.
+
+| Key | EN | FR |
+|---|---|---|
+| `hud.interact.hint` | A mark shows someone or something you can choose. Get close, then choose. | Un repère montre quelqu'un ou quelque chose à choisir. Approchez-vous, puis choisissez. |
+
+The landmark rows below belong, on ratification, in each level's own story, as `hud.interact.parliament-hill`
+belongs in `TN-LEVEL-ottawa.md`. Each is written out from that level document's `pois[].name` with its article,
+and none is interpolated. No row exists for `pier-21`, `chateau-frontenac`, `cn-tower`, `canada-place` or
+`human-rights-museum`, whose names are on `TN-NAMES`'s list. There is none for `peggys-point-light` or
+`yukon-river-sternwheeler` either: they give a quest and draw `hud.interact.poi.offer`.
+
+| Key | EN | FR |
+|---|---|---|
+| `hud.interact.town-clock` | Look at the Halifax Town Clock | Regarder la Tour de l'horloge d'Halifax |
+| `hud.interact.market-stall` | Look at the market stall | Regarder l'étal de marché |
+| `hud.interact.harbour-tug` | Look at the harbour tug | Regarder le remorqueur de port |
+| `hud.interact.granite-shore` | Look at the granite shore | Regarder la côte de granit |
+| `hud.interact.fish-store` | Look at the fish store | Regarder le hangar de pêche |
+| `hud.interact.village-house` | Look at the village house | Regarder la maison du village |
+| `hud.interact.city-wall` | Look at the city wall | Regarder le mur de la ville |
+| `hud.interact.terrace-kiosk` | Look at the bandstand | Regarder le kiosque à musique |
+| `hud.interact.rideau-locks` | Look at the canal locks | Regarder les écluses du canal |
+| `hud.interact.library-of-parliament` | Look at the Library of Parliament | Regarder la Bibliothèque du Parlement |
+| `hud.interact.warming-hut` | Look at the warming hut | Regarder la cabane chauffée |
+| `hud.interact.streetcar` | Look at the streetcar | Regarder le tramway |
+| `hud.interact.nathan-phillips-square` | Look at Nathan Phillips Square | Regarder la place Nathan-Phillips |
+| `hud.interact.footbridge` | Look at the footbridge | Regarder la passerelle |
+| `hud.interact.autumn-maple` | Look at the maple tree | Regarder l'érable |
+| `hud.interact.grain-bins` | Look at the grain bins | Regarder les silos à grains |
+| `hud.interact.grain-elevator` | Look at the grain elevator | Regarder l'élévateur à grain |
+| `hud.interact.combine-harvester` | Look at the combine harvester | Regarder la moissonneuse-batteuse |
+| `hud.interact.container-car` | Look at the container car | Regarder le wagon porte-conteneurs |
+| `hud.interact.ranch-gate` | Look at the ranch gate | Regarder la barrière du ranch |
+| `hud.interact.ranch-barn` | Look at the working ranch | Regarder le ranch en activité |
+| `hud.interact.pump-jack` | Look at the oil pump jack | Regarder le chevalet de pompage |
+| `hud.interact.beef-cattle` | Look at the cattle on the range | Regarder les bovins au pâturage |
+| `hud.interact.marina` | Look at the marina | Regarder la marina |
+| `hud.interact.bulk-carrier` | Look at the cargo ship | Regarder le navire de charge |
+| `hud.interact.spruce-stand` | Look at the spruce trees | Regarder les épinettes |
+| `hud.interact.driftwood` | Look at the driftwood | Regarder le bois flotté |
 
 **The four prompts are labels and carry no full stop**; the hint is two sentences and carries two, because
 it is prose and is read as prose. « Terminé. Revoir » is shorter than its English and says the same two
@@ -401,8 +462,8 @@ Feature: Learning that the marks can be used, once
   Scenario: It appears the first time something is in reach
     When the first mark comes within reach
     Then the element "interact-hint" is visible
-    And it reads "A mark shows something to see. Get close to it, then choose it."
-    And it is shown beside "interact-prompt", not instead of it
+    And it reads "A mark shows someone or something you can choose. Get close, then choose."
+    And it is shown after "interact-prompt" in the strip, not instead of it and not above it (ADR-0039)
 
   Scenario: One hint covers every kind of mark
     Given a level whose first mark in reach is a place that offers a task
@@ -616,7 +677,7 @@ Feature: The prompt in French
 
   Scenario: The hint is French and names no input
     When "interact-hint" appears
-    Then it reads "Un repère indique quelque chose à voir. Approchez-vous, puis choisissez."
+    Then it reads "Un repère montre quelqu'un ou quelque chose à choisir. Approchez-vous, puis choisissez."
     And it contains no key name and no word for one kind of input
     And the announcing element carries "lang" equal to "fr"
 

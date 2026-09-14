@@ -149,6 +149,28 @@ It labels the stop the player is at. The map and the route beside the cards mark
 both `aria-hidden`, so the card has to say it in words. It names no place, because the card already does, and
 no direction (`OQ-MAP-3`).
 
+**Proposed rows, not yet ratified (ADR-0039, 2026-09-14).** The sentence under a locked card is written out
+per level, in `COPY_GAPS` until ratified. `map.locked.after` dropped the map title into a template and drew
+"Finish The Prairies first." / « Terminez d'abord Les Prairies. ». It stays only for a card with no id.
+
+| Key | EN | FR |
+|---|---|---|
+| `level.halifax.finishFirst` | Finish Halifax first. | Terminez d'abord Halifax. |
+| `level.peggys-cove.finishFirst` | Finish Peggy's Cove first. | Terminez d'abord Peggy's Cove. |
+| `level.quebec-city.finishFirst` | Finish Québec City first. | Terminez d'abord la Ville de Québec. |
+| `level.ottawa.finishFirst` | Finish Ottawa first. | Terminez d'abord Ottawa. |
+| `level.toronto.finishFirst` | Finish Toronto first. | Terminez d'abord Toronto. |
+| `level.winnipeg.finishFirst` | Finish Winnipeg first. | Terminez d'abord Winnipeg. |
+| `level.prairie-rail.finishFirst` | Finish the Prairies first. | Terminez d'abord les Prairies. |
+| `level.alberta-foothills.finishFirst` | Finish the Alberta foothills first. | Terminez d'abord les contreforts de l'Alberta. |
+| `level.vancouver.finishFirst` | Finish Vancouver first. | Terminez d'abord Vancouver. |
+| `level.the-north.finishFirst` | Finish the North first. | Terminez d'abord le Nord. |
+
+**`map.levelsReady` follows `map.moreComing`'s rule since ADR-0039**: it is drawn, and put in the arrival
+announcement, only while `ready` is less than `total`, on the map and in the passport alike.
+"Levels ready: 10 of 10" is a build report, not something a player can act on. `exam.subjectsReady` and
+`exam.subjects.help` follow the same rule on the exam's start and result screens.
+
 The level names and subject lines are owned by `TN-LEVELS-2-to-10-spine.md` (`level.<id>.title` and
 `level.<id>.subtitle`, for **every level but Ottawa**) and by `TN-LEVEL-ottawa.md` (`level.ottawa.title`,
 `level.ottawa.subtitle`). This screen names the keys and does not carry the words: a place name written in

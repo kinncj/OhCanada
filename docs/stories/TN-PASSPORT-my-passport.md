@@ -176,7 +176,7 @@ Feature: The passport screen
     Then it shows the heading "My passport"
     And it shows "You earn a stamp when you finish a level's task."
     And it shows "Stamps: 0 of 10"
-    And it shows "Levels ready: 10 of 10"
+    And it does not show "Levels ready: 10 of 10", because every level is made (ADR-0039)
 
   Scenario: A complete map does not promise more
     Given every level in the journey has a document
