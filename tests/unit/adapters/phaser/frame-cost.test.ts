@@ -238,7 +238,7 @@ describe('createFrameCostRecorder', () => {
     expect(recorder.warmupRemaining).toBe(DEFAULT_WARMUP_FRAMES);
     expect(
       DEFAULT_WINDOW_FRAMES,
-      'tests/perf/budgets.spec.ts refuses to call fewer than 30 frames a measurement',
+      'tests/perf/frame-time.device.ts refuses to call fewer than 30 frames a measurement',
     ).toBeGreaterThanOrEqual(30);
 
     for (let frame = 0; frame < DEFAULT_WARMUP_FRAMES + DEFAULT_WINDOW_FRAMES - 1; frame += 1) {

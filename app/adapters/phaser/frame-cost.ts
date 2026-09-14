@@ -81,8 +81,8 @@ export const DEFAULT_WARMUP_FRAMES = 10;
 /**
  * Frames per measurement window.
  *
- * Thirty is the same floor `tests/perf/budgets.spec.ts` uses before it will call
- * a sample a measurement, and it is the smallest window where a median is not
+ * Thirty is the same floor `tests/perf/frame-time.device.ts` uses before it will
+ * call a sample a measurement, and it is the smallest window where a median is not
  * itself noise. At 60 Hz a window is half a second, so a device that degrades
  * mid-level is caught within one.
  */

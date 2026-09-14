@@ -435,9 +435,18 @@ export class GameRenderer {
       ...(this.#options.onLevelMilestone === undefined
         ? {}
         : { onMilestone: this.#options.onLevelMilestone }),
-      ...(this.#options.onLevelReady === undefined
-        ? {}
-        : { onReady: this.#options.onLevelReady }),
+      onReady: (levelId: string) => {
+        /*
+         * Building a level is a gap, not a slow frame — the same class of event
+         * as a resume or a resize, which already re-arm the warm-up. It matters
+         * more than it did: a demotion soon after a tier was entered now counts
+         * as a failed attempt at that tier, and two close it for the session
+         * (`createTierTracker`). The frames that construct the scene and upload
+         * its first textures must not be the evidence for that.
+         */
+        this.#probe?.reset();
+        this.#options.onLevelReady?.(levelId);
+      },
     });
     this.#level = scene;
     /* Before `scene.add`, so the option is in force on the level's first frame

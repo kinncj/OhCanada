@@ -25,19 +25,24 @@ import {
   backingScaleFor,
   classifyFormFactor,
   createTierTracker,
+  DEFAULT_PROMOTE_AFTER_WINDOWS,
   isPromotion,
   LARGE_PARTICLE_CEILING,
+  MAX_FAILED_ATTEMPTS,
   MIN_BACKING_SCALE,
   minTier,
   particleCeilingFor,
   PHONE_PARTICLE_CEILING,
+  PROBATION_WINDOWS,
   provisionalTier,
   resolveRenderProfile,
+  stepDown,
   stepUp,
   thresholdsFor,
   TIER_ORDER,
   tierCeilingFor,
   tierFromFrameCost,
+  type TierTracker,
   type VisualTier,
 } from '@adapters/phaser/visual-tier';
 
@@ -245,6 +250,149 @@ describe('createTierTracker', () => {
   });
 });
 
+describe('the tier settles instead of cycling', () => {
+  /*
+   * What this section is written against. CI's GPU census, 2026-09-13: on
+   * SwiftShader the tracker ran `low` for 71 frames and `medium` for 41, forever,
+   * at normal speed and at 4x CPU throttle alike.
+   *
+   * Those two numbers are the old rule's arithmetic to the frame: one frame with
+   * no interval, ten warm-up frames, then two 30-frame windows to promote (71) or
+   * one to demote (41). So EVERY window at `low` passed and EVERY window at
+   * `medium` failed. That is not noise around a threshold, which a wider band
+   * would absorb. It is the tier change moving the measured quantity across the
+   * threshold: a promotion is judged on frames drawn at `low`, the demotion on
+   * frames drawn at `medium`, and on that phone viewport `medium` draws four
+   * times the fragments. No threshold measured at one tier predicts another, so
+   * the rule has to remember how trying the other tier went.
+   *
+   * The host below is that pattern: its cost is a function of the tier it is
+   * drawing at, not a fixed number.
+   */
+  const SWIFTSHADER_HOST: Readonly<Record<VisualTier, ReturnType<typeof summary>>> = {
+    /* Cheap enough to argue for medium, not for high. */
+    low: summary(9, 14, 22),
+    /* Over the whole budget at a sub-30 fps cadence: demote. */
+    medium: summary(38, 55, 60),
+    high: summary(38, 55, 60),
+  };
+
+  /** Feed `windows` windows, each measured at the tier the tracker is on. Index 0 is the start. */
+  function drive(
+    tracker: TierTracker,
+    host: (tier: VisualTier) => ReturnType<typeof summary>,
+    windows: number,
+  ): VisualTier[] {
+    const tiers: VisualTier[] = [tracker.decision.tier];
+    for (let window = 0; window < windows; window += 1) {
+      tiers.push(tracker.observe(host(tracker.decision.tier)).tier);
+    }
+    return tiers;
+  }
+
+  const changesIn = (tiers: readonly VisualTier[]): number =>
+    tiers.reduce((count, tier, index) => (index > 0 && tier !== tiers[index - 1] ? count + 1 : count), 0);
+
+  it.each([
+    ['a named software rasteriser', SOFTWARE],
+    ['a software rasteriser that hides its name, which starts at medium', ANONYMOUS],
+  ] as const)('settles at low for %s, after two failed attempts at medium', (_name, identity) => {
+    const tracker = createTierTracker({ identity, frameTimeMs: FRAME_BUDGET_MS });
+
+    const tiers = drive(tracker, (tier) => SWIFTSHADER_HOST[tier], 200);
+
+    expect(
+      changesIn(tiers),
+      `the tier kept moving: ${tiers.slice(0, 16).join(' ')} ...`,
+    ).toBeLessThanOrEqual(2 * MAX_FAILED_ATTEMPTS);
+    expect(new Set(tiers.slice(20)), 'the tier was still moving twenty windows in').toEqual(
+      new Set(['low']),
+    );
+    expect(tracker.ceiling).toBe('low');
+    expect(tracker.decision.reasons.join(' ')).toContain('closed for this session');
+  });
+
+  it('asks for twice the sustained headroom before retrying a tier that just failed', () => {
+    const tracker = createTierTracker({ identity: SOFTWARE, frameTimeMs: FRAME_BUDGET_MS });
+    /* low, promoted to medium, failed straight back to low. */
+    drive(tracker, (tier) => SWIFTSHADER_HOST[tier], 3);
+    expect(tracker.decision.tier).toBe('low');
+
+    const retry = 2 * DEFAULT_PROMOTE_AFTER_WINDOWS;
+    for (let window = 1; window < retry; window += 1) {
+      expect(tracker.observe(SWIFTSHADER_HOST.low).tier, `retry window ${window}/${retry}`).toBe('low');
+    }
+    expect(tracker.observe(SWIFTSHADER_HOST.low).tier).toBe('medium');
+  });
+
+  it('still takes a fast machine to high, and keeps it there', () => {
+    const FAST_HOST: Readonly<Record<VisualTier, ReturnType<typeof summary>>> = {
+      low: summary(2, 4),
+      medium: summary(3, 6),
+      /* Dearer than medium, still inside what high allows. */
+      high: summary(6, 11),
+    };
+    const tracker = createTierTracker({ identity: HARDWARE, frameTimeMs: FRAME_BUDGET_MS });
+
+    const tiers = drive(tracker, (tier) => FAST_HOST[tier], 500);
+
+    expect(tiers.at(-1)).toBe('high');
+    expect(changesIn(tiers), 'a fast machine should promote once and hold').toBe(1);
+    expect(tracker.ceiling).toBe('high');
+  });
+
+  it('does not close a tier over a stall that came after the tier had held', () => {
+    /* A notification, a level load, a background tab: the tier had proven
+       itself, so dropping is a change in conditions and not a failed attempt. */
+    const tracker = createTierTracker({ identity: HARDWARE, frameTimeMs: FRAME_BUDGET_MS });
+    const fast = summary(4, 8);
+    const stall = summary(25, 40, 33);
+
+    for (let stalls = 0; stalls < 3; stalls += 1) {
+      for (let window = 0; window < PROBATION_WINDOWS + 40; window += 1) tracker.observe(fast);
+      expect(tracker.decision.tier, `before stall ${stalls + 1}`).toBe('high');
+      expect(tracker.observe(stall).tier, 'a genuinely slow window still demotes at once').toBe('low');
+    }
+    for (let window = 0; window < PROBATION_WINDOWS + 40; window += 1) tracker.observe(fast);
+
+    expect(tracker.decision.tier).toBe('high');
+    expect(tracker.ceiling).toBe('high');
+  });
+
+  it('makes a host that fails a tier only after holding it retry less and less often', () => {
+    /* The borderline device: holds medium past its probation, then fails, every
+       time. It is never closed, so what stops the cycle is the doubling. */
+    const tracker = createTierTracker({ identity: SOFTWARE, frameTimeMs: FRAME_BUDGET_MS });
+    const holdFor = PROBATION_WINDOWS + 5;
+    let windowsAtMedium = 0;
+
+    const tiers = drive(
+      tracker,
+      (tier) => {
+        if (tier !== 'medium') {
+          windowsAtMedium = 0;
+          return SWIFTSHADER_HOST.low;
+        }
+        windowsAtMedium += 1;
+        return windowsAtMedium > holdFor ? SWIFTSHADER_HOST.medium : SWIFTSHADER_HOST.low;
+      },
+      4000,
+    );
+
+    const promotions = tiers.flatMap((tier, index) =>
+      index > 0 && tier === 'medium' && tiers[index - 1] === 'low' ? [index] : [],
+    );
+    const gaps = promotions.slice(1).map((at, index) => at - (promotions[index] ?? 0));
+    for (let index = 1; index < gaps.length; index += 1) {
+      expect(gaps[index], `retry gaps ${gaps.join(', ')}`).toBeGreaterThanOrEqual(gaps[index - 1] ?? 0);
+    }
+    /* The old rule's cycle here is 28 windows: ~285 changes in 4000. */
+    expect(changesIn(tiers)).toBeLessThan(30);
+    expect(changesIn(tiers.slice(-1000)), 'still cycling at the end of the run').toBeLessThanOrEqual(2);
+    expect(tracker.ceiling, 'a tier held past probation is not closed').toBe('medium');
+  });
+});
+
 describe('tier arithmetic', () => {
   it('orders the tiers the way the presets are named', () => {
     expect(TIER_ORDER).toEqual(['low', 'medium', 'high']);
@@ -254,6 +402,8 @@ describe('tier arithmetic', () => {
     expect(isPromotion('high', 'low')).toBe(false);
     expect(stepUp('low')).toBe('medium');
     expect(stepUp('high')).toBe('high');
+    expect(stepDown('high')).toBe('medium');
+    expect(stepDown('low')).toBe('low');
   });
 });
 

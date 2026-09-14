@@ -66,6 +66,10 @@ export const isPromotion = (current: VisualTier, candidate: VisualTier): boolean
 export const stepUp = (tier: VisualTier): VisualTier =>
   TIER_ORDER[Math.min(TIER_ORDER.length - 1, rank(tier) + 1)] ?? tier;
 
+/** One step down, or the same tier at the bottom. */
+export const stepDown = (tier: VisualTier): VisualTier =>
+  TIER_ORDER[Math.max(0, rank(tier) - 1)] ?? tier;
+
 /**
  * Where the tier boundaries sit, derived from the one budget CLAUDE.md states:
  * frame time <= 16.7 ms at the *medium* preset.
@@ -254,26 +258,61 @@ export interface TierDecision {
 }
 
 /**
- * Windows of agreement required before a tier goes *up*.
+ * Windows of agreement required before a tier goes *up*, the first time.
  *
  * Asymmetric on purpose. A demotion is a response to something the player is
  * already seeing, so it happens on the first bad window. A promotion is a bet
- * that the good window will repeat, and getting it wrong costs a visible pop
- * followed by a stutter followed by a demotion — so it takes two consecutive
- * windows and moves one step at a time. This is also what keeps a device that
- * simply finished warming up from oscillating across a threshold.
+ * that the good window will repeat, so it takes consecutive agreeing windows
+ * and moves one step at a time. The count restarts at every tier change, which
+ * makes it the cool-down as well: no tier is entered sooner than this many
+ * windows after the last change. What a lost bet costs is in `createTierTracker`.
  */
 export const DEFAULT_PROMOTE_AFTER_WINDOWS = 2;
+
+/**
+ * How long a tier is on trial after it is entered, in measurement windows.
+ *
+ * A demotion inside this span is a **failed attempt** at the tier: the frames
+ * drawn at it said it cannot be held, which is a statement about the device. A
+ * demotion after it is a change in conditions — a stall, a thermal throttle, a
+ * busy tab — about a tier that had already held. Twenty windows is 600 frames:
+ * ten seconds at 60 Hz, fifty at the ~12 fps a GPU-less runner manages. The
+ * failure CI measured came on the first window.
+ */
+export const PROBATION_WINDOWS = 20;
+
+/**
+ * Failed attempts after which a tier is closed for the rest of the session.
+ *
+ * Two, not one: a single failed attempt can be bad luck — something else
+ * landing on the first window at a new tier — and a retry costs a player one
+ * more visible change. Two failures is a pattern. "Closed" means this page load,
+ * never this device: a reload measures from scratch.
+ */
+export const MAX_FAILED_ATTEMPTS = 2;
+
+/**
+ * The doubling of `DEFAULT_PROMOTE_AFTER_WINDOWS` stops here: 2 x 2^10 windows
+ * is ~17 minutes at 60 Hz, which is "not this session" in practice, and the
+ * arithmetic stays finite however long a tab is left open.
+ */
+export const MAX_RETRY_DOUBLINGS = 10;
 
 export interface TierTrackerOptions {
   readonly identity: RendererIdentity;
   /** `budgets.frameTimeMs` from `content/game.config.json`. */
   readonly frameTimeMs: number;
   readonly promoteAfterWindows?: number;
+  readonly probationWindows?: number;
+  readonly maxFailedAttempts?: number;
 }
 
 export interface TierTracker {
   readonly decision: TierDecision;
+  /**
+   * The highest tier still on offer: the device's ceiling (`tierCeilingFor`),
+   * lowered by any tier this session has closed.
+   */
   readonly ceiling: VisualTier;
   readonly thresholds: TierThresholds;
   /** Feed one completed measurement window. Returns the decision after it. */
@@ -281,20 +320,77 @@ export interface TierTracker {
 }
 
 /**
- * The re-evaluation state machine: provisional tier, then one decision per
- * measurement window, demoting at once and promoting only on agreement.
+ * The re-evaluation state machine: a provisional tier, then one decision per
+ * measurement window.
+ *
+ * ## The rule
+ *
+ *   1. **Demote on the first window that breaches the tier's thresholds.** The
+ *      player is already seeing it. Unchanged since ADR-0011.
+ *   2. **Promote only on sustained headroom, and more of it after a failure.**
+ *      Entering a tier takes `promoteAfterWindows` consecutive agreeing windows,
+ *      doubled for every time the device has been demoted out of that tier. The
+ *      count restarts at every change, so every change is followed by a
+ *      cool-down.
+ *   3. **A tier that fails `maxFailedAttempts` times on probation is closed for
+ *      the session.** A failed attempt is a demotion within `probationWindows`
+ *      of entering the tier. Closing a tier lowers the ceiling beneath it.
+ *
+ * ## Why this rule and not a wider threshold band
+ *
+ * CI's GPU census measured the previous rule — demote on one window, promote on
+ * two — cycling `low` 71 frames, `medium` 41, forever, on SwiftShader at normal
+ * speed and at 4x CPU throttle. Those are that rule's own numbers to the frame
+ * (one frame with no interval, ten warm-up, then 60 frames to promote or 30 to
+ * demote), so every window at `low` passed and every window at `medium` failed.
+ * That is not a device whose cost wanders around a threshold; hysteresis on the
+ * thresholds is the fix for that, and it would not have fixed this. It is the
+ * tier change moving the measured quantity across the threshold: promotion is
+ * judged on frames drawn at `low`, demotion on frames drawn at `medium`, and on
+ * the perf suite's phone viewport `medium` draws four times the fragments. A
+ * frame measured at one tier cannot say what a frame at another costs, so no
+ * band placed around the thresholds is guaranteed to separate the two. Only the
+ * outcome of trying the tier can, so the tracker remembers it:
+ *
+ *   - that host now tries `medium` twice (the second time after four agreeing
+ *     windows instead of two), is closed out of it, and **stays at `low` for the
+ *     session** — which is the right answer for a machine that cannot hold
+ *     `medium`, and four tier changes instead of one every two seconds;
+ *   - a fast machine promotes to `high` on its second window and never fails, so
+ *     none of this ever engages for it;
+ *   - a machine that holds a tier past probation and then stalls is demoted at
+ *     once as before, not closed, and returns — each time after twice the wait,
+ *     so a borderline device that keeps losing a tier after holding it retries
+ *     at 1 s, 2 s, 4 s... rather than on a fixed cycle.
+ *
+ * The tracker still never reads the motion preference. A closed tier removes
+ * detail; reduced motion is applied on top of whatever tier results, in
+ * `resolveRenderProfile`, exactly as before.
  */
 export function createTierTracker(options: TierTrackerOptions): TierTracker {
-  const ceiling = tierCeilingFor(options.identity);
+  const deviceCeiling = tierCeilingFor(options.identity);
   const thresholds = thresholdsFor(options.frameTimeMs);
   const promoteAfter = Math.max(
     1,
     Math.floor(options.promoteAfterWindows ?? DEFAULT_PROMOTE_AFTER_WINDOWS),
   );
+  const probation = Math.max(1, Math.floor(options.probationWindows ?? PROBATION_WINDOWS));
+  const maxFailedAttempts = Math.max(
+    1,
+    Math.floor(options.maxFailedAttempts ?? MAX_FAILED_ATTEMPTS),
+  );
 
+  let ceiling = deviceCeiling;
+  /* Why the ceiling is below the device's, once it is. */
+  let closedNote: string | null = null;
   let tier = minTier(provisionalTier(options.identity), ceiling);
   let windows = 0;
-  let agreeingPromotions = 0;
+  /* The provisional tier is on probation from window 0: it is a guess, and a
+     guess that fails its first window has failed an attempt. */
+  let enteredAt = 0;
+  let agreeing = 0;
+  const demotions: Record<VisualTier, number> = { low: 0, medium: 0, high: 0 };
+  const failedAttempts: Record<VisualTier, number> = { low: 0, medium: 0, high: 0 };
   let decision: TierDecision = {
     tier,
     measured: false,
@@ -304,11 +400,22 @@ export function createTierTracker(options: TierTrackerOptions): TierTracker {
     ],
   };
 
+  const requiredWindowsFor = (target: VisualTier): number =>
+    promoteAfter * 2 ** Math.min(MAX_RETRY_DOUBLINGS, demotions[target]);
+
+  const enter = (next: VisualTier): void => {
+    tier = next;
+    enteredAt = windows;
+    agreeing = 0;
+  };
+
   return {
     get decision(): TierDecision {
       return decision;
     },
-    ceiling,
+    get ceiling(): VisualTier {
+      return ceiling;
+    },
     thresholds,
 
     observe(summary: FrameCostSummary): TierDecision {
@@ -321,29 +428,56 @@ export function createTierTracker(options: TierTrackerOptions): TierTracker {
           `over ${summary.samples} frames`,
       ];
 
-      if (candidate === tier) {
-        agreeingPromotions = 0;
-        reasons.push(`holding "${tier}".`);
-      } else if (isPromotion(tier, candidate)) {
-        agreeingPromotions += 1;
-        if (agreeingPromotions >= promoteAfter) {
-          tier = stepUp(tier);
-          agreeingPromotions = 0;
-          reasons.push(`promoted to "${tier}" after ${promoteAfter} agreeing windows.`);
+      if (rank(candidate) < rank(tier)) {
+        const left = tier;
+        /* Windows measured at `left`, this one included. */
+        const heldFor = windows - enteredAt;
+        demotions[left] += 1;
+        enter(candidate);
+        reasons.push(`demoted to "${tier}" on the first window that asked for it.`);
+
+        if (heldFor <= probation) {
+          failedAttempts[left] += 1;
+          if (failedAttempts[left] >= maxFailedAttempts) {
+            ceiling = minTier(ceiling, stepDown(left));
+            closedNote =
+              `"${left}" failed ${failedAttempts[left]} attempts, each within ${probation} ` +
+              `windows of being entered, so it is closed for this session`;
+            reasons.push(`${closedNote}; "${ceiling}" is the highest tier on offer until the page reloads.`);
+          } else {
+            reasons.push(
+              `failed attempt ${failedAttempts[left]}/${maxFailedAttempts} at "${left}" ` +
+                `(dropped after ${heldFor} of ${probation} probation windows); ` +
+                `retrying it needs ${requiredWindowsFor(left)} agreeing windows.`,
+            );
+          }
+        } else {
+          reasons.push(
+            `"${left}" had held for ${heldFor} windows, so this is a change in conditions and ` +
+              `not a failed attempt; retrying it needs ${requiredWindowsFor(left)} agreeing windows.`,
+          );
+        }
+      } else if (rank(candidate) > rank(tier)) {
+        const target = stepUp(tier);
+        const required = requiredWindowsFor(target);
+        agreeing += 1;
+        if (agreeing >= required) {
+          enter(target);
+          reasons.push(`promoted to "${tier}" after ${required} agreeing windows.`);
         } else {
           reasons.push(
             `"${candidate}" is available but held at "${tier}": ` +
-              `${agreeingPromotions}/${promoteAfter} agreeing windows.`,
+              `${agreeing}/${required} agreeing windows.`,
           );
         }
       } else {
-        agreeingPromotions = 0;
-        tier = candidate;
-        reasons.push(`demoted to "${tier}" on the first window that asked for it.`);
+        agreeing = 0;
+        reasons.push(`holding "${tier}".`);
       }
 
       if (candidate !== measuredTier) {
-        reasons.push(`capped at "${ceiling}": ${options.identity.note}`);
+        const why = ceiling === deviceCeiling ? options.identity.note : (closedNote ?? options.identity.note);
+        reasons.push(`capped at "${ceiling}": ${why}`);
       }
 
       decision = { tier, measured: true, windows, reasons };
