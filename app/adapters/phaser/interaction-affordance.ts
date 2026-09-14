@@ -77,6 +77,15 @@ export interface AffordanceOptions {
   readonly minTouchPx: number;
   /** Ids the domain has reported finished. Absent is "none yet". */
   readonly completed?: ReadonlySet<string>;
+  /**
+   * The subject a drive is held at, once it has come into reach (ADR-0037).
+   *
+   * Held is in reach. A stop that lands a little past the edge of reach, or a
+   * brake that carries the player through it, does not take away the offer it
+   * made — the prompt, the tap target and this mark all say `ready` until the
+   * hold is let go. Absent or `null` is "nothing held".
+   */
+  readonly held?: string | null;
 }
 
 export interface AffordanceMark {
@@ -136,7 +145,7 @@ export function affordanceMarks(
     const distance = Math.abs(subject.position.x - options.playerX);
     const state: AffordanceState = completed?.has(subject.id)
       ? 'done'
-      : distance <= reach
+      : distance <= reach || subject.id === options.held
         ? 'ready'
         : 'idle';
 

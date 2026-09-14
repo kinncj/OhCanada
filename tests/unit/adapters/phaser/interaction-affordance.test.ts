@@ -77,6 +77,26 @@ describe('every engageable subject is marked', () => {
     expect(justOutside[0]?.state).toBe('idle');
   });
 
+  it('keeps a held subject ready past the edge of reach, and nothing else (ADR-0037)', () => {
+    /* A player who let go in reach is held at the subject, and a brake can carry
+       them a little past the edge. The offer the prompt made is not withdrawn by
+       that: the mark says the same thing the prompt does. */
+    const justOutside = { ...options, playerX: 5400 - 241 };
+    expect(affordanceMarks([landmark], { ...justOutside, held: 'landmark-one' })[0]?.state).toBe('ready');
+    expect(affordanceMarks([landmark], { ...justOutside, held: 'npc-one' })[0]?.state).toBe('idle');
+    expect(affordanceMarks([landmark], { ...justOutside, held: null })[0]?.state).toBe('idle');
+  });
+
+  it('says done for a held subject that is finished, because done still wins', () => {
+    const marks = affordanceMarks([landmark], {
+      ...options,
+      playerX: 5400 - 241,
+      held: 'landmark-one',
+      completed: new Set(['landmark-one']),
+    });
+    expect(marks[0]?.state).toBe('done');
+  });
+
   it('shows nothing at all when the mode cannot engage anything', () => {
     /* A canoe mid-river has `interaction: null`, which reaches here as a reach
        of 0. Every tap would be refused, so nothing may advertise otherwise. */

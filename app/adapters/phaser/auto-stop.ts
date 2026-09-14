@@ -75,6 +75,25 @@
  * glides exactly as it does after a released touch". A player pressing *against*
  * their travel is braking or turning, and is not heading for anything.
  *
+ * ## Letting go in reach is a choice (ADR-0037)
+ *
+ * The glide rule above had one case it got wrong, and it was the one-thumb case.
+ * The prompt appears when a subject comes into reach, and the thumb has to leave
+ * the glass to take it. On the skate the prompt appears 220 px out and the stop
+ * line is 204 px at cruise, so a player who let go the moment it appeared glided
+ * 2 000 px on and the prompt was gone before the thumb arrived; any mode lifted
+ * in reach at a speed whose stop line is shorter than its reach did the same.
+ *
+ * So the frame a held press **ends** is read as well as the frames it lasts. If a
+ * subject this visit has not let the player go from is within reach on that
+ * frame, the drive is held at the nearest one: it glides on to the stop line and
+ * brakes there, or brakes at once when it is already inside it. A glide that
+ * began outside reach is still the player's, and still passes everything — which
+ * is what keeps a skater's long coast down the canal a coast.
+ *
+ * The three ways out are the same three. Rest points (`stand-off.ts`) move where
+ * a stop aims for a character: beside them, not inside them.
+ *
  * ## Letting go
  *
  * Three ways out, and no fourth:
@@ -137,11 +156,30 @@ import type { LocomotionIntent, LocomotionTuning } from '@application/ports';
 
 import { MAX_STEP_SECONDS, MOVE_DEADZONE } from './locomotion';
 
+/** Where a drive travelling right, and one travelling left, comes to rest for a subject. */
+export interface RestPoints {
+  readonly right: number;
+  readonly left: number;
+}
+
 /** One thing in the level a player could choose, as the scene already holds it. */
 export interface AutoStopSubject {
   readonly id: string;
   /** Where the level document puts it. The same x reach is measured from. */
   readonly x: number;
+  /**
+   * Where to come to rest for it, when that is not level with {@link x}.
+   *
+   * A character: beside them, not inside them (`stand-off.ts`, ADR-0037).
+   * Absent for a landmark, which a player stands in front of.
+   */
+  readonly rest?: RestPoints;
+}
+
+/** The world x a drive travelling `heading` aims at for `subject`. */
+export function restXFor(subject: AutoStopSubject, heading: 1 | -1): number {
+  if (subject.rest === undefined) return subject.x;
+  return heading > 0 ? subject.rest.right : subject.rest.left;
 }
 
 /** One frame, as the scene knows it after sampling input and before stepping. */
@@ -171,7 +209,13 @@ export interface AutoStopFrame {
 }
 
 export interface AutoStopWatch {
-  /** The subject the drive is currently held at, or `null`. */
+  /**
+   * The subject the drive is currently held at, or `null`.
+   *
+   * Held is offered: the scene keeps a held subject in reach once it has come
+   * into reach, so the prompt, the mark and the tap target outlive a brake that
+   * carries the player past the edge of reach (ADR-0037).
+   */
   readonly holding: string | null;
   /**
    * Feed this frame. `true` means the drive is suspended: step the player with
@@ -276,13 +320,38 @@ export function createAutoStop(tuning: LocomotionTuning): AutoStopWatch {
      otherwise halt at a landmark it is not allowed to touch. The same test
      `affordanceMarks` makes before drawing a mark, so what stops the player and
      what the player can see agree by construction. */
-  const engages = (tuning.interaction?.reachPx ?? 0) > 0;
+  const reachPx = tuning.interaction?.reachPx ?? 0;
+  const engages = reachPx > 0;
   const done = new Set<string>();
-  let holding: { readonly id: string; readonly heading: 1 | -1 } | null = null;
+  /*
+   * What the drive is held at, which way it was going, where it is aiming to
+   * come to rest, and whether the brake is on yet.
+   *
+   * `braking` is false only for a hold a lift began short of the stop line
+   * (ADR-0037): the glide carries on to the line and the brake takes over there,
+   * so the player comes to rest at the thing rather than short of it. Once on it
+   * stays on — the slack in the stop line shrinks with speed, and a brake that
+   * could let go half way would hand an automatic drive back its throttle.
+   */
+  let holding: {
+    readonly id: string;
+    readonly heading: 1 | -1;
+    readonly restX: number;
+    braking: boolean;
+  } | null = null;
   /* The press the previous frame saw. A press is "new" when this frame's
      direction differs from it, which is what makes letting go and pressing again
      a release while holding on is not. */
   let lastPressed: -1 | 0 | 1 = 0;
+
+  /* The brake goes on once the rest point is inside the stop line — or behind
+     the player, when there is no glide left to spend. An automatic drive is never
+     left coasting under a hold, because its strategy would drive. */
+  const brakeNow = (restX: number, heading: 1 | -1, frame: AutoStopFrame): boolean => {
+    if (frame.automatic) return true;
+    const ahead = (restX - frame.playerX) * heading;
+    return ahead <= stopLinePx(Math.abs(frame.velocityX), tuning);
+  };
 
   const letGo = (): void => {
     if (holding === null) return;
@@ -304,6 +373,7 @@ export function createAutoStop(tuning: LocomotionTuning): AutoStopWatch {
     update(frame: AutoStopFrame): boolean {
       const pressed = pressedDirection(frame.playerMove);
       const began = pressed !== 0 && pressed !== lastPressed;
+      const lifted = pressed === 0 && lastPressed !== 0;
       lastPressed = pressed;
 
       if (!engages) {
@@ -322,31 +392,59 @@ export function createAutoStop(tuning: LocomotionTuning): AutoStopWatch {
           letGo();
           return false;
         }
-        return true;
+        if (!holding.braking) holding.braking = brakeNow(holding.restX, holding.heading, frame);
+        return holding.braking;
       }
 
-      /* Is anything driving? A glide the player let go of is theirs. */
-      if (pressed === 0 && !frame.automatic) return false;
-
-      const line = stopLinePx(Math.abs(frame.velocityX), tuning);
-      if (line <= 0) return false;
-
+      const speed = Math.abs(frame.velocityX);
       /* Travel, not the level's layout: the same landmark is ahead going one way
-         and behind going the other. Never zero — `line > 0` means speed > 0. */
+         and behind going the other. */
       const heading: 1 | -1 = frame.velocityX > 0 ? 1 : -1;
+
+      if (pressed === 0 && !frame.automatic) {
+        /*
+         * Nobody is driving. A glide the player let go of **outside** reach is
+         * theirs, and passes everything (TN-LEVEL-06, ADR-0032).
+         *
+         * Letting go **inside** reach is the one-thumb way of saying "this one"
+         * (ADR-0037): the prompt is up, and the thumb has to leave the glass to
+         * take it. So the frame a held press ends, with a subject this visit has
+         * not let the player go from within reach, holds the player at it — the
+         * nearest, whichever side of them it is on. A player at rest has nothing
+         * to bring to rest.
+         */
+        if (!lifted || speed <= 0) return false;
+        let inReach: { subject: AutoStopSubject; distance: number } | null = null;
+        for (const subject of frame.subjects) {
+          if (done.has(subject.id)) continue;
+          const distance = Math.abs(subject.x - frame.playerX);
+          if (distance > reachPx) continue;
+          if (inReach === null || distance < inReach.distance) inReach = { subject, distance };
+        }
+        if (inReach === null) return false;
+        const restX = restXFor(inReach.subject, heading);
+        holding = { id: inReach.subject.id, heading, restX, braking: brakeNow(restX, heading, frame) };
+        return holding.braking;
+      }
+
+      const line = stopLinePx(speed, tuning);
+      if (line <= 0) return false;
       /* Pressing against the travel is braking or turning, not approaching. */
       if (pressed !== 0 && pressed !== heading) return false;
 
-      let nearest: { id: string; ahead: number } | null = null;
+      let nearest: { subject: AutoStopSubject; restX: number; ahead: number } | null = null;
       for (const subject of frame.subjects) {
         if (done.has(subject.id)) continue;
-        const ahead = (subject.x - frame.playerX) * heading;
+        /* Measured to where the drive will rest, which for a character is beside
+           them rather than on them (ADR-0037). */
+        const restX = restXFor(subject, heading);
+        const ahead = (restX - frame.playerX) * heading;
         if (ahead <= 0 || ahead > line) continue;
-        if (nearest === null || ahead < nearest.ahead) nearest = { id: subject.id, ahead };
+        if (nearest === null || ahead < nearest.ahead) nearest = { subject, restX, ahead };
       }
 
       if (nearest === null) return false;
-      holding = { id: nearest.id, heading };
+      holding = { id: nearest.subject.id, heading, restX: nearest.restX, braking: true };
       return true;
     },
   };

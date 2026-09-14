@@ -75,6 +75,7 @@ import { gestureHoldMs } from './engagement-pose';
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
 import { rideArtProblems, rideBobPx, rideFor, ridePlacement, type RideArtSize } from './ride';
 import { depthPlan, interleavedDepths, type DepthGroup, type DepthPlan } from './depth-plan';
+import { stopSubjectsFor } from './stand-off';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
 import { watchExit, type ExitWatch } from './level-exit';
@@ -1170,10 +1171,7 @@ export class LevelScene extends Phaser.Scene {
 
   /** Targets within the mode's reach right now, with the hit area they were drawn at. */
   #engageableTargets(): readonly { readonly id: string; readonly npc: boolean; readonly rect: TargetRect }[] {
-    const reach = this.#reachPx();
-    return this.#reachTargets.filter(
-      (target) => Math.abs(target.position.x - this.#state.x) <= reach,
-    );
+    return this.#reachTargets.filter((target) => this.#onOffer(target.id, target.position.x));
   }
 
   #sampleIntent(): LocomotionIntent {
@@ -1543,21 +1541,47 @@ export class LevelScene extends Phaser.Scene {
         rect: rectFor(character.characterId as string, character.position),
       })),
     ];
-    this.#stopSubjects = this.#reachTargets.map((target) => ({
-      id: target.id,
-      x: target.position.x,
-    }));
+    /* The same subjects, in the same order, with a rest point beside every
+       character the rig can measure: a drive comes to rest next to a person,
+       not inside them (ADR-0037, `stand-off.ts`). */
+    this.#stopSubjects = stopSubjectsFor({
+      level,
+      rig: this.#options.rig,
+      tuning: this.#tuning,
+      ride: this.#ride,
+    });
   }
 
   #reachPx(): number {
     return this.#tuning.interaction?.reachPx ?? 0;
   }
 
+  /**
+   * Is this target on offer: can the prompt name it, a tap land on it, the
+   * interact key reach it?
+   *
+   * In reach, as it always was — **or held at by the stop, once it has come
+   * into reach** (ADR-0037). A brake can carry a player a little past the edge
+   * of reach, and a player who let go to take the prompt must still find it
+   * there. The hold ends the way ADR-0032 says, and the offer ends with it.
+   * "Once it has come into reach" is what stops a drive caught at its stop
+   * line, still hundreds of pixels out, from announcing the offer early.
+   */
+  #onOffer(id: string, x: number): boolean {
+    if (Math.abs(x - this.#state.x) <= this.#reachPx()) return true;
+    return id === this.#autoStop.holding && this.#inReach.has(id);
+  }
+
+  /** The held subject, when the hold is keeping it on offer. */
+  #heldOffer(): string | null {
+    const held = this.#autoStop.holding;
+    return held !== null && this.#inReach.has(held) ? held : null;
+  }
+
   #updateReach(): void {
-    const reach = this.#reachPx();
     let changed = false;
     for (const target of this.#reachTargets) {
-      const near = Math.abs(target.position.x - this.#state.x) <= reach;
+      const near = this.#onOffer(target.id, target.position.x);
       const was = this.#inReach.has(target.id);
       if (near && !was) {
         this.#inReach.add(target.id);
@@ -1585,14 +1609,13 @@ export class LevelScene extends Phaser.Scene {
    * this runs, and this is the last gate rather than a second rulebook.
    */
   #engageNearest(): void {
-    const reach = this.#reachPx();
     const asked = this.#pendingEngage;
     this.#pendingEngage = null;
 
     let best: { id: string; npc: boolean; distance: number } | null = null;
     for (const target of this.#reachTargets) {
+      if (!this.#onOffer(target.id, target.position.x)) continue;
       const distance = Math.abs(target.position.x - this.#state.x);
-      if (distance > reach) continue;
       if (target.id === asked) {
         best = { id: target.id, npc: target.npc, distance };
         break;
@@ -2485,6 +2508,7 @@ export class LevelScene extends Phaser.Scene {
       reachPx: this.#reachPx(),
       minTouchPx: this.#minTouchWorldPx(),
       completed: this.#completed,
+      held: this.#heldOffer(),
     });
 
     const live = new Set(marks.map((mark) => mark.id));

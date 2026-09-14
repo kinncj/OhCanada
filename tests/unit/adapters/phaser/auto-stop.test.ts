@@ -34,6 +34,7 @@ import {
   brakingIntent,
   brakingTuning,
   createAutoStop,
+  restXFor,
   stopLinePx,
   type AutoStopFrame,
 } from '@adapters/phaser/auto-stop';
@@ -45,12 +46,21 @@ import {
   applyBounds,
   createLocomotion,
 } from '@adapters/phaser/locomotion';
+import { rideFor } from '@adapters/phaser/ride';
+import { stopSubjectsFor } from '@adapters/phaser/stand-off';
 
-import type { LocomotionIntent, LocomotionState, LocomotionTuning } from '@application/ports';
+import type {
+  LocomotionIntent,
+  LocomotionState,
+  LocomotionTuning,
+  RigDocument,
+} from '@application/ports';
 
+import rigJson from '@content/characters/rig.json';
 import gameConfigJson from '@content/game.config.json';
 
 const CONFIG = gameConfigJson as { readonly locomotionModes: readonly string[] };
+const RIG = rigJson as unknown as RigDocument;
 
 const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 
@@ -169,7 +179,9 @@ function drive(
   const braking = createLocomotion(brakingTuning(tuning));
   const watch = createAutoStop(tuning);
   const bounds = levelBounds(level.ground, level.size);
-  const subjects = subjectsOf(level);
+  /* The subjects exactly as the scene builds them: a rest point beside every
+     character (ADR-0037), level with every landmark. */
+  const subjects = stopSubjectsFor({ level, rig: RIG, tuning, ride: rideFor(level.rides, tuning.mode) });
 
   let state = driving.spawn(level.spawn.x, groundYAt(level.ground, level.spawn.x), 'right');
   const frames: RunFrame[] = [];
@@ -778,5 +790,225 @@ describe('the small print', () => {
     const near = { id: 'near', x: LINE * 0.4 };
     expect(nearest([far, near])).toBe('near');
     expect(nearest([near, far])).toBe('near');
+  });
+
+  it('aims at a rest point beside a character, not at the character', () => {
+    /* ADR-0037. The line is measured to where the drive will rest. */
+    const watch = createAutoStop(ANY_TUNING);
+    const beside = { id: 'person', x: LINE * 3, rest: { right: LINE * 0.5, left: LINE * 5 } };
+    expect(watch.update(frame({ subjects: [beside] }))).toBe(true);
+    expect(watch.holding).toBe('person');
+
+    /* A character inside the stop line whose rest point is already behind the
+       player is not something this drive is arriving at. */
+    const passed = { id: 'passed', x: LINE * 0.5, rest: { right: -10, left: LINE } };
+    expect(createAutoStop(ANY_TUNING).update(frame({ subjects: [passed] }))).toBe(false);
+
+    expect(restXFor(beside, 1)).toBe(LINE * 0.5);
+    expect(restXFor(beside, -1)).toBe(LINE * 5);
+    expect(restXFor({ id: 'place', x: 42 }, -1)).toBe(42);
+  });
+});
+
+/* ------------------------------------------- letting go in reach, ADR-0037 --- */
+
+describe('letting go in reach is a choice, and the drive stops there (ADR-0037)', () => {
+  const REACH = ANY_TUNING.interaction?.reachPx ?? 0;
+  const SPEED = ANY_TUNING.maxSpeed / 2;
+  const LINE = stopLinePx(SPEED, ANY_TUNING);
+  const THERE = REACH * 0.9;
+
+  /** A held drive, pressing the way it travels, with one thing in reach beyond the stop line. */
+  const held = (over: Partial<AutoStopFrame>): AutoStopFrame => ({
+    automatic: false,
+    playerX: 0,
+    velocityX: SPEED,
+    playerMove: 1,
+    subjects: [{ id: 'there', x: THERE }],
+    ...over,
+  });
+
+  it('the premise: the subject is in reach and beyond the stop line, so pressing alone passes it', () => {
+    expect(REACH).toBeGreaterThan(0);
+    expect(THERE).toBeGreaterThan(LINE);
+    expect(createAutoStop(ANY_TUNING).update(held({}))).toBe(false);
+  });
+
+  it('holds at it from the frame the press ends, glides to the line, then brakes and stays braked', () => {
+    const watch = createAutoStop(ANY_TUNING);
+    expect(watch.update(held({}))).toBe(false);
+    expect(watch.holding).toBeNull();
+
+    /* The thumb comes off the glass. Held — and still gliding, because the stop
+       line is further on. */
+    expect(watch.update(held({ playerMove: 0 }))).toBe(false);
+    expect(watch.holding).toBe('there');
+    expect(watch.update(held({ playerMove: 0, playerX: THERE - LINE * 1.5 }))).toBe(false);
+
+    /* Inside the line: the brake goes on. */
+    expect(watch.update(held({ playerMove: 0, playerX: THERE - LINE * 0.5 }))).toBe(true);
+    /* And stays on, though at this lower speed the line is shorter than what is left. */
+    expect(
+      watch.update(held({ playerMove: 0, playerX: THERE - LINE * 0.5, velocityX: SPEED * 0.1 })),
+    ).toBe(true);
+    expect(watch.update(held({ playerMove: 0, playerX: THERE - 4, velocityX: 0 }))).toBe(true);
+
+    /* A fresh press lets go, as ADR-0032 says, and it is not caught again. */
+    expect(watch.update(held({ playerX: THERE - 4, velocityX: 0 }))).toBe(false);
+    expect(watch.holding).toBeNull();
+    expect(watch.update(held({ playerMove: 0, playerX: THERE - 2 }))).toBe(false);
+    expect(watch.holding).toBeNull();
+  });
+
+  it('brakes at once when let go beside something already passed, because there is no glide left to spend', () => {
+    const watch = createAutoStop(ANY_TUNING);
+    const behind = held({ subjects: [{ id: 'behind', x: -REACH * 0.5 }] });
+    expect(watch.update(behind)).toBe(false);
+    expect(watch.update({ ...behind, playerMove: 0 })).toBe(true);
+    expect(watch.holding).toBe('behind');
+  });
+
+  it('holds the nearest thing in reach, on either side', () => {
+    const watch = createAutoStop(ANY_TUNING);
+    const two = held({
+      subjects: [
+        { id: 'ahead', x: REACH * 0.8 },
+        { id: 'behind', x: -REACH * 0.3 },
+      ],
+    });
+    watch.update(two);
+    watch.update({ ...two, playerMove: 0 });
+    expect(watch.holding).toBe('behind');
+  });
+
+  it('holds nothing when let go outside reach, and the glide passes what it then reaches', () => {
+    /* TN-LEVEL-06: a glide the player let go of is theirs. */
+    const watch = createAutoStop(ANY_TUNING);
+    const far = held({ subjects: [{ id: 'far', x: REACH * 1.5 }] });
+    expect(watch.update(far)).toBe(false);
+    expect(watch.update({ ...far, playerMove: 0 })).toBe(false);
+    expect(watch.holding).toBeNull();
+    for (const playerX of [REACH, REACH * 1.2, REACH * 1.5 - LINE * 0.5, REACH * 1.5]) {
+      expect(watch.update({ ...far, playerMove: 0, playerX }), `at ${String(playerX)}`).toBe(false);
+    }
+    expect(watch.holding).toBeNull();
+  });
+
+  it('holds nothing when let go at rest, or beside something already let go from', () => {
+    const atRest = createAutoStop(ANY_TUNING);
+    atRest.update(held({ velocityX: 0 }));
+    expect(atRest.update(held({ velocityX: 0, playerMove: 0 }))).toBe(false);
+    expect(atRest.holding).toBeNull();
+
+    const finished = createAutoStop(ANY_TUNING);
+    finished.release('there');
+    finished.update(held({}));
+    expect(finished.update(held({ playerMove: 0 }))).toBe(false);
+    expect(finished.holding).toBeNull();
+  });
+
+  it('an automatic drive keeps its own rule: a nudge let go in reach is not a stop', () => {
+    const watch = createAutoStop(ANY_TUNING);
+    expect(watch.update(held({ automatic: true }))).toBe(false);
+    expect(watch.update(held({ automatic: true, playerMove: 0 }))).toBe(false);
+    expect(watch.holding).toBeNull();
+  });
+
+  it('a pause hides a lift as it hides a press', () => {
+    const watch = createAutoStop(ANY_TUNING);
+    watch.update(held({}));
+    watch.forgetInput();
+    expect(watch.update(held({ playerMove: 0 }))).toBe(false);
+    expect(watch.holding).toBeNull();
+  });
+
+  /** Every held mode that can engage, whose first thing ahead is out of reach at the spawn. */
+  const HELD = EVERY_MODE.filter(
+    ({ level, tuning }) =>
+      tuning.drive === 'held' &&
+      (tuning.interaction?.reachPx ?? 0) > 0 &&
+      firstAhead(level).x - level.spawn.x > (tuning.interaction?.reachPx ?? 0),
+  );
+
+  it('every shipped held mode, let go the frame the first thing comes into reach, rests in reach of it, held', () => {
+    expect(HELD.length).toBeGreaterThan(0);
+    let neededThisRule = false;
+
+    for (const { level, tuning } of HELD) {
+      const reach = tuning.interaction?.reachPx ?? 0;
+      const subject = firstAhead(level);
+      const lift = { frame: -1, x: 0, speed: 0 };
+      const run = drive(level, tuning, {
+        frames: 60 * 30,
+        autoMove: false,
+        hold: (state, frameIndex) => {
+          if (lift.frame < 0 && Math.abs(subject.x - state.x) <= reach) {
+            lift.frame = frameIndex;
+            lift.x = state.x;
+            lift.speed = Math.abs(state.velocityX);
+          }
+          return lift.frame < 0 ? 1 : 0;
+        },
+      });
+      const where = nameOf(level, tuning);
+
+      expect(lift.frame, `${where} never came into reach of "${subject.id}"`).toBeGreaterThan(0);
+      expect(run.state.velocityX, `${where} let go in reach of "${subject.id}" and glided on`).toBe(0);
+      expect(
+        Math.abs(run.state.x - subject.x),
+        `${where} let go in reach of "${subject.id}" and came to rest ${String(Math.round(Math.abs(run.state.x - subject.x)))} px away`,
+      ).toBeLessThanOrEqual(reach);
+      expect(run.frames.at(-1)?.holding, where).toBe(subject.id);
+
+      /* Did ADR-0032 already have the player when they let go? If not, and the
+         rest point was beyond the stop line, only the new rule stopped them. */
+      const before = run.frames[lift.frame - 1];
+      const aim = stopSubjectsFor({ level, rig: RIG, tuning, ride: rideFor(level.rides, tuning.mode) }).find(
+        (candidate) => candidate.id === subject.id,
+      );
+      if (before !== undefined && before.holding === null && aim !== undefined) {
+        const ahead = restXFor(aim, 1) - lift.x;
+        if (ahead > stopLinePx(lift.speed, tuning)) neededThisRule = true;
+      }
+    }
+
+    expect(
+      neededThisRule,
+      'no shipped mode lets go in reach before its own stop line catches it, so nothing here needs ADR-0037',
+    ).toBe(true);
+  });
+
+  it('a glide let go outside reach is still the player’s: it is never held, and passes what it glides through', () => {
+    let passedThrough = false;
+    for (const { level, tuning } of HELD) {
+      const reach = tuning.interaction?.reachPx ?? 0;
+      const subject = firstAhead(level);
+      const lift = { frame: -1 };
+      const run = drive(level, tuning, {
+        frames: 60 * 20,
+        autoMove: false,
+        hold: (state, frameIndex) => {
+          const distance = subject.x - state.x;
+          const oneFrame = (Math.abs(state.velocityX) / 60) * 2 + 1;
+          if (lift.frame < 0 && distance > reach && distance <= reach + oneFrame) lift.frame = frameIndex;
+          return lift.frame < 0 ? 1 : 0;
+        },
+      });
+      const before = run.frames[lift.frame - 1];
+      /* A mode whose stop line is longer than its reach was already held by
+         ADR-0032 before it got here; that is not a glide. */
+      if (lift.frame < 0 || before === undefined || before.holding !== null) continue;
+
+      const after = run.frames.slice(lift.frame);
+      expect(
+        after.every((frameAfter) => frameAfter.holding === null),
+        `${nameOf(level, tuning)} let go outside reach and was held`,
+      ).toBe(true);
+      if (after.some((frameAfter) => frameAfter.x > subject.x + reach)) passedThrough = true;
+    }
+    expect(
+      passedThrough,
+      'no shipped mode glides through the reach of what it was let go short of, so "the glide is theirs" is not exercised',
+    ).toBe(true);
   });
 });
