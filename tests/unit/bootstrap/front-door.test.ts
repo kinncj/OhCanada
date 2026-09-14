@@ -350,6 +350,9 @@ vi.mock('@adapters/phaser', () => ({
     markLevelComplete(): void {
       hoisted.state.markedComplete += 1;
     }
+    /* Every engagement route tells the scene, so a stop it is holding lets go
+       when the card closes (ADR-0032). Nothing here holds a stop. */
+    markEngaged(): void {}
     pause(): void {
       hoisted.state.paused += 1;
     }
