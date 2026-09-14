@@ -168,8 +168,50 @@ describe('the copy table', () => {
       'level.unfinished.notStarted',
       'card.kind.new',
       'card.kind.seen',
+      /* ADR-0039, the live-site audit's copy findings: the reworded hint, one
+         prompt per landmark that opens a card and is not on TN-NAMES's list,
+         and the finish-first sentence written out per level. Each is a proposed
+         row in TN-REACH or TN-MAP. */
+      'hud.interact.hint',
+      'hud.interact.town-clock',
+      'hud.interact.market-stall',
+      'hud.interact.harbour-tug',
+      'hud.interact.granite-shore',
+      'hud.interact.fish-store',
+      'hud.interact.village-house',
+      'hud.interact.city-wall',
+      'hud.interact.terrace-kiosk',
+      'hud.interact.rideau-locks',
+      'hud.interact.library-of-parliament',
+      'hud.interact.warming-hut',
+      'hud.interact.streetcar',
+      'hud.interact.nathan-phillips-square',
+      'hud.interact.footbridge',
+      'hud.interact.autumn-maple',
+      'hud.interact.grain-bins',
+      'hud.interact.grain-elevator',
+      'hud.interact.combine-harvester',
+      'hud.interact.container-car',
+      'hud.interact.ranch-gate',
+      'hud.interact.ranch-barn',
+      'hud.interact.pump-jack',
+      'hud.interact.beef-cattle',
+      'hud.interact.marina',
+      'hud.interact.bulk-carrier',
+      'hud.interact.spruce-stand',
+      'hud.interact.driftwood',
+      'level.halifax.finishFirst',
+      'level.peggys-cove.finishFirst',
+      'level.quebec-city.finishFirst',
+      'level.ottawa.finishFirst',
+      'level.toronto.finishFirst',
+      'level.winnipeg.finishFirst',
+      'level.prairie-rail.finishFirst',
+      'level.alberta-foothills.finishFirst',
+      'level.vancouver.finishFirst',
+      'level.the-north.finishFirst',
     ]);
-    expect(COPY_GAPS).toHaveLength(19);
+    expect(COPY_GAPS).toHaveLength(57);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {
@@ -444,6 +486,125 @@ describe('the copy table', () => {
           );
         }
       }
+    }
+  });
+
+  it('names the level to finish first in a sentence written out for that level', () => {
+    /*
+     * ADR-0039. `map.locked.after` — "Finish {{level}} first." — dropped the map
+     * title into a sentence and drew "Finish The Prairies first." and
+     * « Terminez d'abord Les Prairies. ». Every built level carries its own
+     * sentence in both languages, and none of them carries a title that starts
+     * with an article.
+     */
+    for (const levelId of LEVEL_IDS) {
+      const key = `level.${levelId}.finishFirst`;
+      expect(KEYS, `content/levels/${levelId}.json ships with no ${key}`).toContain(key);
+      for (const locale of UI_LOCALES) {
+        const value = text(locale, key as Parameters<typeof text>[1]);
+        expect(value.endsWith('.'), `${key} (${locale}) is not a sentence`).toBe(true);
+        expect(value.includes('{{'), `${key} (${locale}) is a template`).toBe(false);
+        const title = text(locale, `level.${levelId}.title` as Parameters<typeof text>[1]);
+        if (/^(The|Les|Le|La) /u.test(title)) {
+          expect(value, `${key} (${locale}) drops the map title in, capital article and all`).not.toContain(
+            title,
+          );
+        }
+      }
+    }
+    expect(text('en', 'level.prairie-rail.finishFirst')).toBe('Finish the Prairies first.');
+    expect(text('fr', 'level.prairie-rail.finishFirst')).toBe("Terminez d'abord les Prairies.");
+    expect(text('en', 'level.alberta-foothills.finishFirst')).toBe(
+      'Finish the Alberta foothills first.',
+    );
+    expect(text('fr', 'level.alberta-foothills.finishFirst')).toBe(
+      "Terminez d'abord les contreforts de l'Alberta.",
+    );
+    expect(text('fr', 'level.quebec-city.finishFirst')).toBe("Terminez d'abord la Ville de Québec.");
+    expect(text('fr', 'level.the-north.finishFirst')).toBe("Terminez d'abord le Nord.");
+    expect(text('en', 'level.ottawa.finishFirst')).toBe('Finish Ottawa first.');
+  });
+
+  it('names each landmark in its prompt where its level may, and keeps the rest generic', () => {
+    /*
+     * ADR-0039 and `OQ-REACH-4`'s recommendation. "Look at this place" was drawn
+     * for almost every landmark, so a player who cannot see the mark was never
+     * told which one was in reach. Read from the level and quest documents, so a
+     * landmark added without a row — or a row left behind by a landmark that was
+     * removed — fails here.
+     *
+     * Two kinds of landmark keep the generic row and may not have their own:
+     * a name on TN-NAMES's list, which TN-NAMES-04 keeps out of the HUD, and a
+     * landmark that gives a quest, whose prompt is `hud.interact.poi.offer` and
+     * whose story keeps its name out of the HUD.
+     */
+    const LISTED = [
+      'château frontenac',
+      'chateau frontenac',
+      'cn tower',
+      'tour cn',
+      'toronto city hall',
+      'canadian museum for human rights',
+      'musée canadien pour les droits de la personne',
+      'canada place',
+      'pier 21',
+      'quai 21',
+    ];
+    const givers = new Set(
+      readdirSync(fileURLToPath(new URL('../../../content/quests', import.meta.url)))
+        .filter((name) => name.endsWith('.json'))
+        .map(
+          (name) =>
+            (
+              JSON.parse(
+                readFileSync(new URL(`../../../content/quests/${name}`, import.meta.url), 'utf8'),
+              ) as { giver: string }
+            ).giver,
+        ),
+    );
+    expect(givers.size, 'no quest documents were read').toBeGreaterThan(0);
+
+    const declared = new Set<string>();
+    let named = 0;
+    for (const levelId of LEVEL_IDS) {
+      const document = JSON.parse(
+        readFileSync(new URL(`../../../content/levels/${levelId}.json`, import.meta.url), 'utf8'),
+      ) as {
+        pois?: { id: string; name: { en: string; fr: string } }[];
+        characters?: { characterId: string }[];
+      };
+      for (const character of document.characters ?? []) declared.add(character.characterId);
+      for (const poi of document.pois ?? []) {
+        declared.add(poi.id);
+        const key = `hud.interact.${poi.id}`;
+        const names = `${poi.name.en} ${poi.name.fr}`.toLowerCase();
+        if (LISTED.some((name) => names.includes(name)) || givers.has(poi.id)) {
+          expect(KEYS, `${key} puts a name the HUD may not carry into the prompt`).not.toContain(key);
+          continue;
+        }
+        expect(KEYS, `${levelId} places "${poi.id}" and no prompt names it`).toContain(key);
+        named += 1;
+        const row = key as Parameters<typeof text>[1];
+        expect(text('en', row), key).toMatch(/^Look at \S/u);
+        expect(text('fr', row), key).toMatch(/^Regarder \S/u);
+        for (const locale of UI_LOCALES) {
+          const value = text(locale, row);
+          expect(value, `${key} (${locale})`).not.toBe(text(locale, 'hud.interact.poi'));
+          expect(value.endsWith('.'), `${key} (${locale}) is a sentence, not a label`).toBe(false);
+          expect(
+            / (The|A|An|Les|Le|La|Un|Une|Des) /u.test(value),
+            `${key} (${locale}) drops a capital article in mid-phrase: ${value}`,
+          ).toBe(false);
+        }
+      }
+    }
+    expect(named, 'no landmark is named at all, so this proves nothing').toBeGreaterThan(0);
+
+    const KIND_WORDS = new Set(['poi', 'poi.offer', 'npc', 'done', 'hint']);
+    for (const key of KEYS.map(String).filter((row) => row.startsWith('hud.interact.'))) {
+      const target = key.slice('hud.interact.'.length);
+      if (KIND_WORDS.has(target)) continue;
+      expect(declared.has(target), `${key} is a prompt for something no level places`).toBe(true);
     }
   });
 

@@ -67,6 +67,18 @@ export function promptTargets(
      * learned about quests offers nothing it cannot open.
      */
     readonly awaits?: (targetId: string) => boolean;
+    /**
+     * Is there still something to do at this target, whatever this sitting has
+     * engaged?
+     *
+     * `done` is "engaged in this sitting", and that is not the same as finished.
+     * A giver who has just handed over a task, or a landmark a running quest is
+     * waiting for, was drawn as "Done. See this one again" the moment it was
+     * engaged — which read as the task being complete (ADR-0039). Such a target
+     * keeps its own prompt. Optional, and absent reads as "nothing left", which
+     * is what `done` meant before.
+     */
+    readonly stillToDo?: (targetId: string) => boolean;
   },
 ): Readonly<Record<string, LevelTarget>> {
   if (level === null) return {};
@@ -78,7 +90,7 @@ export function promptTargets(
     const prompt = interactPrompt(locale, {
       id: bare,
       kind,
-      done: state.done.has(bare),
+      done: state.done.has(bare) && !(state.stillToDo?.(bare) ?? false),
       offersQuest,
     });
     /* No row, no offer. The alternative is a button whose label this file would

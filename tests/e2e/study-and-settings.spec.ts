@@ -1,9 +1,42 @@
+import { readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { expect, test, type Page } from '@playwright/test';
 
-import { text } from '@ui/copy';
+import { hasCopyRow, text } from '@ui/copy';
 
 import { START_LEVEL } from './start-level';
 import { letGo } from './walk';
+
+/**
+ * What the prompt reads for each landmark the start level places that opens a
+ * card, asked of the same sources the game asks.
+ *
+ * A landmark draws its own row where one is written (`TN-REACH` rule 2, and
+ * ADR-0039 wrote one for most of them) and the generic row otherwise; a landmark
+ * that gives a quest opens a dialogue, not a card, so it is left out. A spec that
+ * typed "Look at this place" stopped matching the day the Town Clock was named.
+ */
+const LANDMARK_PROMPTS: ReadonlySet<string> = ((): ReadonlySet<string> => {
+  const read = (path: string): unknown =>
+    JSON.parse(readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8'));
+  const givers = new Set(
+    readdirSync(fileURLToPath(new URL('../../content/quests', import.meta.url)))
+      .filter((name) => name.endsWith('.json'))
+      .map((name) => (read(`../../content/quests/${name}`) as { giver: string }).giver),
+  );
+  const level = read(`../../content/levels/${START_LEVEL}.json`) as {
+    readonly pois?: readonly { readonly id: string }[];
+  };
+  return new Set(
+    (level.pois ?? [])
+      .filter((poi) => !givers.has(poi.id))
+      .map((poi) => {
+        const own = `hud.interact.${poi.id}`;
+        return hasCopyRow(own) ? text('en', own) : text('en', 'hud.interact.poi');
+      }),
+  );
+})();
 
 /**
  * The two things a player could not do on the shipped build, done on the
@@ -271,7 +304,9 @@ test.describe('reaching a landmark teaches, then asks', () => {
      * what a player does when they are heading somewhere, and this scenario is
      * about arriving.
      */
-    const aPlace = text('en', 'hud.interact.poi');
+    expect(LANDMARK_PROMPTS.size, `${START_LEVEL} places no landmark that opens a card`).toBeGreaterThan(0);
+    const aPlace = async (): Promise<boolean> =>
+      (await prompt.isVisible()) && LANDMARK_PROMPTS.has((await prompt.textContent()) ?? '');
     for (let step = 0; step < 30; step += 1) {
       await page.keyboard.down('ArrowRight');
       await page.waitForTimeout(600);
@@ -279,15 +314,16 @@ test.describe('reaching a landmark teaches, then asks', () => {
          rest at the guide (ADR-0032), and only a press the level sees begin
          carries the player on past them. */
       await letGo(page, 'ArrowRight');
-      if ((await prompt.isVisible()) && (await prompt.textContent()) === aPlace) break;
+      if (await aPlace()) break;
     }
     await expect(
       prompt,
       'nothing was ever offered: the player walked past a landmark in silence',
     ).toBeVisible();
-    await expect(prompt, 'the walk stopped at somebody rather than at a landmark').toHaveText(
-      aPlace,
-    );
+    expect(
+      LANDMARK_PROMPTS.has((await prompt.textContent()) ?? ''),
+      'the walk stopped at somebody rather than at a landmark',
+    ).toBe(true);
 
     /*
      * The label says **what choosing it will do**, from `app/ui/copy.ts`, and it

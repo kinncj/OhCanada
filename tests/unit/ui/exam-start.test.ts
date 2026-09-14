@@ -183,6 +183,10 @@ describe('how much of the game the exam can cover', () => {
   it('stops promising more once there is no more', () => {
     const fixture = open({ ...READY, subjects: { ready: 10, total: 10 } });
     expect(fixture.texts()).not.toContain('More are coming.');
+    /* ADR-0039: nor a build report, nor a caveat about subjects that are all
+       there — a player preparing for a real test reads a caveat as a warning. */
+    expect(fixture.at('exam-subjects')).toBeNull();
+    expect(fixture.texts()).not.toContain('This exam only asks about the subjects that are ready.');
   });
 
   it('draws no line at all when the number cannot be derived', () => {

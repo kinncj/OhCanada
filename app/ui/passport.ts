@@ -234,13 +234,13 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
   function countsLines(): string[] {
     const total = entries.length;
     const ready = readyCount();
-    const parts = [
-      text(locale, 'map.stamps', { earned: stampCount(), total }),
-      text(locale, 'map.levelsReady', { ready, total }),
-    ];
-    /* Only while it is true, exactly as the map draws it: a finished game does
-       not promise more of something that is finished. */
-    if (ready < total) parts.push(text(locale, 'map.moreComing'));
+    const parts = [text(locale, 'map.stamps', { earned: stampCount(), total })];
+    /* Both only while they are true, exactly as the map draws them: a finished
+       game neither reports "Levels ready: 10 of 10" nor promises more of
+       something that is finished (ADR-0039). */
+    if (ready < total) {
+      parts.push(text(locale, 'map.levelsReady', { ready, total }), text(locale, 'map.moreComing'));
+    }
     return parts;
   }
 

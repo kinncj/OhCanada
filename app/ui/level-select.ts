@@ -67,7 +67,7 @@
 
 import type { LevelId } from '@domain/ids';
 
-import { count, text, type CopyKey, type UiLocale } from './copy';
+import { count, hasCopyRow, text, type CopyKey, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
 import { journeyRail, journeyRoute, type HereFacts, type JourneyStop } from './journey';
 import { createLevelMap, SHIPPED_MAP_ANCHORS } from './level-map';
@@ -186,6 +186,18 @@ function helpForEntry(
   if (typeof needed === 'number') return count(locale, 'map.locked.stamps', needed);
 
   const previous = entries[index - 1];
+  /*
+   * The level to finish first, in that level's own sentence (ADR-0039).
+   *
+   * Written out per level, like its stamp and its play label, because the map
+   * title is "The Prairies" / « Les Prairies » and dropping it into
+   * `map.locked.after` drew a capital article mid-sentence. The template is
+   * what is left for a card with no id, which has no row to look up.
+   */
+  if (previous !== undefined) {
+    const own = `level.${String(previous.id ?? previous.number)}.finishFirst`;
+    if (hasCopyRow(own)) return text(locale, own);
+  }
   const previousTitle = previous === undefined ? null : titleKeyOf(previous);
   if (previousTitle !== null) {
     return text(locale, 'map.locked.after', { level: text(locale, previousTitle) });
@@ -369,13 +381,16 @@ export function createLevelSelect(
   function countsLines(): string[] {
     const total = entries.length;
     const ready = readyCount();
-    const parts = [
-      text(locale, 'map.levelsReady', { ready, total }),
-      text(locale, 'map.stamps', { earned: stampCount(), total }),
-    ];
-    /* Only while it is true. A game with every level built says nothing here,
-       rather than promising more of something that is finished. */
-    if (ready < total) parts.push(text(locale, 'map.moreComing'));
+    const unfinished = ready < total;
+    /*
+     * Both only while they are true. "Levels ready: 10 of 10" is a build report,
+     * not something a player can do anything with, and a game with every level
+     * built says nothing about readiness at all — the same rule `map.moreComing`
+     * already followed, extended to the count it sat beside (ADR-0039).
+     */
+    const parts = unfinished ? [text(locale, 'map.levelsReady', { ready, total })] : [];
+    parts.push(text(locale, 'map.stamps', { earned: stampCount(), total }));
+    if (unfinished) parts.push(text(locale, 'map.moreComing'));
     return parts;
   }
 
@@ -591,10 +606,11 @@ export function createLevelSelect(
        * have had to write.
        */
       const total = entries.length;
-      return `${text(locale, 'map.title')}. ${text(locale, 'map.levelsReady', {
-        ready: readyCount(),
-        total,
-      })}`;
+      const ready = readyCount();
+      /* The count only while some level is not made, for the reason the
+         visible line follows. */
+      if (ready >= total) return `${text(locale, 'map.title')}.`;
+      return `${text(locale, 'map.title')}. ${text(locale, 'map.levelsReady', { ready, total })}`;
     },
     setEntries(next): void {
       entries = next;

@@ -517,6 +517,24 @@ const EN = {
   'level.alberta-foothills.play': 'Play the Alberta foothills',
   'level.vancouver.play': 'Play Vancouver',
   'level.the-north.play': 'Play the North',
+  /* The sentence under a locked card that names the level to finish first.
+     **Written out per level, and listed in {@link COPY_GAPS}** until `TN-MAP`'s
+     owner ratifies them (ADR-0039). `map.locked.after`, "Finish {{level}} first.",
+     dropped the map title into a sentence and drew "Finish The Prairies first."
+     and « Terminez d'abord Les Prairies. » — the capital article the stamp and
+     play rows above were written out to avoid, arriving on the one level-keyed
+     sentence that was still a template. The template stays only for a card with
+     no id, which this build does not have. */
+  'level.halifax.finishFirst': 'Finish Halifax first.',
+  'level.peggys-cove.finishFirst': "Finish Peggy's Cove first.",
+  'level.quebec-city.finishFirst': 'Finish Québec City first.',
+  'level.ottawa.finishFirst': 'Finish Ottawa first.',
+  'level.toronto.finishFirst': 'Finish Toronto first.',
+  'level.winnipeg.finishFirst': 'Finish Winnipeg first.',
+  'level.prairie-rail.finishFirst': 'Finish the Prairies first.',
+  'level.alberta-foothills.finishFirst': 'Finish the Alberta foothills first.',
+  'level.vancouver.finishFirst': 'Finish Vancouver first.',
+  'level.the-north.finishFirst': 'Finish the North first.',
 
   /* docs/stories/TN-HUD-hud-and-menu.md */
   /* The accessible name of the `hud` region (`TN-HUD-07`). It names what the
@@ -571,7 +589,14 @@ const EN = {
   'hud.interact.poi.offer': 'See what there is to do here',
   'hud.interact.npc': 'Talk to this person',
   'hud.interact.done': 'Done. See this one again',
-  'hud.interact.hint': 'A mark shows something to see. Get close to it, then choose it.',
+  /* Reworded 2026-09-14 and listed in {@link COPY_GAPS} until `TN-REACH`'s owner
+     ratifies it. "A mark shows something to see" was drawn the first time
+     anything came into reach — and on Halifax, the level the game opens on, the
+     first thing in reach is the guide, who is somebody to talk to rather than
+     something to see. "Someone or something" is true of a person, a beaver, a
+     lighthouse and a building alike, still names no kind and no input, and
+     "choose" is still the single-switch contract's word. */
+  'hud.interact.hint': 'A mark shows someone or something you can choose. Get close, then choose.',
   /* docs/stories/TN-LEVEL-ottawa.md — that level's own two rows, keyed on the
      ids its document gives the targets. Ottawa may write them because its
      character is named and its landmark is not on `TN-NAMES`'s list; a level
@@ -585,6 +610,55 @@ const EN = {
      absence was a live defect — the kind row calls the guide "this person", and
      the guide is a beaver. */
   'hud.interact.guide': 'Talk to the guide',
+  /* Every landmark that opens a card, named the way "Look at Parliament Hill"
+     already names its own — `TN-REACH`'s rule 2, a per-target row keyed on the
+     id the level document gives the target. **Proposed rows, written by app/ui
+     and every one listed in {@link COPY_GAPS}** (ADR-0039), each to move into its
+     level's story when that story's owner ratifies it.
+
+     "Look at this place" was drawn for almost every landmark in the game, so a
+     player who cannot see the mark was told nothing about which one was in reach
+     (`OQ-REACH-4`, whose recommendation this is). The wording follows each
+     document's own `pois[].name`, and is **written out, never interpolated**:
+     the names carry capital articles ("The canal locks", « Les écluses du
+     canal »), indefinite ones (« Un étal de marché ») and none at all
+     (« Tramway »), so a template would draw "Look at The canal locks" and
+     « Regarder Tramway ».
+
+     Two kinds of landmark — seven landmarks — have **no** row, on purpose, and
+     keep the generic one: a name on `TN-NAMES`'s list (Pier 21, the Château Frontenac, the CN
+     Tower, Canada Place, the Canadian Museum for Human Rights), and the two
+     landmarks that give a quest (Peggy's Point Lighthouse and the Yukon River
+     sternwheeler), whose stories keep their names out of the HUD and whose
+     prompt is `hud.interact.poi.offer`. `tests/unit/ui/copy.test.ts` holds both
+     halves against the level and quest documents. */
+  'hud.interact.town-clock': 'Look at the Halifax Town Clock',
+  'hud.interact.market-stall': 'Look at the market stall',
+  'hud.interact.harbour-tug': 'Look at the harbour tug',
+  'hud.interact.granite-shore': 'Look at the granite shore',
+  'hud.interact.fish-store': 'Look at the fish store',
+  'hud.interact.village-house': 'Look at the village house',
+  'hud.interact.city-wall': 'Look at the city wall',
+  'hud.interact.terrace-kiosk': 'Look at the bandstand',
+  'hud.interact.rideau-locks': 'Look at the canal locks',
+  'hud.interact.library-of-parliament': 'Look at the Library of Parliament',
+  'hud.interact.warming-hut': 'Look at the warming hut',
+  'hud.interact.streetcar': 'Look at the streetcar',
+  'hud.interact.nathan-phillips-square': 'Look at Nathan Phillips Square',
+  'hud.interact.footbridge': 'Look at the footbridge',
+  'hud.interact.autumn-maple': 'Look at the maple tree',
+  'hud.interact.grain-bins': 'Look at the grain bins',
+  'hud.interact.grain-elevator': 'Look at the grain elevator',
+  'hud.interact.combine-harvester': 'Look at the combine harvester',
+  'hud.interact.container-car': 'Look at the container car',
+  'hud.interact.ranch-gate': 'Look at the ranch gate',
+  'hud.interact.ranch-barn': 'Look at the working ranch',
+  'hud.interact.pump-jack': 'Look at the oil pump jack',
+  'hud.interact.beef-cattle': 'Look at the cattle on the range',
+  'hud.interact.marina': 'Look at the marina',
+  'hud.interact.bulk-carrier': 'Look at the cargo ship',
+  'hud.interact.spruce-stand': 'Look at the spruce trees',
+  'hud.interact.driftwood': 'Look at the driftwood',
 
   /* docs/stories/TN-SAVE-save-and-reload.md — the storage warning these screens
      raise, and the way out it has to offer (TN-HUD-03). */
@@ -1173,6 +1247,19 @@ const FR: Readonly<Record<CopyRow, string>> = {
   /* The fourth play shape, after « à », « dans la » and « dans les ».
      Not « Jouer au Nord » — « au Nord » is a compass instruction. */
   'level.the-north.play': 'Jouer dans le Nord',
+  /* « d'abord » ne se contracte avec rien, donc chaque ligne ne diffère que par
+     l'article du lieu : aucun pour les villes, « la » pour la Ville de Québec,
+     « les » pour les Prairies et les contreforts, « le » pour le Nord. */
+  'level.halifax.finishFirst': "Terminez d'abord Halifax.",
+  'level.peggys-cove.finishFirst': "Terminez d'abord Peggy's Cove.",
+  'level.quebec-city.finishFirst': "Terminez d'abord la Ville de Québec.",
+  'level.ottawa.finishFirst': "Terminez d'abord Ottawa.",
+  'level.toronto.finishFirst': "Terminez d'abord Toronto.",
+  'level.winnipeg.finishFirst': "Terminez d'abord Winnipeg.",
+  'level.prairie-rail.finishFirst': "Terminez d'abord les Prairies.",
+  'level.alberta-foothills.finishFirst': "Terminez d'abord les contreforts de l'Alberta.",
+  'level.vancouver.finishFirst': "Terminez d'abord Vancouver.",
+  'level.the-north.finishFirst': "Terminez d'abord le Nord.",
 
   'hud.label': 'Commandes du jeu',
   'hud.menu': 'Menu',
@@ -1192,12 +1279,45 @@ const FR: Readonly<Record<CopyRow, string>> = {
   /* Shorter than its English and saying the same two things — the state, then
      the way on — which is what a translation of meaning is allowed to do. */
   'hud.interact.done': 'Terminé. Revoir',
-  'hud.interact.hint': 'Un repère indique quelque chose à voir. Approchez-vous, puis choisissez.',
+  'hud.interact.hint':
+    "Un repère montre quelqu'un ou quelque chose à choisir. Approchez-vous, puis choisissez.",
   'hud.interact.officer': "Parler à l'agent",
   'hud.interact.parliament-hill': 'Regarder la Colline du Parlement',
   /* « Au », the contraction of « à le », and it agrees with the « votre guide »
      the authored quest lines already use. */
   'hud.interact.guide': 'Parler au guide',
+  /* Voir le bloc anglais. L'article suit le nom du lieu et s'élide devant une
+     voyelle (« l'étal », « l'élévateur », « l'érable »); un nom de lieu garde la
+     majuscule de son document (« la Tour de l'horloge d'Halifax », « la
+     Bibliothèque du Parlement ») et un générique la perd dans la phrase (« la
+     place Nathan-Phillips »). */
+  'hud.interact.town-clock': "Regarder la Tour de l'horloge d'Halifax",
+  'hud.interact.market-stall': "Regarder l'étal de marché",
+  'hud.interact.harbour-tug': 'Regarder le remorqueur de port',
+  'hud.interact.granite-shore': 'Regarder la côte de granit',
+  'hud.interact.fish-store': 'Regarder le hangar de pêche',
+  'hud.interact.village-house': 'Regarder la maison du village',
+  'hud.interact.city-wall': 'Regarder le mur de la ville',
+  'hud.interact.terrace-kiosk': 'Regarder le kiosque à musique',
+  'hud.interact.rideau-locks': 'Regarder les écluses du canal',
+  'hud.interact.library-of-parliament': 'Regarder la Bibliothèque du Parlement',
+  'hud.interact.warming-hut': 'Regarder la cabane chauffée',
+  'hud.interact.streetcar': 'Regarder le tramway',
+  'hud.interact.nathan-phillips-square': 'Regarder la place Nathan-Phillips',
+  'hud.interact.footbridge': 'Regarder la passerelle',
+  'hud.interact.autumn-maple': "Regarder l'érable",
+  'hud.interact.grain-bins': 'Regarder les silos à grains',
+  'hud.interact.grain-elevator': "Regarder l'élévateur à grain",
+  'hud.interact.combine-harvester': 'Regarder la moissonneuse-batteuse',
+  'hud.interact.container-car': 'Regarder le wagon porte-conteneurs',
+  'hud.interact.ranch-gate': 'Regarder la barrière du ranch',
+  'hud.interact.ranch-barn': 'Regarder le ranch en activité',
+  'hud.interact.pump-jack': 'Regarder le chevalet de pompage',
+  'hud.interact.beef-cattle': 'Regarder les bovins au pâturage',
+  'hud.interact.marina': 'Regarder la marina',
+  'hud.interact.bulk-carrier': 'Regarder le navire de charge',
+  'hud.interact.spruce-stand': 'Regarder les épinettes',
+  'hud.interact.driftwood': 'Regarder le bois flotté',
 
   'storage.warning': "Ce navigateur n'enregistre pas votre progression.",
   'storage.warning.help':
@@ -1430,6 +1550,50 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'level.unfinished.notStarted',
   'card.kind.new',
   'card.kind.seen',
+  /* ADR-0039, 2026-09-14: the audit's copy findings. The hint is a ratified
+     `TN-REACH` row reworded, so it is unratified again until that story's owner
+     takes the new words; the twenty-seven landmark prompts are per-target rows
+     `TN-REACH` says belong in each level's story; and the ten finish-first
+     sentences replace a template `TN-MAP` owns. All three are written as
+     proposed rows in those stories. */
+  'hud.interact.hint',
+  'hud.interact.town-clock',
+  'hud.interact.market-stall',
+  'hud.interact.harbour-tug',
+  'hud.interact.granite-shore',
+  'hud.interact.fish-store',
+  'hud.interact.village-house',
+  'hud.interact.city-wall',
+  'hud.interact.terrace-kiosk',
+  'hud.interact.rideau-locks',
+  'hud.interact.library-of-parliament',
+  'hud.interact.warming-hut',
+  'hud.interact.streetcar',
+  'hud.interact.nathan-phillips-square',
+  'hud.interact.footbridge',
+  'hud.interact.autumn-maple',
+  'hud.interact.grain-bins',
+  'hud.interact.grain-elevator',
+  'hud.interact.combine-harvester',
+  'hud.interact.container-car',
+  'hud.interact.ranch-gate',
+  'hud.interact.ranch-barn',
+  'hud.interact.pump-jack',
+  'hud.interact.beef-cattle',
+  'hud.interact.marina',
+  'hud.interact.bulk-carrier',
+  'hud.interact.spruce-stand',
+  'hud.interact.driftwood',
+  'level.halifax.finishFirst',
+  'level.peggys-cove.finishFirst',
+  'level.quebec-city.finishFirst',
+  'level.ottawa.finishFirst',
+  'level.toronto.finishFirst',
+  'level.winnipeg.finishFirst',
+  'level.prairie-rail.finishFirst',
+  'level.alberta-foothills.finishFirst',
+  'level.vancouver.finishFirst',
+  'level.the-north.finishFirst',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

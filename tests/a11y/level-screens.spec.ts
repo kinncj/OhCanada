@@ -1116,7 +1116,9 @@ test.describe('what is in reach', () => {
   test('explains the marks once, beside the offer and never instead of it', async ({ page }) => {
     const root = await open(page, 'level', { prompt: true, hint: true });
     const hint = root.locator('[data-testid="interact-hint"]');
-    await expect(hint).toHaveText('A mark shows something to see. Get close to it, then choose it.');
+    await expect(hint).toHaveText(
+      'A mark shows someone or something you can choose. Get close, then choose.',
+    );
     /* It blocks nothing: not a dialog, no modal attribute, and the offer it sits
        beside is still there. */
     await expect(hint).not.toHaveAttribute('aria-modal', 'true');
@@ -1161,7 +1163,7 @@ test.describe('what is in reach', () => {
     });
     await expect(page.locator('[data-testid="interact-prompt"]')).toHaveText("Parler à l'agent");
     await expect(page.locator('[data-testid="interact-hint"]')).toHaveText(
-      'Un repère indique quelque chose à voir. Approchez-vous, puis choisissez.',
+      "Un repère montre quelqu'un ou quelque chose à choisir. Approchez-vous, puis choisissez.",
     );
     expect(await scrollsSideways(page)).toBe(false);
   });

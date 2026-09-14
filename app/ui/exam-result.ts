@@ -333,7 +333,9 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
       );
     }
 
-    if (current.subjectsReady !== undefined) {
+    /* Only while some subject has no questions, as the start screen and the map
+       draw it (ADR-0039): "Subjects ready: 10 of 10" is a build report. */
+    if (current.subjectsReady !== undefined && current.subjectsReady.ready < current.subjectsReady.total) {
       const { ready, total } = current.subjectsReady;
       lines.push(
         element(doc, 'p', {
@@ -341,15 +343,11 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
           className: 'tn-screen__help',
           text: text(locale, 'exam.subjectsReady', { ready, total }),
         }),
+        element(doc, 'p', {
+          className: 'tn-screen__help',
+          text: text(locale, 'map.moreComing'),
+        }),
       );
-      if (ready < total) {
-        lines.push(
-          element(doc, 'p', {
-            className: 'tn-screen__help',
-            text: text(locale, 'map.moreComing'),
-          }),
-        );
-      }
     }
 
     replaceChildren(summary, lines);

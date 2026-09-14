@@ -1463,11 +1463,12 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
      * by the HUD. It got past that check because the name was never a copy
      * string; it was content interpolated at runtime, right here.
      *
-     * Halifax writes no row of its own for this landmark, so the generic row is
-     * the answer — which is the rule working, not a shortfall.
+     * Since ADR-0039 the Town Clock has a row of its own, "Look at the Halifax
+     * Town Clock": a verb phrase from the copy table, never the bare name.
      */
-    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.poi')]);
-    expect(hoisted.state.prompts.join(' ')).not.toContain('Halifax Town Clock');
+    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.town-clock')]);
+    expect(hoisted.state.prompts).not.toContain('Halifax Town Clock');
+    expect(hoisted.state.prompts).not.toContain(text('en', 'hud.interact.poi'));
   });
 
   it('draws the level’s own row where the level wrote one', async () => {
@@ -1527,7 +1528,7 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
     await arrive();
     emit('poi/entered', 'town-clock');
     emit('poi/left', 'town-clock');
-    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.poi'), null]);
+    expect(hoisted.state.prompts).toEqual([text('en', 'hud.interact.town-clock'), null]);
   });
 
   it('offers nothing for a landmark the level does not declare', async () => {

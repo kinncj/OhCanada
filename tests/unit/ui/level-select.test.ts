@@ -120,6 +120,32 @@ describe('the level select', () => {
     expect(lines).toEqual(['Levels ready: 2 of 10', 'Stamps: 0 of 10', 'More are coming.']);
   });
 
+  it('says nothing about readiness once every level is made', () => {
+    /* ADR-0039: "Levels ready: 10 of 10" is a build report, not something a
+       player can act on — the rule `map.moreComing` already followed. */
+    const all: readonly MapEntry[] = [
+      'halifax',
+      'peggys-cove',
+      'quebec-city',
+      'ottawa',
+      'toronto',
+      'winnipeg',
+      'prairie-rail',
+      'alberta-foothills',
+      'vancouver',
+      'the-north',
+    ].map((levelId, index) => ({
+      number: index + 1,
+      id: id(levelId),
+      built: true,
+      unlocked: index === 0,
+    }));
+    const { at, screen } = open({ entries: all });
+    const lines = (at('level-select-counts')?.children ?? []).map((line) => line.textContent);
+    expect(lines).toEqual(['Stamps: 0 of 10']);
+    expect(screen.arrivalMessage).toBe('Choose a level.');
+  });
+
   it('lists ten cards, in the order the journey takes', () => {
     const { at } = open();
     const handles = at('level-select-list')
@@ -414,6 +440,31 @@ describe('a level that is locked and can be earned', () => {
     expect(at('level-card-toronto')?.getAttribute('data-state')).toBe('locked');
     expect(at('level-card-toronto')?.textContent).toContain('Locked');
     expect(at('level-card-toronto-help')?.textContent).toBe('Finish Ottawa first.');
+  });
+
+  it('names the level to finish first without a capital article, in both languages', () => {
+    /* ADR-0039: the template drew "Finish The Prairies first." and « Terminez
+       d'abord Les Prairies. ». The sentence is the level's own row now. */
+    const pair: readonly MapEntry[] = [
+      { number: 7, id: id('prairie-rail'), built: true, unlocked: true },
+      { number: 8, id: id('alberta-foothills'), built: true, unlocked: false },
+      { number: 9, id: id('vancouver'), built: true, unlocked: false },
+    ];
+    const english = open({ entries: pair });
+    expect(english.at('level-card-alberta-foothills-help')?.textContent).toBe(
+      'Finish the Prairies first.',
+    );
+    expect(english.at('level-card-vancouver-help')?.textContent).toBe(
+      'Finish the Alberta foothills first.',
+    );
+
+    const french = open({ entries: pair, locale: 'fr' });
+    expect(french.at('level-card-alberta-foothills-help')?.textContent).toBe(
+      "Terminez d'abord les Prairies.",
+    );
+    expect(french.at('level-card-vancouver-help')?.textContent).toBe(
+      "Terminez d'abord les contreforts de l'Alberta.",
+    );
   });
 
   it('counts the stamps still needed when the caller knows the number', () => {

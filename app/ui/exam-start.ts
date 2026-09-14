@@ -308,23 +308,25 @@ export function createExamStartScreen(
 
     const children: HTMLElement[] = [intro, rules, timerGroup(ready.timeLimitMs)];
 
-    if (ready.subjects !== undefined) {
+    /*
+     * Only while some subject has no questions, exactly as the map draws its
+     * count (`TN-MAP`, ADR-0039). With every subject ready, "Subjects ready: 10 of
+     * 10" and "This exam only asks about the subjects that are ready" are a build
+     * report and a caveat about nothing, and a player preparing for a real test
+     * reads a caveat as a warning.
+     */
+    if (ready.subjects !== undefined && ready.subjects.ready < ready.subjects.total) {
       const { ready: available, total } = ready.subjects;
       const lines: HTMLElement[] = [
         element(doc, 'p', {
           testId: 'exam-subjects',
           text: text(locale, 'exam.subjectsReady', { ready: available, total }),
         }),
+        element(doc, 'p', {
+          className: 'tn-screen__help',
+          text: text(locale, 'map.moreComing'),
+        }),
       ];
-      /* Only while it is true, exactly as the map draws it (`TN-MAP`). */
-      if (available < total) {
-        lines.push(
-          element(doc, 'p', {
-            className: 'tn-screen__help',
-            text: text(locale, 'map.moreComing'),
-          }),
-        );
-      }
       lines.push(
         element(doc, 'p', {
           className: 'tn-screen__help',

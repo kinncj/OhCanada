@@ -339,6 +339,17 @@ export interface QuestController {
   awaits(targetId: string): boolean;
   /** Is this target a quest giver in this level? */
   isGiver(targetId: string): boolean;
+  /**
+   * Is this target a giver whose quest is not finished — on offer, declined, or
+   * accepted and still running?
+   *
+   * The question the prompt needs before it says "Done. See this one again"
+   * about somebody the player has just spoken to. Engaging a giver is not
+   * finishing with it: the guide who has just handed over a task still has that
+   * task, and a prompt calling them done read as the task being complete
+   * (ADR-0039). Only a completed quest makes its giver done.
+   */
+  hasUnfinishedQuest(targetId: string): boolean;
   /** An answer was recorded: redraw the tracker from the save. */
   refresh(): void;
   setLocale(locale: UiLocale): void;
@@ -982,6 +993,12 @@ export function createQuestController(wiring: QuestWiring): QuestController {
 
     isGiver(targetId): boolean {
       return questFor(targetId) !== null;
+    },
+
+    hasUnfinishedQuest(targetId): boolean {
+      const quest = questFor(targetId);
+      if (quest === null) return false;
+      return questStateFor(wiring.progress(), wiring.levelId, quest.id)?.status !== 'completed';
     },
 
     awaits(targetId): boolean {

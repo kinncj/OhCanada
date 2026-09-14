@@ -129,6 +129,55 @@ describe('a character is offered only while there is something to say', () => {
   });
 });
 
+describe('engaged is not the same as finished (ADR-0039)', () => {
+  const OTTAWA: LevelPlacements = { characters: [{ characterId: 'officer' }], pois: [] };
+
+  it('keeps a giver its own prompt while its quest is unfinished, and says done once it is finished', () => {
+    /* The audit: right after accepting a quest, the guide's button read "Done.
+       See this one again", which reads as the task being complete. */
+    const engaged = new Set(['officer']);
+    const running = promptTargets(OTTAWA, 'en', {
+      done: engaged,
+      canEngage: () => true,
+      stillToDo: () => true,
+    });
+    expect(running['officer']?.prompt).toBe(text('en', 'hud.interact.officer'));
+    expect(running['officer']?.prompt).not.toBe(text('en', 'hud.interact.done'));
+
+    const finished = promptTargets(OTTAWA, 'en', {
+      done: engaged,
+      canEngage: () => true,
+      stillToDo: () => false,
+    });
+    expect(finished['officer']?.prompt).toBe(text('en', 'hud.interact.done'));
+  });
+
+  it('reads a caller that asks nothing about quests as "nothing left", which is what done always meant', () => {
+    const targets = promptTargets(OTTAWA, 'en', { done: new Set(['officer']), canEngage: () => true });
+    expect(targets['officer']?.prompt).toBe(text('en', 'hud.interact.done'));
+  });
+
+  it('does not call a landmark done while a running quest is waiting for the player there', () => {
+    const HALIFAX: LevelPlacements = {
+      characters: [],
+      pois: [
+        {
+          id: 'town-clock',
+          name: localised('Halifax Town Clock', "Tour de l'horloge d'Halifax"),
+          blurb: localised('A true, short thing.', 'Une chose vraie et courte.'),
+        },
+      ],
+    };
+    const targets = promptTargets(HALIFAX, 'fr', {
+      done: new Set(['town-clock']),
+      canEngage: () => false,
+      stillToDo: (targetId) => targetId === 'town-clock',
+    });
+    expect(targets['town-clock']?.prompt).toBe(text('fr', 'hud.interact.town-clock'));
+    expect(targets['poi.town-clock']).toBeDefined();
+  });
+});
+
 describe('the precedence, and the two states that are not failures', () => {
   it('says "done" about anything already engaged, whatever kind it is', () => {
     const done = { done: new Set(['peggys-point-light']), canEngage: (): boolean => true };

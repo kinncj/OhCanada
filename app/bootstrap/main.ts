@@ -2478,6 +2478,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
       done: engaged,
       canEngage: (targetId) => quests.canEngage(targetId),
       awaits: (targetId) => quests.awaits(targetId),
+      /* A giver whose quest is unfinished, or a landmark a running quest is
+         waiting for, is not "done" just because it was engaged (ADR-0039). */
+      stillToDo: (targetId) => quests.hasUnfinishedQuest(targetId) || quests.awaits(targetId),
     });
   }
 

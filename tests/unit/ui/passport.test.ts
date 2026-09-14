@@ -121,6 +121,32 @@ describe('the passport', () => {
     expect(lines).toEqual(['Stamps: 1 of 10', 'Levels ready: 4 of 10', 'More are coming.']);
   });
 
+  it('says nothing about readiness once every level is made', () => {
+    /* ADR-0039, as the map: the stamp count is the player's, the readiness
+       count was the build's. */
+    const all: readonly MapEntry[] = [
+      'halifax',
+      'peggys-cove',
+      'quebec-city',
+      'ottawa',
+      'toronto',
+      'winnipeg',
+      'prairie-rail',
+      'alberta-foothills',
+      'vancouver',
+      'the-north',
+    ].map((levelId, index) => ({
+      number: index + 1,
+      id: id(levelId),
+      built: true,
+      unlocked: index === 0,
+      stamped: levelId === 'halifax',
+    }));
+    const { at } = open({ entries: all });
+    const lines = (at('passport-counts')?.children ?? []).map((line) => line.textContent);
+    expect(lines).toEqual(['Stamps: 1 of 10']);
+  });
+
   it('draws ten slots, in the order the journey takes', () => {
     const { at } = open();
     const slots = at('passport-slots')?.children ?? [];

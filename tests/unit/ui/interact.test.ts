@@ -86,6 +86,15 @@ describe('what the prompt says', () => {
     expect(interactPrompt('en', { id: 'parliament-hill', kind: 'poi' })).toBe(
       'Look at Parliament Hill',
     );
+    /* ADR-0039: the same rule, written for every landmark that opens a card and
+       is not on the list — and written out, so French keeps its elision. */
+    expect(interactPrompt('en', { id: 'town-clock', kind: 'poi' })).toBe(
+      'Look at the Halifax Town Clock',
+    );
+    expect(interactPrompt('fr', { id: 'market-stall', kind: 'poi' })).toBe(
+      "Regarder l'étal de marché",
+    );
+    expect(interactPrompt('fr', { id: 'prairie-rail', kind: 'poi' })).toBe('Regarder ce lieu');
   });
 
   it('draws the guide’s own row on all three levels that place it', () => {

@@ -707,8 +707,9 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     const tracker = page.getByTestId('hud-quest-tracker');
     await expect(tracker).toContainText(FIRST_VISIT?.prompt.en ?? '');
 
-    /* On past the giver — whose prompt now reads "Done. See this one again" —
-       and up to the first landmark the tracker names. */
+    /* On past the giver — whose prompt keeps its own words while the task runs
+       (ADR-0039) and read "Done. See this one again" before — and up to the
+       first landmark the tracker names. */
     const offered = await walkPastAndOnTo(page, [GIVER_PROMPT, text('en', 'hud.interact.done')]);
     expect(
       offered,
@@ -826,8 +827,11 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
           if (offered === null) break;
           if (offered === 'card') continue;
         }
-      } else if (inReach === null || inReach === DONE_PROMPT) {
-        const offered = await walkPastAndOnTo(page, [DONE_PROMPT]);
+      } else if (inReach === null || inReach === DONE_PROMPT || inReach === GIVER_PROMPT) {
+        /* The giver keeps its own prompt while its quest is unfinished
+           (ADR-0039) — engaged is not finished — so a walk that is going
+           somewhere passes it as it passes anything already done. */
+        const offered = await walkPastAndOnTo(page, [DONE_PROMPT, GIVER_PROMPT]);
         if (offered === null) break;
         if (offered === 'card') continue;
       }
