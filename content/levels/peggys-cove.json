@@ -233,20 +233,20 @@
         "fr": "Le phare de Peggy's Point"
       },
       "blurb": {
-        "en": "This coast is part of the Maritimes. The Acadians are the descendants of French colonists who began to settle here in 1604. Between 1755 and 1763, more than two thirds of the Acadians were deported from their homeland. Acadian culture survived, and it is a lively part of French-speaking Canada today.",
-        "fr": "Cette côte fait partie des Maritimes. Les Acadiens sont les descendants de colons français qui ont commencé à s'y établir en 1604. Entre 1755 et 1763, plus des deux tiers des Acadiens ont été déportés de leur terre natale. La culture acadienne a survécu, et elle est aujourd'hui une part bien vivante du Canada francophone."
+        "en": "Nova Scotia's identity is linked to building ships, to fishing and to shipping.",
+        "fr": "L'identité de la Nouvelle-Écosse est liée à la construction navale, à la pêche et au transport maritime."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 19,
+          "chapter": "Canada's Regions",
+          "page": 97,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-13T00:00:00Z",
           "volatile": false,
-          "quote": "The Acadians are the descendants of French colonists who began settling in what are now the Maritime provinces in 1604. Between 1755 and 1763, during the war between Britain and France, more than two-thirds of the Acadians were deported from their homeland. Despite this ordeal, known as the “Great Upheaval,” the Acadians survived and maintained their unique identity. Today, Acadian culture is flourishing and is a lively part of French-speaking Canada."
+          "quote": "Nova Scotia is the most populous Atlantic Province, with a rich history as the gateway to Canada. Known for the world’s highest tides in the Bay of Fundy, the province’s identity is linked to shipbuilding, fisheries and shipping."
         },
         "verification": {
           "status": "rejected",
