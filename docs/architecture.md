@@ -394,6 +394,18 @@ the auto-stop and the level exit all read the same `LocomotionState` they read b
 arithmetic is `app/adapters/phaser/ride.ts`, which imports no Phaser. No port was added: a ride is part of
 `LevelDocument` and mirrored by `Ride` under ADR-0007, so the ports table below is unchanged.
 
+### The creator preview seam
+
+The character creator shows the player the character they are making, drawn with the level's own sprite
+puppet (ADR-0040). The seam is **not an application port** and has no row in the table above: its first
+argument is the DOM element to draw into, and a port may not name the DOM. `app/ui/character-creator.ts`
+publishes `CreatorArtFactory` — a host element, and `draw`, `setMotion` and `destroy` — which is the same kind of
+shape as the shell's `onPlayLevel`; `app/bootstrap/creator-art.ts` fills it and hands over the rig (ADR-0022);
+`app/adapters/phaser/character-preview.ts` paints the puppet into a 2D canvas with no Phaser game behind it, so
+the page never holds a second WebGL context. The atlas is the level's page, fetched when the creator opens and
+released when it closes. The host reports `data-state` and `data-frames`, so a browser test reads what is drawn
+without comparing pixels.
+
 ## 6. Seams deliberately left open
 
 Named here so a later slice picks them up on purpose rather than inventing them under pressure.

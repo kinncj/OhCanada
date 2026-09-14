@@ -491,6 +491,87 @@ const CSS = `
 }
 
 /* ------------------------------------------------------------------ *
+ * The character creator's picture (ADR-0040).
+ *
+ * A panel holding a picture has three parts: the heading, the picture and the
+ * sentence. Where the sheet is wide enough for the words to sit beside the
+ * picture -- 17.5em of the sheet's own font, which is 100 % text at phone width
+ * and not 125 % -- the picture takes the start edge and the heading and the
+ * sentence stack beside it. Narrower, or at larger text, the three stack, so
+ * the words never wrap a letter at a time to make room for decoration.
+ *
+ * The picture is sized in px on purpose. Text scaling makes words larger; a
+ * picture that grew with them would push every option further from the thumb
+ * and show nothing more.
+ *
+ * At 100 % text the panel is sticky, so a player choosing a hair colour at the
+ * bottom of the list still sees the face it goes on. Only at 100 %: at larger
+ * text the sentence alone is a third of the screen, and a sticky panel that tall
+ * would cover the options it exists to show. scroll-padding keeps a focused or
+ * highlighted control out from under it.
+ *
+ * A picture that failed is hidden and data-art says so, and the panel is the
+ * plain preview again: not sticky, not a grid, no empty box.
+ * ------------------------------------------------------------------ */
+.tn-creator .tn-screen__card { container: tn-creator / inline-size; }
+
+.tn-creator__preview[data-art="loading"],
+.tn-creator__preview[data-art="ready"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "heading" "art" "text";
+  row-gap: 0.5rem;
+}
+.tn-creator__preview[data-art] > h2 { grid-area: heading; }
+.tn-creator__preview[data-art] > p { grid-area: text; }
+
+.tn-creator__art {
+  grid-area: art;
+  box-sizing: border-box;
+  inline-size: 118px;
+  block-size: 188px;
+  border: var(--tn-edge-width) solid var(--tn-edge-soft);
+  border-radius: 0.75rem;
+  background: var(--tn-paper);
+  overflow: hidden;
+  /* The figure's ground stays light in a forced-colours theme; the words beside
+     it are what carry the choice, and they do follow the theme. */
+  forced-color-adjust: none;
+}
+.tn-creator__art canvas { display: block; inline-size: 100%; block-size: 100%; }
+
+@container tn-creator (min-width: 17.5em) {
+  .tn-creator__preview[data-art="loading"],
+  .tn-creator__preview[data-art="ready"] {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "art heading" "art text";
+    column-gap: 0.875rem;
+    align-items: start;
+  }
+}
+
+:root[data-tn-text-scale="100"] .tn-creator__preview[data-art="loading"],
+:root[data-tn-text-scale="100"] .tn-creator__preview[data-art="ready"] {
+  position: sticky;
+  /* Measured inside the screen's 1.25rem top padding, so this puts the panel
+     0.5rem from the top edge, and the paper ring below covers that 0.5rem. */
+  top: -0.75rem;
+  z-index: 2;
+  /* Paper round the panel, so an option scrolling under it never shows at its
+     rounded corners. */
+  box-shadow: 0 0 0 0.5rem var(--tn-paper);
+}
+:root[data-tn-text-scale="100"] .tn-creator:has(.tn-creator__preview[data-art="loading"]),
+:root[data-tn-text-scale="100"] .tn-creator:has(.tn-creator__preview[data-art="ready"]) {
+  scroll-padding-block-start: 16rem;
+}
+
+@media (forced-colors: active) {
+  .tn-creator__art { border-color: CanvasText; }
+}
+
+/* ------------------------------------------------------------------ *
  * The character creator's skin tones: a swatch above each name.
  *
  * The colour arrives on the element as --tn-swatch, set by

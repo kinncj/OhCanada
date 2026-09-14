@@ -123,6 +123,8 @@ const hoisted = vi.hoisted(() => {
     modalOptions: Record<string, unknown>;
     shellOptions: Record<string, unknown> | null;
     shellHost: unknown;
+    /** Every call to the creator's picture backend: host, request, deps. */
+    previews: unknown[][];
     storageWarning: boolean;
     entries: unknown;
     level: unknown;
@@ -235,6 +237,7 @@ const hoisted = vi.hoisted(() => {
     modalOptions: {},
     shellOptions: null,
     shellHost: null,
+    previews: [],
     storageWarning: false,
     entries: null,
     level: null,
@@ -299,6 +302,20 @@ vi.mock('@adapters/phaser', () => ({
    * built levels written into a screen, which is the bug `TN-MAP` is about.
    */
   hasLevel: (id: string): boolean => hoisted.state.built.includes(id),
+  /*
+   * The creator's picture (ADR-0040). Read at boot, when the composition root
+   * builds the factory it hands the shell, so a mock without it would fail every
+   * test in this file on the import rather than on anything about the picture.
+   * The shell is mocked too, so nothing here ever draws.
+   */
+  createCharacterPreview: (...args: unknown[]): unknown => {
+    hoisted.state.previews.push(args);
+    return {
+      draw: (): void => undefined,
+      setMotion: (): void => undefined,
+      destroy: (): void => undefined,
+    };
+  },
   GameRenderer: class {
     readonly ready = Promise.resolve();
     constructor(options: {
@@ -909,6 +926,7 @@ beforeEach(() => {
   hoisted.state.modalOptions = {};
   hoisted.state.shellOptions = null;
   hoisted.state.shellHost = null;
+  hoisted.state.previews = [];
   hoisted.state.storageWarning = false;
   hoisted.state.entries = null;
   hoisted.state.level = null;
@@ -980,6 +998,29 @@ const shellOption = <T>(name: string): T => (hoisted.state.shellOptions?.[name] 
 const hudOption = <T>(name: string): T => (hoisted.state.hudOptions?.[name] as T);
 /** The options one mocked modal was built with, so its callbacks can be driven. */
 const modalOption = <T>(name: string): T => (hoisted.state.modalOptions[name] as T);
+
+describe("the character creator's picture (ADR-0040)", () => {
+  it('hands the shell a picture drawn by the sprite puppet, dressed from the shipped rig', async () => {
+    await boot('');
+
+    const creator = shellOption<{ art?: (host: unknown, request: unknown) => unknown }>('creator');
+    expect(typeof creator.art, 'the creator was given nothing to draw with').toBe('function');
+    /* Built at boot, drawn only when a creator opens: nothing has asked yet. */
+    expect(hoisted.state.previews).toEqual([]);
+
+    const host = { id: 'preview-host' };
+    const request = { selection: {}, motion: 'full', onStatus: (): void => undefined };
+    creator.art?.(host, request);
+
+    expect(hoisted.state.previews).toHaveLength(1);
+    const [givenHost, givenRequest, deps] = hoisted.state.previews[0] ?? [];
+    expect(givenHost).toBe(host);
+    expect(givenRequest).toBe(request);
+    const rig = (deps as { rig?: { artboards?: readonly { playerSelectableSlots: readonly string[] }[] } })
+      .rig;
+    expect(rig?.artboards?.some((board) => board.playerSelectableSlots.length > 0)).toBe(true);
+  });
+});
 
 describe('a cold load opens the front door', () => {
   it('mounts the shell into #ui and starts it on the title screen', async () => {

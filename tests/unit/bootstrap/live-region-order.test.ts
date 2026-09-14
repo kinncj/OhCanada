@@ -57,6 +57,14 @@ vi.mock('@adapters/phaser', () => ({
   /* The level catalogue's answer to "does this build have that level". Nothing
      here opens one; the map's ten entries are `journey.test.ts`'s subject. */
   hasLevel: (): boolean => false,
+  /* The creator's picture (ADR-0040). The composition root reads it when it
+     builds the shell's options, which this suite reaches; the shell is mocked,
+     so nothing is ever drawn. */
+  createCharacterPreview: (): unknown => ({
+    draw: (): void => undefined,
+    setMotion: (): void => undefined,
+    destroy: (): void => undefined,
+  }),
   GameRenderer: class {
     readonly ready = Promise.resolve();
     constructor() {

@@ -23,6 +23,16 @@ read six, twenty-two and 1 440. The slot's label and option names ("Style": Femi
 « Style » : Féminin, Masculin, Neutre) were written by `app/ui` and are declared in `COPY_GAPS` until
 `TN-LOOK` ratifies them.
 
+**Amended 2026-09-14 — the preview draws the character (ADR-0040).** A play-through audit found that "Your
+character" was a sentence and nothing else: six groups of choices and no picture of the result. The preview now
+shows the character beside the words, drawn from the level's own art, and redraws on every choice. The words
+stay the preview: the picture is `aria-hidden` inside `character-preview` and adds no control. Its host,
+`character-preview-art`, reports `data-state` (`loading`, `ready`, `failed`) and `data-frames`, the atlas frames
+on the picture back to front. `TN-CREATOR-12` is the new scenario. `TN-CREATOR-03`'s "the preview art fails to
+load" is now a path the build can take, and `TN-CREATOR-07`'s "does not animate" is a still picture rather than a
+claim about a picture that did not exist. `data-animated` now follows the device's motion preference as well as
+the setting.
+
 **Amended 2026-09-09 — this file no longer says what the slots are.** It said three: `skin`, `hair`, `coat`.
 The rig says five — `skin`, `hairShape`, `hairColour`, `headCovering`, `feature` — with nineteen options
 between them and 480 reachable appearances, and `coat` is `costume`, which is `playerSelectable: false` and
@@ -500,6 +510,54 @@ Feature: Reaching Settings from the creator
     When I open Settings and close it
     Then the same options are still chosen
     And no message claims the character was saved
+```
+
+## TN-CREATOR-12 — The preview shows the character
+
+```gherkin
+Feature: Seeing the character while making it
+  As a new player
+  I want to see the character I am choosing
+  So that I recognise it on the ice, and not for the first time there
+
+  Background:
+    Given the element "character-creator" is visible
+
+  Scenario: The picture is the character the words describe
+    Then "character-preview-art" reports "data-state" equal to "ready"
+    And its "data-frames" include the head, neck, hair and face frames for the chosen skin, hair shape,
+      hair colour and style
+    And they include the toque frame only when "data-head-covering" is "toque"
+    And they include the glasses frame only when "data-feature" is "glasses"
+
+  Scenario: A choice changes the picture at once
+    When I choose a different option in "slot-skin"
+    Then "data-frames" names that skin tone's head frame and no other
+
+  Scenario: The picture is not read and not reached
+    Then "character-preview-art" and its canvas are "aria-hidden"
+    And the Tab order and the switch ring are what they are with no picture
+    And "character-preview" keeps its heading and its text description
+
+  Scenario: At 100 % text the picture stays in view
+    Given the viewport is 390 x 844 and text scaling is 100 %
+    When I scroll to "slot-presentation"
+    Then "character-preview" is still on screen
+    And no focused control is hidden under it
+
+  Scenario: At 200 % text nothing is sticky and nothing is covered
+    Given text scaling is 200 %
+    Then "character-preview" is not sticky
+    And the picture overlaps neither its heading nor its description
+
+  Scenario: Reduced motion is a still picture
+    Given reduced motion is on, in Settings or on the device
+    Then "character-preview" reports "data-animated" equal to "false"
+    And the picture does not change unless a choice does
+
+  Scenario: The picture is released when the creator closes
+    When I tap "start-playing"
+    Then no "character-preview-art" and no second canvas remain on the page
 ```
 
 ---

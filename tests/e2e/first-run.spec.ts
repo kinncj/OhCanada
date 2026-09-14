@@ -199,7 +199,14 @@ test.describe('a first run', () => {
 
     await page.getByTestId('title-play').click();
     await expect(live).toHaveCount(1);
-    await expect(page.locator('canvas')).toHaveAttribute('aria-hidden', 'true');
+    /* Two canvases now: the game's, and the creator's picture (ADR-0040). Both
+       are read by nobody. Scoped, because a locator matching two elements is a
+       strict-mode failure rather than an answer. */
+    await expect(page.locator('#game canvas')).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('[data-testid="character-preview-art"] canvas')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    );
 
     await page.getByTestId('start-playing').click();
     await expect(page.getByTestId('level-select')).toBeVisible();
