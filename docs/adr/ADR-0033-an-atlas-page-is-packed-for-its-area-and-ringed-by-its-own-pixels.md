@@ -1,4 +1,4 @@
-# ADR-0032: An atlas page is packed for its area, and ringed by its own pixels
+# ADR-0033: An atlas page is packed for its area, and ringed by its own pixels
 
 - Status: Accepted (2026-09-14)
 

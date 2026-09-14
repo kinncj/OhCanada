@@ -1,5 +1,5 @@
 /**
- * scripts/lib/atlas-pack.mjs (ADR-0032): how `make assets` lays sprites out on an
+ * scripts/lib/atlas-pack.mjs (ADR-0033): how `make assets` lays sprites out on an
  * atlas page and fills the pixels round each one.
  *
  * Two defects this module replaced, and every case below is one of them:

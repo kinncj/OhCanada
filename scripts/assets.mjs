@@ -22,7 +22,7 @@
  *   2. packs everything that fits into per-level WebP atlases with
  *      scripts/lib/atlas-pack.mjs, page size capped at 2048 px (art-bible 9),
  *      the smallest page area it can find, each frame ringed by its own edge
- *      pixels and every page re-read after encoding to prove it (ADR-0032);
+ *      pixels and every page re-read after encoding to prove it (ADR-0033);
  *   3. ships anything too big for a page — parallax layers are 1920 tall and
  *      wide — as a standalone WebP, capped at 4096 px, the texture size a 2021
  *      mid-range Android can be relied on to accept;

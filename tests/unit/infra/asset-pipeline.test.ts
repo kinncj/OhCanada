@@ -387,7 +387,7 @@ describe('make assets builds WebP from SVG', () => {
   });
 
   it('rings every atlas frame with its own edge pixels, read back from the shipped WebP', async () => {
-    // The hairlines (ADR-0032). free-tex-packer-core's `extrude` painted a
+    // The hairlines (ADR-0033). free-tex-packer-core's `extrude` painted a
     // trimmed frame's ring in a colour taken from the whole source rather than
     // from the frame's edge, so every character part drew a faint rectangle
     // round itself under linear filtering. A sprite with a transparent margin is

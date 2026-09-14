@@ -631,7 +631,7 @@ trims, re-packed under random ±2 px drift of the other frames. The chosen trim,
 and 2 px shorter at 1x, stayed at or under 1618 px in 12 of 12 drift trials. **Anyone who resizes a character
 frame should repack and read the page, not the frame**, and `OQ-RIG-1` is the real fix.
 
-**Since 2026-09-14 the page is no longer chaotic (ADR-0032).** The packer was replaced. It now tries every
+**Since 2026-09-14 the page is no longer chaotic (ADR-0033).** The packer was replaced. It now tries every
 insertion order, placement rule and page width it knows, and keeps the smallest page area. The same 80 frames
 pack to **1278×1805, 8.80 MiB** where they packed to 2045×1316, 10.27 MiB, so every level is 1.47 MiB lighter
 on a 2× device and 2.96 MiB lighter on a 1× device. Measured over 40 trials in which every frame drifted ±2 px,
@@ -646,7 +646,7 @@ still stands: read the page.
 - In `train/*` and `toboggan/*` the rigid coat hangs below the lap.
 - The guide still stands on the human leg canon, so it is long in the leg for a beaver.
 - ~~The faint rectangular hairlines around characters in the running game are older than this redraw. They show in
-  the before screenshots too, and they are not in any source.~~ **Fixed 2026-09-14 (ADR-0032).** They were in the
+  the before screenshots too, and they are not in any source.~~ **Fixed 2026-09-14 (ADR-0033).** They were in the
   atlas, not the art. The old packer's `extrude` option ringed every trimmed frame with a 1 px rectangle in a
   colour sampled from the whole source image. All 80 frames of 80 had it, at alpha up to 255. Linear filtering
   drew that ring. Every frame is now ringed by its own edge pixels, and `make assets` re-reads each encoded page

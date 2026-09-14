@@ -1,6 +1,6 @@
 /**
  * atlas-pack — how `make assets` lays sprites out on an atlas page, and how it
- * fills the pixels round each one (ADR-0032).
+ * fills the pixels round each one (ADR-0033).
  *
  * It replaces free-tex-packer-core, which did two things wrong, both measured on
  * the shared character atlas of a real build:
