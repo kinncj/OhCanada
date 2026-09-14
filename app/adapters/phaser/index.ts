@@ -455,3 +455,17 @@ export {
   tintPalette,
   type SkyConditions,
 } from './time-of-day';
+
+/*
+  The character creator's picture (ADR-0040): the level's own sprite puppet,
+  painted into a 2D canvas the creator owns, with no Phaser game behind it.
+  Exported for the composition root, which is the only place that decides the
+  creator draws with this backend.
+*/
+export {
+  createCharacterPreview,
+  type CharacterPreview,
+  type CharacterPreviewDeps,
+  type CharacterPreviewRequest,
+  type PreviewStatus,
+} from './character-preview';

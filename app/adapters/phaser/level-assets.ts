@@ -259,8 +259,11 @@ export function atlasKeyOf(path: string): string | null {
  * texture that is twice the resolution it wanted, which costs memory and looks
  * fine. The alternative is loading nothing, and loading nothing is exactly how a
  * level ends up drawing coloured bands and calling itself ready.
+ *
+ * Exported for `character-preview.ts`, so the creator's picture resolves the
+ * character atlas by this rule and not by a second one that could disagree.
  */
-function bestScale(
+export function bestScale(
   candidates: readonly AssetManifestFile[],
   wanted: number,
 ): AssetManifestFile | undefined {
