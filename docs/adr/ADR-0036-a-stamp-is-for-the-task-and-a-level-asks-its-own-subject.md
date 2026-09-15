@@ -1,6 +1,9 @@
 # ADR-0036: A stamp is for the task, and a level asks its own subject
 
-- Status: Accepted (2026-09-14)
+- Status: Accepted (2026-09-14). **Amended by ADR-0048 (2026-09-15):** with no `answer` step being played a
+  landmark asks only a question resting on its own sentence, or nothing — §2 rule 4 no longer falls back to the
+  rest of the subject — and no landmark draw asks again what the level visit has answered. The consequence below
+  about the 24 landmarks with no question of their own is replaced: they ask nothing outside a task.
 - Amends: `TN-DONE-01` and `TN-DONE-02` (reaching the end of a level no longer earns the stamp of a level whose
   task is not done); `TN-CARD` (the counter, the "New" tag and the controls after an answer). Resolves
   `OQ-PASSPORT-8`.

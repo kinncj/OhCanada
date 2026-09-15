@@ -24,6 +24,11 @@ where they touch a scenario below the scenario is read with them:
   itself instead. `TN-CARD-08`'s "accessible name includes 'Question 1 of 3'" holds wherever there are three.
 - **In a level the counter counts the quest step.** A landmark asks everything the current `answer` step has
   left, all from the level's subject, and "Question 2 of 2" is the second of that step's two questions.
+- **Amended 2026-09-15 by ADR-0048: outside a task a landmark asks only what it told.** With no `answer` step
+  being played, a landmark asks one question resting on the sentence its card has just told, or none. No question
+  answered in a level visit is asked again in that visit, unless a task step has nothing else left to ask — and
+  then the strip says so: "You have already answered some of these questions here." (`quest.askedAgain`, a
+  `COPY_GAPS` row).
 - **After the last question is answered, "Close" goes and "Finish" stays.** Mid-set, "Next" and "Close" are
   different choices and both stay (`TN-STUDY-05`).
 
